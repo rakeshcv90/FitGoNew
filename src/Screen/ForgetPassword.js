@@ -1,16 +1,80 @@
-import {View, Text, SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
-import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
+import React, {useState} from 'react';
 import {TextInput} from 'react-native-paper';
 
-import { DeviceHeigth, DeviceWidth } from '../Component/Config';
+import {Api, Appapi, DeviceHeigth, DeviceWidth} from '../Component/Config';
 import Header from '../Component/Header';
+import {showMessage} from 'react-native-flash-message';
+import axios from 'axios';
 
-const ForgetPassword = () => {
+let reg = /\S+@\S+\.\S+/;
+const ForgetPassword = ({navigation}) => {
   const [Email, setEmail] = useState('');
   const [inputText, setInputText] = useState('Enter');
+  const ErrorHandle = async () => {
+    if (!Email) {
+      showMessage({
+        message: 'Email Alert',
+        description: 'Please Enter your Email',
+        type: 'danger',
+        icon: {icon: 'auto', position: 'left'},
+      });
+      setInputText('Enter');
+    } else if (!reg.test(Email)) {
+      showMessage({
+        message: 'Email Alert',
+        description: 'Invalid Email Format',
+        type: 'danger',
+        icon: {icon: 'auto', position: 'left'},
+      });
+      setInputText('ENTER');
+    } else {
+      try {
+        const data = await axios(`${Api}/${Appapi.forgetPassword}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          data: {
+            email: Email,
+          },
+        });
+        
+        setInputText('Enter');
+        if (data.data.data[0].msg == 'Email has been Sent successfully') {
+          showMessage({
+            message: 'Forget Password Alert',
+            description: data.data.data[0].msg,
+            type: 'success',
+            icon: {icon: 'auto', position: 'left'},
+          });
+          navigation.navigate('Login')
+        } else {
+          showMessage({
+            message: 'Forget Password Alert',
+            description: data.data.data[0].msg,
+            type: 'danger',
+            icon: {icon: 'auto', position: 'left'},
+          });
+        }
+
+        setEmail('');
+      } catch (error) {
+        setInputText('Enter');
+        console.log('uygij11111111', error);
+        setEmail('');
+      }
+    }
+  };
   return (
-      <SafeAreaView style={styles.container}>
-  <Header header={"ForgetPassword"}/>
+    <SafeAreaView style={styles.container}>
+      <Header header={'ForgetPassword'} />
       <View style={styles.container1}>
         <Text style={styles.text}>
           We'll send you an email with a reset link

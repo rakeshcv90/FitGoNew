@@ -5,6 +5,10 @@ import SplaceScreen from '../Screen/SplaceScreen';
 import Login from '../Screen/Login';
 import Signup from '../Screen/Signup';
 import ForgetPassword from '../Screen/ForgetPassword';
+import TermaAndCondition from '../Screen/TermaAndCondition';
+import DrawerNavigation from './DrawerNavigation';
+import HomeScreenDrawer from './HomeScreenDrawer';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -26,7 +30,10 @@ const LoginStack = () => {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
-  
+        <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
+        <Stack.Screen name="DrawerNavigation" component={DrawerNavigation} />
+        {/* <Stack.Screen name="HomeScreenDrawer" component={HomeScreenDrawer} /> */}
+   
       </Stack.Navigator>
     );
   };

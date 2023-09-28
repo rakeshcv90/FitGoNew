@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {localImage} from '../Component/Image';
-import {Api, DeviceHeigth, DeviceWidth} from '../Component/Config';
+import {Api, DeviceHeigth, DeviceWidth, Appapi} from '../Component/Config';
 import {TextInput} from 'react-native-paper';
 import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
@@ -25,6 +25,7 @@ const Login = ({navigation}) => {
     BackHandler.exitApp();
     return true;
   };
+
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
     return () => {
@@ -47,7 +48,6 @@ const Login = ({navigation}) => {
       });
       setsubmitText('ENTER');
     } else if (!reg.test(Email)) {
-      Alert.alert('Invalid Format');
       showMessage({
         message: 'Email Alert',
         description: 'Invalid Format',
@@ -66,7 +66,7 @@ const Login = ({navigation}) => {
       setsubmitText('ENTER');
     } else {
       try {
-        const data = await axios(`${Api}/login.php`, {
+        const data = await axios(`${Api}/${Appapi.login}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -88,6 +88,7 @@ const Login = ({navigation}) => {
             type: 'success',
             icon: {icon: 'auto', position: 'left'},
           });
+          navigation.navigate('DrawerNavigation');
         } else {
           showMessage({
             message: 'Login Alert',
@@ -127,10 +128,9 @@ const Login = ({navigation}) => {
       <View style={{width: (DeviceWidth * 80) / 100, alignItems: 'flex-end'}}>
         <TouchableOpacity
           style={styles.Forget}
-            onPress={() => {
-              navigation.navigate('ForgetPassword');
-            }}
-        >
+          onPress={() => {
+            navigation.navigate('ForgetPassword');
+          }}>
           <Text style={{color: 'black'}}>Forget Password ?</Text>
         </TouchableOpacity>
       </View>
@@ -143,10 +143,9 @@ const Login = ({navigation}) => {
         <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
       </TouchableOpacity>
       <TouchableOpacity
-      onPress={() => {
-        navigation.navigate('Signup');
-      }}
-      >
+        onPress={() => {
+          navigation.navigate('Signup');
+        }}>
         <Text style={{color: 'black', marginBottom: (DeviceHeigth * 5) / 100}}>
           Don't have an account ?{' '}
           <Text style={{color: 'black', fontWeight: 'bold'}}>SignUp</Text>
