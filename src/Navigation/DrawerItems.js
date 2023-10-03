@@ -10,21 +10,22 @@ import {
 import React, {useEffect, useContext} from 'react';
 import {DrawerContentScrollView} from '@react-navigation/drawer';
 import {localImage} from '../Component/Image';
-
+import { useSelector, } from 'react-redux';
 import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import {Logo} from '../Component/logo';
 
 const DrawerItems = props => {
-  const DrawerList = [
-    'Workouts',
-    'Exercises',
-    'Diets',
-    'Store',
-    'Blog',
-    'Profile',
-    'Favorites',
-    'Settings',
-  ];
+  // const DrawerList = [
+  //   'Workouts',
+  //   'Exercises',
+  //   'Diets',
+  //   'Store',
+  //   'Blog',
+  //   'Profile',
+  //   'Favorites',
+  //   'Settings',
+  // ];
+  const {defaultTheme}=useSelector(state=>state)
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
@@ -41,7 +42,7 @@ const DrawerItems = props => {
       style={{
         flex: 1,
         marginLeft: (DeviceWidth * 5) / 100,
-        backgroundColor: '#fff',
+        backgroundColor: defaultTheme?"#000":"#fff",
       }}>
       <DrawerContentScrollView {...props}>
         <Logo />
@@ -51,7 +52,7 @@ const DrawerItems = props => {
           //     props.navigation.navigate('Workouts');
           //   }}
         >
-          <Text style={[styles.Text, {color: '#000'}]}>Workouts</Text>
+          <Text style={[styles.Text, {color:defaultTheme?"#fff":"#000"}]}>Workouts</Text>
           <Image source={localImage.nextButton} style={styles.nextIcon} />
         </TouchableOpacity>
         <TouchableOpacity
@@ -60,7 +61,7 @@ const DrawerItems = props => {
           //     props.navigation.navigate('Exercises');
           //   }}
         >
-          <Text style={[styles.Text, {color: '#000'}]}>Exercises</Text>
+          <Text style={[styles.Text, {color:defaultTheme?"#fff":"#000"}]}>Exercises</Text>
           <Image source={localImage.nextButton} style={styles.nextIcon} />
         </TouchableOpacity>
         <TouchableOpacity
@@ -69,7 +70,7 @@ const DrawerItems = props => {
           //     props.navigation.navigate('Diets');
           //   }}
         >
-          <Text style={[styles.Text, {color: '#000'}]}>Diets</Text>
+          <Text style={[styles.Text, {color:defaultTheme?"#fff":"#000"}]}>Diets</Text>
           <Image source={localImage.nextButton} style={styles.nextIcon} />
         </TouchableOpacity>
         <TouchableOpacity
@@ -78,7 +79,7 @@ const DrawerItems = props => {
           //     props.navigation.navigate('Store');
           //   }}
         >
-          <Text style={[styles.Text, {color: '#000'}]}>Store</Text>
+          <Text style={[styles.Text, {color:defaultTheme?"#fff":"#000"}]}>Store</Text>
           <Image source={localImage.nextButton} style={styles.nextIcon} />
         </TouchableOpacity>
         <TouchableOpacity
@@ -87,7 +88,7 @@ const DrawerItems = props => {
           //     props.navigation.navigate('Blog');
           //   }}
         >
-          <Text style={[styles.Text, {color: '#000'}]}>Blog</Text>
+          <Text style={[styles.Text, {color:defaultTheme?"#fff":"#000"}]}>Blog</Text>
           <Image source={localImage.nextButton} style={styles.nextIcon} />
         </TouchableOpacity>
         <TouchableOpacity
@@ -96,20 +97,20 @@ const DrawerItems = props => {
           //     props.navigation.navigate('Profile');
           //   }}
         >
-          <Text style={[styles.Text, {color: '#000'}]}>Profile</Text>
+          <Text style={[styles.Text, {color:defaultTheme?"#fff":"#000"}]}>Profile</Text>
           <Image source={localImage.nextButton} style={styles.nextIcon} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttons}>
-          <Text style={[styles.Text, {color: '#000'}]}>Favorites</Text>
+          <Text style={[styles.Text, {color:defaultTheme?"#fff":"#000"}]}>Favorites</Text>
           <Image source={localImage.nextButton} style={styles.nextIcon} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.buttons}
-          //   onPress={() => {
-          //     props.navigation.navigate('Settings');
-          //   }}
+            onPress={() => {
+              props.navigation.navigate('Settings');
+            }}
         >
-          <Text style={[styles.Text, {color: '#000'}]}>Settings </Text>
+          <Text style={[styles.Text, {color:defaultTheme?"#fff":"#000"}]}>Settings </Text>
           <Image source={localImage.nextButton} style={styles.nextIcon} />
         </TouchableOpacity>
       </DrawerContentScrollView>

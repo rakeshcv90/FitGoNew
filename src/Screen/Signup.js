@@ -97,10 +97,10 @@ const Signup = ({navigation}) => {
           password: Password,
         },
       });
-      if (data.data.data[0].msg === 'Signin Successfully') {
+      if (data.data[0].msg === 'Sign Up successful') {
         showMessage({
           message: 'Signup  Alert',
-          description: data.data.data[0].msg,
+          description: data.data[0].msg,
           type: 'success',
           icon: {icon: 'auto', position: 'left'},
         });
@@ -113,10 +113,10 @@ const Signup = ({navigation}) => {
 
         navigation.navigate('Login');
       } else {
-        ToastAndroid.show(data.data.data[0].msg, 2);
+        ToastAndroid.show(data.data[0].msg, 2);
         showMessage({
           message: 'Signup  Alert',
-          description: data.data.data[0].msg,
+          description: data.data[0].msg,
           type: 'danger',
           icon: {icon: 'auto', position: 'left'},
         });

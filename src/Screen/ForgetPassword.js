@@ -47,10 +47,10 @@ const ForgetPassword = ({navigation}) => {
         });
         
         setInputText('Enter');
-        if (data.data.data[0].msg == 'Email has been Sent successfully') {
+        if (data.data[0].msg == 'Email has been Sent successfully') {
           showMessage({
             message: 'Forget Password Alert',
-            description: data.data.data[0].msg,
+            description: data.data[0].msg,
             type: 'success',
             icon: {icon: 'auto', position: 'left'},
           });

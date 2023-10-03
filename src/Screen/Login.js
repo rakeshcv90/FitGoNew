@@ -76,15 +76,15 @@ const Login = ({navigation}) => {
             password: Password,
           },
         });
-        if (data.data.data[0].msg === 'login Successfully') {
-          await AsyncStorage.setItem('Data', JSON.stringify(data.data.data));
+        if (data.data[0].msg === 'login successfully') {
+          await AsyncStorage.setItem('Data', JSON.stringify(data.data));
           // navigation.navigate('HomeDrawer');
           setsubmitText('ENTER');
           setEmail('');
           setPassword('');
           showMessage({
             message: 'Login Alert',
-            description: data.data.data[0].msg,
+            description: data.data[0].msg,
             type: 'success',
             icon: {icon: 'auto', position: 'left'},
           });
@@ -92,7 +92,7 @@ const Login = ({navigation}) => {
         } else {
           showMessage({
             message: 'Login Alert',
-            description: data.data.data[0].msg,
+            description: data.data[0].msg,
             type: 'danger',
             icon: {icon: 'auto', position: 'left'},
           });

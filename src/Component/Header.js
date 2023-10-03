@@ -37,7 +37,7 @@ const Header = ({header, iconName}) => {
         <TouchableOpacity
           style={styles.rightIcon}
           onPress={() => {
-            navigation.navigate('searchScreen');
+            navigation.navigate('Search');
           }}>
           <Icons name={iconName} size={25} color={'white'} />
         </TouchableOpacity>

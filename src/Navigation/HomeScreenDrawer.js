@@ -4,9 +4,11 @@ import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import {localImage} from '../Component/Image';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
-
+import { useSelector, } from 'react-redux';
 const HomeScreenDrawer = () => {
   const navigation = useNavigation();
+  const {defaultTheme}=useSelector(state=>state)
+  console.log(defaultTheme)
   const [data, setData] = useState([
     {
       id: 1,
@@ -18,7 +20,7 @@ const HomeScreenDrawer = () => {
         <Icons
           name="chevron-right"
           size={25}
-          color={'#000000'}
+          color={defaultTheme?"#fff":"#000"}
         />
       ),
     },
@@ -30,7 +32,7 @@ const HomeScreenDrawer = () => {
         <Icons
           name="chevron-right"
           size={25}
-          color={'#000000'}
+          color={defaultTheme?"#fff":"#000"}
         />
       ),
     },
@@ -42,7 +44,7 @@ const HomeScreenDrawer = () => {
         <Icons
           name="chevron-right"
           size={25}
-          color={'#000000'}
+          color={defaultTheme?"#fff":"#000"}
         />
       ),
     },
@@ -54,7 +56,7 @@ const HomeScreenDrawer = () => {
         <Icons
           name="chevron-right"
           size={25}
-          color={'#000000'}
+          color={defaultTheme?"#fff":"#000"}
         />
       ),
     },
@@ -70,14 +72,27 @@ const HomeScreenDrawer = () => {
         <Icons
           name="chevron-right"
           size={25}
-          color={'#000000'}
+          color={defaultTheme?"#fff":"#000"}
         />
       ),
     },
   ]);
+  const screenChange = item => {
+    if (item.item.id == 1) {
+      navigation.navigate('Workouts');
+    } else if (item.item.id == 2) {
+      navigation.navigate('Exercises');
+    } else if (item.item.id == 3) {
+      navigation.navigate('Diets');
+    } else if (item.item.id == 4) {
+      navigation.navigate('Store');
+    } else if (item.item.id == 5) {
+      navigation.navigate('Blog');
+    }
+  };
   return (
     <>
-      <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+      <SafeAreaView style={{flex: 1, backgroundColor: defaultTheme==true?'red':"red"}}>
         <ImageBackground source={localImage.homeImg} style={styles.homeImg}>
           <View
             style={{
@@ -94,7 +109,7 @@ const HomeScreenDrawer = () => {
           style={{
             justifyContent: 'center',
             height: DeviceHeigth,
-            backgroundColor: '#fff',
+            backgroundColor: defaultTheme?'#000000':'#ffffff',
           }}>
           <FlatList
             data={data}
@@ -119,7 +134,7 @@ const HomeScreenDrawer = () => {
                     justifyContent: 'space-between',
                     width: (DeviceWidth * 70) / 100,
                   }}>
-                  <Text style={{color: '#000', fontSize: 15}}>
+                  <Text style={{color:defaultTheme?"#fff":"#000", fontSize: 15}}>
                     {elements.item.title}
                   </Text>
                   {elements.item.icon1}
