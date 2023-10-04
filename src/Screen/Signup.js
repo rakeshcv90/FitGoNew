@@ -19,7 +19,8 @@ const Signup = ({navigation}) => {
   const [ConfirmPassword, setConformPassword] = useState('');
   const {defaultTheme}=useSelector((state)=>state)
   const [submitText, setSubmitText] = useState('Enter');
-
+  const [isVisible,seIsvisible]= useState(false)
+  const ToggleVisibility=()=>{seIsvisible(!isVisible)}
   let inputData = [];
   const ErrorHandler = () => {
     let reg = /\S+@\S+\.\S+/;
@@ -157,6 +158,9 @@ const Signup = ({navigation}) => {
           style={styles.AuthInput}
           activeUnderlineColor="#ec9706"
           value={Password}
+          secureTextEntry={!isVisible}
+          right={ <TextInput.Icon icon={isVisible?'eye':'eye-off'}
+          onPress={ToggleVisibility}/>}
         />
         <TextInput
           label={'Confirm Password'}

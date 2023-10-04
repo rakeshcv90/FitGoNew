@@ -30,11 +30,11 @@ import Blog from '../Screen/Blog/Blog';
 import BlogDetail from '../Screen/Blog/BlogDetail';
 import BlogTags from '../Screen/Blog/BlogTags';
 import ProfileScreen from '../Screen/ProfileScreen';
+import SingleDay from '../Screen/SingleDay';
 const Stack = createNativeStackNavigator();
 const screenOptions = {
     headerShown: false, // Hide the header for all screens
   };
-
 const Router = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
@@ -61,6 +61,7 @@ const Router = () => {
     <Stack.Screen name="BlogDetail" component={BlogDetail}/>
     <Stack.Screen name="BlogTags" component={BlogTags}/>
     <Stack.Screen name="ProfileScreen" component={ProfileScreen}/>
+    <Stack.Screen name="Singleday" component={SingleDay}/>
     </Stack.Navigator>
   );
 }
@@ -77,5 +78,4 @@ const LoginStack = () => {
       </Stack.Navigator>
     );
   };
-
 export default Router

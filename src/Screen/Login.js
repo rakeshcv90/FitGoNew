@@ -21,7 +21,9 @@ const Login = ({navigation}) => {
   const [Password, setPassword] = useState('');
   const [isLoggedIn, setisLoggedIN] = useState(false);
   const [submitText, setsubmitText] = useState('ENTER');
+  const [isVisible,seIsvisible]= useState(false)
   const {defaultTheme}=useSelector((state)=>state)
+  const ToggleVisibility=()=>{seIsvisible(!isVisible)}
   const handleBackButtonClick = () => {
     BackHandler.exitApp();
     return true;
@@ -121,10 +123,12 @@ const Login = ({navigation}) => {
         label={'Password'}
         onChangeText={text => setPassword(text)}
         mode="flat"
-        secureTextEntry={true}
+        secureTextEntry={!isVisible}
         style={styles.AuthInput}
         activeUnderlineColor="#f39c1f"
         value={Password}
+        right={ <TextInput.Icon icon={isVisible?'eye':'eye-off'}
+        onPress={ToggleVisibility}/>}
       />
       <View style={{width: (DeviceWidth * 80) / 100, alignItems: 'flex-end',backgroundColor:defaultTheme?"#000":"#fff"}}>
         <TouchableOpacity

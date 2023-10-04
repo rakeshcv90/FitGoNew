@@ -8,7 +8,6 @@ import { useSelector, } from 'react-redux';
 const HomeScreenDrawer = () => {
   const navigation = useNavigation();
   const {defaultTheme}=useSelector(state=>state)
-  console.log(defaultTheme)
   const [data, setData] = useState([
     {
       id: 1,

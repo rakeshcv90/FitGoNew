@@ -18,5 +18,6 @@ import { Dimensions } from "react-native";
   Products:'data_products.php',
   Categories:'data_types.php',
   FeaturedPost:'data_posts.php',
-  Tags:'data_tags.php'
+  Tags:'data_tags.php',
+  Days:'data_days.php'
 }

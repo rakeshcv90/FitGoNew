@@ -22,46 +22,48 @@ const WorkoutDescription = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const route = useRoute();
   const {defaultTheme}=useSelector(state=>state)
+  useEffect(() => {
+    getData();
+  }, []);
+  const getData = () => {
+    try {
+      const Data = route.params; 
+      setHomeCardioData(Data.elements.item);
+      // console.log("datatatatat",HomeCardioData[0].id);
+    } catch (error) {}
+  };
+
   const [Days, setDays] = useState([
     {
         id: 1,
-        days: 'Day 1',
+        days: "Day 1",
       },
       {
         id: 2,
-        days: 'Day 2',
+        days: "Day 2",
       },
       {
         id: 3,
-        days: 'Day 3',
+        days: "Day 3",
       },
       {
         id: 4,
-        days: 'Day 4',
+        days: "Day 4",
       },
       {
         id: 5,
-        days: 'Day 5',
+        days: "Day 5",
       },
       {
         id: 6,
-        days: 'Day 6',
+        days: "Day 6",
       },
       {
         id: 7,
-        days: 'Day 7',
+        days: "Day 7",
       },
     ]);
-    const getData = () => {
-        try {
-          const Data = route.params;
-          setHomeCardioData(Data.elements.item);
-        //   console.log(Data.elements.item);
-        } catch (error) {}
-      };
-      useEffect(() => {
-        getData();
-      }, []);
+    
   return (
     
     <SafeAreaView style={{flex:1,backgroundColor:defaultTheme==true?"#000":"#fff"}}>
@@ -116,7 +118,9 @@ const WorkoutDescription = () => {
       <FlatList
         data={Days}
         renderItem={elements => (
-          <TouchableOpacity style={styles.Days}>
+          <TouchableOpacity style={styles.Days} onPress={()=>{
+            navigation.navigate("Singleday",{Day:elements.item.id,Id:HomeCardioData.id,DayName:elements.item.days})
+          }}>
             <Text style={{fontSize: 17,color:defaultTheme==true?"#fff":"#000"}}>{elements.item.days}</Text>
             <Icons name="chevron-right" size={20} color={'#f39c1f'}/>
           </TouchableOpacity>
