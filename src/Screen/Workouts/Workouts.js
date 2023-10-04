@@ -87,7 +87,7 @@ const Workouts = () => {
                         renderItem={elements => (
                             <TouchableOpacity
                                 onPress={() => {
-                                    //   ScreenChange(elements);
+                                      navigation.navigate("WorkoutDescription",{elements});
                                 }}>
                                 <ImageBackground
                                     source={{ uri: elements.item.image }}

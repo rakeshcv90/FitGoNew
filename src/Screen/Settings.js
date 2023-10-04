@@ -25,7 +25,7 @@ const changeTHEME=()=>{
     </View>
     <View style={styels.container1}>
         <Text style={{color:defaultTheme==true?"#fff":"#000"}}>Dark Mode</Text>
-        <Switch   trackColor={{false: '#767577', true: "#f39c1f"}}
+        <Switch   trackColor={{false: '#fff', true: "orange"}}
         thumbColor={isEnabled ? "#f39c1f" : '#fff'}
         onValueChange={()=>{toggleSwitch();
         changeTHEME();}}

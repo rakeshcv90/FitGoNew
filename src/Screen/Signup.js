@@ -10,14 +10,14 @@ import {Api, Appapi, DeviceHeigth, DeviceWidth} from '../Component/Config';
 import {TextInput} from 'react-native-paper';
 import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
-
+import { useSelector } from 'react-redux'
 const Signup = ({navigation}) => {
   const [checked, setChecked] = useState(false);
   const [Name, setName] = useState('');
   const [Email, setEmail] = useState('');
   const [Password, setPassword] = useState('');
   const [ConfirmPassword, setConformPassword] = useState('');
-
+  const {defaultTheme}=useSelector((state)=>state)
   const [submitText, setSubmitText] = useState('Enter');
 
   let inputData = [];
@@ -128,12 +128,12 @@ const Signup = ({navigation}) => {
     }
   };
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <Text style={styles.SignUpText}>SignUp</Text>
-      <View style={styles.container}>
+    <SafeAreaView style={{flex: 1, backgroundColor: defaultTheme?"#000":"#fff"}}>
+      <Text style={[styles.SignUpText,{color:defaultTheme?"#fff":"#000"}]}>SignUp</Text>
+      <View style={[styles.container,{backgroundColor: defaultTheme?"#000":"#fff"}]}>
         <TextInput
           label={'Name'}
-          onChangeText={text => setName(text.trim())}
+          onChangeText={text => setName(text)}
           mode="flat"
           autoCapitalize="none"
           style={styles.AuthInput}
@@ -186,7 +186,7 @@ const Signup = ({navigation}) => {
           <TouchableOpacity onPress={()=>{
             navigation.navigate('TermaAndCondition')
           }}>
-            <Text style={{color: 'black'}}>I Agree to Term & Conditions</Text>
+            <Text style={{color:defaultTheme?"#fff":"#000"}}>I Agree to Term & Conditions</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity
@@ -201,9 +201,9 @@ const Signup = ({navigation}) => {
           onPress={() => {
             navigation.navigate('Login');
           }}>
-          <Text style={{color: 'black'}}>
+          <Text style={{color:defaultTheme?"#fff":"#000"}}>
             Already have an account ?{' '}
-            <Text style={{color: 'black', fontWeight: 'bold'}}>Login</Text>
+            <Text style={{color:defaultTheme?"#fff":"#000", fontWeight: 'bold'}}>Login</Text>
           </Text>
         </TouchableOpacity>
       </View>

@@ -7,4 +7,5 @@ export const localImage = {
   homeImg:require('../Icon/Images/icons/bg.jpg'),
   blogIcon:require('../Icon/Images/blogIcon.png'),
   logo1:require('../Icon/Images/icons/logo-white.png'),
+  maleIcon:require("../Icon/Images/male.jpg")
 };

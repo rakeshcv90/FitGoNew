@@ -7,16 +7,16 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {TextInput} from 'react-native-paper';
-
+import { useSelector } from 'react-redux'
 import {Api, Appapi, DeviceHeigth, DeviceWidth} from '../Component/Config';
 import Header from '../Component/Header';
 import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
-
 let reg = /\S+@\S+\.\S+/;
 const ForgetPassword = ({navigation}) => {
   const [Email, setEmail] = useState('');
   const [inputText, setInputText] = useState('Enter');
+  const {defaultTheme}=useSelector((state)=>state)
   const ErrorHandle = async () => {
     if (!Email) {
       showMessage({
@@ -45,9 +45,9 @@ const ForgetPassword = ({navigation}) => {
             email: Email,
           },
         });
-        
+        console.log(data.data[0].msg)
         setInputText('Enter');
-        if (data.data[0].msg == 'Email has been Sent successfully') {
+        if (data.data[0].msg == 'Mail Send') {
           showMessage({
             message: 'Forget Password Alert',
             description: data.data[0].msg,
@@ -73,10 +73,10 @@ const ForgetPassword = ({navigation}) => {
     }
   };
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container,{backgroundColor: defaultTheme?"#000":"#fff"}]}>
       <Header header={'ForgetPassword'} />
-      <View style={styles.container1}>
-        <Text style={styles.text}>
+      <View style={[styles.container1,{backgroundColor: defaultTheme?"#000":"#fff"}]}>
+        <Text style={[styles.text,{color:defaultTheme?"#fff":"#000"}]}>
           We'll send you an email with a reset link
         </Text>
         <TextInput

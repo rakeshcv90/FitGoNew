@@ -15,12 +15,13 @@ import {TextInput} from 'react-native-paper';
 import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useSelector } from 'react-redux'
 const Login = ({navigation}) => {
   const [Email, setEmail] = useState('');
   const [Password, setPassword] = useState('');
   const [isLoggedIn, setisLoggedIN] = useState(false);
   const [submitText, setsubmitText] = useState('ENTER');
+  const {defaultTheme}=useSelector((state)=>state)
   const handleBackButtonClick = () => {
     BackHandler.exitApp();
     return true;
@@ -105,7 +106,7 @@ const Login = ({navigation}) => {
     }
   };
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
       <Image style={styles.logo} source={localImage.logo} />
       <TextInput
         label={'Email'}
@@ -125,13 +126,13 @@ const Login = ({navigation}) => {
         activeUnderlineColor="#f39c1f"
         value={Password}
       />
-      <View style={{width: (DeviceWidth * 80) / 100, alignItems: 'flex-end'}}>
+      <View style={{width: (DeviceWidth * 80) / 100, alignItems: 'flex-end',backgroundColor:defaultTheme?"#000":"#fff"}}>
         <TouchableOpacity
-          style={styles.Forget}
+          style={[styles.Forget,{backgroundColor:defaultTheme?"#000":"#fff"}]}
           onPress={() => {
             navigation.navigate('ForgetPassword');
           }}>
-          <Text style={{color: 'black'}}>Forget Password ?</Text>
+          <Text style={{color:defaultTheme?"#fff":"#000"}}>Forget Password ?</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity
@@ -146,9 +147,9 @@ const Login = ({navigation}) => {
         onPress={() => {
           navigation.navigate('Signup');
         }}>
-        <Text style={{color: 'black', marginBottom: (DeviceHeigth * 5) / 100}}>
+        <Text style={{color:defaultTheme?"#fff":"#000", marginBottom: (DeviceHeigth * 5) / 100}}>
           Don't have an account ?{' '}
-          <Text style={{color: 'black', fontWeight: 'bold'}}>SignUp</Text>
+          <Text style={{color:defaultTheme?"#fff":"#000", fontWeight: 'bold'}}>SignUp</Text>
         </Text>
       </TouchableOpacity>
     </SafeAreaView>

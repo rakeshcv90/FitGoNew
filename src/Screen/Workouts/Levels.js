@@ -15,23 +15,23 @@ import {
   import Loader from '../../Component/Loader';
   import {useSelector} from 'react-redux'
   import { Api,Appapi } from '../../Component/Config';
-const Goals = ({navigation}) => {
+const Levels = () => {
     const [ApiData, setApiData] = useState();
     const [isLoaded, setIsLoaded] = useState(false);
     const {defaultTheme}=useSelector(state=>state)
+    const navigation=useNavigation()
     useEffect(() => {
         getData();
       }, []);
       const getData = async () => {
         try {
-          const data = await axios(`${Api}/${Appapi.goals}`, {
+          const data = await axios(`${Api}/${Appapi.levels}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'Multipart/form-data',
             },
           });
           setApiData(data.data);
-          console.log(data.data[0])
           setIsLoaded(true);
         } catch (error) {}
       };
@@ -39,7 +39,7 @@ const Goals = ({navigation}) => {
   return (
     <SafeAreaView style={{flex:1,backgroundColor:defaultTheme==true?"#000":"#fff"}}>
     <Header
-      header={'Goals'}
+      header={'Levels'}
       iconName={'magnify'}
     />
     <View
@@ -52,12 +52,11 @@ const Goals = ({navigation}) => {
         renderItem={elements => (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('SingleGoal',{title:elements.item.title});
+              navigation.navigate("SingleLevel",{level:elements.item.title});
             }}>
             <ImageBackground
               source={{uri: elements.item.image}}
-              style={styles.FlatListImg}
-              >
+              style={styles.FlatListImg}>
               <View
                 style={{
                   backgroundColor: 'rgba(0,0,0,0.4)',
@@ -79,10 +78,12 @@ const Goals = ({navigation}) => {
       />
     </View>
   </SafeAreaView>
-  )}
+  )  }
   else{
     return(
-        <View><Loader/></View>
+        <View>
+            <Loader/>
+        </View>
     )
   }
 }
@@ -118,4 +119,4 @@ const styles = StyleSheet.create({
       backgroundColor: '#f39c1f',
     },
   });
-export default Goals
+export default Levels
