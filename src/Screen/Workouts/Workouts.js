@@ -33,7 +33,7 @@ const Workouts = () => {
                     'Content-Type': 'Multipart/form-data',
                 },
             });
-            console.log(data.data)
+            // console.log(data.data)
             setWorkoutData(data.data);
             setIsLoaded(true)
         } catch (error) {

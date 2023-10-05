@@ -122,7 +122,6 @@ const Search = () => {
             <View style={styles.noData}>
               <Text style={{fontSize:20}}>Ooops! No Results</Text>
               <Text>Try different keyword</Text>
-              <Text style={{color:'#f39c1f'}}>TRY AGAIN</Text>
             </View>
             </>)}
           

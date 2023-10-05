@@ -27,7 +27,7 @@ const BlogDetail = () => {
     //   console.log(Data.data);
     const regex = /(<([^>]+)>)/ig;
     // const result = data.description.replace(regex, '');
-    const Description = Data.data.description.replace(regex, '\n');
+    const Description = Data.data.description.replace(regex, '');
     const DesData = [{ Description }]
     //   console.log(Description)
     const { defaultTheme } = useSelector(state => state);

@@ -6,6 +6,6 @@ export const localImage = {
   nextButton:require('../Icon/Images/next.png'),
   homeImg:require('../Icon/Images/icons/bg.jpg'),
   blogIcon:require('../Icon/Images/blogIcon.png'),
-  logo1:require('../Icon/Images/icons/logo-white.png'),
+  logo1:require('../Icon/Images/icons/logo.png'),
   maleIcon:require("../Icon/Images/male.jpg")
 };

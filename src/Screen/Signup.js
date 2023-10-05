@@ -184,7 +184,7 @@ const Signup = ({navigation}) => {
             onPress={() => setChecked(!checked)}>
             <Text>
               {' '}
-              {checked && <Text style={{color:'red'}}>&#10004;</Text>}
+              {checked && <Text style={{color:'#fff'}}>&#10004;</Text>}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={()=>{

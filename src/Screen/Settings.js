@@ -20,13 +20,13 @@ const changeTHEME=()=>{
   return (
    <SafeAreaView style={[styels.container,{backgroundColor:defaultTheme==true?"#000":"#fff"}]}>
     <HeaderWithoutSearch Header={"Settings"}/>
-    <View style={{borderBottomWidth:1,margin:15,borderBottomColor:'#adadad',padding:5,backgroundColor:defaultTheme==true?"#000":"#fff"}}>
-    <Text style={{fontSize:18,color:defaultTheme==true?"#fff":"#000"}}>Theme</Text>
+    <View style={{borderBottomWidth:1,marginVertical:15,borderBottomColor:'#adadad',padding:5,backgroundColor:defaultTheme==true?"#000":"#fff"}}>
+    <Text style={{fontSize:18,color:defaultTheme==true?"#fff":"#000",marginHorizontal:20}}>Theme</Text>
     </View>
     <View style={styels.container1}>
-        <Text style={{color:defaultTheme==true?"#fff":"#000"}}>Dark Mode</Text>
-        <Switch   trackColor={{false: '#fff', true: "orange"}}
-        thumbColor={isEnabled ? "#f39c1f" : '#fff'}
+        <Text style={{color:defaultTheme==true?"#fff":"#000",marginHorizontal:20}}>Dark Mode</Text>
+        <Switch   trackColor={{false: '#rgba(0,0,0,0.1)', true: "orange"}}
+        thumbColor={isEnabled ? "#f39c1f" : '#rgba(0,0,0,0.1)'}
         onValueChange={()=>{toggleSwitch();
         changeTHEME();}}
         value={isEnabled}

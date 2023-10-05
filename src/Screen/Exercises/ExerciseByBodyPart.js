@@ -48,7 +48,7 @@ const ExerciseByBodyPart = () => {
     const Back = ApiData.filter(item => item.bodypart.includes('Back'));
     const Forearms = ApiData.filter(item => item.bodypart.includes('Forearms'));
     const Chest = ApiData.filter(item => item.bodypart.includes('Chest'));
-    console.log('filterData', Abs);
+    // console.log('filterData', Abs);
     if (isLoaded && Data.title == 'Abs') {
         return (
             <SafeAreaView

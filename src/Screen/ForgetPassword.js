@@ -74,7 +74,7 @@ const ForgetPassword = ({navigation}) => {
   };
   return (
     <SafeAreaView style={[styles.container,{backgroundColor: defaultTheme?"#000":"#fff"}]}>
-      <Header header={'ForgetPassword'} />
+      <Header header={'Forget Password'} />
       <View style={[styles.container1,{backgroundColor: defaultTheme?"#000":"#fff"}]}>
         <Text style={[styles.text,{color:defaultTheme?"#fff":"#000"}]}>
           We'll send you an email with a reset link

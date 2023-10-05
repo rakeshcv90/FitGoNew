@@ -7,7 +7,6 @@ import Signup from '../Screen/Signup';
 import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
 import DrawerNavigation from './DrawerNavigation';
-import HomeScreenDrawer from './HomeScreenDrawer';
 import Workouts from '../Screen/Workouts/Workouts';
 import Search from '../Screen/Search';
 import Settings from '../Screen/Settings';
@@ -31,6 +30,10 @@ import BlogDetail from '../Screen/Blog/BlogDetail';
 import BlogTags from '../Screen/Blog/BlogTags';
 import ProfileScreen from '../Screen/ProfileScreen';
 import SingleDay from '../Screen/SingleDay';
+import ExerciseDetails from '../Screen/ExerciseDetails';
+import Player from '../Component/Player';
+import modalView from '../Component/ModalView';
+import ModalView from '../Component/ModalView';
 const Stack = createNativeStackNavigator();
 const screenOptions = {
     headerShown: false, // Hide the header for all screens
@@ -62,6 +65,9 @@ const Router = () => {
     <Stack.Screen name="BlogTags" component={BlogTags}/>
     <Stack.Screen name="ProfileScreen" component={ProfileScreen}/>
     <Stack.Screen name="Singleday" component={SingleDay}/>
+    <Stack.Screen name="ExerciseDetails" component={ExerciseDetails}/>
+    <Stack.Screen name="Player" component={Player}/>
+    <Stack.Screen name="ModalView" component={ModalView}/>
     </Stack.Navigator>
   );
 }

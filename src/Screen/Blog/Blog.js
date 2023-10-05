@@ -150,7 +150,7 @@ const Blog = () => {
                             renderItem={elements => (
                                 <TouchableOpacity style={styles.categories}
                                     onPress={() => {
-                                        navigation.navigate("BlogTags", { data: elements.item })
+                                        navigation.navigate("BlogTags",{data:elements.item})
                                     }}>
                                     <Icon
                                         name="tag"
@@ -205,63 +205,47 @@ const Blog = () => {
             </View>
             {isLoaded ? (
                 <>
-                    <View style={{ height: (DeviceHeigth * 45) / 100,}}>
-                        <FlatList
-                            data={LatestPost}
-                            renderItem={elements => (
-                                <TouchableOpacity style={{ height: (DeviceHeigth * 10) / 100 }} onPress={() => {
-                                    navigation.navigate("BlogDetail", { data: elements.item })
-                                }}>
+                    <View style={{ height: DeviceHeigth * 40 / 100 }}>
+                    <FlatList
+                        data={LatestPost}
+                        renderItem={elements => (
+                            <TouchableOpacity style={{ height: (DeviceHeigth * 10) / 100 }} onPress={() => {
+                                navigation.navigate("BlogDetail", { data: elements.item })
+                            }}>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        margin: 10,
+                                        justifyContent: 'space-between',
+                                        // borderWidth:1,
+                                        
+                                    }}>
+                                    <Image
+                                        source={{ uri: elements.item.image }}
+                                        style={{ height: 60, width: 60, borderRadius: 60 / 2 }}
+                                    />
                                     <View
                                         style={{
+                                            // marginLeft: 10,
                                             flexDirection: 'row',
+                                            width: (DeviceWidth * 65) / 100,
                                             alignItems: 'center',
-                                            marginLeft: 15,
-                                            // width: (DeviceWidth * 78) / 100,
-                                            // borderWidth: 2,
-                                            // borderColor: 'red'
+                                            // borderWidth:1,
                                         }}>
-                                        <Image
-                                            source={{ uri: elements.item.image }}
-                                            style={{ height: 60, width: 60, borderRadius: 60 / 2 }}
-                                        />
-                                        <View
-                                            style={{
-                                                justifyContent: 'space-between',
-                                                marginLeft: 10,
-                                                flexDirection: 'row',
-                                                width: (DeviceWidth * 74) / 100,
-                                                alignItems: 'center',
-                                                padding:5,
-                                                // borderWidth:2,
-                                                // borderColor:"yellow"
-                                            }}>
-                                            <View>
-                                                <Text
-                                                    style={[
-                                                        styles.flatListTitle,
-                                                        { color: defaultTheme == true ? '#fff' : '#000' },
-                                                    ]}>
-                                                    {elements.item.title}</Text>
-                                                <Text
-                                                    style={{
-                                                        color: '#f39c1f',
-                                                        fontWeight: '500',
-                                                        marginTop: 7,
-                                                    }}>
-                                                    {moment(elements.item.date).fromNow()}
-                                                </Text></View>
-                                            <Icon
-                                                name="chevron-right"
-                                                size={20}
-                                                color={defaultTheme == true ? '#fff' : '#000'}
-                                            />
+                                        <View>
+                                            <Text style={{ color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>{elements.item.title}</Text>
+                                            <Text style={{ color: '#f39c1f', fontWeight: '500' }}>
+                                                {elements.item.price}
+                                            </Text>
                                         </View>
                                     </View>
-                                </TouchableOpacity>
-                            )}
-                        />
-                    </View>
+                                    <Icon name="chevron-right" size={20} color={defaultTheme == true ? "#fff" : "#000"} />
+                                </View>
+                            </TouchableOpacity>
+                        )}
+                    />
+                </View>
                 </>
             ) : (
                 <>

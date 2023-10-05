@@ -91,7 +91,7 @@ const HomeScreenDrawer = () => {
   };
   return (
     <>
-      <SafeAreaView style={{flex: 1, backgroundColor: defaultTheme==true?'red':"red"}}>
+      <SafeAreaView style={{flex: 1, backgroundColor: defaultTheme==true?"#000":"#fff"}}>
         <ImageBackground source={localImage.homeImg} style={styles.homeImg}>
           <View
             style={{
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   },
   homeLogo: {
     width: (DeviceWidth * 45) / 100,
-    height: (DeviceHeigth * 15) / 100,
+    height: (DeviceHeigth * 20) / 100,
     resizeMode: 'contain',
   },
   buttons: {
