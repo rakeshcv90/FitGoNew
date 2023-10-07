@@ -99,6 +99,7 @@ const Signup = ({navigation}) => {
         },
       });
       if (data.data[0].msg === 'Sign Up successful') {
+
         showMessage({
           message: 'Signup  Alert',
           description: data.data[0].msg,
@@ -114,7 +115,7 @@ const Signup = ({navigation}) => {
 
         navigation.navigate('Login');
       } else {
-        ToastAndroid.show(data.data[0].msg, 2);
+        
         showMessage({
           message: 'Signup  Alert',
           description: data.data[0].msg,

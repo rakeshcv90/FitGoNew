@@ -19,5 +19,7 @@ import { Dimensions } from "react-native";
   Categories:'data_types.php',
   FeaturedPost:'data_posts.php',
   Tags:'data_tags.php',
-  Days:'data_days.php'
+  Days:'data_days.php',
+  Favorites:'favorite.php',
+  Strings:'data_strings.php'
 }

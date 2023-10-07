@@ -9,17 +9,12 @@ import {
     Image
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import Header from '../../Component/Header';
 import { DeviceWidth, DeviceHeigth } from '../../Component/Config';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import axios from 'axios';
-import { Api, Appapi } from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
-import LevelRate from '../../Component/LevelRate';
-import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux';
-import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
 import LinearGradient from 'react-native-linear-gradient';
+import HTMLRender from "react-native-render-html";
 const DietDetail = () => {
     const navigation = useNavigation();
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -27,13 +22,11 @@ const DietDetail = () => {
   const route = useRoute();
   const Data = route.params;
   console.log(Data.data);
-  const regex = /(<([^>]+)>)/gi;
-  const Summary = Data.data.description.replace(regex, '\n');
-  const Ingredients = Data.data.ingredients.replace(regex, '\n');
-  const Instructions = Data.data.instructions.replace(regex, '\n');
+  const Summary = Data.data.description
+  const Ingredients = Data.data.ingredients
+  const Instructions = Data.data.instructions
   const FlatListData = [{Summary, Ingredients, Instructions}];
   const {defaultTheme} = useSelector(state => state);
-
   return (
     <SafeAreaView
       style={[
@@ -105,15 +98,15 @@ const DietDetail = () => {
             <>
           <View style={styles.FlatListItem}>
             <Text style={[styles.Title,{color: defaultTheme?"#fff":"000"}]}>Summary</Text>
-            <Text style={{color: defaultTheme?"#fff":"000"}}>{elements.item.Summary}</Text>
+            <HTMLRender source={{ html: elements.item.Summary}} contentWidth={DeviceWidth}/>
           </View>
            <View style={styles.FlatListItem}>
            <Text style={[styles.Title,{color: defaultTheme?"#fff":"000"}]}>Ingredients</Text>
-           <Text style={{color: defaultTheme?"#fff":"000"}}>{elements.item.Ingredients}</Text>
+           <HTMLRender source={{ html: elements.item.Ingredients}} contentWidth={DeviceWidth}/>
          </View>
          <View style={styles.FlatListItem}>
            <Text style={[styles.Title,{color: defaultTheme?"#fff":"000"}]}>Instructions</Text>
-           <Text style={{color: defaultTheme?"#fff":"000"}}>{elements.item.Instructions}</Text>
+           <HTMLRender source={{ html: elements.item.Instructions }} contentWidth={DeviceWidth}/>
          </View>
          </>
         )}

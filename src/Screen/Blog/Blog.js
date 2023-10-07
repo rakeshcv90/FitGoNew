@@ -194,7 +194,7 @@ const Blog = () => {
                     Latest Posts
                 </Text>
                 <TouchableOpacity onPress={() => {
-                    navigation.navigate("LatestPosts")
+                    navigation.navigate("LatestPost")
                 }}>
                     <Icon
                         name="chevron-right"

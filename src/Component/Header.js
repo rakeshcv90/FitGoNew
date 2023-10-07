@@ -4,6 +4,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   StyleSheet,
+  StatusBar
 } from 'react-native';
 import React from 'react';
 import {localImage} from './Image';
@@ -17,6 +18,7 @@ const Header = ({header, iconName}) => {
     <>
       <ImageBackground
         source={localImage.color_image}
+        translucent={true}
         style={{
           width: DeviceWidth,
           height: (DeviceHeigth * 7) / 100,

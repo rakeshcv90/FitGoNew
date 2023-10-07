@@ -26,29 +26,31 @@ const ExerciseByBodyPart = () => {
     const { defaultTheme } = useSelector((state) => state);
     useEffect(() => {
         getData();
-    }, []);
-    const getData = async () => {
+      }, []);
+      const getData = async () => {
         try {
-            const data = await axios(`${Api}/${Appapi.workhouts}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'Multipart/form-data',
-                },
-            });
-            setApiData(data.data);
-            setIsLoaded(true);
-            console.log('example', data.data[0].bodypart);
-        } catch (error) { }
-    };
-    const Abs = ApiData.filter(item => item.bodypart.includes('Abs'));
-    const Shoulders = ApiData.filter(item => item.bodypart.includes('Shoulders'));
-    const Triceps = ApiData.filter(item => item.bodypart.includes('Triceps'));
-    const Qauds = ApiData.filter(item => item.bodypart.includes('Quads'));
-    const Biceps = ApiData.filter(item => item.bodypart.includes('Biceps'));
-    const Back = ApiData.filter(item => item.bodypart.includes('Back'));
-    const Forearms = ApiData.filter(item => item.bodypart.includes('Forearms'));
-    const Chest = ApiData.filter(item => item.bodypart.includes('Chest'));
-    // console.log('filterData', Abs);
+          const data = await axios(`${Api}/${Appapi.Exercise}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'Multipart/form-data',
+            },
+          });
+          setApiData(data.data);
+          setIsLoaded(true);
+          // console.log('example', data.data[0].bodyparts);
+        } catch (error) {}
+      };
+      const Abs = ApiData.filter(item => item.bodyparts.includes('Abs'));
+      const Shoulders = ApiData.filter(item =>
+        item.bodyparts.includes('Shoulders'),
+      );
+      const Triceps = ApiData.filter(item => item.bodyparts.includes('Triceps'));
+      const Qauds = ApiData.filter(item => item.bodyparts.includes('Quads'));
+      const Biceps = ApiData.filter(item => item.bodyparts.includes('Biceps'));
+      const Back = ApiData.filter(item => item.bodyparts.includes('Back'));
+      const Forearms = ApiData.filter(item => item.bodyparts.includes('Forearms'));
+      const Chest = ApiData.filter(item => item.bodyparts.includes('Chest'));
+      // console.log('filterData', Abs);
     if (isLoaded && Data.title == 'Abs') {
         return (
             <SafeAreaView
@@ -61,7 +63,9 @@ const ExerciseByBodyPart = () => {
                     <FlatList
                         data={Abs}
                         renderItem={elements => (
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
+                                navigation.navigate("ExerciseDetails", { elements })
+                            }}>
                                 <View
                                     style={{
                                         flexDirection: 'row',
@@ -108,7 +112,10 @@ const ExerciseByBodyPart = () => {
                     <FlatList
                         data={Shoulders}
                         renderItem={elements => (
-                            <TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate("ExerciseDetails", { elements })
+                                }}>
                                 <View
                                     style={{
                                         flexDirection: 'row',
@@ -150,12 +157,15 @@ const ExerciseByBodyPart = () => {
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
-                <WithoutSearchHeader Header={"Forearms"} Screenname={"Exercises"}></WithoutSearchHeader>
+                <HeaderWithoutSearch Header={Data.title}></HeaderWithoutSearch>
                 <View style={{ height: (DeviceHeigth * 90) / 100 }}>
                     <FlatList
                         data={Triceps}
                         renderItem={elements => (
-                            <TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate("ExerciseDetails", { elements })
+                                }}>
                                 <View
                                     style={{
                                         flexDirection: 'row',
@@ -197,12 +207,15 @@ const ExerciseByBodyPart = () => {
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
-                <WithoutSearchHeader Header={"Forearms"} Screenname={"Exercises"}></WithoutSearchHeader>
+              <HeaderWithoutSearch Header={Data.title}></HeaderWithoutSearch>
                 <View style={{ height: (DeviceHeigth * 90) / 100 }}>
                     <FlatList
                         data={Qauds}
                         renderItem={elements => (
-                            <TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate("ExerciseDetails", { elements })
+                                }}>
                                 <View
                                     style={{
                                         flexDirection: 'row',
@@ -249,7 +262,10 @@ const ExerciseByBodyPart = () => {
                     <FlatList
                         data={Biceps}
                         renderItem={elements => (
-                            <TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate("ExerciseDetails", { elements })
+                                }}>
                                 <View
                                     style={{
                                         flexDirection: 'row',
@@ -299,6 +315,9 @@ const ExerciseByBodyPart = () => {
                         data={Back}
                         renderItem={elements => (
                             <TouchableOpacity>
+                                onPress={() => {
+                                    navigation.navigate("ExerciseDetails", { elements })
+                                }}
                                 <View
                                     style={{
                                         flexDirection: 'row',
@@ -345,7 +364,10 @@ const ExerciseByBodyPart = () => {
                     <FlatList
                         data={Forearms}
                         renderItem={elements => (
-                            <TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate("ExerciseDetails", { elements })
+                                }}>
                                 <View
                                     style={{
                                         flexDirection: 'row',
@@ -392,7 +414,10 @@ const ExerciseByBodyPart = () => {
                     <FlatList
                         data={Chest}
                         renderItem={elements => (
-                            <TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate("ExerciseDetails", { elements })
+                                }}>
                                 <View
                                     style={{
                                         flexDirection: 'row',

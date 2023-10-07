@@ -11,7 +11,6 @@ const SplaceScreen = ({ navigation }) => {
 
   useEffect(() => {
     setTimeout(() => {
-      setTime(1);
       UserAuth();
 
     }, 2000)
@@ -41,26 +40,21 @@ const SplaceScreen = ({ navigation }) => {
   return (
     <View style={styels.container}>
       <Image
-        source={time == 0 ? localImage.splash2 : localImage.splash}
-        style={time == 0 ? styels.iconStyle : styels.logo}></Image>
+        source={ localImage.splash}
+        style={styels.logo}></Image>
     </View>
   );
 };
 const styels = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f39c1f',
+    backgroundColor: '#fff',
     justifyContent: 'center',
   },
   logo: {
     width: DeviceWidth,
     height: DeviceHeigth,
-  },
-  iconStyle: {
-    width: (DeviceWidth * 30) / 100,
-    height: (DeviceHeigth * 30) / 100,
-    justifyContent: 'center',
-    alignSelf: 'center',
-  },
+    resizeMode:'stretch'
+  }
 });
 export default SplaceScreen;

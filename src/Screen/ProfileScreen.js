@@ -81,7 +81,7 @@ const ProfileScreen = () => {
           navigation.navigate('Favorites');
           break;
         case 4:
-          navigation.navigate('About');
+          navigation.navigate("AboutUs");
           break;
         case 5:
           navigation.navigate('Privacy');

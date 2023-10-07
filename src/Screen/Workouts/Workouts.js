@@ -6,6 +6,7 @@ import {
     ImageBackground,
     TouchableOpacity,
     StyleSheet,
+    StatusBar,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Header from '../../Component/Header';
@@ -17,11 +18,13 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import LevelRate from '../../Component/LevelRate';
 import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Workouts = () => {
     const [WorkoutData, setWorkoutData] = useState([])
     const navigation = useNavigation()
     const [IsLoaded, setIsLoaded] = useState(false)
-    const {defaultTheme}=useSelector(state=>state)
+    const { defaultTheme } = useSelector(state => state)
+    const [userId, setUserId] = useState('')
     useEffect(() => {
         getData();
     }, []);
@@ -35,6 +38,9 @@ const Workouts = () => {
             });
             // console.log(data.data)
             setWorkoutData(data.data);
+            const usrid = JSON.parse(await AsyncStorage.getItem("Data"))
+            setUserId(usrid[0].email)
+            console.log("usr", userId)
             setIsLoaded(true)
         } catch (error) {
             console.log("error loading ", error)
@@ -42,7 +48,8 @@ const Workouts = () => {
     };
     if (IsLoaded) {
         return (
-            <SafeAreaView style={{backgroundColor:defaultTheme?"#000":"#fff"}}>
+            <SafeAreaView style={{ backgroundColor: defaultTheme ? "#000" : "#fff" }}>
+                 {/* <StatusBar  barStyle={'default'} translucent={false}/> */}
                 <Header header={"Workouts"} iconName={"magnify"} />
                 <View
                     style={{
@@ -52,7 +59,7 @@ const Workouts = () => {
                         alignItems: 'stretch',
                         marginVertical: 10,
                         justifyContent: 'space-between',
-                        
+
                     }}>
                     <TouchableOpacity
                         style={styles.Buttons}
@@ -81,13 +88,13 @@ const Workouts = () => {
                         <Text style={{ color: 'black', marginHorizontal: 2 }}> Levels</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={{ width: DeviceWidth, height: (DeviceHeigth * 82) / 100 ,backgroundColor: defaultTheme?"#000":"#fff"}}>
+                <View style={{ width: DeviceWidth, height: (DeviceHeigth * 82) / 100, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
                     <FlatList
                         data={WorkoutData}
                         renderItem={elements => (
                             <TouchableOpacity
                                 onPress={() => {
-                                      navigation.navigate("WorkoutDescription",{elements});
+                                    navigation.navigate("WorkoutDescription", { elements ,userId});
                                 }}>
                                 <ImageBackground
                                     source={{ uri: elements.item.image }}
@@ -127,9 +134,9 @@ const Workouts = () => {
     }
     else {
         return (
-        <View>
-            <Loader />
-        </View>)
+            <View>
+                <Loader />
+            </View>)
     }
 }
 const styles = StyleSheet.create({

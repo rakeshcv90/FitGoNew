@@ -19,6 +19,7 @@ import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
+import HTMLRender from "react-native-render-html";
 const BlogDetail = () => {
     const navigation = useNavigation();
     const route = useRoute();
@@ -27,7 +28,7 @@ const BlogDetail = () => {
     //   console.log(Data.data);
     const regex = /(<([^>]+)>)/ig;
     // const result = data.description.replace(regex, '');
-    const Description = Data.data.description.replace(regex, '');
+    const Description = Data.data.description;
     const DesData = [{ Description }]
     //   console.log(Description)
     const { defaultTheme } = useSelector(state => state);
@@ -64,9 +65,9 @@ const BlogDetail = () => {
                     </LinearGradient>
                 </ImageBackground>
             </View>
-            <View style={{ height: DeviceHeigth * 80 / 100, marginHorizontal: 20 }}>
+            <View style={{ height: DeviceHeigth * 55 / 100, marginHorizontal: 20 }}>
                 <FlatList data={DesData} renderItem={(elements) => (
-                    <Text style={{ color: defaultTheme ? "#fff" : "#000", fontSize: 14 }}>{elements.item.Description}</Text>
+                    <HTMLRender source={{ html: elements.item.Description }} contentWidth={DeviceWidth}/>
                 )} />
             </View>
         </SafeAreaView>
