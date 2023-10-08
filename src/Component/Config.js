@@ -21,5 +21,6 @@ import { Dimensions } from "react-native";
   Tags:'data_tags.php',
   Days:'data_days.php',
   Favorites:'favorite.php',
-  Strings:'data_strings.php'
+  Strings:'data_strings.php',
+  FavoriteWorkout:"favoriteworkout.php"
 }

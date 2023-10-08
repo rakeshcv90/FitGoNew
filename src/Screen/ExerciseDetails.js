@@ -63,7 +63,7 @@ const ExerciseDetails = () => {
   const VideoModal = () => {
     return (
       <View>
-        <StatusBar backgroundColor={showModal?'#000':"transparent"} barStyle={'light-content'} translucent={true} />
+        <StatusBar backgroundColor={showModal?"#000":"transparent"} barStyle={'default'} translucent={true} />
         <Modal
           animationType="slide"
           // transparent={true}

@@ -97,7 +97,7 @@ const WorkoutDescription = () => {
   return (
 
     <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-      <StatusBar backgroundColor="transparent" translucent={true} />
+      <StatusBar backgroundColor="transparent" translucent={false} barStyle={'dark-content'}/>
       <ImageBackground
         source={{ uri: HomeCardioData.image }}
         style={styles.HomeImg}>

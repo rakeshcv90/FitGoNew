@@ -31,9 +31,10 @@ import BlogTags from '../Screen/Blog/BlogTags';
 import ProfileScreen from '../Screen/ProfileScreen';
 import SingleDay from '../Screen/SingleDay';
 import ExerciseDetails from '../Screen/ExerciseDetails';
-import Player from '../Component/Player';
 import LatestPost from '../Screen/Blog/LatestPost';
 import AboutUs from '../Screen/AboutUs';
+import PlayerModal from '../Component/Player';
+import Completed from '../Screen/Completed';
 const Stack = createNativeStackNavigator();
 const screenOptions = {
   headerShown: false, // Hide the header for all screens
@@ -66,9 +67,10 @@ const Router = () => {
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="Singleday" component={SingleDay} />
       <Stack.Screen name="ExerciseDetails" component={ExerciseDetails} />
-      <Stack.Screen name="Player" component={Player} />
+      <Stack.Screen name="Player" component={PlayerModal} />
       <Stack.Screen name="LatestPost" component={LatestPost} />
       <Stack.Screen name="AboutUs" component={AboutUs} />
+      <Stack.Screen name="completed" component={Completed}/>
     </Stack.Navigator>
   );
 }

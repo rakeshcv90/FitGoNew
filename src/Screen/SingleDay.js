@@ -5,7 +5,6 @@ import {
     StyleSheet,
     TouchableOpacity,
     Image,
-    StatusBar,
     SafeAreaView,
     FlatList,
 } from 'react-native';
@@ -18,10 +17,10 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux'
 import axios from 'axios';
 import Loader from '../Component/Loader';
-import HeaderWithoutSearch from '../Component/HeaderWithoutSearch'
 const SingleDay = () => {
     const [ApiData, setApiData] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [Player, setPlayer] = useState(false)
     const { defaultTheme } = useSelector(state => state)
     const route = useRoute();
     const navigation = useNavigation()
@@ -39,11 +38,13 @@ const SingleDay = () => {
                 },
             });
             setApiData(data.data);
+            console.log(Data)
             setIsLoaded(true);
         } catch (error) {
             console.log("eroror", error)
         }
     };
+
     if (!isLoaded) {
         return (
             <View>
@@ -51,22 +52,22 @@ const SingleDay = () => {
             </View>
         )
     }
-    else if (isLoaded == true && ApiData.length > 0) {
+    else if (isLoaded&& ApiData.length > 0) {
         return (
             <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
-                 <View style={[styles.closeButton]}>
+                <View style={[styles.closeButton]}>
                     <TouchableOpacity onPress={() => {
                         navigation.goBack()
-                    }}><Icons name="close" size={27} color={defaultTheme?"#fff":"#000"}/></TouchableOpacity>
-                    <Text style={{fontSize:20,color:defaultTheme?"#fff":"#000"}}>{Data.DayName}</Text>
+                    }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity>
+                    <Text style={{ fontSize: 20, color: defaultTheme ? "#fff" : "#000" }}>{Data.DayName}</Text>
                     <Text></Text></View>
                 <View style={{ flex: 1, justifyContent: 'space-between' }}>
                     <View>
                         <FlatList
                             data={ApiData}
                             renderItem={elements => (
-                                <TouchableOpacity onPress={()=>{
-                                    navigation.navigate("ExerciseDetails",{elements})
+                                <TouchableOpacity onPress={() => {
+                                    navigation.navigate("ExerciseDetails", { elements })
                                 }}>
                                     <View
                                         style={{
@@ -97,26 +98,30 @@ const SingleDay = () => {
                             )}
                         />
                     </View>
-                    <TouchableOpacity style={styles.Startbtn}>
-                        <Icons name="play" size={25} /><Text style={{ color: '#000' }}>START NOW</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.Startbtn}
+                        onPress={() => {
+                            navigation.navigate("Player",{PlayerData:ApiData})
+                        }}>
+                        <Icons name="play" size={25} color={'#000'} /><Text style={{ color: '#000' }}>START NOW</Text></TouchableOpacity>
                 </View>
             </SafeAreaView>
         )
     }
     else if (isLoaded && ApiData.length == 0) {
         return (
-            <SafeAreaView style={[styles.RestDayCntnr,{backgroundColor: defaultTheme ? "#000" : "#fff"}]}>
+            <SafeAreaView style={[styles.RestDayCntnr, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
                 <View style={styles.closeButton}>
                     <TouchableOpacity onPress={() => {
                         navigation.goBack()
-                    }}><Icons name="close" size={27} color={defaultTheme?"#fff":"#000"}/></TouchableOpacity>
-                    <Text style={{fontSize:20,color:defaultTheme?"#fff":"#000"}}>{Data.DayName}</Text>
+                    }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity>
+                    <Text style={{ fontSize: 20, color: defaultTheme ? "#fff" : "#000" }}>{Data.DayName}</Text>
                     <Text></Text></View>
-                <View style={{flex:1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Icons name="bed" size={50} color={'#f39c1f'}/>
-                   <Text style={{fontSize:20,marginVertical:5,color:defaultTheme?"#fff":"#000"}}>Rest Day</Text>
-                   <Text style={{fontSize:17,color:defaultTheme?"#fff":"#000"}}>It's Part of the Program</Text>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Icons name="bed" size={50} color={'#f39c1f'} />
+                    <Text style={{ fontSize: 20, marginVertical: 5, color: defaultTheme ? "#fff" : "#000" }}>Rest Day</Text>
+                    <Text style={{ fontSize: 17, color: defaultTheme ? "#fff" : "#000" }}>It's Part of the Program</Text>
                 </View>
+
             </SafeAreaView>
         )
     }
@@ -154,11 +159,11 @@ const styles = StyleSheet.create({
     RestDayCntnr: {
         flex: 1
     },
-    closeButton:{
-        flexDirection:'row',
-        justifyContent:'space-between',
-        margin:30,
-        alignItems:'center'
+    closeButton: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        margin: 30,
+        alignItems: 'center'
     }
 });
 export default SingleDay

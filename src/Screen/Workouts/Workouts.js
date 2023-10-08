@@ -24,10 +24,20 @@ const Workouts = () => {
     const navigation = useNavigation()
     const [IsLoaded, setIsLoaded] = useState(false)
     const { defaultTheme } = useSelector(state => state)
-    const [userId, setUserId] = useState('')
+    const [userId, setUserId] = useState()
+    const [FavData,setFavData]=useState([])
+
     useEffect(() => {
         getData();
+        getFavWorkoutData();
+        getUserId()
     }, []);
+    const getUserId=async()=>{
+    const usrid=await AsyncStorage.getItem('Data')
+    const data1=JSON.parse(usrid)
+    setUserId(data1[0].email)
+    console.log(userId)
+    }
     const getData = async () => {
         try {
             const data = await axios(`${Api}/${Appapi.workhouts}`, {
@@ -38,9 +48,23 @@ const Workouts = () => {
             });
             // console.log(data.data)
             setWorkoutData(data.data);
-            const usrid = JSON.parse(await AsyncStorage.getItem("Data"))
-            setUserId(usrid[0].email)
             console.log("usr", userId)
+            setIsLoaded(true)
+        } catch (error) {
+            console.log("error loading ", error)
+        }
+    };
+    const getFavWorkoutData=async()=>{
+        try {
+            const data = await axios(`${Api}/${Appapi.FavoriteWorkout}?workout_id=${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'Multipart/form-data',
+                },
+            });
+            // console.log(data.data)
+            setFavData(data.data)
+            console.log("fav",FavData)
             setIsLoaded(true)
         } catch (error) {
             console.log("error loading ", error)
