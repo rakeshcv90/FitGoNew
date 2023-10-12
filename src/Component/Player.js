@@ -1,4 +1,4 @@
-import { View, Text, Modal, StyleSheet, StatusBar, TouchableOpacity, Button } from 'react-native'
+import { View, Text, Modal, StyleSheet, StatusBar, TouchableOpacity, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { DeviceHeigth, DeviceWidth } from './Config'
 import { SafeAreaView } from 'react-native'
@@ -14,15 +14,15 @@ const PlayerModal = ({ setState, State }) => {
   const Data = route.params;
   const PlayerScrnData = Data.PlayerData
   const [currentPage, setCurrentPage] = useState(0);
-  const [isPlaying, setIsPlaying] = React.useState(false);
-  const [nextSet, setnextSet] = React.useState(false);
-  const [finished, setFinished] = React.useState(false);
-  const [isEnd, setIsEnd] = React.useState(false);
-  const [reps, setReps] = React.useState(1);
-  const [sets, setSets] = React.useState(1);
-  const [rest, setRest] = React.useState(false);
-  const [timeLeft, setTimeLeft] = React.useState(60);
-  const [totaltime, setTotaltime] = React.useState({ seconds: 0, minutes: 0, hours: 0, });
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [nextSet, setnextSet] = useState(false);
+  const [finished, setFinished] = useState(false);
+  const [isEnd, setIsEnd] = useState(false);
+  const [reps, setReps] = useState(1);
+  const [sets, setSets] = useState(1);
+  const [rest, setRest] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(60);
+  const [totaltime, setTotaltime] = useState({ seconds: 0, minutes: 0, hours: 0, });
   const PlayPause = () => {
     setIsPlaying(!isPlaying);
   }
@@ -87,7 +87,7 @@ const PlayerModal = ({ setState, State }) => {
       if (!timeLeft) return;
       const intervalId = setInterval(() => {
         setTimeLeft(timeLeft - 1);
-      }, 100);
+      }, 1000);
       return () => clearInterval(intervalId);
     }
   }, [rest, timeLeft]);
@@ -121,9 +121,7 @@ const PlayerModal = ({ setState, State }) => {
       }
     }
   }, [timeLeft]);
-
   useEffect(() => {
-
     if (isPlaying) {
       if (!reps) return;
       const intervalId = setInterval(() => {
@@ -133,46 +131,45 @@ const PlayerModal = ({ setState, State }) => {
           setnextSet(true);
           setIsPlaying(false);
         }
-      }, 100);
+      }, 2500);
       return () => clearInterval(intervalId);
     }
   }, [reps, isPlaying]);
+const handleExit=()=>{
+  Alert.alert('Confirm Exit',
+  'Are you sure you want to exit?',[
+    {
+      text:'Cancel',
+      style:'cancel',
+    },
+    {
+      text:'Exit',
+      onPress:(()=>{
+        navigation.goBack();
+      })
+    }
+  ])
+}
   const renderRest = () => {
     if (rest && !finished) {
       return (
         <SafeAreaView style={{ flex: 1, height: DeviceHeigth, alignItems: 'center', justifyContent: 'center' }}>
           <View style={{ flexDirection: 'column', justifyContent: 'center', borderRadius: 100, alignItems: 'center', marginHorizontal: 20, borderColor: "orange", borderWidth: 15, width: 200, height: 200, }}>
-            <Text style={{ fontSize: 66, fontWeight: 'bold', color: "black" }}>{timeLeft}"</Text>
+            <Text style={{ fontSize: 66, fontWeight: 'bold', color: '#f39c1f'}}>{timeLeft}"</Text>
           </View>
-          <Text style={{ fontSize: 26, fontWeight: 'bold', marginTop: 20 }}>Rest</Text>
+          <Text style={{ fontSize: 26, fontWeight: 'bold', marginTop: 20, color:defaultTheme?"#fff":"#000"}}>Rest</Text>
         </SafeAreaView>
       )
     }
-  }
-  const ExitModal=()=>{
-    return( <Modal 
-      transparent={false}
-      animationType='fade'
-      visible={showModal}
-      onRequestClose={()=>{
-        setShowModal(false)
-      }}
-      >
-        <View style={{width:400,height:400}}>
-       <Text>Confirm Exit</Text>
-       <Text>Are you sure you want to exit</Text>
-        </View>
-      </Modal>)
-   
   }
   const renderContent = () => {
     if (!finished && !rest) {
       return (
         <SafeAreaView style={{ flex: 1, justifyContent: 'space-between' }}>
           <View>
-            <View style={[styles.closeButton, { margin: 10 }]}>
+            <View style={[styles.closeButton, { marginTop: 45}]}>
               <TouchableOpacity onPress={() => {
-                navigation.goBack()
+                handleExit();
               }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity></View>
             <View>
               <Video source={{ uri: 'https://vjs.zencdn.net/v/oceans.mp4' }} repeat muted style={styles.VideoPlayer} resizeMode={"stretch"} paused={!isPlaying}/>
@@ -209,14 +206,13 @@ const PlayerModal = ({ setState, State }) => {
   
   return (
     <SafeAreaView style={{ flex: 1 ,backgroundColor:defaultTheme?"#000":"#fff"}}>
-        
       {renderContent()}
       {renderRest()}
       {finished ?
        <View style={{flex:1}}>
          <View style={[styles.closeButton, { margin: 10}]}>
           <TouchableOpacity onPress={() => {
-            navigation.goBack()
+            handleExit();
           }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity>
           </View>
             <View style={{alignItems:'center',justifyContent:'center',marginTop:250}}>

@@ -35,6 +35,9 @@ import LatestPost from '../Screen/Blog/LatestPost';
 import AboutUs from '../Screen/AboutUs';
 import PlayerModal from '../Component/Player';
 import Completed from '../Screen/Completed';
+import MyDiets from '../Screen/MyDiets';
+import MyWorkouts from '../Screen/MyWorkouts';
+import FavoritesRouter from './FavoritesRouter';
 const Stack = createNativeStackNavigator();
 const screenOptions = {
   headerShown: false, // Hide the header for all screens
@@ -61,7 +64,7 @@ const Router = () => {
       <Stack.Screen name="Store" component={Store} />
       <Stack.Screen name="StoreDetail" component={StoreDetail} />
       <Stack.Screen name="StoreCategories" component={StoreCategories} />
-      <Stack.Screen name="Blog" component={Blog}/>
+      <Stack.Screen name="Blog" component={Blog} />
       <Stack.Screen name="BlogDetail" component={BlogDetail} />
       <Stack.Screen name="BlogTags" component={BlogTags} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
@@ -70,7 +73,11 @@ const Router = () => {
       <Stack.Screen name="Player" component={PlayerModal} />
       <Stack.Screen name="LatestPost" component={LatestPost} />
       <Stack.Screen name="AboutUs" component={AboutUs} />
-      <Stack.Screen name="completed" component={Completed}/>
+      <Stack.Screen name="completed" component={Completed} />
+      <Stack.Screen name="Privacy" component={TermaAndCondition} />
+      <Stack.Screen name="MyDiets" component={MyDiets}/>
+      <Stack.Screen name="MyWorkouts" component={MyWorkouts}/>
+      <Stack.Screen name="FavoritesRouter" component={FavoritesRouter}/>
     </Stack.Navigator>
   );
 }

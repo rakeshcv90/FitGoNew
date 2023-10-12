@@ -52,10 +52,10 @@ const SingleDay = () => {
             </View>
         )
     }
-    else if (isLoaded&& ApiData.length > 0) {
+    else if (isLoaded && ApiData.length > 0) {
         return (
             <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
-                <View style={[styles.closeButton]}>
+                <View style={[styles.closeButton,{marginTop: 45}]}>
                     <TouchableOpacity onPress={() => {
                         navigation.goBack()
                     }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity>
@@ -100,7 +100,7 @@ const SingleDay = () => {
                     </View>
                     <TouchableOpacity style={styles.Startbtn}
                         onPress={() => {
-                            navigation.navigate("Player",{PlayerData:ApiData})
+                            navigation.navigate("Player", { PlayerData: ApiData })
                         }}>
                         <Icons name="play" size={25} color={'#000'} /><Text style={{ color: '#000' }}>START NOW</Text></TouchableOpacity>
                 </View>

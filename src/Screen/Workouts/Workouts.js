@@ -18,62 +18,31 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import LevelRate from '../../Component/LevelRate';
 import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 const Workouts = () => {
     const [WorkoutData, setWorkoutData] = useState([])
     const navigation = useNavigation()
     const [IsLoaded, setIsLoaded] = useState(false)
     const { defaultTheme } = useSelector(state => state)
-    const [userId, setUserId] = useState()
-    const [FavData,setFavData]=useState([])
-
     useEffect(() => {
+        const getData = async () => {
+            try {
+                const data = await axios(`${Api}/${Appapi.workhouts}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'Multipart/form-data',
+                    },
+                });
+                setWorkoutData(data.data);
+                setIsLoaded(true)
+            } catch (error) {
+                console.log("error loading", error)
+            }
+        }
         getData();
-        getFavWorkoutData();
-        getUserId()
-    }, []);
-    const getUserId=async()=>{
-    const usrid=await AsyncStorage.getItem('Data')
-    const data1=JSON.parse(usrid)
-    setUserId(data1[0].email)
-    console.log(userId)
-    }
-    const getData = async () => {
-        try {
-            const data = await axios(`${Api}/${Appapi.workhouts}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'Multipart/form-data',
-                },
-            });
-            // console.log(data.data)
-            setWorkoutData(data.data);
-            console.log("usr", userId)
-            setIsLoaded(true)
-        } catch (error) {
-            console.log("error loading ", error)
-        }
-    };
-    const getFavWorkoutData=async()=>{
-        try {
-            const data = await axios(`${Api}/${Appapi.FavoriteWorkout}?workout_id=${userId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'Multipart/form-data',
-                },
-            });
-            // console.log(data.data)
-            setFavData(data.data)
-            console.log("fav",FavData)
-            setIsLoaded(true)
-        } catch (error) {
-            console.log("error loading ", error)
-        }
-    };
+    }, [])
     if (IsLoaded) {
         return (
-            <SafeAreaView style={{ backgroundColor: defaultTheme ? "#000" : "#fff" }}>
-                 {/* <StatusBar  barStyle={'default'} translucent={false}/> */}
+            <SafeAreaView style={{ backgroundColor: defaultTheme ? "#000" : "#fff", flex: 1 }}>
                 <Header header={"Workouts"} iconName={"magnify"} />
                 <View
                     style={{
@@ -83,7 +52,6 @@ const Workouts = () => {
                         alignItems: 'stretch',
                         marginVertical: 10,
                         justifyContent: 'space-between',
-
                     }}>
                     <TouchableOpacity
                         style={styles.Buttons}
@@ -118,7 +86,7 @@ const Workouts = () => {
                         renderItem={elements => (
                             <TouchableOpacity
                                 onPress={() => {
-                                    navigation.navigate("WorkoutDescription", { elements ,userId});
+                                    navigation.navigate("WorkoutDescription", { elements, });
                                 }}>
                                 <ImageBackground
                                     source={{ uri: elements.item.image }}

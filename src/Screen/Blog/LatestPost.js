@@ -40,11 +40,11 @@ const LatestPost = () => {
         } catch (error) { }
     };
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? '#000' : '#fff' }}>
             <HeaderWithoutSearch Header={"Blog"} />
             {isLoaded ? (
                 <>
-                    <View style={{ height: (DeviceHeigth * 90) / 100 }}>
+                    <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
                         <FlatList
                             data={LatestPost}
                             renderItem={elements => (

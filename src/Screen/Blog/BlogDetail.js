@@ -6,6 +6,7 @@ import {
     ImageBackground,
     TouchableOpacity,
     StyleSheet,
+    StatusBar
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Header from '../../Component/Header';
@@ -34,7 +35,7 @@ const BlogDetail = () => {
     const { defaultTheme } = useSelector(state => state);
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? '#000' : '#fff' }}>
-            {/* <StatusBar translucent={true} backgroundColor={'transparent'} /> */}
+          <StatusBar barStyle={"light-content"} translucent={true} backgroundColor={'transparent'}/>
             <View>
                 <ImageBackground source={{ uri: Data.data.image }} style={styles.HomeImg}>
                     <LinearGradient

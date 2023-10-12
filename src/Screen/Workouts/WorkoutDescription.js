@@ -8,6 +8,8 @@ import {
   StatusBar,
   SafeAreaView,
   FlatList,
+  LogBox,
+  ToastAndroid
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { DeviceHeigth, DeviceWidth } from '../../Component/Config';
@@ -17,37 +19,65 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux'
 import LevelRate from '../../Component/LevelRate';
 import { Api, Appapi } from '../../Component/Config';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import Loader from '../../Component/Loader';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const WorkoutDescription = () => {
   const navigation = useNavigation();
   const [HomeCardioData, setHomeCardioData] = useState([]);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [IsLoaded, setIsLoaded] = useState(false)
   const route = useRoute();
   const { defaultTheme } = useSelector(state => state)
-  const [WorkoutId, setWorkoutId] = useState()
-  const [userId, setUserId] = useState()
+  const [userid, setUserId] = useState()
+  const [favWorkoutID, setFavWorkoutID] = useState([])
+  const [FavData, setFavData] = useState([])
   useEffect(() => {
+    const getUsersFavWorkout = async () => {
+      try {
+        const Storeddata = await AsyncStorage.getItem('Data');
+        if (Storeddata !== null) {
+          const JASONData = JSON.parse(Storeddata)
+          const Id = JASONData[0].email
+          // console.log(Id)
+          setUserId(JASONData[0].email)
+          const favWorkout = await axios(`${Api}/favoriteworkout.php?email=${Id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            }
+          })
+          if (favWorkout) {
+            console.log(favWorkout.data)
+            setFavData(favWorkout.data)
+            setFavWorkoutID(favWorkout.data[0].workout_id)
+            setIsLoaded(true)
+            console.log('id', favWorkout.data)
+          }
+        }
+        else {
+          console.log("data not found")
+        }
+      } catch (error) {
+        console.log("ERROR", error)
+      }
+    }
     getData();
+    getUsersFavWorkout();
   }, []);
-  const getData = async () => {
+  const getData = () => {
     try {
       const Data = route.params;
-      setUserId(Data.userId)
-      setHomeCardioData(Data.elements.item);
-      setWorkoutId(Data.elements.item.id)
-      console.log("datatatatat", userId);
+      setHomeCardioData(Data.elements.item)
     }
     catch (error) { }
   };
-
   const AddToFavorites = async () => {
     try {
       let payload = new FormData()
-      payload.append('email', userId)
-      payload.append('workout_id', WorkoutId)
+      payload.append('email', userid)
+      payload.append('workout_id', HomeCardioData.id)
       payload.append('temp', 1)
-      payload.append('diet_id', 1)
       const Fav = await axios(`${Api}/${Appapi.Favorites}`, {
         method: 'POST',
         headers: {
@@ -56,11 +86,37 @@ const WorkoutDescription = () => {
         data: payload
       })
       if (Fav.data) {
-        console.log(Fav.data)
+       ToastAndroid.showWithGravity(Fav.data[0].msg,ToastAndroid.SHORT,ToastAndroid.CENTER)
+        setIsBookmarked(true)
       }
     } catch (error) {
       console.log("Erroror", error)
-
+    }
+  }
+  const RemoveFavorites = async () => {
+    try {
+      const RemovedData = await axios(`${Api}/${Appapi.RemoveFavorite}?email=${userid}&workout_id=${HomeCardioData.id}&temp=${2}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        // data:payload,
+      })
+      if (RemovedData) {
+        ToastAndroid.showWithGravity(RemovedData.data[0].msg,ToastAndroid.SHORT,ToastAndroid.CENTER)
+        setIsBookmarked(false)
+      }
+    } catch (error) {
+      console.log("Erroror", error)
+    }
+  }
+  console.log(FavData)
+  const toggleAddRemove = () => {
+    if (FavData.some((FavItem)=>FavItem.workout_id===HomeCardioData.id)) {
+      RemoveFavorites();
+    }
+    else {
+   AddToFavorites();
     }
   }
   const [Days, setDays] = useState([
@@ -93,75 +149,81 @@ const WorkoutDescription = () => {
       days: "Day 7",
     },
   ]);
-
-  return (
-
-    <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-      <StatusBar backgroundColor="transparent" translucent={false} barStyle={'dark-content'}/>
-      <ImageBackground
-        source={{ uri: HomeCardioData.image }}
-        style={styles.HomeImg}>
-        <LinearGradient
-          colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0.6)']}
-          style={styles.LinearG}>
-          <View style={styles.Buttn}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.goBack();
+  if (IsLoaded) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+        <StatusBar barStyle={"light-content"} translucent={true} backgroundColor={'transparent'}/>
+        <ImageBackground
+          source={{ uri: HomeCardioData.image }}
+          style={styles.HomeImg}>
+          <LinearGradient
+            colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0.6)']}
+            style={styles.LinearG}>
+            <View style={styles.Buttn}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.goBack();
+                }}>
+                <Icons name="close" size={30} color={'white'} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => {
+               toggleAddRemove()
               }}>
-              <Icons name="close" size={30} color={'white'} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
-              setIsBookmarked(!isBookmarked)
-              AddToFavorites()
-            }}>
-              {!isBookmarked ? (
-                <>
-                  <Icons name="heart-outline" size={30} color={'white'} />
-                </>
-              ) : (
-                <>
-                  <Icons name="heart" size={30} color={'red'} />
-                </>
-              )}
-            </TouchableOpacity>
-          </View>
-          <View style={styles.textView}>
-            <Text style={{ color: 'white', padding: 8, fontSize: 16 }}>
-              {HomeCardioData.title}
-            </Text>
-            <Text style={{ color: '#f39c1f' }}>{HomeCardioData.duration}</Text>
-            <View style={styles.rating}>
-              <LevelRate level={HomeCardioData.level} />
+                {(isBookmarked) ? (
+                  <>
+                    <Icons name="heart-outline" size={30} color={'white'} />
+                  </>
+                ) : (
+                  <>
+                    <Icons name="heart" size={30} color={'red'} />
+                  </>
+                )}
+              </TouchableOpacity>
             </View>
+            <View style={styles.textView}>
+              <Text style={{ color: 'white', padding: 8, fontSize: 16 }}>
+                {HomeCardioData.title}
+              </Text>
+              <Text style={{ color: '#f39c1f' }}>{HomeCardioData.duration}</Text>
+              <View style={styles.rating}>
+                <LevelRate level={HomeCardioData.level} />
+              </View>
+            </View>
+          </LinearGradient>
+        </ImageBackground>
+        <View style={styles.levelGoalView}>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: 'black', fontSize: 17 }}>Level</Text>
+            <Text style={{ color: 'black' }}>{HomeCardioData.level}</Text>
           </View>
-        </LinearGradient>
-      </ImageBackground>
-      <View style={styles.levelGoalView}>
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ color: 'black', fontSize: 17 }}>Level</Text>
-          <Text style={{ color: 'black' }}>{HomeCardioData.level}</Text>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: 'black', fontSize: 17 }}>Goal</Text>
+            <Text style={{ color: 'black' }}>{HomeCardioData.goal}</Text>
+          </View>
         </View>
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ color: 'black', fontSize: 17 }}>Goal</Text>
-          <Text style={{ color: 'black' }}>{HomeCardioData.goal}</Text>
+        <View style={{ width: DeviceWidth, height: DeviceHeigth * 95 / 100 }}>
+          <FlatList
+            data={Days}
+            renderItem={elements => (
+              <TouchableOpacity style={styles.Days} onPress={() => {
+                navigation.navigate("Singleday", { Day: elements.item.id, Id: HomeCardioData.id, DayName: elements.item.days })
+              }}>
+                <Text style={{ fontSize: 17, color: defaultTheme == true ? "#fff" : "#000" }}>{elements.item.days}</Text>
+                <Icons name="chevron-right" size={20} color={'#f39c1f'} />
+              </TouchableOpacity>
+            )}
+          />
         </View>
+      </SafeAreaView>
+    )
+  }
+  else {
+    return (
+      <View>
+        <Loader />
       </View>
-      <View style={{ width: DeviceWidth, height: DeviceHeigth * 95 / 100 }}>
-        <FlatList
-          data={Days}
-          renderItem={elements => (
-            <TouchableOpacity style={styles.Days} onPress={() => {
-              navigation.navigate("Singleday", { Day: elements.item.id, Id: HomeCardioData.id, DayName: elements.item.days })
-            }}>
-              <Text style={{ fontSize: 17, color: defaultTheme == true ? "#fff" : "#000" }}>{elements.item.days}</Text>
-              <Icons name="chevron-right" size={20} color={'#f39c1f'} />
-            </TouchableOpacity>
-          )}
-        />
-      </View>
-    </SafeAreaView>
-  )
+    )
+  }
 }
 const styles = StyleSheet.create({
   HomeImg: {

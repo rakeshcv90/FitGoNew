@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, ImageBackground,Image,SafeAreaView, FlatList, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, ImageBackground,Image,SafeAreaView, FlatList, TouchableOpacity,StatusBar} from 'react-native';
 import React, {useState} from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import {localImage} from '../Component/Image';
@@ -92,6 +92,7 @@ const HomeScreenDrawer = () => {
   return (
     <>
       <SafeAreaView style={{flex: 1, backgroundColor: defaultTheme==true?"#000":"#fff"}}>
+      <StatusBar barStyle={"light-content"} translucent={false} backgroundColor={'#f39c1f'}/>
         <ImageBackground source={localImage.homeImg} style={styles.homeImg}>
           <View
             style={{

@@ -40,7 +40,7 @@ const SplaceScreen = ({ navigation }) => {
   return (
     <View style={styels.container}>
       <Image
-        source={ localImage.splash}
+        source={localImage.splash}
         style={styels.logo}></Image>
     </View>
   );
@@ -54,7 +54,7 @@ const styels = StyleSheet.create({
   logo: {
     width: DeviceWidth,
     height: DeviceHeigth,
-    resizeMode:'stretch'
+    resizeMode: 'stretch'
   }
 });
 export default SplaceScreen;

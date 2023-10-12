@@ -5,22 +5,22 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
-import {Api, Appapi, DeviceHeigth, DeviceWidth} from '../Component/Config';
-import {TextInput} from 'react-native-paper';
-import {showMessage} from 'react-native-flash-message';
+import React, { useState } from 'react';
+import { Api, Appapi, DeviceHeigth, DeviceWidth } from '../Component/Config';
+import { TextInput } from 'react-native-paper';
+import { showMessage } from 'react-native-flash-message';
 import axios from 'axios';
 import { useSelector } from 'react-redux'
-const Signup = ({navigation}) => {
+const Signup = ({ navigation }) => {
   const [checked, setChecked] = useState(false);
   const [Name, setName] = useState('');
   const [Email, setEmail] = useState('');
   const [Password, setPassword] = useState('');
   const [ConfirmPassword, setConformPassword] = useState('');
-  const {defaultTheme}=useSelector((state)=>state)
+  const { defaultTheme } = useSelector((state) => state)
   const [submitText, setSubmitText] = useState('Enter');
-  const [isVisible,seIsvisible]= useState(false)
-  const ToggleVisibility=()=>{seIsvisible(!isVisible)}
+  const [isVisible, seIsvisible] = useState(false)
+  const ToggleVisibility = () => { seIsvisible(!isVisible) }
   let inputData = [];
   const ErrorHandler = () => {
     let reg = /\S+@\S+\.\S+/;
@@ -30,7 +30,7 @@ const Signup = ({navigation}) => {
         message: 'Signup  Alert',
         description: 'Enter Your name',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (!Email) {
@@ -38,7 +38,7 @@ const Signup = ({navigation}) => {
         message: 'Signup  Alert',
         description: 'Enter Your Email',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (!reg.test(Email)) {
@@ -46,7 +46,7 @@ const Signup = ({navigation}) => {
         message: 'Signup  Alert',
         description: 'Invalid Format',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (!Password) {
@@ -54,7 +54,7 @@ const Signup = ({navigation}) => {
         message: 'Signup  Alert',
         description: 'Please Enter Your Password',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (!ConfirmPassword) {
@@ -62,7 +62,7 @@ const Signup = ({navigation}) => {
         message: 'Signup  Alert',
         description: 'Please enter Confirm  Password',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (Password != ConfirmPassword) {
@@ -70,7 +70,7 @@ const Signup = ({navigation}) => {
         message: 'Signup  Alert',
         description: ' Confirm  Password Not Match',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (checked == false) {
@@ -78,7 +78,7 @@ const Signup = ({navigation}) => {
         message: 'Signup  Alert',
         description: 'Please Accept Terms and Conditions',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else {
@@ -104,7 +104,7 @@ const Signup = ({navigation}) => {
           message: 'Signup  Alert',
           description: data.data[0].msg,
           type: 'success',
-          icon: {icon: 'auto', position: 'left'},
+          icon: { icon: 'auto', position: 'left' },
         });
         setSubmitText('Enter');
         setEmail('')
@@ -115,12 +115,12 @@ const Signup = ({navigation}) => {
 
         navigation.navigate('Login');
       } else {
-        
+
         showMessage({
           message: 'Signup  Alert',
           description: data.data[0].msg,
           type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
+          icon: { icon: 'auto', position: 'left' },
         });
         setSubmitText('Enter');
       }
@@ -130,9 +130,9 @@ const Signup = ({navigation}) => {
     }
   };
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: defaultTheme?"#000":"#fff"}}>
-      <Text style={[styles.SignUpText,{color:defaultTheme?"#fff":"#000"}]}>SignUp</Text>
-      <View style={[styles.container,{backgroundColor: defaultTheme?"#000":"#fff"}]}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
+      <Text style={[styles.SignUpText, { color: defaultTheme ? "#fff" : "#000" }]}>SignUp</Text>
+      <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
         <TextInput
           label={'Name'}
           onChangeText={text => setName(text)}
@@ -160,8 +160,8 @@ const Signup = ({navigation}) => {
           activeUnderlineColor="#ec9706"
           value={Password}
           secureTextEntry={!isVisible}
-          right={ <TextInput.Icon icon={isVisible?'eye':'eye-off'}
-          onPress={ToggleVisibility}/>}
+          right={<TextInput.Icon icon={isVisible ? 'eye' : 'eye-off'}
+            onPress={ToggleVisibility} />}
         />
         <TextInput
           label={'Confirm Password'}
@@ -185,13 +185,13 @@ const Signup = ({navigation}) => {
             onPress={() => setChecked(!checked)}>
             <Text>
               {' '}
-              {checked && <Text style={{color:'#fff'}}>&#10004;</Text>}
+              {checked && <Text style={{ color: '#fff' }}>&#10004;</Text>}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=>{
+          <TouchableOpacity onPress={() => {
             navigation.navigate('TermaAndCondition')
           }}>
-            <Text style={{color:defaultTheme?"#fff":"#000"}}>I Agree to Term & Conditions</Text>
+            <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>I Agree to Term & Conditions</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity
@@ -200,15 +200,15 @@ const Signup = ({navigation}) => {
             setSubmitText('Please Wait...');
             ErrorHandler();
           }}>
-          <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
+          <Text style={{ color: 'white', fontSize: 15 }}>{submitText}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('Login');
           }}>
-          <Text style={{color:defaultTheme?"#fff":"#000"}}>
+          <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>
             Already have an account ?{' '}
-            <Text style={{color:defaultTheme?"#fff":"#000", fontWeight: 'bold'}}>Login</Text>
+            <Text style={{ color: defaultTheme ? "#fff" : "#000", fontWeight: 'bold' }}>Login</Text>
           </Text>
         </TouchableOpacity>
       </View>

@@ -99,8 +99,6 @@ const ExerciseDetails = () => {
                     <TouchableOpacity
                       onPress={() => {
                         setShowModal(true)
-                        console.log("sdbdvdbjsdvhjds")
-                        // navigation.navigate("ModalView")
                       }}
                     >
                       <View style={{ borderRadius: 100, overflow: 'hidden' }}>
@@ -182,7 +180,6 @@ const ExerciseDetails = () => {
                   }
                 </View>
               </View>);
-
           }} />
         <VideoModal />
       </SafeAreaView>

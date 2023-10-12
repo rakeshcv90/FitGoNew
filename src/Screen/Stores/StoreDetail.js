@@ -6,6 +6,7 @@ import {
     ImageBackground,
     TouchableOpacity,
     StyleSheet,
+    StatusBar
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Header from '../../Component/Header';
@@ -31,6 +32,7 @@ const StoreDetail = () => {
     <SafeAreaView style={{flex: 1,backgroundColor:defaultTheme?'#000':'fff'}}>
     <View>
       <ImageBackground source={{uri: Data.data.image}} style={[styles.HomeImg]}>
+      <StatusBar barStyle={"light-content"} translucent={true} backgroundColor={'transparent'}/>
         <LinearGradient
           colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0.6)']}
           style={styles.LinearG}>

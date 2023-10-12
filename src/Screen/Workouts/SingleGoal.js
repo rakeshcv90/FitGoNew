@@ -1,11 +1,11 @@
 import {
-    View,
-    Text,
-    SafeAreaView,
-    StyleSheet,
-    FlatList,
-    ImageBackground,
-    TouchableOpacity,
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  FlatList,
+  ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
 import React, { useState, useEffect, useContext } from 'react';
 import { DeviceHeigth, DeviceWidth } from '../../Component/Config';
@@ -17,57 +17,57 @@ import { useSelector } from 'react-redux'
 import Header from '../../Component/Header'
 import LevelRate from '../../Component/LevelRate';
 const SingleGoal = () => {
-    const [ApiData, setApiData] = useState([]);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const {defaultTheme}=useSelector((state)=>state)
-    const route=useRoute()
-    const navigation=useNavigation()
-    const Data=route.params;
-    console.log(Data.title)
-    useEffect(() => {
-        getData();
-      }, []);
-      const getData = async () => {
-        try {
-          const data = await axios(`${Api}/${Appapi.workhouts}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'Multipart/form-data',
-            },
-          });
-    
-          setApiData(data.data);
-          setIsLoaded(true);
-        } catch (error) {}
-      };
-      const SingleGoalData = ApiData.filter(item => item.goal==Data.title);
-      if(isLoaded){
+  const [ApiData, setApiData] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const { defaultTheme } = useSelector((state) => state)
+  const route = useRoute()
+  const navigation = useNavigation()
+  const Data = route.params;
+  console.log(Data.title)
+  useEffect(() => {
+    getData();
+  }, []);
+  const getData = async () => {
+    try {
+      const data = await axios(`${Api}/${Appapi.workhouts}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'Multipart/form-data',
+        },
+      });
 
-      
+      setApiData(data.data);
+      setIsLoaded(true);
+    } catch (error) { }
+  };
+  const SingleGoalData = ApiData.filter(item => item.goal == Data.title);
+  if (isLoaded) {
+
+
     return (
-        <SafeAreaView style={{flex:1,backgroundColor:defaultTheme?"#000":"#fff"}}>
-            <Header header={Data.title}
-            iconName={"magnify"}/>
-            <View style={{width: (DeviceWidth * 98) / 100}}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
+        <Header header={Data.title}
+          iconName={"magnify"} />
+        <View style={{ width: (DeviceWidth * 98) / 100 }}>
           <FlatList
             data={SingleGoalData}
             renderItem={elements => (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("WorkoutDescription",{elements});
+                  navigation.navigate("WorkoutDescription", { elements });
                 }}>
                 <ImageBackground
-                  source={{uri: elements.item.image}}
+                  source={{ uri: elements.item.image }}
                   style={styles.backGimage}>
                   <View style={styles.textView}>
                     <View style={styles.rating}>
-                     <LevelRate level={elements.item.level}/>
+                      <LevelRate level={elements.item.level} />
                     </View>
                     <View>
                       <Text
                         style={[
                           styles.text,
-                          {fontSize: 15, fontWeight: '500'},
+                          { fontSize: 15, fontWeight: '500' },
                         ]}>
                         {elements.item.title}
                       </Text>
@@ -79,44 +79,45 @@ const SingleGoal = () => {
             )}
           />
         </View>
-        </SafeAreaView>
-    )}
-    else{
-        return(
-            <View>
-                <Loader/>
-            </View>
-        )
-    }
+      </SafeAreaView>
+    )
+  }
+  else {
+    return (
+      <View>
+        <Loader />
+      </View>
+    )
+  }
 }
 const styles = StyleSheet.create({
-    backGimage: {
-      width: (DeviceWidth * 95) / 100,
-      height: (DeviceHeigth * 20) / 100,
-      margin: 10,
-      borderRadius: 8,
-      overflow: 'hidden',
-      justifyContent: 'flex-end',
-    },
-    textView: {
-      justifyContent: 'space-between',
-      padding: 15,
-      backgroundColor: 'rgba(0,0,0,0.2)',
-      height: (DeviceHeigth * 20) / 100,
-    },
-    text: {
-      color: 'white',
-      margin: 3,
-    },
-    rating: {
-      width: 75,
-      height: 30,
-      backgroundColor: 'rgba(0,0,0,0.5)',
-      borderRadius: 20,
-      flexDirection: 'row',
-      alignItems: 'center',
-      padding: 4,
-      justifyContent: 'center',
-    },
-  });
+  backGimage: {
+    width: (DeviceWidth * 95) / 100,
+    height: (DeviceHeigth * 20) / 100,
+    margin: 10,
+    borderRadius: 8,
+    overflow: 'hidden',
+    justifyContent: 'flex-end',
+  },
+  textView: {
+    justifyContent: 'space-between',
+    padding: 15,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    height: (DeviceHeigth * 20) / 100,
+  },
+  text: {
+    color: 'white',
+    margin: 3,
+  },
+  rating: {
+    width: 75,
+    height: 30,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 4,
+    justifyContent: 'center',
+  },
+});
 export default SingleGoal

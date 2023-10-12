@@ -19,7 +19,6 @@ import { useSelector } from 'react-redux'
 const Login = ({navigation}) => {
   const [Email, setEmail] = useState('');
   const [Password, setPassword] = useState('');
-  const [isLoggedIn, setisLoggedIN] = useState(false);
   const [submitText, setsubmitText] = useState('ENTER');
   const [isVisible,seIsvisible]= useState(false)
   const {defaultTheme}=useSelector((state)=>state)
@@ -28,7 +27,6 @@ const Login = ({navigation}) => {
     BackHandler.exitApp();
     return true;
   };
-
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
     return () => {
@@ -46,7 +44,6 @@ const Login = ({navigation}) => {
         message: 'Email Alert',
         description: 'Please Enter Your Mail',
         type: 'danger',
-
         icon: {icon: 'auto', position: 'left'},
       });
       setsubmitText('ENTER');
@@ -81,7 +78,6 @@ const Login = ({navigation}) => {
         });
         if (data.data[0].msg === 'login successfully') {
           await AsyncStorage.setItem('Data', JSON.stringify(data.data));
-          // navigation.navigate('HomeDrawer');
           setsubmitText('ENTER');
           setEmail('');
           setPassword('');

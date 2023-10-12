@@ -4,11 +4,12 @@ import { useSelector } from 'react-redux';
 import HTMLRender from "react-native-render-html";
 import { DeviceWidth, DeviceHeigth } from '../Component/Config';
 import { Api, Appapi } from '../Component/Config';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { localImage } from '../Component/Image';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import Loader from '../Component/Loader';
 import HeaderWithoutSearch from '../Component/HeaderWithoutSearch';
+import { Image } from 'react-native';
 const AboutUs = () => {
     const { width } = useWindowDimensions();
     const [isLoaded, setIsLoaded] = useState(false);
@@ -18,17 +19,6 @@ const AboutUs = () => {
     useEffect(() => {
         getData();
     }, []);
-    const mixedStyle = {
-        body: {
-           whiteSpace: "bold",
-           color: "black",
-        },
-        // p: {
-        //   color: "#000",
-        // whiteSpace: "normal",
-          
-        // },
-     };
     const getData = async () => {
         try {
             const data = await axios(`${Api}/${Appapi.Strings}`, {
@@ -48,13 +38,24 @@ const AboutUs = () => {
     };
     if (isLoaded) {
         return (
-            <SafeAreaView style={styles.container}>
+            <SafeAreaView style={[styles.container,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
              <HeaderWithoutSearch Header={"About Us"}/>
+             <View style={{justifyContent:'center',alignItems:'center'}}>
+                <Image source={localImage.logo} style={{width:DeviceWidth*40/100,resizeMode:'contain',height:DeviceHeigth*20/100}}/>
+             </View>
                 <View style={{marginHorizontal:20}}>
                     <FlatList data={About} renderItem={elements => {
                         return(
                         <View>
-                            <HTMLRender source={{ html: elements.item.st_aboutus }} tagsStyles={mixedStyle} contentWidth={width}/>
+                            <HTMLRender source={{ html: elements.item.st_aboutus }} tagsStyles={customStyle={
+                                p:{
+                                    color:defaultTheme?"#fff":"#000"
+                                },
+                                strong:{
+                                    color:'#f39c1f',
+                                    fontSize:20,
+                                }
+                            }} contentWidth={width} />
                             {/* <Text style={{ color: "red" }}>{elements.item.st_aboutus}</Text> */}
                         </View>)
                     }} />
