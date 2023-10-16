@@ -8,7 +8,6 @@ import {
   StatusBar,
   SafeAreaView,
   FlatList,
-  LogBox,
   ToastAndroid
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
@@ -30,8 +29,8 @@ const WorkoutDescription = () => {
   const route = useRoute();
   const { defaultTheme } = useSelector(state => state)
   const [userid, setUserId] = useState()
-  const [favWorkoutID, setFavWorkoutID] = useState([])
   const [FavData, setFavData] = useState([])
+  const [isMounted, setIsMounted] = useState(0);
   useEffect(() => {
     const getUsersFavWorkout = async () => {
       try {
@@ -39,20 +38,17 @@ const WorkoutDescription = () => {
         if (Storeddata !== null) {
           const JASONData = JSON.parse(Storeddata)
           const Id = JASONData[0].email
-          // console.log(Id)
           setUserId(JASONData[0].email)
-          const favWorkout = await axios(`${Api}/favoriteworkout.php?email=${Id}`, {
+          const favWorkout = await axios(`${Api}/${Appapi.FavoriteWorkout}?email=${Id}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'multipart/form-data',
             }
           })
-          if (favWorkout) {
-            console.log(favWorkout.data)
+          if (favWorkout.data) {
             setFavData(favWorkout.data)
-            setFavWorkoutID(favWorkout.data[0].workout_id)
+            console.log("data", favWorkout.data)
             setIsLoaded(true)
-            console.log('id', favWorkout.data)
           }
         }
         else {
@@ -64,7 +60,7 @@ const WorkoutDescription = () => {
     }
     getData();
     getUsersFavWorkout();
-  }, []);
+  }, [isMounted]);
   const getData = () => {
     try {
       const Data = route.params;
@@ -86,8 +82,9 @@ const WorkoutDescription = () => {
         data: payload
       })
       if (Fav.data) {
-       ToastAndroid.showWithGravity(Fav.data[0].msg,ToastAndroid.SHORT,ToastAndroid.CENTER)
-        setIsBookmarked(true)
+        ToastAndroid.showWithGravity(Fav.data[0].msg, ToastAndroid.SHORT, ToastAndroid.CENTER)
+        setFavData(FavData)
+        setIsMounted(isMounted + 1)
       }
     } catch (error) {
       console.log("Erroror", error)
@@ -102,22 +99,27 @@ const WorkoutDescription = () => {
         },
         // data:payload,
       })
-      if (RemovedData) {
-        ToastAndroid.showWithGravity(RemovedData.data[0].msg,ToastAndroid.SHORT,ToastAndroid.CENTER)
-        setIsBookmarked(false)
+      if (RemovedData.data) {
+        ToastAndroid.showWithGravity(RemovedData.data[0].msg, ToastAndroid.SHORT, ToastAndroid.CENTER)
+        setFavData(FavData.filter((item) => item.id !== HomeCardioData.id))
+        setIsMounted(isMounted + 1)
       }
     } catch (error) {
       console.log("Erroror", error)
     }
   }
-  console.log(FavData)
   const toggleAddRemove = () => {
-    if (FavData.some((FavItem)=>FavItem.workout_id===HomeCardioData.id)) {
+    if (FavData.some((item) => item.id === HomeCardioData.id)) {
       RemoveFavorites();
+      console.log('true Tggle')
     }
     else {
-   AddToFavorites();
+      AddToFavorites();
+      console.log("false tggle")
     }
+  }
+  const ToggleBookmark = () => {
+    setIsBookmarked(!isBookmarked)
   }
   const [Days, setDays] = useState([
     {
@@ -152,9 +154,9 @@ const WorkoutDescription = () => {
   if (IsLoaded) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-        <StatusBar barStyle={"light-content"} translucent={true} backgroundColor={'transparent'}/>
+        <StatusBar barStyle={"light-content"} translucent={true} backgroundColor={'transparent'} />
         <ImageBackground
-          source={{ uri: HomeCardioData.image }}
+          source={{ uri: HomeCardioData.image}}
           style={styles.HomeImg}>
           <LinearGradient
             colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0.6)']}
@@ -167,15 +169,17 @@ const WorkoutDescription = () => {
                 <Icons name="close" size={30} color={'white'} />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => {
-               toggleAddRemove()
+                toggleAddRemove();
+                ToggleBookmark();
               }}>
-                {(isBookmarked) ? (
+
+                {(FavData.some((item)=>item.id===HomeCardioData.id)) ? (
                   <>
-                    <Icons name="heart-outline" size={30} color={'white'} />
+                    <Icons name="heart" size={30} color={'red'} />
                   </>
                 ) : (
                   <>
-                    <Icons name="heart" size={30} color={'red'} />
+                    <Icons name="heart-outline" size={30} color={'white'} />
                   </>
                 )}
               </TouchableOpacity>

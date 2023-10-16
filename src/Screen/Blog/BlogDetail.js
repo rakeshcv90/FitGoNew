@@ -9,14 +9,9 @@ import {
     StatusBar
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import Header from '../../Component/Header';
 import { DeviceWidth, DeviceHeigth } from '../../Component/Config';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import axios from 'axios';
-import { Api, Appapi } from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
-import LevelRate from '../../Component/LevelRate';
-import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
@@ -26,12 +21,8 @@ const BlogDetail = () => {
     const route = useRoute();
     const Data = route.params;
     const ShownData = Data.data;
-    //   console.log(Data.data);
-    const regex = /(<([^>]+)>)/ig;
-    // const result = data.description.replace(regex, '');
     const Description = Data.data.description;
     const DesData = [{ Description }]
-    //   console.log(Description)
     const { defaultTheme } = useSelector(state => state);
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? '#000' : '#fff' }}>
@@ -68,7 +59,24 @@ const BlogDetail = () => {
             </View>
             <View style={{ height: DeviceHeigth * 55 / 100, marginHorizontal: 20 }}>
                 <FlatList data={DesData} renderItem={(elements) => (
-                    <HTMLRender source={{ html: elements.item.Description }} contentWidth={DeviceWidth}/>
+                    <HTMLRender source={{ html: elements.item.Description }} contentWidth={DeviceWidth} tagsStyles={{
+                        p:{
+                            color:defaultTheme?"#fff":"#000"
+                        },
+                        strong:{
+                            color:'#f39c1f',
+                            fontSize:20,
+                        }
+                        ,li:{
+                            color:defaultTheme?"#fff":"#000"
+                        },
+                        ul:{
+                            color:defaultTheme?"#fff":"#000"
+                        },
+                        ol:{
+                            color:defaultTheme?"#fff":"#000"
+                        }
+                    }}/>
                 )} />
             </View>
         </SafeAreaView>

@@ -2,7 +2,6 @@ import { Dimensions } from "react-native";
  export const DeviceHeigth=Dimensions.get('window').height
  export const DeviceWidth=Dimensions.get('window').width
  export const Api ='https://cvinfotech2@gofit.tentoptoday.com/json/'
-
  export const Appapi={
   login:'user_login.php',
   signup:'user_registration.php',
@@ -22,6 +21,8 @@ import { Dimensions } from "react-native";
   Days:'data_days.php',
   Favorites:'favorite.php',
   Strings:'data_strings.php',
-  FavoriteWorkout:"favoriteworkout.php",
-  RemoveFavorite:"remove_favorite.php"
+  FavoriteWorkout:'favoriteworkout.php',
+  RemoveFavorite:"remove_favorite.php",
+  FavoriteDiets:"favoritediet.php",
+  DeleteAccount:"user_delete.php"
 }

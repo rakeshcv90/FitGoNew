@@ -13,6 +13,7 @@ import { localImage } from '../Component/Image';
 import { useSelector, } from 'react-redux';
 import { DeviceHeigth, DeviceWidth } from '../Component/Config';
 import { Logo } from '../Component/logo';
+import { navigationRef } from '../../App';
 
 const DrawerItems = props => {
   // const DrawerList = [
@@ -100,8 +101,10 @@ const DrawerItems = props => {
           <Text style={[styles.Text, { color: defaultTheme ? "#fff" : "#000" }]}>Profile</Text>
           <Image source={localImage.nextButton} style={styles.nextIcon} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttons}>
-          <Text style={[styles.Text, { color: defaultTheme ? "#fff" : "#000" }]}>Favorites</Text>
+        <TouchableOpacity style={styles.buttons} onPress={()=>{
+            props.navigation.navigate('FavoritesRouter')
+          }}>
+          <Text style={[styles.Text, { color: defaultTheme ? "#fff" : "#000" }]} >Favorites</Text>
           <Image source={localImage.nextButton} style={styles.nextIcon} />
         </TouchableOpacity>
         <TouchableOpacity

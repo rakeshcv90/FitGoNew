@@ -26,7 +26,7 @@ const TermaAndCondition = () => {
           'Content-Type': 'Multipart/form-data',
         },
       });
-      console.log("Aboiutsygsyuw", Terms)
+      console.log("Aboiutsygsyuw", data.data)
       setTerms(data.data)
       setIsLoaded(true);
     }
@@ -38,12 +38,21 @@ const TermaAndCondition = () => {
   if (isLoaded) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
-        <HeaderWithoutSearch Header={"Terms & Conditions"} />
-        <View style={{ marginHorizontal: 20 }}>
-          <FlatList data={Terms} renderItem={elements => {
+        <HeaderWithoutSearch Header={"Terms & Privacy"} />
+        <View style={{ marginHorizontal: 20, height:DeviceHeigth*90/100}}>
+          <FlatList data={Terms} showsVerticalScrollIndicator={false} renderItem={elements => {
             return (
               <View>
                 <HTMLRender source={{ html: elements.item.st_termsofservice }} tagsStyles={customStyle = {
+                  p: {
+                    color: defaultTheme ? "#fff" : "#000"
+                  },
+                  strong: {
+                    color: '#f39c1f',
+                    fontSize: 20,
+                  }
+                }} contentWidth={width} />
+                <HTMLRender source={{ html: elements.item.st_privacypolicy }} tagsStyles={customStyle = {
                   p: {
                     color: defaultTheme ? "#fff" : "#000"
                   },

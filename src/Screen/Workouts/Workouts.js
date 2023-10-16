@@ -24,22 +24,23 @@ const Workouts = () => {
     const [IsLoaded, setIsLoaded] = useState(false)
     const { defaultTheme } = useSelector(state => state)
     useEffect(() => {
-        const getData = async () => {
-            try {
-                const data = await axios(`${Api}/${Appapi.workhouts}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'Multipart/form-data',
-                    },
-                });
-                setWorkoutData(data.data);
-                setIsLoaded(true)
-            } catch (error) {
-                console.log("error loading", error)
-            }
-        }
         getData();
     }, [])
+    const getData = async () => {
+        try {
+            const data = await axios(`${Api}/${Appapi.workhouts}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'Multipart/form-data',
+                },
+            });
+            setWorkoutData(data.data);
+            console.log('imageUrl',data.data[0].image)
+            setIsLoaded(true)
+        } catch (error) {
+            console.log("error loading", error)
+        }
+    }
     if (IsLoaded) {
         return (
             <SafeAreaView style={{ backgroundColor: defaultTheme ? "#000" : "#fff", flex: 1 }}>
@@ -86,7 +87,7 @@ const Workouts = () => {
                         renderItem={elements => (
                             <TouchableOpacity
                                 onPress={() => {
-                                    navigation.navigate("WorkoutDescription", { elements, });
+                                    navigation.navigate("WorkoutDescription", {elements});
                                 }}>
                                 <ImageBackground
                                     source={{ uri: elements.item.image }}

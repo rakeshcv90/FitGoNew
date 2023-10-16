@@ -5,16 +5,18 @@ import {
   StyleSheet,
   TouchableOpacity,
   FlatList,
-  SafeAreaView
+  SafeAreaView,
+  ToastAndroid
 } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import HeaderWithoutSearch from '../Component/HeaderWithoutSearch';
 import { localImage } from '../Component/Image';
-import { DeviceHeigth, DeviceWidth } from '../Component/Config'
+import { DeviceHeigth, DeviceWidth ,Api,Appapi} from '../Component/Config'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux'
+import axios from 'axios';
 const ProfileScreen = () => {
   const [mydata, setMyData] = useState();
   const navigation = useNavigation();
@@ -68,6 +70,30 @@ const ProfileScreen = () => {
       navigation.navigate('Login');
     } catch (error) { }
   };
+  const DeleteAccount = async () => {
+    try {
+      const Storeddata = await AsyncStorage.getItem('Data');
+      if (Storeddata !== null) {
+        const JASONData = JSON.parse(Storeddata)
+        const Id = JASONData[0].email
+        const Msg = await axios(`${Api}/${Appapi.DeleteAccount}?email=${Id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          }
+        })
+        if(Msg.data){
+          navigation.navigate("Signup")
+          ToastAndroid.showWithGravity(Msg.data[0].user,ToastAndroid.SHORT,ToastAndroid.BOTTOM)
+        }
+      }
+      else {
+        console.log("data not found")
+      }
+    } catch (error) {
+      console.log("ERROR", error)
+    }
+  }
   const ScreenChange = item => {
     switch (item.item.id) {
       case 1:
@@ -87,6 +113,9 @@ const ProfileScreen = () => {
         break;
       case 6:
         removeData();
+        break;
+        case 7:
+          DeleteAccount();
     }
   };
   return (

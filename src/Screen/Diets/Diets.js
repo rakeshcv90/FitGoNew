@@ -65,7 +65,7 @@ const Diets = () => {
             <View style={styles.text}>
             <Text style={{color:"#f39c1f",marginLeft:10,fontWeight:'bold',fontSize:16}}>{item.category}</Text>
             <Text style={{color:'#fff',marginTop:5,marginLeft:10,fontWeight:'bold',fontSize:16}}>{item.title}</Text>
-            <Text style={{color:'#adadad',margin:10,fontWeight:'bold',fontSize:16}}>{item.calories} Kcal | Servings: {item.servings}</Text>
+            <Text style={{color:'#fff',margin:10,fontWeight:'bold',fontSize:13}}>{item.calories} Kcal | Servings: {item.servings}</Text>
             </View>
           </ImageBackground>
           </TouchableOpacity>
