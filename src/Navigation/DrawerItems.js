@@ -27,17 +27,16 @@ const DrawerItems = props => {
   //   'Settings',
   // ];
   const { defaultTheme } = useSelector(state => state)
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      handleBackButton,
-    );
-
-    return () => backHandler.remove();
-  }, []);
-  const handleBackButton = () => {
-    return true;
-  };
+  // useEffect(() => {
+  //   const backHandler = BackHandler.addEventListener(
+  //     'hardwareBackPress',
+  //     handleBackButton,
+  //   );
+  //   return () => backHandler.remove();
+  // }, []);
+  // const handleBackButton = () => {
+  //   return true;
+  // };
   return (
     <SafeAreaView
       style={{

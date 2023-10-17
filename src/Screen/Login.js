@@ -8,34 +8,40 @@ import {
   BackHandler,
   Alert,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState,} from 'react';
 import {localImage} from '../Component/Image';
 import {Api, DeviceHeigth, DeviceWidth, Appapi} from '../Component/Config';
-import {TextInput} from 'react-native-paper';
+import {TextInput,DefaultTheme} from 'react-native-paper';
 import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector } from 'react-redux'
-const Login = ({navigation}) => {
+import { useNavigation } from '@react-navigation/native';
+const Login = () => {
+  const navigation=useNavigation();
   const [Email, setEmail] = useState('');
   const [Password, setPassword] = useState('');
   const [submitText, setsubmitText] = useState('ENTER');
   const [isVisible,seIsvisible]= useState(false)
   const {defaultTheme}=useSelector((state)=>state)
   const ToggleVisibility=()=>{seIsvisible(!isVisible)}
-  const handleBackButtonClick = () => {
-    BackHandler.exitApp();
-    return true;
-  };
   useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        'hardwareBackPress',
-        handleBackButtonClick,
-      );
-    };
+    const HandleBackButton=()=>{
+      BackHandler.exitApp();
+      return true;
+  };
+    BackHandler.addEventListener('hardwareBackPress',HandleBackButton);
+    return()=>{
+      BackHandler.removeEventListener('hardwareBackPress',HandleBackButton)
+    }
   }, []);
+  // const customTheme={
+  //   ...DefaultTheme,
+  //   colors:{
+  //     ...DefaultTheme.colors,
+  //    color:'red'
+  //   },
+  // }
   const ErrorHandler = async () => {
     let reg = /\S+@\S+\.\S+/;
     let pass = /^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/;
@@ -76,22 +82,22 @@ const Login = ({navigation}) => {
             password: Password,
           },
         });
-        if (data.data[0].msg === 'login successfully') {
+        if (data.data[0].msg === 'Login successful') {
           await AsyncStorage.setItem('Data', JSON.stringify(data.data));
           setsubmitText('ENTER');
           setEmail('');
           setPassword('');
           showMessage({
-            message: 'Login Alert',
-            description: data.data[0].msg,
+            message: data.data[0].msg,
+            // description: data.data[0].msg,
             type: 'success',
             icon: {icon: 'auto', position: 'left'},
           });
           navigation.navigate('DrawerNavigation');
         } else {
           showMessage({
-            message: 'Login Alert',
-            description: data.data[0].msg,
+            message: data.data[0].msg,
+            // description: data.data[0].msg,
             type: 'danger',
             icon: {icon: 'auto', position: 'left'},
           });
@@ -114,6 +120,8 @@ const Login = ({navigation}) => {
         style={styles.AuthInput}
         activeUnderlineColor="#f39c1f"
         value={Email}
+        textColor={defaultTheme?'#fff':'#000'}
+        // theme={customTheme}
       />
       <TextInput
         label={'Password'}
@@ -124,6 +132,7 @@ const Login = ({navigation}) => {
         activeUnderlineColor="#f39c1f"
         value={Password}
         right={ <TextInput.Icon icon={isVisible?'eye':'eye-off'}
+        textColor={defaultTheme?'#fff':'#000'}
         onPress={ToggleVisibility}/>}
       />
       <View style={{width: (DeviceWidth * 80) / 100, alignItems: 'flex-end',backgroundColor:defaultTheme?"#000":"#fff"}}>
@@ -166,7 +175,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: (DeviceWidth * 50) / 100,
-    height: (DeviceHeigth * 20) / 100,
+    height: (DeviceHeigth * 30) / 100,
     marginBottom: (DeviceHeigth * 5) / 100,
     resizeMode: 'contain',
     marginTop: (DeviceHeigth * 8) / 100,
@@ -191,6 +200,13 @@ const styles = StyleSheet.create({
     marginBottom: (DeviceHeigth * 1) / 100,
     backgroundColor: 'transparent',
     width: (DeviceWidth * 80) / 100,
+  },
+  SignUpText: {
+    fontSize: 25,
+    color: 'black',
+    alignItems: 'flex-start',
+    textAlign: 'center',
+    borderWidth:1
   },
 });
 export default Login;

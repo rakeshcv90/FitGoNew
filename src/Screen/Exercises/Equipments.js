@@ -34,7 +34,6 @@ const Equipments= () => {
         },
       });
       setApiData(data.data);
-      console.log(data.data[0].image);
       setIsLoaded(true);
     } catch (error) {}
   };
@@ -53,7 +52,9 @@ return (
 <FlatList
         data={ApiData}
         renderItem={elements => (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>{
+            navigation.navigate("ExerciseByEquipments",{item:elements.item})
+          }}>
             <View
               style={{
                 flexDirection: 'row',

@@ -1,14 +1,9 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image,BackHandler } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { DeviceHeigth, DeviceWidth } from '../Component/Config';
 import { localImage } from '../Component/Image';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 const SplaceScreen = ({ navigation }) => {
-  const [time, setTime] = useState(0);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
-
   useEffect(() => {
     setTimeout(() => {
       UserAuth();

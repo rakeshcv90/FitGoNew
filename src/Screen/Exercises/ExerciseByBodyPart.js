@@ -41,16 +41,13 @@ const ExerciseByBodyPart = () => {
         } catch (error) {}
       };
       const Abs = ApiData.filter(item => item.bodyparts.includes('Abs'));
-      const Shoulders = ApiData.filter(item =>
-        item.bodyparts.includes('Shoulders'),
-      );
+      const Shoulders = ApiData.filter(item => item.bodyparts.includes('Shoulders'));
       const Triceps = ApiData.filter(item => item.bodyparts.includes('Triceps'));
       const Qauds = ApiData.filter(item => item.bodyparts.includes('Quads'));
       const Biceps = ApiData.filter(item => item.bodyparts.includes('Biceps'));
       const Back = ApiData.filter(item => item.bodyparts.includes('Back'));
       const Forearms = ApiData.filter(item => item.bodyparts.includes('Forearms'));
       const Chest = ApiData.filter(item => item.bodyparts.includes('Chest'));
-      // console.log('filterData', Abs);
     if (isLoaded && Data.title == 'Abs') {
         return (
             <SafeAreaView

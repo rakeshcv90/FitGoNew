@@ -18,6 +18,7 @@ import LevelRate from '../../Component/LevelRate';
 import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux';
 import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
+import { Element } from 'react-native-render-html';
 const Diets = () => {
     const {defaultTheme}=useSelector((state)=>state)
     const [ApiData, setApiData] = useState([]);

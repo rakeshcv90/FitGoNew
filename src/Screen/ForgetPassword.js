@@ -45,20 +45,20 @@ const ForgetPassword = ({navigation}) => {
             email: Email,
           },
         });
-        console.log(data.data[0].msg)
+        console.log('datatat',data.data[0].msg)
         setInputText('Enter');
-        if (data.data[0].msg == 'Mail Send') {
+        if (data.data[0].msg == 'Mail Sent') {
           showMessage({
-            message: 'Forget Password Alert',
-            description: data.data[0].msg,
+            message: data.data[0].msg,
+            // description: data.data[0].msg,
             type: 'success',
             icon: {icon: 'auto', position: 'left'},
           });
           navigation.navigate('Login')
         } else {
           showMessage({
-            message: 'Forget Password Alert',
-            description: data.data.data[0].msg,
+            message: data.data.data[0].msg,
+            // description: data.data.data[0].msg,
             type: 'danger',
             icon: {icon: 'auto', position: 'left'},
           });
@@ -81,6 +81,7 @@ const ForgetPassword = ({navigation}) => {
         </Text>
         <TextInput
           label={'Email'}
+          textColor={defaultTheme?"#fff":"#000"}
           onChangeText={text => {
             setEmail(text.trim());
             setInputText('Enter');

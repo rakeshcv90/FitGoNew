@@ -61,10 +61,10 @@ const FavDiets = () => {
         <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
           <FlatList
             data={Favdiet}
-            renderItem={elements => {
+            renderItem={({item}) => {
               return(
                 <TouchableOpacity onPress={() => {
-                  navigation.navigate("DietDetail",{elements})
+                  navigation.navigate("DietDetail",{data:item})
                 }}>
                   <View
                     style={{
@@ -73,7 +73,7 @@ const FavDiets = () => {
                       alignItems: 'center',
                     }}> 
                     <Image
-                      source={{uri:elements.item.image}}
+                      source={{uri:item.image}}
                       style={styles.Image}
                     />
                     <View>
@@ -83,7 +83,7 @@ const FavDiets = () => {
                             style={[
                               styles.flatListTitle,
                               { color: defaultTheme == true ? '#fff' : '#000' },
-                            ]}>{elements.item.title}
+                            ]}>{item.title}
                            </Text>
                           </View>
                         <Icons name="chevron-right" size={20} color={'grey'} />

@@ -7,27 +7,113 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  StatusBar
+  StatusBar,
+  ToastAndroid
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { DeviceWidth, DeviceHeigth } from '../../Component/Config';
+import { DeviceWidth, DeviceHeigth,Api,Appapi } from '../../Component/Config';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useSelector } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import HTMLRender from "react-native-render-html";
+import Loader from '../../Component/Loader';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const DietDetail = () => {
   const navigation = useNavigation();
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [isLoaded, seIsLoaded] = useState(false);
   const route = useRoute();
   const Data = route.params;
-  console.log(Data.data);
+  const [isLoaded,setIsLoaded]=useState(false)
+  const [FavData, setFavData] = useState([])
+  const [isMounted, setIsMounted] = useState(0);
+  const [userid, setUserId] = useState()
   const Summary = Data.data.description
   const Ingredients = Data.data.ingredients
   const Instructions = Data.data.instructions
   const FlatListData = [{ Summary, Ingredients, Instructions }];
   const { defaultTheme } = useSelector(state => state);
+  useEffect(() => {
+    const getUsersFavWorkout = async () => {
+      try {
+        const Storeddata = await AsyncStorage.getItem('Data');
+        if (Storeddata !== null) {
+          const JASONData = JSON.parse(Storeddata)
+          const Id = JASONData[0].email
+          setUserId(Id)
+          const favDiet = await axios(`${Api}/${Appapi.FavoriteDiets}?email=${Id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            }
+          })
+          setIsLoaded(true)
+          if (favDiet.data) {
+            setFavData(favDiet.data)
+           console.log('fsvdata',favDiet.data)
+          }
+        }
+        else {
+          console.log("data not found")
+        }
+      } catch (error) {
+        console.log("ERROR", error)
+      }
+    }
+    getUsersFavWorkout();
+  }, [isMounted]);
+  const AddToFavorites = async () => {
+    try {
+      let payload = new FormData()
+      payload.append('email', userid)
+      payload.append('diet_id', Data.data.id)
+      payload.append('temp', 0)
+      const Fav = await axios(`${Api}/${Appapi.Favorites}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: payload
+      })
+      if (Fav.data) {
+        ToastAndroid.showWithGravity(Fav.data[0].msg, ToastAndroid.SHORT, ToastAndroid.CENTER)
+        setFavData(FavData)
+
+        setIsMounted(isMounted + 1)
+      }
+    } catch (error) {
+      console.log("Erroror", error)
+    }
+  }
+  const RemoveFavorites = async () => {
+    try {
+      const RemovedData = await axios(`${Api}/${Appapi.RemoveFavorite}?email=${userid}&diet_id=${Data.data.id}&temp=${1}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        // data:payload,
+      })
+      if (RemovedData.data) {
+        ToastAndroid.showWithGravity(RemovedData.data[0].msg, ToastAndroid.SHORT, ToastAndroid.CENTER)
+        setFavData(FavData.filter((item) => item.id !== Data.data.id))
+        setIsMounted(isMounted + 1)
+      }
+    } catch (error) {
+      console.log("Erroror", error)
+    }
+  }
+  const toggleAddRemove = () => {
+    if (FavData.some((item) => item.id === Data.data.id)) {
+      RemoveFavorites();
+      console.log('true Tggle')
+    }
+    else {
+      AddToFavorites();
+      console.log("false tggle")
+    }
+  }
+  if(isLoaded){
   return (
     <SafeAreaView
       style={[
@@ -42,18 +128,18 @@ const DietDetail = () => {
           <View style={styles.Buttn}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('Diets');
+                navigation.goBack();
               }}>
               <Icons name="close" size={30} color={'white'} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setIsBookmarked(!isBookmarked)}>
-              {isBookmarked ? (
+            <TouchableOpacity onPress={() =>toggleAddRemove()}>
+              {FavData.some((item) => item.id === Data.data.id) ? (
                 <>
-                  <Icons name="heart-outline" size={30} color={'white'} />
+                  <Icons name="heart" size={30} color={'red'} />
                 </>
               ) : (
                 <>
-                  <Icons name="heart" size={30} color={'red'} />
+                  <Icons name="heart-outline" size={30} color={'white'} />
                 </>
               )}
             </TouchableOpacity>
@@ -167,7 +253,14 @@ const DietDetail = () => {
       />
       <View />
     </SafeAreaView>
-  );
+  )}
+  else{
+    return(
+      <View>
+        <Loader/>
+      </View>
+    )
+  }
 }
 const styles = StyleSheet.create({
   container: {

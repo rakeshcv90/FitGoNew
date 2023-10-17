@@ -141,6 +141,7 @@ const Signup = ({ navigation }) => {
           style={styles.AuthInput}
           activeUnderlineColor="#f39c1f"
           value={Name}
+          textColor={defaultTheme?"#fff":"#000"}
         />
         <TextInput
           label={'Email'}
@@ -150,6 +151,7 @@ const Signup = ({ navigation }) => {
           style={styles.AuthInput}
           activeUnderlineColor="#f39c1f"
           value={Email}
+          textColor={defaultTheme?"#fff":"#000"}
         />
         <TextInput
           label={'Password'}
@@ -159,9 +161,10 @@ const Signup = ({ navigation }) => {
           style={styles.AuthInput}
           activeUnderlineColor="#ec9706"
           value={Password}
+          textColor={defaultTheme?"#fff":"#000"}
           secureTextEntry={!isVisible}
           right={<TextInput.Icon icon={isVisible ? 'eye' : 'eye-off'}
-            onPress={ToggleVisibility} />}
+            onPress={ToggleVisibility} color={"#f39c1f"} />}
         />
         <TextInput
           label={'Confirm Password'}
@@ -171,6 +174,7 @@ const Signup = ({ navigation }) => {
           style={styles.AuthInput}
           activeUnderlineColor="#f39c1f"
           value={ConfirmPassword}
+          textColor={defaultTheme?"#fff":"#000"}
         />
         <View
           style={{

@@ -41,7 +41,6 @@ const FavWorkouts = () => {
           })
           if (favWorkout.data) {
             setFavWorkout(favWorkout.data)
-            console.log("datarl", favWorkout.data[0].image)
             setIsLoaded(true)
           }
         }
