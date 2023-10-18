@@ -8,7 +8,6 @@ import {Provider} from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react';
 import { persister,store } from './src/Component/ThemeRedux/Store';
 const AppRedux = () => {
-  console.log(store)
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persister}>

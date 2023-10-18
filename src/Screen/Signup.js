@@ -27,56 +27,56 @@ const Signup = ({ navigation }) => {
     let pass = /^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/;
     if (!Name) {
       showMessage({
-        message: 'Signup  Alert',
-        description: 'Enter Your name',
+        message: 'Enter Your name',
+        // description: 'Enter Your name',
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (!Email) {
       showMessage({
-        message: 'Signup  Alert',
-        description: 'Enter Your Email',
+        message: 'Enter Your Email',
+        // description: 'Enter Your Email',
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (!reg.test(Email)) {
       showMessage({
-        message: 'Signup  Alert',
-        description: 'Invalid Format',
+        message: 'Invalid Format',
+        // description: 'Invalid Format',
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (!Password) {
       showMessage({
-        message: 'Signup  Alert',
-        description: 'Please Enter Your Password',
+        message: 'Please Enter Your Password',
+        // description: 'Please Enter Your Password',
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (!ConfirmPassword) {
       showMessage({
-        message: 'Signup  Alert',
-        description: 'Please enter Confirm  Password',
+        message: 'Please enter Confirm  Password',
+        // description: 'Please enter Confirm  Password',
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (Password != ConfirmPassword) {
       showMessage({
-        // message: 'Signup  Alert',
-        description: 'Confirm Password does not Match',
+        message: 'Confirm Password does not Match',
+        // description: 'Confirm Password does not Match',
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (checked == false) {
       showMessage({
-        // message: 'Signup  Alert',
-        description: 'Please Accept Terms and Conditions',
+        message: 'Please Accept Terms and Conditions',
+        // description: 'Please Accept Terms and Conditions',
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -115,7 +115,6 @@ const Signup = ({ navigation }) => {
 
         navigation.navigate('Login');
       } else {
-
         showMessage({
           message: 'Signup  Alert',
           description: data.data[0].msg,

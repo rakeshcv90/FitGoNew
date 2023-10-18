@@ -111,11 +111,9 @@ const WorkoutDescription = () => {
   const toggleAddRemove = () => {
     if (FavData.some((item) => item.id === HomeCardioData.id)) {
       RemoveFavorites();
-      console.log('true Tggle')
     }
     else {
       AddToFavorites();
-      console.log("false tggle")
     }
   }
   const ToggleBookmark = () => {
@@ -172,8 +170,7 @@ const WorkoutDescription = () => {
                 toggleAddRemove();
                 ToggleBookmark();
               }}>
-
-                {(FavData.some((item)=>item.id===HomeCardioData.id)) ? (
+                {(FavData.some((item)=>item.id===HomeCardioData.id )) ? (
                   <>
                     <Icons name="heart" size={30} color={'red'} />
                   </>

@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 import { useNavigation, useRoute } from '@react-navigation/native'
 const PlayerModal = ({ setState, State }) => {
   const { defaultTheme } = useSelector(state => state)
-  const [showModal,setShowModal]=useState(false)
+  const [showModal, setShowModal] = useState(false)
   const navigation = useNavigation()
   const route = useRoute();
   const Data = route.params;
@@ -96,7 +96,7 @@ const PlayerModal = ({ setState, State }) => {
       if (currentData.sets === sets) {
         if (isEnd) {
           setTimeout(() => {
-            navigation.navigate('completed', {id: currentData.id, time: totaltime});
+            navigation.navigate('completed', { id: currentData.id, time: totaltime });
           }, 1000);
         } else if (!isEnd) {
           setTimeout(() => {
@@ -135,29 +135,35 @@ const PlayerModal = ({ setState, State }) => {
       return () => clearInterval(intervalId);
     }
   }, [reps, isPlaying]);
-const handleExit=()=>{
-  Alert.alert('Confirm Exit',
-  'Are you sure you want to exit?',[
-    {
-      text:'Cancel',
-      style:'cancel',
-    },
-    {
-      text:'Exit',
-      onPress:(()=>{
-        navigation.goBack();
-      })
-    }
-  ])
-}
+  const handleExit = () => {
+    Alert.alert('Confirm Exit',
+      'Are you sure you want to exit?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Exit',
+        onPress: (() => {
+          navigation.goBack();
+        })
+      }
+    ])
+  }
   const renderRest = () => {
     if (rest && !finished) {
       return (
-        <SafeAreaView style={{ flex: 1, height: DeviceHeigth, alignItems: 'center', justifyContent: 'center' }}>
-          <View style={{ flexDirection: 'column', justifyContent: 'center', borderRadius: 100, alignItems: 'center', marginHorizontal: 20, borderColor: "orange", borderWidth: 15, width: 200, height: 200, }}>
-            <Text style={{ fontSize: 66, fontWeight: 'bold', color: '#f39c1f'}}>{timeLeft}"</Text>
+        <SafeAreaView style={{ flex: 1,}}>
+          <View style={[styles.closeButton, { marginTop: 45 }]}>
+            <TouchableOpacity onPress={() => {
+              handleExit();
+            }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity></View>
+          <View style={{ justifyContent: 'center', alignItems: 'center',flex:1}}>
+            <View style={{ flexDirection: 'column', justifyContent: 'center', borderRadius: 100, alignItems: 'center', marginHorizontal: 20, borderColor: "orange", borderWidth: 15, width: 200, height: 200, }}>
+              <Text style={{ fontSize: 66, fontWeight: 'bold', color: '#f39c1f' }}>{timeLeft}"</Text>
+            </View>
+            <Text style={{ fontSize: 26, fontWeight: 'bold', marginTop: 20, color: defaultTheme ? "#fff" : "#000" }}>Rest</Text>
           </View>
-          <Text style={{ fontSize: 26, fontWeight: 'bold', marginTop: 20, color:defaultTheme?"#fff":"#000"}}>Rest</Text>
         </SafeAreaView>
       )
     }
@@ -167,12 +173,12 @@ const handleExit=()=>{
       return (
         <SafeAreaView style={{ flex: 1, justifyContent: 'space-between' }}>
           <View>
-            <View style={[styles.closeButton, { marginTop: 45}]}>
+            <View style={[styles.closeButton, { marginTop: 45 }]}>
               <TouchableOpacity onPress={() => {
                 handleExit();
               }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity></View>
             <View>
-              <Video source={{ uri: 'https://vjs.zencdn.net/v/oceans.mp4' }} repeat muted style={styles.VideoPlayer} resizeMode={"stretch"} paused={!isPlaying}/>
+              <Video source={{ uri: 'https://vjs.zencdn.net/v/oceans.mp4' }} repeat muted style={styles.VideoPlayer} resizeMode={"stretch"} paused={!isPlaying} />
             </View>
             <View style={styles.Title}>
               <Text style={{ color: defaultTheme ? "#fff" : "#000", fontSize: 20 }}>{currentData.title}</Text>
@@ -199,28 +205,27 @@ const handleExit=()=>{
             <TouchableOpacity onPress={() => { goToPreviousPage() }} disabled={currentPage === 0} ><Text style={{ color: '#f39c1f', fontSize: 20 }}>Previous</Text></TouchableOpacity>
             <TouchableOpacity onPress={() => { goToNextPage() }} disabled={currentPage === PlayerScrnData.length - 1}><Text style={{ color: '#f39c1f', fontSize: 20 }}>Next</Text></TouchableOpacity>
           </View>
-         
+
         </SafeAreaView>)
     }
   }
-  
+
   return (
-    <SafeAreaView style={{ flex: 1 ,backgroundColor:defaultTheme?"#000":"#fff"}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
       {renderContent()}
       {renderRest()}
       {finished ?
-       <View style={{flex:1}}>
-         <View style={[styles.closeButton, { margin: 10}]}>
-          <TouchableOpacity onPress={() => {
-            handleExit();
-          }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity>
+        <View style={{ flex: 1 }}>
+          <View style={[styles.closeButton, { margin: 10 }]}>
+            <TouchableOpacity onPress={() => {
+              handleExit();
+            }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity>
           </View>
-            <View style={{alignItems:'center',justifyContent:'center',marginTop:250}}>
-            <Icons name="checkbox-marked-circle-outline" style={{color:'#f39c1f', fontSize: 72, marginBottom:10}}/>
-            <Text style={{fontSize:34, fontWeight:'bold', textAlign:'center',color:defaultTheme?"#fff":"#000"}}>Completed</Text>
-            </View>
-            </View> : null}
-     
+          <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 250 }}>
+            <Icons name="checkbox-marked-circle-outline" style={{ color: '#f39c1f', fontSize: 72, marginBottom: 10 }} />
+            <Text style={{ fontSize: 34, fontWeight: 'bold', textAlign: 'center', color: defaultTheme ? "#fff" : "#000" }}>Completed</Text>
+          </View>
+        </View> : null}x
     </SafeAreaView>
 
   );

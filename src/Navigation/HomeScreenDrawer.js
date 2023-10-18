@@ -98,7 +98,7 @@ const HomeScreenDrawer = () => {
             style={{
               width: DeviceWidth,
               height: (DeviceHeigth * 35) / 100,
-              backgroundColor: 'rgba(0,0,0,0.5)',
+              backgroundColor: 'rgba(0,0,0,0.3)',
               justifyContent: 'center',
               alignItems: 'center',
             }}>

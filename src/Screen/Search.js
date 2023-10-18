@@ -20,7 +20,7 @@ import { useSelector } from 'react-redux';
 import Loader from '../Component/Loader';
 import { useNavigation } from '@react-navigation/native';
 const Search = () => {
-  const navigation =useNavigation()
+  const navigation = useNavigation()
   const [query, setQuery] = useState('');
   const [ApiData, setApiData] = useState([]);
   const [searchedData, setSearchedData] = useState([]);
@@ -62,20 +62,22 @@ const Search = () => {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
         <HeaderWithoutSearch Header={"Search"} />
-        <View style={styles.SearchView}>
+        <View style={[styles.SearchView, { borderColor: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' }]}>
           <Icons
             name={'magnify'}
             size={25}
-            color={'grey'}
+            color={defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'}
             style={styles.searchIcon}
           />
           <TextInput
             style={styles.textInput}
             placeholder="Search Workouts..."
             underlineColor="transparent"
-            theme={{ colors: { primary: 'transparent' } }}
+            placeholderTextColor={defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'}
             cursorColor="#f39c1f"
             value={query}
+            activeUnderlineColor='transparent'
+            textColor={defaultTheme ? '#fff' : '#000'}
             onChangeText={text => {
               setQuery(text);
               onSearch(text);
@@ -88,10 +90,10 @@ const Search = () => {
               <FlatList
                 data={searchedData}
                 renderItem={elements => (
-                  <TouchableOpacity 
-                  onPress={()=>{
-                    navigation.navigate("WorkoutDescription",{elements})
-                  }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("WorkoutDescription", { elements })
+                    }}>
                     <View
                       style={{
                         flexDirection: 'row',
@@ -124,11 +126,10 @@ const Search = () => {
                 </View>
               </>) : (<>
                 <View style={styles.noData}>
-                  <Text style={{ fontSize: 20 }}>Ooops! No Results</Text>
-                  <Text>Try different keyword</Text>
+                  <Text style={{ fontSize: 20, color:defaultTheme ? '#fff' : '#000'}}>Ooops! No Results</Text>
+                  <Text style={{color:defaultTheme ? '#fff': '#000'}}>Try different keyword</Text>
                 </View>
               </>)}
-
             </>
           )}
         </View>

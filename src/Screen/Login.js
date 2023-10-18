@@ -8,31 +8,31 @@ import {
   BackHandler,
   Alert,
 } from 'react-native';
-import React, {useEffect, useState,} from 'react';
-import {localImage} from '../Component/Image';
-import {Api, DeviceHeigth, DeviceWidth, Appapi} from '../Component/Config';
-import {TextInput} from 'react-native-paper';
-import {showMessage} from 'react-native-flash-message';
+import React, { useEffect, useState, } from 'react';
+import { localImage } from '../Component/Image';
+import { Api, DeviceHeigth, DeviceWidth, Appapi } from '../Component/Config';
+import { TextInput } from 'react-native-paper';
+import { showMessage } from 'react-native-flash-message';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native';
 const Login = () => {
-  const navigation=useNavigation();
+  const navigation = useNavigation();
   const [Email, setEmail] = useState('');
   const [Password, setPassword] = useState('');
   const [submitText, setsubmitText] = useState('ENTER');
-  const [isVisible,seIsvisible]= useState(false)
-  const {defaultTheme}=useSelector((state)=>state)
-  const ToggleVisibility=()=>{seIsvisible(!isVisible)}
+  const [isVisible, seIsvisible] = useState(false)
+  const { defaultTheme } = useSelector((state) => state)
+  const ToggleVisibility = () => { seIsvisible(!isVisible) }
   useEffect(() => {
-    const HandleBackButton=()=>{
+    const HandleBackButton = () => {
       BackHandler.removeEventListener();
       return true;
-  };
-    BackHandler.addEventListener('hardwareBackPress',HandleBackButton);
-    return()=>{
-      BackHandler.removeEventListener('hardwareBackPress',HandleBackButton);
+    };
+    BackHandler.addEventListener('hardwareBackPress', HandleBackButton);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', HandleBackButton);
     }
   }, []);
   // const customTheme={
@@ -47,27 +47,26 @@ const Login = () => {
     let pass = /^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/;
     if (!Email) {
       showMessage({
-        message: 'Email Alert',
-        description: 'Please Enter Your Mail',
+        message: 'Please Enter Your Mail',
+        // description: 'Please Enter Your Mail',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setsubmitText('ENTER');
     } else if (!reg.test(Email)) {
       showMessage({
-        message: 'Email Alert',
-        description: 'Invalid Format',
+        message: 'Invalid Format',
+        // description: 'Invalid Format',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setsubmitText('ENTER');
     } else if (!Password) {
-      Alert.alert('Please Enter Your Password');
       showMessage({
-        message: 'Password Alert',
-        description: 'Please Enter Your Password',
+        message: 'Please Enter Your Password',
+        // description: 'Please Enter Your Password',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setsubmitText('ENTER');
     } else {
@@ -90,14 +89,14 @@ const Login = () => {
           showMessage({
             message: data.data[0].msg,
             type: 'success',
-            icon: {icon: 'auto', position: 'left'},
+            icon: { icon: 'auto', position: 'left' },
           });
           navigation.navigate('DrawerNavigation');
         } else {
           showMessage({
             message: data.data[0].msg,
             type: 'danger',
-            icon: {icon: 'auto', position: 'left'},
+            icon: { icon: 'auto', position: 'left' },
           });
           setsubmitText('ENTER');
         }
@@ -108,7 +107,7 @@ const Login = () => {
     }
   };
   return (
-    <SafeAreaView style={[styles.container,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
       <Image style={styles.logo} source={localImage.logo} />
       <TextInput
         label={'Email'}
@@ -117,10 +116,10 @@ const Login = () => {
         autoCapitalize="none"
         style={styles.AuthInput}
         activeUnderlineColor="#f39c1f"
-        underlineColor={defaultTheme?'rgba(255,255,255,0.7)':'rgba(0,0,0,0.6)'}
+        underlineColor={defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'}
         value={Email}
-        textColor={defaultTheme?'#fff':'#000'}
-        theme={{colors:{onSurfaceVariant:defaultTheme?'rgba(255,255,255,0.7)':'rgba(0,0,0,0.6)'}}}
+        textColor={defaultTheme ? '#fff' : '#000'}
+        theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
       />
       <TextInput
         label={'Password'}
@@ -129,21 +128,21 @@ const Login = () => {
         secureTextEntry={!isVisible}
         style={styles.AuthInput}
         activeUnderlineColor="#f39c1f"
-        underlineColor={defaultTheme?'rgba(255,255,255,0.7)':'rgba(0,0,0,0.6)'}
+        underlineColor={defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'}
         value={Password}
-        textColor={defaultTheme?'#fff':'#000'}
-        theme={{colors:{onSurfaceVariant:defaultTheme?'rgba(255,255,255,0.7)':'rgba(0,0,0,0.6)'}}}
-        right={ <TextInput.Icon icon={isVisible?'eye':'eye-off'}
-        theme={{colors:{onSurfaceVariant:defaultTheme?'rgba(255,255,255,0.7)':'rgba(0,0,0,0.6)'}}}
-        onPress={ToggleVisibility}/>}
+        textColor={defaultTheme ? '#fff' : '#000'}
+        theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
+        right={<TextInput.Icon icon={isVisible ? 'eye' : 'eye-off'}
+          theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
+          onPress={ToggleVisibility} />}
       />
-      <View style={{width: (DeviceWidth * 80) / 100, alignItems: 'flex-end',backgroundColor:defaultTheme?"#000":"#fff"}}>
+      <View style={{ width: (DeviceWidth * 80) / 100, alignItems: 'flex-end', backgroundColor: defaultTheme ? "#000" : "#fff" }}>
         <TouchableOpacity
-          style={[styles.Forget,{backgroundColor:defaultTheme?"#000":"#fff"}]}
+          style={[styles.Forget, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}
           onPress={() => {
             navigation.navigate('ForgetPassword');
           }}>
-          <Text style={{color:defaultTheme?"#fff":"#000"}}>Forget Password ?</Text>
+          <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>Forget Password ?</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity
@@ -152,15 +151,15 @@ const Login = () => {
           setsubmitText('Please Wait...');
           ErrorHandler();
         }}>
-        <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
+        <Text style={{ color: 'white', fontSize: 15 }}>{submitText}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('Signup');
         }}>
-        <Text style={{color:defaultTheme?"#fff":"#000", marginBottom: (DeviceHeigth * 5) / 100}}>
+        <Text style={{ color: defaultTheme ? "#fff" : "#000", marginBottom: (DeviceHeigth * 5) / 100 }}>
           Don't have an account ?{' '}
-          <Text style={{color:defaultTheme?"#fff":"#000", fontWeight: 'bold'}}>SignUp</Text>
+          <Text style={{ color: defaultTheme ? "#fff" : "#000", fontWeight: 'bold' }}>SignUp</Text>
         </Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -208,7 +207,7 @@ const styles = StyleSheet.create({
     color: 'black',
     alignItems: 'flex-start',
     textAlign: 'center',
-    borderWidth:1
+    borderWidth: 1
   },
 });
 export default Login;

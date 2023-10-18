@@ -20,16 +20,16 @@ const ForgetPassword = ({navigation}) => {
   const ErrorHandle = async () => {
     if (!Email) {
       showMessage({
-        message: 'Email Alert',
-        description: 'Please Enter your Email',
+        message: 'Please Enter your Email',
+        // description: 'Please Enter your Email',
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
       });
       setInputText('Enter');
     } else if (!reg.test(Email)) {
       showMessage({
-        message: 'Email Alert',
-        description: 'Invalid Email Format',
+        message: 'Invalid Email Format',
+        // description: 'Invalid Email Format',
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
       });
@@ -57,7 +57,7 @@ const ForgetPassword = ({navigation}) => {
           navigation.navigate('Login')
         } else {
           showMessage({
-            message: data.data.data[0].msg,
+            message: data.data[0].msg,
             // description: data.data.data[0].msg,
             type: 'danger',
             icon: {icon: 'auto', position: 'left'},
