@@ -23,5 +23,4 @@ const FavoritesRouter = () => {
 
     )
 }
-
 export default FavoritesRouter

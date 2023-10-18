@@ -56,7 +56,6 @@ const AboutUs = () => {
                                     fontSize:20,
                                 }
                             }} contentWidth={width} />
-                            {/* <Text style={{ color: "red" }}>{elements.item.st_aboutus}</Text> */}
                         </View>)
                     }} />
                 </View>
@@ -80,7 +79,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         margin: 30,
         alignItems: 'center'
-    
     }
 })
 export default AboutUs

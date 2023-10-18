@@ -67,15 +67,15 @@ const Signup = ({ navigation }) => {
       setSubmitText('Enter');
     } else if (Password != ConfirmPassword) {
       showMessage({
-        message: 'Signup  Alert',
-        description: ' Confirm  Password Not Match',
+        // message: 'Signup  Alert',
+        description: 'Confirm Password does not Match',
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (checked == false) {
       showMessage({
-        message: 'Signup  Alert',
+        // message: 'Signup  Alert',
         description: 'Please Accept Terms and Conditions',
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
@@ -141,7 +141,9 @@ const Signup = ({ navigation }) => {
           style={styles.AuthInput}
           activeUnderlineColor="#f39c1f"
           value={Name}
-          textColor={defaultTheme?"#fff":"#000"}
+          textColor={defaultTheme ? "#fff" : "#000"}
+          theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
+          underlineColor={defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'}
         />
         <TextInput
           label={'Email'}
@@ -151,7 +153,9 @@ const Signup = ({ navigation }) => {
           style={styles.AuthInput}
           activeUnderlineColor="#f39c1f"
           value={Email}
-          textColor={defaultTheme?"#fff":"#000"}
+          textColor={defaultTheme ? "#fff" : "#000"}
+          theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
+          underlineColor={defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'}
         />
         <TextInput
           label={'Password'}
@@ -161,10 +165,14 @@ const Signup = ({ navigation }) => {
           style={styles.AuthInput}
           activeUnderlineColor="#ec9706"
           value={Password}
-          textColor={defaultTheme?"#fff":"#000"}
+          textColor={defaultTheme ? "#fff" : "#000"}
           secureTextEntry={!isVisible}
+          underlineColor={defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'}
+          theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
           right={<TextInput.Icon icon={isVisible ? 'eye' : 'eye-off'}
-            onPress={ToggleVisibility} color={"#f39c1f"} />}
+            onPress={ToggleVisibility}
+            theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }} />}
+
         />
         <TextInput
           label={'Confirm Password'}
@@ -174,7 +182,9 @@ const Signup = ({ navigation }) => {
           style={styles.AuthInput}
           activeUnderlineColor="#f39c1f"
           value={ConfirmPassword}
-          textColor={defaultTheme?"#fff":"#000"}
+          textColor={defaultTheme ? "#fff" : "#000"}
+          underlineColor={defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'}
+          theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
         />
         <View
           style={{

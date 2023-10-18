@@ -11,7 +11,6 @@ const SplaceScreen = ({ navigation }) => {
     }, 2000)
   }, [])
   const UserAuth = async () => {
-
     try {
       const userData = await AsyncStorage.getItem('Data')
       const data = (JSON.parse(userData))
@@ -25,13 +24,6 @@ const SplaceScreen = ({ navigation }) => {
       navigation.navigate('Login')
     }
   }
-  // if(!isLoaded){
-  //   return(
-  //     <View>
-  //       <CustomLoader/>
-  //     </View>
-  //   )
-  // }else{
   return (
     <View style={styels.container}>
       <Image

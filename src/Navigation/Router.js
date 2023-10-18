@@ -39,6 +39,7 @@ import MyDiets from '../Screen/MyDiets';
 import MyWorkouts from '../Screen/MyWorkouts';
 import FavoritesRouter from './FavoritesRouter';
 import ExerciseByEquipments from '../Screen/Exercises/ExerciseByEquipments';
+import LatestProducts from '../Screen/Stores/LatestProducts';
 const Stack = createNativeStackNavigator();
 const screenOptions = {
   headerShown: false, // Hide the header for all screens
@@ -80,6 +81,7 @@ const Router = () => {
       <Stack.Screen name="MyWorkouts" component={MyWorkouts}/>
       <Stack.Screen name="FavoritesRouter" component={FavoritesRouter}/>
       <Stack.Screen name="ExerciseByEquipments" component={ExerciseByEquipments}/>
+      <Stack.Screen name="LatestProducts" component={LatestProducts}/>
     </Stack.Navigator>
   );
 }

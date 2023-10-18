@@ -6,22 +6,19 @@ import {
     ImageBackground,
     TouchableOpacity,
     StyleSheet,
+    Linking
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import Header from '../../Component/Header';
 import { DeviceWidth, DeviceHeigth } from '../../Component/Config';
 import { useNavigation,useRoute} from '@react-navigation/native';
 import axios from 'axios';
 import { Api, Appapi } from '../../Component/Config';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
-import LevelRate from '../../Component/LevelRate';
 import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux';
 import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
 const StoreCategories = () => {
     const route = useRoute();
     const Data = route.params;
-    const navigation=useNavigation()
     const [FilterData, setFilterData] = useState([]);
     const {defaultTheme}=useSelector((state)=>state)
     const [isLoaded, setIsLoaded] = useState(false);
@@ -57,8 +54,8 @@ const StoreCategories = () => {
                   scrollEnabled={true}
                   data={TagData}
                   renderItem={elements => (
-                    <TouchableOpacity onPress={()=>{
-                        navigation.navigate("StoreDetail",{data:elements.item})
+                    <TouchableOpacity  onPress={()=>{
+                      Linking.openURL(elements.item.link)
                     }}>
                       <ImageBackground
                         source={{uri: elements.item.image}}
@@ -66,14 +63,14 @@ const StoreCategories = () => {
                         <View style={[styles.gradientView, {}]}>
                           <View>
                             <Text style={styles.text}>{elements.item.title}</Text>
-                            <Text
+                            {/* <Text
                               style={{
                                 color: '#f39c1f',
                                 fontWeight: '500',
                                 marginTop: 7,
                               }}>
                               {(elements.item.price)}
-                            </Text>
+                            </Text> */}
                           </View>
                         </View>
                       </ImageBackground>

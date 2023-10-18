@@ -87,7 +87,6 @@ const ExerciseByEquipments = () => {
             <Text style={{color:defaultTheme?"#fff":"#000"}}> No Items Available</Text>
           </View>
           </>)}
-         
         </View>
       </SafeAreaView>
     )

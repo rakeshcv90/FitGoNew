@@ -73,7 +73,7 @@ const WorkoutDescription = () => {
       let payload = new FormData()
       payload.append('email', userid)
       payload.append('workout_id', HomeCardioData.id)
-      payload.append('temp', 0)
+      payload.append('temp', 1)
       const Fav = await axios(`${Api}/${Appapi.Favorites}`, {
         method: 'POST',
         headers: {
@@ -92,7 +92,7 @@ const WorkoutDescription = () => {
   }
   const RemoveFavorites = async () => {
     try {
-      const RemovedData = await axios(`${Api}/${Appapi.RemoveFavorite}?email=${userid}&workout_id=${HomeCardioData.id}&temp=${1}`, {
+      const RemovedData = await axios(`${Api}/${Appapi.RemoveFavorite}?email=${userid}&workout_id=${HomeCardioData.id}&temp=${2 }`, {
         method: 'GET',
         headers: {
           'Content-Type': 'multipart/form-data',

@@ -11,7 +11,7 @@ import {
 import React, {useEffect, useState,} from 'react';
 import {localImage} from '../Component/Image';
 import {Api, DeviceHeigth, DeviceWidth, Appapi} from '../Component/Config';
-import {TextInput,DefaultTheme} from 'react-native-paper';
+import {TextInput} from 'react-native-paper';
 import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -27,12 +27,12 @@ const Login = () => {
   const ToggleVisibility=()=>{seIsvisible(!isVisible)}
   useEffect(() => {
     const HandleBackButton=()=>{
-      BackHandler.exitApp();
+      BackHandler.removeEventListener();
       return true;
   };
     BackHandler.addEventListener('hardwareBackPress',HandleBackButton);
     return()=>{
-      BackHandler.removeEventListener('hardwareBackPress',HandleBackButton)
+      BackHandler.removeEventListener('hardwareBackPress',HandleBackButton);
     }
   }, []);
   // const customTheme={
@@ -89,7 +89,6 @@ const Login = () => {
           setPassword('');
           showMessage({
             message: data.data[0].msg,
-            // description: data.data[0].msg,
             type: 'success',
             icon: {icon: 'auto', position: 'left'},
           });
@@ -97,7 +96,6 @@ const Login = () => {
         } else {
           showMessage({
             message: data.data[0].msg,
-            // description: data.data[0].msg,
             type: 'danger',
             icon: {icon: 'auto', position: 'left'},
           });
@@ -119,9 +117,10 @@ const Login = () => {
         autoCapitalize="none"
         style={styles.AuthInput}
         activeUnderlineColor="#f39c1f"
+        underlineColor={defaultTheme?'rgba(255,255,255,0.7)':'rgba(0,0,0,0.6)'}
         value={Email}
         textColor={defaultTheme?'#fff':'#000'}
-        // theme={customTheme}
+        theme={{colors:{onSurfaceVariant:defaultTheme?'rgba(255,255,255,0.7)':'rgba(0,0,0,0.6)'}}}
       />
       <TextInput
         label={'Password'}
@@ -130,9 +129,12 @@ const Login = () => {
         secureTextEntry={!isVisible}
         style={styles.AuthInput}
         activeUnderlineColor="#f39c1f"
+        underlineColor={defaultTheme?'rgba(255,255,255,0.7)':'rgba(0,0,0,0.6)'}
         value={Password}
-        right={ <TextInput.Icon icon={isVisible?'eye':'eye-off'}
         textColor={defaultTheme?'#fff':'#000'}
+        theme={{colors:{onSurfaceVariant:defaultTheme?'rgba(255,255,255,0.7)':'rgba(0,0,0,0.6)'}}}
+        right={ <TextInput.Icon icon={isVisible?'eye':'eye-off'}
+        theme={{colors:{onSurfaceVariant:defaultTheme?'rgba(255,255,255,0.7)':'rgba(0,0,0,0.6)'}}}
         onPress={ToggleVisibility}/>}
       />
       <View style={{width: (DeviceWidth * 80) / 100, alignItems: 'flex-end',backgroundColor:defaultTheme?"#000":"#fff"}}>

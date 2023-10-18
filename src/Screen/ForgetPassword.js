@@ -91,6 +91,8 @@ const ForgetPassword = ({navigation}) => {
           style={styles.AuthInput}
           activeUnderlineColor="#ec9706"
           value={Email}
+          theme={{colors:{onSurfaceVariant:defaultTheme?'rgba(255,255,255,0.7)':'rgba(0,0,0,0.6)'}}}
+          underlineColor={defaultTheme?'rgba(255,255,255,0.7)':'rgba(0,0,0,0.6)'}
         />
         <TouchableOpacity
           style={styles.Tbutton}

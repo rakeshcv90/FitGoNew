@@ -6,30 +6,34 @@ import {
     ImageBackground,
     TouchableOpacity,
     StyleSheet,
-    Image
+    Image,
+    Linking
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { DeviceWidth, DeviceHeigth } from '../../Component/Config';
-import { useNavigation ,useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
 import { Api, Appapi } from '../../Component/Config';
 import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux';
 import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { Divider } from 'react-native-paper';
 const Store = () => {
     const [ApiData, setApiData] = useState([]);
     const [Categories, setCategories] = useState([])
+    const [getLatestprdct, setLatestprdct] = useState([])
     const [isLoaded, setIsLoaded] = useState(false);
     const navigation = useNavigation();
     const { defaultTheme } = useSelector(state => state)
     useEffect(() => {
         getData();
         getCategories();
+        getLatestProducts()
     }, []);
     const getData = async () => {
         try {
-            const data = await axios(`${Api}/${Appapi.Products}`, {
+            const data = await axios(`${Api}/${Appapi.Products}?featured=1`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'Multipart/form-data',
@@ -52,9 +56,21 @@ const Store = () => {
             setIsLoaded(true)
             console.log(data.data[0])
         } catch (error) {
-
         }
     };
+    const getLatestProducts = async () => {
+        try {
+            const data = await axios(`${Api}/${Appapi.Products}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'Multipart/form-data',
+                },
+            });
+            setLatestprdct(data.data);
+            // console.log(data.data.data);
+            setIsLoaded(true);
+        } catch (error) { }
+    }
     if (!isLoaded) {
         return (
             <View><Loader /></View>
@@ -76,23 +92,25 @@ const Store = () => {
                         data={ApiData}
                         renderItem={elements => (
                             <TouchableOpacity onPress={() => {
-                                navigation.navigate("StoreDetail", { data: elements.item })
+                                Linking.openURL(elements.item.link)
                             }}>
                                 <ImageBackground
                                     source={{ uri: elements.item.image }}
                                     style={styles.Image}>
                                     <View style={styles.gradientView}>
                                         <Text style={styles.text}>{elements.item.title}</Text>
-                                        <Text
+                                        {/* <Text
                                             style={{ color: '#f39c1f', fontWeight: '500', marginTop: 7 }}>
-                                            {elements.item.price}
-                                        </Text>
+                                            Buy Product
+                                        </Text> */}
                                     </View>
+
                                 </ImageBackground>
                             </TouchableOpacity>
                         )}
                     />
                 </View>
+                {/* <Divider bold/> */}
                 <View
                     style={{
                         flexDirection: 'row',
@@ -109,9 +127,6 @@ const Store = () => {
                         }}>
                         Categories
                     </Text>
-                    <TouchableOpacity>
-                        <Icon name="chevron-right" size={25} color={defaultTheme == true ? "#fff" : "#000"} />
-                    </TouchableOpacity>
                 </View>
                 <View>
                     <FlatList
@@ -131,6 +146,7 @@ const Store = () => {
                         )}
                     />
                 </View>
+                {/* <Divider bold/> */}
                 <View
                     style={{
                         flexDirection: 'row',
@@ -147,17 +163,20 @@ const Store = () => {
                         }}>
                         Latest Products
                     </Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate("LatestProducts")
+                    }}>
                         <Icon name="chevron-right" size={25} color={defaultTheme == true ? "#fff" : "#000"} />
                     </TouchableOpacity>
                 </View>
                 <View style={{ height: DeviceHeigth * 35 / 100 }}>
                     <FlatList
-                        data={ApiData}
+                        data={getLatestprdct}
                         renderItem={elements => (
-                            <TouchableOpacity style={{ height: (DeviceHeigth * 10) / 100 }} onPress={() => {
-                                navigation.navigate("StoreDetail", { data: elements.item })
-                            }}>
+                            <TouchableOpacity style={{ height: (DeviceHeigth * 10) / 100 }}
+                                onPress={() => {
+                                    Linking.openURL(elements.item.link)
+                                }}>
                                 <View
                                     style={{
                                         flexDirection: 'row',
@@ -178,9 +197,9 @@ const Store = () => {
                                         }}>
                                         <View>
                                             <Text style={{ color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>{elements.item.title}</Text>
-                                            <Text style={{ color: '#f39c1f', fontWeight: '500' }}>
+                                            {/* <Text style={{ color: '#f39c1f', fontWeight: '500' }}>
                                                 {elements.item.price}
-                                            </Text>
+                                            </Text> */}
                                         </View>
                                         <Icon name="chevron-right" size={20} color={defaultTheme == true ? "#fff" : "#000"} />
                                     </View>

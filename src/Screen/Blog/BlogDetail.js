@@ -58,7 +58,8 @@ const BlogDetail = () => {
                 </ImageBackground>
             </View>
             <View style={{ height: DeviceHeigth * 55 / 100, marginHorizontal: 20 }}>
-                <FlatList data={DesData} renderItem={(elements) => (
+                <FlatList data={DesData} showsVerticalScrollIndicator={false}
+                 renderItem={(elements) => (
                     <HTMLRender source={{ html: elements.item.Description }} contentWidth={DeviceWidth} tagsStyles={{
                         p:{
                             color:defaultTheme?"#fff":"#000"

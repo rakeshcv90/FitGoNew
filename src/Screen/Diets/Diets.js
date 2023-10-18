@@ -8,17 +8,14 @@ import {
     StyleSheet,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import Header from '../../Component/Header';
 import { DeviceWidth, DeviceHeigth } from '../../Component/Config';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { Api, Appapi } from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
-import LevelRate from '../../Component/LevelRate';
 import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux';
 import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
-import { Element } from 'react-native-render-html';
 const Diets = () => {
     const {defaultTheme}=useSelector((state)=>state)
     const [ApiData, setApiData] = useState([]);

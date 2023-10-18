@@ -6,7 +6,6 @@ import {
   ImageBackground,
   TouchableOpacity,
   StyleSheet,
-  Image,
   StatusBar,
   ToastAndroid
 } from 'react-native';
@@ -287,7 +286,6 @@ const styles = StyleSheet.create({
     marginBottom: (DeviceHeigth * 3) / 100,
     alignItems: 'flex-start',
     marginHorizontal: 15,
-    // justifyContent:'space-evenly'
   },
   levelGoalView: {
     width: DeviceWidth,
