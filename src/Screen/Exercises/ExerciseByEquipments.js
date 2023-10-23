@@ -93,9 +93,9 @@ const ExerciseByEquipments = () => {
   }
   else {
     return (
-      <View>
+  
         <Loader />
-      </View>
+ 
     )
   }
 }

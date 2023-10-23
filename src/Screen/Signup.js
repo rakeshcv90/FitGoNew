@@ -4,6 +4,7 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  KeyboardAvoidingView
 } from 'react-native';
 import React, { useState } from 'react';
 import { Api, Appapi, DeviceHeigth, DeviceWidth } from '../Component/Config';
@@ -130,101 +131,106 @@ const Signup = ({ navigation }) => {
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
-      <Text style={[styles.SignUpText, { color: defaultTheme ? "#fff" : "#000" }]}>SignUp</Text>
-      <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
-        <TextInput
-          label={'Name'}
-          onChangeText={text => setName(text)}
-          mode="flat"
-          autoCapitalize="none"
-          style={styles.AuthInput}
-          activeUnderlineColor="#f39c1f"
-          value={Name}
-          textColor={defaultTheme ? "#fff" : "#000"}
-          theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
-          underlineColor={defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'}
-        />
-        <TextInput
-          label={'Email'}
-          onChangeText={text => setEmail(text.trim())}
-          mode="flat"
-          autoCapitalize="none"
-          style={styles.AuthInput}
-          activeUnderlineColor="#f39c1f"
-          value={Email}
-          textColor={defaultTheme ? "#fff" : "#000"}
-          theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
-          underlineColor={defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'}
-        />
-        <TextInput
-          label={'Password'}
-          onChangeText={text => setPassword(text.trim())}
-          mode="flat"
-          autoCapitalize="none"
-          style={styles.AuthInput}
-          activeUnderlineColor="#ec9706"
-          value={Password}
-          textColor={defaultTheme ? "#fff" : "#000"}
-          secureTextEntry={!isVisible}
-          underlineColor={defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'}
-          theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
-          right={<TextInput.Icon icon={isVisible ? 'eye' : 'eye-off'}
-            onPress={ToggleVisibility}
-            theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }} />}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'height' : 'height'}
+        style={{ flex: 1 }}>
+        <Text style={[styles.SignUpText, { color: defaultTheme ? "#fff" : "#000" }]}>SignUp</Text>
 
-        />
-        <TextInput
-          label={'Confirm Password'}
-          onChangeText={text => setConformPassword(text.trim())}
-          mode="flat"
-          autoCapitalize="none"
-          style={styles.AuthInput}
-          activeUnderlineColor="#f39c1f"
-          value={ConfirmPassword}
-          textColor={defaultTheme ? "#fff" : "#000"}
-          underlineColor={defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'}
-          theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            position: 'relative',
-            alignItems: 'center',
-            width: (DeviceWidth * 80) / 100,
-          }}>
+        <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+          <TextInput
+            label={'Name'}
+            onChangeText={text => setName(text)}
+            mode="flat"
+            autoCapitalize="none"
+            style={styles.AuthInput}
+            activeUnderlineColor="#f39c1f"
+            value={Name}
+            textColor={defaultTheme ? "#fff" : "#000"}
+            theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
+            underlineColor={defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'}
+          />
+          <TextInput
+            label={'Email'}
+            onChangeText={text => setEmail(text.trim())}
+            mode="flat"
+            autoCapitalize="none"
+            style={styles.AuthInput}
+            activeUnderlineColor="#f39c1f"
+            value={Email}
+            textColor={defaultTheme ? "#fff" : "#000"}
+            theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
+            underlineColor={defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'}
+          />
+          <TextInput
+            label={'Password'}
+            onChangeText={text => setPassword(text.trim())}
+            mode="flat"
+            autoCapitalize="none"
+            style={styles.AuthInput}
+            activeUnderlineColor="#ec9706"
+            value={Password}
+            textColor={defaultTheme ? "#fff" : "#000"}
+            secureTextEntry={!isVisible}
+            underlineColor={defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'}
+            theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
+            right={<TextInput.Icon icon={isVisible ? 'eye' : 'eye-off'}
+              onPress={ToggleVisibility}
+              theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }} />}
+
+          />
+          <TextInput
+            label={'Confirm Password'}
+            onChangeText={text => setConformPassword(text.trim())}
+            mode="flat"
+            autoCapitalize="none"
+            style={styles.AuthInput}
+            activeUnderlineColor="#f39c1f"
+            value={ConfirmPassword}
+            textColor={defaultTheme ? "#fff" : "#000"}
+            underlineColor={defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'}
+            theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              position: 'relative',
+              alignItems: 'center',
+              width: (DeviceWidth * 80) / 100,
+            }}>
+            <TouchableOpacity
+              style={[styles.checkboxContainer, checked && styles.Checked]}
+              onPress={() => setChecked(!checked)}>
+              <Text>
+                {' '}
+                {checked && <Text style={{ color: '#fff' }}>&#10004;</Text>}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+              navigation.navigate('TermaAndCondition')
+            }}>
+              <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>I Agree to Term & Conditions</Text>
+            </TouchableOpacity>
+          </View>
           <TouchableOpacity
-            style={[styles.checkboxContainer, checked && styles.Checked]}
-            onPress={() => setChecked(!checked)}>
-            <Text>
-              {' '}
-              {checked && <Text style={{ color: '#fff' }}>&#10004;</Text>}
+            style={styles.Tbutton}
+            onPress={() => {
+              setSubmitText('Please Wait...');
+              ErrorHandler();
+            }}>
+            <Text style={{ color: 'white', fontSize: 15 }}>{submitText}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Login');
+            }}>
+            <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>
+              Already have an account ?{' '}
+              <Text style={{ color: defaultTheme ? "#fff" : "#000", fontWeight: 'bold' }}>Login</Text>
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {
-            navigation.navigate('TermaAndCondition')
-          }}>
-            <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>I Agree to Term & Conditions</Text>
-          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.Tbutton}
-          onPress={() => {
-            setSubmitText('Please Wait...');
-            ErrorHandler();
-          }}>
-          <Text style={{ color: 'white', fontSize: 15 }}>{submitText}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('Login');
-          }}>
-          <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>
-            Already have an account ?{' '}
-            <Text style={{ color: defaultTheme ? "#fff" : "#000", fontWeight: 'bold' }}>Login</Text>
-          </Text>
-        </TouchableOpacity>
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

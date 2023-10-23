@@ -26,6 +26,7 @@ const FavDiets = () => {
   const { defaultTheme } = useSelector((state) => state);
   const [isLoaded, setIsLoaded] = useState(false);
   const navigation = useNavigation()
+  const[update,setUpdate]=useState(0)
   useEffect(() => {
     const getUsersFavDiets = async () => {
       try {
@@ -41,7 +42,8 @@ const FavDiets = () => {
           })
           if (favDiet) {
             setFavDiets(favDiet.data)
-            // console.log("diet", favDiet)
+            console.log("diet", favDiet.data[0])
+            setUpdate(update+1)
             setIsLoaded(true)
           }
         }
@@ -53,7 +55,7 @@ const FavDiets = () => {
       }
     }
     getUsersFavDiets();
-  }, []);
+  }, [update]);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ?'#000':'#fff' }}>
     {isLoaded ? (
@@ -97,9 +99,9 @@ const FavDiets = () => {
       </>
     ) : (
       <>
-        <View>
+    
           <Loader />
-        </View>
+       
       </>
     )}
   </SafeAreaView>

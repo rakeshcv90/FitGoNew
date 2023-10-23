@@ -17,6 +17,7 @@ import { Api, Appapi } from '../../Component/Config';
 import axios from 'axios';
 import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import moment from 'moment';
 const LatestPost = () => {
     const [LatestPost, setLatestPost] = useState([]);
@@ -39,64 +40,61 @@ const LatestPost = () => {
             setIsLoaded(true);
         } catch (error) { }
     };
-    return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? '#000' : '#fff' }}>
-            <HeaderWithoutSearch Header={"Blog"} />
-            {isLoaded ? (
-                <>
-                    <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
-                        <FlatList
-                            data={LatestPost}
-                            renderItem={elements => (
-                                <TouchableOpacity onPress={() => {
-                                    navigation.navigate("BlogDetail", { data: elements.item })
-                                }}>
+    if (isLoaded) {
+        return (
+            <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
+                <HeaderWithoutSearch Header={"Latest Post"} />
+                <View style={{ height: DeviceHeigth * 90 / 100 }}>
+                    <FlatList
+                        data={LatestPost}
+                        renderItem={elements => (
+                            <TouchableOpacity style={{ height: (DeviceHeigth * 10) / 100 }} onPress={() => {
+                                navigation.navigate('BlogDetail', { data: elements.item })
+                            }}>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        margin: 10,
+                                        justifyContent: 'space-between',
+                                        // borderWidth:1,
+
+                                    }}>
+                                    <Image
+                                        source={{ uri: elements.item.image }}
+                                        style={{ height: 60, width: 60, borderRadius: 60 / 2 }}
+                                    />
                                     <View
                                         style={{
+                                            // marginLeft: 10,
                                             flexDirection: 'row',
-                                            margin: 10,
+                                            width: (DeviceWidth * 65) / 100,
                                             alignItems: 'center',
+                                            // borderWidth:1,
                                         }}>
-                                        <Image
-                                            source={{ uri: elements.item.image }}
-                                            style={styles.Image}
-                                        />
                                         <View>
-                                            <View style={styles.container3}>
-                                                <View>
-                                                    <Text
-                                                        style={[
-                                                            styles.flatListTitle,
-                                                            { color: defaultTheme == true ? '#fff' : '#000' },
-                                                        ]}>
-                                                        {elements.item.title}</Text>
-                                                    <Text
-                                                        style={{
-                                                            color: '#f39c1f',
-                                                            fontWeight: '500',
-                                                            marginTop: 7,
-                                                        }}>
-                                                        {moment(elements.item.date).fromNow()}
-                                                    </Text></View>
-                                                <Icons name="chevron-right" size={20} color={'grey'} />
-                                            </View>
-                                            <Text>{elements.item.days}</Text>
+                                            <Text style={{ color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>{elements.item.title}</Text>
+                                            <Text style={{ color: '#f39c1f', fontWeight: '500' }}>
+                                                {/* {elements.item.price} */}
+                                            </Text>
                                         </View>
                                     </View>
-                                </TouchableOpacity>
-                            )}
-                        />
-                    </View>
-                </>
-            ) : (
-                <>
-                    <View>
-                        <Loader />
-                    </View>
-                </>
-            )}
-        </SafeAreaView>
-    );
+                                    <Icon name="chevron-right" size={20} color={defaultTheme == true ? "#fff" : "#000"} />
+                                </View>
+                            </TouchableOpacity>
+                        )}
+                    />
+                </View>
+            </SafeAreaView>
+        )
+    }
+    else {
+        return (
+
+            <Loader />
+
+        )
+    }
 };
 const styles = StyleSheet.create({
     conatiner: {

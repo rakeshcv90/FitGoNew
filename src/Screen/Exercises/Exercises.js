@@ -104,7 +104,7 @@ const Exercises = () => {
   }
   else {
     return (
-      <View><Loader /></View>
+  <Loader />
     )
   }
 }

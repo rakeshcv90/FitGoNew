@@ -73,7 +73,7 @@ const Store = () => {
     }
     if (!isLoaded) {
         return (
-            <View><Loader /></View>
+           <Loader />
         )
     }
     else {

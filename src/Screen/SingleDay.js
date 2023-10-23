@@ -47,15 +47,13 @@ const SingleDay = () => {
 
     if (!isLoaded) {
         return (
-            <View>
-                <Loader />
-            </View>
+            <Loader />
         )
     }
     else if (isLoaded && ApiData.length > 0) {
         return (
             <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
-                <View style={[styles.closeButton,{marginTop: 45}]}>
+                <View style={[styles.closeButton, { marginTop: 45 }]}>
                     <TouchableOpacity onPress={() => {
                         navigation.goBack()
                     }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity>

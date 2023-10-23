@@ -47,8 +47,8 @@ const screenOptions = {
 const Router = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="LoginStack" component={LoginStack} />
-      <Stack.Screen name="Workouts" component={Workouts} />
+     <Stack.Screen name='DrawerNavigation' component={DrawerNavigation}/>
+     <Stack.Screen name="Workouts" component={Workouts}/>
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="Settings" component={Settings} />
       <Stack.Screen name="Goals" component={Goals} />
@@ -85,15 +85,13 @@ const Router = () => {
     </Stack.Navigator>
   );
 }
-const LoginStack = () => {
+export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
-      <Stack.Screen name="DrawerNavigation" component={DrawerNavigation} />
     </Stack.Navigator>
   );
 };

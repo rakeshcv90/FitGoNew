@@ -19,6 +19,7 @@ import HTMLRender from "react-native-render-html";
 import Loader from '../../Component/Loader';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { showMessage } from 'react-native-flash-message';
 const DietDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -75,7 +76,13 @@ const DietDetail = () => {
         data: payload
       })
       if (Fav.data) {
-        ToastAndroid.showWithGravity(Fav.data[0].msg, ToastAndroid.SHORT, ToastAndroid.CENTER)
+        // ToastAndroid.showWithGravity(Fav.data[0].msg, ToastAndroid.SHORT, ToastAndroid.CENTER)
+        showMessage({
+          message:Fav.data[0].msg,
+          // description: 'Please Enter Your Mail',
+          type: 'success',
+          icon: { icon: 'auto', position: 'left' },
+        });
         setFavData(FavData)
 
         setIsMounted(isMounted + 1)
@@ -94,7 +101,13 @@ const DietDetail = () => {
         // data:payload,
       })
       if (RemovedData.data) {
-        ToastAndroid.showWithGravity(RemovedData.data[0].msg, ToastAndroid.SHORT, ToastAndroid.CENTER)
+        // ToastAndroid.showWithGravity(RemovedData.data[0].msg, ToastAndroid.SHORT, ToastAndroid.CENTER)
+        showMessage({
+          message:RemovedData.data[0].msg,
+          // description: 'Please Enter Your Mail',
+          type: 'danger',
+          icon: { icon: 'auto', position: 'left' },
+        });
         setFavData(FavData.filter((item) => item.id !== Data.data.id))
         setIsMounted(isMounted + 1)
       }
@@ -255,9 +268,7 @@ const DietDetail = () => {
   )}
   else{
     return(
-      <View>
         <Loader/>
-      </View>
     )
   }
 }

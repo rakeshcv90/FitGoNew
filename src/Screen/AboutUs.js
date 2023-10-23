@@ -38,25 +38,25 @@ const AboutUs = () => {
     };
     if (isLoaded) {
         return (
-            <SafeAreaView style={[styles.container,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
-             <HeaderWithoutSearch Header={"About Us"}/>
-             <View style={{justifyContent:'center',alignItems:'center'}}>
-                <Image source={localImage.logo} style={{width:DeviceWidth*40/100,resizeMode:'contain',height:DeviceHeigth*20/100}}/>
-             </View>
-                <View style={{marginHorizontal:20}}>
+            <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+                <HeaderWithoutSearch Header={"About Us"} />
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <Image source={localImage.logo} style={{ width: DeviceWidth * 40 / 100, resizeMode: 'contain', height: DeviceHeigth * 20 / 100 }} />
+                </View>
+                <View style={{ marginHorizontal: 20, height: DeviceHeigth * 90 / 100 }}>
                     <FlatList data={About} renderItem={elements => {
-                        return(
-                        <View>
-                            <HTMLRender source={{ html: elements.item.st_aboutus }} tagsStyles={customStyle={
-                                p:{
-                                    color:defaultTheme?"#fff":"#000"
-                                },
-                                strong:{
-                                    color:'#f39c1f',
-                                    fontSize:20,
-                                }
-                            }} contentWidth={width} />
-                        </View>)
+                        return (
+                            <View>
+                                <HTMLRender source={{ html: elements.item.st_aboutus }} tagsStyles={customStyle = {
+                                    p: {
+                                        color: defaultTheme ? "#fff" : "#000"
+                                    },
+                                    strong: {
+                                        color: '#f39c1f',
+                                        fontSize: 20,
+                                    }
+                                }} contentWidth={width} />
+                            </View>)
                     }} />
                 </View>
             </SafeAreaView>
@@ -64,9 +64,9 @@ const AboutUs = () => {
     }
     else {
         return (
-            <View>
-                <Loader />
-            </View>
+
+            <Loader />
+
         )
     }
 }

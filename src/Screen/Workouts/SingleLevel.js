@@ -249,9 +249,9 @@ const SingleLevel = () => {
     );
   } else {
     return (
-      <View>
-        <Loader />
-      </View>
+
+      <Loader />
+
     );
   }
 }

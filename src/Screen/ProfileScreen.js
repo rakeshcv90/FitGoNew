@@ -11,11 +11,12 @@ import {
 import React, { useEffect, useState, useContext } from 'react';
 import HeaderWithoutSearch from '../Component/HeaderWithoutSearch';
 import { localImage } from '../Component/Image';
-import { DeviceHeigth, DeviceWidth ,Api,Appapi} from '../Component/Config'
+import { DeviceHeigth, DeviceWidth, Api, Appapi } from '../Component/Config'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux'
+import { showMessage } from 'react-native-flash-message';
 import axios from 'axios';
 const ProfileScreen = () => {
   const [mydata, setMyData] = useState();
@@ -82,9 +83,17 @@ const ProfileScreen = () => {
             'Content-Type': 'multipart/form-data',
           }
         })
-        if(Msg.data){
-          navigation.navigate("Signup")
-          ToastAndroid.showWithGravity(Msg.data[0].user,ToastAndroid.SHORT,ToastAndroid.BOTTOM)
+        if (Msg.data) {
+          try {
+            await AsyncStorage.removeItem('Data');
+            navigation.navigate('Login');
+            showMessage({
+              message: Msg.data[0].user,
+              type: 'success',
+              icon: { icon: 'auto', position: 'left' },
+            });
+          } catch (error) { }
+         
         }
       }
       else {
@@ -114,8 +123,8 @@ const ProfileScreen = () => {
       case 6:
         removeData();
         break;
-        case 7:
-          DeleteAccount();
+      case 7:
+        DeleteAccount();
     }
   };
   return (

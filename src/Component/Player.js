@@ -1,4 +1,4 @@
-import { View, Text, Modal, StyleSheet, StatusBar, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, Modal, StyleSheet, StatusBar, TouchableOpacity, Alert, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { DeviceHeigth, DeviceWidth } from './Config'
 import { SafeAreaView } from 'react-native'
@@ -6,6 +6,7 @@ import Video from 'react-native-video'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useSelector } from 'react-redux'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import { WebView } from 'react-native-webview'
 const PlayerModal = ({ setState, State }) => {
   const { defaultTheme } = useSelector(state => state)
   const [showModal, setShowModal] = useState(false)
@@ -153,12 +154,12 @@ const PlayerModal = ({ setState, State }) => {
   const renderRest = () => {
     if (rest && !finished) {
       return (
-        <SafeAreaView style={{ flex: 1,}}>
+        <SafeAreaView style={{ flex: 1, }}>
           <View style={[styles.closeButton, { marginTop: 45 }]}>
             <TouchableOpacity onPress={() => {
               handleExit();
             }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity></View>
-          <View style={{ justifyContent: 'center', alignItems: 'center',flex:1}}>
+          <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
             <View style={{ flexDirection: 'column', justifyContent: 'center', borderRadius: 100, alignItems: 'center', marginHorizontal: 20, borderColor: "orange", borderWidth: 15, width: 200, height: 200, }}>
               <Text style={{ fontSize: 66, fontWeight: 'bold', color: '#f39c1f' }}>{timeLeft}"</Text>
             </View>
@@ -171,14 +172,14 @@ const PlayerModal = ({ setState, State }) => {
   const renderContent = () => {
     if (!finished && !rest) {
       return (
-        <SafeAreaView style={{ flex: 1, justifyContent: 'space-between' }}>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'space-between',backgroundColor:defaultTheme?"#000":"#fff"}}>
           <View>
             <View style={[styles.closeButton, { marginTop: 45 }]}>
               <TouchableOpacity onPress={() => {
                 handleExit();
               }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity></View>
-            <View>
-              <Video source={{ uri: 'https://vjs.zencdn.net/v/oceans.mp4' }} repeat muted style={styles.VideoPlayer} resizeMode={"stretch"} paused={!isPlaying} />
+            <View style={{ width: DeviceWidth, height: DeviceHeigth * 30 / 100, backgroundColor:defaultTheme?"#fff":"#000"}}>
+              <WebView source={{ uri: currentData.video }} style={{ width: DeviceWidth, height: DeviceHeigth * 30 / 100, backgroundColor:defaultTheme?"#fff":"#000"}}/>
             </View>
             <View style={styles.Title}>
               <Text style={{ color: defaultTheme ? "#fff" : "#000", fontSize: 20 }}>{currentData.title}</Text>
@@ -202,14 +203,14 @@ const PlayerModal = ({ setState, State }) => {
             </View>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 100, marginHorizontal: 25 }}>
-            <TouchableOpacity onPress={() => { goToPreviousPage() }} disabled={currentPage === 0} ><Text style={{ color: '#f39c1f', fontSize: 20 }}>Previous</Text></TouchableOpacity>
-            <TouchableOpacity onPress={() => { goToNextPage() }} disabled={currentPage === PlayerScrnData.length - 1}><Text style={{ color: '#f39c1f', fontSize: 20 }}>Next</Text></TouchableOpacity>
+            {/* {console.log(currentPage==0,defaultTheme)} */}
+            <TouchableOpacity onPress={() => { goToPreviousPage() }}  ><Text style={{ color: defaultTheme?(currentPage==0?"#rgba(255,255,255,0.6)":'#f39c1f'):(currentPage==0?"#rgba(0,0,0,0.6)":'#f39c1f'), fontSize: 20 }}>Previous</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => { goToNextPage() }} disabled={currentPage === PlayerScrnData.length - 1}><Text style={{ color: defaultTheme?(currentPage === PlayerScrnData.length - 1?"#rgba(255,255,255,0.6)":'#f39c1f'):(currentPage === PlayerScrnData.length - 1?"#rgba(0,0,0,0.6)":'#f39c1f'), fontSize: 20 }}>Next</Text></TouchableOpacity>
           </View>
 
         </SafeAreaView>)
     }
   }
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
       {renderContent()}
@@ -225,7 +226,7 @@ const PlayerModal = ({ setState, State }) => {
             <Icons name="checkbox-marked-circle-outline" style={{ color: '#f39c1f', fontSize: 72, marginBottom: 10 }} />
             <Text style={{ fontSize: 34, fontWeight: 'bold', textAlign: 'center', color: defaultTheme ? "#fff" : "#000" }}>Completed</Text>
           </View>
-        </View> : null}x
+        </View> : null}
     </SafeAreaView>
 
   );

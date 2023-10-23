@@ -6,7 +6,7 @@ import {
     ImageBackground,
     TouchableOpacity,
     StyleSheet,
-    StatusBar
+    StatusBar,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { DeviceWidth, DeviceHeigth } from '../../Component/Config';

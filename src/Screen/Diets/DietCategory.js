@@ -92,9 +92,9 @@ const DietCategory = () => {
     }
     else {
         return (
-            <View>
-                <Loader />
-            </View>
+
+            <Loader />
+
         )
     }
 }

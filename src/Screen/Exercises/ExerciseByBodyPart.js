@@ -19,35 +19,35 @@ import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
 const ExerciseByBodyPart = () => {
     const route = useRoute();
     const Data = route.params;
-    console.log(" title", Data.title)
     const [ApiData, setApiData] = useState([]);
-    const [isLoaded, setIsLoaded] = useState(false);
     const navigation = useNavigation();
     const { defaultTheme } = useSelector((state) => state);
+    const[isLoaded,setLoaded]=useState(false)
     useEffect(() => {
         getData();
-      }, []);
-      const getData = async () => {
+    }, []);
+    const getData = async () => {
         try {
-          const data = await axios(`${Api}/${Appapi.Exercise}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'Multipart/form-data',
-            },
-          });
-          setApiData(data.data);
-          setIsLoaded(true);
-          // console.log('example', data.data[0].bodyparts);
-        } catch (error) {}
-      };
-      const Abs = ApiData.filter(item => item.bodyparts.includes('Abs'));
-      const Shoulders = ApiData.filter(item => item.bodyparts.includes('Shoulders'));
-      const Triceps = ApiData.filter(item => item.bodyparts.includes('Triceps'));
-      const Qauds = ApiData.filter(item => item.bodyparts.includes('Quads'));
-      const Biceps = ApiData.filter(item => item.bodyparts.includes('Biceps'));
-      const Back = ApiData.filter(item => item.bodyparts.includes('Back'));
-      const Forearms = ApiData.filter(item => item.bodyparts.includes('Forearms'));
-      const Chest = ApiData.filter(item => item.bodyparts.includes('Chest'));
+            const data = await axios(`${Api}/${Appapi.Exercise}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            setApiData(data.data)
+            setLoaded(true)
+        } catch (error) {
+            console.log(error)
+         }
+    };
+    const Abs = ApiData.filter(item => item.bodyparts.includes('Abs'));
+    const Shoulders = ApiData.filter(item => item.bodyparts.includes('Shoulders'));
+    const Triceps = ApiData.filter(item => item.bodyparts.includes('Triceps'));
+    const Qauds = ApiData.filter(item => item.bodyparts.includes('Quads'));
+    const Biceps = ApiData.filter(item => item.bodyparts.includes('Biceps'));
+    const Back = ApiData.filter(item => item.bodyparts.includes('Back'));
+    const Legs = ApiData.filter(item => item.bodyparts.includes('Legs'));
+    const Chest = ApiData.filter(item => item.bodyparts.includes('Chest'));
     if (isLoaded && Data.title == 'Abs') {
         return (
             <SafeAreaView
@@ -197,14 +197,14 @@ const ExerciseByBodyPart = () => {
                 </View>
             </SafeAreaView>
         );
-    } else if (isLoaded && Data.title == 'Quads') {
+    } else if(isLoaded && Data.title ==='Quads') {
         return (
             <SafeAreaView
                 style={[
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
-              <HeaderWithoutSearch Header={Data.title}></HeaderWithoutSearch>
+                <HeaderWithoutSearch Header={Data.title}></HeaderWithoutSearch>
                 <View style={{ height: (DeviceHeigth * 90) / 100 }}>
                     <FlatList
                         data={Qauds}
@@ -299,7 +299,7 @@ const ExerciseByBodyPart = () => {
                 </View>
             </SafeAreaView>
         );
-    } else if (isLoaded && Data.title == 'Back') {
+    } else if (isLoaded && Data.title == "Back") {
         return (
             <SafeAreaView
                 style={[
@@ -311,10 +311,9 @@ const ExerciseByBodyPart = () => {
                     <FlatList
                         data={Back}
                         renderItem={elements => (
-                            <TouchableOpacity>
-                                onPress={() => {
-                                    navigation.navigate("ExerciseDetails", { elements })
-                                }}
+                            <TouchableOpacity onPress={() => {
+                                navigation.navigate("ExerciseDetails", { elements })
+                            }}>
                                 <View
                                     style={{
                                         flexDirection: 'row',
@@ -348,8 +347,8 @@ const ExerciseByBodyPart = () => {
                     />
                 </View>
             </SafeAreaView>
-        );
-    } else if (isLoaded && Data.title == 'Forearms') {
+        )
+    } else if (isLoaded && Data.title == "Legs") {
         return (
             <SafeAreaView
                 style={[
@@ -359,7 +358,7 @@ const ExerciseByBodyPart = () => {
                 <HeaderWithoutSearch Header={Data.title} />
                 <View style={{ height: (DeviceHeigth * 90) / 100 }}>
                     <FlatList
-                        data={Forearms}
+                        data={Legs}
                         renderItem={elements => (
                             <TouchableOpacity
                                 onPress={() => {
@@ -452,9 +451,9 @@ const ExerciseByBodyPart = () => {
         );
     } else {
         return (
-            <View>
+      
                 <Loader />
-            </View>
+           
         );
     }
 };

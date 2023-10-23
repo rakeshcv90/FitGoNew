@@ -42,7 +42,7 @@ const StoreCategories = () => {
     const TagData = FilterData.filter(item => item.type== Data.data.title);
     if(!isLoaded){
         return(
-            <View><Loader/></View>
+            <Loader/>
         )
       }else{
       return (

@@ -82,9 +82,9 @@ const Levels = () => {
   }
   else {
     return (
-      <View>
-        <Loader />
-      </View>
+
+      <Loader />
+
     )
   }
 }

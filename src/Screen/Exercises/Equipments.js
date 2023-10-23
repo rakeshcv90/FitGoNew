@@ -39,16 +39,16 @@ const Equipments= () => {
   };
   if(!isLoaded){
     return(
-        <View>
+      
             <Loader/>
-        </View>
+       
     )
   }
   else{
 return (
 <SafeAreaView style={[styles.container,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
 <HeaderWithoutSearch Header={"Equipments"}/>
-<View>
+<View style={{height:DeviceHeigth*90/100}}>
 <FlatList
         data={ApiData}
         renderItem={elements => (

@@ -21,6 +21,7 @@ import { Api, Appapi } from '../../Component/Config';
 import axios from 'axios';
 import Loader from '../../Component/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { showMessage } from 'react-native-flash-message';
 const WorkoutDescription = () => {
   const navigation = useNavigation();
   const [HomeCardioData, setHomeCardioData] = useState([]);
@@ -47,7 +48,7 @@ const WorkoutDescription = () => {
           })
           if (favWorkout.data) {
             setFavData(favWorkout.data)
-            console.log("data", favWorkout.data)
+            // console.log("data", favWorkout.data)
             setIsLoaded(true)
           }
         }
@@ -82,7 +83,12 @@ const WorkoutDescription = () => {
         data: payload
       })
       if (Fav.data) {
-        ToastAndroid.showWithGravity(Fav.data[0].msg, ToastAndroid.SHORT, ToastAndroid.CENTER)
+        showMessage({
+          message:Fav.data[0].msg,
+          // description: 'Please Enter Your Mail',
+          type: 'success',
+          icon: { icon: 'auto', position: 'left' },
+        });
         setFavData(FavData)
         setIsMounted(isMounted + 1)
       }
@@ -100,7 +106,12 @@ const WorkoutDescription = () => {
         // data:payload,
       })
       if (RemovedData.data) {
-        ToastAndroid.showWithGravity(RemovedData.data[0].msg, ToastAndroid.SHORT, ToastAndroid.CENTER)
+        showMessage({
+          message:RemovedData.data[0].msg,
+          // description: 'Please Enter Your Mail',
+          type: 'danger',
+          icon: { icon: 'auto', position: 'left' },
+        });
         setFavData(FavData.filter((item) => item.id !== HomeCardioData.id))
         setIsMounted(isMounted + 1)
       }
@@ -152,7 +163,7 @@ const WorkoutDescription = () => {
   if (IsLoaded) {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-        <StatusBar barStyle={"light-content"} translucent={true} backgroundColor={'transparent'} />
+        <StatusBar barStyle={defaultTheme?'light-content':'dark-content'} translucent={true} backgroundColor={'transparent'} />
         <ImageBackground
           source={{ uri: HomeCardioData.image}}
           style={styles.HomeImg}>
@@ -220,9 +231,7 @@ const WorkoutDescription = () => {
   }
   else {
     return (
-      <View>
         <Loader />
-      </View>
     )
   }
 }

@@ -83,7 +83,7 @@ const Goals = ({ navigation }) => {
   }
   else {
     return (
-      <View><Loader /></View>
+      <Loader />
     )
   }
 }

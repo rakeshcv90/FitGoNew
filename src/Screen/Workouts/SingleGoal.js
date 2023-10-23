@@ -84,9 +84,9 @@ const SingleGoal = () => {
   }
   else {
     return (
-      <View>
+     
         <Loader />
-      </View>
+    
     )
   }
 }

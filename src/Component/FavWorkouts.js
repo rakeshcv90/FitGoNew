@@ -25,6 +25,7 @@ const FavWorkouts = () => {
   const [FavWorkout, setFavWorkout] = useState([]);
   const { defaultTheme } = useSelector((state) => state);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [update,setUpdate]=useState(false)
   const navigation = useNavigation()
   useEffect(() => {
     const getUsersFavWorkout = async () => {
@@ -41,6 +42,7 @@ const FavWorkouts = () => {
           })
           if (favWorkout.data) {
             setFavWorkout(favWorkout.data)
+            setUpdate(update+1)
             setIsLoaded(true)
           }
         }
@@ -52,7 +54,7 @@ const FavWorkouts = () => {
       }
     }
     getUsersFavWorkout();
-  }, []);
+  }, [update]);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? '#000' : '#fff' }}>
       {isLoaded ? (
@@ -96,9 +98,9 @@ const FavWorkouts = () => {
         </>
       ) : (
         <>
-          <View>
+     
             <Loader />
-          </View>
+       
         </>
       )}
     </SafeAreaView>

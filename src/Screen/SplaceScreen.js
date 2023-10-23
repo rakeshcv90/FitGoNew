@@ -7,7 +7,6 @@ const SplaceScreen = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
       UserAuth();
-
     }, 2000)
   }, [])
   const UserAuth = async () => {

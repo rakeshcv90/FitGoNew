@@ -44,9 +44,9 @@ const SingleCategory = () => {
     const DietCat = Diets.filter(item => item.category == Data.title);
     if (!isLoaded) {
         return (
-            <View>
+        
                 <Loader />
-            </View>
+        
         )
     }
     else if(isLoaded &&DietCat!=null){

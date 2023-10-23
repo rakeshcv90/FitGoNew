@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   BackHandler,
   Alert,
+  KeyboardAvoidingView
 } from 'react-native';
 import React, { useEffect, useState, } from 'react';
 import { localImage } from '../Component/Image';
@@ -17,6 +18,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native';
+import LoginLoader from '../Component/LoginLoader';
 const Login = () => {
   const navigation = useNavigation();
   const [Email, setEmail] = useState('');
@@ -24,24 +26,8 @@ const Login = () => {
   const [submitText, setsubmitText] = useState('ENTER');
   const [isVisible, seIsvisible] = useState(false)
   const { defaultTheme } = useSelector((state) => state)
+  const [isLoaded,setIsLoaded]=useState(false)
   const ToggleVisibility = () => { seIsvisible(!isVisible) }
-  useEffect(() => {
-    const HandleBackButton = () => {
-      BackHandler.removeEventListener();
-      return true;
-    };
-    BackHandler.addEventListener('hardwareBackPress', HandleBackButton);
-    return () => {
-      BackHandler.removeEventListener('hardwareBackPress', HandleBackButton);
-    }
-  }, []);
-  // const customTheme={
-  //   ...DefaultTheme,
-  //   colors:{
-  //     ...DefaultTheme.colors,
-  //    color:'red'
-  //   },
-  // }
   const ErrorHandler = async () => {
     let reg = /\S+@\S+\.\S+/;
     let pass = /^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/;
@@ -84,8 +70,7 @@ const Login = () => {
         if (data.data[0].msg === 'Login successful') {
           await AsyncStorage.setItem('Data', JSON.stringify(data.data));
           setsubmitText('ENTER');
-          setEmail('');
-          setPassword('');
+          setIsLoaded(true)
           showMessage({
             message: data.data[0].msg,
             type: 'success',
@@ -93,6 +78,7 @@ const Login = () => {
           });
           navigation.navigate('DrawerNavigation');
         } else {
+          setIsLoaded(true)
           showMessage({
             message: data.data[0].msg,
             type: 'danger',
@@ -108,6 +94,10 @@ const Login = () => {
   };
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+      <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+      style={{flex:1}}>
+      <View style={{ backgroundColor: defaultTheme ? "#000" : "#fff" ,justifyContent:'center',alignItems:'center',flex:1}}>
       <Image style={styles.logo} source={localImage.logo} />
       <TextInput
         label={'Email'}
@@ -162,8 +152,10 @@ const Login = () => {
           <Text style={{ color: defaultTheme ? "#fff" : "#000", fontWeight: 'bold' }}>SignUp</Text>
         </Text>
       </TouchableOpacity>
+      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
-  );
+  )
 };
 const styles = StyleSheet.create({
   container: {
@@ -207,7 +199,7 @@ const styles = StyleSheet.create({
     color: 'black',
     alignItems: 'flex-start',
     textAlign: 'center',
-    borderWidth: 1
+    marginBottom:50
   },
 });
 export default Login;

@@ -45,7 +45,7 @@ const BlogTags = () => {
     const TagData = FilterData.filter(item => item.tag == Data.data.title);
     if(!isLoaded){
         return(
-            <View><Loader/></View>
+            <Loader/>
         )
       }else{
   return (

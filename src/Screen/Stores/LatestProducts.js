@@ -41,21 +41,23 @@ const LatestProducts = () => {
     }
     if (isLoaded) {
         return (
-            <SafeAreaView style={{flex:1,backgroundColor:defaultTheme?"#000":"#fff"}}>
-                <HeaderWithoutSearch Header={"Latest Products"}/>
-                <View style={{ height: DeviceHeigth * 35 / 100 ,margin:10 }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
+                <HeaderWithoutSearch Header={"Latest Products"} />
+                <View style={{ height: DeviceHeigth * 90 / 100 }}>
                     <FlatList
                         data={getLatestprdct}
                         renderItem={elements => (
-                            <TouchableOpacity style={{ height: (DeviceHeigth * 10) / 100 }}
-                                onPress={() => {
-                                    Linking.openURL(elements.item.link)
-                                }}>
+                            <TouchableOpacity style={{ height: (DeviceHeigth * 10) / 100 }} onPress={() => {
+                                Linking.openURL(elements.item.link)
+                            }}>
                                 <View
                                     style={{
                                         flexDirection: 'row',
                                         alignItems: 'center',
-                                        marginLeft: 15
+                                        margin: 10,
+                                        justifyContent: 'space-between',
+                                        // borderWidth:1,
+
                                     }}>
                                     <Image
                                         source={{ uri: elements.item.image }}
@@ -63,20 +65,20 @@ const LatestProducts = () => {
                                     />
                                     <View
                                         style={{
-                                            justifyContent: 'space-between',
-                                            marginLeft: 10,
+                                            // marginLeft: 10,
                                             flexDirection: 'row',
-                                            width: (DeviceWidth * 76) / 100,
+                                            width: (DeviceWidth * 65) / 100,
                                             alignItems: 'center',
+                                            // borderWidth:1,
                                         }}>
                                         <View>
                                             <Text style={{ color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>{elements.item.title}</Text>
-                                            {/* <Text style={{ color: '#f39c1f', fontWeight: '500' }}>
-                                                {elements.item.price}
-                                            </Text> */}
+                                            <Text style={{ color: '#f39c1f', fontWeight: '500' }}>
+                                                {/* {elements.item.price} */}
+                                            </Text>
                                         </View>
-                                        <Icon name="chevron-right" size={20} color={defaultTheme == true ? "#fff" : "#000"} />
                                     </View>
+                                    <Icon name="chevron-right" size={20} color={defaultTheme == true ? "#fff" : "#000"} />
                                 </View>
                             </TouchableOpacity>
                         )}
@@ -87,9 +89,9 @@ const LatestProducts = () => {
     }
     else {
         return (
-            <View>
-                <Loader />
-            </View>
+
+            <Loader />
+
         )
     }
 }

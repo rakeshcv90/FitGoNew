@@ -35,7 +35,7 @@ const Workouts = () => {
                 },
             });
             setWorkoutData(data.data);
-            console.log('imageUrl',data.data[0].image)
+            console.log('imageUrl', data.data[0].image)
             setIsLoaded(true)
         } catch (error) {
             console.log("error loading", error)
@@ -87,7 +87,7 @@ const Workouts = () => {
                         renderItem={elements => (
                             <TouchableOpacity
                                 onPress={() => {
-                                    navigation.navigate("WorkoutDescription", {elements});
+                                    navigation.navigate("WorkoutDescription", { elements });
                                 }}>
                                 <ImageBackground
                                     source={{ uri: elements.item.image }}
@@ -127,9 +127,8 @@ const Workouts = () => {
     }
     else {
         return (
-            <View>
-                <Loader />
-            </View>)
+            <Loader />
+        )
     }
 }
 const styles = StyleSheet.create({

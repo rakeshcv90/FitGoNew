@@ -6,7 +6,8 @@ import {
     ImageBackground,
     TouchableOpacity,
     StyleSheet,
-    Image
+    Image,
+    Linking
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { DeviceWidth, DeviceHeigth } from '../../Component/Config';
@@ -132,13 +133,6 @@ const Blog = () => {
                     }}>
                     Tags
                 </Text>
-                <TouchableOpacity>
-                    <Icon
-                        name="chevron-right"
-                        size={25}
-                        color={defaultTheme == true ? '#fff' : '#000'}
-                    />
-                </TouchableOpacity>
             </View>
             <View>
                 {isLoaded ? (
@@ -150,7 +144,7 @@ const Blog = () => {
                             renderItem={elements => (
                                 <TouchableOpacity style={styles.categories}
                                     onPress={() => {
-                                        navigation.navigate("BlogTags",{data:elements.item})
+                                        navigation.navigate("BlogTags", { data: elements.item })
                                     }}>
                                     <Icon
                                         name="tag"
@@ -206,52 +200,52 @@ const Blog = () => {
             {isLoaded ? (
                 <>
                     <View style={{ height: DeviceHeigth * 40 / 100 }}>
-                    <FlatList
-                        data={LatestPost}
-                        renderItem={elements => (
-                            <TouchableOpacity style={{ height: (DeviceHeigth * 10) / 100 }} onPress={() => {
-                                navigation.navigate("BlogDetail", { data: elements.item })
-                            }}>
-                                <View
-                                    style={{
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        margin: 10,
-                                        justifyContent: 'space-between',
-                                        // borderWidth:1,
-                                        
-                                    }}>
-                                    <Image
-                                        source={{ uri: elements.item.image }}
-                                        style={{ height: 60, width: 60, borderRadius: 60 / 2 }}
-                                    />
+                        <FlatList
+                            data={LatestPost}
+                            renderItem={elements => (
+                                <TouchableOpacity style={{ height: (DeviceHeigth * 10) / 100 }} onPress={() => {
+                                    navigation.navigate("BlogDetail", { data: elements.item })
+                                }}>
                                     <View
                                         style={{
-                                            // marginLeft: 10,
                                             flexDirection: 'row',
-                                            width: (DeviceWidth * 65) / 100,
                                             alignItems: 'center',
+                                            margin: 10,
+                                            justifyContent: 'space-between',
                                             // borderWidth:1,
+
                                         }}>
-                                        <View>
-                                            <Text style={{ color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>{elements.item.title}</Text>
-                                            <Text style={{ color: '#f39c1f', fontWeight: '500' }}>
-                                                {elements.item.price}
-                                            </Text>
+                                        <Image
+                                            source={{ uri: elements.item.image }}
+                                            style={{ height: 60, width: 60, borderRadius: 60 / 2 }}
+                                        />
+                                        <View
+                                            style={{
+                                                // marginLeft: 10,
+                                                flexDirection: 'row',
+                                                width: (DeviceWidth * 65) / 100,
+                                                alignItems: 'center',
+                                                // borderWidth:1,
+                                            }}>
+                                            <View>
+                                                <Text style={{ color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>{elements.item.title}</Text>
+                                                <Text style={{ color: '#f39c1f', fontWeight: '500' }}>
+                                                    {elements.item.price}
+                                                </Text>
+                                            </View>
                                         </View>
+                                        <Icon name="chevron-right" size={20} color={defaultTheme == true ? "#fff" : "#000"} />
                                     </View>
-                                    <Icon name="chevron-right" size={20} color={defaultTheme == true ? "#fff" : "#000"} />
-                                </View>
-                            </TouchableOpacity>
-                        )}
-                    />
-                </View>
+                                </TouchableOpacity>
+                            )}
+                        />
+                    </View>
                 </>
             ) : (
                 <>
-                    <View>
-                        <Loader />
-                    </View>
+
+                    <Loader />
+
                 </>
             )}
         </SafeAreaView>
