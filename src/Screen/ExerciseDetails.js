@@ -56,7 +56,7 @@ const ExerciseDetails = () => {
       setApiData(data.data);
       // console.log(ApiData)
       setIsLoaded(true);
-      setUpdate(update+1)
+      setUpdate(update + 1)
     } catch (error) {
       console.log("errrror", error)
     }
@@ -64,14 +64,14 @@ const ExerciseDetails = () => {
   const VideoModal = () => {
     return (
       <View>
-        <StatusBar backgroundColor={showModal ? "#000" : "transparent"} barStyle={'default'} translucent={true} />
+        {/* <StatusBar backgroundColor={showModal ? "#000" : "transparent"} barStyle={'default'} translucent={true} /> */}
       </View>
     );
   }
   if (isLoaded) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
-        <View style={[styles.closeButton, {  marginTop:DeviceHeigth*7/100 ,marginHorizontal:DeviceWidth*5/100}]}>
+      <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+        <View style={[styles.closeButton, { marginTop: DeviceHeigth * 7 / 100, marginHorizontal: DeviceWidth * 5 / 100 }]}>
           <TouchableOpacity onPress={() => {
             navigation.goBack()
           }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity>
@@ -80,7 +80,7 @@ const ExerciseDetails = () => {
         <FlatList data={ApiData} showsVerticalScrollIndicator={false}
           renderItem={elements => {
             return (
-              <View style={{flex:1,backgroundColor:defaultTheme?"#000":"#fff"}}>
+              <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
                 <Modal
                   animationType="slide"
                   // transparent={true}
@@ -88,15 +88,15 @@ const ExerciseDetails = () => {
                   onRequestClose={() => {
                     setShowModal(!showModal);
                   }}>
-                  <View style={[styles.modalContainer, { backgroundColor: defaultTheme?'#000':"#fff",flex:1}]}>
-                    <View style={{marginHorizontal:DeviceWidth*4/100,marginVertical:DeviceHeigth*6/100,backgroundColor: defaultTheme?'#000':"#fff"}}>
-                    <TouchableOpacity onPress={() => {
-                      handleback();
-                    }}><Icons name="close" size={27} color={defaultTheme?"#fff":"#000"} /></TouchableOpacity></View>
-                    <View style={{width:DeviceWidth,height:DeviceHeigth*30/100,justifyContent:'center',marginTop:DeviceHeigth*20/100,backgroundColor: defaultTheme?'#000':"#fff"}}> 
-                    <WebView source={{ uri: elements.item.video }}/>
+                  <View style={[styles.modalContainer, { backgroundColor: defaultTheme ? '#000' : "#fff", flex: 1 }]}>
+                    <View style={{ marginHorizontal: DeviceWidth * 4 / 100, marginVertical: DeviceHeigth * 6 / 100, backgroundColor: defaultTheme ? '#000' : "#fff" }}>
+                      <TouchableOpacity onPress={() => {
+                        handleback();
+                      }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity></View>
+                    <View style={{ width: DeviceWidth, height: DeviceHeigth * 30 / 100, justifyContent: 'center', marginTop: DeviceHeigth * 20 / 100, backgroundColor: defaultTheme ? '#000' : "#fff" }}>
+                      <WebView source={{ uri: elements.item.video }} />
                     </View>
-                    </View>
+                  </View>
                 </Modal>
                 <View>
                   <ImageBackground source={{ uri: elements.item.image }} style={styles.ImageBckg}>
@@ -184,7 +184,7 @@ const ExerciseDetails = () => {
               </View>);
           }} />
         <VideoModal />
-      </SafeAreaView>
+      </View>
     )
   }
   else {
