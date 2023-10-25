@@ -193,7 +193,6 @@ const ExerciseDetails = () => {
     )
   }
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -134,7 +134,7 @@ const Signup = ({ navigation }) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'height' : 'height'}
         style={{ flex: 1 }}>
-        <Text style={[styles.SignUpText, { color: defaultTheme ? "#fff" : "#000" }]}>SignUp</Text>
+        <Text style={[styles.SignUpText, { color: defaultTheme ? "#fff" : "#000",marginTop:DeviceHeigth*5/100 }]}>SignUp</Text>
 
         <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
           <TextInput
