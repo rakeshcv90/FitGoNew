@@ -25,7 +25,7 @@ const BlogDetail = () => {
     const DesData = [{ Description }]
     const { defaultTheme } = useSelector(state => state);
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? '#000' : '#fff' }}>
+        <View style={{ flex: 1, backgroundColor: defaultTheme ? '#000' : '#fff' }}>
           <StatusBar barStyle={"light-content"} translucent={true} backgroundColor={'transparent'}/>
             <View>
                 <ImageBackground source={{ uri: Data.data.image }} style={styles.HomeImg}>
@@ -80,7 +80,7 @@ const BlogDetail = () => {
                     }}/>
                 )} />
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 const styles = StyleSheet.create({

@@ -49,7 +49,7 @@ const BlogTags = () => {
         )
       }else{
   return (
-    <SafeAreaView style={[styles.container,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
+    <View style={[styles.container,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
    <HeaderWithoutSearch Header={Data.data.title}/>
     <View style={{height:DeviceHeigth*90/100}}>
     <FlatList
@@ -84,7 +84,7 @@ const BlogTags = () => {
             )}
           />
     </View>
-  </SafeAreaView>
+  </View>
   )}
 }
 const styles = StyleSheet.create({

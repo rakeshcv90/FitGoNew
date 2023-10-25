@@ -128,7 +128,7 @@ const ProfileScreen = () => {
     }
   };
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+    <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
       <HeaderWithoutSearch Header={"Profile"} />
       <View style={styles.container1}>
         <Image source={localImage.maleIcon} style={styles.Icon} />
@@ -172,7 +172,7 @@ const ProfileScreen = () => {
           )}
         />
       </View>
-    </SafeAreaView>
+    </View>
   )
 }
 const styles = StyleSheet.create({

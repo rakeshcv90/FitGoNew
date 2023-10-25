@@ -51,7 +51,7 @@ const SingleCategory = () => {
     }
     else if(isLoaded &&DietCat!=null){
         return (
-            <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+            <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
                <HeaderWithoutSearch Header={Data.title}/>
                 <View
                     style={{
@@ -105,7 +105,7 @@ const SingleCategory = () => {
                         )}
                     />
                 </View>
-            </SafeAreaView>
+            </View>
         )}
       else if(isLoaded && !DietCat){
         return(

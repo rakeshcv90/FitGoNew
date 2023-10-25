@@ -73,7 +73,7 @@ const ForgetPassword = ({navigation}) => {
     }
   };
   return (
-    <SafeAreaView style={[styles.container,{backgroundColor: defaultTheme?"#000":"#fff"}]}>
+    <View style={[styles.container,{backgroundColor: defaultTheme?"#000":"#fff"}]}>
       <Header header={'Forget Password'} />
       <View style={[styles.container1,{backgroundColor: defaultTheme?"#000":"#fff"}]}>
         <Text style={[styles.text,{color:defaultTheme?"#fff":"#000"}]}>
@@ -103,7 +103,7 @@ const ForgetPassword = ({navigation}) => {
           <Text style={{color: 'white', fontSize: 15}}>{inputText}</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({

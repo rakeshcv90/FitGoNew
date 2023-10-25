@@ -18,7 +18,7 @@ const Settings = () => {
         }
     }
     return (
-        <SafeAreaView style={[styels.container, { backgroundColor: defaultTheme == true ? "#000" : "#fff" }]}>
+        <View style={[styels.container, { backgroundColor: defaultTheme == true ? "#000" : "#fff" }]}>
             <HeaderWithoutSearch Header={"Settings"} />
             <View style={{ borderBottomWidth: 1, marginVertical: 15, borderBottomColor: '#adadad', padding: 5, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
                 <Text style={{ fontSize: 18, color: defaultTheme == true ? "#fff" : "#000", marginHorizontal: 20 }}>Theme</Text>
@@ -34,7 +34,7 @@ const Settings = () => {
                     value={isEnabled}
                 />
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 const styels = StyleSheet.create({

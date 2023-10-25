@@ -45,7 +45,7 @@ const ExerciseByEquipments = () => {
   };
   if (isLoaded) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+      <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
         <HeaderWithoutSearch Header={title} />
         <View>
           {getExerciseByEquipment.length>0?(<>
@@ -88,7 +88,7 @@ const ExerciseByEquipments = () => {
           </View>
           </>)}
         </View>
-      </SafeAreaView>
+      </View>
     )
   }
   else {

@@ -37,7 +37,7 @@ const Levels = () => {
   };
   if (isLoaded) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+      <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
         <Header
           header={'Levels'}
           iconName={'magnify'}
@@ -77,7 +77,7 @@ const Levels = () => {
             )}
           />
         </View>
-      </SafeAreaView>
+      </View>
     )
   }
   else {

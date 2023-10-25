@@ -12,7 +12,7 @@ const Completed = () => {
   const { defaultTheme } = useSelector(state => state)
   console.log(Data)
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
+    <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
       <View style={[styles.closeButton, { margin: 35 }]}>
         <TouchableOpacity onPress={() => {
           navigation.goBack()
@@ -22,7 +22,7 @@ const Completed = () => {
       <Image source={localImage.logo} style={styles.image}/>
       </View>
      
-    </SafeAreaView>
+    </View>
   )
 }
 const styles=StyleSheet.create({

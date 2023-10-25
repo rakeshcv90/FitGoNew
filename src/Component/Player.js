@@ -154,7 +154,7 @@ const PlayerModal = ({ setState, State }) => {
   const renderRest = () => {
     if (rest && !finished) {
       return (
-        <SafeAreaView style={{ flex: 1, }}>
+        <View style={{ flex: 1, }}>
           <View style={[styles.closeButton, {  marginTop:DeviceHeigth*5/100 ,marginHorizontal:DeviceWidth*5/100 }]}>
             <TouchableOpacity onPress={() => {
               handleExit();
@@ -165,14 +165,14 @@ const PlayerModal = ({ setState, State }) => {
             </View>
             <Text style={{ fontSize: 26, fontWeight: 'bold', marginTop: 20, color: defaultTheme ? "#fff" : "#000" }}>Rest</Text>
           </View>
-        </SafeAreaView>
+        </View>
       )
     }
   }
   const renderContent = () => {
     if (!finished && !rest) {
       return (
-        <SafeAreaView style={{ flex: 1, justifyContent: 'space-between',backgroundColor:defaultTheme?"#000":"#fff"}}>
+        <View style={{ flex: 1, justifyContent: 'space-between',backgroundColor:defaultTheme?"#000":"#fff"}}>
           <View>
             <View style={[styles.closeButton, {  marginTop:DeviceHeigth*5/100 ,marginHorizontal:DeviceWidth*5/100 }]}>
               <TouchableOpacity onPress={() => {
@@ -208,11 +208,11 @@ const PlayerModal = ({ setState, State }) => {
             <TouchableOpacity onPress={() => { goToNextPage() }} disabled={currentPage === PlayerScrnData.length - 1}><Text style={{ color: defaultTheme?(currentPage === PlayerScrnData.length - 1?"#rgba(255,255,255,0.6)":'#f39c1f'):(currentPage === PlayerScrnData.length - 1?"#rgba(0,0,0,0.6)":'#f39c1f'), fontSize: 20 }}>Next</Text></TouchableOpacity>
           </View>
 
-        </SafeAreaView>)
+        </View>)
     }
   }
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
+    <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
       {renderContent()}
       {renderRest()}
       {finished ?
@@ -227,7 +227,7 @@ const PlayerModal = ({ setState, State }) => {
             <Text style={{ fontSize: 34, fontWeight: 'bold', textAlign: 'center', color: defaultTheme ? "#fff" : "#000" }}>Completed</Text>
           </View>
         </View> : null}
-    </SafeAreaView>
+    </View>
 
   );
 }

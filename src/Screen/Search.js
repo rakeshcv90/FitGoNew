@@ -60,7 +60,7 @@ const Search = () => {
   };
   if (isLoaded) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+      <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
         <HeaderWithoutSearch Header={"Search"} />
         <View style={[styles.SearchView, { borderColor: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' }]}>
           <Icons
@@ -133,14 +133,14 @@ const Search = () => {
             </>
           )}
         </View>
-      </SafeAreaView>
+      </View>
     )
   }
   else {
     return (
-      <View>
+    
         <Loader />
-      </View>
+   
     )
   }
 }

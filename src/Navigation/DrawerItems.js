@@ -38,7 +38,7 @@ const DrawerItems = props => {
   //   return true;
   // };
   return (
-    <SafeAreaView
+    <View
       style={{
         flex: 1,
         marginLeft: (DeviceWidth * 5) / 100,
@@ -116,7 +116,7 @@ const DrawerItems = props => {
           <Image source={localImage.nextButton} style={styles.nextIcon} />
         </TouchableOpacity>
       </DrawerContentScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({

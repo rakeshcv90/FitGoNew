@@ -37,7 +37,7 @@ const Goals = ({ navigation }) => {
   };
   if (isLoaded) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+      <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
         <Header
           header={'Goals'}
           iconName={'magnify'}
@@ -78,7 +78,7 @@ const Goals = ({ navigation }) => {
             )}
           />
         </View>
-      </SafeAreaView>
+      </View>
     )
   }
   else {

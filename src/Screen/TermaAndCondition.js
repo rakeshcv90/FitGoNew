@@ -37,7 +37,7 @@ const TermaAndCondition = () => {
   };
   if (isLoaded) {
     return (
-      <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+      <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
         <HeaderWithoutSearch Header={"Terms & Privacy"} />
         <View style={{ marginHorizontal: 20, height:DeviceHeigth*90/100}}>
           <FlatList data={Terms} showsVerticalScrollIndicator={false} renderItem={elements => {
@@ -64,7 +64,7 @@ const TermaAndCondition = () => {
               </View>)
           }} />
         </View>
-      </SafeAreaView>
+      </View>
     )
   }
   else {

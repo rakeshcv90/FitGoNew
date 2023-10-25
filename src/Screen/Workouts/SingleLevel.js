@@ -42,7 +42,7 @@ const SingleLevel = () => {
   const RenderData = ApiData.filter(item => item.level === Data.level);
   if (Data.level == 'Beginner' && isLoaded == true) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+      <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
         <Header
           ScreenName={'Levels'}
           iconName={'magnify'}
@@ -90,11 +90,11 @@ const SingleLevel = () => {
             )}
           />
         </View>
-      </SafeAreaView>
+      </View>
     );
   } else if (Data.level == 'Intermediate' && isLoaded == true) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+      <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
         <Header
           ScreenName={'Levels'}
           iconName={'magnify'}
@@ -143,11 +143,11 @@ const SingleLevel = () => {
             )}
           />
         </View>
-      </SafeAreaView>
+      </View>
     );
   } else if (Data.level == 'Advanced' && isLoaded == true) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+      <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
         <Header
           ScreenName={'Levels'}
           iconName={'magnify'}
@@ -196,11 +196,11 @@ const SingleLevel = () => {
             )}
           />
         </View>
-      </SafeAreaView>
+      </View>
     );
   } else if (Data.level == 'Elite' && isLoaded == true) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+      <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
         <Header ScreenName={'Levels'} iconName={'magnify'} header={'Elite'}
           searchShow={true}
           style={'space-between'}
@@ -245,7 +245,7 @@ const SingleLevel = () => {
             )}
           />
         </View>
-      </SafeAreaView>
+      </View>
     );
   } else {
     return (

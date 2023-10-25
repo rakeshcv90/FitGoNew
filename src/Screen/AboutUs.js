@@ -38,7 +38,7 @@ const AboutUs = () => {
     };
     if (isLoaded) {
         return (
-            <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+            <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
                 <HeaderWithoutSearch Header={"About Us"} />
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <Image source={localImage.logo} style={{ width: DeviceWidth * 40 / 100, resizeMode: 'contain', height: DeviceHeigth * 20 / 100 }} />
@@ -59,7 +59,7 @@ const AboutUs = () => {
                             </View>)
                     }} />
                 </View>
-            </SafeAreaView>
+            </View>
         )
     }
     else {

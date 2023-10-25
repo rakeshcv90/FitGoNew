@@ -91,7 +91,7 @@ const HomeScreenDrawer = () => {
   };
   return (
     <>
-      <SafeAreaView style={{flex: 1, backgroundColor: defaultTheme==true?"#000":"#fff"}}>
+      <View style={{flex: 1, backgroundColor: defaultTheme==true?"#000":"#fff"}}>
       <StatusBar barStyle={defaultTheme?"light-content":"dark-content"} translucent={false} backgroundColor={'#f39c1f'}/>
         <ImageBackground source={localImage.homeImg} style={styles.homeImg}>
           <View
@@ -143,7 +143,7 @@ const HomeScreenDrawer = () => {
             )}
           />
         </View>
-      </SafeAreaView>
+      </View>
     </>
   );
 };

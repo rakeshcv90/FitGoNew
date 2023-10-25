@@ -50,7 +50,7 @@ const ExerciseByBodyPart = () => {
     const Chest = ApiData.filter(item => item.bodyparts.includes('Chest'));
     if (isLoaded && Data.title == 'Abs') {
         return (
-            <SafeAreaView
+            <View
                 style={[
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
@@ -95,11 +95,11 @@ const ExerciseByBodyPart = () => {
                         )}
                     />
                 </View>
-            </SafeAreaView>
+            </View>
         );
     } else if (isLoaded && Data.title == 'Shoulders') {
         return (
-            <SafeAreaView
+            <View
                 style={[
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
@@ -145,11 +145,11 @@ const ExerciseByBodyPart = () => {
                         )}
                     />
                 </View>
-            </SafeAreaView>
+            </View>
         );
     } else if (isLoaded && Data.title == 'Triceps') {
         return (
-            <SafeAreaView
+            <View
                 style={[
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
@@ -195,11 +195,11 @@ const ExerciseByBodyPart = () => {
                         )}
                     />
                 </View>
-            </SafeAreaView>
+            </View>
         );
     } else if(isLoaded && Data.title ==='Quads') {
         return (
-            <SafeAreaView
+            <View
                 style={[
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
@@ -245,11 +245,11 @@ const ExerciseByBodyPart = () => {
                         )}
                     />
                 </View>
-            </SafeAreaView>
+            </View>
         );
     } else if (isLoaded && Data.title == 'Biceps') {
         return (
-            <SafeAreaView
+            <View
                 style={[
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
@@ -297,11 +297,11 @@ const ExerciseByBodyPart = () => {
                         )}
                     />
                 </View>
-            </SafeAreaView>
+            </View>
         );
     } else if (isLoaded && Data.title == "Back") {
         return (
-            <SafeAreaView
+            <View
                 style={[
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
@@ -346,11 +346,11 @@ const ExerciseByBodyPart = () => {
                         )}
                     />
                 </View>
-            </SafeAreaView>
+            </View>
         )
     } else if (isLoaded && Data.title == "Legs") {
         return (
-            <SafeAreaView
+            <View
                 style={[
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
@@ -396,11 +396,11 @@ const ExerciseByBodyPart = () => {
                         )}
                     />
                 </View>
-            </SafeAreaView>
+            </View>
         );
     } else if (isLoaded && Data.title == 'Chest') {
         return (
-            <SafeAreaView
+            <View
                 style={[
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000000' : '#fff' },
@@ -447,7 +447,7 @@ const ExerciseByBodyPart = () => {
                         )}
                     />
                 </View>
-            </SafeAreaView>
+            </View>
         );
     } else {
         return (

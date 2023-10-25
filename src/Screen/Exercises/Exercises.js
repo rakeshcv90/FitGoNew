@@ -41,7 +41,7 @@ const Exercises = () => {
   };
   if (isLoaded) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+      <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
         <HeaderWithoutSearch Header={"Exercises"} />
         <View style={styles.container}>
           <TouchableOpacity style={styles.button} onPress={() => {
@@ -99,7 +99,7 @@ const Exercises = () => {
             )}
           />
         </View>
-      </SafeAreaView>
+      </View>
     )
   }
   else {

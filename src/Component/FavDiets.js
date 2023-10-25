@@ -57,7 +57,7 @@ const FavDiets = () => {
     getUsersFavDiets();
   }, [update]);
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ?'#000':'#fff' }}>
+    <View style={{ flex: 1, backgroundColor: defaultTheme ?'#000':'#fff' }}>
     {isLoaded ? (
       <>
         <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
@@ -99,12 +99,10 @@ const FavDiets = () => {
       </>
     ) : (
       <>
-    
           <Loader />
-       
       </>
     )}
-  </SafeAreaView>
+  </View>
   )
 }
 const styles = StyleSheet.create({

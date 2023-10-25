@@ -23,7 +23,7 @@ const StoreDetail = () => {
   const Description = Data.data.description
   const { defaultTheme } = useSelector(state => state);
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? '#000' : 'fff' }}>
+    <View style={{ flex: 1, backgroundColor: defaultTheme ? '#000' : 'fff' }}>
       <View>
         <ImageBackground source={{ uri: Data.data.image }} style={[styles.HomeImg]}>
           <StatusBar barStyle={"light-content"} translucent={true} backgroundColor={'transparent'} />
@@ -77,7 +77,7 @@ const StoreDetail = () => {
           <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>BUY NOW</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   )
 }
 const styles = StyleSheet.create({

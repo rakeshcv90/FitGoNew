@@ -93,7 +93,7 @@ const Login = () => {
     }
   };
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+    <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
       <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'position' : 'height'}
       style={{flex:1}}>
@@ -154,7 +154,7 @@ const Login = () => {
       </TouchableOpacity>
       </View>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   )
 };
 const styles = StyleSheet.create({

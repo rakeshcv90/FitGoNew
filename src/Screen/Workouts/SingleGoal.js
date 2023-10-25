@@ -45,7 +45,7 @@ const SingleGoal = () => {
 
 
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
+      <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
         <Header header={Data.title}
           iconName={"magnify"} />
         <View style={{ width: (DeviceWidth * 98) / 100 }}>
@@ -79,7 +79,7 @@ const SingleGoal = () => {
             )}
           />
         </View>
-      </SafeAreaView>
+      </View>
     )
   }
   else {

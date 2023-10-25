@@ -7,7 +7,7 @@ import FavWorkouts from '../Component/FavWorkouts'
 const FavoritesRouter = () => {
     const Tabs = createMaterialTopTabNavigator()
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
             <HeaderWithoutSearch Header={"Favorites"} />
             <Tabs.Navigator initialRouteName='FavWorkouts' screenOptions={{
                 tabBarLabelStyle: { fontSize: 16, color: "#fff",textTransform:'none' },
@@ -19,7 +19,7 @@ const FavoritesRouter = () => {
                 <Tabs.Screen name="FavWorkouts" component={FavWorkouts} options={{ title: "Workouts", }} />
                 <Tabs.Screen name="FavDiets" component={FavDiets} options={{ title: "Diets", }} />
             </Tabs.Navigator>
-        </SafeAreaView>
+        </View>
 
     )
 }

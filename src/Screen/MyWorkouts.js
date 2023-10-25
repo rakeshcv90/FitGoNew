@@ -4,10 +4,10 @@ import HeaderWithoutSearch from '../Component/HeaderWithoutSearch'
 import FavWorkouts from '../Component/FavWorkouts'
 const MyWorkouts = () => {
   return (
-    <SafeAreaView>
+    <View style={{flex:1}}>
      <HeaderWithoutSearch Header={"My Workouts"}/>
      <FavWorkouts/>
-    </SafeAreaView>
+    </View>
   )
 }
 

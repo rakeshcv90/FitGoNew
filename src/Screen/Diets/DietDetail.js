@@ -127,7 +127,7 @@ const DietDetail = () => {
   }
   if(isLoaded){
   return (
-    <SafeAreaView
+    <View
       style={[
         styles.container,
         { backgroundColor: defaultTheme ? '#000' : '#fff' },
@@ -264,7 +264,7 @@ const DietDetail = () => {
         )}
       />
       <View />
-    </SafeAreaView>
+    </View>
   )}
   else{
     return(

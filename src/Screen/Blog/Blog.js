@@ -71,7 +71,7 @@ const Blog = () => {
         } catch (error) { }
     };
     return (
-        <SafeAreaView style={[styles.conatainer, { backgroundColor: defaultTheme ? '#000' : '#fff' }]}>
+        <View style={[styles.conatainer, { backgroundColor: defaultTheme ? '#000' : '#fff' }]}>
             <HeaderWithoutSearch Header={"Blog"} />
             <View>
                 {isLoaded ? (
@@ -248,7 +248,7 @@ const Blog = () => {
 
                 </>
             )}
-        </SafeAreaView>
+        </View>
     )
 }
 const styles = StyleSheet.create({

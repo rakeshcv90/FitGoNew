@@ -52,7 +52,7 @@ const SingleDay = () => {
     }
     else if (isLoaded && ApiData.length > 0) {
         return (
-            <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+            <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
                 <View style={[styles.closeButton, {  marginTop:DeviceHeigth*5/100 ,marginHorizontal:DeviceWidth*5/100}]}>
                     <TouchableOpacity onPress={() => {
                         navigation.goBack()
@@ -102,12 +102,12 @@ const SingleDay = () => {
                         }}>
                         <Icons name="play" size={25} color={'#000'} /><Text style={{ color: '#000' }}>START NOW</Text></TouchableOpacity>
                 </View>
-            </SafeAreaView>
+            </View>
         )
     }
     else if (isLoaded && ApiData.length == 0) {
         return (
-            <SafeAreaView style={[styles.RestDayCntnr, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+            <View style={[styles.RestDayCntnr, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
                 <View style={[styles.closeButton,{ marginTop:DeviceHeigth*5/100 ,marginHorizontal:DeviceWidth*5/100}]}>
                     <TouchableOpacity onPress={() => {
                         navigation.goBack()
@@ -120,7 +120,7 @@ const SingleDay = () => {
                     <Text style={{ fontSize: 17, color: defaultTheme ? "#fff" : "#000" }}>It's Part of the Program</Text>
                 </View>
 
-            </SafeAreaView>
+            </View>
         )
     }
 }

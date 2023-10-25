@@ -46,7 +46,7 @@ const Equipments= () => {
   }
   else{
 return (
-<SafeAreaView style={[styles.container,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
+<View style={[styles.container,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
 <HeaderWithoutSearch Header={"Equipments"}/>
 <View style={{height:DeviceHeigth*90/100}}>
 <FlatList
@@ -86,7 +86,7 @@ return (
         )}
       />
 </View>
-</SafeAreaView>
+</View>
 ) }
 }
 const styles = StyleSheet.create({

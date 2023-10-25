@@ -78,7 +78,7 @@ const Store = () => {
     }
     else {
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+            <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
                 <HeaderWithoutSearch Header={"Store"} />
                 <Text
                     style={{ margin: 15, fontSize: 20, color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>
@@ -208,7 +208,7 @@ const Store = () => {
                         )}
                     />
                 </View>
-            </SafeAreaView>
+            </View>
         )
     }
 }

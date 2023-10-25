@@ -5,10 +5,10 @@ import HeaderWithoutSearch from '../Component/HeaderWithoutSearch'
 import FavDiets from '../Component/FavDiets'
 const MyDiets = () => {
   return (
-    <SafeAreaView>
+    <View style={{flex:1}}>
      <HeaderWithoutSearch Header={'My Diets'}/>
      <FavDiets/>
-    </SafeAreaView>
+    </View>
   )
 }
 export default MyDiets

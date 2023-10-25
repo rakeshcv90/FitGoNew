@@ -41,7 +41,7 @@ const LatestProducts = () => {
     }
     if (isLoaded) {
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
+            <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
                 <HeaderWithoutSearch Header={"Latest Products"} />
                 <View style={{ height: DeviceHeigth * 90 / 100 }}>
                     <FlatList
@@ -84,7 +84,7 @@ const LatestProducts = () => {
                         )}
                     />
                 </View>
-            </SafeAreaView>
+            </View>
         )
     }
     else {

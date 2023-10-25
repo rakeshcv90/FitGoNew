@@ -46,7 +46,7 @@ const Diets = () => {
   }
   else {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+      <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
         <HeaderWithoutSearch Header={"Diets"} />
         <TouchableOpacity style={styles.button} onPress={() => {
           navigation.navigate('DietCategory')
@@ -69,7 +69,7 @@ const Diets = () => {
             </TouchableOpacity>
           )}></FlatList>
         </View>
-      </SafeAreaView>
+      </View>
     )
   };
 };

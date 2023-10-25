@@ -44,7 +44,7 @@ const DietCategory = () => {
     // const DietCat = Diets.filter(item => item.category == Data.title);
     if (isLoaded) {
         return (
-            <SafeAreaView
+            <View
                 style={[
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
@@ -87,7 +87,7 @@ const DietCategory = () => {
                         )}
                     />
                 </View>
-            </SafeAreaView>
+            </View>
         )
     }
     else {
