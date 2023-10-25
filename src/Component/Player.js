@@ -155,7 +155,7 @@ const PlayerModal = ({ setState, State }) => {
     if (rest && !finished) {
       return (
         <SafeAreaView style={{ flex: 1, }}>
-          <View style={[styles.closeButton, { marginTop: 45 }]}>
+          <View style={[styles.closeButton, {  marginTop:DeviceHeigth*5/100 ,marginHorizontal:DeviceWidth*5/100 }]}>
             <TouchableOpacity onPress={() => {
               handleExit();
             }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity></View>
@@ -174,7 +174,7 @@ const PlayerModal = ({ setState, State }) => {
       return (
         <SafeAreaView style={{ flex: 1, justifyContent: 'space-between',backgroundColor:defaultTheme?"#000":"#fff"}}>
           <View>
-            <View style={[styles.closeButton, { marginTop: 45 }]}>
+            <View style={[styles.closeButton, {  marginTop:DeviceHeigth*5/100 ,marginHorizontal:DeviceWidth*5/100 }]}>
               <TouchableOpacity onPress={() => {
                 handleExit();
               }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity></View>
@@ -217,9 +217,9 @@ const PlayerModal = ({ setState, State }) => {
       {renderRest()}
       {finished ?
         <View style={{ flex: 1 }}>
-          <View style={[styles.closeButton, { margin: 10 }]}>
+          <View style={[styles.closeButton, { marginTop:DeviceHeigth*5/100 ,marginHorizontal:DeviceWidth*5/100}]}>
             <TouchableOpacity onPress={() => {
-              handleExit();
+              navigation.goBack();
             }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity>
           </View>
           <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 250 }}>

@@ -69,9 +69,9 @@ const TermaAndCondition = () => {
   }
   else {
     return (
-      <View>
+    
         <Loader />
-      </View>
+    
     )
   }
 }

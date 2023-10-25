@@ -53,7 +53,7 @@ const SingleDay = () => {
     else if (isLoaded && ApiData.length > 0) {
         return (
             <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
-                <View style={[styles.closeButton, { marginTop: 45 }]}>
+                <View style={[styles.closeButton, {  marginTop:DeviceHeigth*5/100 ,marginHorizontal:DeviceWidth*5/100}]}>
                     <TouchableOpacity onPress={() => {
                         navigation.goBack()
                     }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity>
@@ -108,7 +108,7 @@ const SingleDay = () => {
     else if (isLoaded && ApiData.length == 0) {
         return (
             <SafeAreaView style={[styles.RestDayCntnr, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
-                <View style={styles.closeButton}>
+                <View style={[styles.closeButton,{ marginTop:DeviceHeigth*5/100 ,marginHorizontal:DeviceWidth*5/100}]}>
                     <TouchableOpacity onPress={() => {
                         navigation.goBack()
                     }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity>

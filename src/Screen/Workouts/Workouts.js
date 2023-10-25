@@ -43,7 +43,8 @@ const Workouts = () => {
     }
     if (IsLoaded) {
         return (
-            <SafeAreaView style={{ backgroundColor: defaultTheme ? "#000" : "#fff", flex: 1 }}>
+            <View style={{ backgroundColor: defaultTheme ? "#000" : "#fff", flex: 1 }}>
+                <StatusBar barStyle={defaultTheme?"light-content":"dark-content"} translucent={true} backgroundColor={'#f39c1f'}/>
                 <Header header={"Workouts"} iconName={"magnify"} />
                 <View
                     style={{
@@ -122,7 +123,7 @@ const Workouts = () => {
                         )}
                     />
                 </View>
-            </SafeAreaView>
+            </View>
         )
     }
     else {

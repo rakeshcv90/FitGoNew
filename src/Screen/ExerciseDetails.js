@@ -13,13 +13,11 @@ import {
 import React, { useState, useEffect } from 'react';
 import { DeviceHeigth, DeviceWidth } from '../Component/Config';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { showMessage } from 'react-native-flash-message';
 import { useSelector } from 'react-redux'
 import { List, Subheading, Caption } from 'react-native-paper';
 import { Api, Appapi } from '../Component/Config';
 import axios from 'axios';
 import Loader from '../Component/Loader';
-import VideoPlayer from 'react-native-video-controls'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { WebView } from 'react-native-webview';
 const ExerciseDetails = () => {
@@ -73,7 +71,7 @@ const ExerciseDetails = () => {
   if (isLoaded) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
-        <View style={[styles.closeButton, { margin: 40}]}>
+        <View style={[styles.closeButton, {  marginTop:DeviceHeigth*7/100 ,marginHorizontal:DeviceWidth*5/100}]}>
           <TouchableOpacity onPress={() => {
             navigation.goBack()
           }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity>
@@ -91,12 +89,12 @@ const ExerciseDetails = () => {
                     setShowModal(!showModal);
                   }}>
                   <View style={[styles.modalContainer, { backgroundColor: defaultTheme?'#000':"#fff",flex:1}]}>
-                    <View style={{margin:20,backgroundColor: defaultTheme?'#000':"#fff"}}>
+                    <View style={{marginHorizontal:DeviceWidth*4/100,marginVertical:DeviceHeigth*6/100,backgroundColor: defaultTheme?'#000':"#fff"}}>
                     <TouchableOpacity onPress={() => {
                       handleback();
                     }}><Icons name="close" size={27} color={defaultTheme?"#fff":"#000"} /></TouchableOpacity></View>
                     <View style={{width:DeviceWidth,height:DeviceHeigth*30/100,justifyContent:'center',marginTop:DeviceHeigth*20/100,backgroundColor: defaultTheme?'#000':"#fff"}}> 
-                    <WebView source={{ uri: elements.item.video }} style/>
+                    <WebView source={{ uri: elements.item.video }}/>
                     </View>
                     </View>
                 </Modal>
