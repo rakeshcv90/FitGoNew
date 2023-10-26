@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, FlatList, useWindowDimensions } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, FlatList, useWindowDimensions ,StatusBar} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import HTMLRender from "react-native-render-html";
@@ -9,7 +9,7 @@ import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import Loader from '../Component/Loader';
 import HeaderWithoutSearch from '../Component/HeaderWithoutSearch';
-
+import CustomStatusBar from '../Component/CustomStatusBar';
 const TermaAndCondition = () => {
   const { width } = useWindowDimensions();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -38,6 +38,9 @@ const TermaAndCondition = () => {
   if (isLoaded) {
     return (
       <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+        <View>
+        {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
+        </View>
         <HeaderWithoutSearch Header={"Terms & Privacy"} />
         <View style={{ marginHorizontal: 20, height:DeviceHeigth*90/100}}>
           <FlatList data={Terms} showsVerticalScrollIndicator={false} renderItem={elements => {

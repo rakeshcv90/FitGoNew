@@ -6,7 +6,8 @@ import {
     ImageBackground,
     TouchableOpacity,
     StyleSheet,
-    Image
+    Image,
+    StatusBar
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Header from '../../Component/Header';
@@ -19,6 +20,7 @@ import LevelRate from '../../Component/LevelRate';
 import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux';
 import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const SingleCategory = () => {
     const navigation = useNavigation();
     const [isLoaded, setIsLoaded] = useState(false)
@@ -52,6 +54,7 @@ const SingleCategory = () => {
     else if(isLoaded &&DietCat!=null){
         return (
             <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+                {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
                <HeaderWithoutSearch Header={Data.title}/>
                 <View
                     style={{

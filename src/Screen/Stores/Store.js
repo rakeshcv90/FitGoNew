@@ -7,7 +7,8 @@ import {
     TouchableOpacity,
     StyleSheet,
     Image,
-    Linking
+    Linking,
+    StatusBar
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { DeviceWidth, DeviceHeigth } from '../../Component/Config';
@@ -19,6 +20,7 @@ import { useSelector } from 'react-redux';
 import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Divider } from 'react-native-paper';
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const Store = () => {
     const [ApiData, setApiData] = useState([]);
     const [Categories, setCategories] = useState([])
@@ -79,6 +81,7 @@ const Store = () => {
     else {
         return (
             <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+                {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
                 <HeaderWithoutSearch Header={"Store"} />
                 <Text
                     style={{ margin: 15, fontSize: 20, color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>

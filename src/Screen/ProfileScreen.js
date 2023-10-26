@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   FlatList,
   SafeAreaView,
-  ToastAndroid
+  ToastAndroid,
+  StatusBar
 } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import HeaderWithoutSearch from '../Component/HeaderWithoutSearch';
@@ -17,6 +18,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux'
 import { showMessage } from 'react-native-flash-message';
+import CustomStatusBar from '../Component/CustomStatusBar';
 import axios from 'axios';
 const ProfileScreen = () => {
   const [mydata, setMyData] = useState();
@@ -93,7 +95,7 @@ const ProfileScreen = () => {
               icon: { icon: 'auto', position: 'left' },
             });
           } catch (error) { }
-         
+
         }
       }
       else {
@@ -129,6 +131,7 @@ const ProfileScreen = () => {
   };
   return (
     <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+      {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
       <HeaderWithoutSearch Header={"Profile"} />
       <View style={styles.container1}>
         <Image source={localImage.maleIcon} style={styles.Icon} />

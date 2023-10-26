@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, FlatList, useWindowDimensions } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, FlatList, useWindowDimensions,StatusBar } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import HTMLRender from "react-native-render-html";
@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import Loader from '../Component/Loader';
 import HeaderWithoutSearch from '../Component/HeaderWithoutSearch';
 import { Image } from 'react-native';
+import CustomStatusBar from '../Component/CustomStatusBar';
 const AboutUs = () => {
     const { width } = useWindowDimensions();
     const [isLoaded, setIsLoaded] = useState(false);
@@ -39,12 +40,13 @@ const AboutUs = () => {
     if (isLoaded) {
         return (
             <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+                {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
                 <HeaderWithoutSearch Header={"About Us"} />
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <Image source={localImage.logo} style={{ width: DeviceWidth * 40 / 100, resizeMode: 'contain', height: DeviceHeigth * 20 / 100 }} />
                 </View>
-                <View style={{ marginHorizontal: 20, height: DeviceHeigth * 90 / 100 }}>
-                    <FlatList data={About} renderItem={elements => {
+                <View style={{ marginHorizontal: 20, height: DeviceHeigth * 72 / 100 }}>
+                    <FlatList data={About} showsVerticalScrollIndicator={false} renderItem={elements => {
                         return (
                             <View>
                                 <HTMLRender source={{ html: elements.item.st_aboutus }} tagsStyles={customStyle = {

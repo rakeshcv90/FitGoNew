@@ -6,6 +6,7 @@ import {
     FlatList,
     TouchableOpacity,
     Image,
+    StatusBar
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -16,13 +17,14 @@ import { DeviceHeigth, DeviceWidth } from '../../Component/Config';
 import { useSelector } from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const ExerciseByBodyPart = () => {
     const route = useRoute();
     const Data = route.params;
     const [ApiData, setApiData] = useState([]);
     const navigation = useNavigation();
     const { defaultTheme } = useSelector((state) => state);
-    const[isLoaded,setLoaded]=useState(false)
+    const [isLoaded, setLoaded] = useState(false)
     useEffect(() => {
         getData();
     }, []);
@@ -38,7 +40,7 @@ const ExerciseByBodyPart = () => {
             setLoaded(true)
         } catch (error) {
             console.log(error)
-         }
+        }
     };
     const Abs = ApiData.filter(item => item.bodyparts.includes('Abs'));
     const Shoulders = ApiData.filter(item => item.bodyparts.includes('Shoulders'));
@@ -56,6 +58,7 @@ const ExerciseByBodyPart = () => {
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
                 <HeaderWithoutSearch Header={Data.title} />
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <View style={{ height: (DeviceHeigth * 90) / 100 }}>
                     <FlatList
                         data={Abs}
@@ -104,6 +107,7 @@ const ExerciseByBodyPart = () => {
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title} />
                 <View style={{ height: (DeviceHeigth * 90) / 100 }}>
                     <FlatList
@@ -154,6 +158,7 @@ const ExerciseByBodyPart = () => {
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title}></HeaderWithoutSearch>
                 <View style={{ height: (DeviceHeigth * 90) / 100 }}>
                     <FlatList
@@ -197,13 +202,14 @@ const ExerciseByBodyPart = () => {
                 </View>
             </View>
         );
-    } else if(isLoaded && Data.title ==='Quads') {
+    } else if (isLoaded && Data.title === 'Quads') {
         return (
             <View
                 style={[
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title}></HeaderWithoutSearch>
                 <View style={{ height: (DeviceHeigth * 90) / 100 }}>
                     <FlatList
@@ -254,6 +260,7 @@ const ExerciseByBodyPart = () => {
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title} />
                 <View style={{ height: (DeviceHeigth * 90) / 100 }}>
                     <FlatList
@@ -306,6 +313,7 @@ const ExerciseByBodyPart = () => {
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title} />
                 <View style={{ height: (DeviceHeigth * 90) / 100 }}>
                     <FlatList
@@ -355,6 +363,7 @@ const ExerciseByBodyPart = () => {
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title} />
                 <View style={{ height: (DeviceHeigth * 90) / 100 }}>
                     <FlatList
@@ -405,6 +414,7 @@ const ExerciseByBodyPart = () => {
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000000' : '#fff' },
                 ]}>
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title} />
                 <View style={{ height: (DeviceHeigth * 90) / 100 }}>
                     <FlatList
@@ -451,9 +461,9 @@ const ExerciseByBodyPart = () => {
         );
     } else {
         return (
-      
-                <Loader />
-           
+
+            <Loader />
+
         );
     }
 };

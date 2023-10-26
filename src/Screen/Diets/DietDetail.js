@@ -10,7 +10,7 @@ import {
   ToastAndroid
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { DeviceWidth, DeviceHeigth,Api,Appapi } from '../../Component/Config';
+import { DeviceWidth, DeviceHeigth, Api, Appapi } from '../../Component/Config';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useSelector } from 'react-redux';
@@ -20,11 +20,12 @@ import Loader from '../../Component/Loader';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { showMessage } from 'react-native-flash-message';
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const DietDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const Data = route.params;
-  const [isLoaded,setIsLoaded]=useState(false)
+  const [isLoaded, setIsLoaded] = useState(false)
   const [FavData, setFavData] = useState([])
   const [isMounted, setIsMounted] = useState(0);
   const [userid, setUserId] = useState()
@@ -50,7 +51,7 @@ const DietDetail = () => {
           setIsLoaded(true)
           if (favDiet.data) {
             setFavData(favDiet.data)
-           console.log('fsvdata',favDiet.data)
+            console.log('fsvdata', favDiet.data)
           }
         }
         else {
@@ -78,7 +79,7 @@ const DietDetail = () => {
       if (Fav.data) {
         // ToastAndroid.showWithGravity(Fav.data[0].msg, ToastAndroid.SHORT, ToastAndroid.CENTER)
         showMessage({
-          message:Fav.data[0].msg,
+          message: Fav.data[0].msg,
           // description: 'Please Enter Your Mail',
           type: 'success',
           icon: { icon: 'auto', position: 'left' },
@@ -103,7 +104,7 @@ const DietDetail = () => {
       if (RemovedData.data) {
         // ToastAndroid.showWithGravity(RemovedData.data[0].msg, ToastAndroid.SHORT, ToastAndroid.CENTER)
         showMessage({
-          message:RemovedData.data[0].msg,
+          message: RemovedData.data[0].msg,
           // description: 'Please Enter Your Mail',
           type: 'danger',
           icon: { icon: 'auto', position: 'left' },
@@ -125,150 +126,151 @@ const DietDetail = () => {
       console.log("false tggle")
     }
   }
-  if(isLoaded){
-  return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: defaultTheme ? '#000' : '#fff' },
-      ]}>
-      <StatusBar backgroundColor={'transparent'} translucent={true} />
-      <ImageBackground source={{ uri: Data.data.image }} style={styles.HomeImg}>
-        <LinearGradient
-          colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0.6)']}
-          style={styles.LinearG}>
-          <View style={styles.Buttn}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <Icons name="close" size={30} color={'white'} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() =>toggleAddRemove()}>
-              {FavData.some((item) => item.id === Data.data.id) ? (
-                <>
-                  <Icons name="heart" size={30} color={'red'} />
-                </>
-              ) : (
-                <>
-                  <Icons name="heart-outline" size={30} color={'white'} />
-                </>
-              )}
-            </TouchableOpacity>
+  if (isLoaded) {
+    return (
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: defaultTheme ? '#000' : '#fff' },
+        ]}>
+      
+        <ImageBackground source={{ uri: Data.data.image }} style={styles.HomeImg}>
+          <LinearGradient
+            colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0.6)']}
+            style={styles.LinearG}>
+            <View style={styles.Buttn}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.goBack();
+                }}>
+                <Icons name="close" size={30} color={'white'} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => toggleAddRemove()}>
+                {FavData.some((item) => item.id === Data.data.id) ? (
+                  <>
+                    <Icons name="heart" size={30} color={'red'} />
+                  </>
+                ) : (
+                  <>
+                    <Icons name="heart-outline" size={30} color={'white'} />
+                  </>
+                )}
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.textView]}>
+              <Text style={{ color: '#f39c1f', fontWeight: '600' }}>
+                {Data.data.category}
+              </Text>
+              <Text style={{ color: 'white', paddingVertical: 8, fontSize: 20 }}>
+                {Data.data.title}
+              </Text>
+              <Text style={{ color: '#fff' }}>
+                Servings: {Data.data.servings} | Prep Time: {Data.data.time}
+              </Text>
+            </View>
+          </LinearGradient>
+        </ImageBackground>
+        <View style={styles.levelGoalView}>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: 'black', fontSize: 17 }}>
+              {Data.data.calories}
+            </Text>
+            <Text style={{ color: 'black', fontWeight: '400' }}>calories</Text>
           </View>
-          <View style={[styles.textView]}>
-            <Text style={{ color: '#f39c1f', fontWeight: '600' }}>
-              {Data.data.category}
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: 'black', fontSize: 17 }}>
+              {Data.data.protein}
             </Text>
-            <Text style={{ color: 'white', paddingVertical: 8, fontSize: 20 }}>
-              {Data.data.title}
-            </Text>
-            <Text style={{ color: '#fff' }}>
-              Servings: {Data.data.servings} | Prep Time: {Data.data.time}
-            </Text>
+            <Text style={{ color: 'black', fontWeight: '400' }}>Protein</Text>
           </View>
-        </LinearGradient>
-      </ImageBackground>
-      <View style={styles.levelGoalView}>
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ color: 'black', fontSize: 17 }}>
-            {Data.data.calories}
-          </Text>
-          <Text style={{ color: 'black', fontWeight: '400' }}>calories</Text>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: 'black', fontSize: 17 }}>{Data.data.fat}</Text>
+            <Text style={{ color: 'black', fontWeight: '400' }}>Fat</Text>
+          </View>
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: 'black', fontSize: 17 }}>{Data.data.carbs}</Text>
+            <Text style={{ color: 'black', fontWeight: '400' }}>Carbs</Text>
+          </View>
         </View>
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ color: 'black', fontSize: 17 }}>
-            {Data.data.protein}
-          </Text>
-          <Text style={{ color: 'black', fontWeight: '400' }}>Protein</Text>
-        </View>
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ color: 'black', fontSize: 17 }}>{Data.data.fat}</Text>
-          <Text style={{ color: 'black', fontWeight: '400' }}>Fat</Text>
-        </View>
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ color: 'black', fontSize: 17 }}>{Data.data.carbs}</Text>
-          <Text style={{ color: 'black', fontWeight: '400' }}>Carbs</Text>
-        </View>
+        <FlatList
+          data={FlatListData}
+          renderItem={elements => (
+            <>
+              <View style={styles.FlatListItem}>
+                <Text style={[styles.Title, { color: defaultTheme ? "#fff" : "#000" }]}>Summary</Text>
+                <HTMLRender source={{ html: elements.item.Summary }} contentWidth={DeviceWidth} tagsStyles={{
+                  p: {
+                    color: defaultTheme ? "#fff" : "#000"
+                  },
+                  strong: {
+                    color: '#f39c1f',
+                    fontSize: 20,
+                  }
+                  , li: {
+                    color: defaultTheme ? "#fff" : "#000"
+                  },
+                  ul: {
+                    color: defaultTheme ? "#fff" : "#000"
+                  },
+                  ol: {
+                    color: defaultTheme ? "#fff" : "#000"
+                  }
+                }} />
+              </View>
+              <View style={styles.FlatListItem}>
+                <Text style={[styles.Title, { color: defaultTheme ? "#fff" : "#000" }]}>Ingredients</Text>
+                <HTMLRender source={{ html: elements.item.Ingredients }} contentWidth={DeviceWidth}
+                  tagsStyles={{
+                    p: {
+                      color: defaultTheme ? "#fff" : "#000"
+                    },
+                    strong: {
+                      color: '#f39c1f',
+                      fontSize: 20,
+                    }
+                    , li: {
+                      color: defaultTheme ? "#fff" : "#000"
+                    },
+                    ul: {
+                      color: defaultTheme ? "#fff" : "#000"
+                    },
+                    ol: {
+                      color: defaultTheme ? "#fff" : "#000"
+                    }
+                  }} />
+              </View>
+              <View style={styles.FlatListItem}>
+                <Text style={[styles.Title, { color: defaultTheme ? "#fff" : "#000" }]}>Instructions</Text>
+                <HTMLRender source={{ html: elements.item.Instructions }} contentWidth={DeviceWidth}
+                  tagsStyles={{
+                    p: {
+                      color: defaultTheme ? "#fff" : "#000"
+                    },
+                    strong: {
+                      color: '#f39c1f',
+                      fontSize: 20,
+                    }
+                    , li: {
+                      color: defaultTheme ? "#fff" : "#000"
+                    },
+                    ul: {
+                      color: defaultTheme ? "#fff" : "#000"
+                    },
+                    ol: {
+                      color: defaultTheme ? "#fff" : "#000"
+                    }
+                  }} />
+              </View>
+            </>
+          )}
+        />
+        <View />
       </View>
-      <FlatList
-        data={FlatListData}
-        renderItem={elements => (
-          <>
-            <View style={styles.FlatListItem}>
-              <Text style={[styles.Title,{color:defaultTheme?"#fff":"#000"}]}>Summary</Text>
-              <HTMLRender source={{ html: elements.item.Summary }} contentWidth={DeviceWidth} tagsStyles={{
-                p: {
-                  color: defaultTheme ? "#fff" : "#000"
-                },
-                strong: {
-                  color: '#f39c1f',
-                  fontSize: 20,
-                }
-                , li: {
-                  color: defaultTheme ? "#fff" : "#000"
-                },
-                ul: {
-                  color: defaultTheme ? "#fff" : "#000"
-                },
-                ol: {
-                  color: defaultTheme ? "#fff" : "#000"
-                }
-              }} />
-            </View>
-            <View style={styles.FlatListItem}>
-              <Text style={[styles.Title,{color:defaultTheme?"#fff":"#000"}]}>Ingredients</Text>
-              <HTMLRender source={{ html: elements.item.Ingredients }} contentWidth={DeviceWidth}
-                tagsStyles={{
-                  p: {
-                    color: defaultTheme ? "#fff" : "#000"
-                  },
-                  strong: {
-                    color: '#f39c1f',
-                    fontSize: 20,
-                  }
-                  , li: {
-                    color: defaultTheme ? "#fff" : "#000"
-                  },
-                  ul: {
-                    color: defaultTheme ? "#fff" : "#000"
-                  },
-                  ol: {
-                    color: defaultTheme ? "#fff" : "#000"
-                  }
-                }} />
-            </View>
-            <View style={styles.FlatListItem}>
-              <Text style={[styles.Title,{color:defaultTheme?"#fff":"#000"}]}>Instructions</Text>
-              <HTMLRender source={{ html: elements.item.Instructions }} contentWidth={DeviceWidth}
-                tagsStyles={{
-                  p: {
-                    color: defaultTheme ? "#fff" : "#000"
-                  },
-                  strong: {
-                    color: '#f39c1f',
-                    fontSize: 20,
-                  }
-                  , li: {
-                    color: defaultTheme ? "#fff" : "#000"
-                  },
-                  ul: {
-                    color: defaultTheme ? "#fff" : "#000"
-                  },
-                  ol: {
-                    color: defaultTheme ? "#fff" : "#000"
-                  }
-                }} />
-            </View>
-          </>
-        )}
-      />
-      <View />
-    </View>
-  )}
-  else{
-    return(
-        <Loader/>
+    )
+  }
+  else {
+    return (
+      <Loader />
     )
   }
 }

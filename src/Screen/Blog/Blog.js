@@ -19,6 +19,7 @@ import { useSelector } from 'react-redux';
 import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import moment from 'moment';
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const Blog = () => {
     const [featuredBlog, setfeaturedBlog] = useState([]);
     const [tags, setTags] = useState([]);
@@ -72,6 +73,7 @@ const Blog = () => {
     };
     return (
         <View style={[styles.conatainer, { backgroundColor: defaultTheme ? '#000' : '#fff' }]}>
+              {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
             <HeaderWithoutSearch Header={"Blog"} />
             <View>
                 {isLoaded ? (

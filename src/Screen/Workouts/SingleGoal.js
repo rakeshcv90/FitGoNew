@@ -6,6 +6,7 @@ import {
   FlatList,
   ImageBackground,
   TouchableOpacity,
+  StatusBar
 } from 'react-native';
 import React, { useState, useEffect, useContext } from 'react';
 import { DeviceHeigth, DeviceWidth } from '../../Component/Config';
@@ -16,6 +17,7 @@ import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux'
 import Header from '../../Component/Header'
 import LevelRate from '../../Component/LevelRate';
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const SingleGoal = () => {
   const [ApiData, setApiData] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -46,6 +48,7 @@ const SingleGoal = () => {
 
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
+        {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
         <Header header={Data.title}
           iconName={"magnify"} />
         <View style={{ width: (DeviceWidth * 98) / 100 }}>

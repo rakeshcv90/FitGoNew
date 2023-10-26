@@ -7,7 +7,8 @@ import {
     TouchableOpacity,
     StyleSheet,
     Image,
-    Linking
+    Linking,
+    StatusBar
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { DeviceWidth, DeviceHeigth } from '../../Component/Config';
@@ -19,6 +20,7 @@ import { useSelector } from 'react-redux';
 import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { Divider } from 'react-native-paper';
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const LatestProducts = () => {
     const [getLatestprdct, setLatestprdct] = useState([])
     const [isLoaded, setIsLoaded] = useState(false);
@@ -42,6 +44,7 @@ const LatestProducts = () => {
     if (isLoaded) {
         return (
             <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
+                {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
                 <HeaderWithoutSearch Header={"Latest Products"} />
                 <View style={{ height: DeviceHeigth * 90 / 100 }}>
                     <FlatList

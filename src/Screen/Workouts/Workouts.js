@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     StyleSheet,
     StatusBar,
+    Platform,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Header from '../../Component/Header';
@@ -18,6 +19,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import LevelRate from '../../Component/LevelRate';
 import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux';
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const Workouts = () => {
     const [WorkoutData, setWorkoutData] = useState([])
     const navigation = useNavigation()
@@ -44,7 +46,7 @@ const Workouts = () => {
     if (IsLoaded) {
         return (
             <View style={{ backgroundColor: defaultTheme ? "#000" : "#fff", flex: 1 }}>
-                <StatusBar barStyle={defaultTheme?"light-content":"dark-content"} translucent={false} backgroundColor={'#f39c1f'}/>
+                {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
                 <Header header={"Workouts"} iconName={"magnify"} />
                 <View
                     style={{

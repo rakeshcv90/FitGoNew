@@ -4,7 +4,8 @@ import {
   ImageBackground,
   TouchableOpacity,
   StyleSheet,
-  StatusBar
+  StatusBar,
+  Platform
 } from 'react-native';
 import React from 'react';
 import { localImage } from './Image';
@@ -21,7 +22,7 @@ const Header = ({ header, iconName }) => {
         translucent={true}
         style={{
           width: DeviceWidth,
-          height: (DeviceHeigth * 10) / 100,
+          height:Platform.OS=='ios'?DeviceHeigth*8/100:DeviceHeigth*6/100,
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'flex-end',

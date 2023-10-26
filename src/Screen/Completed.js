@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView ,Image, StyleSheet} from 'react-native'
+import { View, Text, SafeAreaView ,Image, StyleSheet,StatusBar} from 'react-native'
 import React from 'react'
 import { useRoute } from '@react-navigation/native'
 import HeaderWithoutSearch from '../Component/HeaderWithoutSearch';
@@ -13,6 +13,7 @@ const Completed = () => {
   console.log(Data)
   return (
     <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
+        {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
       <View style={[styles.closeButton, { margin: 35 }]}>
         <TouchableOpacity onPress={() => {
           navigation.goBack()

@@ -1,8 +1,9 @@
-import { View, Text, SafeAreaView, StyleSheet, Switch } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, Switch,StatusBar } from 'react-native'
 import React, { useState } from 'react'
 import { setTheme } from '../Component/ThemeRedux/Actions'
 import { useSelector, useDispatch } from 'react-redux'
 import HeaderWithoutSearch from '../Component/HeaderWithoutSearch'
+import CustomStatusBar from '../Component/CustomStatusBar'
 const Settings = () => {
     const Dispatch = useDispatch()
     const { defaultTheme } = useSelector((state) => state)
@@ -19,6 +20,7 @@ const Settings = () => {
     }
     return (
         <View style={[styels.container, { backgroundColor: defaultTheme == true ? "#000" : "#fff" }]}>
+            {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
             <HeaderWithoutSearch Header={"Settings"} />
             <View style={{ borderBottomWidth: 1, marginVertical: 15, borderBottomColor: '#adadad', padding: 5, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
                 <Text style={{ fontSize: 18, color: defaultTheme == true ? "#fff" : "#000", marginHorizontal: 20 }}>Theme</Text>

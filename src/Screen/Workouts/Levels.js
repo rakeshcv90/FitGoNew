@@ -6,6 +6,7 @@ import {
   FlatList,
   ImageBackground,
   TouchableOpacity,
+  StatusBar
 } from 'react-native';
 import React, { useState, useEffect, useContext } from 'react';
 import Header from '../../Component/Header'
@@ -15,6 +16,7 @@ import axios from 'axios';
 import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux'
 import { Api, Appapi } from '../../Component/Config';
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const Levels = () => {
   const [ApiData, setApiData] = useState();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -38,6 +40,7 @@ const Levels = () => {
   if (isLoaded) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+        {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
         <Header
           header={'Levels'}
           iconName={'magnify'}

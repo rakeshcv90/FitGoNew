@@ -6,6 +6,7 @@ import {
   FlatList,
   ImageBackground,
   TouchableOpacity,
+  StatusBar
 } from 'react-native';
 import React, { useState, useEffect, useContext } from 'react';
 import Header from '../../Component/Header'
@@ -17,6 +18,7 @@ import { useSelector } from 'react-redux'
 import { Api, Appapi } from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import LevelRate from '../../Component/LevelRate';
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const SingleLevel = () => {
   const [ApiData, setApiData] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -43,6 +45,7 @@ const SingleLevel = () => {
   if (Data.level == 'Beginner' && isLoaded == true) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
         <Header
           ScreenName={'Levels'}
           iconName={'magnify'}
@@ -95,6 +98,7 @@ const SingleLevel = () => {
   } else if (Data.level == 'Intermediate' && isLoaded == true) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
         <Header
           ScreenName={'Levels'}
           iconName={'magnify'}
@@ -148,6 +152,7 @@ const SingleLevel = () => {
   } else if (Data.level == 'Advanced' && isLoaded == true) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
         <Header
           ScreenName={'Levels'}
           iconName={'magnify'}
@@ -201,6 +206,7 @@ const SingleLevel = () => {
   } else if (Data.level == 'Elite' && isLoaded == true) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
         <Header ScreenName={'Levels'} iconName={'magnify'} header={'Elite'}
           searchShow={true}
           style={'space-between'}

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ImageBackground,
   FlatList,
+  StatusBar
 } from 'react-native';
 import React, { useState, useEffect, useContext } from 'react';
 import Header from '../../Component/Header';
@@ -17,6 +18,7 @@ import { Api, Appapi } from '../../Component/Config';
 import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux'
 import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const Exercises = () => {
   const numColomns = 2;
   const [ApiData, setApiData] = useState([]);
@@ -42,6 +44,7 @@ const Exercises = () => {
   if (isLoaded) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+          {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
         <HeaderWithoutSearch Header={"Exercises"} />
         <View style={styles.container}>
           <TouchableOpacity style={styles.button} onPress={() => {

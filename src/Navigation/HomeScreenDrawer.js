@@ -5,6 +5,7 @@ import {localImage} from '../Component/Image';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import { useSelector, } from 'react-redux';
+import CustomStatusBar from '../Component/CustomStatusBar';
 const HomeScreenDrawer = () => {
   const navigation = useNavigation();
   const {defaultTheme}=useSelector(state=>state)
@@ -91,8 +92,9 @@ const HomeScreenDrawer = () => {
   };
   return (
     <>
-      <View style={{flex: 1, backgroundColor: defaultTheme==true?"#000":"#fff"}}>
-      <StatusBar barStyle={defaultTheme?"light-content":"dark-content"} translucent={false} backgroundColor={'#f39c1f'}/>
+        
+      <SafeAreaView style={{flex: 1, backgroundColor: defaultTheme==true?"#000":"#fff"}}>
+      <StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/>
         <ImageBackground source={localImage.homeImg} style={styles.homeImg}>
           <View
             style={{
@@ -143,7 +145,7 @@ const HomeScreenDrawer = () => {
             )}
           />
         </View>
-      </View>
+      </SafeAreaView>
     </>
   );
 };

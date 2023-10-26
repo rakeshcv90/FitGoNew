@@ -4,26 +4,31 @@ import {
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  StatusBar
 } from 'react-native';
-import React, {useState} from 'react';
-import {TextInput} from 'react-native-paper';
+import React, { useState } from 'react';
+import { TextInput } from 'react-native-paper';
 import { useSelector } from 'react-redux'
-import {Api, Appapi, DeviceHeigth, DeviceWidth} from '../Component/Config';
+import { Api, Appapi, DeviceHeigth, DeviceWidth } from '../Component/Config';
 import Header from '../Component/Header';
-import {showMessage} from 'react-native-flash-message';
+import { showMessage } from 'react-native-flash-message';
+import CustomStatusBar from '../Component/CustomStatusBar';
 import axios from 'axios';
+import HeaderWithoutSearch from '../Component/HeaderWithoutSearch';
 let reg = /\S+@\S+\.\S+/;
-const ForgetPassword = ({navigation}) => {
+const ForgetPassword = ({ navigation }) => {
   const [Email, setEmail] = useState('');
   const [inputText, setInputText] = useState('Enter');
-  const {defaultTheme}=useSelector((state)=>state)
+  const { defaultTheme } = useSelector((state) => state)
   const ErrorHandle = async () => {
     if (!Email) {
       showMessage({
         message: 'Please Enter your Email',
         // description: 'Please Enter your Email',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setInputText('Enter');
     } else if (!reg.test(Email)) {
@@ -31,7 +36,7 @@ const ForgetPassword = ({navigation}) => {
         message: 'Invalid Email Format',
         // description: 'Invalid Email Format',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setInputText('ENTER');
     } else {
@@ -45,14 +50,14 @@ const ForgetPassword = ({navigation}) => {
             email: Email,
           },
         });
-        console.log('datatat',data.data[0].msg)
+        console.log('datatat', data.data[0].msg)
         setInputText('Enter');
         if (data.data[0].msg == 'Mail Sent') {
           showMessage({
             message: data.data[0].msg,
             // description: data.data[0].msg,
             type: 'success',
-            icon: {icon: 'auto', position: 'left'},
+            icon: { icon: 'auto', position: 'left' },
           });
           navigation.navigate('Login')
         } else {
@@ -60,7 +65,7 @@ const ForgetPassword = ({navigation}) => {
             message: data.data[0].msg,
             // description: data.data.data[0].msg,
             type: 'danger',
-            icon: {icon: 'auto', position: 'left'},
+            icon: { icon: 'auto', position: 'left' },
           });
         }
 
@@ -73,36 +78,40 @@ const ForgetPassword = ({navigation}) => {
     }
   };
   return (
-    <View style={[styles.container,{backgroundColor: defaultTheme?"#000":"#fff"}]}>
-      <Header header={'Forget Password'} />
-      <View style={[styles.container1,{backgroundColor: defaultTheme?"#000":"#fff"}]}>
-        <Text style={[styles.text,{color:defaultTheme?"#fff":"#000"}]}>
-          We'll send you an email with a reset link
-        </Text>
-        <TextInput
-          label={'Email'}
-          textColor={defaultTheme?"#fff":"#000"}
-          onChangeText={text => {
-            setEmail(text.trim());
-            setInputText('Enter');
-          }}
-          mode="flat"
-          autoCapitalize="none"
-          style={styles.AuthInput}
-          activeUnderlineColor="#ec9706"
-          value={Email}
-          theme={{colors:{onSurfaceVariant:defaultTheme?'rgba(255,255,255,0.7)':'rgba(0,0,0,0.6)'}}}
-          underlineColor={defaultTheme?'rgba(255,255,255,0.7)':'rgba(0,0,0,0.6)'}
-        />
-        <TouchableOpacity
-          style={styles.Tbutton}
-          onPress={() => {
-            setInputText('Please Wait...');
-            ErrorHandle();
-          }}>
-          <Text style={{color: 'white', fontSize: 15}}>{inputText}</Text>
-        </TouchableOpacity>
-      </View>
+    <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+      {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'height' : 'height'} style={{ flex: 1 }}>
+        <HeaderWithoutSearch Header={'Forget Password'} />
+
+        <View style={[styles.container1, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+          <Text style={[styles.text, { color: defaultTheme ? "#fff" : "#000" }]}>
+            We'll send you an email with a reset link
+          </Text>
+          <TextInput
+            label={'Email'}
+            textColor={defaultTheme ? "#fff" : "#000"}
+            onChangeText={text => {
+              setEmail(text.trim());
+              setInputText('Enter');
+            }}
+            mode="flat"
+            autoCapitalize="none"
+            style={styles.AuthInput}
+            activeUnderlineColor="#ec9706"
+            value={Email}
+            theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
+            underlineColor={defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'}
+          />
+          <TouchableOpacity
+            style={styles.Tbutton}
+            onPress={() => {
+              setInputText('Please Wait...');
+              ErrorHandle();
+            }}>
+            <Text style={{ color: 'white', fontSize: 15 }}>{inputText}</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </View>
   );
 };

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   FlatList,
+  StatusBar
 } from 'react-native';
 import React, { useState, useEffect, useContext } from 'react';
 import Header from '../../Component/Header';
@@ -17,6 +18,7 @@ import { Api, Appapi } from '../../Component/Config';
 import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux'
 import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const Equipments= () => {
   const [ApiData, setApiData] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -47,6 +49,7 @@ const Equipments= () => {
   else{
 return (
 <View style={[styles.container,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
+{Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
 <HeaderWithoutSearch Header={"Equipments"}/>
 <View style={{height:DeviceHeigth*90/100}}>
 <FlatList

@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  StatusBar
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -38,7 +39,7 @@ const ExerciseByEquipments = () => {
       });
       if (data.data) {
         setExerciseByEquipment(data.data.filter((item) => item.equipment == Data.item.title))
-        console.log(getExerciseByEquipment)
+
         setIsLoaded(true);
       }
     } catch (error) { }
@@ -46,56 +47,57 @@ const ExerciseByEquipments = () => {
   if (isLoaded) {
     return (
       <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
         <HeaderWithoutSearch Header={title} />
         <View>
-          {getExerciseByEquipment.length>0?(<>
+          {getExerciseByEquipment.length > 0 ? (<>
             <FlatList
-            data={getExerciseByEquipment}
-            renderItem={elements => (
-              <TouchableOpacity onPress={() => {
-                navigation.navigate("ExerciseDetails", {elements})
-              }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    margin: 10,
-                    alignItems: 'center',
-                  }}>
-                  <View style={{margin: 5 }}>
-                    <Image
-                      source={{ uri: elements.item.image }}
-                      style={styles.Image}
-                    /></View>
-                  <View>
-                    <View style={styles.container3}>
+              data={getExerciseByEquipment}
+              renderItem={elements => (
+                <TouchableOpacity onPress={() => {
+                  navigation.navigate("ExerciseDetails", { elements })
+                }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      margin: 10,
+                      alignItems: 'center',
+                    }}>
+                    <View style={{ margin: 5 }}>
+                      <Image
+                        source={{ uri: elements.item.image }}
+                        style={styles.Image}
+                      /></View>
+                    <View>
+                      <View style={styles.container3}>
 
-                      <Text
-                        style={[
-                          styles.flatListTitle,
-                          { color: defaultTheme == true ? '#fff' : '#000' },
-                        ]}>
-                        {elements.item.title}
-                      </Text>
-                      <Icons name="chevron-right" size={20} color={'#f39c1f'} />
+                        <Text
+                          style={[
+                            styles.flatListTitle,
+                            { color: defaultTheme == true ? '#fff' : '#000' },
+                          ]}>
+                          {elements.item.title}
+                        </Text>
+                        <Icons name="chevron-right" size={20} color={'#f39c1f'} />
+                      </View>
                     </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            )}
-          /></>):(<>
-          <View style={{justifyContent:'center',alignItems:'center', backgroundColor:defaultTheme?"#000":"#fff",}}>
-            <Text style={{color:defaultTheme?"#fff":"#000"}}> No Items Available</Text>
-          </View>
-          </>)}
+                </TouchableOpacity>
+              )}
+            /></>) : (<>
+              <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: defaultTheme ? "#000" : "#fff", }}>
+                <Text style={{ color: defaultTheme ? "#fff" : "#000" }}> No Items Available</Text>
+              </View>
+            </>)}
         </View>
       </View>
     )
   }
   else {
     return (
-  
-        <Loader />
- 
+
+      <Loader />
+
     )
   }
 }
@@ -108,7 +110,7 @@ const styles = StyleSheet.create({
     height: 70,
     margin: 8,
     resizeMode: 'contain',
-    borderRadius:70/2
+    borderRadius: 70 / 2
   },
   container3: {
     flexDirection: 'row',

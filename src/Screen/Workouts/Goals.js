@@ -6,8 +6,10 @@ import {
   FlatList,
   ImageBackground,
   TouchableOpacity,
+  StatusBar
 } from 'react-native';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext,
+ } from 'react';
 import Header from '../../Component/Header'
 import { DeviceHeigth, DeviceWidth } from '../../Component/Config';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -15,6 +17,7 @@ import axios from 'axios';
 import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux'
 import { Api, Appapi } from '../../Component/Config';
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const Goals = ({ navigation }) => {
   const [ApiData, setApiData] = useState();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -38,6 +41,7 @@ const Goals = ({ navigation }) => {
   if (isLoaded) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+        {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
         <Header
           header={'Goals'}
           iconName={'magnify'}

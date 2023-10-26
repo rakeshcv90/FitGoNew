@@ -16,6 +16,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSelector } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import HTMLRender from "react-native-render-html";
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const StoreDetail = () => {
   const navigation = useNavigation()
   const route = useRoute();
@@ -26,7 +27,7 @@ const StoreDetail = () => {
     <View style={{ flex: 1, backgroundColor: defaultTheme ? '#000' : 'fff' }}>
       <View>
         <ImageBackground source={{ uri: Data.data.image }} style={[styles.HomeImg]}>
-          <StatusBar barStyle={"light-content"} translucent={true} backgroundColor={'transparent'} />
+        {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
           <LinearGradient
             colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0.6)']}
             style={styles.LinearG}>

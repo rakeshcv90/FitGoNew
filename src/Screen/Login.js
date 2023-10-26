@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   BackHandler,
   Alert,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  StatusBar
 } from 'react-native';
 import React, { useEffect, useState, } from 'react';
 import { localImage } from '../Component/Image';

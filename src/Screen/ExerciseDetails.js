@@ -20,6 +20,7 @@ import axios from 'axios';
 import Loader from '../Component/Loader';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { WebView } from 'react-native-webview';
+import CustomStatusBar from '../Component/CustomStatusBar';
 const ExerciseDetails = () => {
   const { defaultTheme } = useSelector(state => state)
   const [showInfo, setShowInfo] = useState(false);
@@ -64,7 +65,7 @@ const ExerciseDetails = () => {
   const VideoModal = () => {
     return (
       <View>
-        {/* <StatusBar backgroundColor={showModal ? "#000" : "transparent"} barStyle={'default'} translucent={true} /> */}
+         {/* {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>} */}
       </View>
     );
   }

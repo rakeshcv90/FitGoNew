@@ -6,11 +6,11 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
+  Platform
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { DeviceHeigth, DeviceWidth } from '../Component/Config';
 import { useNavigation } from '@react-navigation/native';
-import { HeaderStyleInterpolators } from '@react-navigation/stack';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { localImage } from './Image';
 const HeaderWithoutSearch = ({ Header }) => {
@@ -21,7 +21,7 @@ const HeaderWithoutSearch = ({ Header }) => {
         source={localImage.color_image}
         style={{
           width: DeviceWidth,
-          height: (DeviceHeigth * 10) / 100,
+          height:Platform.OS=='ios'?DeviceHeigth*8/100:DeviceHeigth*6/100,
           flexDirection: 'row',
           alignItems: 'flex-end',
 
@@ -38,7 +38,7 @@ const HeaderWithoutSearch = ({ Header }) => {
             <Icons name={"arrow-left"} size={25} color={'white'} />
           </TouchableOpacity>
           <View style={{ width: DeviceWidth * 75 / 100, justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'white', fontSize: 20, fontFamily: 'serif', }}>
+            <Text style={{ color: 'white', fontSize: 20, fontFamily: 'serif',marginRight:DeviceWidth*4/100}}>
               {Header}
             </Text></View>
         </View></ImageBackground></>

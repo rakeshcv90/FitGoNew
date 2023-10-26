@@ -6,6 +6,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   StyleSheet,
+  StatusBar
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { DeviceWidth, DeviceHeigth } from '../../Component/Config';
@@ -16,6 +17,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Loader from '../../Component/Loader';
 import { useSelector } from 'react-redux';
 import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const Diets = () => {
   const { defaultTheme } = useSelector((state) => state)
   const [ApiData, setApiData] = useState([]);
@@ -47,6 +49,7 @@ const Diets = () => {
   else {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
+          {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
         <HeaderWithoutSearch Header={"Diets"} />
         <TouchableOpacity style={styles.button} onPress={() => {
           navigation.navigate('DietCategory')

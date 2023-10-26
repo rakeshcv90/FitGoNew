@@ -6,7 +6,8 @@ import {
   ImageBackground,
   Image,
   TouchableOpacity,
-  SafeAreaView
+  SafeAreaView,
+  StatusBar
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { TextInput } from 'react-native-paper';
@@ -19,6 +20,7 @@ import HeaderWithoutSearch from '../Component/HeaderWithoutSearch';
 import { useSelector } from 'react-redux';
 import Loader from '../Component/Loader';
 import { useNavigation } from '@react-navigation/native';
+import CustomStatusBar from '../Component/CustomStatusBar';
 const Search = () => {
   const navigation = useNavigation()
   const [query, setQuery] = useState('');
@@ -61,6 +63,7 @@ const Search = () => {
   if (isLoaded) {
     return (
       <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+          {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
         <HeaderWithoutSearch Header={"Search"} />
         <View style={[styles.SearchView, { borderColor: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' }]}>
           <Icons
