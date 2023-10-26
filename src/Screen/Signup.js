@@ -4,7 +4,9 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  StatusBar,
+  Platform
 } from 'react-native';
 import React, { useState } from 'react';
 import { Api, Appapi, DeviceHeigth, DeviceWidth } from '../Component/Config';
@@ -12,6 +14,7 @@ import { TextInput } from 'react-native-paper';
 import { showMessage } from 'react-native-flash-message';
 import axios from 'axios';
 import { useSelector } from 'react-redux'
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 const Signup = ({ navigation }) => {
   const [checked, setChecked] = useState(false);
   const [Name, setName] = useState('');
@@ -131,10 +134,16 @@ const Signup = ({ navigation }) => {
   };
   return (
     <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
+      <SafeAreaView style={{
+        height:Platform.OS=='ios'?getStatusBarHeight():0,
+        backgroundColor:defaultTheme?'#000':"#fff"
+      }}>
+      <StatusBar barStyle={defaultTheme?"light-content":'dark-content'} />
+      </SafeAreaView>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'height' : 'height'}
         style={{ flex: 1 }}>
-        <Text style={[styles.SignUpText, { color: defaultTheme ? "#fff" : "#000",marginTop:DeviceHeigth*5/100 }]}>SignUp</Text>
+        <Text style={[styles.SignUpText, { color: defaultTheme ? "#fff" : "#000",}]}>SignUp</Text>
 
         <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
           <TextInput

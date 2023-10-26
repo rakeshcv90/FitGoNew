@@ -21,7 +21,7 @@ const HeaderWithoutSearch = ({ Header }) => {
         source={localImage.color_image}
         style={{
           width: DeviceWidth,
-          height:Platform.OS=='ios'?DeviceHeigth*8/100:DeviceHeigth*6/100,
+          height:Platform.OS=='ios'?DeviceHeigth*5/100:DeviceHeigth*5/100,
           flexDirection: 'row',
           alignItems: 'flex-end',
 

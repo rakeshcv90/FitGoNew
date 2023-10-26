@@ -95,6 +95,7 @@ const Login = () => {
   };
   return (
     <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+      <StatusBar barStyle={defaultTheme?"light-content":'dark-content'} backgroundColor={defaultTheme?"#000":"#fff"}/>
       <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'position' : 'height'}
       style={{flex:1}}>

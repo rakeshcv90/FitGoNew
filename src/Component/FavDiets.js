@@ -28,34 +28,34 @@ const FavDiets = () => {
   const navigation = useNavigation()
   const[update,setUpdate]=useState(0)
   useEffect(() => {
-    const getUsersFavDiets = async () => {
-      try {
-        const Storeddata = await AsyncStorage.getItem('Data');
-        if (Storeddata !== null) {
-          const JASONData = JSON.parse(Storeddata)
-          const Id = JASONData[0].email
-          const favDiet = await axios(`${Api}/${Appapi.FavoriteDiets}?email=${Id}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            }
-          })
-          if (favDiet) {
-            setFavDiets(favDiet.data)
-            console.log("diet", favDiet.data[0])
-            setUpdate(update+1)
-            setIsLoaded(true)
-          }
-        }
-        else {
-          console.log("data not found")
-        }
-      } catch (error) {
-        console.log("ERROR", error)
-      }
-    }
     getUsersFavDiets();
   }, [update]);
+  const getUsersFavDiets = async () => {
+    try {
+      const Storeddata = await AsyncStorage.getItem('Data');
+      if (Storeddata !== null) {
+        const JASONData = JSON.parse(Storeddata)
+        const Id = JASONData[0].email
+        console.log(Id)
+        const favDiet = await axios(`${Api}/${Appapi.FavoriteDiets}?email=${Id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          }
+        })
+        if (favDiet) {
+          setFavDiets(favDiet.data)
+          setUpdate(update+1)
+          setIsLoaded(true)
+        }
+      }
+      else {
+        console.log("data not found")
+      }
+    } catch (error) {
+      console.log("ERROR", error)
+    }
+  }
   return (
     <View style={{ flex: 1, backgroundColor: defaultTheme ?'#000':'#fff' }}>
     {isLoaded ? (

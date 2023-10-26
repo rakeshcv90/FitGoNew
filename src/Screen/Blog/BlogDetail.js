@@ -26,7 +26,7 @@ const BlogDetail = () => {
     const { defaultTheme } = useSelector(state => state);
     return (
         <View style={{ flex: 1, backgroundColor: defaultTheme ? '#000' : '#fff' }}>
-          <StatusBar barStyle={"light-content"} translucent={true} backgroundColor={'transparent'}/>
+          <StatusBar barStyle={defaultTheme?"light-content":'dark-content'} translucent={true} backgroundColor={'transparent'}/>
             <View>
                 <ImageBackground source={{ uri: Data.data.image }} style={styles.HomeImg}>
                     <LinearGradient

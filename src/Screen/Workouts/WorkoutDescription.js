@@ -87,7 +87,7 @@ const WorkoutDescription = () => {
           message:Fav.data[0].msg,
           // description: 'Please Enter Your Mail',
           type: 'success',
-          icon: { icon: 'auto', position: 'left' },
+          icon: { icon: 'success', position: 'left' },
         });
         setFavData(FavData)
         setIsMounted(isMounted + 1)
@@ -110,7 +110,7 @@ const WorkoutDescription = () => {
           message:RemovedData.data[0].msg,
           // description: 'Please Enter Your Mail',
           type: 'danger',
-          icon: { icon: 'auto', position: 'left' },
+          icon: { icon: 'none', position: 'left' },
         });
         setFavData(FavData.filter((item) => item.id !== HomeCardioData.id))
         setIsMounted(isMounted + 1)

@@ -82,7 +82,7 @@ const DietDetail = () => {
           message: Fav.data[0].msg,
           // description: 'Please Enter Your Mail',
           type: 'success',
-          icon: { icon: 'auto', position: 'left' },
+          icon: { icon: 'none', position: 'left' },
         });
         setFavData(FavData)
 
@@ -105,9 +105,9 @@ const DietDetail = () => {
         // ToastAndroid.showWithGravity(RemovedData.data[0].msg, ToastAndroid.SHORT, ToastAndroid.CENTER)
         showMessage({
           message: RemovedData.data[0].msg,
-          // description: 'Please Enter Your Mail',
+          
           type: 'danger',
-          icon: { icon: 'auto', position: 'left' },
+          icon: { icon: 'none', position: 'left' },
         });
         setFavData(FavData.filter((item) => item.id !== Data.data.id))
         setIsMounted(isMounted + 1)
@@ -133,7 +133,7 @@ const DietDetail = () => {
           styles.container,
           { backgroundColor: defaultTheme ? '#000' : '#fff' },
         ]}>
-      
+       <StatusBar translucent={true} barStyle={defaultTheme?"light-content":'dark-content'} backgroundColor={'transparent'}/>
         <ImageBackground source={{ uri: Data.data.image }} style={styles.HomeImg}>
           <LinearGradient
             colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0.6)']}
