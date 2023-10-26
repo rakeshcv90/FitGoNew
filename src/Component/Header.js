@@ -4,43 +4,51 @@ import {
   ImageBackground,
   TouchableOpacity,
   StyleSheet,
+  StatusBar,
+  Platform
 } from 'react-native';
 import React from 'react';
-import {localImage} from './Image';
-import {DeviceHeigth, DeviceWidth} from './Config';
+import { localImage } from './Image';
+import { DeviceHeigth, DeviceWidth } from './Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
-const Header = ({header, iconName}) => {
+const Header = ({ header, iconName }) => {
   const navigation = useNavigation();
   return (
     <>
       <ImageBackground
         source={localImage.color_image}
+        translucent={true}
         style={{
           width: DeviceWidth,
-          height: (DeviceHeigth * 7) / 100,
+          height:Platform.OS=='ios'?DeviceHeigth*8/100:DeviceHeigth*6/100,
           flexDirection: 'row',
           justifyContent: 'space-between',
-          alignItems: 'center',
+          alignItems: 'flex-end',
         }}>
-        <TouchableOpacity
-          style={styles.leftIcon}
-          onPress={() => {
-            navigation.goBack();
-          }}>
-          <Icons name={'arrow-left'} size={25} color={'white'} />
-        </TouchableOpacity>
-        <Text style={{color: 'white', fontSize: 20, fontFamily: 'serif'}}>
-          {header}
-        </Text>
-        <TouchableOpacity
-          style={styles.rightIcon}
-          onPress={() => {
-            navigation.navigate('searchScreen');
-          }}>
-          <Icons name={iconName} size={25} color={'white'} />
-        </TouchableOpacity>
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center', paddingBottom: DeviceHeigth * 0.5 / 100, justifyContent: 'space-between', width: DeviceWidth
+        }}>
+          <TouchableOpacity
+            style={styles.leftIcon}
+            onPress={() => {
+              navigation.goBack();
+            }}>
+            <Icons name={'arrow-left'} size={25} color={'white'} />
+          </TouchableOpacity>
+          <Text style={{ color: 'white', fontSize: 20, fontFamily: 'serif' }}>
+            {header}
+          </Text>
+          <TouchableOpacity
+            style={styles.rightIcon}
+            onPress={() => {
+              navigation.navigate('Search');
+            }}>
+            <Icons name={iconName} size={25} color={'white'} />
+          </TouchableOpacity>
+        </View>
       </ImageBackground>
     </>
   );

@@ -1,4 +1,4 @@
-package com.fitgo;
+package fitme.health.fitness.homeworkouts.equipment;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

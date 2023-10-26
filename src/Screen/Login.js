@@ -7,61 +7,53 @@ import {
   TouchableOpacity,
   BackHandler,
   Alert,
+  KeyboardAvoidingView,
+  StatusBar
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {localImage} from '../Component/Image';
-import {Api, DeviceHeigth, DeviceWidth, Appapi} from '../Component/Config';
-import {TextInput} from 'react-native-paper';
-import {showMessage} from 'react-native-flash-message';
+import React, { useEffect, useState, } from 'react';
+import { localImage } from '../Component/Image';
+import { Api, DeviceHeigth, DeviceWidth, Appapi } from '../Component/Config';
+import { TextInput } from 'react-native-paper';
+import { showMessage } from 'react-native-flash-message';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const Login = ({navigation}) => {
+import { useSelector } from 'react-redux'
+import { useNavigation } from '@react-navigation/native';
+import LoginLoader from '../Component/LoginLoader';
+const Login = () => {
+  const navigation = useNavigation();
   const [Email, setEmail] = useState('');
   const [Password, setPassword] = useState('');
-  const [isLoggedIn, setisLoggedIN] = useState(false);
   const [submitText, setsubmitText] = useState('ENTER');
-  const handleBackButtonClick = () => {
-    BackHandler.exitApp();
-    return true;
-  };
-
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        'hardwareBackPress',
-        handleBackButtonClick,
-      );
-    };
-  }, []);
+  const [isVisible, seIsvisible] = useState(false)
+  const { defaultTheme } = useSelector((state) => state)
+  const [isLoaded,setIsLoaded]=useState(false)
+  const ToggleVisibility = () => { seIsvisible(!isVisible) }
   const ErrorHandler = async () => {
     let reg = /\S+@\S+\.\S+/;
     let pass = /^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/;
     if (!Email) {
       showMessage({
-        message: 'Email Alert',
-        description: 'Please Enter Your Mail',
+        message: 'Please Enter Your Mail',
+        // description: 'Please Enter Your Mail',
         type: 'danger',
-
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setsubmitText('ENTER');
     } else if (!reg.test(Email)) {
       showMessage({
-        message: 'Email Alert',
-        description: 'Invalid Format',
+        message: 'Invalid Format',
+        // description: 'Invalid Format',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setsubmitText('ENTER');
     } else if (!Password) {
-      Alert.alert('Please Enter Your Password');
       showMessage({
-        message: 'Password Alert',
-        description: 'Please Enter Your Password',
+        message: 'Please Enter Your Password',
+        // description: 'Please Enter Your Password',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setsubmitText('ENTER');
     } else {
@@ -76,25 +68,22 @@ const Login = ({navigation}) => {
             password: Password,
           },
         });
-        if (data.data.data[0].msg === 'login Successfully') {
-          await AsyncStorage.setItem('Data', JSON.stringify(data.data.data));
-          // navigation.navigate('HomeDrawer');
+        if (data.data[0].msg === 'Login successful') {
+          await AsyncStorage.setItem('Data', JSON.stringify(data.data));
           setsubmitText('ENTER');
-          setEmail('');
-          setPassword('');
+          setIsLoaded(true)
           showMessage({
-            message: 'Login Alert',
-            description: data.data.data[0].msg,
+            message: data.data[0].msg,
             type: 'success',
-            icon: {icon: 'auto', position: 'left'},
+            icon: { icon: 'auto', position: 'left' },
           });
           navigation.navigate('DrawerNavigation');
         } else {
+          setIsLoaded(true)
           showMessage({
-            message: 'Login Alert',
-            description: data.data.data[0].msg,
+            message: data.data[0].msg,
             type: 'danger',
-            icon: {icon: 'auto', position: 'left'},
+            icon: { icon: 'auto', position: 'left' },
           });
           setsubmitText('ENTER');
         }
@@ -105,7 +94,11 @@ const Login = ({navigation}) => {
     }
   };
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+      <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+      style={{flex:1}}>
+      <View style={{ backgroundColor: defaultTheme ? "#000" : "#fff" ,justifyContent:'center',alignItems:'center',flex:1}}>
       <Image style={styles.logo} source={localImage.logo} />
       <TextInput
         label={'Email'}
@@ -114,24 +107,33 @@ const Login = ({navigation}) => {
         autoCapitalize="none"
         style={styles.AuthInput}
         activeUnderlineColor="#f39c1f"
+        underlineColor={defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'}
         value={Email}
+        textColor={defaultTheme ? '#fff' : '#000'}
+        theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
       />
       <TextInput
         label={'Password'}
         onChangeText={text => setPassword(text)}
         mode="flat"
-        secureTextEntry={true}
+        secureTextEntry={!isVisible}
         style={styles.AuthInput}
         activeUnderlineColor="#f39c1f"
+        underlineColor={defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'}
         value={Password}
+        textColor={defaultTheme ? '#fff' : '#000'}
+        theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
+        right={<TextInput.Icon icon={isVisible ? 'eye' : 'eye-off'}
+          theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
+          onPress={ToggleVisibility} />}
       />
-      <View style={{width: (DeviceWidth * 80) / 100, alignItems: 'flex-end'}}>
+      <View style={{ width: (DeviceWidth * 80) / 100, alignItems: 'flex-end', backgroundColor: defaultTheme ? "#000" : "#fff" }}>
         <TouchableOpacity
-          style={styles.Forget}
+          style={[styles.Forget, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}
           onPress={() => {
             navigation.navigate('ForgetPassword');
           }}>
-          <Text style={{color: 'black'}}>Forget Password ?</Text>
+          <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>Forget Password ?</Text>
         </TouchableOpacity>
       </View>
       <TouchableOpacity
@@ -140,19 +142,21 @@ const Login = ({navigation}) => {
           setsubmitText('Please Wait...');
           ErrorHandler();
         }}>
-        <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
+        <Text style={{ color: 'white', fontSize: 15 }}>{submitText}</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('Signup');
         }}>
-        <Text style={{color: 'black', marginBottom: (DeviceHeigth * 5) / 100}}>
+        <Text style={{ color: defaultTheme ? "#fff" : "#000", marginBottom: (DeviceHeigth * 5) / 100 }}>
           Don't have an account ?{' '}
-          <Text style={{color: 'black', fontWeight: 'bold'}}>SignUp</Text>
+          <Text style={{ color: defaultTheme ? "#fff" : "#000", fontWeight: 'bold' }}>SignUp</Text>
         </Text>
       </TouchableOpacity>
-    </SafeAreaView>
-  );
+      </View>
+      </KeyboardAvoidingView>
+    </View>
+  )
 };
 const styles = StyleSheet.create({
   container: {
@@ -165,7 +169,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: (DeviceWidth * 50) / 100,
-    height: (DeviceHeigth * 20) / 100,
+    height: (DeviceHeigth * 30) / 100,
     marginBottom: (DeviceHeigth * 5) / 100,
     resizeMode: 'contain',
     marginTop: (DeviceHeigth * 8) / 100,
@@ -190,6 +194,13 @@ const styles = StyleSheet.create({
     marginBottom: (DeviceHeigth * 1) / 100,
     backgroundColor: 'transparent',
     width: (DeviceWidth * 80) / 100,
+  },
+  SignUpText: {
+    fontSize: 25,
+    color: 'black',
+    alignItems: 'flex-start',
+    textAlign: 'center',
+    marginBottom:50
   },
 });
 export default Login;

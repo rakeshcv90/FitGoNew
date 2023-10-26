@@ -4,80 +4,82 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  KeyboardAvoidingView
 } from 'react-native';
-import React, {useState} from 'react';
-import {Api, Appapi, DeviceHeigth, DeviceWidth} from '../Component/Config';
-import {TextInput} from 'react-native-paper';
-import {showMessage} from 'react-native-flash-message';
+import React, { useState } from 'react';
+import { Api, Appapi, DeviceHeigth, DeviceWidth } from '../Component/Config';
+import { TextInput } from 'react-native-paper';
+import { showMessage } from 'react-native-flash-message';
 import axios from 'axios';
-
-const Signup = ({navigation}) => {
+import { useSelector } from 'react-redux'
+const Signup = ({ navigation }) => {
   const [checked, setChecked] = useState(false);
   const [Name, setName] = useState('');
   const [Email, setEmail] = useState('');
   const [Password, setPassword] = useState('');
   const [ConfirmPassword, setConformPassword] = useState('');
-
+  const { defaultTheme } = useSelector((state) => state)
   const [submitText, setSubmitText] = useState('Enter');
-
+  const [isVisible, seIsvisible] = useState(false)
+  const ToggleVisibility = () => { seIsvisible(!isVisible) }
   let inputData = [];
   const ErrorHandler = () => {
     let reg = /\S+@\S+\.\S+/;
     let pass = /^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/;
     if (!Name) {
       showMessage({
-        message: 'Signup  Alert',
-        description: 'Enter Your name',
+        message: 'Enter Your name',
+        // description: 'Enter Your name',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (!Email) {
       showMessage({
-        message: 'Signup  Alert',
-        description: 'Enter Your Email',
+        message: 'Enter Your Email',
+        // description: 'Enter Your Email',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (!reg.test(Email)) {
       showMessage({
-        message: 'Signup  Alert',
-        description: 'Invalid Format',
+        message: 'Invalid Format',
+        // description: 'Invalid Format',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (!Password) {
       showMessage({
-        message: 'Signup  Alert',
-        description: 'Please Enter Your Password',
+        message: 'Please Enter Your Password',
+        // description: 'Please Enter Your Password',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (!ConfirmPassword) {
       showMessage({
-        message: 'Signup  Alert',
-        description: 'Please enter Confirm  Password',
+        message: 'Please enter Confirm  Password',
+        // description: 'Please enter Confirm  Password',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (Password != ConfirmPassword) {
       showMessage({
-        message: 'Signup  Alert',
-        description: ' Confirm  Password Not Match',
+        message: 'Confirm Password does not Match',
+        // description: 'Confirm Password does not Match',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else if (checked == false) {
       showMessage({
-        message: 'Signup  Alert',
-        description: 'Please Accept Terms and Conditions',
+        message: 'Please Accept Terms and Conditions',
+        // description: 'Please Accept Terms and Conditions',
         type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
+        icon: { icon: 'auto', position: 'left' },
       });
       setSubmitText('Enter');
     } else {
@@ -97,12 +99,13 @@ const Signup = ({navigation}) => {
           password: Password,
         },
       });
-      if (data.data.data[0].msg === 'Signin Successfully') {
+      if (data.data[0].msg === 'Sign Up successful') {
+
         showMessage({
           message: 'Signup  Alert',
-          description: data.data.data[0].msg,
+          description: data.data[0].msg,
           type: 'success',
-          icon: {icon: 'auto', position: 'left'},
+          icon: { icon: 'auto', position: 'left' },
         });
         setSubmitText('Enter');
         setEmail('')
@@ -113,12 +116,11 @@ const Signup = ({navigation}) => {
 
         navigation.navigate('Login');
       } else {
-        ToastAndroid.show(data.data.data[0].msg, 2);
         showMessage({
           message: 'Signup  Alert',
-          description: data.data.data[0].msg,
+          description: data.data[0].msg,
           type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
+          icon: { icon: 'auto', position: 'left' },
         });
         setSubmitText('Enter');
       }
@@ -128,86 +130,108 @@ const Signup = ({navigation}) => {
     }
   };
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <Text style={styles.SignUpText}>SignUp</Text>
-      <View style={styles.container}>
-        <TextInput
-          label={'Name'}
-          onChangeText={text => setName(text.trim())}
-          mode="flat"
-          autoCapitalize="none"
-          style={styles.AuthInput}
-          activeUnderlineColor="#f39c1f"
-          value={Name}
-        />
-        <TextInput
-          label={'Email'}
-          onChangeText={text => setEmail(text.trim())}
-          mode="flat"
-          autoCapitalize="none"
-          style={styles.AuthInput}
-          activeUnderlineColor="#f39c1f"
-          value={Email}
-        />
-        <TextInput
-          label={'Password'}
-          onChangeText={text => setPassword(text.trim())}
-          mode="flat"
-          autoCapitalize="none"
-          style={styles.AuthInput}
-          activeUnderlineColor="#ec9706"
-          value={Password}
-        />
-        <TextInput
-          label={'Confirm Password'}
-          onChangeText={text => setConformPassword(text.trim())}
-          mode="flat"
-          autoCapitalize="none"
-          style={styles.AuthInput}
-          activeUnderlineColor="#f39c1f"
-          value={ConfirmPassword}
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            position: 'relative',
-            alignItems: 'center',
-            width: (DeviceWidth * 80) / 100,
-          }}>
+    <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'height' : 'height'}
+        style={{ flex: 1 }}>
+        <Text style={[styles.SignUpText, { color: defaultTheme ? "#fff" : "#000",marginTop:DeviceHeigth*5/100 }]}>SignUp</Text>
+
+        <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
+          <TextInput
+            label={'Name'}
+            onChangeText={text => setName(text)}
+            mode="flat"
+            autoCapitalize="none"
+            style={styles.AuthInput}
+            activeUnderlineColor="#f39c1f"
+            value={Name}
+            textColor={defaultTheme ? "#fff" : "#000"}
+            theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
+            underlineColor={defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'}
+          />
+          <TextInput
+            label={'Email'}
+            onChangeText={text => setEmail(text.trim())}
+            mode="flat"
+            autoCapitalize="none"
+            style={styles.AuthInput}
+            activeUnderlineColor="#f39c1f"
+            value={Email}
+            textColor={defaultTheme ? "#fff" : "#000"}
+            theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
+            underlineColor={defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'}
+          />
+          <TextInput
+            label={'Password'}
+            onChangeText={text => setPassword(text.trim())}
+            mode="flat"
+            autoCapitalize="none"
+            style={styles.AuthInput}
+            activeUnderlineColor="#ec9706"
+            value={Password}
+            textColor={defaultTheme ? "#fff" : "#000"}
+            secureTextEntry={!isVisible}
+            underlineColor={defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'}
+            theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
+            right={<TextInput.Icon icon={isVisible ? 'eye' : 'eye-off'}
+              onPress={ToggleVisibility}
+              theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }} />}
+
+          />
+          <TextInput
+            label={'Confirm Password'}
+            onChangeText={text => setConformPassword(text.trim())}
+            mode="flat"
+            autoCapitalize="none"
+            style={styles.AuthInput}
+            activeUnderlineColor="#f39c1f"
+            value={ConfirmPassword}
+            textColor={defaultTheme ? "#fff" : "#000"}
+            underlineColor={defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'}
+            theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              position: 'relative',
+              alignItems: 'center',
+              width: (DeviceWidth * 80) / 100,
+            }}>
+            <TouchableOpacity
+              style={[styles.checkboxContainer, checked && styles.Checked]}
+              onPress={() => setChecked(!checked)}>
+              <Text>
+                {' '}
+                {checked && <Text style={{ color: '#fff' }}>&#10004;</Text>}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+              navigation.navigate('TermaAndCondition')
+            }}>
+              <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>I Agree to Term & Conditions</Text>
+            </TouchableOpacity>
+          </View>
           <TouchableOpacity
-            style={[styles.checkboxContainer, checked && styles.Checked]}
-            onPress={() => setChecked(!checked)}>
-            <Text>
-              {' '}
-              {checked && <Text style={{color:'red'}}>&#10004;</Text>}
+            style={styles.Tbutton}
+            onPress={() => {
+              setSubmitText('Please Wait...');
+              ErrorHandler();
+            }}>
+            <Text style={{ color: 'white', fontSize: 15 }}>{submitText}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Login');
+            }}>
+            <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>
+              Already have an account ?{' '}
+              <Text style={{ color: defaultTheme ? "#fff" : "#000", fontWeight: 'bold' }}>Login</Text>
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=>{
-            navigation.navigate('TermaAndCondition')
-          }}>
-            <Text style={{color: 'black'}}>I Agree to Term & Conditions</Text>
-          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.Tbutton}
-          onPress={() => {
-            setSubmitText('Please Wait...');
-            ErrorHandler();
-          }}>
-          <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('Login');
-          }}>
-          <Text style={{color: 'black'}}>
-            Already have an account ?{' '}
-            <Text style={{color: 'black', fontWeight: 'bold'}}>Login</Text>
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      </KeyboardAvoidingView>
+    </View>
   );
 };
 const styles = StyleSheet.create({
