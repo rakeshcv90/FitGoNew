@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   StatusBar,
-  ToastAndroid
+  ToastAndroid,
+  Platform
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { DeviceWidth, DeviceHeigth, Api, Appapi } from '../../Component/Config';
@@ -21,6 +22,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { showMessage } from 'react-native-flash-message';
 import CustomStatusBar from '../../Component/CustomStatusBar';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 const DietDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -77,10 +79,11 @@ const DietDetail = () => {
         data: payload
       })
       if (Fav.data) {
-        // ToastAndroid.showWithGravity(Fav.data[0].msg, ToastAndroid.SHORT, ToastAndroid.CENTER)
+       
         showMessage({
           message: Fav.data[0].msg,
-          // description: 'Please Enter Your Mail',
+          statusBarHeight:Platform.OS=='ios'?0:getStatusBarHeight(),
+          floating:Platform.OS=='ios'?true:false,
           type: 'success',
           icon: { icon: 'none', position: 'left' },
         });
@@ -105,7 +108,8 @@ const DietDetail = () => {
         // ToastAndroid.showWithGravity(RemovedData.data[0].msg, ToastAndroid.SHORT, ToastAndroid.CENTER)
         showMessage({
           message: RemovedData.data[0].msg,
-          
+          statusBarHeight:Platform.OS=='ios'?0:getStatusBarHeight(),
+          floating:Platform.OS=='ios'?true:false,
           type: 'danger',
           icon: { icon: 'none', position: 'left' },
         });
@@ -119,11 +123,9 @@ const DietDetail = () => {
   const toggleAddRemove = () => {
     if (FavData.some((item) => item.id === Data.data.id)) {
       RemoveFavorites();
-      console.log('true Tggle')
     }
     else {
       AddToFavorites();
-      console.log("false tggle")
     }
   }
   if (isLoaded) {

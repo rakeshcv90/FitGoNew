@@ -7,7 +7,8 @@ import {
     TouchableOpacity,
     StyleSheet,
     Image,
-    Linking
+    Linking,
+    StatusBar
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { DeviceWidth, DeviceHeigth } from '../../Component/Config';

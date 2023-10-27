@@ -32,7 +32,8 @@ const Signup = ({ navigation }) => {
     if (!Name) {
       showMessage({
         message: 'Enter Your name',
-        // description: 'Enter Your name',
+        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
+        floating: Platform.OS == 'ios' ? false : true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -40,7 +41,8 @@ const Signup = ({ navigation }) => {
     } else if (!Email) {
       showMessage({
         message: 'Enter Your Email',
-        // description: 'Enter Your Email',
+        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
+        floating: Platform.OS == 'ios' ? false : true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -48,7 +50,8 @@ const Signup = ({ navigation }) => {
     } else if (!reg.test(Email)) {
       showMessage({
         message: 'Invalid Format',
-        // description: 'Invalid Format',
+        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
+        floating: Platform.OS == 'ios' ? false : true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -56,7 +59,8 @@ const Signup = ({ navigation }) => {
     } else if (!Password) {
       showMessage({
         message: 'Please Enter Your Password',
-        // description: 'Please Enter Your Password',
+        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
+        floating: Platform.OS == 'ios' ? false : true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -64,7 +68,8 @@ const Signup = ({ navigation }) => {
     } else if (!ConfirmPassword) {
       showMessage({
         message: 'Please enter Confirm  Password',
-        // description: 'Please enter Confirm  Password',
+        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
+        floating: Platform.OS == 'ios' ? false : true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -72,7 +77,8 @@ const Signup = ({ navigation }) => {
     } else if (Password != ConfirmPassword) {
       showMessage({
         message: 'Confirm Password does not Match',
-        // description: 'Confirm Password does not Match',
+        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
+        floating: Platform.OS == 'ios' ? false : true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -80,7 +86,8 @@ const Signup = ({ navigation }) => {
     } else if (checked == false) {
       showMessage({
         message: 'Please Accept Terms and Conditions',
-        // description: 'Please Accept Terms and Conditions',
+        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
+        floating: Platform.OS == 'ios' ? false : true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -103,10 +110,10 @@ const Signup = ({ navigation }) => {
         },
       });
       if (data.data[0].msg === 'Sign Up successful') {
-
         showMessage({
-          message: 'Signup  Alert',
-          description: data.data[0].msg,
+          message: data.data[0].msg,
+          statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
+          floating: Platform.OS == 'ios' ? false : true,
           type: 'success',
           icon: { icon: 'auto', position: 'left' },
         });
@@ -120,9 +127,10 @@ const Signup = ({ navigation }) => {
         navigation.navigate('Login');
       } else {
         showMessage({
-          message: 'Signup  Alert',
-          description: data.data[0].msg,
+          message: data.data[0].msg,
           type: 'danger',
+          statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
+          floating: Platform.OS == 'ios' ? false : true,
           icon: { icon: 'auto', position: 'left' },
         });
         setSubmitText('Enter');
@@ -135,15 +143,15 @@ const Signup = ({ navigation }) => {
   return (
     <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
       <SafeAreaView style={{
-        height:Platform.OS=='ios'?getStatusBarHeight():0,
-        backgroundColor:defaultTheme?'#000':"#fff"
+        height: Platform.OS == 'ios' ? getStatusBarHeight() : 0,
+        backgroundColor: defaultTheme ? '#000' : "#fff"
       }}>
-      <StatusBar barStyle={defaultTheme?"light-content":'dark-content'} />
+        <StatusBar barStyle={defaultTheme ? "light-content" : 'dark-content'} />
       </SafeAreaView>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'height' : 'height'}
         style={{ flex: 1 }}>
-        <Text style={[styles.SignUpText, { color: defaultTheme ? "#fff" : "#000",}]}>SignUp</Text>
+        <Text style={[styles.SignUpText, { color: defaultTheme ? "#fff" : "#000", }]}>SignUp</Text>
 
         <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
           <TextInput

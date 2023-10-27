@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import { View, Text, SafeAreaView, Alert } from 'react-native'
+import { View, Text, SafeAreaView, Alert, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import {
   NavigationContainer,
@@ -12,42 +12,55 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const navigationRef = createNavigationContainerRef();
 import Loader from './src/Component/Loader';
 import { setupNetworkListner } from './src/Component/NetworkUtils';
+import NetInfo from '@react-native-community/netinfo'
+import Toast from 'react-native-toast-message';
+import { useSelector } from 'react-redux';
+import { DeviceHeigth, DeviceWidth } from './src/Component/Config';
+import RNRestart from 'react-native-restart'
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 // import { sendConnectionNotification } from './src/Component/Notification';
 const App = () => {
-  // useEffect(()=>{
-  //   Notification();
-  //   },[])
   const [isLogged, setIsLogged] = useState()
   const [update, setUpdate] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
-  const [isConnected,setConnected]=useState(false)
-  // const thresoldTime=5000;
-  // const Notification=()=>{
-  //   setupNetworkListner(Disconnected=>{
-  //     if(Disconnected){
-  //       showMessage({
-  //         message: 'No internet Connection',
-  //                 type: 'danger',
-  //                 icon: { icon: 'none', position: 'left'},
-  //       })
-  //       setConnected(false)
-  //       console.log("dis",Disconnected,isConnected)
-  //     }else {
-  //       showMessage({
-  //         message: 'Back to Online',
-  //                 type: 'success',
-  //                 icon: { icon: 'none', position: 'left'},
-  //       })
-  //       // Alert.alert("back")
-  //       setConnected(true)
-  //       console.log("misss",Disconnected,isConnected)
-  //     }
-  //   })
-  // }
+  const [isConnected, setConnected] = useState(false)
+  const {defaultTheme}=useSelector(state=>state)
+  // Checking if the App is Connected to the internet or not 
   useEffect(() => {
-      UserAuth();
+    const subscription = NetInfo.addEventListener(state => {
+      if (state.isConnected) {
+        showMessage({
+          message:"Back Online",
+          animationDuration:750,
+          statusBarHeight:Platform.OS=='ios'?0:getStatusBarHeight(),
+          floating:Platform.OS=='ios'?false:true,
+          type: 'success',
+          icon: { icon: 'none', position: 'left' },
+        });
+        setConnected(true)
+      }
+      else {
+        showMessage({
+          message:"No Internet Connection",
+          animationDuration:750,
+          statusBarHeight:Platform.OS=='ios'?0:getStatusBarHeight(),
+          floating:Platform.OS=='ios'?true:false,
+          type: 'danger',
+          icon: { icon: 'none', position: 'left' },
+        });
+        setConnected(false)
+      }
+    })
+    return () => {
+      subscription();
+    }
+  }, [])
+
+  useEffect(() => {
+    UserAuth();
   }, [update])
-  const UserAuth = async () => {
+  // Checking if User is Already Login or not
+  const UserAuth = async () => { 
     try {
       const userData = await AsyncStorage.getItem('Data')
       const data = (JSON.parse(userData))
@@ -66,32 +79,59 @@ const App = () => {
       setIsLoaded(false)
     }
   }
-  if (isLoaded && isLogged )  {
+  if (isLoaded && isLogged && isConnected) {
     return (
       <>
         <NavigationContainer ref={navigationRef}>
           <Router />
         </NavigationContainer>
-        <FlashMessage position="top" />
+        <FlashMessage position='top' />
+        <Toast position='top' topOffset={50} />
       </>
     )
   }
-  else if (isLoaded && !isLogged ) {
+  else if (isLoaded && !isLogged && isConnected) {
     return (
       <>
         <NavigationContainer ref={navigationRef}>
           <LoginStack />
         </NavigationContainer>
-        <FlashMessage position="top" />
+        <FlashMessage position='top' />
+        <Toast position='top' topOffset={50} />
       </>
     )
   }
+  // Will Visible When Internet is Disconnected
+  else if (isConnected == false && isLoaded) {
+    return (
+      <View style={[styles.View,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
+        <Text style={{ color: 'red' ,fontSize:20}}>No Internet Connection</Text>
+        <Text style> Make sure you have connected to the Internet</Text>
+        <TouchableOpacity style={[styles.button,{backgroundColor:'red'}]} onPress={()=>RNRestart.restart()}>
+          <Text style={{color:"#fff" ,fontSize:16, fontFamily:'sans-serif',fontWeight:'bold'}}> Try Again</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
   else {
-    return(
-      
-      <Loader/>
+    return (
+      <Loader />
     )
   }
 }
-
+const styles=StyleSheet.create({
+  View:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  button:{
+    marginVertical:DeviceHeigth*2/100,
+    width:DeviceWidth*40/100,
+    height:DeviceHeigth*4/100,
+    justifyContent:'center',
+    alignItems:'center',
+    borderRadius:100
+  }
+})
 export default App

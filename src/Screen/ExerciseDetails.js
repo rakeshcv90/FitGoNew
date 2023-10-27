@@ -65,7 +65,7 @@ const ExerciseDetails = () => {
   const VideoModal = () => {
     return (
       <View>
-         {/* {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>} */}
+         {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={defaultTheme?"#000":"#fff"}/></>:<><CustomStatusBar/></>}
       </View>
     );
   }

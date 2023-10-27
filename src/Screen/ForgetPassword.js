@@ -17,6 +17,7 @@ import { showMessage } from 'react-native-flash-message';
 import CustomStatusBar from '../Component/CustomStatusBar';
 import axios from 'axios';
 import HeaderWithoutSearch from '../Component/HeaderWithoutSearch';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 let reg = /\S+@\S+\.\S+/;
 const ForgetPassword = ({ navigation }) => {
   const [Email, setEmail] = useState('');
@@ -26,7 +27,8 @@ const ForgetPassword = ({ navigation }) => {
     if (!Email) {
       showMessage({
         message: 'Please Enter your Email',
-        // description: 'Please Enter your Email',
+        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
+        floating: Platform.OS == 'ios' ? false : true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -34,7 +36,8 @@ const ForgetPassword = ({ navigation }) => {
     } else if (!reg.test(Email)) {
       showMessage({
         message: 'Invalid Email Format',
-        // description: 'Invalid Email Format',
+        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
+        floating: Platform.OS == 'ios' ? false : true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -55,7 +58,8 @@ const ForgetPassword = ({ navigation }) => {
         if (data.data[0].msg == 'Mail Sent') {
           showMessage({
             message: data.data[0].msg,
-            // description: data.data[0].msg,
+            statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
+            floating: Platform.OS == 'ios' ? false : true,
             type: 'success',
             icon: { icon: 'auto', position: 'left' },
           });
@@ -63,7 +67,8 @@ const ForgetPassword = ({ navigation }) => {
         } else {
           showMessage({
             message: data.data[0].msg,
-            // description: data.data.data[0].msg,
+            statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
+            floating: Platform.OS == 'ios' ? false : true,
             type: 'danger',
             icon: { icon: 'auto', position: 'left' },
           });
