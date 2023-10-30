@@ -25,6 +25,7 @@ const DietCategory = () => {
     const navigation = useNavigation();
     const [isLoaded, setIsLoaded] = useState(false)
     const [Diets, setDiets] = useState([]);
+    const [isEmpty, setIsEmpty] = useState(false)
     const route = useRoute;
     const Data = route.params;
     const { defaultTheme } = useSelector(state => state);
@@ -39,12 +40,18 @@ const DietCategory = () => {
                     'Content-Type': 'Multipart/form-data',
                 },
             });
-            setDiets(data.data);
-            setIsLoaded(true)
+            if (data.data.length > 0) {
+                setDiets(data.data);
+                setIsLoaded(true)
+                setIsEmpty(false)
+            } else {
+                setIsEmpty(false);
+                setIsLoaded(false)
+            }
         } catch (error) { }
     };
     // const DietCat = Diets.filter(item => item.category == Data.title);
-    if (isLoaded) {
+    if (isLoaded && !isEmpty) {
         return (
             <View
                 style={[
@@ -52,7 +59,7 @@ const DietCategory = () => {
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
                 {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
-                
+
                 <HeaderWithoutSearch Header={"Categories"} />
                 <View style={{ height: (DeviceHeigth * 90) / 100 }}>
                     <FlatList
@@ -92,6 +99,12 @@ const DietCategory = () => {
                     />
                 </View>
             </View>
+        )
+    }
+    else if (isLoaded && isEmpty) {
+        return (
+            <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff", justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: '#f39c1f', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View>
         )
     }
     else {

@@ -37,7 +37,6 @@ const LatestProducts = () => {
                 },
             });
             setLatestprdct(data.data);
-            // console.log(data.data.data);
             setIsLoaded(true);
         } catch (error) { }
     }

@@ -86,7 +86,6 @@ const App = () => {
           <Router />
         </NavigationContainer>
         <FlashMessage position='top' />
-        <Toast position='top' topOffset={50} />
       </>
     )
   }
@@ -97,7 +96,6 @@ const App = () => {
           <LoginStack />
         </NavigationContainer>
         <FlashMessage position='top' />
-        <Toast position='top' topOffset={50} />
       </>
     )
   }
@@ -106,7 +104,7 @@ const App = () => {
     return (
       <View style={[styles.View,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
         <Text style={{ color: 'red' ,fontSize:20}}>No Internet Connection</Text>
-        <Text style> Make sure you have connected to the Internet</Text>
+        <Text style={{color:defaultTheme?"#fff":"#000"}}> Make sure you have connected to the Internet</Text>
         <TouchableOpacity style={[styles.button,{backgroundColor:'red'}]} onPress={()=>RNRestart.restart()}>
           <Text style={{color:"#fff" ,fontSize:16, fontFamily:'sans-serif',fontWeight:'bold'}}> Try Again</Text>
         </TouchableOpacity>

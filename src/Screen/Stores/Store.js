@@ -27,6 +27,7 @@ const Store = () => {
     const [getLatestprdct, setLatestprdct] = useState([])
     const [isLoaded, setIsLoaded] = useState(false);
     const navigation = useNavigation();
+    const [Isempty, setEmpty] = useState(false)
     const { defaultTheme } = useSelector(state => state)
     useEffect(() => {
         getData();
@@ -41,9 +42,15 @@ const Store = () => {
                     'Content-Type': 'Multipart/form-data',
                 },
             });
-            setApiData(data.data);
-            // console.log(data.data.data);
-            setIsLoaded(true);
+            if (data.data.length > 0) {
+                setApiData(data.data);
+                setIsLoaded(true);
+                setEmpty(false)
+            }
+            else {
+                setEmpty(true)
+                setIsLoaded(true)
+            }
         } catch (error) { }
     };
     const getCategories = async () => {
@@ -54,9 +61,8 @@ const Store = () => {
                     'Content-Type': 'Multipart/form-data',
                 },
             });
-            setCategories(data.data);
-            setIsLoaded(true)
-            console.log(data.data[0])
+                setCategories(data.data);
+                setIsLoaded(true)
         } catch (error) {
         }
     };
@@ -68,20 +74,21 @@ const Store = () => {
                     'Content-Type': 'Multipart/form-data',
                 },
             });
-            setLatestprdct(data.data);
-            // console.log(data.data.data);
-            setIsLoaded(true);
+            if (data.data.length > 0) {
+                setLatestprdct(data.data);
+                setIsLoaded(true);
+                setEmpty(false)
+            }
+            else {
+                setEmpty(true);
+                setIsLoaded(true)
+            }
         } catch (error) { }
     }
-    if (!isLoaded) {
-        return (
-           <Loader />
-        )
-    }
-    else {
+    if (isLoaded && !Isempty) {
         return (
             <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-                {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={"Store"} />
                 <Text
                     style={{ margin: 15, fontSize: 20, color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>
@@ -102,12 +109,7 @@ const Store = () => {
                                     style={styles.Image}>
                                     <View style={styles.gradientView}>
                                         <Text style={styles.text}>{elements.item.title}</Text>
-                                        {/* <Text
-                                            style={{ color: '#f39c1f', fontWeight: '500', marginTop: 7 }}>
-                                            Buy Product
-                                        </Text> */}
                                     </View>
-
                                 </ImageBackground>
                             </TouchableOpacity>
                         )}
@@ -213,6 +215,17 @@ const Store = () => {
                 </View>
             </View>
         )
+    }
+    else if(isLoaded && Isempty){
+return(
+    <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff", justifyContent: 'center', alignItems: 'center' }}>
+      <Text style={{ color: '#f39c1f', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View>
+)
+    }
+    else {
+       return(
+        <Loader/>
+       )
     }
 }
 const styles = StyleSheet.create({

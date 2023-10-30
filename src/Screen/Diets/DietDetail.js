@@ -50,10 +50,12 @@ const DietDetail = () => {
               'Content-Type': 'multipart/form-data',
             }
           })
-          setIsLoaded(true)
+          
           if (favDiet.data) {
             setFavData(favDiet.data)
-            console.log('fsvdata', favDiet.data)
+            setIsLoaded(true)
+          }else{
+            setIsLoaded(true)
           }
         }
         else {

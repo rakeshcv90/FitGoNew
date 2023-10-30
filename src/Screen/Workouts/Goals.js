@@ -8,8 +8,9 @@ import {
   TouchableOpacity,
   StatusBar
 } from 'react-native';
-import React, { useState, useEffect, useContext,
- } from 'react';
+import React, {
+  useState, useEffect, useContext,
+} from 'react';
 import Header from '../../Component/Header'
 import { DeviceHeigth, DeviceWidth } from '../../Component/Config';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -21,6 +22,7 @@ import CustomStatusBar from '../../Component/CustomStatusBar';
 const Goals = ({ navigation }) => {
   const [ApiData, setApiData] = useState();
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false)
   const { defaultTheme } = useSelector(state => state)
   useEffect(() => {
     getData();
@@ -33,15 +35,22 @@ const Goals = ({ navigation }) => {
           'Content-Type': 'Multipart/form-data',
         },
       });
-      setApiData(data.data);
-      console.log(data.data[0])
-      setIsLoaded(true);
+      if (data.data.length > 0) {
+        setApiData(data.data);
+        setIsLoaded(true);
+        setIsEmpty(false)
+      }
+      else {
+        setIsLoaded(true)
+        setIsEmpty(true)
+      }
+
     } catch (error) { }
   };
-  if (isLoaded) {
+  if (isLoaded && !isEmpty) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-        {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
         <Header
           header={'Goals'}
           iconName={'magnify'}
@@ -83,6 +92,12 @@ const Goals = ({ navigation }) => {
           />
         </View>
       </View>
+    )
+  }
+  else if (isEmpty && isLoaded) {
+    return (
+      <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: defaultTheme ? "#000" : "#fff", }}>
+        <Text style={{ color: defaultTheme ? "#fff" : "#000" }}> No Data Available</Text></View>
     )
   }
   else {

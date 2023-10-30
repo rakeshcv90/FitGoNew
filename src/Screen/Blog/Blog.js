@@ -21,12 +21,14 @@ import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import moment from 'moment';
 import CustomStatusBar from '../../Component/CustomStatusBar';
+import { FlashMessageManager } from 'react-native-flash-message';
 const Blog = () => {
     const [featuredBlog, setfeaturedBlog] = useState([]);
     const [tags, setTags] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const navigation = useNavigation();
     const [LatestPost, setLatestPost] = useState([]);
+    const [isEmpty, setEmpty] = useState(false)
     const { defaultTheme } = useSelector((state) => state);
     useEffect(() => {
         getData();
@@ -41,9 +43,15 @@ const Blog = () => {
                     'Content-Type': 'Multipart/form-data',
                 },
             });
-            setfeaturedBlog(data.data);
-            console.log(data.data);
-            setIsLoaded(true);
+            if (data.data.length > 0) {
+                setfeaturedBlog(data.data);
+                setIsLoaded(true);
+            }
+            else {
+                setEmpty(true);
+                setIsLoaded(true)
+            }
+
         } catch (error) { }
     };
     const getTags = async () => {
@@ -54,9 +62,15 @@ const Blog = () => {
                     'Content-Type': 'Multipart/form-data',
                 },
             });
-            setTags(data.data);
-            console.log(data.data);
-            setIsLoaded(true);
+            if (data.data.length > 0) {
+                setTags(data.data);
+                setIsLoaded(true);
+                setEmpty(false)
+            }
+            else {
+                setEmpty(true)
+                setIsLoaded(true)
+            }
         } catch (error) { }
     };
     const getLatestpost = async () => {
@@ -67,50 +81,61 @@ const Blog = () => {
                     'Content-Type': 'Multipart/form-data',
                 },
             });
-            setLatestPost(data.data);
-            // console.log(data.data);
-            setIsLoaded(true);
+            if (data.data.length > 0) {
+                setLatestPost(data.data);
+                setIsLoaded(true);
+                setEmpty(false)
+            }
+            else {
+                setEmpty(true);
+                setIsLoaded(true)
+            }
         } catch (error) { }
     };
     return (
         <View style={[styles.conatainer, { backgroundColor: defaultTheme ? '#000' : '#fff' }]}>
-              {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
+            {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
             <HeaderWithoutSearch Header={"Blog"} />
             <View>
                 {isLoaded ? (
                     <>
-                        <FlatList
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}
-                            scrollEnabled={true}
-                            data={featuredBlog}
-                            renderItem={elements => (
-                                <TouchableOpacity onPress={() => {
-                                    navigation.navigate('BlogDetail', { data: elements.item })
-                                }}>
-                                    <ImageBackground
-                                        source={{ uri: elements.item.image }}
-                                        style={styles.Image}>
-                                        <View style={[styles.gradientView]}>
-                                            <View style={styles.Tag}>
-                                                <Text style={{ color: "#fff" }}>{elements.item.tag}</Text>
-                                            </View>
-                                            <View>
-                                                <Text style={styles.text}>{elements.item.title}</Text>
-                                                <Text
-                                                    style={{
-                                                        color: '#f39c1f',
-                                                        fontWeight: '500',
-                                                        marginTop: 7,
-                                                    }}>
-                                                    {moment(elements.item.date).fromNow()}
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    </ImageBackground>
-                                </TouchableOpacity>
-                            )}
-                        />
+                        {!isEmpty ?
+                            <>
+                                <FlatList
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    scrollEnabled={true}
+                                    data={featuredBlog}
+                                    renderItem={elements => (
+                                        <TouchableOpacity onPress={() => {
+                                            navigation.navigate('BlogDetail', { data: elements.item })
+                                        }}>
+                                            <ImageBackground
+                                                source={{ uri: elements.item.image }}
+                                                style={styles.Image}>
+                                                <View style={[styles.gradientView]}>
+                                                    <View style={styles.Tag}>
+                                                        <Text style={{ color: "#fff" }}>{elements.item.tag}</Text>
+                                                    </View>
+                                                    <View>
+                                                        <Text style={styles.text}>{elements.item.title}</Text>
+                                                        <Text
+                                                            style={{
+                                                                color: '#f39c1f',
+                                                                fontWeight: '500',
+                                                                marginTop: 7,
+                                                            }}>
+                                                            {moment(elements.item.date).fromNow()}
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                            </ImageBackground>
+                                        </TouchableOpacity>
+                                    )}
+                                />
+                            </> : <>
+                                <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff", justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text style={{ color: '#f39c1f', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View></>}
                     </>
                 ) : (
                     <>
@@ -202,47 +227,54 @@ const Blog = () => {
             </View>
             {isLoaded ? (
                 <>
-                    <View style={{ height: DeviceHeigth * 40 / 100 }}>
-                        <FlatList
-                            data={LatestPost}
-                            renderItem={elements => (
-                                <TouchableOpacity style={{ height: (DeviceHeigth * 10) / 100 }} onPress={() => {
-                                    navigation.navigate("BlogDetail", { data: elements.item })
-                                }}>
-                                    <View
-                                        style={{
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            margin: 10,
-                                            justifyContent: 'space-between',
-                                            // borderWidth:1,
-
+                    {!isEmpty ?
+                        <>
+                            <View style={{ height: DeviceHeigth * 40 / 100 }}>
+                                <FlatList
+                                    data={LatestPost}
+                                    renderItem={elements => (
+                                        <TouchableOpacity style={{ height: (DeviceHeigth * 10) / 100 }} onPress={() => {
+                                            navigation.navigate("BlogDetail", { data: elements.item })
                                         }}>
-                                        <Image
-                                            source={{ uri: elements.item.image }}
-                                            style={{ height: 60, width: 60, borderRadius: 60 / 2 }}
-                                        />
-                                        <View
-                                            style={{
-                                                // marginLeft: 10,
-                                                flexDirection: 'row',
-                                                width: (DeviceWidth * 65) / 100,
-                                                alignItems: 'center',
-                                                // borderWidth:1,
-                                            }}>
-                                            <View>
-                                                <Text style={{ color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>{elements.item.title}</Text>
-                                                <Text style={{ color: '#f39c1f', fontWeight: '500' }}>
-                                                    {elements.item.price}
-                                                </Text>
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'center',
+                                                    margin: 10,
+                                                    justifyContent: 'space-between',
+                                                    // borderWidth:1,
+
+                                                }}>
+                                                <Image
+                                                    source={{ uri: elements.item.image }}
+                                                    style={{ height: 60, width: 60, borderRadius: 60 / 2 }}
+                                                />
+                                                <View
+                                                    style={{
+                                                        // marginLeft: 10,
+                                                        flexDirection: 'row',
+                                                        width: (DeviceWidth * 65) / 100,
+                                                        alignItems: 'center',
+                                                        // borderWidth:1,
+                                                    }}>
+                                                    <View>
+                                                        <Text style={{ color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>{elements.item.title}</Text>
+                                                        <Text style={{ color: '#f39c1f', fontWeight: '500' }}>
+                                                            {elements.item.price}
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                                <Icon name="chevron-right" size={20} color={defaultTheme == true ? "#fff" : "#000"} />
                                             </View>
-                                        </View>
-                                        <Icon name="chevron-right" size={20} color={defaultTheme == true ? "#fff" : "#000"} />
-                                    </View>
-                                </TouchableOpacity>
-                            )}
-                        />
-                    </View>
+                                        </TouchableOpacity>
+                                    )}
+                                />
+                            </View>
+                        </> :
+                        <>
+                            <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff", justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ color: '#f39c1f', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View>
+                        </>}
                 </>
             ) : (
                 <>
