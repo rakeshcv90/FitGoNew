@@ -37,8 +37,8 @@ const Login = () => {
     if (!Email) {
       showMessage({
         message: 'Please Enter Your Mail',
-        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-        floating: Platform.OS == 'ios' ? false : true,
+        statusBarHeight: getStatusBarHeight(),
+        floating: true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -46,8 +46,8 @@ const Login = () => {
     } else if (!reg.test(Email)) {
       showMessage({
         message: 'Invalid Format',
-        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-        floating: Platform.OS == 'ios' ? false : true,
+        statusBarHeight: getStatusBarHeight(),
+        floating: true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -55,8 +55,8 @@ const Login = () => {
     } else if (!Password) {
       showMessage({
         message: 'Please Enter Your Password',
-        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-        floating: Platform.OS == 'ios' ? false : true,
+        statusBarHeight: getStatusBarHeight(),
+        floating: true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -80,8 +80,8 @@ const Login = () => {
           showMessage({
             message: data.data[0].msg,
             type: 'success',
-            statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-            floating: Platform.OS == 'ios' ? false : true,
+            statusBarHeight: getStatusBarHeight(),
+            floating: true,
             icon: { icon: 'auto', position: 'left' },
           });
           navigation.navigate('DrawerNavigation');
@@ -89,8 +89,8 @@ const Login = () => {
           setIsLoaded(true)
           showMessage({
             message: data.data[0].msg,
-            statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-            floating: Platform.OS == 'ios' ? false : true,
+            statusBarHeight: getStatusBarHeight(),
+            floating: true,
             type: 'danger',
             icon: { icon: 'auto', position: 'left' },
           });

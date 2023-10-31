@@ -30,10 +30,10 @@ const App = () => {
     const subscription = NetInfo.addEventListener(state => {
       if (state.isConnected) {
         showMessage({
-          message:"Back Online",
+          message:"Online",
           animationDuration:750,
-          statusBarHeight:Platform.OS=='ios'?0:getStatusBarHeight(),
-          floating:Platform.OS=='ios'?false:true,
+          statusBarHeight:getStatusBarHeight(),
+          floating:true,
           type: 'success',
           icon: { icon: 'none', position: 'left' },
         });
@@ -43,8 +43,8 @@ const App = () => {
         showMessage({
           message:"No Internet Connection",
           animationDuration:750,
-          statusBarHeight:Platform.OS=='ios'?0:getStatusBarHeight(),
-          floating:Platform.OS=='ios'?true:false,
+          statusBarHeight:getStatusBarHeight(),
+          floating:true,
           type: 'danger',
           icon: { icon: 'none', position: 'left' },
         });

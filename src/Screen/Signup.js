@@ -32,8 +32,8 @@ const Signup = ({ navigation }) => {
     if (!Name) {
       showMessage({
         message: 'Enter Your name',
-        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-        floating: Platform.OS == 'ios' ? false : true,
+        statusBarHeight:getStatusBarHeight(),
+        floating:true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -41,8 +41,8 @@ const Signup = ({ navigation }) => {
     } else if (!Email) {
       showMessage({
         message: 'Enter Your Email',
-        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-        floating: Platform.OS == 'ios' ? false : true,
+        statusBarHeight:getStatusBarHeight(),
+        floating:true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -50,8 +50,8 @@ const Signup = ({ navigation }) => {
     } else if (!reg.test(Email)) {
       showMessage({
         message: 'Invalid Format',
-        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-        floating: Platform.OS == 'ios' ? false : true,
+        statusBarHeight:getStatusBarHeight(),
+        floating:true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -59,8 +59,8 @@ const Signup = ({ navigation }) => {
     } else if (!Password) {
       showMessage({
         message: 'Please Enter Your Password',
-        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-        floating: Platform.OS == 'ios' ? false : true,
+        statusBarHeight:getStatusBarHeight(),
+        floating:true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -68,8 +68,8 @@ const Signup = ({ navigation }) => {
     } else if (!ConfirmPassword) {
       showMessage({
         message: 'Please enter Confirm  Password',
-        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-        floating: Platform.OS == 'ios' ? false : true,
+        statusBarHeight:getStatusBarHeight(),
+          floating:true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -77,8 +77,8 @@ const Signup = ({ navigation }) => {
     } else if (Password != ConfirmPassword) {
       showMessage({
         message: 'Confirm Password does not Match',
-        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-        floating: Platform.OS == 'ios' ? false : true,
+        statusBarHeight:getStatusBarHeight(),
+          floating:true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -86,8 +86,8 @@ const Signup = ({ navigation }) => {
     } else if (checked == false) {
       showMessage({
         message: 'Please Accept Terms and Conditions',
-        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-        floating: Platform.OS == 'ios' ? false : true,
+        statusBarHeight:getStatusBarHeight(),
+        floating:true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -112,8 +112,8 @@ const Signup = ({ navigation }) => {
       if (data.data[0].msg === 'Sign Up successful') {
         showMessage({
           message: data.data[0].msg,
-          statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-          floating: Platform.OS == 'ios' ? false : true,
+          statusBarHeight:getStatusBarHeight(),
+          floating:true,
           type: 'success',
           icon: { icon: 'auto', position: 'left' },
         });
@@ -129,8 +129,8 @@ const Signup = ({ navigation }) => {
         showMessage({
           message: data.data[0].msg,
           type: 'danger',
-          statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-          floating: Platform.OS == 'ios' ? false : true,
+          statusBarHeight:getStatusBarHeight(),
+          floating:true,
           icon: { icon: 'auto', position: 'left' },
         });
         setSubmitText('Enter');

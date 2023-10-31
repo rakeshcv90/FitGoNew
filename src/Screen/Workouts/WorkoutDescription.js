@@ -87,8 +87,8 @@ const WorkoutDescription = () => {
       if (Fav.data) {
         showMessage({
           message:Fav.data[0].msg,
-          statusBarHeight:Platform.OS=='ios'?0:getStatusBarHeight(),
-          floating:Platform.OS=='ios'?false:true,
+          statusBarHeight:getStatusBarHeight(),
+          floating:true,
           type: 'success',
           icon: { icon: 'success', position: 'left' },
         });
@@ -112,8 +112,8 @@ const WorkoutDescription = () => {
       if (RemovedData.data) {
         showMessage({
           message:RemovedData.data[0].msg,
-          statusBarHeight:Platform.OS=='ios'?0:getStatusBarHeight(),
-          floating:Platform.OS=='ios'?false:true,
+          statusBarHeight:getStatusBarHeight(),
+          floating:true,
           type: 'danger',
           icon: { icon: 'none', position: 'left' },
         });

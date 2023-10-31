@@ -84,8 +84,8 @@ const DietDetail = () => {
        
         showMessage({
           message: Fav.data[0].msg,
-          statusBarHeight:Platform.OS=='ios'?0:getStatusBarHeight(),
-          floating:Platform.OS=='ios'?true:false,
+          statusBarHeight:getStatusBarHeight(),
+          floating:true,
           type: 'success',
           icon: { icon: 'none', position: 'left' },
         });
@@ -110,8 +110,8 @@ const DietDetail = () => {
         // ToastAndroid.showWithGravity(RemovedData.data[0].msg, ToastAndroid.SHORT, ToastAndroid.CENTER)
         showMessage({
           message: RemovedData.data[0].msg,
-          statusBarHeight:Platform.OS=='ios'?0:getStatusBarHeight(),
-          floating:Platform.OS=='ios'?true:false,
+          statusBarHeight:getStatusBarHeight(),
+          floating:true,
           type: 'danger',
           icon: { icon: 'none', position: 'left' },
         });

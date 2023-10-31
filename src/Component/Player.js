@@ -97,7 +97,12 @@ const PlayerModal = ({ setState, State }) => {
       if (currentData.sets === sets) {
         if (isEnd) {
           setTimeout(() => {
-            navigation.navigate('completed', { id: currentData.id, time: totaltime });
+           Alert.alert("Workout Completed","",[{
+            text:"Ok",
+            onPress:(()=>{
+              navigation.goBack()
+            })
+           }])
           }, 1000);
         } else if (!isEnd) {
           setTimeout(() => {
@@ -132,7 +137,7 @@ const PlayerModal = ({ setState, State }) => {
           setnextSet(true);
           setIsPlaying(false);
         }
-      }, 2500);
+      }, 250);
       return () => clearInterval(intervalId);
     }
   }, [reps, isPlaying]);
@@ -250,7 +255,7 @@ const PlayerModal = ({ setState, State }) => {
           </View>
           <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 250 }}>
             <Icons name="checkbox-marked-circle-outline" style={{ color: '#f39c1f', fontSize: 72, marginBottom: 10 }} />
-            <Text style={{ fontSize: 34, fontWeight: 'bold', textAlign: 'center', color: defaultTheme ? "#fff" : "#000" }}>Workout Completed</Text>
+            <Text style={{ fontSize: 34, fontWeight: 'bold', textAlign: 'center', color: defaultTheme ? "#fff" : "#000" }}>Exercise Completed</Text>
           </View>
         </View> : null}
     </View>

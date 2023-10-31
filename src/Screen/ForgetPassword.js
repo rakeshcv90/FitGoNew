@@ -27,8 +27,8 @@ const ForgetPassword = ({ navigation }) => {
     if (!Email) {
       showMessage({
         message: 'Please Enter your Email',
-        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-        floating: Platform.OS == 'ios' ? false : true,
+        statusBarHeight: getStatusBarHeight(),
+        floating: true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -36,8 +36,8 @@ const ForgetPassword = ({ navigation }) => {
     } else if (!reg.test(Email)) {
       showMessage({
         message: 'Invalid Email Format',
-        statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-        floating: Platform.OS == 'ios' ? false : true,
+        statusBarHeight: getStatusBarHeight(),
+        floating: true,
         type: 'danger',
         icon: { icon: 'auto', position: 'left' },
       });
@@ -58,8 +58,8 @@ const ForgetPassword = ({ navigation }) => {
         if (data.data[0].msg == 'Mail Sent') {
           showMessage({
             message: data.data[0].msg,
-            statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-            floating: Platform.OS == 'ios' ? false : true,
+            statusBarHeight: getStatusBarHeight(),
+            floating: true,
             type: 'success',
             icon: { icon: 'auto', position: 'left' },
           });
@@ -67,8 +67,8 @@ const ForgetPassword = ({ navigation }) => {
         } else {
           showMessage({
             message: data.data[0].msg,
-            statusBarHeight: Platform.OS == 'ios' ? 0 : getStatusBarHeight(),
-            floating: Platform.OS == 'ios' ? false : true,
+            statusBarHeight: getStatusBarHeight(),
+            floating: true,
             type: 'danger',
             icon: { icon: 'auto', position: 'left' },
           });

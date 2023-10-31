@@ -17,6 +17,7 @@ import { DeviceHeigth, DeviceWidth } from '../../Component/Config';
 import { useSelector } from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const ExerciseByEquipments = () => {
   const route = useRoute()
   const [getExerciseByEquipment, setExerciseByEquipment] = useState([])
