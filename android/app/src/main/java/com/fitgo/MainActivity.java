@@ -4,7 +4,8 @@ import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
-
+import android.os.Bundle;
+import com.zoontek.rnbootsplash.RNBootSplash;
 public class MainActivity extends ReactActivity {
 
   /**
@@ -15,12 +16,16 @@ public class MainActivity extends ReactActivity {
   protected String getMainComponentName() {
     return "FitGo";
   }
-
   /**
    * Returns the instance of the {@link ReactActivityDelegate}. Here we use a util class {@link
    * DefaultReactActivityDelegate} which allows you to easily enable Fabric and Concurrent React
    * (aka React 18) with two boolean flags.
    */
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    RNBootSplash.init(this, R.style.BootTheme); 
+    super.onCreate(savedInstanceState);
+  }
   @Override
   protected ReactActivityDelegate createReactActivityDelegate() {
     return new DefaultReactActivityDelegate(

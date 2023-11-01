@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import { DeviceHeigth, DeviceWidth } from './src/Component/Config';
 import RNRestart from 'react-native-restart'
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import BootSplash from "react-native-bootsplash"
 // import { sendConnectionNotification } from './src/Component/Notification';
 const App = () => {
   const [isLogged, setIsLogged] = useState()
@@ -82,7 +83,7 @@ const App = () => {
   if (isLoaded && isLogged && isConnected) {
     return (
       <>
-        <NavigationContainer ref={navigationRef}>
+        <NavigationContainer ref={navigationRef} onReady={()=>BootSplash.hide({duration:2000})}>
           <Router />
         </NavigationContainer>
         <FlashMessage position='top' />
@@ -92,7 +93,7 @@ const App = () => {
   else if (isLoaded && !isLogged && isConnected) {
     return (
       <>
-        <NavigationContainer ref={navigationRef}>
+        <NavigationContainer ref={navigationRef} onReady={()=>BootSplash.hide({duration:2000})}>
           <LoginStack />
         </NavigationContainer>
         <FlashMessage position='top' />
