@@ -11,9 +11,7 @@ import FlashMessage, { showMessage } from "react-native-flash-message";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export const navigationRef = createNavigationContainerRef();
 import Loader from './src/Component/Loader';
-import { setupNetworkListner } from './src/Component/NetworkUtils';
 import NetInfo from '@react-native-community/netinfo'
-import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux';
 import { DeviceHeigth, DeviceWidth } from './src/Component/Config';
 import RNRestart from 'react-native-restart'
@@ -24,31 +22,31 @@ const App = () => {
   const [isLogged, setIsLogged] = useState()
   const [update, setUpdate] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
-  const [isConnected, setConnected] = useState(false)
+  const [isConnected, setConnected] = useState(true)
   const {defaultTheme}=useSelector(state=>state)
   // Checking if the App is Connected to the internet or not 
   useEffect(() => {
     const subscription = NetInfo.addEventListener(state => {
       if (state.isConnected) {
-        showMessage({
-          message:"Online",
-          animationDuration:750,
-          statusBarHeight:getStatusBarHeight(),
-          floating:true,
-          type: 'success',
-          icon: { icon: 'none', position: 'left' },
-        });
+        // showMessage({
+        //   message:"Online",
+        //   animationDuration:500,
+        //   statusBarHeight:getStatusBarHeight(),
+        //   floating:true,
+        //   type: 'success',
+        //   icon: { icon: 'none', position: 'left' },
+        // });
         setConnected(true)
       }
       else {
-        showMessage({
-          message:"No Internet Connection",
-          animationDuration:750,
-          statusBarHeight:getStatusBarHeight(),
-          floating:true,
-          type: 'danger',
-          icon: { icon: 'none', position: 'left' },
-        });
+        // showMessage({
+        //   message:"No Internet Connection",
+        //   animationDuration:750,
+        //   statusBarHeight:getStatusBarHeight(),
+        //   floating:true,
+        //   type: 'danger',
+        //   icon: { icon: 'none', position: 'left' },
+        // });
         setConnected(false)
       }
     })
@@ -65,7 +63,7 @@ const App = () => {
     try {
       const userData = await AsyncStorage.getItem('Data')
       const data = (JSON.parse(userData))
-      if (!!data) {
+      if (data) {
         setIsLogged(true)
         setUpdate(update + 1)
         setIsLoaded(true)
@@ -101,7 +99,7 @@ const App = () => {
     )
   }
   // Will Visible When Internet is Disconnected
-  else if (isConnected == false && isLoaded) {
+  else if (isConnected==false &&isLoaded) {
     return (
       <View style={[styles.View,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
         <Text style={{ color: 'red' ,fontSize:20}}>No Internet Connection</Text>

@@ -24,5 +24,7 @@ import { Dimensions } from "react-native";
   FavoriteWorkout:'favoriteworkout.php',
   RemoveFavorite:"remove_favorite.php",
   FavoriteDiets:"favoritediet.php",
-  DeleteAccount:"user_delete.php"
+  DeleteAccount:"user_delete.php",
+  OTPVerification:"user_email_verification.php",
+  ResendOTP:"resend_otp.php"
 }

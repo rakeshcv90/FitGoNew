@@ -63,6 +63,7 @@ const ProfileScreen = () => {
   ]);
   useEffect(() => {
     getMydata();
+    console.log("data",mydata)
   }, []);
   const getMydata = async () => {
     setMyData(JSON.parse(await AsyncStorage.getItem('Data')));
@@ -137,8 +138,8 @@ const ProfileScreen = () => {
         <Image source={localImage.maleIcon} style={styles.Icon} />
         {!!mydata && (
           <>
-            <Text style={[styles.textStyle, { color: defaultTheme == true ? "#fff" : "#000" }]}>{mydata[0].name}</Text>
-            <Text style={{ color: defaultTheme == true ? "#fff" : "#000" }}>{mydata[0].email}</Text>
+            <Text style={[styles.textStyle, { color: defaultTheme == true ? "#fff" : "#000" }]}>{mydata.name}</Text>
+            <Text style={{ color: defaultTheme == true ? "#fff" : "#000" }}>{mydata.email}</Text>
           </>
         )}
       </View>
