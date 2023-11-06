@@ -23,15 +23,16 @@ import Loader from '../Component/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { showMessage } from 'react-native-flash-message';
 const FavWorkouts = () => {
+  useEffect(() => {
+    getUsersFavWorkout();
+  }, [update]);
   const [FavWorkout, setFavWorkout] = useState([]);
   const { defaultTheme } = useSelector((state) => state);
   const [isLoaded, setIsLoaded] = useState(false);
   const [update, setUpdate] = useState(0)
   const [isEmpty, setEmpty] = useState(false)
   const navigation = useNavigation()
-  useEffect(() => {
-    getUsersFavWorkout();
-  }, [update]);
+
   const getUsersFavWorkout = async () => {
     try {
       const Storeddata = await AsyncStorage.getItem('Data');
@@ -44,7 +45,8 @@ const FavWorkouts = () => {
             'Content-Type': 'multipart/form-data',
           }
         })
-        if (favWorkout.data.length > 0) {
+        if (favWorkout.data) {
+          console.log(favWorkout.data)
           setFavWorkout(favWorkout.data)
           setUpdate(update + 1)
           setIsLoaded(true)
@@ -112,7 +114,7 @@ const FavWorkouts = () => {
                 )}
               />
             </View></> : <><View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff", justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ color: '#f39c1f', fontSize: 20, fontWeight: 'bold' }}>No Workouts Added</Text></View></>}
+              <Text style={{ color: defaultTheme?"#FFF":"#000", fontSize: 20, fontWeight: 'bold' }}>No Workouts Added</Text></View></>}
         </>
       ) : (
         <>

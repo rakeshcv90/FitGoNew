@@ -31,6 +31,7 @@ const Login = () => {
   const [isVisible, seIsvisible] = useState(false);
   const {defaultTheme} = useSelector(state => state);
   const [isLoaded, setIsLoaded] = useState(false);
+  const StatusBar_Bar_Height=Platform.OS==='ios'?getStatusBarHeight():0;
   const ToggleVisibility = () => {
     seIsvisible(!isVisible);
   };
@@ -40,7 +41,7 @@ const Login = () => {
     if (!Email) {
       showMessage({
         message: 'Please Enter Your Mail',
-        statusBarHeight: getStatusBarHeight(),
+        statusBarHeight: StatusBar_Bar_Height,
         floating: true,
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
@@ -76,8 +77,11 @@ const Login = () => {
             password: Password,
           },
         });
-        console.log('data', data.data[0]);
+       
         if (data.data[0].status === 0) {
+          setEmail("");
+          setPassword("")
+          // console.log('data', data.data[0]);
           navigation.navigate("Signup",{userData:data.data})
           setsubmitText('ENTER');
           setIsLoaded(true);
@@ -123,14 +127,14 @@ const Login = () => {
     }
   };
   return (
-    <View
+    <SafeAreaView
       style={[
         styles.container,
         {backgroundColor: defaultTheme ? '#000' : '#fff'},
       ]}>
       <StatusBar
         barStyle={defaultTheme ? 'light-content' : 'dark-content'}
-        backgroundColor={defaultTheme ? '#000' : '#fff'}
+        backgroundColor={defaultTheme ? '#000' : '#fff'}s
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
@@ -145,6 +149,7 @@ const Login = () => {
           <Image style={styles.logo} source={localImage.logo} />
           <TextInput
             label={'Email'}
+            keyboardType='email-address'
             onChangeText={text => {
               setEmail(text);
             }}
@@ -251,7 +256,7 @@ const Login = () => {
             </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

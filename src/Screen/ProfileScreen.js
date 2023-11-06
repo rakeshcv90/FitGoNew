@@ -7,7 +7,8 @@ import {
   FlatList,
   SafeAreaView,
   ToastAndroid,
-  StatusBar
+  StatusBar,
+  Alert
 } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import HeaderWithoutSearch from '../Component/HeaderWithoutSearch';
@@ -57,7 +58,7 @@ const ProfileScreen = () => {
     },
     {
       id: 7,
-      icon: <Icon name="account-cancel-outline" size={20} color="#ec9706" />,
+      icon: <Icon name="account-cancel-outline" size={20} color="#ec9706"/>,
       itemData: 'Delete My Account',
     },
   ]);
@@ -127,7 +128,14 @@ const ProfileScreen = () => {
         removeData();
         break;
       case 7:
-        DeleteAccount();
+        Alert.alert("Are you sure you want to delete your Account ?","",[
+          {text:"Cancel"
+        ,style:'cancel'},
+        {
+          text:"Yes",
+          onPress:(()=>{DeleteAccount()})
+        }
+        ])
     }
   };
   return (
@@ -138,8 +146,8 @@ const ProfileScreen = () => {
         <Image source={localImage.maleIcon} style={styles.Icon} />
         {!!mydata && (
           <>
-            <Text style={[styles.textStyle, { color: defaultTheme == true ? "#fff" : "#000" }]}>{mydata.name}</Text>
-            <Text style={{ color: defaultTheme == true ? "#fff" : "#000" }}>{mydata.email}</Text>
+            <Text style={[styles.textStyle, { color: defaultTheme == true ? "#fff" : "#000" }]}>{mydata[0].name}</Text>
+            <Text style={{ color: defaultTheme == true ? "#fff" : "#000" }}>{mydata[0].email}</Text>
           </>
         )}
       </View>

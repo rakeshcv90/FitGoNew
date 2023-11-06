@@ -6,7 +6,6 @@ import { getStatusBarHeight } from 'react-native-status-bar-height';
 const CustomStatusBar = () => {
     const StatusBar_Bar_Height=Platform.OS==='ios'?getStatusBarHeight():0;
     const { defaultTheme } = useSelector(state => state)
-    console.log(StatusBar_Bar_Height,Platform.OS)
   return (
     <SafeAreaView style={{
         width: DeviceWidth,

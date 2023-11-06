@@ -17,10 +17,10 @@ import axios from 'axios';
 import {useSelector} from 'react-redux';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRoute } from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 const Signup = ({navigation}) => {
-  const route=useRoute();
-  const data=route.params;
+  const route = useRoute();
+  const data = route.params;
   const t1 = useRef();
   const t2 = useRef();
   const t3 = useRef();
@@ -34,8 +34,8 @@ const Signup = ({navigation}) => {
   const [txt5, setTxt5] = useState('');
   const [txt6, setTxt6] = useState('');
   const [checked, setChecked] = useState(false);
-  const [Name, setName] = useState("");
-  const [Email, setEmail] = useState("");
+  const [Name, setName] = useState('');
+  const [Email, setEmail] = useState('');
   const [Password, setPassword] = useState('');
   const [ConfirmPassword, setConformPassword] = useState('');
   const {defaultTheme} = useSelector(state => state);
@@ -43,27 +43,27 @@ const Signup = ({navigation}) => {
   const [isVisible, seIsvisible] = useState(false);
   const [timeLeft, setTimeleft] = useState(60);
   const [VerifyText, SetVerifyText] = useState('Verify');
-  const [resendtxt,setResendTxt]=useState("Resend OTP")
+  const [resendtxt, setResendTxt] = useState('Resend OTP');
+  const [IsVerifyVisible, setVerifyVisible] = useState(false);
+  const StatusBar_Bar_Height = Platform.OS === 'ios' ? getStatusBarHeight() : 0;
   const ToggleVisibility = () => {
     seIsvisible(!isVisible);
   };
-  useEffect(()=>{
-    if(!data){
-      setName("");
-      setEmail("");
-    }
-    else{
+  useEffect(() => {
+    if (!data) {
+      setName(Name);
+      setEmail(Email);
+    } else {
       setName(data.userData[0].name);
-      setEmail(data.userData[0].email)
+      setEmail(data.userData[0].email);
     }
-  },[])
-  const [visible, setVisible] = useState(false);
+  }, []);
   const OtpString = txt1 + txt2 + txt3 + txt4 + txt5 + txt6;
   const handleOTP = async () => {
     if (!txt1 || !txt2 || !txt3 || !txt4 || !txt5 || !txt6) {
       showMessage({
         message: 'Please enter the otp',
-        statusBarHeight: getStatusBarHeight(),
+        statusBarHeight: StatusBar_Bar_Height,
         floating: true,
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
@@ -82,22 +82,22 @@ const Signup = ({navigation}) => {
           },
           data: payload,
         });
-        if (OtpMsg.data[0].msg == 'Email verified successfully') {
-          SetVerifyText(false)
+        if (OtpMsg.data[0].msg == 'Email verified successfully ,Please Login') {
+          SetVerifyText(false);
           showMessage({
             message: OtpMsg.data[0].msg,
             statusBarHeight: getStatusBarHeight(),
             floating: true,
             type: 'success',
             icon: {icon: 'auto', position: 'left'},
-          })
-          setVisible(false)
+          });
+          setVerifyVisible(false);
           setSubmitText('Enter');
-          navigation.navigate("Login")
+          navigation.navigate('Login');
         } else {
           showMessage({
             message: OtpMsg.data[0].msg,
-            statusBarHeight: getStatusBarHeight(),
+            statusBarHeight: StatusBar_Bar_Height,
             floating: true,
             type: 'danger',
             icon: {icon: 'auto', position: 'left'},
@@ -111,67 +111,13 @@ const Signup = ({navigation}) => {
       }
     }
   };
-  const ResendOTP = async () => {
-    try {
-      let payload = new FormData();
-      payload.append('email', Email);
-      const data = await axios(`${Api}/${Appapi.ResendOTP}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: payload,
-      });
-      if (data.data[0].msg == 'otp sent') {
-        setTimeleft(60);
-        setTxt1('');
-        setTxt2('');
-        setTxt3('');
-        setTxt4('');
-        setTxt5('');
-        setTxt6('');
-       t1.current.focus()
-        setSubmitText('Enter');
-        setResendTxt("Resend OTP")
-        showMessage({
-          message: data.data[0].msg,
-          statusBarHeight: Platform.OS="ios"?getStatusBarHeight():getStatusBarHeight(),
-          floating: true,
-          type: 'success',
-          icon: {icon: 'auto', position: 'left'},
-        });
-      }
-      else{
-        setTimeleft(60);
-        setTxt1('');
-        setTxt2('');
-        setTxt3('');
-        setTxt4('');
-        setTxt5('');
-        setTxt6('');
-       t1.current.focus();
-        setSubmitText('Enter');
-        setResendTxt("Resend OTP")
-        showMessage({
-          message: data.data[0].msg,
-          statusBarHeight: getStatusBarHeight(),
-          floating: true,
-          type: 'success',
-          icon: {icon: 'auto', position: 'left'},
-        });
-      }
-    } catch (error) {
-      setSubmitText('Enter');
-      setResendTxt("Resend OTP")
-    }
-  };
   const ErrorHandler = () => {
     let reg = /\S+@\S+\.\S+/;
     let pass = /^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/;
     if (!Name) {
       showMessage({
         message: 'Enter Your name',
-        statusBarHeight: getStatusBarHeight(),
+        statusBarHeight: StatusBar_Bar_Height,
         floating: true,
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
@@ -180,7 +126,7 @@ const Signup = ({navigation}) => {
     } else if (!Email) {
       showMessage({
         message: 'Enter Your Email',
-        statusBarHeight: getStatusBarHeight(),
+        statusBarHeight: StatusBar_Bar_Height,
         floating: true,
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
@@ -189,7 +135,7 @@ const Signup = ({navigation}) => {
     } else if (!reg.test(Email)) {
       showMessage({
         message: 'Invalid Format',
-        statusBarHeight: getStatusBarHeight(),
+        statusBarHeight: StatusBar_Bar_Height,
         floating: true,
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
@@ -198,7 +144,7 @@ const Signup = ({navigation}) => {
     } else if (!Password) {
       showMessage({
         message: 'Please Enter Your Password',
-        statusBarHeight: getStatusBarHeight(),
+        statusBarHeight: StatusBar_Bar_Height,
         floating: true,
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
@@ -207,7 +153,7 @@ const Signup = ({navigation}) => {
     } else if (!ConfirmPassword) {
       showMessage({
         message: 'Please enter Confirm  Password',
-        statusBarHeight: getStatusBarHeight(),
+        statusBarHeight: StatusBar_Bar_Height,
         floating: true,
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
@@ -216,7 +162,7 @@ const Signup = ({navigation}) => {
     } else if (Password != ConfirmPassword) {
       showMessage({
         message: 'Confirm Password does not Match',
-        statusBarHeight: getStatusBarHeight(),
+        statusBarHeight: StatusBar_Bar_Height,
         floating: true,
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
@@ -225,7 +171,7 @@ const Signup = ({navigation}) => {
     } else if (checked == false) {
       showMessage({
         message: 'Please Accept Terms and Conditions',
-        statusBarHeight: getStatusBarHeight(),
+        statusBarHeight: StatusBar_Bar_Height,
         floating: true,
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
@@ -248,11 +194,11 @@ const Signup = ({navigation}) => {
           password: Password,
         },
       });
-      console.log("datda",data.data)
       if (data.data[0].msg === 'Otp sent to your email') {
+        t1.current.focus();
         showMessage({
           message: data.data[0].msg,
-          statusBarHeight: getStatusBarHeight(),
+          statusBarHeight: StatusBar_Bar_Height,
           floating: true,
           type: 'success',
           icon: {icon: 'auto', position: 'left'},
@@ -264,11 +210,11 @@ const Signup = ({navigation}) => {
         setTxt5('');
         setTxt6('');
         setSubmitText('Enter');
-        setResendTxt("Resend OTP")
+        setResendTxt('Resend OTP');
         setSubmitText('Enter');
         setTimeleft(60);
-        setVisible(true);
-      } else if(data.data[0].status==0){
+        setVerifyVisible(true);
+      } else if (data.data[0].status == 0) {
         try {
           let payload = new FormData();
           payload.append('email', Email);
@@ -278,8 +224,10 @@ const Signup = ({navigation}) => {
               'Content-Type': 'multipart/form-data',
             },
             data: payload,
-          })
+          });
+
           if (data.data[0].msg == 'otp sent') {
+            t1.current.focus();
             setTimeleft(60);
             setTxt1('');
             setTxt2('');
@@ -288,9 +236,8 @@ const Signup = ({navigation}) => {
             setTxt5('');
             setTxt6('');
             setSubmitText('Enter');
-            setResendTxt("Resend OTP")
-          }
-          else{
+            setResendTxt('Resend OTP');
+          } else {
             setTimeleft(60);
             setTxt1('');
             setTxt2('');
@@ -299,10 +246,10 @@ const Signup = ({navigation}) => {
             setTxt5('');
             setTxt6('');
             setSubmitText('Enter');
-            setResendTxt("Resend OTP")
+            setResendTxt('Resend OTP');
             showMessage({
               message: data.data[0].msg,
-              statusBarHeight: Platform="ios"?getStatusBarHeight():getStatusBarHeight(),
+              statusBarHeight: StatusBar_Bar_Height,
               floating: true,
               type: 'success',
               icon: {icon: 'auto', position: 'left'},
@@ -310,10 +257,10 @@ const Signup = ({navigation}) => {
           }
         } catch (error) {
           setSubmitText('Enter');
-          setResendTxt("Resend OTP")
+          setResendTxt('Resend OTP');
         }
-        setVisible(true)
-        setTimeleft(60)
+        setVerifyVisible(true);
+        setTimeleft(60);
         setTxt1('');
         setTxt2('');
         setTxt3('');
@@ -321,22 +268,21 @@ const Signup = ({navigation}) => {
         setTxt5('');
         setTxt6('');
         setSubmitText('Enter');
-        setResendTxt("Resend OTP")
+        setResendTxt('Resend OTP');
         showMessage({
-          message: "We have sent an OTP to your email , Please verify your email first",
+          message:
+            'We have sent an OTP to your email , Please verify your email first',
           type: 'warning',
-          animationDuration:500,
-          statusBarHeight: getStatusBarHeight(),
+          animationDuration: 500,
+          statusBarHeight: StatusBar_Bar_Height,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-
-      }
-       else {
+      } else {
         showMessage({
           message: data.data[0],
           type: 'danger',
-          statusBarHeight: getStatusBarHeight(),
+          statusBarHeight: StatusBar_Bar_Height,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
@@ -347,32 +293,74 @@ const Signup = ({navigation}) => {
       console.log('eror', error);
     }
   };
+  const ResendOTP = async () => {
+    try {
+      let payload = new FormData();
+      payload.append('email', Email);
+      const OTPdata = await axios(`${Api}/${Appapi.ResendOTP}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: payload,
+      });
+      if (OTPdata) {
+        setResendTxt('Resend OTP');
+        setTimeleft(60);
+        setTxt1('');
+        setTxt2('');
+        setTxt3('');
+        setTxt4('');
+        setTxt5('');
+        setTxt6('');
+        showMessage({
+          message: 'OTP has been sent to your email',
+          type: 'success',
+          statusBarHeight: getStatusBarHeight(),
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        showMessage({
+          message: OTPdata.data[0].msg,
+          type: 'success',
+          statusBarHeight: getStatusBarHeight(),
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      }
+    } catch (error) {
+      console.log('erere', error);
+      setResendTxt('Resent OTP');
+      setTimeleft(60);
+    }
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
       if (timeLeft > 0) {
         setTimeleft(timeLeft - 1);
       }
-    }, 1000);
+    }, 100);
     return () => clearInterval(timer);
   }, [timeLeft]);
   return (
     <>
       <View style={{flex: 1, backgroundColor: defaultTheme ? '#000' : '#fff'}}>
-        <View
+        <SafeAreaView
           style={{
-            height: Platform.OS == 'ios' ? getStatusBarHeight() : 0,
+            width: DeviceWidth,
+            height: StatusBar_Bar_Height,
             backgroundColor: defaultTheme ? '#000' : '#fff',
           }}>
           <StatusBar
             barStyle={defaultTheme ? 'light-content' : 'dark-content'}
           />
-        </View>
-     
+        </SafeAreaView>
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'position' : 'height '}
+          behavior={Platform.OS === 'ios' ? 'height' : 'height '}
           style={{flex: 1}}>
-            <Text
+          <Text
             style={[
               styles.SignUpText,
               {color: defaultTheme ? '#fff' : '#000'},
@@ -384,7 +372,6 @@ const Signup = ({navigation}) => {
               styles.container,
               {backgroundColor: defaultTheme ? '#000' : '#fff'},
             ]}>
-             
             <TextInput
               label={'Name'}
               onChangeText={text => {
@@ -409,9 +396,10 @@ const Signup = ({navigation}) => {
             />
             <TextInput
               label={'Email'}
+              keyboardType="email-address"
               onChangeText={text => {
                 setEmail(text.trim());
-                setVisible(false);
+                setVerifyVisible(false);
               }}
               mode="flat"
               autoCapitalize="none"
@@ -436,10 +424,31 @@ const Signup = ({navigation}) => {
               mode="flat"
               autoCapitalize="none"
               style={styles.AuthInput}
-              activeUnderlineColor="#ec9706"
+              activeUnderlineColor="#f39c1f"
               value={Password}
+              secureTextEntry={true}
               textColor={defaultTheme ? '#fff' : '#000'}
+              underlineColor={
+                defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
+              }
+              theme={{
+                colors: {
+                  onSurfaceVariant: defaultTheme
+                    ? 'rgba(255,255,255,0.7)'
+                    : 'rgba(0,0,0,0.6)',
+                },
+              }}
+            />
+            <TextInput
+              label={'Confirm Password'}
+              onChangeText={text => setConformPassword(text.trim())}
+              mode="flat"
+              autoCapitalize="none"
+              style={styles.AuthInput}
+              activeUnderlineColor="#f39c1f"
+              value={ConfirmPassword}
               secureTextEntry={!isVisible}
+              textColor={defaultTheme ? '#fff' : '#000'}
               underlineColor={
                 defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
               }
@@ -464,27 +473,7 @@ const Signup = ({navigation}) => {
                 />
               }
             />
-            <TextInput
-              label={'Confirm Password'}
-              onChangeText={text => setConformPassword(text.trim())}
-              mode="flat"
-              autoCapitalize="none"
-              style={styles.AuthInput}
-              activeUnderlineColor="#f39c1f"
-              value={ConfirmPassword}
-              textColor={defaultTheme ? '#fff' : '#000'}
-              underlineColor={
-                defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
-              }
-              theme={{
-                colors: {
-                  onSurfaceVariant: defaultTheme
-                    ? 'rgba(255,255,255,0.7)'
-                    : 'rgba(0,0,0,0.6)',
-                },
-              }}
-            />
-            {visible ? null : (
+            {IsVerifyVisible ? null : (
               <View
                 style={{
                   flexDirection: 'row',
@@ -504,7 +493,6 @@ const Signup = ({navigation}) => {
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate('TermaAndCondition');
-                 
                   }}>
                   <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
                     I Agree to Terms & Conditions
@@ -513,7 +501,7 @@ const Signup = ({navigation}) => {
               </View>
             )}
 
-            {visible ? null : (
+            {IsVerifyVisible ? null : (
               <TouchableOpacity
                 style={styles.Tbutton}
                 onPress={() => {
@@ -523,29 +511,39 @@ const Signup = ({navigation}) => {
                 <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
               </TouchableOpacity>
             )}
-            {visible ? null : (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('Login');
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Login');
+              }}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginVertical: 5,
                 }}>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                  <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
-                    Already have an account ?{' '}
-                    <Text
-                      style={{
-                        color: defaultTheme ? '#fff' : '#000',
-                        fontWeight: 'bold',
-                      }}>
-                      Login
-                    </Text>
+                <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
+                  Already have an account ?{' '}
+                  <Text
+                    style={{
+                      color: defaultTheme ? '#fff' : '#000',
+                      fontWeight: 'bold',
+                    }}>
+                    Login
                   </Text>
-                </View>
-              </TouchableOpacity>
-            )}
-
-            {visible ? (
+                </Text>
+              </View>
+            </TouchableOpacity>
+            {IsVerifyVisible ? (
               <>
-                <Text style={{color:defaultTheme?"#fff":"#000",fontSize:18,fontWeight:'600',marginVertical:10}}>OTP Verification</Text>
+                <Text
+                  style={{
+                    color: defaultTheme ? '#fff' : '#000',
+                    fontSize: 18,
+                    fontWeight: '600',
+                    marginVertical: 10,
+                  }}>
+                  OTP Verification
+                </Text>
                 <View style={styles.OtpBox}>
                   <TextInput
                     style={styles.OtpField}
@@ -556,7 +554,7 @@ const Signup = ({navigation}) => {
                     activeUnderlineColor="transparent"
                     maxLength={1}
                     activeOutlineColor="red"
-                    value={txt1}
+                    value={txt1 ? '*' : ''}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt1(txt);
@@ -576,7 +574,7 @@ const Signup = ({navigation}) => {
                     activeUnderlineColor="transparent"
                     maxLength={1}
                     activeOutlineColor="red"
-                    value={txt2}
+                    value={txt2 ? '*' : ''}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt2(txt);
@@ -596,7 +594,7 @@ const Signup = ({navigation}) => {
                     activeUnderlineColor="transparent"
                     maxLength={1}
                     activeOutlineColor="#f39c1f"
-                    value={txt3}
+                    value={txt3 ? '*' : ''}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt3(txt);
@@ -616,7 +614,7 @@ const Signup = ({navigation}) => {
                     activeUnderlineColor="transparent"
                     maxLength={1}
                     activeOutlineColor="#f39c1f"
-                    value={txt4}
+                    value={txt4 ? '*' : ''}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt4(txt);
@@ -636,7 +634,7 @@ const Signup = ({navigation}) => {
                     activeUnderlineColor="transparent"
                     maxLength={1}
                     activeOutlineColor="red"
-                    value={txt5}
+                    value={txt5 ? '*' : ''}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt5(txt);
@@ -648,6 +646,7 @@ const Signup = ({navigation}) => {
                     }}
                   />
                   <TextInput
+                    textContentType="password"
                     style={styles.OtpField}
                     ref={t6}
                     underlineColor="transparent"
@@ -656,7 +655,7 @@ const Signup = ({navigation}) => {
                     activeUnderlineColor="transparent"
                     maxLength={1}
                     activeOutlineColor="red"
-                    value={txt6}
+                    value={txt6 ? '*' : ''}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt6(txt);
@@ -668,8 +667,8 @@ const Signup = ({navigation}) => {
                     }}
                   />
                 </View>
-                <View style={{flexDirection: 'row'}}>
-                  {timeLeft == 0 ? (
+                <View style={{flexDirection: 'row', marginVertical: 5}}>
+                  {timeLeft === 0 ? (
                     <TouchableOpacity>
                       <Text
                         style={{
@@ -677,7 +676,7 @@ const Signup = ({navigation}) => {
                           fontSize: 16,
                         }}
                         onPress={() => {
-                          setResendTxt("Please Wait...")
+                          setResendTxt('Please Wait...');
                           ResendOTP();
                         }}>
                         {resendtxt}
@@ -689,8 +688,8 @@ const Signup = ({navigation}) => {
                         color: defaultTheme ? '#fff' : '#000',
                         fontSize: 16,
                       }}>
-                      Resend OTP in{' '}
-                      <Text style={{fontWeight: 'bold'}}>{timeLeft}</Text>{' '}
+                      Resend OTP in
+                      <Text style={{fontWeight: 'bold'}}> {timeLeft} </Text>
                       seconds
                     </Text>
                   )}
