@@ -22,9 +22,7 @@ import axios from 'axios';
 import Loader from '../Component/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const FavDiets = () => {
-  useEffect(() => {
-    getUsersFavDiets();
-  }, [update]);
+ 
   const [Favdiet, setFavDiets] = useState([]);
   const {defaultTheme} = useSelector(state => state);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -61,6 +59,9 @@ const FavDiets = () => {
       console.log('ERROR', error);
     }
   };
+  useEffect(() => {
+    getUsersFavDiets();
+  }, [update]);
   return (
     <View style={{flex: 1, backgroundColor: defaultTheme ? '#000' : '#fff'}}>
       {isLoaded ? (
@@ -82,11 +83,11 @@ const FavDiets = () => {
                     fontWeight: '500',
                     marginVertical:15
                   }}>
-                  Nothing is added , Add some Diets
+                  Nothing is added , Add Diets
                 </Text>
                  <View>
-                  <TouchableOpacity>
-                  <Icons name="add_box" color={'#f39c1f'} size={30} />
+                  <TouchableOpacity onPress={()=>{navigation.navigate("Diets")}}>
+                   <Image source={require("../Icon/Images/icons/shadow-add.png")} style={styles.add}/>
                   </TouchableOpacity>
                  </View>
               </View>
@@ -174,5 +175,11 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 70) / 100,
     justifyContent: 'space-between',
   },
+  add:{
+    width:DeviceWidth*15/100,
+    height:DeviceHeigth*5/100,
+    resizeMode:'contain',
+    tintColor:'#f39c1f'
+  }
 });
 export default FavDiets;
