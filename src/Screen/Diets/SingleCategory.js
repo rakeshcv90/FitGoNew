@@ -25,6 +25,7 @@ const SingleCategory = () => {
     const navigation = useNavigation();
     const [isLoaded, setIsLoaded] = useState(false)
     const [Diets, setDiets] = useState([]);
+    const [isEmpty, setIsEmpty] = useState(false)
     const route = useRoute();
     const Data = route.params;
     const { defaultTheme } = useSelector(state => state);
@@ -39,23 +40,23 @@ const SingleCategory = () => {
                     'Content-Type': 'Multipart/form-data',
                 },
             });
-            setDiets(data.data);
-            setIsLoaded(true)
+            if (data.data.length > 0) {
+                setDiets(data.data);
+                setIsLoaded(true)
+                setIsEmpty(false)
+            } else {
+                setIsEmpty(true)
+                setIsLoaded(true)
+            }
+
         } catch (error) { }
     };
     const DietCat = Diets.filter(item => item.category == Data.title);
-    if (!isLoaded) {
-        return (
-        
-                <Loader />
-        
-        )
-    }
-    else if(isLoaded &&DietCat!=null){
+    if (isLoaded && DietCat != null) {
         return (
             <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
-                {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
-               <HeaderWithoutSearch Header={Data.title}/>
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
+                <HeaderWithoutSearch Header={Data.title} />
                 <View
                     style={{
                         height: (DeviceHeigth * 90) / 100,
@@ -109,32 +110,37 @@ const SingleCategory = () => {
                     />
                 </View>
             </View>
-        )}
-      else if(isLoaded && !DietCat){
-        return(
-            <View>
-                <Text style={{color:"red"}}>No Item Found</Text>
-            </View>
         )
-      }
+    }
+    else if (isLoaded && isEmpty) {
+        return (
+            <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff",justifyContent:'center',alignItems:'center' }}>
+            <Text style={{color:'#f39c1f',fontSize:20,fontWeight:'bold'}}>No Data Available</Text></View>
+        )
+    }
+    else{
+        return(
+            <Loader/>
+        )
+    }
 }
 const styles = StyleSheet.create({
-    container:{
-        flex:1
+    container: {
+        flex: 1
     },
-  imageBackground: {
-    width: (DeviceWidth * 95.5) / 100,
-    height: (DeviceHeigth * 20) / 100,
-    margin: 10,
-    resizeMode: 'contain',
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  text: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    height: (DeviceHeigth * 20) / 100,
-    justifyContent: 'flex-end',
-    paddingBottom: 4,
-  },
+    imageBackground: {
+        width: (DeviceWidth * 95.5) / 100,
+        height: (DeviceHeigth * 20) / 100,
+        margin: 10,
+        resizeMode: 'contain',
+        borderRadius: 8,
+        overflow: 'hidden',
+    },
+    text: {
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        height: (DeviceHeigth * 20) / 100,
+        justifyContent: 'flex-end',
+        paddingBottom: 4,
+    },
 });
 export default SingleCategory

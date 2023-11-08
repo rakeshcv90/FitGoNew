@@ -24,6 +24,7 @@ const Workouts = () => {
     const [WorkoutData, setWorkoutData] = useState([])
     const navigation = useNavigation()
     const [IsLoaded, setIsLoaded] = useState(false)
+    const [isEmpty, setIsEmpty] = useState(false)
     const { defaultTheme } = useSelector(state => state)
     useEffect(() => {
         getData();
@@ -36,17 +37,23 @@ const Workouts = () => {
                     'Content-Type': 'Multipart/form-data',
                 },
             });
-            setWorkoutData(data.data);
-            console.log('imageUrl', data.data[0].image)
-            setIsLoaded(true)
+            if (data.data.length > 0) {
+                setWorkoutData(data.data);
+                setIsLoaded(true)
+                setIsEmpty(false)
+            }
+            else {
+                setIsEmpty(true)
+                setIsLoaded(true)
+            }
         } catch (error) {
             console.log("error loading", error)
         }
     }
-    if (IsLoaded) {
+    if (IsLoaded && !isEmpty) {
         return (
             <View style={{ backgroundColor: defaultTheme ? "#000" : "#fff", flex: 1 }}>
-                {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <Header header={"Workouts"} iconName={"magnify"} />
                 <View
                     style={{
@@ -126,6 +133,12 @@ const Workouts = () => {
                     />
                 </View>
             </View>
+        )
+    }
+    else if (IsLoaded && isEmpty) {
+        return (
+            <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: defaultTheme ? "#000" : "#fff", }}>
+                <Text style={{ color: defaultTheme ? "#fff" : "#000" }}> No Data Available</Text></View>
         )
     }
     else {

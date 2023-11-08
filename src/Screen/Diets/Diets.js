@@ -22,6 +22,7 @@ const Diets = () => {
   const { defaultTheme } = useSelector((state) => state)
   const [ApiData, setApiData] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isEmpty, setISEmpty] = useState(false)
   const navigation = useNavigation();
   useEffect(() => {
     getData();
@@ -34,22 +35,22 @@ const Diets = () => {
           'Content-Type': 'Multipart/form-data',
         },
       });
-      setApiData(data.data);
-      // console.log(data.data.data);
-      setIsLoaded(true);
+      if (data.data.length > 0) {
+        setApiData(data.data);
+        setIsLoaded(true);
+        setISEmpty(false)
+      }
+      else {
+        setISEmpty(true);
+        setIsLoaded(false)
+      }
+
     } catch (error) { }
   };
-  if (!isLoaded) {
-    return (
-    
-        <Loader />
-  
-    )
-  }
-  else {
+  if (isLoaded) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-          {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
         <HeaderWithoutSearch Header={"Diets"} />
         <TouchableOpacity style={styles.button} onPress={() => {
           navigation.navigate('DietCategory')
@@ -73,6 +74,12 @@ const Diets = () => {
           )}></FlatList>
         </View>
       </View>
+
+    )
+  }
+  else {
+    return (
+      <Loader />
     )
   };
 };

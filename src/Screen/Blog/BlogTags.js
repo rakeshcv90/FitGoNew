@@ -6,9 +6,9 @@ import {
   ImageBackground,
   FlatList,
   StyleSheet,
+  StatusBar
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import Header from '../../Component/Header';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { DeviceHeigth, DeviceWidth } from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -26,6 +26,7 @@ const BlogTags = () => {
   const [FilterData, setFilterData] = useState([]);
   const { defaultTheme } = useSelector((state) => state);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isEmpty,setisEmpty]=useState(false)
   console.log('Tags', Data.data);
   useEffect(() => {
     getData();
@@ -38,17 +39,21 @@ const BlogTags = () => {
           'Content-Type': 'Multipart/form-data',
         },
       });
+     if(data.data.length>0){
       setFilterData(data.data);
-      //   console.log(data.data);
       setIsLoaded(true);
-    } catch (error) { }
+      setisEmpty(false)
+     }
+     else{
+      setisEmpty(true);
+      setIsLoaded(true)
+     }
+    } catch (error) {
+      console.log("ERRROOR",error)
+     }
   };
   const TagData = FilterData.filter(item => item.tag == Data.data.title);
-  if (!isLoaded) {
-    return (
-      <Loader />
-    )
-  } else {
+  if (isLoaded &&!isEmpty)  {
     return (
       <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
         {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
@@ -67,7 +72,7 @@ const BlogTags = () => {
                   style={styles.Image}>
                   <View style={[styles.gradientView, {}]}>
                     <View style={styles.rating}>
-                      <Text style={{ color: "#fff" }}>{elements.item.tag}</Text>
+                      <Text style={{ color: "#fff" ,width:'auto'}}>{elements.item.tag}</Text>
                     </View>
                     <View>
                       <Text style={styles.text}>{elements.item.title}</Text>
@@ -88,6 +93,16 @@ const BlogTags = () => {
         </View>
       </View>
     )
+  }else if(isLoaded && isEmpty){
+    return(
+      <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff", justifyContent: 'center', alignItems: 'center' }}>
+      <Text style={{ color: '#f39c1f', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View>
+    )
+  }
+   else {
+    return (
+     <Loader/>
+    )
   }
 }
 const styles = StyleSheet.create({
@@ -95,7 +110,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   rating: {
-    width: 75,
+    width: 100,
     height: 30,
     backgroundColor: 'rgba(0,0,0,0.6)',
     borderRadius: 20,

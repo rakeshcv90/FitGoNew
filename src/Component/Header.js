@@ -22,7 +22,7 @@ const Header = ({ header, iconName }) => {
         translucent={true}
         style={{
           width: DeviceWidth,
-          height:Platform.OS=='ios'?DeviceHeigth*8/100:DeviceHeigth*6/100,
+          height:Platform.OS=='ios'?DeviceHeigth*5/100:DeviceHeigth*5/100,
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'flex-end',

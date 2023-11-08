@@ -24,6 +24,7 @@ const Exercises = () => {
   const [ApiData, setApiData] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const navigation = useNavigation();
+  const [isEmpty, setIsEmpty] = useState(false)
   const { defaultTheme } = useSelector((state) => state)
   useEffect(() => {
     getData();
@@ -36,15 +37,21 @@ const Exercises = () => {
           'Content-Type': 'Multipart/form-data',
         },
       });
-      setApiData(data.data);
-      // console.log(data.data.data);
-      setIsLoaded(true);
+      if (data.data.length > 0) {
+        setApiData(data.data);
+        setIsLoaded(true);
+        setIsEmpty(false)
+      }
+      else {
+        setIsEmpty(true)
+        setIsLoaded(true)
+      }
     } catch (error) { }
   };
-  if (isLoaded) {
+  if (isLoaded && !isEmpty) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-          {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
         <HeaderWithoutSearch Header={"Exercises"} />
         <View style={styles.container}>
           <TouchableOpacity style={styles.button} onPress={() => {
@@ -105,9 +112,15 @@ const Exercises = () => {
       </View>
     )
   }
+  else if (isLoaded && isEmpty) {
+    return (
+      <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff", justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color: '#f39c1f', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View>
+    )
+  }
   else {
     return (
-  <Loader />
+      <Loader />
     )
   }
 }

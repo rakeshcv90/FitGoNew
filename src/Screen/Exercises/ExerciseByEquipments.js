@@ -17,12 +17,14 @@ import { DeviceHeigth, DeviceWidth } from '../../Component/Config';
 import { useSelector } from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import HeaderWithoutSearch from '../../Component/HeaderWithoutSearch';
+import CustomStatusBar from '../../Component/CustomStatusBar';
 const ExerciseByEquipments = () => {
   const route = useRoute()
   const [getExerciseByEquipment, setExerciseByEquipment] = useState([])
   const [title, setTitle] = useState()
   const navigation = useNavigation();
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false)
   const { defaultTheme } = useSelector(state => state)
   useEffect(() => {
     getData();
@@ -37,14 +39,18 @@ const ExerciseByEquipments = () => {
           'Content-Type': 'Multipart/form-data',
         },
       });
-      if (data.data) {
+      if (data.data.length > 0) {
         setExerciseByEquipment(data.data.filter((item) => item.equipment == Data.item.title))
-
+        setIsEmpty(false)
         setIsLoaded(true);
+      }
+      else {
+        setIsEmpty(true)
+        setIsLoaded(true)
       }
     } catch (error) { }
   };
-  if (isLoaded) {
+  if (isLoaded && !isEmpty) {
     return (
       <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
         {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
@@ -86,11 +92,17 @@ const ExerciseByEquipments = () => {
               )}
             /></>) : (<>
               <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: defaultTheme ? "#000" : "#fff", }}>
-                <Text style={{ color: defaultTheme ? "#fff" : "#000" }}> No Items Available</Text>
+                <Text style={{ color: defaultTheme ? "#fff" : "#000" }}> No Data Available</Text>
               </View>
             </>)}
         </View>
       </View>
+    )
+  }
+  else if (isEmpty && isLoaded) {
+    return (
+      <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: defaultTheme ? "#000" : "#fff", }}>
+        <Text style={{ color: defaultTheme ? "#fff" : "#000" }}> No Data Available</Text></View>
     )
   }
   else {

@@ -8,7 +8,8 @@ import {
   StatusBar,
   SafeAreaView,
   FlatList,
-  ToastAndroid
+  ToastAndroid,
+  Platform
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { DeviceHeigth, DeviceWidth } from '../../Component/Config';
@@ -22,6 +23,7 @@ import axios from 'axios';
 import Loader from '../../Component/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { showMessage } from 'react-native-flash-message';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 const WorkoutDescription = () => {
   const navigation = useNavigation();
   const [HomeCardioData, setHomeCardioData] = useState([]);
@@ -85,9 +87,10 @@ const WorkoutDescription = () => {
       if (Fav.data) {
         showMessage({
           message:Fav.data[0].msg,
-          // description: 'Please Enter Your Mail',
+          statusBarHeight:getStatusBarHeight(),
+          floating:true,
           type: 'success',
-          icon: { icon: 'auto', position: 'left' },
+          icon: { icon: 'success', position: 'left' },
         });
         setFavData(FavData)
         setIsMounted(isMounted + 1)
@@ -96,9 +99,10 @@ const WorkoutDescription = () => {
       console.log("Erroror", error)
     }
   }
+  // i am sending 2 so that backend can know that it has to remove workout data of the user(same 1 for diet)
   const RemoveFavorites = async () => {
     try {
-      const RemovedData = await axios(`${Api}/${Appapi.RemoveFavorite}?email=${userid}&workout_id=${HomeCardioData.id}&temp=${2 }`, {
+      const RemovedData = await axios(`${Api}/${Appapi.RemoveFavorite}?email=${userid}&workout_id=${HomeCardioData.id}&temp=${2}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -108,9 +112,10 @@ const WorkoutDescription = () => {
       if (RemovedData.data) {
         showMessage({
           message:RemovedData.data[0].msg,
-          // description: 'Please Enter Your Mail',
+          statusBarHeight:getStatusBarHeight(),
+          floating:true,
           type: 'danger',
-          icon: { icon: 'auto', position: 'left' },
+          icon: { icon: 'none', position: 'left' },
         });
         setFavData(FavData.filter((item) => item.id !== HomeCardioData.id))
         setIsMounted(isMounted + 1)
