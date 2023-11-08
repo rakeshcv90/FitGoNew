@@ -22,8 +22,13 @@ import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import LoginLoader from '../Component/LoginLoader';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
-import {ColorSpace} from 'react-native-reanimated';
+// import { GoogleSignin,statusCodes ,GoogleSigninButton} from 'react-native-google-signin';
 const Login = () => {
+//  useEffect(()=>{
+//   GoogleSignin.configure({
+//     webClientId:"512109926378-h2m6a1a229bh9bfsv6h6ss78e9hm2lcq.apps.googleusercontent.com"
+//   })
+//  },[])
   const navigation = useNavigation();
   const [Email, setEmail] = useState('');
   const [Password, setPassword] = useState('');
@@ -31,7 +36,25 @@ const Login = () => {
   const [isVisible, seIsvisible] = useState(false);
   const {defaultTheme} = useSelector(state => state);
   const [isLoaded, setIsLoaded] = useState(false);
-  const StatusBar_Bar_Height=Platform.OS==='ios'?getStatusBarHeight():0;
+  const StatusBar_Bar_Height = Platform.OS === 'ios' ? getStatusBarHeight() : 0;
+  // const GoogleLogin = async () => {
+  //   try {
+  //     await GoogleSignin.hasPlayServices();
+  //     const userInfo = await GoogleSignin.signIn();
+  //     console.log("userInfo",userInfo.user)
+  //   } catch (error) {
+  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+  //       // user cancelled the login flow
+  //       console.log("erroe",error)
+  //     } else if (error.code === statusCodes.IN_PROGRESS) {
+  //       // operation (e.g. sign in) is in progress already
+  //     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+  //       // play services not available or outdated
+  //     } else {
+  //       // some other error happened
+  //     }
+  //   }
+  // };
   const ToggleVisibility = () => {
     seIsvisible(!isVisible);
   };
@@ -77,17 +100,16 @@ const Login = () => {
             password: Password,
           },
         });
-       
+
         if (data.data[0].status === 0) {
-          setEmail("");
-          setPassword("")
+          setEmail('');
+          setPassword('');
           // console.log('data', data.data[0]);
-          navigation.navigate("Signup",{userData:data.data})
+          navigation.navigate('Signup', {userData: data.data});
           setsubmitText('ENTER');
           setIsLoaded(true);
           showMessage({
-            message:
-              "Your email is not verified , Please verify your email ",
+            message: 'Your email is not verified , Please verify your email ',
             type: 'warning',
             animationDuration: '500',
             statusBarHeight: getStatusBarHeight(),
@@ -107,8 +129,7 @@ const Login = () => {
             icon: {icon: 'auto', position: 'left'},
           });
           setsubmitText('ENTER');
-        }
-        else{
+        } else {
           setIsLoaded(true);
           showMessage({
             message: data.data[0].msg,
@@ -134,7 +155,8 @@ const Login = () => {
       ]}>
       <StatusBar
         barStyle={defaultTheme ? 'light-content' : 'dark-content'}
-        backgroundColor={defaultTheme ? '#000' : '#fff'}s
+        backgroundColor={defaultTheme ? '#000' : '#fff'}
+        s
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
@@ -149,7 +171,7 @@ const Login = () => {
           <Image style={styles.logo} source={localImage.logo} />
           <TextInput
             label={'Email'}
-            keyboardType='email-address'
+            keyboardType="email-address"
             onChangeText={text => {
               setEmail(text);
             }}
@@ -203,57 +225,57 @@ const Login = () => {
               />
             }
           />
-       
-            <View
-              style={{
-                width: (DeviceWidth * 80) / 100,
-                alignItems: 'flex-end',
-                backgroundColor: defaultTheme ? '#000' : '#fff',
-              }}>
-              <TouchableOpacity
-                style={[
-                  styles.Forget,
-                  {backgroundColor: defaultTheme ? '#000' : '#fff'},
-                ]}
-                onPress={() => {
-                  navigation.navigate('ForgetPassword');
-                }}>
-                <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
-                  Forget Password ?
-                </Text>
-              </TouchableOpacity>
-            </View>
-         
-         
+
+          <View
+            style={{
+              width: (DeviceWidth * 80) / 100,
+              alignItems: 'flex-end',
+              backgroundColor: defaultTheme ? '#000' : '#fff',
+            }}>
             <TouchableOpacity
-              style={styles.Tbutton}
+              style={[
+                styles.Forget,
+                {backgroundColor: defaultTheme ? '#000' : '#fff'},
+              ]}
               onPress={() => {
-                setsubmitText('Please Wait...');
-                ErrorHandler();
+                navigation.navigate('ForgetPassword');
               }}>
-              <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
+              <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
+                Forget Password ?
+              </Text>
             </TouchableOpacity>
-        
-         
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('Signup');
+          </View>
+
+          <TouchableOpacity
+            style={styles.Tbutton}
+            onPress={() => {
+              setsubmitText('Please Wait...');
+              ErrorHandler();
+            }}>
+            <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Signup');
+            }}>
+            <Text
+              style={{
+                color: defaultTheme ? '#fff' : '#000',
+                marginBottom: (DeviceHeigth * 5) / 100,
               }}>
+              Don't have an account ?{' '}
               <Text
                 style={{
                   color: defaultTheme ? '#fff' : '#000',
-                  marginBottom: (DeviceHeigth * 5) / 100,
+                  fontWeight: 'bold',
                 }}>
-                Don't have an account ?{' '}
-                <Text
-                  style={{
-                    color: defaultTheme ? '#fff' : '#000',
-                    fontWeight: 'bold',
-                  }}>
-                  SignUp
-                </Text>
+                SignUp
               </Text>
-            </TouchableOpacity>
+            </Text>
+          </TouchableOpacity>
+          {/* <GoogleSigninButton size={GoogleSigninButton.Size.Wide} onPress={()=>{GoogleLogin()}}/>
+          <TouchableOpacity style={{backgroundColor:"red" ,marginTop:10}}><Text>Sign Out</Text></TouchableOpacity> */}
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

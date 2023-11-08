@@ -82,11 +82,11 @@ const Signup = ({navigation}) => {
           },
           data: payload,
         });
-        if (OtpMsg.data[0].msg == 'Email verified successfully ,Please Login') {
+        if (OtpMsg.data[0].msg == 'Email verified successfully') {
           SetVerifyText(false);
           showMessage({
-            message: OtpMsg.data[0].msg,
-            statusBarHeight: getStatusBarHeight(),
+            message: 'Email verified successfully , Please Login',
+            statusBarHeight: StatusBar_Bar_Height,
             floating: true,
             type: 'success',
             icon: {icon: 'auto', position: 'left'},
@@ -195,7 +195,6 @@ const Signup = ({navigation}) => {
         },
       });
       if (data.data[0].msg === 'Otp sent to your email') {
-        t1.current.focus();
         showMessage({
           message: data.data[0].msg,
           statusBarHeight: StatusBar_Bar_Height,
@@ -270,8 +269,7 @@ const Signup = ({navigation}) => {
         setSubmitText('Enter');
         setResendTxt('Resend OTP');
         showMessage({
-          message:
-            'We have sent an OTP to your email , Please verify your email first',
+          message:'We have sent an OTP to your email , Please verify your email first',
           type: 'warning',
           animationDuration: 500,
           statusBarHeight: StatusBar_Bar_Height,
@@ -280,7 +278,7 @@ const Signup = ({navigation}) => {
         });
       } else {
         showMessage({
-          message: data.data[0],
+          message: data.data[0].msg,
           type: 'danger',
           statusBarHeight: StatusBar_Bar_Height,
           floating: true,
@@ -316,7 +314,7 @@ const Signup = ({navigation}) => {
         showMessage({
           message: 'OTP has been sent to your email',
           type: 'success',
-          statusBarHeight: getStatusBarHeight(),
+          statusBarHeight: StatusBar_Bar_Height,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
@@ -324,7 +322,7 @@ const Signup = ({navigation}) => {
         showMessage({
           message: OTPdata.data[0].msg,
           type: 'success',
-          statusBarHeight: getStatusBarHeight(),
+          statusBarHeight: StatusBar_Bar_Height,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
@@ -341,7 +339,7 @@ const Signup = ({navigation}) => {
       if (timeLeft > 0) {
         setTimeleft(timeLeft - 1);
       }
-    }, 100);
+    }, 1000);
     return () => clearInterval(timer);
   }, [timeLeft]);
   return (

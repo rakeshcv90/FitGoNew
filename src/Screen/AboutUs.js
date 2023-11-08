@@ -28,11 +28,9 @@ const AboutUs = () => {
                     'Content-Type': 'Multipart/form-data',
                 },
             });
-            console.log("Aboiutsygsyuw", About)
             setAbout(data.data)
             setIsLoaded(true);
         }
-
         catch (error) {
             console.log("eroror", error)
         }
