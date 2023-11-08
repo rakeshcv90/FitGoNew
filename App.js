@@ -81,7 +81,7 @@ const App = () => {
   if (isLoaded && isLogged && isConnected) {
     return (
       <>
-        <NavigationContainer ref={navigationRef} onReady={()=>BootSplash.hide({duration:2000})}>
+        <NavigationContainer ref={navigationRef} onReady={()=>BootSplash.hide({duration:5000})}>
           <Router />
         </NavigationContainer>
         <FlashMessage position='top' />
@@ -91,7 +91,7 @@ const App = () => {
   else if (isLoaded && !isLogged && isConnected) {
     return (
       <>
-        <NavigationContainer ref={navigationRef} onReady={()=>BootSplash.hide({duration:2000})}>
+        <NavigationContainer ref={navigationRef} onReady={()=>BootSplash.hide({duration:5000})}>
           <LoginStack />
         </NavigationContainer>
         <FlashMessage position='top' />

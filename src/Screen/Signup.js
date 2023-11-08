@@ -8,6 +8,7 @@ import {
   StatusBar,
   Platform,
   Modal,
+  Animated,
 } from 'react-native';
 import React, {useEffect, useRef, useState, useMemo} from 'react';
 import {Api, Appapi, DeviceHeigth, DeviceWidth} from '../Component/Config';
@@ -18,6 +19,7 @@ import {useSelector} from 'react-redux';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useRoute} from '@react-navigation/native';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 const Signup = ({navigation}) => {
   const route = useRoute();
   const data = route.params;
@@ -46,6 +48,15 @@ const Signup = ({navigation}) => {
   const [resendtxt, setResendTxt] = useState('Resend OTP');
   const [IsVerifyVisible, setVerifyVisible] = useState(false);
   const StatusBar_Bar_Height = Platform.OS === 'ios' ? getStatusBarHeight() : 0;
+  const Animation = useRef(new Animated.Value(0)).current;
+  const [isAnimated, setAnimated] = useState(false);
+  const [isOTPView, setIsOTPView] = useState(false);
+  const startAnimation =
+    Animated.timing(Animation, {
+      toValue: 1,
+      duration: 100,
+      useNativeDriver: true,
+    });
   const ToggleVisibility = () => {
     seIsvisible(!isVisible);
   };
@@ -194,6 +205,18 @@ const Signup = ({navigation}) => {
           password: Password,
         },
       });
+      setTxt1('');
+      setTxt2('');
+      setTxt3('');
+      setTxt4('');
+      setTxt5('');
+      setTxt6('');
+      setSubmitText('Enter');
+      setResendTxt('Resend OTP');
+      setSubmitText('Enter');
+      setTimeleft(60);
+     
+     
       if (data.data[0].msg === 'Otp sent to your email') {
         showMessage({
           message: data.data[0].msg,
@@ -202,17 +225,8 @@ const Signup = ({navigation}) => {
           type: 'success',
           icon: {icon: 'auto', position: 'left'},
         });
-        setTxt1('');
-        setTxt2('');
-        setTxt3('');
-        setTxt4('');
-        setTxt5('');
-        setTxt6('');
-        setSubmitText('Enter');
-        setResendTxt('Resend OTP');
-        setSubmitText('Enter');
-        setTimeleft(60);
-        setVerifyVisible(true);
+        startAnimation.start(()=>{setVerifyVisible(true)})
+       
       } else if (data.data[0].status == 0) {
         try {
           let payload = new FormData();
@@ -258,8 +272,6 @@ const Signup = ({navigation}) => {
           setSubmitText('Enter');
           setResendTxt('Resend OTP');
         }
-        setVerifyVisible(true);
-        setTimeleft(60);
         setTxt1('');
         setTxt2('');
         setTxt3('');
@@ -268,8 +280,12 @@ const Signup = ({navigation}) => {
         setTxt6('');
         setSubmitText('Enter');
         setResendTxt('Resend OTP');
+        setSubmitText('Enter');
+        setTimeleft(60);
+        startAnimation.start(()=>{setVerifyVisible(true)})
         showMessage({
-          message:'We have sent an OTP to your email , Please verify your email first',
+          message:
+            'We have sent an OTP to your email , Please verify your email first',
           type: 'warning',
           animationDuration: 500,
           statusBarHeight: StatusBar_Bar_Height,
@@ -333,7 +349,6 @@ const Signup = ({navigation}) => {
       setTimeleft(60);
     }
   };
-
   useEffect(() => {
     const timer = setInterval(() => {
       if (timeLeft > 0) {
@@ -356,7 +371,7 @@ const Signup = ({navigation}) => {
           />
         </SafeAreaView>
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'height' : 'height '}
+          behavior={Platform.OS === 'ios' ? 'height' : 'height'}
           style={{flex: 1}}>
           <Text
             style={[
@@ -471,7 +486,7 @@ const Signup = ({navigation}) => {
                 />
               }
             />
-            {IsVerifyVisible ? null : (
+            {!IsVerifyVisible ? (
               <View
                 style={{
                   flexDirection: 'row',
@@ -485,21 +500,48 @@ const Signup = ({navigation}) => {
                   onPress={() => setChecked(!checked)}>
                   <Text>
                     {' '}
-                    {checked && <Text style={{color: '#fff'}}>&#10004;</Text>}
+                    {checked && <Icons name="check" size={16} color={'#fff'} />}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate('TermaAndCondition');
+                    // startAnimation();
+                    // setVerifyVisible(!IsVerifyVisible);
+                    // setAnimated(!isAnimated);
+                    // setIsOTPView(true);
                   }}>
                   <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
                     I Agree to Terms & Conditions
                   </Text>
                 </TouchableOpacity>
               </View>
+            ) : (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  position: 'relative',
+                  alignItems: 'center',
+                  width: (DeviceWidth * 80) / 100,
+                }}>
+                <View
+                  style={[styles.checkboxContainer, checked && styles.Checked]}
+                  >
+                  <Text>
+                    {' '}
+                    {checked && <Icons name="check" size={16} color={'#fff'} />}
+                  </Text>
+                </View>
+                <View
+                  >
+                  <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
+                    I Agree to Terms & Conditions
+                  </Text>
+                </View>
+              </View>
             )}
-
-            {IsVerifyVisible ? null : (
+            {!IsVerifyVisible ? (
               <TouchableOpacity
                 style={styles.Tbutton}
                 onPress={() => {
@@ -508,6 +550,10 @@ const Signup = ({navigation}) => {
                 }}>
                 <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
               </TouchableOpacity>
+            ) : (
+              <View style={styles.Tbutton}>
+                <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
+              </View>
             )}
             <TouchableOpacity
               onPress={() => {
@@ -531,7 +577,34 @@ const Signup = ({navigation}) => {
                 </Text>
               </View>
             </TouchableOpacity>
-            {IsVerifyVisible ? (
+          </View>
+          {IsVerifyVisible && (
+            <Animated.View
+              style={[
+                {
+                  backgroundColor: defaultTheme ? '#000' : '#fff',
+                  width: '100%',
+                  height: (DeviceHeigth * 25) / 100,
+                  borderTopLeftRadius: 25,
+                  borderTopRightRadius: 25,
+                  borderTopColor: 'grey',
+                  borderWidth: 0.5,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  position: 'absolute',
+                  bottom: 0,
+                },
+                {
+                  transform: [
+                    {
+                      translateY: Animation.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: [DeviceHeigth,0],
+                      }),
+                    },
+                  ],
+                },
+              ]}>
               <>
                 <Text
                   style={{
@@ -712,8 +785,8 @@ const Signup = ({navigation}) => {
                   </TouchableOpacity>
                 </View>
               </>
-            ) : null}
-          </View>
+            </Animated.View>
+          )}
         </KeyboardAvoidingView>
       </View>
     </>
@@ -723,7 +796,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'white',
     // marginVertical:DeviceHeigth,
     justifyContent: 'center',
   },
