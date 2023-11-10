@@ -137,7 +137,7 @@ const PlayerModal = ({ setState, State }) => {
           setnextSet(true);
           setIsPlaying(false);
         }
-      }, 250);
+      }, 2500);
       return () => clearInterval(intervalId);
     }
   }, [reps, isPlaying]);

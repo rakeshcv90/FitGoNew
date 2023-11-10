@@ -23,18 +23,6 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 const Signup = ({navigation}) => {
   const route = useRoute();
   const data = route.params;
-  const t1 = useRef();
-  const t2 = useRef();
-  const t3 = useRef();
-  const t4 = useRef();
-  const t5 = useRef();
-  const t6 = useRef();
-  const [txt1, setTxt1] = useState('');
-  const [txt2, setTxt2] = useState('');
-  const [txt3, setTxt3] = useState('');
-  const [txt4, setTxt4] = useState('');
-  const [txt5, setTxt5] = useState('');
-  const [txt6, setTxt6] = useState('');
   const [checked, setChecked] = useState(false);
   const [Name, setName] = useState('');
   const [Email, setEmail] = useState('');
@@ -43,20 +31,9 @@ const Signup = ({navigation}) => {
   const {defaultTheme} = useSelector(state => state);
   const [submitText, setSubmitText] = useState('Enter');
   const [isVisible, seIsvisible] = useState(false);
-  const [timeLeft, setTimeleft] = useState(60);
-  const [VerifyText, SetVerifyText] = useState('Verify');
-  const [resendtxt, setResendTxt] = useState('Resend OTP');
   const [IsVerifyVisible, setVerifyVisible] = useState(false);
   const StatusBar_Bar_Height = Platform.OS === 'ios' ? getStatusBarHeight() : 0;
   const Animation = useRef(new Animated.Value(0)).current;
-  const [isAnimated, setAnimated] = useState(false);
-  const [isOTPView, setIsOTPView] = useState(false);
-  const startAnimation =
-    Animated.timing(Animation, {
-      toValue: 1,
-      duration: 100,
-      useNativeDriver: true,
-    });
   const ToggleVisibility = () => {
     seIsvisible(!isVisible);
   };
@@ -69,59 +46,7 @@ const Signup = ({navigation}) => {
       setEmail(data.userData[0].email);
     }
   }, []);
-  const OtpString = txt1 + txt2 + txt3 + txt4 + txt5 + txt6;
-  const handleOTP = async () => {
-    if (!txt1 || !txt2 || !txt3 || !txt4 || !txt5 || !txt6) {
-      showMessage({
-        message: 'Please enter the otp',
-        statusBarHeight: StatusBar_Bar_Height,
-        floating: true,
-        type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
-      });
-      SetVerifyText('Verify');
-      setSubmitText('Enter');
-    } else {
-      try {
-        let payload = new FormData();
-        payload.append('email', Email);
-        payload.append('otp', OtpString);
-        const OtpMsg = await axios(`${Api}/${Appapi.OTPVerification}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          data: payload,
-        });
-        if (OtpMsg.data[0].msg == 'Email verified successfully') {
-          SetVerifyText(false);
-          showMessage({
-            message: 'Email verified successfully , Please Login',
-            statusBarHeight: StatusBar_Bar_Height,
-            floating: true,
-            type: 'success',
-            icon: {icon: 'auto', position: 'left'},
-          });
-          setVerifyVisible(false);
-          setSubmitText('Enter');
-          navigation.navigate('Login');
-        } else {
-          showMessage({
-            message: OtpMsg.data[0].msg,
-            statusBarHeight: StatusBar_Bar_Height,
-            floating: true,
-            type: 'danger',
-            icon: {icon: 'auto', position: 'left'},
-          });
-        }
-        SetVerifyText('Verify');
-        setSubmitText('Enter');
-      } catch (error) {
-        SetVerifyText('Verify');
-        console.log('OTPERROR', error);
-      }
-    }
-  };
+
   const ErrorHandler = () => {
     let reg = /\S+@\S+\.\S+/;
     let pass = /^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/;
@@ -205,18 +130,10 @@ const Signup = ({navigation}) => {
           password: Password,
         },
       });
-      setTxt1('');
-      setTxt2('');
-      setTxt3('');
-      setTxt4('');
-      setTxt5('');
-      setTxt6('');
       setSubmitText('Enter');
-      setResendTxt('Resend OTP');
+ 
       setSubmitText('Enter');
-      setTimeleft(60);
-     
-     
+      setVerifyVisible(true);
       if (data.data[0].msg === 'Otp sent to your email') {
         showMessage({
           message: data.data[0].msg,
@@ -225,8 +142,9 @@ const Signup = ({navigation}) => {
           type: 'success',
           icon: {icon: 'auto', position: 'left'},
         });
-        startAnimation.start(()=>{setVerifyVisible(true)})
-       
+      
+          setVerifyVisible(true);
+  
       } else if (data.data[0].status == 0) {
         try {
           let payload = new FormData();
@@ -240,26 +158,10 @@ const Signup = ({navigation}) => {
           });
 
           if (data.data[0].msg == 'otp sent') {
-            t1.current.focus();
-            setTimeleft(60);
-            setTxt1('');
-            setTxt2('');
-            setTxt3('');
-            setTxt4('');
-            setTxt5('');
-            setTxt6('');
-            setSubmitText('Enter');
-            setResendTxt('Resend OTP');
+            // t1.current.focus();
+            setSubmitText('Enter');   
           } else {
-            setTimeleft(60);
-            setTxt1('');
-            setTxt2('');
-            setTxt3('');
-            setTxt4('');
-            setTxt5('');
-            setTxt6('');
             setSubmitText('Enter');
-            setResendTxt('Resend OTP');
             showMessage({
               message: data.data[0].msg,
               statusBarHeight: StatusBar_Bar_Height,
@@ -270,19 +172,10 @@ const Signup = ({navigation}) => {
           }
         } catch (error) {
           setSubmitText('Enter');
-          setResendTxt('Resend OTP');
         }
-        setTxt1('');
-        setTxt2('');
-        setTxt3('');
-        setTxt4('');
-        setTxt5('');
-        setTxt6('');
         setSubmitText('Enter');
-        setResendTxt('Resend OTP');
         setSubmitText('Enter');
-        setTimeleft(60);
-        startAnimation.start(()=>{setVerifyVisible(true)})
+        setVerifyVisible(true);
         showMessage({
           message:
             'We have sent an OTP to your email , Please verify your email first',
@@ -307,304 +200,166 @@ const Signup = ({navigation}) => {
       console.log('eror', error);
     }
   };
-  const ResendOTP = async () => {
-    try {
-      let payload = new FormData();
-      payload.append('email', Email);
-      const OTPdata = await axios(`${Api}/${Appapi.ResendOTP}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: payload,
-      });
-      if (OTPdata) {
-        setResendTxt('Resend OTP');
+
+  const ModalView = () => {
+    const t1 = useRef();
+    const t2 = useRef();
+    const t3 = useRef();
+    const t4 = useRef();
+    const t5 = useRef();
+    const t6 = useRef();
+    const [txt1, setTxt1] = useState('');
+    const [txt2, setTxt2] = useState('');
+    const [txt3, setTxt3] = useState('');
+    const [txt4, setTxt4] = useState('');
+    const [txt5, setTxt5] = useState('');
+    const [txt6, setTxt6] = useState('');
+    const [VerifyText, SetVerifyText] = useState('Verify');
+    const [timeLeft, setTimeleft] = useState(60);
+    const [resendtxt, setResendTxt] = useState('Resend OTP');
+    const OtpString=txt1 + txt2 + txt3 + txt4 + txt5 + txt6;
+    const ResendOTP = async () => {
+      try {
+        let payload = new FormData();
+        payload.append('email', Email);
+        const OTPdata = await axios(`${Api}/${Appapi.ResendOTP}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          data: payload,
+        });
+        if (OTPdata) {
+          setResendTxt('Resend OTP');
+          setTimeleft(60);
+          setTxt1('');
+          setTxt2('');
+          setTxt3('');
+          setTxt4('');
+          setTxt5('');
+          setTxt6('');
+          showMessage({
+            message: 'OTP has been sent to your email',
+            type: 'success',
+            duration:500,
+            statusBarHeight: StatusBar_Bar_Height,
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
+        } else {
+          showMessage({
+            message: OTPdata.data[0].msg,
+            type: 'success',
+            statusBarHeight: StatusBar_Bar_Height,
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
+        }
+      } catch (error) {
+        console.log('erere', error);
+        setResendTxt('Resent OTP');
         setTimeleft(60);
-        setTxt1('');
-        setTxt2('');
-        setTxt3('');
-        setTxt4('');
-        setTxt5('');
-        setTxt6('');
+      }
+    };
+
+    const handleOTP = async () => {
+      if (!txt1 || !txt2 || !txt3 || !txt4 || !txt5 || !txt6) {
         showMessage({
-          message: 'OTP has been sent to your email',
-          type: 'success',
+          message: 'Please enter the otp',
           statusBarHeight: StatusBar_Bar_Height,
           floating: true,
+          type: 'danger',
           icon: {icon: 'auto', position: 'left'},
         });
+        SetVerifyText('Verify');
+        setSubmitText('Enter');
       } else {
-        showMessage({
-          message: OTPdata.data[0].msg,
-          type: 'success',
-          statusBarHeight: StatusBar_Bar_Height,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
+        try {
+          let payload = new FormData();
+          payload.append('email', Email);
+          payload.append('otp', OtpString);
+          const OtpMsg = await axios(`${Api}/${Appapi.OTPVerification}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            data: payload,
+          });
+          console.log(Email,OtpString,OtpMsg.data[0])
+          if (OtpMsg.data[0].msg == 'Email verified successfully') {
+        
+            showMessage({
+              message: 'Email verified successfully , Please Login',
+              statusBarHeight: StatusBar_Bar_Height,
+              floating: true,
+              duration:500,
+              type: 'success',
+              icon: {icon: 'auto', position: 'left'},
+            });
+            setResendTxt('Resend OTP');
+            setTimeleft(60);
+            setTxt1('');
+            setTxt2('');
+            setTxt3('');
+            setTxt4('');
+            setTxt5('');
+            setTxt6('');
+            setVerifyVisible(false);
+            setSubmitText('Enter');
+            navigation.navigate('Login');
+          } else {
+            showMessage({
+              message: OtpMsg.data[0].msg,
+              statusBarHeight: StatusBar_Bar_Height,
+              floating: true,
+              type: 'danger',
+              icon: {icon: 'auto', position: 'left'},
+            });
+            setResendTxt('Resend OTP');
+            setTimeleft(60);
+            setTxt1('');
+            setTxt2('');
+            setTxt3('');
+            setTxt4('');
+            setTxt5('');
+            setTxt6('');
+          }
+          SetVerifyText('Verify');
+          setSubmitText('Enter');
+        } catch (error) {
+          SetVerifyText('Verify');
+          console.log('OTPERROR', error);
+        }
       }
-    } catch (error) {
-      console.log('erere', error);
-      setResendTxt('Resent OTP');
-      setTimeleft(60);
-    }
-  };
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (timeLeft > 0) {
-        setTimeleft(timeLeft - 1);
-      }
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [timeLeft]);
-  return (
-    <>
-      <View style={{flex: 1, backgroundColor: defaultTheme ? '#000' : '#fff'}}>
-        <SafeAreaView
-          style={{
-            width: DeviceWidth,
-            height: StatusBar_Bar_Height,
-            backgroundColor: defaultTheme ? '#000' : '#fff',
+    };
+    useEffect(() => {
+      const timer = setInterval(() => {
+        if (timeLeft > 0) {
+          setTimeleft(timeLeft - 1);
+        }
+      }, 1000);
+      return () => clearInterval(timer);
+    }, [timeLeft]);
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: defaultTheme ? '#000' : '#fff',
+          position: 'absolute',
+        }}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={true}
+          onRequestClose={() => {
+            setVerifyVisible(false);
           }}>
-          <StatusBar
-            barStyle={defaultTheme ? 'light-content' : 'dark-content'}
-          />
-        </SafeAreaView>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'height' : 'height'}
-          style={{flex: 1}}>
-          <Text
-            style={[
-              styles.SignUpText,
-              {color: defaultTheme ? '#fff' : '#000'},
-            ]}>
-            SignUp
-          </Text>
           <View
             style={[
-              styles.container,
-              {backgroundColor: defaultTheme ? '#000' : '#fff'},
+              styles.modalContainer,
+              {backgroundColor: 'transparent', flex: 1},
             ]}>
-            <TextInput
-              label={'Name'}
-              onChangeText={text => {
-                setName(text);
-              }}
-              mode="flat"
-              autoCapitalize="none"
-              style={styles.AuthInput}
-              activeUnderlineColor="#f39c1f"
-              value={Name}
-              textColor={defaultTheme ? '#fff' : '#000'}
-              theme={{
-                colors: {
-                  onSurfaceVariant: defaultTheme
-                    ? 'rgba(255,255,255,0.7)'
-                    : 'rgba(0,0,0,0.6)',
-                },
-              }}
-              underlineColor={
-                defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
-              }
-            />
-            <TextInput
-              label={'Email'}
-              keyboardType="email-address"
-              onChangeText={text => {
-                setEmail(text.trim());
-                setVerifyVisible(false);
-              }}
-              mode="flat"
-              autoCapitalize="none"
-              style={styles.AuthInput}
-              activeUnderlineColor="#f39c1f"
-              value={Email}
-              textColor={defaultTheme ? '#fff' : '#000'}
-              theme={{
-                colors: {
-                  onSurfaceVariant: defaultTheme
-                    ? 'rgba(255,255,255,0.7)'
-                    : 'rgba(0,0,0,0.6)',
-                },
-              }}
-              underlineColor={
-                defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
-              }
-            />
-            <TextInput
-              label={'Password'}
-              onChangeText={text => setPassword(text.trim())}
-              mode="flat"
-              autoCapitalize="none"
-              style={styles.AuthInput}
-              activeUnderlineColor="#f39c1f"
-              value={Password}
-              secureTextEntry={true}
-              textColor={defaultTheme ? '#fff' : '#000'}
-              underlineColor={
-                defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
-              }
-              theme={{
-                colors: {
-                  onSurfaceVariant: defaultTheme
-                    ? 'rgba(255,255,255,0.7)'
-                    : 'rgba(0,0,0,0.6)',
-                },
-              }}
-            />
-            <TextInput
-              label={'Confirm Password'}
-              onChangeText={text => setConformPassword(text.trim())}
-              mode="flat"
-              autoCapitalize="none"
-              style={styles.AuthInput}
-              activeUnderlineColor="#f39c1f"
-              value={ConfirmPassword}
-              secureTextEntry={!isVisible}
-              textColor={defaultTheme ? '#fff' : '#000'}
-              underlineColor={
-                defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
-              }
-              theme={{
-                colors: {
-                  onSurfaceVariant: defaultTheme
-                    ? 'rgba(255,255,255,0.7)'
-                    : 'rgba(0,0,0,0.6)',
-                },
-              }}
-              right={
-                <TextInput.Icon
-                  icon={isVisible ? 'eye' : 'eye-off'}
-                  onPress={ToggleVisibility}
-                  theme={{
-                    colors: {
-                      onSurfaceVariant: defaultTheme
-                        ? 'rgba(255,255,255,0.7)'
-                        : 'rgba(0,0,0,0.6)',
-                    },
-                  }}
-                />
-              }
-            />
-            {!IsVerifyVisible ? (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'flex-start',
-                  position: 'relative',
-                  alignItems: 'center',
-                  width: (DeviceWidth * 80) / 100,
-                }}>
-                <TouchableOpacity
-                  style={[styles.checkboxContainer, checked && styles.Checked]}
-                  onPress={() => setChecked(!checked)}>
-                  <Text>
-                    {' '}
-                    {checked && <Icons name="check" size={16} color={'#fff'} />}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('TermaAndCondition');
-                    // startAnimation();
-                    // setVerifyVisible(!IsVerifyVisible);
-                    // setAnimated(!isAnimated);
-                    // setIsOTPView(true);
-                  }}>
-                  <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
-                    I Agree to Terms & Conditions
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'flex-start',
-                  position: 'relative',
-                  alignItems: 'center',
-                  width: (DeviceWidth * 80) / 100,
-                }}>
-                <View
-                  style={[styles.checkboxContainer, checked && styles.Checked]}
-                  >
-                  <Text>
-                    {' '}
-                    {checked && <Icons name="check" size={16} color={'#fff'} />}
-                  </Text>
-                </View>
-                <View
-                  >
-                  <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
-                    I Agree to Terms & Conditions
-                  </Text>
-                </View>
-              </View>
-            )}
-            {!IsVerifyVisible ? (
-              <TouchableOpacity
-                style={styles.Tbutton}
-                onPress={() => {
-                  setSubmitText('Please Wait...');
-                  ErrorHandler();
-                }}>
-                <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
-              </TouchableOpacity>
-            ) : (
-              <View style={styles.Tbutton}>
-                <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
-              </View>
-            )}
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('Login');
-              }}>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginVertical: 5,
-                }}>
-                <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
-                  Already have an account ?{' '}
-                  <Text
-                    style={{
-                      color: defaultTheme ? '#fff' : '#000',
-                      fontWeight: 'bold',
-                    }}>
-                    Login
-                  </Text>
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-          {IsVerifyVisible && (
-            <Animated.View
-              style={[
-                {
-                  backgroundColor: defaultTheme ? '#000' : '#fff',
-                  width: '100%',
-                  height: (DeviceHeigth * 25) / 100,
-                  borderTopLeftRadius: 25,
-                  borderTopRightRadius: 25,
-                  borderTopColor: 'grey',
-                  borderWidth: 0.5,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  position: 'absolute',
-                  bottom: 0,
-                },
-                {
-                  transform: [
-                    {
-                      translateY: Animation.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [DeviceHeigth,0],
-                      }),
-                    },
-                  ],
-                },
-              ]}>
+            <View style={styles.modalContent}>
               <>
                 <Text
                   style={{
@@ -785,8 +540,230 @@ const Signup = ({navigation}) => {
                   </TouchableOpacity>
                 </View>
               </>
-            </Animated.View>
-          )}
+            </View>
+          </View>
+        </Modal>
+      </View>
+    );
+  };
+  return (
+    <>
+      <View style={{flex: 1, backgroundColor: defaultTheme ? '#000' : '#fff'}}>
+        <SafeAreaView
+          style={{
+            width: DeviceWidth,
+            height: StatusBar_Bar_Height,
+            backgroundColor: defaultTheme ? '#000' : '#fff',
+          }}>
+          <StatusBar
+            barStyle={defaultTheme ? 'light-content' : 'dark-content'}
+          />
+        </SafeAreaView>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'height' : 'height'}
+          style={{flex: 1}}>
+          <Text
+            style={[
+              styles.SignUpText,
+              {color: defaultTheme ? '#fff' : '#000'},
+            ]}>
+            SignUp
+          </Text>
+          <View
+            style={[
+              styles.container,
+              {backgroundColor: defaultTheme ? '#000' : '#fff'},
+            ]}>
+            <TextInput
+              label={'Name'}
+              onChangeText={text => {
+                setName(text);
+              }}
+              mode="flat"
+              autoCapitalize="none"
+              style={styles.AuthInput}
+              activeUnderlineColor="#f39c1f"
+              value={Name}
+              textColor={defaultTheme ? '#fff' : '#000'}
+              theme={{
+                colors: {
+                  onSurfaceVariant: defaultTheme
+                    ? 'rgba(255,255,255,0.7)'
+                    : 'rgba(0,0,0,0.6)',
+                },
+              }}
+              underlineColor={
+                defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
+              }
+            />
+            <TextInput
+              label={'Email'}
+              keyboardType="email-address"
+              onChangeText={text => {
+                setEmail(text.trim());
+                setVerifyVisible(false);
+              }}
+              mode="flat"
+              autoCapitalize="none"
+              style={styles.AuthInput}
+              activeUnderlineColor="#f39c1f"
+              value={Email}
+              textColor={defaultTheme ? '#fff' : '#000'}
+              theme={{
+                colors: {
+                  onSurfaceVariant: defaultTheme
+                    ? 'rgba(255,255,255,0.7)'
+                    : 'rgba(0,0,0,0.6)',
+                },
+              }}
+              underlineColor={
+                defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
+              }
+            />
+            <TextInput
+              label={'Password'}
+              onChangeText={text => setPassword(text.trim())}
+              mode="flat"
+              autoCapitalize="none"
+              style={styles.AuthInput}
+              activeUnderlineColor="#f39c1f"
+              value={Password}
+              secureTextEntry={true}
+              textColor={defaultTheme ? '#fff' : '#000'}
+              underlineColor={
+                defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
+              }
+              theme={{
+                colors: {
+                  onSurfaceVariant: defaultTheme
+                    ? 'rgba(255,255,255,0.7)'
+                    : 'rgba(0,0,0,0.6)',
+                },
+              }}
+            />
+            <TextInput
+              label={'Confirm Password'}
+              onChangeText={text => setConformPassword(text.trim())}
+              mode="flat"
+              autoCapitalize="none"
+              style={styles.AuthInput}
+              activeUnderlineColor="#f39c1f"
+              value={ConfirmPassword}
+              secureTextEntry={!isVisible}
+              textColor={defaultTheme ? '#fff' : '#000'}
+              underlineColor={
+                defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
+              }
+              theme={{
+                colors: {
+                  onSurfaceVariant: defaultTheme
+                    ? 'rgba(255,255,255,0.7)'
+                    : 'rgba(0,0,0,0.6)',
+                },
+              }}
+              right={
+                <TextInput.Icon
+                  icon={isVisible ? 'eye' : 'eye-off'}
+                  onPress={ToggleVisibility}
+                  theme={{
+                    colors: {
+                      onSurfaceVariant: defaultTheme
+                        ? 'rgba(255,255,255,0.7)'
+                        : 'rgba(0,0,0,0.6)',
+                    },
+                  }}
+                />
+              }
+            />
+            {!IsVerifyVisible ? (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  position: 'relative',
+                  alignItems: 'center',
+                  width: (DeviceWidth * 80) / 100,
+                }}>
+                <TouchableOpacity
+                  style={[styles.checkboxContainer, checked && styles.Checked]}
+                  onPress={() => setChecked(!checked)}>
+                  <Text>
+                    {' '}
+                    {checked && <Icons name="check" size={16} color={'#fff'} />}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('TermaAndCondition');
+                    
+                  }}>
+                  <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
+                    I Agree to Terms & Conditions
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  position: 'relative',
+                  alignItems: 'center',
+                  width: (DeviceWidth * 80) / 100,
+                }}>
+                <View
+                  style={[styles.checkboxContainer, checked && styles.Checked]}>
+                  <Text>
+                    {' '}
+                    {checked && <Icons name="check" size={16} color={'#fff'} />}
+                  </Text>
+                </View>
+                <View>
+                  <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
+                    I Agree to Terms & Conditions
+                  </Text>
+                </View>
+              </View>
+            )}
+            {!IsVerifyVisible ? (
+              <TouchableOpacity
+                style={styles.Tbutton}
+                onPress={() => {
+                  setSubmitText('Please Wait...');
+                  ErrorHandler();
+                }}>
+                <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
+              </TouchableOpacity>
+            ) : (
+              <View style={styles.Tbutton}>
+                <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
+              </View>
+            )}
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Login');
+              }}>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginVertical: 5,
+                }}>
+                <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
+                  Already have an account ?{' '}
+                  <Text
+                    style={{
+                      color: defaultTheme ? '#fff' : '#000',
+                      fontWeight: 'bold',
+                    }}>
+                    Login
+                  </Text>
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        
+         {IsVerifyVisible? <ModalView />:null}
         </KeyboardAvoidingView>
       </View>
     </>
@@ -863,6 +840,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'lightgray',
+    position: 'absolute',
+    bottom: 0,
     ...Platform.select({
       ios: {
         shadowColor: '#000000',
