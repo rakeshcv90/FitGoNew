@@ -111,7 +111,7 @@ const Login = () => {
           showMessage({
             message: 'Your email is not verified , Please verify your email ',
             type: 'warning',
-            animationDuration: '500',
+            animationDuration: '750',
             statusBarHeight: getStatusBarHeight(),
             floating: true,
             icon: {icon: 'auto', position: 'left'},

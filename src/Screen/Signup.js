@@ -129,11 +129,11 @@ const Signup = ({navigation}) => {
           password: Password,
         },
       });
+      console.log(data.data)
       setSubmitText('Enter');
-
       setSubmitText('Enter');
       setVerifyVisible(true);
-      if (data.data[0].msg === 'Otp sent to your email') {
+      if (data.data[0].msg === 'Otp sent to your email' ) {
         showMessage({
           message: data.data[0].msg,
           statusBarHeight: StatusBar_Bar_Height,
@@ -141,57 +141,59 @@ const Signup = ({navigation}) => {
           type: 'success',
           icon: {icon: 'auto', position: 'left'},
         });
-
         setVerifyVisible(true);
       } else if (data.data[0].status == 0) {
-        try {
-          let payload = new FormData();
-          payload.append('email', Email);
-          const data = await axios(`${Api}/${Appapi.ResendOTP}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-            data: payload,
-          });
+        // try {
+          // let payload = new FormData();
+          // payload.append('email', Email);
+          // const data = await axios(`${Api}/${Appapi.ResendOTP}`, {
+          //   method: 'POST',
+          //   headers: {
+          //     'Content-Type': 'multipart/form-data',
+          //   },
+          //   data: payload,
+          // });
 
-          if (data.data[0].msg == 'otp sent') {
-            // t1.current.focus();
-            setSubmitText('Enter');
-          } else {
-            setSubmitText('Enter');
-            showMessage({
-              message: data.data[0].msg,
-              statusBarHeight: StatusBar_Bar_Height,
-              floating: true,
-              type: 'success',
-              icon: {icon: 'auto', position: 'left'},
-            });
-          }
-        } catch (error) {
-          setSubmitText('Enter');
-        }
+          // if (data.data[0].msg == 'otp sent') {
+          //   setSubmitText('Enter');
+          // } else {
+          //   setSubmitText('Enter');
+          //   showMessage({
+          //     message: data.data[0].msg,
+          //     statusBarHeight: StatusBar_Bar_Height,
+          //     floating: true,
+          //     type: 'success',
+          //     icon: {icon: 'auto', position: 'left'},
+          //   });
+          // }
+        // } catch (error) {
+        //   setSubmitText('Enter');
+        // }
         setSubmitText('Enter');
         setSubmitText('Enter');
         setVerifyVisible(true);
         showMessage({
           message:
             'We have sent an OTP to your email , Please verify your email first',
-          type: 'warning',
+          type: 'danger',
           animationDuration: 500,
           statusBarHeight: StatusBar_Bar_Height,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      } else {
+      } 
+      else if(data.data[0].status==1) {
         showMessage({
-          message: data.data[0].msg,
+          message: "Email already registered , Please Login",
           type: 'danger',
           statusBarHeight: StatusBar_Bar_Height,
           floating: true,
+          animationDuration:750,
           icon: {icon: 'auto', position: 'left'},
         });
         setSubmitText('Enter');
+        setVerifyVisible(false)
+        navigation.navigate("Login")
       }
     } catch (error) {
       setSubmitText('Enter');
@@ -289,7 +291,7 @@ const Signup = ({navigation}) => {
               message: 'Email verified successfully , Please Login',
               statusBarHeight: StatusBar_Bar_Height,
               floating: true,
-              duration: 500,
+              duration: 750,
               type: 'success',
               icon: {icon: 'auto', position: 'left'},
             });
@@ -353,7 +355,11 @@ const Signup = ({navigation}) => {
             setVerifyVisible(false);
           }}>
           <View style={[styles.modalContainer]}>
-            <View style={[styles.modalContent,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
+            <View
+              style={[
+                styles.modalContent,
+                {backgroundColor: defaultTheme ? '#000' : '#fff'},
+              ]}>
               <View
                 style={[
                   styles.closeButton,
@@ -394,8 +400,8 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
-                    activeOutlineColor="red"
-                    value={txt1 ? '*' : ''}
+                    activeOutlineColor="#f39c1f"
+                    value={txt1}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt1(txt);
@@ -414,8 +420,8 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
-                    activeOutlineColor="red"
-                    value={txt2 ? '*' : ''}
+                    activeOutlineColor="#f39c1f"
+                    value={txt2}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt2(txt);
@@ -435,7 +441,7 @@ const Signup = ({navigation}) => {
                     activeUnderlineColor="transparent"
                     maxLength={1}
                     activeOutlineColor="#f39c1f"
-                    value={txt3 ? '*' : ''}
+                    value={txt3}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt3(txt);
@@ -455,7 +461,7 @@ const Signup = ({navigation}) => {
                     activeUnderlineColor="transparent"
                     maxLength={1}
                     activeOutlineColor="#f39c1f"
-                    value={txt4 ? '*' : ''}
+                    value={txt4}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt4(txt);
@@ -474,8 +480,8 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
-                    activeOutlineColor="red"
-                    value={txt5 ? '*' : ''}
+                    activeOutlineColor="#f39c1f"
+                    value={txt5}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt5(txt);
@@ -495,8 +501,8 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
-                    activeOutlineColor="red"
-                    value={txt6 ? '*' : ''}
+                    activeOutlineColor="#f39c1f"
+                    value={txt6}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt6(txt);
