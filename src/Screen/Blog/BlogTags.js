@@ -58,7 +58,7 @@ const BlogTags = () => {
       <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
         {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
         <HeaderWithoutSearch Header={Data.data.title} />
-        <View style={{ height: DeviceHeigth * 90 / 100 }}>
+        <View style={{flex:1}}>
           <FlatList
             showsHorizontalScrollIndicator={false}
             scrollEnabled={true}

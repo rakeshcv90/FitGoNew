@@ -44,7 +44,7 @@ const LatestPost = () => {
         return (
             <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
                 <HeaderWithoutSearch Header={"Latest Post"} />
-                <View style={{ height: DeviceHeigth * 90 / 100 }}>
+                <View style={{ flex:1 }}>
                     <FlatList
                         data={LatestPost}
                         renderItem={elements => (

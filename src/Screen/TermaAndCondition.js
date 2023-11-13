@@ -42,7 +42,7 @@ const TermaAndCondition = () => {
         {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
         </View>
         <HeaderWithoutSearch Header={"Terms & Privacy"} />
-        <View style={{ marginHorizontal: 20, height:DeviceHeigth*90/100}}>
+        <View style={{ flex:1,marginHorizontal:8}}>
           <FlatList data={Terms} showsVerticalScrollIndicator={false} renderItem={elements => {
             return (
               <View>

@@ -58,7 +58,7 @@ const Diets = () => {
           <Icons name="tag" size={15} color={"black"} />
           <Text style={styles.btnText}>Categories</Text>
         </TouchableOpacity>
-        <View style={{ height: DeviceHeigth * 80 / 100, width: DeviceWidth, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{flex:1, width: DeviceWidth, justifyContent: 'center', alignItems: 'center' }}>
           <FlatList data={ApiData} renderItem={({ item }) => (
             <TouchableOpacity onPress={() => {
               navigation.navigate("DietDetail", { data: item })

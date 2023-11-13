@@ -57,7 +57,7 @@ const BlogDetail = () => {
                     </LinearGradient>
                 </ImageBackground>
             </View>
-            <View style={{ height: DeviceHeigth * 55 / 100, marginHorizontal: 20 }}>
+            <View style={{ flex:1, marginHorizontal: 20 }}>
                 <FlatList data={DesData} showsVerticalScrollIndicator={false}
                  renderItem={(elements) => (
                     <HTMLRender source={{ html: elements.item.Description }} contentWidth={DeviceWidth} tagsStyles={{

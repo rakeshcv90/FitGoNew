@@ -117,9 +117,6 @@ const Login = () => {
             icon: {icon: 'auto', position: 'left'},
           });
         } else if (data.data[0].msg == 'Login successful') {
-          await AsyncStorage.setItem('Data', JSON.stringify(data.data));
-          setIsLoaded(true);
-          setisVerifyVisible(false);
           showMessage({
             message: data.data[0].msg,
             statusBarHeight: getStatusBarHeight(),
@@ -128,6 +125,10 @@ const Login = () => {
             animationDuration: 500,
             icon: {icon: 'auto', position: 'left'},
           });
+          await AsyncStorage.setItem('Data', JSON.stringify(data.data));
+          setIsLoaded(true);
+          setisVerifyVisible(false);
+        
           setsubmitText('ENTER');
         } else {
           setIsLoaded(true);

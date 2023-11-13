@@ -61,7 +61,7 @@ const DietCategory = () => {
                 {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
 
                 <HeaderWithoutSearch Header={"Categories"} />
-                <View style={{ height: (DeviceHeigth * 90) / 100 }}>
+                <View style={{flex:1 }}>
                     <FlatList
                         data={Diets}
                         renderItem={elements => (

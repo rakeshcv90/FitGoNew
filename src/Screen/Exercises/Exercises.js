@@ -6,7 +6,8 @@ import {
   StyleSheet,
   ImageBackground,
   FlatList,
-  StatusBar
+  StatusBar,
+  Dimensions
 } from 'react-native';
 import React, { useState, useEffect, useContext } from 'react';
 import Header from '../../Component/Header';
@@ -28,6 +29,9 @@ const Exercises = () => {
   const { defaultTheme } = useSelector((state) => state)
   useEffect(() => {
     getData();
+    console.log(Dimensions.get("screen").height)
+    console.log(Dimensions.get("window").height)
+    console.log(StatusBar.currentHeight)
   }, []);
   const getData = async () => {
     try {
@@ -64,7 +68,9 @@ const Exercises = () => {
         <View
           style={{
             width: (DeviceWidth * 99) / 100,
-            height: (DeviceHeigth * 80) / 100,
+            // height: (DeviceHeigth * 88) / 100,
+            // marginBottom:DeviceHeigth*0.12,
+            flex:1
           }}>
           <FlatList
             data={ApiData}

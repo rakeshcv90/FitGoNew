@@ -229,7 +229,7 @@ const Blog = () => {
                 <>
                     {!isEmpty ?
                         <>
-                            <View style={{ height: DeviceHeigth * 40 / 100 }}>
+                            <View style={{flex:1}}>
                                 <FlatList
                                     data={LatestPost}
                                     renderItem={elements => (

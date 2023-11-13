@@ -87,7 +87,7 @@ const Search = () => {
             }}
           />
         </View>
-        <View style={{ width: (DeviceWidth * 98) / 100 }}>
+        <View style={{ flex:1}}>
           {searchedData.length > 0 ? (
             <>
               <FlatList

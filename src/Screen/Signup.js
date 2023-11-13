@@ -352,30 +352,30 @@ const Signup = ({navigation}) => {
           onRequestClose={() => {
             setVerifyVisible(false);
           }}>
-          <View
-            style={[
-              styles.modalContainer,
-              {backgroundColor: 'transparent', flex: 1},
-            ]}>
-            
-            <View style={styles.modalContent}>
-            <View
-                  style={[
-                    styles.closeButton,
-                  ]}>
-                  <TouchableOpacity
-                    onPress={() => {
-                     setVerifyVisible(false)
-                    }}>
-                    <Icons
-                      name="close"
-                      size={27}
-                      color={defaultTheme ? '#fff' : '#000'}
-                    />
-                  </TouchableOpacity>
-                </View>
+          <View style={[styles.modalContainer]}>
+            <View style={[styles.modalContent,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
+              <View
+                style={[
+                  styles.closeButton,
+                  ,
+                  {
+                    width: (DeviceWidth * 85) / 100,
+                    marginTop: 8,
+                    backgroundColor: defaultTheme ? '#000' : 'fff',
+                  },
+                ]}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setVerifyVisible(false);
+                  }}>
+                  <Icons
+                    name="close"
+                    size={27}
+                    color={defaultTheme ? '#fff' : '#000'}
+                  />
+                </TouchableOpacity>
+              </View>
               <>
-                
                 <Text
                   style={{
                     color: defaultTheme ? '#fff' : '#000',
@@ -848,7 +848,6 @@ const styles = StyleSheet.create({
   modalContent: {
     height: DeviceHeigth / 4,
     width: '100%',
-    backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     alignItems: 'center',
@@ -879,6 +878,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
 });
 export default Signup;

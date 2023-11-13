@@ -174,7 +174,7 @@ const Store = () => {
                         <Icon name="chevron-right" size={25} color={defaultTheme == true ? "#fff" : "#000"} />
                     </TouchableOpacity>
                 </View>
-                <View style={{ height: DeviceHeigth * 35 / 100 }}>
+                <View style={{ flex:1}}>
                     <FlatList
                         data={getLatestprdct}
                         renderItem={elements => (

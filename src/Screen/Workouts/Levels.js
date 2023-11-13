@@ -55,8 +55,10 @@ const Levels = () => {
         />
         <View
           style={{
-            width: DeviceWidth,
-            height: (DeviceHeigth * 90) / 100,
+            // width: DeviceWidth,
+            // height: (DeviceHeigth * 88) / 100,
+            // marginBottom:DeviceHeigth*0.12,
+            flex:1
           }}>
           <FlatList
             data={ApiData}

@@ -55,7 +55,7 @@ const SingleLevel = () => {
           onPress={() => navigation.navigate("searchScreen")}
 
         />
-        <View style={{ width: DeviceWidth, height: (DeviceHeigth * 90) / 100 }}>
+        <View style={{flex:1}}>
           <FlatList
             data={RenderData}
             renderItem={elements => (

@@ -55,7 +55,7 @@ const ExerciseByEquipments = () => {
       <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
         {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
         <HeaderWithoutSearch Header={title} />
-        <View>
+        <View style={{flex:1}}>
           {getExerciseByEquipment.length > 0 ? (<>
             <FlatList
               data={getExerciseByEquipment}

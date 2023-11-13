@@ -59,7 +59,7 @@ const ExerciseByBodyPart = () => {
                 ]}>
                 <HeaderWithoutSearch Header={Data.title} />
                 {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
-                <View style={{ height: (DeviceHeigth * 90) / 100 }}>
+                <View style={{flex:1}}>
                     <FlatList
                         data={Abs}
                         renderItem={elements => (
@@ -109,7 +109,7 @@ const ExerciseByBodyPart = () => {
                 ]}>
                 {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title} />
-                <View style={{ height: (DeviceHeigth * 90) / 100 }}>
+                <View style={{ flex:1}}>
                     <FlatList
                         data={Shoulders}
                         renderItem={elements => (
@@ -160,7 +160,7 @@ const ExerciseByBodyPart = () => {
                 ]}>
                 {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title}></HeaderWithoutSearch>
-                <View style={{ height: (DeviceHeigth * 90) / 100 }}>
+                <View style={{flex:1}}>
                     <FlatList
                         data={Triceps}
                         renderItem={elements => (
@@ -211,7 +211,7 @@ const ExerciseByBodyPart = () => {
                 ]}>
                 {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title}></HeaderWithoutSearch>
-                <View style={{ height: (DeviceHeigth * 90) / 100 }}>
+                <View style={{ flex:1 }}>
                     <FlatList
                         data={Qauds}
                         renderItem={elements => (
@@ -262,7 +262,7 @@ const ExerciseByBodyPart = () => {
                 ]}>
                 {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title} />
-                <View style={{ height: (DeviceHeigth * 90) / 100 }}>
+                <View style={{flex:1 }}>
                     <FlatList
                         data={Biceps}
                         renderItem={elements => (
@@ -315,7 +315,7 @@ const ExerciseByBodyPart = () => {
                 ]}>
                 {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title} />
-                <View style={{ height: (DeviceHeigth * 90) / 100 }}>
+                <View style={{ flex:1}}>
                     <FlatList
                         data={Back}
                         renderItem={elements => (
@@ -361,11 +361,11 @@ const ExerciseByBodyPart = () => {
             <View
                 style={[
                     styles.container,
-                    { backgroundColor: defaultTheme ? '#000' : '#fff' },
+                    { backgroundColor: defaultTheme ? '#000' : '#fff', },
                 ]}>
                 {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title} />
-                <View style={{ height: (DeviceHeigth * 90) / 100 }}>
+                <View style={{flex:1}}>
                     <FlatList
                         data={Legs}
                         renderItem={elements => (
@@ -416,7 +416,7 @@ const ExerciseByBodyPart = () => {
                 ]}>
                 {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title} />
-                <View style={{ height: (DeviceHeigth * 90) / 100 }}>
+                <View style={{ flex:1 }}>
                     <FlatList
                         data={Chest}
                         renderItem={elements => (

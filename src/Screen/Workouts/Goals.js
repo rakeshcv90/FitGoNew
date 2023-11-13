@@ -57,8 +57,7 @@ const Goals = ({ navigation }) => {
         />
         <View
           style={{
-            width: DeviceWidth,
-            height: (DeviceHeigth * 90) / 100,
+            flex:1
           }}>
           <FlatList
             data={ApiData}

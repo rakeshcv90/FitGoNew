@@ -1,6 +1,6 @@
 import { Dimensions } from "react-native";
- export const DeviceHeigth=Dimensions.get('window').height
- export const DeviceWidth=Dimensions.get('window').width
+ export const DeviceHeigth=Dimensions.get('screen').height
+ export const DeviceWidth=Dimensions.get('screen').width
  export const Api ='https://cvinfotech2@gofit.tentoptoday.com/json/'
  export const Appapi={
   login:'user_login.php',
