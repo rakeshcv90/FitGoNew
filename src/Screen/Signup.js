@@ -17,7 +17,6 @@ import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useRoute} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 const Signup = ({navigation}) => {
@@ -131,7 +130,7 @@ const Signup = ({navigation}) => {
         },
       });
       setSubmitText('Enter');
- 
+
       setSubmitText('Enter');
       setVerifyVisible(true);
       if (data.data[0].msg === 'Otp sent to your email') {
@@ -142,9 +141,8 @@ const Signup = ({navigation}) => {
           type: 'success',
           icon: {icon: 'auto', position: 'left'},
         });
-      
-          setVerifyVisible(true);
-  
+
+        setVerifyVisible(true);
       } else if (data.data[0].status == 0) {
         try {
           let payload = new FormData();
@@ -159,7 +157,7 @@ const Signup = ({navigation}) => {
 
           if (data.data[0].msg == 'otp sent') {
             // t1.current.focus();
-            setSubmitText('Enter');   
+            setSubmitText('Enter');
           } else {
             setSubmitText('Enter');
             showMessage({
@@ -217,7 +215,7 @@ const Signup = ({navigation}) => {
     const [VerifyText, SetVerifyText] = useState('Verify');
     const [timeLeft, setTimeleft] = useState(60);
     const [resendtxt, setResendTxt] = useState('Resend OTP');
-    const OtpString=txt1 + txt2 + txt3 + txt4 + txt5 + txt6;
+    const OtpString = txt1 + txt2 + txt3 + txt4 + txt5 + txt6;
     const ResendOTP = async () => {
       try {
         let payload = new FormData();
@@ -241,7 +239,7 @@ const Signup = ({navigation}) => {
           showMessage({
             message: 'OTP has been sent to your email',
             type: 'success',
-            duration:500,
+            duration: 500,
             statusBarHeight: StatusBar_Bar_Height,
             floating: true,
             icon: {icon: 'auto', position: 'left'},
@@ -285,14 +283,13 @@ const Signup = ({navigation}) => {
             },
             data: payload,
           });
-          console.log(Email,OtpString,OtpMsg.data[0])
+          console.log(Email, OtpString, OtpMsg.data[0]);
           if (OtpMsg.data[0].msg == 'Email verified successfully') {
-        
             showMessage({
               message: 'Email verified successfully , Please Login',
               statusBarHeight: StatusBar_Bar_Height,
               floating: true,
-              duration:500,
+              duration: 500,
               type: 'success',
               icon: {icon: 'auto', position: 'left'},
             });
@@ -315,6 +312,7 @@ const Signup = ({navigation}) => {
               type: 'danger',
               icon: {icon: 'auto', position: 'left'},
             });
+            t1.current.foucus();
             setResendTxt('Resend OTP');
             setTimeleft(60);
             setTxt1('');
@@ -350,7 +348,7 @@ const Signup = ({navigation}) => {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={true}
+          visible={IsVerifyVisible}
           onRequestClose={() => {
             setVerifyVisible(false);
           }}>
@@ -359,8 +357,25 @@ const Signup = ({navigation}) => {
               styles.modalContainer,
               {backgroundColor: 'transparent', flex: 1},
             ]}>
+            
             <View style={styles.modalContent}>
+            <View
+                  style={[
+                    styles.closeButton,
+                  ]}>
+                  <TouchableOpacity
+                    onPress={() => {
+                     setVerifyVisible(false)
+                    }}>
+                    <Icons
+                      name="close"
+                      size={27}
+                      color={defaultTheme ? '#fff' : '#000'}
+                    />
+                  </TouchableOpacity>
+                </View>
               <>
+                
                 <Text
                   style={{
                     color: defaultTheme ? '#fff' : '#000',
@@ -695,7 +710,6 @@ const Signup = ({navigation}) => {
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate('TermaAndCondition');
-                    
                   }}>
                   <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
                     I Agree to Terms & Conditions
@@ -762,8 +776,8 @@ const Signup = ({navigation}) => {
               </View>
             </TouchableOpacity>
           </View>
-        
-         {IsVerifyVisible? <ModalView />:null}
+
+          {IsVerifyVisible ? <ModalView /> : null}
         </KeyboardAvoidingView>
       </View>
     </>
@@ -862,6 +876,9 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  closeButton: {
+    flexDirection: 'row',
   },
 });
 export default Signup;

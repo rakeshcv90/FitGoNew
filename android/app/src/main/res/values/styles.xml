@@ -4,7 +4,7 @@
         <!-- Customize your theme here. -->
         <item name="android:editTextBackground">@android:color/transparent</item>
     </style>
-    <style name="BootTheme" parent="Theme.BootSplash">
+   <style name="BootTheme" parent="Theme.BootSplash.EdgeToEdge">
     <item name="android:windowBackground">@drawable/bootsplash</item>
     <item name="android:statusBarColor" tools:targetApi="m">@color/bootsplash_background</item>
     <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>v
