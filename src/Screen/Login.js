@@ -24,11 +24,11 @@ import LoginLoader from '../Component/LoginLoader';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 // import { GoogleSignin,statusCodes ,GoogleSigninButton} from 'react-native-google-signin';
 const Login = () => {
-//  useEffect(()=>{
-//   GoogleSignin.configure({
-//     webClientId:"512109926378-h2m6a1a229bh9bfsv6h6ss78e9hm2lcq.apps.googleusercontent.com"
-//   })
-//  },[])
+  //  useEffect(()=>{
+  //   GoogleSignin.configure({
+  //     webClientId:"512109926378-h2m6a1a229bh9bfsv6h6ss78e9hm2lcq.apps.googleusercontent.com"
+  //   })
+  //  },[])
   const navigation = useNavigation();
   const [Email, setEmail] = useState('');
   const [Password, setPassword] = useState('');
@@ -117,9 +117,6 @@ const Login = () => {
             icon: {icon: 'auto', position: 'left'},
           });
         } else if (data.data[0].msg == 'Login successful') {
-          await AsyncStorage.setItem('Data', JSON.stringify(data.data));
-          setIsLoaded(true);
-          setisVerifyVisible(false);
           showMessage({
             message: data.data[0].msg,
             statusBarHeight: getStatusBarHeight(),
@@ -128,6 +125,9 @@ const Login = () => {
             animationDuration: 500,
             icon: {icon: 'auto', position: 'left'},
           });
+          await AsyncStorage.setItem('Data', JSON.stringify(data.data));
+          setIsLoaded(true);
+          setisVerifyVisible(false);
           setsubmitText('ENTER');
         } else {
           setIsLoaded(true);
@@ -156,7 +156,6 @@ const Login = () => {
       <StatusBar
         barStyle={defaultTheme ? 'light-content' : 'dark-content'}
         backgroundColor={defaultTheme ? '#000' : '#fff'}
-        s
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
@@ -168,7 +167,11 @@ const Login = () => {
             alignItems: 'center',
             flex: 1,
           }}>
-          <Image style={styles.logo} source={localImage.logo} />
+          <Image
+            resizeMode="cover"
+            style={styles.logo}
+            source={localImage.logo}
+          />
           <TextInput
             label={'Email'}
             keyboardType="email-address"
@@ -287,15 +290,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
-    width: DeviceWidth,
-    height: DeviceHeigth,
   },
   logo: {
-    width: (DeviceWidth * 50) / 100,
-    height: (DeviceHeigth * 30) / 100,
-    marginBottom: (DeviceHeigth * 5) / 100,
-    resizeMode: 'contain',
-    marginTop: (DeviceHeigth * 8) / 100,
+    width: DeviceWidth * 0.6,
+    height: DeviceWidth * 0.7,
+    alignSelf: 'center',
   },
   Forget: {
     width: (DeviceWidth * 50) / 100,

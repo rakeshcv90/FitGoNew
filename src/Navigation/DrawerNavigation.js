@@ -15,7 +15,7 @@ const {defaultTheme}=useSelector(state=>state)
       screenOptions={{
         drawerStyle: {
           backgroundColor:defaultTheme?"#000":"#fff",
-        //   width: (DeviceWidth * 65) / 100,
+          width: (DeviceWidth * 60) / 100,
         },
         headerStyle: {
           backgroundColor: '#f39c1f',

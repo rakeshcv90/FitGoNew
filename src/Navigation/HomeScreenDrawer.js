@@ -1,14 +1,24 @@
-import {View, Text, StyleSheet, ImageBackground,Image,SafeAreaView, FlatList, TouchableOpacity,StatusBar} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  Image,
+  SafeAreaView,
+  FlatList,
+  TouchableOpacity,
+  StatusBar,
+} from 'react-native';
 import React, {useState} from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import {localImage} from '../Component/Image';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
-import { useSelector, } from 'react-redux';
+import {useSelector} from 'react-redux';
 import CustomStatusBar from '../Component/CustomStatusBar';
 const HomeScreenDrawer = () => {
   const navigation = useNavigation();
-  const {defaultTheme}=useSelector(state=>state)
+  const {defaultTheme} = useSelector(state => state);
   const [data, setData] = useState([
     {
       id: 1,
@@ -20,7 +30,7 @@ const HomeScreenDrawer = () => {
         <Icons
           name="chevron-right"
           size={25}
-          color={defaultTheme?"#fff":"#000"}
+          color={defaultTheme ? '#fff' : '#000'}
         />
       ),
     },
@@ -32,7 +42,7 @@ const HomeScreenDrawer = () => {
         <Icons
           name="chevron-right"
           size={25}
-          color={defaultTheme?"#fff":"#000"}
+          color={defaultTheme ? '#fff' : '#000'}
         />
       ),
     },
@@ -44,7 +54,7 @@ const HomeScreenDrawer = () => {
         <Icons
           name="chevron-right"
           size={25}
-          color={defaultTheme?"#fff":"#000"}
+          color={defaultTheme ? '#fff' : '#000'}
         />
       ),
     },
@@ -56,7 +66,7 @@ const HomeScreenDrawer = () => {
         <Icons
           name="chevron-right"
           size={25}
-          color={defaultTheme?"#fff":"#000"}
+          color={defaultTheme ? '#fff' : '#000'}
         />
       ),
     },
@@ -72,7 +82,7 @@ const HomeScreenDrawer = () => {
         <Icons
           name="chevron-right"
           size={25}
-          color={defaultTheme?"#fff":"#000"}
+          color={defaultTheme ? '#fff' : '#000'}
         />
       ),
     },
@@ -92,9 +102,15 @@ const HomeScreenDrawer = () => {
   };
   return (
     <>
-        
-      <SafeAreaView style={{flex: 1, backgroundColor: defaultTheme==true?"#000":"#fff"}}>
-      <StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor: defaultTheme == true ? '#000' : '#fff',
+        }}>
+        <StatusBar
+          barStyle={defaultTheme ? 'light-content' : 'dark-content'}
+          backgroundColor={'#f39c1f'}
+        />
         <ImageBackground source={localImage.homeImg} style={styles.homeImg}>
           <View
             style={{
@@ -111,7 +127,7 @@ const HomeScreenDrawer = () => {
           style={{
             justifyContent: 'center',
             height: DeviceHeigth,
-            backgroundColor: defaultTheme?'#000000':'#ffffff',
+            backgroundColor: defaultTheme ? '#000000' : '#ffffff',
           }}>
           <FlatList
             data={data}
@@ -136,7 +152,11 @@ const HomeScreenDrawer = () => {
                     justifyContent: 'space-between',
                     width: (DeviceWidth * 70) / 100,
                   }}>
-                  <Text style={{color:defaultTheme?"#fff":"#000", fontSize: 15}}>
+                  <Text
+                    style={{
+                      color: defaultTheme ? '#fff' : '#000',
+                      fontSize: 15,
+                    }}>
                     {elements.item.title}
                   </Text>
                   {elements.item.icon1}
