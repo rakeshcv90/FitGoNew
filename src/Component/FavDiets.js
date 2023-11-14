@@ -21,6 +21,7 @@ import {Api, Appapi} from '../Component/Config';
 import axios from 'axios';
 import Loader from '../Component/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { localImage } from './Image';
 const FavDiets = () => {
  
   const [Favdiet, setFavDiets] = useState([]);
@@ -87,7 +88,7 @@ const FavDiets = () => {
                 </Text>
                  <View>
                   <TouchableOpacity onPress={()=>{navigation.navigate("Diets")}}>
-                   <Image source={require("../Icon/Images/icons/shadow-add.png")} style={styles.add}/>
+                   <Image source={localImage.addIcon} style={styles.add}/>
                   </TouchableOpacity>
                  </View>
               </View>
@@ -96,7 +97,7 @@ const FavDiets = () => {
             <>
               <View
                 style={{
-                  height: (DeviceHeigth * 90) / 100,
+                 flex:1,
                   backgroundColor: defaultTheme ? '#000' : '#fff',
                 }}>
                 <FlatList
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
     width:DeviceWidth*15/100,
     height:DeviceHeigth*5/100,
     resizeMode:'contain',
-    tintColor:'#f39c1f'
+    tintColor:'#941000'
   }
 });
 export default FavDiets;

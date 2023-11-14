@@ -22,6 +22,7 @@ import axios from 'axios';
 import Loader from '../Component/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {showMessage} from 'react-native-flash-message';
+import { localImage } from './Image';
 const FavWorkouts = () => {
   const [FavWorkout, setFavWorkout] = useState([]);
   const {defaultTheme} = useSelector(state => state);
@@ -80,7 +81,7 @@ const FavWorkouts = () => {
             <>
               <View
                 style={{
-                  height: (DeviceHeigth * 90) / 100,
+                  flex:1,
                   backgroundColor: defaultTheme ? '#000' : '#fff',
                 }}>
                 <FlatList
@@ -153,7 +154,7 @@ const FavWorkouts = () => {
                     navigation.navigate('Workouts');
                   }}>
                   <Image
-                    source={require('../Icon/Images/icons/shadow-add.png')}
+                    source={localImage.addIcon}
                     style={styles.add}
                   />
                 </TouchableOpacity>
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
     width:DeviceWidth*15/100,
     height:DeviceHeigth*5/100,
     resizeMode:'contain',
-    tintColor:'#f39c1f'
+    tintColor:'#941000'
   }
 });
 export default FavWorkouts;

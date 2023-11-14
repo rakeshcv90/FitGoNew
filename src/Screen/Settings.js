@@ -20,7 +20,7 @@ const Settings = () => {
     }
     return (
         <View style={[styels.container, { backgroundColor: defaultTheme == true ? "#000" : "#fff" }]}>
-            {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
+            {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
             <HeaderWithoutSearch Header={"Settings"} />
             <View style={{ borderBottomWidth: 1, marginVertical: 15, borderBottomColor: '#adadad', padding: 5, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
                 <Text style={{ fontSize: 18, color: defaultTheme == true ? "#fff" : "#000", marginHorizontal: 20 }}>Theme</Text>
@@ -28,7 +28,7 @@ const Settings = () => {
             <View style={styels.container1}>
                 <Text style={{ color: defaultTheme == true ? "#fff" : "#000", marginHorizontal: 20 }}>Dark Mode</Text>
                 <Switch trackColor={{ false: 'lightgrey', true: "orange" }}
-                    thumbColor={isEnabled ? "#f39c1f" : 'grey'}
+                    thumbColor={isEnabled ? "#941000" : 'grey'}
                     onValueChange={() => {
                         toggleSwitch();
                         changeTHEME();

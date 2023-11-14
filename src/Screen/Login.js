@@ -101,7 +101,7 @@ const Login = () => {
           },
         });
 
-        if (data.data[0].status === 0) {
+        if (data.data[0].status == 0) {
           setEmail('');
           setPassword('');
           // console.log('data', data.data[0]);
@@ -111,7 +111,7 @@ const Login = () => {
           showMessage({
             message: 'Your email is not verified , Please verify your email ',
             type: 'warning',
-            animationDuration: '500',
+            animationDuration: '750',
             statusBarHeight: getStatusBarHeight(),
             floating: true,
             icon: {icon: 'auto', position: 'left'},
@@ -127,7 +127,9 @@ const Login = () => {
           });
           await AsyncStorage.setItem('Data', JSON.stringify(data.data));
           setIsLoaded(true);
-          setisVerifyVisible(false);
+
+          navigation.navigate('DrawerNavigation')
+
           setsubmitText('ENTER');
         } else {
           setIsLoaded(true);
@@ -181,7 +183,7 @@ const Login = () => {
             mode="flat"
             autoCapitalize="none"
             style={styles.AuthInput}
-            activeUnderlineColor="#f39c1f"
+            activeUnderlineColor="#941000"
             underlineColor={
               defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'
             }
@@ -201,7 +203,7 @@ const Login = () => {
             mode="flat"
             secureTextEntry={!isVisible}
             style={styles.AuthInput}
-            activeUnderlineColor="#f39c1f"
+            activeUnderlineColor="#941000"
             underlineColor={
               defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'
             }
@@ -309,7 +311,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f39c1f',
+    backgroundColor: '#941000',
     marginBottom: (DeviceHeigth * 2) / 100,
   },
   AuthInput: {

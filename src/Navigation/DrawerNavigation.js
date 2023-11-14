@@ -18,7 +18,7 @@ const {defaultTheme}=useSelector(state=>state)
           width: (DeviceWidth * 60) / 100,
         },
         headerStyle: {
-          backgroundColor: '#f39c1f',
+          backgroundColor: '#941000',
           //height: (DeviceHeigth * 7) / 100,
         },
         headerTintColor: '#fff',

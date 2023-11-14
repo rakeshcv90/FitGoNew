@@ -50,7 +50,7 @@ const Diets = () => {
   if (isLoaded) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
         <HeaderWithoutSearch Header={"Diets"} />
         <TouchableOpacity style={styles.button} onPress={() => {
           navigation.navigate('DietCategory')
@@ -58,14 +58,14 @@ const Diets = () => {
           <Icons name="tag" size={15} color={"black"} />
           <Text style={styles.btnText}>Categories</Text>
         </TouchableOpacity>
-        <View style={{ height: DeviceHeigth * 80 / 100, width: DeviceWidth, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{flex:1, width: DeviceWidth, justifyContent: 'center', alignItems: 'center' }}>
           <FlatList data={ApiData} renderItem={({ item }) => (
             <TouchableOpacity onPress={() => {
               navigation.navigate("DietDetail", { data: item })
             }}>
               <ImageBackground source={{ uri: item.image }} style={styles.imageBackground}>
                 <View style={styles.text}>
-                  <Text style={{ color: "#f39c1f", marginLeft: 10, fontWeight: 'bold', fontSize: 16 }}>{item.category}</Text>
+                  <Text style={{ color: "#941000", marginLeft: 10, fontWeight: 'bold', fontSize: 16 }}>{item.category}</Text>
                   <Text style={{ color: '#fff', marginTop: 5, marginLeft: 10, fontWeight: 'bold', fontSize: 16 }}>{item.title}</Text>
                   <Text style={{ color: '#fff', margin: 10, fontWeight: 'bold', fontSize: 13 }}>{item.calories} Kcal | Servings: {item.servings}</Text>
                 </View>
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: "#f39c1f",
+    backgroundColor: "#941000",
     borderRadius: 8
   },
   catIcon: {

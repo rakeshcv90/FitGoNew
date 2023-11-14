@@ -88,7 +88,7 @@ const Store = () => {
     if (isLoaded && !Isempty) {
         return (
             <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={"Store"} />
                 <Text
                     style={{ margin: 15, fontSize: 20, color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>
@@ -174,7 +174,7 @@ const Store = () => {
                         <Icon name="chevron-right" size={25} color={defaultTheme == true ? "#fff" : "#000"} />
                     </TouchableOpacity>
                 </View>
-                <View style={{ height: DeviceHeigth * 35 / 100 }}>
+                <View style={{ flex:1}}>
                     <FlatList
                         data={getLatestprdct}
                         renderItem={elements => (
@@ -202,7 +202,7 @@ const Store = () => {
                                         }}>
                                         <View>
                                             <Text style={{ color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>{elements.item.title}</Text>
-                                            {/* <Text style={{ color: '#f39c1f', fontWeight: '500' }}>
+                                            {/* <Text style={{ color: '#941000', fontWeight: '500' }}>
                                                 {elements.item.price}
                                             </Text> */}
                                         </View>
@@ -219,7 +219,7 @@ const Store = () => {
     else if(isLoaded && Isempty){
 return(
     <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff", justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ color: '#f39c1f', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View>
+      <Text style={{ color: '#941000', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View>
 )
     }
     else {

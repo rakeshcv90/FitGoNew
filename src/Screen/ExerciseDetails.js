@@ -107,7 +107,7 @@ const ExerciseDetails = () => {
                       }}
                     >
                       <View style={{ borderRadius: 100, overflow: 'hidden' }}>
-                        <Icons name="play-circle" size={45} color={"#f39c1f"} style={{ backgroundColor: 'rgba(255,255,255,1)', overflow: 'hidden' }} />
+                        <Icons name="play-circle" size={45} color={"#941000"} style={{ backgroundColor: 'rgba(255,255,255,1)', overflow: 'hidden' }} />
                       </View>
                     </TouchableOpacity>
                   </ImageBackground>
@@ -117,17 +117,17 @@ const ExerciseDetails = () => {
                 </View>
                 <View style={{ margin: 20, flexDirection: 'row', justifyContent: 'space-between' }}>
                   <View style={styles.GridStyle}>
-                    <Icons name="backup-restore" color={"#f39c1f"} size={33} />
+                    <Icons name="backup-restore" color={"#941000"} size={33} />
                     <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>Reps</Text>
                     <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>{Data.reps}</Text>
                   </View>
                   <View style={styles.GridStyle}>
-                    <Icons name="checkbox-marked-circle-outline" color={"#f39c1f"} size={33} />
+                    <Icons name="checkbox-marked-circle-outline" color={"#941000"} size={33} />
                     <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>Sets</Text>
                     <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>{elements.item.sets}</Text>
                   </View>
                   <View style={styles.GridStyle}>
-                    <Icons name="timer-outline" color={"#f39c1f"} size={33} />
+                    <Icons name="timer-outline" color={"#941000"} size={33} />
                     <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>Rest</Text>
                     <Text style={{ color: defaultTheme ? "#fff" : "#000" }}>{elements.item.rest}</Text>
                   </View>

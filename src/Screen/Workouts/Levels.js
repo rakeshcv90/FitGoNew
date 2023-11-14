@@ -48,15 +48,17 @@ const Levels = () => {
   if (isLoaded && !isEmpty) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
         <Header
           header={'Levels'}
           iconName={'magnify'}
         />
         <View
           style={{
-            width: DeviceWidth,
-            height: (DeviceHeigth * 90) / 100,
+            // width: DeviceWidth,
+            // height: (DeviceHeigth * 88) / 100,
+            // marginBottom:DeviceHeigth*0.12,
+            flex:1
           }}>
           <FlatList
             data={ApiData}
@@ -134,7 +136,7 @@ const styles = StyleSheet.create({
   orangeLine: {
     width: 55,
     height: 3,
-    backgroundColor: '#f39c1f',
+    backgroundColor: '#941000',
   },
 });
 export default Levels

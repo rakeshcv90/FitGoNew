@@ -44,7 +44,7 @@ const LatestPost = () => {
         return (
             <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
                 <HeaderWithoutSearch Header={"Latest Post"} />
-                <View style={{ height: DeviceHeigth * 90 / 100 }}>
+                <View style={{ flex:1 }}>
                     <FlatList
                         data={LatestPost}
                         renderItem={elements => (
@@ -74,7 +74,7 @@ const LatestPost = () => {
                                         }}>
                                         <View>
                                             <Text style={{ color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>{elements.item.title}</Text>
-                                            <Text style={{ color: '#f39c1f', fontWeight: '500' }}>
+                                            <Text style={{ color: '#941000', fontWeight: '500' }}>
                                                 {/* {elements.item.price} */}
                                             </Text>
                                         </View>

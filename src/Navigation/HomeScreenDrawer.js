@@ -102,6 +102,7 @@ const HomeScreenDrawer = () => {
   };
   return (
     <>
+
       <SafeAreaView
         style={{
           flex: 1,
@@ -111,6 +112,7 @@ const HomeScreenDrawer = () => {
           barStyle={defaultTheme ? 'light-content' : 'dark-content'}
           backgroundColor={'#f39c1f'}
         />
+
         <ImageBackground source={localImage.homeImg} style={styles.homeImg}>
           <View
             style={{

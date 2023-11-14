@@ -13,7 +13,7 @@ const Completed = () => {
   console.log(Data)
   return (
     <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
-        {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
+        {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#941000'}/></>:<><CustomStatusBar/></>}
       <View style={[styles.closeButton, { margin: 35 }]}>
         <TouchableOpacity onPress={() => {
           navigation.goBack()

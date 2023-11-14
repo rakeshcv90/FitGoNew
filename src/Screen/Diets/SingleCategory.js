@@ -55,7 +55,7 @@ const SingleCategory = () => {
     if (isLoaded && DietCat != null) {
         return (
             <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
-                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title} />
                 <View
                     style={{
@@ -77,7 +77,7 @@ const SingleCategory = () => {
                                     <View style={styles.text}>
                                         <Text
                                             style={{
-                                                color: '#f39c1f',
+                                                color: '#941000',
                                                 marginLeft: 10,
                                                 fontWeight: 'bold',
                                                 fontSize: 16,
@@ -115,7 +115,7 @@ const SingleCategory = () => {
     else if (isLoaded && isEmpty) {
         return (
             <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff",justifyContent:'center',alignItems:'center' }}>
-            <Text style={{color:'#f39c1f',fontSize:20,fontWeight:'bold'}}>No Data Available</Text></View>
+            <Text style={{color:'#941000',fontSize:20,fontWeight:'bold'}}>No Data Available</Text></View>
         )
     }
     else{

@@ -45,7 +45,7 @@ const SingleLevel = () => {
   if (Data.level == 'Beginner' && isLoaded == true) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
         <Header
           ScreenName={'Levels'}
           iconName={'magnify'}
@@ -55,7 +55,7 @@ const SingleLevel = () => {
           onPress={() => navigation.navigate("searchScreen")}
 
         />
-        <View style={{ width: DeviceWidth, height: (DeviceHeigth * 90) / 100 }}>
+        <View style={{flex:1}}>
           <FlatList
             data={RenderData}
             renderItem={elements => (
@@ -98,7 +98,7 @@ const SingleLevel = () => {
   } else if (Data.level == 'Intermediate' && isLoaded == true) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
         <Header
           ScreenName={'Levels'}
           iconName={'magnify'}
@@ -152,7 +152,7 @@ const SingleLevel = () => {
   } else if (Data.level == 'Advanced' && isLoaded == true) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
         <Header
           ScreenName={'Levels'}
           iconName={'magnify'}
@@ -206,7 +206,7 @@ const SingleLevel = () => {
   } else if (Data.level == 'Elite' && isLoaded == true) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
         <Header ScreenName={'Levels'} iconName={'magnify'} header={'Elite'}
           searchShow={true}
           style={'space-between'}

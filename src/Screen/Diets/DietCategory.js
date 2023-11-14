@@ -58,10 +58,10 @@ const DietCategory = () => {
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
-                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
 
                 <HeaderWithoutSearch Header={"Categories"} />
-                <View style={{ height: (DeviceHeigth * 90) / 100 }}>
+                <View style={{flex:1 }}>
                     <FlatList
                         data={Diets}
                         renderItem={elements => (
@@ -88,9 +88,9 @@ const DietCategory = () => {
                                                     ]}>
                                                     {elements.item.title}
                                                 </Text>
-                                                <Text style={{ color: '#f39c1f' }}>{elements.item.total} Recipies</Text>
+                                                <Text style={{ color: '#941000' }}>{elements.item.total} Recipies</Text>
                                             </View>
-                                            <Icons name="chevron-right" size={20} color={'#f39c1f'} />
+                                            <Icons name="chevron-right" size={20} color={'#941000'} />
                                         </View>
                                     </View>
                                 </View>
@@ -104,7 +104,7 @@ const DietCategory = () => {
     else if (isLoaded && isEmpty) {
         return (
             <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff", justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ color: '#f39c1f', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View>
+                <Text style={{ color: '#941000', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View>
         )
     }
     else {

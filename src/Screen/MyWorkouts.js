@@ -8,7 +8,7 @@ const MyWorkouts = () => {
   const {defaultTheme}=useSelector(state=>state)
   return (
     <View style={{ flex: 1 }}>
-      {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
+      {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
       <HeaderWithoutSearch Header={"My Workouts"} />
       <FavWorkouts />
     </View>

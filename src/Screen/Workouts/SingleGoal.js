@@ -48,10 +48,10 @@ const SingleGoal = () => {
 
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
-        {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
+        {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#941000'}/></>:<><CustomStatusBar/></>}
         <Header header={Data.title}
           iconName={"magnify"} />
-        <View style={{ width: (DeviceWidth * 98) / 100 }}>
+        <View style={{ flex:1}}>
           <FlatList
             data={SingleGoalData}
             renderItem={elements => (

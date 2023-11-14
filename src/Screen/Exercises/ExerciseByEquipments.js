@@ -53,9 +53,9 @@ const ExerciseByEquipments = () => {
   if (isLoaded && !isEmpty) {
     return (
       <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
-        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
         <HeaderWithoutSearch Header={title} />
-        <View>
+        <View style={{flex:1}}>
           {getExerciseByEquipment.length > 0 ? (<>
             <FlatList
               data={getExerciseByEquipment}
@@ -84,7 +84,7 @@ const ExerciseByEquipments = () => {
                           ]}>
                           {elements.item.title}
                         </Text>
-                        <Icons name="chevron-right" size={20} color={'#f39c1f'} />
+                        <Icons name="chevron-right" size={20} color={'#941000'} />
                       </View>
                     </View>
                   </View>
