@@ -27,7 +27,7 @@ const StoreDetail = () => {
     <View style={{ flex: 1, backgroundColor: defaultTheme ? '#000' : 'fff' }}>
       <View>
         <ImageBackground source={{ uri: Data.data.image }} style={[styles.HomeImg]}>
-        {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#941000'}/></>:<><CustomStatusBar/></>}
+        {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#C8170D'}/></>:<><CustomStatusBar/></>}
           <LinearGradient
             colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0.6)']}
             style={styles.LinearG}>
@@ -40,11 +40,11 @@ const StoreDetail = () => {
               </TouchableOpacity>
             </View>
             <View style={styles.textView}>
-              <Text style={{ color: "#941000" }}>{Data.data.type}</Text>
+              <Text style={{ color: "#C8170D" }}>{Data.data.type}</Text>
               <Text style={{ color: 'white', paddingVertical: 8, fontSize: 16 }}>
                 {Data.data.title}
               </Text>
-              <Text style={{ color: '#941000' }}>{Data.data.price}</Text>
+              <Text style={{ color: '#C8170D' }}>{Data.data.price}</Text>
             </View>
           </LinearGradient>
         </ImageBackground>
@@ -55,7 +55,7 @@ const StoreDetail = () => {
             color: defaultTheme ? "#fff" : "#000"
           },
           strong: {
-            color: '#941000',
+            color: '#C8170D',
             fontSize: 20,
           }
           , li: {
@@ -70,7 +70,7 @@ const StoreDetail = () => {
         }} />
       </View>
       <View>
-        <TouchableOpacity style={{ backgroundColor: '#941000', width: DeviceWidth * 90 / 100, height: DeviceHeigth * 5 / 100, margin: 20, justifyContent: 'center', alignItems: 'center', borderRadius: 20, flexDirection: 'row' }}
+        <TouchableOpacity style={{ backgroundColor: '#C8170D', width: DeviceWidth * 90 / 100, height: DeviceHeigth * 5 / 100, margin: 20, justifyContent: 'center', alignItems: 'center', borderRadius: 20, flexDirection: 'row' }}
         onPress={()=>{
           Linking.openURL(Data.data.link)
         }}>
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   levelGoalView: {
     width: DeviceWidth,
     height: (DeviceHeigth * 8) / 100,
-    backgroundColor: '#941000',
+    backgroundColor: '#C8170D',
     justifyContent: 'space-around',
     flexDirection: 'row',
     alignItems: 'center',

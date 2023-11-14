@@ -43,7 +43,7 @@ const LatestProducts = () => {
     if (isLoaded) {
         return (
             <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
-                {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#941000'}/></>:<><CustomStatusBar/></>}
+                {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#C8170D'}/></>:<><CustomStatusBar/></>}
                 <HeaderWithoutSearch Header={"Latest Products"} />
                 <View style={{ height: DeviceHeigth * 90 / 100 }}>
                     <FlatList
@@ -75,7 +75,7 @@ const LatestProducts = () => {
                                         }}>
                                         <View>
                                             <Text style={{ color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>{elements.item.title}</Text>
-                                            <Text style={{ color: '#941000', fontWeight: '500' }}>
+                                            <Text style={{ color: '#C8170D', fontWeight: '500' }}>
                                                 {/* {elements.item.price} */}
                                             </Text>
                                         </View>

@@ -9,7 +9,7 @@ const MyDiets = () => {
   const {defaultTheme}=useSelector(state=>state)
   return (
     <View style={{ flex: 1 }}>
-      {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
+      {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#C8170D'} /></> : <><CustomStatusBar /></>}
       <HeaderWithoutSearch Header={'My Diets'} />
       <FavDiets />
     </View>

@@ -49,7 +49,7 @@ const Equipments= () => {
   else{
 return (
 <View style={[styles.container,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
-{Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#941000'}/></>:<><CustomStatusBar/></>}
+{Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#C8170D'}/></>:<><CustomStatusBar/></>}
 <HeaderWithoutSearch Header={"Equipments"}/>
 <View style={{height:DeviceHeigth*90/100}}>
 <FlatList
@@ -81,7 +81,7 @@ return (
                     </Text>
                     
                   
-                  <Icons name="chevron-right" size={20} color={'#941000'} />
+                  <Icons name="chevron-right" size={20} color={'#C8170D'} />
                 </View>
               </View>
             </View>
@@ -100,7 +100,7 @@ Image: {
   width: 40,
   height: 40,
   margin: 10,
-  tintColor:'#941000',
+  tintColor:'#C8170D',
   resizeMode:'contain',
 },
 container3: {

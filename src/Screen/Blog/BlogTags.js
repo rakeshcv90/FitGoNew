@@ -56,7 +56,7 @@ const BlogTags = () => {
   if (isLoaded &&!isEmpty)  {
     return (
       <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
-        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#C8170D'} /></> : <><CustomStatusBar /></>}
         <HeaderWithoutSearch Header={Data.data.title} />
         <View style={{flex:1}}>
           <FlatList
@@ -78,7 +78,7 @@ const BlogTags = () => {
                       <Text style={styles.text}>{elements.item.title}</Text>
                       <Text
                         style={{
-                          color: '#941000',
+                          color: '#C8170D',
                           fontWeight: '500',
                           marginTop: 7,
                         }}>
@@ -96,7 +96,7 @@ const BlogTags = () => {
   }else if(isLoaded && isEmpty){
     return(
       <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff", justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ color: '#941000', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View>
+      <Text style={{ color: '#C8170D', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View>
     )
   }
    else {

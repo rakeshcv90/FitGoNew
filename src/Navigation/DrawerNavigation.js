@@ -15,10 +15,10 @@ const {defaultTheme}=useSelector(state=>state)
       screenOptions={{
         drawerStyle: {
           backgroundColor:defaultTheme?"#000":"#fff",
-          width: (DeviceWidth * 60) / 100,
+          width: (DeviceWidth * 65) / 100,
         },
         headerStyle: {
-          backgroundColor: '#941000',
+          backgroundColor: '#C8170D',
           //height: (DeviceHeigth * 7) / 100,
         },
         headerTintColor: '#fff',
@@ -37,6 +37,7 @@ const {defaultTheme}=useSelector(state=>state)
         component={HomeScreenDrawer}
         options={{title: 'FitMe', headerTitleAlign: 'center'}}></Drawer.Screen>
     </Drawer.Navigator>
+    
   );
 };
 

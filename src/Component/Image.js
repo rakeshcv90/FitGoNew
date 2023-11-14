@@ -8,5 +8,18 @@ export const localImage = {
   blogIcon:require('../Icon/Images/blogIcon.png'),
   logo1:require('../Icon/Images/icons/logo.png'),
   maleIcon:require("../Icon/Images/male.jpg"),
-  addIcon:require("../Icon/Images/addIcon.png")
+  addIcon:require("../Icon/Images/addIcon.png"),
+  dw1:require("../Icon/Images/DwaderImage/n1.png"),
+  dw2:require("../Icon/Images/DwaderImage/n2.png"),
+  dw3:require("../Icon/Images/DwaderImage/n3.png"),
+  dw4:require("../Icon/Images/DwaderImage/n4.png"),
+  dw5:require("../Icon/Images/DwaderImage/n5.png"),
+  dw6:require("../Icon/Images/DwaderImage/n6.png"),
+  dw7:require("../Icon/Images/DwaderImage/n7.png"),
+  dw8:require("../Icon/Images/DwaderImage/n8.png"),
+  dw9:require("../Icon/Images/DwaderImage/n9.png"),
+  avt:require("../Icon/Images/DwaderImage/Avatar.png"),
+  dw10:require("../Icon/Images/DwaderImage/n10.png"),
+  dw11:require("../Icon/Images/DwaderImage/n11.png"),
+
 };

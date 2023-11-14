@@ -9,12 +9,8 @@ import {
   Platform,
   Modal,
   Animated,
-
-  Alert,
-
   Image,
   ScrollView,
-
 } from 'react-native';
 import React, {useEffect, useRef, useState, useMemo} from 'react';
 import {Api, Appapi, DeviceHeigth, DeviceWidth} from '../Component/Config';
@@ -23,13 +19,10 @@ import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useRoute} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import Icon from 'react-native-vector-icons/Ionicons';
-
 import {localImage} from '../Component/Image';
-
 const Signup = ({navigation}) => {
   const route = useRoute();
   const data = route.params;
@@ -156,7 +149,6 @@ const Signup = ({navigation}) => {
           password: Password,
         },
       });
-      console.log(data.data);
       setSubmitText('Enter');
 
       setSubmitText('Enter');
@@ -166,24 +158,22 @@ const Signup = ({navigation}) => {
           message: data.data[0].msg,
           statusBarHeight: StatusBar_Bar_Height,
           floating: true,
-          animationDuration: 500,
           type: 'success',
           icon: {icon: 'auto', position: 'left'},
         });
 
         setVerifyVisible(true);
       } else if (data.data[0].status == 0) {
-        // try {
-        // let payload = new FormData();
-        // payload.append('email', Email);
-        // const data = await axios(`${Api}/${Appapi.ResendOTP}`, {
-        //   method: 'POST',
-        //   headers: {
-        //     'Content-Type': 'multipart/form-data',
-        //   },
-        //   data: payload,
-        // });
-
+        try {
+          let payload = new FormData();
+          payload.append('email', Email);
+          const data = await axios(`${Api}/${Appapi.ResendOTP}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            data: payload,
+          });
 
           if (data.data[0].msg == 'otp sent') {
             // t1.current.focus();
@@ -207,24 +197,21 @@ const Signup = ({navigation}) => {
         showMessage({
           message:
             'We have sent an OTP to your email , Please verify your email first',
-          type: 'danger',
+          type: 'warning',
           animationDuration: 500,
           statusBarHeight: StatusBar_Bar_Height,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      } else if (data.data[0].status == 1) {
+      } else {
         showMessage({
-          message: 'Email already registered , Please Login',
+          message: data.data[0].msg,
           type: 'danger',
           statusBarHeight: StatusBar_Bar_Height,
           floating: true,
-          animationDuration: 500,
           icon: {icon: 'auto', position: 'left'},
         });
         setSubmitText('Enter');
-        setVerifyVisible(false);
-        navigation.navigate('Login');
       }
     } catch (error) {
       setSubmitText('Enter');
@@ -300,7 +287,6 @@ const Signup = ({navigation}) => {
           statusBarHeight: StatusBar_Bar_Height,
           floating: true,
           type: 'danger',
-          animationDuration: 500,
           icon: {icon: 'auto', position: 'left'},
         });
         SetVerifyText('Verify');
@@ -317,15 +303,13 @@ const Signup = ({navigation}) => {
             },
             data: payload,
           });
-
+          console.log(Email, OtpString, OtpMsg.data[0]);
           if (OtpMsg.data[0].msg == 'Email verified successfully') {
             showMessage({
               message: 'Email verified successfully , Please Login',
               statusBarHeight: StatusBar_Bar_Height,
               floating: true,
-
-              duration: 750,
-
+              duration: 500,
               type: 'success',
               icon: {icon: 'auto', position: 'left'},
             });
@@ -345,11 +329,11 @@ const Signup = ({navigation}) => {
               message: OtpMsg.data[0].msg,
               statusBarHeight: StatusBar_Bar_Height,
               floating: true,
-              duration: 750,
               type: 'danger',
               icon: {icon: 'auto', position: 'left'},
             });
-            t1.current.focus();
+            setResendTxt('Resend OTP');
+            setTimeleft(60);
             setTxt1('');
             setTxt2('');
             setTxt3('');
@@ -374,24 +358,26 @@ const Signup = ({navigation}) => {
       return () => clearInterval(timer);
     }, [timeLeft]);
     return (
-      <KeyboardAvoidingView
+      <View
         style={{
+          flex: 1,
           backgroundColor: defaultTheme ? '#000' : '#fff',
           position: 'absolute',
         }}>
         <Modal
           animationType="slide"
           transparent={true}
-          visible={IsVerifyVisible}
+          visible={true}
           onRequestClose={() => {
             setVerifyVisible(false);
           }}>
-          <View style={[styles.modalContainer]}>
-            <View
-              style={[
-                styles.modalContent,
-                {backgroundColor: defaultTheme ? '#000' : '#fff'},
-              ]}>
+          <View
+            style={[
+              styles.modalContainer,
+              {backgroundColor: 'transparent', flex: 1},
+            ]}>
+            <View style={styles.modalContent}>
+              <>
               <View
                 style={[
                   styles.closeButton,
@@ -413,7 +399,6 @@ const Signup = ({navigation}) => {
                   />
                 </TouchableOpacity>
               </View>
-              <>
                 <Text
                   style={{
                     color: defaultTheme ? '#fff' : '#000',
@@ -432,10 +417,8 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
-
-                    activeOutlineColor="#941000"
-                    value={txt1}
-
+                    activeOutlineColor="red"
+                    value={txt1 }
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt1(txt);
@@ -454,10 +437,8 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
-
-                    activeOutlineColor="#941000"
-                    value={txt2}
-
+                    activeOutlineColor="red"
+                    value={txt2 }
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt2(txt);
@@ -476,9 +457,7 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
-
-                    activeOutlineColor="#941000"
-
+                    activeOutlineColor="#C8170D"
                     value={txt3}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
@@ -498,10 +477,8 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
-
-                    activeOutlineColor="#941000"
-                    value={txt4}
-
+                    activeOutlineColor="#C8170D"
+                    value={txt4 }
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt4(txt);
@@ -520,10 +497,8 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
-
-                    activeOutlineColor="#941000"
-                    value={txt5}
-
+                    activeOutlineColor="red"
+                    value={txt5 }
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt5(txt);
@@ -543,8 +518,7 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
-
-                    activeOutlineColor="#941000"
+                    activeOutlineColor="red"
                     value={txt6}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
@@ -588,8 +562,8 @@ const Signup = ({navigation}) => {
                   <TouchableOpacity
                     style={{
                       width: (DeviceWidth * 40) / 100,
-                      backgroundColor: '#941000',
-                      height: (DeviceHeigth * 4) / 100,
+                      backgroundColor: '#C8170D',
+                      height: (DeviceHeigth * 4.5) / 100,
                       justifyContent: 'center',
                       alignItems: 'center',
                       borderRadius: 100,
@@ -607,7 +581,7 @@ const Signup = ({navigation}) => {
             </View>
           </View>
         </Modal>
-      </KeyboardAvoidingView>
+      </View>
     );
   };
   return (
@@ -643,7 +617,7 @@ const Signup = ({navigation}) => {
             mode="flat"
             autoCapitalize="none"
             style={styles.AuthInput}
-            activeUnderlineColor="#f39c1f"
+            activeUnderlineColor="#C8170D"
             value={Name}
             textColor={defaultTheme ? '#fff' : '#000'}
             theme={{
@@ -657,7 +631,6 @@ const Signup = ({navigation}) => {
               defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
             }
           />
-
           <TextInput
             label={'Email'}
             keyboardType="email-address"
@@ -668,7 +641,7 @@ const Signup = ({navigation}) => {
             mode="flat"
             autoCapitalize="none"
             style={styles.AuthInput}
-            activeUnderlineColor="#f39c1f"
+            activeUnderlineColor="#C8170D"
             value={Email}
             textColor={defaultTheme ? '#fff' : '#000'}
             theme={{
@@ -688,7 +661,7 @@ const Signup = ({navigation}) => {
             mode="flat"
             autoCapitalize="none"
             style={styles.AuthInput}
-            activeUnderlineColor="#f39c1f"
+            activeUnderlineColor="#C8170D"
             value={Password}
             secureTextEntry={!isVisiblepassword}
             textColor={defaultTheme ? '#fff' : '#000'}
@@ -722,7 +695,7 @@ const Signup = ({navigation}) => {
             mode="flat"
             autoCapitalize="none"
             style={styles.AuthInput}
-            activeUnderlineColor="#f39c1f"
+            activeUnderlineColor="#C8170D"
             value={ConfirmPassword}
             secureTextEntry={!isVisible}
             textColor={defaultTheme ? '#fff' : '#000'}
@@ -751,7 +724,6 @@ const Signup = ({navigation}) => {
             }
           />
           {!IsVerifyVisible ? (
-
             <View
               style={{
                 flexDirection: 'row',
@@ -761,14 +733,12 @@ const Signup = ({navigation}) => {
                 width: (DeviceWidth * 80) / 100,
               }}>
               <TouchableOpacity
-
                 style={[styles.checkboxContainer, checked && styles.Checked]}
                 onPress={() => setChecked(!checked)}>
                 <Text>
                   {' '}
                   {checked && <Icons name="check" size={16} color={'#fff'} />}
                 </Text>
-
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
@@ -779,9 +749,7 @@ const Signup = ({navigation}) => {
                 </Text>
               </TouchableOpacity>
             </View>
-
           ) : (
-
             <View
               style={{
                 flexDirection: 'row',
@@ -789,7 +757,6 @@ const Signup = ({navigation}) => {
                 position: 'relative',
                 alignItems: 'center',
                 width: (DeviceWidth * 80) / 100,
-
               }}>
               <View
                 style={[styles.checkboxContainer, checked && styles.Checked]}>
@@ -814,7 +781,6 @@ const Signup = ({navigation}) => {
               }}>
               <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
             </TouchableOpacity>
-
           ) : (
             <View style={styles.Tbutton}>
               <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
@@ -847,7 +813,6 @@ const Signup = ({navigation}) => {
         {IsVerifyVisible ? <ModalView /> : null}
       </KeyboardAvoidingView>
     </SafeAreaView>
-
   );
 };
 const styles = StyleSheet.create({
@@ -860,7 +825,7 @@ const styles = StyleSheet.create({
   TextInput: {
     borderBottomWidth: 1,
     width: (DeviceWidth * 80) / 100,
-    color: '#941000',
+    color: '#C8170D',
     borderBottomColor: '#adadad',
   },
   checkboxContainer: {
@@ -873,13 +838,17 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     marginRight: 10,
   },
+  Checked: {
+    backgroundColor: '#C8170D',
+    borderColor: '#C8170D',
+  },
   Tbutton: {
     width: (DeviceWidth * 80) / 100,
     height: (DeviceHeigth * 6) / 100,
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#941000',
+    backgroundColor: '#C8170D',
     marginBottom: 15,
   },
   SignUpText: {
@@ -903,20 +872,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   modalContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    marginHorizontal: 15,
+   // flex: 1,
+    justifyContent: 'center',
+   alignItems: 'center',
+    //marginHorizontal: 15,
   },
   modalContent: {
-    height: DeviceHeigth / 4,
-    width: '100%',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    height: DeviceHeigth / 3.5,
+    width: '90%',
+    backgroundColor: 'white',
+    // borderTopLeftRadius: 20,
+    // borderTopRightRadius: 20,
+    borderRadius:20,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'lightgray',
-    position: 'absolute',
+   // position: 'absolute',
     bottom: 0,
     ...Platform.select({
       ios: {
@@ -931,7 +902,7 @@ const styles = StyleSheet.create({
     }),
   },
   Verify: {
-    backgroundColor: '#941000',
+    //backgroundColor: 'red',
     width: (DeviceWidth * 50) / 100,
     height: (DeviceHeigth * 4) / 100,
     borderRadius: 100,
@@ -943,5 +914,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
+
 });
 export default Signup;

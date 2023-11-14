@@ -128,7 +128,7 @@ const Login = () => {
           await AsyncStorage.setItem('Data', JSON.stringify(data.data));
           setIsLoaded(true);
 
-          navigation.navigate('DrawerNavigation')
+          navigation.navigate('DrawerNavigation');
 
           setsubmitText('ENTER');
         } else {
@@ -160,14 +160,12 @@ const Login = () => {
         backgroundColor={defaultTheme ? '#000' : '#fff'}
       />
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'position' : 'padding'}
-        style={{flex: 1}}>
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View
           style={{
             backgroundColor: defaultTheme ? '#000' : '#fff',
             justifyContent: 'center',
             alignItems: 'center',
-            flex: 1,
           }}>
           <Image
             resizeMode="cover"
@@ -183,7 +181,7 @@ const Login = () => {
             mode="flat"
             autoCapitalize="none"
             style={styles.AuthInput}
-            activeUnderlineColor="#941000"
+            activeUnderlineColor="#C8170D"
             underlineColor={
               defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'
             }
@@ -203,7 +201,7 @@ const Login = () => {
             mode="flat"
             secureTextEntry={!isVisible}
             style={styles.AuthInput}
-            activeUnderlineColor="#941000"
+            activeUnderlineColor="#C8170D"
             underlineColor={
               defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'
             }
@@ -311,7 +309,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#941000',
+    backgroundColor: '#C8170D',
     marginBottom: (DeviceHeigth * 2) / 100,
   },
   AuthInput: {

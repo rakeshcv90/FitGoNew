@@ -50,7 +50,7 @@ const Diets = () => {
   if (isLoaded) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#C8170D'} /></> : <><CustomStatusBar /></>}
         <HeaderWithoutSearch Header={"Diets"} />
         <TouchableOpacity style={styles.button} onPress={() => {
           navigation.navigate('DietCategory')
@@ -65,7 +65,7 @@ const Diets = () => {
             }}>
               <ImageBackground source={{ uri: item.image }} style={styles.imageBackground}>
                 <View style={styles.text}>
-                  <Text style={{ color: "#941000", marginLeft: 10, fontWeight: 'bold', fontSize: 16 }}>{item.category}</Text>
+                  <Text style={{ color: "#C8170D", marginLeft: 10, fontWeight: 'bold', fontSize: 16 }}>{item.category}</Text>
                   <Text style={{ color: '#fff', marginTop: 5, marginLeft: 10, fontWeight: 'bold', fontSize: 16 }}>{item.title}</Text>
                   <Text style={{ color: '#fff', margin: 10, fontWeight: 'bold', fontSize: 13 }}>{item.calories} Kcal | Servings: {item.servings}</Text>
                 </View>
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: "#941000",
+    backgroundColor: "#C8170D",
     borderRadius: 8
   },
   catIcon: {

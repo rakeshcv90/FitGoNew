@@ -12,8 +12,7 @@ import {
   NavigationContainer,
   createNavigationContainerRef,
   useNavigation,
-} from '@react-navigation/native
-
+} from '@react-navigation/native';
 import Router, {LoginStack} from './src/Navigation/Router';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,7 +23,7 @@ import {useSelector} from 'react-redux';
 import {DeviceHeigth, DeviceWidth} from './src/Component/Config';
 import RNRestart from 'react-native-restart';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
-import BootSplash from 'react-native-bootsplash
+import BootSplash from 'react-native-bootsplash';
 // import { sendConnectionNotification } from './src/Component/Notification';
 const App = () => {
   const [isLogged, setIsLogged] = useState();
@@ -36,13 +35,11 @@ const App = () => {
   useEffect(() => {
     const subscription = NetInfo.addEventListener(state => {
       if (state.isConnected) {
-
         
-        setConnected(true)
-      }
-      else {
-        setConnected(false)
-
+        setConnected(true);
+      } else {
+       
+        setConnected(false);
       }
     });
     return () => {

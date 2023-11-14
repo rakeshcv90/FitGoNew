@@ -110,7 +110,7 @@ const HomeScreenDrawer = () => {
         }}>
         <StatusBar
           barStyle={defaultTheme ? 'light-content' : 'dark-content'}
-          backgroundColor={'#f39c1f'}
+          backgroundColor={'#C8170D'}
         />
 
         <ImageBackground source={localImage.homeImg} style={styles.homeImg}>

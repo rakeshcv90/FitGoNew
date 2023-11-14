@@ -58,7 +58,7 @@ const ExerciseByBodyPart = () => {
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
                 <HeaderWithoutSearch Header={Data.title} />
-                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#C8170D'} /></> : <><CustomStatusBar /></>}
                 <View style={{flex:1}}>
                     <FlatList
                         data={Abs}
@@ -90,7 +90,7 @@ const ExerciseByBodyPart = () => {
                                                     {elements.item.level}
                                                 </Text>
                                             </View>
-                                            <Icons name="chevron-right" size={20} color={'#941000'} />
+                                            <Icons name="chevron-right" size={20} color={'#C8170D'} />
                                         </View>
                                     </View>
                                 </View>
@@ -107,7 +107,7 @@ const ExerciseByBodyPart = () => {
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
-                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#C8170D'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title} />
                 <View style={{ flex:1}}>
                     <FlatList
@@ -141,7 +141,7 @@ const ExerciseByBodyPart = () => {
                                                     {elements.item.level}
                                                 </Text>
                                             </View>
-                                            <Icons name="chevron-right" size={20} color={'#941000'} />
+                                            <Icons name="chevron-right" size={20} color={'#C8170D'} />
                                         </View>
                                     </View>
                                 </View>
@@ -158,7 +158,7 @@ const ExerciseByBodyPart = () => {
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
-                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#C8170D'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title}></HeaderWithoutSearch>
                 <View style={{flex:1}}>
                     <FlatList
@@ -192,7 +192,7 @@ const ExerciseByBodyPart = () => {
                                                     {elements.item.level}
                                                 </Text>
                                             </View>
-                                            <Icons name="chevron-right" size={20} color={'#941000'} />
+                                            <Icons name="chevron-right" size={20} color={'#C8170D'} />
                                         </View>
                                     </View>
                                 </View>
@@ -209,7 +209,7 @@ const ExerciseByBodyPart = () => {
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
-                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#C8170D'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title}></HeaderWithoutSearch>
                 <View style={{ flex:1 }}>
                     <FlatList
@@ -243,7 +243,7 @@ const ExerciseByBodyPart = () => {
                                                     {elements.item.level}
                                                 </Text>
                                             </View>
-                                            <Icons name="chevron-right" size={20} color={'#941000'} />
+                                            <Icons name="chevron-right" size={20} color={'#C8170D'} />
                                         </View>
                                     </View>
                                 </View>
@@ -260,7 +260,7 @@ const ExerciseByBodyPart = () => {
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
-                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#C8170D'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title} />
                 <View style={{flex:1 }}>
                     <FlatList
@@ -295,7 +295,7 @@ const ExerciseByBodyPart = () => {
                                                 </Text>
                                             </View>
 
-                                            <Icons name="chevron-right" size={20} color={'#941000'} />
+                                            <Icons name="chevron-right" size={20} color={'#C8170D'} />
                                         </View>
                                         <Text>{elements.item.days}</Text>
                                     </View>
@@ -313,7 +313,7 @@ const ExerciseByBodyPart = () => {
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff' },
                 ]}>
-                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#C8170D'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title} />
                 <View style={{ flex:1}}>
                     <FlatList
@@ -346,7 +346,7 @@ const ExerciseByBodyPart = () => {
                                                     {elements.item.level}
                                                 </Text>
                                             </View>
-                                            <Icons name="chevron-right" size={20} color={'#941000'} />
+                                            <Icons name="chevron-right" size={20} color={'#C8170D'} />
                                         </View>
                                     </View>
                                 </View>
@@ -363,7 +363,7 @@ const ExerciseByBodyPart = () => {
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000' : '#fff', },
                 ]}>
-                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#C8170D'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title} />
                 <View style={{flex:1}}>
                     <FlatList
@@ -397,7 +397,7 @@ const ExerciseByBodyPart = () => {
                                                     {elements.item.level}
                                                 </Text>
                                             </View>
-                                            <Icons name="chevron-right" size={20} color={'#941000'} />
+                                            <Icons name="chevron-right" size={20} color={'#C8170D'} />
                                         </View>
                                     </View>
                                 </View>
@@ -414,7 +414,7 @@ const ExerciseByBodyPart = () => {
                     styles.container,
                     { backgroundColor: defaultTheme ? '#000000' : '#fff' },
                 ]}>
-                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
+                {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#C8170D'} /></> : <><CustomStatusBar /></>}
                 <HeaderWithoutSearch Header={Data.title} />
                 <View style={{ flex:1 }}>
                     <FlatList
@@ -448,7 +448,7 @@ const ExerciseByBodyPart = () => {
                                                     {elements.item.level}
                                                 </Text>
                                             </View>
-                                            <Icons name="chevron-right" size={20} color={'#941000'} />
+                                            <Icons name="chevron-right" size={20} color={'#C8170D'} />
                                         </View>
                                         <Text>{elements.item.days}</Text>
                                     </View>

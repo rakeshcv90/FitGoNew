@@ -57,7 +57,7 @@ const Workouts = () => {
             <StatusBar
               barStyle={defaultTheme ? 'light-content' : 'dark-content'}
 
-              backgroundColor={'#941000'}
+              backgroundColor={'#C8170D'}
             />
           </>
         ) : (
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#941000',
+    backgroundColor: '#C8170D',
 
     borderRadius: 8,
     marginHorizontal: 7,

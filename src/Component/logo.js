@@ -1,4 +1,11 @@
-import {View, Text, Image, StatusBar, StyleSheet, SafeAreaView} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StatusBar,
+  StyleSheet,
+  SafeAreaView,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {localImage} from './Image';
 import {DeviceHeigth, DeviceWidth} from './Config';
@@ -13,7 +20,6 @@ export const Logo = () => {
   const {defaultTheme} = useSelector(state => state);
   useEffect(() => {
     getMydata();
-
   }, []);
   const getMydata = async () => {
     setMyData(JSON.parse(await AsyncStorage.getItem('Data')));
@@ -24,52 +30,55 @@ export const Logo = () => {
         <>
           <StatusBar
             barStyle={defaultTheme ? 'light-content' : 'dark-content'}
-            backgroundColor={'#f39c1f'}
+            backgroundColor={'#C8170D'}
           />
         </>
       ) : (
         <>
-      <SafeAreaView style={{
-        width: DeviceWidth,
-       // height: StatusBar_Bar_Height,
-       // backgroundColor:'#f39c1f'
-    }}>
-       
-    </SafeAreaView>
+          <SafeAreaView
+            style={{
+              width: DeviceWidth,
+              // height: StatusBar_Bar_Height,
+              // backgroundColor:'#C8170D'
+            }}></SafeAreaView>
         </>
       )}
       <View
         style={{
-          height: (drawerHeight * 30) / 100,
+          flexDirection: 'row',
+          height: (drawerHeight * 20) / 100,
           width: drawerWidth,
-          marginTop: (DeviceHeigth * 2) / 100,
-          
-          alignItems:'center'
+          marginTop: -(DeviceHeigth * 5) / 100,
+          alignItems: 'center',
         }}>
         <Image
-          source={localImage.maleIcon}
+          source={localImage.avt}
           style={{
-            height:(DeviceHeigth * 15) / 100,
-            width: (DeviceWidth * 32) / 100,
+            height: (DeviceHeigth * 7) / 100,
+            width: (DeviceWidth * 15) / 100,
             justifyContent: 'center',
-
+            marginHorizontal: 10,
             borderRadius: 200 / 2,
             resizeMode: 'cover',
           }}
         />
         {!!mydata && (
-          <>
+          <View>
             <Text
               style={[
                 styles.textStyle,
-                {color: defaultTheme == true ? '#fff' : '#000'},
+                {color: defaultTheme == true ? '#fff' : '#fff'},
               ]}>
               {mydata[0].name}
             </Text>
-            <Text style={[styles.textStyle1,{color: defaultTheme == true ? '#fff' : '#000'}]}>
+            <Text
+              style={[
+                styles.textStyle1,
+                {color: defaultTheme == true ? '#D6D6D6' : '#D6D6D6'},
+              ]}>
               {mydata[0].email}
             </Text>
-          </>
+          </View>
         )}
         {/* <Text style={{color:'black',fontSize:20,fontWeight:'700'}}>User Name</Text> */}
       </View>
@@ -78,15 +87,17 @@ export const Logo = () => {
 };
 const styles = StyleSheet.create({
   textStyle: {
-    fontSize: 20,
-    fontWeight: '700',
-    marginHorizontal:10,
-    marginVertical: (DeviceHeigth * 1) / 100,
+    fontSize: 15,
+    fontWeight: '600',
+    marginHorizontal: 10,
+    color: ' #FFFFFF',
+    lineHeight: 24,
   },
   textStyle1: {
-    fontSize: 15,
+    fontSize: 12,
     fontWeight: '500',
-    marginHorizontal:10
-    //marginVertical: (DeviceHeigth * 2) / 100,
+    marginHorizontal: 10,
+    lineHeight: 12,
+    fontFamily: 'Inter',
   },
 });

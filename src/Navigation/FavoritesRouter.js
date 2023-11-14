@@ -11,11 +11,11 @@ const FavoritesRouter = () => {
     const {defaultTheme}=useSelector(state=>state)
     return (
         <View style={{ flex: 1 }}>
-              {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#941000'}/></>:<><CustomStatusBar/></>}
+              {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#C8170D'}/></>:<><CustomStatusBar/></>}
             <HeaderWithoutSearch Header={"Favorites"} />
             <Tabs.Navigator initialRouteName='FavWorkouts' screenOptions={{
                 tabBarLabelStyle: { fontSize: 16, color: "#fff",textTransform:'none' },
-                tabBarStyle: { backgroundColor: "#941000" },
+                tabBarStyle: { backgroundColor: "#C8170D" },
                 tabBarIndicatorStyle: {
                     backgroundColor: '#fff', height: 3
                 }

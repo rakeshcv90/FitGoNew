@@ -201,7 +201,7 @@ const WorkoutDescription = () => {
               <Text style={{ color: 'white', padding: 8, fontSize: 16 }}>
                 {HomeCardioData.title}
               </Text>
-              <Text style={{ color: '#941000' }}>{HomeCardioData.duration}</Text>
+              <Text style={{ color: '#C8170D' }}>{HomeCardioData.duration}</Text>
               <View style={styles.rating}>
                 <LevelRate level={HomeCardioData.level} />
               </View>
@@ -226,7 +226,7 @@ const WorkoutDescription = () => {
                 navigation.navigate("Singleday", { Day: elements.item.id, Id: HomeCardioData.id, DayName: elements.item.days })
               }}>
                 <Text style={{ fontSize: 17, color: defaultTheme == true ? "#fff" : "#000" }}>{elements.item.days}</Text>
-                <Icons name="chevron-right" size={20} color={'#941000'} />
+                <Icons name="chevron-right" size={20} color={'#C8170D'} />
               </TouchableOpacity>
             )}
           />
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
   levelGoalView: {
     width: DeviceWidth,
     height: (DeviceHeigth * 8) / 100,
-    backgroundColor: '#941000',
+    backgroundColor: '#C8170D',
     justifyContent: 'space-around',
     flexDirection: 'row',
     alignItems: 'center',

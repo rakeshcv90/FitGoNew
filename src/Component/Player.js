@@ -191,7 +191,7 @@ const PlayerModal = ({ setState, State }) => {
             }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity></View>
           <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
             <View style={{ flexDirection: 'column', justifyContent: 'center', borderRadius: 100, alignItems: 'center', marginHorizontal: 20, borderColor: "orange", borderWidth: 15, width: 200, height: 200, }}>
-              <Text style={{ fontSize: 66, fontWeight: 'bold', color: '#941000' }}>{timeLeft}"</Text>
+              <Text style={{ fontSize: 66, fontWeight: 'bold', color: '#C8170D' }}>{timeLeft}"</Text>
             </View>
             <Text style={{ fontSize: 26, fontWeight: 'bold', marginTop: 20, color: defaultTheme ? "#fff" : "#000" }}>Rest</Text>
           </View>
@@ -234,8 +234,8 @@ const PlayerModal = ({ setState, State }) => {
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 100, marginHorizontal: 25 }}>
             {/* {console.log(currentPage==0,defaultTheme)} */}
-            <TouchableOpacity onPress={() => { goToPreviousPage() }}  ><Text style={{ color: defaultTheme ? (currentPage == 0 ? "#rgba(255,255,255,0.6)" : '#941000') : (currentPage == 0 ? "#rgba(0,0,0,0.6)" : '#941000'), fontSize: 20 }}>Previous</Text></TouchableOpacity>
-            <TouchableOpacity onPress={() => { goToNextPage() }} disabled={currentPage === PlayerScrnData.length - 1}><Text style={{ color: defaultTheme ? (currentPage === PlayerScrnData.length - 1 ? "#rgba(255,255,255,0.6)" : '#941000') : (currentPage === PlayerScrnData.length - 1 ? "#rgba(0,0,0,0.6)" : '#941000'), fontSize: 20 }}>Next</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => { goToPreviousPage() }}  ><Text style={{ color: defaultTheme ? (currentPage == 0 ? "#rgba(255,255,255,0.6)" : '#C8170D') : (currentPage == 0 ? "#rgba(0,0,0,0.6)" : '#C8170D'), fontSize: 20 }}>Previous</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => { goToNextPage() }} disabled={currentPage === PlayerScrnData.length - 1}><Text style={{ color: defaultTheme ? (currentPage === PlayerScrnData.length - 1 ? "#rgba(255,255,255,0.6)" : '#C8170D') : (currentPage === PlayerScrnData.length - 1 ? "#rgba(0,0,0,0.6)" : '#C8170D'), fontSize: 20 }}>Next</Text></TouchableOpacity>
           </View>
 
         </View>)
@@ -254,7 +254,7 @@ const PlayerModal = ({ setState, State }) => {
             }}><Icons name="close" size={27} color={defaultTheme ? "#fff" : "#000"} /></TouchableOpacity>
           </View>
           <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 250 }}>
-            <Icons name="checkbox-marked-circle-outline" style={{ color: '#941000', fontSize: 72, marginBottom: 10 }} />
+            <Icons name="checkbox-marked-circle-outline" style={{ color: '#C8170D', fontSize: 72, marginBottom: 10 }} />
             <Text style={{ fontSize: 34, fontWeight: 'bold', textAlign: 'center', color: defaultTheme ? "#fff" : "#000" }}>Exercise Completed</Text>
           </View>
         </View> : null}
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   Startbtn: {
-    backgroundColor: '#941000',
+    backgroundColor: '#C8170D',
     margin: 20,
     width: DeviceWidth * 50 / 100,
     height: DeviceHeigth * 6 / 100,
