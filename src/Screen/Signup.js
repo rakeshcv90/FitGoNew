@@ -9,6 +9,7 @@ import {
   Platform,
   Modal,
   Animated,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useRef, useState, useMemo} from 'react';
 import {Api, Appapi, DeviceHeigth, DeviceWidth} from '../Component/Config';
@@ -19,6 +20,7 @@ import {useSelector} from 'react-redux';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {useRoute} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/FontAwesome5'
 const Signup = ({navigation}) => {
   const route = useRoute();
   const data = route.params;
@@ -129,43 +131,44 @@ const Signup = ({navigation}) => {
           password: Password,
         },
       });
-      console.log(data.data)
+      console.log(data.data);
       setSubmitText('Enter');
       setSubmitText('Enter');
       setVerifyVisible(true);
-      if (data.data[0].msg === 'Otp sent to your email' ) {
+      if (data.data[0].msg === 'Otp sent to your email') {
         showMessage({
           message: data.data[0].msg,
           statusBarHeight: StatusBar_Bar_Height,
           floating: true,
+          animationDuration:500,
           type: 'success',
           icon: {icon: 'auto', position: 'left'},
         });
         setVerifyVisible(true);
       } else if (data.data[0].status == 0) {
         // try {
-          // let payload = new FormData();
-          // payload.append('email', Email);
-          // const data = await axios(`${Api}/${Appapi.ResendOTP}`, {
-          //   method: 'POST',
-          //   headers: {
-          //     'Content-Type': 'multipart/form-data',
-          //   },
-          //   data: payload,
-          // });
+        // let payload = new FormData();
+        // payload.append('email', Email);
+        // const data = await axios(`${Api}/${Appapi.ResendOTP}`, {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'multipart/form-data',
+        //   },
+        //   data: payload,
+        // });
 
-          // if (data.data[0].msg == 'otp sent') {
-          //   setSubmitText('Enter');
-          // } else {
-          //   setSubmitText('Enter');
-          //   showMessage({
-          //     message: data.data[0].msg,
-          //     statusBarHeight: StatusBar_Bar_Height,
-          //     floating: true,
-          //     type: 'success',
-          //     icon: {icon: 'auto', position: 'left'},
-          //   });
-          // }
+        // if (data.data[0].msg == 'otp sent') {
+        //   setSubmitText('Enter');
+        // } else {
+        //   setSubmitText('Enter');
+        //   showMessage({
+        //     message: data.data[0].msg,
+        //     statusBarHeight: StatusBar_Bar_Height,
+        //     floating: true,
+        //     type: 'success',
+        //     icon: {icon: 'auto', position: 'left'},
+        //   });
+        // }
         // } catch (error) {
         //   setSubmitText('Enter');
         // }
@@ -181,19 +184,18 @@ const Signup = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      } 
-      else if(data.data[0].status==1) {
+      } else if (data.data[0].status == 1) {
         showMessage({
-          message: "Email already registered , Please Login",
+          message: 'Email already registered , Please Login',
           type: 'danger',
           statusBarHeight: StatusBar_Bar_Height,
           floating: true,
-          animationDuration:750,
+          animationDuration: 500,
           icon: {icon: 'auto', position: 'left'},
         });
         setSubmitText('Enter');
-        setVerifyVisible(false)
-        navigation.navigate("Login")
+        setVerifyVisible(false);
+        navigation.navigate('Login');
       }
     } catch (error) {
       setSubmitText('Enter');
@@ -269,6 +271,7 @@ const Signup = ({navigation}) => {
           statusBarHeight: StatusBar_Bar_Height,
           floating: true,
           type: 'danger',
+          animationDuration:500,
           icon: {icon: 'auto', position: 'left'},
         });
         SetVerifyText('Verify');
@@ -285,7 +288,7 @@ const Signup = ({navigation}) => {
             },
             data: payload,
           });
-          console.log(Email, OtpString, OtpMsg.data[0]);
+          // console.log(Email, OtpString, OtpMsg.data[0]);
           if (OtpMsg.data[0].msg == 'Email verified successfully') {
             showMessage({
               message: 'Email verified successfully , Please Login',
@@ -311,18 +314,17 @@ const Signup = ({navigation}) => {
               message: OtpMsg.data[0].msg,
               statusBarHeight: StatusBar_Bar_Height,
               floating: true,
+              duration: 750,
               type: 'danger',
               icon: {icon: 'auto', position: 'left'},
             });
-            t1.current.foucus();
-            setResendTxt('Resend OTP');
-            setTimeleft(60);
-            setTxt1('');
-            setTxt2('');
-            setTxt3('');
-            setTxt4('');
-            setTxt5('');
-            setTxt6('');
+           t1.current.focus();
+           setTxt1('');
+           setTxt2('');
+           setTxt3('');
+           setTxt4('');
+           setTxt5('');
+           setTxt6('');
           }
           SetVerifyText('Verify');
           setSubmitText('Enter');
@@ -341,9 +343,8 @@ const Signup = ({navigation}) => {
       return () => clearInterval(timer);
     }, [timeLeft]);
     return (
-      <View
+      <KeyboardAvoidingView
         style={{
-          flex: 1,
           backgroundColor: defaultTheme ? '#000' : '#fff',
           position: 'absolute',
         }}>
@@ -564,7 +565,7 @@ const Signup = ({navigation}) => {
             </View>
           </View>
         </Modal>
-      </View>
+      </KeyboardAvoidingView>
     );
   };
   return (
@@ -710,7 +711,7 @@ const Signup = ({navigation}) => {
                   onPress={() => setChecked(!checked)}>
                   <Text>
                     {' '}
-                    {checked && <Icons name="check" size={16} color={'#fff'} />}
+                    {checked && <Icon name="check" size={23} color={'#fff'} />}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -735,7 +736,7 @@ const Signup = ({navigation}) => {
                   style={[styles.checkboxContainer, checked && styles.Checked]}>
                   <Text>
                     {' '}
-                    {checked && <Icons name="check" size={16} color={'#fff'} />}
+                    {checked && <Icon name=""/>}
                   </Text>
                 </View>
                 <View>
@@ -781,9 +782,10 @@ const Signup = ({navigation}) => {
                 </Text>
               </View>
             </TouchableOpacity>
+            {IsVerifyVisible ? <ModalView /> : null}
           </View>
 
-          {IsVerifyVisible ? <ModalView /> : null}
+         
         </KeyboardAvoidingView>
       </View>
     </>

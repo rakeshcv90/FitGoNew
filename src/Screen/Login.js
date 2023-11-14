@@ -101,7 +101,7 @@ const Login = () => {
           },
         });
 
-        if (data.data[0].status === 0) {
+        if (data.data[0].status == 0) {
           setEmail('');
           setPassword('');
           // console.log('data', data.data[0]);
@@ -127,8 +127,7 @@ const Login = () => {
           });
           await AsyncStorage.setItem('Data', JSON.stringify(data.data));
           setIsLoaded(true);
-          setisVerifyVisible(false);
-        
+          navigation.navigate('DrawerNavigation')
           setsubmitText('ENTER');
         } else {
           setIsLoaded(true);

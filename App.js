@@ -7,7 +7,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import Router, { LoginStack } from './src/Navigation/Router';
-import FlashMessage, { showMessage } from "react-native-flash-message";
+import  FlashMessage from "react-native-flash-message";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export const navigationRef = createNavigationContainerRef();
 import Loader from './src/Component/Loader';
@@ -15,7 +15,6 @@ import NetInfo from '@react-native-community/netinfo'
 import { useSelector } from 'react-redux';
 import { DeviceHeigth, DeviceWidth } from './src/Component/Config';
 import RNRestart from 'react-native-restart'
-import { getStatusBarHeight } from 'react-native-status-bar-height';
 import BootSplash from "react-native-bootsplash"
 // import { sendConnectionNotification } from './src/Component/Notification';
 const App = () => {
@@ -28,25 +27,10 @@ const App = () => {
   useEffect(() => {
     const subscription = NetInfo.addEventListener(state => {
       if (state.isConnected) {
-        // showMessage({
-        //   message:"Online",
-        //   animationDuration:500,
-        //   statusBarHeight:getStatusBarHeight(),
-        //   floating:true,
-        //   type: 'success',
-        //   icon: { icon: 'none', position: 'left' },
-        // });
+        
         setConnected(true)
       }
       else {
-        // showMessage({
-        //   message:"No Internet Connection",
-        //   animationDuration:750,
-        //   statusBarHeight:getStatusBarHeight(),
-        //   floating:true,
-        //   type: 'danger',
-        //   icon: { icon: 'none', position: 'left' },
-        // });
         setConnected(false)
       }
     })
