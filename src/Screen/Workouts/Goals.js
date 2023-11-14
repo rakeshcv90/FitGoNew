@@ -50,7 +50,7 @@ const Goals = ({ navigation }) => {
   if (isLoaded && !isEmpty) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#C8170D'} /></> : <><CustomStatusBar /></>}
         <Header
           header={'Goals'}
           iconName={'magnify'}
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   orangeLine: {
     width: 55,
     height: 3,
-    backgroundColor: '#941000',
+    backgroundColor: '#C8170D',
   },
 });
 export default Goals

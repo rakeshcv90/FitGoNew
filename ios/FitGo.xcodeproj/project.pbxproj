@@ -496,7 +496,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = 277GPQ33HC;
+				DEVELOPMENT_TEAM = L47238H5LK;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = FitGo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FitMe;
@@ -533,7 +533,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = 277GPQ33HC;
+				DEVELOPMENT_TEAM = L47238H5LK;
 				INFOPLIST_FILE = FitGo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FitMe;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";

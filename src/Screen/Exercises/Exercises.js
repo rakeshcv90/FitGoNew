@@ -55,7 +55,7 @@ const Exercises = () => {
   if (isLoaded && !isEmpty) {
     return (
       <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
+        {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#C8170D'} /></> : <><CustomStatusBar /></>}
         <HeaderWithoutSearch Header={"Exercises"} />
         <View style={styles.container}>
           <TouchableOpacity style={styles.button} onPress={() => {
@@ -104,7 +104,7 @@ const Exercises = () => {
                       style={{
                         width: 25,
                         height: 3,
-                        backgroundColor: '#941000',
+                        backgroundColor: '#C8170D',
                         marginLeft: 15,
                         marginBottom: 15,
                       }}
@@ -121,7 +121,7 @@ const Exercises = () => {
   else if (isLoaded && isEmpty) {
     return (
       <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff", justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ color: '#941000', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View>
+        <Text style={{ color: '#C8170D', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View>
     )
   }
   else {
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     height: (DeviceHeigth * 4.5) / 100,
     width: (DeviceWidth * 96) / 100,
     marginVertical: 5,
-    backgroundColor: '#941000',
+    backgroundColor: '#C8170D',
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',

@@ -162,7 +162,7 @@ const DietDetail = () => {
               </TouchableOpacity>
             </View>
             <View style={[styles.textView]}>
-              <Text style={{ color: '#941000', fontWeight: '600' }}>
+              <Text style={{ color: '#C8170D', fontWeight: '600' }}>
                 {Data.data.category}
               </Text>
               <Text style={{ color: 'white', paddingVertical: 8, fontSize: 20 }}>
@@ -207,7 +207,7 @@ const DietDetail = () => {
                     color: defaultTheme ? "#fff" : "#000"
                   },
                   strong: {
-                    color: '#941000',
+                    color: '#C8170D',
                     fontSize: 20,
                   }
                   , li: {
@@ -229,7 +229,7 @@ const DietDetail = () => {
                       color: defaultTheme ? "#fff" : "#000"
                     },
                     strong: {
-                      color: '#941000',
+                      color: '#C8170D',
                       fontSize: 20,
                     }
                     , li: {
@@ -251,7 +251,7 @@ const DietDetail = () => {
                       color: defaultTheme ? "#fff" : "#000"
                     },
                     strong: {
-                      color: '#941000',
+                      color: '#C8170D',
                       fontSize: 20,
                     }
                     , li: {
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
   levelGoalView: {
     width: DeviceWidth,
     height: (DeviceHeigth * 8) / 100,
-    backgroundColor: '#941000',
+    backgroundColor: '#C8170D',
     justifyContent: 'space-around',
     flexDirection: 'row',
     alignItems: 'center',

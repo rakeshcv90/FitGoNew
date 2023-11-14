@@ -142,7 +142,7 @@ const ProfileScreen = () => {
   };
   return (
     <View style={{ flex: 1, backgroundColor: defaultTheme == true ? "#000" : "#fff" }}>
-      {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
+      {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#C8170D'} /></> : <><CustomStatusBar /></>}
       <HeaderWithoutSearch Header={"Profile"} />
       <View style={styles.container1}>
         <Image source={localImage.maleIcon} style={styles.Icon} />
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     marginVertical: (DeviceHeigth * 2) / 100,
   },
   nextIcon: {
-    tintColor: "#941000",
+    tintColor: "#C8170D",
     resizeMode: 'contain',
     height: (DeviceHeigth * 1.5) / 100,
     alignSelf: 'flex-end',

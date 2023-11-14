@@ -17,8 +17,8 @@ const Header = ({ header, iconName }) => {
   const navigation = useNavigation();
   return (
     <>
-      <ImageBackground
-        source={localImage.color_image}
+      <View
+        // source={localImage.color_image}
         translucent={true}
         style={{
           width: DeviceWidth,
@@ -26,6 +26,7 @@ const Header = ({ header, iconName }) => {
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'flex-end',
+          backgroundColor:'#C8170D'
         }}>
         <View style={{
           flexDirection: 'row',
@@ -49,7 +50,7 @@ const Header = ({ header, iconName }) => {
             <Icons name={iconName} size={25} color={'white'} />
           </TouchableOpacity>
         </View>
-      </ImageBackground>
+      </View>
     </>
   );
 };

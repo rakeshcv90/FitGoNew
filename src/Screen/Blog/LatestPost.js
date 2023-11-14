@@ -74,7 +74,7 @@ const LatestPost = () => {
                                         }}>
                                         <View>
                                             <Text style={{ color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>{elements.item.title}</Text>
-                                            <Text style={{ color: '#941000', fontWeight: '500' }}>
+                                            <Text style={{ color: '#C8170D', fontWeight: '500' }}>
                                                 {/* {elements.item.price} */}
                                             </Text>
                                         </View>
