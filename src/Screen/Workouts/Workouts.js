@@ -56,6 +56,7 @@ const Workouts = () => {
           <>
             <StatusBar
               barStyle={defaultTheme ? 'light-content' : 'dark-content'}
+
               backgroundColor={'#941000'}
             />
           </>
@@ -103,10 +104,12 @@ const Workouts = () => {
         </View>
         <View
           style={{
+
             // width: DeviceWidth,
             //height: (DeviceHeigth * 88) / 100,
             // marginBottom:DeviceHeigth*0.12,
             flex:1,
+
             backgroundColor: defaultTheme ? '#000' : '#fff',
           }}>
           <FlatList
@@ -181,6 +184,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#941000',
+
     borderRadius: 8,
     marginHorizontal: 7,
     flex: 1,

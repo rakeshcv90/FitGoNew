@@ -73,7 +73,9 @@ const ProfileScreen = () => {
     try {
       await AsyncStorage.removeItem('Data');
       navigation.navigate('Login');
-    } catch (error) { }
+    } catch (error) { 
+      console.log(Error1)
+    }
   };
   const DeleteAccount = async () => {
     try {

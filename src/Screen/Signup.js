@@ -9,7 +9,12 @@ import {
   Platform,
   Modal,
   Animated,
+
   Alert,
+
+  Image,
+  ScrollView,
+
 } from 'react-native';
 import React, {useEffect, useRef, useState, useMemo} from 'react';
 import {Api, Appapi, DeviceHeigth, DeviceWidth} from '../Component/Config';
@@ -20,7 +25,11 @@ import {useSelector} from 'react-redux';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {useRoute} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import Icon from 'react-native-vector-icons/Ionicons';
+
+import {localImage} from '../Component/Image';
+
 const Signup = ({navigation}) => {
   const route = useRoute();
   const data = route.params;
@@ -31,12 +40,16 @@ const Signup = ({navigation}) => {
   const [ConfirmPassword, setConformPassword] = useState('');
   const {defaultTheme} = useSelector(state => state);
   const [submitText, setSubmitText] = useState('Enter');
-  const [isVisible, seIsvisible] = useState(false);
+  const [isVisible, setIsvisible] = useState(false);
+  const [isVisiblepassword, setIsvisiblepassword] = useState(false);
   const [IsVerifyVisible, setVerifyVisible] = useState(false);
   const StatusBar_Bar_Height = Platform.OS === 'ios' ? getStatusBarHeight() : 0;
   const Animation = useRef(new Animated.Value(0)).current;
   const ToggleVisibility = () => {
-    seIsvisible(!isVisible);
+    setIsvisible(!isVisible);
+  };
+  const ToggleVisibilityPassword = () => {
+    setIsvisiblepassword(!isVisiblepassword);
   };
   useEffect(() => {
     if (!data) {
@@ -50,7 +63,8 @@ const Signup = ({navigation}) => {
 
   const ErrorHandler = () => {
     let reg = /\S+@\S+\.\S+/;
-    let pass = /^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/;
+    const PasswordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%&*()-_+='":;,.?/~`[{}<>€£¥÷×])[A-Za-z\d!@#$%&*()-_+='":;,.?/~`[{}<>€£¥÷×]{8,}$/;
     if (!Name) {
       showMessage({
         message: 'Enter Your name',
@@ -81,6 +95,17 @@ const Signup = ({navigation}) => {
     } else if (!Password) {
       showMessage({
         message: 'Please Enter Your Password',
+        statusBarHeight: StatusBar_Bar_Height,
+        floating: true,
+        type: 'danger',
+        icon: {icon: 'auto', position: 'left'},
+      });
+      setSubmitText('Enter');
+    } else if (!PasswordRegex.test(Password)) {
+      showMessage({
+        message: `Password must contain 1 Upper-Case letter,
+           1 Lower-Case letter, 1 Digit, 1 Special 
+           Character(@,$,-,^,&, !),and the length must be at least 8 characters`,
         statusBarHeight: StatusBar_Bar_Height,
         floating: true,
         type: 'danger',
@@ -133,6 +158,7 @@ const Signup = ({navigation}) => {
       });
       console.log(data.data);
       setSubmitText('Enter');
+
       setSubmitText('Enter');
       setVerifyVisible(true);
       if (data.data[0].msg === 'Otp sent to your email') {
@@ -144,6 +170,7 @@ const Signup = ({navigation}) => {
           type: 'success',
           icon: {icon: 'auto', position: 'left'},
         });
+
         setVerifyVisible(true);
       } else if (data.data[0].status == 0) {
         // try {
@@ -157,21 +184,23 @@ const Signup = ({navigation}) => {
         //   data: payload,
         // });
 
-        // if (data.data[0].msg == 'otp sent') {
-        //   setSubmitText('Enter');
-        // } else {
-        //   setSubmitText('Enter');
-        //   showMessage({
-        //     message: data.data[0].msg,
-        //     statusBarHeight: StatusBar_Bar_Height,
-        //     floating: true,
-        //     type: 'success',
-        //     icon: {icon: 'auto', position: 'left'},
-        //   });
-        // }
-        // } catch (error) {
-        //   setSubmitText('Enter');
-        // }
+
+          if (data.data[0].msg == 'otp sent') {
+            // t1.current.focus();
+            setSubmitText('Enter');
+          } else {
+            setSubmitText('Enter');
+            showMessage({
+              message: data.data[0].msg,
+              statusBarHeight: StatusBar_Bar_Height,
+              floating: true,
+              type: 'success',
+              icon: {icon: 'auto', position: 'left'},
+            });
+          }
+        } catch (error) {
+          setSubmitText('Enter');
+        }
         setSubmitText('Enter');
         setSubmitText('Enter');
         setVerifyVisible(true);
@@ -288,13 +317,15 @@ const Signup = ({navigation}) => {
             },
             data: payload,
           });
-          // console.log(Email, OtpString, OtpMsg.data[0]);
+
           if (OtpMsg.data[0].msg == 'Email verified successfully') {
             showMessage({
               message: 'Email verified successfully , Please Login',
               statusBarHeight: StatusBar_Bar_Height,
               floating: true,
+
               duration: 750,
+
               type: 'success',
               icon: {icon: 'auto', position: 'left'},
             });
@@ -401,8 +432,10 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
+
                     activeOutlineColor="#941000"
                     value={txt1}
+
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt1(txt);
@@ -421,8 +454,10 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
+
                     activeOutlineColor="#941000"
                     value={txt2}
+
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt2(txt);
@@ -441,7 +476,9 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
+
                     activeOutlineColor="#941000"
+
                     value={txt3}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
@@ -461,8 +498,10 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
+
                     activeOutlineColor="#941000"
                     value={txt4}
+
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt4(txt);
@@ -481,8 +520,10 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
+
                     activeOutlineColor="#941000"
                     value={txt5}
+
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt5(txt);
@@ -502,6 +543,7 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
+
                     activeOutlineColor="#941000"
                     value={txt6}
                     onChangeText={txt => {
@@ -569,134 +611,147 @@ const Signup = ({navigation}) => {
     );
   };
   return (
-    <>
-      <View style={{flex: 1, backgroundColor: defaultTheme ? '#000' : '#fff'}}>
-        <SafeAreaView
+    <SafeAreaView
+      style={{flex: 1, backgroundColor: defaultTheme ? '#000' : '#fff'}}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'position' : 'position'}
+        style={{marginVertical: DeviceHeigth * 0.07}}
+        contentContainerStyle={{flexGrow: 1}}>
+        <Text
+          style={[styles.SignUpText, {color: defaultTheme ? '#fff' : '#000'}]}>
+          SignUp
+        </Text>
+        <Image
+          source={localImage.logo}
           style={{
-            width: DeviceWidth,
-            height: StatusBar_Bar_Height,
-            backgroundColor: defaultTheme ? '#000' : '#fff',
-          }}>
-          <StatusBar
-            barStyle={defaultTheme ? 'light-content' : 'dark-content'}
+            width: DeviceWidth * 0.6,
+            height: DeviceWidth * 0.6,
+            alignSelf: 'center',
+          }}
+          resizeMode="cover"
+        />
+        <View
+          style={[
+            styles.container,
+            {backgroundColor: defaultTheme ? '#000' : '#fff'},
+          ]}>
+          <TextInput
+            label={'Name'}
+            onChangeText={text => {
+              setName(text);
+            }}
+            mode="flat"
+            autoCapitalize="none"
+            style={styles.AuthInput}
+            activeUnderlineColor="#f39c1f"
+            value={Name}
+            textColor={defaultTheme ? '#fff' : '#000'}
+            theme={{
+              colors: {
+                onSurfaceVariant: defaultTheme
+                  ? 'rgba(255,255,255,0.7)'
+                  : 'rgba(0,0,0,0.6)',
+              },
+            }}
+            underlineColor={
+              defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
+            }
           />
-        </SafeAreaView>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'height' : 'height'}
-          style={{flex: 1}}>
-          <Text
-            style={[
-              styles.SignUpText,
-              {color: defaultTheme ? '#fff' : '#000'},
-            ]}>
-            SignUp
-          </Text>
-          <View
-            style={[
-              styles.container,
-              {backgroundColor: defaultTheme ? '#000' : '#fff'},
-            ]}>
-            <TextInput
-              label={'Name'}
-              onChangeText={text => {
-                setName(text);
-              }}
-              mode="flat"
-              autoCapitalize="none"
-              style={styles.AuthInput}
-              activeUnderlineColor="#941000"
-              value={Name}
-              textColor={defaultTheme ? '#fff' : '#000'}
-              theme={{
-                colors: {
-                  onSurfaceVariant: defaultTheme
-                    ? 'rgba(255,255,255,0.7)'
-                    : 'rgba(0,0,0,0.6)',
-                },
-              }}
-              underlineColor={
-                defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
-              }
-            />
-            <TextInput
-              label={'Email'}
-              keyboardType="email-address"
-              onChangeText={text => {
-                setEmail(text.trim());
-                setVerifyVisible(false);
-              }}
-              mode="flat"
-              autoCapitalize="none"
-              style={styles.AuthInput}
-              activeUnderlineColor="#941000"
-              value={Email}
-              textColor={defaultTheme ? '#fff' : '#000'}
-              theme={{
-                colors: {
-                  onSurfaceVariant: defaultTheme
-                    ? 'rgba(255,255,255,0.7)'
-                    : 'rgba(0,0,0,0.6)',
-                },
-              }}
-              underlineColor={
-                defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
-              }
-            />
-            <TextInput
-              label={'Password'}
-              onChangeText={text => setPassword(text.trim())}
-              mode="flat"
-              autoCapitalize="none"
-              style={styles.AuthInput}
-              activeUnderlineColor="#941000"
-              value={Password}
-              secureTextEntry={true}
-              textColor={defaultTheme ? '#fff' : '#000'}
-              underlineColor={
-                defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
-              }
-              theme={{
-                colors: {
-                  onSurfaceVariant: defaultTheme
-                    ? 'rgba(255,255,255,0.7)'
-                    : 'rgba(0,0,0,0.6)',
-                },
-              }}
-            />
-            <TextInput
-              label={'Confirm Password'}
-              onChangeText={text => setConformPassword(text.trim())}
-              mode="flat"
-              autoCapitalize="none"
-              style={styles.AuthInput}
-              activeUnderlineColor="#941000"
-              value={ConfirmPassword}
-              secureTextEntry={!isVisible}
-              textColor={defaultTheme ? '#fff' : '#000'}
-              underlineColor={
-                defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
-              }
-              theme={{
-                colors: {
-                  onSurfaceVariant: defaultTheme
-                    ? 'rgba(255,255,255,0.7)'
-                    : 'rgba(0,0,0,0.6)',
-                },
-              }}
-              right={
-                <TextInput.Icon
-                  icon={isVisible ? 'eye' : 'eye-off'}
-                  onPress={ToggleVisibility}
-                  theme={{
-                    colors: {
-                      onSurfaceVariant: defaultTheme
-                        ? 'rgba(255,255,255,0.7)'
-                        : 'rgba(0,0,0,0.6)',
-                    },
-                  }}
-                />
-              }
-            />
+
+          <TextInput
+            label={'Email'}
+            keyboardType="email-address"
+            onChangeText={text => {
+              setEmail(text.trim());
+              setVerifyVisible(false);
+            }}
+            mode="flat"
+            autoCapitalize="none"
+            style={styles.AuthInput}
+            activeUnderlineColor="#f39c1f"
+            value={Email}
+            textColor={defaultTheme ? '#fff' : '#000'}
+            theme={{
+              colors: {
+                onSurfaceVariant: defaultTheme
+                  ? 'rgba(255,255,255,0.7)'
+                  : 'rgba(0,0,0,0.6)',
+              },
+            }}
+            underlineColor={
+              defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
+            }
+          />
+          <TextInput
+            label={'Password'}
+            onChangeText={text => setPassword(text.trim())}
+            mode="flat"
+            autoCapitalize="none"
+            style={styles.AuthInput}
+            activeUnderlineColor="#f39c1f"
+            value={Password}
+            secureTextEntry={!isVisiblepassword}
+            textColor={defaultTheme ? '#fff' : '#000'}
+            underlineColor={
+              defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
+            }
+            theme={{
+              colors: {
+                onSurfaceVariant: defaultTheme
+                  ? 'rgba(255,255,255,0.7)'
+                  : 'rgba(0,0,0,0.6)',
+              },
+            }}
+            right={
+              <TextInput.Icon
+                icon={isVisiblepassword ? 'eye' : 'eye-off'}
+                onPress={ToggleVisibilityPassword}
+                theme={{
+                  colors: {
+                    onSurfaceVariant: defaultTheme
+                      ? 'rgba(255,255,255,0.7)'
+                      : 'rgba(0,0,0,0.6)',
+                  },
+                }}
+              />
+            }
+          />
+          <TextInput
+            label={'Confirm Password'}
+            onChangeText={text => setConformPassword(text.trim())}
+            mode="flat"
+            autoCapitalize="none"
+            style={styles.AuthInput}
+            activeUnderlineColor="#f39c1f"
+            value={ConfirmPassword}
+            secureTextEntry={!isVisible}
+            textColor={defaultTheme ? '#fff' : '#000'}
+            underlineColor={
+              defaultTheme ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'
+            }
+            theme={{
+              colors: {
+                onSurfaceVariant: defaultTheme
+                  ? 'rgba(255,255,255,0.7)'
+                  : 'rgba(0,0,0,0.6)',
+              },
+            }}
+            right={
+              <TextInput.Icon
+                icon={isVisible ? 'eye' : 'eye-off'}
+                onPress={ToggleVisibility}
+                theme={{
+                  colors: {
+                    onSurfaceVariant: defaultTheme
+                      ? 'rgba(255,255,255,0.7)'
+                      : 'rgba(0,0,0,0.6)',
+                  },
+                }}
+              />
+            }
+          />
+          {!IsVerifyVisible ? (
+
             <View
               style={{
                 flexDirection: 'row',
@@ -706,24 +761,14 @@ const Signup = ({navigation}) => {
                 width: (DeviceWidth * 80) / 100,
               }}>
               <TouchableOpacity
-                onPress={() => {
-                  setChecked(!checked);
-                }}>
-                {checked ? (
-                  <Icons
-                    name="checkbox-marked"
-                    size={30}
-                    style={{marginVertical: 10, marginRight: 8}}
-                    color={"#941000"}
-                  />
-                ) : (
-                  <Icons
-                    name="checkbox-blank-outline"
-                    size={30}
-                    style={{marginVertical: 10, marginRight: 8}}
-                    color={defaultTheme?"rgba(255,255,255,0.5)":"rgba(0,0,0,0.5)"}
-                  />
-                )}
+
+                style={[styles.checkboxContainer, checked && styles.Checked]}
+                onPress={() => setChecked(!checked)}>
+                <Text>
+                  {' '}
+                  {checked && <Icons name="check" size={16} color={'#fff'} />}
+                </Text>
+
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
@@ -735,6 +780,8 @@ const Signup = ({navigation}) => {
               </TouchableOpacity>
             </View>
 
+          ) : (
+
             <View
               style={{
                 flexDirection: 'row',
@@ -742,7 +789,23 @@ const Signup = ({navigation}) => {
                 position: 'relative',
                 alignItems: 'center',
                 width: (DeviceWidth * 80) / 100,
-              }}></View>
+
+              }}>
+              <View
+                style={[styles.checkboxContainer, checked && styles.Checked]}>
+                <Text>
+                  {' '}
+                  {checked && <Icons name="check" size={16} color={'#fff'} />}
+                </Text>
+              </View>
+              <View>
+                <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
+                  I Agree to Terms & Conditions
+                </Text>
+              </View>
+            </View>
+          )}
+          {!IsVerifyVisible ? (
             <TouchableOpacity
               style={styles.Tbutton}
               onPress={() => {
@@ -751,38 +814,45 @@ const Signup = ({navigation}) => {
               }}>
               <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('Login');
+
+          ) : (
+            <View style={styles.Tbutton}>
+              <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
+            </View>
+          )}
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Login');
+            }}>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginVertical: 5,
               }}>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginVertical: 5,
-                }}>
-                <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
-                  Already have an account ?{' '}
-                  <Text
-                    style={{
-                      color: defaultTheme ? '#fff' : '#000',
-                      fontWeight: 'bold',
-                    }}>
-                    Login
-                  </Text>
+              <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
+                Already have an account ?{' '}
+                <Text
+                  style={{
+                    color: defaultTheme ? '#fff' : '#000',
+                    fontWeight: 'bold',
+                  }}>
+                  Login
                 </Text>
-              </View>
-            </TouchableOpacity>
-            {IsVerifyVisible ? <ModalView /> : null}
-          </View>
-        </KeyboardAvoidingView>
-      </View>
-    </>
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        {IsVerifyVisible ? <ModalView /> : null}
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+
   );
 };
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
     alignItems: 'center',
     // marginVertical:DeviceHeigth,
     justifyContent: 'center',
