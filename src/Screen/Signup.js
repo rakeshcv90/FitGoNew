@@ -20,7 +20,7 @@ import {useSelector} from 'react-redux';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {useRoute} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon from 'react-native-vector-icons/FontAwesome5'
+import Icon from 'react-native-vector-icons/Ionicons';
 const Signup = ({navigation}) => {
   const route = useRoute();
   const data = route.params;
@@ -140,7 +140,7 @@ const Signup = ({navigation}) => {
           message: data.data[0].msg,
           statusBarHeight: StatusBar_Bar_Height,
           floating: true,
-          animationDuration:500,
+          animationDuration: 500,
           type: 'success',
           icon: {icon: 'auto', position: 'left'},
         });
@@ -271,7 +271,7 @@ const Signup = ({navigation}) => {
           statusBarHeight: StatusBar_Bar_Height,
           floating: true,
           type: 'danger',
-          animationDuration:500,
+          animationDuration: 500,
           icon: {icon: 'auto', position: 'left'},
         });
         SetVerifyText('Verify');
@@ -318,13 +318,13 @@ const Signup = ({navigation}) => {
               type: 'danger',
               icon: {icon: 'auto', position: 'left'},
             });
-           t1.current.focus();
-           setTxt1('');
-           setTxt2('');
-           setTxt3('');
-           setTxt4('');
-           setTxt5('');
-           setTxt6('');
+            t1.current.focus();
+            setTxt1('');
+            setTxt2('');
+            setTxt3('');
+            setTxt4('');
+            setTxt5('');
+            setTxt6('');
           }
           SetVerifyText('Verify');
           setSubmitText('Enter');
@@ -401,7 +401,7 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
-                    activeOutlineColor="#f39c1f"
+                    activeOutlineColor="#941000"
                     value={txt1}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
@@ -421,7 +421,7 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
-                    activeOutlineColor="#f39c1f"
+                    activeOutlineColor="#941000"
                     value={txt2}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
@@ -441,7 +441,7 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
-                    activeOutlineColor="#f39c1f"
+                    activeOutlineColor="#941000"
                     value={txt3}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
@@ -461,7 +461,7 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
-                    activeOutlineColor="#f39c1f"
+                    activeOutlineColor="#941000"
                     value={txt4}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
@@ -481,7 +481,7 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
-                    activeOutlineColor="#f39c1f"
+                    activeOutlineColor="#941000"
                     value={txt5}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
@@ -502,7 +502,7 @@ const Signup = ({navigation}) => {
                     keyboardType="number-pad"
                     activeUnderlineColor="transparent"
                     maxLength={1}
-                    activeOutlineColor="#f39c1f"
+                    activeOutlineColor="#941000"
                     value={txt6}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
@@ -546,7 +546,7 @@ const Signup = ({navigation}) => {
                   <TouchableOpacity
                     style={{
                       width: (DeviceWidth * 40) / 100,
-                      backgroundColor: '#f39c1f',
+                      backgroundColor: '#941000',
                       height: (DeviceHeigth * 4) / 100,
                       justifyContent: 'center',
                       alignItems: 'center',
@@ -604,7 +604,7 @@ const Signup = ({navigation}) => {
               mode="flat"
               autoCapitalize="none"
               style={styles.AuthInput}
-              activeUnderlineColor="#f39c1f"
+              activeUnderlineColor="#941000"
               value={Name}
               textColor={defaultTheme ? '#fff' : '#000'}
               theme={{
@@ -628,7 +628,7 @@ const Signup = ({navigation}) => {
               mode="flat"
               autoCapitalize="none"
               style={styles.AuthInput}
-              activeUnderlineColor="#f39c1f"
+              activeUnderlineColor="#941000"
               value={Email}
               textColor={defaultTheme ? '#fff' : '#000'}
               theme={{
@@ -648,7 +648,7 @@ const Signup = ({navigation}) => {
               mode="flat"
               autoCapitalize="none"
               style={styles.AuthInput}
-              activeUnderlineColor="#f39c1f"
+              activeUnderlineColor="#941000"
               value={Password}
               secureTextEntry={true}
               textColor={defaultTheme ? '#fff' : '#000'}
@@ -669,7 +669,7 @@ const Signup = ({navigation}) => {
               mode="flat"
               autoCapitalize="none"
               style={styles.AuthInput}
-              activeUnderlineColor="#f39c1f"
+              activeUnderlineColor="#941000"
               value={ConfirmPassword}
               secureTextEntry={!isVisible}
               textColor={defaultTheme ? '#fff' : '#000'}
@@ -697,69 +697,60 @@ const Signup = ({navigation}) => {
                 />
               }
             />
-            {!IsVerifyVisible ? (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'flex-start',
-                  position: 'relative',
-                  alignItems: 'center',
-                  width: (DeviceWidth * 80) / 100,
-                }}>
-                <TouchableOpacity
-                  style={[styles.checkboxContainer, checked && styles.Checked]}
-                  onPress={() => setChecked(!checked)}>
-                  <Text>
-                    {' '}
-                    {checked && <Icon name="check" size={23} color={'#fff'} />}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate('TermaAndCondition');
-                  }}>
-                  <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
-                    I Agree to Terms & Conditions
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'flex-start',
-                  position: 'relative',
-                  alignItems: 'center',
-                  width: (DeviceWidth * 80) / 100,
-                }}>
-                <View
-                  style={[styles.checkboxContainer, checked && styles.Checked]}>
-                  <Text>
-                    {' '}
-                    {checked && <Icon name=""/>}
-                  </Text>
-                </View>
-                <View>
-                  <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
-                    I Agree to Terms & Conditions
-                  </Text>
-                </View>
-              </View>
-            )}
-            {!IsVerifyVisible ? (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                position: 'relative',
+                alignItems: 'center',
+                width: (DeviceWidth * 80) / 100,
+              }}>
               <TouchableOpacity
-                style={styles.Tbutton}
                 onPress={() => {
-                  setSubmitText('Please Wait...');
-                  ErrorHandler();
+                  setChecked(!checked);
                 }}>
-                <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
+                {checked ? (
+                  <Icons
+                    name="checkbox-marked"
+                    size={30}
+                    style={{marginVertical: 10, marginRight: 8}}
+                    color={"#941000"}
+                  />
+                ) : (
+                  <Icons
+                    name="checkbox-blank-outline"
+                    size={30}
+                    style={{marginVertical: 10, marginRight: 8}}
+                    color={defaultTheme?"rgba(255,255,255,0.5)":"rgba(0,0,0,0.5)"}
+                  />
+                )}
               </TouchableOpacity>
-            ) : (
-              <View style={styles.Tbutton}>
-                <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
-              </View>
-            )}
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('TermaAndCondition');
+                }}>
+                <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
+                  I Agree to Terms & Conditions
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                position: 'relative',
+                alignItems: 'center',
+                width: (DeviceWidth * 80) / 100,
+              }}></View>
+            <TouchableOpacity
+              style={styles.Tbutton}
+              onPress={() => {
+                setSubmitText('Please Wait...');
+                ErrorHandler();
+              }}>
+              <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('Login');
@@ -784,8 +775,6 @@ const Signup = ({navigation}) => {
             </TouchableOpacity>
             {IsVerifyVisible ? <ModalView /> : null}
           </View>
-
-         
         </KeyboardAvoidingView>
       </View>
     </>
@@ -801,7 +790,7 @@ const styles = StyleSheet.create({
   TextInput: {
     borderBottomWidth: 1,
     width: (DeviceWidth * 80) / 100,
-    color: '#f39c1f',
+    color: '#941000',
     borderBottomColor: '#adadad',
   },
   checkboxContainer: {
@@ -814,17 +803,13 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     marginRight: 10,
   },
-  Checked: {
-    backgroundColor: '#f39c1f',
-    borderColor: '#f39c1f',
-  },
   Tbutton: {
     width: (DeviceWidth * 80) / 100,
     height: (DeviceHeigth * 6) / 100,
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f39c1f',
+    backgroundColor: '#941000',
     marginBottom: 15,
   },
   SignUpText: {
@@ -876,7 +861,7 @@ const styles = StyleSheet.create({
     }),
   },
   Verify: {
-    backgroundColor: 'red',
+    backgroundColor: '#941000',
     width: (DeviceWidth * 50) / 100,
     height: (DeviceHeigth * 4) / 100,
     borderRadius: 100,

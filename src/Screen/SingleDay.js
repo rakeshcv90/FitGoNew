@@ -89,7 +89,7 @@ const SingleDay = () => {
                                                     ]}>
                                                     {elements.item.title}
                                                 </Text>
-                                                <Icons name="chevron-right" size={20} color={'#f39c1f'} />
+                                                <Icons name="chevron-right" size={20} color={'#941000'} />
                                             </View>
                                         </View>
                                     </View>
@@ -116,7 +116,7 @@ const SingleDay = () => {
                     <Text style={{ fontSize: 20, color: defaultTheme ? "#fff" : "#000" }}>{Data.DayName}</Text>
                     <Text></Text></View>
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Icons name="bed" size={50} color={'#f39c1f'} />
+                    <Icons name="bed" size={50} color={'#941000'} />
                     <Text style={{ fontSize: 20, marginVertical: 5, color: defaultTheme ? "#fff" : "#000" }}>Rest Day</Text>
                     <Text style={{ fontSize: 17, color: defaultTheme ? "#fff" : "#000" }}>It's Part of the Program</Text>
                 </View>
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     Startbtn: {
-        backgroundColor: '#f39c1f',
+        backgroundColor: '#941000',
         margin: 20,
         width: DeviceWidth * 90 / 100,
         height: DeviceHeigth * 7 / 100,

@@ -38,7 +38,7 @@ const AboutUs = () => {
     if (isLoaded) {
         return (
             <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
-                {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
+                {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#941000'}/></>:<><CustomStatusBar/></>}
                 <HeaderWithoutSearch Header={"About Us"} />
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <Image source={localImage.logo} style={{ width: DeviceWidth * 40 / 100, resizeMode: 'contain', height: DeviceHeigth * 20 / 100 }} />
@@ -52,7 +52,7 @@ const AboutUs = () => {
                                         color: defaultTheme ? "#fff" : "#000"
                                     },
                                     strong: {
-                                        color: '#f39c1f',
+                                        color: '#941000',
                                         fontSize: 20,
                                     }
                                 }} contentWidth={width} />

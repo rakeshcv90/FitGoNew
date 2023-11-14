@@ -178,7 +178,7 @@ const Login = () => {
             mode="flat"
             autoCapitalize="none"
             style={styles.AuthInput}
-            activeUnderlineColor="#f39c1f"
+            activeUnderlineColor="#941000"
             underlineColor={
               defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'
             }
@@ -198,7 +198,7 @@ const Login = () => {
             mode="flat"
             secureTextEntry={!isVisible}
             style={styles.AuthInput}
-            activeUnderlineColor="#f39c1f"
+            activeUnderlineColor="#941000"
             underlineColor={
               defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'
             }
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f39c1f',
+    backgroundColor: '#941000',
     marginBottom: (DeviceHeigth * 2) / 100,
   },
   AuthInput: {

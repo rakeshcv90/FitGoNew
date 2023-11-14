@@ -52,7 +52,7 @@ const BlogDetail = () => {
                             <Text style={{ color: 'white', paddingVertical: 8, fontSize: 16 }}>
                                 {Data.data.title}
                             </Text>
-                            <Text style={{ color: '#f39c1f' }}>{Data.data.tag}</Text>
+                            <Text style={{ color: '#941000' }}>{Data.data.tag}</Text>
                         </View>
                     </LinearGradient>
                 </ImageBackground>
@@ -65,7 +65,7 @@ const BlogDetail = () => {
                             color:defaultTheme?"#fff":"#000"
                         },
                         strong:{
-                            color:'#f39c1f',
+                            color:'#941000',
                             fontSize:20,
                         }
                         ,li:{
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     levelGoalView: {
         width: DeviceWidth,
         height: (DeviceHeigth * 8) / 100,
-        backgroundColor: '#f39c1f',
+        backgroundColor: '#941000',
         justifyContent: 'space-around',
         flexDirection: 'row',
         alignItems: 'center',

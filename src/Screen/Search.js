@@ -63,7 +63,7 @@ const Search = () => {
   if (isLoaded) {
     return (
       <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
-          {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
+          {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#941000'}/></>:<><CustomStatusBar/></>}
         <HeaderWithoutSearch Header={"Search"} />
         <View style={[styles.SearchView, { borderColor: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' }]}>
           <Icons
@@ -77,7 +77,7 @@ const Search = () => {
             placeholder="Search Workouts..."
             underlineColor="transparent"
             placeholderTextColor={defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'}
-            cursorColor="#f39c1f"
+            cursorColor="#941000"
             value={query}
             activeUnderlineColor='transparent'
             textColor={defaultTheme ? '#fff' : '#000'}

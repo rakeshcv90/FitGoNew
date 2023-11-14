@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     width:DeviceWidth*15/100,
     height:DeviceHeigth*5/100,
     resizeMode:'contain',
-    tintColor:'#f39c1f'
+    tintColor:'#941000'
   }
 });
 export default FavDiets;

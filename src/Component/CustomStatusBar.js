@@ -10,7 +10,7 @@ const CustomStatusBar = () => {
     <SafeAreaView style={{
         width: DeviceWidth,
         height: StatusBar_Bar_Height,
-        backgroundColor:'#f39c1f'
+        backgroundColor:'#941000'
     }}>
         <StatusBar
             barStyle={defaultTheme?'light-content':'dark-content'}

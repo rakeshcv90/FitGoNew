@@ -84,7 +84,7 @@ const ForgetPassword = ({ navigation }) => {
   };
   return (
     <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
-      {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
+      {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'height' : 'height'} style={{ flex: 1 }}>
         <HeaderWithoutSearch Header={'Forget Password'} />
 
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f39c1f',
+    backgroundColor: '#941000',
     marginBottom: (DeviceHeigth * 6) / 100,
   },
   AuthInput: {

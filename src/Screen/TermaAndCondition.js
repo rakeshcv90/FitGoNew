@@ -39,7 +39,7 @@ const TermaAndCondition = () => {
     return (
       <View style={[styles.container, { backgroundColor: defaultTheme ? "#000" : "#fff" }]}>
         <View>
-        {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#f39c1f'}/></>:<><CustomStatusBar/></>}
+        {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#941000'}/></>:<><CustomStatusBar/></>}
         </View>
         <HeaderWithoutSearch Header={"Terms & Privacy"} />
         <View style={{ flex:1,marginHorizontal:8}}>
@@ -51,7 +51,7 @@ const TermaAndCondition = () => {
                     color: defaultTheme ? "#fff" : "#000"
                   },
                   strong: {
-                    color: '#f39c1f',
+                    color: '#941000',
                     fontSize: 20,
                   }
                 }} contentWidth={width} />
@@ -60,7 +60,7 @@ const TermaAndCondition = () => {
                     color: defaultTheme ? "#fff" : "#000"
                   },
                   strong: {
-                    color: '#f39c1f',
+                    color: '#941000',
                     fontSize: 20,
                   }
                 }} contentWidth={width} />

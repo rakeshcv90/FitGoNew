@@ -94,7 +94,7 @@ const Blog = () => {
     };
     return (
         <View style={[styles.conatainer, { backgroundColor: defaultTheme ? '#000' : '#fff' }]}>
-            {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#f39c1f'} /></> : <><CustomStatusBar /></>}
+            {Platform.OS == 'android' ? <><StatusBar barStyle={defaultTheme ? 'light-content' : 'dark-content'} backgroundColor={'#941000'} /></> : <><CustomStatusBar /></>}
             <HeaderWithoutSearch Header={"Blog"} />
             <View>
                 {isLoaded ? (
@@ -121,7 +121,7 @@ const Blog = () => {
                                                         <Text style={styles.text}>{elements.item.title}</Text>
                                                         <Text
                                                             style={{
-                                                                color: '#f39c1f',
+                                                                color: '#941000',
                                                                 fontWeight: '500',
                                                                 marginTop: 7,
                                                             }}>
@@ -135,7 +135,7 @@ const Blog = () => {
                                 />
                             </> : <>
                                 <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff", justifyContent: 'center', alignItems: 'center' }}>
-                                    <Text style={{ color: '#f39c1f', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View></>}
+                                    <Text style={{ color: '#941000', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View></>}
                     </>
                 ) : (
                     <>
@@ -259,7 +259,7 @@ const Blog = () => {
                                                     }}>
                                                     <View>
                                                         <Text style={{ color: defaultTheme == true ? "#fff" : "#000", fontWeight: '500' }}>{elements.item.title}</Text>
-                                                        <Text style={{ color: '#f39c1f', fontWeight: '500' }}>
+                                                        <Text style={{ color: '#941000', fontWeight: '500' }}>
                                                             {elements.item.price}
                                                         </Text>
                                                     </View>
@@ -273,7 +273,7 @@ const Blog = () => {
                         </> :
                         <>
                             <View style={{ height: (DeviceHeigth * 90) / 100, backgroundColor: defaultTheme ? "#000" : "#fff", justifyContent: 'center', alignItems: 'center' }}>
-                            <Text style={{ color: '#f39c1f', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View>
+                            <Text style={{ color: '#941000', fontSize: 20, fontWeight: 'bold' }}>No Data Available</Text></View>
                         </>}
                 </>
             ) : (
