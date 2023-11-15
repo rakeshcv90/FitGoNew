@@ -55,7 +55,7 @@ const Diets = () => {
         <TouchableOpacity style={styles.button} onPress={() => {
           navigation.navigate('DietCategory')
         }}>
-          <Icons name="tag" size={15} color={"black"} />
+          <Icons name="tag" size={15} color={"#fff"} />
           <Text style={styles.btnText}>Categories</Text>
         </TouchableOpacity>
         <View style={{flex:1, width: DeviceWidth, justifyContent: 'center', alignItems: 'center' }}>
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     marginRight: 5
   },
   btnText: {
-    color: 'black',
+    color: "#fff",
     fontWeight: 'bold',
     marginLeft: 10
   },

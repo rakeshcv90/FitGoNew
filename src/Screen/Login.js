@@ -100,11 +100,11 @@ const Login = () => {
             password: Password,
           },
         });
-
+        console.log(data.data)
         if (data.data[0].status == 0) {
           setEmail('');
           setPassword('');
-          // console.log('data', data.data[0]);
+          
           navigation.navigate('Signup', {userData: data.data});
           setsubmitText('ENTER');
           setIsLoaded(true);
@@ -168,9 +168,10 @@ const Login = () => {
             alignItems: 'center',
           }}>
           <Image
-            resizeMode="cover"
+            resizeMode="contain"
             style={styles.logo}
             source={localImage.logo}
+           
           />
           <TextInput
             label={'Email'}
@@ -292,7 +293,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   logo: {
-    width: DeviceWidth * 0.6,
+    width: DeviceWidth * 0.5,
     height: DeviceWidth * 0.7,
     alignSelf: 'center',
   },

@@ -102,7 +102,7 @@ const ForgetPassword = ({ navigation }) => {
             mode="flat"
             autoCapitalize="none"
             style={styles.AuthInput}
-            activeUnderlineColor="#ec9706"
+            activeUnderlineColor='#C8170D'
             value={Email}
             theme={{ colors: { onSurfaceVariant: defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)' } }}
             underlineColor={defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'}

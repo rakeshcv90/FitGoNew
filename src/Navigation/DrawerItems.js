@@ -61,7 +61,7 @@ const DrawerItems = props => {
         {...props}
         style={{backgroundColor: defaultTheme ? '#000' : '#fff'}}>
         <TouchableOpacity
-          style={styles.buttons}
+          style={[styles.buttons,{marginTop: -(DeviceWidth * 8) / 100,}]}
           onPress={() => {
             props.navigation.navigate('Workouts');
           }}>
@@ -248,7 +248,7 @@ const DrawerItems = props => {
         <TouchableOpacity
           style={styles.buttons}
           onPress={() => {
-            props.navigation.navigate('Settings');
+            // props.navigation.navigate('Settings');
           }}>
           <View style={styles.buttons2}>
             {/* <Icons1 name={'settings-outline'} size={30} color={'#ec9706'} /> */}

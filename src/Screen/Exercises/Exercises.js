@@ -61,7 +61,7 @@ const Exercises = () => {
           <TouchableOpacity style={styles.button} onPress={() => {
             navigation.navigate("Equipments")
           }}>
-            <Icons name={'dumbbell'} size={20} color={'black'} />
+            <Icons name={'dumbbell'} size={20} color={"#fff"} />
             <Text style={styles.buttonText}> Exercises By Equipment</Text>
           </TouchableOpacity>
         </View>
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
 
   },
   buttonText: {
-    color: 'black',
+    color: "#fff",
     fontWeight: '500',
   },
   ExerciseIcon: {

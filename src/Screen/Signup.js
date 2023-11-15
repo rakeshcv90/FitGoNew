@@ -204,15 +204,19 @@ const Signup = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
+        setVerifyVisible(false)
         showMessage({
-          message: data.data[0].msg,
+          message: "User already exists",
           type: 'danger',
+          animationDuration:500,
           statusBarHeight: StatusBar_Bar_Height,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
         setSubmitText('Enter');
+        navigation.navigate("Login")
       }
+     
     } catch (error) {
       setSubmitText('Enter');
       console.log('eror', error);
@@ -305,6 +309,7 @@ const Signup = ({navigation}) => {
           });
           console.log(Email, OtpString, OtpMsg.data[0]);
           if (OtpMsg.data[0].msg == 'Email verified successfully') {
+            setVerifyVisible(false);
             showMessage({
               message: 'Email verified successfully , Please Login',
               statusBarHeight: StatusBar_Bar_Height,
@@ -321,7 +326,7 @@ const Signup = ({navigation}) => {
             setTxt4('');
             setTxt5('');
             setTxt6('');
-            setVerifyVisible(false);
+           
             setSubmitText('Enter');
             navigation.navigate('Login');
           } else {
@@ -376,29 +381,29 @@ const Signup = ({navigation}) => {
               styles.modalContainer,
               {backgroundColor: 'transparent', flex: 1},
             ]}>
-            <View style={styles.modalContent}>
+            <View style={[styles.modalContent ,{backgroundColor:defaultTheme?"#000":"#fff"}]}>
               <>
-              <View
-                style={[
-                  styles.closeButton,
-                  ,
-                  {
-                    width: (DeviceWidth * 85) / 100,
-                    marginTop: 8,
-                    backgroundColor: defaultTheme ? '#000' : 'fff',
-                  },
-                ]}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setVerifyVisible(false);
-                  }}>
-                  <Icons
-                    name="close"
-                    size={27}
-                    color={defaultTheme ? '#fff' : '#000'}
-                  />
-                </TouchableOpacity>
-              </View>
+                <View
+                  style={[
+                    styles.closeButton,
+                    ,
+                    {
+                      width: (DeviceWidth * 85) / 100,
+                      marginTop: 8,
+                      backgroundColor: defaultTheme ? '#000' : 'fff',
+                    },
+                  ]}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setVerifyVisible(false);
+                    }}>
+                    <Icons
+                      name="close"
+                      size={27}
+                      color={defaultTheme ? '#fff' : '#000'}
+                    />
+                  </TouchableOpacity>
+                </View>
                 <Text
                   style={{
                     color: defaultTheme ? '#fff' : '#000',
@@ -418,7 +423,7 @@ const Signup = ({navigation}) => {
                     activeUnderlineColor="transparent"
                     maxLength={1}
                     activeOutlineColor="red"
-                    value={txt1 }
+                    value={txt1}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt1(txt);
@@ -438,7 +443,7 @@ const Signup = ({navigation}) => {
                     activeUnderlineColor="transparent"
                     maxLength={1}
                     activeOutlineColor="red"
-                    value={txt2 }
+                    value={txt2}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt2(txt);
@@ -478,7 +483,7 @@ const Signup = ({navigation}) => {
                     activeUnderlineColor="transparent"
                     maxLength={1}
                     activeOutlineColor="#C8170D"
-                    value={txt4 }
+                    value={txt4}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt4(txt);
@@ -498,7 +503,7 @@ const Signup = ({navigation}) => {
                     activeUnderlineColor="transparent"
                     maxLength={1}
                     activeOutlineColor="red"
-                    value={txt5 }
+                    value={txt5}
                     onChangeText={txt => {
                       if (txt.length >= 1) {
                         setTxt5(txt);
@@ -558,7 +563,7 @@ const Signup = ({navigation}) => {
                     </Text>
                   )}
                 </View>
-                <View style={{marginVertical: 8}}>
+                <View style={{marginBottom:6}}>
                   <TouchableOpacity
                     style={{
                       width: (DeviceWidth * 40) / 100,
@@ -598,11 +603,11 @@ const Signup = ({navigation}) => {
         <Image
           source={localImage.logo}
           style={{
-            width: DeviceWidth * 0.6,
+            width: DeviceWidth * 0.5,
             height: DeviceWidth * 0.6,
             alignSelf: 'center',
           }}
-          resizeMode="cover"
+          resizeMode='contain'
         />
         <View
           style={[
@@ -659,7 +664,6 @@ const Signup = ({navigation}) => {
             label={'Password'}
             onChangeText={text => setPassword(text.trim())}
             mode="flat"
-            autoCapitalize="none"
             style={styles.AuthInput}
             activeUnderlineColor="#C8170D"
             value={Password}
@@ -693,7 +697,6 @@ const Signup = ({navigation}) => {
             label={'Confirm Password'}
             onChangeText={text => setConformPassword(text.trim())}
             mode="flat"
-            autoCapitalize="none"
             style={styles.AuthInput}
             activeUnderlineColor="#C8170D"
             value={ConfirmPassword}
@@ -723,7 +726,7 @@ const Signup = ({navigation}) => {
               />
             }
           />
-          {!IsVerifyVisible ? (
+         
             <View
               style={{
                 flexDirection: 'row',
@@ -732,13 +735,24 @@ const Signup = ({navigation}) => {
                 alignItems: 'center',
                 width: (DeviceWidth * 80) / 100,
               }}>
-              <TouchableOpacity
-                style={[styles.checkboxContainer, checked && styles.Checked]}
-                onPress={() => setChecked(!checked)}>
-                <Text>
-                  {' '}
-                  {checked && <Icons name="check" size={16} color={'#fff'} />}
-                </Text>
+              <TouchableOpacity onPress={() => setChecked(!checked)}>
+                {checked ? (
+                  <Icons
+                    name="checkbox-marked"
+                    size={27}
+                    style={{marginVertical: 15, marginRight: 10}}
+                    color={'#C8170D'}
+                  />
+                ) : (
+                  <Icons
+                    name="checkbox-blank-outline"
+                    size={27}
+                    style={{marginVertical: 15, marginRight: 10}}
+                    color={
+                      defaultTheme ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.6)'
+                    }
+                  />
+                )}
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
@@ -749,30 +763,7 @@ const Signup = ({navigation}) => {
                 </Text>
               </TouchableOpacity>
             </View>
-          ) : (
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                position: 'relative',
-                alignItems: 'center',
-                width: (DeviceWidth * 80) / 100,
-              }}>
-              <View
-                style={[styles.checkboxContainer, checked && styles.Checked]}>
-                <Text>
-                  {' '}
-                  {checked && <Icons name="check" size={16} color={'#fff'} />}
-                </Text>
-              </View>
-              <View>
-                <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
-                  I Agree to Terms & Conditions
-                </Text>
-              </View>
-            </View>
-          )}
-          {!IsVerifyVisible ? (
+         
             <TouchableOpacity
               style={styles.Tbutton}
               onPress={() => {
@@ -781,11 +772,6 @@ const Signup = ({navigation}) => {
               }}>
               <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
             </TouchableOpacity>
-          ) : (
-            <View style={styles.Tbutton}>
-              <Text style={{color: 'white', fontSize: 15}}>{submitText}</Text>
-            </View>
-          )}
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('Login');
@@ -872,22 +858,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   modalContainer: {
-   // flex: 1,
+    // flex: 1,
     justifyContent: 'center',
-   alignItems: 'center',
+    alignItems: 'center',
     //marginHorizontal: 15,
   },
   modalContent: {
     height: DeviceHeigth / 3.5,
     width: '90%',
     backgroundColor: 'white',
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
-    borderRadius:20,
+ 
+    borderRadius: 20,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'lightgray',
-   // position: 'absolute',
     bottom: 0,
     ...Platform.select({
       ios: {
@@ -914,6 +898,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
-
 });
 export default Signup;

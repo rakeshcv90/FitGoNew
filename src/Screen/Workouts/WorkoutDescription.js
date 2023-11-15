@@ -188,7 +188,7 @@ const WorkoutDescription = () => {
               }}>
                 {(FavData.some((item)=>item.id===HomeCardioData.id )) ? (
                   <>
-                    <Icons name="heart" size={30} color={'red'} />
+                    <Icons name="heart" size={30} color={'#C8170D'} />
                   </>
                 ) : (
                   <>
@@ -201,7 +201,7 @@ const WorkoutDescription = () => {
               <Text style={{ color: 'white', padding: 8, fontSize: 16 }}>
                 {HomeCardioData.title}
               </Text>
-              <Text style={{ color: '#C8170D' }}>{HomeCardioData.duration}</Text>
+              <Text style={{ color: "#fff" }}>{HomeCardioData.duration}</Text>
               <View style={styles.rating}>
                 <LevelRate level={HomeCardioData.level} />
               </View>
@@ -210,12 +210,12 @@ const WorkoutDescription = () => {
         </ImageBackground>
         <View style={styles.levelGoalView}>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'black', fontSize: 17 }}>Level</Text>
-            <Text style={{ color: 'black' }}>{HomeCardioData.level}</Text>
+            <Text style={{ color: "#fff", fontSize: 17 }}>Level</Text>
+            <Text style={{ color: "#fff" }}>{HomeCardioData.level}</Text>
           </View>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'black', fontSize: 17 }}>Goal</Text>
-            <Text style={{ color: 'black' }}>{HomeCardioData.goal}</Text>
+            <Text style={{ color: "#fff", fontSize: 17 }}>Goal</Text>
+            <Text style={{ color: "#fff" }}>{HomeCardioData.goal}</Text>
           </View>
         </View>
         <View style={{ width: DeviceWidth, height: DeviceHeigth * 95 / 100 }}>
