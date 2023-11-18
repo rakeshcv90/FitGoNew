@@ -18,10 +18,11 @@ import {TextInput} from 'react-native-paper';
 import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import LoginLoader from '../Component/LoginLoader';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
+import { updatePhoto } from '../Component/ThemeRedux/Actions';
 // import { GoogleSignin,statusCodes ,GoogleSigninButton} from 'react-native-google-signin';
 const Login = () => {
   //  useEffect(()=>{
@@ -37,27 +38,12 @@ const Login = () => {
   const {defaultTheme} = useSelector(state => state);
   const [isLoaded, setIsLoaded] = useState(false);
   const StatusBar_Bar_Height = Platform.OS === 'ios' ? getStatusBarHeight() : 0;
-  // const GoogleLogin = async () => {
-  //   try {
-  //     await GoogleSignin.hasPlayServices();
-  //     const userInfo = await GoogleSignin.signIn();
-  //     console.log("userInfo",userInfo.user)
-  //   } catch (error) {
-  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-  //       // user cancelled the login flow
-  //       console.log("erroe",error)
-  //     } else if (error.code === statusCodes.IN_PROGRESS) {
-  //       // operation (e.g. sign in) is in progress already
-  //     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-  //       // play services not available or outdated
-  //     } else {
-  //       // some other error happened
-  //     }
-  //   }
-  // };
+  const {ProfilePhoto}=useSelector(state=>state)
+  const dispatch=useDispatch();
   const ToggleVisibility = () => {
     seIsvisible(!isVisible);
   };
+  console.log("Theme",defaultTheme)
   const ErrorHandler = async () => {
     let reg = /\S+@\S+\.\S+/;
     let pass = /^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/;
@@ -117,6 +103,14 @@ const Login = () => {
             icon: {icon: 'auto', position: 'left'},
           });
         } else if (data.data[0].msg == 'Login successful') {
+          // console.log(data.data)
+            if(data.data[0].image=="https://gofit.tentoptoday.com/json/profile_img/"){
+           //do nothing
+            }
+            else{
+              dispatch(updatePhoto(data.data[0].image))
+            }
+          // console.log(data.data)
           showMessage({
             message: data.data[0].msg,
             statusBarHeight: getStatusBarHeight(),
@@ -161,12 +155,14 @@ const Login = () => {
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+         
         <View
           style={{
             backgroundColor: defaultTheme ? '#000' : '#fff',
             justifyContent: 'center',
             alignItems: 'center',
           }}>
+             <Text style={{fontSize:25,color:defaultTheme?"#fff":"#000"}}>Login</Text>
           <Image
             resizeMode="contain"
             style={styles.logo}

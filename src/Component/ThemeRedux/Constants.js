@@ -1,1 +1,1 @@
-export default {Dark_Theme: 'DARK_THEME'};
+export default {Dark_Theme: 'DARK_THEME',Profile_Photo:"Profile_Photo" ,Reset_Store:"Reset_Store"};

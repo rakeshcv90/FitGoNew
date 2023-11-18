@@ -14,18 +14,17 @@ import {useDispatch, useSelector} from 'react-redux';
 import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import {Logo} from '../Component/logo';
 import {navigationRef} from '../../App';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icons1 from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {setTheme} from '../Component/ThemeRedux/Actions';
+import {setTheme,resetStore} from '../Component/ThemeRedux/Actions';
 
 const DrawerItems = props => {
   const {defaultTheme} = useSelector(state => state);
+  const {ProfilePhoto}=useSelector(state=>state)
   const [marginData, setMarginData] = useState(
   defaultTheme?(DeviceWidth * 25) / 100:(-DeviceWidth * 2.5) / 100)
   const Dispatch = useDispatch();
   const [isEnabled, setIsEnabled] = useState(defaultTheme);
-
+ console.log("Profile",ProfilePhoto)
   const removeData = async () => {
     try {
       await AsyncStorage.removeItem('Data');
@@ -245,46 +244,22 @@ const DrawerItems = props => {
           </View>
           {/* <Image source={localImage.nextButton} style={styles.nextIcon} /> */}
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.buttons}
-          onPress={() => {
-            // props.navigation.navigate('Settings');
-          }}>
-          <View style={styles.buttons2}>
-            {/* <Icons1 name={'settings-outline'} size={30} color={'#ec9706'} /> */}
-            <Image
-              source={localImage.dw8}
-              style={{width: 25, height: 25}}
-              tintColor={defaultTheme ? 'white' : '#535763'}
-              resizeMode="contain"
-            />
-            <Text
-              style={[
-                styles.Text,
-                {
-                  color: defaultTheme ? '#fff' : '#535763',
-                  marginHorizontal: 15,
-                },
-              ]}>
-              Settings
-            </Text>
-          </View>
-          {/* <Image source={localImage.nextButton} style={styles.nextIcon} /> */}
-        </TouchableOpacity>
+        
         <View
           style={{
             width: '100%',
             height: 2,
             backgroundColor: '#d3d3d3',
             marginLeft: -10,
-            marginTop: DeviceHeigth * 0.12,
+            marginTop: DeviceHeigth * 0.08,
           }}
         />
         <TouchableOpacity
           style={[styles.buttons, {marginTop: (DeviceWidth * 5) / 100}]}
           onPress={() => {
+            Dispatch(resetStore())
             removeData();
-            // props.navigation.navigate('Settings');
+           
           }}>
           <View style={styles.buttons2}>
             <Image
@@ -386,11 +361,10 @@ const DrawerItems = props => {
 };
 const styles = StyleSheet.create({
   buttons: {
-    marginTop: (DeviceWidth * 7) / 100,
+    marginVertical: (DeviceWidth * 5) / 100,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-
     marginLeft: (DeviceWidth * 5) / 100,
   },
   Text: {

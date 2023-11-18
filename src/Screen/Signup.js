@@ -543,6 +543,7 @@ const Signup = ({navigation}) => {
                         style={{
                           color: defaultTheme ? '#fff' : '#000',
                           fontSize: 16,
+                          fontWeight:"700"
                         }}
                         onPress={() => {
                           setResendTxt('Please Wait...');
