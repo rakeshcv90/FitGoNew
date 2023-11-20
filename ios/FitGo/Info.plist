@@ -73,8 +73,8 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Need Gallery Access to upload Image</string>
-	<key>	NSPhotoLibraryUsageDescription</key>
-	<string>Need camera access to upload Image</string>
+	<string> FitGo needs gallery access for user's profile photo</string>
+	<key>NSCameraUsageDescription</key>
+	<string> FitGo needs camera access for user's profile photo</string>
 </dict>
 </plist>
