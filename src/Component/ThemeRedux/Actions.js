@@ -9,5 +9,10 @@ export const updatePhoto=(imgURL)=>({
 });
 export const resetStore=()=>({
   type:types.Reset_Store
+});
+export const Is_user_Login=(login)=>({
+  type:types.Is_Login,
+  payload:login
+
 })
 

@@ -1,7 +1,8 @@
 import types from '../../Component/ThemeRedux/Constants';
 const intialState = {
   defaultTheme: false,
-  ProfilePhoto:"https://gofit.tentoptoday.com/json/image/Avatar.png"
+  ProfilePhoto:"https://gofit.tentoptoday.com/json/image/Avatar.png",
+  isLogin:false
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -11,6 +12,8 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state,ProfilePhoto:action.payload}
     case types.Reset_Store:
       return intialState
+    case types.Is_Login:
+      return{...state,isLogin:action.payload}  
     default:
       return state;
   }

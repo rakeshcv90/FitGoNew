@@ -22,7 +22,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import LoginLoader from '../Component/LoginLoader';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
-import { updatePhoto } from '../Component/ThemeRedux/Actions';
+import { updatePhoto ,Is_user_Login} from '../Component/ThemeRedux/Actions';
 // import { GoogleSignin,statusCodes ,GoogleSigninButton} from 'react-native-google-signin';
 const Login = () => {
   //  useEffect(()=>{
@@ -43,7 +43,6 @@ const Login = () => {
   const ToggleVisibility = () => {
     seIsvisible(!isVisible);
   };
-  console.log("Theme",defaultTheme)
   const ErrorHandler = async () => {
     let reg = /\S+@\S+\.\S+/;
     let pass = /^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$/;
@@ -119,7 +118,8 @@ const Login = () => {
             animationDuration: 500,
             icon: {icon: 'auto', position: 'left'},
           });
-          await AsyncStorage.setItem('Data', JSON.stringify(data.data));
+          dispatch(Is_user_Login(true)) // dispatching the state if the user is login once
+          await AsyncStorage.setItem('Data', JSON.stringify(data.data)); //user details
           setIsLoaded(true);
 
           navigation.navigate('DrawerNavigation');

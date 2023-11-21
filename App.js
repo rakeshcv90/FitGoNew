@@ -65,6 +65,7 @@ const App = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isConnected, setConnected] = useState(true);
   const {defaultTheme} = useSelector(state => state);
+  const {isLogin}=useSelector(state=>state)
   // Checking if the App is Connected to the internet or not
   useEffect(() => {
     const subscription = NetInfo.addEventListener(state => {
@@ -104,7 +105,7 @@ const App = () => {
       setIsLoaded(false);
     }
   };
-  if (isLoaded && isLogged && isConnected) {
+  if (isLoaded &&  isLogged && isConnected) {
     return (
       <>
         <NavigationContainer
