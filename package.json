@@ -1,6 +1,6 @@
 {
   "name": "FitGo",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -43,6 +43,7 @@
     "react-native-toast-message": "^2.1.6",
     "react-native-toast-notification": "^1.1.2",
     "react-native-vector-icons": "^10.0.0",
+    "react-native-version-check": "^3.4.7",
     "react-native-video": "^5.2.1",
     "react-native-video-controls": "^2.8.1",
     "react-native-webview": "^13.6.0",

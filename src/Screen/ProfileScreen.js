@@ -13,6 +13,7 @@ import {
   Modal,
   ActivityIndicator,
   Platform,
+  Linking,
 } from 'react-native';
 import React, {useEffect, useState, useContext} from 'react';
 import HeaderWithoutSearch from '../Component/HeaderWithoutSearch';
@@ -29,7 +30,7 @@ import Icons from 'react-native-vector-icons/AntDesign';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import Loader from '../Component/Loader';
 import {updatePhoto, resetStore} from '../Component/ThemeRedux/Actions';
-import {request, PERMISSIONS} from 'react-native-permissions';
+import {request, PERMISSIONS, openSettings} from 'react-native-permissions';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 const ProfileScreen = () => {
   const [Name, setName] = useState('');
@@ -262,7 +263,7 @@ const ProfileScreen = () => {
           },
           data: payload,
         });
-        // console.log(payload);
+        console.log(ProfileData.data[0]);
         if (ProfileData.data[0].msg == 'profile updated') {
           await AsyncStorage.setItem(
             'UserData',
@@ -285,42 +286,78 @@ const ProfileScreen = () => {
         console.log('UpdateProfileError', error);
       }
     };
-    const askPermissionForCamera = async(permission) => {
-      const result=await request(permission)
-      // camera access
-        if (result == 'granted') {
-          try {
-            const resultCamera =await launchCamera({
-              mediaType: 'photo',
-              quality: 0.5,
-            });
-            setUserAvatar(resultCamera.assets[0]);
-            if (resultCamera) {
-              setModalImageUploaded(true);
-            }                               // add toast for when do not select any photos
-          } catch (error) {
-            console.log('CameraimageError', error);
+    const askPermissionForCamera = async permission => {
+      const result = await request(permission);
+      //  console.log("camera result",result)
+      if (result == 'granted') {
+        try {
+          const resultCamera = await launchCamera({
+            mediaType: 'photo',
+            quality: 0.5,
+          });
+          setUserAvatar(resultCamera.assets[0]);
+          if (resultCamera) {
+            setModalImageUploaded(true);
           }
+        } catch (error) {
+          console.log('CameraimageError', error);
         }
-      // });
+      } else if (Platform.OS == 'ios') {
+        Alert.alert(
+          'Permission Required',
+          'To use the camera feature ,Please enable camera access in settings',
+          [
+            {
+              text: 'cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Open settings',
+              onPress: openSettings,
+            },
+          ],
+          {cancelable: false},
+        );
+      } else {
+        console.log('error occured');
+      }
     };
-    const askPermissionForLibrary = async(permission) => {
+    const askPermissionForLibrary = async permission => {
       //Library permission
-      const result=await request(permission)
-        if (result == 'granted') {
-          try {
-            const resultLibrary =await launchImageLibrary({
-              mediaType: 'photo',
-              quality: 0.5,
-            });
-            setUserAvatar(resultLibrary.assets[0]);
-            if (resultLibrary) {
-              setModalImageUploaded(true);
-            }
-          } catch (error) {
-            console.log('LibimageError', error);
+      const resultLib = await request(permission);
+      // console.log("result",resultLib)
+      if (resultLib == 'granted') {
+        try {
+          const resultLibrary = await launchImageLibrary({
+            mediaType: 'photo',
+            quality: 0.5,
+          });
+          setUserAvatar(resultLibrary.assets[0]);
+          if (resultLibrary) {
+            setModalImageUploaded(true);
           }
+        } catch (error) {
+          console.log('LibimageError', error);
         }
+      } else if (Platform.OS == 'ios') {
+        Alert.alert(
+          'Permission Required',
+          'To use the photo library ,Please enable library access in settings',
+          [
+            {
+              text: 'cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Open settings',
+              onPress: openSettings,
+            },
+          ],
+          {cancelable: false},
+        );
+      } else {
+        console.log('error occured');
+      }
       // });
     };
     return (
@@ -382,8 +419,8 @@ const ProfileScreen = () => {
                   alignItems: 'center',
                   flexDirection: 'row',
                   width: (DeviceWidth * 80) / 100,
-                  height:DeviceHeigth*10/100,
-                  marginBottom:2, 
+                  height: (DeviceHeigth * 10) / 100,
+                  marginBottom: 2,
                   // borderWidth:1
                 }}>
                 <TouchableOpacity
@@ -408,9 +445,7 @@ const ProfileScreen = () => {
                   style={styles.cameraButton}
                   onPress={() => {
                     if (Platform.OS == 'ios') {
-                      askPermissionForLibrary(
-                        PERMISSIONS.IOS.READ_MEDIA_IMAGES,
-                      );
+                      askPermissionForLibrary(PERMISSIONS.IOS.PHOTO_LIBRARY);
                     } else {
                       askPermissionForLibrary(
                         PERMISSIONS.ANDROID.READ_MEDIA_IMAGES,
@@ -451,7 +486,9 @@ const ProfileScreen = () => {
                       style={{
                         width: DeviceWidth * 0.4,
                         height: (DeviceHeigth * 3) / 100,
-                        backgroundColor: defaultTheme?"rgba(255,255,255,0.7)":"rgba(0,0,0,0.7)",
+                        backgroundColor: defaultTheme
+                          ? 'rgba(255,255,255,0.7)'
+                          : 'rgba(0,0,0,0.7)',
                         justifyContent: 'center',
                         borderRadius: 20,
                         alignItems: 'center',
@@ -501,31 +538,33 @@ const ProfileScreen = () => {
         )}
         <HeaderWithoutSearch Header={'Profile'} />
         <View style={styles.container1}>
-          <View style={styles.Icon}>
-            {PhotoUploaded ? (
-              <Image
-                source={{
-                  uri:
-                    ProfilePhoto != null
-                      ? ProfilePhoto
-                      : 'https://gofit.tentoptoday.com/json/image/Avatar.png',
-                }}
-                style={styles.Icon}></Image>
-            ) : (
-              <ActivityIndicator size={35} color={'#C8170D'} />
-            )}
-          </View>
           <View>
-            <TouchableOpacity
-              onPress={() => {
-                setUpadteScreenVisibilty(true);
-              }}>
-              <Icons
-                name="edit"
-                size={25}
-                color={defaultTheme ? '#fff' : '#000'}
-              />
-            </TouchableOpacity>
+            <View style={[styles.Icon,{borderColor:defaultTheme?"#fff":"#000"}]}>
+              {PhotoUploaded ? (
+                <ImageBackground
+                  source={{
+                    uri:
+                      ProfilePhoto != null
+                        ? ProfilePhoto
+                        : 'https://gofit.tentoptoday.com/json/image/Avatar.png',
+                  }}
+                  style={styles.Icon}></ImageBackground>
+              ) : (
+                <ActivityIndicator size={35} color={'#C8170D'} />
+              )}
+            </View>
+            <View style={{position: 'absolute', bottom: -2,right:-2}}>
+              <TouchableOpacity style
+                onPress={() => {
+                  setUpadteScreenVisibilty(true);
+                }}>
+                <Icons
+                  name="edit"
+                  size={30}
+                  color={defaultTheme ? '#fff' : '#000'}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
 
           <Text
@@ -605,6 +644,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth:2,
   },
   textStyle: {
     fontSize: 15,
