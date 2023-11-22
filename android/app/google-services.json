@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "60298593797",
+    "project_id": "fitme-f65b3",
+    "storage_bucket": "fitme-f65b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:60298593797:android:181766aad5fd3468ebbe6c",
+        "android_client_info": {
+          "package_name": "fitme.health.fitness.homeworkouts.equipment"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIhB9vX4-9EScrDox-m0kwSkiSJj9OWuk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

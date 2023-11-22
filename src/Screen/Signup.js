@@ -150,7 +150,6 @@ const Signup = ({navigation}) => {
         },
       });
       setSubmitText('Enter');
-
       setSubmitText('Enter');
       setVerifyVisible(true);
       if (data.data[0].msg === 'Otp sent to your email') {
@@ -164,33 +163,6 @@ const Signup = ({navigation}) => {
 
         setVerifyVisible(true);
       } else if (data.data[0].status == 0) {
-        try {
-          let payload = new FormData();
-          payload.append('email', Email);
-          const data = await axios(`${Api}/${Appapi.ResendOTP}`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-            data: payload,
-          });
-
-          if (data.data[0].msg == 'otp sent') {
-            // t1.current.focus();
-            setSubmitText('Enter');
-          } else {
-            setSubmitText('Enter');
-            showMessage({
-              message: data.data[0].msg,
-              statusBarHeight: StatusBar_Bar_Height,
-              floating: true,
-              type: 'success',
-              icon: {icon: 'auto', position: 'left'},
-            });
-          }
-        } catch (error) {
-          setSubmitText('Enter');
-        }
         setSubmitText('Enter');
         setSubmitText('Enter');
         setVerifyVisible(true);

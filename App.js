@@ -24,56 +24,25 @@ import NetInfo from '@react-native-community/netinfo';
 import {useSelector} from 'react-redux';
 import {DeviceHeigth, DeviceWidth} from './src/Component/Config';
 import RNRestart from 'react-native-restart';
-import {getStatusBarHeight} from 'react-native-status-bar-height';
 import BootSplash from 'react-native-bootsplash';
-import VersionCheck from 'react-native-version-check'
-import { sendConnectionNotification } from './src/Component/Notification';
+import { requestPermissionforNotification,RemoteMessage} from './src/Component/Helper/PushNotification';
 const App = () => {
-  // useEffect(()=>{
-  //   const CheckVersion=async()=>{
-  //     try {
-  //       const latestVersion =await VersionCheck.getLatestVersion({
-  //         packageName:"fitme.health.fitness.homeworkouts.equipment",
-  //         ingnoreErrors:true
-         
-  //       })
-  //       const CurrentVersion=VersionCheck.getCurrentVersion();
-  //       // console.log(latestVersion,CurrentVersion)
-  //       if(latestVersion>CurrentVersion){
-  //         Alert.alert("Update Required","A new version of the app is available , Please update to continue using the app...",[
-  //           {
-  //             text:"Update Now",
-  //             onPress:()=>Linking.openURL(
-  //               Platform.OS==="ios"?
-  //               "https://apps.apple.com/in/app/fitme-health-and-fitness-app/id6470018217"
-  //               :"https://play.google.com/store/apps/details?id=fitme.health.fitness.homeworkouts.equipment")
-  //           }
-  //         ])
-  //       }
-  //       else{
-  //         // continue using app
-  //       }
-  //     } catch (error) {
-  //       console.log("update Error",error)
-        
-  //     }
-  //   }
-  //  CheckVersion()
-  // },[])
+  useEffect(() => {
+   requestPermissionforNotification()
+    RemoteMessage();
+  }, []);
   const [isLogged, setIsLogged] = useState();
   const [update, setUpdate] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isConnected, setConnected] = useState(true);
   const {defaultTheme} = useSelector(state => state);
-  const {isLogin}=useSelector(state=>state)
+  const {isLogin} = useSelector(state => state);
   // Checking if the App is Connected to the internet or not
   useEffect(() => {
     const subscription = NetInfo.addEventListener(state => {
       if (state.isConnected) {
-        
         setConnected(true);
       } else {
-       
         setConnected(false);
       }
     });
@@ -105,7 +74,7 @@ const App = () => {
       setIsLoaded(false);
     }
   };
-  if (isLoaded &&  isLogged && isConnected) {
+  if (isLoaded && isLogged && isConnected) {
     return (
       <>
         <NavigationContainer

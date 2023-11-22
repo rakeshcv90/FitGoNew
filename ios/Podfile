@@ -23,7 +23,7 @@ setup_permissions([
   # 'MediaLibrary',
   # 'Microphone',
   # 'Motion',
-  # 'Notifications',
+#    'Notifications',
     'PhotoLibrary',
   # 'PhotoLibraryAddOnly',
   # 'Reminders',
@@ -50,7 +50,11 @@ end
 
 target 'FitGo' do
   config = use_native_modules!
-
+  use_modular_headers!
+  $RNFirebaseAsStaticFramework = true
+    pod 'Firebase', :modular_headers => true
+    pod 'FirebaseCoreInternal', :modular_headers => true
+    pod 'GoogleUtilities', :modular_headers => true
   # Flags change depending on the env values.
   flags = get_default_flags()
 
@@ -63,7 +67,7 @@ target 'FitGo' do
     #
     # Note that if you have use_frameworks! enabled, Flipper will not work and
     # you should disable the next line.
-    :flipper_configuration => flipper_config,
+#    :flipper_configuration => flipper_config,
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
@@ -71,6 +75,7 @@ target 'FitGo' do
   target 'FitGoTests' do
     inherit! :complete
     # Pods for testing
+    
   end
 
   post_install do |installer|
