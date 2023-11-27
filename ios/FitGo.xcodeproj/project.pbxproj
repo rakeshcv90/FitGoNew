@@ -12,7 +12,8 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		4C23D4222B0DE04D000DEDA1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C23D4212B0DE04D000DEDA1 /* GoogleService-Info.plist */; };
+		184CB1952B10B8E500C64C6A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 184CB1942B10B8E500C64C6A /* GoogleService-Info.plist */; };
+		184CB1962B10B90A00C64C6A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 184CB1942B10B8E500C64C6A /* GoogleService-Info.plist */; };
 		4C426F652AF209950063F75E /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C426F642AF209950063F75E /* BootSplash.storyboard */; };
 		4CF7BFBF2AC13D4B00F8EF48 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 4CF7BFBE2AC13D4B00F8EF48 /* Fonts */; };
 		7699B88040F8A987B510C191 /* libPods-FitGo-FitGoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-FitGo-FitGoTests.a */; };
@@ -39,10 +40,10 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = FitGo/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = FitGo/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = FitGo/main.m; sourceTree = "<group>"; };
+		184CB1942B10B8E500C64C6A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-FitGo-FitGoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FitGo-FitGoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-FitGo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FitGo.debug.xcconfig"; path = "Target Support Files/Pods-FitGo/Pods-FitGo.debug.xcconfig"; sourceTree = "<group>"; };
 		4C23D41F2B0DC621000DEDA1 /* FitGo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FitGo.entitlements; path = FitGo/FitGo.entitlements; sourceTree = "<group>"; };
-		4C23D4212B0DE04D000DEDA1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4C426F642AF209950063F75E /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = FitGo/BootSplash.storyboard; sourceTree = "<group>"; };
 		4CF7BFBE2AC13D4B00F8EF48 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-FitGo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FitGo.release.xcconfig"; path = "Target Support Files/Pods-FitGo/Pods-FitGo.release.xcconfig"; sourceTree = "<group>"; };
@@ -126,7 +127,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				4C23D4212B0DE04D000DEDA1 /* GoogleService-Info.plist */,
+				184CB1942B10B8E500C64C6A /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* FitGo */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* FitGoTests */,
@@ -250,6 +251,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				184CB1962B10B90A00C64C6A /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,9 +261,9 @@
 			files = (
 				4CF7BFBF2AC13D4B00F8EF48 /* Fonts in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				4C23D4222B0DE04D000DEDA1 /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				4C426F652AF209950063F75E /* BootSplash.storyboard in Resources */,
+				184CB1952B10B8E500C64C6A /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
