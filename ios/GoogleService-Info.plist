@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDeHkz6IjkbcKeiJ6nvY7SIUXhiMPEyndI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>60298593797</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>fitme.health.fitness.homeworkouts.equipment</string>
+	<key>PROJECT_ID</key>
+	<string>fitme-f65b3</string>
+	<key>STORAGE_BUCKET</key>
+	<string>fitme-f65b3.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:60298593797:ios:d36839a2e9df6199ebbe6c</string>
+</dict>
+</plist>
