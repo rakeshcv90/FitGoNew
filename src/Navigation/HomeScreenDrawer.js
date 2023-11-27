@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import {localImage} from '../Component/Image';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -22,69 +22,28 @@ const HomeScreenDrawer = () => {
   const [data, setData] = useState([
     {
       id: 1,
-      icon: (
-        <Icons name={'calendar-month-outline'} size={40} color={'#ec9706'} />
-      ),
+      ImageSource: localImage.dw1,
       title: 'Workouts',
-      icon1: (
-        <Icons
-          name="chevron-right"
-          size={25}
-          color={defaultTheme ? '#fff' : '#000'}
-        />
-      ),
     },
     {
       id: 2,
-      icon: <Icons name={'dumbbell'} size={40} color={'#ec9706'} />,
+      ImageSource: localImage.dw2,
       title: 'Exercises',
-      icon1: (
-        <Icons
-          name="chevron-right"
-          size={25}
-          color={defaultTheme ? '#fff' : '#000'}
-        />
-      ),
     },
     {
       id: 3,
-      icon: <Icons name={'silverware'} size={40} color={'#ec9706'} />,
+      ImageSource: localImage.dw3,
       title: 'Diets',
-      icon1: (
-        <Icons
-          name="chevron-right"
-          size={25}
-          color={defaultTheme ? '#fff' : '#000'}
-        />
-      ),
     },
     {
       id: 4,
-      icon: <Icons name={'cart-outline'} size={40} color={'#ec9706'} />,
+      ImageSource: localImage.dw4,
       title: 'Store',
-      icon1: (
-        <Icons
-          name="chevron-right"
-          size={25}
-          color={defaultTheme ? '#fff' : '#000'}
-        />
-      ),
     },
     {
       id: 5,
-      icon: (
-        <Image
-          source={localImage.blogIcon}
-          style={{height: 30, width: 36, resizeMode: 'contain'}}></Image>
-      ),
+      ImageSource: localImage.dw5,
       title: 'Blog',
-      icon1: (
-        <Icons
-          name="chevron-right"
-          size={25}
-          color={defaultTheme ? '#fff' : '#000'}
-        />
-      ),
     },
   ]);
   const screenChange = item => {
@@ -102,7 +61,6 @@ const HomeScreenDrawer = () => {
   };
   return (
     <>
-
       <SafeAreaView
         style={{
           flex: 1,
@@ -122,7 +80,7 @@ const HomeScreenDrawer = () => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Image source={localImage.logo1} style={styles.homeLogo} />
+            {/* <Image source={localImage.logo1} style={styles.homeLogo} /> */}
           </View>
         </ImageBackground>
         <View
@@ -145,9 +103,17 @@ const HomeScreenDrawer = () => {
                 onPress={() => {
                   screenChange(elements);
                 }}>
-                <View style={{marginRight: 20, marginLeft: 20}}>
-                  {elements.item.icon}
-                </View>
+                <Image
+                  style={{
+                    marginRight: 20,
+                    marginLeft: 20,
+                    height: 28,
+                    width:34,
+                  }}
+                  source={elements.item.ImageSource}
+                  resizeMode='contain'
+                  tintColor={defaultTheme?"#fff":'#535763' }
+                />
                 <View
                   style={{
                     flexDirection: 'row',
@@ -156,12 +122,17 @@ const HomeScreenDrawer = () => {
                   }}>
                   <Text
                     style={{
-                      color: defaultTheme ? '#fff' : '#000',
-                      fontSize: 15,
+                      color: defaultTheme?"#fff":'#535763' ,
+                      fontSize: 18,
+                      fontWeight:"600"
                     }}>
                     {elements.item.title}
                   </Text>
-                  {elements.item.icon1}
+                  <Icons
+                    name="chevron-right"
+                    size={25}
+                    color={defaultTheme?"#fff":'#535763' }
+                  />
                 </View>
               </TouchableOpacity>
             )}

@@ -18,10 +18,11 @@ import {TextInput} from 'react-native-paper';
 import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import LoginLoader from '../Component/LoginLoader';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
+import { updatePhoto ,Is_user_Login} from '../Component/ThemeRedux/Actions';
 // import { GoogleSignin,statusCodes ,GoogleSigninButton} from 'react-native-google-signin';
 const Login = () => {
   //  useEffect(()=>{
@@ -37,24 +38,8 @@ const Login = () => {
   const {defaultTheme} = useSelector(state => state);
   const [isLoaded, setIsLoaded] = useState(false);
   const StatusBar_Bar_Height = Platform.OS === 'ios' ? getStatusBarHeight() : 0;
-  // const GoogleLogin = async () => {
-  //   try {
-  //     await GoogleSignin.hasPlayServices();
-  //     const userInfo = await GoogleSignin.signIn();
-  //     console.log("userInfo",userInfo.user)
-  //   } catch (error) {
-  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-  //       // user cancelled the login flow
-  //       console.log("erroe",error)
-  //     } else if (error.code === statusCodes.IN_PROGRESS) {
-  //       // operation (e.g. sign in) is in progress already
-  //     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-  //       // play services not available or outdated
-  //     } else {
-  //       // some other error happened
-  //     }
-  //   }
-  // };
+  const {ProfilePhoto}=useSelector(state=>state)
+  const dispatch=useDispatch();
   const ToggleVisibility = () => {
     seIsvisible(!isVisible);
   };
@@ -100,11 +85,11 @@ const Login = () => {
             password: Password,
           },
         });
-
+        console.log(data.data)
         if (data.data[0].status == 0) {
           setEmail('');
           setPassword('');
-          // console.log('data', data.data[0]);
+          
           navigation.navigate('Signup', {userData: data.data});
           setsubmitText('ENTER');
           setIsLoaded(true);
@@ -117,6 +102,14 @@ const Login = () => {
             icon: {icon: 'auto', position: 'left'},
           });
         } else if (data.data[0].msg == 'Login successful') {
+          // console.log(data.data)
+            if(data.data[0].image=="https://gofit.tentoptoday.com/json/profile_img/"){
+           //do nothing
+            }
+            else{
+              dispatch(updatePhoto(data.data[0].image))
+            }
+          // console.log(data.data)
           showMessage({
             message: data.data[0].msg,
             statusBarHeight: getStatusBarHeight(),
@@ -125,7 +118,8 @@ const Login = () => {
             animationDuration: 500,
             icon: {icon: 'auto', position: 'left'},
           });
-          await AsyncStorage.setItem('Data', JSON.stringify(data.data));
+          dispatch(Is_user_Login(true)) // dispatching the state if the user is login once
+          await AsyncStorage.setItem('Data', JSON.stringify(data.data)); //user details
           setIsLoaded(true);
 
           navigation.navigate('DrawerNavigation');
@@ -161,16 +155,19 @@ const Login = () => {
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+         
         <View
           style={{
             backgroundColor: defaultTheme ? '#000' : '#fff',
             justifyContent: 'center',
             alignItems: 'center',
           }}>
+             <Text style={{fontSize:25,color:defaultTheme?"#fff":"#000"}}>Login</Text>
           <Image
-            resizeMode="cover"
+            resizeMode="contain"
             style={styles.logo}
             source={localImage.logo}
+           
           />
           <TextInput
             label={'Email'}
@@ -292,7 +289,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   logo: {
-    width: DeviceWidth * 0.6,
+    width: DeviceWidth * 0.5,
     height: DeviceWidth * 0.7,
     alignSelf: 'center',
   },

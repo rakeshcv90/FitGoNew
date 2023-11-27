@@ -101,7 +101,7 @@ const SingleDay = () => {
                         onPress={() => {
                             navigation.navigate("Player", { PlayerData: ApiData })
                         }}>
-                        <Icons name="play" size={25} color={'#000'} /><Text style={{ color: '#000' }}>START NOW</Text></TouchableOpacity>
+                        <Icons name="play" size={25} color={"#fff"} /><Text style={{ color:"#fff" }}>START NOW</Text></TouchableOpacity>
                 </View>
             </View>
         )

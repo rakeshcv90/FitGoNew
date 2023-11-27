@@ -84,9 +84,9 @@ const Workouts = () => {
               name="lightning-bolt"
               size={20}
               mode="contained"
-              color={'black'}
+              color={"#fff"}
             />
-            <Text style={{color: 'black', marginHorizontal: 6}}> Goals</Text>
+            <Text style={{color: "#fff", marginHorizontal: 6}}> Goals</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.Buttons}
@@ -97,9 +97,9 @@ const Workouts = () => {
               name="equalizer"
               size={20}
               mode="contained"
-              color={'black'}
+              color={"#fff"}
             />
-            <Text style={{color: 'black', marginHorizontal: 2}}> Levels</Text>
+            <Text style={{color: "#fff", marginHorizontal: 2}}> Levels</Text>
           </TouchableOpacity>
         </View>
         <View

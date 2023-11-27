@@ -8,19 +8,25 @@ const LevelRate = ({level}) => {
         <>
             <Icons
             name="lightning-bolt"
-            size={17}
+            size={16}
             mode="contained"
-            color={'orange'}
+            color={'#C8170D'}
           />
           <Icons
             name="lightning-bolt"
-            size={17}
+            size={16}
             mode="contained"
             color={'white'}
           />
           <Icons
             name="lightning-bolt"
-            size={17}
+            size={16}
+            mode="contained"
+            color={'white'}
+          />
+           <Icons
+            name="lightning-bolt"
+            size={16}
             mode="contained"
             color={'white'}
           />
@@ -32,19 +38,25 @@ const LevelRate = ({level}) => {
         <>
          <Icons
             name="lightning-bolt"
-            size={17}
+            size={16}
             mode="contained"
-            color={'orange'}
+            color={'#C8170D'}
           />
           <Icons
             name="lightning-bolt"
-            size={17}
+            size={16}
             mode="contained"
-            color={'orange'}
+            color={'#C8170D'}
           />
           <Icons
             name="lightning-bolt"
-            size={17}
+            size={16}
+            mode="contained"
+            color={'#C8170D'}
+          />
+           <Icons
+            name="lightning-bolt"
+            size={16}
             mode="contained"
             color={'white'}
           />
@@ -55,21 +67,27 @@ const LevelRate = ({level}) => {
         <>
          <Icons
             name="lightning-bolt"
-            size={17}
+            size={16}
             mode="contained"
-            color={'orange'}
+            color={'#C8170D'}
           />
           <Icons
             name="lightning-bolt"
-            size={17}
+            size={16}
             mode="contained"
-            color={'orange'}
+            color={'#C8170D'}
           />
           <Icons
             name="lightning-bolt"
-            size={17}
+            size={16}
             mode="contained"
-            color={'orange'}
+            color={'#C8170D'}
+          />
+           <Icons
+            name="lightning-bolt"
+            size={16}
+            mode="contained"
+            color={'white'}
           />
         </>
      )}
@@ -78,21 +96,27 @@ const LevelRate = ({level}) => {
         <>
          <Icons
             name="lightning-bolt"
-            size={17}
+            size={16}
             mode="contained"
-            color={'orange'}
+            color={'#C8170D'}
           />
           <Icons
             name="lightning-bolt"
-            size={17}
+            size={16}
             mode="contained"
-            color={'orange'}
+            color={'#C8170D'}
           />
           <Icons
             name="lightning-bolt"
-            size={17}
+            size={16}
             mode="contained"
-            color={'orange'}
+            color={'#C8170D'}
+          />
+            <Icons
+            name="lightning-bolt"
+            size={16}
+            mode="contained"
+            color={'#C8170D'}
           />
         </>
      )}

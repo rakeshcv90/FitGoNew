@@ -6,6 +6,8 @@ import {
   Alert,
   StyleSheet,
   TouchableOpacity,
+  Linking,
+  Platform,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {
@@ -22,23 +24,25 @@ import NetInfo from '@react-native-community/netinfo';
 import {useSelector} from 'react-redux';
 import {DeviceHeigth, DeviceWidth} from './src/Component/Config';
 import RNRestart from 'react-native-restart';
-import {getStatusBarHeight} from 'react-native-status-bar-height';
 import BootSplash from 'react-native-bootsplash';
-// import { sendConnectionNotification } from './src/Component/Notification';
+import { requestPermissionforNotification,RemoteMessage} from './src/Component/Helper/PushNotification';
 const App = () => {
+  useEffect(() => {
+   requestPermissionforNotification()
+    RemoteMessage();
+  }, []);
   const [isLogged, setIsLogged] = useState();
   const [update, setUpdate] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isConnected, setConnected] = useState(true);
   const {defaultTheme} = useSelector(state => state);
+  const {isLogin} = useSelector(state => state);
   // Checking if the App is Connected to the internet or not
   useEffect(() => {
     const subscription = NetInfo.addEventListener(state => {
       if (state.isConnected) {
-        
         setConnected(true);
       } else {
-       
         setConnected(false);
       }
     });

@@ -12,17 +12,37 @@ import {DeviceHeigth, DeviceWidth} from './Config';
 import CustomStatusBar from './CustomStatusBar';
 import {useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { Api,Appapi } from './Config';
+import axios from 'axios';
 export const Logo = () => {
+
+  const [Name, setName] = useState('');
+  const [Email, setEmail] = useState();
+  const [imageUrl, setImageUrl] = useState(null);
   const drawerWidth = (DeviceWidth * 65) / 100;
   const drawerHeight = DeviceHeigth;
   const [mydata, setMyData] = useState();
   const {defaultTheme} = useSelector(state => state);
+  const {ProfilePhoto}=useSelector(state=>state)
   useEffect(() => {
     getMydata();
-  }, []);
+  },);
   const getMydata = async () => {
-    setMyData(JSON.parse(await AsyncStorage.getItem('Data')));
+    try {
+      const userData = JSON.parse(await AsyncStorage.getItem('Data'));
+      const apiResponse = await axios(
+        `${Api}/${Appapi.getUserData}?email=${userData[0].email}`,
+      );
+      if (apiResponse.data) {
+        setImageUrl(apiResponse.data[0].image);
+        setEmail(apiResponse.data[0].email);
+        setName(apiResponse.data[0].name)
+      } else {
+        console.log('No Data found');
+      }
+    } catch (error) {
+      console.log('apiResponseError', error);
+    }
   };
   return (
     <>
@@ -38,8 +58,6 @@ export const Logo = () => {
           <SafeAreaView
             style={{
               width: DeviceWidth,
-              // height: StatusBar_Bar_Height,
-              // backgroundColor:'#C8170D'
             }}></SafeAreaView>
         </>
       )}
@@ -52,7 +70,7 @@ export const Logo = () => {
           alignItems: 'center',
         }}>
         <Image
-          source={localImage.avt}
+          source={{uri:ProfilePhoto}}
           style={{
             height: (DeviceHeigth * 7) / 100,
             width: (DeviceWidth * 15) / 100,
@@ -62,24 +80,23 @@ export const Logo = () => {
             resizeMode: 'cover',
           }}
         />
-        {!!mydata && (
+
           <View>
             <Text
               style={[
                 styles.textStyle,
-                {color: defaultTheme == true ? '#fff' : '#fff'},
+                {color: defaultTheme == true ? '#fff' : '#fff',textTransform:'capitalize'},
               ]}>
-              {mydata[0].name}
+           {Name}
             </Text>
             <Text
               style={[
                 styles.textStyle1,
                 {color: defaultTheme == true ? '#D6D6D6' : '#D6D6D6'},
               ]}>
-              {mydata[0].email}
+            {Email}
             </Text>
           </View>
-        )}
         {/* <Text style={{color:'black',fontSize:20,fontWeight:'700'}}>User Name</Text> */}
       </View>
     </>
@@ -99,5 +116,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     lineHeight: 12,
     fontFamily: 'Inter',
+    marginVertical:5
   },
 });

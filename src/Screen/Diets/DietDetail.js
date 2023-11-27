@@ -176,24 +176,24 @@ const DietDetail = () => {
         </ImageBackground>
         <View style={styles.levelGoalView}>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'black', fontSize: 17 }}>
+            <Text style={{ color: "#fff", fontSize: 17 }}>
               {Data.data.calories}
             </Text>
-            <Text style={{ color: 'black', fontWeight: '400' }}>calories</Text>
+            <Text style={{ color: "#fff", fontWeight: '400' }}>calories</Text>
           </View>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'black', fontSize: 17 }}>
+            <Text style={{ color: "#fff", fontSize: 17 }}>
               {Data.data.protein}
             </Text>
-            <Text style={{ color: 'black', fontWeight: '400' }}>Protein</Text>
+            <Text style={{ color: "#fff", fontWeight: '400' }}>Protein</Text>
           </View>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'black', fontSize: 17 }}>{Data.data.fat}</Text>
-            <Text style={{ color: 'black', fontWeight: '400' }}>Fat</Text>
+            <Text style={{ color: "#fff", fontSize: 17 }}>{Data.data.fat}</Text>
+            <Text style={{ color: "#fff", fontWeight: '400' }}>Fat</Text>
           </View>
           <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: 'black', fontSize: 17 }}>{Data.data.carbs}</Text>
-            <Text style={{ color: 'black', fontWeight: '400' }}>Carbs</Text>
+            <Text style={{ color: "#fff", fontSize: 17 }}>{Data.data.carbs}</Text>
+            <Text style={{ color: "#fff", fontWeight: '400' }}>Carbs</Text>
           </View>
         </View>
         <FlatList
