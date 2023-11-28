@@ -21,5 +21,12 @@ export const localImage = {
   avt:require("../Icon/Images/DwaderImage/Avatar.png"),
   dw10:require("../Icon/Images/DwaderImage/n10.png"),
   dw11:require("../Icon/Images/DwaderImage/n11.png"),
+  Lock:require("../Icon/Images/NewImage/Lock.png"),
+  Message:require("../Icon/Images/NewImage/Message.png"),
+  EYE:require("../Icon/Images/NewImage/eye.png"),
+  EYE1:require("../Icon/Images/NewImage/eye1.png"),
+  FACEBOOK:require("../Icon/Images/NewImage/facebook.png"),
+  GOOGLE:require("../Icon/Images/NewImage/google.png"),
+  PROFILE:require("../Icon/Images/NewImage/Profile.png"),
 
 };
