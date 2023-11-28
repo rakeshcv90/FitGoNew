@@ -1,6 +1,9 @@
 export const localImage = {
-  // splash: require('../Icon/Images/icons/Splash.png'),
-  // splash2: require('../Icon/Images/icons/icon.png'),
+  splash: require('../Icon/Images/NewImage/Splash_screen.jpeg'),
+  Inrtoduction1: require('../Icon/Images/NewImage/Inrtoduction1.jpg'),
+  Inrtoduction2: require('../Icon/Images/NewImage/Inrtoduction2.jpg'),
+  Inrtoduction3: require('../Icon/Images/NewImage/Inrtoduction3.jpg'),
+
   logo: require('../Icon/Images/icons/logo.png'),
   color_image: require('../Icon/Images/color-image.png'),
   nextButton:require('../Icon/Images/next.png'),
