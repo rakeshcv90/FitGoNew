@@ -82,6 +82,7 @@ const Router = () => {
       <Stack.Screen name="FavoritesRouter" component={FavoritesRouter}/>
       <Stack.Screen name="ExerciseByEquipments" component={ExerciseByEquipments}/>
       <Stack.Screen name="LatestProducts" component={LatestProducts}/>
+      <Stack.Screen name="Login" component={Login} />
     </Stack.Navigator>
   );
 }
