@@ -1,6 +1,6 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {View, Text} from 'react-native';
+import React from 'react';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SplaceScreen from '../Screen/SplaceScreen';
 import Login from '../Screen/Login';
 import Signup from '../Screen/Signup';
@@ -40,6 +40,7 @@ import MyWorkouts from '../Screen/MyWorkouts';
 import FavoritesRouter from './FavoritesRouter';
 import ExerciseByEquipments from '../Screen/Exercises/ExerciseByEquipments';
 import LatestProducts from '../Screen/Stores/LatestProducts';
+import IntroductionScreen from '../Screen/IntroductionScreen';
 const Stack = createNativeStackNavigator();
 const screenOptions = {
   headerShown: false, // Hide the header for all screens
@@ -47,8 +48,8 @@ const screenOptions = {
 const Router = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-     <Stack.Screen name='DrawerNavigation' component={DrawerNavigation}/>
-     <Stack.Screen name="Workouts" component={Workouts}/>
+      <Stack.Screen name="DrawerNavigation" component={DrawerNavigation} />
+      <Stack.Screen name="Workouts" component={Workouts} />
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="Settings" component={Settings} />
       <Stack.Screen name="Goals" component={Goals} />
@@ -77,18 +78,22 @@ const Router = () => {
       <Stack.Screen name="AboutUs" component={AboutUs} />
       <Stack.Screen name="completed" component={Completed} />
       <Stack.Screen name="Privacy" component={TermaAndCondition} />
+
       <Stack.Screen name="MyDiets" component={MyDiets}/>
       <Stack.Screen name="MyWorkouts" component={MyWorkouts}/>
       <Stack.Screen name="FavoritesRouter" component={FavoritesRouter}/>
       <Stack.Screen name="ExerciseByEquipments" component={ExerciseByEquipments}/>
       <Stack.Screen name="LatestProducts" component={LatestProducts}/>
       <Stack.Screen name="Login" component={Login} />
+
     </Stack.Navigator>
   );
-}
+};
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+      <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
@@ -96,4 +101,4 @@ export const LoginStack = () => {
     </Stack.Navigator>
   );
 };
-export default Router
+export default Router;

@@ -51,84 +51,96 @@ const App = () => {
     };
   }, []);
 
-  useEffect(() => {
-    UserAuth();
-  }, [update]);
-  // Checking if User is Already Login or not
-  const UserAuth = async () => {
-    try {
-      const userData = await AsyncStorage.getItem('Data');
-      const data = JSON.parse(userData);
-      if (data) {
-        setIsLogged(true);
-        setUpdate(update + 1);
-        setIsLoaded(true);
-      } else {
-        setIsLogged(false);
-        setUpdate(update + 1);
-        setIsLoaded(true);
-      }
-    } catch (error) {
-      setIsLogged(false);
-      // setUpdate(update + 1)
-      setIsLoaded(false);
-    }
-  };
-  if (isLoaded && isLogged && isConnected) {
-    return (
+  // useEffect(() => {
+  //   UserAuth();
+  // }, [update]);
+  // // Checking if User is Already Login or not
+  // const UserAuth = async () => {
+  //   try {
+  //     const userData = await AsyncStorage.getItem('Data');
+  //     const data = JSON.parse(userData);
+  //     if (data) {
+  //       setIsLogged(true);
+  //       setUpdate(update + 1);
+  //       setIsLoaded(true);
+  //     } else {
+  //       setIsLogged(false);
+  //       setUpdate(update + 1);
+  //       setIsLoaded(true);
+  //     }
+  //   } catch (error) {
+  //     setIsLogged(false);
+  //     // setUpdate(update + 1)
+  //     setIsLoaded(false);
+  //   }
+  // };
+  // if (isLoaded && isLogged && isConnected) {
+  //   return (
+  //     <>
+  //       <NavigationContainer
+  //         ref={navigationRef}
+  //         onReady={() => BootSplash.hide({duration: 5000})}>
+  //         <Router />
+  //       </NavigationContainer>
+  //       <FlashMessage position="top" />
+  //     </>
+  //   );
+  // } else if (isLoaded && !isLogged && isConnected) {
+  //   return (
+  //     <>
+  //       <NavigationContainer
+  //         ref={navigationRef}
+  //         onReady={() => BootSplash.hide({duration: 5000})}>
+  //         <LoginStack />
+  //       </NavigationContainer>
+  //       <FlashMessage position="top" />
+  //     </>
+  //   );
+  // }
+  // // Will Visible When Internet is Disconnected
+  // else if (isConnected == false && isLoaded) {
+  //   return (
+  //     <View
+  //       style={[
+  //         styles.View,
+  //         {backgroundColor: defaultTheme ? '#000' : '#fff'},
+  //       ]}>
+  //       <Text style={{color: 'red', fontSize: 20}}>No Internet Connection</Text>
+  //       <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
+  //         {' '}
+  //         Make sure you have connected to the Internet
+  //       </Text>
+  //       <TouchableOpacity
+  //         style={[styles.button, {backgroundColor: 'red'}]}
+  //         onPress={() => RNRestart.restart()}>
+  //         <Text
+  //           style={{
+  //             color: '#fff',
+  //             fontSize: 16,
+  //             fontFamily: 'sans-serif',
+  //             fontWeight: 'bold',
+  //           }}>
+  //           {' '}
+  //           Try Again
+  //         </Text>
+  //       </TouchableOpacity>
+  //     </View>
+  //   );
+  // } else {
+  //   return <Loader />;
+  // }
+      return (
       <>
         <NavigationContainer
-          ref={navigationRef}
-          onReady={() => BootSplash.hide({duration: 5000})}>
-          <Router />
-        </NavigationContainer>
-        <FlashMessage position="top" />
-      </>
-    );
-  } else if (isLoaded && !isLogged && isConnected) {
-    return (
-      <>
-        <NavigationContainer
-          ref={navigationRef}
-          onReady={() => BootSplash.hide({duration: 5000})}>
+         ref={navigationRef}
+          onReady={() => BootSplash.hide({duration: 5000})}
+          >
           <LoginStack />
+          {/* <Router /> */}
         </NavigationContainer>
         <FlashMessage position="top" />
       </>
     );
-  }
-  // Will Visible When Internet is Disconnected
-  else if (isConnected == false && isLoaded) {
-    return (
-      <View
-        style={[
-          styles.View,
-          {backgroundColor: defaultTheme ? '#000' : '#fff'},
-        ]}>
-        <Text style={{color: 'red', fontSize: 20}}>No Internet Connection</Text>
-        <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
-          {' '}
-          Make sure you have connected to the Internet
-        </Text>
-        <TouchableOpacity
-          style={[styles.button, {backgroundColor: 'red'}]}
-          onPress={() => RNRestart.restart()}>
-          <Text
-            style={{
-              color: '#fff',
-              fontSize: 16,
-              fontFamily: 'sans-serif',
-              fontWeight: 'bold',
-            }}>
-            {' '}
-            Try Again
-          </Text>
-        </TouchableOpacity>
-      </View>
-    );
-  } else {
-    return <Loader />;
-  }
 };
 const styles = StyleSheet.create({
   View: {
