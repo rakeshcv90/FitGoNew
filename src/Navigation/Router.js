@@ -78,14 +78,14 @@ const Router = () => {
       <Stack.Screen name="AboutUs" component={AboutUs} />
       <Stack.Screen name="completed" component={Completed} />
       <Stack.Screen name="Privacy" component={TermaAndCondition} />
-      <Stack.Screen name="MyDiets" component={MyDiets} />
-      <Stack.Screen name="MyWorkouts" component={MyWorkouts} />
-      <Stack.Screen name="FavoritesRouter" component={FavoritesRouter} />
-      <Stack.Screen
-        name="ExerciseByEquipments"
-        component={ExerciseByEquipments}
-      />
-      <Stack.Screen name="LatestProducts" component={LatestProducts} />
+
+      <Stack.Screen name="MyDiets" component={MyDiets}/>
+      <Stack.Screen name="MyWorkouts" component={MyWorkouts}/>
+      <Stack.Screen name="FavoritesRouter" component={FavoritesRouter}/>
+      <Stack.Screen name="ExerciseByEquipments" component={ExerciseByEquipments}/>
+      <Stack.Screen name="LatestProducts" component={LatestProducts}/>
+      <Stack.Screen name="Login" component={Login} />
+
     </Stack.Navigator>
   );
 };

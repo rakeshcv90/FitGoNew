@@ -4,32 +4,25 @@ import notifee, {
   AndroidVisibility,
 } from '@notifee/react-native';
 import {request, PERMISSIONS} from 'react-native-permissions';
-import {Alert, Platform, AppState} from 'react-native';
+import {Alert, Platform, AppState, PermissionsAndroid} from 'react-native';
 export const requestPermissionforNotification = async () => {
-  if (Platform.OS == 'ios') {
-    const authorizationStatus = await messaging().requestPermission();
-    if (authorizationStatus == 1) {
-      console.log(authorizationStatus);
-      DeviceToken();
-    }
-  } else if (Platform.OS == 'android') {
-    askPermissionRequestforAndroid();
+  if (Platform.OS == 'android') {
+    PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+    );
+    await messaging().registerDeviceForRemoteMessages();
+    token = await messaging().getToken();
+    console.log('Android token is', token);
   } else {
-    console.log('Not authorized');
-  }
-};
-const askPermissionRequestforAndroid = async () => {
-  const DToken = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
-  if (DToken == 'granted') {
-    DeviceToken();
-  }
-};
-const DeviceToken = async () => {
-  try {
-    const token = await messaging().getToken();
-    console.log('DEVICE TOKEN--------->', token);
-  } catch (error) {
-    console.log('Token Error', error);
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      token = await messaging().getToken();
+      console.log('Ios token is', token);
+    }
   }
 };
 
@@ -44,6 +37,22 @@ export const RemoteMessage = () => {
   messaging().setBackgroundMessageHandler(async remoteMessage => {
     DisplayNotification(remoteMessage);
   });
+  notifee.setNotificationCategories([
+    {
+      id: 'Alarm',
+      actions: [
+        {
+          id: 'Plus_Five',
+          title: 'Add +5',
+        },
+        {
+          id: 'Stop',
+          title: 'Stop',
+        },
+      ],
+    },
+  ]);
+
   messaging().getInitialNotification(async remoteMessage => {
     DisplayNotification(remoteMessage);
   });
