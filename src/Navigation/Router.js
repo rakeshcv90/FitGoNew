@@ -41,6 +41,7 @@ import FavoritesRouter from './FavoritesRouter';
 import ExerciseByEquipments from '../Screen/Exercises/ExerciseByEquipments';
 import LatestProducts from '../Screen/Stores/LatestProducts';
 import IntroductionScreen from '../Screen/IntroductionScreen';
+import Yourself from '../Screen/Yourself/index';
 const Stack = createNativeStackNavigator();
 const screenOptions = {
   headerShown: false, // Hide the header for all screens
@@ -85,6 +86,7 @@ const Router = () => {
       <Stack.Screen name="ExerciseByEquipments" component={ExerciseByEquipments}/>
       <Stack.Screen name="LatestProducts" component={LatestProducts}/>
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Yourself" component={Yourself} />
 
     </Stack.Navigator>
   );
@@ -94,6 +96,7 @@ export const LoginStack = () => {
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} />
+      <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
