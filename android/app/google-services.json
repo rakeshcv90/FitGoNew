@@ -12,7 +12,20 @@
           "package_name": "fitme.health.fitness.homeworkouts.equipment"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "60298593797-g5e1jqaqhgjanfmfi6o60gc69v8lec42.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fitme.health.fitness.homeworkouts.equipment",
+            "certificate_hash": "e986c4324cb5dcb7172eb987a28dab81392b2342"
+          }
+        },
+        {
+          "client_id": "60298593797-kkelutkvu5it955cebn8dhi1n543osi8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCIhB9vX4-9EScrDox-m0kwSkiSJj9OWuk"
@@ -20,7 +33,20 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "60298593797-kkelutkvu5it955cebn8dhi1n543osi8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "60298593797-qvbkjikkk7c3t2314rr3fpaql8pak453.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "fitme.health.fitness.homeworkouts.equipment",
+                "app_store_id": "6470018217"
+              }
+            }
+          ]
         }
       }
     }

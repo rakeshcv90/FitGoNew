@@ -2,6 +2,7 @@ import { Dimensions } from "react-native";
  export const DeviceHeigth=Dimensions.get('screen').height
  export const DeviceWidth=Dimensions.get('screen').width
  export const Api ='https://cvinfotech2@gofit.tentoptoday.com/json/'
+ export const NewApi='https://gofit.tentoptoday.com/adserver/public/api/'
  export const Appapi={
   login:'user_login.php',
   signup:'user_registration.php',
@@ -29,4 +30,11 @@ import { Dimensions } from "react-native";
   ResendOTP:"resend_otp.php",
   UpdateProfile:"user_img.php",
   getUserData:"get_user_img.php",
+
+}
+export const NewAppapi={
+  login:'user_login',
+  signup:'user_registration',
+  forgetPassword:'sendemail_link',
+
 }

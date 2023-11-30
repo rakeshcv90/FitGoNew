@@ -31,5 +31,6 @@ export const localImage = {
   FACEBOOK:require("../Icon/Images/NewImage/facebook.png"),
   GOOGLE:require("../Icon/Images/NewImage/google.png"),
   PROFILE:require("../Icon/Images/NewImage/Profile.png"),
+  BACK:require("../Icon/Images/NewImage/back.png"),
 
 };

@@ -882,27 +882,167 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {AppColor} from '../Component/Color';
-import {DeviceHeigth, DeviceWidth} from '../Component/Config';
+import {
+  DeviceHeigth,
+  DeviceWidth,
+  NewAppapi,
+  NewApi,
+} from '../Component/Config';
 import InputText from '../Component/InputText';
 import {localImage} from '../Component/Image';
 import Button2 from '../Component/Button2';
 import Button from '../Component/Button';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
+import axios from 'axios';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+  GoogleAuthProvider,
+} from '@react-native-google-signin/google-signin';
+import {StatusBar} from 'react-native';
+import {showMessage} from 'react-native-flash-message';
+
+import ActivityLoader from '../Component/ActivityLoader';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 const Signup = ({navigation}) => {
   const [showPassword, setShowPassword] = useState(true);
+  const [isVisiblepassword, setIsvisiblepassword] = useState(true);
   const [checked, setChecked] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [forLoading, setForLoading] = useState(false);
 
-  const loginFunction = () => {
-    console.log('csdfdsfdsfds');
+  const PasswordRegex =
+    // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%&*()-_+='":;,.?/~`[{}<>€£¥÷×])[A-Za-z\d!@#$%&*()-_+='":;,.?/~`[{}<>€£¥÷×]{8,}$/;
+  const validationSchema = Yup.object().shape({
+    // name: Yup.string().required('Full Name is required'),
+    name: Yup.string()
+      .required('Full Name is Required')
+      .matches(/^[A-Za-z].*/, 'First Name must start with a character')
+      .min(3, 'First Name must contain atleast 3 characters'),
+
+    email: Yup.string()
+      .matches(/^[\w.\-]+@[\w.\-]+\.\w{2,4}$/, 'Invalid Email Format')
+      .required('Email is Required'),
+    // mobile: Yup.string().min(10).required('Phone No. is required'),
+
+    password: Yup.string()
+      .matches(
+        PasswordRegex,
+        'Password must contain 1 Upper-Case letter, 1 Lower-Case letter, 1 Digit, 1 Special Character(@,$,-,^,&, !), and the length must be at least 8 characters',
+      )
+      .required('Password is Required'),
+    repeat_password: Yup.string()
+      .matches(
+        PasswordRegex,
+        'Password must contain 1 Upper-Case letter, 1 Lower-Case letter, 1 Digit, 1 Special Character(@,$,-,^,&, !), and the length must be at least 8 characters',
+      )
+      .required('Confirm Password is Required')
+      .oneOf([Yup.ref('password')], 'Passwords must match'),
+  });
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      //scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
+      webClientId:
+        '60298593797-kkelutkvu5it955cebn8dhi1n543osi8.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+      // offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+    });
+  }, []);
+
+  const loginFunction = async () => {
+    await GoogleSignin.signOut();
+  };
+  const GoogleSignup = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const {accessToken, idToken, user} = await GoogleSignin.signIn();
+
+      socialLogiIn(user, idToken);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        alert('Cancel');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        alert('Signin in progress');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        alert('PLAY_SERVICES_NOT_AVAILABLE');
+      } else {
+      }
+    }
+  };
+  const handleFormSubmit = async value => {
+    console.log('TEsting Data');
+    try {
+      const data = await axios(`${NewApi}${NewAppapi.signup}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          name: value.name,
+          email: value.email,
+          password: value.password,
+          signup_type: 'form',
+          social_id: 0,
+          social_token: 0,
+          social_type: 'null',
+        },
+      });
+      console.log('TEsting Data for login', data.data);
+    } catch (error) {
+      console.log('Form Signup Error', error);
+    }
+  };
+  const socialLogiIn = async (value, token) => {
+    setForLoading(true);
+    try {
+      const data = await axios(`${NewApi}${NewAppapi.signup}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          name: value.name,
+          email: value.email,
+          signuptype: 'social',
+          socialid: value.id,
+          socialtoken: token,
+          socialtype: 'google',
+        },
+      });
+
+      if (data.data.msg == 'User already exists' && data.data.status == 0) {
+        setForLoading(false);
+        console.log('Compleate Profile');
+      } else if (
+        data.data.msg == 'User registered via social login' &&
+        data.data.status == 0
+      ) {
+        setForLoading(false);
+        console.log('Compleate Profile1');
+      } else if (
+        data.data.msg == 'User already exists' &&
+        data.data.status == 1
+      ) {
+        setForLoading(false);
+        console.log('Compleate Profile Successfull');
+      } else {
+        setForLoading(false);
+        console.log('user not found');
+      }
+    } catch (error) {
+      setForLoading(false);
+      console.log('google Signup Error', error);
+    }
   };
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
@@ -910,129 +1050,177 @@ const Signup = ({navigation}) => {
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'position' : undefined}
           contentContainerStyle={{flexGrow: 1}}>
+          {forLoading ? <ActivityLoader /> : ''}
           <View style={styles.TextContainer}>
             <Text style={styles.LoginText2}>{'Hey there,'}</Text>
             <Text style={styles.LoginText}>Create an Account</Text>
           </View>
-          <View
-            style={{
-              marginTop: DeviceHeigth * 0.07,
-              marginLeft: 10,
-            }}>
-            <InputText
-              leftIcon={localImage.PROFILE}
-              placeholder={'Full Name'}
-              placeholderTextColor={AppColor.PLACEHOLDERCOLOR}
-              onChangeText={text => {
-                setEmail(text);
-              }}
-              value={email}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-          </View>
-          <View
-            style={{
-              marginTop: DeviceHeigth * 0.02,
-              marginLeft: 10,
-            }}>
-            <InputText
-              leftIcon={localImage.Message}
-              placeholder={'Enter Mail ID'}
-              placeholderTextColor={AppColor.PLACEHOLDERCOLOR}
-              onChangeText={text => {
-                setEmail(text);
-              }}
-              value={email}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-          </View>
-          <View
-            style={{
-              marginTop: DeviceHeigth * 0.02,
-              marginLeft: 10,
-            }}>
-            <InputText
-              leftIcon={localImage.Lock}
-              placeholder={'Password'}
-              placeholderTextColor={'#303841'}
-              passwordInput={true}
-              pasButton={() => setShowPassword(!showPassword)}
-              secureTextEntry={showPassword}
-              passwordInputIcon={showPassword}
-              onChangeText={text => setPassword(text)}
-              value={password}
-            />
-          </View>
-          <View
-            style={{
-              marginTop: DeviceHeigth * 0.02,
-              marginLeft: 10,
-            }}>
-            <InputText
-              leftIcon={localImage.Lock}
-              placeholder={'Confirm Passwordrd'}
-              placeholderTextColor={'#303841'}
-              passwordInput={true}
-              pasButton={() => setShowPassword(!showPassword)}
-              secureTextEntry={showPassword}
-              passwordInputIcon={showPassword}
-              onChangeText={text => setPassword(text)}
-              value={password}
-            />
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: '85%',
-              alignSelf: 'center',
-              paddingRight:DeviceWidth*0.08
-            }}>
-            <TouchableOpacity onPress={() => setChecked(!checked)}>
-              {checked ? (
-                <Icons
-                  name="checkbox-marked"
-                  size={30}
+
+          <Formik
+            initialValues={{
+              name: '',
+              email: '',
+              password: '',
+              repeat_password: '',
+            }}
+            onSubmit={values => {
+              if (checked) {
+                handleFormSubmit(values);
+              } else {
+                showMessage({
+                  message: 'Please Check Term & Condition',
+                  type: 'danger',
+                  animationDuration: 500,
+                  // statusBarHeight: StatusBar_Bar_Height+,
+                  floating: true,
+                  icon: {icon: 'auto', position: 'left'},
+                });
+              }
+            }}
+            validationSchema={validationSchema}>
+            {({
+              values,
+              handleChange,
+              handleSubmit,
+              handleBlur,
+              errors,
+              touched,
+            }) => (
+              <>
+                <View
                   style={{
-                    marginVertical: 15,
-                    marginRight: 10,
-                  }}
-                  color={AppColor.CHECKBOXCOLOR}
-                />
-              ) : (
-                <Icons
-                  name="checkbox-blank-outline"
-                  size={30}
+                    marginTop: DeviceHeigth * 0.07,
+                    marginLeft: 10,
+                  }}>
+                  <InputText
+                    errors={errors.name}
+                    touched={touched.name}
+                    value={values.name}
+                    leftIcon={localImage.PROFILE}
+                    placeholder={'Full Name'}
+                    placeholderTextColor={AppColor.PLACEHOLDERCOLOR}
+                    onChangeText={handleChange('name')}
+                    onBlur={handleBlur('name')}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                  />
+                </View>
+                <View
                   style={{
-                    marginVertical: 15,
-                    marginRight: 10,
-                  }}
-                  color={AppColor.CHECKBOXCOLOR}
-                />
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('TermaAndCondition');
-              }}>
-              <Text style={styles.policyText}>
-                By continuing you accept our{' '}
-                <Text onPress={() => {}} style={styles.policyText1}>
-                   Privacy Policy
-                </Text>{' '}
-                and
-                <Text style={styles.policyText1} onPress={() => {}}>
-                  {' '}
-                  Terma os use
-                </Text>{' '}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{marginTop: DeviceHeigth * 0.08}}>
-            <Button buttonText={'Register'} onPresh={loginFunction} />
-          </View>
+                    marginTop: DeviceHeigth * 0.02,
+                    marginLeft: 10,
+                  }}>
+                  <InputText
+                    leftIcon={localImage.Message}
+                    placeholder={'Enter Mail ID'}
+                    placeholderTextColor={AppColor.PLACEHOLDERCOLOR}
+                    onChangeText={handleChange('email')}
+                    errors={errors.email}
+                    touched={touched.email}
+                    value={values.email}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                  />
+                </View>
+                <View
+                  style={{
+                    marginTop: DeviceHeigth * 0.02,
+                    marginLeft: 10,
+                  }}>
+                  <InputText
+                    leftIcon={localImage.Lock}
+                    placeholder={'Password'}
+                    placeholderTextColor={'#303841'}
+                    passwordInput={true}
+                    pasButton={() => setShowPassword(!showPassword)}
+                    secureTextEntry={showPassword}
+                    passwordInputIcon={showPassword}
+                    errors={errors.password}
+                    touched={touched.password}
+                    value={values.password}
+                    onChangeText={handleChange('password')}
+                    onBlur={handleBlur('password')}
+                  />
+                </View>
+                <View
+                  style={{
+                    marginTop: DeviceHeigth * 0.02,
+                    marginLeft: 10,
+                  }}>
+                  <InputText
+                    leftIcon={localImage.Lock}
+                    placeholder={'Confirm Passwordrd'}
+                    placeholderTextColor={'#303841'}
+                    passwordInput={true}
+                    pasButton={() => setIsvisiblepassword(!isVisiblepassword)}
+                    secureTextEntry={isVisiblepassword}
+                    passwordInputIcon={isVisiblepassword}
+                    errors={errors.repeat_password}
+                    touched={touched.repeat_password}
+                    value={values.repeat_password}
+                    onChangeText={handleChange('repeat_password')}
+                    onBlur={handleBlur('repeat_password')}
+                  />
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    width: '85%',
+                    alignSelf: 'center',
+                    paddingRight: DeviceWidth * 0.08,
+                  }}>
+                  <TouchableOpacity onPress={() => setChecked(!checked)}>
+                    {checked ? (
+                      <Icons
+                        name="checkbox-marked"
+                        size={30}
+                        style={{
+                          marginVertical: 15,
+                          marginRight: 10,
+                        }}
+                        color={AppColor.CHECKBOXCOLOR}
+                      />
+                    ) : (
+                      <Icons
+                        name="checkbox-blank-outline"
+                        size={30}
+                        style={{
+                          marginVertical: 15,
+                          marginRight: 10,
+                        }}
+                        color={AppColor.CHECKBOXCOLOR}
+                      />
+                    )}
+                  </TouchableOpacity>
+                  <View>
+                    <Text style={styles.policyText}>
+                      By continuing you accept our{' '}
+                      <Text
+                        onPress={() => {
+                          navigation.navigate('TermaAndCondition');
+                        }}
+                        style={styles.policyText1}>
+                        Privacy Policy
+                      </Text>{' '}
+                      and
+                      <Text
+                        style={styles.policyText1}
+                        onPress={() => {
+                          navigation.navigate('TermaAndCondition');
+                        }}>
+                        {' '}
+                        Terma os use
+                      </Text>{' '}
+                    </Text>
+                  </View>
+                </View>
+                <View style={{marginTop: DeviceHeigth * 0.08}}>
+                  <Button buttonText={'Register'} onPresh={handleSubmit} />
+                </View>
+              </>
+            )}
+          </Formik>
 
           <View
             style={{
@@ -1047,7 +1235,7 @@ const Signup = ({navigation}) => {
           </View>
         </KeyboardAvoidingView>
         <View style={{marginTop: DeviceHeigth * 0.02}}>
-          <Button2 />
+          <Button2 onGooglePress={GoogleSignup} />
         </View>
 
         <View
@@ -1059,7 +1247,7 @@ const Signup = ({navigation}) => {
             alignItems: 'center',
           }}>
           <Text style={[styles.forgotText, {fontSize: 17, fontWeight: '400'}]}>
-           Already have an account ?
+            Already have an account ?
           </Text>
           <TouchableOpacity
             onPress={() => {
