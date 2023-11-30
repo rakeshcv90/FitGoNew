@@ -1251,7 +1251,7 @@ const Signup = ({navigation}) => {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('Login');
+              navigation.navigate('WorkoutCategories');
             }}>
             <Text
               style={[

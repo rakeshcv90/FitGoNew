@@ -42,6 +42,7 @@ import ExerciseByEquipments from '../Screen/Exercises/ExerciseByEquipments';
 import LatestProducts from '../Screen/Stores/LatestProducts';
 import IntroductionScreen from '../Screen/IntroductionScreen';
 import OtpVerification from '../Screen/OtpVerification';
+import WorkoutCategories from '../Screen/New Workouts/WorkoutCategories';
 const Stack = createNativeStackNavigator();
 const screenOptions = {
   headerShown: false, // Hide the header for all screens
@@ -86,7 +87,7 @@ const Router = () => {
       <Stack.Screen name="ExerciseByEquipments" component={ExerciseByEquipments}/>
       <Stack.Screen name="LatestProducts" component={LatestProducts}/>
       <Stack.Screen name="Login" component={Login} />
-
+       <Stack.Screen name="WorkoutCategories" component={WorkoutCategories}/>
     </Stack.Navigator>
   );
 };
@@ -100,6 +101,7 @@ export const LoginStack = () => {
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
       <Stack.Screen name="OtpVerification" component={OtpVerification} />
+      <Stack.Screen name="WorkoutCategories" component={WorkoutCategories}/>
     </Stack.Navigator>
   );
 };
