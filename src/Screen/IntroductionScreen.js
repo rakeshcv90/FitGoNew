@@ -4,14 +4,23 @@ import {
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {localImage} from '../Component/Image';
 import {DeviceWidth, DeviceHeigth} from '../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
+import {AppColor} from '../Component/Color';
+import {navigationRef} from '../../App';
+import { setShowIntro } from '../Component/ThemeRedux/Actions';
+import {useDispatch} from 'react-redux';
+
 const IntroductionScreen = () => {
+  const translateY = useRef(new Animated.Value(-200)).current;
   const [currentPage, setCurrentPage] = useState(0);
+  const [hide, setHide] = useState(false);
+  const dispatch = useDispatch()
   const IntroductionData = [
     {
       id: 1,
@@ -32,46 +41,113 @@ const IntroductionScreen = () => {
       img: localImage.Inrtoduction3,
     },
   ];
-  const goToNextPage = () => {
-    if (currentPage < IntroductionData.length - 1) {
-      setCurrentPage(currentPage + 1);
-    }
+  useEffect(() => {
+    goToNextPage(-1);
+    setTimeout(() => {
+      setHide(true);
+    }, 1000);
+  }, []);
+  const goToNextPage = index => {
+    setCurrentPage(index + 1);
+    translateY.setValue(300);
+    Animated.timing(translateY, {
+      useNativeDriver: true,
+      toValue: -(DeviceHeigth * 15) / 100,
+      delay: 1000,
+      duration: 1500,
+    }).start();
   };
-  const currentData = IntroductionData[currentPage];
+
   return (
     <View style={styles.Container}>
-      <ImageBackground source={ IntroductionData[currentPage].img} style={styles.ImgBackground}>
+      <ImageBackground
+        source={IntroductionData[currentPage].img}
+        style={styles.ImgBackground}>
         <View style={styles.LinearG}>
-          <View style={styles.TextView}>
+          <Animated.View
+            style={[styles.TextView, {transform: [{translateY: translateY}]}]}>
             <Text style={[styles.Texts, {fontSize: 25}]}>
-              {currentData.text1}
+              {IntroductionData[currentPage].text1}
             </Text>
-            <Text style={[styles.Texts, {fontSize: 33}]}>
-              {currentData.text2}
+            <Text style={[styles.Texts, {fontSize: 33, marginBottom: 50}]}>
+              {IntroductionData[currentPage].text2}
             </Text>
-          </View>
-          <View style={styles.buttons}>
-            <TouchableOpacity>
-              <Text style={styles.Texts}>Skip</Text>
-            </TouchableOpacity>
 
-            <View>
-              <Text>Something</Text>
-            </View>
-            <View>
+            {currentPage == 2 && (
               <LinearGradient
                 start={{x: 0, y: 1}}
                 end={{x: 1, y: 0}}
                 colors={['#941000', '#D5191A']}
-                style={styles.nextButton}>
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                  height: 50,
+                  borderRadius: 50,
+                  width: DeviceWidth * 0.4,
+                }}>
                 <TouchableOpacity
-                  onPress={() => goToNextPage()}
-                  style={styles.nextButton}>
-                  <Icons name="chevron-right" size={25} color={'#fff'} />
+                  onPress={() => {
+                    dispatch(setShowIntro(true));
+                    navigationRef.navigate('Login');
+                  }}>
+                  <Text
+                    style={[
+                      styles.Texts,
+                      {fontSize: 20},
+                    ]}>{`Start Now   >`}</Text>
                 </TouchableOpacity>
               </LinearGradient>
+            )}
+          </Animated.View>
+          {hide && (
+            <View style={styles.buttons}>
+              <TouchableOpacity onPress={() => navigationRef.navigate('Login')}>
+                <Text style={[styles.Texts, {fontSize: 20}]}>Skip</Text>
+              </TouchableOpacity>
+              <View
+                style={{
+                  width: DeviceWidth * 0.22,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                {IntroductionData.map(item => (
+                  <View
+                    style={{
+                      height: 3,
+                      width: item.id == currentPage + 1 ? 40 : 20,
+                      backgroundColor:
+                        item.id == currentPage + 1
+                          ? AppColor.RED
+                          : AppColor.SOCIALBUTTON,
+                    }}
+                  />
+                ))}
+              </View>
+              {currentPage != 2 ? (
+                <TouchableOpacity onPress={() => goToNextPage(currentPage)}>
+                  <LinearGradient
+                    start={{x: 0, y: 1}}
+                    end={{x: 1, y: 0}}
+                    colors={['#941000', '#D5191A']}
+                    style={[styles.nextButton]}>
+                    <Icons name="chevron-right" size={25} color={'#fff'} />
+                  </LinearGradient>
+                </TouchableOpacity>
+              ) : (
+                <View
+                  style={{
+                    width: 45,
+                    height: 45,
+                    borderRadius: 50 / 2,
+                    overflow: 'hidden',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                />
+              )}
             </View>
-          </View>
+          )}
         </View>
       </ImageBackground>
     </View>
@@ -80,6 +156,7 @@ const IntroductionScreen = () => {
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
+    backgroundColor: AppColor.WHITE,
   },
   ImgBackground: {
     width: DeviceWidth,
@@ -97,8 +174,7 @@ const styles = StyleSheet.create({
   TextView: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: (DeviceHeigth * 20) / 100,
-
+    // marginBottom: (DeviceHeigth * 20) / 100,
   },
   Texts: {
     color: '#fff',
@@ -106,16 +182,16 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-
     width: (DeviceWidth * 85) / 100,
     marginBottom: (DeviceHeigth * 5) / 100,
     alignItems: 'center',
+    alignSelf: 'center',
   },
   nextButton: {
     backgroundColor: 'red',
-    width: 30,
-    height: 30,
-    borderRadius: 30 / 2,
+    width: 45,
+    height: 45,
+    borderRadius: 50 / 2,
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',

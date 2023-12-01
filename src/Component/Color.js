@@ -2,6 +2,7 @@ export const AppColor={
     RED:'#941000',
     FBBUTTON:'#4267B2',
     WHITE:'#ffffff',
+    BLACK:'#000000',
     INPUTLABLECOLOR:'#3A4750',
     INPUTTEXTCOLOR:'#303841',
     GOOGLEBUTTON:'#F5F5F5',
@@ -11,6 +12,6 @@ export const AppColor={
     SOCIALBUTTON:'#f4e7e5',
     BACKGROUNG:'#F8F9F9',
     BORDERCOLOR:"#E3E3E3",
-    CHECKBOXCOLOR:'#ADA4A5'
-    
+    CHECKBOXCOLOR:'#ADA4A5',
+    BORDERCOLOR2: '#4285F4'
   }
