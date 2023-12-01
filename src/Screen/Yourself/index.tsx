@@ -20,21 +20,28 @@ import {showMessage} from 'react-native-flash-message';
 import Level from './Level';
 import {Picker} from '@react-native-picker/picker';
 import Focus from './Focus';
+import Toggle from '../../Component/Toggle';
+import {AppColor} from '../../Component/Color';
 
 const imgData = Array(60)
   .fill(0)
   .map((item: any, index, arr) => arr[index] + index + 1);
+const imgData2 = Array(60)
+  .fill(27)
+  .map((item: any, index, arr) => arr[index] + index + 3);
 
 const index = () => {
   const {defaultTheme} = useSelector((state: any) => state);
   const [screen, setScreen] = useState(0);
   const [toggleW, setToggleW] = useState('kg');
-  const [toggle, setToggle] = useState('in');
+  const [toggle, setToggle] = useState('ft');
   const [selectedGender, setSelectedGender] = useState(0);
   const [selectedGoal, setSelectedGoal] = useState(-1);
   const [selectedLevel, setSelectedLevel] = useState(-1);
   const [selectedFocus, setSelectedFocus] = useState(-1);
   const [selectedHeight, setSelectedHeight] = useState('1');
+  const [selectedWeight, setSelectedWeight] = useState('1');
+  const [selectedAge, setSelectedAge] = useState('1');
 
   const fullData = [
     {
@@ -56,14 +63,43 @@ const index = () => {
           image: localImage.WeightLoss,
           name: 'Weight Loss',
           color: '#95ADFE4D',
+          gender: 'Female',
         },
         {
           id: 2,
           image: localImage.BuildMuscle,
           name: 'Build Muscle',
           color: '#D7EFFE',
+          gender: 'Female',
         },
-        {id: 3, image: localImage.Strength, name: 'Strength', color: '#EFDFD2'},
+        {
+          id: 3,
+          image: localImage.StrengthF,
+          name: 'Strength',
+          color: '#EFDFD2',
+          gender: 'Female',
+        },
+        {
+          id: 4,
+          image: localImage.WeightLossM,
+          name: 'Weight Loss',
+          color: '#95ADFE4D',
+          gender: 'Male',
+        },
+        {
+          id: 5,
+          image: localImage.BuildMuscleM,
+          name: 'Build Muscle',
+          color: '#D7EFFE',
+          gender: 'Male',
+        },
+        {
+          id: 6,
+          image: localImage.Strength,
+          name: 'Strength',
+          color: '#EFDFD2',
+          gender: 'Male',
+        },
       ],
       top1: `What’s your goal?`,
       top2: 'This helps us create to your personalized plan',
@@ -87,20 +123,20 @@ const index = () => {
       top1: `What’s your Fitness level?`,
       top2: 'This helps us create to your personalized plan',
     },
-    // {
-    //   id: 4,
-    //   name: 'Weight',
-    //   top1: `What’s your Weight?`,
-    //   top2: 'This helps us create to your personalized plan',
-    //   data: ['kg', 'lb'],
-    // },
-    // {
-    //   id: 5,
-    //   name: 'Height',
-    //   top1: `What’s your height?`,
-    //   top2: 'This helps us create to your personalized plan',
-    //   data: ['cm', 'in'],
-    // },
+    {
+      id: 4,
+      name: 'Weight',
+      top1: `What’s your Weight?`,
+      top2: 'This helps us create to your personalized plan',
+      data: ['kg', 'lb'],
+    },
+    {
+      id: 5,
+      name: 'Height',
+      top1: `What’s your height?`,
+      top2: 'This helps us create to your personalized plan',
+      data: ['ft', 'cm'],
+    },
     {
       id: 6,
       name: 'Age',
@@ -113,12 +149,13 @@ const index = () => {
       data: [
         {
           id: 1,
-          image: localImage.BeginnerLevel,
+          image:
+            'https://s3-alpha-sig.figma.com/img/1095/45fb/d3a879434dc93bc48b49f0017caf502b?Expires=1702252800&Signature=aU63bVTWLsvR~bXX7LpQHkn0mGrM8P4cs7h7MC7mcXpFL5MkeKPZ6-PiVa8B9G--twIPDKzOILKOr0oPGCIcHfdmZooK5M5AGJm7n-wOkumenFnrB3vEpmuDd9exXYtCOwcpkuOyjqdcQnz7yig7kKOoAV8ZQtbqVbFVhFHx7U2K3SRB1JIhYXR-Fv3Re1wJScDdRhyTBs6wHA1MtQIQ5S~RIM3LZL-qHYSBOp5yOp8v5SeXqkYLkHMl-dfR1IIOCVkCkPi4ELRqKzNNc-jjvdQC6DJLwDDrbcVcsWLT8R~vyK0ylbtXLYfCQzPCEBx4EvZMB0bJ~jXgo-FxHGmsKg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4',
           name: 'Legs',
         },
         {
           id: 2,
-          image: localImage.IntermediateLevel,
+          image: 'https://s3-alpha-sig.figma.com/img/7910/f5cb/bf41d4a61461ea0e215258e153dade1d?Expires=1702252800&Signature=U6wH-q9rpuBeAD~mWlmKVUrJl9dNpDVEnkVSMof2mpm~aSEv-2BXy5OUKIC-JCh2XOsQGPiLfszi8SL9TTvqz75gjtmuUd97uOjq8Gnyd2p8jfC0d4eKBB-RBLs0fiob-uf9F6dUC99qasTFEltk2muZWbAuFpk23uFDtPbj8X-kpLzyCr1-~grSMkFCYIOjYfg1H19ZYj7bGtZJ69rWFFe~c-UaokTSxUOlAPL1B-V8WhVuCaRiDXWeE6Fe5Q0aoKl3~jLYOg0TpB0zGcSaxenEaJizmwXU11oFazQ1zVgSUuMjSeSDI6CCU5ya5tEFXhEjLaRr18CxjtFF72Bjdw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4',
           name: 'Shoulders',
         },
         {id: 3, image: localImage.AdvanceLevel, name: 'Biceps'},
@@ -139,20 +176,100 @@ const index = () => {
       top2: 'This helps us create to your personalized plan',
     },
   ];
-
+  const Pickers = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          width: DeviceWidth * 0.5,
+          marginTop: DeviceHeigth * 0.2,
+        }}>
+        {screen == 3 ? (
+          <Picker
+            style={{flex: 1}}
+            selectedValue={selectedWeight}
+            onValueChange={(itemValue: any, itemIndex) => {
+              setSelectedWeight(itemValue);
+            }}
+            selectionColor={'white'}>
+            {imgData.map((hr: any, index: number) => {
+              if (index < 10) return;
+              if (toggleW == 'lb') hr = (hr * 0.2).toPrecision(2);
+              return (
+                <Picker.Item label={hr} value={hr} />
+                // <Picker.Item label={`${hr} kg`} value={hr} />
+              );
+            })}
+          </Picker>
+        ) : screen == 4 ? (
+          <Picker
+            style={{flex: 1}}
+            selectedValue={selectedHeight}
+            onValueChange={(itemValue: any, itemIndex) => {
+              setSelectedHeight(itemValue);
+            }}
+            selectionColor={'white'}>
+            {imgData2.map((hr: any, index: number) => {
+              if (index < 10) return;
+              if (toggle == 'cm') hr = (hr * 30).toPrecision(2);
+              return (
+                <Picker.Item label={hr} value={hr} />
+                // <Picker.Item label={`${hr} kg`} value={hr} />
+              );
+            })}
+          </Picker>
+        ) : (
+          <Picker
+            style={{flex: 1}}
+            selectedValue={selectedAge}
+            onValueChange={(itemValue: any, itemIndex) => {
+              setSelectedAge(itemValue);
+            }}
+            selectionColor={'white'}>
+            {imgData.map((hr: any, index: number) => {
+              if (index < 15) return;
+              if (toggleW == 'lb') hr = (hr * 0.2).toPrecision(2);
+              return (
+                <Picker.Item label={hr} value={hr} />
+                // <Picker.Item label={`${hr} kg`} value={hr} />
+              );
+            })}
+          </Picker>
+        )}
+      </View>
+    );
+  };
   return (
     <SafeAreaView
       style={{flex: 1, backgroundColor: defaultTheme ? 'black' : 'white'}}>
+      <View style={styles.buttonsUp}>
+        {screen >= 1 && (
+          <TouchableOpacity
+            style={[styles.nextButton2]}
+            onPress={() => setScreen(screen - 1)}>
+            <Icons name="chevron-left" size={25} color={'#000'} />
+          </TouchableOpacity>
+        )}
+        {screen >= 1 && screen <= 6 && (
+          <TouchableOpacity onPress={() => navigationRef.navigate('Login')}>
+            <Text
+              style={[{fontSize: 15, color: 'black', fontFamily: 'Poppins'}]}>
+              SKIP
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
       <View
         style={{
-          height: DeviceHeigth * 0.8,
+          height: DeviceHeigth * 0.7,
           alignItems: 'center',
         }}>
         <View
           style={{
             justifyContent: 'center',
             alignItems: 'center',
-            marginTop: 50,
+            // marginTop: 50,
           }}>
           <Text
             style={{
@@ -172,14 +289,14 @@ const index = () => {
               fontFamily: '',
               fontWeight: '400',
               lineHeight: 16,
-              width: '65%',
+              width: DeviceWidth * 0.6,
               textAlign: 'center',
             }}>
             {fullData[screen]?.top2}
           </Text>
           {/* <Text>{screen}</Text> */}
         </View>
-        {/* {screen == 3 && (
+        {screen == 3 && (
           <View
             style={{flexDirection: 'row-reverse', left: 100, marginTop: 10}}>
             <Toggle
@@ -202,7 +319,7 @@ const index = () => {
               setSelected={setToggle}
             />
           </View>
-        )} */}
+        )}
 
         {screen == 0 ? (
           <Gender
@@ -215,6 +332,7 @@ const index = () => {
             data={fullData[screen]?.data}
             selectedImage={selectedGoal}
             setSelectedImage={setSelectedGoal}
+            selectedGender={fullData[0]?.data[selectedGender].name}
           />
         ) : screen == 2 ? (
           <Level
@@ -222,44 +340,22 @@ const index = () => {
             selectedImage={selectedLevel}
             setSelectedImage={setSelectedLevel}
           />
-        ) : 
-        // screen == 5 || screen == 4 || 
-        screen == 3 ? (
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              width: DeviceWidth * 0.5,
-              marginTop: DeviceHeigth * 0.2,
-            }}>
-            <Picker
-              style={{flex: 1}}
-              selectedValue={selectedHeight}
-              onValueChange={(itemValue: any, itemIndex) => {
-                setSelectedHeight(itemValue);
-              }}
-              selectionColor={'white'}>
-              {imgData.map((hr: any, index: number) => {
-                if (index < 10) return;
-                return (
-                  <Picker.Item label={hr} value={hr} />
-                  // <Picker.Item label={`${hr} kg`} value={hr} />
-                );
-              })}
-            </Picker>
-          </View>
-        ) : screen == 4 ? (
+        ) : screen == 5 || screen == 4 || screen == 3 ? (
+          <Pickers />
+        ) : screen == 6 ? (
           <Focus
             data={fullData[screen]?.data}
             selectedImage={selectedFocus}
             setSelectedImage={setSelectedFocus}
           />
-        ): null}
+        ) : null}
       </View>
 
       <View style={styles.buttons}>
-        <TouchableOpacity onPress={() => navigationRef.navigate('Login')}>
-          <Text style={[{fontSize: 20, color: 'black'}]}>SKIP</Text>
+        <TouchableOpacity
+          onPress={() => navigationRef.navigate('Login')}
+          disabled>
+          {/* <Text style={[{fontSize: 20, color: 'black'}]}>SKIP</Text> */}
         </TouchableOpacity>
         {/* <View
                 style={{
@@ -322,9 +418,27 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 85) / 100,
     alignItems: 'center',
     alignSelf: 'center',
+    marginTop: 50,
+  },
+  buttonsUp: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: (DeviceWidth * 85) / 100,
+    alignItems: 'center',
+    alignSelf: 'center',
+    height: 50,
   },
   nextButton: {
     backgroundColor: 'red',
+    width: 45,
+    height: 45,
+    borderRadius: 50 / 2,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  nextButton2: {
+    // backgroundColor: 'red',
     width: 45,
     height: 45,
     borderRadius: 50 / 2,

@@ -4,7 +4,7 @@ import {Image} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor} from '../../Component/Color';
 
-const Goal = ({data, selectedImage, setSelectedImage}: any) => {
+const Goal = ({data, selectedImage, setSelectedImage, selectedGender}: any) => {
   return (
     <View
       style={{
@@ -15,6 +15,7 @@ const Goal = ({data, selectedImage, setSelectedImage}: any) => {
       }}>
       {data &&
         data?.map((item: any, index: number) => {
+          if (item.gender != selectedGender) return;
           return (
             <TouchableOpacity
               key={index}
@@ -44,7 +45,14 @@ const Goal = ({data, selectedImage, setSelectedImage}: any) => {
                 resizeMode="contain"
                 style={{
                   height: index == 0 ? DeviceHeigth * 0.17 : DeviceHeigth * 0.2,
-                  width: DeviceWidth * 0.3,
+                  width:
+                    selectedGender == 'Female' && index == 1
+                      ? DeviceWidth * 0.28
+                      : selectedGender == 'Female' && index == 2
+                      ? DeviceWidth * 0.38
+                      : DeviceWidth * 0.33,
+                  marginRight:
+                    selectedGender == 'Female' && index != 0 ? 25 : 0,
                 }}
               />
             </TouchableOpacity>

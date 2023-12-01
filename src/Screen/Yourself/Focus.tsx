@@ -31,27 +31,21 @@ const Focus = ({data, selectedImage, setSelectedImage}: any) => {
               key={index}
               activeOpacity={0.8}
               onPress={() => setSelectedImage(index)}
-              style={[
-                styles.box,
-                {
-                  padding: index == selectedImage ? 18 : 20,
-                  paddingRight: index == 0 ? 20 : 0,
-                  borderWidth: index == selectedImage ? 3 : 0,
-                  backgroundColor: item.color,
-                },
-              ]}>
+              style={[styles.box, {}]}>
               <Text
                 style={{
-                  color: '#505050',
-                  fontSize: 18,
-                  fontWeight: '600',
+                  color: AppColor.LITELTEXTCOLOR,
+                  fontSize: 16,
+                  fontWeight: '500',
                   fontFamily: 'Poppins',
-                  lineHeight: 27,
+                  lineHeight: 24,
                 }}>
                 {item.name}
               </Text>
               <Image
-                source={item.image}
+                source={{
+                  uri: item.image,
+                }}
                 resizeMode="contain"
                 style={{
                   height: index == 0 ? DeviceHeigth * 0.17 : DeviceHeigth * 0.2,
@@ -71,12 +65,14 @@ export default Focus;
 const styles = StyleSheet.create({
   box: {
     width: DeviceWidth * 0.8,
-    height: DeviceHeigth / 8,
-    borderColor: AppColor.BORDERCOLOR2,
+    height: DeviceHeigth / 12,
+    borderColor: AppColor.LITELTEXTCOLOR,
+    borderWidth: 1,
     borderRadius: 20,
     marginBottom: 20,
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
     overflow: 'hidden',
+    flexDirection: 'row',
   },
 });
