@@ -1,0 +1,72 @@
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">-->
+<!--<plist version="1.0">-->
+<!--<dict>-->
+<!--	<key>CLIENT_ID</key>-->
+<!--	<string>60298593797-qvbkjikkk7c3t2314rr3fpaql8pak453.apps.googleusercontent.com</string>-->
+<!--	<key>REVERSED_CLIENT_ID</key>-->
+<!--	<string>com.googleusercontent.apps.60298593797-qvbkjikkk7c3t2314rr3fpaql8pak453</string>-->
+<!--	<key>ANDROID_CLIENT_ID</key>-->
+<!--	<string>60298593797-g5e1jqaqhgjanfmfi6o60gc69v8lec42.apps.googleusercontent.com</string>-->
+<!--	<key>API_KEY</key>-->
+<!--	<string>AIzaSyDeHkz6IjkbcKeiJ6nvY7SIUXhiMPEyndI</string>-->
+<!--	<key>GCM_SENDER_ID</key>-->
+<!--	<string>60298593797</string>-->
+<!--	<key>PLIST_VERSION</key>-->
+<!--	<string>1</string>-->
+<!--	<key>BUNDLE_ID</key>-->
+<!--	<string>fitme.health.fitness.homeworkouts.equipment</string>-->
+<!--	<key>PROJECT_ID</key>-->
+<!--	<string>fitme-f65b3</string>-->
+<!--	<key>STORAGE_BUCKET</key>-->
+<!--	<string>fitme-f65b3.appspot.com</string>-->
+<!--	<key>IS_ADS_ENABLED</key>-->
+<!--	<false></false>-->
+<!--	<key>IS_ANALYTICS_ENABLED</key>-->
+<!--	<false></false>-->
+<!--	<key>IS_APPINVITE_ENABLED</key>-->
+<!--	<true></true>-->
+<!--	<key>IS_GCM_ENABLED</key>-->
+<!--	<true></true>-->
+<!--	<key>IS_SIGNIN_ENABLED</key>-->
+<!--	<true></true>-->
+<!--	<key>GOOGLE_APP_ID</key>-->
+<!--	<string>1:60298593797:ios:d36839a2e9df6199ebbe6c</string>-->
+<!--</dict>-->
+<!--</plist>-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CLIENT_ID</key>
+    <string>60298593797-1cq5dlnk96m56t9nbd26dlmutjl7ubks.apps.googleusercontent.com</string>
+    <key>REVERSED_CLIENT_ID</key>
+    <string>com.googleusercontent.apps.60298593797-1cq5dlnk96m56t9nbd26dlmutjl7ubks</string>
+    <key>ANDROID_CLIENT_ID</key>
+    <string>60298593797-g5e1jqaqhgjanfmfi6o60gc69v8lec42.apps.googleusercontent.com</string>
+    <key>API_KEY</key>
+    <string>AIzaSyDeHkz6IjkbcKeiJ6nvY7SIUXhiMPEyndI</string>
+    <key>GCM_SENDER_ID</key>
+    <string>60298593797</string>
+    <key>PLIST_VERSION</key>
+    <string>1</string>
+    <key>BUNDLE_ID</key>
+    <string>fitme.health.fitness.homeworkouts.equipment</string>
+    <key>PROJECT_ID</key>
+    <string>fitme-f65b3</string>
+    <key>STORAGE_BUCKET</key>
+    <string>fitme-f65b3.appspot.com</string>
+    <key>IS_ADS_ENABLED</key>
+    <false></false>
+    <key>IS_ANALYTICS_ENABLED</key>
+    <false></false>
+    <key>IS_APPINVITE_ENABLED</key>
+    <true></true>
+    <key>IS_GCM_ENABLED</key>
+    <true></true>
+    <key>IS_SIGNIN_ENABLED</key>
+    <true></true>
+    <key>GOOGLE_APP_ID</key>
+    <string>1:60298593797:ios:d36839a2e9df6199ebbe6c</string>
+</dict>
+</plist>

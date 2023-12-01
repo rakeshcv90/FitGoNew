@@ -103,6 +103,7 @@ export const LoginStack = () => {
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
       <Stack.Screen name="OtpVerification" component={OtpVerification} />
+      <Stack.Screen name="Yourself" component={Yourself} />
     </Stack.Navigator>
   );
 };
