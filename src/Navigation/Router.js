@@ -1,6 +1,8 @@
 import {View, Text} from 'react-native';
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
 import SplaceScreen from '../Screen/SplaceScreen';
 import Login from '../Screen/Login';
 import Signup from '../Screen/Signup';
@@ -8,6 +10,7 @@ import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
 import DrawerNavigation from './DrawerNavigation';
 // import Workouts from '../Screen/Workouts/Workouts';
+//import Workouts from '../Screen/Workouts/Workouts';
 import Search from '../Screen/Search';
 import Settings from '../Screen/Settings';
 import Goals from '../Screen/Workouts/Goals';
@@ -18,11 +21,11 @@ import SingleLevel from '../Screen/Workouts/SingleLevel';
 import Exercises from '../Screen/Exercises/Exercises';
 import ExerciseByBodyPart from '../Screen/Exercises/ExerciseByBodyPart';
 import Equipments from '../Screen/Exercises/Equipments';
-import Diets from '../Screen/Diets/Diets';
+//import Diets from '../Screen/Diets/Diets';
 import DietCategory from '../Screen/Diets/DietCategory';
 import DietDetail from '../Screen/Diets/DietDetail';
 import SingleCategory from '../Screen/Diets/SingleCategory';
-import Store from '../Screen/Stores/Store';
+// import Store from '../Screen/Stores/Store';
 import StoreDetail from '../Screen/Stores/StoreDetail';
 import StoreCategories from '../Screen/Stores/StoreCategories';
 import Blog from '../Screen/Blog/Blog';
@@ -41,11 +44,19 @@ import FavoritesRouter from './FavoritesRouter';
 import ExerciseByEquipments from '../Screen/Exercises/ExerciseByEquipments';
 import LatestProducts from '../Screen/Stores/LatestProducts';
 import IntroductionScreen from '../Screen/IntroductionScreen';
+import Yourself from '../Screen/Yourself/Index';
 import OtpVerification from '../Screen/OtpVerification';
 import WorkoutCategories from '../Screen/New Workouts/WorkoutCategories';
 import Workouts from '../Screen/New Workouts/WorkoutsDetails';
 import NewProfileScreen from '../Screen/NewProfileScreen';
+import Home from '../Screen/NewHome/Home';
+import ApplicantBottomTabBar from './ApplicantBottomTabBar';
+import Workouts from '../Screen/NewHome/Workouts';
+import Diets from '../Screen/NewHome/Diets';
+import Store from '../Screen/NewHome/Store';
+import Profile from '../Screen/NewHome/Profile';
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 const screenOptions = {
   headerShown: false, // Hide the header for all screens
 };
@@ -82,30 +93,59 @@ const Router = () => {
       <Stack.Screen name="AboutUs" component={AboutUs} />
       <Stack.Screen name="completed" component={Completed} />
       <Stack.Screen name="Privacy" component={TermaAndCondition} />
-
-      <Stack.Screen name="MyDiets" component={MyDiets}/>
-      <Stack.Screen name="MyWorkouts" component={MyWorkouts}/>
-      <Stack.Screen name="FavoritesRouter" component={FavoritesRouter}/>
-      <Stack.Screen name="ExerciseByEquipments" component={ExerciseByEquipments}/>
-      <Stack.Screen name="LatestProducts" component={LatestProducts}/>
+      <Stack.Screen name="MyDiets" component={MyDiets} />
+      <Stack.Screen name="MyWorkouts" component={MyWorkouts} />
+      <Stack.Screen name="FavoritesRouter" component={FavoritesRouter} />
+      <Stack.Screen
+        name="ExerciseByEquipments"
+        component={ExerciseByEquipments}
+      />
+      <Stack.Screen name="LatestProducts" component={LatestProducts} />
       <Stack.Screen name="Login" component={Login} />
-
+      <Stack.Screen name="Yourself" component={Yourself} />
     </Stack.Navigator>
   );
 };
+
+const BottomTab = () => {
+  return (
+    <Tab.Navigator
+      initialRouteName="HomeTabs"
+      tabBar={props => <ApplicantBottomTabBar {...props} />}
+      screenOptions={({route, navigation}) => ({
+        headerShown: false,
+        tabBarHideOnKeyboard: true,
+      })}>
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Workouts" component={Workouts} />
+      <Tab.Screen name="Diets" component={Diets} />
+      <Tab.Screen name="Store" component={Store} />
+      <Tab.Screen name="Profile" component={Profile} />
+    </Tab.Navigator>
+  );
+};
+
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       {/* <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
-      <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} /> */}
+      <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
+
       <Stack.Screen name="OtpVerification" component={OtpVerification} />
       <Stack.Screen name="WorkoutCategories" component={WorkoutCategories}/>
       <Stack.Screen name="Workouts" component={Workouts}/>
       <Stack.Screen name="NewProfileScreen" component={NewProfileScreen}/>
+
+      <Stack.Screen name="OtpVerification" component={OtpVerification} /> */}
+      {/* <Stack.Screen name="Home" component={Home} /> */}
+      {/* <Stack.Screen name="Yourself" component={Yourself} /> */}
+      {/* <Stack.Screen name="WorkoutCategories" component={WorkoutCategories}/>    //by dillip */}
+      <Stack.Screen name="BottomTab" component={BottomTab} />
+
     </Stack.Navigator>
   );
 };

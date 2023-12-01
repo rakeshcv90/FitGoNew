@@ -3,17 +3,19 @@ import {
   Text,
   StyleSheet,
   Image,
-  BackHandler,
+  Animated,
   StatusBar,
   ImageBackground,
 } from 'react-native';
 import React, {useEffect, useState, useRef} from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import {localImage} from '../Component/Image';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import LinearGradient from 'react-native-linear-gradient';
-import {Animated} from 'react-native';
+import {useSelector} from 'react-redux';
+
+
+
 const SplaceScreen = ({navigation}) => {
+  const {showIntro} = useSelector(state => state);
   //fade In
 
   useEffect(() => {
@@ -22,8 +24,13 @@ const SplaceScreen = ({navigation}) => {
       fadeInSecondText();
     }, 1000);
     setTimeout(() => {
-      navigation.navigate('IntroductionScreen');
-    }, 3000);
+      if (showIntro) {
+       //navigation.navigate('Yourself');
+        navigation.navigate('Login');
+      } else {
+        navigation.navigate('IntroductionScreen');
+      }
+    }, 2000);
   }, []);
   // const UserAuth = async () => {
   //   try {
@@ -124,3 +131,44 @@ const styels = StyleSheet.create({
   },
 });
 export default SplaceScreen;
+// import React, { useEffect } from 'react';
+// import { View, StyleSheet,Text } from 'react-native';
+// import Video from 'react-native-video';
+// import SplashScreen from 'react-native-splash-screen';
+
+// const SplaceScreen = ({navigation}) => {
+//   useEffect(() => {
+   
+//      SplashScreen.hide();
+   
+ 
+//     setTimeout(() => {
+//       navigation.replace('Login');
+//     }, 5000); 
+//   }, []);
+//   return (
+//     <View style={styles.container}>
+//       <Video
+//         source={require('../Icon/Images/NewImage/v1.mp4')} 
+//         style={styles.backgroundVideo}
+//         resizeMode="cover"
+//         repeat={false}
+//       />
+//     </View>
+//   )
+// }
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   backgroundVideo: {
+//     position: 'absolute',
+//     top: 0,
+//     left: 0,
+//     bottom: 0,
+//     right: 0,
+//   },
+// });
+// export default SplaceScreen

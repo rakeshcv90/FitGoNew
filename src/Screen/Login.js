@@ -462,7 +462,28 @@ const Login = ({navigation}) => {
         },
       });
       console.log('TEsting Data for login', data.data);
-      setForLoading(false);
+      if( data.data.msg=='Login successful'){
+        setForLoading(false);
+        showMessage({
+          message: data.data.msg,
+          floating: true,
+          duration: 500,
+          type: 'success',
+          icon: {icon: 'auto', position: 'left'},
+        });
+        navigation.navigate('Home')
+     
+      }else{
+        setForLoading(false);
+        showMessage({
+          message: data.data.msg,
+          floating: true,
+          duration: 500,
+          type: 'success',
+          icon: {icon: 'auto', position: 'left'},
+        });
+      }
+     
     } catch (error) {
       console.log('google Signup Error', error);
       setForLoading(false);
@@ -520,8 +541,8 @@ const Login = ({navigation}) => {
           </View>
           <TouchableOpacity
             onPress={() => {
-               navigation.navigate('ForgetPassword');
-              navigation.navigate('OtpVerification');
+           navigation.navigate('ForgetPassword');
+              //navigation.navigate('OtpVerification',{email:'test@gmail.com'});
             }}
             style={styles.forgotView}>
             <Text style={styles.forgotText}>Forgot Password?</Text>
