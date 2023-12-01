@@ -9,6 +9,7 @@ import Signup from '../Screen/Signup';
 import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
 import DrawerNavigation from './DrawerNavigation';
+// import Workouts from '../Screen/Workouts/Workouts';
 //import Workouts from '../Screen/Workouts/Workouts';
 import Search from '../Screen/Search';
 import Settings from '../Screen/Settings';
@@ -45,7 +46,9 @@ import LatestProducts from '../Screen/Stores/LatestProducts';
 import IntroductionScreen from '../Screen/IntroductionScreen';
 import Yourself from '../Screen/Yourself/Index';
 import OtpVerification from '../Screen/OtpVerification';
-
+import WorkoutCategories from '../Screen/New Workouts/WorkoutCategories';
+import Workouts from '../Screen/New Workouts/WorkoutsDetails';
+import NewProfileScreen from '../Screen/NewProfileScreen';
 import Home from '../Screen/NewHome/Home';
 import ApplicantBottomTabBar from './ApplicantBottomTabBar';
 import Workouts from '../Screen/NewHome/Workouts';
@@ -61,7 +64,7 @@ const Router = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen name="DrawerNavigation" component={DrawerNavigation} />
-      <Stack.Screen name="Workouts" component={Workouts} />
+      {/* <Stack.Screen name="Workouts" component={Workouts} /> */}
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="Settings" component={Settings} />
       <Stack.Screen name="Goals" component={Goals} />
@@ -131,11 +134,18 @@ export const LoginStack = () => {
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
+
+      <Stack.Screen name="OtpVerification" component={OtpVerification} />
+      <Stack.Screen name="WorkoutCategories" component={WorkoutCategories}/>
+      <Stack.Screen name="Workouts" component={Workouts}/>
+      <Stack.Screen name="NewProfileScreen" component={NewProfileScreen}/>
+
       <Stack.Screen name="OtpVerification" component={OtpVerification} /> */}
       {/* <Stack.Screen name="Home" component={Home} /> */}
       {/* <Stack.Screen name="Yourself" component={Yourself} /> */}
       {/* <Stack.Screen name="WorkoutCategories" component={WorkoutCategories}/>    //by dillip */}
       <Stack.Screen name="BottomTab" component={BottomTab} />
+
     </Stack.Navigator>
   );
 };

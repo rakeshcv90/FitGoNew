@@ -37,6 +37,6 @@ export const NewAppapi={
   signup:'user_registration',
   forgetPassword:'sendemail_link',
   OTPVerification:'user_verify',
-  All_Workouts:"allworkout"
+  All_Workouts:"allworkout",
 
 }
