@@ -41,6 +41,7 @@ import FavoritesRouter from './FavoritesRouter';
 import ExerciseByEquipments from '../Screen/Exercises/ExerciseByEquipments';
 import LatestProducts from '../Screen/Stores/LatestProducts';
 import IntroductionScreen from '../Screen/IntroductionScreen';
+import Yourself from '../Screen/Yourself/index';
 import OtpVerification from '../Screen/OtpVerification';
 import Home from '../Screen/NewHome/Home';
 const Stack = createNativeStackNavigator();
@@ -86,6 +87,7 @@ const Router = () => {
       <Stack.Screen name="ExerciseByEquipments" component={ExerciseByEquipments}/>
       <Stack.Screen name="LatestProducts" component={LatestProducts}/>
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Yourself" component={Yourself} />
 
     </Stack.Navigator>
   );
@@ -97,6 +99,11 @@ export const LoginStack = () => {
       <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} /> */}
       <Stack.Screen name="Home" component={Home} />
       {/* <Stack.Screen name="Login" component={Login} />
+
+      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+      <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} />
+      <Stack.Screen name="Login" component={Login} />
+
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
