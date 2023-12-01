@@ -3,7 +3,7 @@ export const localImage = {
   Inrtoduction1: require('../Icon/Images/NewImage/Inrtoduction1.jpg'),
   Inrtoduction2: require('../Icon/Images/NewImage/Inrtoduction2.jpg'),
   Inrtoduction3: require('../Icon/Images/NewImage/Inrtoduction3.jpg'),
-
+  
   logo: require('../Icon/Images/icons/logo.png'),
   color_image: require('../Icon/Images/color-image.png'),
   nextButton: require('../Icon/Images/next.png'),
@@ -41,4 +41,5 @@ export const localImage = {
   BeginnerLevel: require('../Icon/Images/NewImage/BeginnerLevel.jpg'),
   IntermediateLevel: require('../Icon/Images/NewImage/IntermediateLevel.jpg'),
   PathChargeLevel: require('../Icon/Images/NewImage/PathChargeLevel.png'),
+  BACK:require("../Icon/Images/NewImage/back.png"),
 };

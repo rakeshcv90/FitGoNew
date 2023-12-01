@@ -348,26 +348,129 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Button from '../Component/Button';
 import InputText from '../Component/InputText';
 import {StyleSheet} from 'react-native';
 import {AppColor} from '../Component/Color';
-import {DeviceHeigth, DeviceWidth} from '../Component/Config';
+import {
+  DeviceHeigth,
+  DeviceWidth,
+  NewApi,
+  NewAppapi,
+} from '../Component/Config';
 import {localImage} from '../Component/Image';
 import Button2 from '../Component/Button2';
+import {StatusBar} from 'react-native';
+import axios from 'axios';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import ActivityLoader from '../Component/ActivityLoader';
+import {showMessage} from 'react-native-flash-message';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 const Login = ({navigation}) => {
   const [showPassword, setShowPassword] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [forLoading, setForLoading] = useState(false);
 
-  const loginFunction = () => {
-    console.log('csdfdsfdsfds');
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '60298593797-kkelutkvu5it955cebn8dhi1n543osi8.apps.googleusercontent.com',
+    });
+  }, []);
+  const GoogleSignup = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      await GoogleSignin.hasPlayServices();
+      const {accessToken, idToken, user} = await GoogleSignin.signIn();
+      socialLogiIn(user, idToken);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        alert('Cancel');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        alert('Signin in progress');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        alert('PLAY_SERVICES_NOT_AVAILABLE');
+      } else {
+      }
+    }
+  };
+  const socialLogiIn = async (value, token) => {
+    setForLoading(true);
+    try {
+      const data = await axios(`${NewApi}${NewAppapi.login}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          name: value.name,
+          email: value.email,
+          signuptype: 'social',
+          socialid: value.id,
+          socialtoken: token,
+          socialtype: 'google',
+        },
+      });
+      if (data.data.status == 1) {
+        showMessage({
+          message: data.data.msg,
+          type: 'success',
+          animationDuration: 500,
+        
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setForLoading(false);
+      } else {
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setForLoading(false);
+      }
+    } catch (error) {
+      setForLoading(false);
+      console.log('google Signup Error', error);
+    }
+  };
+
+  const loginFunction = async () => {
+    setForLoading(true);
+    try {
+      const data = await axios(`${NewApi}${NewAppapi.login}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          email: 'cvmytest@gmail.com',
+          password: 'Test@123',
+          // signuptype: 'social',
+          // socialid: value.id,
+          // socialtoken: token,
+          // socialtype: 'google',
+        },
+      });
+      console.log('TEsting Data for login', data.data);
+      setForLoading(false);
+    } catch (error) {
+      console.log('google Signup Error', error);
+      setForLoading(false);
+    }
   };
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
@@ -375,6 +478,7 @@ const Login = ({navigation}) => {
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'position' : undefined}
           contentContainerStyle={{flexGrow: 1}}>
+          {forLoading ? <ActivityLoader /> : ''}
           <View style={styles.TextContainer}>
             <Text style={styles.LoginText2}>{'Hey there,'}</Text>
             <Text style={styles.LoginText}>Welcome</Text>
@@ -416,7 +520,8 @@ const Login = ({navigation}) => {
           </View>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('ForgetPassword');
+               navigation.navigate('ForgetPassword');
+              navigation.navigate('OtpVerification');
             }}
             style={styles.forgotView}>
             <Text style={styles.forgotText}>Forgot Password?</Text>
@@ -438,7 +543,7 @@ const Login = ({navigation}) => {
           </View>
         </KeyboardAvoidingView>
         <View style={{marginTop: DeviceHeigth * 0.02}}>
-          <Button2 />
+          <Button2 onGooglePress={GoogleSignup} />
         </View>
 
         <View

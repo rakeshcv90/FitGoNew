@@ -26,7 +26,9 @@ import {DeviceHeigth, DeviceWidth} from './src/Component/Config';
 import RNRestart from 'react-native-restart';
 import BootSplash from 'react-native-bootsplash';
 import { requestPermissionforNotification,RemoteMessage} from './src/Component/Helper/PushNotification';
+import {getStatusBarHeight} from 'react-native-status-bar-height';
 const App = () => {
+  const StatusBar_Bar_Height = Platform.OS === 'ios' ? getStatusBarHeight() : 0;
   useEffect(() => {
    requestPermissionforNotification()
     RemoteMessage();
@@ -138,7 +140,7 @@ const App = () => {
           <LoginStack />
           {/* <Router /> */}
         </NavigationContainer>
-        <FlashMessage position="top" />
+        <FlashMessage position="top" statusBarHeight={StatusBar_Bar_Height+30} />
       </>
     );
 };

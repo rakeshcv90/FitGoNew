@@ -12,18 +12,14 @@ import {StyleSheet} from 'react-native';
 import {localImage} from './Image';
 
 export type Props = TextInputProps & {
-  mV?: number,
-  mH?: number,
+
   IconLeft: any,
   IconRight?: boolean | false,
   text: string,
   errors: any | undefined,
   touched: any | undefined,
   placeholder: string,
-  bgColor: string,
-  bColor?: string,
-  bR?: number,
-  bW?: number,
+ 
   pasButton?: () => void,
   passwordInput?: boolean | false,
   passwordInputIcon?: boolean | false,
@@ -78,69 +74,18 @@ const InputText = ({...Props}) => {
           )}
         </View>
       </View>
-      {/* <View
-        style={{
-          width: '95%',
-          backgroundColor: '#F5F5F5',
-          height: 55,
-          borderRadius: 5,
-          borderColor: 'gray',
-          borderWidth: 1,
-          justifyContent: 'center',
-          paddingLeft: 20,
-        }}>
-        <View
-          style={{
-            marginTop: Platform.OS == 'android' && -20,
-          }}>
-          <TextInput {...Props}></TextInput>
-        </View>
-
-        {Props.IconRight && (
-          <View
-            style={{
-              alignSelf: 'flex-end',
-              marginTop: Platform.OS == 'android' ? -35 : -20,
-              marginRight: 15,
-            }}>
-            <Image
-              source={require('../assets/Image/tick.png')}
-              style={{width: 15, height: 15}}
-              resizeMode="contain"
-            />
-          </View>
-        )}
-        {Props.passwordInput && (
-          <TouchableOpacity
-            onPress={Props.pasButton}
-            style={{
-              alignSelf: 'flex-end',
-              marginTop: Platform.OS == 'android' ? -35 : -20,
-              marginRight: 15,
-            }}>
-            {Props.passwordInputIcon ? (
-              <Image
-                source={require('../assets/Image/eye.png')}
-                style={{width: 20, height: 20}}
-                resizeMode="contain"
-              />
-            ) : (
-              <Image
-                source={require('../assets/Image/eye1.png')}
-                style={{width: 20, height: 20}}
-                resizeMode="contain"
-              />
-            )}
-          </TouchableOpacity>
-        )}
-      </View> */}
+      {Props.errors && Props.touched && (
+        <Text style={{color:Props.colorText?'green' :'red', fontSize: 12, textAlign: 'center'}}>
+          {Props.errors}
+        </Text>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: '90%',
+    width: '95%',
     justifyContent: 'center',
     alignSelf: 'center',
     // backgroundColor: '#E3E3E3',
