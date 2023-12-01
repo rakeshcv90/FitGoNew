@@ -30,7 +30,7 @@ const imgData2 = Array(60)
   .fill(27)
   .map((item: any, index, arr) => arr[index] + index + 3);
 
-const index = () => {
+const Index = () => {
   const {defaultTheme} = useSelector((state: any) => state);
   const [screen, setScreen] = useState(0);
   const [toggleW, setToggleW] = useState('kg');
@@ -409,7 +409,7 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;
 
 const styles = StyleSheet.create({
   buttons: {
