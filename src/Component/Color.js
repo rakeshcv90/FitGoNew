@@ -11,6 +11,7 @@ export const AppColor={
     SOCIALBUTTON:'#f4e7e5',
     BACKGROUNG:'#F8F9F9',
     BORDERCOLOR:"#E3E3E3",
-    CHECKBOXCOLOR:'#ADA4A5'
+    CHECKBOXCOLOR:'#ADA4A5',
+    PINK:'#FFB09B'
     
   }

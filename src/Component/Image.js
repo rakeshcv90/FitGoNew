@@ -32,5 +32,7 @@ export const localImage = {
   GOOGLE:require("../Icon/Images/NewImage/google.png"),
   PROFILE:require("../Icon/Images/NewImage/Profile.png"),
   BACK:require("../Icon/Images/NewImage/back.png"),
+  CARD:require("../Icon/Images/NewImage/card.png"),
+  BELL:require("../Icon/Images/NewImage/bell.png"),
 
 };

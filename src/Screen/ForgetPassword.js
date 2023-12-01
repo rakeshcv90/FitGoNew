@@ -163,7 +163,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {StatusBar} from 'react-native';
 import {AppColor} from '../Component/Color';
 import {DeviceHeigth, NewApi, NewAppapi} from '../Component/Config';
@@ -175,7 +175,7 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import ActivityLoader from '../Component/ActivityLoader';
-import { showMessage } from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .matches(/^[\w.\-]+@[\w.\-]+\.\w{2,4}$/, 'Invalid Email Format')
@@ -185,7 +185,7 @@ const validationSchema = Yup.object().shape({
 const ForgetPassword = ({navigation}) => {
   const [forLoading, setForLoading] = useState(false);
   const handleFormSubmit = async value => {
-    setForLoading(true)
+    setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.forgetPassword}`, {
         method: 'POST',
@@ -196,8 +196,8 @@ const ForgetPassword = ({navigation}) => {
           email: value.email,
         },
       });
-      if(data.data.msg=='Mail Sent'){
-        setForLoading(false)
+      if (data.data.msg == 'Mail Sent') {
+        setForLoading(false);
         showMessage({
           message: 'Reset Password link sent!',
           type: 'success',
@@ -207,7 +207,7 @@ const ForgetPassword = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         navigation.navigate('Login');
-      }else{
+      } else {
         showMessage({
           message: 'Somthing went wrong!',
           type: 'ganger',
@@ -216,12 +216,12 @@ const ForgetPassword = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-        setForLoading(false)
+        setForLoading(false);
       }
       console.log('datatat', data.data.msg);
     } catch (error) {
       console.log('FOrgot Password Error', error);
-      setForLoading(false)
+      setForLoading(false);
     }
   };
   return (
@@ -233,7 +233,7 @@ const ForgetPassword = ({navigation}) => {
         }}
         style={{
           marginHorizontal: DeviceHeigth * 0.03,
-          marginTop: DeviceHeigth * 0.03,
+          marginTop: DeviceHeigth * 0.02,
         }}>
         <Image
           source={localImage.BACK}
@@ -244,17 +244,19 @@ const ForgetPassword = ({navigation}) => {
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled">
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'position' : undefined}
           contentContainerStyle={{flexGrow: 1}}>
-               {forLoading ? <ActivityLoader /> : ''}
+          {forLoading ? <ActivityLoader /> : ''}
           <View style={styles.TextContainer}>
             <Text style={styles.LoginText}>Forget Password</Text>
             <Text style={[styles.LoginText2, {marginTop: DeviceHeigth * 0.02}]}>
               {'Please enter your email below to receive'}
             </Text>
-            <Text style={[styles.LoginText2, {marginTop: DeviceHeigth * 0.001}]}>
+            <Text
+              style={[styles.LoginText2, {marginTop: DeviceHeigth * 0.001}]}>
               {'your password reset code'}
             </Text>
           </View>
@@ -290,7 +292,7 @@ const ForgetPassword = ({navigation}) => {
                     autoCapitalize="none"
                   />
                 </View>
-                <View style={{marginTop: DeviceHeigth * 0.08}}>
+                <View style={{marginTop: DeviceHeigth * 0.3}}>
                   <Button
                     buttonText={'Reset Password'}
                     onPresh={handleSubmit}
@@ -310,7 +312,7 @@ var styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
   },
   TextContainer: {
-    marginTop: DeviceHeigth * 0.09,
+    marginTop: DeviceHeigth * 0.06,
     marginHorizontal: DeviceHeigth * 0.03,
     justifyContent: 'center',
     alignItems: 'center',

@@ -36,5 +36,6 @@ export const NewAppapi={
   login:'user_login',
   signup:'user_registration',
   forgetPassword:'sendemail_link',
+  OTPVerification:'user_verify',
 
 }
