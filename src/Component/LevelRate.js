@@ -1,6 +1,7 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
+import { AppColor } from './Color'
 const LevelRate = ({level}) => {
 {
     if(level=='Beginner'){
@@ -8,27 +9,21 @@ const LevelRate = ({level}) => {
         <>
             <Icons
             name="lightning-bolt"
-            size={16}
+            size={25}
             mode="contained"
-            color={'#C8170D'}
+            color={AppColor.RED}
           />
           <Icons
             name="lightning-bolt"
-            size={16}
+            size={25}
             mode="contained"
-            color={'white'}
+            color={AppColor.LIGHTNING_PINK}
           />
           <Icons
             name="lightning-bolt"
-            size={16}
+            size={25}
             mode="contained"
-            color={'white'}
-          />
-           <Icons
-            name="lightning-bolt"
-            size={16}
-            mode="contained"
-            color={'white'}
+            color={AppColor.LIGHTNING_PINK}
           />
         </>
    
@@ -38,27 +33,21 @@ const LevelRate = ({level}) => {
         <>
          <Icons
             name="lightning-bolt"
-            size={16}
+            size={25}
             mode="contained"
-            color={'#C8170D'}
+            color={AppColor.RED}
           />
           <Icons
             name="lightning-bolt"
-            size={16}
+            size={25}
             mode="contained"
-            color={'#C8170D'}
+            color={AppColor.RED}
           />
           <Icons
             name="lightning-bolt"
-            size={16}
+            size={25}
             mode="contained"
-            color={'#C8170D'}
-          />
-           <Icons
-            name="lightning-bolt"
-            size={16}
-            mode="contained"
-            color={'white'}
+            color={AppColor.LIGHTNING_PINK}
           />
         </>
      )}
@@ -67,56 +56,21 @@ const LevelRate = ({level}) => {
         <>
          <Icons
             name="lightning-bolt"
-            size={16}
+            size={25}
             mode="contained"
-            color={'#C8170D'}
+            color={AppColor.RED}
           />
           <Icons
             name="lightning-bolt"
-            size={16}
+            size={25}
             mode="contained"
-            color={'#C8170D'}
+            color={AppColor.RED}
           />
           <Icons
             name="lightning-bolt"
-            size={16}
+            size={25}
             mode="contained"
-            color={'#C8170D'}
-          />
-           <Icons
-            name="lightning-bolt"
-            size={16}
-            mode="contained"
-            color={'white'}
-          />
-        </>
-     )}
-     else if(level=="Elite"){
-        return(
-        <>
-         <Icons
-            name="lightning-bolt"
-            size={16}
-            mode="contained"
-            color={'#C8170D'}
-          />
-          <Icons
-            name="lightning-bolt"
-            size={16}
-            mode="contained"
-            color={'#C8170D'}
-          />
-          <Icons
-            name="lightning-bolt"
-            size={16}
-            mode="contained"
-            color={'#C8170D'}
-          />
-            <Icons
-            name="lightning-bolt"
-            size={16}
-            mode="contained"
-            color={'#C8170D'}
+            color={AppColor.RED}
           />
         </>
      )}

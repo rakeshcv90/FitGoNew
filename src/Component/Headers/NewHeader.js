@@ -95,6 +95,7 @@ const style = StyleSheet.create({
   },
   headerstyle: {
     fontWeight: '600',
+    fontSize:19
   },
 });
 export default NewHeader;

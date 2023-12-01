@@ -560,7 +560,7 @@ const Login = ({navigation}) => {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('Signup');
+              navigation.navigate('Workouts');
             }}>
             <Text
               style={[

@@ -14,26 +14,21 @@ import axios from 'axios';
 import {AppColor} from '../../Component/Color';
 import {NewApi, NewAppapi} from '../../Component/Config';
 import ActivityLoader from '../../Component/ActivityLoader';
-const WorkoutCategories = () => {
+const WorkoutCategories = ({navigation}) => {
   const [WorkoutData, setWorkoutData] = useState([]);
   const [selectedButton, setSelectedButton] = useState('1');
   const [isLoaded, setLoaded] = useState(false);
-  const data='Female'
   useEffect(() => {
     getData();
   }, [selectedButton]);
   const getData = async () => {
     try {
-      // const payload=new FormData();
-      // payload.append('gender','Male')
-      const data = await axios(`${NewApi}${NewAppapi.All_Workouts}?gender=Female`, {
+      const data = await axios(`${NewApi}${NewAppapi.All_Workouts}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Multipart/form-data',
         },
-        // data:payload
       });
-      console.log(data.data)
       if (data.data) {
         if (selectedButton == '1') {
           setWorkoutData(
@@ -71,10 +66,7 @@ const WorkoutCategories = () => {
   };
   return (
     <View style={[style.Container, {backgroundColor: AppColor.WHITE}]}>
-      <NewHeader
-        header={'Workout Categories'}
-        backButton
-      />
+      <NewHeader header={'Workout Categories'} backButton />
       {isLoaded == true ? null : <ActivityLoader />}
       <View style={style.buttonView}>
         <TouchableOpacity
@@ -141,7 +133,7 @@ const WorkoutCategories = () => {
           renderItem={elements => (
             <TouchableOpacity
               onPress={() => {
-                // navigation.navigate('WorkoutDescription', {elements});
+                navigation.navigate('Workouts', {WorkoutData: elements.item});
               }}>
               <ImageBackground
                 source={{uri: elements.item.image_path}}
@@ -215,5 +207,6 @@ const style = StyleSheet.create({
   TitleText: {
     flexDirection: 'column',
   },
+
 });
 export default WorkoutCategories;
