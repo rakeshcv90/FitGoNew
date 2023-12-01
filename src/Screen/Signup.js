@@ -975,8 +975,8 @@ const Signup = ({navigation}) => {
       }
     }
   };
-  const handleFormSubmit = async value => {
-    console.log('TEsting Data');
+  const handleFormSubmit = async (value,action) => {
+    setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
         method: 'POST',
@@ -993,9 +993,32 @@ const Signup = ({navigation}) => {
           social_type: 'null',
         },
       });
-      console.log('TEsting Data for login', data.data);
+      console.log("My Data is",data.data)
+     if(data.data.status==0){
+      setForLoading(false);
+      showMessage({
+        message: data.data.msg,
+        floating: true,
+        duration: 500,
+        type: 'success',
+        icon: {icon: 'auto', position: 'left'},
+      });
+      navigation.navigate('OtpVerification',{email:data.data.email});
+       action.resetForm();
+     }else{
+      setForLoading(false);
+      showMessage({
+        message: data.data.msg,
+        floating: true,
+        duration: 500,
+        type: 'error',
+        icon: {icon: 'auto', position: 'left'},
+      });
+      action.resetForm();
+     }
     } catch (error) {
       console.log('Form Signup Error', error);
+      setForLoading(false);
     }
   };
   const socialLogiIn = async (value, token) => {
@@ -1049,7 +1072,8 @@ const Signup = ({navigation}) => {
         keyboardShouldPersistTaps="handled">
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'position' : undefined}
-          contentContainerStyle={{flexGrow: 1}}>
+          contentContainerStyle={{flexGrow: 1}}
+          >
           {forLoading ? <ActivityLoader /> : ''}
           <View style={styles.TextContainer}>
             <Text style={styles.LoginText2}>{'Hey there,'}</Text>
@@ -1063,9 +1087,9 @@ const Signup = ({navigation}) => {
               password: '',
               repeat_password: '',
             }}
-            onSubmit={values => {
+            onSubmit={(values, action) => {
               if (checked) {
-                handleFormSubmit(values);
+                handleFormSubmit(values,action);
               } else {
                 showMessage({
                   message: 'Please Check Term & Condition',
@@ -1130,7 +1154,7 @@ const Signup = ({navigation}) => {
                   <InputText
                     leftIcon={localImage.Lock}
                     placeholder={'Password'}
-                    placeholderTextColor={'#303841'}
+                    placeholderTextColor={AppColor.PLACEHOLDERCOLOR}
                     passwordInput={true}
                     pasButton={() => setShowPassword(!showPassword)}
                     secureTextEntry={showPassword}
@@ -1150,7 +1174,7 @@ const Signup = ({navigation}) => {
                   <InputText
                     leftIcon={localImage.Lock}
                     placeholder={'Confirm Passwordrd'}
-                    placeholderTextColor={'#303841'}
+                    placeholderTextColor={AppColor.PLACEHOLDERCOLOR}
                     passwordInput={true}
                     pasButton={() => setIsvisiblepassword(!isVisiblepassword)}
                     secureTextEntry={isVisiblepassword}
@@ -1159,7 +1183,7 @@ const Signup = ({navigation}) => {
                     touched={touched.repeat_password}
                     value={values.repeat_password}
                     onChangeText={handleChange('repeat_password')}
-                    onBlur={handleBlur('repeat_password')}
+                   onBlur={handleBlur('repeat_password')}
                   />
                 </View>
                 <View
@@ -1221,7 +1245,7 @@ const Signup = ({navigation}) => {
               </>
             )}
           </Formik>
-
+          </KeyboardAvoidingView>
           <View
             style={{
               marginTop: DeviceHeigth * 0.05,
@@ -1233,7 +1257,7 @@ const Signup = ({navigation}) => {
               Or Continue With
             </Text>
           </View>
-        </KeyboardAvoidingView>
+       
         <View style={{marginTop: DeviceHeigth * 0.02}}>
           <Button2 onGooglePress={GoogleSignup} />
         </View>

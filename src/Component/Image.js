@@ -42,4 +42,6 @@ export const localImage = {
   IntermediateLevel: require('../Icon/Images/NewImage/IntermediateLevel.jpg'),
   PathChargeLevel: require('../Icon/Images/NewImage/PathChargeLevel.png'),
   BACK:require("../Icon/Images/NewImage/back.png"),
+  CARD:require("../Icon/Images/NewImage/card.png"),
+  BELL:require("../Icon/Images/NewImage/bell.png"),
 };

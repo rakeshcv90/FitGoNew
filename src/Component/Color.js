@@ -13,5 +13,7 @@ export const AppColor={
     BACKGROUNG:'#F8F9F9',
     BORDERCOLOR:"#E3E3E3",
     CHECKBOXCOLOR:'#ADA4A5',
+    PINK:'#FFB09B'
     BORDERCOLOR2: '#4285F4'
+
   }
