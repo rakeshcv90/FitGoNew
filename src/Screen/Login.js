@@ -423,11 +423,12 @@ const Login = ({navigation}) => {
           message: data.data.msg,
           type: 'success',
           animationDuration: 500,
-        
+
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
         setForLoading(false);
+        navigation.navigate('BottomTab');
       } else {
         showMessage({
           message: data.data.msg,
@@ -462,7 +463,7 @@ const Login = ({navigation}) => {
         },
       });
       console.log('TEsting Data for login', data.data);
-      if( data.data.msg=='Login successful'){
+      if (data.data.msg == 'Login successful') {
         setForLoading(false);
         showMessage({
           message: data.data.msg,
@@ -471,9 +472,8 @@ const Login = ({navigation}) => {
           type: 'success',
           icon: {icon: 'auto', position: 'left'},
         });
-        navigation.navigate('Home')
-     
-      }else{
+        navigation.navigate('BottomTab');
+      } else {
         setForLoading(false);
         showMessage({
           message: data.data.msg,
@@ -483,7 +483,6 @@ const Login = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       }
-     
     } catch (error) {
       console.log('google Signup Error', error);
       setForLoading(false);
@@ -541,7 +540,7 @@ const Login = ({navigation}) => {
           </View>
           <TouchableOpacity
             onPress={() => {
-           navigation.navigate('ForgetPassword');
+              navigation.navigate('ForgetPassword');
               //navigation.navigate('OtpVerification',{email:'test@gmail.com'});
             }}
             style={styles.forgotView}>
@@ -581,7 +580,7 @@ const Login = ({navigation}) => {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('Workouts');
+              navigation.navigate('Signup');
             }}>
             <Text
               style={[

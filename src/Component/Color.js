@@ -19,6 +19,7 @@ export const AppColor={
     PURPLELIGHT:'#EFF0FF',
     LIGHTYELLOW:'#FFF6E0',
     BORDERCOLOR2: '#4285F4',
-    DARKGRAY:'#707070'
+    DARKGRAY:'#707070',
+    GRAY:'#F0F0F0',
 
   }

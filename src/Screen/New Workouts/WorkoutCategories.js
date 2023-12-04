@@ -14,6 +14,7 @@ import axios from 'axios';
 import {AppColor} from '../../Component/Color';
 import {NewApi, NewAppapi} from '../../Component/Config';
 import ActivityLoader from '../../Component/ActivityLoader';
+import AnimatedLottieView from 'lottie-react-native';
 const WorkoutCategories = ({navigation}) => {
   const [WorkoutData, setWorkoutData] = useState([]);
   const [selectedButton, setSelectedButton] = useState('1');
@@ -22,13 +23,19 @@ const WorkoutCategories = ({navigation}) => {
     getData();
   }, [selectedButton]);
   const getData = async () => {
+    setLoaded(true)
     try {
+      let payload = new FormData();
+      payload.append('id', 6);
       const data = await axios(`${NewApi}${NewAppapi.All_Workouts}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'Multipart/form-data',
+          'Content-Type': 'multipart/form-data',
         },
+        data: payload,
       });
+      setLoaded(false);
+      // console.log('Workout response is', res.data.workout_details);
       if (data.data) {
         if (selectedButton == '1') {
           setWorkoutData(
@@ -36,27 +43,28 @@ const WorkoutCategories = ({navigation}) => {
               item => item.level_title == 'Beginner',
             ),
           );
-          setLoaded(true);
+          //setLoaded(true);
         } else if (selectedButton == '2') {
           setWorkoutData(
             data.data.workout_details.filter(
               item => item.level_title == 'Intermediate',
             ),
           );
-          setLoaded(true);
+          //setLoaded(true);
         } else if (selectedButton == '3') {
           setWorkoutData(
             data.data.workout_details.filter(
               item => item.level_title == 'Advanced',
             ),
           );
-          setLoaded(true);
+          // setLoaded(true);
         }
       } else {
         console.log('No data available');
+        setLoaded(false);
       }
     } catch (error) {
-      console.log('error loading', error);
+      console.log('Workout Error', error);
     }
   };
 
@@ -64,10 +72,29 @@ const WorkoutCategories = ({navigation}) => {
     setSelectedButton(ButtonNumber);
     setLoaded(false);
   };
+  const noData = () => {
+    return (
+      <View
+        style={{
+          alignItems: 'center',
+          top:DeviceHeigth*0.1,
+          height: DeviceHeigth,
+      
+        }}>
+        <AnimatedLottieView
+          source={require('../../Icon/Images/NewImage/NoData.json')}
+          speed={2}
+          autoPlay
+          loop
+          style={{width: DeviceWidth  *0.5, height: DeviceHeigth *0.5,}}
+        />
+      </View>
+    );
+  };
   return (
     <View style={[style.Container, {backgroundColor: AppColor.WHITE}]}>
       <NewHeader header={'Workout Categories'} backButton />
-      {isLoaded == true ? null : <ActivityLoader />}
+      {isLoaded ? <ActivityLoader /> : ''}
       <View style={style.buttonView}>
         <TouchableOpacity
           style={[
@@ -83,7 +110,7 @@ const WorkoutCategories = ({navigation}) => {
               selectedButton == '1'
                 ? {color: AppColor.WHITE}
                 : {color: AppColor.INPUTTEXTCOLOR},
-              {fontFamily: 'Montserrat'},
+                {fontFamily: 'Verdana',fontWeight:'600'},
             ]}>
             Beginner
           </Text>
@@ -102,7 +129,7 @@ const WorkoutCategories = ({navigation}) => {
               selectedButton == '2'
                 ? {color: AppColor.WHITE}
                 : {color: AppColor.INPUTTEXTCOLOR},
-              {fontFamily: 'Montserrat'},
+                {fontFamily: 'Verdana',fontWeight:'600'},
             ]}>
             Intermediate
           </Text>
@@ -121,7 +148,8 @@ const WorkoutCategories = ({navigation}) => {
               selectedButton == '3'
                 ? {color: AppColor.WHITE}
                 : {color: AppColor.INPUTTEXTCOLOR},
-              {fontFamily: 'Montserrat'},
+                {fontFamily: 'Verdana',fontWeight:'600'},
+
             ]}>
             Advance
           </Text>
@@ -133,8 +161,9 @@ const WorkoutCategories = ({navigation}) => {
           renderItem={elements => (
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('Workouts', {WorkoutData: elements.item});
-              }}>
+                navigation.navigate('WorkoutsDetails', {WorkoutData: elements.item});
+              }}
+              >
               <ImageBackground
                 source={{uri: elements.item.image_path}}
                 style={style.TextDesign}>
@@ -153,6 +182,7 @@ const WorkoutCategories = ({navigation}) => {
               </ImageBackground>
             </TouchableOpacity>
           )}
+          ListEmptyComponent={noData}
         />
       </View>
     </View>
@@ -170,12 +200,12 @@ const style = StyleSheet.create({
     marginHorizontal: DeviceWidth * 0.05,
   },
   Buttons: {
-    width: DeviceWidth / 3.8,
-    height: (DeviceHeigth * 4.5) / 100,
+ 
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
     backgroundColor: '#F0F0F0',
+    padding:15
   },
   TextStyle: {},
   Text: {
@@ -207,6 +237,5 @@ const style = StyleSheet.create({
   TitleText: {
     flexDirection: 'column',
   },
-
 });
 export default WorkoutCategories;
