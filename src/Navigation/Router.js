@@ -47,7 +47,7 @@ import IntroductionScreen from '../Screen/IntroductionScreen';
 import Yourself from '../Screen/Yourself/Index';
 import OtpVerification from '../Screen/OtpVerification';
 import WorkoutCategories from '../Screen/New Workouts/WorkoutCategories';
-import Workouts from '../Screen/New Workouts/WorkoutsDetails';
+// import Workouts from '../Screen/New Workouts/WorkoutsDetails';
 import NewProfileScreen from '../Screen/NewProfileScreen';
 import Home from '../Screen/NewHome/Home';
 import ApplicantBottomTabBar from './ApplicantBottomTabBar';
@@ -55,6 +55,7 @@ import Workouts from '../Screen/NewHome/Workouts';
 import Diets from '../Screen/NewHome/Diets';
 import Store from '../Screen/NewHome/Store';
 import Profile from '../Screen/NewHome/Profile';
+import NewEditProfile from '../Component/NewEditProfile';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const screenOptions = {
@@ -138,12 +139,14 @@ export const LoginStack = () => {
       <Stack.Screen name="OtpVerification" component={OtpVerification} />
       <Stack.Screen name="WorkoutCategories" component={WorkoutCategories}/>
       <Stack.Screen name="Workouts" component={Workouts}/>
-      <Stack.Screen name="NewProfileScreen" component={NewProfileScreen}/>
+      
 
       <Stack.Screen name="OtpVerification" component={OtpVerification} /> */}
       {/* <Stack.Screen name="Home" component={Home} /> */}
       {/* <Stack.Screen name="Yourself" component={Yourself} /> */}
       {/* <Stack.Screen name="WorkoutCategories" component={WorkoutCategories}/>    //by dillip */}
+      <Stack.Screen name="Profile" component={Profile}/>
+      <Stack.Screen name="Edit_Profile" component={NewEditProfile}/>
       <Stack.Screen name="BottomTab" component={BottomTab} />
 
     </Stack.Navigator>

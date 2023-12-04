@@ -17,7 +17,7 @@ import {localImage} from '../../Component/Image';
 import Gender from './Gender';
 import Goal from './Goal';
 import {showMessage} from 'react-native-flash-message';
-import Level from './Level';
+import Level from './Level'; 
 import {Picker} from '@react-native-picker/picker';
 import Focus from './Focus';
 import Toggle from '../../Component/Toggle';

@@ -254,7 +254,6 @@ const ProfileScreen = () => {
           type: userAvatar.type,
           uri: userAvatar.uri,
         });
-
         payload.append('email', data[0].email);
         const ProfileData = await axios(`${Api}/${Appapi.UpdateProfile}`, {
           method: 'POST',
@@ -539,7 +538,11 @@ const ProfileScreen = () => {
         <HeaderWithoutSearch Header={'Profile'} />
         <View style={styles.container1}>
           <View>
-            <View style={[styles.Icon,{borderColor:defaultTheme?"#fff":"#000"}]}>
+            <View
+              style={[
+                styles.Icon,
+                {borderColor: defaultTheme ? '#fff' : '#000'},
+              ]}>
               {PhotoUploaded ? (
                 <ImageBackground
                   source={{
@@ -553,8 +556,9 @@ const ProfileScreen = () => {
                 <ActivityIndicator size={35} color={'#C8170D'} />
               )}
             </View>
-            <View style={{position: 'absolute', bottom: -2,right:-2}}>
-              <TouchableOpacity style
+            <View style={{position: 'absolute', bottom: -2, right: -2}}>
+              <TouchableOpacity
+                style
                 onPress={() => {
                   setUpadteScreenVisibilty(true);
                 }}>
@@ -644,7 +648,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth:2,
+    borderWidth: 2,
   },
   textStyle: {
     fontSize: 15,
