@@ -56,4 +56,14 @@ export const localImage = {
   Diets1:require("../Icon/Images/NewImage/Dites2.png"),
   Sttore1:require("../Icon/Images/NewImage/Store2.png"),
   Profile1:require("../Icon/Images/NewImage/Profile2.png"),
+  Profile4:require("../Icon/Images/NewImage/Profile4.png"),
+  Documents:require("../Icon/Images/NewImage/Document.png"),
+  Heart:require("../Icon/Images/NewImage/heart-icon.png"),
+  Shield:require("../Icon/Images/NewImage/Shield.png"),
+  reminder:require("../Icon/Images/NewImage/Vector3.png"),
+  History:require("../Icon/Images/NewImage/tabler_history.png"),
+  Documents:require("../Icon/Images/NewImage/Document.png"),
+  Pen:require("../Icon/Images/NewImage/Pen.png"),
+  Profile3:require("../Icon/Images/NewImage/Profile.png"),
+
 };
