@@ -129,17 +129,20 @@ const BottomTab = () => {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      {/* <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} />
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Yourself" component={Yourself} />
+      <Stack.Screen name="Home" component={Home} />
+
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
       <Stack.Screen name="OtpVerification" component={OtpVerification} />
+
       <Stack.Screen name="WorkoutCategories" component={WorkoutCategories}/>
       <Stack.Screen name="WorkoutsDetails" component={WorkoutsDetails}/>
       <Stack.Screen name="NewProfileScreen" component={NewProfileScreen}/>
-     <Stack.Screen name="Yourself" component={Yourself} />  */}
       <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="WorkoutCategories" component={WorkoutCategories}/>
       <Stack.Screen name="WorkoutsDetails" component={WorkoutsDetails}/>

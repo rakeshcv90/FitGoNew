@@ -906,8 +906,9 @@ import {
 } from '@react-native-google-signin/google-signin';
 import {StatusBar} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
-
+import {useDispatch, useSelector} from 'react-redux';
 import ActivityLoader from '../Component/ActivityLoader';
+import { setUserId } from '../Component/ThemeRedux/Actions';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 const Signup = ({navigation}) => {
@@ -915,6 +916,7 @@ const Signup = ({navigation}) => {
   const [isVisiblepassword, setIsvisiblepassword] = useState(true);
   const [checked, setChecked] = useState(false);
   const [forLoading, setForLoading] = useState(false);
+  const dispatch = useDispatch()
 
   const PasswordRegex =
     // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -975,7 +977,7 @@ const Signup = ({navigation}) => {
       }
     }
   };
-  const handleFormSubmit = async (value,action) => {
+  const handleFormSubmit = async (value, action) => {
     setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
@@ -993,31 +995,31 @@ const Signup = ({navigation}) => {
           social_type: 'null',
         },
       });
-      console.log("My Data is",data.data)
-     if(data.data.status==0){
-      setForLoading(false);
-      showMessage({
-        message: data.data.msg,
-        floating: true,
-        duration: 500,
-        type: 'success',
-        icon: {icon: 'auto', position: 'left'},
-      });
-      navigation.navigate('OtpVerification',{email:data.data.email});
-       action.resetForm();
-     }else{
-      setForLoading(false);
-      showMessage({
-        message: data.data.msg,
-        floating: true,
-        duration: 500,
-        type: 'error',
-        icon: {icon: 'auto', position: 'left'},
-      });
-      action.resetForm();
-     }
+      console.log('My Data is', data.data);
+      if (data.data.status == 0) {
+        setForLoading(false);
+        showMessage({
+          message: data.data.msg,
+          floating: true,
+          duration: 500,
+          type: 'success',
+          icon: {icon: 'auto', position: 'left'},
+        });
+        navigation.navigate('OtpVerification', {email: data.data.email});
+        action.resetForm();
+      } else {
+        setForLoading(false);
+        showMessage({
+          message: data.data.msg,
+          floating: true,
+          duration: 500,
+          type: 'error',
+          icon: {icon: 'auto', position: 'left'},
+        });
+        action.resetForm();
+      }
     } catch (error) {
-      console.log('Form Signup Error', error);
+      console.log('Form Signup Error', error?.response?.data);
       setForLoading(false);
     }
   };
@@ -1042,12 +1044,16 @@ const Signup = ({navigation}) => {
       if (data.data.msg == 'User already exists' && data.data.status == 0) {
         setForLoading(false);
         console.log('Compleate Profile');
+        dispatch(setUserId(data.data?.id))
+        navigation.navigate('Yourself');
       } else if (
         data.data.msg == 'User registered via social login' &&
         data.data.status == 0
       ) {
         setForLoading(false);
         console.log('Compleate Profile1');
+        dispatch(setUserId(data.data?.id))
+        navigation.navigate('Yourself');
       } else if (
         data.data.msg == 'User already exists' &&
         data.data.status == 1
@@ -1060,7 +1066,7 @@ const Signup = ({navigation}) => {
       }
     } catch (error) {
       setForLoading(false);
-      console.log('google Signup Error', error);
+      console.log('google Signup Error', error?.response);
     }
   };
   return (
@@ -1072,8 +1078,7 @@ const Signup = ({navigation}) => {
         keyboardShouldPersistTaps="handled">
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'position' : undefined}
-          contentContainerStyle={{flexGrow: 1}}
-          >
+          contentContainerStyle={{flexGrow: 1}}>
           {forLoading ? <ActivityLoader /> : ''}
           <View style={styles.TextContainer}>
             <Text style={styles.LoginText2}>{'Hey there,'}</Text>
@@ -1089,7 +1094,7 @@ const Signup = ({navigation}) => {
             }}
             onSubmit={(values, action) => {
               if (checked) {
-                handleFormSubmit(values,action);
+                handleFormSubmit(values, action);
               } else {
                 showMessage({
                   message: 'Please Check Term & Condition',
@@ -1183,7 +1188,7 @@ const Signup = ({navigation}) => {
                     touched={touched.repeat_password}
                     value={values.repeat_password}
                     onChangeText={handleChange('repeat_password')}
-                   onBlur={handleBlur('repeat_password')}
+                    onBlur={handleBlur('repeat_password')}
                   />
                 </View>
                 <View
@@ -1234,7 +1239,7 @@ const Signup = ({navigation}) => {
                           navigation.navigate('TermaAndCondition');
                         }}>
                         {' '}
-                        Terma os use
+                        Terms of use
                       </Text>{' '}
                     </Text>
                   </View>
@@ -1245,19 +1250,18 @@ const Signup = ({navigation}) => {
               </>
             )}
           </Formik>
-          </KeyboardAvoidingView>
-          <View
-            style={{
-              marginTop: DeviceHeigth * 0.05,
-              alignSelf: 'center',
-              marginRight: DeviceWidth * 0.1,
-            }}>
-            <Text
-              style={[styles.forgotText, {fontSize: 12, fontWeight: '400'}]}>
-              Or Continue With
-            </Text>
-          </View>
-       
+        </KeyboardAvoidingView>
+        <View
+          style={{
+            marginTop: DeviceHeigth * 0.05,
+            alignSelf: 'center',
+            marginRight: DeviceWidth * 0.1,
+          }}>
+          <Text style={[styles.forgotText, {fontSize: 12, fontWeight: '400'}]}>
+            Or Continue With
+          </Text>
+        </View>
+
         <View style={{marginTop: DeviceHeigth * 0.02}}>
           <Button2 onGooglePress={GoogleSignup} />
         </View>
@@ -1331,13 +1335,13 @@ var styles = StyleSheet.create({
     lineHeight: 20,
   },
   policyText: {
-    underline: {textDecorationLine: 'underline'},
+    // underline: {textDecorationLine: 'underline'},
     fontSize: 14,
     lineHeight: 15,
     fontWeight: '400',
   },
   policyText1: {
-    underline: {textDecorationLine: 'underline'},
+    // underline: {textDecorationLine: 'underline'},
     fontSize: 15,
     lineHeight: 15,
     fontWeight: '400',

@@ -20,3 +20,15 @@ export const setShowIntro = data => {
     payload: data,
   };
 };
+export const setCompleteProfileData = data => {
+  return {
+    type: types.COMPLETE_PROFILE_DATA,
+    payload: data,
+  };
+};
+export const setUserId = data => {
+  return {
+    type: types.User_ID,
+    payload: data,
+  };
+};

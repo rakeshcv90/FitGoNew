@@ -20,7 +20,7 @@ import {
 } from '../Component/Config';
 import {localImage} from '../Component/Image';
 import ActivityLoader from '../Component/ActivityLoader';
-
+import {useDispatch, useSelector} from 'react-redux';
 
 import axios from 'axios';
 import {AppColor} from '../Component/Color';
@@ -28,6 +28,7 @@ import {AppColor} from '../Component/Color';
 import Button from '../Component/Button';
 
 import {showMessage} from 'react-native-flash-message';
+import {setUserId} from '../Component/ThemeRedux/Actions';
 
 const OtpVerification = ({navigation, route}) => {
   const [forLoading, setForLoading] = useState(false);
@@ -44,7 +45,7 @@ const OtpVerification = ({navigation, route}) => {
   const [txt5, setTxt5] = useState('');
   const [txt6, setTxt6] = useState('');
   const [email, setEmail] = useState(route.params.email);
-
+  const dispatch = useDispatch();
   // const [timeLeft, setTimeleft] = useState(60);
   // const [resendtxt, setResendTxt] = useState('Resend OTP');
 
@@ -60,7 +61,7 @@ const OtpVerification = ({navigation, route}) => {
       });
     } else {
       setForLoading(true);
-   
+
       try {
         const OtpMsg = await axios(`${NewApi}${NewAppapi.OTPVerification}`, {
           method: 'POST',
@@ -75,15 +76,17 @@ const OtpVerification = ({navigation, route}) => {
 
         if (OtpMsg.data.msg == 'Email verified successfully') {
           setForLoading(false);
-          console.log("iiiiii",OtpMsg.data);
-            showMessage({
-              message: 'Email verified successfully!',
-              floating: true,
-              duration: 500,
-              type: 'success',
-              icon: {icon: 'auto', position: 'left'},
-            });
-            navigation.navigate('Login');
+          console.log('iiiiii', OtpMsg.data);
+          showMessage({
+            message: 'Email verified successfully!',
+            floating: true,
+            duration: 500,
+            type: 'success',
+            icon: {icon: 'auto', position: 'left'},
+          });
+          dispatch(setUserId(OtpMsg.data?.id));
+          navigation.navigate('Yourself');
+          // navigation.navigate('Login');
           //setTimeleft(60);
           setTxt1('');
           setTxt2('');
@@ -93,13 +96,13 @@ const OtpVerification = ({navigation, route}) => {
           //navigation.navigate('Login');
         } else {
           setForLoading(false);
-          console.log("bbbbbbbb",OtpMsg.data);
-            showMessage({
-              message: OtpMsg.data.msg,
-              floating: true,
-              type: 'danger',
-              icon: {icon: 'auto', position: 'left'},
-            });
+          console.log('bbbbbbbb', OtpMsg.data);
+          showMessage({
+            message: OtpMsg.data.msg,
+            floating: true,
+            type: 'danger',
+            icon: {icon: 'auto', position: 'left'},
+          });
 
           //   setTimeleft(60);
           setTxt1('');
