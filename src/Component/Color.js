@@ -20,6 +20,7 @@ export const AppColor={
     LIGHTYELLOW:'#FFF6E0',
     BORDERCOLOR2: '#4285F4',
     DARKGRAY:'#707070',
-    ProfileTextColor:"#7B6F72"
+    ProfileTextColor:"#7B6F72",
+    GRAY:'#F0F0F0',
 
   }

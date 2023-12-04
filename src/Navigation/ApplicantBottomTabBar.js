@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
         ? 0
         : 0,
 
-    shadowColor: 'rgba(0, 0, 0, 1)',
+ 
     ...Platform.select({
       ios: {
         shadowColor: '#000000',
@@ -196,9 +196,10 @@ const styles = StyleSheet.create({
       android: {
         elevation: 4,
         shadowOffset: {width: -2, height: 4},
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.5,
         shadowRadius: 3,
         elevation: 20,
+        shadowColor: '#000000',
       },
    
     
@@ -214,8 +215,7 @@ const styles = StyleSheet.create({
   bellImage: {
     width: 50,
     height: 50,
-    //right: -DeviceWidth * 0.1,
-    //top: -DeviceHeigth * 0.05,
+
   },
 });
 

@@ -29,7 +29,6 @@
     "@types/react-native-snap-carousel": "^3.8.9",
     "axios": "^1.5.0",
     "formik": "^2.4.5",
-    "install": "^0.13.0",
     "lottie-react-native": "^6.4.1",
     "moment": "^2.29.4",
     "npm": "^10.2.4",

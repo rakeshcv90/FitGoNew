@@ -13,25 +13,35 @@ import {AppColor} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 
-const Focus = ({data, selectedImage, setSelectedImage}: any) => {
+const Focus = ({data, selectedImage, setSelectedImage, data2}: any) => {
   return (
     <View
       style={{
         flex: 1,
         // justifyContent: 'center',
         alignItems: 'center',
-        // marginTop: 50,
+        marginTop: 10,
       }}>
       <FlatList
-        data={data}
+        data={data2}
         showsVerticalScrollIndicator={false}
         renderItem={({item}: any, index: number) => {
           return (
             <TouchableOpacity
               key={index}
               activeOpacity={0.8}
-              onPress={() => setSelectedImage(index)}
-              style={[styles.box, {}]}>
+              onPress={() => setSelectedImage(item?.bodypart_id)}
+              style={[
+                styles.box,
+                {
+                  padding: item?.bodypart_id == selectedImage ? 18 : 20,
+                  paddingRight: index == 0 ? 20 : 0,
+                  borderColor:
+                    item?.bodypart_id == selectedImage
+                      ? AppColor.BORDERCOLOR2
+                      : AppColor.LITELTEXTCOLOR,
+                },
+              ]}>
               <Text
                 style={{
                   color: AppColor.LITELTEXTCOLOR,
@@ -40,11 +50,11 @@ const Focus = ({data, selectedImage, setSelectedImage}: any) => {
                   fontFamily: 'Poppins',
                   lineHeight: 24,
                 }}>
-                {item.name}
+                {item.bodypart_title}
               </Text>
               <Image
                 source={{
-                  uri: item.image,
+                  uri: item.bodypart_image,
                 }}
                 resizeMode="contain"
                 style={{
@@ -66,7 +76,6 @@ const styles = StyleSheet.create({
   box: {
     width: DeviceWidth * 0.8,
     height: DeviceHeigth / 12,
-    borderColor: AppColor.LITELTEXTCOLOR,
     borderWidth: 1,
     borderRadius: 20,
     marginBottom: 20,

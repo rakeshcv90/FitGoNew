@@ -9,21 +9,38 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {AppColor} from '../../Component/Color';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {
+  DeviceHeigth,
+  DeviceWidth,
+  NewApi,
+  NewAppapi,
+} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import Calories from '../../Component/Calories';
+import axios from 'axios';
+import ActivityLoader from '../../Component/ActivityLoader';
+import AnimatedLottieView from 'lottie-react-native';
+import PercentageBar from '../../Component/PercentageBar';
 
-const Home = () => {
+const Home = ({navigation}) => {
   const [selectedButton, setSelectedButton] = useState('1');
-  const [loader, setLoaded] = useState(false);
+
+  const [isLoaded, setLoaded] = useState(false);
+  const [WorkoutData, setWorkoutData] = useState([]);
   const handleButtonColor = ButtonNumber => {
     setSelectedButton(ButtonNumber);
     //setLoaded(false);
   };
+  useEffect(() => {
+    getData();
+  }, [selectedButton]);
 
+  const onSelectSwitch = index => {
+    alert('Selected index: ' + index);
+  };
   const IntroductionData = [
     {
       id: 1,
@@ -44,6 +61,74 @@ const Home = () => {
       img: localImage.Inrtoduction3,
     },
   ];
+
+  const getData = async () => {
+    setLoaded(true);
+    try {
+      let payload = new FormData();
+      payload.append('id', 6);
+      const data = await axios(`${NewApi}${NewAppapi.All_Workouts}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: payload,
+      });
+      setLoaded(false);
+
+      if (data.data) {
+        if (selectedButton == '1') {
+          setWorkoutData(
+            data.data.workout_details.filter(
+              item => item.level_title == 'Beginner',
+            ),
+          );
+          //setLoaded(true);
+        } else if (selectedButton == '2') {
+          setWorkoutData(
+            data.data.workout_details.filter(
+              item => item.level_title == 'Intermediate',
+            ),
+          );
+          //setLoaded(true);
+        } else if (selectedButton == '3') {
+          setWorkoutData(
+            data.data.workout_details.filter(
+              item => item.level_title == 'Advanced',
+            ),
+          );
+          // setLoaded(true);
+        }
+      } else {
+        console.log('No data available');
+        setLoaded(false);
+      }
+    } catch (error) {
+      console.log('Workout Error', error);
+    }
+  };
+  const noData = () => {
+    return (
+      <View style={{marginTop: 10, paddingBottom: DeviceHeigth * 0.03}}>
+        <AnimatedLottieView
+          source={require('../../Icon/Images/NewImage/NoData.json')}
+          speed={2}
+          autoPlay
+          loop
+          style={[
+            styles.card,
+            {
+              borderRadius: 20,
+              overflow: 'hidden',
+              margin: 5,
+              resizeMode: 'contain',
+              width: DeviceWidth * 0.91,
+              borderColor: AppColor.GRAY,
+            },
+          ]}></AnimatedLottieView>
+      </View>
+    );
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -74,6 +159,7 @@ const Home = () => {
           </View>
           <View style={styles.circle} />
         </ImageBackground>
+
         <View style={styles.dailyContainer}>
           <Text style={styles.dailyText}>Daily progress</Text>
           <View
@@ -85,6 +171,25 @@ const Home = () => {
             }}>
             <Calories type={'Calories'} />
             <Calories type={'Steps'} />
+          </View>
+        </View>
+        <View style={styles.progressBar}>
+          <Text style={styles.text}>Overall progress</Text>
+          <Text style={styles.text2}>50%</Text>
+          <Text style={styles.text3}>200 Calories Burn | 30minutes</Text>
+          <View
+            style={{
+              width: '90%',
+              justifyContent: 'center',
+              marginLeft: 15,
+              marginTop: 10,
+            }}>
+            <PercentageBar
+              height={20}
+              backgroundColor={'grey'}
+              
+              percentage={'50%'}
+            />
           </View>
         </View>
         <View style={styles.dailyContainer}>
@@ -131,71 +236,7 @@ const Home = () => {
           />
         </View>
         <View style={[styles.dailyContainer, {marginTop: 20}]}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={styles.dailyText}>Workout Categories</Text>
-            <Text style={styles.seeAll} onPress={() => {}}>
-              See all
-            </Text>
-          </View>
-          <View style={styles.buttonView}>
-            <TouchableOpacity
-              style={[
-                styles.Buttons,
-                selectedButton == '1' ? {backgroundColor: AppColor.RED} : null,
-              ]}
-              onPress={() => {
-                handleButtonColor('1');
-              }}>
-              <Text
-                style={[
-                  ,
-                  selectedButton == '1'
-                    ? {color: AppColor.WHITE}
-                    : {color: AppColor.INPUTTEXTCOLOR},
-                  {fontFamily: 'Montserrat'},
-                ]}>
-                Beginner
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.Buttons,
-                selectedButton == '2' ? {backgroundColor: AppColor.RED} : null,
-              ]}
-              onPress={() => {
-                handleButtonColor('2');
-              }}>
-              <Text
-                style={[
-                  ,
-                  selectedButton == '2'
-                    ? {color: AppColor.WHITE}
-                    : {color: AppColor.INPUTTEXTCOLOR},
-                  {fontFamily: 'Montserrat'},
-                ]}>
-                Intermediate
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.Buttons,
-                selectedButton == '3' ? {backgroundColor: AppColor.RED} : null,
-              ]}
-              onPress={() => {
-                handleButtonColor('3');
-              }}>
-              <Text
-                style={[
-                  ,
-                  selectedButton == '3'
-                    ? {color: AppColor.WHITE}
-                    : {color: AppColor.INPUTTEXTCOLOR},
-                  {fontFamily: 'Montserrat'},
-                ]}>
-                Advance
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <Text style={styles.dailyText}>Featured workout</Text>
           <FlatList
             data={IntroductionData}
             horizontal
@@ -204,7 +245,7 @@ const Home = () => {
               return (
                 <TouchableOpacity
                   onPress={() => {}}
-                  style={{marginTop: 10, paddingBottom: DeviceHeigth * 0.03}}
+                  style={{marginTop: 10}}
                   activeOpacity={0.7}>
                   <ImageBackground
                     source={localImage.Inrtoduction3}
@@ -237,6 +278,123 @@ const Home = () => {
             }}
           />
         </View>
+        <View style={[styles.dailyContainer, {marginTop: 20}]}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Text style={styles.dailyText}>Workout Categories</Text>
+            <Text
+              style={styles.seeAll}
+              onPress={() => {
+                navigation.navigate('WorkoutCategories');
+              }}>
+              See all
+            </Text>
+          </View>
+          <View style={styles.buttonView}>
+            <TouchableOpacity
+              style={[
+                styles.Buttons,
+                selectedButton == '1' ? {backgroundColor: AppColor.RED} : null,
+              ]}
+              onPress={() => {
+                handleButtonColor('1');
+              }}>
+              <Text
+                style={[
+                  ,
+                  selectedButton == '1'
+                    ? {color: AppColor.WHITE}
+                    : {color: AppColor.INPUTTEXTCOLOR},
+                  {fontFamily: 'Verdana', fontWeight: '600'},
+                ]}>
+                Beginner
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.Buttons,
+                selectedButton == '2' ? {backgroundColor: AppColor.RED} : null,
+              ]}
+              onPress={() => {
+                handleButtonColor('2');
+              }}>
+              <Text
+                style={[
+                  ,
+                  selectedButton == '2'
+                    ? {color: AppColor.WHITE}
+                    : {color: AppColor.INPUTTEXTCOLOR},
+                  {fontFamily: 'Verdana', fontWeight: '600'},
+                ]}>
+                Intermediate
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.Buttons,
+                selectedButton == '3' ? {backgroundColor: AppColor.RED} : null,
+              ]}
+              onPress={() => {
+                handleButtonColor('3');
+              }}>
+              <Text
+                style={[
+                  ,
+                  selectedButton == '3'
+                    ? {color: AppColor.WHITE}
+                    : {color: AppColor.INPUTTEXTCOLOR},
+                  {fontFamily: 'Verdana', fontWeight: '600'},
+                ]}>
+                Advance
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {console.log('Workout response is', WorkoutData)}
+          <FlatList
+            data={WorkoutData}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            renderItem={elements => {
+              console.log('HDFBGDGDGDGDG', elements);
+              return (
+                <TouchableOpacity
+                  onPress={() => {}}
+                  style={{marginTop: 10, paddingBottom: DeviceHeigth * 0.03}}
+                  activeOpacity={0.7}>
+                  <ImageBackground
+                    source={{uri: elements.item.image_path}}
+                    style={[
+                      styles.card,
+                      {
+                        borderRadius: 20,
+                        overflow: 'hidden',
+                        margin: 5,
+                        resizeMode: 'contain',
+                        width: DeviceWidth * 0.91,
+                      },
+                    ]}>
+                    {isLoaded ? <ActivityLoader /> : ''}
+                    <View style={styles.LinearG}>
+                      <View style={styles.TitleText}>
+                        <Text style={styles.Text}>
+                          {elements.item.workout_title}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.Text,
+                            {fontSize: 14, fontWeight: 'bold'},
+                          ]}>
+                          {' '}
+                          {elements.item.workout_duration}
+                        </Text>
+                      </View>
+                    </View>
+                  </ImageBackground>
+                </TouchableOpacity>
+              );
+            }}
+            ListEmptyComponent={noData}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -245,6 +403,7 @@ const Home = () => {
 var styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: AppColor.WHITE,
   },
   card: {
     height: DeviceHeigth * 0.2,
@@ -353,12 +512,50 @@ var styles = StyleSheet.create({
     marginHorizontal: DeviceWidth * 0.05,
   },
   Buttons: {
-    width: DeviceWidth / 3.8,
-    height: (DeviceHeigth * 4.5) / 100,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: AppColor.GRAY,
+    padding: 10,
+  },
+  progressBar: {
+    marginVertical: 15,
+    marginHorizontal: DeviceWidth * 0.04,
+    backgroundColor: '#D7EFFE',
+    height: DeviceHeigth * 0.15,
+    alignSelf: 'center',
+    marginTop: 30,
+    width: DeviceWidth * 0.91,
+    borderRadius: 20,
+  },
+  text3: {
+    fontSize: 14,
+    fontFamily: 'Poppins',
+    fontWeight: '400',
+    color: AppColor.DARKGRAY,
+    lineHeight: 21,
+    // marginTop: -30,
+    marginLeft: 15,
+  },
+  text: {
+    fontSize: 15,
+    fontFamily: 'Poppins',
+    fontWeight: '500',
+    color: AppColor.BLACK,
+    lineHeight: 18,
+    marginTop: 20,
+    marginLeft: 15,
+  },
+  text2: {
+    fontSize: 20,
+    fontFamily: 'Poppins',
+    fontWeight: '700',
+    color: AppColor.BLACK,
+    lineHeight: 30,
+    marginLeft: 15,
+    marginTop: -20,
+    textAlign: 'right',
+    marginRight: DeviceWidth * 0.04,
   },
 });
 export default Home;
