@@ -1,10 +1,4 @@
-import {
-  ImageBackground,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import {Image} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
@@ -12,21 +6,21 @@ import {AppColor} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 
+const RenderImage = ({tint}: any) => {
+  return (
+    <Image
+      tintColor={tint ? tint : 'rgba(235, 148, 137, 0.79)'}
+      source={localImage.PathChargeLevel}
+      resizeMode="contain"
+      style={{
+        height: 25,
+        width: 25,
+        marginRight: 1,
+      }}
+    />
+  );
+};
 const Level = ({data, selectedImage, setSelectedImage}: any) => {
-  const RenderImage = ({tint}: any) => {
-    return (
-      <Image
-        tintColor={tint}
-        source={localImage.PathChargeLevel}
-        resizeMode="contain"
-        style={{
-          height: 25,
-          width: 25,
-          marginRight: 1,
-        }}
-      />
-    );
-  };
   return (
     <View
       style={{
@@ -37,66 +31,61 @@ const Level = ({data, selectedImage, setSelectedImage}: any) => {
       }}>
       {data &&
         data?.map((item: any, index: number) => {
+          // if (item.goal_gender != selectedGender) return;
           return (
             <TouchableOpacity
-            activeOpacity={1}
               key={index}
-              onPress={() => setSelectedImage(index)}>
-                <ImageBackground
-                  source={item.image}
-                  style={[
-                      styles.box,
-                    {
-                        padding: index == selectedImage ? 18 : 20,
-                        // paddingRight: index == 0 ? 20 : 0,
-                        borderWidth: index == selectedImage ? 3 : 0,
-                    },
-                  ]}>
-                    <LinearGradient
-                      start={{x: 0, y: 1}}
-                      end={{x: 1, y: 0}}
-                      colors={['rgba(41, 47, 69, 0.6)', 'rgba(41, 47, 69, 0.6)']}
-                      style={[
-                        styles.box2,
-                        {
-                          padding: index == selectedImage ? 18 : 20,
-                          // paddingRight: index == 0 ? 20 : 0,
-                          borderWidth: index == selectedImage ? 3 : 0,
-                        },
-                      ]}>
-                  <Text
-                    style={{
-                      color: AppColor.WHITE,
-                      fontSize: 18,
-                      fontWeight: '600',
-                      fontFamily: 'Poppins',
-                      lineHeight: 27,
-                    }}>
-                    {item.name}
-                  </Text>
-                  <View style={{flexDirection: 'row'}}>
-                    {index == 0 ? (
-                      <>
-                        <RenderImage />
-                        <RenderImage tint={'rgba(255, 255, 255, 0.4)'} />
-                        <RenderImage tint={'rgba(255, 255, 255, 0.4)'} />
-                      </>
-                    ) : index == 1 ? (
-                      <>
-                        <RenderImage />
-                        <RenderImage />
-                        <RenderImage tint={'rgba(255, 255, 255, 0.4)'} />
-                      </>
-                    ) : (
-                      <>
-                        <RenderImage />
-                        <RenderImage />
-                        <RenderImage />
-                      </>
-                    )}
-                  </View>
-              </LinearGradient>
-                </ImageBackground>
+              activeOpacity={0.8}
+              onPress={() => setSelectedImage(index)}
+              style={[
+                styles.box,
+                {
+                  padding: index == selectedImage ? 18 : 20,
+                  paddingRight: index == 0 ? 20 : 10,
+                  borderWidth: index == selectedImage ? 1 : 0,
+                },
+              ]}>
+              <Text
+                style={{
+                  color: '#505050',
+                  fontSize: 18,
+                  fontWeight: '600',
+                  fontFamily: 'Poppins',
+                  lineHeight: 27,
+                }}>
+                {item.name}
+              </Text>
+              <View style={{flexDirection: 'row'}}>
+                {index == 0 ? (
+                  <>
+                    <RenderImage tint={AppColor.RED} />
+                    <RenderImage />
+                    <RenderImage />
+                    <RenderImage />
+                  </>
+                ) : index == 1 ? (
+                  <>
+                    <RenderImage tint={AppColor.RED} />
+                    <RenderImage tint={AppColor.RED} />
+                    <RenderImage />
+                    <RenderImage />
+                  </>
+                ) : index == 2 ? (
+                  <>
+                    <RenderImage tint={AppColor.RED} />
+                    <RenderImage tint={AppColor.RED} />
+                    <RenderImage tint={AppColor.RED} />
+                    <RenderImage />
+                  </>
+                ) : (
+                  <>
+                    <RenderImage tint={AppColor.RED} />
+                    <RenderImage tint={AppColor.RED} />
+                    <RenderImage tint={AppColor.RED} />
+                    <RenderImage tint={AppColor.RED} />
+                  </>
+                )}
+              </View>
             </TouchableOpacity>
           );
         })}
@@ -109,22 +98,26 @@ export default Level;
 const styles = StyleSheet.create({
   box: {
     width: DeviceWidth * 0.8,
-    height: DeviceHeigth / 8,
-    borderColor: AppColor.BORDERCOLOR2,
+    height: DeviceHeigth / 10,
+    borderColor: AppColor.RED,
     borderRadius: 20,
     marginBottom: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  box2: {
-    width: DeviceWidth * 0.8,
-    height: DeviceHeigth / 8,
-    borderColor: AppColor.BORDERCOLOR2,
-    borderRadius: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    overflow: 'hidden',
+    // overflow: 'hidden',
+    backgroundColor: '#f5f5f5',
+    shadowColor: 'rgba(0, 0, 0, 1)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
 });

@@ -4,6 +4,8 @@ const intialState = {
   ProfilePhoto: 'https://gofit.tentoptoday.com/json/image/Avatar.png',
   isLogin: false,
   showIntro: false,
+  completeProfileData: [],
+  getUserID: '',
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -17,6 +19,10 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, isLogin: action.payload};
     case types.SHOW_INTRO:
       return {...state, showIntro: action.payload};
+    case types.COMPLETE_PROFILE_DATA:
+      return {...state, completeProfileData: action.payload};
+    case types.User_ID:
+      return {...state, getUserID: action.payload};
     default:
       return state;
   }

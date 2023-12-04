@@ -81,35 +81,31 @@ const Router = () => {
       <Stack.Screen name="AboutUs" component={AboutUs} />
       <Stack.Screen name="completed" component={Completed} />
       <Stack.Screen name="Privacy" component={TermaAndCondition} />
-      <Stack.Screen name="MyDiets" component={MyDiets}/>
-      <Stack.Screen name="MyWorkouts" component={MyWorkouts}/>
-      <Stack.Screen name="FavoritesRouter" component={FavoritesRouter}/>
-      <Stack.Screen name="ExerciseByEquipments" component={ExerciseByEquipments}/>
-      <Stack.Screen name="LatestProducts" component={LatestProducts}/>
+      <Stack.Screen name="MyDiets" component={MyDiets} />
+      <Stack.Screen name="MyWorkouts" component={MyWorkouts} />
+      <Stack.Screen name="FavoritesRouter" component={FavoritesRouter} />
+      <Stack.Screen
+        name="ExerciseByEquipments"
+        component={ExerciseByEquipments}
+      />
+      <Stack.Screen name="LatestProducts" component={LatestProducts} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Yourself" component={Yourself} />
-
     </Stack.Navigator>
   );
 };
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      {/* <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
-      <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} /> */}
-      <Stack.Screen name="Home" component={Home} />
-      {/* <Stack.Screen name="Login" component={Login} />
-
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} />
       <Stack.Screen name="Login" component={Login} />
-
+      <Stack.Screen name="Yourself" component={Yourself} />
+      <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Signup" component={Signup} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
       <Stack.Screen name="OtpVerification" component={OtpVerification} />
-    */}
-
     </Stack.Navigator>
   );
 };

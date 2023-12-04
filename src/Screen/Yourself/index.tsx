@@ -7,10 +7,15 @@ import {
   Image,
   Platform,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
-import {useSelector} from 'react-redux';
-import {navigationRef} from '../../../App';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import React, {useEffect, useRef, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {navigation} from '../../../App';
+import {
+  DeviceHeigth,
+  DeviceWidth,
+  NewApi,
+  NewAppapi,
+} from '../../Component/Config';
 import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {localImage} from '../../Component/Image';
@@ -22,6 +27,9 @@ import {Picker} from '@react-native-picker/picker';
 import Focus from './Focus';
 import Toggle from '../../Component/Toggle';
 import {AppColor} from '../../Component/Color';
+import {setCompleteProfileData} from '../../Component/ThemeRedux/Actions';
+import axios from 'axios';
+import ActivityLoader from '../../Component/ActivityLoader';
 
 const imgData = Array(60)
   .fill(0)
@@ -30,18 +38,74 @@ const imgData2 = Array(60)
   .fill(27)
   .map((item: any, index, arr) => arr[index] + index + 3);
 
-const index = () => {
-  const {defaultTheme} = useSelector((state: any) => state);
+const index = ({navigation}: any) => {
+  const {defaultTheme, completeProfileData, getUserID} = useSelector(
+    (state: any) => state,
+  );
+  const dispatch = useDispatch();
   const [screen, setScreen] = useState(0);
   const [toggleW, setToggleW] = useState('kg');
   const [toggle, setToggle] = useState('ft');
-  const [selectedGender, setSelectedGender] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const [selectedGender, setSelectedGender] = useState(-1);
   const [selectedGoal, setSelectedGoal] = useState(-1);
   const [selectedLevel, setSelectedLevel] = useState(-1);
   const [selectedFocus, setSelectedFocus] = useState(-1);
-  const [selectedHeight, setSelectedHeight] = useState('1');
-  const [selectedWeight, setSelectedWeight] = useState('1');
-  const [selectedAge, setSelectedAge] = useState('1');
+  const [selectedHeight, setSelectedHeight] = useState('');
+  const [selectedWeight, setSelectedWeight] = useState('');
+  const [selectedAge, setSelectedAge] = useState('');
+
+  useEffect(() => {
+    ProfileDataAPI();
+  }, []);
+
+  const ProfileDataAPI = async () => {
+    try {
+      const res = await axios({
+        url: NewAppapi.Get_COMPLETE_PROFILE,
+        method: 'get',
+      });
+      if (res.data) {
+        console.log(res.data);
+        dispatch(setCompleteProfileData(res.data));
+      }
+    } catch (error) {
+      dispatch(setCompleteProfileData([]));
+      console.log(error);
+    }
+  };
+  const setProfileAPI = async () => {
+    setVisible(true);
+    const payload = new FormData();
+    // gender,goal,age,fitnesslevel,focusarea,height, weight
+    payload.append('gender', selectedGender == 0 ? 'Male' : 'Female');
+    payload.append('goal', selectedGoal);
+    payload.append('age', selectedAge);
+    payload.append('fitnesslevel', selectedLevel);
+    payload.append('focusarea', selectedFocus);
+    payload.append('height', selectedHeight);
+    payload.append('weight', selectedWeight);
+    payload.append('id', getUserID);
+    console.log(payload);
+    try {
+      const res = await axios({
+        url: NewAppapi.Post_COMPLETE_PROFILE,
+        method: 'post',
+        data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (res.data) {
+        console.log(res.data);
+        setVisible(false);
+        navigation.navigate('Home');
+      }
+    } catch (error) {
+      console.log(error);
+      setVisible(false);
+    }
+  };
 
   const fullData = [
     {
@@ -119,6 +183,7 @@ const index = () => {
           name: 'Intermediate',
         },
         {id: 3, image: localImage.AdvanceLevel, name: 'Advance'},
+        {id: 4, image: localImage.AdvanceLevel, name: 'Elite'},
       ],
       top1: `What’s your Fitness level?`,
       top2: 'This helps us create to your personalized plan',
@@ -155,7 +220,8 @@ const index = () => {
         },
         {
           id: 2,
-          image: 'https://s3-alpha-sig.figma.com/img/7910/f5cb/bf41d4a61461ea0e215258e153dade1d?Expires=1702252800&Signature=U6wH-q9rpuBeAD~mWlmKVUrJl9dNpDVEnkVSMof2mpm~aSEv-2BXy5OUKIC-JCh2XOsQGPiLfszi8SL9TTvqz75gjtmuUd97uOjq8Gnyd2p8jfC0d4eKBB-RBLs0fiob-uf9F6dUC99qasTFEltk2muZWbAuFpk23uFDtPbj8X-kpLzyCr1-~grSMkFCYIOjYfg1H19ZYj7bGtZJ69rWFFe~c-UaokTSxUOlAPL1B-V8WhVuCaRiDXWeE6Fe5Q0aoKl3~jLYOg0TpB0zGcSaxenEaJizmwXU11oFazQ1zVgSUuMjSeSDI6CCU5ya5tEFXhEjLaRr18CxjtFF72Bjdw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4',
+          image:
+            'https://s3-alpha-sig.figma.com/img/7910/f5cb/bf41d4a61461ea0e215258e153dade1d?Expires=1702252800&Signature=U6wH-q9rpuBeAD~mWlmKVUrJl9dNpDVEnkVSMof2mpm~aSEv-2BXy5OUKIC-JCh2XOsQGPiLfszi8SL9TTvqz75gjtmuUd97uOjq8Gnyd2p8jfC0d4eKBB-RBLs0fiob-uf9F6dUC99qasTFEltk2muZWbAuFpk23uFDtPbj8X-kpLzyCr1-~grSMkFCYIOjYfg1H19ZYj7bGtZJ69rWFFe~c-UaokTSxUOlAPL1B-V8WhVuCaRiDXWeE6Fe5Q0aoKl3~jLYOg0TpB0zGcSaxenEaJizmwXU11oFazQ1zVgSUuMjSeSDI6CCU5ya5tEFXhEjLaRr18CxjtFF72Bjdw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4',
           name: 'Shoulders',
         },
         {id: 3, image: localImage.AdvanceLevel, name: 'Biceps'},
@@ -229,7 +295,6 @@ const index = () => {
             selectionColor={'white'}>
             {imgData.map((hr: any, index: number) => {
               if (index < 15) return;
-              if (toggleW == 'lb') hr = (hr * 0.2).toPrecision(2);
               return (
                 <Picker.Item label={hr} value={hr} />
                 // <Picker.Item label={`${hr} kg`} value={hr} />
@@ -240,10 +305,54 @@ const index = () => {
       </View>
     );
   };
+
+  const ProgressBar = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: DeviceWidth * 0.9,
+        }}>
+        <View style={{flexDirection: 'row-reverse', alignSelf: 'flex-end'}}>
+          <Text
+            style={{
+              color: '#83898C',
+              fontFamily: 'Poppins',
+              fontWeight: '400',
+            }}>
+            <Text style={{color: AppColor.RED}}>{`Step  ${screen + 1} `}</Text>
+            of 8
+          </Text>
+        </View>
+        <View
+          style={{
+            width: DeviceWidth * 0.8,
+            backgroundColor: '#E2E6F9',
+            height: 5,
+            borderRadius: 5,
+            marginLeft: 40,
+            marginTop: 5,
+          }}>
+          <View
+            style={{
+              width: (DeviceWidth * 0.9) / (7 - screen),
+              backgroundColor: AppColor.RED,
+              height: 5,
+              borderRadius: 5,
+            }}
+          />
+        </View>
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView
       style={{flex: 1, backgroundColor: defaultTheme ? 'black' : 'white'}}>
-      <View style={styles.buttonsUp}>
+      <ProgressBar />
+      {/* <View style={styles.buttonsUp}>
         {screen >= 1 && (
           <TouchableOpacity
             style={[styles.nextButton2]}
@@ -252,14 +361,14 @@ const index = () => {
           </TouchableOpacity>
         )}
         {screen >= 1 && screen <= 6 && (
-          <TouchableOpacity onPress={() => navigationRef.navigate('Login')}>
+          <TouchableOpacity onPress={() => setProfileAPI()}>
             <Text
               style={[{fontSize: 15, color: 'black', fontFamily: 'Poppins'}]}>
               SKIP
             </Text>
           </TouchableOpacity>
         )}
-      </View>
+      </View> */}
       <View
         style={{
           height: DeviceHeigth * 0.7,
@@ -323,19 +432,20 @@ const index = () => {
 
         {screen == 0 ? (
           <Gender
-            data={fullData[screen]}
+            data={fullData[screen]?.data}
             selectedImage={selectedGender}
             setSelectedImage={setSelectedGender}
           />
         ) : screen == 1 ? (
           <Goal
-            data={fullData[screen]?.data}
+            data={completeProfileData?.goal}
             selectedImage={selectedGoal}
             setSelectedImage={setSelectedGoal}
-            selectedGender={fullData[0]?.data[selectedGender].name}
+            selectedGender={selectedGender == 0 ? 'M' : 'F'}
           />
         ) : screen == 2 ? (
           <Level
+            data2={completeProfileData?.level}
             data={fullData[screen]?.data}
             selectedImage={selectedLevel}
             setSelectedImage={setSelectedLevel}
@@ -345,6 +455,7 @@ const index = () => {
         ) : screen == 6 ? (
           <Focus
             data={fullData[screen]?.data}
+            data2={completeProfileData?.focusarea}
             selectedImage={selectedFocus}
             setSelectedImage={setSelectedFocus}
           />
@@ -352,11 +463,23 @@ const index = () => {
       </View>
 
       <View style={styles.buttons}>
-        <TouchableOpacity
-          onPress={() => navigationRef.navigate('Login')}
-          disabled>
-          {/* <Text style={[{fontSize: 20, color: 'black'}]}>SKIP</Text> */}
-        </TouchableOpacity>
+        {screen >= 1 ? (
+          <TouchableOpacity
+            style={[styles.nextButton2]}
+            onPress={() => setScreen(screen - 1)}>
+            <Icons name="chevron-left" size={25} color={'#000'} />
+          </TouchableOpacity>
+        ):(
+          <TouchableOpacity
+            style={[styles.nextButton2]}
+            onPress={() => setScreen(screen - 1)}
+            disabled>
+            <Text
+              style={[{fontSize: 15, color: 'black', fontFamily: 'Poppins'}]}>
+              {    }
+            </Text>
+          </TouchableOpacity>
+        )}
         {/* <View
                 style={{
                   width: DeviceWidth * 0.22,
@@ -394,17 +517,48 @@ const index = () => {
                   type: 'danger',
                   // icon: {icon: 'none', position: 'left'},
                 })
+              : screen == 6
+              ? selectedFocus == -1
+                ? showMessage({
+                    message: 'Please Select your Focus Area',
+                    animationDuration: 750,
+                    floating: true,
+                    type: 'danger',
+                    // icon: {icon: 'none', position: 'left'},
+                  })
+                : setProfileAPI()
               : setScreen(screen + 1);
           }}>
           <LinearGradient
             start={{x: 0, y: 1}}
             end={{x: 1, y: 0}}
             colors={['#941000', '#D5191A']}
-            style={[styles.nextButton]}>
+            style={[
+              styles.nextButton,
+              {
+                flexDirection: screen == 6 ? 'row' : 'column',
+                width: screen == 6 ? 120 : 45,
+              },
+            ]}>
+            {screen == 6 && (
+              <Text
+                style={{
+                  color: 'white',
+                  marginTop: 5,
+                  fontSize: 14,
+                  fontFamily: 'Poppins',
+                  fontWeight: '600',
+                  lineHeight: 16,
+                  textAlign: 'center',
+                }}>
+                Let's Start
+              </Text>
+            )}
             <Icons name="chevron-right" size={25} color={'#fff'} />
           </LinearGradient>
         </TouchableOpacity>
       </View>
+      <ActivityLoader visible={visible} />
     </SafeAreaView>
   );
 };
@@ -430,7 +584,6 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     backgroundColor: 'red',
-    width: 45,
     height: 45,
     borderRadius: 50 / 2,
     overflow: 'hidden',

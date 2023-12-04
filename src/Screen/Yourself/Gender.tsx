@@ -1,22 +1,21 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
-import { Image } from 'react-native';
-import { localImage } from '../../Component/Image';
-import { DeviceHeigth, DeviceWidth } from '../../Component/Config';
+import {StyleSheet, Text, TouchableOpacity, View, Platform} from 'react-native';
+import React, {useState} from 'react';
+import {Image} from 'react-native';
+import {localImage} from '../../Component/Image';
+import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Carousel from 'react-native-snap-carousel';
-import { AppColor } from '../../Component/Color';
-
+import {AppColor} from '../../Component/Color';
 
 const Gender = ({data, selectedImage, setSelectedImage}: any) => {
-
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Carousel
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        
+      }}>
+      {/* <Carousel
           data={data.data}
           sliderWidth={DeviceWidth}
           itemWidth={DeviceWidth * 0.75}
@@ -93,11 +92,81 @@ const Gender = ({data, selectedImage, setSelectedImage}: any) => {
               )}
             </View>
           )}
-        />
-      </View>
-    );
-  };
+        /> */}
+      {data &&
+        data?.map((item: any, index: number) => {
+          // if (item.gender != selectedGender) return;
+          return (
+            <TouchableOpacity
+              key={index}
+              activeOpacity={0.8}
+              onPress={() => setSelectedImage(index)}
+              style={[
+                styles.box,
+                {
+                  padding: index == selectedImage ? 18 : 20,
+                  paddingRight: index == 0 ? 20 : 0,
+                  borderWidth: index == selectedImage ? 1 : 0,
+                  borderColor:
+                    index == selectedImage
+                      ? AppColor.RED
+                      : AppColor.LITELTEXTCOLOR,
+                  marginVertical: 10,
+                },
+              ]}>
+              <Text
+                style={{
+                  color: '#505050',
+                  fontSize: 18,
+                  fontWeight: '600',
+                  fontFamily: 'Poppins',
+                  lineHeight: 27,
+                }}>
+                {item.name}
+              </Text>
+              <Image
+                source={item.image}
+                defaultSource={1}
+                resizeMode="contain"
+                style={{
+                  height: DeviceHeigth * 0.17,
+                  width: DeviceWidth * 0.3,
+                  marginBottom: 25,
+                  // marginRight:
+                  //   selectedGender == 'Female' && index != 0 ? 25 : 0,
+                }}
+              />
+            </TouchableOpacity>
+          );
+        })}
+    </View>
+  );
+};
 
-export default Gender
+export default Gender;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  box: {
+    width: DeviceWidth * 0.8,
+    height: DeviceHeigth / 7,
+    borderRadius: 20,
+    marginBottom: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    // overflow: 'hidden',
+    backgroundColor: '#f5f5f5',
+    shadowColor: 'rgba(0, 0, 0, 1)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+});

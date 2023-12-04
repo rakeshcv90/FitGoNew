@@ -13,14 +13,14 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import {AppColor} from '../Component/Color';
 import {navigationRef} from '../../App';
-import { setShowIntro } from '../Component/ThemeRedux/Actions';
+import {setShowIntro} from '../Component/ThemeRedux/Actions';
 import {useDispatch} from 'react-redux';
 
 const IntroductionScreen = () => {
   const translateY = useRef(new Animated.Value(-200)).current;
   const [currentPage, setCurrentPage] = useState(0);
   const [hide, setHide] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const IntroductionData = [
     {
       id: 1,
@@ -102,9 +102,16 @@ const IntroductionScreen = () => {
           </Animated.View>
           {hide && (
             <View style={styles.buttons}>
-              <TouchableOpacity onPress={() => navigationRef.navigate('Login')}>
-                <Text style={[styles.Texts, {fontSize: 20}]}>Skip</Text>
-              </TouchableOpacity>
+              {currentPage != 2 ? (
+                <TouchableOpacity
+                  onPress={() => navigationRef.navigate('Login')}>
+                  <Text style={[styles.Texts, {fontSize: 20}]}>Skip</Text>
+                </TouchableOpacity>
+              ):
+                <TouchableOpacity
+                  onPress={() => null}>
+                  <Text style={[styles.Texts, {fontSize: 20}]}>    </Text>
+                </TouchableOpacity>}
               <View
                 style={{
                   width: DeviceWidth * 0.22,
