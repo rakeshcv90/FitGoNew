@@ -5,6 +5,7 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import React from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
@@ -50,13 +51,17 @@ const Workouts = ({navigation}) => {
       </ImageBackground>
       <View style={styles.TitleView}>
         <View style={styles.TextView}>
-          <Text style={{fontSize:16,color:AppColor.INPUTLABLECOLOR}}>title</Text>
+          <Text style={{fontSize: 16, color: AppColor.INPUTLABLECOLOR}}>
+            title
+          </Text>
         </View>
         <View>
           <View style={styles.LevelView}>
             <LevelRate level={'Intermediate'} />
           </View>
-          <Text style={{fontSize:16,color:AppColor.INPUTLABLECOLOR}}>Intermediate</Text>
+          <Text style={{fontSize: 16, color: AppColor.INPUTLABLECOLOR}}>
+            Intermediate
+          </Text>
         </View>
       </View>
       <View style={styles.FlatListView}>
@@ -64,15 +69,15 @@ const Workouts = ({navigation}) => {
           data={StaticArrayforDesing}
           renderItem={elements => (
             <TouchableOpacity
-            activeOpacity={0.6}
+              activeOpacity={0.6}
               style={[
                 styles.FlatListDataView,
                 {backgroundColor: AppColor.LIGHTPINK},
               ]}
-              onPress={()=>{
-                navigation.navigate("NewProfileScreen")
+              onPress={() => {
+                navigation.navigate('NewProfileScreen');
               }}>
-              <Text style={[styles.FlatListText, {fontFamily:'Poppins'}]}>
+              <Text style={[styles.FlatListText, {fontFamily: 'Poppins'}]}>
                 {elements.item.text}
               </Text>
             </TouchableOpacity>
@@ -104,7 +109,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     justifyContent: 'space-around',
     alignSelf: 'center',
-    top: DeviceHeigth * 0.235,
+    top:Platform.OS=='ios'? DeviceHeigth * 0.3: DeviceHeigth * 0.235,
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     marginBottom: 20,
@@ -126,7 +131,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     marginTop: DeviceHeigth * 0.07,
-    marginBottom:10
+    marginBottom: 10,
   },
   FlatListText: {
     fontSize: 20,
