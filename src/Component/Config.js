@@ -39,4 +39,6 @@ export const NewAppapi={
   OTPVerification:'user_verify',
   Get_COMPLETE_PROFILE: NewApi + 'goals_levels_focusarea_data',
   Post_COMPLETE_PROFILE: NewApi + 'user_update_details',
+  All_Workouts:'allworkout',
+
 }

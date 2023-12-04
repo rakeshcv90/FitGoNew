@@ -38,11 +38,13 @@ const imgData2 = Array(60)
   .fill(27)
   .map((item: any, index, arr) => arr[index] + index + 3);
 
-const index = ({navigation}: any) => {
+
+const Index = ({navigation}: any) => {
   const {defaultTheme, completeProfileData, getUserID} = useSelector(
     (state: any) => state,
   );
   const dispatch = useDispatch();
+
   const [screen, setScreen] = useState(0);
   const [toggleW, setToggleW] = useState('kg');
   const [toggle, setToggle] = useState('ft');
@@ -563,7 +565,7 @@ const index = ({navigation}: any) => {
   );
 };
 
-export default index;
+export default Index;
 
 const styles = StyleSheet.create({
   buttons: {

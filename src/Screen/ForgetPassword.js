@@ -162,6 +162,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import React, {useState} from 'react';
 import {StatusBar} from 'react-native';
@@ -233,7 +234,8 @@ const ForgetPassword = ({navigation}) => {
         }}
         style={{
           marginHorizontal: DeviceHeigth * 0.03,
-          marginTop: DeviceHeigth * 0.02,
+          marginTop:
+            Platform.OS == 'ios' ? DeviceHeigth * 0.03 : DeviceHeigth * 0.06,
         }}>
         <Image
           source={localImage.BACK}
@@ -244,7 +246,7 @@ const ForgetPassword = ({navigation}) => {
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ flexGrow: 1 }}
+        contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled">
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'position' : undefined}
