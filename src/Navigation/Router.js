@@ -144,8 +144,6 @@ export const LoginStack = () => {
       <Stack.Screen name="WorkoutsDetails" component={WorkoutsDetails}/>
       <Stack.Screen name="NewProfileScreen" component={NewProfileScreen}/>
       <Stack.Screen name="BottomTab" component={BottomTab} />
-      <Stack.Screen name="WorkoutCategories" component={WorkoutCategories}/>
-      <Stack.Screen name="WorkoutsDetails" component={WorkoutsDetails}/>
 
     </Stack.Navigator>
   );

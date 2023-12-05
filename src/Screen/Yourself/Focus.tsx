@@ -36,9 +36,10 @@ const Focus = ({data, selectedImage, setSelectedImage, data2}: any) => {
                 {
                   padding: item?.bodypart_id == selectedImage ? 18 : 20,
                   paddingRight: index == 0 ? 20 : 0,
+                  borderWidth: item?.bodypart_id == selectedImage ? 1.5 : 1,
                   borderColor:
                     item?.bodypart_id == selectedImage
-                      ? AppColor.BORDERCOLOR2
+                      ? AppColor.RED
                       : AppColor.LITELTEXTCOLOR,
                 },
               ]}>
@@ -76,7 +77,6 @@ const styles = StyleSheet.create({
   box: {
     width: DeviceWidth * 0.8,
     height: DeviceHeigth / 12,
-    borderWidth: 1,
     borderRadius: 20,
     marginBottom: 20,
     justifyContent: 'space-around',

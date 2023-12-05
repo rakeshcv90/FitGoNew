@@ -10,7 +10,7 @@ import React, {useEffect, useState} from 'react';
 import {Image} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor} from '../../Component/Color';
-import { localImage } from '../../Component/Image';
+import {localImage} from '../../Component/Image';
 
 const Goal = ({data, selectedImage, setSelectedImage, selectedGender}: any) => {
   const [height, setHeight] = useState(0);
@@ -35,16 +35,28 @@ const Goal = ({data, selectedImage, setSelectedImage, selectedGender}: any) => {
   }, [height, animatedHeight]);
   return (
     <View
-    style={{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 50,
-    }}>
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 50,
+      }}>
       {data &&
         data?.map((item: any, index: number) => {
+          useEffect(() => {
+            const prefetchImage = async () => {
+              try {
+                const image = await Image.prefetch(item.goal_image);
+                console.log('Image preloaded:', image);
+              } catch (error) {
+                console.error('Error prefetching image:', error);
+              }
+            };
+
+            prefetchImage();
+          }, [item.goal_image]);
           if (item.goal_gender != selectedGender) return;
-          console.log(item);
+          // console.log(item);
           return (
             <TouchableOpacity
               key={index}

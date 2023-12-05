@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   Image,
   Platform,
+  FlatList,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {navigation} from '../../../App';
 import {
   DeviceHeigth,
   DeviceWidth,
@@ -30,6 +30,7 @@ import {AppColor} from '../../Component/Color';
 import {setCompleteProfileData} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import ActivityLoader from '../../Component/ActivityLoader';
+import Carousel from 'react-native-snap-carousel';
 
 const imgData = Array(60)
   .fill(0)
@@ -38,15 +39,20 @@ const imgData2 = Array(60)
   .fill(27)
   .map((item: any, index, arr) => arr[index] + index + 3);
 
+const weight = Array(281)
+  .fill(30)
+  .map((item: any, index, arr) => arr[index] + index / 4);
 
 const Index = ({navigation}: any) => {
   const {defaultTheme, completeProfileData, getUserID} = useSelector(
     (state: any) => state,
   );
+  const flatListRef = useRef(null);
   const dispatch = useDispatch();
-
   const [screen, setScreen] = useState(0);
   const [toggleW, setToggleW] = useState('kg');
+  const [toggleWData, setToggleWData] = useState([]);
+  const [toggleData, setToggleData] = useState([]);
   const [toggle, setToggle] = useState('ft');
   const [visible, setVisible] = useState(false);
   const [selectedGender, setSelectedGender] = useState(-1);
@@ -56,10 +62,29 @@ const Index = ({navigation}: any) => {
   const [selectedHeight, setSelectedHeight] = useState('');
   const [selectedWeight, setSelectedWeight] = useState('');
   const [selectedAge, setSelectedAge] = useState('');
-
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const carouselRef = useRef(null);
   useEffect(() => {
     ProfileDataAPI();
   }, []);
+  useEffect(() => {
+    if (toggleW === 'lb') {
+      const te: any = weight.map(item => parseFloat((item * 2.2).toFixed(3)));
+      setToggleWData(te);
+    } else {
+      const te: any = weight.map(item => parseFloat((item / 2.2).toFixed(3)));
+      setToggleWData(te);
+    }
+  }, [toggleW]);
+  useEffect(() => {
+    if (toggle === 'cm') {
+      const te: any = weight.map(item => parseFloat((item * 30.48).toFixed(3)));
+      setToggleData(te);
+    } else {
+      const te: any = weight.map(item => parseFloat((item / 30.48).toFixed(3)));
+      setToggleData(te);
+    }
+  }, [toggle]);
 
   const ProfileDataAPI = async () => {
     try {
@@ -68,7 +93,6 @@ const Index = ({navigation}: any) => {
         method: 'get',
       });
       if (res.data) {
-        console.log(res.data);
         dispatch(setCompleteProfileData(res.data));
       }
     } catch (error) {
@@ -83,11 +107,12 @@ const Index = ({navigation}: any) => {
     payload.append('gender', selectedGender == 0 ? 'Male' : 'Female');
     payload.append('goal', selectedGoal);
     payload.append('age', selectedAge);
-    payload.append('fitnesslevel', selectedLevel);
+    payload.append('fitnesslevel', selectedLevel + 1);
     payload.append('focusarea', selectedFocus);
     payload.append('height', selectedHeight);
-    payload.append('weight', selectedWeight);
-    payload.append('id', getUserID);
+    payload.append('weight', 10);
+    // payload.append('id', getUserID);
+    payload.append('id', 16);
     console.log(payload);
     try {
       const res = await axios({
@@ -244,6 +269,72 @@ const Index = ({navigation}: any) => {
       top2: 'This helps us create to your personalized plan',
     },
   ];
+  const snaptoItem = (index: number) => {
+    screen == 3
+      ? setSelectedWeight(toggleWData[index])
+      : screen == 4
+      ? setSelectedWeight(toggleData[index])
+      : setSelectedAge(imgData[index]);
+  };
+  const Carousal = ({data}: any) => (
+    <Carousel
+      // ref={carouselRef}
+      data={data}
+      vertical={true}
+      showsVerticalScrollIndicator={false}
+      keyExtractor={(item, index) => index.toString()}
+      windowSize={10}
+      sliderHeight={DeviceHeigth * 0.5}
+      sliderWidth={DeviceWidth}
+      itemHeight={30}
+      inactiveSlideScale={0.4}
+      enableSnap={true}
+      firstItem={selectedIndex}
+      itemWidth={50}
+      activeAnimationType="spring"
+      activeSlideAlignment="center"
+      snapToAlignment="start"
+      snapToInterval={30}
+      decelerationRate={'fast'}
+      renderItem={({item, index}: any) => {
+        return (
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {index % 2 == 0 ? (
+              <View
+                style={{
+                  width: 80,
+                  height: 3,
+                  backgroundColor: AppColor.RED,
+                  borderRadius: 10,
+                  marginBottom: 20,
+                }}
+              />
+            ) : (
+              <View
+                style={{
+                  width: 40,
+                  height: 3,
+                  backgroundColor: AppColor.BLACK,
+                  borderRadius: 10,
+                  marginBottom: 20,
+                }}
+              />
+            )}
+            {/* <Text>{item}</Text> */}
+          </View>
+        );
+      }}
+      onBeforeSnapToItem={(index: number) => {
+        setSelectedIndex(index);
+        screen == 3
+          ? setSelectedWeight(toggleWData[index])
+          : screen == 4
+          ? setSelectedWeight(toggleData[index])
+          : setSelectedAge(imgData[index]);
+      }}
+      onSnapToItem={index => console.log('GFGFGF', index)}
+    />
+  );
   const Pickers = () => {
     return (
       <View
@@ -251,58 +342,52 @@ const Index = ({navigation}: any) => {
           flex: 1,
           flexDirection: 'row',
           width: DeviceWidth * 0.5,
-          marginTop: DeviceHeigth * 0.2,
         }}>
         {screen == 3 ? (
-          <Picker
-            style={{flex: 1}}
-            selectedValue={selectedWeight}
-            onValueChange={(itemValue: any, itemIndex) => {
-              setSelectedWeight(itemValue);
-            }}
-            selectionColor={'white'}>
-            {imgData.map((hr: any, index: number) => {
-              if (index < 10) return;
-              if (toggleW == 'lb') hr = (hr * 0.2).toPrecision(2);
-              return (
-                <Picker.Item label={hr} value={hr} />
-                // <Picker.Item label={`${hr} kg`} value={hr} />
-              );
-            })}
-          </Picker>
+          <View style={{marginLeft: -DeviceWidth * 0.2}}>
+            <Carousal data={toggleWData} />
+            <Text
+              style={{
+                color: AppColor.RED,
+                fontSize: 30,
+                position: 'absolute',
+                top: '38%',
+                left: '120%',
+                width: DeviceWidth * 0.5,
+              }}>
+              {selectedWeight + ' ' + toggleW}
+            </Text>
+          </View>
         ) : screen == 4 ? (
-          <Picker
-            style={{flex: 1}}
-            selectedValue={selectedHeight}
-            onValueChange={(itemValue: any, itemIndex) => {
-              setSelectedHeight(itemValue);
-            }}
-            selectionColor={'white'}>
-            {imgData2.map((hr: any, index: number) => {
-              if (index < 10) return;
-              if (toggle == 'cm') hr = (hr * 30).toPrecision(2);
-              return (
-                <Picker.Item label={hr} value={hr} />
-                // <Picker.Item label={`${hr} kg`} value={hr} />
-              );
-            })}
-          </Picker>
+          <View style={{marginLeft: -DeviceWidth * 0.2}}>
+            <Carousal data={toggleData} />
+            <Text
+              style={{
+                color: AppColor.RED,
+                fontSize: 30,
+                position: 'absolute',
+                top: '38%',
+                left: '120%',
+                width: DeviceWidth * 0.5,
+              }}>
+              {selectedHeight + ' ' + toggle}
+            </Text>
+          </View>
         ) : (
-          <Picker
-            style={{flex: 1}}
-            selectedValue={selectedAge}
-            onValueChange={(itemValue: any, itemIndex) => {
-              setSelectedAge(itemValue);
-            }}
-            selectionColor={'white'}>
-            {imgData.map((hr: any, index: number) => {
-              if (index < 15) return;
-              return (
-                <Picker.Item label={hr} value={hr} />
-                // <Picker.Item label={`${hr} kg`} value={hr} />
-              );
-            })}
-          </Picker>
+          <View style={{marginLeft: -DeviceWidth * 0.2}}>
+            <Carousal data={imgData} />
+            <Text
+              style={{
+                color: AppColor.RED,
+                fontSize: 30,
+                position: 'absolute',
+                top: '35%',
+                left: '120%',
+                width: DeviceWidth * 0.5,
+              }}>
+              {selectedAge + ' years'}
+            </Text>
+          </View>
         )}
       </View>
     );
@@ -339,7 +424,7 @@ const Index = ({navigation}: any) => {
           }}>
           <View
             style={{
-              width: (DeviceWidth * 0.9) / (7 - screen),
+              width: screen == 0 ? '12%' : `${12 * screen}%`,
               backgroundColor: AppColor.RED,
               height: 5,
               borderRadius: 5,
@@ -471,14 +556,14 @@ const Index = ({navigation}: any) => {
             onPress={() => setScreen(screen - 1)}>
             <Icons name="chevron-left" size={25} color={'#000'} />
           </TouchableOpacity>
-        ):(
+        ) : (
           <TouchableOpacity
             style={[styles.nextButton2]}
             onPress={() => setScreen(screen - 1)}
             disabled>
             <Text
               style={[{fontSize: 15, color: 'black', fontFamily: 'Poppins'}]}>
-              {    }
+              {}
             </Text>
           </TouchableOpacity>
         )}
@@ -503,7 +588,15 @@ const Index = ({navigation}: any) => {
               </View> */}
         <TouchableOpacity
           onPress={() => {
-            screen == 1 && selectedGoal == -1
+            screen == 0 && selectedGender == -1
+              ? showMessage({
+                  message: 'Please specify your Gender',
+                  animationDuration: 750,
+                  floating: true,
+                  type: 'danger',
+                  // icon: {icon: 'none', position: 'left'},
+                })
+              : screen == 1 && selectedGoal == -1
               ? showMessage({
                   message: 'Please Select one Goal',
                   animationDuration: 750,
