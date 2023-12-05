@@ -150,7 +150,7 @@ const Profile = () => {
       </View>
       <View style={styles.UserDetailsView}>
         {FirstView.map((data, index) => (
-          <TouchableOpacity key={index} style={styles.SingleButton}>
+          <TouchableOpacity key={index} style={styles.SingleButton} onPress={()=>{navigation.navigate(data.text1,{title:data.text1})}}>
             {data.icon1}
             <View style={styles.View1}>
               <Text style={styles.nameText}>{data.text1}</Text>
@@ -161,7 +161,7 @@ const Profile = () => {
       </View>
       <View style={styles.UserDetailsView}>
         {SecondView.map((data, index) => (
-          <TouchableOpacity key={index} style={styles.SingleButton}>
+          <TouchableOpacity key={index} style={styles.SingleButton} >
             {data.icon1}
             <View style={styles.View1}>
               <Text style={styles.nameText}>{data.text1}</Text>
