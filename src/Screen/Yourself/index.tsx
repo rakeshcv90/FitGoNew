@@ -27,27 +27,31 @@ import {Picker} from '@react-native-picker/picker';
 import Focus from './Focus';
 import Toggle from '../../Component/Toggle';
 import {AppColor} from '../../Component/Color';
-import {setCompleteProfileData} from '../../Component/ThemeRedux/Actions';
+import {
+  setCompleteProfileData,
+  setCustomWorkoutData,
+} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import ActivityLoader from '../../Component/ActivityLoader';
 import Carousel from 'react-native-snap-carousel';
+import AnimatedLottieView from 'lottie-react-native';
 
 const imgData = Array(60)
-  .fill(0)
+  .fill(16)
   .map((item: any, index, arr) => arr[index] + index + 1);
-const imgData2 = Array(60)
-  .fill(27)
-  .map((item: any, index, arr) => arr[index] + index + 3);
 
 const weight = Array(281)
   .fill(30)
-  .map((item: any, index, arr) => arr[index] + index / 4);
+  .map((item: any, index, arr) => arr[index] + index / 2);
+const height = Array(100)
+  .fill(4)
+  .map((item: any, index, arr) => arr[index] + index / 10);
 
 const Index = ({navigation}: any) => {
   const {defaultTheme, completeProfileData, getUserID} = useSelector(
     (state: any) => state,
   );
-  const flatListRef = useRef(null);
+
   const dispatch = useDispatch();
   const [screen, setScreen] = useState(0);
   const [toggleW, setToggleW] = useState('kg');
@@ -63,26 +67,35 @@ const Index = ({navigation}: any) => {
   const [selectedWeight, setSelectedWeight] = useState('');
   const [selectedAge, setSelectedAge] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const carouselRef = useRef(null);
+
   useEffect(() => {
     ProfileDataAPI();
   }, []);
   useEffect(() => {
+    console.log(screen);
+    if (screen == 5 || screen == 4 || screen == 3) {
+      setSelectedHeight(toggleData[0]);
+      setSelectedWeight(toggleWData[0]);
+      setSelectedAge(imgData[0]);
+      setSelectedIndex(0);
+    }
+  }, [screen]);
+  useEffect(() => {
     if (toggleW === 'lb') {
-      const te: any = weight.map(item => parseFloat((item * 2.2).toFixed(3)));
+      const te: any = weight.map(item => parseFloat((item * 2.2).toFixed(2)));
       setToggleWData(te);
     } else {
-      const te: any = weight.map(item => parseFloat((item / 2.2).toFixed(3)));
-      setToggleWData(te);
+      // const te: any = weight.map(item => parseFloat((item / 2.2).toFixed(2)));
+      setToggleWData(weight);
     }
   }, [toggleW]);
   useEffect(() => {
     if (toggle === 'cm') {
-      const te: any = weight.map(item => parseFloat((item * 30.48).toFixed(3)));
+      const te: any = height.map(item => parseFloat((item * 30.48).toFixed(2)));
       setToggleData(te);
     } else {
-      const te: any = weight.map(item => parseFloat((item / 30.48).toFixed(3)));
-      setToggleData(te);
+      // const te: any = weight.map(item => parseFloat((item / 30.48).toFixed(2)));
+      setToggleData(height);
     }
   }, [toggle]);
 
@@ -110,7 +123,7 @@ const Index = ({navigation}: any) => {
     payload.append('fitnesslevel', selectedLevel + 1);
     payload.append('focusarea', selectedFocus);
     payload.append('height', selectedHeight);
-    payload.append('weight', 10);
+    payload.append('weight', selectedWeight);
     // payload.append('id', getUserID);
     payload.append('id', 16);
     console.log(payload);
@@ -124,7 +137,9 @@ const Index = ({navigation}: any) => {
         },
       });
       if (res.data) {
-        console.log(res.data);
+        console.log(res.data?.length);
+        // dispatch(setUserProfileData(res.data?.userprofile))
+        dispatch(setCustomWorkoutData(res.data?.workout[0]));
         setVisible(false);
         navigation.navigate('Home');
       }
@@ -268,14 +283,48 @@ const Index = ({navigation}: any) => {
       top1: `What’s your Focus Area?`,
       top2: 'This helps us create to your personalized plan',
     },
+    {
+      id: 8,
+      name: 'Complete',
+      data: [
+        {
+          id: 1,
+          image:
+            'https://s3-alpha-sig.figma.com/img/1095/45fb/d3a879434dc93bc48b49f0017caf502b?Expires=1702252800&Signature=aU63bVTWLsvR~bXX7LpQHkn0mGrM8P4cs7h7MC7mcXpFL5MkeKPZ6-PiVa8B9G--twIPDKzOILKOr0oPGCIcHfdmZooK5M5AGJm7n-wOkumenFnrB3vEpmuDd9exXYtCOwcpkuOyjqdcQnz7yig7kKOoAV8ZQtbqVbFVhFHx7U2K3SRB1JIhYXR-Fv3Re1wJScDdRhyTBs6wHA1MtQIQ5S~RIM3LZL-qHYSBOp5yOp8v5SeXqkYLkHMl-dfR1IIOCVkCkPi4ELRqKzNNc-jjvdQC6DJLwDDrbcVcsWLT8R~vyK0ylbtXLYfCQzPCEBx4EvZMB0bJ~jXgo-FxHGmsKg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4',
+          name: 'Legs',
+        },
+        {
+          id: 2,
+          image:
+            'https://s3-alpha-sig.figma.com/img/7910/f5cb/bf41d4a61461ea0e215258e153dade1d?Expires=1702252800&Signature=U6wH-q9rpuBeAD~mWlmKVUrJl9dNpDVEnkVSMof2mpm~aSEv-2BXy5OUKIC-JCh2XOsQGPiLfszi8SL9TTvqz75gjtmuUd97uOjq8Gnyd2p8jfC0d4eKBB-RBLs0fiob-uf9F6dUC99qasTFEltk2muZWbAuFpk23uFDtPbj8X-kpLzyCr1-~grSMkFCYIOjYfg1H19ZYj7bGtZJ69rWFFe~c-UaokTSxUOlAPL1B-V8WhVuCaRiDXWeE6Fe5Q0aoKl3~jLYOg0TpB0zGcSaxenEaJizmwXU11oFazQ1zVgSUuMjSeSDI6CCU5ya5tEFXhEjLaRr18CxjtFF72Bjdw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4',
+          name: 'Shoulders',
+        },
+        {id: 3, image: localImage.AdvanceLevel, name: 'Biceps'},
+        {
+          id: 4,
+          image: localImage.BeginnerLevel,
+          name: 'Back',
+        },
+        {
+          id: 5,
+          image: localImage.IntermediateLevel,
+          name: 'Triceps',
+        },
+        {id: 3, image: localImage.AdvanceLevel, name: 'Abs'},
+        {id: 3, image: localImage.AdvanceLevel, name: 'Chest'},
+      ],
+      top1: `Generating the plan for you`,
+      top2: 'Preparing your plan based on your goal...',
+    },
   ];
-  const snaptoItem = (index: number) => {
-    screen == 3
-      ? setSelectedWeight(toggleWData[index])
-      : screen == 4
-      ? setSelectedWeight(toggleData[index])
-      : setSelectedAge(imgData[index]);
-  };
+  // console.log(toggle == 'ft'
+  // ? selectedHeight.split('.')[0] +
+  //   ' ' +
+  //   toggle +
+  //   selectedHeight.split('.')[0] +
+  //   ' ' +
+  //   toggle
+  // : selectedHeight + ' ' + toggle)
   const Carousal = ({data}: any) => (
     <Carousel
       // ref={carouselRef}
@@ -299,10 +348,20 @@ const Index = ({navigation}: any) => {
       renderItem={({item, index}: any) => {
         return (
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            {index % 2 == 0 ? (
+            {screen == 5 ? (
               <View
                 style={{
-                  width: 80,
+                  width: 100,
+                  height: 3,
+                  backgroundColor: AppColor.RED,
+                  borderRadius: 10,
+                  marginBottom: 20,
+                }}
+              />
+            ) : index % 2 == 0 ? (
+              <View
+                style={{
+                  width: 100,
                   height: 3,
                   backgroundColor: AppColor.RED,
                   borderRadius: 10,
@@ -312,7 +371,7 @@ const Index = ({navigation}: any) => {
             ) : (
               <View
                 style={{
-                  width: 40,
+                  width: 50,
                   height: 3,
                   backgroundColor: AppColor.BLACK,
                   borderRadius: 10,
@@ -329,10 +388,17 @@ const Index = ({navigation}: any) => {
         screen == 3
           ? setSelectedWeight(toggleWData[index])
           : screen == 4
-          ? setSelectedWeight(toggleData[index])
+          ? setSelectedHeight(toggleData[index])
           : setSelectedAge(imgData[index]);
       }}
-      onSnapToItem={index => console.log('GFGFGF', index)}
+      onSnapToItem={(index: number) => {
+        setSelectedIndex(index);
+        screen == 3
+          ? setSelectedWeight(toggleWData[index])
+          : screen == 4
+          ? setSelectedHeight(toggleData[index])
+          : setSelectedAge(imgData[index]);
+      }}
     />
   );
   const Pickers = () => {
@@ -546,6 +612,63 @@ const Index = ({navigation}: any) => {
             selectedImage={selectedFocus}
             setSelectedImage={setSelectedFocus}
           />
+        ) : screen == 7 ? (
+          <>
+            <AnimatedLottieView
+              source={require('../../Icon/Images/NewImage/completeProfile.json')}
+              style={{height: 300, width: 300, marginTop: 30}}
+              // resizeMode="contain"
+              // speed={0.2}
+              autoPlay={true}
+              loop
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginTop: 30,
+              }}>
+              <Image
+                source={localImage.BlueTick}
+                style={{height: 30, width: 30}}
+              />
+              <Text
+                style={{
+                  color: '#7B6F72',
+                  fontFamily: 'Poppins',
+                  fontSize: 14,
+                  fontWeight: '500',
+                  lineHeight: 18,
+                  marginLeft: 10,
+                }}>
+                Analyzing your given details
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginVertical: 10,
+              }}>
+              <Image
+                source={localImage.BlueTick}
+                style={{height: 30, width: 30}}
+              />
+              <Text
+                style={{
+                  color: '#7B6F72',
+                  fontFamily: 'Poppins',
+                  fontSize: 14,
+                  fontWeight: '500',
+                  lineHeight: 18,
+                  marginLeft: 10,
+                }}>
+                Analyzing your fitness level and goals
+              </Text>
+            </View>
+          </>
         ) : null}
       </View>
 
@@ -612,16 +735,16 @@ const Index = ({navigation}: any) => {
                   type: 'danger',
                   // icon: {icon: 'none', position: 'left'},
                 })
-              : screen == 6
-              ? selectedFocus == -1
-                ? showMessage({
-                    message: 'Please Select your Focus Area',
-                    animationDuration: 750,
-                    floating: true,
-                    type: 'danger',
-                    // icon: {icon: 'none', position: 'left'},
-                  })
-                : setProfileAPI()
+              : screen == 6 && selectedFocus == -1
+              ? showMessage({
+                  message: 'Please Select your Focus Area',
+                  animationDuration: 750,
+                  floating: true,
+                  type: 'danger',
+                  // icon: {icon: 'none', position: 'left'},
+                })
+              : screen == 7
+              ? setProfileAPI()
               : setScreen(screen + 1);
           }}>
           <LinearGradient
@@ -631,11 +754,11 @@ const Index = ({navigation}: any) => {
             style={[
               styles.nextButton,
               {
-                flexDirection: screen == 6 ? 'row' : 'column',
-                width: screen == 6 ? 120 : 45,
+                flexDirection: screen == 7 ? 'row' : 'column',
+                width: screen == 7 ? 120 : 45,
               },
             ]}>
-            {screen == 6 && (
+            {screen == 7 && (
               <Text
                 style={{
                   color: 'white',
@@ -667,7 +790,8 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 85) / 100,
     alignItems: 'center',
     alignSelf: 'center',
-    marginTop: 50,
+    marginVertical: 20,
+    // backgroundColor: 'red',
   },
   buttonsUp: {
     flexDirection: 'row',

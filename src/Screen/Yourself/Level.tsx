@@ -43,6 +43,7 @@ const Level = ({data, selectedImage, setSelectedImage}: any) => {
                   padding: index == selectedImage ? 18 : 20,
                   paddingRight: index == 0 ? 20 : 10,
                   borderWidth: index == selectedImage ? 1 : 0,
+                  borderColor: index == selectedImage ?AppColor.RED: AppColor.WHITE,
                 },
               ]}>
               <Text
@@ -99,14 +100,13 @@ const styles = StyleSheet.create({
   box: {
     width: DeviceWidth * 0.8,
     height: DeviceHeigth / 10,
-    borderColor: AppColor.RED,
     borderRadius: 20,
     marginBottom: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     // overflow: 'hidden',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff',
     shadowColor: 'rgba(0, 0, 0, 1)',
     ...Platform.select({
       ios: {
