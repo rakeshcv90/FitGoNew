@@ -155,7 +155,7 @@ const Profile = () => {
         </View>
         <View style={styles.UserDetailsView}>
           {FirstView.map((data, index) => (
-            <TouchableOpacity key={index} style={styles.SingleButton}>
+            <TouchableOpacity key={index} style={styles.SingleButton} navigation onPress={()=>{navigation.navigate("Personal Details")}}>
               {data.icon1}
               <View style={styles.View1}>
                 <Text style={styles.nameText}>{data.text1}</Text>
