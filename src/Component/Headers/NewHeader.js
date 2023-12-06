@@ -28,6 +28,7 @@ const NewHeader = ({
               ? DeviceHeigth*0.11  + getStatusBarHeight() //adding statusbar height for the ios
 
               : (DeviceHeigth * 5) / 100,
+              paddingHorizontal:DeviceWidth*0.07
         },
       ]}>
       {!backButton ? (

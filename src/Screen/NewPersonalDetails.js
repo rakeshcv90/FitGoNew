@@ -6,45 +6,44 @@ import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import Button from '../Component/Button';
 import Goal from '../Screen/Yourself/Goal';
 import {useDispatch, useSelector} from 'react-redux';
-import Index from "../Screen/Yourself/Index"
-const NewPersonalDetails = ({route,navigation}) => {
- 
+import Index from '../Screen/Yourself/Index';
+const NewPersonalDetails = ({route, navigation}) => {
   const data1 = [
     {
       id: 1,
       text1: '180cm',
       text2: 'Height',
-      SC:4
+      SC: 4,
     },
     {
       id: 2,
       text1: '57Kg',
       text2: 'Weight',
-      SC:3
+      SC: 3,
     },
     {
       id: 3,
       text1: '33yrs',
       text2: 'Age',
-      SC:5
+      SC: 5,
     },
     {
       id: 4,
       text1: 'target Area',
       text2: 'Legs,Shoulder & Back',
-      SC:6
+      SC: 6,
     },
     {
       id: 5,
       text1: 'Fitness level',
       text2: 'Intermediate',
-      SC:2
+      SC: 2,
     },
     {
       id: 6,
       text1: 'Goal',
       text2: 'Build muscle',
-      SC:1
+      SC: 1,
     },
   ];
   const txtData = [
@@ -64,38 +63,38 @@ const NewPersonalDetails = ({route,navigation}) => {
 
   return (
     <View style={styles.Container}>
-      <NewHeader header={"Personal Details"} backButton />
-          <View style={styles.TopView}>
-            {firstViewData.map((value, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.View1}
-                onPress={() => {
-                //   selectedID(value.id);
-                  navigation.navigate("Yourself",{id:value.SC})
-                }}>
-                <Text style={styles.txt1}>{value.text1}</Text>
-                <Text style={styles.txt2}>{value.text2}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-          {secondViewData.map((value, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.middleView}
-              onPress={() => {
-                selectedID(value.id);
-                navigation.navigate("Yourself",{id:value.SC})
-              }}>
-              <Text style={styles.txt2}>{value.text1}</Text>
-              <Text style={[styles.txt1, {width: DeviceWidth * 0.3}]}>
-                {value.text2}
-              </Text>
-            </TouchableOpacity>
-          ))}
-          <View style={styles.buttonView}>
-            <Button buttonText={'Save'}/>
-          </View>
+      <NewHeader header={'Personal Details'} backButton />
+      <View style={styles.TopView}>
+        {firstViewData.map((value, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.View1}
+            onPress={() => {
+              //   selectedID(value.id);
+              navigation.navigate('Yourself', {id: value.SC});
+            }}>
+            <Text style={styles.txt1}>{value.text1}</Text>
+            <Text style={styles.txt2}>{value.text2}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      {secondViewData.map((value, index) => (
+        <TouchableOpacity
+          key={index}
+          style={styles.middleView}
+          onPress={() => {
+            selectedID(value.id);
+            navigation.navigate('Yourself', {id: value.SC});
+          }}>
+          <Text style={styles.txt2}>{value.text1}</Text>
+          <Text style={[styles.txt1, {width: DeviceWidth * 0.3}]}>
+            {value.text2}
+          </Text>
+        </TouchableOpacity>
+      ))}
+      <View style={styles.buttonView}>
+        <Button buttonText={'Save'} />
+      </View>
     </View>
   );
 };
