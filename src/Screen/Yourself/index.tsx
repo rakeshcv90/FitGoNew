@@ -22,7 +22,7 @@ import {localImage} from '../../Component/Image';
 import Gender from './Gender';
 import Goal from './Goal';
 import {showMessage} from 'react-native-flash-message';
-import Level from './Level'; 
+import Level from './Level';
 import {Picker} from '@react-native-picker/picker';
 import Focus from './Focus';
 import Toggle from '../../Component/Toggle';
@@ -30,6 +30,7 @@ import {AppColor} from '../../Component/Color';
 import {setCompleteProfileData} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import ActivityLoader from '../../Component/ActivityLoader';
+import Button from '../../Component/Button';
 
 const imgData = Array(60)
   .fill(0)
@@ -38,13 +39,11 @@ const imgData2 = Array(60)
   .fill(27)
   .map((item: any, index, arr) => arr[index] + index + 3);
 
-
-const Index = ({navigation}: any) => {
+const Index = ({navigation, route}: any) => {
   const {defaultTheme, completeProfileData, getUserID} = useSelector(
     (state: any) => state,
   );
   const dispatch = useDispatch();
-
   const [screen, setScreen] = useState(0);
   const [toggleW, setToggleW] = useState('kg');
   const [toggle, setToggle] = useState('ft');
@@ -56,7 +55,16 @@ const Index = ({navigation}: any) => {
   const [selectedHeight, setSelectedHeight] = useState('');
   const [selectedWeight, setSelectedWeight] = useState('');
   const [selectedAge, setSelectedAge] = useState('');
-
+  const [isRouteDataAvailable, setIsrouteDataAvailable] = useState(false);
+  useEffect(() => {
+    if (route?.params?.id == undefined) {
+      setScreen(0);
+      // console.log(Sid.id)
+    } else {
+      setScreen(route?.params?.id);
+      setIsrouteDataAvailable(true);
+    }
+  }, [route?.params?.id]);
   useEffect(() => {
     ProfileDataAPI();
   }, []);
@@ -68,7 +76,7 @@ const Index = ({navigation}: any) => {
         method: 'get',
       });
       if (res.data) {
-        console.log(res.data);
+        // console.log(res.data);
         dispatch(setCompleteProfileData(res.data));
       }
     } catch (error) {
@@ -88,7 +96,7 @@ const Index = ({navigation}: any) => {
     payload.append('height', selectedHeight);
     payload.append('weight', selectedWeight);
     payload.append('id', getUserID);
-    console.log(payload);
+    // console.log(payload);
     try {
       const res = await axios({
         url: NewAppapi.Post_COMPLETE_PROFILE,
@@ -99,12 +107,14 @@ const Index = ({navigation}: any) => {
         },
       });
       if (res.data) {
-        console.log(res.data);
+        // console.log(res.data);
         setVisible(false);
-        navigation.navigate('Home');
+        navigation.navigate('BottomTab');
       }
     } catch (error) {
       console.log(error);
+      navigation.navigate('BottomTab');
+
       setVisible(false);
     }
   };
@@ -353,7 +363,11 @@ const Index = ({navigation}: any) => {
   return (
     <SafeAreaView
       style={{flex: 1, backgroundColor: defaultTheme ? 'black' : 'white'}}>
-      <ProgressBar />
+      {isRouteDataAvailable ? (
+        <View style={{marginTop: DeviceHeigth * 0.03}}></View>
+      ) : (
+        <ProgressBar />
+      )}
       {/* <View style={styles.buttonsUp}>
         {screen >= 1 && (
           <TouchableOpacity
@@ -380,7 +394,6 @@ const Index = ({navigation}: any) => {
           style={{
             justifyContent: 'center',
             alignItems: 'center',
-            // marginTop: 50,
           }}>
           <Text
             style={{
@@ -409,7 +422,11 @@ const Index = ({navigation}: any) => {
         </View>
         {screen == 3 && (
           <View
-            style={{flexDirection: 'row-reverse', left: 100, marginTop: 10}}>
+            style={{
+              flexDirection: 'row-reverse',
+              left: 100,
+              marginVertical: 30,
+            }}>
             <Toggle
               data={fullData[screen].data}
               highlightColor={AppColor.RED}
@@ -421,7 +438,11 @@ const Index = ({navigation}: any) => {
         )}
         {screen == 4 && (
           <View
-            style={{flexDirection: 'row-reverse', left: 100, marginTop: 10}}>
+            style={{
+              flexDirection: 'row-reverse',
+              left: 100,
+              marginVertical: 30,
+            }}>
             <Toggle
               data={fullData[screen].data}
               highlightColor={AppColor.RED}
@@ -464,25 +485,43 @@ const Index = ({navigation}: any) => {
         ) : null}
       </View>
 
-      <View style={styles.buttons}>
-        {screen >= 1 ? (
-          <TouchableOpacity
-            style={[styles.nextButton2]}
-            onPress={() => setScreen(screen - 1)}>
-            <Icons name="chevron-left" size={25} color={'#000'} />
-          </TouchableOpacity>
-        ):(
-          <TouchableOpacity
-            style={[styles.nextButton2]}
-            onPress={() => setScreen(screen - 1)}
-            disabled>
-            <Text
-              style={[{fontSize: 15, color: 'black', fontFamily: 'Poppins'}]}>
-              {    }
-            </Text>
-          </TouchableOpacity>
-        )}
-        {/* <View
+      {isRouteDataAvailable ? (
+        <View
+          style={{
+            marginBottom: DeviceHeigth * 0.05,
+            flex: 1,
+            justifyContent: 'flex-end',
+          }}>
+          <Button
+            buttonText={'Update'}
+            onPresh={() => {
+              navigation.navigate('Personal Details');
+            }}
+          />
+        </View>
+      ) : (
+        <>
+          <View style={styles.buttons}>
+            {screen >= 1 ? (
+              <TouchableOpacity
+                style={[styles.nextButton2]}
+                onPress={() => setScreen(screen - 1)}>
+                <Icons name="chevron-left" size={25} color={'#000'} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={[styles.nextButton2]}
+                onPress={() => setScreen(screen - 1)}
+                disabled>
+                <Text
+                  style={[
+                    {fontSize: 15, color: 'black', fontFamily: 'Poppins'},
+                  ]}>
+                  {}
+                </Text>
+              </TouchableOpacity>
+            )}
+            {/* <View
                 style={{
                   width: DeviceWidth * 0.22,
                   flexDirection: 'row',
@@ -501,65 +540,67 @@ const Index = ({navigation}: any) => {
                   />
                 ))}
               </View> */}
-        <TouchableOpacity
-          onPress={() => {
-            screen == 1 && selectedGoal == -1
-              ? showMessage({
-                  message: 'Please Select one Goal',
-                  animationDuration: 750,
-                  floating: true,
-                  type: 'danger',
-                  // icon: {icon: 'none', position: 'left'},
-                })
-              : screen == 2 && selectedLevel == -1
-              ? showMessage({
-                  message: 'Please Select your Current Fitness Level',
-                  animationDuration: 750,
-                  floating: true,
-                  type: 'danger',
-                  // icon: {icon: 'none', position: 'left'},
-                })
-              : screen == 6
-              ? selectedFocus == -1
-                ? showMessage({
-                    message: 'Please Select your Focus Area',
-                    animationDuration: 750,
-                    floating: true,
-                    type: 'danger',
-                    // icon: {icon: 'none', position: 'left'},
-                  })
-                : setProfileAPI()
-              : setScreen(screen + 1);
-          }}>
-          <LinearGradient
-            start={{x: 0, y: 1}}
-            end={{x: 1, y: 0}}
-            colors={['#941000', '#D5191A']}
-            style={[
-              styles.nextButton,
-              {
-                flexDirection: screen == 6 ? 'row' : 'column',
-                width: screen == 6 ? 120 : 45,
-              },
-            ]}>
-            {screen == 6 && (
-              <Text
-                style={{
-                  color: 'white',
-                  marginTop: 5,
-                  fontSize: 14,
-                  fontFamily: 'Poppins',
-                  fontWeight: '600',
-                  lineHeight: 16,
-                  textAlign: 'center',
-                }}>
-                Let's Start
-              </Text>
-            )}
-            <Icons name="chevron-right" size={25} color={'#fff'} />
-          </LinearGradient>
-        </TouchableOpacity>
-      </View>
+            <TouchableOpacity
+              onPress={() => {
+                screen == 1 && selectedGoal == -1
+                  ? showMessage({
+                      message: 'Please Select one Goal',
+                      animationDuration: 750,
+                      floating: true,
+                      type: 'danger',
+                      // icon: {icon: 'none', position: 'left'},
+                    })
+                  : screen == 2 && selectedLevel == -1
+                  ? showMessage({
+                      message: 'Please Select your Current Fitness Level',
+                      animationDuration: 750,
+                      floating: true,
+                      type: 'danger',
+                      // icon: {icon: 'none', position: 'left'},
+                    })
+                  : screen == 6
+                  ? selectedFocus == -1
+                    ? showMessage({
+                        message: 'Please Select your Focus Area',
+                        animationDuration: 750,
+                        floating: true,
+                        type: 'danger',
+                        // icon: {icon: 'none', position: 'left'},
+                      })
+                    : setProfileAPI()
+                  : setScreen(screen + 1);
+              }}>
+              <LinearGradient
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 0}}
+                colors={['#941000', '#D5191A']}
+                style={[
+                  styles.nextButton,
+                  {
+                    flexDirection: screen == 6 ? 'row' : 'column',
+                    width: screen == 6 ? 120 : 45,
+                  },
+                ]}>
+                {screen == 6 && (
+                  <Text
+                    style={{
+                      color: 'white',
+                      marginTop: 5,
+                      fontSize: 14,
+                      fontFamily: 'Poppins',
+                      fontWeight: '600',
+                      lineHeight: 16,
+                      textAlign: 'center',
+                    }}>
+                    Let's Start
+                  </Text>
+                )}
+                <Icons name="chevron-right" size={25} color={'#fff'} />
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
       <ActivityLoader visible={visible} />
     </SafeAreaView>
   );

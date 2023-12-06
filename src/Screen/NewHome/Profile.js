@@ -124,7 +124,6 @@ const Profile = () => {
   return (
     <View style={styles.Container}>
       <NewHeader backButton header={'Profile'} />
-
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
@@ -151,6 +150,7 @@ const Profile = () => {
               style={styles.buttonStyle}>
               <Text style={styles.EditText}>Edit</Text>
             </LinearGradient>
+
           </TouchableOpacity>
         </View>
         <View style={styles.UserDetailsView}>

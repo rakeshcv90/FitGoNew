@@ -51,8 +51,6 @@ import WorkoutCategories from '../Screen/New Workouts/WorkoutCategories';
 // import Workouts from '../Screen/New Workouts/WorkoutsDetails';
 
 import WorkoutsDetails from '../Screen/New Workouts/WorkoutsDetails';
-
-
 import Home from '../Screen/NewHome/Home';
 import ApplicantBottomTabBar from './ApplicantBottomTabBar';
 import Workouts from '../Screen/NewHome/Workouts';
@@ -60,6 +58,7 @@ import Diets from '../Screen/NewHome/Diets';
 import Store from '../Screen/NewHome/Store';
 import Profile from '../Screen/NewHome/Profile';
 import NewEditProfile from '../Component/NewEditProfile';
+import NewPersonalDetails from '../Screen/NewPersonalDetails';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const screenOptions = {
@@ -134,19 +133,22 @@ const BottomTab = () => {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-   
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} />
       <Stack.Screen name="Login" component={Login} />
        <Stack.Screen name="Signup" component={Signup} />
-      <Stack.Screen name="Yourself" component={Yourself} />
-      <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Yourself" component={Yourself} />
+       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
       <Stack.Screen name="OtpVerification" component={OtpVerification} />
-      <Stack.Screen name="BottomTab" component={BottomTab} />
+      <Stack.Screen name="Edit_Profile" component={NewEditProfile}/>
+      <Stack.Screen name="Personal Details" component={NewPersonalDetails}/>
       <Stack.Screen name="WorkoutCategories" component={WorkoutCategories}/>
       <Stack.Screen name="WorkoutsDetails" component={WorkoutsDetails}/>
+      <Stack.Screen name="BottomTab" component={BottomTab} />
+
+     
 
     </Stack.Navigator>
   );

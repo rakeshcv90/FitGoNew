@@ -164,7 +164,7 @@ const [Name,setName]=useState("")
                       askPermissionForLibrary(PERMISSIONS.IOS.PHOTO_LIBRARY);
                     } else {
                       askPermissionForLibrary(
-                        PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+                        PERMISSIONS.ANDROID.READ_MEDIA_IMAGES, // Need to check once according to Android versions
                       );
                     }
                   }}>
