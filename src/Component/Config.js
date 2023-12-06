@@ -37,6 +37,8 @@ export const NewAppapi={
   signup:'user_registration',
   forgetPassword:'sendemail_link',
   OTPVerification:'user_verify',
+  UserProfile:'userprofile',
+
   Get_COMPLETE_PROFILE: NewApi + 'goals_levels_focusarea_data',
   Post_COMPLETE_PROFILE: NewApi + 'user_update_details',
   All_Workouts:'allworkout',

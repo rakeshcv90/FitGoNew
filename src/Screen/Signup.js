@@ -909,6 +909,8 @@ import {showMessage} from 'react-native-flash-message';
 import {useDispatch, useSelector} from 'react-redux';
 import ActivityLoader from '../Component/ActivityLoader';
 import { setUserId } from '../Component/ThemeRedux/Actions';
+import { LoginManager,Profile } from 'react-native-fbsdk-next'
+import AnimatedLottieView from 'lottie-react-native';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 const Signup = ({navigation}) => {
@@ -957,9 +959,9 @@ const Signup = ({navigation}) => {
     });
   }, []);
 
-  const loginFunction = async () => {
-    await GoogleSignin.signOut();
-  };
+  // const loginFunction = async () => {
+  //   await GoogleSignin.signOut();
+  // };
   const GoogleSignup = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -977,6 +979,27 @@ const Signup = ({navigation}) => {
       }
     }
   };
+  const FacebookSignup=()=>{
+    LoginManager.logInWithPermissions(["public_profile", "email"]).then(
+      function (result) {
+      if (result.isCancelled) {
+        alert('Cancel');
+      } else {
+        const currentProfile = Profile.getCurrentProfile().then(
+          function(currentProfile) {
+            if (currentProfile) {
+            
+              socialFacebookLogiIn(currentProfile);
+            }
+          }
+        );
+      }
+      },
+      function (error) {
+      alert("Login failed with error: " + error);
+      }
+      )
+  }
   const handleFormSubmit = async (value, action) => {
     setForLoading(true);
     try {
@@ -992,10 +1015,10 @@ const Signup = ({navigation}) => {
           signup_type: 'form',
           social_id: 0,
           social_token: 0,
-          social_type: 'null',
+          social_type: '',
         },
       });
-      console.log('My Data is', data.data);
+
       if (data.data.status == 0) {
         setForLoading(false);
         showMessage({
@@ -1024,7 +1047,7 @@ const Signup = ({navigation}) => {
     }
   };
   const socialLogiIn = async (value, token) => {
-    setForLoading(true);
+   // setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
         method: 'POST',
@@ -1041,14 +1064,15 @@ const Signup = ({navigation}) => {
         },
       });
 
-      if (data.data.msg == 'User already exists' && data.data.status == 0) {
+
+      if (data.data.msg == 'User already exists' && data.data.profile_compl_status == 0) {
         setForLoading(false);
         console.log('Compleate Profile');
         dispatch(setUserId(data.data?.id))
         navigation.navigate('Yourself');
       } else if (
         data.data.msg == 'User registered via social login' &&
-        data.data.status == 0
+        data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
         console.log('Compleate Profile1');
@@ -1056,10 +1080,56 @@ const Signup = ({navigation}) => {
         navigation.navigate('Yourself');
       } else if (
         data.data.msg == 'User already exists' &&
-        data.data.status == 1
+        data.data.profile_compl_status == 1
       ) {
         setForLoading(false);
-        console.log('Compleate Profile Successfull');
+        navigation.navigate('BottomTab');
+      } else {
+        setForLoading(false);
+        console.log('user not found');
+      }
+    } catch (error) {
+      setForLoading(false);
+      console.log('google Signup Error', error?.response);
+    }
+  };
+  const socialFacebookLogiIn = async (value,) => {
+    setForLoading(true);
+    try {
+      const data = await axios(`${NewApi}${NewAppapi.signup}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          name: value.name,
+          email: value.email,
+          signuptype: 'social',
+          socialid: value.userID,
+          socialtoken:'',
+          socialtype: 'facebook',
+        },
+      });
+
+      if (data.data.msg == 'User already exists' && data.data.profile_compl_status == 0) {
+        setForLoading(false);
+        console.log('Compleate Profile');
+        dispatch(setUserId(data.data?.id))
+        navigation.navigate('Yourself');
+      } else if (
+        data.data.msg == 'User registered via social login' &&
+        data.data.profile_compl_status == 0
+      ) {
+        setForLoading(false);
+        console.log('Compleate Profile1');
+        dispatch(setUserId(data.data?.id))
+        navigation.navigate('Yourself');
+      } else if (
+        data.data.msg == 'User already exists' &&
+        data.data.profile_compl_status == 1
+      ) {
+        setForLoading(false);
+        navigation.navigate('BottomTab');
       } else {
         setForLoading(false);
         console.log('user not found');
@@ -1263,7 +1333,7 @@ const Signup = ({navigation}) => {
         </View>
 
         <View style={{marginTop: DeviceHeigth * 0.02}}>
-          <Button2 onGooglePress={GoogleSignup} />
+          <Button2 onGooglePress={GoogleSignup} onFBPress={FacebookSignup} />
         </View>
 
         <View

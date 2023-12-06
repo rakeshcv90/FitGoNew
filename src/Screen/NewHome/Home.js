@@ -24,9 +24,11 @@ import axios from 'axios';
 import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
 import PercentageBar from '../../Component/PercentageBar';
+import { useSelector } from 'react-redux';
 
 const Home = ({navigation}) => {
   const [selectedButton, setSelectedButton] = useState('1');
+  const {getUserDataDetails} = useSelector(state => state);
 
   const [isLoaded, setLoaded] = useState(false);
   const [WorkoutData, setWorkoutData] = useState([]);
@@ -41,6 +43,7 @@ const Home = ({navigation}) => {
   const onSelectSwitch = index => {
     alert('Selected index: ' + index);
   };
+
   const IntroductionData = [
     {
       id: 1,
@@ -142,14 +145,27 @@ const Home = ({navigation}) => {
           style={styles.card}
           resizeMode="contain">
           <View style={styles.cardheader}>
-            <Image
+            {getUserDataDetails.image_path==null? <Image
               source={localImage.avt}
               style={styles.profileImage}
               resizeMode="contain"
-            />
+            /> : <Image
+            source={{
+              uri:getUserDataDetails.image_path ,
+            }}
+            style={styles.profileImage}
+            resizeMode="contain"
+          /> 
+              
+            }
+            {/* <Image
+              source={getUserDataDetails.image_path==null?localImage.avt:getUserDataDetails.image_path}
+              style={styles.profileImage}
+              resizeMode="contain"
+            /> */}
             <View style={styles.textcontainer}>
               <Text style={styles.nameText}>Hello, Good Morning</Text>
-              <Text style={styles.subText}>Jamie !</Text>
+              <Text style={styles.subText}>{getUserDataDetails.name}</Text>
             </View>
             <Image
               source={localImage.BELL}

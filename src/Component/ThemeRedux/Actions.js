@@ -26,6 +26,12 @@ export const setCompleteProfileData = data => {
     payload: data,
   };
 };
+export const setUserProfileData = data => {
+  return {
+    type: types.User_Profile_Data,
+    payload: data,
+  };
+};
 export const setUserId = data => {
   return {
     type: types.User_ID,
