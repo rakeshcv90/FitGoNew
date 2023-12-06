@@ -729,26 +729,7 @@ const Index = ({navigation, route}: any) => {
             </Text>
           </TouchableOpacity>
         )}
-            {/* <View
-
-                style={{
-                  width: DeviceWidth * 0.22,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                {IntroductionData.map(item => (
-                  <View
-                    style={{
-                      height: 3,
-                      width: item.id == currentPage + 1 ? 40 : 20,
-                      backgroundColor:
-                        item.id == currentPage + 1
-                          ? AppColor.RED
-                          : AppColor.SOCIALBUTTON,
-                    }}
-                  />
-                ))}
-              </View> */}
+    
 
         <TouchableOpacity
           onPress={() => {
@@ -817,7 +798,7 @@ const Index = ({navigation, route}: any) => {
           </LinearGradient>
         </TouchableOpacity>
       </View>
-
+      )}
       <ActivityLoader visible={visible} />
     </SafeAreaView>
   );
