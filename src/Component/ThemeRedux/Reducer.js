@@ -6,6 +6,7 @@ const intialState = {
   showIntro: false,
   completeProfileData: [],
   getUserID: '',
+  getUserDataDetails:[]
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -23,6 +24,8 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, completeProfileData: action.payload};
     case types.User_ID:
       return {...state, getUserID: action.payload};
+      case types.User_Profile_Data:
+        return {...state, getUserDataDetails: action.payload};
     default:
       return state;
   }

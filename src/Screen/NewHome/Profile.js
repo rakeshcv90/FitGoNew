@@ -122,59 +122,65 @@ const Profile = () => {
   const FirstView = Profile_Data.slice(0, 5);
   const SecondView = Profile_Data.slice(5);
   return (
-    <ScrollView style={styles.Container}>
+    <View style={styles.Container}>
       <NewHeader backButton header={'Profile'} />
-      <View style={styles.DetailView}>
-        <Image
-          source={localImage.Inrtoduction1}
-          style={styles.ProfileImg}
-          resizeMode="cover"
-        />
-        <View style={styles.TextView}>
-          <Text style={styles.NameText}>Jamie</Text>
-          <Text style={styles.nameText}>abc@gmail.com</Text>
+
+      <ScrollView
+        keyboardDismissMode="interactive"
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled">
+        <View style={styles.DetailView}>
+          <Image
+            source={localImage.Inrtoduction1}
+            style={styles.ProfileImg}
+            resizeMode="cover"
+          />
+          <View style={styles.TextView}>
+            <Text style={styles.NameText}>Jamie</Text>
+            <Text style={styles.nameText}>abc@gmail.com</Text>
+          </View>
+          <TouchableOpacity
+            style={[styles.Button, {backgroundColor: AppColor.RED}]}
+            onPress={() => {
+              navigation.navigate('Edit_Profile');
+            }}>
+            <LinearGradient
+              start={{x: 1, y: 0}}
+              end={{x: 0, y: 1}}
+              colors={['#941000', '#D01818']}
+              style={styles.buttonStyle}>
+              <Text style={styles.EditText}>Edit</Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={[styles.Button, {backgroundColor: AppColor.RED}]}
-          onPress={() => {
-            navigation.navigate('Edit_Profile');
-          }}>
-          <LinearGradient
-            start={{x: 1, y: 0}}
-            end={{x: 0, y: 1}}
-            colors={['#941000', '#D01818']}
-            style={styles.buttonStyle}>
-            <Text style={styles.EditText}>Edit</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.UserDetailsView}>
-        {FirstView.map((data, index) => (
-          <TouchableOpacity key={index} style={styles.SingleButton}>
-            {data.icon1}
-            <View style={styles.View1}>
-              <Text style={styles.nameText}>{data.text1}</Text>
-              <Icons name="chevron-right" size={22} />
-            </View>
-          </TouchableOpacity>
-        ))}
-      </View>
-      <View style={styles.UserDetailsView}>
-        {SecondView.map((data, index) => (
-          <TouchableOpacity key={index} style={styles.SingleButton}>
-            {data.icon1}
-            <View style={styles.View1}>
-              <Text style={styles.nameText}>{data.text1}</Text>
-              <Icons
-                name="chevron-right"
-                size={22}
-                color={AppColor.ProfileTextColor}
-              />
-            </View>
-          </TouchableOpacity>
-        ))}
-      </View>
-    </ScrollView>
+        <View style={styles.UserDetailsView}>
+          {FirstView.map((data, index) => (
+            <TouchableOpacity key={index} style={styles.SingleButton}>
+              {data.icon1}
+              <View style={styles.View1}>
+                <Text style={styles.nameText}>{data.text1}</Text>
+                <Icons name="chevron-right" size={22} />
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <View style={styles.UserDetailsView}>
+          {SecondView.map((data, index) => (
+            <TouchableOpacity key={index} style={styles.SingleButton}>
+              {data.icon1}
+              <View style={styles.View1}>
+                <Text style={styles.nameText}>{data.text1}</Text>
+                <Icons
+                  name="chevron-right"
+                  size={22}
+                  color={AppColor.ProfileTextColor}
+                />
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 const styles = StyleSheet.create({
@@ -243,19 +249,31 @@ const styles = StyleSheet.create({
     marginHorizontal: DeviceWidth * 0.04,
     marginBottom: DeviceHeigth * 0.03,
     paddingVertical: DeviceHeigth * 0.02,
+    shadowColor: 'rgba(0, 0, 0, 1)',
     ...Platform.select({
       ios: {
-        shadowColor: AppColor.BLACK,
-        shadowOffset: {width: 0, height: 10},
-        shadowOpacity: 0.4,
+        shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
       },
       android: {
-        elevation: 0,
-        shadowColor: AppColor.BLACK,
-        shadowOffset: {width: 5, height: 5},
-        shadowOpacity: 0.5,
+        elevation: 4,
       },
     }),
+    // ...Platform.select({
+    //   ios: {
+    //    // shadowColor: AppColor.BLACK,
+    //     shadowOffset: {width: 0, height: 10},
+    //     shadowOpacity: 0.4,
+    //   },
+    //   android: {
+    //     elevation: 0,
+    //     shadowColor: AppColor.BLACK,
+    //     shadowOffset: {width: 5, height: 5},
+    //     shadowOpacity: 0.5,
+    //   },
+    // }),
   },
   userDetailsText: {
     fontFamily: '',
