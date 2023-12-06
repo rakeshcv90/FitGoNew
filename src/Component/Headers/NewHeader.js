@@ -7,16 +7,12 @@ import {
   SafeAreaView,
 } from 'react-native';
 import React from 'react';
-import {DeviceHeigth, DeviceWidth} from '../Config'
+import {DeviceHeigth, DeviceWidth} from '../Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { AppColor } from '../Color';
+import {AppColor} from '../Color';
 import {useNavigation} from '@react-navigation/native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
-const NewHeader = ({
-  header,
-  backButton,
-  SearchButton
-}) => {
+const NewHeader = ({header, backButton, SearchButton}) => {
   const navigation = useNavigation();
   return (
     <SafeAreaView
@@ -26,22 +22,20 @@ const NewHeader = ({
           height:
             Platform.OS == 'ios'
               ? (DeviceHeigth * 10) / 100 + getStatusBarHeight() //adding statusbar height for the ios
-
-
-              : (DeviceHeigth * 5) / 100,
-              paddingHorizontal:DeviceWidth*0.07
-
+              : (DeviceHeigth * 10) / 100,
+          paddingHorizontal: DeviceWidth * 0.07,
+          paddingTop: Platform.OS == 'android' ? DeviceHeigth * 0.05 : 0,
         },
       ]}>
       {!backButton ? (
-        <View style={{width:25}}></View>
+        <View style={{width: 25}}></View>
       ) : (
         <TouchableOpacity
           onPress={() => {
             navigation.goBack();
           }}>
           <Icons
-            name={"chevron-left"}
+            name={'chevron-left'}
             size={25}
             color={AppColor.INPUTTEXTCOLOR}
           />
@@ -59,14 +53,10 @@ const NewHeader = ({
         {header}
       </Text>
       {!SearchButton ? (
-        <View style={{width:25}}></View>
+        <View style={{width: 25}}></View>
       ) : (
-        <TouchableOpacity onPress={() => {}}> 
-          <Icons
-            name={"magnify"}
-            size={25}
-            color={AppColor.INPUTTEXTCOLOR}
-          />
+        <TouchableOpacity onPress={() => {}}>
+          <Icons name={'magnify'} size={25} color={AppColor.INPUTTEXTCOLOR} />
         </TouchableOpacity>
       )}
     </SafeAreaView>
@@ -98,7 +88,7 @@ const style = StyleSheet.create({
   },
   headerstyle: {
     fontWeight: '600',
-    fontSize:19
+    fontSize: 19,
   },
 });
 export default NewHeader;
