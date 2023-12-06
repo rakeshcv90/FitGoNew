@@ -38,3 +38,9 @@ export const setUserId = data => {
     payload: data,
   };
 };
+export const setCustomWorkoutData = data => {
+  return {
+    type: types.CUSTOM_WORKOUT_DATA,
+    payload: data,
+  };
+};

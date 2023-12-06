@@ -56,6 +56,7 @@ export const localImage = {
   Diets1:require("../Icon/Images/NewImage/Dites2.png"),
   Sttore1:require("../Icon/Images/NewImage/Store2.png"),
   Profile1:require("../Icon/Images/NewImage/Profile2.png"),
+  BlueTick:require("../Icon/Images/NewImage/BlueTick.png"),
   Profile4:require("../Icon/Images/NewImage/Profile4.png"),
   Documents:require("../Icon/Images/NewImage/Document.png"),
   Heart:require("../Icon/Images/NewImage/heart-icon.png"),

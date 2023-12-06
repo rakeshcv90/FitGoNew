@@ -110,7 +110,7 @@ const Gender = ({data, selectedImage, setSelectedImage}: any) => {
                   borderColor:
                     index == selectedImage
                       ? AppColor.RED
-                      : AppColor.LITELTEXTCOLOR,
+                      : AppColor.WHITE,
                   marginVertical: 10,
                 },
               ]}>
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     // overflow: 'hidden',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: AppColor.WHITE,
     shadowColor: 'rgba(0, 0, 0, 1)',
     ...Platform.select({
       ios: {

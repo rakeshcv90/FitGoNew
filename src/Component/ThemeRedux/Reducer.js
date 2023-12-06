@@ -6,6 +6,7 @@ const intialState = {
   showIntro: false,
   completeProfileData: [],
   getUserID: '',
+  customWorkoutData: [],
   getUserDataDetails:[]
 };
 const ThemeReducer = (state = intialState, action) => {
@@ -22,8 +23,10 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, showIntro: action.payload};
     case types.COMPLETE_PROFILE_DATA:
       return {...state, completeProfileData: action.payload};
-    case types.User_ID:
-      return {...state, getUserID: action.payload};
+      case types.User_ID:
+        return {...state, getUserID: action.payload};
+        case types.CUSTOM_WORKOUT_DATA:
+          return {...state, customWorkoutData: action.payload};
       case types.User_Profile_Data:
         return {...state, getUserDataDetails: action.payload};
     default:

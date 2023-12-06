@@ -1,6 +1,6 @@
 import {
   FlatList,
-  ImageBackground,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -10,8 +10,6 @@ import React, {useState} from 'react';
 import {Image} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor} from '../../Component/Color';
-import {localImage} from '../../Component/Image';
-import LinearGradient from 'react-native-linear-gradient';
 
 const Focus = ({data, selectedImage, setSelectedImage, data2}: any) => {
   return (
@@ -24,24 +22,58 @@ const Focus = ({data, selectedImage, setSelectedImage, data2}: any) => {
       }}>
       <FlatList
         data={data2}
+        numColumns={2}
+        // horizontal
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          width: DeviceWidth * 0.8,
+        }}
         renderItem={({item}: any, index: number) => {
           return (
             <TouchableOpacity
               key={index}
               activeOpacity={0.8}
               onPress={() => setSelectedImage(item?.bodypart_id)}
-              style={[
-                styles.box,
-                {
-                  padding: item?.bodypart_id == selectedImage ? 18 : 20,
-                  paddingRight: index == 0 ? 20 : 0,
-                  borderColor:
-                    item?.bodypart_id == selectedImage
-                      ? AppColor.BORDERCOLOR2
-                      : AppColor.LITELTEXTCOLOR,
-                },
-              ]}>
+              style={{
+                marginBottom: 20,
+              }}>
+              <View
+                style={[
+                  styles.box,
+                  {
+                    // padding: item?.bodypart_id == selectedImage ? 18 : 20,
+                    marginRight: DeviceWidth * 0.2,
+                    borderWidth: item?.bodypart_id == selectedImage ? 1.5 : 1,
+                    borderColor:
+                      item?.bodypart_id == selectedImage
+                        ? AppColor.RED
+                        : 'white',
+                        backgroundColor: '#f5f5f5',
+                        shadowColor: 'rgba(0, 0, 0, 1)',
+                        ...Platform.select({
+                          ios: {
+                            shadowColor: '#000000',
+                            shadowOffset: {width: 0, height: 2},
+                            shadowOpacity: 0.3,
+                            shadowRadius: 4,
+                          },
+                          android: {
+                            elevation: 4,
+                          },
+                        }),
+                  },
+                ]}>
+                <Image
+                  source={{
+                    uri: item.bodypart_image,
+                  }}
+                  resizeMode="contain"
+                  style={{
+                    height: DeviceWidth * 0.28,
+                    width: DeviceWidth * 0.28,
+                  }}
+                />
+              </View>
               <Text
                 style={{
                   color: AppColor.LITELTEXTCOLOR,
@@ -49,19 +81,11 @@ const Focus = ({data, selectedImage, setSelectedImage, data2}: any) => {
                   fontWeight: '500',
                   fontFamily: 'Poppins',
                   lineHeight: 24,
+                  marginLeft: '15%',
+                  marginTop: '3%',
                 }}>
                 {item.bodypart_title}
               </Text>
-              <Image
-                source={{
-                  uri: item.bodypart_image,
-                }}
-                resizeMode="contain"
-                style={{
-                  height: index == 0 ? DeviceHeigth * 0.17 : DeviceHeigth * 0.2,
-                  width: DeviceWidth * 0.3,
-                }}
-              />
             </TouchableOpacity>
           );
         }}
@@ -74,14 +98,12 @@ export default Focus;
 
 const styles = StyleSheet.create({
   box: {
-    width: DeviceWidth * 0.8,
-    height: DeviceHeigth / 12,
-    borderWidth: 1,
+    width: DeviceWidth * 0.3,
+    height: DeviceWidth * 0.3,
     borderRadius: 20,
-    marginBottom: 20,
-    justifyContent: 'space-around',
     alignItems: 'center',
-    overflow: 'hidden',
-    flexDirection: 'row',
+    justifyContent: 'center',
+    // overflow: 'hidden',
+    // flexDirection: 'row',
   },
 });

@@ -148,8 +148,6 @@ export const LoginStack = () => {
       <Stack.Screen name="WorkoutsDetails" component={WorkoutsDetails}/>
       <Stack.Screen name="BottomTab" component={BottomTab} />
 
-     
-
     </Stack.Navigator>
   );
 };

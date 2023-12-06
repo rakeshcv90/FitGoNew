@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   Image,
   Platform,
+  FlatList,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {navigation} from '../../../App';
 import {
   DeviceHeigth,
   DeviceWidth,
@@ -27,25 +27,37 @@ import {Picker} from '@react-native-picker/picker';
 import Focus from './Focus';
 import Toggle from '../../Component/Toggle';
 import {AppColor} from '../../Component/Color';
-import {setCompleteProfileData} from '../../Component/ThemeRedux/Actions';
+import {
+  setCompleteProfileData,
+  setCustomWorkoutData,
+} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import ActivityLoader from '../../Component/ActivityLoader';
+import Carousel from 'react-native-snap-carousel';
+import AnimatedLottieView from 'lottie-react-native';
 import Button from '../../Component/Button';
 
 const imgData = Array(60)
-  .fill(0)
+  .fill(16)
   .map((item: any, index, arr) => arr[index] + index + 1);
-const imgData2 = Array(60)
-  .fill(27)
-  .map((item: any, index, arr) => arr[index] + index + 3);
+
+const weight = Array(281)
+  .fill(30)
+  .map((item: any, index, arr) => arr[index] + index / 2);
+const height = Array(100)
+  .fill(4)
+  .map((item: any, index, arr) => arr[index] + index / 10);
 
 const Index = ({navigation, route}: any) => {
   const {defaultTheme, completeProfileData, getUserID} = useSelector(
     (state: any) => state,
   );
+
   const dispatch = useDispatch();
   const [screen, setScreen] = useState(0);
   const [toggleW, setToggleW] = useState('kg');
+  const [toggleWData, setToggleWData] = useState([]);
+  const [toggleData, setToggleData] = useState([]);
   const [toggle, setToggle] = useState('ft');
   const [visible, setVisible] = useState(false);
   const [selectedGender, setSelectedGender] = useState(-1);
@@ -55,6 +67,8 @@ const Index = ({navigation, route}: any) => {
   const [selectedHeight, setSelectedHeight] = useState('');
   const [selectedWeight, setSelectedWeight] = useState('');
   const [selectedAge, setSelectedAge] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
   const [isRouteDataAvailable, setIsrouteDataAvailable] = useState(false);
   useEffect(() => {
     if (route?.params?.id == undefined) {
@@ -68,6 +82,33 @@ const Index = ({navigation, route}: any) => {
   useEffect(() => {
     ProfileDataAPI();
   }, []);
+  useEffect(() => {
+    console.log(screen);
+    if (screen == 5 || screen == 4 || screen == 3) {
+      setSelectedHeight(toggleData[0]);
+      setSelectedWeight(toggleWData[0]);
+      setSelectedAge(imgData[0]);
+      setSelectedIndex(0);
+    }
+  }, [screen]);
+  useEffect(() => {
+    if (toggleW === 'lb') {
+      const te: any = weight.map(item => parseFloat((item * 2.2).toFixed(2)));
+      setToggleWData(te);
+    } else {
+      // const te: any = weight.map(item => parseFloat((item / 2.2).toFixed(2)));
+      setToggleWData(weight);
+    }
+  }, [toggleW]);
+  useEffect(() => {
+    if (toggle === 'cm') {
+      const te: any = height.map(item => parseFloat((item * 30.48).toFixed(2)));
+      setToggleData(te);
+    } else {
+      // const te: any = weight.map(item => parseFloat((item / 30.48).toFixed(2)));
+      setToggleData(height);
+    }
+  }, [toggle]);
 
   const ProfileDataAPI = async () => {
     try {
@@ -76,7 +117,6 @@ const Index = ({navigation, route}: any) => {
         method: 'get',
       });
       if (res.data) {
-        // console.log(res.data);
         dispatch(setCompleteProfileData(res.data));
       }
     } catch (error) {
@@ -91,12 +131,12 @@ const Index = ({navigation, route}: any) => {
     payload.append('gender', selectedGender == 0 ? 'Male' : 'Female');
     payload.append('goal', selectedGoal);
     payload.append('age', selectedAge);
-    payload.append('fitnesslevel', selectedLevel);
+    payload.append('fitnesslevel', selectedLevel + 1);
     payload.append('focusarea', selectedFocus);
     payload.append('height', selectedHeight);
     payload.append('weight', selectedWeight);
     payload.append('id', getUserID);
-    // console.log(payload);
+     console.log(payload);
     try {
       const res = await axios({
         url: NewAppapi.Post_COMPLETE_PROFILE,
@@ -107,7 +147,10 @@ const Index = ({navigation, route}: any) => {
         },
       });
       if (res.data) {
-        // console.log(res.data);
+        console.log(res.data?.length);
+        // dispatch(setUserProfileData(res.data?.userprofile))
+        dispatch(setCustomWorkoutData(res.data?.workout[0]));
+
         setVisible(false);
         navigation.navigate('BottomTab');
       }
@@ -253,7 +296,124 @@ const Index = ({navigation, route}: any) => {
       top1: `What’s your Focus Area?`,
       top2: 'This helps us create to your personalized plan',
     },
+    {
+      id: 8,
+      name: 'Complete',
+      data: [
+        {
+          id: 1,
+          image:
+            'https://s3-alpha-sig.figma.com/img/1095/45fb/d3a879434dc93bc48b49f0017caf502b?Expires=1702252800&Signature=aU63bVTWLsvR~bXX7LpQHkn0mGrM8P4cs7h7MC7mcXpFL5MkeKPZ6-PiVa8B9G--twIPDKzOILKOr0oPGCIcHfdmZooK5M5AGJm7n-wOkumenFnrB3vEpmuDd9exXYtCOwcpkuOyjqdcQnz7yig7kKOoAV8ZQtbqVbFVhFHx7U2K3SRB1JIhYXR-Fv3Re1wJScDdRhyTBs6wHA1MtQIQ5S~RIM3LZL-qHYSBOp5yOp8v5SeXqkYLkHMl-dfR1IIOCVkCkPi4ELRqKzNNc-jjvdQC6DJLwDDrbcVcsWLT8R~vyK0ylbtXLYfCQzPCEBx4EvZMB0bJ~jXgo-FxHGmsKg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4',
+          name: 'Legs',
+        },
+        {
+          id: 2,
+          image:
+            'https://s3-alpha-sig.figma.com/img/7910/f5cb/bf41d4a61461ea0e215258e153dade1d?Expires=1702252800&Signature=U6wH-q9rpuBeAD~mWlmKVUrJl9dNpDVEnkVSMof2mpm~aSEv-2BXy5OUKIC-JCh2XOsQGPiLfszi8SL9TTvqz75gjtmuUd97uOjq8Gnyd2p8jfC0d4eKBB-RBLs0fiob-uf9F6dUC99qasTFEltk2muZWbAuFpk23uFDtPbj8X-kpLzyCr1-~grSMkFCYIOjYfg1H19ZYj7bGtZJ69rWFFe~c-UaokTSxUOlAPL1B-V8WhVuCaRiDXWeE6Fe5Q0aoKl3~jLYOg0TpB0zGcSaxenEaJizmwXU11oFazQ1zVgSUuMjSeSDI6CCU5ya5tEFXhEjLaRr18CxjtFF72Bjdw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4',
+          name: 'Shoulders',
+        },
+        {id: 3, image: localImage.AdvanceLevel, name: 'Biceps'},
+        {
+          id: 4,
+          image: localImage.BeginnerLevel,
+          name: 'Back',
+        },
+        {
+          id: 5,
+          image: localImage.IntermediateLevel,
+          name: 'Triceps',
+        },
+        {id: 3, image: localImage.AdvanceLevel, name: 'Abs'},
+        {id: 3, image: localImage.AdvanceLevel, name: 'Chest'},
+      ],
+      top1: `Generating the plan for you`,
+      top2: 'Preparing your plan based on your goal...',
+    },
   ];
+  // console.log(toggle == 'ft'
+  // ? selectedHeight.split('.')[0] +
+  //   ' ' +
+  //   toggle +
+  //   selectedHeight.split('.')[0] +
+  //   ' ' +
+  //   toggle
+  // : selectedHeight + ' ' + toggle)
+  const Carousal = ({data}: any) => (
+    <Carousel
+      // ref={carouselRef}
+      data={data}
+      vertical={true}
+      showsVerticalScrollIndicator={false}
+      keyExtractor={(item, index) => index.toString()}
+      windowSize={10}
+      sliderHeight={DeviceHeigth * 0.5}
+      sliderWidth={DeviceWidth}
+      itemHeight={30}
+      inactiveSlideScale={0.4}
+      enableSnap={true}
+      firstItem={selectedIndex}
+      itemWidth={50}
+      activeAnimationType="spring"
+      activeSlideAlignment="center"
+      snapToAlignment="start"
+      snapToInterval={30}
+      decelerationRate={'fast'}
+      renderItem={({item, index}: any) => {
+        return (
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {screen == 5 ? (
+              <View
+                style={{
+                  width: 100,
+                  height: 3,
+                  backgroundColor: AppColor.RED,
+                  borderRadius: 10,
+                  marginBottom: 20,
+                }}
+              />
+            ) : index % 2 == 0 ? (
+              <View
+                style={{
+                  width: 100,
+                  height: 3,
+                  backgroundColor: AppColor.RED,
+                  borderRadius: 10,
+                  marginBottom: 20,
+                }}
+              />
+            ) : (
+              <View
+                style={{
+                  width: 50,
+                  height: 3,
+                  backgroundColor: AppColor.BLACK,
+                  borderRadius: 10,
+                  marginBottom: 20,
+                }}
+              />
+            )}
+            {/* <Text>{item}</Text> */}
+          </View>
+        );
+      }}
+      onBeforeSnapToItem={(index: number) => {
+        setSelectedIndex(index);
+        screen == 3
+          ? setSelectedWeight(toggleWData[index])
+          : screen == 4
+          ? setSelectedHeight(toggleData[index])
+          : setSelectedAge(imgData[index]);
+      }}
+      onSnapToItem={(index: number) => {
+        setSelectedIndex(index);
+        screen == 3
+          ? setSelectedWeight(toggleWData[index])
+          : screen == 4
+          ? setSelectedHeight(toggleData[index])
+          : setSelectedAge(imgData[index]);
+      }}
+    />
+  );
   const Pickers = () => {
     return (
       <View
@@ -261,58 +421,52 @@ const Index = ({navigation, route}: any) => {
           flex: 1,
           flexDirection: 'row',
           width: DeviceWidth * 0.5,
-          marginTop: DeviceHeigth * 0.2,
         }}>
         {screen == 3 ? (
-          <Picker
-            style={{flex: 1}}
-            selectedValue={selectedWeight}
-            onValueChange={(itemValue: any, itemIndex) => {
-              setSelectedWeight(itemValue);
-            }}
-            selectionColor={'white'}>
-            {imgData.map((hr: any, index: number) => {
-              if (index < 10) return;
-              if (toggleW == 'lb') hr = (hr * 0.2).toPrecision(2);
-              return (
-                <Picker.Item label={hr} value={hr} />
-                // <Picker.Item label={`${hr} kg`} value={hr} />
-              );
-            })}
-          </Picker>
+          <View style={{marginLeft: -DeviceWidth * 0.2}}>
+            <Carousal data={toggleWData} />
+            <Text
+              style={{
+                color: AppColor.RED,
+                fontSize: 30,
+                position: 'absolute',
+                top: '38%',
+                left: '120%',
+                width: DeviceWidth * 0.5,
+              }}>
+              {selectedWeight + ' ' + toggleW}
+            </Text>
+          </View>
         ) : screen == 4 ? (
-          <Picker
-            style={{flex: 1}}
-            selectedValue={selectedHeight}
-            onValueChange={(itemValue: any, itemIndex) => {
-              setSelectedHeight(itemValue);
-            }}
-            selectionColor={'white'}>
-            {imgData2.map((hr: any, index: number) => {
-              if (index < 10) return;
-              if (toggle == 'cm') hr = (hr * 30).toPrecision(2);
-              return (
-                <Picker.Item label={hr} value={hr} />
-                // <Picker.Item label={`${hr} kg`} value={hr} />
-              );
-            })}
-          </Picker>
+          <View style={{marginLeft: -DeviceWidth * 0.2}}>
+            <Carousal data={toggleData} />
+            <Text
+              style={{
+                color: AppColor.RED,
+                fontSize: 30,
+                position: 'absolute',
+                top: '38%',
+                left: '120%',
+                width: DeviceWidth * 0.5,
+              }}>
+              {selectedHeight + ' ' + toggle}
+            </Text>
+          </View>
         ) : (
-          <Picker
-            style={{flex: 1}}
-            selectedValue={selectedAge}
-            onValueChange={(itemValue: any, itemIndex) => {
-              setSelectedAge(itemValue);
-            }}
-            selectionColor={'white'}>
-            {imgData.map((hr: any, index: number) => {
-              if (index < 15) return;
-              return (
-                <Picker.Item label={hr} value={hr} />
-                // <Picker.Item label={`${hr} kg`} value={hr} />
-              );
-            })}
-          </Picker>
+          <View style={{marginLeft: -DeviceWidth * 0.2}}>
+            <Carousal data={imgData} />
+            <Text
+              style={{
+                color: AppColor.RED,
+                fontSize: 30,
+                position: 'absolute',
+                top: '35%',
+                left: '120%',
+                width: DeviceWidth * 0.5,
+              }}>
+              {selectedAge + ' years'}
+            </Text>
+          </View>
         )}
       </View>
     );
@@ -349,7 +503,7 @@ const Index = ({navigation, route}: any) => {
           }}>
           <View
             style={{
-              width: (DeviceWidth * 0.9) / (7 - screen),
+              width: screen == 0 ? '12%' : `${12 * screen}%`,
               backgroundColor: AppColor.RED,
               height: 5,
               borderRadius: 5,
@@ -482,10 +636,67 @@ const Index = ({navigation, route}: any) => {
             selectedImage={selectedFocus}
             setSelectedImage={setSelectedFocus}
           />
+        ) : screen == 7 ? (
+          <>
+            <AnimatedLottieView
+              source={require('../../Icon/Images/NewImage/completeProfile.json')}
+              style={{height: 300, width: 300, marginTop: 30}}
+              // resizeMode="contain"
+              // speed={0.2}
+              autoPlay={true}
+              loop
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginTop: 30,
+              }}>
+              <Image
+                source={localImage.BlueTick}
+                style={{height: 30, width: 30}}
+              />
+              <Text
+                style={{
+                  color: '#7B6F72',
+                  fontFamily: 'Poppins',
+                  fontSize: 14,
+                  fontWeight: '500',
+                  lineHeight: 18,
+                  marginLeft: 10,
+                }}>
+                Analyzing your given details
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginVertical: 10,
+              }}>
+              <Image
+                source={localImage.BlueTick}
+                style={{height: 30, width: 30}}
+              />
+              <Text
+                style={{
+                  color: '#7B6F72',
+                  fontFamily: 'Poppins',
+                  fontSize: 14,
+                  fontWeight: '500',
+                  lineHeight: 18,
+                  marginLeft: 10,
+                }}>
+                Analyzing your fitness level and goals
+              </Text>
+            </View>
+          </>
         ) : null}
       </View>
 
-      {isRouteDataAvailable ? (
+  {isRouteDataAvailable ? (
         <View
           style={{
             marginBottom: DeviceHeigth * 0.05,
@@ -500,28 +711,26 @@ const Index = ({navigation, route}: any) => {
           />
         </View>
       ) : (
-        <>
-          <View style={styles.buttons}>
-            {screen >= 1 ? (
-              <TouchableOpacity
-                style={[styles.nextButton2]}
-                onPress={() => setScreen(screen - 1)}>
-                <Icons name="chevron-left" size={25} color={'#000'} />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={[styles.nextButton2]}
-                onPress={() => setScreen(screen - 1)}
-                disabled>
-                <Text
-                  style={[
-                    {fontSize: 15, color: 'black', fontFamily: 'Poppins'},
-                  ]}>
-                  {}
-                </Text>
-              </TouchableOpacity>
-            )}
+      <View style={styles.buttons}>
+        {screen >= 1 ? (
+          <TouchableOpacity
+            style={[styles.nextButton2]}
+            onPress={() => setScreen(screen - 1)}>
+            <Icons name="chevron-left" size={25} color={'#000'} />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={[styles.nextButton2]}
+            onPress={() => setScreen(screen - 1)}
+            disabled>
+            <Text
+              style={[{fontSize: 15, color: 'black', fontFamily: 'Poppins'}]}>
+              {}
+            </Text>
+          </TouchableOpacity>
+        )}
             {/* <View
+
                 style={{
                   width: DeviceWidth * 0.22,
                   flexDirection: 'row',
@@ -540,67 +749,75 @@ const Index = ({navigation, route}: any) => {
                   />
                 ))}
               </View> */}
-            <TouchableOpacity
-              onPress={() => {
-                screen == 1 && selectedGoal == -1
-                  ? showMessage({
-                      message: 'Please Select one Goal',
-                      animationDuration: 750,
-                      floating: true,
-                      type: 'danger',
-                      // icon: {icon: 'none', position: 'left'},
-                    })
-                  : screen == 2 && selectedLevel == -1
-                  ? showMessage({
-                      message: 'Please Select your Current Fitness Level',
-                      animationDuration: 750,
-                      floating: true,
-                      type: 'danger',
-                      // icon: {icon: 'none', position: 'left'},
-                    })
-                  : screen == 6
-                  ? selectedFocus == -1
-                    ? showMessage({
-                        message: 'Please Select your Focus Area',
-                        animationDuration: 750,
-                        floating: true,
-                        type: 'danger',
-                        // icon: {icon: 'none', position: 'left'},
-                      })
-                    : setProfileAPI()
-                  : setScreen(screen + 1);
-              }}>
-              <LinearGradient
-                start={{x: 0, y: 1}}
-                end={{x: 1, y: 0}}
-                colors={['#941000', '#D5191A']}
-                style={[
-                  styles.nextButton,
-                  {
-                    flexDirection: screen == 6 ? 'row' : 'column',
-                    width: screen == 6 ? 120 : 45,
-                  },
-                ]}>
-                {screen == 6 && (
-                  <Text
-                    style={{
-                      color: 'white',
-                      marginTop: 5,
-                      fontSize: 14,
-                      fontFamily: 'Poppins',
-                      fontWeight: '600',
-                      lineHeight: 16,
-                      textAlign: 'center',
-                    }}>
-                    Let's Start
-                  </Text>
-                )}
-                <Icons name="chevron-right" size={25} color={'#fff'} />
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
-        </>
-      )}
+
+        <TouchableOpacity
+          onPress={() => {
+            screen == 0 && selectedGender == -1
+              ? showMessage({
+                  message: 'Please specify your Gender',
+                  animationDuration: 750,
+                  floating: true,
+                  type: 'danger',
+                  // icon: {icon: 'none', position: 'left'},
+                })
+              : screen == 1 && selectedGoal == -1
+              ? showMessage({
+                  message: 'Please Select one Goal',
+                  animationDuration: 750,
+                  floating: true,
+                  type: 'danger',
+                  // icon: {icon: 'none', position: 'left'},
+                })
+              : screen == 2 && selectedLevel == -1
+              ? showMessage({
+                  message: 'Please Select your Current Fitness Level',
+                  animationDuration: 750,
+                  floating: true,
+                  type: 'danger',
+                  // icon: {icon: 'none', position: 'left'},
+                })
+              : screen == 6 && selectedFocus == -1
+              ? showMessage({
+                  message: 'Please Select your Focus Area',
+                  animationDuration: 750,
+                  floating: true,
+                  type: 'danger',
+                  // icon: {icon: 'none', position: 'left'},
+                })
+              : screen == 7
+              ? setProfileAPI()
+              : setScreen(screen + 1);
+          }}>
+          <LinearGradient
+            start={{x: 0, y: 1}}
+            end={{x: 1, y: 0}}
+            colors={['#941000', '#D5191A']}
+            style={[
+              styles.nextButton,
+              {
+                flexDirection: screen == 7 ? 'row' : 'column',
+                width: screen == 7 ? 120 : 45,
+              },
+            ]}>
+            {screen == 7 && (
+              <Text
+                style={{
+                  color: 'white',
+                  marginTop: 5,
+                  fontSize: 14,
+                  fontFamily: 'Poppins',
+                  fontWeight: '600',
+                  lineHeight: 16,
+                  textAlign: 'center',
+                }}>
+                Let's Start
+              </Text>
+            )}
+            <Icons name="chevron-right" size={25} color={'#fff'} />
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+
       <ActivityLoader visible={visible} />
     </SafeAreaView>
   );
@@ -615,7 +832,8 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 85) / 100,
     alignItems: 'center',
     alignSelf: 'center',
-    marginTop: 50,
+    marginVertical: 20,
+    // backgroundColor: 'red',
   },
   buttonsUp: {
     flexDirection: 'row',
