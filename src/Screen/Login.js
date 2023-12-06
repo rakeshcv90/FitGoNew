@@ -347,6 +347,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   ScrollView,
+  Modal,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Button from '../Component/Button';
@@ -370,13 +371,19 @@ import {
 } from '@react-native-google-signin/google-signin';
 import ActivityLoader from '../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
+import {LoginManager, Profile} from 'react-native-fbsdk-next';
+import AnimatedLottieView from 'lottie-react-native';
+import {setUserProfileData} from '../Component/ThemeRedux/Actions';
+import {useDispatch} from 'react-redux';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 const Login = ({navigation}) => {
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [forLoading, setForLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -401,6 +408,76 @@ const Login = ({navigation}) => {
       }
     }
   };
+
+  const FacebookLogin = () => {
+    LoginManager.logInWithPermissions(['public_profile', 'email']).then(
+      function (result) {
+        if (result.isCancelled) {
+          alert('Login Cancelled ');
+        } else {
+          const currentProfile = Profile.getCurrentProfile().then(function (
+            currentProfile,
+          ) {
+            if (currentProfile) {
+              socialFacebookLogiIn(currentProfile);
+            }
+          });
+        }
+      },
+      function (error) {
+        alert('Login failed with error: ' + error);
+      },
+    );
+  };
+  const socialFacebookLogiIn = async value => {
+    setForLoading(true);
+    try {
+      const data = await axios(`${NewApi}${NewAppapi.login}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          name: value.name,
+          email: value.email,
+          signuptype: 'social',
+          socialid: value.userID,
+          socialtoken: '',
+          socialtype: 'facebook',
+        },
+      });
+      if (data.data.status == 1) {
+        showMessage({
+          message: data.data.msg,
+          type: 'success',
+          animationDuration: 500,
+
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setForLoading(false);
+        navigation.navigate('BottomTab');
+      } else if (
+        data.data.msg ==
+        'User does not exist with provided Facebook social credentials'
+      ) {
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setForLoading(false);
+      } else {
+        setForLoading(false);
+        setModalVisible(true);
+      }
+    } catch (error) {
+      setForLoading(false);
+      console.log('google Signup Error', error);
+    }
+  };
   const socialLogiIn = async (value, token) => {
     setForLoading(true);
     try {
@@ -418,6 +495,7 @@ const Login = ({navigation}) => {
           socialtype: 'google',
         },
       });
+
       if (data.data.status == 1) {
         showMessage({
           message: data.data.msg,
@@ -429,7 +507,10 @@ const Login = ({navigation}) => {
         });
         setForLoading(false);
         navigation.navigate('BottomTab');
-      } else {
+      } else if (
+        data.data.msg ==
+        'User does not exist with provided Google social credentials'
+      ) {
         showMessage({
           message: data.data.msg,
           type: 'danger',
@@ -438,6 +519,16 @@ const Login = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         setForLoading(false);
+      } else {
+        // showMessage({
+        //   message: data.data.msg,
+        //   type: 'danger',
+        //   animationDuration: 500,
+        //   floating: true,
+        //   icon: {icon: 'auto', position: 'left'},
+        // });
+        setForLoading(false);
+        setModalVisible(true);
       }
     } catch (error) {
       setForLoading(false);
@@ -454,17 +545,15 @@ const Login = ({navigation}) => {
           'Content-Type': 'multipart/form-data',
         },
         data: {
-          email: 'cvmytest@gmail.com',
-          password: 'Test@123',
-          // signuptype: 'social',
-          // socialid: value.id,
-          // socialtoken: token,
-          // socialtype: 'google',
+          email: email,
+          password: password,
         },
       });
-      console.log('TEsting Data for login', data.data);
-      if (data.data.msg == 'Login successful') {
-        setForLoading(false);
+
+      if (
+        data.data.msg == 'Login successful' &&
+        data.data.profile_status == 1
+      ) {
         showMessage({
           message: data.data.msg,
           floating: true,
@@ -472,22 +561,112 @@ const Login = ({navigation}) => {
           type: 'success',
           icon: {icon: 'auto', position: 'left'},
         });
-        navigation.navigate('BottomTab');
+
+        getProfileData(data.data.id);
+        //
+      } else if (
+        data.data.msg == 'Login successful' &&
+        data.data.profile_status == 0
+      ) {
+        setForLoading(false);
+        setModalVisible(true);
       } else {
         setForLoading(false);
+        // setModalVisible(true);
         showMessage({
           message: data.data.msg,
           floating: true,
           duration: 500,
-          type: 'success',
+          type: 'danger',
           icon: {icon: 'auto', position: 'left'},
         });
       }
     } catch (error) {
-      console.log('google Signup Error', error);
+      console.log('Form  Login Error', error);
       setForLoading(false);
     }
   };
+  const getProfileData = async user_id => {
+    try {
+      const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          id: user_id,
+        },
+      });
+      console.log('Usewr Id is', data.data.profile);
+      if (data.data.profile) {
+        setForLoading(false);
+        dispatch(setUserProfileData(data.data.profile));
+        navigation.navigate('BottomTab');
+      } else {
+        setForLoading(false);
+        dispatch(setUserProfileData([]));
+        navigation.navigate('BottomTab');
+      }
+    } catch (error) {
+      console.log('User Profile Error', error);
+      setForLoading(false);
+    }
+  };
+  const CompleateProfileModal = () => {
+    return (
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Compleate Profile</Text>
+            <AnimatedLottieView
+              source={require('../Icon/Images/NewImage/compleateProfile.json')} // Replace with your animation file
+              autoPlay
+              loop
+              style={{width: 250, height: 200}}
+              resizeMode="cover"
+            />
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: '600',
+                color: 'black',
+                fontFamily: 'Poppins',
+              }}>
+              Compleat your profile for Your Own Exercise!
+            </Text>
+            <View style={styles.button_one}>
+              <TouchableOpacity
+                style={{
+                  borderRadius: 20,
+                  padding: 10,
+                }}
+                onPress={() => {
+                  navigation.navigate('BottomTab');
+                  setModalVisible(false);
+                }}>
+                <Text style={styles.textStyle}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  navigation.navigate('Yourself');
+                  setModalVisible(false);
+                }}>
+                <Text style={styles.textStyle}>Continue</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -563,7 +742,7 @@ const Login = ({navigation}) => {
           </View>
         </KeyboardAvoidingView>
         <View style={{marginTop: DeviceHeigth * 0.02}}>
-          <Button2 onGooglePress={GoogleSignup} />
+          <Button2 onGooglePress={GoogleSignup} onFBPress={FacebookLogin} />
         </View>
 
         <View
@@ -593,6 +772,7 @@ const Login = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <CompleateProfileModal />
     </SafeAreaView>
   );
 };
@@ -635,6 +815,53 @@ var styles = StyleSheet.create({
     fontFamily: 'Poppins',
     fontWeight: '400',
     lineHeight: 20,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    // shadowColor: '#000',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: DeviceWidth * 0.8,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontWeight: '400',
+    fontSize: 24,
+    color: '#000000',
+  },
+  // buttonClose: {
+  //   backgroundColor: AppColor.RED,
+  // },
+  textStyle: {
+    color: 'black',
+
+    textAlign: 'center',
+    // paddingVertical: 5,
+    // paddingHorizontal: 20,
+    fontSize: 20,
+    fontWeight: '700',
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
   },
 });
 

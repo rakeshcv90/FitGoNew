@@ -5,6 +5,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   Animated,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {localImage} from '../Component/Image';
@@ -177,6 +178,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     position: 'absolute',
+    bottom:Platform.OS=='ios'?-DeviceHeigth*0.00:DeviceHeigth*0.02
   },
   TextView: {
     justifyContent: 'center',

@@ -7,4 +7,5 @@ export default {
   COMPLETE_PROFILE_DATA: 'COMPLETE_PROFILE_DATA',
   User_ID: 'User_ID',
   CUSTOM_WORKOUT_DATA: 'CUSTOM_WORKOUT_DATA',
+  User_Profile_Data:'User_Profile_Data'
 };

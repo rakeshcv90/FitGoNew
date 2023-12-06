@@ -35,6 +35,7 @@ import axios from 'axios';
 import ActivityLoader from '../../Component/ActivityLoader';
 import Carousel from 'react-native-snap-carousel';
 import AnimatedLottieView from 'lottie-react-native';
+import Button from '../../Component/Button';
 
 const imgData = Array(60)
   .fill(16)
@@ -47,7 +48,7 @@ const height = Array(100)
   .fill(4)
   .map((item: any, index, arr) => arr[index] + index / 10);
 
-const Index = ({navigation}: any) => {
+const Index = ({navigation, route}: any) => {
   const {defaultTheme, completeProfileData, getUserID} = useSelector(
     (state: any) => state,
   );
@@ -68,6 +69,16 @@ const Index = ({navigation}: any) => {
   const [selectedAge, setSelectedAge] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
 
+  const [isRouteDataAvailable, setIsrouteDataAvailable] = useState(false);
+  useEffect(() => {
+    if (route?.params?.id == undefined) {
+      setScreen(0);
+      // console.log(Sid.id)
+    } else {
+      setScreen(route?.params?.id);
+      setIsrouteDataAvailable(true);
+    }
+  }, [route?.params?.id]);
   useEffect(() => {
     ProfileDataAPI();
   }, []);
@@ -124,9 +135,8 @@ const Index = ({navigation}: any) => {
     payload.append('focusarea', selectedFocus);
     payload.append('height', selectedHeight);
     payload.append('weight', selectedWeight);
-    // payload.append('id', getUserID);
-    payload.append('id', 16);
-    console.log(payload);
+    payload.append('id', getUserID);
+     console.log(payload);
     try {
       const res = await axios({
         url: NewAppapi.Post_COMPLETE_PROFILE,
@@ -140,11 +150,14 @@ const Index = ({navigation}: any) => {
         console.log(res.data?.length);
         // dispatch(setUserProfileData(res.data?.userprofile))
         dispatch(setCustomWorkoutData(res.data?.workout[0]));
+
         setVisible(false);
-        navigation.navigate('Home');
+        navigation.navigate('BottomTab');
       }
     } catch (error) {
       console.log(error);
+      navigation.navigate('BottomTab');
+
       setVisible(false);
     }
   };
@@ -504,7 +517,11 @@ const Index = ({navigation}: any) => {
   return (
     <SafeAreaView
       style={{flex: 1, backgroundColor: defaultTheme ? 'black' : 'white'}}>
-      <ProgressBar />
+      {isRouteDataAvailable ? (
+        <View style={{marginTop: DeviceHeigth * 0.03}}></View>
+      ) : (
+        <ProgressBar />
+      )}
       {/* <View style={styles.buttonsUp}>
         {screen >= 1 && (
           <TouchableOpacity
@@ -531,7 +548,6 @@ const Index = ({navigation}: any) => {
           style={{
             justifyContent: 'center',
             alignItems: 'center',
-            // marginTop: 50,
           }}>
           <Text
             style={{
@@ -560,7 +576,11 @@ const Index = ({navigation}: any) => {
         </View>
         {screen == 3 && (
           <View
-            style={{flexDirection: 'row-reverse', left: 100, marginTop: 10}}>
+            style={{
+              flexDirection: 'row-reverse',
+              left: 100,
+              marginVertical: 30,
+            }}>
             <Toggle
               data={fullData[screen].data}
               highlightColor={AppColor.RED}
@@ -572,7 +592,11 @@ const Index = ({navigation}: any) => {
         )}
         {screen == 4 && (
           <View
-            style={{flexDirection: 'row-reverse', left: 100, marginTop: 10}}>
+            style={{
+              flexDirection: 'row-reverse',
+              left: 100,
+              marginVertical: 30,
+            }}>
             <Toggle
               data={fullData[screen].data}
               highlightColor={AppColor.RED}
@@ -672,6 +696,21 @@ const Index = ({navigation}: any) => {
         ) : null}
       </View>
 
+  {isRouteDataAvailable ? (
+        <View
+          style={{
+            marginBottom: DeviceHeigth * 0.05,
+            flex: 1,
+            justifyContent: 'flex-end',
+          }}>
+          <Button
+            buttonText={'Update'}
+            onPresh={() => {
+              navigation.navigate('Personal Details');
+            }}
+          />
+        </View>
+      ) : (
       <View style={styles.buttons}>
         {screen >= 1 ? (
           <TouchableOpacity
@@ -690,7 +729,8 @@ const Index = ({navigation}: any) => {
             </Text>
           </TouchableOpacity>
         )}
-        {/* <View
+            {/* <View
+
                 style={{
                   width: DeviceWidth * 0.22,
                   flexDirection: 'row',
@@ -709,6 +749,7 @@ const Index = ({navigation}: any) => {
                   />
                 ))}
               </View> */}
+
         <TouchableOpacity
           onPress={() => {
             screen == 0 && selectedGender == -1
@@ -776,6 +817,7 @@ const Index = ({navigation}: any) => {
           </LinearGradient>
         </TouchableOpacity>
       </View>
+
       <ActivityLoader visible={visible} />
     </SafeAreaView>
   );
