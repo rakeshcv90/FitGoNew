@@ -45,6 +45,7 @@ import ExerciseByEquipments from '../Screen/Exercises/ExerciseByEquipments';
 import LatestProducts from '../Screen/Stores/LatestProducts';
 import IntroductionScreen from '../Screen/IntroductionScreen';
 import Yourself from '../Screen/Yourself/Index';
+import Scale from '../Screen/Yourself/Scale';
 import OtpVerification from '../Screen/OtpVerification';
 import WorkoutCategories from '../Screen/New Workouts/WorkoutCategories';
 
@@ -147,6 +148,7 @@ export const LoginStack = () => {
       <Stack.Screen name="WorkoutCategories" component={WorkoutCategories}/>
       <Stack.Screen name="WorkoutsDetails" component={WorkoutsDetails}/>
       <Stack.Screen name="BottomTab" component={BottomTab} />
+      <Stack.Screen name="Scale" component={Scale} />
 
     </Stack.Navigator>
   );

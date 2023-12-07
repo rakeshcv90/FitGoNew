@@ -6,7 +6,7 @@ import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import Button from '../Component/Button';
 import Goal from '../Screen/Yourself/Goal';
 import {useDispatch, useSelector} from 'react-redux';
-import Index from '../Screen/Yourself/Index';
+import Index from './Yourself/Index';
 const NewPersonalDetails = ({route, navigation}) => {
   const data1 = [
     {
