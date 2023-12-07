@@ -371,7 +371,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 import ActivityLoader from '../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
-import {LoginManager, Profile} from 'react-native-fbsdk-next';
+// import {LoginManager, Profile} from 'react-native-fbsdk-next';
 import AnimatedLottieView from 'lottie-react-native';
 import {setUserProfileData} from '../Component/ThemeRedux/Actions';
 import {useDispatch} from 'react-redux';
@@ -409,75 +409,75 @@ const Login = ({navigation}) => {
     }
   };
 
-  const FacebookLogin = () => {
-    LoginManager.logInWithPermissions(['public_profile', 'email']).then(
-      function (result) {
-        if (result.isCancelled) {
-          alert('Login Cancelled ');
-        } else {
-          const currentProfile = Profile.getCurrentProfile().then(function (
-            currentProfile,
-          ) {
-            if (currentProfile) {
-              socialFacebookLogiIn(currentProfile);
-            }
-          });
-        }
-      },
-      function (error) {
-        alert('Login failed with error: ' + error);
-      },
-    );
-  };
-  const socialFacebookLogiIn = async value => {
-    setForLoading(true);
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.login}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          name: value.name,
-          email: value.email,
-          signuptype: 'social',
-          socialid: value.userID,
-          socialtoken: '',
-          socialtype: 'facebook',
-        },
-      });
-      if (data.data.status == 1) {
-        showMessage({
-          message: data.data.msg,
-          type: 'success',
-          animationDuration: 500,
+  // const FacebookLogin = () => {
+  //   LoginManager.logInWithPermissions(['public_profile', 'email']).then(
+  //     function (result) {
+  //       if (result.isCancelled) {
+  //         alert('Login Cancelled ');
+  //       } else {
+  //         const currentProfile = Profile.getCurrentProfile().then(function (
+  //           currentProfile,
+  //         ) {
+  //           if (currentProfile) {
+  //             socialFacebookLogiIn(currentProfile);
+  //           }
+  //         });
+  //       }
+  //     },
+  //     function (error) {
+  //       alert('Login failed with error: ' + error);
+  //     },
+  //   );
+  // };
+  // const socialFacebookLogiIn = async value => {
+  //   setForLoading(true);
+  //   try {
+  //     const data = await axios(`${NewApi}${NewAppapi.login}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         name: value.name,
+  //         email: value.email,
+  //         signuptype: 'social',
+  //         socialid: value.userID,
+  //         socialtoken: '',
+  //         socialtype: 'facebook',
+  //       },
+  //     });
+  //     if (data.data.status == 1) {
+  //       showMessage({
+  //         message: data.data.msg,
+  //         type: 'success',
+  //         animationDuration: 500,
 
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setForLoading(false);
-        navigation.navigate('BottomTab');
-      } else if (
-        data.data.msg ==
-        'User does not exist with provided Facebook social credentials'
-      ) {
-        showMessage({
-          message: data.data.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setForLoading(false);
-      } else {
-        setForLoading(false);
-        setModalVisible(true);
-      }
-    } catch (error) {
-      setForLoading(false);
-      console.log('google Signup Error', error);
-    }
-  };
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       setForLoading(false);
+  //       navigation.navigate('BottomTab');
+  //     } else if (
+  //       data.data.msg ==
+  //       'User does not exist with provided Facebook social credentials'
+  //     ) {
+  //       showMessage({
+  //         message: data.data.msg,
+  //         type: 'danger',
+  //         animationDuration: 500,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       setForLoading(false);
+  //     } else {
+  //       setForLoading(false);
+  //       setModalVisible(true);
+  //     }
+  //   } catch (error) {
+  //     setForLoading(false);
+  //     console.log('google Signup Error', error);
+  //   }
+  // };
   const socialLogiIn = async (value, token) => {
     setForLoading(true);
     try {

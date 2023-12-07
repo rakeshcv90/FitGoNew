@@ -9,8 +9,31 @@ PODS:
   - BVLinearGradient (2.8.3):
     - React-Core
   - DoubleConversion (1.1.6)
-  - FBAEMKit (14.0.0):
-    - FBSDKCoreKit_Basics (= 14.0.0)
+  - EXApplication (5.3.1):
+    - ExpoModulesCore
+  - EXConstants (14.4.2):
+    - ExpoModulesCore
+  - EXFileSystem (15.4.5):
+    - ExpoModulesCore
+  - EXFont (11.4.0):
+    - ExpoModulesCore
+  - Expo (49.0.21):
+    - ExpoModulesCore
+  - ExpoAdapterGoogleSignIn (10.1.1):
+    - ExpoModulesCore
+    - GoogleSignIn (~> 7.0)
+    - React-Core
+  - ExpoGL (13.2.0):
+    - ExpoModulesCore
+    - ReactCommon/turbomodule/core
+  - ExpoKeepAwake (12.3.0):
+    - ExpoModulesCore
+  - ExpoModulesCore (1.5.12):
+    - RCT-Folly (= 2021.07.22.00)
+    - React-Core
+    - React-NativeModulesApple
+    - React-RCTAppDelegate
+    - ReactCommon/turbomodule/core
   - FBLazyVector (0.72.4)
   - FBReactNativeSpec (0.72.4):
     - RCT-Folly (= 2021.07.22.00)
@@ -19,18 +42,6 @@ PODS:
     - React-Core (= 0.72.4)
     - React-jsi (= 0.72.4)
     - ReactCommon/turbomodule/core (= 0.72.4)
-  - FBSDKCoreKit (14.0.0):
-    - FBAEMKit (= 14.0.0)
-    - FBSDKCoreKit_Basics (= 14.0.0)
-  - FBSDKCoreKit_Basics (14.0.0)
-  - FBSDKGamingServicesKit (14.0.0):
-    - FBSDKCoreKit (= 14.0.0)
-    - FBSDKCoreKit_Basics (= 14.0.0)
-    - FBSDKShareKit (= 14.0.0)
-  - FBSDKLoginKit (14.0.0):
-    - FBSDKCoreKit (= 14.0.0)
-  - FBSDKShareKit (14.0.0):
-    - FBSDKCoreKit (= 14.0.0)
   - Firebase (10.18.0):
     - Firebase/Core (= 10.18.0)
   - Firebase/Auth (10.18.0):
@@ -473,21 +484,6 @@ PODS:
   - React-jsinspector (0.72.4)
   - React-logger (0.72.4):
     - glog
-  - react-native-fbsdk-next (10.0.0):
-    - React-Core
-    - react-native-fbsdk-next/Core (= 10.0.0)
-    - react-native-fbsdk-next/Login (= 10.0.0)
-    - react-native-fbsdk-next/Share (= 10.0.0)
-  - react-native-fbsdk-next/Core (10.0.0):
-    - FBSDKCoreKit (~> 14.0.0)
-    - React-Core
-  - react-native-fbsdk-next/Login (10.0.0):
-    - FBSDKLoginKit (~> 14.0.0)
-    - React-Core
-  - react-native-fbsdk-next/Share (10.0.0):
-    - FBSDKGamingServicesKit (~> 14.0.0)
-    - FBSDKShareKit (~> 14.0.0)
-    - React-Core
   - react-native-image-picker (7.0.2):
     - React-Core
   - react-native-netinfo (9.4.1):
@@ -499,6 +495,11 @@ PODS:
   - react-native-restart (0.0.27):
     - React-Core
   - react-native-safe-area-context (4.7.2):
+    - React-Core
+  - react-native-skia (0.1.225):
+    - RCT-Folly (= 2021.07.22.00)
+    - React
+    - React-callinvoker
     - React-Core
   - react-native-splash-screen (3.3.0):
     - React-Core
@@ -685,6 +686,8 @@ PODS:
   - RNScreens (3.25.0):
     - React-Core
     - React-RCTImage
+  - RNSVG (14.1.0):
+    - React-Core
   - RNVectorIcons (10.0.0):
     - React-Core
   - SocketRocket (0.6.1)
@@ -694,6 +697,15 @@ DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - EXApplication (from `../node_modules/expo-application/ios`)
+  - EXConstants (from `../node_modules/expo-constants/ios`)
+  - EXFileSystem (from `../node_modules/expo-file-system/ios`)
+  - EXFont (from `../node_modules/expo-font/ios`)
+  - Expo (from `../node_modules/expo`)
+  - "ExpoAdapterGoogleSignIn (from `../node_modules/@react-native-google-signin/google-signin/expo/ios`)"
+  - ExpoGL (from `../node_modules/expo-gl`)
+  - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
+  - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - Firebase
@@ -719,13 +731,13 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
-  - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-render-html (from `../node_modules/react-native-render-html`)
   - react-native-restart (from `../node_modules/react-native-restart`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-skia (from `../node_modules/@shopify/react-native-skia`)"
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-version-check (from `../node_modules/react-native-version-check`)
   - react-native-video (from `../node_modules/react-native-video`)
@@ -759,18 +771,13 @@ DEPENDENCIES:
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
     - AppAuth
-    - FBAEMKit
-    - FBSDKCoreKit
-    - FBSDKCoreKit_Basics
-    - FBSDKGamingServicesKit
-    - FBSDKLoginKit
-    - FBSDKShareKit
     - Firebase
     - FirebaseAnalytics
     - FirebaseAppCheckInterop
@@ -801,6 +808,24 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-linear-gradient"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  EXApplication:
+    :path: "../node_modules/expo-application/ios"
+  EXConstants:
+    :path: "../node_modules/expo-constants/ios"
+  EXFileSystem:
+    :path: "../node_modules/expo-file-system/ios"
+  EXFont:
+    :path: "../node_modules/expo-font/ios"
+  Expo:
+    :path: "../node_modules/expo"
+  ExpoAdapterGoogleSignIn:
+    :path: "../node_modules/@react-native-google-signin/google-signin/expo/ios"
+  ExpoGL:
+    :path: "../node_modules/expo-gl"
+  ExpoKeepAwake:
+    :path: "../node_modules/expo-keep-awake/ios"
+  ExpoModulesCore:
+    :path: "../node_modules/expo-modules-core"
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -842,8 +867,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
-  react-native-fbsdk-next:
-    :path: "../node_modules/react-native-fbsdk-next"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-netinfo:
@@ -856,6 +879,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-restart"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-skia:
+    :path: "../node_modules/@shopify/react-native-skia"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
   react-native-version-check:
@@ -922,6 +947,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   Yoga:
@@ -932,14 +959,17 @@ SPEC CHECKSUMS:
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  FBAEMKit: d00064597439e75885c70d9adbcb5f3e9ad84f5d
+  EXApplication: 042aa2e3f05258a16962ea1a9914bf288db9c9a1
+  EXConstants: ce5bbea779da8031ac818c36bea41b10e14d04e1
+  EXFileSystem: f8b838a880254de42a5a7da20ed5ce12e2697c1b
+  EXFont: 738c44c390953ebcbab075a4848bfbef025fd9ee
+  Expo: 61a8e1aa94311557c137c0a4dfd4fe78281cfbb4
+  ExpoAdapterGoogleSignIn: 6c55782832b7fbdc2c27dac05ef00445c103b8f3
+  ExpoGL: d41d4054d14289fb9f537b1203f23a845525c2dd
+  ExpoKeepAwake: be4cbd52d9b177cde0fd66daa1913afa3161fc1d
+  ExpoModulesCore: c480fd4e3c7c8e81f0a6ba3a7c56869f25fe016d
   FBLazyVector: 5d4a3b7f411219a45a6d952f77d2c0a6c9989da5
   FBReactNativeSpec: 3fc2d478e1c4b08276f9dd9128f80ec6d5d85c1f
-  FBSDKCoreKit: e5d3acfffe5063a9d0b967ba2ad1f5afc460cf43
-  FBSDKCoreKit_Basics: 1ff46a12e80f0b66e6c00e1ef32d6a5b5b9008a5
-  FBSDKGamingServicesKit: cfac825e69b78049c9f2b10198da7d20ab6b5a6f
-  FBSDKLoginKit: dbe86ef42ab142f3bd0f1c904a21bb33f31c5569
-  FBSDKShareKit: 2f6a6a1445cc1b8ea0f733e60d02d2f7c4ebf8be
   Firebase: 414ad272f8d02dfbf12662a9d43f4bba9bec2a06
   FirebaseAnalytics: 4d310b35c48eaa4a058ddc04bdca6bdb5dc0fe80
   FirebaseAppCheckInterop: 3cd914842ba46f4304050874cd284de82f154ffd
@@ -978,13 +1008,13 @@ SPEC CHECKSUMS:
   React-jsiexecutor: c7f826e40fa9cab5d37cab6130b1af237332b594
   React-jsinspector: aaed4cf551c4a1c98092436518c2d267b13a673f
   React-logger: da1ebe05ae06eb6db4b162202faeafac4b435e77
-  react-native-fbsdk-next: 75ea1d4b48e047796f3264535a1cab502686a3e2
   react-native-image-picker: 2e2e82aba9b6a91a7c78f7d9afde341a2659c7b8
   react-native-netinfo: fefd4e98d75cbdd6e85fc530f7111a8afdf2b0c5
   react-native-pager-view: d211379f61895b6349bd7e571b44a26d005c2975
   react-native-render-html: 984dfe2294163d04bf5fe25d7c9f122e60e05ebe
   react-native-restart: 7595693413fe3ca15893702f2c8306c62a708162
   react-native-safe-area-context: 7aa8e6d9d0f3100a820efb1a98af68aa747f9284
+  react-native-skia: 0af8dd48ce9332d1dedcb1bc8a648f7d57a04b6c
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-version-check: 6cd36aad4e30b8e3216747e3b4ddeb09e0647af8
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
@@ -1019,10 +1049,11 @@ SPEC CHECKSUMS:
   RNPermissions: e9980c7c19d2445d604d8b61a0c7c3ffca45c2b1
   RNReanimated: ab2e96c6d5591c3dfbb38a464f54c8d17fb34a87
   RNScreens: 85d3880b52d34db7b8eeebe2f1a0e807c05e69fa
+  RNSVG: ba3e7232f45e34b7b47e74472386cf4e1a676d0a
   RNVectorIcons: 8b5bb0fa61d54cd2020af4f24a51841ce365c7e9
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 3efc43e0d48686ce2e8c60f99d4e6bd349aff981
 
-PODFILE CHECKSUM: dfbfcf3f54ed78e92d55608f17db0a6cc9066046
+PODFILE CHECKSUM: 5b74bcb7f70af2db000d5f3c96d8f71ed98a42d5
 
 COCOAPODS: 1.13.0

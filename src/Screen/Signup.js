@@ -909,7 +909,7 @@ import {showMessage} from 'react-native-flash-message';
 import {useDispatch, useSelector} from 'react-redux';
 import ActivityLoader from '../Component/ActivityLoader';
 import { setUserId } from '../Component/ThemeRedux/Actions';
-import { LoginManager,Profile } from 'react-native-fbsdk-next'
+// import { LoginManager,Profile } from 'react-native-fbsdk-next's
 import AnimatedLottieView from 'lottie-react-native';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
@@ -979,27 +979,27 @@ const Signup = ({navigation}) => {
       }
     }
   };
-  const FacebookSignup=()=>{
-    LoginManager.logInWithPermissions(["public_profile", "email"]).then(
-      function (result) {
-      if (result.isCancelled) {
-        alert('Cancel');
-      } else {
-        const currentProfile = Profile.getCurrentProfile().then(
-          function(currentProfile) {
-            if (currentProfile) {
+  // const FacebookSignup=()=>{
+  //   LoginManager.logInWithPermissions(["public_profile", "email"]).then(
+  //     function (result) {
+  //     if (result.isCancelled) {
+  //       alert('Cancel');
+  //     } else {
+  //       const currentProfile = Profile.getCurrentProfile().then(
+  //         function(currentProfile) {
+  //           if (currentProfile) {
             
-              socialFacebookLogiIn(currentProfile);
-            }
-          }
-        );
-      }
-      },
-      function (error) {
-      alert("Login failed with error: " + error);
-      }
-      )
-  }
+  //             socialFacebookLogiIn(currentProfile);
+  //           }
+  //         }
+  //       );
+  //     }
+  //     },
+  //     function (error) {
+  //     alert("Login failed with error: " + error);
+  //     }
+  //     )
+  // }
   const handleFormSubmit = async (value, action) => {
     setForLoading(true);
     try {
@@ -1093,52 +1093,52 @@ const Signup = ({navigation}) => {
       console.log('google Signup Error', error?.response);
     }
   };
-  const socialFacebookLogiIn = async (value,) => {
-    setForLoading(true);
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.signup}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          name: value.name,
-          email: value.email,
-          signuptype: 'social',
-          socialid: value.userID,
-          socialtoken:'',
-          socialtype: 'facebook',
-        },
-      });
+  // const socialFacebookLogiIn = async (value,) => {
+  //   setForLoading(true);
+  //   try {
+  //     const data = await axios(`${NewApi}${NewAppapi.signup}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         name: value.name,
+  //         email: value.email,
+  //         signuptype: 'social',
+  //         socialid: value.userID,
+  //         socialtoken:'',
+  //         socialtype: 'facebook',
+  //       },
+  //     });
 
-      if (data.data.msg == 'User already exists' && data.data.profile_compl_status == 0) {
-        setForLoading(false);
-        console.log('Compleate Profile');
-        dispatch(setUserId(data.data?.id))
-        navigation.navigate('Yourself');
-      } else if (
-        data.data.msg == 'User registered via social login' &&
-        data.data.profile_compl_status == 0
-      ) {
-        setForLoading(false);
-        console.log('Compleate Profile1');
-        dispatch(setUserId(data.data?.id))
-        navigation.navigate('Yourself');
-      } else if (
-        data.data.msg == 'User already exists' &&
-        data.data.profile_compl_status == 1
-      ) {
-        setForLoading(false);
-        navigation.navigate('BottomTab');
-      } else {
-        setForLoading(false);
-        console.log('user not found');
-      }
-    } catch (error) {
-      setForLoading(false);
-      console.log('google Signup Error', error?.response);
-    }
-  };
+  //     if (data.data.msg == 'User already exists' && data.data.profile_compl_status == 0) {
+  //       setForLoading(false);
+  //       console.log('Compleate Profile');
+  //       dispatch(setUserId(data.data?.id))
+  //       navigation.navigate('Yourself');
+  //     } else if (
+  //       data.data.msg == 'User registered via social login' &&
+  //       data.data.profile_compl_status == 0
+  //     ) {
+  //       setForLoading(false);
+  //       console.log('Compleate Profile1');
+  //       dispatch(setUserId(data.data?.id))
+  //       navigation.navigate('Yourself');
+  //     } else if (
+  //       data.data.msg == 'User already exists' &&
+  //       data.data.profile_compl_status == 1
+  //     ) {
+  //       setForLoading(false);
+  //       navigation.navigate('BottomTab');
+  //     } else {
+  //       setForLoading(false);
+  //       console.log('user not found');
+  //     }
+  //   } catch (error) {
+  //     setForLoading(false);
+  //     console.log('google Signup Error', error?.response);
+  //   }
+  // };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />

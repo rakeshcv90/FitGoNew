@@ -1,3 +1,4 @@
+require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
  def node_require(script)
    # Resolve script with node to allow for hoisting
    require Pod::Executable.execute_command('node', ['-p',
@@ -8,7 +9,7 @@
  end
  node_require('react-native/scripts/react_native_pods.rb')
  node_require('react-native-permissions/scripts/setup.rb')
-platform :ios, min_ios_version_supported
+platform :ios, '13.0'
 prepare_react_native_project!
 setup_permissions([
   # 'AppTrackingTransparency',
@@ -49,6 +50,14 @@ if linkage != nil
 end
 
 target 'FitGo' do
+  use_expo_modules!
+  post_integrate do |installer|
+    begin
+      expo_patch_react_imports!(installer)
+    rescue => e
+      Pod::UI.warn e
+    end
+  end
   config = use_native_modules!
   use_modular_headers!
   $RNFirebaseAsStaticFramework = true

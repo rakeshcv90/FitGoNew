@@ -24,6 +24,7 @@
 		4C426F652AF209950063F75E /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C426F642AF209950063F75E /* BootSplash.storyboard */; };
 		4CF7BFBF2AC13D4B00F8EF48 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 4CF7BFBE2AC13D4B00F8EF48 /* Fonts */; };
 		4D3A414E624B4E1F9EC4CD09 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 240A377C434C4E928F6D825E /* Poppins-Regular.ttf */; };
+		609BAD91063620D270C2F1FA /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 192853A61E538B4591549D11 /* ExpoModulesProvider.swift */; };
 		700256FADB1A406AB46E2C6D /* Poppins-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC2D8CE17F8492F8BDEFC34 /* Poppins-ExtraLightItalic.ttf */; };
 		74D0ECF484A64CABB39F4879 /* Poppins-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CC6A13618FFB49CF8BC9E99F /* Poppins-BlackItalic.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-FitGo-FitGoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-FitGo-FitGoTests.a */; };
@@ -36,6 +37,7 @@
 		CFA5D2594052407DAB49E273 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E85AEB633AB14F02A9520136 /* Poppins-Medium.ttf */; };
 		DF33DEA4AE6F48BC80B4D3F4 /* Poppins-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3B72A1A996BF49A9A3ECD7B5 /* Poppins-SemiBoldItalic.ttf */; };
 		E52F236A3FEF48BAAEFCEF30 /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 246C12EBF2EE4BB8B8C585D0 /* Poppins-Thin.ttf */; };
+		EDA8AC2CAE7FF3D4BCFC89B0 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D565410EC34D350967B19FCD /* ExpoModulesProvider.swift */; };
 		EE9744819A304788A52BC030 /* Poppins-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9507F384785345BBB8C57EBB /* Poppins-Italic.ttf */; };
 		FC0272EC5E6146D68CEC0937 /* verdanab.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1EB9C32AEB604904891AAFBD /* verdanab.ttf */; };
 /* End PBXBuildFile section */
@@ -61,6 +63,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = FitGo/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = FitGo/main.m; sourceTree = "<group>"; };
 		186A6F312B1DA2D00005DC45 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		192853A61E538B4591549D11 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-FitGo/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-FitGo-FitGoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FitGo-FitGoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1EB9C32AEB604904891AAFBD /* verdanab.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = verdanab.ttf; path = ../assets/fonts/verdanab.ttf; sourceTree = "<group>"; };
 		1F9FB247D2AE475BBAFFE601 /* Poppins-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-LightItalic.ttf"; path = "../assets/fonts/Poppins-LightItalic.ttf"; sourceTree = "<group>"; };
@@ -90,6 +93,7 @@
 		CC6A13618FFB49CF8BC9E99F /* Poppins-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BlackItalic.ttf"; path = "../assets/fonts/Poppins-BlackItalic.ttf"; sourceTree = "<group>"; };
 		CF0A1BF12FC24968AE7691EE /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		D03A5B6C55644E0E8CA53A07 /* Poppins-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBoldItalic.ttf"; path = "../assets/fonts/Poppins-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
+		D565410EC34D350967B19FCD /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-FitGo-FitGoTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		E85AEB633AB14F02A9520136 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -131,6 +135,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		0DC914BAD852C0C2151102C1 /* FitGo */ = {
+			isa = PBXGroup;
+			children = (
+				192853A61E538B4591549D11 /* ExpoModulesProvider.swift */,
+			);
+			name = FitGo;
+			sourceTree = "<group>";
+		};
 		13B07FAE1A68108700A75B9A /* FitGo */ = {
 			isa = PBXGroup;
 			children = (
@@ -157,6 +169,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		58E19F5F02A941B759246B6A /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				0DC914BAD852C0C2151102C1 /* FitGo */,
+				8DC04DFE8B703868E7F611DD /* FitGoTests */,
+			);
+			name = ExpoModulesProviders;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -175,6 +196,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
 				B237919393184058950BFEA8 /* Resources */,
+				58E19F5F02A941B759246B6A /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -188,6 +210,14 @@
 				00E356EE1AD99517003FC87E /* FitGoTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		8DC04DFE8B703868E7F611DD /* FitGoTests */ = {
+			isa = PBXGroup;
+			children = (
+				D565410EC34D350967B19FCD /* ExpoModulesProvider.swift */,
+			);
+			name = FitGoTests;
 			sourceTree = "<group>";
 		};
 		B237919393184058950BFEA8 /* Resources */ = {
@@ -236,6 +266,7 @@
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "FitGoTests" */;
 			buildPhases = (
 				A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */,
+				09E72A59FEED1A8FB2504D3B /* [Expo] Configure project */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
@@ -258,6 +289,7 @@
 			buildPhases = (
 				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
+				A8D96C25D9323072EEA3F31D /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
@@ -391,6 +423,25 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FitGo/Pods-FitGo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		09E72A59FEED1A8FB2504D3B /* [Expo] Configure project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[Expo] Configure project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-FitGo-FitGoTests/expo-configure-project.sh\"\n";
+		};
 		38D36CF746E19DA894788D4C /* [CP-User] [RNFB] Core Configuration */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -425,6 +476,25 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		A8D96C25D9323072EEA3F31D /* [Expo] Configure project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[Expo] Configure project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-FitGo/expo-configure-project.sh\"\n";
 		};
 		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -526,6 +596,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E356F31AD99517003FC87E /* FitGoTests.m in Sources */,
+				EDA8AC2CAE7FF3D4BCFC89B0 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,6 +606,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				609BAD91063620D270C2F1FA /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -559,7 +631,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = FitGoTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -570,6 +642,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FitGo.app/FitGo";
@@ -583,7 +656,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = FitGoTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -594,6 +667,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FitGo.app/FitGo";
@@ -625,6 +699,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = fitme.health.fitness.homeworkouts.equipment;
 				PRODUCT_NAME = FitGo;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -662,6 +737,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = fitme.health.fitness.homeworkouts.equipment;
 				PRODUCT_NAME = FitGo;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -723,7 +799,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -789,7 +865,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
