@@ -818,7 +818,7 @@ const Index = ({navigation, route}: any) => {
         </TouchableOpacity>
       </View>
 
-      <ActivityLoader visible={visible} />
+      )}
     </SafeAreaView>
   );
 };

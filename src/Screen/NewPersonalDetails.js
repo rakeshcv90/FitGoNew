@@ -1,97 +1,101 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import NewHeader from '../Component/Headers/NewHeader';
 import {AppColor} from '../Component/Color';
-import {DeviceHeigth, DeviceWidth} from '../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../Component/Config';
 import Button from '../Component/Button';
 import Goal from '../Screen/Yourself/Goal';
 import {useDispatch, useSelector} from 'react-redux';
-import Index from '../Screen/Yourself/Index';
+import axios from 'axios';
+import { setUserProfileData } from '../Component/ThemeRedux/Actions';
 const NewPersonalDetails = ({route, navigation}) => {
-  const data1 = [
-    {
-      id: 1,
-      text1: '180cm',
-      text2: 'Height',
-      SC: 4,
-    },
-    {
-      id: 2,
-      text1: '57Kg',
-      text2: 'Weight',
-      SC: 3,
-    },
-    {
-      id: 3,
-      text1: '33yrs',
-      text2: 'Age',
-      SC: 5,
-    },
-    {
-      id: 4,
-      text1: 'target Area',
-      text2: 'Legs,Shoulder & Back',
-      SC: 6,
-    },
-    {
-      id: 5,
-      text1: 'Fitness level',
-      text2: 'Intermediate',
-      SC: 2,
-    },
-    {
-      id: 6,
-      text1: 'Goal',
-      text2: 'Build muscle',
-      SC: 1,
-    },
-  ];
-  const txtData = [
-    {
-      id: 1,
-      txt1: 'Upate your goal here!',
-    },
-  ];
-  const firstViewData = data1.slice(0, 3);
-  const secondViewData = data1.slice(3);
-  const ScreenTitle = route?.params?.title;
-  const [SId, setSId] = useState();
-  const selectedID = ID => {
-    setSId(ID);
-    // console.log(ID);
+  const {getUserDataDetails} = useSelector(state => state);
+  const {completeProfileData}=useSelector(state=>state)
+  console.log('userData', getUserDataDetails,completeProfileData);
+  const Dispatch = useDispatch();
+  useEffect(() => {
+    getCustomWorkout();
+  }, []);
+  const getCustomWorkout = async () => {
+    try {
+      const data = await axios(
+        `https://gofit.tentoptoday.com/adserver/public/api/userprofile`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          data: {
+            id: 31,
+          },
+        },
+      );
+      if (data.data) {
+        // setForLoading(false);
+        Dispatch(setUserProfileData(data.data?.profile));
+        // console.log(' Api data', data.data);
+        // navigation.navigate('BottomTab');
+      } else {
+        // setForLoading(false);
+        // dispatch(setCustomWorkoutData([]));
+        // navigation.navigate('BottomTab');
+      }
+    } catch (error) {
+      console.log('User Profile Error', error);
+      // setForLoading(false);
+    }
   };
-
   return (
     <View style={styles.Container}>
       <NewHeader header={'Personal Details'} backButton />
       <View style={styles.TopView}>
-        {firstViewData.map((value, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.View1}
-            onPress={() => {
-              //   selectedID(value.id);
-              navigation.navigate('Yourself', {id: value.SC});
-            }}>
-            <Text style={styles.txt1}>{value.text1}</Text>
-            <Text style={styles.txt2}>{value.text2}</Text>
-          </TouchableOpacity>
-        ))}
+        {Object.entries(getUserDataDetails).map((item, index) => {
+          if (['height', 'weight', 'age'].includes(item[0])) {
+            return (
+              <TouchableOpacity
+                key={index}
+                style={styles.View1}
+                onPress={() => {
+                  navigation.navigate('Yourself', {id: item[1], type: item[0]});
+                }}>
+                <Text style={styles.txt1}>
+                  {item[1] == null ? 'No Data' : item[1]}
+                </Text>
+                <Text style={styles.txt2}>{item[0]}</Text>
+              </TouchableOpacity>
+            );
+          }
+          return null;
+        })}
       </View>
-      {secondViewData.map((value, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.middleView}
-          onPress={() => {
-            selectedID(value.id);
-            navigation.navigate('Yourself', {id: value.SC});
-          }}>
-          <Text style={styles.txt2}>{value.text1}</Text>
-          <Text style={[styles.txt1, {width: DeviceWidth * 0.3}]}>
-            {value.text2}
-          </Text>
-        </TouchableOpacity>
-      ))}
+      <View style={{flexDirection: 'column-reverse'}}>
+        {Object.entries(getUserDataDetails).map((item, index) => {
+          if (
+            !['height', 'weight', 'age'].includes(item[0]) &&
+            !['id', 'email', 'name', 'image', 'gender', 'image_path'].includes(
+              item[0],
+            )
+          ) {
+            return (
+              <TouchableOpacity
+                key={index}
+                style={styles.middleView}
+                onPress={() => {
+                  selectedID(item.id);
+                  navigation.navigate('Yourself', {id: item.SC});
+                }}>
+                <Text style={[styles.txt2, {textTransform: 'capitalize'}]}>
+                  {item[0]?.replace('_', ' ')}
+                </Text>
+                <Text style={styles.txt1}>
+                  {item[1] == null ? 'No Data' : item[1]}
+                </Text>
+              </TouchableOpacity>
+            );
+          }
+          return null;
+        })}
+      </View>
       <View style={styles.buttonView}>
         <Button buttonText={'Save'} />
       </View>
@@ -104,9 +108,10 @@ const styles = StyleSheet.create({
     backgroundColor: AppColor.BACKGROUNG,
   },
   TopView: {
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     justifyContent: 'center',
     marginVertical: DeviceHeigth * 0.015,
+    // borderWidth: 1,
   },
   View1: {
     backgroundColor: AppColor.WHITE,
@@ -142,6 +147,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     marginBottom: DeviceHeigth * 0.08,
+  },
+  noDataView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  NodataText: {
+    color: AppColor.BLACK,
+    fontSize: 18,
   },
 });
 export default NewPersonalDetails;

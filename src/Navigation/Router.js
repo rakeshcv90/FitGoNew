@@ -44,12 +44,11 @@ import FavoritesRouter from './FavoritesRouter';
 import ExerciseByEquipments from '../Screen/Exercises/ExerciseByEquipments';
 import LatestProducts from '../Screen/Stores/LatestProducts';
 import IntroductionScreen from '../Screen/IntroductionScreen';
-import Yourself from '../Screen/Yourself/Index';
+import Yourself from '../Screen/Yourself/Index'
 import OtpVerification from '../Screen/OtpVerification';
 import WorkoutCategories from '../Screen/New Workouts/WorkoutCategories';
 
 // import Workouts from '../Screen/New Workouts/WorkoutsDetails';
-
 import WorkoutsDetails from '../Screen/New Workouts/WorkoutsDetails';
 import Home from '../Screen/NewHome/Home';
 import ApplicantBottomTabBar from './ApplicantBottomTabBar';
