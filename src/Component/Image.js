@@ -66,5 +66,6 @@ export const localImage = {
   Documents:require("../Icon/Images/NewImage/Document.png"),
   Pen:require("../Icon/Images/NewImage/Pen.png"),
   Profile3:require("../Icon/Images/NewImage/Profile.png"),
+  BULB:require("../Icon/Images/NewImage/emojione_light-bulb.png"),
 
 };
