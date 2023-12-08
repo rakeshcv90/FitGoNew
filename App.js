@@ -24,7 +24,6 @@ import NetInfo from '@react-native-community/netinfo';
 import {useSelector} from 'react-redux';
 import {DeviceHeigth, DeviceWidth} from './src/Component/Config';
 import RNRestart from 'react-native-restart';
-import BootSplash from 'react-native-bootsplash';
 import { requestPermissionforNotification,RemoteMessage} from './src/Component/Helper/PushNotification';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 const App = () => {
@@ -135,7 +134,6 @@ const App = () => {
       <>
         <NavigationContainer
          ref={navigationRef}
-          onReady={() => BootSplash.hide({duration: 5000})}
           >
           <LoginStack />
           {/* <Router /> */}

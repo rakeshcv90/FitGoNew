@@ -58,6 +58,7 @@ import Store from '../Screen/NewHome/Store';
 import Profile from '../Screen/NewHome/Profile';
 import NewEditProfile from '../Component/NewEditProfile';
 import NewPersonalDetails from '../Screen/NewPersonalDetails';
+import NewStepCounter from '../Screen/NewStepCounter';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const screenOptions = {
@@ -145,6 +146,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Personal Details" component={NewPersonalDetails}/>
       <Stack.Screen name="WorkoutCategories" component={WorkoutCategories}/>
       <Stack.Screen name="WorkoutsDetails" component={WorkoutsDetails}/>
+      <Stack.Screen name="StepCounter" component={NewStepCounter}/>
       <Stack.Screen name="BottomTab" component={BottomTab} />
 
     </Stack.Navigator>
