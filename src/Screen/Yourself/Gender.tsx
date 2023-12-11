@@ -7,105 +7,156 @@ import {
   TouchableWithoutFeedback,
   Animated,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
-import Carousel from 'react-native-snap-carousel';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AppColor} from '../../Component/Color';
 import ProgressBar from './ProgressBar';
 import Bulb from './Bulb';
+import {useDispatch, useSelector} from 'react-redux';
+import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 
 const Gender = ({route, navigation}: any) => {
-  const {data, screen} = route.params;
+  const {data, nextScreen} = route.params;
+
+  const dispatch = useDispatch();
   const [selected, setSelected] = useState('');
+  const [screen, setScreen] = useState(nextScreen);
   const translateX = useRef(new Animated.Value(0)).current;
   const translateX1 = useRef(new Animated.Value(0)).current;
-  const translateXRight = useRef(new Animated.Value(0)).current;
-  const translateX1Left = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    setScreen(nextScreen);
+  }, []);
 
   const handleImagePress = (gender: string) => {
     // Set the selected gender
-
-    // Animate the translation of the unselected image
-
-    Animated.parallel([
-      Animated.timing(translateX, {
-        toValue: gender === 'Male' ? DeviceWidth / 2 : -DeviceWidth *0.4,
-        duration: 500,
-        useNativeDriver: true,
-        delay: gender === 'Male' ? 250 : 0, // Delay the return to center animation for a smoother effect
-      }),
-      Animated.timing(translateX1, {
-        toValue: gender === 'Female' ? -DeviceWidth *0.4 : DeviceWidth / 2,
-        duration: 500,
-        useNativeDriver: true,
-        delay: gender === 'Female' ? 250 : 0, // Delay the return to center animation for a smoother effect
-      }),
-      Animated.timing(translateXRight, {
-        toValue: gender === 'Male' ? DeviceWidth / 2 : -DeviceWidth / 2,
-        duration: 500,
-        useNativeDriver: true,
-        delay: gender === 'Male' ? 500 : 0, // Delay the return to center animation for a smoother effect
-      }),
-      Animated.timing(translateX1Left, {
-        toValue: gender === 'Female' ? -DeviceWidth / 2 : DeviceWidth * 0.1,
-        duration: 500,
-        useNativeDriver: true,
-        delay: gender === 'Female' ? 500 : 0, // Delay the return to center animation for a smoother effect
-      }),
-    ]).start();
-    setSelected(gender);
+    console.log(gender, selected, DeviceWidth / 2, -DeviceWidth * 0.4);
+    if (gender === '') {
+      Animated.parallel([
+        Animated.timing(translateX, {
+          toValue: DeviceWidth / 2,
+          duration: 500,
+          useNativeDriver: true,
+          delay: 250, // Delay the return to center animation for a smoother effect
+        }),
+        Animated.timing(translateX1, {
+          toValue: 0,
+          // toValue: selected == 'M' ? 0 : DeviceWidth / 2,
+          duration: 500,
+          useNativeDriver: true,
+          delay: 500, // Delay the return to center animation for a smoother effect
+        }),
+      ]).start();
+      setTimeout(() => {
+        setScreen(screen - 1);
+        setSelected('');
+      }, 1000);
+    } else {
+      // Animate the translation of the unselected image
+      Animated.parallel([
+        Animated.timing(selected === 'F' ? translateX : translateX1, {
+          toValue: gender == 'F' ? -DeviceWidth * 0.5 : DeviceWidth / 2,
+          duration: 500,
+          useNativeDriver: true,
+          delay: 500, // Delay the return to center animation for a smoother effect
+        }),
+      ]).start();
+      setTimeout(() => {
+        setSelected(gender);
+        setScreen(screen + 1);
+      }, 1000);
+    }
   };
+  const toNextScreen = (item: any) => {
+    const currentData = [
+      {
+        gender: selected,
+        image: selected == 'M' ? localImage.MALE : localImage.FEMALE,
+      },
+      {
+        goal: item?.goal_id,
+      },
+    ];
+    dispatch(setLaterButtonData(currentData));
+    navigation.navigate('Level', {nextScreen: screen+ 1});
+  };
+
   const Goal = () => {
+    const goalsAnimation = useRef(new Animated.Value(0)).current;
+
+    const startGoalsAnimation = () => {
+      Animated.stagger(250, [
+        Animated.timing(goalsAnimation, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    };
+
+    useEffect(() => {
+      startGoalsAnimation();
+    }, []);
     return (
-      <Animated.View
-        style={
-          {
-            // transform: [
-            //   {
-            //     translateX:
-            //       selected === 'Female' ? translateX1Left : translateXRight,
-            //   },
-            // ],
-          }
-        }>
+      <Animated.View style={{}}>
         {data &&
           data?.map((item: any, index: number) => {
-            // console.log(item);
+            if (item?.goal_gender != selected) return;
+            // console.log(goalsAnimation);
+            const goalAnimationStyle = {
+              opacity: goalsAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+              }),
+              transform: [
+                {
+                  translateX: goalsAnimation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange:
+                      selected == 'F' ? [0, -index * 5] : [0, index * 5],
+                  }),
+                },
+              ],
+            };
             return (
-              <TouchableOpacity
+              <TouchableWithoutFeedback
                 key={index}
-                activeOpacity={0.8}
-                onPress={() => null}
-                style={[
-                  styles.box2,
-                  {
-                    padding: 10,
-                    paddingRight: 10,
-                    borderWidth: 0,
-                    borderColor: AppColor.WHITE,
-                  },
-                ]}>
-                <Text
-                  style={{
-                    color: '#505050',
-                    fontSize: 18,
-                    fontWeight: '600',
-                    fontFamily: 'Poppins',
-                    lineHeight: 27,
-                  }}>
-                  {item.name}
-                </Text>
-                <Image
-                  source={{uri: item.image}}
-                  resizeMode="contain"
-                  style={{
-                    height: DeviceHeigth * 0.2,
-                    width: DeviceWidth * 0.3,
-                  }}
-                />
-              </TouchableOpacity>
+                onPress={() => toNextScreen(item)}>
+                <Animated.View
+                  style={[
+                    styles.box2,
+                    goalAnimationStyle,
+                    {
+                      padding: 10,
+                      // paddingRight: 10,
+                      borderWidth: 0,
+                      borderColor: AppColor.WHITE,
+                    },
+                  ]}>
+                  <Image
+                    source={{uri: item.goal_image}}
+                    resizeMode="contain"
+                    style={{
+                      height: 50,
+                      width: 40,
+                      marginRight: 10,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: '#505050',
+                      fontSize: 18,
+                      fontWeight: '600',
+                      fontFamily: 'Poppins',
+                      lineHeight: 27,
+                    }}>
+                    {item.goal_title}
+                  </Text>
+                </Animated.View>
+              </TouchableWithoutFeedback>
             );
           })}
       </Animated.View>
@@ -121,67 +172,98 @@ const Gender = ({route, navigation}: any) => {
         backgroundColor: AppColor.WHITE,
       }}>
       <ProgressBar screen={screen} />
-      <Bulb />
+      <Bulb screen={screen} />
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-around',
+          justifyContent: 'space-between',
           alignItems: 'center',
           alignSelf: 'flex-end',
           height: DeviceHeigth * 0.6,
         }}>
+        {/* {selected != 'F' ? ( */}
         <Animated.View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-around',
             alignItems: 'center',
-            // backgroundColor: 'blue',
             alignSelf: 'center',
             transform: [{translateX: translateX1}],
-            width: DeviceWidth / 2,
+            width: selected == 'M' ? DeviceWidth : DeviceWidth / 2,
+            marginLeft: 50,
           }}>
-          {selected == 'Male' && <Goal />}
-          <Animated.View
+          {selected == 'M' && <Goal />}
+          <View
             style={{
               width: DeviceWidth / 2,
               alignItems: 'center',
             }}>
-            <TouchableWithoutFeedback onPress={() => handleImagePress('Male')}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                nextScreen == screen && handleImagePress('M');
+              }}>
               <Image
                 source={localImage.MALE}
                 style={{height: 450, width: 300}}
                 resizeMode="contain"
               />
             </TouchableWithoutFeedback>
-          </Animated.View>
+          </View>
         </Animated.View>
+        {/* ) : (
+          <View style={{width: DeviceWidth / 2}} />
+        )} */}
         <Animated.View
           style={{
-            flexDirection: 'row',
+            flexDirection: 'row-reverse',
             justifyContent: 'space-around',
             alignItems: 'center',
             alignSelf: 'center',
-            transform: [{translateX: translateX}],
-            width: DeviceWidth,
-            // backgroundColor: 'green',
+            transform: [
+              {translateX: selected === 'F' ? translateX : translateX1},
+            ],
+            width: selected == 'F' ? DeviceWidth : DeviceWidth / 2,
+            // marginLeft: selected == 'F' ? 50 : 0,
           }}>
-          <Animated.View
+          {selected == 'F' && <Goal />}
+          <View
             style={{
               width: DeviceWidth / 2,
               alignItems: 'center',
             }}>
             <TouchableWithoutFeedback
-              onPress={() => handleImagePress('Female')}>
+              onPress={() => {
+                nextScreen == screen && handleImagePress('F');
+              }}>
               <Image
                 source={localImage.FEMALE}
-                style={{height: 450, width: 300}}
+                style={{
+                  height: 450,
+                  width: 300,
+                }}
                 resizeMode="contain"
               />
             </TouchableWithoutFeedback>
-          </Animated.View>
-          {selected == 'Female' && <Goal />}
+          </View>
         </Animated.View>
       </View>
+      {selected != '' ? (
+        <TouchableOpacity
+          style={{alignSelf: 'flex-start', marginLeft: DeviceWidth * 0.1}}
+          onPress={() => {
+            handleImagePress('');
+          }}>
+          <Icons name="chevron-left" size={25} color={'#000'} />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          style={{alignSelf: 'flex-start', marginLeft: DeviceWidth * 0.1}}
+          onPress={() => {
+            null;
+          }}>
+          <Icons name="chevron-left" size={25} color={'#fff'} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -213,12 +295,12 @@ const styles = StyleSheet.create({
     }),
   },
   box2: {
-    width: DeviceWidth * 0.4,
-    height: DeviceHeigth * 0.1,
+    width: DeviceWidth * 0.45,
+    height: DeviceHeigth * 0.08,
     borderRadius: 20,
-    marginBottom: 20,
+    marginBottom: 30,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     // overflow: 'hidden',
     backgroundColor: AppColor.WHITE,
@@ -234,5 +316,14 @@ const styles = StyleSheet.create({
         elevation: 4,
       },
     }),
+  },
+  nextButton: {
+    backgroundColor: 'white',
+    width: 45,
+    height: 45,
+    borderRadius: 50 / 2,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

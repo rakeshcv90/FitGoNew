@@ -3,7 +3,7 @@ import React from 'react';
 import {localImage} from '../../Component/Image';
 import {DeviceWidth} from '../../Component/Config';
 
-const Bulb = () => {
+const Bulb = ({screen}: any) => {
   return (
     <View style={{alignItems: 'center'}}>
       <Text
@@ -14,7 +14,12 @@ const Bulb = () => {
           fontWeight: 'bold',
           lineHeight: 30,
         }}>
-        Select your Gender
+        {'Select your '}
+        {screen == 1
+          ? 'Gender'
+          : screen == 2
+          ? 'Fitness goal'
+          : 'Fitness level'}
       </Text>
       <View
         style={{
@@ -29,7 +34,7 @@ const Bulb = () => {
         }}>
         <Image source={localImage.BULB} />
         <Text
-        numberOfLines={2}
+          numberOfLines={2}
           style={{
             fontSize: 12,
             fontWeight: '400',

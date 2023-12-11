@@ -55,7 +55,7 @@ const Index = ({navigation, route}: any) => {
   );
 
   const dispatch = useDispatch();
-  const [screen, setScreen] = useState(0);
+  const [screen, setScreen] = useState(1);
   const [toggleW, setToggleW] = useState('kg');
   const [toggleWData, setToggleWData] = useState([]);
   const [toggleData, setToggleData] = useState([]);
@@ -118,6 +118,7 @@ const Index = ({navigation, route}: any) => {
         method: 'get',
       });
       if (res.data) {
+        console.log('first', res.data?.goal)
         dispatch(setCompleteProfileData(res.data));
       }
     } catch (error) {
@@ -474,7 +475,7 @@ const Index = ({navigation, route}: any) => {
   };
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate('Gender', {data: fullData[1].data, screen: screen});
+      navigation.navigate('Gender', {data: completeProfileData?.goal, nextScreen: screen});
     }, 2000);
   }, []);
   return (
