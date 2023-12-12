@@ -35,7 +35,7 @@ const WorkoutCategories = ({navigation}) => {
         data: payload,
       });
       setLoaded(false);
-      // console.log('Workout response is', res.data.workout_details);
+ 
       if (data.data) {
         if (selectedButton == '1') {
           setWorkoutData(

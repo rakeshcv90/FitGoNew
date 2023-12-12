@@ -22,5 +22,7 @@ export const AppColor={
     DARKGRAY:'#707070',
     ProfileTextColor:"#7B6F72",
     GRAY:'#F0F0F0',
+    GRAY1:'#DDDADA',
+    GRAY2:'#D9D9D9'
 
   }

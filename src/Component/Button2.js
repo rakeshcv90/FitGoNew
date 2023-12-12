@@ -11,29 +11,27 @@ const Button2 = ({buttonText, onFBPress, onGooglePress}) => {
     <View
       style={{
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
+        justifyContent: 'space-between',
         alignItems: 'center',
       }}>
       <TouchableOpacity
-        style={styles.buttonStyle}
+        style={[styles.buttonStyle, {marginLeft: DeviceWidth * 0.07}]}
         activeOpacity={0.5}
         onPress={onFBPress}>
         <Image
           source={localImage.FACEBOOK}
           style={{width: DeviceWidth * 0.4, height: DeviceHeigth * 0.035}}
           resizeMode="contain"
- 
         />
       </TouchableOpacity>
       <TouchableOpacity
-        style={styles.buttonStyle}
+        style={[styles.buttonStyle, {marginRight: DeviceWidth * 0.07}]}
         activeOpacity={0.5}
         onPress={onGooglePress}>
         <Image
           source={localImage.GOOGLE}
           style={{width: DeviceWidth * 0.4, height: DeviceHeigth * 0.035}}
           resizeMode="contain"
-   
         />
       </TouchableOpacity>
     </View>
@@ -42,22 +40,12 @@ const Button2 = ({buttonText, onFBPress, onGooglePress}) => {
 const styles = StyleSheet.create({
   buttonStyle: {
     backgroundColor: AppColor.SOCIALBUTTON,
-    width: DeviceWidth * 0.45,
+    width: DeviceWidth * 0.4,
     height: DeviceHeigth * 0.07,
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-  },
-  button: {
-    fontSize: 16,
-    fontFamily: 'Poppins',
-    textAlign: 'center',
-    margin: 10,
-    color: AppColor.WHITE,
-    fontWeight: '700',
-    backgroundColor: 'transparent',
-    lineHeight: 24,
   },
 });
 

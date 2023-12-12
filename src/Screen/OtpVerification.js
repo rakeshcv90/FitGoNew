@@ -138,7 +138,7 @@ const OtpVerification = ({navigation, route}) => {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
         <KeyboardAvoidingView
-          behavior={Platform.OS == 'ios' ? 'position' : undefined}
+          behavior={Platform.OS == 'ios' ? 'position' : 'position'}
           contentContainerStyle={{flexGrow: 1}}>
           {forLoading ? <ActivityLoader /> : ''}
           <View style={styles.TextContainer}>

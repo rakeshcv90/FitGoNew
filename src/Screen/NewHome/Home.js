@@ -8,6 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
   StatusBar,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
@@ -24,7 +25,7 @@ import axios from 'axios';
 import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
 import PercentageBar from '../../Component/PercentageBar';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 
 const Home = ({navigation}) => {
   const [selectedButton, setSelectedButton] = useState('1');
@@ -138,42 +139,46 @@ const Home = ({navigation}) => {
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{flexGrow: 1}}
+        contentContainerStyle={{flexGrow: 1, marginTop: 20}}
         keyboardShouldPersistTaps="handled">
         <ImageBackground
           source={localImage.CARD}
           style={styles.card}
           resizeMode="contain">
           <View style={styles.cardheader}>
-            {getUserDataDetails.image_path==null? <Image
-              source={localImage.avt}
-              style={styles.profileImage}
-              resizeMode="contain"
-            /> : <Image
-            source={{
-              uri:getUserDataDetails.image_path ,
-            }}
-            style={styles.profileImage}
-            resizeMode="contain"
-          /> 
-              
-            }
-            {/* <Image
-              source={getUserDataDetails.image_path==null?localImage.avt:getUserDataDetails.image_path}
-              style={styles.profileImage}
-              resizeMode="contain"
-            /> */}
+            {getUserDataDetails.image_path == null ? (
+              <Image
+                source={localImage.avt}
+                style={styles.profileImage}
+                resizeMode="contain"
+              />
+            ) : (
+              <Image
+                source={{
+                  uri: getUserDataDetails.image_path,
+                }}
+                style={styles.profileImage}
+                resizeMode="contain"
+              />
+            )}
+
             <View style={styles.textcontainer}>
               <Text style={styles.nameText}>Hello, Good Morning</Text>
               <Text style={styles.subText}>{getUserDataDetails.name}</Text>
             </View>
-            <Image
-              source={localImage.BELL}
-              style={styles.bellImage}
-              resizeMode="contain"
-            />
+
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('AppNotification');
+              }}>
+              <Image
+                source={localImage.BELL}
+                style={styles.bellImage}
+                resizeMode="contain"
+              />
+              <View style={styles.circle} />
+            </TouchableOpacity>
           </View>
-          <View style={styles.circle} />
         </ImageBackground>
 
         <View style={styles.dailyContainer}>
@@ -203,7 +208,6 @@ const Home = ({navigation}) => {
             <PercentageBar
               height={20}
               backgroundColor={'grey'}
-              
               percentage={'50%'}
             />
           </View>
@@ -364,13 +368,11 @@ const Home = ({navigation}) => {
               </Text>
             </TouchableOpacity>
           </View>
-          {console.log('Workout response is', WorkoutData)}
           <FlatList
             data={WorkoutData}
             horizontal
             showsHorizontalScrollIndicator={false}
             renderItem={elements => {
-              console.log('HDFBGDGDGDGDG', elements);
               return (
                 <TouchableOpacity
                   onPress={() => {}}
@@ -462,7 +464,7 @@ var styles = StyleSheet.create({
     width: 30,
     height: 30,
     right: -DeviceWidth * 0.1,
-    top: -DeviceHeigth * 0.05,
+    top: Platform.OS == 'ios' ? -DeviceHeigth * 0.05 : -DeviceHeigth * 0.05,
   },
   circle: {
     width: 7,
@@ -470,8 +472,8 @@ var styles = StyleSheet.create({
     backgroundColor: '#B0C929',
     borderRadius: 5.5 / 2,
     position: 'absolute',
-    right: DeviceWidth * 0.04,
-    top: DeviceHeigth * 0.03,
+    right: -DeviceWidth * 0.09,
+    top: -DeviceHeigth * 0.043,
   },
   dailyContainer: {
     top: DeviceHeigth * 0.02,
