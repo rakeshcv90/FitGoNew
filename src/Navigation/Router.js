@@ -51,6 +51,8 @@ import Gender from '../Screen/Yourself/Gender';
 import Goal from '../Screen/Yourself/Goal';
 import Focus from '../Screen/Yourself/Focus';
 import Level from '../Screen/Yourself/Level';
+import Height from '../Screen/Yourself/Height';
+import Weight from '../Screen/Yourself/Weight';
 import OtpVerification from '../Screen/OtpVerification';
 import WorkoutCategories from '../Screen/New Workouts/WorkoutCategories';
 
@@ -152,7 +154,7 @@ export const LoginStack = () => {
 
       {/* <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} /> */}
-      <Stack.Screen name="LogSignUp" component={LogSignUp} />
+      {/* <Stack.Screen name="LogSignUp" component={LogSignUp} /> */}
       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
@@ -171,6 +173,8 @@ export const LoginStack = () => {
       <Stack.Screen name="Goal" component={Goal} />
       <Stack.Screen name="Focus" component={Focus} />
       <Stack.Screen name="Level" component={Level} />
+      <Stack.Screen name="Height" component={Height} />
+      <Stack.Screen name="Weight" component={Weight} />
     </Stack.Navigator>
   );
 };

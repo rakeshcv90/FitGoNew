@@ -73,7 +73,7 @@ const Index = ({navigation, route}: any) => {
   const [isRouteDataAvailable, setIsrouteDataAvailable] = useState(false);
   useEffect(() => {
     if (route?.params?.id == undefined) {
-      setScreen(0);
+      setScreen(1);
       // console.log(Sid.id)
     } else {
       setScreen(route?.params?.id);

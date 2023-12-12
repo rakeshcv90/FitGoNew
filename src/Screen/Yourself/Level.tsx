@@ -1,5 +1,6 @@
 import {
   Animated,
+  FlatList,
   Platform,
   StyleSheet,
   Text,
@@ -21,6 +22,7 @@ import Svg, {
   Stop,
   Text as SvgText,
 } from 'react-native-svg';
+import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 
 const GradientText = ({item}: any) => {
   const gradientColors = ['#D5191A', '#941000'];
@@ -36,7 +38,6 @@ const GradientText = ({item}: any) => {
           fontFamily="Verdana"
           fontWeight="700"
           fontSize="12"
-          lineHeight="16"
           fill="url(#grad)"
           x="10"
           y="25">
@@ -51,18 +52,25 @@ const Level = ({route, navigation}: any) => {
   const {nextScreen} = route.params;
   const translateLevel = useRef(new Animated.Value(0)).current;
 
-  const {defaultTheme, completeProfileData, getUserID} = useSelector(
+  const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
     (state: any) => state,
   );
   const dispatch = useDispatch();
   const [selected, setSelected] = useState(-1);
   const [screen, setScreen] = useState(nextScreen);
+  const flatListRef = useRef<FlatList>(null);
 
   useEffect(() => {
     setScreen(nextScreen);
     setSelected(1);
   }, []);
-
+  const toNextScreen = () => {
+    const currentData = {
+      level: selected,
+    };
+    dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
+    navigation.navigate('Height', {nextScreen: screen + 1});
+  };
   return (
     <View
       style={{
@@ -84,29 +92,32 @@ const Level = ({route, navigation}: any) => {
           height: DeviceHeigth * 0.6,
           // width: DeviceWidth,
         }}>
-        <Animated.View
+        <View
           style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            alignSelf: 'center',
-            flexDirection: 'row',
             width: DeviceWidth,
             height: DeviceHeigth * 0.5,
-            transform: [{translateX: translateLevel}],
             // backgroundColor: 'red',
-            flex: 1,
           }}>
-          {completeProfileData.level?.map((item: any, index: number) => {
-            if (item?.level_id == selected)
-            return (
+          <FlatList
+            ref={flatListRef}
+            keyExtractor={(index) => index.toString()}
+            data={completeProfileData?.level}
+            horizontal
+            scrollEnabled={false}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item, index}: any) => (
               <Image
-                source={{uri: item?.level_image}}
-                style={{height: DeviceHeigth * 0.4, width: DeviceWidth}}
                 resizeMode="contain"
+                source={{uri: item?.level_image}}
+                style={{
+                  width: DeviceWidth,
+                  height: DeviceHeigth * 0.5,
+                  // backgroundColor: 'red',
+                }}
               />
-            );
-          })}
-        </Animated.View>
+            )}
+          />
+        </View>
         <View style={{height: DeviceHeigth * 0.1}}>
           <View
             style={{
@@ -143,14 +154,19 @@ const Level = ({route, navigation}: any) => {
                   ) : (
                     <TouchableOpacity
                       onPress={() => {
-                        console.log(-(DeviceWidth * item?.level_id) / 2);
-                        Animated.timing(translateLevel, {
-                          toValue: -DeviceWidth,
-                          // toValue: selected == 'M' ? 0 : DeviceWidth / 2,
-                          duration: 500,
-                          useNativeDriver: true,
-                          delay: 500, // Delay the return to center animation for a smoother effect
-                        }).start();
+                        if (flatListRef.current) {
+                          // Animated.timing(translateLevel, {
+                          //   toValue: -DeviceWidth * index,
+                          //   duration: 500,
+                          //   useNativeDriver: true,
+                          //   delay: 250,
+                          // }).start(() => {
+                          // });
+                          flatListRef.current?.scrollToIndex({
+                            index,
+                            animated: true,
+                          });
+                        }
                         setSelected(item?.level_id);
                       }}
                       style={{
@@ -232,7 +248,7 @@ const Level = ({route, navigation}: any) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icons name="chevron-left" size={25} color={'#000'} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={toNextScreen}>
           <LinearGradient
             start={{x: 0, y: 1}}
             end={{x: 1, y: 0}}

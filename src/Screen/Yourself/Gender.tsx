@@ -74,7 +74,7 @@ const Gender = ({route, navigation}: any) => {
     const currentData = [
       {
         gender: selected,
-        image: selected == 'M' ? localImage.MALE : localImage.FEMALE,
+        image: selected == 'M' ? '../Icon/Images/NewImage/Male.png' : '../Icon/Images/NewImage/Female.png',
       },
       {
         goal: item?.goal_id,
