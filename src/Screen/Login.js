@@ -659,7 +659,8 @@ const Login = ({navigation}) => {
 
           <TouchableOpacity
             onPress={() => {
-              setVerifyVisible(true);
+              // setVerifyVisible(true);
+              navigation.navigate("MeditationConsent")
             }}
             style={styles.forgotView}>
             <Text style={styles.forgotText}>Forgot Password?</Text>

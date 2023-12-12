@@ -44,7 +44,7 @@ import MyWorkouts from '../Screen/MyWorkouts';
 import FavoritesRouter from './FavoritesRouter';
 import ExerciseByEquipments from '../Screen/Exercises/ExerciseByEquipments';
 import LatestProducts from '../Screen/Stores/LatestProducts';
-import IntroductionScreen from '../Screen/IntroductionScreen';
+import IntroductionScreen from '../Screen/Introduction/IntroductionScreen1';
 import Yourself from '../Screen/Yourself/Index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
@@ -71,6 +71,12 @@ import AppNotification from '../Screen/AppNotification';
 import TestScreen from '../Screen/TestScreen';
 import LogSignUp from '../Screen/LogSignUp';
 import FocuseArea from '../Screen/FocuseArea';
+import IntroductionScreen1 from '../Screen/Introduction/IntroductionScreen1';
+import IntroductionScreen2 from '../Screen/Introduction/IntroductionScreen2';
+import IntroductionScreen3 from '../Screen/Introduction/IntroductionScreen3';
+import MeditationConsent from '../Screen/MeditationScreens/MeditationConsent';
+import MeditationRoutine from '../Screen/MeditationScreens/MeditationRoutine';
+import ActivityDuration from '../Screen/MeditationScreens/ActivityDuration';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -150,10 +156,15 @@ export const LoginStack = () => {
       {/* <Stack.Screen name="FocuseArea" component={FocuseArea} />
       <Stack.Screen name="TestScreen" component={TestScreen} /> */}
 
-      {/* <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
-      <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} /> */}
+      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+      <Stack.Screen name="IntroductionScreen1" component={IntroductionScreen1} />
+      <Stack.Screen name="IntroductionScreen2" component={IntroductionScreen2}/>
+      <Stack.Screen name="IntroductionScreen3" component={IntroductionScreen3}/>
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
-      <Stack.Screen name="Yourself" component={Yourself} />
+      <Stack.Screen name="MeditationConsent" component={MeditationConsent}/>
+      <Stack.Screen name="MeditationRoutine" component={MeditationRoutine}/>
+      <Stack.Screen name="ActivityDuration" component={ActivityDuration}/>
+      {/* <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
@@ -170,7 +181,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Gender" component={Gender} />
       <Stack.Screen name="Goal" component={Goal} />
       <Stack.Screen name="Focus" component={Focus} />
-      <Stack.Screen name="Level" component={Level} />
+      <Stack.Screen name="Level" component={Level} /> */}
     </Stack.Navigator>
   );
 };

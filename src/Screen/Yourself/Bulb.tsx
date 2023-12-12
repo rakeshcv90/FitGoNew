@@ -3,24 +3,28 @@ import React from 'react';
 import {localImage} from '../../Component/Image';
 import {DeviceWidth} from '../../Component/Config';
 
-const Bulb = ({screen}: any) => {
+const Bulb = ({screen, Title}: any) => {
   return (
     <View style={{alignItems: 'center'}}>
-      <Text
-        style={{
-          color: 'black',
-          fontSize: 20,
-          fontFamily: 'Poppins',
-          fontWeight: 'bold',
-          lineHeight: 30,
-        }}>
-        {'Select your '}
-        {screen == 1
-          ? 'Gender'
-          : screen == 2
-          ? 'Fitness goal'
-          : 'Fitness level'}
-      </Text>
+      {Title ? null : (
+        <Text
+          style={{
+            color: 'black',
+            fontSize: 20,
+            fontFamily: 'Poppins',
+            fontWeight: 'bold',
+            lineHeight: 30,
+          }}>
+          {}
+          {'Select your '}
+          {screen == 1
+            ? 'Gender'
+            : screen == 2
+            ? 'Fitness goal'
+            : 'Fitness level'}
+        </Text>
+      )}
+
       <View
         style={{
           flexDirection: 'row',
@@ -44,8 +48,9 @@ const Bulb = ({screen}: any) => {
             paddingRight: 10,
             color: '#505050',
           }}>
-          Knowing your gender can help us for you based on different metabolic
-          rates.
+          {Title
+            ? Title
+            : 'Knowing your gender can help us for you based on different metabolic rates.'}
         </Text>
       </View>
     </View>
