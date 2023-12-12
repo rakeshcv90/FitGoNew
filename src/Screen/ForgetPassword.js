@@ -207,7 +207,7 @@ const ForgetPassword = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-        navigation.navigate('Login');
+        navigation.navigate('LogSignUp');
       } else {
         showMessage({
           message: 'Somthing went wrong!',
@@ -249,7 +249,7 @@ const ForgetPassword = ({navigation}) => {
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled">
         <KeyboardAvoidingView
-          behavior={Platform.OS == 'ios' ? 'position' : undefined}
+          behavior={Platform.OS == 'ios' ? 'position': "absolute"}
           contentContainerStyle={{flexGrow: 1}}>
           {forLoading ? <ActivityLoader /> : ''}
           <View style={styles.TextContainer}>

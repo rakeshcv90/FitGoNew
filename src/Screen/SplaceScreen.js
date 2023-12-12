@@ -21,7 +21,7 @@ const SplaceScreen = ({navigation}) => {
     setTimeout(() => {
       if (showIntro) {
       //  navigation.navigate('Yourself');
-        navigation.navigate('Login');
+        navigation.navigate('LogSignUp');
       } else {
         navigation.navigate('IntroductionScreen');
       }

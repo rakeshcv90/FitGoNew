@@ -8,6 +8,7 @@ import Goal from '../Screen/Yourself/Goal';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import { setUserProfileData } from '../Component/ThemeRedux/Actions';
+
 const NewPersonalDetails = ({route, navigation}) => {
   const {getUserDataDetails} = useSelector(state => state);
   const {completeProfileData}=useSelector(state=>state)

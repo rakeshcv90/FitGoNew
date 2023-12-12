@@ -90,7 +90,7 @@ const IntroductionScreen = () => {
                 <TouchableOpacity
                   onPress={() => {
                     dispatch(setShowIntro(true));
-                    navigationRef.navigate('Login');
+                    navigationRef.navigate('LogSignUp');
                   }}>
                   <Text
                     style={[
@@ -105,7 +105,7 @@ const IntroductionScreen = () => {
             <View style={styles.buttons}>
               {currentPage != 2 ? (
                 <TouchableOpacity
-                  onPress={() => navigationRef.navigate('Login')}>
+                  onPress={() => navigationRef.navigate('LogSignUp')}>
                   <Text style={[styles.Texts, {fontSize: 20}]}>Skip</Text>
                 </TouchableOpacity>
               ):
