@@ -1,6 +1,7 @@
 import {View, Text} from 'react-native';
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {CardStyleInterpolators} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import SplaceScreen from '../Screen/SplaceScreen';
@@ -44,7 +45,12 @@ import FavoritesRouter from './FavoritesRouter';
 import ExerciseByEquipments from '../Screen/Exercises/ExerciseByEquipments';
 import LatestProducts from '../Screen/Stores/LatestProducts';
 import IntroductionScreen from '../Screen/IntroductionScreen';
-import Yourself from '../Screen/Yourself/Index'
+import Yourself from '../Screen/Yourself/Index';
+import Scale from '../Screen/Yourself/Scale';
+import Gender from '../Screen/Yourself/Gender';
+import Goal from '../Screen/Yourself/Goal';
+import Focus from '../Screen/Yourself/Focus';
+import Level from '../Screen/Yourself/Level';
 import OtpVerification from '../Screen/OtpVerification';
 import WorkoutCategories from '../Screen/New Workouts/WorkoutCategories';
 
@@ -71,6 +77,8 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const screenOptions = {
   headerShown: false, // Hide the header for all screens
+  gestureDirection: 'horizontal',
+  cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
 };
 // const Router = () => {
 //   return (
@@ -153,7 +161,7 @@ export const LoginStack = () => {
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       /> */}
-      {/* <Stack.Screen name="Yourself" component={Yourself} />
+       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
@@ -171,7 +179,12 @@ export const LoginStack = () => {
       <Stack.Screen name="WorkoutsDetails" component={WorkoutsDetails} />
 
       <Stack.Screen name="BottomTab" component={BottomTab} />
-      <Stack.Screen name="AppNotification" component={AppNotification} /> */}
+      <Stack.Screen name="Scale" component={Scale} />
+      <Stack.Screen name="Gender" component={Gender} />
+      <Stack.Screen name="Goal" component={Goal} />
+      <Stack.Screen name="Focus" component={Focus} />
+      <Stack.Screen name="Level" component={Level} />
+
     </Stack.Navigator>
   );
 };

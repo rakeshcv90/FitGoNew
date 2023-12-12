@@ -1,144 +1,269 @@
-import {StyleSheet, Text, TouchableOpacity, View, Platform} from 'react-native';
-import React, {useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Platform,
+  TouchableWithoutFeedback,
+  Animated,
+} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
 import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
-import Carousel from 'react-native-snap-carousel';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AppColor} from '../../Component/Color';
+import ProgressBar from './ProgressBar';
+import Bulb from './Bulb';
+import {useDispatch, useSelector} from 'react-redux';
+import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 
-const Gender = ({data, selectedImage, setSelectedImage}: any) => {
+const Gender = ({route, navigation}: any) => {
+  const {data, nextScreen} = route.params;
+
+  const dispatch = useDispatch();
+  const [selected, setSelected] = useState('');
+  const [screen, setScreen] = useState(nextScreen);
+  const translateX = useRef(new Animated.Value(0)).current;
+  const translateX1 = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    setScreen(nextScreen);
+  }, []);
+
+  const handleImagePress = (gender: string) => {
+    // Set the selected gender
+    console.log(gender, selected, DeviceWidth / 2, -DeviceWidth * 0.4);
+    if (gender === '') {
+      Animated.parallel([
+        Animated.timing(translateX, {
+          toValue: DeviceWidth / 2,
+          duration: 500,
+          useNativeDriver: true,
+          delay: 250, // Delay the return to center animation for a smoother effect
+        }),
+        Animated.timing(translateX1, {
+          toValue: 0,
+          // toValue: selected == 'M' ? 0 : DeviceWidth / 2,
+          duration: 500,
+          useNativeDriver: true,
+          delay: 500, // Delay the return to center animation for a smoother effect
+        }),
+      ]).start();
+      setTimeout(() => {
+        setScreen(screen - 1);
+        setSelected('');
+      }, 1000);
+    } else {
+      // Animate the translation of the unselected image
+      Animated.parallel([
+        Animated.timing(selected === 'F' ? translateX : translateX1, {
+          toValue: gender == 'F' ? -DeviceWidth * 0.5 : DeviceWidth / 2,
+          duration: 500,
+          useNativeDriver: true,
+          delay: 500, // Delay the return to center animation for a smoother effect
+        }),
+      ]).start();
+      setTimeout(() => {
+        setSelected(gender);
+        setScreen(screen + 1);
+      }, 1000);
+    }
+  };
+  const toNextScreen = (item: any) => {
+    const currentData = [
+      {
+        gender: selected,
+        image: selected == 'M' ? localImage.MALE : localImage.FEMALE,
+      },
+      {
+        goal: item?.goal_id,
+      },
+    ];
+    dispatch(setLaterButtonData(currentData));
+    navigation.navigate('Level', {nextScreen: screen+ 1});
+  };
+
+  const Goal = () => {
+    const goalsAnimation = useRef(new Animated.Value(0)).current;
+
+    const startGoalsAnimation = () => {
+      Animated.stagger(250, [
+        Animated.timing(goalsAnimation, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    };
+
+    useEffect(() => {
+      startGoalsAnimation();
+    }, []);
+    return (
+      <Animated.View style={{}}>
+        {data &&
+          data?.map((item: any, index: number) => {
+            if (item?.goal_gender != selected) return;
+            // console.log(goalsAnimation);
+            const goalAnimationStyle = {
+              opacity: goalsAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+              }),
+              transform: [
+                {
+                  translateX: goalsAnimation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange:
+                      selected == 'F' ? [0, -index * 5] : [0, index * 5],
+                  }),
+                },
+              ],
+            };
+            return (
+              <TouchableWithoutFeedback
+                key={index}
+                onPress={() => toNextScreen(item)}>
+                <Animated.View
+                  style={[
+                    styles.box2,
+                    goalAnimationStyle,
+                    {
+                      padding: 10,
+                      // paddingRight: 10,
+                      borderWidth: 0,
+                      borderColor: AppColor.WHITE,
+                    },
+                  ]}>
+                  <Image
+                    source={{uri: item.goal_image}}
+                    resizeMode="contain"
+                    style={{
+                      height: 50,
+                      width: 40,
+                      marginRight: 10,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: '#505050',
+                      fontSize: 18,
+                      fontWeight: '600',
+                      fontFamily: 'Poppins',
+                      lineHeight: 27,
+                    }}>
+                    {item.goal_title}
+                  </Text>
+                </Animated.View>
+              </TouchableWithoutFeedback>
+            );
+          })}
+      </Animated.View>
+    );
+  };
   return (
     <View
       style={{
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        
+        width: DeviceWidth,
+        backgroundColor: AppColor.WHITE,
       }}>
-      {/* <Carousel
-          data={data.data}
-          sliderWidth={DeviceWidth}
-          itemWidth={DeviceWidth * 0.75}
-          enableSnap
-          firstItem={selectedImage}
-          onSnapToItem={(index: number) => setSelectedImage(index)}
-          renderItem={({item, index}: any) => (
-            <View
-              key={index}
-              style={{
-                flexDirection: index == 0 ? 'row' : 'row-reverse',
-                width: '55%',
-                opacity: index == selectedImage ? 1 : 0.4,
-                // backgroundColor: 'blue',
+      <ProgressBar screen={screen} />
+      <Bulb screen={screen} />
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          alignSelf: 'flex-end',
+          height: DeviceHeigth * 0.6,
+        }}>
+        {/* {selected != 'F' ? ( */}
+        <Animated.View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            alignSelf: 'center',
+            transform: [{translateX: translateX1}],
+            width: selected == 'M' ? DeviceWidth : DeviceWidth / 2,
+            marginLeft: 50,
+          }}>
+          {selected == 'M' && <Goal />}
+          <View
+            style={{
+              width: DeviceWidth / 2,
+              alignItems: 'center',
+            }}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                nextScreen == screen && handleImagePress('M');
               }}>
-              {index == 0 && (
-                <View
-                  style={{
-                    width: '70%',
-                  }}
-                />
-              )}
-              <View
-                key={index}
-                style={{
-                  width: '60%',
-                  alignSelf: 'center',
-                  alignItems: 'center',
-                }}>
-                {index < 2 && (
-                  <Image
-                    source={localImage.GENDER}
-                    resizeMode="contain"
-                    style={{
-                      position: 'absolute',
-                      top: DeviceHeigth * 0.2,
-                      alignSelf: 'center',
-                      left: -DeviceWidth * 0.1,
-                      opacity: index == selectedImage ? 1 : 0,
-                    }}
-                  />
-                )}
-                {index <= 2 && (
-                  <>
-                    <Image
-                      source={item.image}
-                      resizeMode="contain"
-                      style={{
-                        height: DeviceHeigth * 0.5,
-                        width: DeviceWidth * 0.5,
-                        zIndex: index === 0 ? 1 : 0,
-                      }}
-                    />
-                    <Text
-                      style={{
-                        color: AppColor.RED,
-                        fontSize: 16,
-                        fontWeight: '700',
-                        fontFamily: 'Verdana',
-                        marginTop: -DeviceWidth * 0.1,
-                      }}>
-                      {item.name}
-                    </Text>
-                  </>
-                )}
-              </View>
-
-              {index == 2 && (
-                <View
-                  style={{
-                    width: '70%',
-                  }}
-                />
-              )}
-            </View>
-          )}
-        /> */}
-      {data &&
-        data?.map((item: any, index: number) => {
-          // if (item.gender != selectedGender) return;
-          return (
-            <TouchableOpacity
-              key={index}
-              activeOpacity={0.8}
-              onPress={() => setSelectedImage(index)}
-              style={[
-                styles.box,
-                {
-                  padding: index == selectedImage ? 18 : 20,
-                  paddingRight: index == 0 ? 20 : 0,
-                  borderWidth: index == selectedImage ? 1 : 0,
-                  borderColor:
-                    index == selectedImage
-                      ? AppColor.RED
-                      : AppColor.WHITE,
-                  marginVertical: 10,
-                },
-              ]}>
-              <Text
-                style={{
-                  color: '#505050',
-                  fontSize: 18,
-                  fontWeight: '600',
-                  fontFamily: 'Poppins',
-                  lineHeight: 27,
-                }}>
-                {item.name}
-              </Text>
               <Image
-                source={item.image}
-                defaultSource={1}
+                source={localImage.MALE}
+                style={{height: 450, width: 300}}
                 resizeMode="contain"
-                style={{
-                  height: DeviceHeigth * 0.17,
-                  width: DeviceWidth * 0.3,
-                  marginBottom: 25,
-                  // marginRight:
-                  //   selectedGender == 'Female' && index != 0 ? 25 : 0,
-                }}
               />
-            </TouchableOpacity>
-          );
-        })}
+            </TouchableWithoutFeedback>
+          </View>
+        </Animated.View>
+        {/* ) : (
+          <View style={{width: DeviceWidth / 2}} />
+        )} */}
+        <Animated.View
+          style={{
+            flexDirection: 'row-reverse',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            alignSelf: 'center',
+            transform: [
+              {translateX: selected === 'F' ? translateX : translateX1},
+            ],
+            width: selected == 'F' ? DeviceWidth : DeviceWidth / 2,
+            // marginLeft: selected == 'F' ? 50 : 0,
+          }}>
+          {selected == 'F' && <Goal />}
+          <View
+            style={{
+              width: DeviceWidth / 2,
+              alignItems: 'center',
+            }}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                nextScreen == screen && handleImagePress('F');
+              }}>
+              <Image
+                source={localImage.FEMALE}
+                style={{
+                  height: 450,
+                  width: 300,
+                }}
+                resizeMode="contain"
+              />
+            </TouchableWithoutFeedback>
+          </View>
+        </Animated.View>
+      </View>
+      {selected != '' ? (
+        <TouchableOpacity
+          style={{alignSelf: 'flex-start', marginLeft: DeviceWidth * 0.1}}
+          onPress={() => {
+            handleImagePress('');
+          }}>
+          <Icons name="chevron-left" size={25} color={'#000'} />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          style={{alignSelf: 'flex-start', marginLeft: DeviceWidth * 0.1}}
+          onPress={() => {
+            null;
+          }}>
+          <Icons name="chevron-left" size={25} color={'#fff'} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -168,5 +293,37 @@ const styles = StyleSheet.create({
         elevation: 4,
       },
     }),
+  },
+  box2: {
+    width: DeviceWidth * 0.45,
+    height: DeviceHeigth * 0.08,
+    borderRadius: 20,
+    marginBottom: 30,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    // overflow: 'hidden',
+    backgroundColor: AppColor.WHITE,
+    shadowColor: 'rgba(0, 0, 0, 1)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  nextButton: {
+    backgroundColor: 'white',
+    width: 45,
+    height: 45,
+    borderRadius: 50 / 2,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -36,6 +36,7 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import Carousel from 'react-native-snap-carousel';
 import AnimatedLottieView from 'lottie-react-native';
 import Button from '../../Component/Button';
+import ProgressBar from './ProgressBar';
 
 const imgData = Array(60)
   .fill(16)
@@ -54,7 +55,7 @@ const Index = ({navigation, route}: any) => {
   );
 
   const dispatch = useDispatch();
-  const [screen, setScreen] = useState(0);
+  const [screen, setScreen] = useState(1);
   const [toggleW, setToggleW] = useState('kg');
   const [toggleWData, setToggleWData] = useState([]);
   const [toggleData, setToggleData] = useState([]);
@@ -117,6 +118,7 @@ const Index = ({navigation, route}: any) => {
         method: 'get',
       });
       if (res.data) {
+        console.log('first', res.data?.goal)
         dispatch(setCompleteProfileData(res.data));
       }
     } catch (error) {
@@ -136,7 +138,7 @@ const Index = ({navigation, route}: any) => {
     payload.append('height', selectedHeight);
     payload.append('weight', selectedWeight);
     payload.append('id', getUserID);
-     console.log(payload);
+    console.log(payload);
     try {
       const res = await axios({
         url: NewAppapi.Post_COMPLETE_PROFILE,
@@ -191,27 +193,27 @@ const Index = ({navigation, route}: any) => {
           color: '#D7EFFE',
           gender: 'Female',
         },
-        {
-          id: 3,
-          image: localImage.StrengthF,
-          name: 'Strength',
-          color: '#EFDFD2',
-          gender: 'Female',
-        },
-        {
-          id: 4,
-          image: localImage.WeightLossM,
-          name: 'Weight Loss',
-          color: '#95ADFE4D',
-          gender: 'Male',
-        },
-        {
-          id: 5,
-          image: localImage.BuildMuscleM,
-          name: 'Build Muscle',
-          color: '#D7EFFE',
-          gender: 'Male',
-        },
+             // {
+        //   id: 3,
+        //   image: localImage.StrengthF,
+        //   name: 'Strength',
+        //   color: '#EFDFD2',
+        //   gender: 'Female',
+        // },
+        // {
+        //   id: 4,
+        //   image: localImage.WeightLossM,
+        //   name: 'Weight Loss',
+        //   color: '#95ADFE4D',
+        //   gender: 'Male',
+        // },
+        // {
+        //   id: 5,
+        //   image: localImage.BuildMuscleM,
+        //   name: 'Build Muscle',
+        //   color: '#D7EFFE',
+        //   gender: 'Male',
+        // },
         {
           id: 6,
           image: localImage.Strength,
@@ -471,336 +473,51 @@ const Index = ({navigation, route}: any) => {
       </View>
     );
   };
-
-  const ProgressBar = () => {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: DeviceWidth * 0.9,
-        }}>
-        <View style={{flexDirection: 'row-reverse', alignSelf: 'flex-end'}}>
-          <Text
-            style={{
-              color: '#83898C',
-              fontFamily: 'Poppins',
-              fontWeight: '400',
-            }}>
-            <Text style={{color: AppColor.RED}}>{`Step  ${screen + 1} `}</Text>
-            of 8
-          </Text>
-        </View>
-        <View
-          style={{
-            width: DeviceWidth * 0.8,
-            backgroundColor: '#E2E6F9',
-            height: 5,
-            borderRadius: 5,
-            marginLeft: 40,
-            marginTop: 5,
-          }}>
-          <View
-            style={{
-              width: screen == 0 ? '12%' : `${12 * screen}%`,
-              backgroundColor: AppColor.RED,
-              height: 5,
-              borderRadius: 5,
-            }}
-          />
-        </View>
-      </View>
-    );
-  };
-
+  useEffect(() => {
+    setTimeout(() => {
+      navigation.navigate('Gender', {data: completeProfileData?.goal, nextScreen: screen});
+    }, 2000);
+  }, []);
   return (
     <SafeAreaView
-      style={{flex: 1, backgroundColor: defaultTheme ? 'black' : 'white'}}>
-      {isRouteDataAvailable ? (
-        <View style={{marginTop: DeviceHeigth * 0.03}}></View>
-      ) : (
-        <ProgressBar />
-      )}
-      {/* <View style={styles.buttonsUp}>
-        {screen >= 1 && (
-          <TouchableOpacity
-            style={[styles.nextButton2]}
-            onPress={() => setScreen(screen - 1)}>
-            <Icons name="chevron-left" size={25} color={'#000'} />
-          </TouchableOpacity>
-        )}
-        {screen >= 1 && screen <= 6 && (
-          <TouchableOpacity onPress={() => setProfileAPI()}>
-            <Text
-              style={[{fontSize: 15, color: 'black', fontFamily: 'Poppins'}]}>
-              SKIP
-            </Text>
-          </TouchableOpacity>
-        )}
-      </View> */}
-      <View
+      style={{
+        flex: 1,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      <AnimatedLottieView
+        source={require('../../Icon/Images/NewImage/Hi.json')}
+        // speed={5}
+        autoPlay
+        loop
+        style={{width: 300, height: 200}}
+      />
+      <Text
         style={{
-          height: DeviceHeigth * 0.7,
-          alignItems: 'center',
+          color: 'black',
+          fontSize: 20,
+          fontFamily: 'Poppins',
+          fontWeight: '700',
+          lineHeight: 30,
+          marginTop: -50,
         }}>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text
-            style={{
-              color: !defaultTheme ? 'black' : 'white',
-              fontSize: 20,
-              fontFamily: '',
-              fontWeight: 'bold',
-              lineHeight: 30,
-            }}>
-            {fullData[screen]?.top1}
-          </Text>
-          <Text
-            style={{
-              color: !defaultTheme ? 'black' : 'white',
-              marginTop: 5,
-              fontSize: 14,
-              fontFamily: '',
-              fontWeight: '400',
-              lineHeight: 16,
-              width: DeviceWidth * 0.6,
-              textAlign: 'center',
-            }}>
-            {fullData[screen]?.top2}
-          </Text>
-          {/* <Text>{screen}</Text> */}
-        </View>
-        {screen == 3 && (
-          <View
-            style={{
-              flexDirection: 'row-reverse',
-              left: 100,
-              marginVertical: 30,
-            }}>
-            <Toggle
-              data={fullData[screen].data}
-              highlightColor={AppColor.RED}
-              baseColor={AppColor.SOCIALBUTTON}
-              selected={toggleW}
-              setSelected={setToggleW}
-            />
-          </View>
-        )}
-        {screen == 4 && (
-          <View
-            style={{
-              flexDirection: 'row-reverse',
-              left: 100,
-              marginVertical: 30,
-            }}>
-            <Toggle
-              data={fullData[screen].data}
-              highlightColor={AppColor.RED}
-              baseColor={AppColor.SOCIALBUTTON}
-              selected={toggle}
-              setSelected={setToggle}
-            />
-          </View>
-        )}
-
-        {screen == 0 ? (
-          <Gender
-            data={fullData[screen]?.data}
-            selectedImage={selectedGender}
-            setSelectedImage={setSelectedGender}
-          />
-        ) : screen == 1 ? (
-          <Goal
-            data={completeProfileData?.goal}
-            selectedImage={selectedGoal}
-            setSelectedImage={setSelectedGoal}
-            selectedGender={selectedGender == 0 ? 'M' : 'F'}
-          />
-        ) : screen == 2 ? (
-          <Level
-            data2={completeProfileData?.level}
-            data={fullData[screen]?.data}
-            selectedImage={selectedLevel}
-            setSelectedImage={setSelectedLevel}
-          />
-        ) : screen == 5 || screen == 4 || screen == 3 ? (
-          <Pickers />
-        ) : screen == 6 ? (
-          <Focus
-            data={fullData[screen]?.data}
-            data2={completeProfileData?.focusarea}
-            selectedImage={selectedFocus}
-            setSelectedImage={setSelectedFocus}
-          />
-        ) : screen == 7 ? (
-          <>
-            <AnimatedLottieView
-              source={require('../../Icon/Images/NewImage/completeProfile.json')}
-              style={{height: 300, width: 300, marginTop: 30}}
-              // resizeMode="contain"
-              // speed={0.2}
-              autoPlay={true}
-              loop
-            />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginTop: 30,
-              }}>
-              <Image
-                source={localImage.BlueTick}
-                style={{height: 30, width: 30}}
-              />
-              <Text
-                style={{
-                  color: '#7B6F72',
-                  fontFamily: 'Poppins',
-                  fontSize: 14,
-                  fontWeight: '500',
-                  lineHeight: 18,
-                  marginLeft: 10,
-                }}>
-                Analyzing your given details
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginVertical: 10,
-              }}>
-              <Image
-                source={localImage.BlueTick}
-                style={{height: 30, width: 30}}
-              />
-              <Text
-                style={{
-                  color: '#7B6F72',
-                  fontFamily: 'Poppins',
-                  fontSize: 14,
-                  fontWeight: '500',
-                  lineHeight: 18,
-                  marginLeft: 10,
-                }}>
-                Analyzing your fitness level and goals
-              </Text>
-            </View>
-          </>
-        ) : null}
-      </View>
-
-  {isRouteDataAvailable ? (
-        <View
-          style={{
-            marginBottom: DeviceHeigth * 0.05,
-            flex: 1,
-            justifyContent: 'flex-end',
-          }}>
-          <Button
-            buttonText={'Update'}
-            onPresh={() => {
-              navigation.navigate('Personal Details');
-            }}
-          />
-        </View>
-      ) : (
-      <View style={styles.buttons}>
-        {screen >= 1 ? (
-          <TouchableOpacity
-            style={[styles.nextButton2]}
-            onPress={() => setScreen(screen - 1)}>
-            <Icons name="chevron-left" size={25} color={'#000'} />
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={[styles.nextButton2]}
-            onPress={() => setScreen(screen - 1)}
-            disabled>
-            <Text
-              style={[{fontSize: 15, color: 'black', fontFamily: 'Poppins'}]}>
-              {}
-            </Text>
-          </TouchableOpacity>
-        )}
-    
-
-        <TouchableOpacity
-          onPress={() => {
-            screen == 0 && selectedGender == -1
-              ? showMessage({
-                  message: 'Please specify your Gender',
-                  animationDuration: 750,
-                  floating: true,
-                  type: 'danger',
-                  // icon: {icon: 'none', position: 'left'},
-                })
-              : screen == 1 && selectedGoal == -1
-              ? showMessage({
-                  message: 'Please Select one Goal',
-                  animationDuration: 750,
-                  floating: true,
-                  type: 'danger',
-                  // icon: {icon: 'none', position: 'left'},
-                })
-              : screen == 2 && selectedLevel == -1
-              ? showMessage({
-                  message: 'Please Select your Current Fitness Level',
-                  animationDuration: 750,
-                  floating: true,
-                  type: 'danger',
-                  // icon: {icon: 'none', position: 'left'},
-                })
-              : screen == 6 && selectedFocus == -1
-              ? showMessage({
-                  message: 'Please Select your Focus Area',
-                  animationDuration: 750,
-                  floating: true,
-                  type: 'danger',
-                  // icon: {icon: 'none', position: 'left'},
-                })
-              : screen == 7
-              ? setProfileAPI()
-              : setScreen(screen + 1);
-          }}>
-          <LinearGradient
-            start={{x: 0, y: 1}}
-            end={{x: 1, y: 0}}
-            colors={['#941000', '#D5191A']}
-            style={[
-              styles.nextButton,
-              {
-                flexDirection: screen == 7 ? 'row' : 'column',
-                width: screen == 7 ? 120 : 45,
-              },
-            ]}>
-            {screen == 7 && (
-              <Text
-                style={{
-                  color: 'white',
-                  marginTop: 5,
-                  fontSize: 14,
-                  fontFamily: 'Poppins',
-                  fontWeight: '600',
-                  lineHeight: 16,
-                  textAlign: 'center',
-                }}>
-                Let's Start
-              </Text>
-            )}
-            <Icons name="chevron-right" size={25} color={'#fff'} />
-          </LinearGradient>
-        </TouchableOpacity>
-      </View>
-      )}
-      <ActivityLoader visible={visible} />
-
+        Tell us about yourself!
+      </Text>
+      <Text
+        style={{
+          fontSize: 12,
+          fontWeight: '400',
+          fontFamily: 'Verdana',
+          lineHeight: 16,
+          width: DeviceWidth * 0.7,
+          paddingLeft: 10,
+          color: '#505050',
+          textAlign: 'center',
+          marginTop: 5,
+        }}>
+        To give you a better experience and personalized plan
+      </Text>
     </SafeAreaView>
   );
 };

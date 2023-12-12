@@ -75,5 +75,7 @@ export const localImage = {
   FEMALE: require('../Icon/Images/NewImage/Female.png'),
   Solder: require('../Icon/Images/NewImage/Solder.png'),
   Solder1: require('../Icon/Images/NewImage/Sloder1.png'),
+  BULB:require("../Icon/Images/NewImage/emojione_light-bulb.png"),
+  SelectLevel:require("../Icon/Images/NewImage/SelectLevel.png"),
 
 };

@@ -25,12 +25,13 @@ import axios from 'axios';
 import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
 import PercentageBar from '../../Component/PercentageBar';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import { setCustomWorkoutData } from '../../Component/ThemeRedux/Actions';
 
 const Home = ({navigation}) => {
   const [selectedButton, setSelectedButton] = useState('1');
-  const {getUserDataDetails} = useSelector(state => state);
-
+  const {getUserDataDetails, customWorkoutData} = useSelector(state => state);
+const dispatch = useDispatch()
   const [isLoaded, setLoaded] = useState(false);
   const [WorkoutData, setWorkoutData] = useState([]);
   const handleButtonColor = ButtonNumber => {
@@ -133,6 +134,34 @@ const Home = ({navigation}) => {
       </View>
     );
   };
+  // useEffect(() => {
+  //  getCustomWorkout()
+  // }, [])
+  // const getCustomWorkout = async() => {
+  //   try {
+  //     const data = await axios('https://gofit.tentoptoday.com/adserver/public/api/usercustomworkout', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         id: 31,
+  //       },
+  //     });
+  //     console.log(data.data?.workout[0]?.image_path,"DATA")
+  //     if (data.data) {
+  //       dispatch(setCustomWorkoutData(data.data?.workout));
+  //      await Image.prefetch(data.data?.workout[0]?.image_path);
+  //       // navigation.navigate('BottomTab');
+  //     } else { 
+  //       dispatch(setCustomWorkoutData([]));
+  //       // navigation.navigate('BottomTab');
+  //     }
+  //   } catch (error) {
+  //     console.log('User Profile Error', error);
+  //   }
+  // };
+  
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -161,7 +190,11 @@ const Home = ({navigation}) => {
                 resizeMode="contain"
               />
             )}
-
+            {/* <Image
+              source={getUserDataDetails.image_path==null?localImage.avt:getUserDataDetails.image_path}
+              style={styles.profileImage}
+              resizeMode="contain"
+            /> */}
             <View style={styles.textcontainer}>
               <Text style={styles.nameText}>Hello, Good Morning</Text>
               <Text style={styles.subText}>{getUserDataDetails.name}</Text>
@@ -180,7 +213,6 @@ const Home = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </ImageBackground>
-
         <View style={styles.dailyContainer}>
           <Text style={styles.dailyText}>Daily progress</Text>
           <View
@@ -194,67 +226,71 @@ const Home = ({navigation}) => {
             <Calories type={'Steps'} />
           </View>
         </View>
-        <View style={styles.progressBar}>
-          <Text style={styles.text}>Overall progress</Text>
-          <Text style={styles.text2}>50%</Text>
-          <Text style={styles.text3}>200 Calories Burn | 30minutes</Text>
-          <View
-            style={{
-              width: '90%',
-              justifyContent: 'center',
-              marginLeft: 15,
-              marginTop: 10,
-            }}>
-            <PercentageBar
-              height={20}
-              backgroundColor={'grey'}
-              percentage={'50%'}
-            />
-          </View>
-        </View>
-        <View style={styles.dailyContainer}>
-          <Text style={styles.dailyText}>My workout</Text>
-          <FlatList
-            data={IntroductionData}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item, index}) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {}}
-                  style={{marginTop: 10}}
-                  activeOpacity={0.7}>
-                  <ImageBackground
-                    source={localImage.Inrtoduction3}
-                    style={[
-                      styles.card,
-                      {
-                        borderRadius: 20,
-                        overflow: 'hidden',
-                        margin: 5,
-                        resizeMode: 'contain',
-                        width: DeviceWidth * 0.91,
-                      },
-                    ]}>
-                    <View style={styles.LinearG}>
-                      <View style={styles.TitleText}>
-                        <Text style={styles.Text}>{item.text1}</Text>
-                        <Text
-                          style={[
-                            styles.Text,
-                            {fontSize: 14, fontWeight: 'bold'},
-                          ]}>
-                          {' '}
-                          {item.text2}
-                        </Text>
-                      </View>
-                    </View>
-                  </ImageBackground>
-                </TouchableOpacity>
-              );
-            }}
-          />
-        </View>
+        {customWorkoutData.length > 0 && (
+          <>
+            <View style={styles.progressBar}>
+              <Text style={styles.text}>Overall progress</Text>
+              <Text style={styles.text2}>50%</Text>
+              <Text style={styles.text3}>200 Calories Burn | 30minutes</Text>
+              <View
+                style={{
+                  width: '90%',
+                  justifyContent: 'center',
+                  marginLeft: 15,
+                  marginTop: 10,
+                }}>
+                <PercentageBar
+                  height={20}
+                  backgroundColor={'grey'}
+                  percentage={'50%'}
+                />
+              </View>
+            </View>
+            <View style={styles.dailyContainer}>
+              <Text style={styles.dailyText}>My workout</Text>
+              <FlatList
+                data={customWorkoutData}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                renderItem={({item, index}) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => {}}
+                      style={{marginTop: 10}}
+                      activeOpacity={0.7}>
+                      <ImageBackground
+                        source={{uri: item?.image_path}}
+                        style={[
+                          styles.card,
+                          {
+                            borderRadius: 20,
+                            overflow: 'hidden',
+                            margin: 5,
+                            resizeMode: 'contain',
+                            width: DeviceWidth * 0.91,
+                          },
+                        ]}>
+                        <View style={styles.LinearG}>
+                          <View style={styles.TitleText}>
+                            <Text style={styles.Text}>{item.workout_title}</Text>
+                            <Text
+                              style={[
+                                styles.Text,
+                                {fontSize: 14, fontWeight: 'bold'},
+                              ]}>
+                              {' '}
+                              {item.workout_duration}
+                            </Text>
+                          </View>
+                        </View>
+                      </ImageBackground>
+                    </TouchableOpacity>
+                  );
+                }}
+              />
+            </View>
+          </>
+        )}
         <View style={[styles.dailyContainer, {marginTop: 20}]}>
           <Text style={styles.dailyText}>Featured workout</Text>
           <FlatList

@@ -26,6 +26,12 @@ export const setCompleteProfileData = data => {
     payload: data,
   };
 };
+export const setLaterButtonData = data => {
+  return {
+    type: types.LATER_BUTTON_USER_DATA,
+    payload: data,
+  };
+};
 export const setUserProfileData = data => {
   return {
     type: types.User_Profile_Data,
