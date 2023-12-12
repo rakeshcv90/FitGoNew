@@ -800,6 +800,7 @@ const Index = ({navigation, route}: any) => {
       </View>
       )}
       <ActivityLoader visible={visible} />
+
     </SafeAreaView>
   );
 };

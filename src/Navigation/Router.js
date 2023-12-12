@@ -44,12 +44,11 @@ import FavoritesRouter from './FavoritesRouter';
 import ExerciseByEquipments from '../Screen/Exercises/ExerciseByEquipments';
 import LatestProducts from '../Screen/Stores/LatestProducts';
 import IntroductionScreen from '../Screen/IntroductionScreen';
-import Yourself from '../Screen/Yourself/Index';
+import Yourself from '../Screen/Yourself/Index'
 import OtpVerification from '../Screen/OtpVerification';
 import WorkoutCategories from '../Screen/New Workouts/WorkoutCategories';
 
 // import Workouts from '../Screen/New Workouts/WorkoutsDetails';
-
 import WorkoutsDetails from '../Screen/New Workouts/WorkoutsDetails';
 import Home from '../Screen/NewHome/Home';
 import ApplicantBottomTabBar from './ApplicantBottomTabBar';
@@ -59,6 +58,9 @@ import Store from '../Screen/NewHome/Store';
 import Profile from '../Screen/NewHome/Profile';
 import NewEditProfile from '../Component/NewEditProfile';
 import NewPersonalDetails from '../Screen/NewPersonalDetails';
+
+import NewStepCounter from '../Screen/NewStepCounter';
+
 import AppNotification from '../Screen/AppNotification';
 import TestScreen from '../Screen/TestScreen';
 import {CardStyleInterpolators} from '@react-navigation/stack';
@@ -156,10 +158,18 @@ export const LoginStack = () => {
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
       <Stack.Screen name="OtpVerification" component={OtpVerification} />
+
+      <Stack.Screen name="Edit_Profile" component={NewEditProfile}/>
+      <Stack.Screen name="Personal Details" component={NewPersonalDetails}/>
+      <Stack.Screen name="WorkoutCategories" component={WorkoutCategories}/>
+      <Stack.Screen name="WorkoutsDetails" component={WorkoutsDetails}/>
+      <Stack.Screen name="StepCounter" component={NewStepCounter}/>
+
       <Stack.Screen name="Edit_Profile" component={NewEditProfile} />
       <Stack.Screen name="Personal Details" component={NewPersonalDetails} />
       <Stack.Screen name="WorkoutCategories" component={WorkoutCategories} />
       <Stack.Screen name="WorkoutsDetails" component={WorkoutsDetails} />
+
       <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="AppNotification" component={AppNotification} /> */}
     </Stack.Navigator>

@@ -66,6 +66,7 @@ export const localImage = {
   Documents:require("../Icon/Images/NewImage/Document.png"),
   Pen:require("../Icon/Images/NewImage/Pen.png"),
   Profile3:require("../Icon/Images/NewImage/Profile.png"),
+  SplashText:require("../Icon/Images/NewImage/SplashText.png"),
   Focus:require("../Icon/Images/NewImage/Focus.png"),
   Focus1:require("../Icon/Images/NewImage/Focus1.png"),
   Ellipse:require("../Icon/Images/NewImage/Ellipse.png"),
@@ -74,4 +75,5 @@ export const localImage = {
   FEMALE: require('../Icon/Images/NewImage/Female.png'),
   Solder: require('../Icon/Images/NewImage/Solder.png'),
   Solder1: require('../Icon/Images/NewImage/Sloder1.png'),
+
 };
