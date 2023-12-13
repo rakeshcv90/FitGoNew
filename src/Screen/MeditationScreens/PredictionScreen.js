@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const ActivityDuration = () => {
+const PredictionScreen = () => {
   return (
     <View>
-      <Text>ActivityDuration</Text>
+      <Text>PredictionScreen</Text>
     </View>
   )
 }
 
-export default ActivityDuration
+export default PredictionScreen

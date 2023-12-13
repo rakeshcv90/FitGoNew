@@ -29,7 +29,7 @@ const Bulb = ({screen, Title}: any) => {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
           width: DeviceWidth * 0.9,
           backgroundColor: '#f5f5f5',
           padding: 15,
@@ -47,6 +47,7 @@ const Bulb = ({screen, Title}: any) => {
             paddingLeft: 10,
             paddingRight: 10,
             color: '#505050',
+            marginHorizontal:10
           }}>
           {Title
             ? Title

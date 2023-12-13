@@ -76,7 +76,10 @@ import IntroductionScreen2 from '../Screen/Introduction/IntroductionScreen2';
 import IntroductionScreen3 from '../Screen/Introduction/IntroductionScreen3';
 import MeditationConsent from '../Screen/MeditationScreens/MeditationConsent';
 import MeditationRoutine from '../Screen/MeditationScreens/MeditationRoutine';
-import ActivityDuration from '../Screen/MeditationScreens/ActivityDuration';
+import ActivityDuration from '../Screen/MeditationScreens/SleepDuration';
+import SleepDuration from '../Screen/MeditationScreens/SleepDuration';
+import MentalState from '../Screen/MeditationScreens/MentalState';
+import PredictionScreen from '../Screen/MeditationScreens/PredictionScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -155,17 +158,28 @@ export const LoginStack = () => {
     <Stack.Navigator screenOptions={screenOptions}>
       {/* <Stack.Screen name="FocuseArea" component={FocuseArea} />
       <Stack.Screen name="TestScreen" component={TestScreen} /> */}
-
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
-      <Stack.Screen name="IntroductionScreen1" component={IntroductionScreen1} />
-      <Stack.Screen name="IntroductionScreen2" component={IntroductionScreen2}/>
-      <Stack.Screen name="IntroductionScreen3" component={IntroductionScreen3}/>
+      <Stack.Screen
+        name="IntroductionScreen1"
+        component={IntroductionScreen1}
+      />
+      <Stack.Screen
+        name="IntroductionScreen2"
+        component={IntroductionScreen2}
+      />
+      <Stack.Screen
+        name="IntroductionScreen3"
+        component={IntroductionScreen3}
+      />
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
-      <Stack.Screen name="MeditationConsent" component={MeditationConsent}/>
-      <Stack.Screen name="MeditationRoutine" component={MeditationRoutine}/>
-      <Stack.Screen name="ActivityDuration" component={ActivityDuration}/>
-      {/* <Stack.Screen name="Yourself" component={Yourself} />
+      <Stack.Screen name="MeditationConsent" component={MeditationConsent} />
+      <Stack.Screen name="MeditationRoutine" component={MeditationRoutine} />
+      <Stack.Screen name="SleepDuration" component={SleepDuration} />
+      <Stack.Screen name="MentalState" component={MentalState} />
+      <Stack.Screen name="PredictionScreen" component={PredictionScreen} />
       <Stack.Screen name="Home" component={Home} />
+      {/* <Stack.Screen name="Yourself" component={Yourself} />
+   
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
       <Stack.Screen name="OtpVerification" component={OtpVerification} />

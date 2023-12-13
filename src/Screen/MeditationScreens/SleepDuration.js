@@ -14,13 +14,27 @@ import {AppColor} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-const MeditationConsent = ({navigation}) => {
+const SleepDuration = ({navigation}) => {
   const TextData = [
-    {id: 1, img: localImage.Meditation_yes, txt: 'Yes, Sure'},
+    {
+      id: 1,
+      img: localImage.Person_Sleep,
+      txt: '2-5 hours',
+    },
     {
       id: 2,
-      img: localImage.Cross,
-      txt: 'Not for Now',
+      img: localImage.Person_Sleep,
+      txt: '5-8 hours',
+    },
+    {
+      id: 3,
+      img: localImage.Person_Sleep,
+      txt: '8-12 hours',
+    },
+    {
+      id: 4,
+      img: localImage.Person_Sleep,
+      txt: '12-18 hours',
     },
   ];
   useEffect(() => {
@@ -49,17 +63,16 @@ const MeditationConsent = ({navigation}) => {
   const SelectedButton = button => {
     setSelectedB(button);
     setTimeout(() => {
-      button == 1
-        ? navigation.navigate('MeditationRoutine')
-        : navigation.navigate('Home');
+       navigation.navigate("MentalState")
     }, 250);
   };
-
   return (
     <View style={styles.Container}>
-      <MeditationTitleComponent Title={'Would you like to Meditate also ?'} />
+      <MeditationTitleComponent
+        Title={"Let's track your sleep cycle?"}
+      />
       <Bulb Title="Meditation helps in keep your body and mind calm, peaceful and relax." />
-      <View style={{marginTop: DeviceHeigth * 0.15}}>
+      <View style={{marginTop: DeviceHeigth *0.08}}>
         {TextData.map((value, index) => (
           <Animated.View
             key={index}
@@ -153,18 +166,5 @@ const styles = StyleSheet.create({
     marginLeft: DeviceWidth * 0.06,
     fontSize: 15,
   },
-  Elevation: {
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
 });
-export default MeditationConsent;
+export default SleepDuration;
