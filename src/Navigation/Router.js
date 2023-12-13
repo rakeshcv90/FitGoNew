@@ -64,20 +64,21 @@ import Store from '../Screen/NewHome/Store';
 import Profile from '../Screen/NewHome/Profile';
 import NewEditProfile from '../Component/NewEditProfile';
 import NewPersonalDetails from '../Screen/NewPersonalDetails';
-
 import NewStepCounter from '../Screen/NewStepCounter';
-
 import AppNotification from '../Screen/AppNotification';
-import TestScreen from '../Screen/TestScreen';
 import LogSignUp from '../Screen/LogSignUp';
-import FocuseArea from '../Screen/FocuseArea';
+import FocuseAreaFmale from '../Component/FocuseAreaFmale';
+import FocusArea from '../Screen/FocusArea';
+import Injury from '../Screen/Yourself/Injury';
+import WorkoutArea from '../Screen/Yourself/WorkoutArea';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const screenOptions = {
   headerShown: false, // Hide the header for all screens
   gestureDirection: 'horizontal',
-  cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+  gesturesEnabled: true,
+  // cardStyleInterpolator: CardStyleInterpolators.,
 };
 // const Router = () => {
 //   return (
@@ -147,13 +148,16 @@ const BottomTab = () => {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      {/* <Stack.Screen name="FocuseArea" component={FocuseArea} />
-      <Stack.Screen name="TestScreen" component={TestScreen} /> */}
+      {/* <Stack.Screen name="ProfileScreen" component={ProfileScreen} /> */}
+    
+      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+      <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} />
 
-      {/* <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
-      <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} /> */}
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
+      <Stack.Screen name="Injury" component={Injury} />
+      <Stack.Screen name="FocusArea" component={FocusArea} />
+      <Stack.Screen name="WorkoutArea" component={WorkoutArea} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />

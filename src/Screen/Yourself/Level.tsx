@@ -98,13 +98,13 @@ const Level = ({route, navigation}: any) => {
           }}>
           {completeProfileData.level?.map((item: any, index: number) => {
             if (item?.level_id == selected)
-            return (
-              <Image
-                source={{uri: item?.level_image}}
-                style={{height: DeviceHeigth * 0.4, width: DeviceWidth}}
-                resizeMode="contain"
-              />
-            );
+              return (
+                <Image
+                  source={{uri: item?.level_image}}
+                  style={{height: DeviceHeigth * 0.4, width: DeviceWidth}}
+                  resizeMode="contain"
+                />
+              );
           })}
         </Animated.View>
         <View style={{height: DeviceHeigth * 0.1}}>
@@ -232,7 +232,10 @@ const Level = ({route, navigation}: any) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icons name="chevron-left" size={25} color={'#000'} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Injury', {nextScreen: screen + 1});
+          }}>
           <LinearGradient
             start={{x: 0, y: 1}}
             end={{x: 1, y: 0}}
