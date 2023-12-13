@@ -4,7 +4,6 @@ import NewHeader from '../Component/Headers/NewHeader';
 import {AppColor} from '../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../Component/Config';
 import Button from '../Component/Button';
-import Goal from '../Screen/Yourself/Goal';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import { setUserProfileData } from '../Component/ThemeRedux/Actions';

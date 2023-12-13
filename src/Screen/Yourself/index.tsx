@@ -20,7 +20,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {localImage} from '../../Component/Image';
 import Gender from './Gender';
-import Goal from './Goal';
 import {showMessage} from 'react-native-flash-message';
 import Level from './Level';
 import {Picker} from '@react-native-picker/picker';

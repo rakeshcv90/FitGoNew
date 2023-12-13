@@ -81,5 +81,7 @@ export const localImage = {
   WithoutEquipment:require("../Icon/Images/NewImage/WithoutE.png"),
   MaleHeight:require("../Icon/Images/NewImage/MaleHeight.png"),
   FemaleHeight:require("../Icon/Images/NewImage/FemaleHeight.png"),
+  MaleWeight:require("../Icon/Images/NewImage/MaleWeight.png"),
+  FemaleWeight:require("../Icon/Images/NewImage/FemaleWeight.png"),
 
 };

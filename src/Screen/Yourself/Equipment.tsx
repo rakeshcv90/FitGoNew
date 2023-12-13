@@ -20,7 +20,7 @@ import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const Goal = ({route, navigation}: any) => {
+const Equipment = ({route, navigation}: any) => {
   const {nextScreen} = route.params;
 
   const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
@@ -108,7 +108,7 @@ const Goal = ({route, navigation}: any) => {
       equipment: selected,
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-    // navigation.navigate('Goal', {nextScreen: screen + 1});
+    // navigation.navigate('Equipment', {nextScreen: screen + 1});
   };
   const data = [
     {
@@ -250,7 +250,7 @@ const Goal = ({route, navigation}: any) => {
   );
 };
 
-export default Goal;
+export default Equipment;
 
 const styles = StyleSheet.create({
   box: {

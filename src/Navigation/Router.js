@@ -48,7 +48,7 @@ import IntroductionScreen from '../Screen/IntroductionScreen';
 import Yourself from '../Screen/Yourself/Index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
-import Goal from '../Screen/Yourself/Goal';
+import Equipment from '../Screen/Yourself/Equipment';
 import Focus from '../Screen/Yourself/Focus';
 import Level from '../Screen/Yourself/Level';
 import Height from '../Screen/Yourself/Height';
@@ -170,7 +170,7 @@ export const LoginStack = () => {
       <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="Scale" component={Scale} />
       <Stack.Screen name="Gender" component={Gender} />
-      <Stack.Screen name="Goal" component={Goal} />
+      <Stack.Screen name="Equipment" component={Equipment} />
       <Stack.Screen name="Focus" component={Focus} />
       <Stack.Screen name="Level" component={Level} />
       <Stack.Screen name="Height" component={Height} />
