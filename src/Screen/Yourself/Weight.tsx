@@ -92,11 +92,12 @@ const Weight = ({route, navigation}: any) => {
     const currentData = {
       currentWeight: selected,
       targetWeight: targetSelected && weight,
+      type: toggle
     };
     if (targetSelected) {
       console.log([...getLaterButtonData, currentData]);
       dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-      navigation.navigate('Equipment', {nextScreen: screen + 1});
+      navigation.navigate('Age', {nextScreen: screen + 1});
     } else {
       handleAnimation(weight);
     }
