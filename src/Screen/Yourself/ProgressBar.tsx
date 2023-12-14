@@ -22,7 +22,7 @@ const ProgressBar = ({screen}: any) => {
             fontWeight: '400',
           }}>
           <Text style={{color: AppColor.RED}}>{`Step  ${screen} `}</Text>
-          of 8
+          of 10
         </Text>
       </View>
       <View
@@ -36,7 +36,7 @@ const ProgressBar = ({screen}: any) => {
         }}>
         <View
           style={{
-            width: screen == 0 ? '12%' : `${12 * screen}%`,
+            width: screen == 0 ? '10%' : `${10 * screen}%`,
             backgroundColor: AppColor.RED,
             height: 5,
             borderRadius: 5,

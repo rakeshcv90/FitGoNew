@@ -6,20 +6,38 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {AppColor} from '../Component/Color';
 import ProgressBar from './Yourself/ProgressBar';
 import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import FocuseAreaFmale from '../Component/FocuseAreaFmale';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import FocuseAreaMale from '../Component/FocuseAreaMale';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
+import { setLaterButtonData } from '../Component/ThemeRedux/Actions';
 
 const FocusArea = ({route, navigation}) => {
+  const dispatch = useDispatch();
   const {nextScreen} = route.params;
   const {getLaterButtonData} = useSelector(state => state);
-  console.log('Item Data Is', getLaterButtonData[0].gender);
+  const [screen, setScreen] = useState(nextScreen);
+  const [selected, setSelected] = useState(-1);
+  
+
+  useEffect(() => {
+    setScreen(nextScreen);
+    setSelected(1);
+  }, []);
+  const toNextScreen = () => {
+    // const currentData = {
+    //   injury: imageView,
+    // };
+    // dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
+    navigation.navigate('WorkoutArea', {nextScreen: screen + 1});
+
+  };
+
   return (
     <SafeAreaView>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -49,13 +67,13 @@ const FocusArea = ({route, navigation}) => {
       </View>
       <View style={styles.buttons}>
         <TouchableOpacity
-        // onPress={() => navigation.goBack()}
+        onPress={() => navigation.goBack()}
         >
           <Icons name="chevron-left" size={25} color={'#000'} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('FocusArea', {nextScreen: screen + 1});
+            toNextScreen()
           }}>
           <LinearGradient
             start={{x: 0, y: 1}}

@@ -150,11 +150,9 @@ const BottomTab = () => {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      {/* <Stack.Screen name="ProfileScreen" component={ProfileScreen} /> */}
-    
-      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+       <Stack.Screen name="WorkoutArea" component={WorkoutArea} />
+      {/* <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} />
-
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Injury" component={Injury} />
@@ -164,13 +162,11 @@ export const LoginStack = () => {
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
       <Stack.Screen name="OtpVerification" component={OtpVerification} />
-
       <Stack.Screen name="Edit_Profile" component={NewEditProfile} />
       <Stack.Screen name="Personal Details" component={NewPersonalDetails} />
       <Stack.Screen name="WorkoutCategories" component={WorkoutCategories} />
       <Stack.Screen name="WorkoutsDetails" component={WorkoutsDetails} />
       <Stack.Screen name="StepCounter" component={NewStepCounter} />
-
       <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="Scale" component={Scale} />
       <Stack.Screen name="Gender" component={Gender} />
@@ -178,7 +174,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Focus" component={Focus} />
       <Stack.Screen name="Level" component={Level} />
       <Stack.Screen name="Height" component={Height} />
-      <Stack.Screen name="Weight" component={Weight} />
+      <Stack.Screen name="Weight" component={Weight} /> */}
     </Stack.Navigator>
   );
 };

@@ -89,5 +89,10 @@ export const localImage = {
   Chest: require('../Icon/Images/NewImage/Chest.png'),
   Abs2: require('../Icon/Images/NewImage/Abs2.png'),
   Leg2: require('../Icon/Images/NewImage/Leg2.png'),
+  AtHome: require('../Icon/Images/NewImage/AtHome.png'),
+  AtBed: require('../Icon/Images/NewImage/Bed.png'),
+  Outdoor: require('../Icon/Images/NewImage/Outdoor.png'),
+  Anywhere: require('../Icon/Images/NewImage/Anywhwere.png'),
+  
 
 };

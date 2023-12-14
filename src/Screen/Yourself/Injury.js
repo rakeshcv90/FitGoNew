@@ -18,14 +18,29 @@ import Bulb from './Bulb';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import {showMessage} from 'react-native-flash-message';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 
 const Injury = ({route, navigation}) => {
+  const dispatch = useDispatch();
   const {nextScreen} = route.params;
   const {getLaterButtonData} = useSelector(state => state);
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageView, setImageVIew] = useState([]);
   const [screen, setScreen] = useState(nextScreen);
+  const [selected, setSelected] = useState(-1);
+
+  useEffect(() => {
+    setScreen(nextScreen);
+    setSelected(1);
+  }, []);
+  const toNextScreen = () => {
+    const currentData = {
+      injury: imageView,
+    };
+    dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
+    navigation.navigate('Height', {nextScreen: screen + 1});
+  };
 
   const buttonName = [
     {
@@ -140,7 +155,7 @@ const Injury = ({route, navigation}) => {
 
           marginTop: DeviceHeigth * 0.05,
         }}>
-        <ProgressBar screen={5} />
+        <ProgressBar screen={screen} />
       </View>
       <View
         style={{
@@ -331,14 +346,12 @@ const Injury = ({route, navigation}) => {
         </View>
       </View>
       <View style={styles.buttons}>
-        <TouchableOpacity
-        // onPress={() => navigation.goBack()}
-        >
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icons name="chevron-left" size={25} color={'#000'} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('FocusArea', {nextScreen: screen + 1});
+            toNextScreen();
           }}>
           <LinearGradient
             start={{x: 0, y: 1}}

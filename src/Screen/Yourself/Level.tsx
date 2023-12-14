@@ -69,7 +69,7 @@ const Level = ({route, navigation}: any) => {
       level: selected,
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-    navigation.navigate('Height', {nextScreen: screen + 1});
+    navigation.navigate('Injury', {nextScreen: screen + 1});
   };
   return (
     <View
@@ -81,7 +81,12 @@ const Level = ({route, navigation}: any) => {
         backgroundColor: AppColor.WHITE,
       }}>
       <ProgressBar screen={screen} />
-      <Bulb screen={screen} />
+      <Bulb
+          screen={'Select your Fitness level'}
+          header={
+            'Knowing your gender can help us for you based on different metabolic rates.'
+          }
+        />
 
       <View
         style={{

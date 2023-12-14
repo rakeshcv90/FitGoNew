@@ -108,7 +108,7 @@ const Equipment = ({route, navigation}: any) => {
       equipment: selected,
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-    // navigation.navigate('Equipment', {nextScreen: screen + 1});
+    navigation.navigate('FocusArea', {nextScreen: screen + 1});
   };
   const data = [
     {
@@ -132,7 +132,12 @@ const Equipment = ({route, navigation}: any) => {
         backgroundColor: AppColor.WHITE,
       }}>
       <ProgressBar screen={screen} />
-      <Bulb screen={screen} />
+      <Bulb
+          screen={'Choose you fitness goal'}
+          header={
+            'We will filter unsuitable workouts for you, Also you can select 1 or 2 Injuries only'
+          }
+        />
 
       <View
         style={{

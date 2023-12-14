@@ -150,7 +150,12 @@ const Weight = ({route, navigation}: any) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Bulb screen={screen} />
+            <Bulb
+              screen={'What’s your Current weight?'}
+              header={
+                'Knowing your weight can help us for you based on different metabolic rates.'
+              }
+            />
             <View style={{marginTop: 30}} />
             <Toggle
               data={toggleH}
@@ -295,7 +300,12 @@ const Weight = ({route, navigation}: any) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Bulb screen={screen} />
+            <Bulb
+              screen={'What’s your Target weight?'}
+              header={
+                'Knowing your weight can help us for you based on different metabolic rates.'
+              }
+            />
             <View style={{marginTop: 30}} />
             <Toggle
               data={toggleH}

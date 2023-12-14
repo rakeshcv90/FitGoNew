@@ -95,7 +95,12 @@ const Height = ({route, navigation}: any) => {
         backgroundColor: AppColor.WHITE,
       }}>
       <ProgressBar screen={screen} />
-      <Bulb screen={screen} />
+      <Bulb
+          screen={'What’s your Height?'}
+          header={
+            'Knowing your height  can help us for you based on different metabolic rates.'
+          }
+        />
       <View
         style={{
           marginTop: 30,

@@ -172,7 +172,13 @@ const Gender = ({route, navigation}: any) => {
         backgroundColor: AppColor.WHITE,
       }}>
       <ProgressBar screen={screen} />
-      <Bulb screen={screen} />
+      {/* <Bulb screen={screen} /> */}
+      <Bulb
+          screen={'Select your Gender'}
+          header={
+            'Knowing your gender can help us for you based on different metabolic rates.'
+          }
+        />
       <View
         style={{
           flexDirection: 'row',

@@ -247,7 +247,8 @@ const ForgetPassword = ({navigation}) => {
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+        >
         <KeyboardAvoidingView
           behavior={Platform.OS == 'ios' ? 'position': "absolute"}
           contentContainerStyle={{flexGrow: 1}}>
