@@ -57,17 +57,17 @@ const Gender = ({route, navigation}: any) => {
     } else {
       // Animate the translation of the unselected image
       Animated.parallel([
-        Animated.timing(selected === 'F' ? translateX : translateX1, {
-          toValue: gender == 'F' ? -DeviceWidth * 0.5 : DeviceWidth / 2,
+        Animated.timing(gender === 'F' ? translateX : translateX1, {
+          toValue: gender == 'F' ? 0 : DeviceWidth / 2,
           duration: 500,
           useNativeDriver: true,
-          delay: 500, // Delay the return to center animation for a smoother effect
+          delay: gender == 'F' ? 500 : 0, // Delay the return to center animation for a smoother effect
         }),
       ]).start();
       setTimeout(() => {
         setSelected(gender);
         setScreen(screen + 1);
-      }, 1000);
+      }, 500);
     }
   };
   const toNextScreen = (item: any) => {
