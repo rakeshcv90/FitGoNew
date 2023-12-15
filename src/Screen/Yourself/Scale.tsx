@@ -24,7 +24,7 @@ const Scale = ({setActiveIndex, activeIndex, data, posData, h}: any) => {
   };
 
   useEffect(() => {
-    getActiveItem(50);
+    getActiveItem(900);
   }, []);
   return (
     <View>

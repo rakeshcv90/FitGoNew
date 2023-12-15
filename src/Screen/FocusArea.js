@@ -22,19 +22,21 @@ const FocusArea = ({route, navigation}) => {
   const {nextScreen} = route.params;
   const {getLaterButtonData} = useSelector(state => state);
   const [screen, setScreen] = useState(nextScreen);
-  const [selected, setSelected] = useState(-1);
-  
+  const [imageView, setImageVIew] = useState([]);
+
+
 
   useEffect(() => {
     setScreen(nextScreen);
-    setSelected(1);
+ 
   }, []);
   const toNextScreen = () => {
-    // const currentData = {
-    //   injury: imageView,
-    // };
-    // dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
+    const currentData = {
+      focuseArea: imageView,
+    };
+    dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     navigation.navigate('WorkoutArea', {nextScreen: screen + 1});
+    {console.log("Focuse Area Screen Data",[...getLaterButtonData, currentData])}
 
   };
 
@@ -60,9 +62,9 @@ const FocusArea = ({route, navigation}) => {
       </View>
       <View>
         {getLaterButtonData[0].gender == 'M' ? (
-          <FocuseAreaMale />
+          <FocuseAreaMale  imageView={imageView} setImageVIew={setImageVIew}/>
         ) : (
-          <FocuseAreaFmale />
+          <FocuseAreaFmale imageView={imageView} setImageVIew={setImageVIew}/>
         )}
       </View>
       <View style={styles.buttons}>
@@ -78,6 +80,8 @@ const FocusArea = ({route, navigation}) => {
         >
           <Icons name="chevron-left" size={25} color={'#000'} />
         </TouchableOpacity>
+
+        {imageView.length!==0&&
         <TouchableOpacity
           onPress={() => {
             toNextScreen()
@@ -89,7 +93,7 @@ const FocusArea = ({route, navigation}) => {
             style={[styles.nextButton]}>
             <Icons name="chevron-right" size={25} color={'#fff'} />
           </LinearGradient>
-        </TouchableOpacity>
+        </TouchableOpacity>}
       </View>
     </SafeAreaView>
   );

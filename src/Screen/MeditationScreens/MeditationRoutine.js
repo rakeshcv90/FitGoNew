@@ -6,6 +6,7 @@ import {
   Image,
   Platform,
   Animated,
+  SafeAreaView,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import MeditationTitleComponent from './MeditationTitleComponent';
@@ -67,9 +68,9 @@ const MeditationRoutine = ({navigation}) => {
   };
 
   return (
-    <View style={styles.Container}>
-    <MeditationTitleComponent Title={"How do you define your daily routine ?"}/>
-    <Bulb Title="Meditation helps in keep your body and mind calm, peaceful and relax."/>
+    <SafeAreaView style={styles.Container}>
+    {/* <MeditationTitleComponent Title={"How do you define your daily routine ?"}/> */}
+    <Bulb screen={'How do you define your daily routine ?'}header="Meditation helps in keep your body and mind calm, peaceful and relax."/>
     <View style={{marginTop: DeviceHeigth * 0.08}}>
         {TextData.map((value, index) => (
           <Animated.View
@@ -123,7 +124,7 @@ const MeditationRoutine = ({navigation}) => {
         }}>
         <Icons name="chevron-left" size={25} />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 const styles=StyleSheet.create({

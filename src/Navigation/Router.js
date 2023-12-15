@@ -34,6 +34,7 @@ import Preview from '../Screen/Yourself/Preview';
 import WorkoutArea from '../Screen/Yourself/WorkoutArea';
 import Age from '../Screen/Yourself/Age';
 import LoadData from '../Screen/Yourself/LoadData';
+import PredictionScreen from '../Screen/MeditationScreens/PredictionScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -96,7 +97,7 @@ export const LoginStack = () => {
   return ( 
 <Stack.Navigator screenOptions={screenOptions}>
 
-      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+   <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
         name="IntroductionScreen1"
         component={IntroductionScreen1}
@@ -108,35 +109,17 @@ export const LoginStack = () => {
       <Stack.Screen
         name="IntroductionScreen3"
         component={IntroductionScreen3}
-
       />
-
-      {/* <Stack.Screen name="PredictionScreen" component={PredictionScreen} />
-      
-
-
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
-
-      
-
-      {/* <Stack.Screen name="PredictionScreen" component={PredictionScreen} /> */}
-      
-    
-
-
-
       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Injury" component={Injury} />
       <Stack.Screen name="FocusArea" component={FocusArea} />
       <Stack.Screen name="WorkoutArea" component={WorkoutArea} />
-      <Stack.Screen name="LoadData" component={LoadData} />
-
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
       <Stack.Screen name="OtpVerification" component={OtpVerification} />
       <Stack.Screen name="Edit_Profile" component={NewEditProfile} />
       <Stack.Screen name="Personal Details" component={NewPersonalDetails} />
-
       <Stack.Screen name="StepCounter" component={NewStepCounter} />
       <Stack.Screen name="Scale" component={Scale} />
       <Stack.Screen name="Gender" component={Gender} />
@@ -146,12 +129,14 @@ export const LoginStack = () => {
       <Stack.Screen name="Height" component={Height} />
       <Stack.Screen name="Weight" component={Weight} />
       <Stack.Screen name="Age" component={Age} />
-      <Stack.Screen name="Preview" component={Preview} />
+      <Stack.Screen name="PredictionScreen" component={PredictionScreen} />
       <Stack.Screen name="MeditationConsent" component={MeditationConsent} />
       <Stack.Screen name="MeditationRoutine" component={MeditationRoutine} />
       <Stack.Screen name="SleepDuration" component={SleepDuration} />
       <Stack.Screen name="MentalState" component={MentalState} />
       <Stack.Screen name="Alcohalinfo" component={Alcohalinfo} />
+      <Stack.Screen name="LoadData" component={LoadData} />
+      <Stack.Screen name="Preview" component={Preview} />
     </Stack.Navigator>
   );
 };

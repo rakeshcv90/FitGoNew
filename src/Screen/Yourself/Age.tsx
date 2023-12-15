@@ -105,6 +105,7 @@ const Age = ({route, navigation}: any) => {
     const currentData = {
       age: data[selected],
     };
+    {console.log("Age Screen Data",[...getLaterButtonData, currentData])}
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     navigation.navigate('Equipment', {nextScreen: screen + 1});
   };

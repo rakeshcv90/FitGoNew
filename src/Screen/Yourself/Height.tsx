@@ -67,10 +67,11 @@ const Height = ({route, navigation}: any) => {
 
   const toNextScreen = () => {
     const currentData = {
-      height: currentActiveIndex,
+      height: height[currentActiveIndex],
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     navigation.navigate('Weight', {nextScreen: screen + 1});
+    {console.log("Hight Screen Data",[...getLaterButtonData, currentData])}
   };
   const data = [
     {

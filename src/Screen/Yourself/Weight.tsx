@@ -95,7 +95,7 @@ const Weight = ({route, navigation}: any) => {
       type: toggle
     };
     if (targetSelected) {
-      console.log([...getLaterButtonData, currentData]);
+      {console.log("Current Weight Screen Data",[...getLaterButtonData, currentData])}
       dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
       navigation.navigate('Age', {nextScreen: screen + 1});
     } else {

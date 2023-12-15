@@ -6,6 +6,7 @@ import {
   Image,
   Platform,
   Animated,
+  SafeAreaView,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import MeditationTitleComponent from './MeditationTitleComponent';
@@ -67,9 +68,9 @@ const MentalState = ({navigation}) => {
   };
 
   return (
-    <View style={styles.Container}>
-      <MeditationTitleComponent Title={'What is your mental state ?'} />
-      <Bulb Title="Meditation helps in keep your body and mind calm, peaceful and relax." />
+    <SafeAreaView style={styles.Container}>
+      {/* <MeditationTitleComponent Title={'What is your mental state ?'} /> */}
+      <Bulb screen={'What is your mental state ?'}header="Meditation helps in keep your body and mind calm, peaceful and relax." />
       <View style={{height: DeviceHeigth * 0.5}}>
         <Carousel
           ref={carouselRef}
@@ -172,7 +173,7 @@ const MentalState = ({navigation}) => {
         }}>
         <Icons name="chevron-left" size={25} color={AppColor.BLACK} />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

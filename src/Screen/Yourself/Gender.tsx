@@ -53,7 +53,7 @@ const Gender = ({route, navigation}: any) => {
       setTimeout(() => {
         setScreen(screen - 1);
         setSelected('');
-      }, 1000);
+      }, 3000);
     } else {
       // Animate the translation of the unselected image
       Animated.parallel([

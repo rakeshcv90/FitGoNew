@@ -6,6 +6,7 @@ import {
   Image,
   Platform,
   Animated,
+  SafeAreaView
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import MeditationTitleComponent from './MeditationTitleComponent';
@@ -14,6 +15,7 @@ import {AppColor} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 const MeditationConsent = ({navigation}) => {
   const TextData = [
     {id: 1, img: localImage.Meditation_yes, txt: 'Yes, Sure'},
@@ -51,14 +53,17 @@ const MeditationConsent = ({navigation}) => {
     setTimeout(() => {
       button == 1
         ? navigation.navigate('MeditationRoutine')
-        : navigation.navigate('Home');
+        : navigation.navigate('LoadData');
     }, 250);
   };
 
   return (
-    <View style={styles.Container}>
-      <MeditationTitleComponent Title={'Would you like to Meditate also ?'} />
-      <Bulb Title="Meditation helps in keep your body and mind calm, peaceful and relax." />
+    <SafeAreaView style={styles.Container}>
+      {/* <MeditationTitleComponent Title={'Would you like to Meditate also ?'} /> */}
+      <Bulb
+        screen={'Would you like to Meditate also ?'}
+        header="Meditation helps in keep your body and mind calm, peaceful and relax."
+      />
       <View style={{marginTop: DeviceHeigth * 0.15}}>
         {TextData.map((value, index) => (
           <Animated.View
@@ -99,20 +104,20 @@ const MeditationConsent = ({navigation}) => {
         ))}
       </View>
       <TouchableOpacity
-      onPress={()=>{
-        navigation.goBack()
-      }}
+        onPress={() => {
+          navigation.goBack();
+        }}
         style={{
           justifyContent: 'flex-end',
           flex: 1,
-          marginBottom: DeviceHeigth*0.05,
+          marginBottom: DeviceHeigth * 0.05,
           alignItems: 'flex-start',
           //  borderWidth: 1,
           width: DeviceWidth * 0.9,
         }}>
         <Icons name="chevron-left" size={25} />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

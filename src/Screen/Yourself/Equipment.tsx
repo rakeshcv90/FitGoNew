@@ -26,7 +26,7 @@ const Equipment = ({route, navigation}: any) => {
   const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
     (state: any) => state,
   );
-  console.log('DDDDDDDDD', getLaterButtonData);
+
   const dispatch = useDispatch();
   const [selected, setSelected] = useState('');
   const [screen, setScreen] = useState(nextScreen);
@@ -108,8 +108,12 @@ const Equipment = ({route, navigation}: any) => {
     const currentData = {
       equipment: selected,
     };
-    dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-    navigation.navigate('FocusArea', {nextScreen: screen + 1});
+    {console.log("Equipment  Screen Data",selected)}
+   dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
+    setTimeout(() => {
+      navigation.navigate('FocusArea', {nextScreen: screen + 1});
+    }, 2000);
+
   };
   const data = [
     {

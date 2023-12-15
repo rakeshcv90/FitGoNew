@@ -91,7 +91,7 @@ const LogSignUp = () => {
     );
   }
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <TouchableOpacity
       onPress={()=>{
@@ -105,7 +105,7 @@ const LogSignUp = () => {
           alignSelf: 'flex-end',
           marginRight: 30,
           borderRadius: 30,
-          marginTop:Platform.OS=='ios'?DeviceHeigth*0.03:DeviceHeigth*0.06,
+          marginTop:Platform.OS=='ios'?DeviceHeigth*0.1:DeviceHeigth*0.08,
           borderWidth: 1.5,
           borderColor: 'red',
         }}>
@@ -136,7 +136,7 @@ const LogSignUp = () => {
         <Tab.Screen name={'Log In'} component={Login} />
         <Tab.Screen name={'Sign Up'} component={Signup} />
       </Tab.Navigator>
-    </SafeAreaView>
+    </View>
   );
 };
 var styles = StyleSheet.create({
@@ -145,7 +145,7 @@ var styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
   },
   TextContainer: {
-    marginTop: DeviceHeigth * 0.06,
+    marginTop: DeviceHeigth * 0.03,
     marginHorizontal: DeviceHeigth * 0.03,
     justifyContent: 'center',
     alignItems: 'center',

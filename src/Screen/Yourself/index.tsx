@@ -117,11 +117,13 @@ const Index = ({navigation, route}: any) => {
         method: 'get',
       });
       if (res.data) {
-        console.log('first', res.data?.goal)
+  
         dispatch(setCompleteProfileData(res.data));
+        navigation.navigate('Gender', {data: res.data?.goal, nextScreen: screen});
       }
     } catch (error) {
       dispatch(setCompleteProfileData([]));
+      navigation.navigate('Gender', {data: [], nextScreen: screen});
       console.log(error);
     }
   };
@@ -164,144 +166,144 @@ const Index = ({navigation, route}: any) => {
   };
 
 
-  const Carousal = ({data}: any) => (
-    <Carousel
-      // ref={carouselRef}
-      data={data}
-      vertical={true}
-      showsVerticalScrollIndicator={false}
-      keyExtractor={(item, index) => index.toString()}
-      windowSize={10}
-      sliderHeight={DeviceHeigth * 0.5}
-      sliderWidth={DeviceWidth}
-      itemHeight={30}
-      inactiveSlideScale={0.4}
-      enableSnap={true}
-      firstItem={selectedIndex}
-      itemWidth={50}
-      activeAnimationType="spring"
-      activeSlideAlignment="center"
-      snapToAlignment="start"
-      snapToInterval={30}
-      decelerationRate={'fast'}
-      renderItem={({item, index}: any) => {
-        return (
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            {screen == 5 ? (
-              <View
-                style={{
-                  width: 100,
-                  height: 3,
-                  backgroundColor: AppColor.RED,
-                  borderRadius: 10,
-                  marginBottom: 20,
-                }}
-              />
-            ) : index % 2 == 0 ? (
-              <View
-                style={{
-                  width: 100,
-                  height: 3,
-                  backgroundColor: AppColor.RED,
-                  borderRadius: 10,
-                  marginBottom: 20,
-                }}
-              />
-            ) : (
-              <View
-                style={{
-                  width: 50,
-                  height: 3,
-                  backgroundColor: AppColor.BLACK,
-                  borderRadius: 10,
-                  marginBottom: 20,
-                }}
-              />
-            )}
-            {/* <Text>{item}</Text> */}
-          </View>
-        );
-      }}
-      onBeforeSnapToItem={(index: number) => {
-        setSelectedIndex(index);
-        screen == 3
-          ? setSelectedWeight(toggleWData[index])
-          : screen == 4
-          ? setSelectedHeight(toggleData[index])
-          : setSelectedAge(imgData[index]);
-      }}
-      onSnapToItem={(index: number) => {
-        setSelectedIndex(index);
-        screen == 3
-          ? setSelectedWeight(toggleWData[index])
-          : screen == 4
-          ? setSelectedHeight(toggleData[index])
-          : setSelectedAge(imgData[index]);
-      }}
-    />
-  );
-  const Pickers = () => {
-    return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          width: DeviceWidth * 0.5,
-        }}>
-        {screen == 3 ? (
-          <View style={{marginLeft: -DeviceWidth * 0.2}}>
-            <Carousal data={toggleWData} />
-            <Text
-              style={{
-                color: AppColor.RED,
-                fontSize: 30,
-                position: 'absolute',
-                top: '38%',
-                left: '120%',
-                width: DeviceWidth * 0.5,
-              }}>
-              {selectedWeight + ' ' + toggleW}
-            </Text>
-          </View>
-        ) : screen == 4 ? (
-          <View style={{marginLeft: -DeviceWidth * 0.2}}>
-            <Carousal data={toggleData} />
-            <Text
-              style={{
-                color: AppColor.RED,
-                fontSize: 30,
-                position: 'absolute',
-                top: '38%',
-                left: '120%',
-                width: DeviceWidth * 0.5,
-              }}>
-              {selectedHeight + ' ' + toggle}
-            </Text>
-          </View>
-        ) : (
-          <View style={{marginLeft: -DeviceWidth * 0.2}}>
-            <Carousal data={imgData} />
-            <Text
-              style={{
-                color: AppColor.RED,
-                fontSize: 30,
-                position: 'absolute',
-                top: '35%',
-                left: '120%',
-                width: DeviceWidth * 0.5,
-              }}>
-              {selectedAge + ' years'}
-            </Text>
-          </View>
-        )}
-      </View>
-    );
-  };
-  useEffect(() => {
-    setTimeout(() => {
-      navigation.navigate('Gender', {data: completeProfileData?.goal, nextScreen: screen});
-    }, 2000);
-  }, []);
+  // const Carousal = ({data}: any) => (
+  //   <Carousel
+  //     // ref={carouselRef}
+  //     data={data}
+  //     vertical={true}
+  //     showsVerticalScrollIndicator={false}
+  //     keyExtractor={(item, index) => index.toString()}
+  //     windowSize={10}
+  //     sliderHeight={DeviceHeigth * 0.5}
+  //     sliderWidth={DeviceWidth}
+  //     itemHeight={30}
+  //     inactiveSlideScale={0.4}
+  //     enableSnap={true}
+  //     firstItem={selectedIndex}
+  //     itemWidth={50}
+  //     activeAnimationType="spring"
+  //     activeSlideAlignment="center"
+  //     snapToAlignment="start"
+  //     snapToInterval={30}
+  //     decelerationRate={'fast'}
+  //     renderItem={({item, index}: any) => {
+  //       return (
+  //         <View style={{flexDirection: 'row', alignItems: 'center'}}>
+  //           {screen == 5 ? (
+  //             <View
+  //               style={{
+  //                 width: 100,
+  //                 height: 3,
+  //                 backgroundColor: AppColor.RED,
+  //                 borderRadius: 10,
+  //                 marginBottom: 20,
+  //               }}
+  //             />
+  //           ) : index % 2 == 0 ? (
+  //             <View
+  //               style={{
+  //                 width: 100,
+  //                 height: 3,
+  //                 backgroundColor: AppColor.RED,
+  //                 borderRadius: 10,
+  //                 marginBottom: 20,
+  //               }}
+  //             />
+  //           ) : (
+  //             <View
+  //               style={{
+  //                 width: 50,
+  //                 height: 3,
+  //                 backgroundColor: AppColor.BLACK,
+  //                 borderRadius: 10,
+  //                 marginBottom: 20,
+  //               }}
+  //             />
+  //           )}
+  //           {/* <Text>{item}</Text> */}
+  //         </View>
+  //       );
+  //     }}
+  //     onBeforeSnapToItem={(index: number) => {
+  //       setSelectedIndex(index);
+  //       screen == 3
+  //         ? setSelectedWeight(toggleWData[index])
+  //         : screen == 4
+  //         ? setSelectedHeight(toggleData[index])
+  //         : setSelectedAge(imgData[index]);
+  //     }}
+  //     onSnapToItem={(index: number) => {
+  //       setSelectedIndex(index);
+  //       screen == 3
+  //         ? setSelectedWeight(toggleWData[index])
+  //         : screen == 4
+  //         ? setSelectedHeight(toggleData[index])
+  //         : setSelectedAge(imgData[index]);
+  //     }}
+  //   />
+  // );
+  // const Pickers = () => {
+  //   return (
+  //     <View
+  //       style={{
+  //         flex: 1,
+  //         flexDirection: 'row',
+  //         width: DeviceWidth * 0.5,
+  //       }}>
+  //       {screen == 3 ? (
+  //         <View style={{marginLeft: -DeviceWidth * 0.2}}>
+  //           <Carousal data={toggleWData} />
+  //           <Text
+  //             style={{
+  //               color: AppColor.RED,
+  //               fontSize: 30,
+  //               position: 'absolute',
+  //               top: '38%',
+  //               left: '120%',
+  //               width: DeviceWidth * 0.5,
+  //             }}>
+  //             {selectedWeight + ' ' + toggleW}
+  //           </Text>
+  //         </View>
+  //       ) : screen == 4 ? (
+  //         <View style={{marginLeft: -DeviceWidth * 0.2}}>
+  //           <Carousal data={toggleData} />
+  //           <Text
+  //             style={{
+  //               color: AppColor.RED,
+  //               fontSize: 30,
+  //               position: 'absolute',
+  //               top: '38%',
+  //               left: '120%',
+  //               width: DeviceWidth * 0.5,
+  //             }}>
+  //             {selectedHeight + ' ' + toggle}
+  //           </Text>
+  //         </View>
+  //       ) : (
+  //         <View style={{marginLeft: -DeviceWidth * 0.2}}>
+  //           <Carousal data={imgData} />
+  //           <Text
+  //             style={{
+  //               color: AppColor.RED,
+  //               fontSize: 30,
+  //               position: 'absolute',
+  //               top: '35%',
+  //               left: '120%',
+  //               width: DeviceWidth * 0.5,
+  //             }}>
+  //             {selectedAge + ' years'}
+  //           </Text>
+  //         </View>
+  //       )}
+  //     </View>
+  //   );
+  // };
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     navigation.navigate('Gender', {data: completeProfileData?.goal, nextScreen: screen});
+  //   }, 2000);
+  // }, []);
   return (
     <SafeAreaView
       style={{

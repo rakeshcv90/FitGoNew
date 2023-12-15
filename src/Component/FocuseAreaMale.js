@@ -16,9 +16,9 @@ import {AppColor} from './Color';
 import {localImage} from './Image';
 import ProgressBar from '../Screen/Yourself/ProgressBar';
 
-const FocuseAreaMale = () => {
+const FocuseAreaMale = ({imageView,setImageVIew}) => {
   const [selectedItems, setSelectedItems] = useState([]);
-  const [imageView, setImageVIew] = useState([]);
+ 
 
   // const setImageFocusArea = (itemId, item) => {
   //   const index = selectedItems.indexOf(itemId);
@@ -84,6 +84,7 @@ const FocuseAreaMale = () => {
     //   text1: 'Back',
     // },
   ];
+  
 
   return (
     <SafeAreaView style={styles.Container}>

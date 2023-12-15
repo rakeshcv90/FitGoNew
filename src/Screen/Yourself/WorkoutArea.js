@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import ProgressBar from './ProgressBar';
 import Bulb from './Bulb';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
@@ -19,12 +19,29 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {localImage} from '../../Component/Image';
+import { setLaterButtonData } from '../../Component/ThemeRedux/Actions';
 
 const WorkoutArea = ({route, navigation}) => {
-  // const {nextScreen} = route.params;
-  // const [screen, setScreen] = useState(nextScreen);
+  const {nextScreen} = route.params;
+  const [screen, setScreen] = useState(nextScreen);
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageView, setImageVIew] = useState([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setScreen(nextScreen);
+ 
+  }, []);
+  const toNextScreen = () => {
+    const currentData = {
+      workoutArea: imageView,
+    };
+    dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
+    navigation.navigate('PredictionScreen', {nextScreen: screen + 1});
+    console.log("WorkoutArea Screen Data",[...getLaterButtonData, currentData])
+
+  };
+
 
   const {getLaterButtonData} = useSelector(state => state);
   useEffect(() => {
@@ -92,7 +109,7 @@ const WorkoutArea = ({route, navigation}) => {
     setSelectedItems(newSelectedItems);
     setImageVIew(newImageVIew);
   };
-  console.log('FDFDFDFFDFDFDFDFDFFD', imageView);
+
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -105,7 +122,7 @@ const WorkoutArea = ({route, navigation}) => {
 
             marginTop: DeviceHeigth * 0.02,
           }}>
-          <ProgressBar screen={10} />
+          <ProgressBar screen={screen} />
         </View>
         <View
           style={{
@@ -323,9 +340,11 @@ const WorkoutArea = ({route, navigation}) => {
             }}>
             <Icons name="chevron-left" size={25} color={'#000'} />
           </TouchableOpacity>
+
+        {imageView.length!==0&&
           <TouchableOpacity
             onPress={() => {
-              // toNextScreen()
+              toNextScreen()
             }}>
             <LinearGradient
               start={{x: 0, y: 1}}
@@ -334,7 +353,7 @@ const WorkoutArea = ({route, navigation}) => {
               style={[styles.nextButton]}>
               <Icons name="chevron-right" size={25} color={'#fff'} />
             </LinearGradient>
-          </TouchableOpacity>
+          </TouchableOpacity>}
         </View>
       </View>
     </SafeAreaView>

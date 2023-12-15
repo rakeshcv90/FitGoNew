@@ -28,16 +28,17 @@ const Injury = ({route, navigation}) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageView, setImageVIew] = useState([]);
   const [screen, setScreen] = useState(nextScreen);
-  const [selected, setSelected] = useState(-1);
+
 
   useEffect(() => {
     setScreen(nextScreen);
-    setSelected(1);
+
   }, []);
   const toNextScreen = () => {
     const currentData = {
       injury: imageView,
     };
+    {console.log("Injury Screen Data",[...getLaterButtonData, currentData])}
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     navigation.navigate('Height', {nextScreen: screen + 1});
   };
@@ -342,6 +343,7 @@ const Injury = ({route, navigation}) => {
           </View>
         </View>
       </View>
+    
       <View style={styles.buttons}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -356,6 +358,7 @@ const Injury = ({route, navigation}) => {
           }}>
           <Icons name="chevron-left" size={25} color={'#000'} />
         </TouchableOpacity>
+      
         <TouchableOpacity
           onPress={() => {
             toNextScreen();

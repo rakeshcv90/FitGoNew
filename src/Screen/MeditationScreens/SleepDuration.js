@@ -6,6 +6,7 @@ import {
   Image,
   Platform,
   Animated,
+  SafeAreaView,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import MeditationTitleComponent from './MeditationTitleComponent';
@@ -67,11 +68,9 @@ const SleepDuration = ({navigation}) => {
     }, 250);
   };
   return (
-    <View style={styles.Container}>
-      <MeditationTitleComponent
-        Title={"Let's track your sleep cycle?"}
-      />
-      <Bulb Title="Meditation helps in keep your body and mind calm, peaceful and relax." />
+    <SafeAreaView style={styles.Container}>
+     
+      <Bulb screen={"Let's track your sleep cycle?"}header="Meditation helps in keep your body and mind calm, peaceful and relax." />
       <View style={{marginTop: DeviceHeigth *0.08}}>
         {TextData.map((value, index) => (
           <Animated.View
@@ -125,7 +124,7 @@ const SleepDuration = ({navigation}) => {
         }}>
         <Icons name="chevron-left" size={25} />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({

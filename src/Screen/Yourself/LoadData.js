@@ -22,7 +22,7 @@ import LinearGradient from 'react-native-linear-gradient';
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 
-const LoadData = () => {
+const LoadData = ({navigation}) => {
   const buttonName = [
     {
       id: 1,
@@ -163,6 +163,7 @@ const LoadData = () => {
         }}>
         <AnimatedFlatList
           data={buttonName}
+          showsHorizontalScrollIndicator={false}
           renderItem={({item, index})=>{
             console.log("dsvddsfdfsd",item)
             const translateX = translationX.interpolate({
@@ -207,7 +208,7 @@ const LoadData = () => {
 
       <View style={styles.buttons}>
         <TouchableOpacity
-          //   onPress={() => navigation.goBack()}
+            onPress={() => navigation.goBack()}
           style={{
             backgroundColor: '#F7F8F8',
             width: 45,
@@ -222,6 +223,7 @@ const LoadData = () => {
         <TouchableOpacity
           onPress={() => {
             // toNextScreen()
+            navigation.navigate('Preview');
           }}>
           <LinearGradient
             start={{x: 0, y: 1}}
