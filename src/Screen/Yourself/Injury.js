@@ -177,7 +177,7 @@ const Injury = ({route, navigation}) => {
             width: DeviceWidth / 2.7,
             height: DeviceHeigth * 0.6,
           }}>
-          <View style={{top: DeviceHeigth * 0.05, height: DeviceHeigth * 0.7}}>
+          <View style={{top: DeviceHeigth * 0.03, height: DeviceHeigth * 0.7}}>
             <FlatList
               data={buttonName}
               scrollEnabled={false}
@@ -196,9 +196,7 @@ const Injury = ({route, navigation}) => {
                           ? -DeviceWidth * 0.06
                           : DeviceWidth * 0.06,
                     }}
-                    // onPress={() => {
-                    //   setImageFocusArea(item.id, item.text1);
-                    // }}
+                    
                   >
                     <Animated.View
                       style={[
@@ -206,7 +204,7 @@ const Injury = ({route, navigation}) => {
                         {transform: [{translateX: translateXValues[index]}]},
                       ]}>
                       <TouchableOpacity
-                        activeOpacity={0.7}
+                      activeOpacity={1}
                         style={{
                           width: 110,
                           height: 110,
@@ -256,9 +254,8 @@ const Injury = ({route, navigation}) => {
             }}>
             <Image
               source={
-                getLaterButtonData[0].gender == 'M'
-                  ? localImage.MALE
-                  : localImage.FEMALE
+                {uri: getLaterButtonData[0].image}
+           
               }
               style={[
                 styles.Image,
@@ -346,15 +343,17 @@ const Injury = ({route, navigation}) => {
         </View>
       </View>
       <View style={styles.buttons}>
-        <TouchableOpacity onPress={() => navigation.goBack()}
-             style={{ backgroundColor: '#F7F8F8',
-             width: 45,
-             height: 45,
-             borderRadius: 15,
-             overflow: 'hidden',
-             justifyContent: 'center',
-             alignItems: 'center',}}
-        >
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            backgroundColor: '#F7F8F8',
+            width: 45,
+            height: 45,
+            borderRadius: 15,
+            overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
           <Icons name="chevron-left" size={25} color={'#000'} />
         </TouchableOpacity>
         <TouchableOpacity
@@ -388,8 +387,8 @@ const styles = StyleSheet.create({
     width: DeviceWidth,
   },
   Image: {
-    width: 106,
-    height: 106,
+    width: 100,
+    height: 100,
   },
   textStyle: {
     color: 'black',
@@ -420,11 +419,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     top:
-    Platform.OS == 'android'
-      ?0
-      : DeviceHeigth == '1024'
-      ? DeviceHeigth * 0.04
-      :0
+      Platform.OS == 'android'
+        ? 0
+        : DeviceHeigth == '1024'
+        ? DeviceHeigth * 0.04
+        : 0,
   },
   nextButton: {
     backgroundColor: 'red',

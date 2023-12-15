@@ -33,7 +33,7 @@ const IntroductionScreen2 = ({navigation}) => {
   return (
     <View style={styles.Container}>
       <ImageBackground
-        source={IntroductionData[1].img}
+       source={{uri:IntroductionData[1].img}}
         style={styles.ImgBackground}>
         <View style={styles.LinearG}>
           <Animated.View

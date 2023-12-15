@@ -116,8 +116,7 @@ const FocuseAreaMale = () => {
                     ]}
                     onPress={() => {
                       setImageFocusArea(item.id, item.text1);
-                    }}
-                    >
+                    }}>
                     <Text
                       style={{
                         color: '#505050',
@@ -142,7 +141,7 @@ const FocuseAreaMale = () => {
               left: -DeviceWidth * 0.09,
             }}>
             <Image
-              source={localImage.Male2}
+              source={{uri:'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/25357fb6-c174-4a3d-995c-77641d9ea900/public'}}
               style={styles.Image}
               resizeMode="contain"
             />

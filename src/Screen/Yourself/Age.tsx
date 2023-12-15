@@ -86,6 +86,7 @@ const Age = ({route, navigation}: any) => {
   useEffect(() => {
     setScreen(nextScreen);
     setSelected(15);
+    getActiveItem(15)
   }, []);
   const getActiveItem = (y: number) => {
     const halfBoxH = BOX_HEIGHT * 0.4;

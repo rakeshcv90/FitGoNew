@@ -130,7 +130,7 @@ const Profile = () => {
         keyboardShouldPersistTaps="handled">
         <View style={styles.DetailView}>
           <Image
-            source={localImage.Inrtoduction1}
+            source={localImage.BELL}
             style={styles.ProfileImg}
             resizeMode="cover"
           />

@@ -68,9 +68,7 @@ const Bulb = ({screen,header}: any) => {
             marginHorizontal:10
           }}>
 
-<!--           {Title
-            ? Title
-            : 'Knowing your gender can help us for you based on different metabolic rates.'} -->
+      
 
          {header}
 

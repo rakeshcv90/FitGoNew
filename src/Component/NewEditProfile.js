@@ -207,7 +207,7 @@ const [Name,setName]=useState("")
       <NewHeader backButton header={'Edit Profile'} />
       <View style={styles.profileView}>
         <Image
-          source={localImage.Inrtoduction3}
+          source={localImage.BELL}
           style={styles.img}
           resizeMode="cover"></Image>
         <TouchableOpacity

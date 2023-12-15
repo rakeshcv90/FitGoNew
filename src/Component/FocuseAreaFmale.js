@@ -15,23 +15,15 @@ import {AppColor} from './Color';
 
 import {localImage} from './Image';
 import ProgressBar from '../Screen/Yourself/ProgressBar';
+import { useSelector } from 'react-redux';
 
 const FocuseAreaFmale = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageView, setImageVIew] = useState([]);
+  const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
+    (state) => state,
+  );
 
-  // const setImageFocusArea = (itemId, item) => {
-  //   const index = selectedItems.indexOf(itemId);
-  //   if (index === -1) {
-  //     setSelectedItems([...selectedItems, itemId]);
-  //     setImageVIew([...selectedItems, itemId]);
-  //   } else {
-  //     const newSelectedItems = [...selectedItems];
-  //     newSelectedItems.splice(index, 1);
-  //     setSelectedItems(newSelectedItems);
-  //     setImageVIew(newSelectedItems);
-  //   }
-  // };
   const setImageFocusArea = (itemId, item) => {
     const index = selectedItems.indexOf(itemId);
     const newSelectedItems = [...selectedItems];
@@ -140,7 +132,7 @@ const FocuseAreaFmale = () => {
               left: -DeviceWidth * 0.15,
             }}>
             <Image
-              source={localImage.FEMALE}
+              source={   {uri: getLaterButtonData[0].image}}
               style={styles.Image}
               resizeMode="contain"
             />
