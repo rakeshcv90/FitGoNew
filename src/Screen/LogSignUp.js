@@ -15,12 +15,10 @@ import Login from './Login';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
+import {navigationRef} from '../../App';
 const Tab = createMaterialTopTabNavigator();
 const LogSignUp = () => {
-  const [showLogin, setShowLogin] = useState(1);
-  const onSelectSwitch = index => {
-    setShowLogin(index);
-  };
+  const [showLogin, setShowLogin] = useState('Welcome');
 
   function MyTabBar({state, descriptors, navigation}) {
     return (
@@ -45,6 +43,12 @@ const LogSignUp = () => {
 
             if (!isFocused && !event.defaultPrevented) {
               navigation.navigate({name: route.name, merge: true});
+
+              if (route.name == 'Sign Up') {
+                setShowLogin('Create an Account');
+              } else {
+                setShowLogin('Welcome');
+              }
             }
           };
 
@@ -88,9 +92,35 @@ const LogSignUp = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
+      <TouchableOpacity
+      onPress={()=>{
+        navigationRef.navigate('Yourself');
+      }}
+        style={{
+          width: DeviceWidth * 0.17,
+          height: DeviceHeigth* 0.05,
+          justifyContent: 'center',
+          alignItems: 'center',
+          alignSelf: 'flex-end',
+          marginRight: 30,
+          borderRadius: 30,
+          marginTop: 30,
+          borderWidth: 1.5,
+          borderColor: 'red',
+        }}>
+        <Text
+          style={{
+            fontSize: 12,
+            fontWeight: '500',
+            fontFamily: 'Verdana',
+            color: AppColor.BLACK,
+          }}>
+          Later
+        </Text>
+      </TouchableOpacity>
       <View style={styles.TextContainer}>
         <Text style={styles.LoginText2}>{'Hey there,'}</Text>
-        <Text style={styles.LoginText}>Welcome</Text>
+        <Text style={styles.LoginText}>{showLogin}</Text>
       </View>
       <Tab.Navigator
         screenOptions={{
@@ -102,26 +132,9 @@ const LogSignUp = () => {
           },
         }}
         tabBar={props => <MyTabBar {...props} />}>
-        <Tab.Screen
-          name={'Log In'}
-          component={Login}
-          //initialParams={{index: ind}}
-        />
+        <Tab.Screen name={'Log In'} component={Login} />
         <Tab.Screen name={'Sign Up'} component={Signup} />
       </Tab.Navigator>
-      {/* <View
-            style={{
-              marginTop: DeviceHeigth * 0.02,
-            }}>
-            <CustomSwitch
-              selectionMode={1}
-              roundCorner={true}
-              option1={'Log In'}
-              option2={'Sign Up'}
-              onSelectSwitch={onSelectSwitch}
-            />
-          </View>
-          {showLogin==1?<Login/>:   <Signup/>} */}
     </SafeAreaView>
   );
 };

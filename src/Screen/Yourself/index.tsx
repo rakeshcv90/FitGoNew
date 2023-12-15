@@ -20,7 +20,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {localImage} from '../../Component/Image';
 import Gender from './Gender';
-import Goal from './Goal';
 import {showMessage} from 'react-native-flash-message';
 import Level from './Level';
 import {Picker} from '@react-native-picker/picker';
@@ -73,7 +72,7 @@ const Index = ({navigation, route}: any) => {
   const [isRouteDataAvailable, setIsrouteDataAvailable] = useState(false);
   useEffect(() => {
     if (route?.params?.id == undefined) {
-      setScreen(0);
+      setScreen(1);
       // console.log(Sid.id)
     } else {
       setScreen(route?.params?.id);

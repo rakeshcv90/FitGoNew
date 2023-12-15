@@ -48,9 +48,11 @@ import IntroductionScreen from '../Screen/Introduction/IntroductionScreen1';
 import Yourself from '../Screen/Yourself/Index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
-import Goal from '../Screen/Yourself/Goal';
+import Equipment from '../Screen/Yourself/Equipment';
 import Focus from '../Screen/Yourself/Focus';
 import Level from '../Screen/Yourself/Level';
+import Height from '../Screen/Yourself/Height';
+import Weight from '../Screen/Yourself/Weight';
 import OtpVerification from '../Screen/OtpVerification';
 import WorkoutCategories from '../Screen/New Workouts/WorkoutCategories';
 
@@ -64,11 +66,8 @@ import Store from '../Screen/NewHome/Store';
 import Profile from '../Screen/NewHome/Profile';
 import NewEditProfile from '../Component/NewEditProfile';
 import NewPersonalDetails from '../Screen/NewPersonalDetails';
-
 import NewStepCounter from '../Screen/NewStepCounter';
-
 import AppNotification from '../Screen/AppNotification';
-import TestScreen from '../Screen/TestScreen';
 import LogSignUp from '../Screen/LogSignUp';
 import FocuseArea from '../Screen/FocuseArea';
 import IntroductionScreen1 from '../Screen/Introduction/IntroductionScreen1';
@@ -81,13 +80,22 @@ import SleepDuration from '../Screen/MeditationScreens/SleepDuration';
 import MentalState from '../Screen/MeditationScreens/MentalState';
 import PredictionScreen from '../Screen/MeditationScreens/PredictionScreen';
 import Alcohalinfo from '../Screen/MeditationScreens/Alcohalinfo';
+import FocuseAreaFmale from '../Component/FocuseAreaFmale';
+import FocusArea from '../Screen/FocusArea';
+import Injury from '../Screen/Yourself/Injury';
+import WorkoutArea from '../Screen/Yourself/WorkoutArea';
+import Age from '../Screen/Yourself/Age';
+import LoadData from '../Screen/Yourself/LoadData';
+
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const screenOptions = {
   headerShown: false, // Hide the header for all screens
   gestureDirection: 'horizontal',
-  cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+  gesturesEnabled: true,
+  // cardStyleInterpolator: CardStyleInterpolators.,
 };
 // const Router = () => {
 //   return (
@@ -182,23 +190,38 @@ export const LoginStack = () => {
       
       {/* <Stack.Screen name="Home" component={Home} /> */}
       {/* <Stack.Screen name="Yourself" component={Yourself} />
-   
+  
+      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+      <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} />
+      <Stack.Screen name="LogSignUp" component={LogSignUp} />
+      <Stack.Screen name="Yourself" component={Yourself} />
+      <Stack.Screen name="Injury" component={Injury} />
+      <Stack.Screen name="FocusArea" component={FocusArea} />
+      <Stack.Screen name="WorkoutArea" component={WorkoutArea} />
+         <Stack.Screen name="LoadData" component={LoadData} />
+      <Stack.Screen name="Home" component={Home} />
+
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
       <Stack.Screen name="OtpVerification" component={OtpVerification} />
-
       <Stack.Screen name="Edit_Profile" component={NewEditProfile} />
       <Stack.Screen name="Personal Details" component={NewPersonalDetails} />
       <Stack.Screen name="WorkoutCategories" component={WorkoutCategories} />
       <Stack.Screen name="WorkoutsDetails" component={WorkoutsDetails} />
       <Stack.Screen name="StepCounter" component={NewStepCounter} />
-
       <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="Scale" component={Scale} />
       <Stack.Screen name="Gender" component={Gender} />
-      <Stack.Screen name="Goal" component={Goal} />
+      <Stack.Screen name="Equipment" component={Equipment} />
       <Stack.Screen name="Focus" component={Focus} />
+
       <Stack.Screen name="Level" component={Level} /> */}
+
+      <Stack.Screen name="Level" component={Level} />
+      <Stack.Screen name="Height" component={Height} />
+      <Stack.Screen name="Weight" component={Weight} />
+      <Stack.Screen name="Age" component={Age} />
+
     </Stack.Navigator>
   );
 };

@@ -3,33 +3,51 @@ import React from 'react';
 import {localImage} from '../../Component/Image';
 import {DeviceWidth} from '../../Component/Config';
 
-const Bulb = ({screen, Title}: any) => {
+
+// const Bulb = ({screen, Title}: any) => {
+//   return (
+//     <View style={{alignItems: 'center'}}>
+//       {Title ? null : (
+//         <Text
+//           style={{
+//             color: 'black',
+//             fontSize: 20,
+//             fontFamily: 'Poppins',
+//             fontWeight: 'bold',
+//             lineHeight: 30,
+//           }}>
+//           {}
+//           {'Select your '}
+//           {screen == 1
+//             ? 'Gender'
+//             : screen == 2
+//             ? 'Fitness goal'
+//             : 'Fitness level'}
+//         </Text>
+//       )}
+
+const Bulb = ({screen,header}: any) => {
   return (
     <View style={{alignItems: 'center'}}>
-      {Title ? null : (
-        <Text
-          style={{
-            color: 'black',
-            fontSize: 20,
-            fontFamily: 'Poppins',
-            fontWeight: 'bold',
-            lineHeight: 30,
-          }}>
-          {}
-          {'Select your '}
-          {screen == 1
-            ? 'Gender'
-            : screen == 2
-            ? 'Fitness goal'
-            : 'Fitness level'}
-        </Text>
-      )}
+      <Text
+        style={{
+          color: 'black',
+          fontSize: 20,
+          fontFamily: 'Poppins',
+          fontWeight: 'bold',
+          lineHeight: 30,
+        }}>
+        {screen}
+       
+      </Text>
 
       <View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
+
           justifyContent: 'center',
+
           width: DeviceWidth * 0.9,
           backgroundColor: '#f5f5f5',
           padding: 15,
@@ -44,14 +62,18 @@ const Bulb = ({screen, Title}: any) => {
             fontWeight: '400',
             fontFamily: 'Verdana',
             lineHeight: 16,
-            paddingLeft: 10,
+           paddingLeft: 10,
             paddingRight: 10,
             color: '#505050',
             marginHorizontal:10
           }}>
-          {Title
+
+<!--           {Title
             ? Title
-            : 'Knowing your gender can help us for you based on different metabolic rates.'}
+            : 'Knowing your gender can help us for you based on different metabolic rates.'} -->
+
+         {header}
+
         </Text>
       </View>
     </View>

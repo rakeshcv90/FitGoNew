@@ -516,7 +516,7 @@ const ProfileScreen = () => {
       </View>
     );
   };
-  if (isLoaded == true) {
+
     return (
       <View
         style={{
@@ -628,9 +628,8 @@ const ProfileScreen = () => {
         {UpdateScreenVisibility ? <UpdateProfileModal /> : null}
       </View>
     );
-  } else {
-    return <Loader />;
-  }
+   
+
 };
 const styles = StyleSheet.create({
   container1: {
@@ -644,7 +643,7 @@ const styles = StyleSheet.create({
   Icon: {
     width: 120,
     height: 120,
-    borderRadius: 120 / 2,
+    borderRadius: 10 / 2,
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
