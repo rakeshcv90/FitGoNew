@@ -73,7 +73,10 @@ import FocuseAreaFmale from '../Component/FocuseAreaFmale';
 import FocusArea from '../Screen/FocusArea';
 import Injury from '../Screen/Yourself/Injury';
 import WorkoutArea from '../Screen/Yourself/WorkoutArea';
+
 import Age from '../Screen/Yourself/Age';
+import LoadData from '../Screen/Yourself/LoadData';
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -158,6 +161,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Injury" component={Injury} />
       <Stack.Screen name="FocusArea" component={FocusArea} />
       <Stack.Screen name="WorkoutArea" component={WorkoutArea} />
+         <Stack.Screen name="LoadData" component={LoadData} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />

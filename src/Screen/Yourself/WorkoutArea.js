@@ -21,9 +21,10 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {localImage} from '../../Component/Image';
 
 const WorkoutArea = ({route, navigation}) => {
-  // const translateValue = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
   // const {nextScreen} = route.params;
   // const [screen, setScreen] = useState(nextScreen);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [imageView, setImageVIew] = useState([]);
 
   const {getLaterButtonData} = useSelector(state => state);
   useEffect(() => {
@@ -47,8 +48,8 @@ const WorkoutArea = ({route, navigation}) => {
   ).current;
   const animateElement1 = () => {
     Animated.timing(translateValue1, {
-      toValue: {x: 0, y: 0}, // Destination position (top: 100, left: 100)
-      duration: 1500, // Animation duration in milliseconds
+      toValue: {x: 0, y: 0},
+      duration: 1500,
       useNativeDriver: true,
     }).start();
   };
@@ -57,8 +58,8 @@ const WorkoutArea = ({route, navigation}) => {
   ).current;
   const animateElement2 = () => {
     Animated.timing(translateValue2, {
-      toValue: {x: 0, y: 0}, // Destination position (top: 100, left: 100)
-      duration: 1500, // Animation duration in milliseconds
+      toValue: {x: 0, y: 0},
+      duration: 1500,
       useNativeDriver: true,
     }).start();
   };
@@ -67,12 +68,31 @@ const WorkoutArea = ({route, navigation}) => {
   ).current;
   const animateElement3 = () => {
     Animated.timing(translateValue3, {
-      toValue: {x: 0, y: 0}, // Destination position (top: 100, left: 100)
-      duration: 1500, // Animation duration in milliseconds
+      toValue: {x: 0, y: 0},
+      duration: 1500,
       useNativeDriver: true,
     }).start();
   };
+  const setImageFocusArea = item => {
+    const index = selectedItems.indexOf(item);
+    const newSelectedItems = [...selectedItems];
+    const newImageVIew = [...imageView];
+    if (index === -1) {
+      newSelectedItems.push(item);
+      newImageVIew.push(item);
+    } else {
+      newSelectedItems.splice(index, 1);
 
+      const imageVIewIndex = newImageVIew.indexOf(item);
+      if (imageVIewIndex !== -1) {
+        newImageVIew.splice(imageVIewIndex, 1);
+      }
+    }
+
+    setSelectedItems(newSelectedItems);
+    setImageVIew(newImageVIew);
+  };
+  console.log('FDFDFDFFDFDFDFDFDFFD', imageView);
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -105,16 +125,15 @@ const WorkoutArea = ({route, navigation}) => {
           keyboardDismissMode="interactive"
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{flexGrow: 1}}
-          style={{bottom: 10}}
+          // style={{bottom: 10}}
           keyboardShouldPersistTaps="handled">
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            top: DeviceHeigth * 0.03,
-          }}>
-          <TouchableOpacity>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              alignItems: 'center',
+              top: DeviceHeigth * 0.03,
+            }}>
             <Animated.View
               style={{
                 transform: [
@@ -122,26 +141,38 @@ const WorkoutArea = ({route, navigation}) => {
                   {translateY: translateValue.y},
                 ],
               }}>
-              <Image
-                source={localImage.AtHome}
+              <TouchableOpacity
                 style={[
-                  styles.Image23,
+                  styles.shadowProp,
                   {
-                    width:
-                      Platform.OS == 'ios' && DeviceHeigth == '1024'
-                        ? DeviceWidth * 0.6
-                        : DeviceWidth * 0.5,
-                    height:
-                      Platform.OS == 'ios' && DeviceHeigth == '1024'
-                        ? DeviceHeigth * 0.4
-                        : DeviceHeigth * 0.3,
+                    borderWidth: imageView.find(num => num === 'AtHome') && 1,
+                    borderColor: imageView.find(num => num === 'AtHome')
+                      ? 'red'
+                      : 'white',
                   },
                 ]}
-                resizeMode="contain"
-              />
+                activeOpacity={0.8}
+                onPress={() => {
+                  setImageFocusArea('AtHome');
+                }}>
+                <Image
+                  source={localImage.Inrtoduction1}
+                  style={styles.Image23}
+                  resizeMode="cover"
+                />
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: '#505050',
+                    fontWeight: '500',
+                    textAlign: 'center',
+                    marginTop: 8,
+                    lineHeight: 21,
+                  }}>
+                  At Home
+                </Text>
+              </TouchableOpacity>
             </Animated.View>
-          </TouchableOpacity>
-          <TouchableOpacity>
             <Animated.View
               style={{
                 transform: [
@@ -149,38 +180,46 @@ const WorkoutArea = ({route, navigation}) => {
                   {translateY: translateValue2.y},
                 ],
               }}>
-              <Image
-                source={localImage.AtHome}
+              <TouchableOpacity
                 style={[
-                  styles.Image23,
+                  styles.shadowProp,
                   {
-                    width:
-                      Platform.OS == 'ios' && DeviceHeigth == '1024'
-                        ? DeviceWidth * 0.6
-                        : DeviceWidth * 0.5,
-                    height:
-                      Platform.OS == 'ios' && DeviceHeigth == '1024'
-                        ? DeviceHeigth * 0.4
-                        : DeviceHeigth * 0.3,
-                    marginLeft:
-                      Platform.OS == 'ios' && DeviceHeigth == '1024'
-                        ? -DeviceWidth * 0.2
-                        : 0,
+                    borderWidth: imageView.find(num => num === 'AtBed') && 1,
+                    borderColor: imageView.find(num => num === 'AtBed')
+                      ? 'red'
+                      : 'white',
                   },
                 ]}
-                resizeMode="contain"
-              />
+                activeOpacity={0.8}
+                onPress={() => {
+                  setImageFocusArea('AtBed');
+                }}>
+                <Image
+                  source={localImage.AtBed}
+                  style={styles.Image23}
+                  resizeMode={DeviceHeigth == '1024' ? 'stretch' : 'cover'}
+                />
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: '#505050',
+                    fontWeight: '500',
+                    textAlign: 'center',
+                    marginTop: 10,
+                    lineHeight: 21,
+                  }}>
+                  At Bed
+                </Text>
+              </TouchableOpacity>
             </Animated.View>
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            top: DeviceHeigth * 0.02,
-          }}>
-          <TouchableOpacity>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              alignItems: 'center',
+              top: DeviceHeigth * 0.05,
+            }}>
             <Animated.View
               style={{
                 transform: [
@@ -188,27 +227,38 @@ const WorkoutArea = ({route, navigation}) => {
                   {translateY: translateValue3.y},
                 ],
               }}>
-              <Image
-                source={localImage.AtHome}
+              <TouchableOpacity
                 style={[
-                  styles.Image23,
+                  styles.shadowProp,
                   {
-                    width:
-                      Platform.OS == 'ios' && DeviceHeigth == '1024'
-                        ? DeviceWidth * 0.6
-                        : DeviceWidth * 0.5,
-                    height:
-                      Platform.OS == 'ios' && DeviceHeigth == '1024'
-                        ? DeviceHeigth * 0.4
-                        : DeviceHeigth * 0.3,
-                   
+                    borderWidth: imageView.find(num => num === 'Outdoor') && 1,
+                    borderColor: imageView.find(num => num === 'Outdoor')
+                      ? 'red'
+                      : 'white',
                   },
                 ]}
-                resizeMode="contain"
-              />
+                activeOpacity={0.8}
+                onPress={() => {
+                  setImageFocusArea('Outdoor');
+                }}>
+                <Image
+                  source={localImage.Outdoor}
+                  style={styles.Image23}
+                  resizeMode={DeviceHeigth == '1024' ? 'stretch' : 'stretch'}
+                />
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: '#505050',
+                    fontWeight: '500',
+                    textAlign: 'center',
+                    marginTop: 10,
+                    lineHeight: 21,
+                  }}>
+                  Outdoor
+                </Text>
+              </TouchableOpacity>
             </Animated.View>
-          </TouchableOpacity>
-          <TouchableOpacity>
             <Animated.View
               style={{
                 transform: [
@@ -216,35 +266,61 @@ const WorkoutArea = ({route, navigation}) => {
                   {translateY: translateValue1.y},
                 ],
               }}>
-              <Image
-                source={localImage.AtHome}
+              <TouchableOpacity
                 style={[
-                  styles.Image23,
+                  styles.shadowProp,
                   {
-                    width:
-                      Platform.OS == 'ios' && DeviceHeigth == '1024'
-                        ? DeviceWidth * 0.6
-                        : DeviceWidth * 0.5,
-                    height:
-                      Platform.OS == 'ios' && DeviceHeigth == '1024'
-                        ? DeviceHeigth * 0.4
-                        : DeviceHeigth * 0.3,
-                    marginLeft:
-                      Platform.OS == 'ios' && DeviceHeigth == '1024'
-                        ? -DeviceWidth * 0.2
-                        : 0,
+                    borderWidth: imageView.find(num => num === 'Anywhere') && 1,
+                    borderColor: imageView.find(num => num === 'Anywhere')
+                      ? 'red'
+                      : 'white',
                   },
                 ]}
-                resizeMode="contain"
-              />
+                activeOpacity={0.8}
+                onPress={() => {
+                  setImageFocusArea('Anywhere');
+                }}>
+                <Image
+                  source={localImage.Anywhere}
+                  style={styles.Image23}
+                  resizeMode={DeviceHeigth == '1024' ? 'stretch' : 'stretch'}
+                />
+                <Text
+                  style={{
+                    fontSize: 15,
+                    color: '#505050',
+                    fontWeight: '500',
+                    textAlign: 'center',
+                    marginTop: 10,
+                    lineHeight: 21,
+                  }}>
+                  Anywhwere
+                </Text>
+              </TouchableOpacity>
             </Animated.View>
-          </TouchableOpacity>
-        </View>
+          </View>
+          <View
+            style={{
+              height:
+                Platform.OS == 'android'
+                  ? DeviceHeigth * 0.1
+                  : DeviceHeigth * 0.08,
+            }}></View>
         </ScrollView>
       </View>
       <View style={{height: DeviceHeigth * 0.18}}>
         <View style={styles.buttons}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{
+              backgroundColor: '#F7F8F8',
+              width: 45,
+              height: 45,
+              borderRadius: 15,
+              overflow: 'hidden',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
             <Icons name="chevron-left" size={25} color={'#000'} />
           </TouchableOpacity>
           <TouchableOpacity
@@ -261,84 +337,6 @@ const WorkoutArea = ({route, navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
-
-      {/* <Animated.View
-        style={{
-          width: 100,
-          height: 100,
-          backgroundColor: 'blue',
-          transform: [
-            {translateX: translateValue.x},
-            {translateY: translateValue.y},
-          ],
-        }}
-        
-      /> */}
-      {/* <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          alignItems: 'center',
-          top: DeviceHeigth * 0.03,
-        }}>
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Image
-            source={localImage.AtHome}
-            style={[styles.Image23]}
-            resizeMode="contain"
-          />
-          <Text>Hello</Text>
-        </View>
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Image
-            source={localImage.AtBed}
-            style={[styles.Image]}
-            resizeMode="contain"
-          />
-          <Text>Hello</Text>
-        </View>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          alignItems: 'center',
-          top: DeviceHeigth * 0.06,
-        }}>
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Image
-            source={localImage.Outdoor}
-            style={[styles.Image]}
-            resizeMode="contain"
-          />
-          <Text>Hello</Text>
-        </View>
-        <View
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Image
-            source={localImage.Anywhere}
-            style={[styles.Image]}
-            resizeMode="cover"
-          />
-          <Text>Hello</Text>
-        </View>
-      </View>
-       */}
     </SafeAreaView>
   );
 };
@@ -400,8 +398,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   Image23: {
-    width: DeviceWidth * 0.5,
-    height: DeviceHeigth * 0.3,
+    width:
+      Platform.OS == 'android'
+        ? DeviceWidth * 0.392
+        : DeviceHeigth == '1024'
+        ? DeviceWidth * 0.395
+        : DeviceWidth * 0.395,
+    height: DeviceHeigth * 0.2,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    // borderRadius: 20,
+    borderColor: 'red',
+  },
+  shadowProp: {
+    width: DeviceWidth * 0.399,
+    //height: DeviceHeigth * 0.3,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'white',
+    shadowColor: '#171717',
+    backgroundColor: 'white',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 export default WorkoutArea;

@@ -96,11 +96,11 @@ const Height = ({route, navigation}: any) => {
       }}>
       <ProgressBar screen={screen} />
       <Bulb
-          screen={'What’s your Height?'}
-          header={
-            'Knowing your height  can help us for you based on different metabolic rates.'
-          }
-        />
+        screen={'What’s your Height?'}
+        header={
+          'Knowing your height  can help us for you based on different metabolic rates.'
+        }
+      />
       <View
         style={{
           marginTop: 30,
@@ -212,6 +212,15 @@ const Height = ({route, navigation}: any) => {
       </View>
       <View style={styles.buttons}>
         <TouchableOpacity
+          style={{
+            backgroundColor: '#F7F8F8',
+            width: 45,
+            height: 45,
+            borderRadius: 15,
+            overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
           onPress={() =>
             //   selected != '' ? handleImagePress('') :
             navigation.goBack()
@@ -220,11 +229,11 @@ const Height = ({route, navigation}: any) => {
         </TouchableOpacity>
         <TouchableOpacity onPress={toNextScreen}>
           <LinearGradient
-              start={{x: 0, y: 1}}
-              end={{x: 1, y: 0}}
-              colors={['#941000', '#D5191A']}
-              style={[styles.nextButton]}>
-          <Icons name="chevron-right" size={25} color={'#fff'} />
+            start={{x: 0, y: 1}}
+            end={{x: 1, y: 0}}
+            colors={['#941000', '#D5191A']}
+            style={[styles.nextButton]}>
+            <Icons name="chevron-right" size={25} color={'#fff'} />
           </LinearGradient>
         </TouchableOpacity>
       </View>
@@ -264,7 +273,7 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 85) / 100,
     alignItems: 'center',
     alignSelf: 'center',
-    marginTop: -60
+    marginTop: -60,
   },
   nextButton: {
     backgroundColor: 'red',

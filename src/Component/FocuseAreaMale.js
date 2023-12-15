@@ -116,7 +116,8 @@ const FocuseAreaMale = () => {
                     ]}
                     onPress={() => {
                       setImageFocusArea(item.id, item.text1);
-                    }}>
+                    }}
+                    >
                     <Text
                       style={{
                         color: '#505050',

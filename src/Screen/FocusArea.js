@@ -67,6 +67,13 @@ const FocusArea = ({route, navigation}) => {
       </View>
       <View style={styles.buttons}>
         <TouchableOpacity
+             style={{ backgroundColor: '#F7F8F8',
+            width: 45,
+            height: 45,
+            borderRadius: 15,
+            overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',}}
         onPress={() => navigation.goBack()}
         >
           <Icons name="chevron-left" size={25} color={'#000'} />

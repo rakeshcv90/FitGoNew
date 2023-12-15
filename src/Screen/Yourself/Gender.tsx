@@ -258,7 +258,17 @@ const Gender = ({route, navigation}: any) => {
       </View>
       {selected != '' ? (
         <TouchableOpacity
-          style={{alignSelf: 'flex-start', marginLeft: DeviceWidth * 0.1}}
+          style={{
+            alignSelf: 'flex-start',
+            marginLeft: DeviceWidth * 0.1,
+            backgroundColor: '#F7F8F8',
+            width: 45,
+            height: 45,
+            borderRadius: 15,
+            overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
           onPress={() => {
             handleImagePress('');
           }}>
