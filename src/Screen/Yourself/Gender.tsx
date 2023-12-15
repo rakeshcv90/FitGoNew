@@ -57,31 +57,34 @@ const Gender = ({route, navigation}: any) => {
     } else {
       // Animate the translation of the unselected image
       Animated.parallel([
-        Animated.timing(selected === 'F' ? translateX : translateX1, {
-          toValue: gender == 'F' ? -DeviceWidth * 0.5 : DeviceWidth / 2,
+        Animated.timing(gender === 'F' ? translateX : translateX1, {
+          toValue: gender == 'F' ? 0 : DeviceWidth / 2,
           duration: 500,
           useNativeDriver: true,
-          delay: 500, // Delay the return to center animation for a smoother effect
+          delay: gender == 'F' ? 500 : 0, // Delay the return to center animation for a smoother effect
         }),
       ]).start();
       setTimeout(() => {
         setSelected(gender);
         setScreen(screen + 1);
-      }, 1000);
+      }, 500);
     }
   };
   const toNextScreen = (item: any) => {
     const currentData = [
       {
         gender: selected,
-        image: selected == 'M' ? '../Icon/Images/NewImage/Male.png' : '../Icon/Images/NewImage/Female.png',
+        image:
+          selected == 'M'
+            ? '../Icon/Images/NewImage/Male.png'
+            : '../Icon/Images/NewImage/Female.png',
       },
       {
         goal: item?.goal_id,
       },
     ];
     dispatch(setLaterButtonData(currentData));
-    navigation.navigate('Level', {nextScreen: screen+ 1});
+    navigation.navigate('Level', {nextScreen: screen + 1});
   };
 
   const Goal = () => {
@@ -174,11 +177,11 @@ const Gender = ({route, navigation}: any) => {
       <ProgressBar screen={screen} />
       {/* <Bulb screen={screen} /> */}
       <Bulb
-          screen={'Select your Gender'}
-          header={
-            'Knowing your gender can help us for you based on different metabolic rates.'
-          }
-        />
+        screen={'Select your Gender'}
+        header={
+          'Knowing your gender can help us for you based on different metabolic rates.'
+        }
+      />
       <View
         style={{
           flexDirection: 'row',
