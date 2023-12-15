@@ -3,7 +3,6 @@ import React from 'react';
 import {localImage} from '../../Component/Image';
 import {DeviceWidth} from '../../Component/Config';
 
-
 // const Bulb = ({screen, Title}: any) => {
 //   return (
 //     <View style={{alignItems: 'center'}}>
@@ -26,7 +25,7 @@ import {DeviceWidth} from '../../Component/Config';
 //         </Text>
 //       )}
 
-const Bulb = ({screen,header}: any) => {
+const Bulb = ({screen, header}: any) => {
   return (
     <View style={{alignItems: 'center'}}>
       <Text
@@ -38,7 +37,6 @@ const Bulb = ({screen,header}: any) => {
           lineHeight: 30,
         }}>
         {screen}
-       
       </Text>
 
       <View
@@ -62,18 +60,12 @@ const Bulb = ({screen,header}: any) => {
             fontWeight: '400',
             fontFamily: 'Verdana',
             lineHeight: 16,
-           paddingLeft: 10,
+            paddingLeft: 10,
             paddingRight: 10,
             color: '#505050',
-            marginHorizontal:10
+            marginHorizontal: 10,
           }}>
-
-<!--           {Title
-            ? Title
-            : 'Knowing your gender can help us for you based on different metabolic rates.'} -->
-
-         {header}
-
+          {header}
         </Text>
       </View>
     </View>
