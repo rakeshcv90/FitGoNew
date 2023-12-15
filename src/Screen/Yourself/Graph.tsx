@@ -2,6 +2,7 @@ import React from 'react';
 
 import {
   Canvas,
+  Circle,
   Line,
   Path,
   runTiming,
@@ -14,7 +15,6 @@ import {
 
 import {curveBasis, line, scaleLinear, scaleTime} from 'd3';
 import {Easing, View, Pressable, Text, StyleSheet} from 'react-native';
-import { runOnJS } from 'react-native-reanimated';
 
 interface GraphData {
   min: number;
@@ -117,12 +117,25 @@ const LineChart = () => {
     });
   };
 
-  const graphData = [makeGraph(originalData), makeGraph(animatedData)];
+  const graphData = [makeGraph(animatedData), makeGraph(originalData)];
 
   const path = useComputedValue(() => {
     const start = graphData[state.current.current].curve;
     const end = graphData[state.current.next].curve;
     const result = start.interpolate(end, transition.current);
+    console.log(
+      result?.contains(20.625, 259.69632904093794),
+      result?.toSVGString().includes(44.910714285714285),
+    );
+    // const length = result?.le;
+    // const pointOnPath = result?.point(length);
+
+    // Check if the x and y values match the point on the path
+    // const isMatchingPoint =
+    //   Math.abs(pointOnPath.x - 20.625) < 1 &&
+    //   Math.abs(pointOnPath.y - 259.69632904093794) < 1;
+    //   console.log(isMatchingPoint)
+
     return result?.toSVGString() ?? '0';
   }, [state, transition]);
 
@@ -154,14 +167,40 @@ const LineChart = () => {
           style="stroke"
           strokeWidth={1}
         />
-        <Path style="stroke" path={path} strokeWidth={4} color="#6231ff" />
+        <Path style="stroke" path={path} strokeWidth={4} color="red" />
+        {animatedData.map((dataPoint, index) => {
+          const xValue = scaleTime()
+            .domain([new Date(2000, 1, 1), new Date(2000, 1, 15)])
+            .range([10, GRAPH_WIDTH - 10])(new Date(dataPoint.date));
+
+          const yValue = scaleLinear()
+            .domain([0, graphData[state.current.current].max])
+            .range([GRAPH_HEIGHT, 35])(dataPoint.value);
+          const final = path.current.split(' ').filter(item => {
+            xValue == item;
+          });
+          // console.log(final);
+          // if (path.current.includes(xValue)) {
+          return (
+            //     <Canvas key={index}>
+            //         <Line
+            //   p1={vec(10, 370)}
+            //   p2={vec(400, 370)}
+            //   color="lightgrey"
+            //   style="stroke"
+            //   strokeWidth={1}
+            // />
+            <Circle cx={xValue} cy={yValue} r={3} color={'red'} />
+            // </Canvas>
+          );
+        })}
       </Canvas>
       <View style={styles.buttonContainer}>
         <Pressable
-          onPress={() =>{
-            transitionStart(0)
+          onPress={() => {
+            transitionStart(0);
             setTimeout(() => {
-              transitionStart(1)
+              transitionStart(1);
             }, 2000);
           }}
           style={styles.buttonStyle}>
@@ -180,7 +219,7 @@ export default LineChart;
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     flex: 1,
   },
   buttonContainer: {

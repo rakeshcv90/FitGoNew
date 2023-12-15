@@ -81,6 +81,7 @@ import PredictionScreen from '../Screen/MeditationScreens/PredictionScreen';
 import Alcohalinfo from '../Screen/MeditationScreens/Alcohalinfo';
 import FocusArea from '../Screen/FocusArea';
 import Injury from '../Screen/Yourself/Injury';
+import Preview from '../Screen/Yourself/Preview';
 import WorkoutArea from '../Screen/Yourself/WorkoutArea';
 import Age from '../Screen/Yourself/Age';
 import LoadData from '../Screen/Yourself/LoadData';
@@ -203,6 +204,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Height" component={Height} />
       <Stack.Screen name="Weight" component={Weight} />
       <Stack.Screen name="Age" component={Age} />
+      <Stack.Screen name="Preview" component={Preview} />
       <Stack.Screen name="MeditationConsent" component={MeditationConsent} />
       <Stack.Screen name="MeditationRoutine" component={MeditationRoutine} />
       <Stack.Screen name="SleepDuration" component={SleepDuration} />
