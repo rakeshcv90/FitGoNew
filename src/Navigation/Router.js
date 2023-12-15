@@ -44,7 +44,7 @@ import MyWorkouts from '../Screen/MyWorkouts';
 import FavoritesRouter from './FavoritesRouter';
 import ExerciseByEquipments from '../Screen/Exercises/ExerciseByEquipments';
 import LatestProducts from '../Screen/Stores/LatestProducts';
-import IntroductionScreen from '../Screen/IntroductionScreen';
+import IntroductionScreen from '../Screen/Introduction/IntroductionScreen1';
 import Yourself from '../Screen/Yourself/Index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
@@ -69,13 +69,24 @@ import NewPersonalDetails from '../Screen/NewPersonalDetails';
 import NewStepCounter from '../Screen/NewStepCounter';
 import AppNotification from '../Screen/AppNotification';
 import LogSignUp from '../Screen/LogSignUp';
+import FocuseArea from '../Screen/FocuseArea';
+import IntroductionScreen1 from '../Screen/Introduction/IntroductionScreen1';
+import IntroductionScreen2 from '../Screen/Introduction/IntroductionScreen2';
+import IntroductionScreen3 from '../Screen/Introduction/IntroductionScreen3';
+import MeditationConsent from '../Screen/MeditationScreens/MeditationConsent';
+import MeditationRoutine from '../Screen/MeditationScreens/MeditationRoutine';
+import ActivityDuration from '../Screen/MeditationScreens/SleepDuration';
+import SleepDuration from '../Screen/MeditationScreens/SleepDuration';
+import MentalState from '../Screen/MeditationScreens/MentalState';
+import PredictionScreen from '../Screen/MeditationScreens/PredictionScreen';
+import Alcohalinfo from '../Screen/MeditationScreens/Alcohalinfo';
 import FocuseAreaFmale from '../Component/FocuseAreaFmale';
 import FocusArea from '../Screen/FocusArea';
 import Injury from '../Screen/Yourself/Injury';
 import WorkoutArea from '../Screen/Yourself/WorkoutArea';
-
 import Age from '../Screen/Yourself/Age';
 import LoadData from '../Screen/Yourself/LoadData';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -154,6 +165,32 @@ const BottomTab = () => {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Screen name="FocuseArea" component={FocuseArea} />
+      <Stack.Screen name="TestScreen" component={TestScreen} /> 
+      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+      <Stack.Screen
+        name="IntroductionScreen1"
+        component={IntroductionScreen1}
+      />
+      <Stack.Screen
+        name="IntroductionScreen2"
+        component={IntroductionScreen2}
+      />
+      <Stack.Screen
+        name="IntroductionScreen3"
+        component={IntroductionScreen3}
+      />
+      <Stack.Screen name="LogSignUp" component={LogSignUp} />
+      <Stack.Screen name="MeditationConsent" component={MeditationConsent} />
+      <Stack.Screen name="MeditationRoutine" component={MeditationRoutine} />
+      <Stack.Screen name="SleepDuration" component={SleepDuration} />
+      <Stack.Screen name="MentalState" component={MentalState} />
+      <Stack.Screen name="Alcohalinfo" component={Alcohalinfo}/>
+      {/* <Stack.Screen name="PredictionScreen" component={PredictionScreen} />
+      
+      {/* <Stack.Screen name="Home" component={Home} /> */}
+      {/* <Stack.Screen name="Yourself" component={Yourself} />
+  
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} />
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
@@ -163,6 +200,7 @@ export const LoginStack = () => {
       <Stack.Screen name="WorkoutArea" component={WorkoutArea} />
          <Stack.Screen name="LoadData" component={LoadData} />
       <Stack.Screen name="Home" component={Home} />
+
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
       <Stack.Screen name="OtpVerification" component={OtpVerification} />
@@ -176,10 +214,14 @@ export const LoginStack = () => {
       <Stack.Screen name="Gender" component={Gender} />
       <Stack.Screen name="Equipment" component={Equipment} />
       <Stack.Screen name="Focus" component={Focus} />
+
+      <Stack.Screen name="Level" component={Level} /> */}
+
       <Stack.Screen name="Level" component={Level} />
       <Stack.Screen name="Height" component={Height} />
       <Stack.Screen name="Weight" component={Weight} />
       <Stack.Screen name="Age" component={Age} />
+
     </Stack.Navigator>
   );
 };

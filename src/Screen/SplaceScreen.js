@@ -23,7 +23,7 @@ const SplaceScreen = ({navigation}) => {
       //  navigation.navigate('Yourself');
         navigation.navigate('LogSignUp');
       } else {
-        navigation.navigate('IntroductionScreen');
+        navigation.navigate('IntroductionScreen1');
       }
     }, 4000);
   }, []);
