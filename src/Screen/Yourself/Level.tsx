@@ -250,7 +250,15 @@ const Level = ({route, navigation}: any) => {
         </View>
       </View>
       <View style={styles.buttons}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()}
+             style={{ backgroundColor: '#F7F8F8',
+             width: 45,
+             height: 45,
+             borderRadius: 15,
+             overflow: 'hidden',
+             justifyContent: 'center',
+             alignItems: 'center',}}
+        >
           <Icons name="chevron-left" size={25} color={'#000'} />
         </TouchableOpacity>
         <TouchableOpacity onPress={toNextScreen}>
@@ -299,6 +307,7 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 85) / 100,
     alignItems: 'center',
     alignSelf: 'center',
+    marginTop:20
   },
   nextButton: {
     backgroundColor: 'red',

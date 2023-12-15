@@ -133,11 +133,11 @@ const Equipment = ({route, navigation}: any) => {
       }}>
       <ProgressBar screen={screen} />
       <Bulb
-          screen={'Choose you fitness goal'}
-          header={
-            'We will filter unsuitable workouts for you, Also you can select 1 or 2 Injuries only'
-          }
-        />
+        screen={'Choose you fitness goal'}
+        header={
+          'We will filter unsuitable workouts for you, Also you can select 1 or 2 Injuries only'
+        }
+      />
 
       <View
         style={{
@@ -236,6 +236,15 @@ const Equipment = ({route, navigation}: any) => {
       </View>
       <View style={styles.buttons}>
         <TouchableOpacity
+          style={{
+            backgroundColor: '#F7F8F8',
+            width: 45,
+            height: 45,
+            borderRadius: 15,
+            overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
           onPress={() =>
             selected != '' ? handleImagePress('') : navigation.goBack()
           }>

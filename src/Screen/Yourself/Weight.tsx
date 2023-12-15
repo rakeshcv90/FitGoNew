@@ -253,6 +253,13 @@ const Weight = ({route, navigation}: any) => {
           </ImageBackground>
           <View style={styles.buttons}>
             <TouchableOpacity
+                 style={{ backgroundColor: '#F7F8F8',
+                 width: 45,
+                 height: 45,
+                 borderRadius: 15,
+                 overflow: 'hidden',
+                 justifyContent: 'center',
+                 alignItems: 'center',}}
               onPress={() =>
                 //   selected != '' ? handleImagePress('') :
                 navigation.goBack()
@@ -404,6 +411,13 @@ const Weight = ({route, navigation}: any) => {
 
           <View style={styles.buttons}>
             <TouchableOpacity
+                 style={{ backgroundColor: '#F7F8F8',
+                 width: 45,
+                 height: 45,
+                 borderRadius: 15,
+                 overflow: 'hidden',
+                 justifyContent: 'center',
+                 alignItems: 'center',}}
               onPress={() =>
                 //   selected != '' ? handleImagePress('') :
                 targetSelected ? handleAnimation(0) : navigation.goBack()

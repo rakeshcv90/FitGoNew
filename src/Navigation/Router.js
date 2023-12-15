@@ -73,6 +73,7 @@ import FocuseAreaFmale from '../Component/FocuseAreaFmale';
 import FocusArea from '../Screen/FocusArea';
 import Injury from '../Screen/Yourself/Injury';
 import WorkoutArea from '../Screen/Yourself/WorkoutArea';
+import LoadData from '../Screen/Yourself/LoadData';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -150,14 +151,15 @@ const BottomTab = () => {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-       <Stack.Screen name="WorkoutArea" component={WorkoutArea} />
-      {/* <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+    
+      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen name="IntroductionScreen" component={IntroductionScreen} />
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Injury" component={Injury} />
       <Stack.Screen name="FocusArea" component={FocusArea} />
       <Stack.Screen name="WorkoutArea" component={WorkoutArea} />
+         <Stack.Screen name="LoadData" component={LoadData} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
@@ -174,7 +176,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Focus" component={Focus} />
       <Stack.Screen name="Level" component={Level} />
       <Stack.Screen name="Height" component={Height} />
-      <Stack.Screen name="Weight" component={Weight} /> */}
+      <Stack.Screen name="Weight" component={Weight} />
     </Stack.Navigator>
   );
 };

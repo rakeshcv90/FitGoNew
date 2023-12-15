@@ -74,14 +74,17 @@ const Gender = ({route, navigation}: any) => {
     const currentData = [
       {
         gender: selected,
-        image: selected == 'M' ? '../Icon/Images/NewImage/Male.png' : '../Icon/Images/NewImage/Female.png',
+        image:
+          selected == 'M'
+            ? '../Icon/Images/NewImage/Male.png'
+            : '../Icon/Images/NewImage/Female.png',
       },
       {
         goal: item?.goal_id,
       },
     ];
     dispatch(setLaterButtonData(currentData));
-    navigation.navigate('Level', {nextScreen: screen+ 1});
+    navigation.navigate('Level', {nextScreen: screen + 1});
   };
 
   const Goal = () => {
@@ -174,11 +177,11 @@ const Gender = ({route, navigation}: any) => {
       <ProgressBar screen={screen} />
       {/* <Bulb screen={screen} /> */}
       <Bulb
-          screen={'Select your Gender'}
-          header={
-            'Knowing your gender can help us for you based on different metabolic rates.'
-          }
-        />
+        screen={'Select your Gender'}
+        header={
+          'Knowing your gender can help us for you based on different metabolic rates.'
+        }
+      />
       <View
         style={{
           flexDirection: 'row',
@@ -255,7 +258,17 @@ const Gender = ({route, navigation}: any) => {
       </View>
       {selected != '' ? (
         <TouchableOpacity
-          style={{alignSelf: 'flex-start', marginLeft: DeviceWidth * 0.1}}
+          style={{
+            alignSelf: 'flex-start',
+            marginLeft: DeviceWidth * 0.1,
+            backgroundColor: '#F7F8F8',
+            width: 45,
+            height: 45,
+            borderRadius: 15,
+            overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
           onPress={() => {
             handleImagePress('');
           }}>
