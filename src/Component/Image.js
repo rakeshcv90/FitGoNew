@@ -1,9 +1,4 @@
 export const localImage = {
-  splash: require('../Icon/Images/NewImage/Splash_screen.jpeg'),
-  Inrtoduction1: require('../Icon/Images/NewImage/Inrtoduction1.jpg'),
-  Inrtoduction2: require('../Icon/Images/NewImage/Inrtoduction2.jpg'),
-  Inrtoduction3: require('../Icon/Images/NewImage/Inrtoduction3.jpg'),
-
   logo: require('../Icon/Images/icons/logo.png'),
   color_image: require('../Icon/Images/color-image.png'),
   nextButton: require('../Icon/Images/next.png'),
@@ -32,30 +27,16 @@ export const localImage = {
   GOOGLE: require('../Icon/Images/NewImage/google.png'),
   PROFILE: require('../Icon/Images/NewImage/Profile.png'),
   GENDER: require('../Icon/Images/NewImage/Gender.png'),
-  MALE: require('../Icon/Images/NewImage/Male.png'),
-  FEMALE: require('../Icon/Images/NewImage/Female.png'),
-  WeightLoss: require('../Icon/Images/NewImage/WeightLoss.png'),
-  BuildMuscle: require('../Icon/Images/NewImage/BuildMuscle.png'),
-  Strength: require('../Icon/Images/NewImage/Strength.png'),
-  AdvanceLevel: require('../Icon/Images/NewImage/AdvanceLevel.jpg'),
-  BeginnerLevel: require('../Icon/Images/NewImage/BeginnerLevel.jpg'),
-  IntermediateLevel: require('../Icon/Images/NewImage/IntermediateLevel.jpg'),
   PathChargeLevel: require('../Icon/Images/NewImage/PathChargeLevel.png'),
   BACK: require('../Icon/Images/NewImage/back.png'),
-  CARD: require('../Icon/Images/NewImage/card.png'),
+
   BELL: require('../Icon/Images/NewImage/bell.png'),
   Calories: require('../Icon/Images/NewImage/Calories.png'),
   Step: require('../Icon/Images/NewImage/Step.png'),
-  Home: require('../Icon/Images/NewImage/Home.png'),
-  Workout: require('../Icon/Images/NewImage/Workout.png'),
-  Diets: require('../Icon/Images/NewImage/DIte.png'),
-  Sttore: require('../Icon/Images/NewImage/Store.png'),
-  Profile: require('../Icon/Images/NewImage/Profile1.png'),
-  Home1: require('../Icon/Images/NewImage/Home1.png'),
-  Workout1: require('../Icon/Images/NewImage/Workout2.png'),
-  Diets1: require('../Icon/Images/NewImage/Dites2.png'),
-  Sttore1: require('../Icon/Images/NewImage/Store2.png'),
-  Profile1: require('../Icon/Images/NewImage/Profile2.png'),
+
+
+
+
   BlueTick: require('../Icon/Images/NewImage/BlueTick.png'),
   Profile4: require('../Icon/Images/NewImage/Profile4.png'),
   Documents: require('../Icon/Images/NewImage/Document.png'),
@@ -67,12 +48,9 @@ export const localImage = {
   Pen: require('../Icon/Images/NewImage/Pen.png'),
   Profile3: require('../Icon/Images/NewImage/Profile.png'),
   SplashText: require('../Icon/Images/NewImage/SplashText.png'),
-  Focus: require('../Icon/Images/NewImage/Focus.png'),
-  Focus1: require('../Icon/Images/NewImage/Focus1.png'),
+
   Ellipse: require('../Icon/Images/NewImage/Ellipse.png'),
   Verify: require('../Icon/Images/NewImage/verify.png'),
-  MALE: require('../Icon/Images/NewImage/Male.png'),
-  FEMALE: require('../Icon/Images/NewImage/Female.png'),
   Solder: require('../Icon/Images/NewImage/Solder.png'),
   Solder1: require('../Icon/Images/NewImage/Sloder1.png'),
   BULB: require('../Icon/Images/NewImage/emojione_light-bulb.png'),
@@ -102,13 +80,11 @@ export const localImage = {
   FemaleWeight: require('../Icon/Images/NewImage/FemaleWeight.png'),
   Leg: require('../Icon/Images/NewImage/Leg.png'),
   Abs: require('../Icon/Images/NewImage/Abs.png'),
-  Male2: require('../Icon/Images/NewImage/Male2.png'),
+
   Chest: require('../Icon/Images/NewImage/Chest.png'),
   Abs2: require('../Icon/Images/NewImage/Abs2.png'),
   Leg2: require('../Icon/Images/NewImage/Leg2.png'),
   AtHome: require('../Icon/Images/NewImage/AtHome.jpg'),
-  AtBed: require('../Icon/Images/NewImage/Bed.jpg'),
-  Outdoor: require('../Icon/Images/NewImage/Outdoor.jpg'),
-  Anywhere: require('../Icon/Images/NewImage/Anywhwere.jpg'),
+
 
 };

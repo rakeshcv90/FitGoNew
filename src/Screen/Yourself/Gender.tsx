@@ -76,8 +76,8 @@ const Gender = ({route, navigation}: any) => {
         gender: selected,
         image:
           selected == 'M'
-            ? '../Icon/Images/NewImage/Male.png'
-            : '../Icon/Images/NewImage/Female.png',
+            ? 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/fc1e357f-2310-4e50-8087-519663fe9400/public'
+            : 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/e71b96f8-e68c-462e-baaf-a371b6fbc100/public',
       },
       {
         goal: item?.goal_id,
@@ -212,7 +212,7 @@ const Gender = ({route, navigation}: any) => {
                 nextScreen == screen && handleImagePress('M');
               }}>
               <Image
-                source={localImage.MALE}
+                source={{uri:'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/fc1e357f-2310-4e50-8087-519663fe9400/public'}}
                 style={{height: 450, width: 300}}
                 resizeMode="contain"
               />
@@ -245,7 +245,7 @@ const Gender = ({route, navigation}: any) => {
                 nextScreen == screen && handleImagePress('F');
               }}>
               <Image
-                source={localImage.FEMALE}
+                source={{uri:'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/e71b96f8-e68c-462e-baaf-a371b6fbc100/public'}}
                 style={{
                   height: 450,
                   width: 300,

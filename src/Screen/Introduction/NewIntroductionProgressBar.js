@@ -24,13 +24,14 @@ const IntroProgressBar=({INDEX})=>{
           flexDirection: 'row',
           justifyContent: 'center',
           flexDirection: 'row',
+        
         }}>
         {IntroductionData.map((value, index) => (
           <View
             key={index}
             style={{
               height: 3,
-              marginBottom: 30,
+              marginBottom: DeviceHeigth*.05,
               marginHorizontal: 2, ///used as masking for the progress bar
               width: index == INDEX ? 40 : 20,
               backgroundColor: AppColor.WHITE,

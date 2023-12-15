@@ -20,58 +20,55 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
-const AnimatedFlatList1 = Animated.createAnimatedComponent(FlatList);
+
 
 const LoadData = () => {
   const buttonName = [
     {
       id: 1,
-      text1: 'Chest',
+   
+      image:require('../../Icon/Images/NewImage/testImage.png')
     },
     {
       id: 2,
-      text1: 'Shoulder',
+
+      image:require('../../Icon/Images/NewImage/testImage1.png')
     },
     {
       id: 3,
-      text1: 'Biceps',
+ 
+      image:require('../../Icon/Images/NewImage/testImage2.png')
     },
     {
       id: 4,
-      text1: 'Abs',
+
+      image:require('../../Icon/Images/NewImage/testImage3.png')
+    },
+    
+  ];
+  const buttonName1 = [
+    {
+      id: 1,
+      image:require('../../Icon/Images/NewImage/testImage3.png')
+   
     },
     {
-      id: 5,
-      text1: 'Triceps',
+      id: 2,
+
+      image:require('../../Icon/Images/NewImage/testImage2.png')
     },
     {
-      id: 6,
-      text1: 'Legs',
+      id: 3,
+ 
+     
+      image:require('../../Icon/Images/NewImage/testImage1.png')
     },
     {
-      id: 7,
-      text1: 'Legs',
+      id: 4,
+      image:require('../../Icon/Images/NewImage/testImage.png')
+   
     },
-    {
-      id: 8,
-      text1: 'Legs',
-    },
-    {
-      id: 9,
-      text1: 'Legs',
-    },
-    {
-      id: 10,
-      text1: 'Legs',
-    },
-    {
-      id: 11,
-      text1: 'Legs',
-    },
-    {
-      id: 12,
-      text1: 'Legs',
-    },
+    
   ];
   const translationX = useRef(new Animated.Value(0)).current;
 
@@ -83,31 +80,32 @@ const LoadData = () => {
       Animated.sequence([
         Animated.timing(translationX, {
           toValue: 1,
-          duration: 2000, // Adjust the duration as needed
+          duration: 5000,
           useNativeDriver: true,
           easing: Easing.linear,
         }),
-        Animated.timing(translationX, {
-          toValue: 0,
-          duration: 5000, // Adjust the duration as needed
-          useNativeDriver: true,
-          easing: Easing.linear,
-        }),
+     
       ]),
     ).start();
+ 
   };
 
   const renderItem = ({item, index}) => {
+  
+  };
+  const renderItem1 = ({item, index}) => {
     const translateX = translationX.interpolate({
-      inputRange: [0, 2],
-      outputRange: [-90, 300],
+
+      inputRange: [0, 1],
+      outputRange: [-10, 300], // 
+   
     });
 
     return (
       <Animated.View style={[styles.item, {transform: [{translateX}]}]}>
         <Image
           resizeMode="contain"
-          source={require('../../Icon/Images/NewImage/testImage.png')}
+          source={item.image}
           style={{
             width: 70,
             height: 70,
@@ -116,6 +114,7 @@ const LoadData = () => {
       </Animated.View>
     );
   };
+
 
   return (
     <SafeAreaView style={styles.Container}>
@@ -160,11 +159,34 @@ const LoadData = () => {
         style={{
           width: '100%',
           height: DeviceHeigth * 0.15,
-          marginTop: DeviceHeigth * 0.1,
+          marginTop: DeviceHeigth * 0.05,
         }}>
         <AnimatedFlatList
           data={buttonName}
-          renderItem={renderItem}
+          renderItem={({item, index})=>{
+            console.log("dsvddsfdfsd",item)
+            const translateX = translationX.interpolate({
+        
+              inputRange: [0, 1],
+              outputRange: [10, -300], // 
+           
+            });
+        
+            return (
+              <Animated.View style={[styles.item, {transform: [{translateX}]}]}>
+                <Image
+                  resizeMode="contain"
+                  source={item.image}
+                  style={{
+                    width: 70,
+                    height: 70,
+                  }}
+                />
+              </Animated.View>
+            );
+
+          }}
+
           keyExtractor={(item, index) => index.toString()}
           horizontal
         />
@@ -175,8 +197,9 @@ const LoadData = () => {
           height: DeviceHeigth * 0.15,
         }}>
         <AnimatedFlatList
-          data={buttonName}
-          renderItem={renderItem}
+          data={buttonName1}
+          showsHorizontalScrollIndicator={false}
+          renderItem={renderItem1}
           keyExtractor={(item, index) => index.toString()}
           horizontal
         />
@@ -232,7 +255,7 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     fontFamily: 'Poppins',
     color: '#424242',
-    top: 20,
+    top: 10,
   },
   text2: {
     textAlign: 'center',
@@ -241,7 +264,7 @@ const styles = StyleSheet.create({
     lineHeight: 35,
     fontFamily: 'Poppins',
     color: 'rgb(197, 23, 20)',
-    top: DeviceHeigth * 0.05,
+    top: DeviceHeigth * 0.03,
   },
   buttons: {
     flexDirection: 'row',
@@ -249,7 +272,8 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 85) / 100,
     alignItems: 'center',
     alignSelf: 'center',
-    top: 20,
+    bottom:DeviceHeigth*0.05,
+    position: 'absolute',
   },
   nextButton: {
     backgroundColor: 'red',
@@ -266,8 +290,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F6F6F6',
-    marginLeft:50,
-    borderRadius:20
+    marginLeft: 50,
+    borderRadius: 20,
   },
 });
 export default LoadData;

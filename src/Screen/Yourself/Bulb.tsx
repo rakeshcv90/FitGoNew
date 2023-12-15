@@ -65,7 +65,9 @@ const Bulb = ({screen, header}: any) => {
             color: '#505050',
             marginHorizontal: 10,
           }}>
-          {header}
+         {header}
+
+
         </Text>
       </View>
     </View>

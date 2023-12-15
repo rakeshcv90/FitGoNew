@@ -156,7 +156,7 @@ const WorkoutArea = ({route, navigation}) => {
                   setImageFocusArea('AtHome');
                 }}>
                 <Image
-                  source={localImage.Inrtoduction1}
+                  source={localImage.AtHome}
                   style={styles.Image23}
                   resizeMode="cover"
                 />
@@ -195,7 +195,7 @@ const WorkoutArea = ({route, navigation}) => {
                   setImageFocusArea('AtBed');
                 }}>
                 <Image
-                  source={localImage.AtBed}
+                  source={{uri:'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/3b41e81c-2485-4abf-ccab-666d58453500/public'}}
                   style={styles.Image23}
                   resizeMode={DeviceHeigth == '1024' ? 'stretch' : 'cover'}
                 />
@@ -242,7 +242,7 @@ const WorkoutArea = ({route, navigation}) => {
                   setImageFocusArea('Outdoor');
                 }}>
                 <Image
-                  source={localImage.Outdoor}
+                  source={{uri:'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/7818f34a-c717-46f8-4fb0-ad52fae40700/public'}}
                   style={styles.Image23}
                   resizeMode={DeviceHeigth == '1024' ? 'stretch' : 'stretch'}
                 />
@@ -281,7 +281,7 @@ const WorkoutArea = ({route, navigation}) => {
                   setImageFocusArea('Anywhere');
                 }}>
                 <Image
-                  source={localImage.Anywhere}
+                  source={{uri:'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/130f304c-8239-49e7-3b5d-91922eee0f00/public'}}
                   style={styles.Image23}
                   resizeMode={DeviceHeigth == '1024' ? 'stretch' : 'stretch'}
                 />

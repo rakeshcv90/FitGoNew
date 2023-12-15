@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   StatusBar,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {AppColor} from '../Component/Color';
@@ -104,7 +105,7 @@ const LogSignUp = () => {
           alignSelf: 'flex-end',
           marginRight: 30,
           borderRadius: 30,
-          marginTop: 30,
+          marginTop:Platform.OS=='ios'?DeviceHeigth*0.03:DeviceHeigth*0.06,
           borderWidth: 1.5,
           borderColor: 'red',
         }}>
