@@ -91,4 +91,7 @@ export const localImage = {
   face2: require('../Icon/Images/NewImage/stressed.png'),
   face3: require('../Icon/Images/NewImage/stressedAnxiety.png'),
   face4: require('../Icon/Images/NewImage/stressedDepression.png'),
+  lvl1:require('../Icon/Images/NewImage/lvl1.png'),
+  lvl2:require('../Icon/Images/NewImage/lvl2.png'),
+  lvl3:require('../Icon/Images/NewImage/lvl3.png'),
 };

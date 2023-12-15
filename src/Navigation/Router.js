@@ -80,6 +80,7 @@ import ActivityDuration from '../Screen/MeditationScreens/SleepDuration';
 import SleepDuration from '../Screen/MeditationScreens/SleepDuration';
 import MentalState from '../Screen/MeditationScreens/MentalState';
 import PredictionScreen from '../Screen/MeditationScreens/PredictionScreen';
+import Alcohalinfo from '../Screen/MeditationScreens/Alcohalinfo';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -156,8 +157,8 @@ const BottomTab = () => {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      {/* <Stack.Screen name="FocuseArea" component={FocuseArea} />
-      <Stack.Screen name="TestScreen" component={TestScreen} /> */}
+      <Stack.Screen name="FocuseArea" component={FocuseArea} />
+      <Stack.Screen name="TestScreen" component={TestScreen} /> 
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
         name="IntroductionScreen1"
@@ -176,8 +177,10 @@ export const LoginStack = () => {
       <Stack.Screen name="MeditationRoutine" component={MeditationRoutine} />
       <Stack.Screen name="SleepDuration" component={SleepDuration} />
       <Stack.Screen name="MentalState" component={MentalState} />
-      <Stack.Screen name="PredictionScreen" component={PredictionScreen} />
-      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Alcohalinfo" component={Alcohalinfo}/>
+      {/* <Stack.Screen name="PredictionScreen" component={PredictionScreen} />
+      
+      {/* <Stack.Screen name="Home" component={Home} /> */}
       {/* <Stack.Screen name="Yourself" component={Yourself} />
    
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />

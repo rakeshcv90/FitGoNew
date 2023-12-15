@@ -16,7 +16,7 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import Carousel from 'react-native-snap-carousel';
-const MentalState = () => {
+const MentalState = ({navigation}) => {
   const [itemIndex, setItemIndex] = useState(0);
 
   const MentalStateData = [
@@ -45,14 +45,20 @@ const MentalState = () => {
       img1: localImage.face4,
     },
   ];
+  const carouselRef = useRef(null);
   const handleSnapToItem = useCallback(index => {
     setItemIndex(index);
-    console.log(index);
+    // console.log(index);
   }, []);
   const renderItem = ({item, index}) => {
     return (
       <View style={styles.slide}>
-        <TouchableOpacity style={styles.button} activeOpacity={0.5}>
+        <TouchableOpacity
+          style={styles.button}
+          activeOpacity={0.5}
+          onPress={() => {
+            navigation.navigate('Alcohalinfo');
+          }}>
           <Text style={styles.txts}>{item.txt}</Text>
           <Image source={item.img} style={styles.img} resizeMode="contain" />
         </TouchableOpacity>
@@ -66,6 +72,7 @@ const MentalState = () => {
       <Bulb Title="Meditation helps in keep your body and mind calm, peaceful and relax." />
       <View style={{height: DeviceHeigth * 0.5}}>
         <Carousel
+          ref={carouselRef}
           data={MentalStateData}
           renderItem={renderItem}
           sliderWidth={DeviceWidth}
@@ -89,20 +96,20 @@ const MentalState = () => {
           <TouchableOpacity
             key={index}
             style={{
-              width: 30,
-              height: 30,
+              width: DeviceWidth * 0.09,
+              height: DeviceHeigth * 0.04,
               backgroundColor: AppColor.WHITE,
-              borderRadius: 30 / 2,
+              borderRadius: (DeviceWidth * 0.09 + DeviceHeigth * 0.04) / 2,
               justifyContent: 'center',
               alignItems: 'center',
             }}
             onPress={() => {
-              setItemIndex(index);
+              carouselRef.current.snapToItem(index);
             }}>
             {itemIndex == index ? (
               <Image
                 source={value.img1}
-                style={{width: 30, height: 30}}
+                style={{width: DeviceWidth * 0.15, height: DeviceHeigth * 0.04}}
                 resizeMode="contain"
               />
             ) : (
@@ -138,13 +145,13 @@ const MentalState = () => {
         {MentalStateData?.map((value, index) => (
           <View
             key={index}
-            style={{justifyContent: 'center', alignItems: 'center'}}>
+            style={{}}>
             <Text
               style={{
                 color: itemIndex == index ? AppColor.RED : AppColor.DARKGRAY,
                 fontSize: itemIndex == index ? 20 : 16,
                 fontFamily: 'Poppins-SemiBold',
-                textAlign: 'center',
+                textAlign: 'right',
                 padding: 10,
               }}>
               {value.txt}
@@ -152,6 +159,19 @@ const MentalState = () => {
           </View>
         ))}
       </View>
+      <TouchableOpacity
+      onPress={()=>{
+        navigation.goBack()
+      }}
+        style={{
+          justifyContent: 'flex-end',
+          flex: 1,
+          marginBottom: DeviceHeigth*0.05,
+          alignItems: 'flex-start',
+          width: DeviceWidth * 0.9,
+        }}>
+        <Icons name="chevron-left" size={25} color={AppColor.BLACK} />
+      </TouchableOpacity>
     </View>
   );
 };
