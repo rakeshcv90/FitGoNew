@@ -45,7 +45,7 @@ import FavoritesRouter from './FavoritesRouter';
 import ExerciseByEquipments from '../Screen/Exercises/ExerciseByEquipments';
 import LatestProducts from '../Screen/Stores/LatestProducts';
 import IntroductionScreen from '../Screen/Introduction/IntroductionScreen1';
-import Yourself from '../Screen/Yourself/Index';
+import Yourself from '../Screen/Yourself/index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -84,7 +84,7 @@ import Injury from '../Screen/Yourself/Injury';
 import WorkoutArea from '../Screen/Yourself/WorkoutArea';
 import Age from '../Screen/Yourself/Age';
 import LoadData from '../Screen/Yourself/LoadData';
-
+import AlcohalConsent from '../Screen/MeditationScreens/AlcohalConsent';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const screenOptions = {
@@ -161,6 +161,8 @@ const BottomTab = () => {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Screen name={'AlcoholConsent'} component={AlcohalConsent} />
+
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
         name="IntroductionScreen1"
@@ -174,12 +176,12 @@ export const LoginStack = () => {
         name="IntroductionScreen3"
         component={IntroductionScreen3}
       />
-
+     
       {/* <Stack.Screen name="PredictionScreen" component={PredictionScreen} />
-      
+
       {/* <Stack.Screen name="Home" component={Home} /> */}
 
-      <Stack.Screen name="LogSignUp" component={LogSignUp} />
+      {/* <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Injury" component={Injury} />
       <Stack.Screen name="FocusArea" component={FocusArea} />
@@ -207,7 +209,7 @@ export const LoginStack = () => {
       <Stack.Screen name="MeditationRoutine" component={MeditationRoutine} />
       <Stack.Screen name="SleepDuration" component={SleepDuration} />
       <Stack.Screen name="MentalState" component={MentalState} />
-      <Stack.Screen name="Alcohalinfo" component={Alcohalinfo} />
+      <Stack.Screen name="Alcohalinfo" component={Alcohalinfo} /> */}
     </Stack.Navigator>
   );
 };

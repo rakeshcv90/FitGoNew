@@ -110,5 +110,9 @@ export const localImage = {
   AtBed: require('../Icon/Images/NewImage/Bed.jpg'),
   Outdoor: require('../Icon/Images/NewImage/Outdoor.jpg'),
   Anywhere: require('../Icon/Images/NewImage/Anywhwere.jpg'),
+  Alocol_yes:require('../Icon/Images/NewImage/Alcohol_yes.png'),
+  Alocol_no:require('../Icon/Images/NewImage/Alcohol_no.png'),
+  Alocol_Dnt:require('../Icon/Images/NewImage/Not_to_say.png')
+
 
 };
