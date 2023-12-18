@@ -23,6 +23,7 @@ const Gender = ({route, navigation}: any) => {
 
   const handleImagePress = (gender: string) => {
     // Set the selected gender
+
     const easing = Easing.linear(1);
     console.log(gender, 'Gender');
 
@@ -64,6 +65,7 @@ const Gender = ({route, navigation}: any) => {
       });
   };
 
+
   return (
     <View
       style={{
@@ -91,12 +93,14 @@ const Gender = ({route, navigation}: any) => {
           width: DeviceWidth,
         }}>
         {/* {selected != 'F' ? ( */}
+
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => {
             handleImagePress('M');
           }}>
           <Animated.View
+
             style={{
               flexDirection: 'row',
               justifyContent: 'space-around',
@@ -105,6 +109,7 @@ const Gender = ({route, navigation}: any) => {
               transform: [{translateX: translateX}],
               width: DeviceWidth / 2,
             }}>
+
             <Image
               source={{
                 uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/fc1e357f-2310-4e50-8087-519663fe9400/public',
@@ -121,6 +126,7 @@ const Gender = ({route, navigation}: any) => {
             handleImagePress('F');
           }}>
           <Animated.View
+
             style={{
               // flexDirection: 'row-reverse',
               // justifyContent: 'space-around',
@@ -130,6 +136,7 @@ const Gender = ({route, navigation}: any) => {
               width: DeviceWidth / 2,
               // marginLeft: selected == 'F' ? 50 : 0,
             }}>
+
             <Image
               source={{
                 uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/e71b96f8-e68c-462e-baaf-a371b6fbc100/public',
@@ -142,6 +149,7 @@ const Gender = ({route, navigation}: any) => {
             />
           </Animated.View>
         </TouchableOpacity>
+
       </View>
       {/* {selected != '' ? (
         <TouchableOpacity
@@ -155,6 +163,9 @@ const Gender = ({route, navigation}: any) => {
             overflow: 'hidden',
             justifyContent: 'center',
             alignItems: 'center',
+          
+            bottom: DeviceHeigth * 0.02,
+            position: 'absolute',
           }}
           onPress={() => {
             handleImagePress('');

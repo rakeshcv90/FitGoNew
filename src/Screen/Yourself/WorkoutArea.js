@@ -19,7 +19,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {localImage} from '../../Component/Image';
-import { setLaterButtonData } from '../../Component/ThemeRedux/Actions';
+import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 
 const WorkoutArea = ({route, navigation}) => {
   const {nextScreen} = route.params;
@@ -30,7 +30,6 @@ const WorkoutArea = ({route, navigation}) => {
 
   useEffect(() => {
     setScreen(nextScreen);
- 
   }, []);
   const toNextScreen = () => {
     const currentData = {
@@ -38,10 +37,11 @@ const WorkoutArea = ({route, navigation}) => {
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     navigation.navigate('PredictionScreen', {nextScreen: screen + 1});
-    console.log("WorkoutArea Screen Data",[...getLaterButtonData, currentData])
-
+    console.log('WorkoutArea Screen Data', [
+      ...getLaterButtonData,
+      currentData,
+    ]);
   };
-
 
   const {getLaterButtonData} = useSelector(state => state);
   useEffect(() => {
@@ -212,7 +212,9 @@ const WorkoutArea = ({route, navigation}) => {
                   setImageFocusArea('AtBed');
                 }}>
                 <Image
-                  source={{uri:'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/3b41e81c-2485-4abf-ccab-666d58453500/public'}}
+                  source={{
+                    uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/3b41e81c-2485-4abf-ccab-666d58453500/public',
+                  }}
                   style={styles.Image23}
                   resizeMode={DeviceHeigth == '1024' ? 'stretch' : 'cover'}
                 />
@@ -259,7 +261,9 @@ const WorkoutArea = ({route, navigation}) => {
                   setImageFocusArea('Outdoor');
                 }}>
                 <Image
-                  source={{uri:'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/7818f34a-c717-46f8-4fb0-ad52fae40700/public'}}
+                  source={{
+                    uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/7818f34a-c717-46f8-4fb0-ad52fae40700/public',
+                  }}
                   style={styles.Image23}
                   resizeMode={DeviceHeigth == '1024' ? 'stretch' : 'stretch'}
                 />
@@ -298,7 +302,9 @@ const WorkoutArea = ({route, navigation}) => {
                   setImageFocusArea('Anywhere');
                 }}>
                 <Image
-                  source={{uri:'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/130f304c-8239-49e7-3b5d-91922eee0f00/public'}}
+                  source={{
+                    uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/130f304c-8239-49e7-3b5d-91922eee0f00/public',
+                  }}
                   style={styles.Image23}
                   resizeMode={DeviceHeigth == '1024' ? 'stretch' : 'stretch'}
                 />
@@ -325,26 +331,26 @@ const WorkoutArea = ({route, navigation}) => {
             }}></View>
         </ScrollView>
       </View>
-      <View style={{height: DeviceHeigth * 0.18}}>
-        <View style={styles.buttons}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={{
-              backgroundColor: '#F7F8F8',
-              width: 45,
-              height: 45,
-              borderRadius: 15,
-              overflow: 'hidden',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Icons name="chevron-left" size={25} color={'#000'} />
-          </TouchableOpacity>
 
-        {imageView.length!==0&&
+      <View style={styles.buttons}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            backgroundColor: '#F7F8F8',
+            width: 45,
+            height: 45,
+            borderRadius: 15,
+            overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Icons name="chevron-left" size={25} color={'#000'} />
+        </TouchableOpacity>
+
+        {imageView.length !== 0 && (
           <TouchableOpacity
             onPress={() => {
-              toNextScreen()
+              toNextScreen();
             }}>
             <LinearGradient
               start={{x: 0, y: 1}}
@@ -353,8 +359,8 @@ const WorkoutArea = ({route, navigation}) => {
               style={[styles.nextButton]}>
               <Icons name="chevron-right" size={25} color={'#fff'} />
             </LinearGradient>
-          </TouchableOpacity>}
-        </View>
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -405,7 +411,9 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 85) / 100,
     alignItems: 'center',
     alignSelf: 'center',
-    top: 20,
+
+    bottom: DeviceHeigth * 0.02,
+    position: 'absolute',
   },
   nextButton: {
     backgroundColor: 'red',

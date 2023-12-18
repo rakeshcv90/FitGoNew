@@ -418,6 +418,7 @@ const Weight = ({route, navigation}: any) => {
                  borderRadius: 15,
                  overflow: 'hidden',
                  justifyContent: 'center',
+                 
                  alignItems: 'center',}}
               onPress={() =>
                 //   selected != '' ? handleImagePress('') :
@@ -493,7 +494,7 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 85) / 100,
     alignItems: 'center',
     alignSelf: 'center',
-    marginTop: -150,
+    marginTop: -140,
   },
   nextButton: {
     backgroundColor: 'red',

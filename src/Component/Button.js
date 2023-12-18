@@ -11,7 +11,8 @@ const Button = ({buttonText, onPresh}) => {
       <LinearGradient
         start={{x: 0, y: 1}}
         end={{x: 1, y: 0}}
-        colors={['#941000', '#D01818']}
+       // colors={['#941000', '#D01818']}
+        colors={['#D01818', '#941000']}
         style={styles.buttonStyle}>
         <TouchableOpacity
           style={styles.buttonStyle}

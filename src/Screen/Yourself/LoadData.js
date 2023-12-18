@@ -90,9 +90,6 @@ const LoadData = ({navigation}) => {
  
   };
 
-  const renderItem = ({item, index}) => {
-  
-  };
   const renderItem1 = ({item, index}) => {
     const translateX = translationX.interpolate({
 
@@ -123,7 +120,7 @@ const LoadData = ({navigation}) => {
         style={{
           width: DeviceWidth * 0.5,
           height: DeviceHeigth * 0.2,
-
+          top:60,
           alignSelf: 'center',
           //backgroundColor: 'red',
         }}>
@@ -294,6 +291,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F6F6F6',
     marginLeft: 50,
     borderRadius: 20,
+  
   },
 });
 export default LoadData;

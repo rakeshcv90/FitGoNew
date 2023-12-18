@@ -3,7 +3,7 @@ export const IntroductionData = [
     {
       id: 1,
       text1: 'Meet your coach,',
-      text2: 'start your juorney',
+      text2: 'start your joureny',
       img: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/b7d2017d-c86a-4b34-c6df-d2e956fcc200/public',
     },
     {
