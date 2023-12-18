@@ -345,8 +345,11 @@ const Injury = ({route, navigation}) => {
       </View>
     
       <View style={styles.buttons}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
+        <TouchableOpacity onPress={() => {
+            const prevPop = getLaterButtonData.pop();
+            dispatch(setLaterButtonData(getLaterButtonData));
+            navigation.goBack();
+          }}
           style={{
             backgroundColor: '#F7F8F8',
             width: 45,

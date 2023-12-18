@@ -33,8 +33,12 @@ import Injury from '../Screen/Yourself/Injury';
 import Preview from '../Screen/Yourself/Preview';
 import WorkoutArea from '../Screen/Yourself/WorkoutArea';
 import Age from '../Screen/Yourself/Age';
+import Goal from '../Screen/Yourself/Goal';
 import LoadData from '../Screen/Yourself/LoadData';
 import PredictionScreen from '../Screen/MeditationScreens/PredictionScreen';
+import {
+  CardStyleInterpolators,
+} from "@react-navigation/stack";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,7 +46,7 @@ const screenOptions = {
   headerShown: false,
   gestureDirection: 'horizontal',
   gesturesEnabled: true,
-
+  cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
 };
 
 //   return (
@@ -137,6 +141,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Alcohalinfo" component={Alcohalinfo} />
       <Stack.Screen name="LoadData" component={LoadData} />
       <Stack.Screen name="Preview" component={Preview} />
+      <Stack.Screen name="Goal" component={Goal} />
     </Stack.Navigator>
   );
 };
