@@ -3,7 +3,7 @@ import React from 'react';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor} from '../../Component/Color';
 
-const ProgressBar = ({screen}: any) => {
+const ProgressBar = ({screen, Type}: any) => {
   console.log(screen);
   return (
     <View
@@ -13,6 +13,7 @@ const ProgressBar = ({screen}: any) => {
         alignItems: 'center',
         width: DeviceWidth * 0.9,
         marginBottom: DeviceHeigth * 0.05,
+        marginTop: Type ? DeviceHeigth * 0.03 : 0,
       }}>
       <View style={{flexDirection: 'row-reverse', alignSelf: 'flex-end'}}>
         <Text
@@ -22,7 +23,7 @@ const ProgressBar = ({screen}: any) => {
             fontWeight: '400',
           }}>
           <Text style={{color: AppColor.RED}}>{`Step  ${screen} `}</Text>
-          of 10
+          {Type ? 'of 6' : 'of 10'}
         </Text>
       </View>
       <View
@@ -36,7 +37,12 @@ const ProgressBar = ({screen}: any) => {
         }}>
         <View
           style={{
-            width: screen == 0 ? '10%' : `${10 * screen}%`,
+            width:
+              screen == 0
+                ? Type
+                  ? '16.2%'
+                  : '10%'
+                : `${Type ? 17 * screen : 10 * screen}%`,
             backgroundColor: AppColor.RED,
             height: 5,
             borderRadius: 5,

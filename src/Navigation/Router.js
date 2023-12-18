@@ -161,10 +161,10 @@ const BottomTab = () => {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name={'AlcoholConsent'} component={AlcohalConsent} />
+   
 
-      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
-      <Stack.Screen
+      {/* <Stack.Screen name="SplaceScreen" component={SplaceScreen} /> */}
+      {/* <Stack.Screen
         name="IntroductionScreen1"
         component={IntroductionScreen1}
       />
@@ -176,7 +176,7 @@ export const LoginStack = () => {
         name="IntroductionScreen3"
         component={IntroductionScreen3}
       />
-     
+      */}
       {/* <Stack.Screen name="PredictionScreen" component={PredictionScreen} />
 
       {/* <Stack.Screen name="Home" component={Home} /> */}
@@ -205,11 +205,14 @@ export const LoginStack = () => {
       <Stack.Screen name="Height" component={Height} />
       <Stack.Screen name="Weight" component={Weight} />
       <Stack.Screen name="Age" component={Age} />
-      <Stack.Screen name="MeditationConsent" component={MeditationConsent} />
+       */} 
+          <Stack.Screen name="Age" component={Age} />
+       {/* <Stack.Screen name="MeditationConsent" component={MeditationConsent} />
       <Stack.Screen name="MeditationRoutine" component={MeditationRoutine} />
       <Stack.Screen name="SleepDuration" component={SleepDuration} />
       <Stack.Screen name="MentalState" component={MentalState} />
-      <Stack.Screen name="Alcohalinfo" component={Alcohalinfo} /> */}
+      <Stack.Screen name="Alcohalinfo" component={Alcohalinfo} />
+        <Stack.Screen name={'AlcoholConsent'} component={AlcohalConsent} /> */}
     </Stack.Navigator>
   );
 };

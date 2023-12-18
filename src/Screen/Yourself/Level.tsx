@@ -87,7 +87,6 @@ const Level = ({route, navigation}: any) => {
             'Knowing your gender can help us for you based on different metabolic rates.'
           }
         />
-
       <View
         style={{
           // flexDirection: 'row',

@@ -72,7 +72,7 @@ const positions = data.map(
     }),
 );
 const Age = ({route, navigation}: any) => {
-  const {nextScreen} = route.params;
+  // const {nextScreen} = route.params;
   const translateLevel = useRef(new Animated.Value(0)).current;
 
   const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
@@ -80,11 +80,11 @@ const Age = ({route, navigation}: any) => {
   );
   const dispatch = useDispatch();
   const [selected, setSelected] = useState(-1);
-  const [screen, setScreen] = useState(nextScreen);
+  // const [screen, setScreen] = useState(nextScreen);
   const flatListRef = useRef(null);
   //   console.log(data);
   useEffect(() => {
-    setScreen(nextScreen);
+    // setScreen(nextScreen);
     setSelected(15);
   }, []);
   const getActiveItem = (y: number) => {
@@ -105,7 +105,7 @@ const Age = ({route, navigation}: any) => {
       age: data[selected],
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-    navigation.navigate('Equipment', {nextScreen: screen + 1});
+    // navigation.navigate('Equipment', {nextScreen: screen + 1});
   };
   return (
     <View
@@ -116,7 +116,7 @@ const Age = ({route, navigation}: any) => {
         // marginTop: 50,
         backgroundColor: AppColor.WHITE,
       }}>
-      <ProgressBar screen={screen} />
+      <ProgressBar />
       <Bulb
         screen={'How old are you?'}
         header={

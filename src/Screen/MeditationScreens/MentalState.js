@@ -16,9 +16,23 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import Carousel from 'react-native-snap-carousel';
-const MentalState = ({navigation}) => {
-  const [itemIndex, setItemIndex] = useState(0);
+import Progressbar from '../../Screen/Yourself/ProgressBar';
+import { setMindset_Data } from '../../Component/ThemeRedux/Actions';
+import {useDispatch, useSelector} from 'react-redux';
+const MentalState = ({navigation, route}) => {
+  const [getMentalstate,setMentalState]=useState('')
+  const{mindSetData}=useSelector(state=>state)
+  const Dispatch=useDispatch();
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {  // for unselecting the item when user hit the back button from next screen
+      // setSelectedB(0); 
+    });
 
+    return unsubscribe;
+  }, [navigation]);
+  const [itemIndex, setItemIndex] = useState(0);
+  const {nextScreen} = route.params;
+  const [screen, setScreen] = useState(nextScreen);
   const MentalStateData = [
     {
       id: 1,
@@ -48,7 +62,9 @@ const MentalState = ({navigation}) => {
   const carouselRef = useRef(null);
   const handleSnapToItem = useCallback(index => {
     setItemIndex(index);
+    // Dispatch(setMindset_Data([...mindSetData,{mState:index}]))
     // console.log(index);
+    // console.log("indexxx",index)
   }, []);
   const renderItem = ({item, index}) => {
     return (
@@ -57,7 +73,8 @@ const MentalState = ({navigation}) => {
           style={styles.button}
           activeOpacity={0.5}
           onPress={() => {
-            navigation.navigate('Alcohalinfo');
+            // navigation.navigate('AlcoholConsent');
+            setItemIndex(index);
           }}>
           <Text style={styles.txts}>{item.txt}</Text>
           <Image source={item.img} style={styles.img} resizeMode="contain" />
@@ -65,18 +82,22 @@ const MentalState = ({navigation}) => {
       </View>
     );
   };
-
+console.log("mental State",mindSetData)
   return (
     <View style={styles.Container}>
-      <MeditationTitleComponent Title={'What is your mental state ?'} />
-      <Bulb Title="Meditation helps in keep your body and mind calm, peaceful and relax." />
-      <View style={{height: DeviceHeigth * 0.5}}>
+      <Progressbar screen={screen} Type />
+      <Bulb
+        header="Meditation helps in keep your body and mind calm, peaceful and relax."
+        screen={'What is your mental state ?'}
+      />
+      <View
+        style={{height: DeviceHeigth * 0.4, marginBottom: DeviceHeigth * 0.08}}>
         <Carousel
           ref={carouselRef}
           data={MentalStateData}
           renderItem={renderItem}
           sliderWidth={DeviceWidth}
-          itemWidth={DeviceWidth * 0.65}
+          itemWidth={DeviceWidth * 0.6}
           itemHeight={DeviceHeigth * 0.4}
           layout={'default'}
           layoutCardOffset={18}
@@ -96,28 +117,29 @@ const MentalState = ({navigation}) => {
           <TouchableOpacity
             key={index}
             style={{
-              width: DeviceWidth * 0.09,
-              height: DeviceHeigth * 0.04,
+              width: 20,
+              height: 20,
               backgroundColor: AppColor.WHITE,
-              borderRadius: (DeviceWidth * 0.09 + DeviceHeigth * 0.04) / 2,
+              borderRadius: 25 / 2,
               justifyContent: 'center',
               alignItems: 'center',
             }}
             onPress={() => {
+              setMentalState(value.txt)
               carouselRef.current.snapToItem(index);
             }}>
             {itemIndex == index ? (
               <Image
                 source={value.img1}
-                style={{width: DeviceWidth * 0.15, height: DeviceHeigth * 0.04}}
+                style={{width:30, height: 30}}
                 resizeMode="contain"
               />
             ) : (
               <View
                 style={{
-                  width: 15,
-                  height: 15,
-                  borderRadius: 15 / 2,
+                  width: 10,
+                  height: 10,
+                  borderRadius: 10 / 2,
                   backgroundColor: AppColor.WHITE,
                   ...Platform.select({
                     ios: {
@@ -134,44 +156,57 @@ const MentalState = ({navigation}) => {
             )}
           </TouchableOpacity>
         ))}
-        {/* <View>{value.txt}</View> */}
       </LinearGradient>
       <View
         style={{
-          width: DeviceWidth * 0.95,
-          justifyContent: 'space-around',
+          width: DeviceWidth*0.90,
+          justifyContent: 'space-between',
           flexDirection: 'row',
+         
         }}>
         {MentalStateData?.map((value, index) => (
-          <View
-            key={index}
-            style={{}}>
+          <View key={index} style={{}}>
             <Text
               style={{
                 color: itemIndex == index ? AppColor.RED : AppColor.DARKGRAY,
-                fontSize: itemIndex == index ? 20 : 16,
+                fontSize: itemIndex == index ? 18 : 12,
                 fontFamily: 'Poppins-SemiBold',
-                textAlign: 'right',
-                padding: 10,
+                textAlign: 'center',
+                paddingVertical:10
               }}>
               {value.txt}
             </Text>
           </View>
         ))}
       </View>
-      <TouchableOpacity
-      onPress={()=>{
-        navigation.goBack()
-      }}
-        style={{
-          justifyContent: 'flex-end',
-          flex: 1,
-          marginBottom: DeviceHeigth*0.05,
-          alignItems: 'flex-start',
-          width: DeviceWidth * 0.9,
-        }}>
-        <Icons name="chevron-left" size={25} color={AppColor.BLACK} />
-      </TouchableOpacity>
+      <View style={styles.buttons}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            backgroundColor: '#F7F8F8',
+            width: 45,
+            height: 45,
+            borderRadius: 15,
+            overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Icons name="chevron-left" size={25} color={'#000'} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            Dispatch(setMindset_Data([...mindSetData,{mState:getMentalstate}]))
+            navigation.navigate('AlcoholConsent', {nextScreen: screen + 1});
+          }}>
+          <LinearGradient
+            start={{x: 0, y: 1}}
+            end={{x: 1, y: 0}}
+            colors={['#941000', '#D5191A']}
+            style={[styles.nextButton]}>
+            <Icons name="chevron-right" size={25} color={'#fff'} />
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -208,13 +243,30 @@ const styles = StyleSheet.create({
     height: DeviceHeigth * 0.4,
   },
   bottomProgressbar: {
-    width: DeviceWidth * 0.8,
-    height: DeviceWidth * 0.1,
+    width: DeviceWidth * 0.85,
     borderRadius: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 5,
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: (DeviceWidth * 85) / 100,
+    alignItems: 'center',
+    alignSelf: 'center',
+    bottom: DeviceHeigth * 0.02,
+    position: 'absolute',
+  },
+  nextButton: {
+    backgroundColor: 'red',
+    width: 45,
+    height: 45,
+    borderRadius: 50 / 2,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 export default MentalState;

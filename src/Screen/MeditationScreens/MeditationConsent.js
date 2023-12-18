@@ -14,7 +14,20 @@ import {AppColor} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import LinearGradient from 'react-native-linear-gradient';
+import Progressbar from '../../Screen/Yourself/ProgressBar';
+import {useDispatch, useSelector} from 'react-redux';
+import { SetmindsetConsent } from '../../Component/ThemeRedux/Actions';
 const MeditationConsent = ({navigation}) => {
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setSelectedB(0);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+  const Dispatch = useDispatch();
+  const [screen, setScreen] = useState(1);
   const TextData = [
     {id: 1, img: localImage.Meditation_yes, txt: 'Yes, Sure'},
     {
@@ -48,17 +61,26 @@ const MeditationConsent = ({navigation}) => {
   const [selectedB, setSelectedB] = useState(0);
   const SelectedButton = button => {
     setSelectedB(button);
+    if (button == 1) {
+      Dispatch(SetmindsetConsent(true));
+    } else {
+      Dispatch(SetmindsetConsent(false));
+    }
     setTimeout(() => {
       button == 1
-        ? navigation.navigate('MeditationRoutine')
-        : navigation.navigate('Home');
+        ? navigation.navigate('MeditationRoutine', {nextScreen: screen + 1})
+        : navigation.naviagte('Home');
     }, 250);
   };
-
   return (
     <View style={styles.Container}>
-      <MeditationTitleComponent Title={'Would you like to Meditate also ?'} />
-      <Bulb Title="Meditation helps in keep your body and mind calm, peaceful and relax." />
+      <Progressbar screen={screen} Type />
+      <Bulb
+        header={
+          'Meditation helps in keep your body and mind calm, peaceful and relax.'
+        }
+        screen={'Would you like to meditate also ?'}
+      />
       <View style={{marginTop: DeviceHeigth * 0.15}}>
         {TextData.map((value, index) => (
           <Animated.View
@@ -98,20 +120,33 @@ const MeditationConsent = ({navigation}) => {
           </Animated.View>
         ))}
       </View>
-      <TouchableOpacity
-      onPress={()=>{
-        navigation.goBack()
-      }}
-        style={{
-          justifyContent: 'flex-end',
-          flex: 1,
-          marginBottom: DeviceHeigth*0.05,
-          alignItems: 'flex-start',
-          //  borderWidth: 1,
-          width: DeviceWidth * 0.9,
-        }}>
-        <Icons name="chevron-left" size={25} />
-      </TouchableOpacity>
+      <View style={styles.buttons}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            backgroundColor: '#F7F8F8',
+            width: 45,
+            height: 45,
+            borderRadius: 15,
+            overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Icons name="chevron-left" size={25} color={'#000'} />
+        </TouchableOpacity>
+        {/* <TouchableOpacity
+          onPress={() => {
+            // toNextScreen()
+          }}>
+          <LinearGradient
+            start={{x: 0, y: 1}}
+            end={{x: 1, y: 0}}
+            colors={['#941000', '#D5191A']}
+            style={[styles.nextButton]}>
+            <Icons name="chevron-right" size={25} color={'#fff'} />
+          </LinearGradient>
+        </TouchableOpacity> */}
+      </View>
     </View>
   );
 };
@@ -165,6 +200,24 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: (DeviceWidth * 85) / 100,
+    alignItems: 'center',
+    alignSelf: 'center',
+    bottom: DeviceHeigth * 0.02,
+    position: 'absolute',
+  },
+  nextButton: {
+    backgroundColor: 'red',
+    width: 45,
+    height: 45,
+    borderRadius: 50 / 2,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 export default MeditationConsent;
