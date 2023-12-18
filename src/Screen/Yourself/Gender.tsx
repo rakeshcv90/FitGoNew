@@ -33,7 +33,7 @@ const Gender = ({route, navigation}: any) => {
 
   const handleImagePress = (gender: string) => {
     // Set the selected gender
-    console.log(gender, selected, DeviceWidth / 2, -DeviceWidth * 0.4);
+    console.log("hjgfhngfhgfh",gender);
     if (gender === '') {
       Animated.parallel([
         Animated.timing(translateX, {
@@ -57,11 +57,11 @@ const Gender = ({route, navigation}: any) => {
     } else {
       // Animate the translation of the unselected image
       Animated.parallel([
-        Animated.timing(gender === 'F' ? translateX : translateX1, {
-          toValue: gender == 'F' ? 0 : DeviceWidth / 2,
+        Animated.timing(gender === 'Female' ? translateX : translateX1, {
+          toValue: gender == 'Female' ? 0 : DeviceWidth / 2,
           duration: 500,
           useNativeDriver: true,
-          delay: gender == 'F' ? 500 : 0, // Delay the return to center animation for a smoother effect
+          delay: gender == 'Female' ? 500 : 0, // Delay the return to center animation for a smoother effect
         }),
       ]).start();
       setTimeout(() => {
@@ -75,7 +75,7 @@ const Gender = ({route, navigation}: any) => {
       {
         gender: selected,
         image:
-          selected == 'M'
+          selected == 'Male'
             ? 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/fc1e357f-2310-4e50-8087-519663fe9400/public'
             : 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/e71b96f8-e68c-462e-baaf-a371b6fbc100/public',
       },
@@ -107,6 +107,7 @@ const Gender = ({route, navigation}: any) => {
       <Animated.View style={{}}>
         {data &&
           data?.map((item: any, index: number) => {
+        
             if (item?.goal_gender != selected) return;
             // console.log(goalsAnimation);
             const goalAnimationStyle = {
@@ -119,7 +120,7 @@ const Gender = ({route, navigation}: any) => {
                   translateX: goalsAnimation.interpolate({
                     inputRange: [0, 1],
                     outputRange:
-                      selected == 'F' ? [0, -index * 5] : [0, index * 5],
+                      selected == 'Female' ? [0, -index * 5] : [0, index * 5],
                   }),
                 },
               ],
@@ -198,10 +199,10 @@ const Gender = ({route, navigation}: any) => {
             alignItems: 'center',
             alignSelf: 'center',
             transform: [{translateX: translateX1}],
-            width: selected == 'M' ? DeviceWidth : DeviceWidth / 2,
+            width: selected == 'Male' ? DeviceWidth : DeviceWidth / 2,
             marginLeft: 50,
           }}>
-          {selected == 'M' && <Goal />}
+          {selected == 'Male' && <Goal />}
           <View
             style={{
               width: DeviceWidth / 2,
@@ -209,7 +210,7 @@ const Gender = ({route, navigation}: any) => {
             }}>
             <TouchableWithoutFeedback
               onPress={() => {
-                nextScreen == screen && handleImagePress('M');
+                nextScreen == screen && handleImagePress('Male');
               }}>
               <Image
                 source={{uri:'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/fc1e357f-2310-4e50-8087-519663fe9400/public'}}
@@ -229,12 +230,12 @@ const Gender = ({route, navigation}: any) => {
             alignItems: 'center',
             alignSelf: 'center',
             transform: [
-              {translateX: selected === 'F' ? translateX : translateX1},
+              {translateX: selected === 'Female' ? translateX : translateX1},
             ],
-            width: selected == 'F' ? DeviceWidth : DeviceWidth / 2,
+            width: selected == 'Female' ? DeviceWidth : DeviceWidth / 2,
             // marginLeft: selected == 'F' ? 50 : 0,
           }}>
-          {selected == 'F' && <Goal />}
+          {selected == '' && <Goal />}
           <View
             style={{
               width: DeviceWidth / 2,
@@ -242,7 +243,7 @@ const Gender = ({route, navigation}: any) => {
             }}>
             <TouchableWithoutFeedback
               onPress={() => {
-                nextScreen == screen && handleImagePress('F');
+                nextScreen == screen && handleImagePress('Female');
               }}>
               <Image
                 source={{uri:'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/e71b96f8-e68c-462e-baaf-a371b6fbc100/public'}}
@@ -268,6 +269,9 @@ const Gender = ({route, navigation}: any) => {
             overflow: 'hidden',
             justifyContent: 'center',
             alignItems: 'center',
+          
+            bottom: DeviceHeigth * 0.02,
+            position: 'absolute',
           }}
           onPress={() => {
             handleImagePress('');

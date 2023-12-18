@@ -65,7 +65,9 @@ const LogSignUp = () => {
                 start={{x: 0, y: 1}}
                 end={{x: 1, y: 0}}
                 colors={
-                  isFocused ? ['#941000', '#D01818'] : ['#D9D9D9', '#D9D9D9']
+                  // isFocused ? ['#941000', '#D01818'] : ['#D9D9D9', '#D9D9D9']
+                  isFocused ? ['#D01818', '#941000'] : ['#D9D9D9', '#D9D9D9']
+                  
                 }
                 style={{
                   borderRadius: isFocused ? 30 : 30,
@@ -98,8 +100,8 @@ const LogSignUp = () => {
         navigationRef.navigate('Yourself');
       }}
         style={{
-          width: DeviceWidth * 0.17,
-          height: DeviceHeigth* 0.05,
+          width: DeviceWidth * 0.13,
+          height: DeviceHeigth* 0.03,
           justifyContent: 'center',
           alignItems: 'center',
           alignSelf: 'flex-end',
@@ -183,7 +185,7 @@ var styles = StyleSheet.create({
   tabbar_part: {
     flexDirection: 'row',
     marginTop: 20,
-    width: DeviceHeigth * 0.27,
+    width: DeviceHeigth * 0.20,
     height: DeviceHeigth * 0.045,
     alignSelf: 'center',
     borderRadius: 30,

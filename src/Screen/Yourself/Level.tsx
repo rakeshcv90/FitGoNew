@@ -307,7 +307,9 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 85) / 100,
     alignItems: 'center',
     alignSelf: 'center',
-    marginTop:20
+  
+    bottom: DeviceHeigth * 0.02,
+    position: 'absolute',
   },
   nextButton: {
     backgroundColor: 'red',
