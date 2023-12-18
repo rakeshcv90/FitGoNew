@@ -30,16 +30,16 @@ const Gender = ({route, navigation}: any) => {
     // Animate the translation of the unselected image
     Animated.parallel([
       Animated.timing(translateX, {
-        toValue: gender == 'M' ? DeviceWidth * 0.2 : -DeviceWidth / 2,
+        toValue: gender == 'Male' ? DeviceWidth * 0.2 : -DeviceWidth / 2,
         duration: 500,
         useNativeDriver: true,
-        delay: gender == 'M' ? 0 : 500, // Delay the return to center animation for a smoother effect
+        delay: gender == 'Male' ? 0 : 500, // Delay the return to center animation for a smoother effect
       }),
       Animated.timing(translateX1, {
-        toValue: gender == 'F' ? -DeviceWidth * 0.2 : DeviceWidth / 2,
+        toValue: gender == 'Female' ? -DeviceWidth * 0.2 : DeviceWidth / 2,
         duration: 500,
         useNativeDriver: true,
-        delay: gender == 'F' ? 500 : 0, // Delay the return to center animation for a smoother effect
+        delay: gender == 'Female' ? 500 : 0, // Delay the return to center animation for a smoother effect
       }),
     ]).start();
     setTimeout(() => {
@@ -49,7 +49,7 @@ const Gender = ({route, navigation}: any) => {
   };
   const toNextScreen = (item: any) => {
     console.log(item, 'ITEM');
-    if (item == 'M') {
+    if (item == 'Male') {
       setTimeout(() => {
         navigation.navigate('Goal', {
           nextScreen: screen + 1,
@@ -97,7 +97,7 @@ const Gender = ({route, navigation}: any) => {
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => {
-            handleImagePress('M');
+            handleImagePress('Male');
           }}>
           <Animated.View
 
@@ -123,7 +123,7 @@ const Gender = ({route, navigation}: any) => {
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => {
-            handleImagePress('F');
+            handleImagePress('Female');
           }}>
           <Animated.View
 

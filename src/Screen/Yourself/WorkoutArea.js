@@ -114,30 +114,33 @@ const WorkoutArea = ({route, navigation}) => {
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
 
-      <View style={{height: DeviceHeigth * 0.25}}>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
 
-            marginTop: DeviceHeigth * 0.02,
-          }}>
-          <ProgressBar screen={screen} />
-        </View>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-
-            marginTop: -DeviceHeigth * 0.01,
-          }}>
-          <Bulb
-            screen={'What’s your comfort place to workout ?'}
-            header={'You can select any 2 options among below given options'}
-          />
-        </View>
+          marginTop: DeviceHeigth * 0.07,
+        }}>
+        <ProgressBar screen={screen} />
       </View>
-      <View style={{height: DeviceHeigth * 0.57}}>
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+
+          marginTop: -DeviceHeigth * 0.03,
+        }}>
+        <Bulb
+          screen={'What’s your comfort place to workout ?'}
+          header={'You can select any 2 options among below given options'}
+        />
+      </View>
+
+      <View
+        style={{
+          height: DeviceHeigth * 0.57,
+          marginVertical: DeviceHeigth * 0.02,
+        }}>
         <ScrollView
           keyboardDismissMode="interactive"
           showsVerticalScrollIndicator={false}
@@ -162,6 +165,8 @@ const WorkoutArea = ({route, navigation}) => {
                 style={[
                   styles.shadowProp,
                   {
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     borderWidth: imageView.find(num => num === 'AtHome') && 1,
                     borderColor: imageView.find(num => num === 'AtHome')
                       ? 'red'
@@ -183,7 +188,7 @@ const WorkoutArea = ({route, navigation}) => {
                     color: '#505050',
                     fontWeight: '500',
                     textAlign: 'center',
-                    marginTop: 8,
+                    marginVertical: 8,
                     lineHeight: 21,
                   }}>
                   At Home
@@ -224,7 +229,7 @@ const WorkoutArea = ({route, navigation}) => {
                     color: '#505050',
                     fontWeight: '500',
                     textAlign: 'center',
-                    marginTop: 10,
+                    marginVertical: 8,
                     lineHeight: 21,
                   }}>
                   At Bed
@@ -273,7 +278,7 @@ const WorkoutArea = ({route, navigation}) => {
                     color: '#505050',
                     fontWeight: '500',
                     textAlign: 'center',
-                    marginTop: 10,
+                    marginVertical: 8,
                     lineHeight: 21,
                   }}>
                   Outdoor
@@ -314,7 +319,7 @@ const WorkoutArea = ({route, navigation}) => {
                     color: '#505050',
                     fontWeight: '500',
                     textAlign: 'center',
-                    marginTop: 10,
+                    marginVertical: 8,
                     lineHeight: 21,
                   }}>
                   Anywhwere

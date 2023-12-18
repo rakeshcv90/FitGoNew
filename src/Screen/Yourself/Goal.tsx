@@ -30,7 +30,7 @@ const Goal = ({navigation, route}: any) => {
   );
   useEffect(() => {
     setScreen(nextScreen);
-    goalsAnimation.setValue(gender == 'M' ? -DeviceWidth : DeviceWidth);
+    goalsAnimation.setValue(gender == 'Male' ? -DeviceWidth : DeviceWidth);
     setTimeout(() => {
       handleImagePress(gender);
     }, 500);
@@ -42,7 +42,7 @@ const Goal = ({navigation, route}: any) => {
       {
         gender: gender,
         image:
-          gender == 'M'
+          gender == 'Male'
             ? 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/fc1e357f-2310-4e50-8087-519663fe9400/public'
             : 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/e71b96f8-e68c-462e-baaf-a371b6fbc100/public',
       },
@@ -65,7 +65,7 @@ const Goal = ({navigation, route}: any) => {
         toValue: 0,
         duration: 500,
         useNativeDriver: true,
-        delay: gender == 'M' ? 1500 : 500, // Delay the return to center animation for a smoother effect
+        delay: gender == 'Male' ? 1500 : 500, // Delay the return to center animation for a smoother effect
       }),
     ]).start();
     setTimeout(() => {
@@ -83,7 +83,7 @@ const Goal = ({navigation, route}: any) => {
         backgroundColor: AppColor.WHITE,
       }}>
       <ProgressBar screen={screen} />
-      {/* <Bulb screen={screen} /> */}
+
       <Bulb
         screen={'Select your Goal'}
         header={
@@ -93,14 +93,14 @@ const Goal = ({navigation, route}: any) => {
 
       <Animated.View
         style={{
-          flexDirection: gender == 'F' ? 'row-reverse' : 'row',
+          flexDirection: gender == 'Female' ? 'row-reverse' : 'row',
           justifyContent: 'center',
           alignItems: 'center',
           alignSelf: 'center',
-          height: DeviceHeigth * 0.6,
+          height: DeviceHeigth * 0.55,
           transform: [{translateX: goalsAnimation}],
           width: DeviceWidth,
-          marginLeft: gender == 'F' ? 50 : 0,
+          marginLeft: gender == 'Female' ? 50 : 0,
         }}>
         <View>
           {data &&
@@ -149,7 +149,7 @@ const Goal = ({navigation, route}: any) => {
         <Image
           source={{
             uri:
-              gender == 'M'
+              gender == 'Male'
                 ? 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/fc1e357f-2310-4e50-8087-519663fe9400/public'
                 : 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/e71b96f8-e68c-462e-baaf-a371b6fbc100/public',
           }}
@@ -157,7 +157,7 @@ const Goal = ({navigation, route}: any) => {
           resizeMode="contain"
         />
       </Animated.View>
-      {selected != '' ? (
+      {gender != '' ? (
         <TouchableOpacity
           style={{
             alignSelf: 'flex-start',
@@ -171,7 +171,8 @@ const Goal = ({navigation, route}: any) => {
             alignItems: 'center',
           }}
           onPress={() => {
-            handleImagePress('');
+            navigation.navigate('Gender', {data: data, nextScreen: screen - 1});
+            //navigation.goBack()
           }}>
           <Icons name="chevron-left" size={25} color={'#000'} />
         </TouchableOpacity>

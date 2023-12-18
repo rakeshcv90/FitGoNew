@@ -117,28 +117,28 @@ const Equipment = ({route, navigation}: any) => {
   };
   const data = [
     {
-      gender: 'M',
+      gender: 'Male',
       name: 'With\nEquipment',
       image: localImage.WithEquipment,
       image2:
         'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/70caf85b-6425-4d62-b2c7-369917626900/public',
     },
     {
-      gender: 'F',
+      gender: 'Female',
       name: 'With\nEquipment',
       image: localImage.WithoutEquipment,
       image2:
         'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/29164007-f1a2-4a75-41e7-223b95196800/public',
     },
     {
-      gender: 'M',
+      gender: 'Male',
       name: 'Without\nEquipment',
       image: localImage.WithEquipment,
       image2:
         'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/8a2695c6-a5b5-47e2-d899-c827a0c26500/public',
     },
     {
-      gender: 'F',
+      gender: 'Female',
       name: 'Without\nEquipment',
       image: localImage.WithoutEquipment,
       image2:
@@ -207,7 +207,7 @@ const Equipment = ({route, navigation}: any) => {
                     style={{
                       width: DeviceWidth * 0.45,
                       height: DeviceHeigth * 0.4,
-                      alignSelf: 'flex-start',
+                    
                     }}
                   />
                   <View

@@ -92,28 +92,22 @@ const Weight = ({route, navigation}: any) => {
     const currentData = {
       currentWeight: selected,
       targetWeight: targetSelected && weight,
-      type: toggle
+      type: toggle,
     };
     if (targetSelected) {
-      {console.log("Current Weight Screen Data",[...getLaterButtonData, currentData])}
+      {
+        console.log('Current Weight Screen Data', [
+          ...getLaterButtonData,
+          currentData,
+        ]);
+      }
       dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
       navigation.navigate('Age', {nextScreen: screen + 1});
     } else {
       handleAnimation(weight);
     }
   };
-  const data = [
-    {
-      gender: 'M',
-      name: 'With\nEquipment',
-      image: localImage.WithEquipment,
-    },
-    {
-      gender: 'F',
-      name: 'Without\nEquipment',
-      image: localImage.WithoutEquipment,
-    },
-  ];
+
   const toggleH = ['kg', 'lb'];
   return (
     <View
@@ -122,7 +116,7 @@ const Weight = ({route, navigation}: any) => {
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: AppColor.WHITE,
-        height: DeviceHeigth * 0.8,
+        // height: DeviceHeigth * 0.8,
       }}>
       <Animated.View
         style={{
@@ -142,12 +136,11 @@ const Weight = ({route, navigation}: any) => {
             alignItems: 'center',
             paddingTop: 20,
             // backgroundColor: AppColor.RED,
-            height: DeviceHeigth * 0.6,
+            height: DeviceHeigth * 0.55,
           }}>
           <ProgressBar screen={screen} />
           <View
             style={{
-              // marginTop: 30,
               justifyContent: 'center',
               alignItems: 'center',
             }}>
@@ -157,7 +150,7 @@ const Weight = ({route, navigation}: any) => {
                 'Knowing your weight can help us for you based on different metabolic rates.'
               }
             />
-            <View style={{marginTop: 30}} />
+            <View style={{marginTop: 20}} />
             <Toggle
               data={toggleH}
               highlightColor={AppColor.RED}
@@ -170,7 +163,7 @@ const Weight = ({route, navigation}: any) => {
           <ImageBackground
             resizeMode="contain"
             source={
-              getLaterButtonData[0]?.gender == 'M'
+              getLaterButtonData[0]?.gender == 'Male'
                 ? localImage.MaleWeight
                 : localImage.FemaleWeight
             }
@@ -252,15 +245,19 @@ const Weight = ({route, navigation}: any) => {
               <View style={{height: DeviceHeigth * 0.2}} />
             </View>
           </ImageBackground>
-          <View style={styles.buttons}>
+          <View style={[styles.buttons,{
+             bottom: -DeviceHeigth * 0.17,
+          }]}>
             <TouchableOpacity
-                 style={{ backgroundColor: '#F7F8F8',
-                 width: 45,
-                 height: 45,
-                 borderRadius: 15,
-                 overflow: 'hidden',
-                 justifyContent: 'center',
-                 alignItems: 'center',}}
+              style={{
+                backgroundColor: '#F7F8F8',
+                width: 45,
+                height: 45,
+                borderRadius: 15,
+                overflow: 'hidden',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
               onPress={() =>
                 //   selected != '' ? handleImagePress('') :
                 navigation.goBack()
@@ -327,14 +324,14 @@ const Weight = ({route, navigation}: any) => {
           <ImageBackground
             resizeMode="contain"
             source={
-              getLaterButtonData[0]?.gender == 'M'
+              getLaterButtonData[0]?.gender == 'Male'
                 ? localImage.MaleWeight
                 : localImage.FemaleWeight
             }
             style={{
               flexDirection: 'row',
               width: DeviceWidth,
-              height: DeviceHeigth * 0.7,
+              height: DeviceHeigth * 0.55,
               justifyContent: 'center',
               alignItems: 'center',
             }}
@@ -412,14 +409,16 @@ const Weight = ({route, navigation}: any) => {
 
           <View style={styles.buttons}>
             <TouchableOpacity
-                 style={{ backgroundColor: '#F7F8F8',
-                 width: 45,
-                 height: 45,
-                 borderRadius: 15,
-                 overflow: 'hidden',
-                 justifyContent: 'center',
-                 
-                 alignItems: 'center',}}
+              style={{
+                backgroundColor: '#F7F8F8',
+                width: 45,
+                height: 45,
+                borderRadius: 15,
+                overflow: 'hidden',
+                justifyContent: 'center',
+
+                alignItems: 'center',
+              }}
               onPress={() =>
                 //   selected != '' ? handleImagePress('') :
                 targetSelected ? handleAnimation(0) : navigation.goBack()
@@ -494,7 +493,8 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 85) / 100,
     alignItems: 'center',
     alignSelf: 'center',
-    marginTop: -140,
+    position: 'absolute',
+    bottom: -DeviceHeigth * 0.11,
   },
   nextButton: {
     backgroundColor: 'red',

@@ -115,7 +115,7 @@ const Height = ({route, navigation}: any) => {
       />
       <View
         style={{
-          marginTop: 30,
+         marginTop: 20,
         }}>
         <Toggle
           data={toggleH}
@@ -131,7 +131,7 @@ const Height = ({route, navigation}: any) => {
           justifyContent: 'flex-start',
           alignItems: 'flex-start',
           //   alignSelf: 'flex-start',
-          height: DeviceHeigth * 0.6,
+          height: DeviceHeigth * 0.55,
           width: DeviceWidth,
         }}>
         <Scale
@@ -212,7 +212,7 @@ const Height = ({route, navigation}: any) => {
           <Image
             resizeMode="contain"
             source={
-              getLaterButtonData[0]?.gender == 'M'
+              getLaterButtonData[0]?.gender == 'Male'
                 ? localImage.MaleHeight
                 : localImage.FemaleHeight
             }

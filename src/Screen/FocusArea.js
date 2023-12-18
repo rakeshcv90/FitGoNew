@@ -70,7 +70,7 @@ const FocusArea = ({route, navigation}) => {
         />
       </View>
       <View>
-        {getLaterButtonData[0].gender == 'M' ? (
+        {getLaterButtonData[0].gender == 'Male' ? (
           <FocuseAreaMale imageView={imageView} setImageVIew={setImageVIew} />
         ) : (
           <FocuseAreaFmale imageView={imageView} setImageVIew={setImageVIew} />

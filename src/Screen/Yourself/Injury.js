@@ -147,7 +147,7 @@ const Injury = ({route, navigation}) => {
   };
 
   return (
-    <SafeAreaView style={styles.Container}>
+    <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
 
       <View
@@ -155,8 +155,8 @@ const Injury = ({route, navigation}) => {
           justifyContent: 'center',
           alignItems: 'center',
           //position: 'absolute',
-          marginTop:
-            Platform.OS == 'ios' ? DeviceHeigth * 0.05 : DeviceHeigth * 0.06,
+          // marginTop:
+          //   Platform.OS == 'ios' ? DeviceHeigth * 0.05 : DeviceHeigth * 0.06,
         }}>
         <ProgressBar screen={screen} />
       </View>
@@ -201,7 +201,6 @@ const Injury = ({route, navigation}) => {
                       justifyContent: 'center',
                       alignItems: 'center',
                       marginVertical: DeviceHeigth * 0.01,
-                     
                     }}>
                     <Animated.View
                       style={[
@@ -292,7 +291,9 @@ const Injury = ({route, navigation}) => {
               left:
                 getLaterButtonData[0].gender == 'F'
                   ? -DeviceWidth * 0.25
-                  : DeviceHeigth <= '667'? -DeviceWidth * 0.25:-DeviceWidth * 0.25,
+                  : DeviceHeigth <= '667'
+                  ? -DeviceWidth * 0.25
+                  : -DeviceWidth * 0.25,
             }}>
             <FlatList
               data={buttonName1}
@@ -354,9 +355,10 @@ const Injury = ({route, navigation}) => {
       </View>
 
       <View style={styles.buttons}>
-        <TouchableOpacity onPress={() => {
-            const prevPop = getLaterButtonData.pop();
-            dispatch(setLaterButtonData(getLaterButtonData));
+        <TouchableOpacity
+          onPress={() => {
+            // const prevPop = getLaterButtonData.pop();
+            // dispatch(setLaterButtonData(getLaterButtonData));
             navigation.goBack();
           }}
           style={{
@@ -384,13 +386,16 @@ const Injury = ({route, navigation}) => {
           </LinearGradient>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    backgroundColor: 'white',
+    justifyContent: 'center',
+    //alignItems: 'center',
+    width: DeviceWidth,
+    backgroundColor: AppColor.WHITE,
   },
 
   imageView: {

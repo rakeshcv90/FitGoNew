@@ -60,7 +60,6 @@ const Level = ({route, navigation}: any) => {
   const [screen, setScreen] = useState(nextScreen);
   const flatListRef = useRef<FlatList>(null);
 
-  console.log(getLaterButtonData)
   useEffect(() => {
     setScreen(nextScreen);
     setSelected(1);
@@ -259,7 +258,7 @@ const Level = ({route, navigation}: any) => {
       <View style={styles.buttons}>
         <TouchableOpacity
           onPress={() => {
-            dispatch(setLaterButtonData([]));
+           // dispatch(setLaterButtonData([]));
             navigation.goBack();
           }}
           style={{
