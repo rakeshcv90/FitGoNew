@@ -43,14 +43,14 @@ const FocusArea = ({route, navigation}) => {
   };
 
   return (
-    <SafeAreaView style={styles.Container}>
+    <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <View
         style={{
           justifyContent: 'center',
           alignItems: 'center',
 
-          marginTop: DeviceHeigth * 0.05,
+          marginTop: DeviceHeigth * 0.02,
         }}>
         <ProgressBar screen={nextScreen} />
       </View>
@@ -60,7 +60,7 @@ const FocusArea = ({route, navigation}) => {
           justifyContent: 'center',
           alignItems: 'center',
 
-          marginTop: -DeviceHeigth * 0.015,
+          // marginTop: -DeviceHeigth * 0.015,
         }}>
         <Bulb
           screen={'Select your Focus area'}
@@ -106,7 +106,7 @@ const FocusArea = ({route, navigation}) => {
           </TouchableOpacity>
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({

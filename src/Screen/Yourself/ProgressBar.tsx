@@ -2,11 +2,12 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor} from '../../Component/Color';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ProgressBar = ({screen}: any) => {
   console.log(screen);
   return (
-    <View
+    <SafeAreaView
       style={{
         //   flex: 1,
         alignSelf: 'flex-start',
@@ -43,7 +44,7 @@ const ProgressBar = ({screen}: any) => {
           }}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -84,7 +84,7 @@ const Equipment = ({route, navigation}: any) => {
         Animated.timing(translateW, {
           toValue:
             gender == 'Without\nEquipment'
-              ? -DeviceWidth * 0.2
+              ? -DeviceWidth * 0.3
               : DeviceWidth / 2,
           duration: 500,
           useNativeDriver: true,
@@ -108,12 +108,13 @@ const Equipment = ({route, navigation}: any) => {
     const currentData = {
       equipment: selected,
     };
-    {console.log("Equipment  Screen Data",selected)}
-   dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
+    {
+      console.log('Equipment  Screen Data', selected);
+    }
+    dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     setTimeout(() => {
       navigation.navigate('FocusArea', {nextScreen: screen + 1});
     }, 2000);
-
   };
   const data = [
     {
@@ -185,7 +186,7 @@ const Equipment = ({route, navigation}: any) => {
                 <Animated.View
                   style={{
                     width: DeviceWidth / 2,
-                    height: DeviceHeigth * 0.6,
+                    height: DeviceHeigth * 0.55,
                     justifyContent: 'center',
                     alignItems: 'center',
                     transform: [
@@ -206,8 +207,8 @@ const Equipment = ({route, navigation}: any) => {
                     source={{uri: item?.image2}}
                     style={{
                       width: DeviceWidth * 0.45,
-                      height: DeviceHeigth * 0.4,
-                    
+                      height: DeviceHeigth * 0.35,
+                      alignSelf: item?.gender == 'Male' ? 'flex-end' : 'center',
                     }}
                   />
                   <View

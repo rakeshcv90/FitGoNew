@@ -91,10 +91,12 @@ const Level = ({route, navigation}: any) => {
       <View
         style={{
           // flexDirection: 'row',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
           alignItems: 'center',
           alignSelf: 'center',
-          height: DeviceHeigth * 0.6,
+          height: DeviceHeigth * 0.65,
+          // backgroundColor: 'red',
+          marginTop: -50
           // width: DeviceWidth,
         }}>
         <View

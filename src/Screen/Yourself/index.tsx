@@ -83,7 +83,6 @@ const Index = ({navigation, route}: any) => {
     ProfileDataAPI();
   }, []);
   useEffect(() => {
-    console.log(screen);
     if (screen == 5 || screen == 4 || screen == 3) {
       setSelectedHeight(toggleData[0]);
       setSelectedWeight(toggleWData[0]);
@@ -117,13 +116,15 @@ const Index = ({navigation, route}: any) => {
         method: 'get',
       });
       if (res.data) {
-
         dispatch(setCompleteProfileData(res.data));
-        navigation.navigate('Gender', {data: res.data?.goal, nextScreen: screen});
+        navigation.navigate('Gender', {
+          data: res.data?.goal,
+          nextScreen: screen,
+        });
       }
     } catch (error) {
       dispatch(setCompleteProfileData([]));
-     // navigation.navigate('Gender', {data: [], nextScreen: screen});
+      navigation.navigate('Gender', {data: [], nextScreen: screen});
       console.log(error);
     }
   };
@@ -164,7 +165,6 @@ const Index = ({navigation, route}: any) => {
       setVisible(false);
     }
   };
-
 
   // const Carousal = ({data}: any) => (
   //   <Carousel

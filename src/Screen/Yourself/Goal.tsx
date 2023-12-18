@@ -153,7 +153,10 @@ const Goal = ({navigation, route}: any) => {
                 ? 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/fc1e357f-2310-4e50-8087-519663fe9400/public'
                 : 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/e71b96f8-e68c-462e-baaf-a371b6fbc100/public',
           }}
-          style={{height: DeviceHeigth * 0.6, width: DeviceWidth / 2}}
+          style={{
+            height: gender == 'Male' ? DeviceHeigth * 0.6 : DeviceHeigth * 0.5,
+            width: DeviceWidth / 2,
+          }}
           resizeMode="contain"
         />
       </Animated.View>

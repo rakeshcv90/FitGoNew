@@ -200,7 +200,7 @@ const Injury = ({route, navigation}) => {
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
-                      marginVertical: DeviceHeigth * 0.01,
+                      marginVertical: DeviceHeigth * 0.005,
                     }}>
                     <Animated.View
                       style={[

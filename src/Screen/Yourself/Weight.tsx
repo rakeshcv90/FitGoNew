@@ -128,16 +128,11 @@ const Weight = ({route, navigation}: any) => {
           width: DeviceWidth,
           transform: [{translateY: translateCurrent}],
           paddingTop: 20,
+          justifyContent: 'center',
+          alignItems: 'center',
+          // backgroundColor: AppColor.RED,
+          height: DeviceHeigth * 0.55,
         }}>
-        <View
-          style={{
-            // flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingTop: 20,
-            // backgroundColor: AppColor.RED,
-            height: DeviceHeigth * 0.55,
-          }}>
           <ProgressBar screen={screen} />
           <View
             style={{
@@ -170,7 +165,7 @@ const Weight = ({route, navigation}: any) => {
             style={{
               flexDirection: 'row',
               width: DeviceWidth,
-              height: DeviceHeigth * 0.7,
+              height: DeviceHeigth * 0.55,
               justifyContent: 'center',
               alignItems: 'center',
             }}
@@ -275,7 +270,6 @@ const Weight = ({route, navigation}: any) => {
               </LinearGradient>
             </TouchableOpacity>
           </View>
-        </View>
       </Animated.View>
       <Animated.View
         style={{
@@ -283,21 +277,15 @@ const Weight = ({route, navigation}: any) => {
           // justifyContent: 'flex-start',
           // alignItems: 'center',
           //   alignSelf: 'flex-start',
-          height: DeviceHeigth * 0.8,
+          height: DeviceHeigth * 0.55,
           width: DeviceWidth,
           transform: [{translateY: translateTarget}],
-          paddingTop: 20,
+          paddingTop: DeviceHeigth * 0.11,
           backgroundColor: AppColor.WHITE,
           display: targetSelected ? 'flex' : 'none',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            paddingTop: 20,
-            backgroundColor: AppColor.WHITE,
-          }}>
           <ProgressBar screen={screen} />
           <View
             style={{
@@ -311,7 +299,7 @@ const Weight = ({route, navigation}: any) => {
                 'Knowing your weight can help us for you based on different metabolic rates.'
               }
             />
-            <View style={{marginTop: 30}} />
+            <View style={{marginTop: 10}} />
             <Toggle
               data={toggleH}
               highlightColor={AppColor.RED}
@@ -331,13 +319,14 @@ const Weight = ({route, navigation}: any) => {
             style={{
               flexDirection: 'row',
               width: DeviceWidth,
-              height: DeviceHeigth * 0.55,
+              height: DeviceHeigth * 0.45,
               justifyContent: 'center',
               alignItems: 'center',
+              marginVertical: 20
             }}
             imageStyle={{
               width: DeviceWidth,
-              height: DeviceHeigth * 0.5,
+              height: DeviceHeigth * 0.45,
               opacity: 0.3,
               marginLeft: -10,
             }}>
@@ -407,7 +396,10 @@ const Weight = ({route, navigation}: any) => {
             </View>
           </ImageBackground>
 
-          <View style={styles.buttons}>
+          <View style={[styles.buttons, {
+            position:'relative',
+            bottom: 0,
+          }]}>
             <TouchableOpacity
               style={{
                 backgroundColor: '#F7F8F8',
@@ -455,7 +447,6 @@ const Weight = ({route, navigation}: any) => {
               </LinearGradient>
             </TouchableOpacity>
           </View>
-        </View>
       </Animated.View>
     </View>
   );

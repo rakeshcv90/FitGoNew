@@ -18,6 +18,7 @@ import {AppColor} from '../../Component/Color';
 
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
+import {useDispatch, useSelector} from 'react-redux';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
@@ -70,8 +71,12 @@ const LoadData = ({navigation}) => {
     },
     
   ];
-  const translationX = useRef(new Animated.Value(0)).current;
 
+  const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
+    (state) => state,
+  );
+  const translationX = useRef(new Animated.Value(0)).current;
+console.log(getLaterButtonData)
   useEffect(() => {
     animateList();
   }, []);
