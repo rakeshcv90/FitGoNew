@@ -3,7 +3,6 @@ import {
   Text,
   StatusBar,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   Animated,
   Image,
@@ -111,7 +110,7 @@ const WorkoutArea = ({route, navigation}) => {
   };
 
   return (
-    <SafeAreaView style={styles.Container}>
+    <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
 
       <View
@@ -119,7 +118,7 @@ const WorkoutArea = ({route, navigation}) => {
           justifyContent: 'center',
           alignItems: 'center',
 
-          marginTop: DeviceHeigth * 0.07,
+          marginTop: DeviceHeigth * 0.03,
         }}>
         <ProgressBar screen={screen} />
       </View>
@@ -128,7 +127,7 @@ const WorkoutArea = ({route, navigation}) => {
           justifyContent: 'center',
           alignItems: 'center',
 
-          marginTop: -DeviceHeigth * 0.03,
+          marginTop: -DeviceHeigth * 0.02,
         }}>
         <Bulb
           screen={'What’s your comfort place to workout ?'}
@@ -367,7 +366,7 @@ const WorkoutArea = ({route, navigation}) => {
           </TouchableOpacity>
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({
