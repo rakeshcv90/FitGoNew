@@ -28,7 +28,7 @@ const ProgressBar = ({screen}: any) => {
       </View>
       <View
         style={{
-          width: DeviceWidth * 0.8,
+          width: DeviceWidth * 0.9,
           backgroundColor: '#E2E6F9',
           height: 5,
           borderRadius: 5,
