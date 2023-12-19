@@ -49,7 +49,7 @@ const GradientText = ({item}: any) => {
 };
 
 const Level = ({route, navigation}: any) => {
-  const {nextScreen} = route.params;
+  const {nextScreen, gender} = route.params;
   const translateLevel = useRef(new Animated.Value(0)).current;
 
   const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
@@ -69,7 +69,7 @@ const Level = ({route, navigation}: any) => {
       level: selected,
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-    navigation.navigate('Injury', {nextScreen: screen + 1});
+    navigation.navigate('Height', {nextScreen: screen + 1});
   };
   return (
     <View
@@ -96,7 +96,7 @@ const Level = ({route, navigation}: any) => {
           alignSelf: 'center',
           height: DeviceHeigth * 0.65,
           // backgroundColor: 'red',
-          marginTop: -50
+          marginTop: -50,
           // width: DeviceWidth,
         }}>
         <View
@@ -112,17 +112,20 @@ const Level = ({route, navigation}: any) => {
             horizontal
             scrollEnabled={false}
             showsHorizontalScrollIndicator={false}
-            renderItem={({item, index}: any) => (
-              <Image
-                resizeMode="contain"
-                source={{uri: item?.level_image}}
-                style={{
-                  width: DeviceWidth,
-                  height: DeviceHeigth * 0.5,
-                  // backgroundColor: 'red',
-                }}
-              />
-            )}
+            renderItem={({item, index}: any) => {
+              if (item?.level_gender != gender) return;
+              return (
+                <Image
+                  resizeMode="contain"
+                  source={{uri: item?.level_image}}
+                  style={{
+                    width: DeviceWidth,
+                    height: DeviceHeigth * 0.5,
+                    // backgroundColor: 'red',
+                  }}
+                />
+              );
+            }}
           />
         </View>
         <View style={{height: DeviceHeigth * 0.1}}>
@@ -139,7 +142,7 @@ const Level = ({route, navigation}: any) => {
               alignSelf: 'center',
             }}>
             {completeProfileData.level?.map((item: any, index: number) => {
-              if (index == 3) return;
+              if (item?.level_gender != gender) return;
               return (
                 <View
                   style={{
@@ -222,7 +225,7 @@ const Level = ({route, navigation}: any) => {
               // paddingHorizontal: 2,
             }}>
             {completeProfileData.level?.map((item: any, index: number) => {
-              if (index == 3) return;
+              if (item?.level_gender != gender) return;
               return (
                 <View
                   style={{
@@ -260,7 +263,7 @@ const Level = ({route, navigation}: any) => {
       <View style={styles.buttons}>
         <TouchableOpacity
           onPress={() => {
-           // dispatch(setLaterButtonData([]));
+            // dispatch(setLaterButtonData([]));
             navigation.goBack();
           }}
           style={{
@@ -321,10 +324,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
 
-  
     bottom: DeviceHeigth * 0.02,
     position: 'absolute',
-
   },
   nextButton: {
     backgroundColor: 'red',
