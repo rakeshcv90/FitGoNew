@@ -98,6 +98,7 @@ const LogSignUp = () => {
       <TouchableOpacity
       onPress={()=>{
         navigationRef.navigate('Yourself');
+   
       }}
         style={{
           width: DeviceWidth * 0.13,

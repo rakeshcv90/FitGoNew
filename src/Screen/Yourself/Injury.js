@@ -25,7 +25,9 @@ import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 const Injury = ({route, navigation}) => {
   const dispatch = useDispatch();
   const {nextScreen} = route.params;
-  const {getLaterButtonData} = useSelector(state => state);
+  const {getLaterButtonData, completeProfileData, getUserID} = useSelector(
+    state => state,
+  );
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageView, setImageVIew] = useState([]);
   const [screen, setScreen] = useState(nextScreen);
@@ -44,42 +46,24 @@ const Injury = ({route, navigation}) => {
     navigation.navigate('Height', {nextScreen: screen + 1});
   };
 
-  const buttonName = [
-    {
-      id: 1,
-      text1: 'Shoulder',
-      image: require('../../Icon/Images/NewImage/Injury.png'),
-    },
-    {
-      id: 2,
-      text1: 'Ankle',
-      image: require('../../Icon/Images/NewImage/Injury1.png'),
-    },
-    {
-      id: 3,
-      text1: 'Elbow',
-      image: require('../../Icon/Images/NewImage/Injury2.png'),
-    },
-  ];
-  const buttonName1 = [
-    {
-      id: 4,
-      text1: 'Knee',
-      image: require('../../Icon/Images/NewImage/Injury3.png'),
-    },
-    {
-      id: 5,
-      text1: 'Back',
-      image: require('../../Icon/Images/NewImage/Injury4.png'),
-    },
 
-    // {
-    //   id: 7,
-    //   text1: 'Back',
-    // },
-  ];
+  const [bodyPart, setBordyPart] = useState(
+    completeProfileData?.injury.filter(
+      part => part.injury_title !== 'Back' && part.injury_title !== 'Knee',
+    ),
+  );
+
+  const [bodyPart2, setBordyPart2] = useState(
+    completeProfileData?.injury.filter(
+      part =>
+        part.injury_title !== 'Shoulder' &&
+        part.injury_title !== 'Ankle' &&
+        part.injury_title !== 'Shoulders' &&
+        part.injury_title !== 'Elbow',
+    ),
+  );
   const translateXValues = useRef(
-    buttonName.map(() => new Animated.Value(-DeviceWidth)),
+    bodyPart.map(() => new Animated.Value(-DeviceWidth)),
   ).current;
   useEffect(() => {
     startAnimation();
@@ -101,7 +85,7 @@ const Injury = ({route, navigation}) => {
   };
 
   const translateXValues1 = useRef(
-    buttonName1.map(() => new Animated.Value(DeviceWidth)),
+    bodyPart2.map(() => new Animated.Value(DeviceWidth)),
   ).current;
 
   const startAnimation1 = () => {
@@ -180,7 +164,6 @@ const Injury = ({route, navigation}) => {
             width: DeviceWidth / 2.7,
             height: DeviceHeigth * 0.6,
           }}>
-          {console.log('sdssdsdsddsdsds', DeviceHeigth)}
           <View
             style={{
               top:
@@ -190,11 +173,12 @@ const Injury = ({route, navigation}) => {
               height: DeviceHeigth * 0.7,
             }}>
             <FlatList
-              data={buttonName}
+              data={bodyPart}
               scrollEnabled={false}
               extraData={({item, index}) => index.toString()}
               renderItem={({item, index}) => {
-                const isSelected = selectedItems.includes(item.id);
+             
+                const isSelected = selectedItems.includes(item.injury_id);
                 return (
                   <View
                     style={{
@@ -220,10 +204,10 @@ const Injury = ({route, navigation}) => {
                           borderColor: isSelected ? 'red' : AppColor.WHITE,
                         }}
                         onPress={() => {
-                          setImageFocusArea(item.id, item.text1);
+                          setImageFocusArea(item.injury_id, item.injury_title);
                         }}>
                         <Image
-                          source={item.image}
+                          source={{uri: item.injury_image}}
                           style={styles.Image}
                           resizeMode="contain"
                         />
@@ -237,7 +221,7 @@ const Injury = ({route, navigation}) => {
                           textAlign: 'center',
                           marginVertical: 5,
                         }}>
-                        {item.text1}
+                        {item.injury_title}
                       </Text>
                     </Animated.View>
                   </View>
@@ -296,11 +280,12 @@ const Injury = ({route, navigation}) => {
                   : -DeviceWidth * 0.25,
             }}>
             <FlatList
-              data={buttonName1}
+              data={bodyPart2}
               scrollEnabled={false}
               extraData={({item, index}) => index.toString()}
               renderItem={({item, index}) => {
-                const isSelected = selectedItems.includes(item.id);
+                const isSelected = selectedItems.includes(item.injury_id);
+
                 return (
                   <View
                     style={{
@@ -326,10 +311,10 @@ const Injury = ({route, navigation}) => {
                           borderColor: isSelected ? 'red' : AppColor.WHITE,
                         }}
                         onPress={() => {
-                          setImageFocusArea(item.id, item.text1);
+                          setImageFocusArea(item.injury_id, item.injury_title);
                         }}>
                         <Image
-                          source={item.image}
+                          source={{uri: item.injury_image}}
                           style={styles.Image}
                           resizeMode="contain"
                         />
@@ -343,7 +328,7 @@ const Injury = ({route, navigation}) => {
                           textAlign: 'center',
                           marginVertical: 5,
                         }}>
-                        {item.text1}
+                        {item.injury_title}
                       </Text>
                     </Animated.View>
                   </View>
