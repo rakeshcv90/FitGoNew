@@ -100,16 +100,16 @@ const Equipment = ({route, navigation}: any) => {
       ]).start();
       setTimeout(() => {
         setSelected(gender);
-        toNextScreen();
+        toNextScreen(gender);
       }, 1000);
     }
   };
-  const toNextScreen = () => {
+  const toNextScreen = (gender: string) => {
     const currentData = {
-      equipment: selected,
+      equipment: gender == 'Without\nEquipment' ? 'Without Equipment': 'With Equipment',
     };
     {
-      console.log('Equipment  Screen Data', selected);
+      console.log('Equipment  Screen Data', currentData);
     }
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     setTimeout(() => {

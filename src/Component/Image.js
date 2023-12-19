@@ -33,10 +33,6 @@ export const localImage = {
   BELL: require('../Icon/Images/NewImage/bell.png'),
   Calories: require('../Icon/Images/NewImage/Calories.png'),
   Step: require('../Icon/Images/NewImage/Step.png'),
-
-
-
-
   BlueTick: require('../Icon/Images/NewImage/BlueTick.png'),
   Profile4: require('../Icon/Images/NewImage/Profile4.png'),
   Documents: require('../Icon/Images/NewImage/Document.png'),

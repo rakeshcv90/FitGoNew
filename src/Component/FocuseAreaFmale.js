@@ -23,6 +23,27 @@ const FocuseAreaFmale = ({imageView, setImageVIew}) => {
   const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
     state => state,
   );
+  const [bodyPart, setBordyPart] = useState(
+    completeProfileData?.focusarea.filter(
+      part =>
+        part.bodypart_title !== 'Quads' &&
+        part.bodypart_title !== 'Back' &&
+        part.bodypart_title !== 'Legs' &&
+        part.bodypart_title !== 'Triceps' &&
+        part.bodypart_title !== 'Abs',
+    ),
+  );
+
+  const [bodyPart2, setBordyPart2] = useState(
+    completeProfileData?.focusarea.filter(
+      part =>
+        part.bodypart_title !== 'Quads' &&
+        part.bodypart_title !== 'Back' &&
+        part.bodypart_title !== 'Shoulders' &&
+        part.bodypart_title !== 'Chest' &&
+        part.bodypart_title !== 'Biceps',
+    ),
+  );
 
   const setImageFocusArea = (itemId, item) => {
     const index = selectedItems.indexOf(itemId);
@@ -44,39 +65,7 @@ const FocuseAreaFmale = ({imageView, setImageVIew}) => {
     setImageVIew(newImageVIew);
   };
 
-  const buttonName = [
-    {
-      id: 1,
-      text1: 'Chest',
-    },
-    {
-      id: 2,
-      text1: 'Shoulder',
-    },
-    {
-      id: 3,
-      text1: 'Biceps',
-    },
-  ];
-  const buttonName1 = [
-    {
-      id: 4,
-      text1: 'Abs',
-    },
-    {
-      id: 5,
-      text1: 'Triceps',
-    },
-    {
-      id: 6,
-      text1: 'Legs',
-    },
-    // {
-    //   id: 7,
-    //   text1: 'Back',
-    // },
-  ];
-  console.log(DeviceHeigth);
+
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -89,11 +78,11 @@ const FocuseAreaFmale = ({imageView, setImageVIew}) => {
           }}>
           <View style={{top: DeviceHeigth * 0.06, height: DeviceHeigth * 0.7}}>
             <FlatList
-              data={buttonName}
+              data={bodyPart}
               scrollEnabled={false}
               extraData={({item, index}) => index.toString()}
               renderItem={({item, index}) => {
-                const isSelected = selectedItems.includes(item.id);
+                const isSelected = selectedItems.includes(item.bodypart_id);
                 return (
                   <TouchableOpacity
                     activeOpacity={0.7}
@@ -106,7 +95,7 @@ const FocuseAreaFmale = ({imageView, setImageVIew}) => {
                       },
                     ]}
                     onPress={() => {
-                      setImageFocusArea(item.id, item.text1);
+                      setImageFocusArea(item.bodypart_id, item.bodypart_title);
                     }}>
                     <Text
                       style={{
@@ -114,7 +103,7 @@ const FocuseAreaFmale = ({imageView, setImageVIew}) => {
                         fontFamily: 'Poppins',
                         fontWeight: '500',
                       }}>
-                      {item.text1}
+                      {item.bodypart_title}
                     </Text>
                   </TouchableOpacity>
                 );
@@ -175,7 +164,7 @@ const FocuseAreaFmale = ({imageView, setImageVIew}) => {
                 )}
               </View>
               <View>
-                {imageView.find(num => num === 'Shoulder') && (
+                {imageView.find(num => num === 'Shoulders') && (
                   <View
                     style={{
                       width: DeviceWidth * 0.31,
@@ -211,7 +200,7 @@ const FocuseAreaFmale = ({imageView, setImageVIew}) => {
                 )}
               </View>
               <View>
-                {imageView.find(num => num === 'Shoulder') && (
+                {imageView.find(num => num === 'Shoulders') && (
                   <View
                     style={{
                       width: DeviceWidth * 0.31,
@@ -402,11 +391,11 @@ const FocuseAreaFmale = ({imageView, setImageVIew}) => {
               left: -DeviceWidth * 0.23,
             }}>
             <FlatList
-              data={buttonName1}
+              data={bodyPart2}
               scrollEnabled={false}
               extraData={({item, index}) => index.toString()}
               renderItem={({item, index}) => {
-                const isSelected = selectedItems.includes(item.id);
+                 const isSelected = selectedItems.includes(item.bodypart_id);
                 return (
                   <TouchableOpacity
                     activeOpacity={0.7}
@@ -419,7 +408,7 @@ const FocuseAreaFmale = ({imageView, setImageVIew}) => {
                       },
                     ]}
                     onPress={() => {
-                      setImageFocusArea(item.id, item.text1);
+                      setImageFocusArea(item.bodypart_id, item.bodypart_title);
                     }}>
                     <Text
                       style={{
@@ -427,7 +416,7 @@ const FocuseAreaFmale = ({imageView, setImageVIew}) => {
                         fontFamily: 'Poppins',
                         fontWeight: '500',
                       }}>
-                      {item.text1}
+                      {item.bodypart_title}
                     </Text>
                   </TouchableOpacity>
                 );

@@ -50,8 +50,9 @@ const Goal = ({navigation, route}: any) => {
         goal: item?.goal_id,
       },
     ];
+    console.log(currentData)
     dispatch(setLaterButtonData(currentData));
-    navigation.navigate('Level', {nextScreen: screen + 1});
+    navigation.navigate('Level', {nextScreen: screen + 1, gender: gender});
   };
 
   const handleImagePress = (gender: string) => {
@@ -164,7 +165,7 @@ const Goal = ({navigation, route}: any) => {
         <TouchableOpacity
           style={{
             alignSelf: 'flex-start',
-            marginLeft: DeviceWidth * 0.1,
+            marginLeft: DeviceWidth * 0.04,
             backgroundColor: '#F7F8F8',
             width: 45,
             height: 45,
