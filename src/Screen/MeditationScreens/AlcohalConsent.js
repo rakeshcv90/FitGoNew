@@ -16,35 +16,38 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import Progressbar from '../../Screen/Yourself/ProgressBar';
-import { setMindset_Data } from '../../Component/ThemeRedux/Actions';
+import {setMindset_Data} from '../../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
-const Alcohalinfo = ({navigation, route}) => {
-  const Dispatch=useDispatch()
+const AlcohalConsent = ({navigation, route}) => {
   const{mindSetData}=useSelector(state=>state)
+  console.log("mindsetData",mindSetData)
+  const Dispatch = useDispatch();
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {  // for unselecting the item when user hit the back button from next screen
-      setSelectedB(0); 
+    const unsubscribe = navigation.addListener('focus', () => {
+      // for unselecting the item when user hit the back button from next screen
+      setSelectedB(0);
     });
 
     return unsubscribe;
   }, [navigation]);
+
   const {nextScreen} = route.params;
   const [screen, setScreen] = useState(nextScreen);
   const TextData = [
     {
       id: 1,
-      img: localImage.lvl1,
-      txt: '2 Times/Week',
+      img: localImage.Alocol_yes,
+      txt: 'Yes',
     },
     {
       id: 2,
-      img: localImage.lvl2,
-      txt: '4 Times/Week',
+      img: localImage.Alocol_no,
+      txt: 'No',
     },
     {
       id: 3,
-      img: localImage.lvl3,
-      txt: 'Everyday',
+      img: localImage.Alocol_Dnt,
+      txt: 'Prefer not to say',
     },
   ];
   useEffect(() => {
@@ -73,16 +76,15 @@ const Alcohalinfo = ({navigation, route}) => {
   const SelectedButton = button => {
     setSelectedB(button);
     setTimeout(() => {
-      navigation.navigate("LoadData");
+      button==1?navigation.navigate('Alcohalinfo', {nextScreen: screen + 1}):navigation.navigate("LoadData") //need to update according functionality
     }, 250);
   };
-  console.log("mindsetData",mindSetData)
   return (
     <View style={styles.Container}>
       <Progressbar screen={screen} Type />
       <Bulb
-        header="Do not drink on an empty stomach."
-        screen={'How often you consume alcohol?'}
+        header="Do not drink on an empty stomach"
+        screen={'Do you drink Alcohol ?'}
       />
       <View style={{marginTop: DeviceHeigth * 0.08}}>
         {TextData.map((value, index) => (
@@ -102,7 +104,7 @@ const Alcohalinfo = ({navigation, route}) => {
                 Dispatch(
                   setMindset_Data([
                     ...mindSetData,
-                    {Alcohol_Qauntity: value?.txt},
+                    {Alcohol_Consent: value?.txt},
                   ]),
                 );
                 SelectedButton(value?.id);
@@ -216,4 +218,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-export default Alcohalinfo;
+export default AlcohalConsent;
