@@ -69,7 +69,7 @@ const Level = ({route, navigation}: any) => {
       level: selected,
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-    navigation.navigate('Height', {nextScreen: screen + 1});
+    navigation.navigate('Injury', {nextScreen: screen + 1});
   };
   return (
     <View
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: (DeviceWidth * 85) / 100,
+    width: DeviceWidth * 0.9,
     alignItems: 'center',
     alignSelf: 'center',
 
