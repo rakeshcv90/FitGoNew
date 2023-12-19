@@ -51,49 +51,63 @@ const PredictionScreen = ({navigation, route}: any) => {
   const [zeroData, setZeroData] = useState<[]>([]);
   const [currentWeight, setCurrentWeight] = useState(-1);
   const [TargetWeight, setTargetWeight] = useState(-1);
+
   useEffect(() => {
-    const i =  getLaterButtonData.findIndex((item: any) => {
-      const t = Object.keys(item).findIndex(it => it == 'currentWeight')
-     if(t == 0) return item
-       })
-       console.log(i)
-    const currentW =
-      getLaterButtonData[i].type == 'kg'
-        ? getLaterButtonData[i].currentWeight
-        : getLaterButtonData[i].currentWeight * 2.2;
-    const targetW =
-      getLaterButtonData[i].type == 'kg'
-        ? getLaterButtonData[i].targetWeight
-        : getLaterButtonData[i].targetWeight * 2.2;
-        setCurrentWeight(currentW)
-        setTargetWeight(targetW)
-    CalculateWeight();
-  }, []);
+    const i = getLaterButtonData.findIndex(
+      (item: any) => 'currentWeight' in item,
+    );
+    if (i !== -1) {
+      const currentW =
+        getLaterButtonData[i].type === 'kg'
+          ? getLaterButtonData[i].currentWeight
+          : getLaterButtonData[i].currentWeight * 2.2;
+      const targetW =
+        getLaterButtonData[i].type === 'kg'
+          ? getLaterButtonData[i].targetWeight
+          : getLaterButtonData[i].targetWeight * 2.2;
+      setCurrentWeight(currentW);
+      setTargetWeight(targetW);
+    }
+  }, [getLaterButtonData]);
+
+  useEffect(() => {
+    if (currentWeight !== null && TargetWeight !== null) {
+      CalculateWeight();
+    }
+  }, [currentWeight, TargetWeight]);
+
   const CalculateWeight = () => {
     const TotalW = currentWeight - TargetWeight;
-console.log(TotalW)
+    if (TotalW <= 0) {
+      // Avoid unnecessary calculations when the weights are not valid
+      return;
+    }
+
     const totalW_Cal = TotalW * Av_Cal_Per_KG;
     const Result_Number_Of_Days = totalW_Cal / Av_Cal_Per_2_Workout;
     let constantWeightArray = [];
     let weightHistoryArray = [];
     let currentDate = moment();
-    
+
     for (let i = Result_Number_Of_Days; i > 0; i -= 15) {
       const decWeight =
-      currentWeight -
-      ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
+        currentWeight -
+        ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
       const formattedDate = currentDate.format('YYYY-MM-DD');
       weightHistoryArray.push({
-        weight: i % 2 == 0 ? decWeight.toFixed(2) : (decWeight - 10).toFixed(2),
+        weight:
+          i % 2 === 0 ? decWeight.toFixed(2) : (decWeight - 10).toFixed(2),
         date: formattedDate,
       });
       constantWeightArray.push({weight: 0, date: formattedDate});
-      
+
       currentDate = currentDate.add(15, 'days');
     }
+
     setZeroData(constantWeightArray);
     setWeightHistory(weightHistoryArray);
-    setFinalDate(weightHistoryArray[weightHistoryArray.length - 1].date)
+    weightHistoryArray[weightHistoryArray.length - 1]?.date &&
+      setFinalDate(weightHistoryArray[weightHistoryArray.length - 1]?.date);
   };
 
   return (
@@ -116,7 +130,7 @@ console.log(TotalW)
           />
           <Text style={styles.t}>Kg by</Text>
           <GradientText
-            item={moment(finalDate).format('DD MMMM YYYY')}
+            item={finalDate ? moment(finalDate).format('DD MMMM YYYY'): ''}
             fontWeight="600"
             fontSize={20}
             width={180}
@@ -247,7 +261,7 @@ const styles = StyleSheet.create({
     width: DeviceWidth * 0.3,
     height: DeviceHeigth * 0.5,
     alignSelf: 'flex-end',
-    marginRight: DeviceWidth * 0.05
+    marginRight: DeviceWidth * 0.05,
   },
 });
 export default PredictionScreen;

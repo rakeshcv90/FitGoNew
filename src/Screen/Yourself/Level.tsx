@@ -62,7 +62,6 @@ const Level = ({route, navigation}: any) => {
 
   useEffect(() => {
     setScreen(nextScreen);
-    setSelected(1);
   }, []);
   const toNextScreen = () => {
     const currentData = {
@@ -114,17 +113,24 @@ const Level = ({route, navigation}: any) => {
             showsHorizontalScrollIndicator={false}
             renderItem={({item, index}: any) => {
               if (item?.level_gender != gender) return;
-              return (
-                <Image
-                  resizeMode="contain"
-                  source={{uri: item?.level_image}}
-                  style={{
-                    width: DeviceWidth,
-                    height: DeviceHeigth * 0.5,
-                    // backgroundColor: 'red',
-                  }}
-                />
-              );
+              if (item?.level_id == selected) {
+                return (
+                  <Image
+                    resizeMode="contain"
+                    source={{uri: item?.level_image}}
+                    // source={{uri: completeProfileData?.level[1]?.level_image}}
+                    style={{
+                      width: DeviceWidth,
+                      height:
+                        gender == 'Male'
+                          ? DeviceHeigth * 0.5
+                          : DeviceHeigth * 0.45,
+                      alignSelf: 'center',
+                      // backgroundColor: 'red',
+                    }}
+                  />
+                );
+              }
             }}
           />
         </View>
@@ -143,6 +149,7 @@ const Level = ({route, navigation}: any) => {
             }}>
             {completeProfileData.level?.map((item: any, index: number) => {
               if (item?.level_gender != gender) return;
+              if (item?.level_title == 'Elite') return;
               return (
                 <View
                   style={{
@@ -226,6 +233,7 @@ const Level = ({route, navigation}: any) => {
             }}>
             {completeProfileData.level?.map((item: any, index: number) => {
               if (item?.level_gender != gender) return;
+              if (item?.level_title == 'Elite') return;
               return (
                 <View
                   style={{
