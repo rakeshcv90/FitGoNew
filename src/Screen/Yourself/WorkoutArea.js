@@ -3,7 +3,6 @@ import {
   Text,
   StatusBar,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   Animated,
   Image,
@@ -11,7 +10,7 @@ import {
   ScrollView,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import ProgressBar from './ProgressBar';
 import Bulb from './Bulb';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
@@ -19,12 +18,29 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {localImage} from '../../Component/Image';
+import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 
 const WorkoutArea = ({route, navigation}) => {
-  // const {nextScreen} = route.params;
-  // const [screen, setScreen] = useState(nextScreen);
+  const {nextScreen} = route.params;
+  const [screen, setScreen] = useState(nextScreen);
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageView, setImageVIew] = useState([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setScreen(nextScreen);
+  }, []);
+  const toNextScreen = () => {
+    const currentData = {
+      workoutArea: imageView,
+    };
+    dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
+    navigation.navigate('PredictionScreen', {nextScreen: screen + 1});
+    console.log('WorkoutArea Screen Data', [
+      ...getLaterButtonData,
+      currentData,
+    ]);
+  };
 
   const {getLaterButtonData} = useSelector(state => state);
   useEffect(() => {
@@ -92,35 +108,38 @@ const WorkoutArea = ({route, navigation}) => {
     setSelectedItems(newSelectedItems);
     setImageVIew(newImageVIew);
   };
-  console.log('FDFDFDFFDFDFDFDFDFFD', imageView);
+
   return (
-    <SafeAreaView style={styles.Container}>
+    <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
 
-      <View style={{height: DeviceHeigth * 0.25}}>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
 
-            marginTop: DeviceHeigth * 0.02,
-          }}>
-          <ProgressBar screen={10} />
-        </View>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-
-            marginTop: -DeviceHeigth * 0.01,
-          }}>
-          <Bulb
-            screen={'What’s your comfort place to workout ?'}
-            header={'You can select any 2 options among below given options'}
-          />
-        </View>
+          marginTop: DeviceHeigth * 0.03,
+        }}>
+        <ProgressBar screen={screen} />
       </View>
-      <View style={{height: DeviceHeigth * 0.57}}>
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+
+          marginTop: -DeviceHeigth * 0.02,
+        }}>
+        <Bulb
+          screen={'What’s your comfort place to workout ?'}
+          header={'You can select any 2 options among below given options'}
+        />
+      </View>
+
+      <View
+        style={{
+          height: DeviceHeigth * 0.57,
+          marginVertical: DeviceHeigth * 0.02,
+        }}>
         <ScrollView
           keyboardDismissMode="interactive"
           showsVerticalScrollIndicator={false}
@@ -145,6 +164,8 @@ const WorkoutArea = ({route, navigation}) => {
                 style={[
                   styles.shadowProp,
                   {
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     borderWidth: imageView.find(num => num === 'AtHome') && 1,
                     borderColor: imageView.find(num => num === 'AtHome')
                       ? 'red'
@@ -156,7 +177,7 @@ const WorkoutArea = ({route, navigation}) => {
                   setImageFocusArea('AtHome');
                 }}>
                 <Image
-                  source={localImage.Inrtoduction1}
+                  source={localImage.AtHome}
                   style={styles.Image23}
                   resizeMode="cover"
                 />
@@ -166,7 +187,7 @@ const WorkoutArea = ({route, navigation}) => {
                     color: '#505050',
                     fontWeight: '500',
                     textAlign: 'center',
-                    marginTop: 8,
+                    marginVertical: 8,
                     lineHeight: 21,
                   }}>
                   At Home
@@ -195,7 +216,9 @@ const WorkoutArea = ({route, navigation}) => {
                   setImageFocusArea('AtBed');
                 }}>
                 <Image
-                  source={localImage.AtBed}
+                  source={{
+                    uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/3b41e81c-2485-4abf-ccab-666d58453500/public',
+                  }}
                   style={styles.Image23}
                   resizeMode={DeviceHeigth == '1024' ? 'stretch' : 'cover'}
                 />
@@ -205,7 +228,7 @@ const WorkoutArea = ({route, navigation}) => {
                     color: '#505050',
                     fontWeight: '500',
                     textAlign: 'center',
-                    marginTop: 10,
+                    marginVertical: 8,
                     lineHeight: 21,
                   }}>
                   At Bed
@@ -242,7 +265,9 @@ const WorkoutArea = ({route, navigation}) => {
                   setImageFocusArea('Outdoor');
                 }}>
                 <Image
-                  source={localImage.Outdoor}
+                  source={{
+                    uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/7818f34a-c717-46f8-4fb0-ad52fae40700/public',
+                  }}
                   style={styles.Image23}
                   resizeMode={DeviceHeigth == '1024' ? 'stretch' : 'stretch'}
                 />
@@ -252,7 +277,7 @@ const WorkoutArea = ({route, navigation}) => {
                     color: '#505050',
                     fontWeight: '500',
                     textAlign: 'center',
-                    marginTop: 10,
+                    marginVertical: 8,
                     lineHeight: 21,
                   }}>
                   Outdoor
@@ -281,7 +306,9 @@ const WorkoutArea = ({route, navigation}) => {
                   setImageFocusArea('Anywhere');
                 }}>
                 <Image
-                  source={localImage.Anywhere}
+                  source={{
+                    uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/130f304c-8239-49e7-3b5d-91922eee0f00/public',
+                  }}
                   style={styles.Image23}
                   resizeMode={DeviceHeigth == '1024' ? 'stretch' : 'stretch'}
                 />
@@ -291,7 +318,7 @@ const WorkoutArea = ({route, navigation}) => {
                     color: '#505050',
                     fontWeight: '500',
                     textAlign: 'center',
-                    marginTop: 10,
+                    marginVertical: 8,
                     lineHeight: 21,
                   }}>
                   Anywhwere
@@ -308,24 +335,26 @@ const WorkoutArea = ({route, navigation}) => {
             }}></View>
         </ScrollView>
       </View>
-      <View style={{height: DeviceHeigth * 0.18}}>
-        <View style={styles.buttons}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={{
-              backgroundColor: '#F7F8F8',
-              width: 45,
-              height: 45,
-              borderRadius: 15,
-              overflow: 'hidden',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Icons name="chevron-left" size={25} color={'#000'} />
-          </TouchableOpacity>
+
+      <View style={styles.buttons}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            backgroundColor: '#F7F8F8',
+            width: 45,
+            height: 45,
+            borderRadius: 15,
+            overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Icons name="chevron-left" size={25} color={'#000'} />
+        </TouchableOpacity>
+
+        {imageView.length !== 0 && (
           <TouchableOpacity
             onPress={() => {
-              // toNextScreen()
+              toNextScreen();
             }}>
             <LinearGradient
               start={{x: 0, y: 1}}
@@ -335,9 +364,9 @@ const WorkoutArea = ({route, navigation}) => {
               <Icons name="chevron-right" size={25} color={'#fff'} />
             </LinearGradient>
           </TouchableOpacity>
-        </View>
+        )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({
@@ -386,7 +415,9 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 85) / 100,
     alignItems: 'center',
     alignSelf: 'center',
-    top: 20,
+
+    bottom: DeviceHeigth * 0.02,
+    position: 'absolute',
   },
   nextButton: {
     backgroundColor: 'red',

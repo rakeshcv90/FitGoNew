@@ -26,6 +26,7 @@ const Equipment = ({route, navigation}: any) => {
   const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
     (state: any) => state,
   );
+
   const dispatch = useDispatch();
   const [selected, setSelected] = useState('');
   const [screen, setScreen] = useState(nextScreen);
@@ -83,7 +84,7 @@ const Equipment = ({route, navigation}: any) => {
         Animated.timing(translateW, {
           toValue:
             gender == 'Without\nEquipment'
-              ? -DeviceWidth * 0.2
+              ? -DeviceWidth * 0.3
               : DeviceWidth / 2,
           duration: 500,
           useNativeDriver: true,
@@ -107,19 +108,42 @@ const Equipment = ({route, navigation}: any) => {
     const currentData = {
       equipment: selected,
     };
+    {
+      console.log('Equipment  Screen Data', selected);
+    }
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-    navigation.navigate('FocusArea', {nextScreen: screen + 1});
+    setTimeout(() => {
+      navigation.navigate('FocusArea', {nextScreen: screen + 1});
+    }, 2000);
   };
   const data = [
     {
-      gender: 'M',
+      gender: 'Male',
       name: 'With\nEquipment',
       image: localImage.WithEquipment,
+      image2:
+        'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/70caf85b-6425-4d62-b2c7-369917626900/public',
     },
     {
-      gender: 'F',
+      gender: 'Female',
+      name: 'With\nEquipment',
+      image: localImage.WithoutEquipment,
+      image2:
+        'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/29164007-f1a2-4a75-41e7-223b95196800/public',
+    },
+    {
+      gender: 'Male',
+      name: 'Without\nEquipment',
+      image: localImage.WithEquipment,
+      image2:
+        'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/8a2695c6-a5b5-47e2-d899-c827a0c26500/public',
+    },
+    {
+      gender: 'Female',
       name: 'Without\nEquipment',
       image: localImage.WithoutEquipment,
+      image2:
+        'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/7c1523d9-bdc7-4a38-af02-be1377509f00/public',
     },
   ];
   return (
@@ -153,85 +177,86 @@ const Equipment = ({route, navigation}: any) => {
           horizontal
           scrollEnabled={false}
           showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}: any) => (
-            <TouchableOpacity
-              onPress={() => selected == '' && handleImagePress(item?.name)}
-              activeOpacity={1}>
-              <Animated.View
-                style={{
-                  width: DeviceWidth / 2,
-                  height: DeviceHeigth * 0.6,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  transform: [
-                    {
-                      translateX:
-                        item?.name == 'With\nEquipment'
-                          ? translateE
-                          : translateW,
-                    },
-                    {
-                      scale:
-                        item?.name == selected ? scaleSelectedInterpolate : 1,
-                    },
-                  ],
-                }}>
-                <Image
-                  resizeMode="contain"
-                  source={
-                    item?.gender == 'M' ? localImage.MALE : localImage.FEMALE
-                  }
+          renderItem={({item, index}: any) => {
+            if (getLaterButtonData[0]?.gender != item?.gender) return;
+            return (
+              <TouchableOpacity
+                onPress={() => selected == '' && handleImagePress(item?.name)}
+                activeOpacity={1}>
+                <Animated.View
                   style={{
-                    width: DeviceWidth * 0.45,
-                    height: DeviceHeigth * 0.4,
-                    alignSelf: 'flex-start',
-                  }}
-                />
-                <View
-                  style={{
-                    backgroundColor: '#D9D9D9',
-                    alignItems: 'center',
+                    width: DeviceWidth / 2,
+                    height: DeviceHeigth * 0.55,
                     justifyContent: 'center',
-                    borderRadius: 20,
-                    padding: 5,
-                    position: 'relative',
-                    top: '4%',
-                    left: '30%',
-                    width: 30,
-                    height: 30,
+                    alignItems: 'center',
+                    transform: [
+                      {
+                        translateX:
+                          item?.name == 'With\nEquipment'
+                            ? translateE
+                            : translateW,
+                      },
+                      {
+                        scale:
+                          item?.name == selected ? scaleSelectedInterpolate : 1,
+                      },
+                    ],
                   }}>
                   <Image
-                    source={item?.image}
-                    style={{width: 20, height: 20}}
                     resizeMode="contain"
-                  />
-                </View>
-                <View
-                  style={{
-                    padding: 20,
-                    borderRadius: 15,
-                    borderWidth: item?.name == selected ? 1.5 : 1,
-                    borderColor:
-                      item?.name == selected ? AppColor.RED : '#404040',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: -1,
-                  }}>
-                  <Text
+                    source={{uri: item?.image2}}
                     style={{
-                      fontSize: 16,
-                      fontWeight: '600',
-                      fontFamily: 'Poppins',
-                      lineHeight: 18,
-                      color: '#404040',
-                      textAlign: 'center',
+                      width: DeviceWidth * 0.45,
+                      height: DeviceHeigth * 0.35,
+                      alignSelf: item?.gender == 'Male' ? 'flex-end' : 'center',
+                    }}
+                  />
+                  <View
+                    style={{
+                      backgroundColor: '#D9D9D9',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 20,
+                      padding: 5,
+                      position: 'relative',
+                      top: '4%',
+                      left: '30%',
+                      width: 30,
+                      height: 30,
                     }}>
-                    {item?.name}
-                  </Text>
-                </View>
-              </Animated.View>
-            </TouchableOpacity>
-          )}
+                    <Image
+                      source={item?.image}
+                      style={{width: 20, height: 20}}
+                      resizeMode="contain"
+                    />
+                  </View>
+                  <View
+                    style={{
+                      padding: 20,
+                      borderRadius: 15,
+                      borderWidth: item?.name == selected ? 1.5 : 1,
+                      borderColor:
+                        item?.name == selected ? AppColor.RED : '#404040',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      zIndex: -1,
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: '600',
+                        fontFamily: 'Poppins',
+                        lineHeight: 18,
+                        color: '#404040',
+                        textAlign: 'center',
+                      }}>
+                      {item?.name}
+                    </Text>
+                  </View>
+                </Animated.View>
+              </TouchableOpacity>
+            );
+          }}
         />
       </View>
       <View style={styles.buttons}>
@@ -296,6 +321,9 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 85) / 100,
     alignItems: 'center',
     alignSelf: 'center',
+
+    bottom: DeviceHeigth * 0.02,
+    position: 'absolute',
   },
   nextButton: {
     backgroundColor: 'red',

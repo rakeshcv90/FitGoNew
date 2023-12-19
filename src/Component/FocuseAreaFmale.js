@@ -15,23 +15,15 @@ import {AppColor} from './Color';
 
 import {localImage} from './Image';
 import ProgressBar from '../Screen/Yourself/ProgressBar';
+import {useSelector} from 'react-redux';
 
-const FocuseAreaFmale = () => {
+const FocuseAreaFmale = ({imageView, setImageVIew}) => {
   const [selectedItems, setSelectedItems] = useState([]);
-  const [imageView, setImageVIew] = useState([]);
+  // const [imageView, setImageVIew] = useState([]);
+  const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
+    state => state,
+  );
 
-  // const setImageFocusArea = (itemId, item) => {
-  //   const index = selectedItems.indexOf(itemId);
-  //   if (index === -1) {
-  //     setSelectedItems([...selectedItems, itemId]);
-  //     setImageVIew([...selectedItems, itemId]);
-  //   } else {
-  //     const newSelectedItems = [...selectedItems];
-  //     newSelectedItems.splice(index, 1);
-  //     setSelectedItems(newSelectedItems);
-  //     setImageVIew(newSelectedItems);
-  //   }
-  // };
   const setImageFocusArea = (itemId, item) => {
     const index = selectedItems.indexOf(itemId);
     const newSelectedItems = [...selectedItems];
@@ -84,7 +76,7 @@ const FocuseAreaFmale = () => {
     //   text1: 'Back',
     // },
   ];
-
+  console.log(DeviceHeigth);
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -140,7 +132,7 @@ const FocuseAreaFmale = () => {
               left: -DeviceWidth * 0.15,
             }}>
             <Image
-              source={localImage.FEMALE}
+              source={{uri: getLaterButtonData[0].image}}
               style={styles.Image}
               resizeMode="contain"
             />
@@ -156,15 +148,19 @@ const FocuseAreaFmale = () => {
                       position: 'absolute',
                       left:
                         Platform.OS == 'android'
-                          ? DeviceHeigth * 0.02
+                          ? DeviceHeigth <= 846
+                            ? DeviceHeigth * 0.015
+                            : DeviceHeigth * 0.02
                           : DeviceHeigth == '1024'
-                          ? DeviceHeigth * 0.03
-                          : DeviceHeigth * 0.02,
+                          ? DeviceHeigth * 0.02
+                          : DeviceHeigth * 0.01,
                       top:
                         Platform.OS == 'android'
                           ? -DeviceHeigth * 0.55
                           : DeviceHeigth == '1024'
                           ? -DeviceHeigth * 0.58
+                          : DeviceHeigth == 667
+                          ? -DeviceHeigth * 0.57
                           : -DeviceHeigth * 0.54,
                     }}>
                     <Image
@@ -187,16 +183,24 @@ const FocuseAreaFmale = () => {
                       position: 'absolute',
                       left:
                         Platform.OS == 'android'
-                          ? -DeviceHeigth * 0.038
+                          ? DeviceHeigth <= 846
+                            ? -DeviceHeigth * 0.045
+                            : -DeviceHeigth * 0.038
                           : DeviceHeigth == '1024'
-                          ? -DeviceHeigth * 0.05
-                          : -DeviceHeigth * 0.035,
+                          ? -DeviceHeigth * 0.059
+                          : DeviceHeigth == 667
+                          ? -DeviceHeigth * 0.048
+                          : -DeviceHeigth * 0.043,
                       top:
                         Platform.OS == 'android'
-                          ? -DeviceHeigth * 0.55
+                          ? DeviceHeigth <= 846
+                            ? -DeviceHeigth * 0.57
+                            : -DeviceHeigth * 0.55
                           : DeviceHeigth == '1024'
-                          ? -DeviceHeigth * 0.59
-                          : -DeviceHeigth * 0.54,
+                          ? -DeviceHeigth * 0.584
+                          : DeviceHeigth == 667
+                          ? -DeviceHeigth * 0.58
+                          : -DeviceHeigth * 0.55,
                     }}>
                     <Image
                       source={localImage.Solder}
@@ -217,14 +221,20 @@ const FocuseAreaFmale = () => {
                         Platform.OS == 'android'
                           ? DeviceHeigth * 0.037
                           : DeviceHeigth == '1024'
-                          ? DeviceHeigth * 0.049
+                          ? DeviceHeigth * 0.045
+                          : DeviceHeigth == 667
+                          ? DeviceHeigth * 0.042
                           : DeviceHeigth * 0.035,
                       top:
                         Platform.OS == 'android'
-                          ? -DeviceHeigth * 0.55
+                          ? DeviceHeigth <= 846
+                            ? -DeviceHeigth * 0.57
+                            : -DeviceHeigth * 0.55
                           : DeviceHeigth == '1024'
                           ? -DeviceHeigth * 0.58
-                          : -DeviceHeigth * 0.54,
+                          : DeviceHeigth == 667
+                          ? -DeviceHeigth * 0.58
+                          : -DeviceHeigth * 0.55,
                     }}>
                     <Image
                       source={localImage.Solder1}
@@ -245,14 +255,18 @@ const FocuseAreaFmale = () => {
                         Platform.OS == 'android'
                           ? DeviceHeigth * 0.085
                           : DeviceHeigth == '1024'
-                          ? DeviceHeigth * 0.11
+                          ? DeviceHeigth * 0.1
+                          : DeviceHeigth == 667
+                          ? DeviceHeigth * 0.1
                           : DeviceHeigth * 0.08,
                       top:
                         Platform.OS == 'android'
                           ? -DeviceHeigth * 0.525
                           : DeviceHeigth == '1024'
-                          ? -DeviceHeigth * 0.53
-                          : -DeviceHeigth * 0.5,
+                          ? -DeviceHeigth * 0.54
+                          : DeviceHeigth == 667
+                          ? -DeviceHeigth * 0.52
+                          : -DeviceHeigth * 0.51,
                     }}>
                     <Image
                       source={localImage.Leg}
@@ -279,13 +293,15 @@ const FocuseAreaFmale = () => {
                         Platform.OS == 'android'
                           ? DeviceHeigth * 0.001
                           : DeviceHeigth == '1024'
-                          ? DeviceHeigth * 0.0004
+                          ? -DeviceHeigth * 0.009
                           : DeviceHeigth * 0.001,
                       top:
                         Platform.OS == 'android'
                           ? -DeviceHeigth * 0.47
                           : DeviceHeigth == '1024'
                           ? -DeviceHeigth * 0.49
+                          : DeviceHeigth == 667
+                          ? -DeviceHeigth * 0.48
                           : -DeviceHeigth * 0.47,
                     }}>
                     <Image
@@ -310,14 +326,18 @@ const FocuseAreaFmale = () => {
                         Platform.OS == 'android'
                           ? DeviceHeigth * 0.085
                           : DeviceHeigth == '1024'
-                          ? DeviceHeigth * 0.11
+                          ? DeviceHeigth * 0.1
+                          : DeviceHeigth == 667
+                          ? DeviceHeigth * 0.1
                           : DeviceHeigth * 0.08,
                       top:
                         Platform.OS == 'android'
                           ? -DeviceHeigth * 0.525
                           : DeviceHeigth == '1024'
-                          ? -DeviceHeigth * 0.53
-                          : -DeviceHeigth * 0.5,
+                          ? -DeviceHeigth * 0.54
+                          : DeviceHeigth == 667
+                          ? -DeviceHeigth * 0.52
+                          : -DeviceHeigth * 0.51,
                     }}>
                     <Image
                       source={localImage.Leg}
@@ -345,6 +365,8 @@ const FocuseAreaFmale = () => {
                           ? -DeviceHeigth * 0.09
                           : DeviceHeigth == '1024'
                           ? -DeviceHeigth * 0.142
+                          : DeviceHeigth == 667
+                          ? -DeviceHeigth * 0.12
                           : -DeviceHeigth * 0.085,
                       top:
                         Platform.OS == 'android'

@@ -21,16 +21,27 @@ import {useDispatch, useSelector} from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Scale from './Scale';
 import Toggle from '../../Component/Toggle';
+import {showMessage} from 'react-native-flash-message';
 
 const BOX_HEIGHT = DeviceHeigth * 0.7;
 const ITEM_HEIGHT = 25;
 
 const halfItemCount = Math.floor(BOX_HEIGHT / 7 / ITEM_HEIGHT);
+const myArray = [];
+
+for (let i = 1; i <= 30; i++) {
+  // You can change the outer loop limit as needed
+  for (let j = 0; j <= 11; j++) {
+    if (j === 0) {
+      myArray.push(parseFloat(i.toFixed(1)));
+    } else {
+      myArray.push(parseFloat(`${i}.${j.toFixed(2)}`));
+    }
+  }
+}
 const height = [
   ...Array(halfItemCount + 5).fill(''), // Empty items for the top half
-  ...Array(1000)
-    .fill(0)
-    .map((item: any, index, arr) => parseFloat((index / 10).toFixed(2))),
+  ...myArray,
   ...Array(halfItemCount + 4).fill(''), // Empty items for the bottom half
 ];
 const positions = height.map(
@@ -54,6 +65,7 @@ const Height = ({route, navigation}: any) => {
   const [currentActiveIndex, setCurrentActiveIndex] = useState(-1);
   useEffect(() => {
     setScreen(nextScreen);
+    setCurrentActiveIndex(37);
   }, []);
   // useEffect(() => {
   //     if (toggle === 'cm') {
@@ -66,24 +78,24 @@ const Height = ({route, navigation}: any) => {
   //   }, [toggle]);
 
   const toNextScreen = () => {
-    const currentData = {
-      height: currentActiveIndex,
-    };
-    dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-    navigation.navigate('Weight', {nextScreen: screen + 1});
+    if (currentActiveIndex < 80) {
+      const currentData = {
+        height: height[currentActiveIndex],
+      };
+      dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
+      navigation.navigate('Weight', {nextScreen: screen + 1});
+      {
+        console.log('Hight Screen Data', [...getLaterButtonData, currentData]);
+      }
+    } else
+      showMessage({
+        message: `Height should be less than ${currentActiveIndex}cm`,
+
+        floating: true,
+        type: 'danger',
+        icon: {icon: 'auto', position: 'left'},
+      });
   };
-  const data = [
-    {
-      gender: 'M',
-      name: 'With\nEquipment',
-      image: localImage.WithEquipment,
-    },
-    {
-      gender: 'F',
-      name: 'Without\nEquipment',
-      image: localImage.WithoutEquipment,
-    },
-  ];
   const toggleH = ['ft', 'cm'];
   return (
     <View
@@ -103,7 +115,7 @@ const Height = ({route, navigation}: any) => {
       />
       <View
         style={{
-          marginTop: 30,
+         marginTop: 20,
         }}>
         <Toggle
           data={toggleH}
@@ -117,9 +129,9 @@ const Height = ({route, navigation}: any) => {
         style={{
           flexDirection: 'row',
           justifyContent: 'flex-start',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           //   alignSelf: 'flex-start',
-          height: DeviceHeigth * 0.6,
+          height: DeviceHeigth * 0.55,
           width: DeviceWidth,
         }}>
         <Scale
@@ -133,8 +145,9 @@ const Height = ({route, navigation}: any) => {
           style={{
             justifyContent: 'center',
             alignItems: 'center',
+            alignSelf: 'center',
           }}>
-          {currentActiveIndex > 7 ? (
+          {currentActiveIndex > 36 ? (
             toggle == 'ft' ? (
               <Text
                 style={{
@@ -156,7 +169,7 @@ const Height = ({route, navigation}: any) => {
                       fontSize: 36,
                       fontWeight: '600',
                     }}>
-                    {Math.round((height[currentActiveIndex] % 1) * 10)}
+                    {((height[currentActiveIndex] % 1) * 12).toFixed(0)}
                     <Text
                       style={{
                         color: AppColor.RED,
@@ -199,7 +212,7 @@ const Height = ({route, navigation}: any) => {
           <Image
             resizeMode="contain"
             source={
-              getLaterButtonData[0]?.gender == 'M'
+              getLaterButtonData[0]?.gender == 'Male'
                 ? localImage.MaleHeight
                 : localImage.FemaleHeight
             }
@@ -273,7 +286,9 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 85) / 100,
     alignItems: 'center',
     alignSelf: 'center',
-    marginTop: -60,
+  
+    bottom: DeviceHeigth * 0.02,
+    position: 'absolute',
   },
   nextButton: {
     backgroundColor: 'red',

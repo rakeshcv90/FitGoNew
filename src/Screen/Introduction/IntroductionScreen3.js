@@ -14,6 +14,8 @@ import {IntroductionData} from './IntroductionScreenData';
 import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import IntroProgressBar from './NewIntroductionProgressBar';
+import {useDispatch, useSelector} from 'react-redux';
+import {setShowIntro} from '../../Component/ThemeRedux/Actions';
 const IntroductionScreen3 = ({navigation}) => {
   const TranslateY = useRef(new Animated.Value(0)).current;
   const HideTextAnimation = () => {
@@ -28,6 +30,7 @@ const IntroductionScreen3 = ({navigation}) => {
       HidePlayIcon()
     },1000)
   };
+  const dispatch = useDispatch();
   const TranslateStartIcon = useRef(new Animated.Value(0)).current;
   const HidePlayIcon = () => {
     TranslateStartIcon.setValue(0);
@@ -58,7 +61,7 @@ const IntroductionScreen3 = ({navigation}) => {
   return (
     <View style={styles.Container}>
       <ImageBackground
-        source={IntroductionData[2].img}
+        source={{uri:IntroductionData[2].img}}
         style={styles.ImgBackground}>
         <View style={styles.LinearG}>
           <Animated.View
@@ -82,7 +85,7 @@ const IntroductionScreen3 = ({navigation}) => {
                   justifyContent: 'center',
                 }}
                 onPress={() => {
-                  // dispatch(setShowIntro(true));
+                  dispatch(setShowIntro(true));
                   // navigation.navigate('LogSignUp');
                   HideTextAnimation();
                 }}>

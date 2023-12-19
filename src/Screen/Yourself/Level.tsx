@@ -82,18 +82,21 @@ const Level = ({route, navigation}: any) => {
       }}>
       <ProgressBar screen={screen} />
       <Bulb
-          screen={'Select your Fitness level'}
-          header={
-            'Knowing your gender can help us for you based on different metabolic rates.'
-          }
-        />
+        screen={'Select your Fitness level'}
+        header={
+          'Knowing your gender can help us for you based on different metabolic rates.'
+        }
+      />
+
       <View
         style={{
           // flexDirection: 'row',
-          justifyContent: 'space-between',
+          justifyContent: 'center',
           alignItems: 'center',
           alignSelf: 'center',
-          height: DeviceHeigth * 0.6,
+          height: DeviceHeigth * 0.65,
+          // backgroundColor: 'red',
+          marginTop: -50
           // width: DeviceWidth,
         }}>
         <View
@@ -104,7 +107,7 @@ const Level = ({route, navigation}: any) => {
           }}>
           <FlatList
             ref={flatListRef}
-            keyExtractor={(index) => index.toString()}
+            keyExtractor={index => index.toString()}
             data={completeProfileData?.level}
             horizontal
             scrollEnabled={false}
@@ -226,6 +229,12 @@ const Level = ({route, navigation}: any) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     flexDirection: 'row',
+                    marginLeft:
+                      selected == item?.level_id && index != 1
+                        ? -DeviceWidth * 0.05
+                        : 0,
+                    marginRight:
+                      selected == item?.level_id ? -DeviceWidth * 0.02 : 0,
                     // flex: 1,
                   }}>
                   {selected == item?.level_id ? (
@@ -249,15 +258,20 @@ const Level = ({route, navigation}: any) => {
         </View>
       </View>
       <View style={styles.buttons}>
-        <TouchableOpacity onPress={() => navigation.goBack()}
-             style={{ backgroundColor: '#F7F8F8',
-             width: 45,
-             height: 45,
-             borderRadius: 15,
-             overflow: 'hidden',
-             justifyContent: 'center',
-             alignItems: 'center',}}
-        >
+        <TouchableOpacity
+          onPress={() => {
+           // dispatch(setLaterButtonData([]));
+            navigation.goBack();
+          }}
+          style={{
+            backgroundColor: '#F7F8F8',
+            width: 45,
+            height: 45,
+            borderRadius: 15,
+            overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
           <Icons name="chevron-left" size={25} color={'#000'} />
         </TouchableOpacity>
         <TouchableOpacity onPress={toNextScreen}>
@@ -306,7 +320,11 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 85) / 100,
     alignItems: 'center',
     alignSelf: 'center',
-    marginTop:20
+
+  
+    bottom: DeviceHeigth * 0.02,
+    position: 'absolute',
+
   },
   nextButton: {
     backgroundColor: 'red',

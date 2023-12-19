@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   StatusBar,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {AppColor} from '../Component/Color';
@@ -64,7 +65,9 @@ const LogSignUp = () => {
                 start={{x: 0, y: 1}}
                 end={{x: 1, y: 0}}
                 colors={
-                  isFocused ? ['#941000', '#D01818'] : ['#D9D9D9', '#D9D9D9']
+                  // isFocused ? ['#941000', '#D01818'] : ['#D9D9D9', '#D9D9D9']
+                  isFocused ? ['#D01818', '#941000'] : ['#D9D9D9', '#D9D9D9']
+                  
                 }
                 style={{
                   borderRadius: isFocused ? 30 : 30,
@@ -90,21 +93,21 @@ const LogSignUp = () => {
     );
   }
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <TouchableOpacity
       onPress={()=>{
         navigationRef.navigate('Yourself');
       }}
         style={{
-          width: DeviceWidth * 0.17,
-          height: DeviceHeigth* 0.05,
+          width: DeviceWidth * 0.13,
+          height: DeviceHeigth* 0.03,
           justifyContent: 'center',
           alignItems: 'center',
           alignSelf: 'flex-end',
           marginRight: 30,
           borderRadius: 30,
-          marginTop: 30,
+          marginTop:Platform.OS=='ios'?DeviceHeigth*0.1:DeviceHeigth*0.08,
           borderWidth: 1.5,
           borderColor: 'red',
         }}>
@@ -135,7 +138,7 @@ const LogSignUp = () => {
         <Tab.Screen name={'Log In'} component={Login} />
         <Tab.Screen name={'Sign Up'} component={Signup} />
       </Tab.Navigator>
-    </SafeAreaView>
+    </View>
   );
 };
 var styles = StyleSheet.create({
@@ -144,7 +147,7 @@ var styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
   },
   TextContainer: {
-    marginTop: DeviceHeigth * 0.06,
+    marginTop: DeviceHeigth * 0.03,
     marginHorizontal: DeviceHeigth * 0.03,
     justifyContent: 'center',
     alignItems: 'center',
@@ -182,7 +185,7 @@ var styles = StyleSheet.create({
   tabbar_part: {
     flexDirection: 'row',
     marginTop: 20,
-    width: DeviceHeigth * 0.27,
+    width: DeviceHeigth * 0.20,
     height: DeviceHeigth * 0.045,
     alignSelf: 'center',
     borderRadius: 30,

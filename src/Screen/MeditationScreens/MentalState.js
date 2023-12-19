@@ -6,6 +6,7 @@ import {
   Image,
   Platform,
   Animated,
+  SafeAreaView,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import MeditationTitleComponent from './MeditationTitleComponent';

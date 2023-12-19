@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   Animated,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet} from 'react-native';
@@ -28,16 +29,17 @@ const Injury = ({route, navigation}) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageView, setImageVIew] = useState([]);
   const [screen, setScreen] = useState(nextScreen);
-  const [selected, setSelected] = useState(-1);
 
   useEffect(() => {
     setScreen(nextScreen);
-    setSelected(1);
   }, []);
   const toNextScreen = () => {
     const currentData = {
       injury: imageView,
     };
+    {
+      console.log('Injury Screen Data', [...getLaterButtonData, currentData]);
+    }
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     navigation.navigate('Height', {nextScreen: screen + 1});
   };
@@ -88,14 +90,14 @@ const Injury = ({route, navigation}) => {
       translateXValues.map(item =>
         Animated.timing(item, {
           toValue: 0,
-          duration: 1000,
+          duration: 500,
           useNativeDriver: true,
         }),
       ),
     ).start();
     setTimeout(() => {
       startAnimation1();
-    }, 1500);
+    }, 1000);
   };
 
   const translateXValues1 = useRef(
@@ -108,7 +110,7 @@ const Injury = ({route, navigation}) => {
       translateXValues1.map(item =>
         Animated.timing(item, {
           toValue: 0,
-          duration: 1000,
+          duration: 500,
           useNativeDriver: true,
         }),
       ),
@@ -145,15 +147,16 @@ const Injury = ({route, navigation}) => {
   };
 
   return (
-    <SafeAreaView style={styles.Container}>
+    <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
 
       <View
         style={{
           justifyContent: 'center',
           alignItems: 'center',
-
-          marginTop: DeviceHeigth * 0.05,
+          //position: 'absolute',
+          // marginTop:
+          //   Platform.OS == 'ios' ? DeviceHeigth * 0.05 : DeviceHeigth * 0.06,
         }}>
         <ProgressBar screen={screen} />
       </View>
@@ -177,7 +180,15 @@ const Injury = ({route, navigation}) => {
             width: DeviceWidth / 2.7,
             height: DeviceHeigth * 0.6,
           }}>
-          <View style={{top: DeviceHeigth * 0.05, height: DeviceHeigth * 0.7}}>
+          {console.log('sdssdsdsddsdsds', DeviceHeigth)}
+          <View
+            style={{
+              top:
+                DeviceHeigth <= '667'
+                  ? DeviceHeigth * 0.02
+                  : DeviceHeigth * 0.13,
+              height: DeviceHeigth * 0.7,
+            }}>
             <FlatList
               data={buttonName}
               scrollEnabled={false}
@@ -189,27 +200,18 @@ const Injury = ({route, navigation}) => {
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
-                      marginLeft:
-                        item.id == 1
-                          ? DeviceWidth * 0.06
-                          : item.id == 2
-                          ? -DeviceWidth * 0.06
-                          : DeviceWidth * 0.06,
-                    }}
-                    // onPress={() => {
-                    //   setImageFocusArea(item.id, item.text1);
-                    // }}
-                  >
+                      marginVertical: DeviceHeigth * 0.005,
+                    }}>
                     <Animated.View
                       style={[
                         styles.TextView,
                         {transform: [{translateX: translateXValues[index]}]},
                       ]}>
                       <TouchableOpacity
-                        activeOpacity={0.7}
+                        activeOpacity={1}
                         style={{
-                          width: 110,
-                          height: 110,
+                          width: 85,
+                          height: 85,
 
                           justifyContent: 'center',
                           alignItems: 'center',
@@ -231,7 +233,9 @@ const Injury = ({route, navigation}) => {
                           color: isSelected ? 'red' : '#505050',
                           fontFamily: 'Poppins',
                           fontWeight: '500',
-                          marginVertical: 15,
+                          top: -5,
+                          textAlign: 'center',
+                          marginVertical: 5,
                         }}>
                         {item.text1}
                       </Text>
@@ -249,17 +253,17 @@ const Injury = ({route, navigation}) => {
           <View
             style={{
               height: DeviceHeigth * 0.5,
+              top:
+                DeviceHeigth <= '667'
+                  ? DeviceHeigth * 0.02
+                  : DeviceHeigth * 0.05,
               left:
                 getLaterButtonData[0].gender == 'M'
                   ? -DeviceWidth * 0.2
                   : -DeviceWidth * 0.15,
             }}>
             <Image
-              source={
-                getLaterButtonData[0].gender == 'M'
-                  ? localImage.MALE
-                  : localImage.FEMALE
-              }
+              source={{uri: getLaterButtonData[0].image}}
               style={[
                 styles.Image,
                 {
@@ -282,12 +286,14 @@ const Injury = ({route, navigation}) => {
           }}>
           <View
             style={{
-              top: DeviceHeigth * 0.08,
+              top: DeviceHeigth * 0.15,
               height: DeviceHeigth * 0.7,
               left:
                 getLaterButtonData[0].gender == 'F'
                   ? -DeviceWidth * 0.25
-                  : -DeviceWidth * 0.3,
+                  : DeviceHeigth <= '667'
+                  ? -DeviceWidth * 0.25
+                  : -DeviceWidth * 0.25,
             }}>
             <FlatList
               data={buttonName1}
@@ -300,7 +306,7 @@ const Injury = ({route, navigation}) => {
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
-                      marginVertical: DeviceHeigth * 0.03,
+                      marginVertical: DeviceHeigth * 0.01,
                     }}>
                     <Animated.View
                       style={[
@@ -310,8 +316,8 @@ const Injury = ({route, navigation}) => {
                       <TouchableOpacity
                         activeOpacity={1}
                         style={{
-                          width: 110,
-                          height: 110,
+                          width: 85,
+                          height: 85,
 
                           justifyContent: 'center',
                           alignItems: 'center',
@@ -333,7 +339,9 @@ const Injury = ({route, navigation}) => {
                           color: isSelected ? 'red' : '#505050',
                           fontFamily: 'Poppins',
                           fontWeight: '500',
-                          marginVertical: 15,
+                          top: -5,
+                          textAlign: 'center',
+                          marginVertical: 5,
                         }}>
                         {item.text1}
                       </Text>
@@ -345,18 +353,26 @@ const Injury = ({route, navigation}) => {
           </View>
         </View>
       </View>
+
       <View style={styles.buttons}>
-        <TouchableOpacity onPress={() => navigation.goBack()}
-             style={{ backgroundColor: '#F7F8F8',
-             width: 45,
-             height: 45,
-             borderRadius: 15,
-             overflow: 'hidden',
-             justifyContent: 'center',
-             alignItems: 'center',}}
-        >
+        <TouchableOpacity
+          onPress={() => {
+            // const prevPop = getLaterButtonData.pop();
+            // dispatch(setLaterButtonData(getLaterButtonData));
+            navigation.goBack();
+          }}
+          style={{
+            backgroundColor: '#F7F8F8',
+            width: 45,
+            height: 45,
+            borderRadius: 15,
+            overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
           <Icons name="chevron-left" size={25} color={'#000'} />
         </TouchableOpacity>
+
         <TouchableOpacity
           onPress={() => {
             toNextScreen();
@@ -370,13 +386,16 @@ const Injury = ({route, navigation}) => {
           </LinearGradient>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    backgroundColor: 'white',
+    justifyContent: 'center',
+    //alignItems: 'center',
+    width: DeviceWidth,
+    backgroundColor: AppColor.WHITE,
   },
 
   imageView: {
@@ -388,8 +407,8 @@ const styles = StyleSheet.create({
     width: DeviceWidth,
   },
   Image: {
-    width: 106,
-    height: 106,
+    width: 80,
+    height: 80,
   },
   textStyle: {
     color: 'black',
@@ -418,13 +437,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: (DeviceWidth * 85) / 100,
     alignItems: 'center',
+
     alignSelf: 'center',
-    top:
-    Platform.OS == 'android'
-      ?0
-      : DeviceHeigth == '1024'
-      ? DeviceHeigth * 0.04
-      :0
+    bottom: DeviceHeigth * 0.02,
+    position: 'absolute',
   },
   nextButton: {
     backgroundColor: 'red',

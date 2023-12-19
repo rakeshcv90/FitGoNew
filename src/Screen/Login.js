@@ -659,8 +659,8 @@ const Login = ({navigation}) => {
 
           <TouchableOpacity
             onPress={() => {
-              // setVerifyVisible(true);
-              navigation.navigate("MeditationConsent")
+              setVerifyVisible(true);
+              // navigation.navigate("MeditationConsent")
             }}
             style={styles.forgotView}>
             <Text style={styles.forgotText}>Forgot Password?</Text>
@@ -671,9 +671,11 @@ const Login = ({navigation}) => {
 
           <View
             style={{
-              marginTop: DeviceHeigth * 0.05,
+              marginTop: DeviceHeigth * 0.03,
               alignSelf: 'center',
-              marginRight: DeviceWidth * 0.1,
+              // backgroundColor:'red',
+              marginLeft: -5,
+             
             }}>
             <Text
               style={[styles.forgotText, {fontSize: 12, fontWeight: '400'}]}>
@@ -681,7 +683,7 @@ const Login = ({navigation}) => {
             </Text>
           </View>
         </KeyboardAvoidingView>
-        <View style={{marginTop: DeviceHeigth * 0.01}}>
+        <View style={{marginTop: DeviceHeigth * 0.02}}>
           <Button2 onGooglePress={GoogleSignup} onFBPress={FacebookLogin} />
         </View>
       </ScrollView>
@@ -699,11 +701,12 @@ var styles = StyleSheet.create({
   forgotView: {
     marginTop: DeviceHeigth * 0.025,
     alignSelf: 'flex-end',
-    marginRight: DeviceWidth * 0.1,
+    //marginRight: DeviceWidth * 0.1,
+      marginHorizontal: DeviceHeigth * 0.028,
   },
   TextContainer: {
     marginTop: DeviceHeigth * 0.09,
-    marginHorizontal: DeviceHeigth * 0.03,
+    marginHorizontal: DeviceHeigth * 0.035,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -16,9 +16,8 @@ import {AppColor} from './Color';
 import {localImage} from './Image';
 import ProgressBar from '../Screen/Yourself/ProgressBar';
 
-const FocuseAreaMale = () => {
+const FocuseAreaMale = ({imageView, setImageVIew}) => {
   const [selectedItems, setSelectedItems] = useState([]);
-  const [imageView, setImageVIew] = useState([]);
 
   // const setImageFocusArea = (itemId, item) => {
   //   const index = selectedItems.indexOf(itemId);
@@ -116,8 +115,7 @@ const FocuseAreaMale = () => {
                     ]}
                     onPress={() => {
                       setImageFocusArea(item.id, item.text1);
-                    }}
-                    >
+                    }}>
                     <Text
                       style={{
                         color: '#505050',
@@ -142,7 +140,9 @@ const FocuseAreaMale = () => {
               left: -DeviceWidth * 0.09,
             }}>
             <Image
-              source={localImage.Male2}
+              source={{
+                uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/25357fb6-c174-4a3d-995c-77641d9ea900/public',
+              }}
               style={styles.Image}
               resizeMode="contain"
             />
@@ -160,13 +160,17 @@ const FocuseAreaMale = () => {
                       left:
                         Platform.OS == 'android'
                           ? -DeviceHeigth * 0.05
-                          : DeviceHeigth == '1024'
+                          : DeviceHeigth == 1024
                           ? -DeviceHeigth * 0.09
+                          : DeviceHeigth == 667
+                          ? -DeviceHeigth * 0.06
                           : -DeviceHeigth * 0.05,
                       top:
                         Platform.OS == 'android'
-                          ? -DeviceHeigth * 0.54
-                          : DeviceHeigth == '1024'
+                          ? -DeviceHeigth * 0.53
+                          : DeviceHeigth == 1024
+                          ? -DeviceHeigth * 0.56
+                          : DeviceHeigth == 667
                           ? -DeviceHeigth * 0.56
                           : -DeviceHeigth * 0.53,
                     }}>
@@ -182,23 +186,38 @@ const FocuseAreaMale = () => {
                 )}
               </View>
               <View>
+                {console.log('DEVICE HIGHT', DeviceHeigth)}
                 {imageView.find(num => num === 'Shoulder') && (
                   <View
                     style={{
-                      width: DeviceWidth * 0.31,
+                      width: DeviceWidth * 0,
                       height: DeviceHeigth * 0.35,
                       position: 'absolute',
                       left:
                         Platform.OS == 'android'
-                          ? -DeviceHeigth * 0.045
+                          ? DeviceHeigth <= 807.2727272727273
+                            ? -DeviceHeigth * 0.04
+                            : DeviceHeigth <= 845.7142857142857
+                            ? -DeviceHeigth * 0.045
+                            : -DeviceHeigth * 0.042
                           : DeviceHeigth == '1024'
                           ? -DeviceHeigth * 0.058
+                          : DeviceHeigth == 667
+                          ? -DeviceHeigth * 0.057
                           : -DeviceHeigth * 0.044,
                       top:
                         Platform.OS == 'android'
-                          ? -DeviceHeigth * 0.53
-                          : DeviceHeigth == '1024'
+                          ? DeviceHeigth == 800
+                            ? -DeviceHeigth * 0.52
+                            : DeviceHeigth <= 807.2727272727273
+                            ? -DeviceHeigth * 0.53
+                            : DeviceHeigth <= 845.7142857142857
+                            ? -DeviceHeigth * 0.53
+                            : -DeviceHeigth * 0.52
+                          : DeviceHeigth == 1024
                           ? -DeviceHeigth * 0.561
+                          : DeviceHeigth == 667
+                          ? -DeviceHeigth * 0.56
                           : -DeviceHeigth * 0.525,
                     }}>
                     <Image
@@ -218,16 +237,28 @@ const FocuseAreaMale = () => {
                       position: 'absolute',
                       left:
                         Platform.OS == 'android'
-                          ? DeviceHeigth * 0.039
+                          ? DeviceHeigth <= 807.2727272727273
+                            ? DeviceHeigth * 0.039
+                            : DeviceHeigth <= 845.7142857142857
+                            ? DeviceHeigth * 0.045
+                            : DeviceHeigth * 0.035
                           : DeviceHeigth == '1024'
                           ? DeviceHeigth * 0.049
+                          : DeviceHeigth == 667
+                          ? DeviceHeigth * 0.055
                           : DeviceHeigth * 0.035,
                       top:
                         Platform.OS == 'android'
-                          ? -DeviceHeigth * 0.54
+                          ? DeviceHeigth == 800
+                            ? -DeviceHeigth * 0.523
+                            : DeviceHeigth <= 807.2727272727273
+                            ? -DeviceHeigth * 0.54
+                            : -DeviceHeigth * 0.523
                           : DeviceHeigth == '1024'
                           ? -DeviceHeigth * 0.58
-                          : -DeviceHeigth * 0.54,
+                          : DeviceHeigth == 667
+                          ? -DeviceHeigth * 0.56
+                          : -DeviceHeigth * 0.53,
                     }}>
                     <Image
                       source={localImage.Solder1}
@@ -249,11 +280,15 @@ const FocuseAreaMale = () => {
                           ? DeviceHeigth * 0.085
                           : DeviceHeigth == '1024'
                           ? DeviceHeigth * 0.12
+                          : DeviceHeigth == 667
+                          ? DeviceHeigth * 0.11
                           : DeviceHeigth * 0.09,
                       top:
                         Platform.OS == 'android'
                           ? -DeviceHeigth * 0.525
                           : DeviceHeigth == '1024'
+                          ? -DeviceHeigth * 0.53
+                          : DeviceHeigth == 667
                           ? -DeviceHeigth * 0.53
                           : -DeviceHeigth * 0.5,
                     }}>
@@ -316,12 +351,16 @@ const FocuseAreaMale = () => {
                         Platform.OS == 'android'
                           ? DeviceHeigth * 0.085
                           : DeviceHeigth == '1024'
+                          ? DeviceHeigth * 0.12
+                          : DeviceHeigth == 667
                           ? DeviceHeigth * 0.11
-                          : DeviceHeigth * 0.085,
+                          : DeviceHeigth * 0.09,
                       top:
                         Platform.OS == 'android'
                           ? -DeviceHeigth * 0.525
                           : DeviceHeigth == '1024'
+                          ? -DeviceHeigth * 0.53
+                          : DeviceHeigth == 667
                           ? -DeviceHeigth * 0.53
                           : -DeviceHeigth * 0.5,
                     }}>
@@ -343,7 +382,7 @@ const FocuseAreaMale = () => {
                 {imageView.find(num => num === 'Legs') && (
                   <View
                     style={{
-                      width: DeviceWidth * 0.2,
+                      width: DeviceWidth * 0,
                       height: DeviceHeigth * 0.4,
                       position: 'absolute',
                       left:
@@ -378,15 +417,23 @@ const FocuseAreaMale = () => {
                         position: 'absolute',
                         left:
                           Platform.OS == 'android'
-                            ? -DeviceHeigth * 0.032
+                            ? DeviceHeigth <= 807.2727272727273
+                              ? -DeviceHeigth * 0.04
+                              : DeviceHeigth <= 845.7142857142857
+                              ? -DeviceHeigth * 0.04
+                              : -DeviceHeigth * 0.037
                             : DeviceHeigth == '1024'
-                            ? -DeviceHeigth * 0.065
-                            : -DeviceHeigth * 0.033,
+                            ? -DeviceHeigth * 0.085
+                            : DeviceHeigth == 667
+                            ? -DeviceHeigth * 0.055
+                            : -DeviceHeigth * 0.04,
                         top:
                           Platform.OS == 'android'
-                            ? -DeviceHeigth * 0.25
+                            ? -DeviceHeigth * 0.26
                             : DeviceHeigth == '1024'
                             ? -DeviceHeigth * 0.24
+                            : DeviceHeigth == 667
+                            ? -DeviceHeigth * 0.23
                             : -DeviceHeigth * 0.27,
                       }}>
                       <Image
@@ -395,7 +442,7 @@ const FocuseAreaMale = () => {
                           styles.Image2,
                           {
                             height: DeviceHeigth * 0.1,
-                            width: DeviceWidth * 0.5,
+                            width: DeviceWidth * 0.55,
                           },
                         ]}
                         resizeMode="contain"

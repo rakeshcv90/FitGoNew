@@ -86,6 +86,7 @@ const Age = ({route, navigation}: any) => {
   useEffect(() => {
     // setScreen(nextScreen);
     setSelected(15);
+    getActiveItem(15)
   }, []);
   const getActiveItem = (y: number) => {
     const halfBoxH = BOX_HEIGHT * 0.4;
@@ -104,6 +105,7 @@ const Age = ({route, navigation}: any) => {
     const currentData = {
       age: data[selected],
     };
+    {console.log("Age Screen Data",[...getLaterButtonData, currentData])}
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     // navigation.navigate('Equipment', {nextScreen: screen + 1});
   };
@@ -249,6 +251,9 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 85) / 100,
     alignItems: 'center',
     alignSelf: 'center',
+
+    bottom: DeviceHeigth * 0.02,
+    position: 'absolute',
   },
   nextButton: {
     backgroundColor: 'red',

@@ -2,11 +2,12 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor} from '../../Component/Color';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ProgressBar = ({screen, Type}: any) => {
   console.log(screen);
   return (
-    <View
+    <SafeAreaView
       style={{
         //   flex: 1,
         alignSelf: 'flex-start',
@@ -23,7 +24,7 @@ const ProgressBar = ({screen, Type}: any) => {
             fontWeight: '400',
           }}>
           <Text style={{color: AppColor.RED}}>{`Step  ${screen} `}</Text>
-          {Type ? 'of 6' : 'of 10'}
+          {Type ? 'of 6' : 'of 11'}
         </Text>
       </View>
       <View
@@ -41,15 +42,15 @@ const ProgressBar = ({screen, Type}: any) => {
               screen == 0
                 ? Type
                   ? '16.2%'
-                  : '10%'
-                : `${Type ? 17 * screen : 10 * screen}%`,
+                  : '11%'
+                : `${Type ? 17 * screen : 9 * screen}%`,
             backgroundColor: AppColor.RED,
             height: 5,
             borderRadius: 5,
           }}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
