@@ -22,6 +22,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Scale from './Scale';
 import Toggle from '../../Component/Toggle';
+import { showMessage } from 'react-native-flash-message';
 
 const BOX_HEIGHT = DeviceHeigth * 0.7;
 const ITEM_HEIGHT = 25;
@@ -91,10 +92,10 @@ const Weight = ({route, navigation}: any) => {
   const toNextScreen = (weight: number) => {
     const currentData = {
       currentWeight: selected,
-      targetWeight: targetSelected && weight,
+      targetWeight: weight,
       type: toggle,
     };
-    if (targetSelected) {
+    if (weight != selected) {
       {
         console.log('Current Weight Screen Data', [
           ...getLaterButtonData,
@@ -104,7 +105,13 @@ const Weight = ({route, navigation}: any) => {
       dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
       navigation.navigate('Age', {nextScreen: screen + 1});
     } else {
-      handleAnimation(weight);
+      showMessage({
+        message: 'Current Weight can not be equal to Target weight',
+        floating: true,
+        duration: 500,
+        type: 'danger',
+        icon: {icon: 'auto', position: 'left'},
+      });
     }
   };
 
@@ -260,7 +267,7 @@ const Weight = ({route, navigation}: any) => {
               <Icons name="chevron-left" size={25} color={'#000'} />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => toNextScreen(height[currentActiveIndex])}>
+              onPress={() => handleAnimation(height[currentActiveIndex])}>
               <LinearGradient
                 start={{x: 0, y: 1}}
                 end={{x: 1, y: 0}}

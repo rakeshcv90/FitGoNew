@@ -50,8 +50,9 @@ const Goal = ({navigation, route}: any) => {
         goal: item?.goal_id,
       },
     ];
+    console.log(currentData)
     dispatch(setLaterButtonData(currentData));
-    navigation.navigate('Level', {nextScreen: screen + 1});
+    navigation.navigate('Level', {nextScreen: screen + 1, gender: gender});
   };
 
   const handleImagePress = (gender: string) => {

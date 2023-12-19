@@ -1,9 +1,11 @@
 import {
   Animated,
   FlatList,
+  Keyboard,
   Platform,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   Vibration,
   View,
@@ -26,6 +28,7 @@ import Svg, {
 } from 'react-native-svg';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 import Carousel from 'react-native-snap-carousel';
+import { showMessage } from 'react-native-flash-message';
 
 const GradientText = ({item}: any) => {
   const gradientColors = ['#D5191A', '#941000'];
@@ -79,14 +82,14 @@ const Age = ({route, navigation}: any) => {
     (state: any) => state,
   );
   const dispatch = useDispatch();
-  const [selected, setSelected] = useState(-1);
+  const [selected, setSelected] = useState('');
   const [screen, setScreen] = useState(nextScreen);
+  const [focused, setFocused] = useState(false);
   const flatListRef = useRef(null);
   //   console.log(data);
   useEffect(() => {
     setScreen(nextScreen);
-    setSelected(15);
-    getActiveItem(15)
+    getActiveItem(15);
   }, []);
   const getActiveItem = (y: number) => {
     const halfBoxH = BOX_HEIGHT * 0.4;
@@ -96,21 +99,32 @@ const Age = ({route, navigation}: any) => {
       const {start, end} = positions[index];
       if (center + 25 >= start && center - 25 <= end) {
         // console.log(center, index);
-        setSelected(index);
+        // setSelected(index);
       }
     }
   };
 
   const toNextScreen = () => {
+    if(selected.length == 0){
+      showMessage({
+        message: 'Please Enter your Age!!!',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+      return
+    }
     const currentData = {
-      age: data[selected],
+      age: selected,
     };
-    {console.log("Age Screen Data",[...getLaterButtonData, currentData])}
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     navigation.navigate('Equipment', {nextScreen: screen + 1});
   };
   return (
-    <View
+    <TouchableOpacity
+    activeOpacity={1}
+    onPress={() => Keyboard.dismiss()}
       style={{
         flex: 1,
         justifyContent: 'center',
@@ -137,15 +151,55 @@ const Age = ({route, navigation}: any) => {
         }}>*/}
       <View
         style={{
-          width: DeviceWidth * 0.8,
+          width: DeviceWidth,
           height: DeviceHeigth * 0.6,
           justifyContent: 'center',
           alignItems: 'center',
           alignSelf: 'center',
           // flex: 1
           flexDirection: 'row',
+          top: -DeviceHeigth * 0.1
         }}>
-        <FlatList
+        <TextInput
+          keyboardType="number-pad"
+          value={selected}
+          onChangeText={(text) => {
+            if(text == '.'){
+              showMessage({
+                message: 'Wrong Input',
+                type: 'danger',
+                animationDuration: 500,
+                floating: true,
+                icon: {icon: 'auto', position: 'left'},
+              });
+            }
+            else setSelected(text)
+          }}
+          onFocus={setFocused}
+          cursorColor={AppColor.RED}
+          placeholder="18"
+          style={{
+            fontSize: 56,
+            fontWeight: '600',
+            fontFamily: 'Poppins',
+            color: AppColor.BLACK,
+            borderWidth: 0,
+            borderColor: focused ? AppColor.RED : AppColor.GRAY,
+            borderBottomWidth: 1,
+          }}
+        />
+        <Text
+          style={{
+            fontSize: 32,
+            fontWeight: '600',
+            fontFamily: 'Poppins',
+            color: AppColor.BLACK,
+            marginLeft: 10,
+            marginTop: DeviceHeigth * 0.02,
+          }}>
+          years old
+        </Text>
+        {/* <FlatList
           ref={flatListRef}
           data={data}
           horizontal
@@ -198,7 +252,7 @@ const Age = ({route, navigation}: any) => {
               </View>
             );
           }}
-        />
+        /> */}
         {/* </View> */}
       </View>
       <View style={styles.buttons}>
@@ -215,7 +269,7 @@ const Age = ({route, navigation}: any) => {
           </LinearGradient>
         </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -252,7 +306,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
 
-    bottom: DeviceHeigth * 0.02,
+    bottom: DeviceHeigth * 0.05,
     position: 'absolute',
   },
   nextButton: {

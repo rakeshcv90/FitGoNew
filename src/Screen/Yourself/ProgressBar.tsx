@@ -5,11 +5,11 @@ import {AppColor} from '../../Component/Color';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ProgressBar = ({screen}: any) => {
-  console.log(screen);
+
   return (
     <SafeAreaView
       style={{
-        //   flex: 1,
+          //   flex: 1,
         alignSelf: 'flex-start',
         alignItems: 'center',
         width: DeviceWidth * 0.9,
