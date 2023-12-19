@@ -84,6 +84,7 @@ const LineChart = ({resultData, zeroData}: any) => {
     return result?.toSVGString() ?? '0';
   }, [state, transition]);
 
+  const final = path.current.split(' ').map(item => parseFloat(item.match(/-?\d+(\.\d+)?/)?.[0])).filter(num => !isNaN(num));
   return (
     <View style={styles.container}>
       <Canvas
@@ -124,11 +125,11 @@ const LineChart = ({resultData, zeroData}: any) => {
           const yValue = scaleLinear()
             .domain([0, max])
             .range([GRAPH_HEIGHT, 150])(dataPoint.weight);
-          const final = path.current.split(' ').filter(item => {
-            xValue == item;
-          });
-          console.log('xValue', xValue, yValue, final);
-          // if (path.current.includes(xValue)) {
+          // console.log('xValue', xValue, yValue, final);
+          // function isApproximatelyEqual(value, array, tolerance) {
+          //   return array.some(item => Math.abs(value - item) <= tolerance);
+          // }
+          // if (isApproximatelyEqual(xValue,final, 2)) {
           return (
             //     <Canvas key={index}>
             //         <Line
@@ -138,9 +139,10 @@ const LineChart = ({resultData, zeroData}: any) => {
             //   style="stroke"
             //   strokeWidth={1}
             // />
-            <Circle cx={xValue} cy={yValue} r={3} color={'red'} />
+            <Circle cx={xValue} cy={yValue} r={5} color={'red'} />
             // </Canvas>
           );
+          // }
         })}
       </Canvas>
     </View>

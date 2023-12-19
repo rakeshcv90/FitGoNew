@@ -45,20 +45,66 @@ const targetW = 60;
 const Preview = () => {
   const {getLaterButtonData} = useSelector((state: any) => state);
   const [finalDate, setFinalDate] = useState('');
+  const [weightHistory, setWeightHistory] = useState<[]>([]);
+  const [zeroData, setZeroData] = useState<[]>([]);
+  const [currentWeight, setCurrentWeight] = useState(-1);
+  const [TargetWeight, setTargetWeight] = useState(-1);
 
   useEffect(() => {
-    CalculateWeight();
-  }, []);
+    const i = getLaterButtonData.findIndex(
+      (item: any) => 'currentWeight' in item,
+    );
+    if (i !== -1) {
+      const currentW =
+        getLaterButtonData[i].type === 'kg'
+          ? getLaterButtonData[i].currentWeight
+          : getLaterButtonData[i].currentWeight * 2.2;
+      const targetW =
+        getLaterButtonData[i].type === 'kg'
+          ? getLaterButtonData[i].targetWeight
+          : getLaterButtonData[i].targetWeight * 2.2;
+      setCurrentWeight(currentW);
+      setTargetWeight(targetW);
+    }
+  }, [getLaterButtonData]);
+
+  useEffect(() => {
+    if (currentWeight !== null && TargetWeight !== null) {
+      CalculateWeight();
+    }
+  }, [currentWeight, TargetWeight]);
 
   const CalculateWeight = () => {
-    const TotalW = currentW - targetW;
+    const TotalW = currentWeight - TargetWeight;
+    // if (TotalW <= 0) {
+    //   // Avoid unnecessary calculations when the weights are not valid
+    //   return;
+    // }
     const totalW_Cal = TotalW * Av_Cal_Per_KG;
     const Result_Number_Of_Days = totalW_Cal / Av_Cal_Per_2_Workout;
-    const Final_Date = moment()
-      .add(Result_Number_Of_Days, 'days')
-      .format('YYYY-MM-DD');
-    setFinalDate(Final_Date);
-    // console.log(Result_Number_Of_Days, Final_Date);
+    let constantWeightArray = [];
+    let weightHistoryArray = [];
+    let currentDate = moment();
+
+    for (let i = Result_Number_Of_Days; i > 0; i -= 15) {
+      const decWeight =
+        currentWeight -
+        ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
+      const formattedDate = currentDate.format('YYYY-MM-DD');
+      weightHistoryArray.push({
+        weight:
+          i % 2 === 0 ? decWeight.toFixed(2) : (decWeight - 10).toFixed(2),
+        date: formattedDate,
+      });
+      constantWeightArray.push({weight: 0, date: formattedDate});
+
+      currentDate = currentDate.add(15, 'days');
+    }
+
+    setZeroData(constantWeightArray);
+    setWeightHistory(weightHistoryArray);
+    weightHistoryArray[weightHistoryArray.length - 1]?.date &&
+      setFinalDate(weightHistoryArray[weightHistoryArray.length - 1]?.date);
   };
   // Helper function to get all dates between start and end dates
   const getDatesBetween = () => {
@@ -88,7 +134,7 @@ const Preview = () => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#F8F8F8'}}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{alignItems: 'center',}}>
+        <View style={{alignItems: 'center'}}>
           <Text
             style={{
               fontFamily: 'Poppins',
@@ -108,7 +154,7 @@ const Preview = () => {
               color: AppColor.BLACK,
               marginTop: 10,
             }}>
-            {`You'll be ${targetW} Kg by`}
+            {`You'll be ${TargetWeight} Kg by`}
           </Text>
           <GradientText
             item={moment(finalDate).format('DD MMMM YYYY')}
@@ -117,7 +163,9 @@ const Preview = () => {
             width={200}
           />
         </View>
-        <Graph />
+        {weightHistory.length != 0 && zeroData.length != 0 && (
+          <Graph resultData={weightHistory} zeroData={zeroData} />
+        )}
         <GradientText item={'Work Routine'} />
         <Calendar
           onDayPress={day => {

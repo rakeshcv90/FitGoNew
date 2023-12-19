@@ -78,10 +78,10 @@ const PredictionScreen = ({navigation, route}: any) => {
 
   const CalculateWeight = () => {
     const TotalW = currentWeight - TargetWeight;
-    if (TotalW <= 0) {
-      // Avoid unnecessary calculations when the weights are not valid
-      return;
-    }
+    // if (TotalW <= 0) {
+    //   // Avoid unnecessary calculations when the weights are not valid
+    //   return;
+    // }
 
     const totalW_Cal = TotalW * Av_Cal_Per_KG;
     const Result_Number_Of_Days = totalW_Cal / Av_Cal_Per_2_Workout;
@@ -130,7 +130,7 @@ const PredictionScreen = ({navigation, route}: any) => {
           />
           <Text style={styles.t}>Kg by</Text>
           <GradientText
-            item={finalDate ? moment(finalDate).format('DD MMMM YYYY'): ''}
+            item={finalDate ? moment(finalDate).format('DD MMMM YYYY') : ''}
             fontWeight="600"
             fontSize={20}
             width={180}
@@ -153,13 +153,13 @@ const PredictionScreen = ({navigation, route}: any) => {
           <Graph resultData={weightHistory} zeroData={zeroData} />
         )}
       </View>
-      <Image
+      {/* <Image
         source={{
           uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/25357fb6-c174-4a3d-995c-77641d9ea900/public',
         }}
         style={styles.Image}
         resizeMode="contain"
-      />
+      /> */}
       <View
         style={{
           bottom: DeviceHeigth * 0.1,
