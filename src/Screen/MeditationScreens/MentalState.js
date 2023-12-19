@@ -21,7 +21,7 @@ import Progressbar from '../../Screen/Yourself/ProgressBar';
 import { setMindset_Data } from '../../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 const MentalState = ({navigation, route}) => {
-  const [getMentalstate,setMentalState]=useState('')
+  const [getMentalstate,setMentalState]=useState('Normal')
   const{mindSetData}=useSelector(state=>state)
   const Dispatch=useDispatch();
   useEffect(() => {
@@ -61,11 +61,9 @@ const MentalState = ({navigation, route}) => {
     },
   ];
   const carouselRef = useRef(null);
-  const handleSnapToItem = useCallback(index => {
+  const handleSnapToItem = useCallback((index) => {
     setItemIndex(index);
-    // Dispatch(setMindset_Data([...mindSetData,{mState:index}]))
-    // console.log(index);
-    // console.log("indexxx",index)
+    setMentalState(index==0?"Normal":index==1?"Stress":index==2?"Anxiety":index==3?"Depression":"")
   }, []);
   const renderItem = ({item, index}) => {
     return (
@@ -76,6 +74,8 @@ const MentalState = ({navigation, route}) => {
           onPress={() => {
             // navigation.navigate('AlcoholConsent');
             setItemIndex(index);
+            setMentalState(item.txt)
+            console.log("value",item.txt)
           }}>
           <Text style={styles.txts}>{item.txt}</Text>
           <Image source={item.img} style={styles.img} resizeMode="contain" />

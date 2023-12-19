@@ -73,7 +73,7 @@ const Alcohalinfo = ({navigation, route}) => {
   const SelectedButton = button => {
     setSelectedB(button);
     setTimeout(() => {
-      // navigation.navigate('MentalState');
+      navigation.navigate("LoadData");
     }, 250);
   };
   console.log("mindsetData",mindSetData)

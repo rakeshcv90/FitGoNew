@@ -6,7 +6,7 @@ import {
   Image,
   Platform,
   Animated,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import MeditationTitleComponent from './MeditationTitleComponent';
@@ -18,7 +18,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import Progressbar from '../../Screen/Yourself/ProgressBar';
 import {useDispatch, useSelector} from 'react-redux';
-import { SetmindsetConsent } from '../../Component/ThemeRedux/Actions';
+import {SetmindsetConsent} from '../../Component/ThemeRedux/Actions';
 const MeditationConsent = ({navigation}) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -70,7 +70,7 @@ const MeditationConsent = ({navigation}) => {
     setTimeout(() => {
       button == 1
         ? navigation.navigate('MeditationRoutine', {nextScreen: screen + 1})
-        : navigation.naviagte('Home');
+        : navigation.navigate('LoadData');
     }, 250);
   };
   return (

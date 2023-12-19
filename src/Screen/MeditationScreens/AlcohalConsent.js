@@ -76,7 +76,7 @@ const AlcohalConsent = ({navigation, route}) => {
   const SelectedButton = button => {
     setSelectedB(button);
     setTimeout(() => {
-      button==1?navigation.navigate('Alcohalinfo', {nextScreen: screen + 1}):null //need to update according functionality
+      button==1?navigation.navigate('Alcohalinfo', {nextScreen: screen + 1}):navigation.navigate("LoadData") //need to update according functionality
     }, 250);
   };
   return (

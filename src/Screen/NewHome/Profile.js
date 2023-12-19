@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Platform,
   ScrollView,
+  StatusBar,
 } from 'react-native';
 import React from 'react';
 import {localImage} from '../../Component/Image';
@@ -121,9 +122,87 @@ const Profile = () => {
   ];
   const FirstView = Profile_Data.slice(0, 5);
   const SecondView = Profile_Data.slice(5);
+  const ProfileView = () => {
+    return (
+      <View>
+        <LinearGradient
+          start={{x: 0, y: 1}}
+          end={{x: 1, y: 0}}
+          colors={['#D5191A', '#941000']}
+          style={{height: DeviceHeigth * 0.35, width: DeviceWidth}}>
+          <View
+            style={{
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              margin: 15,
+           
+              alignItems: 'center',
+            }}>
+            <Icons name="chevron-left" size={30} color={AppColor.WHITE} />
+            <Text
+              style={{
+                fontFamily: 'Poppins-SemiBold',
+                fontSize: 20,
+                color: AppColor.WHITE,
+              }}>
+              {'Profile'}
+            </Text>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <TouchableOpacity
+              activeOpacity={0.5}
+                style={{
+                  // width: DeviceWidth * 0.15,
+                  // height: DeviceHeigth * 0.03,
+                  borderWidth: 1,
+                  borderRadius: 20,
+                  borderColor: AppColor.WHITE,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  // position: 'absolute',
+                  // right:10
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Medium',
+                    fontSize: 12,
+                    color: AppColor.WHITE,
+                    paddingHorizontal:10,
+                    paddingVertical:1
+                  }}>
+                  {'Sign out'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.profileView}>
+        <Image
+          source={localImage.avt}
+          style={styles.img}
+          resizeMode="cover"></Image>
+        <TouchableOpacity
+          style={styles.ButtonPen}
+          activeOpacity={0.6}
+          >
+          <Image
+            source={localImage.Pen}
+            style={styles.pen}
+            resizeMode="cover"
+            tintColor={AppColor.WHITE}
+          />
+        </TouchableOpacity>
+      </View>
+        </LinearGradient>
+      </View>
+    );
+  };
   return (
     <View style={styles.Container}>
-      <NewHeader backButton header={'Profile'} />
+      {/* <StatusBar barStyle={'default'} translucent={true} backgroundColor={'transparent'}/> */}
+      <ProfileView />
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
@@ -141,7 +220,7 @@ const Profile = () => {
           <TouchableOpacity
             style={[styles.Button, {backgroundColor: AppColor.RED}]}
             onPress={() => {
-              navigation.navigate('Edit_Profile');
+              navigation.navigate("NewEditProfile");
             }}>
             <LinearGradient
               start={{x: 1, y: 0}}
@@ -295,6 +374,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     margin: 8,
+  },
+  profileView: {
+    // marginHorizontal: DeviceWidth * 0.06,
+    // marginVertical: DeviceHeigth * 0.04,
+    height: 100,
+    width: 100,
+    borderRadius: 160 / 2,
+  },
+  img: {
+    height: 120,
+    width: 120,
+    borderRadius: 160 / 2,
+  },
+  pen: {
+    width: 30,
+    height: 30,
+  },
+  ButtonPen: {
+    width: 30,
+    height: 30,
+    borderRadius: 30 / 2,
+    position:'absolute',
+    bottom:5,
+    right:16,
+    backgroundColor:AppColor.RED
+    
   },
 });
 export default Profile;
