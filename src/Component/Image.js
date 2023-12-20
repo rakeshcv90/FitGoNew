@@ -80,7 +80,10 @@ export const localImage = {
   Chest: require('../Icon/Images/NewImage/Chest.png'),
   Abs2: require('../Icon/Images/NewImage/Abs2.png'),
   Leg2: require('../Icon/Images/NewImage/Leg2.png'),
-  AtHome: require('../Icon/Images/NewImage/AtHome.jpg'),
+  Alocol_yes:require('../Icon/Images/NewImage/Alcohol_yes.png'),
+  Alocol_no:require('../Icon/Images/NewImage/Alcohol_no.png'),
+  Alocol_Dnt:require('../Icon/Images/NewImage/Not_to_say.png'),
+  Money:require('../Icon/Images/NewImage/money.png')
 
 
 };

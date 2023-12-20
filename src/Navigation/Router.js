@@ -4,7 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SplaceScreen from '../Screen/SplaceScreen';
 import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/Index';
+import Yourself from '../Screen/Yourself/index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -38,6 +38,9 @@ import {
   CardStyleInterpolators,
 } from "@react-navigation/stack";
 
+import AlcohalConsent from '../Screen/MeditationScreens/AlcohalConsent';
+import Profile from '../Screen/NewHome/Profile';
+import BottomTab from './BottomTab';
 const Stack = createNativeStackNavigator();
 
 const screenOptions = {
@@ -96,8 +99,16 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
+
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
+
+   
+   <Stack.Screen name="BottomTab" component={BottomTab} />
+
+   {/* <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+       <Stack.Screen
+
         name="IntroductionScreen1"
         component={IntroductionScreen1}
       />
@@ -127,9 +138,9 @@ export const LoginStack = () => {
       <Stack.Screen name="Level" component={Level} />
       <Stack.Screen name="Height" component={Height} />
       <Stack.Screen name="Weight" component={Weight} />
-      <Stack.Screen name="Age" component={Age} />
-      <Stack.Screen name="PredictionScreen" component={PredictionScreen} />
-      <Stack.Screen name="MeditationConsent" component={MeditationConsent} />
+      <Stack.Screen name="Age" component={Age} /> 
+      <Stack.Screen name="PredictionScreen" component={PredictionScreen} /> 
+       <Stack.Screen name="MeditationConsent" component={MeditationConsent} />
       <Stack.Screen name="MeditationRoutine" component={MeditationRoutine} />
       <Stack.Screen name="SleepDuration" component={SleepDuration} />
       <Stack.Screen name="MentalState" component={MentalState} />
@@ -137,6 +148,9 @@ export const LoginStack = () => {
       <Stack.Screen name="LoadData" component={LoadData} />
       <Stack.Screen name="Preview" component={Preview} />
       <Stack.Screen name="Goal" component={Goal} />
+      <Stack.Screen name="AlcoholConsent" component={AlcohalConsent}/>
+      <Stack.Screen name="Profile" component={Profile}/>
+      <Stack.Screen name="NewEditProfile" component={NewEditProfile}/> */}
     </Stack.Navigator>
   );
 };

@@ -106,9 +106,14 @@ const PredictionScreen = ({navigation, route}: any) => {
 
     setZeroData(constantWeightArray);
     setWeightHistory(weightHistoryArray);
+
     weightHistoryArray[weightHistoryArray.length - 1]?.date &&
       setFinalDate(weightHistoryArray[weightHistoryArray.length - 1]?.date);
   };
+
+
+  
+
 
   return (
     <View style={styles.Container}>
@@ -234,7 +239,7 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: (DeviceWidth * 85) / 100,
+    width: DeviceWidth * 0.9,
     alignItems: 'center',
     alignSelf: 'center',
     bottom: DeviceHeigth * 0.05,

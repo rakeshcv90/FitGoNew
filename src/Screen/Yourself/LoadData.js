@@ -14,6 +14,7 @@ import {
 import React, {useEffect, useRef, useState} from 'react';
 import AnimatedLottieView from 'lottie-react-native';
 import DeviceInfo from 'react-native-device-info';
+
 import {
   DeviceHeigth,
   DeviceWidth,
@@ -81,7 +82,7 @@ const LoadData = ({navigation}) => {
   } = useSelector(state => state);
   console.log('mindset===>', mindSetData);
   const translationX = useRef(new Animated.Value(0)).current;
-  // console.log(getLaterButtonData);
+
   useEffect(() => {
     animateList();
   }, []);
@@ -117,17 +118,22 @@ const LoadData = ({navigation}) => {
       payload.append('injury', null);
       payload.append('equipment', mergedObject?.equipment);
       payload.append('workoutarea', mergedObject?.workoutArea?.join(','));
+
+
       if (mindsetConsent == true) {
         payload.append('workoutroutine', mindSetData[0].routine);
         payload.append('sleepduration', mindSetData[1].SleepDuration);
         payload.append('mindstate', mindSetData[2].mState);
         payload.append('alcoholconstent', mindSetData[3].Alcohol_Consent);
+
        if(mindSetData[4]){
         payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
        }
       }
       console.log(payload)
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
+
+
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -309,7 +315,7 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: (DeviceWidth * 85) / 100,
+    width: DeviceWidth * 0.9,
     alignItems: 'center',
     alignSelf: 'center',
     bottom: DeviceHeigth * 0.05,

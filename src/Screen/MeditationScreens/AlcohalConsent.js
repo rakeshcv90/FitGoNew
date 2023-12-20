@@ -6,7 +6,6 @@ import {
   Image,
   Platform,
   Animated,
-  SafeAreaView,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import MeditationTitleComponent from './MeditationTitleComponent';
@@ -15,40 +14,40 @@ import {AppColor} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Progressbar from '../../Screen/Yourself/ProgressBar'
 import LinearGradient from 'react-native-linear-gradient';
-import { setMindset_Data } from '../../Component/ThemeRedux/Actions';
+import Progressbar from '../../Screen/Yourself/ProgressBar';
+import {setMindset_Data} from '../../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
-const MeditationRoutine = ({navigation,route}) => {
-  const Dispatch=useDispatch();
+const AlcohalConsent = ({navigation, route}) => {
+  const{mindSetData}=useSelector(state=>state)
+  console.log("mindsetData",mindSetData)
+  const Dispatch = useDispatch();
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {  // for unselecting the item when user hit the back button from next screen
-      setSelectedB(0); 
+    const unsubscribe = navigation.addListener('focus', () => {
+      // for unselecting the item when user hit the back button from next screen
+      setSelectedB(0);
     });
+
     return unsubscribe;
   }, [navigation]);
-  const {nextScreen}=route.params;
-  const[screen,setScreen]=useState(nextScreen)
+
+  const {nextScreen} = route.params;
+  const [screen, setScreen] = useState(nextScreen);
   const TextData = [
     {
       id: 1,
-      img: localImage.Person_Sleep,
-      txt: 'At work, moslty seated',
+      img: localImage.Alocol_yes,
+      txt: 'Yes',
     },
     {
       id: 2,
-      img: localImage.GroupHome,
-      txt: 'At home, moslty resting',
+      img: localImage.Alocol_no,
+      txt: 'No',
     },
     {
       id: 3,
-      img: localImage.foot,
-      txt: 'Walking daily',
-    },
-    {
-      id: 4,
-      img: localImage.Person_Walk,
-      txt: 'Working mostly or walking',
+      img: localImage.Alocol_Dnt,
+      txt: 'Prefer not to say',
     },
   ];
   useEffect(() => {
@@ -77,16 +76,15 @@ const MeditationRoutine = ({navigation,route}) => {
   const SelectedButton = button => {
     setSelectedB(button);
     setTimeout(() => {
-      navigation.navigate('SleepDuration',{nextScreen:screen+1});
+      button==1?navigation.navigate('Alcohalinfo', {nextScreen: screen + 1}):navigation.navigate("LoadData") //need to update according functionality
     }, 250);
   };
-
   return (
     <View style={styles.Container}>
-      <Progressbar Type screen={screen} />
+      <Progressbar screen={screen} Type />
       <Bulb
-        header="Meditation helps in keep your body and mind calm, peaceful and relax."
-        screen={'How do you define your daily routine ?'}
+        header="Do not drink on an empty stomach"
+        screen={'Do you drink Alcohol ?'}
       />
       <View style={{marginTop: DeviceHeigth * 0.08}}>
         {TextData.map((value, index) => (
@@ -103,8 +101,13 @@ const MeditationRoutine = ({navigation,route}) => {
                 },
               ]}
               onPress={() => {
-                Dispatch(setMindset_Data([{routine:value?.txt}]))
-                SelectedButton(value?.id)
+                Dispatch(
+                  setMindset_Data([
+                    ...mindSetData,
+                    {Alcohol_Consent: value?.txt},
+                  ]),
+                );
+                SelectedButton(value?.id);
               }}>
               <Image
                 source={value.img}
@@ -130,7 +133,7 @@ const MeditationRoutine = ({navigation,route}) => {
       </View>
       <View style={styles.buttons}>
         <TouchableOpacity
-            onPress={() => navigation.goBack()}
+          onPress={() => navigation.goBack()}
           style={{
             backgroundColor: '#F7F8F8',
             width: 45,
@@ -202,9 +205,8 @@ const styles = StyleSheet.create({
     width: DeviceWidth * 0.9,
     alignItems: 'center',
     alignSelf: 'center',
-    bottom:DeviceHeigth*0.02,
-    position:'absolute',
-    
+    bottom: DeviceHeigth * 0.02,
+    position: 'absolute',
   },
   nextButton: {
     backgroundColor: 'red',
@@ -216,4 +218,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-export default MeditationRoutine;
+export default AlcohalConsent;

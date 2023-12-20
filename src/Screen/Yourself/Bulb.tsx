@@ -1,7 +1,7 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {localImage} from '../../Component/Image';
-import {DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 
 // const Bulb = ({screen, Title}: any) => {
 //   return (
@@ -27,7 +27,9 @@ import {DeviceWidth} from '../../Component/Config';
 
 const Bulb = ({screen, header}: any) => {
   return (
+
     <View style={{alignItems: 'center', width: DeviceWidth * 0.9}}>
+
       <Text
         style={{
           color: 'black',

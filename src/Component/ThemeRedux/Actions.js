@@ -50,3 +50,15 @@ export const setCustomWorkoutData = data => {
     payload: data,
   };
 };
+export const setMindset_Data = data => {
+  return {
+    type: types.Mindset_Data,
+    payload: data,
+  };
+};
+export const SetmindsetConsent=data=>{
+  return{
+    type:types.MindSetConsent,
+    payload:data
+  }
+}

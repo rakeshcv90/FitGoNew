@@ -14,8 +14,22 @@ import {AppColor} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {SafeAreaView} from 'react-native';
-const Alcohalinfo = ({navigation}) => {
+import LinearGradient from 'react-native-linear-gradient';
+import Progressbar from '../../Screen/Yourself/ProgressBar';
+import { setMindset_Data } from '../../Component/ThemeRedux/Actions';
+import {useDispatch, useSelector} from 'react-redux';
+const Alcohalinfo = ({navigation, route}) => {
+  const Dispatch=useDispatch()
+  const{mindSetData}=useSelector(state=>state)
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {  // for unselecting the item when user hit the back button from next screen
+      setSelectedB(0); 
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+  const {nextScreen} = route.params;
+  const [screen, setScreen] = useState(nextScreen);
   const TextData = [
     {
       id: 1,
@@ -59,17 +73,16 @@ const Alcohalinfo = ({navigation}) => {
   const SelectedButton = button => {
     setSelectedB(button);
     setTimeout(() => {
-      navigation.navigate('LoadData');
+      navigation.navigate("LoadData");
     }, 250);
   };
+  console.log("mindsetData",mindSetData)
   return (
-    <SafeAreaView style={styles.Container}>
-      {/* <MeditationTitleComponent
-          Title={"How often you consume alcohol?"}
-        /> */}
+    <View style={styles.Container}>
+      <Progressbar screen={screen} Type />
       <Bulb
-        screen={'How often you consume alcohol?'}
         header="Do not drink on an empty stomach."
+        screen={'How often you consume alcohol?'}
       />
       <View style={{marginTop: DeviceHeigth * 0.08}}>
         {TextData.map((value, index) => (
@@ -86,6 +99,12 @@ const Alcohalinfo = ({navigation}) => {
                 },
               ]}
               onPress={() => {
+                Dispatch(
+                  setMindset_Data([
+                    ...mindSetData,
+                    {Alcohol_Qauntity: value?.txt},
+                  ]),
+                );
                 SelectedButton(value?.id);
               }}>
               <Image
@@ -110,21 +129,34 @@ const Alcohalinfo = ({navigation}) => {
           </Animated.View>
         ))}
       </View>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.goBack();
-        }}
-        style={{
-          justifyContent: 'flex-end',
-          flex: 1,
-          marginBottom: DeviceHeigth * 0.05,
-          alignItems: 'flex-start',
-          //  borderWidth: 1,
-          width: DeviceWidth * 0.9,
-        }}>
-        <Icons name="chevron-left" size={25} color={AppColor.BLACK} />
-      </TouchableOpacity>
-    </SafeAreaView>
+      <View style={styles.buttons}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            backgroundColor: '#F7F8F8',
+            width: 45,
+            height: 45,
+            borderRadius: 15,
+            overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Icons name="chevron-left" size={25} color={'#000'} />
+        </TouchableOpacity>
+        {/* <TouchableOpacity
+          onPress={() => {
+            // toNextScreen()
+          }}>
+          <LinearGradient
+            start={{x: 0, y: 1}}
+            end={{x: 1, y: 0}}
+            colors={['#941000', '#D5191A']}
+            style={[styles.nextButton]}>
+            <Icons name="chevron-right" size={25} color={'#fff'} />
+          </LinearGradient>
+        </TouchableOpacity> */}
+      </View>
+    </View>
   );
 };
 const styles = StyleSheet.create({
@@ -164,6 +196,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginLeft: DeviceWidth * 0.06,
     fontSize: 15,
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: (DeviceWidth * 85) / 100,
+    alignItems: 'center',
+    alignSelf: 'center',
+    bottom: DeviceHeigth * 0.02,
+    position: 'absolute',
+  },
+  nextButton: {
+    backgroundColor: 'red',
+    width: 45,
+    height: 45,
+    borderRadius: 50 / 2,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 export default Alcohalinfo;

@@ -8,7 +8,9 @@ const intialState = {
   getLaterButtonData: [],
   getUserID: '',
   customWorkoutData: [],
-  getUserDataDetails:[]
+  getUserDataDetails:[],
+  mindsetConsent:false,
+  mindSetData:[]
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -32,6 +34,35 @@ const ThemeReducer = (state = intialState, action) => {
           return {...state, customWorkoutData: action.payload};
       case types.User_Profile_Data:
         return {...state, getUserDataDetails: action.payload};
+      case types.Mindset_Data:
+        const updatedData = action.payload;
+        // Create a new copy of the state's mindSetData array
+        const updatedMindSetData = [...state.mindSetData];
+  
+        // Loop through the updatedData array
+        updatedData.forEach((updatedItem) => {
+          const keyToUpdate = Object.keys(updatedItem)[0];
+          const index = updatedMindSetData.findIndex((item) => Object.keys(item)[0] === keyToUpdate);
+  
+          if (index !== -1) {
+            // If key already exists, update its value by creating a new object
+            updatedMindSetData[index] = { ...updatedMindSetData[index], ...updatedItem };
+          } else {
+            // If key doesn't exist, append it to the new array
+            updatedMindSetData.push(updatedItem);
+          }
+        });
+  
+        return {
+          ...state,
+          mindSetData: updatedMindSetData,
+        };
+      return {
+        ...state,
+        mindSetData: [...state.mindSetData],
+      };
+        case types.MindSetConsent:
+          return{...state,mindsetConsent:action.payload}   
     default:
       return state;
   }
