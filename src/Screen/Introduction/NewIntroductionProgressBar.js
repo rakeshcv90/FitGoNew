@@ -1,6 +1,6 @@
 import {IntroductionData} from './IntroductionScreenData';
 import React, {useEffect, useRef, useState} from 'react';
-import { Animated,View } from 'react-native';
+import { Animated,Platform,View } from 'react-native';
 import { DeviceWidth,DeviceHeigth } from '../../Component/Config';
 import { AppColor } from '../../Component/Color';
 const IntroProgressBar=({INDEX})=>{
@@ -24,14 +24,14 @@ const IntroProgressBar=({INDEX})=>{
           flexDirection: 'row',
           justifyContent: 'center',
           flexDirection: 'row',
-        
+          height:Platform.OS=='ios'? 0: DeviceHeigth*0.09,
         }}>
         {IntroductionData.map((value, index) => (
           <View
             key={index}
             style={{
               height: 3,
-              marginBottom: DeviceHeigth*.05,
+              marginBottom: DeviceHeigth*0.5,
               marginHorizontal: 2, ///used as masking for the progress bar
               width: index == INDEX ? 40 : 20,
               backgroundColor: AppColor.WHITE,

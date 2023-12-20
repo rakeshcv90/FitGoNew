@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import AnimatedLottieView from 'lottie-react-native';
+import DeviceInfo from 'react-native-device-info';
 import {
   DeviceHeigth,
   DeviceWidth,
@@ -97,11 +98,12 @@ const LoadData = ({navigation}) => {
     ).start();
   };
   useEffect(() => {
-    WholeData();
+    DeviceInfo.getUniqueId().then(id=>WholeData(id));
   }, []);
-  const WholeData = async () => {
+  const WholeData = async (deviceID) => {
     try {
       const payload = new FormData();
+      payload.append("deviceid",deviceID)
       payload.append('id', '26');
       payload.append('gender', 'male');
       payload.append('goal', 'null');
@@ -118,12 +120,9 @@ const LoadData = ({navigation}) => {
         payload.append('sleepduration', mindSetData[1].SleepDuration);
         payload.append('mindstate', mindSetData[2].mState);
         payload.append('alcoholconstent', mindSetData[3].Alcohol_Consent);
-        payload.append(
-          'alcoholquantity',
-          mindSetData[4].Alcohol_Qauntity
-            ? mindSetData[4].Alcohol_Qauntity
-            : 'Null',
-        );
+       if(mindSetData[4]){
+        payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
+       }
       }
       const data = await axios(`${NewAppapi.Whole_data}`, {
         method: 'POST',

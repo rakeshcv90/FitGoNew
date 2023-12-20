@@ -57,10 +57,6 @@ const ThemeReducer = (state = intialState, action) => {
           ...state,
           mindSetData: updatedMindSetData,
         };
-      return {
-        ...state,
-        mindSetData: [...state.mindSetData],
-      };
         case types.MindSetConsent:
           return{...state,mindsetConsent:action.payload}   
     default:

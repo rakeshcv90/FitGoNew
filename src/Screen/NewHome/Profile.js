@@ -7,8 +7,9 @@ import {
   Platform,
   ScrollView,
   StatusBar,
+  SafeAreaView,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor} from '../../Component/Color';
@@ -16,112 +17,131 @@ import NewHeader from '../../Component/Headers/NewHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
+import CustomStatusBar from '../../Component/CustomStatusBar';
+import {Switch} from 'react-native-switch';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
+import NewHealthkitPermission from '../../Component/NewHealthkitPermission';
 const Profile = () => {
+  useEffect(()=>{NewHealthkitPermission()},[])
   const navigation = useNavigation();
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const Profile_Data = [
     {
+      id: 1,
       icon1: (
         <Image
           source={localImage.Profile4}
-          style={styles.IconView}
+          style={[styles.IconView, {height: 24, width: 23}]}
           resizeMode="contain"
         />
       ),
       text1: 'Personal Details',
     },
     {
+      id: 2,
       icon1: (
         <Image
           source={localImage.Documents}
-          style={styles.IconView}
+          style={[styles.IconView, {height: 23, width: 23}]}
           resizeMode="contain"
         />
       ),
       text1: 'My plans',
     },
     {
+      id: 3,
       icon1: (
         <Image
           source={localImage.Heart}
-          style={styles.IconView}
+          style={[styles.IconView, {height: 17, width: 21}]}
           resizeMode="contain"
         />
       ),
       text1: 'My Favorites',
     },
     {
+      id: 4,
       icon1: (
         <Image
-          source={localImage.History}
-          style={styles.IconView}
+          source={localImage.Backupimg}
+          style={[styles.IconView, {height: 18, width: 22}]}
           resizeMode="contain"
         />
       ),
-      text1: 'Workout History',
+      text1: 'Backup',
     },
     {
+      id: 5,
       icon1: (
         <Image
           source={localImage.reminder}
-          style={styles.IconView}
+          style={[styles.IconView, {height: 27, width: 22}]}
           resizeMode="contain"
         />
       ),
-      text1: 'Reminder',
+      text1: 'Workout Reminder',
     },
     {
+      id: 6,
       icon1: (
         <Image
-          source={localImage.reminder}
-          style={styles.IconView}
+          source={localImage.Soundimg}
+          style={[styles.IconView, {height: 15, width: 22}]}
           resizeMode="contain"
         />
       ),
-      text1: 'Reminder',
+      text1: 'Sound Options',
     },
     {
+      id: 7,
       icon1: (
         <Image
-          source={localImage.reminder}
-          style={styles.IconView}
+          source={localImage.Message}
+          style={[styles.IconView, {height: 20, width: 22}]}
           resizeMode="contain"
+          tintColor={AppColor.RED}
         />
       ),
-      text1: 'Reminder',
+      text1: 'Contact Us',
     },
     {
+      id: 8,
       icon1: (
         <Image
-          source={localImage.reminder}
-          style={styles.IconView}
-          resizeMode="contain"
+          source={localImage.Shield}
+          style={[styles.IconView, {height: 24, width: 22}]}
+          resizeMode="cover"
         />
       ),
-      text1: 'Reminder',
+      text1: 'Privacy Policy',
     },
     {
+      id: 9,
       icon1: (
         <Image
-          source={localImage.reminder}
-          style={styles.IconView}
+          source={localImage.RateStar}
+          style={[styles.IconView, {height: 35, width: 22}]}
           resizeMode="contain"
         />
       ),
-      text1: 'Reminder',
+      text1: 'Rate Us',
     },
     {
+      id: 10,
       icon1: (
         <Image
-          source={localImage.reminder}
-          style={styles.IconView}
+          source={localImage.DeleteAcc}
+          style={[styles.IconView, {height: 29, width: 22}]}
           resizeMode="contain"
         />
       ),
-      text1: 'Reminder',
+      text1: 'Delete Account',
     },
   ];
-  const FirstView = Profile_Data.slice(0, 5);
-  const SecondView = Profile_Data.slice(5);
+  const FirstView = Profile_Data.slice(0, 6);
+  const SecondView = Profile_Data.slice(6);
+
   const ProfileView = () => {
     return (
       <View>
@@ -129,16 +149,21 @@ const Profile = () => {
           start={{x: 0, y: 1}}
           end={{x: 1, y: 0}}
           colors={['#D5191A', '#941000']}
-          style={{height: DeviceHeigth * 0.35, width: DeviceWidth}}>
+          style={{height: DeviceHeigth * 0.4, width: DeviceWidth}}>
           <View
             style={{
               justifyContent: 'space-between',
               flexDirection: 'row',
               margin: 15,
-           
               alignItems: 'center',
             }}>
-            <Icons name="chevron-left" size={30} color={AppColor.WHITE} />
+            <View
+              style={{
+                width: DeviceWidth * 0.23,
+                paddingVertical: 1,
+              }}>
+              <Icons name="chevron-left" size={30} color={AppColor.WHITE} />
+            </View>
             <Text
               style={{
                 fontFamily: 'Poppins-SemiBold',
@@ -153,25 +178,21 @@ const Profile = () => {
                 alignItems: 'center',
               }}>
               <TouchableOpacity
-              activeOpacity={0.5}
+                activeOpacity={0.5}
                 style={{
-                  // width: DeviceWidth * 0.15,
-                  // height: DeviceHeigth * 0.03,
+                  width: DeviceWidth * 0.2,
                   borderWidth: 1,
                   borderRadius: 20,
                   borderColor: AppColor.WHITE,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  // position: 'absolute',
-                  // right:10
                 }}>
                 <Text
                   style={{
                     fontFamily: 'Poppins-Medium',
                     fontSize: 12,
                     color: AppColor.WHITE,
-                    paddingHorizontal:10,
-                    paddingVertical:1
+                    paddingVertical:1.3
                   }}>
                   {'Sign out'}
                 </Text>
@@ -179,94 +200,124 @@ const Profile = () => {
             </View>
           </View>
           <View style={styles.profileView}>
-        <Image
-          source={localImage.avt}
-          style={styles.img}
-          resizeMode="cover"></Image>
-        <TouchableOpacity
-          style={styles.ButtonPen}
-          activeOpacity={0.6}
-          >
-          <Image
-            source={localImage.Pen}
-            style={styles.pen}
-            resizeMode="cover"
-            tintColor={AppColor.WHITE}
-          />
-        </TouchableOpacity>
-      </View>
+            <Image
+              source={localImage.avt}
+              style={styles.img}
+              resizeMode="cover"></Image>
+            <TouchableOpacity style={styles.ButtonPen} activeOpacity={0.6}>
+              <Image
+                source={localImage.Pen}
+                style={styles.pen}
+                resizeMode="cover"
+                tintColor={AppColor.WHITE}
+              />
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              marginTop: DeviceHeigth * 0.05,
+              alignItems: 'center',
+            }}>
+            <Text
+              style={{
+                fontFamily: 'Poppins-SemiBold',
+                color: AppColor.WHITE,
+                fontSize: 20,
+                paddingLeft: 15,
+              }}>
+              {'Jane Austine'}
+            </Text>
+            <Text
+              style={{
+                fontFamily: 'Poppins-Medium',
+                color: AppColor.WHITE,
+                fontSize: 12,
+                paddingLeft: 15,
+              }}>
+              {'abc@gmail.com'}
+            </Text>
+          </View>
         </LinearGradient>
       </View>
     );
   };
+  const profileViewHeight = DeviceHeigth * 0.4;
   return (
-    <View style={styles.Container}>
-      {/* <StatusBar barStyle={'default'} translucent={true} backgroundColor={'transparent'}/> */}
+    <SafeAreaView style={styles.Container}>
       <ProfileView />
-      <ScrollView
-        keyboardDismissMode="interactive"
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled">
-        <View style={styles.DetailView}>
-          <Image
-            source={localImage.BELL}
-            style={styles.ProfileImg}
-            resizeMode="cover"
-          />
-          <View style={styles.TextView}>
-            <Text style={styles.NameText}>Jamie</Text>
-            <Text style={styles.nameText}>abc@gmail.com</Text>
-          </View>
+      <View
+        style={[
+          styles.UserDetailsView,
+          {
+            top: -profileViewHeight * 0.1,
+          },
+        ]}>
+        {FirstView.map((value, index) => (
           <TouchableOpacity
-            style={[styles.Button, {backgroundColor: AppColor.RED}]}
+            activeOpacity={value.id == 4 || value.id == 5 ? 1 : 0.5}
+            key={index}
+            style={styles.SingleButton}
+            navigation
             onPress={() => {
-              navigation.navigate("NewEditProfile");
+              navigation.navigate('Personal Details');
             }}>
-            <LinearGradient
-              start={{x: 1, y: 0}}
-              end={{x: 0, y: 1}}
-              colors={['#941000', '#D01818']}
-              style={styles.buttonStyle}>
-              <Text style={styles.EditText}>Edit</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.UserDetailsView}>
-          {FirstView.map((data, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.SingleButton}
-              navigation
-              onPress={() => {
-                navigation.navigate('Personal Details');
-              }}>
-              {data.icon1}
-              <View style={styles.View1}>
-                <Text style={styles.nameText}>{data.text1}</Text>
-                <Icons name="chevron-right" size={22} />
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
-        <View style={styles.UserDetailsView}>
-          {SecondView.map((data, index) => (
-            <TouchableOpacity key={index} style={styles.SingleButton}>
-              {data.icon1}
-              <View style={styles.View1}>
-                <Text style={styles.nameText}>{data.text1}</Text>
+            {value.icon1}
+            <View style={styles.View1}>
+              <Text style={styles.nameText}>{value.text1}</Text>
+              {value.id == 4 || value.id == 5 ? (
+                <Switch
+                  value={isEnabled}
+                  onValueChange={() => toggleSwitch()}
+                  disabled={false}
+                  circleSize={19}
+                  barHeight={21}
+                  circleBorderWidth={0.1}
+                  backgroundActive={AppColor.RED1}
+                  backgroundInactive={AppColor.GRAY2}
+                  circleActiveColor={AppColor.RED}
+                  circleInActiveColor={AppColor.WHITE}
+                  changeValueImmediately={true} // if rendering inside circle, change state immediately or wait for animation to complete
+                  outerCircleStyle={{color: AppColor.RED}} // style for outer animated circle
+                  renderActiveText={false}
+                  renderInActiveText={false}
+                  switchLeftPx={2} // denominator for logic when sliding to TRUE position. Higher number = more space from RIGHT of the circle to END of the slider
+                  switchRightPx={2} // denominator for logic when sliding to FALSE position. Higher number = more space from LEFT of the circle to BEGINNING of the slider
+                  switchWidthMultiplier={2.2} // multiplied by the `circleSize` prop to calculate total width of the Switch
+                  switchBorderRadius={30} // Sets the border Radius of the switch slider. If unset, it remains the circleSize.
+                />
+              ) : value.id == 6 ? <View style={{width:20,height:20}}></View> : (
                 <Icons
                   name="chevron-right"
                   size={22}
-                  color={AppColor.ProfileTextColor}
+                  color={AppColor.DARKGRAY}
                 />
+              )}
+            </View>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={[styles.UserDetailsView, {marginBottom: 10}]}>
+          {SecondView.map((value, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[styles.SingleButton, {}]}
+              navigation
+              onPress={() => {
+                // navigation.navigate('Personal Details');
+              }}>
+              {value.icon1}
+              <View style={styles.View1}>
+                <Text style={styles.nameText}>{value.text1}</Text>
               </View>
             </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
@@ -324,43 +375,31 @@ const styles = StyleSheet.create({
     color: AppColor.ProfileTextColor,
   },
   IconView: {
-    width: DeviceWidth * 0.05,
-    height: DeviceHeigth * 0.03,
+    // width: 22,
+    // height: 22,
   },
   UserDetailsView: {
     backgroundColor: AppColor.WHITE,
     borderRadius: 12,
     marginHorizontal: DeviceWidth * 0.04,
-    marginBottom: DeviceHeigth * 0.03,
+    marginBottom: -DeviceHeigth * 0.01,
     paddingVertical: DeviceHeigth * 0.02,
     shadowColor: 'rgba(0, 0, 0, 1)',
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor:AppColor.DARKGRAY,
         shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.3,
         shadowRadius: 4,
       },
       android: {
-        elevation: 4,
+        elevation: 3,
+        shadowColor:AppColor.DARKGRAY
       },
     }),
-    // ...Platform.select({
-    //   ios: {
-    //    // shadowColor: AppColor.BLACK,
-    //     shadowOffset: {width: 0, height: 10},
-    //     shadowOpacity: 0.4,
-    //   },
-    //   android: {
-    //     elevation: 0,
-    //     shadowColor: AppColor.BLACK,
-    //     shadowOffset: {width: 5, height: 5},
-    //     shadowOpacity: 0.5,
-    //   },
-    // }),
   },
   userDetailsText: {
-    fontFamily: '',
+    // fontFamily: '',
   },
   SingleButton: {
     // justifyContent: 'space-between',
@@ -376,11 +415,10 @@ const styles = StyleSheet.create({
     margin: 8,
   },
   profileView: {
-    // marginHorizontal: DeviceWidth * 0.06,
-    // marginVertical: DeviceHeigth * 0.04,
     height: 100,
     width: 100,
     borderRadius: 160 / 2,
+    alignSelf: 'center',
   },
   img: {
     height: 120,
@@ -388,18 +426,17 @@ const styles = StyleSheet.create({
     borderRadius: 160 / 2,
   },
   pen: {
-    width: 30,
-    height: 30,
+    width: 35,
+    height: 35,
   },
   ButtonPen: {
-    width: 30,
-    height: 30,
-    borderRadius: 30 / 2,
-    position:'absolute',
-    bottom:5,
-    right:16,
-    backgroundColor:AppColor.RED
-    
+    width: 35,
+    height: 35,
+    borderRadius: 35 / 2,
+    position: 'absolute',
+    bottom: -22,
+    right: -8,
+    backgroundColor: AppColor.RED,
   },
 });
 export default Profile;

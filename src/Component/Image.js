@@ -33,10 +33,6 @@ export const localImage = {
   BELL: require('../Icon/Images/NewImage/bell.png'),
   Calories: require('../Icon/Images/NewImage/Calories.png'),
   Step: require('../Icon/Images/NewImage/Step.png'),
-
-
-
-
   BlueTick: require('../Icon/Images/NewImage/BlueTick.png'),
   Profile4: require('../Icon/Images/NewImage/Profile4.png'),
   Documents: require('../Icon/Images/NewImage/Document.png'),
@@ -48,7 +44,6 @@ export const localImage = {
   Pen: require('../Icon/Images/NewImage/Pen.png'),
   Profile3: require('../Icon/Images/NewImage/Profile.png'),
   SplashText: require('../Icon/Images/NewImage/SplashText.png'),
-
   Ellipse: require('../Icon/Images/NewImage/Ellipse.png'),
   Verify: require('../Icon/Images/NewImage/verify.png'),
   Solder: require('../Icon/Images/NewImage/Solder.png'),
@@ -86,7 +81,11 @@ export const localImage = {
   Leg2: require('../Icon/Images/NewImage/Leg2.png'),
   Alocol_yes:require('../Icon/Images/NewImage/Alcohol_yes.png'),
   Alocol_no:require('../Icon/Images/NewImage/Alcohol_no.png'),
-  Alocol_Dnt:require('../Icon/Images/NewImage/Not_to_say.png')
+  Alocol_Dnt:require('../Icon/Images/NewImage/Not_to_say.png'),
+  Backupimg:require('../Icon/Images/NewImage/Backup.png'),
+  DeleteAcc:require('../Icon/Images/NewImage/Delete_account.png'),
+  RateStar:require('../Icon/Images/NewImage/rate_star.png'),
+  Soundimg:require('../Icon/Images/NewImage/Soundimg.png'),
 
 
 };

@@ -27,7 +27,7 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 
 const Bulb = ({screen, header}: any) => {
   return (
-    <View style={{alignItems: 'center',marginTop:DeviceHeigth*0.05,}}>
+    <View style={{alignItems: 'center',marginTop:DeviceHeigth*0.009,}}>
       <Text
         style={{
           color: 'black',

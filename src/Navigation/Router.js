@@ -106,18 +106,7 @@ export const LoginStack = () => {
   
 
       {/* <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
-       <Stack.Screen
-        name="IntroductionScreen1"
-        component={IntroductionScreen1}
-      />
-      <Stack.Screen
-        name="IntroductionScreen2"
-        component={IntroductionScreen2}
-      />
-      <Stack.Screen
-        name="IntroductionScreen3"
-        component={IntroductionScreen3}
-      />
+   
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Injury" component={Injury} />
@@ -138,7 +127,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Weight" component={Weight} />
       <Stack.Screen name="Age" component={Age} /> */}
       {/* <Stack.Screen name="PredictionScreen" component={PredictionScreen} />  */}
-       <Stack.Screen name="MeditationConsent" component={MeditationConsent} />
+       {/* <Stack.Screen name="MeditationConsent" component={MeditationConsent} />
       <Stack.Screen name="MeditationRoutine" component={MeditationRoutine} />
       <Stack.Screen name="SleepDuration" component={SleepDuration} />
       <Stack.Screen name="MentalState" component={MentalState} />
@@ -146,9 +135,21 @@ export const LoginStack = () => {
       <Stack.Screen name="LoadData" component={LoadData} />
       <Stack.Screen name="Preview" component={Preview} />
       <Stack.Screen name="Goal" component={Goal} />
-      <Stack.Screen name="AlcoholConsent" component={AlcohalConsent}/>
-      {/* <Stack.Screen name="Profile" component={Profile}/>
-      <Stack.Screen name="NewEditProfile" component={NewEditProfile}/> */}
+      <Stack.Screen name="AlcoholConsent" component={AlcohalConsent}/> */}
+      <Stack.Screen name="Profile" component={Profile}/>
+      <Stack.Screen name="NewEditProfile" component={NewEditProfile}/>
+      {/* <Stack.Screen
+        name="IntroductionScreen1"
+        component={IntroductionScreen1}
+      />
+      <Stack.Screen
+        name="IntroductionScreen2"
+        component={IntroductionScreen2}
+      />
+      <Stack.Screen
+        name="IntroductionScreen3"
+        component={IntroductionScreen3}
+      /> */}
     </Stack.Navigator>
   );
 };
