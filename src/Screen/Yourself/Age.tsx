@@ -197,7 +197,6 @@ const Age = ({route, navigation}: any) => {
             fontFamily: 'Poppins',
             color: AppColor.BLACK,
             marginLeft: 10,
-            marginTop: DeviceHeigth * 0.02,
           }}>
           years old
         </Text>

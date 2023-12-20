@@ -1,7 +1,6 @@
 import {View, Text} from 'react-native';
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import SplaceScreen from '../Screen/SplaceScreen';
 import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
@@ -15,16 +14,15 @@ import Height from '../Screen/Yourself/Height';
 import Weight from '../Screen/Yourself/Weight';
 import OtpVerification from '../Screen/OtpVerification';
 import WorkoutCategories from '../Screen/New Workouts/WorkoutCategories';
-import WorkoutsDetails from '../Screen/New Workouts/WorkoutsDetails';
-import NewEditProfile from '../Component/NewEditProfile';
-import NewPersonalDetails from '../Screen/NewPersonalDetails';
-import NewStepCounter from '../Screen/NewStepCounter';
-import LogSignUp from '../Screen/LogSignUp';
 import IntroductionScreen1 from '../Screen/Introduction/IntroductionScreen1';
 import IntroductionScreen2 from '../Screen/Introduction/IntroductionScreen2';
 import IntroductionScreen3 from '../Screen/Introduction/IntroductionScreen3';
 import MeditationConsent from '../Screen/MeditationScreens/MeditationConsent';
 import MeditationRoutine from '../Screen/MeditationScreens/MeditationRoutine';
+import LogSignUp from '../Screen/LogSignUp';
+import NewEditProfile from '../Component/NewEditProfile';
+import NewPersonalDetails from '../Screen/NewPersonalDetails';
+import NewStepCounter from '../Screen/NewStepCounter';
 import SleepDuration from '../Screen/MeditationScreens/SleepDuration';
 import MentalState from '../Screen/MeditationScreens/MentalState';
 import Alcohalinfo from '../Screen/MeditationScreens/Alcohalinfo';
@@ -98,16 +96,19 @@ const screenOptions = {
 //   );
 // };
 
-
-
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
+
+      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+      <Stack.Screen
+
    
    <Stack.Screen name="BottomTab" component={BottomTab} />
 
    {/* <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
        <Stack.Screen
+
         name="IntroductionScreen1"
         component={IntroductionScreen1}
       />

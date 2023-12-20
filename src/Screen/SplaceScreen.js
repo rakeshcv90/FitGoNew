@@ -18,7 +18,7 @@ const SplaceScreen = ({navigation}) => {
   useEffect(() => {
     setTimeout(() => {
       if (showIntro) {
-        navigation.navigate('LogSignUp');
+        navigation.navigate('PredictionScreen');
       } else {
         navigation.navigate('IntroductionScreen1');
       }

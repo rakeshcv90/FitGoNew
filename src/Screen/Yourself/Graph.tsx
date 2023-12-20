@@ -26,7 +26,6 @@ export type DataPoint = {
   value: number;
 };
 
-
 const LineChart = ({resultData, zeroData}: any) => {
   const transition = useValue(1);
   const state = useValue({
@@ -37,7 +36,7 @@ const LineChart = ({resultData, zeroData}: any) => {
     transitionStart(0);
     setTimeout(() => {
       transitionStart(1);
-    }, 2000); 
+    }, 2000);
   }, []);
   const GRAPH_HEIGHT = 400;
   const GRAPH_WIDTH = 360;
@@ -46,18 +45,16 @@ const LineChart = ({resultData, zeroData}: any) => {
     const max = Math.max(...data.map((val: any) => val.weight));
     const min = Math.min(...data.map((val: any) => val.weight));
     const y = scaleLinear().domain([0, max]).range([GRAPH_HEIGHT, 150]);
-    
+
     const x = scaleTime()
-    .domain([new Date(data[0].date), new Date(data[data.length - 1].date)])
-    .range([15, GRAPH_WIDTH - 10]);
+      .domain([new Date(data[0].date), new Date(data[data.length - 1].date)])
+      .range([15, GRAPH_WIDTH - 10]);
     const curvedLine = line<DataPoint>()
-    .x(d => x(new Date(d.date)))
-    .y(d => y(d.weight))
-    .curve(curveBasis)(data);
-    
-    console.log(max, min, curvedLine)
+      .x(d => x(new Date(d.date)))
+      .y(d => y(d.weight))
+      .curve(curveBasis)(data);
+
     const skPath = Skia.Path.MakeFromSVGString(curvedLine!);
- 
 
     return {
       max,
@@ -65,6 +62,7 @@ const LineChart = ({resultData, zeroData}: any) => {
       curve: skPath!,
     };
   };
+  const max = Math.max(...resultData.map((val: any) => val.weight));
 
   const transitionStart = (end: number) => {
     state.current = {
@@ -83,19 +81,10 @@ const LineChart = ({resultData, zeroData}: any) => {
     const start = graphData[state.current.current].curve;
     const end = graphData[state.current.next].curve;
     const result = start.interpolate(end, transition.current);
-
-    // const length = result?.le;
-    // const pointOnPath = result?.point(length);
-
-    // Check if the x and y values match the point on the path
-    // const isMatchingPoint =
-    //   Math.abs(pointOnPath.x - 20.625) < 1 &&
-    //   Math.abs(pointOnPath.y - 259.69632904093794) < 1;
-    //   console.log(isMatchingPoint)
-
     return result?.toSVGString() ?? '0';
   }, [state, transition]);
 
+  const final = path.current.split(' ').map(item => parseFloat(item.match(/-?\d+(\.\d+)?/)?.[0])).filter(num => !isNaN(num));
   return (
     <View style={styles.container}>
       <Canvas
@@ -125,19 +114,22 @@ const LineChart = ({resultData, zeroData}: any) => {
           strokeWidth={1}
         />
         <Path style="stroke" path={path} strokeWidth={4} color="red" />
-        {/* {resultData.map((dataPoint, index) => {
+        {resultData.map((dataPoint, index) => {
           const xValue = scaleTime()
-          .domain([new Date(resultData[0].date), new Date(resultData[resultData.length - 1].date)])
+            .domain([
+              new Date(resultData[0].date),
+              new Date(resultData[resultData.length - 1].date),
+            ])
             .range([15, GRAPH_WIDTH - 10])(new Date(dataPoint.date));
 
           const yValue = scaleLinear()
-            .domain([0, graphData[state.current.current].max])
-            .range([GRAPH_HEIGHT, 150])(dataPoint.value);
-          const final = path.current.split(' ').filter(item => {
-            xValue == item;
-          });
-          // console.log(final);
-          // if (path.current.includes(xValue)) {
+            .domain([0, max])
+            .range([GRAPH_HEIGHT, 150])(dataPoint.weight);
+          // console.log('xValue', xValue, yValue, final);
+          // function isApproximatelyEqual(value, array, tolerance) {
+          //   return array.some(item => Math.abs(value - item) <= tolerance);
+          // }
+          // if (isApproximatelyEqual(xValue,final, 2)) {
           return (
             //     <Canvas key={index}>
             //         <Line
@@ -147,10 +139,11 @@ const LineChart = ({resultData, zeroData}: any) => {
             //   style="stroke"
             //   strokeWidth={1}
             // />
-            <Circle cx={xValue} cy={yValue} r={3} color={'red'} />
+            <Circle cx={xValue} cy={yValue} r={5} color={'red'} />
             // </Canvas>
           );
-        })} */}
+          // }
+        })}
       </Canvas>
     </View>
   );

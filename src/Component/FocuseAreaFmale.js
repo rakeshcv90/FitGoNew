@@ -62,7 +62,7 @@ const FocuseAreaFmale = ({imageView, setImageVIew}) => {
     }
 
     setSelectedItems(newSelectedItems);
-    setImageVIew(newImageVIew);
+    setImageVIew(newSelectedItems);
   };
 
 
