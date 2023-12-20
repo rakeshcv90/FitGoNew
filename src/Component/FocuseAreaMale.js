@@ -17,13 +17,13 @@ import {localImage} from './Image';
 import ProgressBar from '../Screen/Yourself/ProgressBar';
 import {useDispatch, useSelector} from 'react-redux';
 
-const FocuseAreaMale = ({imageView, setImageVIew}) => {
+const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
   const dispatch = useDispatch();
   const {defaultTheme, completeProfileData, getUserID} = useSelector(
     state => state,
   );
 
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [imageView, setImageVIew] = useState([]);
   const [bodyPart, setBordyPart] = useState(
     completeProfileData?.focusarea.filter(
       part =>
@@ -45,18 +45,7 @@ const FocuseAreaMale = ({imageView, setImageVIew}) => {
         part.bodypart_title !== 'Biceps',
     ),
   );
-  // const setImageFocusArea = (itemId, item) => {
-  //   const index = selectedItems.indexOf(itemId);
-  //   if (index === -1) {
-  //     setSelectedItems([...selectedItems, itemId]);
-  //     setImageVIew([...selectedItems, itemId]);
-  //   } else {
-  //     const newSelectedItems = [...selectedItems];
-  //     newSelectedItems.splice(index, 1);
-  //     setSelectedItems(newSelectedItems);
-  //     setImageVIew(newSelectedItems);
-  //   }
-  // };
+
 
   const setImageFocusArea = (itemId, item) => {
     const index = selectedItems.indexOf(itemId);
@@ -75,7 +64,7 @@ const FocuseAreaMale = ({imageView, setImageVIew}) => {
     }
 
     setSelectedItems(newSelectedItems);
-    setImageVIew(newSelectedItems);
+    setImageVIew(newImageVIew);
   };
 
 
@@ -95,7 +84,7 @@ const FocuseAreaMale = ({imageView, setImageVIew}) => {
               scrollEnabled={false}
               extraData={({item, index}) => index.toString()}
               renderItem={({item, index}) => {
-                console.log("sdsfdsfsdfdsfsd",item)
+              
                 const isSelected = selectedItems.includes(item.bodypart_id);
                 return (
                   <TouchableOpacity

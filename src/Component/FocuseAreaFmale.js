@@ -17,8 +17,8 @@ import {localImage} from './Image';
 import ProgressBar from '../Screen/Yourself/ProgressBar';
 import {useSelector} from 'react-redux';
 
-const FocuseAreaFmale = ({imageView, setImageVIew}) => {
-  const [selectedItems, setSelectedItems] = useState([]);
+const FocuseAreaFmale = ({selectedItems, setSelectedItems}) => {
+  const [imageView, setImageVIew] = useState([]);
   // const [imageView, setImageVIew] = useState([]);
   const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
     state => state,
@@ -62,7 +62,7 @@ const FocuseAreaFmale = ({imageView, setImageVIew}) => {
     }
 
     setSelectedItems(newSelectedItems);
-    setImageVIew(newSelectedItems);
+    setImageVIew(newImageVIew);
   };
 
 

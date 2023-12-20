@@ -100,13 +100,13 @@ export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
 
-      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
-      <Stack.Screen
+
+     
 
    
-   <Stack.Screen name="BottomTab" component={BottomTab} />
 
-   {/* <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+
+   <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
        <Stack.Screen
 
         name="IntroductionScreen1"
@@ -150,7 +150,8 @@ export const LoginStack = () => {
       <Stack.Screen name="Goal" component={Goal} />
       <Stack.Screen name="AlcoholConsent" component={AlcohalConsent}/>
       <Stack.Screen name="Profile" component={Profile}/>
-      <Stack.Screen name="NewEditProfile" component={NewEditProfile}/> */}
+      <Stack.Screen name="NewEditProfile" component={NewEditProfile}/>
+      <Stack.Screen name="BottomTab" component={BottomTab} />
     </Stack.Navigator>
   );
 };

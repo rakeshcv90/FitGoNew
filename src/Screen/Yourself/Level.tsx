@@ -62,6 +62,10 @@ const Level = ({route, navigation}: any) => {
 
   useEffect(() => {
     setScreen(nextScreen);
+    gender == 'Male'
+      ? setSelected(completeProfileData.level[0]?.level_id)
+      : setSelected(completeProfileData.level[4]?.level_id);
+
   }, []);
   const toNextScreen = () => {
     const currentData = {
