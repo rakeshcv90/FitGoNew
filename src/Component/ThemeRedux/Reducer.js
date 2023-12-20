@@ -8,6 +8,7 @@ const intialState = {
   getLaterButtonData: [],
   getUserID: '',
   customWorkoutData: [],
+  currentWorkoutData: [],
   getUserDataDetails:[],
   mindsetConsent:false,
   mindSetData:[]
@@ -32,6 +33,8 @@ const ThemeReducer = (state = intialState, action) => {
         return {...state, getUserID: action.payload};
         case types.CUSTOM_WORKOUT_DATA:
           return {...state, customWorkoutData: action.payload};
+        case types.CURRENT_WORKOUT_DATA:
+          return {...state, currentWorkoutData: action.payload};
       case types.User_Profile_Data:
         return {...state, getUserDataDetails: action.payload};
       case types.Mindset_Data:
@@ -57,10 +60,6 @@ const ThemeReducer = (state = intialState, action) => {
           ...state,
           mindSetData: updatedMindSetData,
         };
-      return {
-        ...state,
-        mindSetData: [...state.mindSetData],
-      };
         case types.MindSetConsent:
           return{...state,mindsetConsent:action.payload}   
     default:

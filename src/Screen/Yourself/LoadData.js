@@ -26,6 +26,10 @@ import axios from 'axios';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
+import {
+  setCurrentWorkoutData,
+  setCustomWorkoutData,
+} from '../../Component/ThemeRedux/Actions';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
@@ -82,7 +86,7 @@ const LoadData = ({navigation}) => {
   } = useSelector(state => state);
   console.log('mindset===>', mindSetData);
   const translationX = useRef(new Animated.Value(0)).current;
-
+  const dispatch = useDispatch();
   useEffect(() => {
     animateList();
   }, []);
@@ -99,26 +103,27 @@ const LoadData = ({navigation}) => {
     ).start();
   };
   useEffect(() => {
-    DeviceInfo.getUniqueId().then(id=>WholeData(id));
+    // DeviceInfo.getUniqueId().then(id => WholeData(id));
+    currentWorkoutDataApi(t)
   }, []);
-  const WholeData = async (deviceID) => {
+  const WholeData = async deviceID => {
     const mergedObject = Object.assign({}, ...getLaterButtonData);
 
     try {
       const payload = new FormData();
-      payload.append("deviceid",deviceID)
+      payload.append('deviceid', deviceID);
       payload.append('id', null);
       payload.append('gender', mergedObject?.gender);
       payload.append('goal', mergedObject?.goal);
       payload.append('age', mergedObject?.age);
       payload.append('fitnesslevel', mergedObject?.level); // static values change  it accordingly
-      payload.append('focusarea', mergedObject?.focusArea?.join(','));
+      payload.append('focusarea', mergedObject?.focuseArea?.join(','));
       payload.append('weight', mergedObject?.currentWeight);
       payload.append('height', mergedObject?.height);
-      payload.append('injury', null);
+      // payload.append('injury', mergedObject?.injury || '');
+      payload.append('injury', 'Shoulder');
       payload.append('equipment', mergedObject?.equipment);
       payload.append('workoutarea', mergedObject?.workoutArea?.join(','));
-
 
       if (mindsetConsent == true) {
         payload.append('workoutroutine', mindSetData[0].routine);
@@ -126,25 +131,112 @@ const LoadData = ({navigation}) => {
         payload.append('mindstate', mindSetData[2].mState);
         payload.append('alcoholconstent', mindSetData[3].Alcohol_Consent);
 
-       if(mindSetData[4]){
-        payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
-       }
+        if (mindSetData[4]) {
+          payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
+        }
       }
-      console.log(payload)
+      // console.log(payload)
+      const test = {
+        _parts: [
+          ['deviceid', '91967BB2-1A26-42B2-9D6F-F6F4289161EF'],
+          ['id', null],
+          ['gender', 'Male'],
+          ['goal', 3],
+          ['age', '35'],
+          ['fitnesslevel', 2],
+          ['focusarea', '9'],
+          ['weight', 41],
+          ['height', 4],
+          ['injury', ''],
+          ['equipment', 'With Equipment'],
+          ['workoutarea', 'At Home'],
+        ],
+      };
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: test,
+      });
+      console.log('data=======>', data.data);
+      customWorkoutDataApi(deviceID);
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
 
-
+  const customWorkoutDataApi = async deviceID => {
+    try {
+      const payload = new FormData();
+      payload.append('deviceid', deviceID);
+      const res = await axios({
+        url: NewAppapi.Free_WORKOUT_DATA,
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
         },
         data: payload,
       });
-      console.log('data=======>', data.data);
+      if (res.data) {
+        console.log(res.data);
+        dispatch(setCustomWorkoutData(res.data?.workout));
+        currentWorkoutDataApi(res.data?.workout[0]);
+      }
     } catch (error) {
-      console.log('error', error);
+      console.error(error?.response, 'customWorkoutDataApiError');
     }
   };
+  const t = {
+    image_path: 'https://gofit.tentoptoday.com/images/workout_1519947591.jpg',
+    workout_area: 'At Home',
+    workout_bodypart: 9,
+    workout_duration: '3 Days/Week',
+    workout_equipment: 5,
+    workout_gender: 'Male',
+    workout_goal: 3,
+    workout_id: 9,
+    workout_image: 'workout_1519947591.jpg',
+    workout_image_link: '',
+    workout_injury: 'Knee',
+    workout_level: 2,
+    workout_maxage: 40,
+    workout_minage: 31,
+    workout_price: '-',
+    workout_status: '1',
+    workout_title: 'The 6-Week Fat Blast',
+  };
+
+  const currentWorkoutDataApi = async workout => {
+    try {
+      const payload = new FormData();
+      payload.append('workoutid', workout?.workout_id);
+      payload.append('workoutgender', workout?.workout_gender);
+      payload.append('workoutgoal', workout?.workout_goal);
+      payload.append('workoutlevel', workout?.workout_level);
+      payload.append('workoutarea', workout?.workout_area);
+      payload.append('workoutinjury', workout?.workout_injury);
+      payload.append('workoutage', '35'); //User Age here
+      payload.append('workoutequipment', workout?.workout_equipment);
+      console.log(payload)
+      const res = await axios({
+        url: 'https://gofit.tentoptoday.com/adserver/public/api/userfreecustomexercise',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: payload,
+      });
+      if (res.data) {
+        console.log(res.data, 'AGE_CURRENT');
+        dispatch(setCurrentWorkoutData(res.data))
+        navigation.navigate('Preview',{currentExercise: res.data});
+      }
+    } catch (error) {
+      console.error(error?.response, 'customWorkoutDataApiError');
+    }
+  };
+
   const renderItem1 = ({item, index}) => {
     const translateX = translationX.interpolate({
       inputRange: [0, 1],

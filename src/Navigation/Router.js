@@ -47,7 +47,19 @@ const screenOptions = {
   headerShown: false,
   gestureDirection: 'horizontal',
   gesturesEnabled: true,
-  cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+  // cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+  CardStyleInterpolators:({ current, next, layouts }) => {
+    const translateX = current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [layouts.screen.width, 0],
+    });
+
+    const opacity = current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+    });
+    return { transform: [{ translateX }], opacity };
+  },
 };
 
 //   return (

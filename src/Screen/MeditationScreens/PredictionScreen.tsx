@@ -77,7 +77,7 @@ const PredictionScreen = ({navigation, route}: any) => {
   }, [currentWeight, TargetWeight]);
 
   const CalculateWeight = () => {
-    const TotalW = currentWeight - TargetWeight;
+    const TotalW = 40 - 30;
     // if (TotalW <= 0) {
     //   // Avoid unnecessary calculations when the weights are not valid
     //   return;
@@ -91,7 +91,7 @@ const PredictionScreen = ({navigation, route}: any) => {
 
     for (let i = Result_Number_Of_Days; i > 0; i -= 15) {
       const decWeight =
-        currentWeight -
+        40 -
         ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
       const formattedDate = currentDate.format('YYYY-MM-DD');
       weightHistoryArray.push({

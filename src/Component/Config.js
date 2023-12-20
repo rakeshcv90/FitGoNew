@@ -41,6 +41,7 @@ export const NewAppapi = {
   Get_COMPLETE_PROFILE: NewApi + 'goals_levels_focusarea_data',
   Post_COMPLETE_PROFILE: NewApi + 'user_update_details',
   Custom_WORKOUT_DATA: NewApi + 'usercustomworkout',
+  Free_WORKOUT_DATA: NewApi + 'userfreecustomworkout',
 
   Whole_data: NewApi + 'user_update_details',
   All_Workouts: 'allworkout',
