@@ -83,7 +83,10 @@ export const localImage = {
   Alocol_yes:require('../Icon/Images/NewImage/Alcohol_yes.png'),
   Alocol_no:require('../Icon/Images/NewImage/Alcohol_no.png'),
   Alocol_Dnt:require('../Icon/Images/NewImage/Not_to_say.png'),
-  Money:require('../Icon/Images/NewImage/money.png')
+  Money:require('../Icon/Images/NewImage/money.png'),
+  Step1:require('../Icon/Images/NewImage/Pado1.png'),
+  Step2:require('../Icon/Images/NewImage/Pado2.png'),
+  Step3:require('../Icon/Images/NewImage/Pado3.png'),
 
 
 };

@@ -42,6 +42,10 @@ import AnimatedLottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {TextInput} from 'react-native-paper';
 import {navigationRef} from '../../App';
+import DeviceInfo from 'react-native-device-info';
+import VersionNumber from 'react-native-version-number';
+
+
 
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
@@ -52,6 +56,8 @@ const Signup = ({navigation}) => {
   const [isVisiblepassword, setIsvisiblepassword] = useState(true);
   const [checked, setChecked] = useState(false);
   const [forLoading, setForLoading] = useState(false);
+  const[deviceId,setDeviceId] = useState(0);
+  const[appVersion,setAppVersion] = useState(0);
   const dispatch = useDispatch();
 
   const PasswordRegex =
@@ -93,9 +99,13 @@ const Signup = ({navigation}) => {
     });
   }, []);
 
-  // const loginFunction = async () => {
-  //   await GoogleSignin.signOut();
-  // };
+  useEffect(() => {
+    DeviceInfo.syncUniqueId().then((uniqueId) => {
+      setDeviceId(uniqueId)
+    });
+    setAppVersion( VersionNumber.appVersion)
+  }, );
+
   const GoogleSignup = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -134,51 +144,52 @@ const Signup = ({navigation}) => {
     );
   };
   const handleFormSubmit = async (value, action) => {
-    setForLoading(true);
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.signup}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          name: value.name,
-          email: value.email,
-          password: value.password,
-          signup_type: 'form',
-          social_id: 0,
-          social_token: 0,
-          social_type: '',
-        },
-      });
+    console.log("Device Id",deviceId,appVersion)
+    // setForLoading(true);
+    // try {
+    //   const data = await axios(`${NewApi}${NewAppapi.signup}`, {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data',
+    //     },
+    //     data: {
+    //       name: value.name,
+    //       email: value.email,
+    //       password: value.password,
+    //       signup_type: 'form',
+    //       social_id: 0,
+    //       social_token: 0,
+    //       social_type: '',
+    //     },
+    //   });
 
-      if (data.data.status == 0) {
-        setForLoading(false);
-        showMessage({
-          message: data.data.msg,
-          floating: true,
-          duration: 500,
-          type: 'success',
-          icon: {icon: 'auto', position: 'left'},
-        });
-        navigationRef.navigate('OtpVerification', {email: data.data.email});
-        setEmailSent(data.data.email);
-        action.resetForm();
-      } else {
-        setForLoading(false);
-        showMessage({
-          message: data.data.msg,
-          floating: true,
-          duration: 500,
-          type: 'error',
-          icon: {icon: 'auto', position: 'left'},
-        });
-        action.resetForm();
-      }
-    } catch (error) {
-      console.log('Form Signup Error', error?.response?.data);
-      setForLoading(false);
-    }
+    //   if (data.data.status == 0) {
+    //     setForLoading(false);
+    //     showMessage({
+    //       message: data.data.msg,
+    //       floating: true,
+    //       duration: 500,
+    //       type: 'success',
+    //       icon: {icon: 'auto', position: 'left'},
+    //     });
+    //     navigationRef.navigate('OtpVerification', {email: data.data.email});
+    //     setEmailSent(data.data.email);
+    //     action.resetForm();
+    //   } else {
+    //     setForLoading(false);
+    //     showMessage({
+    //       message: data.data.msg,
+    //       floating: true,
+    //       duration: 500,
+    //       type: 'error',
+    //       icon: {icon: 'auto', position: 'left'},
+    //     });
+    //     action.resetForm();
+    //   }
+    // } catch (error) {
+    //   console.log('Form Signup Error', error?.response?.data);
+    //   setForLoading(false);
+    // }
   };
   const socialLogiIn = async (value, token) => {
     // setForLoading(true);
@@ -880,13 +891,13 @@ const Signup = ({navigation}) => {
                   </View>
                 </View>
                 <View style={{marginTop: DeviceHeigth * 0.05}}>
-                  {/* <Button buttonText={'Register'} onPresh={handleSubmit} /> */}
-                  <Button
+                  <Button buttonText={'Register'} onPresh={handleSubmit} />
+                  {/* <Button
                     buttonText={'Register'}
                     onPresh={() => {
                       setVerifyVisible(true);
                     }}
-                  />
+                  /> */}
                 </View>
               </>
             )}

@@ -37,7 +37,7 @@ const BottomTab = () => {
           }}
         />
         <Tabs.Screen
-          name="Diets"
+          name="Workout"
           component={Diets}
           options={{
             tabBarIcon: ({focused, color, size}) => (
@@ -54,7 +54,7 @@ const BottomTab = () => {
           }}
         />
         <Tabs.Screen
-          name="Store"
+          name="Progress"
           component={Store}
           options={{
             tabBarIcon: ({focused, color, size}) => (
@@ -71,7 +71,7 @@ const BottomTab = () => {
           }}
         />
         <Tabs.Screen
-          name="Workouts"
+          name="Store"
           component={Workouts}
           options={{
             tabBarIcon: ({focused, color, size}) => (
@@ -87,6 +87,24 @@ const BottomTab = () => {
             ),
           }}
         />
+         <Tabs.Screen
+          name="Trainer"
+          component={Workouts}
+          options={{
+            tabBarIcon: ({focused, color, size}) => (
+              <Image
+                source={require('../Icon/Images/NewImage/trainer.png')}
+                resizeMode="contain"
+                style={{
+                  width: 25,
+                  height: 30,
+                  tintColor: focused ? 'red' : '#3D3D3D',
+                }}
+              />
+            ),
+          }}
+        />
+        
       </Tabs.Navigator>
     </>
   );
