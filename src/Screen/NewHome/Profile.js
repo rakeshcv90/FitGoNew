@@ -13,16 +13,19 @@ import React, {useEffect, useState} from 'react';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor} from '../../Component/Color';
-import NewHeader from '../../Component/Headers/NewHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
-import CustomStatusBar from '../../Component/CustomStatusBar';
 import {Switch} from 'react-native-switch';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
-import NewHealthkitPermission from '../../Component/NewHealthkitPermission';
+import  {
+  HealthData,
+} from '../../Component/NewHealthkitPermission';
 const Profile = () => {
-  useEffect(()=>{NewHealthkitPermission()},[])
+  useEffect(() => {
+    if(Platform.OS=='ios'){
+      HealthData;
+    }
+  }, []);
   const navigation = useNavigation();
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -192,7 +195,7 @@ const Profile = () => {
                     fontFamily: 'Poppins-Medium',
                     fontSize: 12,
                     color: AppColor.WHITE,
-                    paddingVertical:1.3
+                    paddingVertical: 1.3,
                   }}>
                   {'Sign out'}
                 </Text>
@@ -285,7 +288,9 @@ const Profile = () => {
                   switchWidthMultiplier={2.2} // multiplied by the `circleSize` prop to calculate total width of the Switch
                   switchBorderRadius={30} // Sets the border Radius of the switch slider. If unset, it remains the circleSize.
                 />
-              ) : value.id == 6 ? <View style={{width:20,height:20}}></View> : (
+              ) : value.id == 6 ? (
+                <View style={{width: 20, height: 20}}></View>
+              ) : (
                 <Icons
                   name="chevron-right"
                   size={22}
@@ -387,14 +392,14 @@ const styles = StyleSheet.create({
     shadowColor: 'rgba(0, 0, 0, 1)',
     ...Platform.select({
       ios: {
-        shadowColor:AppColor.DARKGRAY,
+        shadowColor: AppColor.DARKGRAY,
         shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.3,
         shadowRadius: 4,
       },
       android: {
         elevation: 3,
-        shadowColor:AppColor.DARKGRAY
+        shadowColor: AppColor.DARKGRAY,
       },
     }),
   },
@@ -406,6 +411,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     marginHorizontal: 10,
+   
   },
   View1: {
     justifyContent: 'space-between',
