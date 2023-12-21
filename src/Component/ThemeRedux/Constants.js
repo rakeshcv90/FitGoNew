@@ -9,6 +9,7 @@ export default {
   User_ID: 'User_ID',
   CUSTOM_WORKOUT_DATA: 'CUSTOM_WORKOUT_DATA',
   CURRENT_WORKOUT_DATA: 'CURRENT_WORKOUT_DATA',
+  ALL_WORKOUTS_DATA: 'ALL_WORKOUTS_DATA',
   User_Profile_Data:'User_Profile_Data',
   Mindset_Data:'Mindset_Data',
   MindSetConsent:' MindSetConsent'

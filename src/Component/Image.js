@@ -87,6 +87,7 @@ export const localImage = {
   Step1:require('../Icon/Images/NewImage/Pado1.png'),
   Step2:require('../Icon/Images/NewImage/Pado2.png'),
   Step3:require('../Icon/Images/NewImage/Pado3.png'),
+  INFO:require('../Icon/Images/NewImage/GroupInfo.png'),
 
 
 };

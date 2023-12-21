@@ -44,11 +44,5 @@ export const NewAppapi = {
   Free_WORKOUT_DATA: NewApi + 'userfreecustomworkout',
 
   Whole_data: NewApi + 'user_update_details',
-  All_Workouts: 'allworkout',
+  ALL_WORKOUTS: NewApi + 'allworkout',
 };
-
-
-
-
-
-

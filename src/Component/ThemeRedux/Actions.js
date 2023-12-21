@@ -56,6 +56,12 @@ export const setCurrentWorkoutData = data => {
     payload: data,
   };
 };
+export const setAllWorkoutData = data => {
+  return {
+    type: types.ALL_WORKOUTS_DATA,
+    payload: data,
+  };
+};
 export const setMindset_Data = data => {
   return {
     type: types.Mindset_Data,

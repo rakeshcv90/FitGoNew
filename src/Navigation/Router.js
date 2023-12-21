@@ -109,7 +109,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      {/* <Stack.Screen name="BottomTab" component={BottomTab} />
+      <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
         name="IntroductionScreen1"
@@ -122,7 +122,7 @@ export const LoginStack = () => {
       <Stack.Screen
         name="IntroductionScreen3"
         component={IntroductionScreen3}
-      /> */}
+      />
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Injury" component={Injury} />
