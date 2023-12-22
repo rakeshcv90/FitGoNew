@@ -23,41 +23,7 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Graph from './Graph';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
-
-const GradientText = ({
-  item,
-  fontWeight,
-  fontSize,
-  width,
-  x,
-  y,
-  height,
-  marginTop,
-}: any) => {
-  const gradientColors = ['#D5191A', '#941000'];
-
-  return (
-    <View style={{marginTop: marginTop ? marginTop : 10}}>
-      <Svg
-        height={height ? height : '40'}
-        width={width ? width : item?.length * 10}>
-        <SvgGrad id="grad" x1="0" y1="0" x2="100%" y2="0">
-          <Stop offset="0" stopColor={gradientColors[0]} />
-          <Stop offset="1" stopColor={gradientColors[1]} />
-        </SvgGrad>
-        <SvgText
-          fontFamily="Poppins"
-          fontWeight={fontWeight ? fontWeight : '600'}
-          fontSize={fontSize ? fontSize : '16'}
-          fill="url(#grad)"
-          x={x ? x : '10'}
-          y={y ? y : '25'}>
-          {item}
-        </SvgText>
-      </Svg>
-    </View>
-  );
-};
+import GradientText from '../../Component/GradientText';
 
 const Av_Cal_Per_KG = 4000; // normally 7500
 const Av_Cal_Per_2_Workout = 500; // Assuming

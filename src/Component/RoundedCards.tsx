@@ -11,6 +11,7 @@ import React, {FC} from 'react';
 import {AppColor} from './Color';
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {localImage} from './Image';
+import { navigationRef } from '../../App';
 
 export type Props = {
   viewAllButton?: boolean;
@@ -20,6 +21,38 @@ export type Props = {
   viewAllPress?: () => void;
 };
 
+const data = [
+  {
+    id: 1,
+    name: 'Cardio',
+    image: localImage.Abs,
+  },
+  {
+    id: 2,
+    name: 'Workout',
+    image: localImage.Abs,
+  },
+  {
+    id: 3,
+    name: 'Stretching',
+    image: localImage.Abs,
+  },
+  {
+    id: 4,
+    name: 'Weights',
+    image: localImage.Abs,
+  },
+  {
+    id: 5,
+    name: 'Cardio',
+    image: localImage.Abs,
+  },
+  {
+    id: 6,
+    name: 'Cardio',
+    image: localImage.Abs,
+  },
+];
 const RoundedCards: FC<Props> = ({...props}) => {
   return (
     <View style={styles.container}>
@@ -44,17 +77,16 @@ const RoundedCards: FC<Props> = ({...props}) => {
           width: 'auto',
         }}>
         <FlatList
-          data={props.data}
+          data={props.horizontal ? data : props.data}
           nestedScrollEnabled
           keyExtractor={(item, index) => index.toString()}
           horizontal={props.horizontal}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           renderItem={({item, index}: any) => {
-            console.log(item?.workout_title);
             return (
               <TouchableOpacity
-                onPress={() => null}
+                onPress={() => navigationRef.current?.navigate('WorkoutDays',{data: item})}
                 activeOpacity={0.8}
                 style={[
                   styles.box,
@@ -70,7 +102,9 @@ const RoundedCards: FC<Props> = ({...props}) => {
                   },
                 ]}>
                 <Image
-                  source={{uri: item?.image_path}}
+                  source={
+                    props.horizontal ? item.image : {uri: item?.image_path}
+                  }
                   style={{
                     height: DeviceWidth / 6,
                     width: props.horizontal ? DeviceWidth / 6 : DeviceWidth / 3,
@@ -89,7 +123,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        marginLeft: 10
+                        marginLeft: 10,
                       },
                     ]}>
                     <View
@@ -103,14 +137,16 @@ const RoundedCards: FC<Props> = ({...props}) => {
                         {item?.workout_duration}
                       </Text>
                     </View>
-                    <Image
-                      source={localImage.INFO}
-                      style={{
-                        width: 20,
-                        height: 20,
-                        marginRight: DeviceWidth,
-                      }}
-                    />
+                    <TouchableOpacity onPress={() => navigationRef.navigate('WorkoutsDescription',{data: item})} >
+                      <Image
+                        source={localImage.INFO}
+                        style={{
+                          width: 20,
+                          height: 20,
+                          marginRight: DeviceWidth,
+                        }}
+                      />
+                    </TouchableOpacity>
                   </View>
                 )}
               </TouchableOpacity>

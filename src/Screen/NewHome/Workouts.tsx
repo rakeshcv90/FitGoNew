@@ -58,7 +58,8 @@ const Workouts = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    allWorkoutData.length == 0 && allWorkoutApi();
+    // allWorkoutData.length == 0 &&
+     allWorkoutApi();
   }, []);
 
   const allWorkoutApi = async () => {
@@ -74,7 +75,7 @@ const Workouts = () => {
         data: payload,
       });
       if (res.data) {
-        console.log(res.data);
+        console.log(res.data, 'AllWorkouts');
         dispatch(setAllWorkoutData(res.data?.workout_details));
       }
     } catch (error) {

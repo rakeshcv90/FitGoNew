@@ -39,6 +39,8 @@ import {CardStyleInterpolators} from '@react-navigation/stack';
 import AlcohalConsent from '../Screen/MeditationScreens/AlcohalConsent';
 import Profile from '../Screen/NewHome/Profile';
 import BottomTab from './BottomTab';
+import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
+import WorkoutDays from '../Screen/NewWorkouts/WorkoutDays';
 const Stack = createNativeStackNavigator();
 
 const screenOptions = {
@@ -154,6 +156,8 @@ export const LoginStack = () => {
       <Stack.Screen name="AlcoholConsent" component={AlcohalConsent} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="NewEditProfile" component={NewEditProfile} />
+      <Stack.Screen name="WorkoutsDescription" component={WorkoutDescription} />
+      <Stack.Screen name="WorkoutDays" component={WorkoutDays} />
     </Stack.Navigator>
   );
 };
