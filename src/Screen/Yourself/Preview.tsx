@@ -1,4 +1,13 @@
-import {Platform, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useMemo, useState} from 'react';
 import {
   Stop,
@@ -13,43 +22,23 @@ import {AppColor} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Graph from './Graph';
 import {SafeAreaView} from 'react-native-safe-area-context';
-
-const GradientText = ({item, fontWeight, fontSize, width}: any) => {
-  const gradientColors = ['#D5191A', '#941000'];
-
-  return (
-    <View style={{marginTop: 10}}>
-      <Svg height="40" width={width ? width : item?.length * 10}>
-        <SvgGrad id="grad" x1="0" y1="0" x2="100%" y2="0">
-          <Stop offset="0" stopColor={gradientColors[0]} />
-          <Stop offset="1" stopColor={gradientColors[1]} />
-        </SvgGrad>
-        <SvgText
-          fontFamily="Poppins"
-          fontWeight={fontWeight ? fontWeight : '600'}
-          fontSize={fontSize ? fontSize : '16'}
-          fill="url(#grad)"
-          x="10"
-          y="25">
-          {item}
-        </SvgText>
-      </Svg>
-    </View>
-  );
-};
+import LinearGradient from 'react-native-linear-gradient';
+import GradientText from '../../Component/GradientText';
 
 const Av_Cal_Per_KG = 4000; // normally 7500
 const Av_Cal_Per_2_Workout = 500; // Assuming
 const currentW = 70;
 const targetW = 60;
-const Preview = () => {
-  const {getLaterButtonData} = useSelector((state: any) => state);
+const Preview = ({route, navigation}: any) => {
+  const {currentExercise} = route.params;
+  const {getLaterButtonData, currentWorkoutData} = useSelector(
+    (state: any) => state,
+  );
   const [finalDate, setFinalDate] = useState('');
   const [weightHistory, setWeightHistory] = useState<[]>([]);
   const [zeroData, setZeroData] = useState<[]>([]);
   const [currentWeight, setCurrentWeight] = useState(-1);
   const [TargetWeight, setTargetWeight] = useState(-1);
-
   useEffect(() => {
     const i = getLaterButtonData.findIndex(
       (item: any) => 'currentWeight' in item,
@@ -131,6 +120,34 @@ const Preview = () => {
       arrowColor: AppColor.RED,
     };
   }, []);
+
+  const renderItem = ({item, index}: any) => {
+    return (
+      <View
+        style={{
+          backgroundColor: '#EFF2FA',
+          height: DeviceWidth / 3,
+          width: DeviceWidth / 4,
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 10,
+        }}>
+        <Image
+          source={{uri: item?.exercise_image_link}}
+          style={{height: DeviceWidth / 5, width: DeviceWidth / 5}}
+          resizeMode="contain"
+        />
+        <GradientText
+          item={`X ${item?.exercise_reps}`}
+          fontWeight="600"
+          fontSize={20}
+          width={DeviceWidth / 4}
+          x={DeviceWidth * 0.07}
+        />
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#F8F8F8'}}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -191,10 +208,73 @@ const Preview = () => {
           hideExtraDays={true}
           hideDayNames={true}
           disableAllTouchEventsForInactiveDays
-          style={styles.calender}
+          style={[
+            styles.calender,
+            {
+              height: DeviceHeigth * 0.4,
+            },
+          ]}
           theme={theme}
         />
         <GradientText item={'Plan Preview'} />
+        <View style={[styles.calender, {paddingHorizontal: 10, paddingBottom: 20}]}>
+          {Object.entries(currentExercise?.days).map(
+            (item: any, index: number) => {
+              return (
+                <>
+                  <GradientText
+                    item={`Day ${index + 1}`}
+                    fontWeight="600"
+                    fontSize={14}
+                    width={100}
+                  />
+                  {item[1] == 'Rest' ? (
+                    <GradientText
+                      item={'Rest'}
+                      fontWeight="600"
+                      fontSize={20}
+                      width={100}
+                      marginTop={0}
+                      height={30}
+                    />
+                  ) : (
+                    <FlatList
+                      data={item[1]}
+                      renderItem={renderItem}
+                      key={index}
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      scrollEnabled={item[1].length > 3}
+                    />
+                  )}
+                </>
+              );
+            },
+          )}
+        </View>
+        <TouchableOpacity
+          onPress={() => {
+            // toNextScreen()
+            navigation.navigate('Preview');
+          }}>
+          <LinearGradient
+            start={{x: 1, y: 0}}
+            end={{x: 0, y: 1}}
+            colors={['#941000', '#D5191A']}
+            style={[styles.nextButton]}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontFamily: 'Poppins',
+                lineHeight: 30,
+                color: AppColor.WHITE,
+                fontWeight: '700',
+              }}>
+              Choose Your Plan
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        <View style={{height: DeviceHeigth * 0.05}} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -205,6 +285,7 @@ export default Preview;
 const styles = StyleSheet.create({
   calender: {
     width: DeviceWidth * 0.9,
+    // he: DeviceWidth * 0.9,
     alignSelf: 'center',
     backgroundColor: '#fff',
     shadowColor: 'rgba(0, 0, 0, 1)',
@@ -220,6 +301,16 @@ const styles = StyleSheet.create({
         elevation: 4,
       },
     }),
-    height: DeviceHeigth * 0.4,
+  },
+  nextButton: {
+    // backgroundColor: 'red',
+    width: DeviceWidth * 0.9,
+    height: 50,
+    borderRadius: 50 / 2,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: 20,
   },
 });
