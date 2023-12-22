@@ -8,6 +8,7 @@ import {
   ScrollView,
   StatusBar,
   SafeAreaView,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {localImage} from '../../Component/Image';
@@ -17,15 +18,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {Switch} from 'react-native-switch';
-import  {
-  HealthData,
-} from '../../Component/NewHealthkitPermission';
+import AskHealthPermissionAndroid from '../../Component/AndroidHealthPermission';
+import AppleHealthKit, {
+} from 'react-native-health'
 const Profile = () => {
-  useEffect(() => {
-    if(Platform.OS=='ios'){
-      HealthData;
-    }
-  }, []);
+
   const navigation = useNavigation();
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -146,6 +143,37 @@ const Profile = () => {
   const SecondView = Profile_Data.slice(6);
 
   const ProfileView = () => {
+    useEffect(()=>{
+      if(Platform.OS=="android"){
+        AskHealthPermissionAndroid()
+      }else{
+        AppleHealthKit.isAvailable((err, available) => {
+          console.log("Avialalebe=========>",available)
+          const permissions = {
+            permissions: {
+              read: [
+                AppleHealthKit.Constants.Permissions.DistanceWalkingRunning,
+                AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
+                AppleHealthKit.Constants.Permissions.Steps,
+              ],
+            },
+          };
+          if (err) {
+            console.log('error initializing Healthkit: ', err)
+          }
+          else if(available==true){
+            AppleHealthKit.initHealthKit(permissions, (error) => {
+              if (error) {
+                console.log('[ERROR] Cannot grant permissions!', error);
+              } 
+            });
+          }else{
+            Alert.alert("Attention","Health data can't be tracked in this Device due to its specifications",{
+            })
+          }
+        })
+      }
+    })
     return (
       <View>
         <LinearGradient
@@ -411,7 +439,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     marginHorizontal: 10,
-   
   },
   View1: {
     justifyContent: 'space-between',
