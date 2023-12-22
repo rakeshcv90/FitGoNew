@@ -79,8 +79,9 @@ const LoadData = ({navigation}) => {
     getLaterButtonData,
     mindSetData,
     mindsetConsent,
+    getUserDataDetails,
   } = useSelector(state => state);
-  console.log('mindset===>', mindSetData);
+
   const translationX = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -99,40 +100,45 @@ const LoadData = ({navigation}) => {
     ).start();
   };
   useEffect(() => {
-    DeviceInfo.getUniqueId().then(id=>WholeData(id));
+    DeviceInfo.getUniqueId().then(id => WholeData(id));
   }, []);
-  const WholeData = async (deviceID) => {
+  const WholeData = async deviceID => {
     const mergedObject = Object.assign({}, ...getLaterButtonData);
-
+    console.log('mindset===>', mergedObject?.injury?.join(','));
     try {
       const payload = new FormData();
-      payload.append("deviceid",deviceID)
-      payload.append('id', null);
+      payload.append('deviceid', deviceID);
+      payload.append(
+        'id',
+        getUserDataDetails?.id != null ? getUserDataDetails?.id : null,
+      );
       payload.append('gender', mergedObject?.gender);
       payload.append('goal', mergedObject?.goal);
       payload.append('age', mergedObject?.age);
       payload.append('fitnesslevel', mergedObject?.level); // static values change  it accordingly
-      payload.append('focusarea', mergedObject?.focusArea?.join(','));
+      payload.append('focusarea', mergedObject?.focuseArea?.join(','));
       payload.append('weight', mergedObject?.currentWeight);
       payload.append('height', mergedObject?.height);
-      payload.append('injury', null);
+      payload.append(
+        'injury',
+        mergedObject?.injury != null ? mergedObject?.injury?.join(',') : null,
+      );
       payload.append('equipment', mergedObject?.equipment);
       payload.append('workoutarea', mergedObject?.workoutArea?.join(','));
 
+      if (getUserDataDetails)
+        if (mindsetConsent == true) {
+          payload.append('workoutroutine', mindSetData[0].routine);
+          payload.append('sleepduration', mindSetData[1].SleepDuration);
+          payload.append('mindstate', mindSetData[2].mState);
+          payload.append('alcoholconstent', mindSetData[3].Alcohol_Consent);
 
-      if (mindsetConsent == true) {
-        payload.append('workoutroutine', mindSetData[0].routine);
-        payload.append('sleepduration', mindSetData[1].SleepDuration);
-        payload.append('mindstate', mindSetData[2].mState);
-        payload.append('alcoholconstent', mindSetData[3].Alcohol_Consent);
-
-       if(mindSetData[4]){
-        payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
-       }
-      }
-      console.log(payload)
+          if (mindSetData[4]) {
+            payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
+          }
+        }
+      console.log('Total payloadf', payload);
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
-
 
         method: 'POST',
         headers: {

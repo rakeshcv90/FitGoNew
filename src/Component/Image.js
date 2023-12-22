@@ -13,7 +13,7 @@ export const localImage = {
   dw4: require('../Icon/Images/DwaderImage/n4.png'),
   dw5: require('../Icon/Images/DwaderImage/n5.png'),
   dw6: require('../Icon/Images/DwaderImage/n6.png'),
-  dw7: require('../Icon/Images/DwaderImage/n7.png'),
+  
   dw8: require('../Icon/Images/DwaderImage/n8.png'),
   dw9: require('../Icon/Images/DwaderImage/n9.png'),
   avt: require('../Icon/Images/DwaderImage/Avatar.png'),
@@ -87,6 +87,8 @@ export const localImage = {
   Step1:require('../Icon/Images/NewImage/Pado1.png'),
   Step2:require('../Icon/Images/NewImage/Pado2.png'),
   Step3:require('../Icon/Images/NewImage/Pado3.png'),
+  Play:require('../Icon/Images/NewImage/play.png'),
+  dw7: require('../Icon/Images/NewImage/n7.png'),
 
 
 };

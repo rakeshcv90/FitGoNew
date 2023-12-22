@@ -145,53 +145,56 @@ const Signup = ({navigation}) => {
   };
   const handleFormSubmit = async (value, action) => {
     console.log("Device Id",deviceId,appVersion)
-    // setForLoading(true);
-    // try {
-    //   const data = await axios(`${NewApi}${NewAppapi.signup}`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //     data: {
-    //       name: value.name,
-    //       email: value.email,
-    //       password: value.password,
-    //       signup_type: 'form',
-    //       social_id: 0,
-    //       social_token: 0,
-    //       social_type: '',
-    //     },
-    //   });
+    setForLoading(true);
+    try {
+      const data = await axios(`${NewApi}${NewAppapi.signup}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          name: value.name,
+          email: value.email,
+          password: value.password,
+          signup_type: 'form',
+          social_id: 0,
+          social_token: 0,
+          social_type: '',
+          deviceid:deviceId,
+          version:appVersion
+        },
+      });
 
-    //   if (data.data.status == 0) {
-    //     setForLoading(false);
-    //     showMessage({
-    //       message: data.data.msg,
-    //       floating: true,
-    //       duration: 500,
-    //       type: 'success',
-    //       icon: {icon: 'auto', position: 'left'},
-    //     });
-    //     navigationRef.navigate('OtpVerification', {email: data.data.email});
-    //     setEmailSent(data.data.email);
-    //     action.resetForm();
-    //   } else {
-    //     setForLoading(false);
-    //     showMessage({
-    //       message: data.data.msg,
-    //       floating: true,
-    //       duration: 500,
-    //       type: 'error',
-    //       icon: {icon: 'auto', position: 'left'},
-    //     });
-    //     action.resetForm();
-    //   }
-    // } catch (error) {
-    //   console.log('Form Signup Error', error?.response?.data);
-    //   setForLoading(false);
-    // }
+      if (data.data.status == 0) {
+        setForLoading(false);
+        showMessage({
+          message: data.data.msg,
+          floating: true,
+          duration: 500,
+          type: 'success',
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setVerifyVisible(true)
+        setEmailSent(data.data.email);
+        action.resetForm();
+      } else {
+        setForLoading(false);
+        showMessage({
+          message: data.data.msg,
+          floating: true,
+          duration: 500,
+          type: 'error',
+          icon: {icon: 'auto', position: 'left'},
+        });
+        //action.resetForm();
+      }
+    } catch (error) {
+      console.log('Form Signup Error', error?.response?.data);
+      setForLoading(false);
+    }
   };
   const socialLogiIn = async (value, token) => {
+
     // setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
@@ -206,15 +209,16 @@ const Signup = ({navigation}) => {
           socialid: value.id,
           socialtoken: token,
           socialtype: 'google',
+          deviceid:deviceId,
+          version:appVersion
         },
       });
-
+console.log("sdfdsfsdfs",data.data)
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
-        console.log('Compleate Profile');
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
       } else if (
@@ -222,7 +226,6 @@ const Signup = ({navigation}) => {
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
-        console.log('Compleate Profile1');
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
       } else if (
@@ -255,6 +258,8 @@ const Signup = ({navigation}) => {
           socialid: value.userID,
           socialtoken: '',
           socialtype: 'facebook',
+          deviceid:deviceId,
+          version:appVersion
         },
       });
 
@@ -366,7 +371,7 @@ const Signup = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-        setForLoading(true);
+       // setForLoading(true);
 
         try {
           const OtpMsg = await axios(`${NewApi}${NewAppapi.OTPVerification}`, {
@@ -376,10 +381,10 @@ const Signup = ({navigation}) => {
             },
             data: {
               otp: OtpString,
-              email: 'cvmytest@gmail.com',
+              email:Emailsend ,
             },
           });
-         
+    
           if (OtpMsg.data.msg == 'Email verified successfully') {
             setForLoading(false);
        
@@ -392,6 +397,7 @@ const Signup = ({navigation}) => {
             });
             dispatch(setUserId(OtpMsg.data?.id));
             navigationRef.navigate('Yourself');
+            setVerifyVisible(false)
             setTxt1('');
             setTxt2('');
             setTxt3('');
