@@ -1,11 +1,10 @@
 import {View, Text} from 'react-native';
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import SplaceScreen from '../Screen/SplaceScreen';
 import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/index';
+import Yourself from '../Screen/Yourself/Index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -15,16 +14,15 @@ import Height from '../Screen/Yourself/Height';
 import Weight from '../Screen/Yourself/Weight';
 import OtpVerification from '../Screen/OtpVerification';
 import WorkoutCategories from '../Screen/New Workouts/WorkoutCategories';
-import WorkoutsDetails from '../Screen/New Workouts/WorkoutsDetails';
-import NewEditProfile from '../Component/NewEditProfile';
-import NewPersonalDetails from '../Screen/NewPersonalDetails';
-import NewStepCounter from '../Screen/NewStepCounter';
-import LogSignUp from '../Screen/LogSignUp';
 import IntroductionScreen1 from '../Screen/Introduction/IntroductionScreen1';
 import IntroductionScreen2 from '../Screen/Introduction/IntroductionScreen2';
 import IntroductionScreen3 from '../Screen/Introduction/IntroductionScreen3';
 import MeditationConsent from '../Screen/MeditationScreens/MeditationConsent';
 import MeditationRoutine from '../Screen/MeditationScreens/MeditationRoutine';
+import LogSignUp from '../Screen/LogSignUp';
+import NewEditProfile from '../Component/NewEditProfile';
+import NewPersonalDetails from '../Screen/NewPersonalDetails';
+import NewStepCounter from '../Screen/NewStepCounter';
 import SleepDuration from '../Screen/MeditationScreens/SleepDuration';
 import MentalState from '../Screen/MeditationScreens/MentalState';
 import Alcohalinfo from '../Screen/MeditationScreens/Alcohalinfo';
@@ -36,12 +34,11 @@ import Age from '../Screen/Yourself/Age';
 import Goal from '../Screen/Yourself/Goal';
 import LoadData from '../Screen/Yourself/LoadData';
 import PredictionScreen from '../Screen/MeditationScreens/PredictionScreen';
-import {
-  CardStyleInterpolators,
-} from "@react-navigation/stack";
+import {CardStyleInterpolators} from '@react-navigation/stack';
 
 import AlcohalConsent from '../Screen/MeditationScreens/AlcohalConsent';
 import Profile from '../Screen/NewHome/Profile';
+import BottomTab from './BottomTab';
 const Stack = createNativeStackNavigator();
 
 const screenOptions = {
@@ -97,16 +94,23 @@ const screenOptions = {
 //   );
 // };
 
-
-
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-   
-  
-
-      {/* <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
-   
+      {/* <Stack.Screen name="BottomTab" component={BottomTab} />
+      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+      <Stack.Screen
+        name="IntroductionScreen1"
+        component={IntroductionScreen1}
+      />
+      <Stack.Screen
+        name="IntroductionScreen2"
+        component={IntroductionScreen2}
+      />
+      <Stack.Screen
+        name="IntroductionScreen3"
+        component={IntroductionScreen3}
+      /> */}
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Injury" component={Injury} />
@@ -125,9 +129,9 @@ export const LoginStack = () => {
       <Stack.Screen name="Level" component={Level} />
       <Stack.Screen name="Height" component={Height} />
       <Stack.Screen name="Weight" component={Weight} />
-      <Stack.Screen name="Age" component={Age} /> */}
-      {/* <Stack.Screen name="PredictionScreen" component={PredictionScreen} />  */}
-       {/* <Stack.Screen name="MeditationConsent" component={MeditationConsent} />
+      <Stack.Screen name="Age" component={Age} />
+      <Stack.Screen name="PredictionScreen" component={PredictionScreen} />
+      <Stack.Screen name="MeditationConsent" component={MeditationConsent} />
       <Stack.Screen name="MeditationRoutine" component={MeditationRoutine} />
       <Stack.Screen name="SleepDuration" component={SleepDuration} />
       <Stack.Screen name="MentalState" component={MentalState} />
@@ -135,21 +139,9 @@ export const LoginStack = () => {
       <Stack.Screen name="LoadData" component={LoadData} />
       <Stack.Screen name="Preview" component={Preview} />
       <Stack.Screen name="Goal" component={Goal} />
-      <Stack.Screen name="AlcoholConsent" component={AlcohalConsent}/> */}
-      <Stack.Screen name="Profile" component={Profile}/>
-      <Stack.Screen name="NewEditProfile" component={NewEditProfile}/>
-      {/* <Stack.Screen
-        name="IntroductionScreen1"
-        component={IntroductionScreen1}
-      />
-      <Stack.Screen
-        name="IntroductionScreen2"
-        component={IntroductionScreen2}
-      />
-      <Stack.Screen
-        name="IntroductionScreen3"
-        component={IntroductionScreen3}
-      /> */}
+      <Stack.Screen name="AlcoholConsent" component={AlcohalConsent} />
+      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="NewEditProfile" component={NewEditProfile} />
     </Stack.Navigator>
   );
 };

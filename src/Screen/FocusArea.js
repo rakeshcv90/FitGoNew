@@ -23,14 +23,14 @@ const FocusArea = ({route, navigation}) => {
   const {nextScreen} = route.params;
   const {getLaterButtonData} = useSelector(state => state);
   const [screen, setScreen] = useState(nextScreen);
-  const [imageView, setImageVIew] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
 
   useEffect(() => {
     setScreen(nextScreen);
   }, []);
   const toNextScreen = () => {
     const currentData = {
-      focuseArea: imageView,
+      focuseArea: selectedItems,
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     navigation.navigate('WorkoutArea', {nextScreen: screen + 1});
@@ -41,7 +41,7 @@ const FocusArea = ({route, navigation}) => {
       ]);
     }
   };
-
+console.log("FBHFGHFGHFGFGFGF",selectedItems)
   return (
     <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -71,9 +71,9 @@ const FocusArea = ({route, navigation}) => {
       </View>
       <View>
         {getLaterButtonData[0].gender == 'Male' ? (
-          <FocuseAreaMale imageView={imageView} setImageVIew={setImageVIew} />
+          <FocuseAreaMale selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
         ) : (
-          <FocuseAreaFmale imageView={imageView} setImageVIew={setImageVIew} />
+          <FocuseAreaFmale selectedItems={selectedItems} setSelectedItems={setSelectedItems} />
         )}
       </View>
       <View style={styles.buttons}>
@@ -91,7 +91,7 @@ const FocusArea = ({route, navigation}) => {
           <Icons name="chevron-left" size={25} color={'#000'} />
         </TouchableOpacity>
 
-        {imageView.length !== 0 && (
+        {selectedItems.length !== 0 && (
           <TouchableOpacity
             onPress={() => {
               toNextScreen();
@@ -124,18 +124,13 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: (DeviceWidth * 85) / 100,
+    width: DeviceWidth * 0.9,
     alignItems: 'center',
     alignSelf: 'center',
-    alignSelf: 'center',
+
     bottom: DeviceHeigth * 0.02,
     position: 'absolute',
-    // top:
-    //   Platform.OS == 'android'
-    //     ? DeviceHeigth * 0.69
-    //     : DeviceHeigth == '1024'
-    //     ? DeviceHeigth * 0.7
-    //     : DeviceHeigth * 0.66,
+ 
   },
   nextButton: {
     backgroundColor: 'red',

@@ -31,14 +31,13 @@ const Scale = ({setActiveIndex, activeIndex, data, posData, h}: any) => {
       {h ? (
         <View
           style={{
-            // height: BOX_HEIGHT * 0.3,
-            // flexDirection: 'row',
+          
             alignItems: 'center',
             width: DeviceWidth * 0.9,
             alignSelf: 'center',
-            // backgroundColor: 'red',
+    
           }}>
-          {/* <View style={{width: DeviceWidth * 0.6}} /> */}
+ 
           <FlatList
             ref={ScaleRef}
             data={data}

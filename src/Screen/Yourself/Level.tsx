@@ -49,7 +49,7 @@ const GradientText = ({item}: any) => {
 };
 
 const Level = ({route, navigation}: any) => {
-  const {nextScreen} = route.params;
+  const {nextScreen, gender} = route.params;
   const translateLevel = useRef(new Animated.Value(0)).current;
 
   const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
@@ -62,7 +62,10 @@ const Level = ({route, navigation}: any) => {
 
   useEffect(() => {
     setScreen(nextScreen);
-    setSelected(1);
+    gender == 'Male'
+      ? setSelected(completeProfileData.level[0]?.level_id)
+      : setSelected(completeProfileData.level[4]?.level_id);
+
   }, []);
   const toNextScreen = () => {
     const currentData = {
@@ -96,7 +99,7 @@ const Level = ({route, navigation}: any) => {
           alignSelf: 'center',
           height: DeviceHeigth * 0.65,
           // backgroundColor: 'red',
-          marginTop: -50
+          marginTop: -50,
           // width: DeviceWidth,
         }}>
         <View
@@ -112,17 +115,27 @@ const Level = ({route, navigation}: any) => {
             horizontal
             scrollEnabled={false}
             showsHorizontalScrollIndicator={false}
-            renderItem={({item, index}: any) => (
-              <Image
-                resizeMode="contain"
-                source={{uri: item?.level_image}}
-                style={{
-                  width: DeviceWidth,
-                  height: DeviceHeigth * 0.5,
-                  // backgroundColor: 'red',
-                }}
-              />
-            )}
+            renderItem={({item, index}: any) => {
+              if (item?.level_gender != gender) return;
+              if (item?.level_id == selected) {
+                return (
+                  <Image
+                    resizeMode="contain"
+                    source={{uri: item?.level_image}}
+                    // source={{uri: completeProfileData?.level[1]?.level_image}}
+                    style={{
+                      width: DeviceWidth,
+                      height:
+                        gender == 'Male'
+                          ? DeviceHeigth * 0.5
+                          : DeviceHeigth * 0.45,
+                      alignSelf: 'center',
+                      // backgroundColor: 'red',
+                    }}
+                  />
+                );
+              }
+            }}
           />
         </View>
         <View style={{height: DeviceHeigth * 0.1}}>
@@ -139,7 +152,8 @@ const Level = ({route, navigation}: any) => {
               alignSelf: 'center',
             }}>
             {completeProfileData.level?.map((item: any, index: number) => {
-              if (index == 3) return;
+              if (item?.level_gender != gender) return;
+              if (item?.level_title == 'Elite') return;
               return (
                 <View
                   style={{
@@ -222,7 +236,8 @@ const Level = ({route, navigation}: any) => {
               // paddingHorizontal: 2,
             }}>
             {completeProfileData.level?.map((item: any, index: number) => {
-              if (index == 3) return;
+              if (item?.level_gender != gender) return;
+              if (item?.level_title == 'Elite') return;
               return (
                 <View
                   style={{
@@ -260,7 +275,7 @@ const Level = ({route, navigation}: any) => {
       <View style={styles.buttons}>
         <TouchableOpacity
           onPress={() => {
-           // dispatch(setLaterButtonData([]));
+            // dispatch(setLaterButtonData([]));
             navigation.goBack();
           }}
           style={{
@@ -317,14 +332,12 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: (DeviceWidth * 85) / 100,
+    width: DeviceWidth * 0.9,
     alignItems: 'center',
     alignSelf: 'center',
 
-  
     bottom: DeviceHeigth * 0.02,
     position: 'absolute',
-
   },
   nextButton: {
     backgroundColor: 'red',

@@ -50,8 +50,9 @@ const Goal = ({navigation, route}: any) => {
         goal: item?.goal_id,
       },
     ];
+    console.log(currentData)
     dispatch(setLaterButtonData(currentData));
-    navigation.navigate('Level', {nextScreen: screen + 1});
+    navigation.navigate('Level', {nextScreen: screen + 1, gender: gender});
   };
 
   const handleImagePress = (gender: string) => {
@@ -65,7 +66,7 @@ const Goal = ({navigation, route}: any) => {
         toValue: 0,
         duration: 500,
         useNativeDriver: true,
-        delay: gender == 'Male' ? 1500 : 500, // Delay the return to center animation for a smoother effect
+        delay: gender == 'Male' ? 500 : 500, // Delay the return to center animation for a smoother effect
       }),
     ]).start();
     setTimeout(() => {
@@ -100,7 +101,7 @@ const Goal = ({navigation, route}: any) => {
           height: DeviceHeigth * 0.55,
           transform: [{translateX: goalsAnimation}],
           width: DeviceWidth,
-          marginLeft: gender == 'Female' ? 50 : 0,
+          marginLeft: gender == 'Female' ? 50 : 30,
         }}>
         <View>
           {data &&
@@ -164,7 +165,7 @@ const Goal = ({navigation, route}: any) => {
         <TouchableOpacity
           style={{
             alignSelf: 'flex-start',
-            marginLeft: DeviceWidth * 0.1,
+            marginLeft: DeviceWidth * 0.04,
             backgroundColor: '#F7F8F8',
             width: 45,
             height: 45,

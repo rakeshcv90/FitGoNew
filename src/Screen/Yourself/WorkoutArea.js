@@ -26,7 +26,10 @@ const WorkoutArea = ({route, navigation}) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageView, setImageVIew] = useState([]);
   const dispatch = useDispatch();
-
+  const {getLaterButtonData, completeProfileData, getUserID} = useSelector(
+    state => state,
+  );
+  console.log('Workout ARe', imageView);
   useEffect(() => {
     setScreen(nextScreen);
   }, []);
@@ -42,7 +45,6 @@ const WorkoutArea = ({route, navigation}) => {
     ]);
   };
 
-  const {getLaterButtonData} = useSelector(state => state);
   useEffect(() => {
     animateElement();
     animateElement1();
@@ -166,18 +168,22 @@ const WorkoutArea = ({route, navigation}) => {
                   {
                     justifyContent: 'center',
                     alignItems: 'center',
-                    borderWidth: imageView.find(num => num === 'AtHome') && 1,
-                    borderColor: imageView.find(num => num === 'AtHome')
+                    borderWidth: imageView.find(num => num === 'At Home') && 1,
+                    borderColor: imageView.find(num => num === 'At Home')
                       ? 'red'
                       : 'white',
                   },
                 ]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  setImageFocusArea('AtHome');
+                  setImageFocusArea(
+                    completeProfileData.workoutarea[3].workoutarea_title,
+                  );
                 }}>
                 <Image
-                  source={localImage.AtHome}
+              source={{
+                uri: completeProfileData.workoutarea[3].workoutarea_image,
+              }}
                   style={styles.Image23}
                   resizeMode="cover"
                 />
@@ -190,7 +196,7 @@ const WorkoutArea = ({route, navigation}) => {
                     marginVertical: 8,
                     lineHeight: 21,
                   }}>
-                  At Home
+                  {completeProfileData.workoutarea[3].workoutarea_title}
                 </Text>
               </TouchableOpacity>
             </Animated.View>
@@ -205,19 +211,21 @@ const WorkoutArea = ({route, navigation}) => {
                 style={[
                   styles.shadowProp,
                   {
-                    borderWidth: imageView.find(num => num === 'AtBed') && 1,
-                    borderColor: imageView.find(num => num === 'AtBed')
+                    borderWidth: imageView.find(num => num === 'At Bed') && 1,
+                    borderColor: imageView.find(num => num === 'At Bed')
                       ? 'red'
                       : 'white',
                   },
                 ]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  setImageFocusArea('AtBed');
+                  setImageFocusArea(
+                    completeProfileData.workoutarea[1].workoutarea_title,
+                  );
                 }}>
                 <Image
                   source={{
-                    uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/3b41e81c-2485-4abf-ccab-666d58453500/public',
+                    uri: completeProfileData.workoutarea[1].workoutarea_image,
                   }}
                   style={styles.Image23}
                   resizeMode={DeviceHeigth == '1024' ? 'stretch' : 'cover'}
@@ -231,7 +239,7 @@ const WorkoutArea = ({route, navigation}) => {
                     marginVertical: 8,
                     lineHeight: 21,
                   }}>
-                  At Bed
+                  {completeProfileData.workoutarea[1].workoutarea_title}
                 </Text>
               </TouchableOpacity>
             </Animated.View>
@@ -262,11 +270,13 @@ const WorkoutArea = ({route, navigation}) => {
                 ]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  setImageFocusArea('Outdoor');
+                  setImageFocusArea(
+                    completeProfileData.workoutarea[2].workoutarea_title,
+                  );
                 }}>
                 <Image
-                  source={{
-                    uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/7818f34a-c717-46f8-4fb0-ad52fae40700/public',
+                   source={{
+                    uri: completeProfileData.workoutarea[2].workoutarea_image,
                   }}
                   style={styles.Image23}
                   resizeMode={DeviceHeigth == '1024' ? 'stretch' : 'stretch'}
@@ -280,7 +290,7 @@ const WorkoutArea = ({route, navigation}) => {
                     marginVertical: 8,
                     lineHeight: 21,
                   }}>
-                  Outdoor
+                  {completeProfileData.workoutarea[2].workoutarea_title}
                 </Text>
               </TouchableOpacity>
             </Animated.View>
@@ -303,11 +313,13 @@ const WorkoutArea = ({route, navigation}) => {
                 ]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  setImageFocusArea('Anywhere');
+                  setImageFocusArea(
+                    completeProfileData.workoutarea[0].workoutarea_title,
+                  );
                 }}>
                 <Image
                   source={{
-                    uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/130f304c-8239-49e7-3b5d-91922eee0f00/public',
+                    uri: completeProfileData.workoutarea[0].workoutarea_image,
                   }}
                   style={styles.Image23}
                   resizeMode={DeviceHeigth == '1024' ? 'stretch' : 'stretch'}
@@ -321,7 +333,7 @@ const WorkoutArea = ({route, navigation}) => {
                     marginVertical: 8,
                     lineHeight: 21,
                   }}>
-                  Anywhwere
+                  {completeProfileData.workoutarea[0].workoutarea_title}
                 </Text>
               </TouchableOpacity>
             </Animated.View>
@@ -412,7 +424,7 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: (DeviceWidth * 85) / 100,
+    width: DeviceWidth * 0.9,
     alignItems: 'center',
     alignSelf: 'center',
 
