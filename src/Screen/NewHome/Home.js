@@ -16,6 +16,9 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import VersionNumber from 'react-native-version-number';
+import AskHealthPermissionAndroid from '../../Component/AndroidHealthPermission';
+import AppleHealthKit, {
+} from 'react-native-health'
 import {
   Stop,
   Circle,
@@ -25,7 +28,6 @@ import {
 } from 'react-native-svg';
 
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
-
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
 
@@ -55,6 +57,37 @@ const GradientText = ({item}) => {
   );
 };
 const Home = () => {
+  useEffect(()=>{
+    if(Platform.OS=="android"){
+      AskHealthPermissionAndroid()
+    }else{
+      AppleHealthKit.isAvailable((err, available) => {
+        console.log("Avialalebe=========>",available)
+        const permissions = {
+          permissions: {
+            read: [
+              AppleHealthKit.Constants.Permissions.DistanceWalkingRunning,
+              AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
+              AppleHealthKit.Constants.Permissions.Steps,
+            ],
+          },
+        };
+        if (err) {
+          console.log('error initializing Healthkit: ', err)
+        }
+        else if(available==true){
+          AppleHealthKit.initHealthKit(permissions, (error) => {
+            if (error) {
+              console.log('[ERROR] Cannot grant permissions!', error);
+            } 
+          });
+        }else{
+          Alert.alert("Attention","Health data can't be tracked in this Device due to its specifications",{
+          })
+        }
+      })
+    }
+  })
   const [currentindex, setCurrentIndex] = useState(1);
   const props = {
     activeStrokeWidth: 25,
