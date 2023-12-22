@@ -32,8 +32,8 @@ const FocusArea = ({route, navigation}) => {
     const currentData = {
       focuseArea: selectedItems,
     };
-    dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-    navigation.navigate('WorkoutArea', {nextScreen: screen + 1});
+   dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
+   navigation.navigate('WorkoutArea', {nextScreen: screen + 1});
     {
       console.log('Focuse Area Screen Data', [
         ...getLaterButtonData,
@@ -41,7 +41,7 @@ const FocusArea = ({route, navigation}) => {
       ]);
     }
   };
-console.log("FBHFGHFGHFGFGFGF",selectedItems)
+
   return (
     <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />

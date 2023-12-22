@@ -111,7 +111,6 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
         name="IntroductionScreen1"
@@ -158,6 +157,8 @@ export const LoginStack = () => {
       <Stack.Screen name="NewEditProfile" component={NewEditProfile} />
       <Stack.Screen name="WorkoutsDescription" component={WorkoutDescription} />
       <Stack.Screen name="WorkoutDays" component={WorkoutDays} />
+      <Stack.Screen name="BottomTab" component={BottomTab} />
+
     </Stack.Navigator>
   );
 };

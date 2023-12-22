@@ -83,8 +83,9 @@ const LoadData = ({navigation}) => {
     getLaterButtonData,
     mindSetData,
     mindsetConsent,
+    getUserDataDetails,
   } = useSelector(state => state);
-  console.log('mindset===>', mindSetData);
+
   const translationX = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
   useEffect(() => {
@@ -103,16 +104,22 @@ const LoadData = ({navigation}) => {
     ).start();
   };
   useEffect(() => {
-    // DeviceInfo.getUniqueId().then(id => WholeData(id));
-    currentWorkoutDataApi(t)
+
+    DeviceInfo.getUniqueId().then(id => WholeData(id));
+
   }, []);
   const WholeData = async deviceID => {
     const mergedObject = Object.assign({}, ...getLaterButtonData);
-
+    console.log('mindset===>', mergedObject?.injury?.join(','));
     try {
       const payload = new FormData();
       payload.append('deviceid', deviceID);
-      payload.append('id', null);
+
+      payload.append(
+        'id',
+        getUserDataDetails?.id != null ? getUserDataDetails?.id : null,
+      );
+
       payload.append('gender', mergedObject?.gender);
       payload.append('goal', mergedObject?.goal);
       payload.append('age', mergedObject?.age);
@@ -120,38 +127,27 @@ const LoadData = ({navigation}) => {
       payload.append('focusarea', mergedObject?.focuseArea?.join(','));
       payload.append('weight', mergedObject?.currentWeight);
       payload.append('height', mergedObject?.height);
-      // payload.append('injury', mergedObject?.injury || '');
-      payload.append('injury', 'Shoulder');
+
+      payload.append(
+        'injury',
+        mergedObject?.injury != null ? mergedObject?.injury?.join(',') : null,
+      );
       payload.append('equipment', mergedObject?.equipment);
       payload.append('workoutarea', mergedObject?.workoutArea?.join(','));
 
-      if (mindsetConsent == true) {
-        payload.append('workoutroutine', mindSetData[0].routine);
-        payload.append('sleepduration', mindSetData[1].SleepDuration);
-        payload.append('mindstate', mindSetData[2].mState);
-        payload.append('alcoholconstent', mindSetData[3].Alcohol_Consent);
+      if (getUserDataDetails)
+        if (mindsetConsent == true) {
+          payload.append('workoutroutine', mindSetData[0].routine);
+          payload.append('sleepduration', mindSetData[1].SleepDuration);
+          payload.append('mindstate', mindSetData[2].mState);
+          payload.append('alcoholconstent', mindSetData[3].Alcohol_Consent);
 
-        if (mindSetData[4]) {
-          payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
+          if (mindSetData[4]) {
+            payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
+          }
         }
-      }
-      // console.log(payload)
-      const test = {
-        _parts: [
-          ['deviceid', '91967BB2-1A26-42B2-9D6F-F6F4289161EF'],
-          ['id', null],
-          ['gender', 'Male'],
-          ['goal', 3],
-          ['age', '35'],
-          ['fitnesslevel', 2],
-          ['focusarea', '9'],
-          ['weight', 41],
-          ['height', 4],
-          ['injury', ''],
-          ['equipment', 'With Equipment'],
-          ['workoutarea', 'At Home'],
-        ],
-      };
+      console.log('Total payloadf', payload);
+
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {
@@ -221,6 +217,7 @@ const LoadData = ({navigation}) => {
       console.log(payload)
       const res = await axios({
         url: 'https://gofit.tentoptoday.com/adserver/public/api/userfreecustomexercise',
+
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
