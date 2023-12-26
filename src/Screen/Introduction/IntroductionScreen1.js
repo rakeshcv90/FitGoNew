@@ -24,7 +24,7 @@ const IntroductionScreen1 = ({navigation}) => {
     translateY.setValue(300);
     Animated.timing(translateY, {
       useNativeDriver: true,
-      toValue: -DeviceHeigth*10/100,
+      toValue: -DeviceHeigth*7/100,
       delay: 500,
       duration: 1500,
     }).start();
@@ -44,16 +44,16 @@ const IntroductionScreen1 = ({navigation}) => {
               {IntroductionData[0].text2}
             </Text>
           </Animated.View>
-       <IntroProgressBar INDEX={0}/>
+        <View style={{marginBottom:DeviceHeigth*0.03}}><IntroProgressBar INDEX={0}/></View>
         </View>
       </ImageBackground>
+      
     </View>
   );
 };
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    backgroundColor: AppColor.WHITE,
   },
   ImgBackground: {
     width: DeviceWidth,

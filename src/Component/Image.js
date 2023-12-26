@@ -44,7 +44,6 @@ export const localImage = {
   Pen: require('../Icon/Images/NewImage/Pen.png'),
   Profile3: require('../Icon/Images/NewImage/Profile.png'),
   SplashText: require('../Icon/Images/NewImage/SplashText.png'),
-
   Ellipse: require('../Icon/Images/NewImage/Ellipse.png'),
   Verify: require('../Icon/Images/NewImage/verify.png'),
   Solder: require('../Icon/Images/NewImage/Solder.png'),
@@ -76,7 +75,6 @@ export const localImage = {
   FemaleWeight: require('../Icon/Images/NewImage/FemaleWeight.png'),
   Leg: require('../Icon/Images/NewImage/Leg.png'),
   Abs: require('../Icon/Images/NewImage/Abs.png'),
-
   Chest: require('../Icon/Images/NewImage/Chest.png'),
   Abs2: require('../Icon/Images/NewImage/Abs2.png'),
   Leg2: require('../Icon/Images/NewImage/Leg2.png'),
@@ -87,6 +85,10 @@ export const localImage = {
   Step1:require('../Icon/Images/NewImage/Pado1.png'),
   Step2:require('../Icon/Images/NewImage/Pado2.png'),
   Step3:require('../Icon/Images/NewImage/Pado3.png'),
+  Backupimg:require('../Icon/Images/NewImage/Backup.png'),
+  DeleteAcc:require('../Icon/Images/NewImage/Delete_account.png'),
+  RateStar:require('../Icon/Images/NewImage/rate_star.png'),
+  Soundimg:require('../Icon/Images/NewImage/Soundimg.png'),
   INFO:require('../Icon/Images/NewImage/GroupInfo.png'),
   Play:require('../Icon/Images/NewImage/play.png'),
   dw7: require('../Icon/Images/NewImage/n7.png'),

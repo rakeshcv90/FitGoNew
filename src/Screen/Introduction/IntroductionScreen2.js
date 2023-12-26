@@ -17,14 +17,14 @@ const IntroductionScreen2 = ({navigation}) => {
   useEffect(() => {
     showAnimation();
     setTimeout(() => {
-      navigation.navigate("IntroductionScreen3")
+      navigation.navigate('IntroductionScreen3');
     }, 4000);
   }, []);
   const showAnimation = () => {
     translateX.setValue(-DeviceWidth);
     Animated.timing(translateX, {
       useNativeDriver: true,
-      toValue:1,
+      toValue: 1,
       delay: 500,
       duration: 1500,
     }).start();
@@ -33,7 +33,7 @@ const IntroductionScreen2 = ({navigation}) => {
   return (
     <View style={styles.Container}>
       <ImageBackground
-       source={{uri:IntroductionData[1].img}}
+        source={{uri: IntroductionData[1].img}}
         style={styles.ImgBackground}>
         <View style={styles.LinearG}>
           <Animated.View
@@ -45,7 +45,9 @@ const IntroductionScreen2 = ({navigation}) => {
               {IntroductionData[1].text2}
             </Text>
           </Animated.View>
-          <IntroProgressBar INDEX={1}/>
+          <View style={{marginBottom:DeviceHeigth * 0.03}}>
+            <IntroProgressBar INDEX={1} />
+          </View>
         </View>
       </ImageBackground>
     </View>

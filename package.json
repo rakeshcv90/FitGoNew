@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@dongminyu/react-native-step-counter": "^0.2.3",
     "@notifee/react-native": "^7.8.0",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/netinfo": "^9.4.1",
@@ -45,6 +46,7 @@
     "react-native-fbsdk-next": "^10.0.0",
     "react-native-flash-message": "^0.4.2",
     "react-native-gesture-handler": "^2.14.0",
+    "react-native-health": "^1.18.0",
     "react-native-image-picker": "^7.0.2",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-pager-view": "^6.2.1",
@@ -61,6 +63,7 @@
     "react-native-status-bar-height": "^2.6.0",
     "react-native-storage": "^1.0.1",
     "react-native-svg": "^14.1.0",
+    "react-native-switch": "^1.5.1",
     "react-native-tab-view": "^3.5.2",
     "react-native-toast-message": "^2.1.6",
     "react-native-toast-notification": "^1.1.2",

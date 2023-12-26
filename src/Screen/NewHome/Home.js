@@ -17,10 +17,17 @@ import {AppColor} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
+
+import VersionNumber from 'react-native-version-number';
+import AskHealthPermissionAndroid from '../../Component/AndroidHealthPermission';
+import AppleHealthKit, {
+} from 'react-native-health'
+
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Dropdown} from 'react-native-element-dropdown';
 import {LineChart} from 'react-native-chart-kit';
 import axios from 'axios';
+
 import {
   Stop,
   Circle,
@@ -28,7 +35,6 @@ import {
   Text as SvgText,
   LinearGradient as SvgGrad,
 } from 'react-native-svg';
-
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {navigationRef} from '../../../App';
 import {useSelector} from 'react-redux';
@@ -37,7 +43,6 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import RoundedCards from '../../Component/RoundedCards';
-
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
 
@@ -66,6 +71,41 @@ const GradientText = ({item}) => {
     </View>
   );
 };
+
+const Home = () => {
+  useEffect(()=>{
+    if(Platform.OS=="android"){
+      AskHealthPermissionAndroid()
+    }else{
+      AppleHealthKit.isAvailable((err, available) => {
+        console.log("Avialalebe=========>",available)
+        const permissions = {
+          permissions: {
+            read: [
+              AppleHealthKit.Constants.Permissions.DistanceWalkingRunning,
+              AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
+              AppleHealthKit.Constants.Permissions.Steps,
+            ],
+          },
+        };
+        if (err) {
+          console.log('error initializing Healthkit: ', err)
+        }
+        else if(available==true){
+          AppleHealthKit.initHealthKit(permissions, (error) => {
+            if (error) {
+              console.log('[ERROR] Cannot grant permissions!', error);
+            } 
+          });
+        }else{
+          Alert.alert("Attention","Health data can't be tracked in this Device due to its specifications",{
+          })
+        }
+      })
+    }
+  })
+  const [currentindex, setCurrentIndex] = useState(1);
+
 
 const ProgressBar = ({progress, image, text}) => {
   return (
@@ -124,6 +164,7 @@ const Home = ({navigation}) => {
     mindsetConsent,
     customWorkoutData,
   } = useSelector(state => state);
+
 
   const props = {
     activeStrokeWidth: 25,
