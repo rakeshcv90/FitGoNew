@@ -77,7 +77,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
           width: 'auto',
         }}>
         <FlatList
-          data={props.horizontal ? data : props.data}
+          data={props.horizontal ? props.data : props.data}
           nestedScrollEnabled
           keyExtractor={(item, index) => index.toString()}
           horizontal={props.horizontal}

@@ -9,16 +9,18 @@ import {
   ScrollView,
   TouchableOpacity,
   Dimensions,
+  Platform,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
 import {AppColor} from '../../Component/Color';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Dropdown} from 'react-native-element-dropdown';
 import {LineChart} from 'react-native-chart-kit';
+import axios from 'axios';
 import {
   Stop,
   Circle,
@@ -30,6 +32,11 @@ import {
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {navigationRef} from '../../../App';
 import {useSelector} from 'react-redux';
+import VersionNumber from 'react-native-version-number';
+import ActivityLoader from '../../Component/ActivityLoader';
+import {showMessage} from 'react-native-flash-message';
+import {getStatusBarHeight} from 'react-native-status-bar-height';
+import RoundedCards from '../../Component/RoundedCards';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -105,6 +112,8 @@ const ProgressBar = ({progress, image, text}) => {
 
 const Home = ({navigation}) => {
   const [progress, setProgress] = useState(10);
+  const [mealList, setMealLIst] = useState(10);
+  const [forLoading, setForLoading] = useState(false);
   const [value, setValue] = useState('Weekly');
   const progressAnimation = useRef(new Animated.Value(0)).current;
   const {
@@ -113,8 +122,9 @@ const Home = ({navigation}) => {
     getUserID,
     getUserDataDetails,
     mindsetConsent,
+    customWorkoutData,
   } = useSelector(state => state);
-  console.log('sdfdsfdsfds', mindsetConsent);
+
   const props = {
     activeStrokeWidth: 25,
     inActiveStrokeWidth: 25,
@@ -142,7 +152,9 @@ const Home = ({navigation}) => {
     outputRange: ['0%', '100%'],
     extrapolate: 'extend',
   });
-
+  useEffect(() => {
+    Meal_List();
+  }, []);
   useEffect(() => {
     Animated.timing(progressAnimation, {
       toValue: 1,
@@ -150,19 +162,59 @@ const Home = ({navigation}) => {
       useNativeDriver: false,
     }).start();
   }, [progressAnimation]);
+
   const colors = [
     {color1: '#E2EFFF', color2: '#9CC2F5', color3: '#425B7B'},
     {color1: '#BFF0F5', color2: '#8DD9EA', color3: '#1F6979'},
     {color1: '#FAE3FF', color2: '#C97FCD', color3: '#7C3D80'},
   ];
+  const colors1 = [
+    {color1: '#E7D9FB'},
+    {color1: '#D7FBFF'},
+    {color1: '#DFEEFE'},
+  ];
+  const Meal_List = async () => {
+    setForLoading(true);
+    try {
+      const data = await axios(`${NewAppapi.Meal_Categorie}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          token: getUserDataDetails.login_token,
+          version: VersionNumber.appVersion,
+        },
+      });
+      if (data.data.categories.length > 0) {
+        setForLoading(false);
 
+        setMealLIst(data.data.categories);
+      } else {
+        setForLoading(false);
+      }
+    } catch (error) {
+      setMealLIst([]);
+      setForLoading(false);
+      console.log('Meal List Error', error);
+    }
+  };
   const ListItem = ({title, color}) => (
-    <LinearGradient
-      start={{x: 0, y: 1}}
-      end={{x: 1, y: 0}}
-      colors={[color.color1, color.color2]}
-      style={styles.listItem}>
-      <TouchableOpacity style={styles.listItem}>
+    <TouchableOpacity
+      onPress={() => {
+        showMessage({
+          message: 'Work in Progress',
+          floating: true,
+          duration: 500,
+          type: 'info',
+          icon: {icon: 'auto', position: 'left'},
+        });
+      }}>
+      <LinearGradient
+        start={{x: 0, y: 1}}
+        end={{x: 1, y: 0}}
+        colors={[color.color1, color.color2]}
+        style={styles.listItem}>
         <Text
           style={[
             styles.title,
@@ -182,8 +234,8 @@ const Home = ({navigation}) => {
             },
           ]}
           resizeMode="cover"></Image>
-      </TouchableOpacity>
-    </LinearGradient>
+      </LinearGradient>
+    </TouchableOpacity>
   );
   const getTimeOfDayMessage = () => {
     const currentHour = new Date().getHours();
@@ -237,6 +289,8 @@ const Home = ({navigation}) => {
       <GradientText
         item={getTimeOfDayMessage() + ', ' + getUserDataDetails.name}
       />
+      {forLoading ? <ActivityLoader /> : ''}
+
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
@@ -335,7 +389,7 @@ const Home = ({navigation}) => {
             </View>
           </View>
         </View>
-        {mindsetConsent == true && (
+        {mindsetConsent == false && (
           <>
             <View
               style={{
@@ -401,7 +455,16 @@ const Home = ({navigation}) => {
             }}>
             Workouts
           </Text>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity
+            onPress={() => {
+              showMessage({
+                message: 'Work in Progress',
+                floating: true,
+                duration: 500,
+                type: 'info',
+                icon: {icon: 'auto', position: 'left'},
+              });
+            }}>
             <Icons name="chevron-right" size={25} color={'#000'} />
           </TouchableOpacity>
         </View>
@@ -420,76 +483,75 @@ const Home = ({navigation}) => {
             pagingEnabled
             renderItem={({item, index}) => {
               return (
-                <>
-                  <LinearGradient
-                    start={{x: 0, y: 1}}
-                    end={{x: 1, y: 0}}
-                    colors={[
-                      colors[index % colors.length].color1,
-                      colors[index % colors.length].color2,
-                    ]}
-                    style={styles.listItem1}>
-                    <View>
-                      <Text
-                        style={[
-                          styles.title,
-                          {
-                            color: colors[index % colors.length].color3,
-                          },
-                        ]}>
-                        {item.title}
-                      </Text>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          marginVertical: 10,
-                        }}>
-                        <View>
-                          <ProgressBar
-                            progress={progress}
-                            image={localImage.Play}
-                            text={'2 Min'}
-                          />
-                        </View>
-                        <View style={{marginHorizontal: 10}}>
-                          <ProgressBar
-                            progress={progress}
-                            image={localImage.Step1}
-                            text={'100Kcal'}
-                          />
-                        </View>
+                <View
+                  style={[
+                    styles.listItem1,
+                    {
+                      backgroundColor: colors1[index % colors1.length].color1,
+                      marginTop: 20,
+                    },
+                  ]}>
+                  <View style={{marginVertical: 10, }}>
+                    <Text
+                      style={[
+                        styles.title,
+                        {
+                          color: AppColor.BoldText,
+                        },
+                      ]}>
+                      {item.title}
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        marginVertical: 10,
+                      }}>
+                      <View>
+                        <ProgressBar
+                          progress={progress}
+                          image={localImage.Play}
+                          text={'2 Min'}
+                        />
+                      </View>
+                      <View style={{marginHorizontal: 10}}>
+                        <ProgressBar
+                          progress={progress}
+                          image={localImage.Step1}
+                          text={'100Kcal'}
+                        />
                       </View>
                     </View>
+                  </View>
 
+                  <Image
+                    source={localImage.Money}
+                    style={[
+                      styles.img,
+                      {
+                        height: 120,
+                        width: 100,
+                        marginTop: -60,
+               
+                      },
+                    ]}
+                    resizeMode="contain"></Image>
+                  <TouchableOpacity
+                    onPress={() => {
+                      console.log('Fevvdsvdfvgfd', item);
+                    }}>
                     <Image
-                      source={localImage.Money}
+                      source={localImage.dw7}
                       style={[
                         styles.img,
                         {
-                          height: 120,
-                          width: 100,
-                          bottom: -DeviceHeigth * 0.023,
+                          height: 20,
+                          width: 20,
+                          top: -DeviceHeigth * 0.05,
                         },
                       ]}
                       resizeMode="contain"></Image>
-                    <TouchableOpacity
-                      onPress={() => {
-                        console.log('Fevvdsvdfvgfd', item);
-                      }}>
-                      <Image
-                        source={localImage.dw7}
-                        style={[
-                          styles.img,
-                          {
-                            height: 20,
-                            width: 20,
-                            top: -DeviceHeigth * 0.05,
-                          },
-                        ]}
-                        resizeMode="contain"></Image>
-                    </TouchableOpacity>
-                  </LinearGradient>
-                </>
+                  </TouchableOpacity>
+                </View>
               );
             }}
           />
@@ -522,7 +584,7 @@ const Home = ({navigation}) => {
             alignSelf: 'center',
             top: DeviceHeigth * 0.03,
             justifyContent: 'space-between',
-            top: DeviceHeigth * 0.1,
+            top: DeviceHeigth * 0.11,
           }}>
           <Text
             style={{
@@ -549,7 +611,7 @@ const Home = ({navigation}) => {
             },
           ]}>
           <FlatList
-            data={data1}
+            data={mealList}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id}
@@ -559,24 +621,31 @@ const Home = ({navigation}) => {
                 <>
                   <View style={styles.listItem2}>
                     <Image
-                      source={localImage.Money}
+                      source={{uri: item.category_image}}
                       style={[
                         styles.img,
                         {
-                          height: 100,
-                          width: 100,
+                          height: 70,
+                          width: 70,
+                          borderRadius: 140 / 2,
                           alignSelf: 'center',
+                          top: -5,
                         },
                       ]}
-                      resizeMode="contain"></Image>
+                      resizeMode="cover"></Image>
                     <Text
                       style={[
                         styles.title,
                         {
+                          fontSize: 13,
+                          fontWeight: '500',
+                          lineHeight: 18,
+                          fontFamily: 'Poppins',
+                          textAlign: 'center',
                           color: colors[index % colors.length].color3,
                         },
                       ]}>
-                      {item.title}
+                      {item.category_title}
                     </Text>
                   </View>
                 </>
@@ -589,10 +658,10 @@ const Home = ({navigation}) => {
             flexDirection: 'row',
             width: '95%',
             alignSelf: 'center',
+            alignItems: 'center',
             top: DeviceHeigth * 0.03,
             justifyContent: 'space-between',
             top: DeviceHeigth * 0.1,
-            marginBottom: DeviceHeigth * 0.15,
           }}>
           <Text
             style={{
@@ -623,44 +692,53 @@ const Home = ({navigation}) => {
             renderItem={renderItem}
           />
         </View>
-        <LineChart
-          data={{
-            labels: ['Sun', 'Mon', 'Tue', 'Thur', 'Fri', 'Sat'],
-            datasets: [
-              {
-                data: [100, 0, 0, 0, 0, 0],
-              },
-            ],
-          }}
-          width={Dimensions.get('window').width} // from react-native
-          height={220}
-          yAxisInterval={1} // optional, defaults to 1
-          chartConfig={{
-            backgroundColor: 'white',
-            backgroundGradientFrom: '#eff3ff',
-            backgroundGradientTo: '#efefef',
-            decimalPlaces: 1, // optional, defaults to 2dp
-            color: () => {
-              '#efefef';
-            },
-            labelColor: () => {
-              '#efefef';
-            },
-            style: {
-              borderRadius: 16,
-            },
-            propsForDots: {
-              r: '6',
-              strokeWidth: '2',
-              // stroke: '#ffa726',
-            },
-          }}
-          bezier
+        <View
           style={{
-            marginVertical: 8,
-            borderRadius: 16,
-          }}
-        />
+            top: DeviceHeigth * 0.11,
+            width: '95%',
+            // height: 200,
+            marginBottom: DeviceHeigth * 0.15,
+            alignSelf: 'center',
+            borderRadius: 10,
+          }}>
+          <LineChart
+            data={{
+              labels: ['Sun', 'Mon', 'Tue', 'Thur', 'Fri', 'Sat'],
+              datasets: [
+                {
+                  data: [100, 0, 0, 0, 0, 0],
+                },
+              ],
+            }}
+            width={DeviceWidth * 0.95}
+            height={300}
+            yAxisInterval={1}
+            chartConfig={{
+              backgroundColor: 'white',
+              backgroundGradientFrom: 'white',
+              backgroundGradientTo: 'white',
+              decimalPlaces: 1,
+              color: () => {
+                '#efefef';
+              },
+              labelColor: () => {
+                '#efefef';
+              },
+              style: {
+                borderRadius: 20,
+              },
+              propsForDots: {
+                r: '3',
+                strokeWidth: '5',
+                stroke: 'red',
+              },
+            }}
+            bezier
+            style={{
+              borderRadius: 10,
+            }}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -686,7 +764,7 @@ var styles = StyleSheet.create({
   img: {
     height: 50,
     width: 50,
-    //borderRadius: 100 / 2,
+    borderRadius: 100 / 2,
   },
   rewardView: {
     height: 40,
@@ -797,18 +875,18 @@ var styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 10,
     paddingLeft: 10,
-    paddingRight: 10,
+    // paddingRight: 10,
     paddingBottom: 10,
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
   listItem2: {
-    width: DeviceWidth * 0.4,
-    height: DeviceWidth * 0.4,
+    width: DeviceWidth * 0.3,
+    height: DeviceWidth * 0.3,
     marginHorizontal: 10,
     borderRadius: 10,
-    paddingLeft: 10,
+    // paddingLeft: 10,
     paddingRight: 10,
     marginTop: 10,
     justifyContent: 'center',

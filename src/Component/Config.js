@@ -37,12 +37,11 @@ export const NewAppapi = {
   forgetPassword: 'sendemail_link',
   OTPVerification: 'user_verify',
   UserProfile: 'userprofile',
-
   Get_COMPLETE_PROFILE: NewApi + 'goals_levels_focusarea_data',
   Post_COMPLETE_PROFILE: NewApi + 'user_update_details',
   Custom_WORKOUT_DATA: NewApi + 'usercustomworkout',
   Free_WORKOUT_DATA: NewApi + 'userfreecustomworkout',
-
   Whole_data: NewApi + 'user_update_details',
   ALL_WORKOUTS: NewApi + 'allworkout',
+  Meal_Categorie: NewApi + 'get_categorie',
 };

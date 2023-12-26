@@ -123,7 +123,7 @@ const Login = ({navigation}) => {
         });
         setForLoading(false);
         getProfileData(data.data.id, data.data.profile_status);
-        getCustomWorkout();
+        getCustomWorkout(data.data.id);
       } else if (
         data.data.msg ==
         'User does not exist with provided Google social credentials'
@@ -204,7 +204,7 @@ const Login = ({navigation}) => {
         });
         setForLoading(false);
         getProfileData(data.data.id, data.data.profile_status);
-        getCustomWorkout();
+        getCustomWorkout(data.data.id);
       } else if (
         data.data.msg ==
         'User does not exist with provided Facebook social credentials'
@@ -257,7 +257,7 @@ const Login = ({navigation}) => {
         });
 
         getProfileData(data.data.id, data.data.profile_status);
-        getCustomWorkout();
+        getCustomWorkout(data.data.id);
       } else if (
         data.data.msg == 'Login successful' &&
         data.data.profile_status == 0
@@ -293,7 +293,7 @@ const Login = ({navigation}) => {
           id: user_id,
         },
       });
-      console.log('Usewr Id is', data.data.profile);
+
       if (data.data.profile) {
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));
@@ -387,8 +387,10 @@ const Login = ({navigation}) => {
   };
 
   const getCustomWorkout = async user_id => {
+    
     try {
       const data = await axios(NewAppapi.Custom_WORKOUT_DATA, {
+        
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -397,6 +399,7 @@ const Login = ({navigation}) => {
           id: user_id,
         },
       });
+      console.log('Custom Workout ', data.data.workout);
       if (data.data.workout) {
         setForLoading(false);
         dispatch(setCustomWorkoutData(data.data?.workout));
@@ -405,7 +408,8 @@ const Login = ({navigation}) => {
         dispatch(setCustomWorkoutData([]));
       }
     } catch (error) {
-      console.log('User Profile Error', error);
+      console.log('Custom Workout Error', error);
+      dispatch(setCustomWorkoutData([]));
       setForLoading(false);
     }
   };
