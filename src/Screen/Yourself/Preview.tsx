@@ -255,7 +255,7 @@ const Preview = ({route, navigation}: any) => {
         <TouchableOpacity
           onPress={() => {
             // toNextScreen()
-            navigation.navigate('Preview');
+            navigation.navigate('BottomTab');
           }}>
           <LinearGradient
             start={{x: 1, y: 0}}
