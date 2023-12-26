@@ -39,13 +39,27 @@ import {CardStyleInterpolators} from '@react-navigation/stack';
 import AlcohalConsent from '../Screen/MeditationScreens/AlcohalConsent';
 import Profile from '../Screen/NewHome/Profile';
 import BottomTab from './BottomTab';
+import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
+import WorkoutDays from '../Screen/NewWorkouts/WorkoutDays';
 const Stack = createNativeStackNavigator();
 
 const screenOptions = {
   headerShown: false,
   gestureDirection: 'horizontal',
   gesturesEnabled: true,
-  cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+  // cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+  CardStyleInterpolators:({ current, next, layouts }) => {
+    const translateX = current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [layouts.screen.width, 0],
+    });
+
+    const opacity = current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+    });
+    return { transform: [{ translateX }], opacity };
+  },
 };
 
 //   return (
@@ -97,7 +111,6 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      {/* <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
         name="IntroductionScreen1"
@@ -110,8 +123,10 @@ export const LoginStack = () => {
       <Stack.Screen
         name="IntroductionScreen3"
         component={IntroductionScreen3}
-      /> */}
-      {/* <Stack.Screen name="LogSignUp" component={LogSignUp} />
+
+      />
+      <Stack.Screen name="LogSignUp" component={LogSignUp} />
+
       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Injury" component={Injury} />
       <Stack.Screen name="FocusArea" component={FocusArea} />
@@ -143,6 +158,10 @@ export const LoginStack = () => {
        <Stack.Screen name="BottomTab" component={BottomTab}/>
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="NewEditProfile" component={NewEditProfile} />
+      <Stack.Screen name="WorkoutsDescription" component={WorkoutDescription} />
+      <Stack.Screen name="WorkoutDays" component={WorkoutDays} />
+      <Stack.Screen name="BottomTab" component={BottomTab} />
+
     </Stack.Navigator>
   );
 };

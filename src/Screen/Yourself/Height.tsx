@@ -29,9 +29,9 @@ const ITEM_HEIGHT = 25;
 const halfItemCount = Math.floor(BOX_HEIGHT / 7 / ITEM_HEIGHT);
 const myArray = [];
 
-for (let i = 1; i <= 30; i++) {
+for (let i = 4; i <= 14; i++) {
   // You can change the outer loop limit as needed
-  for (let j = 0; j <= 11; j++) {
+  for (let j = 0; j < 12; j++) {
     if (j === 0) {
       myArray.push(parseFloat(i.toFixed(1)));
     } else {
@@ -40,7 +40,7 @@ for (let i = 1; i <= 30; i++) {
   }
 }
 const height = [
-  ...Array(halfItemCount + 5).fill(''), // Empty items for the top half
+  ...Array(halfItemCount + 6).fill(''), // Empty items for the top half
   ...myArray,
   ...Array(halfItemCount + 4).fill(''), // Empty items for the bottom half
 ];
@@ -65,7 +65,6 @@ const Height = ({route, navigation}: any) => {
   const [currentActiveIndex, setCurrentActiveIndex] = useState(-1);
   useEffect(() => {
     setScreen(nextScreen);
-    setCurrentActiveIndex(37);
   }, []);
   // useEffect(() => {
   //     if (toggle === 'cm') {
@@ -115,7 +114,7 @@ const Height = ({route, navigation}: any) => {
       />
       <View
         style={{
-         marginTop: 20,
+          marginTop: 20,
         }}>
         <Toggle
           data={toggleH}
@@ -140,6 +139,7 @@ const Height = ({route, navigation}: any) => {
           activeIndex={currentActiveIndex}
           data={height}
           posData={positions}
+          activeItem={0}
         />
         <View
           style={{
@@ -147,7 +147,8 @@ const Height = ({route, navigation}: any) => {
             alignItems: 'center',
             alignSelf: 'center',
           }}>
-          {currentActiveIndex > 36 ? (
+          {parseInt(height[currentActiveIndex]) < 7 &&
+          parseInt(height[currentActiveIndex]) >= 4 ? (
             toggle == 'ft' ? (
               <Text
                 style={{
@@ -169,7 +170,8 @@ const Height = ({route, navigation}: any) => {
                       fontSize: 36,
                       fontWeight: '600',
                     }}>
-                    {((height[currentActiveIndex] % 1) * 12).toFixed(0)}
+                    {/* {parseInt(((height[currentActiveIndex] % 1) * 120).toFixed(0)) != 12 && */}
+                      {((height[currentActiveIndex] % 1) * 12).toFixed(0)}
                     <Text
                       style={{
                         color: AppColor.RED,
@@ -286,7 +288,7 @@ const styles = StyleSheet.create({
     width: DeviceWidth * 0.9,
     alignItems: 'center',
     alignSelf: 'center',
-  
+
     bottom: DeviceHeigth * 0.02,
     position: 'absolute',
   },

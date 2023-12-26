@@ -1,20 +1,24 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
   Canvas,
   Circle,
   Line,
   Path,
+  Rect,
+  RoundedRect,
   runTiming,
   Skia,
   SkPath,
   useComputedValue,
   useValue,
   vec,
+  Text as SkiaText,
 } from '@shopify/react-native-skia';
 
 import {curveBasis, line, scaleLinear, scaleTime} from 'd3';
 import {Easing, View, Pressable, Text, StyleSheet} from 'react-native';
+import {AppColor} from '../../Component/Color';
 
 interface GraphData {
   min: number;
@@ -34,12 +38,26 @@ const LineChart = ({resultData, zeroData}: any) => {
   });
   useEffect(() => {
     transitionStart(0);
+    // setCircle(t);
     setTimeout(() => {
       transitionStart(1);
     }, 2000);
+    setTimeout(() => {
+      setLate(true);
+    }, 3000);
   }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     const x = circles.fill(circles[circles.length-1], circles[circles.length-1] - 1, circles[circles.length-1]);
+  //     console.log(x);
+  //     setCircle(x);
+  //   }, 500);
+  // }, []);
   const GRAPH_HEIGHT = 400;
   const GRAPH_WIDTH = 360;
+  const [late, setLate] = useState(false);
+  const [circles, setCircle] = useState([]);
+  const t = Array(resultData.length).fill(0);
 
   const makeGraph = (data: DataPoint[]): GraphData => {
     const max = Math.max(...data.map((val: any) => val.weight));
@@ -84,7 +102,12 @@ const LineChart = ({resultData, zeroData}: any) => {
     return result?.toSVGString() ?? '0';
   }, [state, transition]);
 
-  const final = path.current.split(' ').map(item => parseFloat(item.match(/-?\d+(\.\d+)?/)?.[0])).filter(num => !isNaN(num));
+  const final = path.current
+    .split(' ')
+    .map(item => parseFloat(item.match(/-?\d+(\.\d+)?/)?.[0]))
+    .filter(num => !isNaN(num));
+  const test =
+    '  M15 275L24.306 275C33.611 275 52.222 275 70.833 275C89.444 275 108.056 275 126.667 275C145.278 275 163.889 275 182.5 275C201.111 275 219.722 275 238.333 275C256.944 275 275.556 275 294.167 275C312.778 275 331.389 275 340.694 275L350 275';
   return (
     <View style={styles.container}>
       <Canvas
@@ -113,37 +136,80 @@ const LineChart = ({resultData, zeroData}: any) => {
           style="stroke"
           strokeWidth={1}
         />
+        {/* <Path style="stroke" path={test} strokeWidth={4} color="blue" /> */}
         <Path style="stroke" path={path} strokeWidth={4} color="red" />
-        {resultData.map((dataPoint, index) => {
-          const xValue = scaleTime()
-            .domain([
-              new Date(resultData[0].date),
-              new Date(resultData[resultData.length - 1].date),
-            ])
-            .range([15, GRAPH_WIDTH - 10])(new Date(dataPoint.date));
+        {late &&
+          resultData.map((dataPoint, index: number) => {
+            const xValue = scaleTime()
+              .domain([
+                new Date(resultData[0].date),
+                new Date(resultData[resultData.length - 1].date),
+              ])
+              .range([15, GRAPH_WIDTH - 10])(new Date(dataPoint.date));
 
-          const yValue = scaleLinear()
-            .domain([0, max])
-            .range([GRAPH_HEIGHT, 150])(dataPoint.weight);
-          // console.log('xValue', xValue, yValue, final);
-          // function isApproximatelyEqual(value, array, tolerance) {
-          //   return array.some(item => Math.abs(value - item) <= tolerance);
-          // }
-          // if (isApproximatelyEqual(xValue,final, 2)) {
-          return (
-            //     <Canvas key={index}>
-            //         <Line
-            //   p1={vec(10, 370)}
-            //   p2={vec(400, 370)}
-            //   color="lightgrey"
-            //   style="stroke"
-            //   strokeWidth={1}
-            // />
-            <Circle cx={xValue} cy={yValue} r={5} color={'red'} />
-            // </Canvas>
-          );
-          // }
-        })}
+            const yValue = scaleLinear()
+              .domain([0, max])
+              .range([GRAPH_HEIGHT, 150])(dataPoint.weight);
+            // console.log('xValue', dataPoint?.weight, yValue);
+            // function isApproximatelyEqual(value, array, tolerance) {
+            //   return array.some(item => Math.abs(value - item) <= tolerance);
+            // }
+            // if (isApproximatelyEqual(xValue,final, 2)) {
+            return (
+              //     <Canvas key={index}>
+              //         <Line
+              //   p1={vec(10, 370)}
+              //   p2={vec(400, 370)}
+              //   color="lightgrey"
+              //   style="stroke"
+              //   strokeWidth={1}
+              // />
+              late && (
+                <>
+                  <Circle
+                    cx={xValue}
+                    cy={
+                      resultData[resultData.length - 1].weight ==
+                        dataPoint?.weight ||
+                      resultData[0].weight == dataPoint?.weight
+                        ? yValue
+                        : index % 2 == 0
+                        ? yValue + 20
+                        : yValue - 20
+                    }
+                    r={5}
+                    color={'red'}
+                  />
+                  {/* <RoundedRect
+                x={xValue-10}
+                y={yValue+40}
+                width={80}
+                height={50}
+                r={10}
+                color={AppColor.RED}
+              > */}
+                  {(resultData[resultData.length - 1].weight ==
+                    dataPoint?.weight ||
+                    resultData[0].weight == dataPoint?.weight) && (
+                    <SkiaText
+                      x={
+                        resultData[resultData.length - 1].weight ==
+                        dataPoint?.weight
+                          ? xValue - 30
+                          : xValue - 10
+                      }
+                      y={yValue + 40}
+                      text={dataPoint?.weight}
+                      color={AppColor.RED}
+                    />
+                  )}
+                  {/* </RoundedRect> */}
+                </>
+              )
+              // </Canvas>
+            );
+            // }
+          })}
       </Canvas>
     </View>
   );

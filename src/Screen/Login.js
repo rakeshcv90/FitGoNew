@@ -46,6 +46,9 @@ import CustomSwitch from '../Component/CustomSwitch';
 import Signup from './Signup';
 import {TextInput, TextInputMask} from 'react-native-paper';
 import {navigationRef} from '../../App';
+
+import VersionNumber from 'react-native-version-number';
+
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
 const validationSchema1 = Yup.object().shape({
@@ -62,6 +65,7 @@ const Login = ({navigation}) => {
   const [forLoading, setForLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [IsVerifyVisible, setVerifyVisible] = useState(false);
+  const [appVersion, setAppVersion] = useState(0);
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -69,6 +73,9 @@ const Login = ({navigation}) => {
         '60298593797-kkelutkvu5it955cebn8dhi1n543osi8.apps.googleusercontent.com',
     });
   }, []);
+  useEffect(() => {
+    setAppVersion(VersionNumber.appVersion);
+  });
   const GoogleSignup = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -86,7 +93,67 @@ const Login = ({navigation}) => {
       }
     }
   };
+  const socialLogiIn = async (value, token) => {
+    setForLoading(true);
+    try {
+      const data = await axios(`${NewApi}${NewAppapi.login}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          name: value.name,
+          email: value.email,
+          signuptype: 'social',
+          socialid: value.id,
+          socialtoken: token,
+          socialtype: 'google',
+          version: appVersion,
+        },
+      });
 
+      if (data.data.profile_status == 1) {
+        showMessage({
+          message: data.data.msg,
+          type: 'success',
+          animationDuration: 500,
+
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setForLoading(false);
+        getProfileData(data.data.id, data.data.profile_status);
+        getCustomWorkout(data.data.id);
+      } else if (
+        data.data.msg ==
+        'User does not exist with provided Google social credentials'
+      ) {
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setForLoading(false);
+      } else {
+        // showMessage({
+        //   message: data.data.msg,
+        //   type: 'danger',
+        //   animationDuration: 500,
+        //   floating: true,
+        //   icon: {icon: 'auto', position: 'left'},
+        // });
+        dispatch(setCustomWorkoutData([]));
+        setForLoading(false);
+        // setModalVisible(true);
+        getProfileData(data.data.id, data.data.profile_status);
+      }
+    } catch (error) {
+      setForLoading(false);
+      console.log('google Signup Error', error);
+    }
+  };
   const FacebookLogin = () => {
     LoginManager.logInWithPermissions(['public_profile', 'email']).then(
       function (result) {
@@ -98,6 +165,7 @@ const Login = ({navigation}) => {
           ) {
             if (currentProfile) {
               socialFacebookLogiIn(currentProfile);
+              console.log('dsfdsfdsfdsfsdfds', currentProfile);
             }
           });
         }
@@ -122,6 +190,7 @@ const Login = ({navigation}) => {
           socialid: value.userID,
           socialtoken: '',
           socialtype: 'facebook',
+          version: appVersion,
         },
       });
       if (data.data.profile_status == 1) {
@@ -135,7 +204,7 @@ const Login = ({navigation}) => {
         });
         setForLoading(false);
         getProfileData(data.data.id, data.data.profile_status);
-        getCustomWorkout();
+        getCustomWorkout(data.data.id);
       } else if (
         data.data.msg ==
         'User does not exist with provided Facebook social credentials'
@@ -150,73 +219,13 @@ const Login = ({navigation}) => {
         setForLoading(false);
       } else {
         setForLoading(false);
-        setModalVisible(true);
+        // setModalVisible(true);
         dispatch(setCustomWorkoutData([]));
         getProfileData(data.data.id, data.data.profile_status);
       }
     } catch (error) {
       setForLoading(false);
       console.log('Facebook Signup Error', error);
-    }
-  };
-  const socialLogiIn = async (value, token) => {
-    setForLoading(true);
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.login}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          name: value.name,
-          email: value.email,
-          signuptype: 'social',
-          socialid: value.id,
-          socialtoken: token,
-          socialtype: 'google',
-        },
-      });
-
-      if (data.data.profile_status == 1) {
-        showMessage({
-          message: data.data.msg,
-          type: 'success',
-          animationDuration: 500,
-
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setForLoading(false);
-        getProfileData(data.data.id, data.data.profile_status);
-        getCustomWorkout();
-      } else if (
-        data.data.msg ==
-        'User does not exist with provided Google social credentials'
-      ) {
-        showMessage({
-          message: data.data.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setForLoading(false);
-      } else {
-        // showMessage({
-        //   message: data.data.msg,
-        //   type: 'danger',
-        //   animationDuration: 500,
-        //   floating: true,
-        //   icon: {icon: 'auto', position: 'left'},
-        // });
-        dispatch(setCustomWorkoutData([]));
-        setForLoading(false);
-        setModalVisible(true);
-        getProfileData(data.data.id, data.data.profile_status);
-      }
-    } catch (error) {
-      setForLoading(false);
-      console.log('google Signup Error', error);
     }
   };
 
@@ -231,6 +240,7 @@ const Login = ({navigation}) => {
         data: {
           email: email,
           password: password,
+          version: appVersion,
         },
       });
 
@@ -247,13 +257,13 @@ const Login = ({navigation}) => {
         });
 
         getProfileData(data.data.id, data.data.profile_status);
-        getCustomWorkout();
+        getCustomWorkout(data.data.id);
       } else if (
         data.data.msg == 'Login successful' &&
         data.data.profile_status == 0
       ) {
         setForLoading(false);
-        setModalVisible(true);
+        //setModalVisible(true);
         getProfileData(data.data.id, data.data.profile_status);
         dispatch(setCustomWorkoutData([]));
       } else {
@@ -283,15 +293,19 @@ const Login = ({navigation}) => {
           id: user_id,
         },
       });
-      console.log('Usewr Id is', data.data.profile);
+
       if (data.data.profile) {
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));
-        status == 1 ? navigation.navigate('BottomTab') : null;
+        status == 1
+          ? navigation.navigate('BottomTab')
+          : navigationRef.navigate('Yourself');
       } else {
         setForLoading(false);
         dispatch(setUserProfileData([]));
-        status == 1 ? navigation.navigate('BottomTab') : null;
+        status == 1
+          ? navigation.navigate('BottomTab')
+          : navigationRef.navigate('Yourself');
       }
     } catch (error) {
       console.log('User Profile Error', error);
@@ -373,8 +387,10 @@ const Login = ({navigation}) => {
   };
 
   const getCustomWorkout = async user_id => {
+    
     try {
       const data = await axios(NewAppapi.Custom_WORKOUT_DATA, {
+        
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -383,6 +399,7 @@ const Login = ({navigation}) => {
           id: user_id,
         },
       });
+      console.log('Custom Workout ', data.data.workout);
       if (data.data.workout) {
         setForLoading(false);
         dispatch(setCustomWorkoutData(data.data?.workout));
@@ -391,11 +408,12 @@ const Login = ({navigation}) => {
         dispatch(setCustomWorkoutData([]));
       }
     } catch (error) {
-      console.log('User Profile Error', error);
+      console.log('Custom Workout Error', error);
+      dispatch(setCustomWorkoutData([]));
       setForLoading(false);
     }
   };
- 
+
   const ModalView = () => {
     const [forLoading, setForLoading] = useState(false);
     const handleForgotPassword = async value => {
@@ -416,7 +434,7 @@ const Login = ({navigation}) => {
             message: 'Reset Password link sent!',
             type: 'success',
             animationDuration: 500,
-            // statusBarHeight: StatusBar_Bar_Height+,
+
             floating: true,
             icon: {icon: 'auto', position: 'left'},
           });
@@ -426,7 +444,7 @@ const Login = ({navigation}) => {
             message: 'Somthing went wrong!',
             type: 'ganger',
             animationDuration: 500,
-            // statusBarHeight: StatusBar_Bar_Height+,
+
             floating: true,
             icon: {icon: 'auto', position: 'left'},
           });
@@ -446,7 +464,6 @@ const Login = ({navigation}) => {
           backgroundColor: '#fff',
           position: 'absolute',
         }}>
-   
         <Modal
           animationType="slide"
           transparent={true}
@@ -462,7 +479,7 @@ const Login = ({navigation}) => {
             <KeyboardAvoidingView
               // style={{flex: 1}}
               behavior={Platform.OS === 'ios' ? 'position' : ''}>
-                     {forLoading ? <ActivityLoader /> : ''}
+              {forLoading ? <ActivityLoader /> : ''}
               <View style={[styles.modalContent, {backgroundColor: '#fff'}]}>
                 <>
                   <View
@@ -675,7 +692,6 @@ const Login = ({navigation}) => {
               alignSelf: 'center',
               // backgroundColor:'red',
               marginLeft: -5,
-             
             }}>
             <Text
               style={[styles.forgotText, {fontSize: 12, fontWeight: '400'}]}>
@@ -701,8 +717,8 @@ var styles = StyleSheet.create({
   forgotView: {
     marginTop: DeviceHeigth * 0.025,
     alignSelf: 'flex-end',
-    //marginRight: DeviceWidth * 0.1,
-      marginHorizontal: DeviceHeigth * 0.028,
+
+    marginHorizontal: DeviceHeigth * 0.028,
   },
   TextContainer: {
     marginTop: DeviceHeigth * 0.09,

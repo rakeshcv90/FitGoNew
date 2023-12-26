@@ -38,7 +38,7 @@ const BottomTab = () => {
         />
         <Tabs.Screen
           name="Workout"
-          component={Diets}
+          component={Workouts}
           options={{
             tabBarIcon: ({focused, color, size}) => (
               <Image
@@ -72,7 +72,7 @@ const BottomTab = () => {
         />
         <Tabs.Screen
           name="Store"
-          component={Workouts}
+          component={Diets}
           options={{
             tabBarIcon: ({focused, color, size}) => (
               <Image
@@ -89,7 +89,7 @@ const BottomTab = () => {
         />
          <Tabs.Screen
           name="Trainer"
-          component={Workouts}
+          component={Diets}
           options={{
             tabBarIcon: ({focused, color, size}) => (
               <Image
