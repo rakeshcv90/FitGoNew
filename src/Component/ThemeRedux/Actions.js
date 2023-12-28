@@ -68,6 +68,12 @@ export const setMindset_Data = data => {
     payload: data,
   };
 };
+export const setLogout = data => {
+  return {
+    type: types.LogOut,
+    payload: data,
+  };
+};
 export const SetmindsetConsent=data=>{
   return{
     type:types.MindSetConsent,

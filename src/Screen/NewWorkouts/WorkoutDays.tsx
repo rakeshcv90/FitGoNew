@@ -29,11 +29,12 @@ const WorkoutDays = ({navigation, route}: any) => {
           style={{
             width: 40,
             height: height,
+            top: -25,
           }}>
           <Circle cx={15} cy={15} color="#2F3133" r={15} />
           <Line
             p1={vec(9, 12)}
-            p2={vec(14, 20)}
+            p2={vec(15, 20)}
             strokeWidth={2}
             color={AppColor.WHITE}
           />
@@ -205,7 +206,13 @@ const WorkoutDays = ({navigation, route}: any) => {
 
   return (
     <View style={styles.container}>
-      <Header header={data?.workout_title} backButton SearchButton={false} />
+      <Header
+        header={
+          data?.workout_title == undefined ? 'Full Body' : data?.workout_title
+        }
+        backButton
+        SearchButton={false}
+      />
       <GradientText
         text={'Today'}
         fontWeight={'500'}

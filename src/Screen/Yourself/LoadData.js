@@ -110,16 +110,14 @@ const LoadData = ({navigation}) => {
   }, []);
   const WholeData = async deviceID => {
     const mergedObject = Object.assign({}, ...getLaterButtonData);
-    console.log('mindset===>', mergedObject?.injury?.join(','));
+
     try {
       const payload = new FormData();
       payload.append('deviceid', deviceID);
-
       payload.append(
         'id',
         getUserDataDetails?.id != null ? getUserDataDetails?.id : null,
       );
-
       payload.append('gender', mergedObject?.gender);
       payload.append('goal', mergedObject?.goal);
       payload.append('age', mergedObject?.age);
@@ -127,7 +125,6 @@ const LoadData = ({navigation}) => {
       payload.append('focusarea', mergedObject?.focuseArea?.join(','));
       payload.append('weight', mergedObject?.currentWeight);
       payload.append('height', mergedObject?.height);
-
       payload.append(
         'injury',
         mergedObject?.injury != null ? mergedObject?.injury?.join(',') : null,
@@ -146,16 +143,16 @@ const LoadData = ({navigation}) => {
             payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
           }
         }
-      console.log('Total payloadf', payload);
-
+  
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        data: test,
+        data:payload
+ 
+      
       });
-      console.log('data=======>', data.data);
       customWorkoutDataApi(deviceID);
     } catch (error) {
       console.log('error', error);
@@ -174,8 +171,9 @@ const LoadData = ({navigation}) => {
         },
         data: payload,
       });
+     
       if (res.data) {
-        console.log(res.data);
+      
         dispatch(setCustomWorkoutData(res.data?.workout));
         currentWorkoutDataApi(res.data?.workout[0]);
       }
@@ -183,25 +181,7 @@ const LoadData = ({navigation}) => {
       console.error(error?.response, 'customWorkoutDataApiError');
     }
   };
-  const t = {
-    image_path: 'https://gofit.tentoptoday.com/images/workout_1519947591.jpg',
-    workout_area: 'At Home',
-    workout_bodypart: 9,
-    workout_duration: '3 Days/Week',
-    workout_equipment: 5,
-    workout_gender: 'Male',
-    workout_goal: 3,
-    workout_id: 9,
-    workout_image: 'workout_1519947591.jpg',
-    workout_image_link: '',
-    workout_injury: 'Knee',
-    workout_level: 2,
-    workout_maxage: 40,
-    workout_minage: 31,
-    workout_price: '-',
-    workout_status: '1',
-    workout_title: 'The 6-Week Fat Blast',
-  };
+
 
   const currentWorkoutDataApi = async workout => {
     try {
@@ -227,7 +207,7 @@ const LoadData = ({navigation}) => {
       if (res.data) {
         console.log(res.data, 'AGE_CURRENT');
         dispatch(setCurrentWorkoutData(res.data))
-        navigation.navigate('Preview',{currentExercise: res.data});
+        // navigation.navigate('Preview',{currentExercise: res.data});
       }
     } catch (error) {
       console.error(error?.response, 'customWorkoutDataApiError');
@@ -302,7 +282,7 @@ const LoadData = ({navigation}) => {
           data={buttonName}
           showsHorizontalScrollIndicator={false}
           renderItem={({item, index}) => {
-            console.log('dsvddsfdfsd', item);
+         
             const translateX = translationX.interpolate({
               inputRange: [0, 1],
               outputRange: [10, -300], //

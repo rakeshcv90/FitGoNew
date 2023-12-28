@@ -20,12 +20,12 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import VersionNumber from 'react-native-version-number';
 import AskHealthPermissionAndroid from '../../Component/AndroidHealthPermission';
-import AppleHealthKit, {
-} from 'react-native-health'
+import AppleHealthKit from 'react-native-health';
 
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Dropdown} from 'react-native-element-dropdown';
 import {LineChart} from 'react-native-chart-kit';
+import AnimatedLottieView from 'lottie-react-native';
 import axios from 'axios';
 
 import {
@@ -38,7 +38,6 @@ import {
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {navigationRef} from '../../../App';
 import {useSelector} from 'react-redux';
-import VersionNumber from 'react-native-version-number';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
@@ -71,41 +70,6 @@ const GradientText = ({item}) => {
     </View>
   );
 };
-
-const Home = () => {
-  useEffect(()=>{
-    if(Platform.OS=="android"){
-      AskHealthPermissionAndroid()
-    }else{
-      AppleHealthKit.isAvailable((err, available) => {
-        console.log("Avialalebe=========>",available)
-        const permissions = {
-          permissions: {
-            read: [
-              AppleHealthKit.Constants.Permissions.DistanceWalkingRunning,
-              AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
-              AppleHealthKit.Constants.Permissions.Steps,
-            ],
-          },
-        };
-        if (err) {
-          console.log('error initializing Healthkit: ', err)
-        }
-        else if(available==true){
-          AppleHealthKit.initHealthKit(permissions, (error) => {
-            if (error) {
-              console.log('[ERROR] Cannot grant permissions!', error);
-            } 
-          });
-        }else{
-          Alert.alert("Attention","Health data can't be tracked in this Device due to its specifications",{
-          })
-        }
-      })
-    }
-  })
-  const [currentindex, setCurrentIndex] = useState(1);
-
 
 const ProgressBar = ({progress, image, text}) => {
   return (
@@ -155,6 +119,7 @@ const Home = ({navigation}) => {
   const [mealList, setMealLIst] = useState(10);
   const [forLoading, setForLoading] = useState(false);
   const [value, setValue] = useState('Weekly');
+  const [currentindex, setCurrentIndex] = useState(1);
   const progressAnimation = useRef(new Animated.Value(0)).current;
   const {
     getLaterButtonData,
@@ -165,6 +130,40 @@ const Home = ({navigation}) => {
     customWorkoutData,
   } = useSelector(state => state);
 
+  useEffect(() => {
+    if (Platform.OS == 'android') {
+      AskHealthPermissionAndroid();
+    } else {
+      AppleHealthKit.isAvailable((err, available) => {
+   
+        const permissions = {
+          permissions: {
+            read: [
+              AppleHealthKit.Constants.Permissions.DistanceWalkingRunning,
+              AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
+              AppleHealthKit.Constants.Permissions.Steps,
+            ],
+          },
+        };
+        if (err) {
+          console.log('error initializing Healthkit: ', err);
+        } else if (available == true) {
+          AppleHealthKit.initHealthKit(permissions, error => {
+            
+            if (error) {
+              console.log('[ERROR] Cannot grant permissions!', error);
+            }
+          });
+        } else {
+          Alert.alert(
+            'Attention',
+            "Health data can't be tracked in this Device due to its specifications",
+            {},
+          );
+        }
+      });
+    }
+  });
 
   const props = {
     activeStrokeWidth: 25,
@@ -179,10 +178,7 @@ const Home = ({navigation}) => {
     {id: '4', title: 'Test'},
   ];
   const data1 = [
-    {id: '1', title: 'Single Arm\nBicep Curls'},
-    {id: '2', title: 'Deep'},
-    {id: '3', title: 'Slee'},
-    {id: '4', title: 'Test'},
+    
   ];
   const data2 = [
     {label: 'Weekly', value: '1'},
@@ -251,6 +247,7 @@ const Home = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       }}>
+
       <LinearGradient
         start={{x: 0, y: 1}}
         end={{x: 1, y: 0}}
@@ -263,10 +260,15 @@ const Home = ({navigation}) => {
               color: color.color3,
             },
           ]}>
-          {title}
+          {title.workout_mindset_title}
         </Text>
+
         <Image
-          source={localImage.Money}
+          source={
+            title.workout_mindset_image_link != null
+              ? {uri: title.workout_mindset_image_link}
+              : localImage.Noimage
+          }
           style={[
             styles.img,
             {
@@ -296,6 +298,29 @@ const Home = ({navigation}) => {
     return (
       <View style={styles.item}>
         <Text style={styles.textItem}>{item.label}</Text>
+      </View>
+    );
+  };
+  const emptyComponent = () => {
+
+    return (
+      <View
+        style={{
+        
+       flex:1
+        }}>
+        <AnimatedLottieView
+          source={require('../../Icon/Images/NewImage/NoData.json')}
+          speed={2}
+          autoPlay
+          loop
+          resizeMode="contain"
+          style={{
+            width: DeviceWidth * 0.3,
+            height: DeviceHeigth * 0.15,
+          
+          }}
+        />
       </View>
     );
   };
@@ -430,7 +455,9 @@ const Home = ({navigation}) => {
             </View>
           </View>
         </View>
+  
         {mindsetConsent == false && (
+          
           <>
             <View
               style={{
@@ -458,14 +485,15 @@ const Home = ({navigation}) => {
             </View>
             <View style={styles.meditionBox}>
               <FlatList
-                data={data}
+                data={customWorkoutData?.minset_workout}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={item => item.id}
+                ListEmptyComponent={emptyComponent}
                 renderItem={({item, index}) => {
                   return (
                     <ListItem
-                      title={item.title}
+                      title={item}
                       color={colors[index % colors.length]}
                     />
                   );
@@ -516,13 +544,16 @@ const Home = ({navigation}) => {
               top: DeviceHeigth * 0.09,
             },
           ]}>
+      
           <FlatList
-            data={data1}
+            data={customWorkoutData?.workout}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id}
+            ListEmptyComponent={emptyComponent}
             pagingEnabled
             renderItem={({item, index}) => {
+          
               return (
                 <View
                   style={[
@@ -532,15 +563,16 @@ const Home = ({navigation}) => {
                       marginTop: 20,
                     },
                   ]}>
-                  <View style={{marginVertical: 10, }}>
+                  <View style={{marginVertical: 10}}>
                     <Text
                       style={[
                         styles.title,
                         {
                           color: AppColor.BoldText,
+                          width:DeviceHeigth*0.2
                         },
                       ]}>
-                      {item.title}
+                      {item.workout_title}
                     </Text>
                     <View
                       style={{
@@ -565,18 +597,28 @@ const Home = ({navigation}) => {
                   </View>
 
                   <Image
-                    source={localImage.Money}
+                    source={localImage.GymImage}
+                    style={{
+                      height: DeviceHeigth * 0.2,
+                      width: DeviceWidth * 0.35,
+
+                      bottom: -50,
+                      left: -30,
+                      marginTop: -DeviceHeigth * 0.11,
+                    }}
+                    resizeMode="contain"></Image>
+                  <TouchableOpacity
                     style={[
                       styles.img,
                       {
-                        height: 120,
-                        width: 100,
-                        marginTop: -60,
-               
+                        height: 25,
+                        width: 25,
+                        // backgroundColor:'red',
+                        left: -45,
+                        borderRadius: 0,
+                        top: -DeviceHeigth * 0.055,
                       },
                     ]}
-                    resizeMode="contain"></Image>
-                  <TouchableOpacity
                     onPress={() => {
                       console.log('Fevvdsvdfvgfd', item);
                     }}>
@@ -585,9 +627,10 @@ const Home = ({navigation}) => {
                       style={[
                         styles.img,
                         {
-                          height: 20,
-                          width: 20,
-                          top: -DeviceHeigth * 0.05,
+                          height: 25,
+                          width: 25,
+                          borderRadius: 0,
+                          // tintColor:'red',
                         },
                       ]}
                       resizeMode="contain"></Image>
@@ -738,7 +781,7 @@ const Home = ({navigation}) => {
             top: DeviceHeigth * 0.11,
             width: '95%',
             // height: 200,
-            marginBottom: DeviceHeigth * 0.15,
+            marginBottom: DeviceHeigth * 0.08,
             alignSelf: 'center',
             borderRadius: 10,
           }}>
@@ -897,6 +940,7 @@ var styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: 'white',
     top: DeviceHeigth * 0.05,
+    alignItems:'center'
   },
   meditionText: {
     width: '95%',

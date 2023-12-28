@@ -399,10 +399,10 @@ const Login = ({navigation}) => {
           id: user_id,
         },
       });
-      console.log('Custom Workout ', data.data.workout);
+      // console.log('Custom Workout ', data.data.workout.length);
       if (data.data.workout) {
         setForLoading(false);
-        dispatch(setCustomWorkoutData(data.data?.workout));
+        dispatch(setCustomWorkoutData(data?.data));
       } else {
         setForLoading(false);
         dispatch(setCustomWorkoutData([]));
@@ -699,7 +699,7 @@ const Login = ({navigation}) => {
             </Text>
           </View>
         </KeyboardAvoidingView>
-        <View style={{marginTop: DeviceHeigth * 0.02}}>
+        <View style={{marginTop: DeviceHeigth * 0.02,paddingBottom: 10}}>
           <Button2 onGooglePress={GoogleSignup} onFBPress={FacebookLogin} />
         </View>
       </ScrollView>

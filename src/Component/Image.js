@@ -92,6 +92,8 @@ export const localImage = {
   INFO:require('../Icon/Images/NewImage/GroupInfo.png'),
   Play:require('../Icon/Images/NewImage/play.png'),
   dw7: require('../Icon/Images/NewImage/n7.png'),
+  GymImage: require('../Icon/Images/NewImage/GymImage.png'),
+  Noimage: require('../Icon/Images/NewImage/no-pictures.png')
 
 
 

@@ -213,7 +213,6 @@ const Signup = ({navigation}) => {
           version:appVersion
         },
       });
-console.log("sdfdsfsdfs",data.data)
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0

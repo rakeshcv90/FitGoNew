@@ -12,5 +12,6 @@ export default {
   ALL_WORKOUTS_DATA: 'ALL_WORKOUTS_DATA',
   User_Profile_Data:'User_Profile_Data',
   Mindset_Data:'Mindset_Data',
-  MindSetConsent:' MindSetConsent'
+  MindSetConsent:' MindSetConsent',
+  LogOut:'LogOut'
 };

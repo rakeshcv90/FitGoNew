@@ -14,7 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 const NewHeader = ({header, backButton, SearchButton}) => {
   const navigation = useNavigation();
-  console.log(header)
+  console.log(header);
   return (
     <SafeAreaView
       style={[
@@ -24,8 +24,8 @@ const NewHeader = ({header, backButton, SearchButton}) => {
             Platform.OS == 'ios'
               ? (DeviceHeigth * 10) / 100 + getStatusBarHeight() //adding statusbar height for the ios
               : (DeviceHeigth * 10) / 100,
-          paddingHorizontal: DeviceWidth * 0.07,
-          paddingTop: Platform.OS == 'android' ? DeviceHeigth * 0.05 : 0,
+          left: -1,
+          paddingTop: Platform.OS == 'android' ? DeviceHeigth * 0.03 : 0,
         },
       ]}>
       {!backButton ? (
@@ -69,8 +69,6 @@ const style = StyleSheet.create({
     backgroundColor: '#fff',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
   },
   headerstyle: {
     fontWeight: '600',

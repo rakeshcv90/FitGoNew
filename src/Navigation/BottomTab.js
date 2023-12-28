@@ -18,7 +18,16 @@ const BottomTab = () => {
           activeTintColor: '#D01818',
           inactiveTintColor: '#3D3D3D',
           activeBackgroundColor: '#EED9D6',
-        }}>
+    
+        labelStyle: {  fontFamily: 'Poppins',
+        fontWeight: '700',
+        lineHeight: 18,
+        fontSize: 12,
+        },
+
+        }}
+ 
+        >
         <Tabs.Screen
           name="Home"
           component={Home}
