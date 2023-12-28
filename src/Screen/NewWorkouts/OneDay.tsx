@@ -6,15 +6,37 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColor} from '../../Component/Color';
 import {Image} from 'react-native';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
+import {useDispatch, useSelector} from 'react-redux';
+import axios from 'axios';
 
-const WorkoutsDescription = ({data, open, setOpen}: any) => {
-  console.log(data?.workout_description);
-  const description = data?.workout_description?.split(/<\/?p>/g) || [];
+const OneDay = ({open, setOpen, data, dayData, day}: any) => {
+  const [exerciseData, setExerciseData] = useState([]);
+  const {allWorkoutData, getUserDataDetails} = useSelector(
+    (state: any) => state,
+  );
+  const dispatch = useDispatch();
+  useEffect(() => {
+    allWorkoutApi()
+  }, []);
+
+  const allWorkoutApi = async () => {
+    try {
+      const res = await axios({
+        url: NewAppapi.Get_DAYS + '?day=' + day + '&workout_id=' + data?.workout_id,
+      });
+      if (res.data) {
+        console.log(res.data, 'DaysData');
+        // dispatch(setAllWorkoutData(res.data));
+      }
+    } catch (error) {
+      console.error(error, 'DaysAPIERror');
+    }
+  };
   return (
     <Modal visible={open} onRequestClose={() => null} animationType="slide">
       <View
@@ -51,28 +73,11 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
           <Text
             style={{
               fontWeight: '700',
-              fontSize: 24,
-              lineHeight: 30,
+              fontSize: 30,
+              lineHeight: 40,
               fontFamily: 'Poppins',
             }}>
-            {data?.workout_title}
-          </Text>
-          <Text />
-          <Text
-            style={{
-              fontWeight: 'normal',
-              fontSize: 12,
-              lineHeight: 18,
-              fontFamily: 'Poppins',
-            }}>
-            {description?.map((text: any, index: number) => {
-              if (index % 2 === 0) {
-                <View style={{height: 10,}} />
-              } else {
-                return text;
-                // Bold section, wrap in <BoldText>
-              }
-            })}
+            Day {day}
           </Text>
         </View>
       </View>
@@ -80,7 +85,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
   );
 };
 
-export default WorkoutsDescription;
+export default OneDay;
 
 const styles = StyleSheet.create({
   container: {
@@ -94,7 +99,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     position: 'absolute',
     padding: 20,
-    paddingTop: 50,
+    // paddingTop: 50,
     ...Platform.select({
       ios: {
         shadowColor: 'rgba(0, 0, 0, 0.6)',

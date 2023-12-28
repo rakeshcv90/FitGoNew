@@ -67,7 +67,10 @@ const MediumRounded: FC<Props> = ({...props}) => {
                   ]}>
                   <Image
                     source={item?.image}
-                    style={StyleSheet.absoluteFillObject}
+                    style={{
+                      height: DeviceWidth * 0.35,
+                      width: DeviceWidth * 0.6,
+                    }}
                     resizeMode="contain"
                   />
                 </TouchableOpacity>

@@ -41,7 +41,9 @@ export const NewAppapi = {
   Post_COMPLETE_PROFILE: NewApi + 'user_update_details',
   Custom_WORKOUT_DATA: NewApi + 'usercustomworkout',
   Free_WORKOUT_DATA: NewApi + 'userfreecustomworkout',
+  Free_Excercise_Data: NewApi + 'userfreecustomexercise',
   Whole_data: NewApi + 'user_update_details',
   ALL_WORKOUTS: NewApi + 'allworkout',
   Meal_Categorie: NewApi + 'get_categorie',
+  Get_DAYS: NewApi + 'days'
 };

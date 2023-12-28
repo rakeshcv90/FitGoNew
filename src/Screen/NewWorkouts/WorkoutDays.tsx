@@ -18,47 +18,121 @@ import LinearGradient from 'react-native-linear-gradient';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import ProgressButton from '../../Component/ProgressButton';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useDispatch, useSelector} from 'react-redux';
+import {localImage} from '../../Component/Image';
+import OneDay from './OneDay';
 
 const WorkoutDays = ({navigation, route}: any) => {
   const {data} = route.params;
-  const [selected, setSelected] = useState(5);
-  const BlackCircle = ({indexes, height, select}: any) => {
+  const [selected, setSelected] = useState(0);
+  const [phase, setPhase] = useState(1);
+  const [openDay, setOpenDay] = useState(false);
+  const [day, setDay] = useState(1);
+  const [dayData, setDayData] = useState([]);
+
+  const {allWorkoutData, getUserDataDetails} = useSelector(
+    (state: any) => state,
+  );
+
+  let totalTime = 0;
+  for (const day in data?.days) {
+    if (day != 'Rest') {
+      totalTime = totalTime + parseInt(data?.days[day]?.exercise_rest);
+    }
+  }
+  const dispatch = useDispatch();
+  const BlackCircle = ({indexes, select, index}: any) => {
     return (
-      <View style={{backgroundColor: 'white'}}>
-        <Canvas
+      <View
+        style={{
+          backgroundColor: 'white',
+          marginRight: 10,
+          marginLeft: 0,
+          width: 40,
+          overflow: 'hidden',
+          height: select ? DeviceHeigth * 0.2 : DeviceHeigth * 0.1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginTop: index == 0 || index == 4 ? DeviceHeigth * 0.05 : 0,
+        }}>
+        {/* {index != 0 ? (
+          <Canvas
+            style={{
+              width: 40,
+              height: select
+                ? (DeviceHeigth * 0.2) / 2.5
+                : (DeviceHeigth * 0.1) / 3,
+              left: 5,
+              // backgroundColor: 'red',
+            }}>
+            {Array(100)
+              .fill(1, 0, 21)
+              .map((item, index) => {
+                return (
+                  <Group>
+                    {index % 2 == 0 ? (
+                      <Line
+                        key={index}
+                        p1={vec(15, 8 * (index + 1))}
+                        p2={vec(15, 8 * (index + 2))}
+                        strokeWidth={2}
+                        color={'#2F3133'}
+                      />
+                    ) : (
+                      <Line
+                        key={index}
+                        p1={vec(15, 8 * (index + 1))}
+                        p2={vec(15, 8 * (index + 2))}
+                        strokeWidth={2}
+                        color="white"
+                      />
+                    )}
+                  </Group>
+                );
+              })}
+          </Canvas>
+        ) : (
+          <View
+            style={{
+              width: 40,
+              height: select
+                ? (DeviceHeigth * 0.2) / 2.5
+                : (DeviceHeigth * 0.1) / 3,
+            }}
+          />
+        )} */}
+        {index < selected ? (
+          <Image
+            source={localImage.BlackCircle}
+            style={{height: 30, width: 30}}
+          />
+        ) : (
+          <Image
+            source={localImage.GreyCircle}
+            style={{height: 30, width: 30}}
+          />
+        )}
+        {/* <Canvas
           style={{
             width: 40,
-            height: height,
-            top: -25,
+            height: select
+              ? (DeviceHeigth * 0.2) / 4
+              : (DeviceHeigth * 0.1) / 3,
+            left: 5,
+            // backgroundColor: 'red',
           }}>
-          <Circle cx={15} cy={15} color="#2F3133" r={15} />
-          <Line
-            p1={vec(9, 12)}
-            p2={vec(15, 20)}
-            strokeWidth={2}
-            color={AppColor.WHITE}
-          />
-          <Line
-            invertClip
-            origin={vec(14, 20)}
-            p1={vec(14, 20)}
-            p2={vec(25, 10)}
-            strokeWidth={2}
-            color={AppColor.WHITE}
-          />
           {Array(100)
             .fill(1, 0, 21)
             .map((item, index) => {
-              if (indexes == 6) return;
               return (
                 <Group>
-                  {index <= 2 ? null : index % 2 == 0 ? (
+                  {index % 2 == 0 ? (
                     <Line
                       key={index}
                       p1={vec(15, 8 * (index + 1))}
                       p2={vec(15, 8 * (index + 2))}
                       strokeWidth={2}
-                      color={select ? '#2F3133' : 'blue'}
+                      color={'#2F3133'}
                     />
                   ) : (
                     <Line
@@ -72,12 +146,12 @@ const WorkoutDays = ({navigation, route}: any) => {
                 </Group>
               );
             })}
-        </Canvas>
+        </Canvas> */}
       </View>
     );
   };
 
-  const Phase = ({index, percent}: any) => {
+  const Phase = ({index, percent, select}: any) => {
     const gradientColors = ['#D5191A', '#941000'];
     return (
       <View
@@ -89,78 +163,78 @@ const WorkoutDays = ({navigation, route}: any) => {
           alignSelf: 'flex-end',
         }}>
         <GradientText
-          text={`Phase ${index}: Start Easily`}
+          text={phase == 1 ? `Phase 1: Start Easily` : `Phase 2: Warm Ups`}
           fontSize={14}
           marginTop={0}
           y={20}
-          width={`Phase ${index}: Start Easily`.length * 8}
+          width={
+            phase == 1
+              ? `Phase 1: Start Easily`.length * 8
+              : `Phase 1: Warm Ups`.length * 8
+          }
+          colors={select ? gradientColors : ['#505050', '#505050']}
         />
-        <View
-          style={{
-            flexDirection: 'row',
-            alignSelf: 'center',
-            alignItems: 'center',
-          }}>
+        {select && (
           <View
             style={{
-              height: 5,
-              width: DeviceWidth * 0.2,
-              borderRadius: 5,
-              overflow: 'hidden',
-              backgroundColor: '#d9d9d9',
+              flexDirection: 'row',
+              alignSelf: 'center',
+              alignItems: 'center',
             }}>
-            <LinearGradient
-              colors={gradientColors}
-              start={{x: 0, y: 1}}
-              end={{x: 1, y: 0}}
+            <View
               style={{
                 height: 5,
-                width: `${percent}%`,
-              }}
+                width: DeviceWidth * 0.2,
+                borderRadius: 5,
+                overflow: 'hidden',
+                backgroundColor: '#d9d9d9',
+              }}>
+              <LinearGradient
+                colors={gradientColors}
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 0}}
+                style={{
+                  height: 5,
+                  width: `${percent}%`,
+                }}
+              />
+            </View>
+            <GradientText
+              text={`${percent}%`}
+              fontSize={14}
+              marginTop={0}
+              y={20}
+              width={50}
             />
           </View>
-          <GradientText
-            text={`${percent}%`}
-            fontSize={14}
-            marginTop={0}
-            y={20}
-            width={50}
-          />
-        </View>
+        )}
       </View>
     );
   };
 
-  const Box = ({selected, data, index}: any) => {
+  const Box = ({selected, item, index}: any) => {
     return (
       <TouchableOpacity
         activeOpacity={1}
-        style={{
-          //   flex: 1,
-          width: DeviceWidth * 0.8,
-          backgroundColor: '#F3F4F7',
-          height: selected ? DeviceHeigth * 0.2 : DeviceHeigth * 0.1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: 10,
-          borderRadius: 15,
-          marginVertical: 5,
-          ...Platform.select({
-            ios: {
-              shadowColor: 'rgba(0, 0, 0, 0.6)',
-              shadowOffset: {width: 0, height: 1},
-              shadowOpacity: 0.5,
-              // shadowRadius: 10,
-            },
-            android: {
-              elevation: 10,
-              shadowColor: 'rgba(0, 0, 0, 0.6)',
-              shadowOffset: {width: 1, height: 1},
-              shadowOpacity: 0.1,
-              // shadowRadius: 10,
-            },
-          }),
-        }}>
+        onPress={() => {
+          setDayData(item);
+          setOpenDay(true);
+          setDay(index)
+        }}
+        style={[
+          styles.box,
+          {
+            backgroundColor:
+              index == 1 || index == 5
+                ? '#F3F4F7'
+                : index == 2 || index == 6
+                ? '#EAEBFF'
+                : index == 3 || index == 7
+                ? '#FFE8E1'
+                : '#CEF2F9',
+            height: selected ? DeviceHeigth * 0.2 : DeviceHeigth * 0.1,
+          },
+        ]}>
         <View
           style={{
             flexDirection: 'row',
@@ -168,7 +242,7 @@ const WorkoutDays = ({navigation, route}: any) => {
             alignItems: 'center',
           }}>
           <Image
-            source={{uri: data?.image_path}}
+            source={{uri: data?.workout_image_link}}
             style={{height: 80, width: 60, marginLeft: DeviceWidth * 0.12}}
             resizeMode="contain"
           />
@@ -181,8 +255,14 @@ const WorkoutDays = ({navigation, route}: any) => {
               width: '80%',
             }}>
             <View>
-              <Text style={[styles.category, {fontSize: 20}]}>{index}</Text>
-              <Text style={styles.small}>12 | 45kcal</Text>
+              <Text
+                style={[
+                  styles.category,
+                  {fontSize: 20},
+                ]}>{`Day ${index}`}</Text>
+              <Text style={styles.small}>
+                {item?.exercise_rest} min | {item?.exercise_calories} Kcal
+              </Text>
             </View>
             <Icons
               name={'chevron-right'}
@@ -201,6 +281,48 @@ const WorkoutDays = ({navigation, route}: any) => {
           />
         )}
       </TouchableOpacity>
+    );
+  };
+
+  const Time = () => {
+    return (
+      <LinearGradient
+        start={{x: 1, y: 0}}
+        end={{x: 0, y: 1}}
+        colors={['#941000', '#D5191A']}
+        style={[
+          {
+            width: DeviceWidth,
+            height: 100,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            marginLeft: -15,
+            // justifyContent: 'center',
+            alignItems: 'center',
+            paddingTop: 10,
+          },
+        ]}>
+        <Text
+          style={{
+            color: AppColor.WHITE,
+            fontSize: 18,
+            lineHeight: 30,
+            fontFamily: 'Poppins',
+            fontWeight: '500',
+          }}>
+          Time
+        </Text>
+        <Text
+          style={{
+            color: AppColor.WHITE,
+            fontSize: 28,
+            lineHeight: 30,
+            fontFamily: 'Poppins',
+            fontWeight: '600',
+          }}>
+          {totalTime} min
+        </Text>
+      </LinearGradient>
     );
   };
 
@@ -226,21 +348,17 @@ const WorkoutDays = ({navigation, route}: any) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          flexDirection: 'row',
+          // flexDirection: 'row',
           alignItems: 'center',
         }}>
-        <View>
+        {/* <View>
           {Array(7)
             .fill(1, 0, 7)
             .map((item, index) => (
               <View
                 style={{
                   marginTop:
-                    index == selected && index == 0
-                      ? DeviceHeigth * 0.125
-                      : selected != index && index == 0
-                      ? DeviceHeigth * 0.1
-                      : 0,
+                    index == 0 ? DeviceHeigth * 0.08 : -DeviceHeigth * 0.01,
                   marginRight: 15,
                 }}>
                 <BlackCircle
@@ -276,16 +394,55 @@ const WorkoutDays = ({navigation, route}: any) => {
                 />
               </View>
             ))}
-        </View>
+        </View> */}
         <View style={{alignSelf: 'flex-start'}}>
-          <Phase index={1} percent={80} />
-          {Array(7)
-            .fill(1, 0, 7)
-            .map((item, index) => (
-              <Box selected={index == selected} index={index + 1} data={item} />
-            ))}
+          {Object.values(data?.days).map((item: any, index: number) => {
+            if (item == 'Rest') {
+              return (
+                <View>
+                  <Text>Rest</Text>
+                </View>
+              );
+            }
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                {index < 4 ? (
+                  <BlackCircle index={index} select={index == selected} />
+                ) : (
+                  <View style={{width: 40}} />
+                )}
+                <View>
+                  {(index == 0 || index == 4) && (
+                    <Phase
+                      index={index + 1}
+                      percent={80}
+                      select={index <= selected}
+                    />
+                  )}
+                  <Box
+                    selected={index == selected}
+                    index={index + 1}
+                    item={item}
+                  />
+                </View>
+              </View>
+            );
+          })}
         </View>
       </ScrollView>
+      <Time />
+      <OneDay
+        open={openDay}
+        setOpen={setOpenDay}
+        data={data}
+        dayData={dayData}
+        day={day}
+      />
     </View>
   );
 };
@@ -311,5 +468,29 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: AppColor.BoldText,
     lineHeight: 30,
+  },
+  box: {
+    //   flex: 1,
+    width: DeviceWidth * 0.8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 15,
+    marginVertical: 8,
+    ...Platform.select({
+      ios: {
+        shadowColor: 'rgba(0, 0, 0, 0.6)',
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.5,
+        // shadowRadius: 10,
+      },
+      android: {
+        elevation: 10,
+        shadowColor: 'rgba(0, 0, 0, 0.6)',
+        shadowOffset: {width: 1, height: 1},
+        shadowOpacity: 0.1,
+        // shadowRadius: 10,
+      },
+    }),
   },
 });

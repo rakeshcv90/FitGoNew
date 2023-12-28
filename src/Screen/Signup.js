@@ -36,7 +36,7 @@ import {StatusBar} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
 import {useDispatch, useSelector} from 'react-redux';
 import ActivityLoader from '../Component/ActivityLoader';
-import {setUserId} from '../Component/ThemeRedux/Actions';
+import {setUserId, setUserProfileData} from '../Component/ThemeRedux/Actions';
 import {LoginManager, Profile} from 'react-native-fbsdk-next';
 import AnimatedLottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -44,9 +44,6 @@ import {TextInput} from 'react-native-paper';
 import {navigationRef} from '../../App';
 import DeviceInfo from 'react-native-device-info';
 import VersionNumber from 'react-native-version-number';
-
-
-
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 const Signup = ({navigation}) => {
@@ -56,8 +53,8 @@ const Signup = ({navigation}) => {
   const [isVisiblepassword, setIsvisiblepassword] = useState(true);
   const [checked, setChecked] = useState(false);
   const [forLoading, setForLoading] = useState(false);
-  const[deviceId,setDeviceId] = useState(0);
-  const[appVersion,setAppVersion] = useState(0);
+  const [deviceId, setDeviceId] = useState(0);
+  const [appVersion, setAppVersion] = useState(0);
   const dispatch = useDispatch();
 
   const PasswordRegex =
@@ -100,11 +97,11 @@ const Signup = ({navigation}) => {
   }, []);
 
   useEffect(() => {
-    DeviceInfo.syncUniqueId().then((uniqueId) => {
-      setDeviceId(uniqueId)
+    DeviceInfo.syncUniqueId().then(uniqueId => {
+      setDeviceId(uniqueId);
     });
-    setAppVersion( VersionNumber.appVersion)
-  }, );
+    setAppVersion(VersionNumber.appVersion);
+  });
 
   const GoogleSignup = async () => {
     try {
@@ -144,7 +141,7 @@ const Signup = ({navigation}) => {
     );
   };
   const handleFormSubmit = async (value, action) => {
-    console.log("Device Id",deviceId,appVersion)
+    console.log('Device Id', deviceId, appVersion);
     setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
@@ -160,8 +157,8 @@ const Signup = ({navigation}) => {
           social_id: 0,
           social_token: 0,
           social_type: '',
-          deviceid:deviceId,
-          version:appVersion
+          deviceid: deviceId,
+          version: appVersion,
         },
       });
 
@@ -174,7 +171,7 @@ const Signup = ({navigation}) => {
           type: 'success',
           icon: {icon: 'auto', position: 'left'},
         });
-        setVerifyVisible(true)
+        setVerifyVisible(true);
         setEmailSent(data.data.email);
         action.resetForm();
       } else {
@@ -194,7 +191,6 @@ const Signup = ({navigation}) => {
     }
   };
   const socialLogiIn = async (value, token) => {
-
     // setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
@@ -209,8 +205,8 @@ const Signup = ({navigation}) => {
           socialid: value.id,
           socialtoken: token,
           socialtype: 'google',
-          deviceid:deviceId,
-          version:appVersion
+          deviceid: deviceId,
+          version: appVersion,
         },
       });
       if (
@@ -257,8 +253,8 @@ const Signup = ({navigation}) => {
           socialid: value.userID,
           socialtoken: '',
           socialtype: 'facebook',
-          deviceid:deviceId,
-          version:appVersion
+          deviceid: deviceId,
+          version: appVersion,
         },
       });
 
@@ -360,7 +356,7 @@ const Signup = ({navigation}) => {
     };
     const handleOTP = async () => {
       const OtpString = txt1 + txt2 + txt3 + txt4;
-     
+
       if (!txt1 || !txt2 || !txt3 || !txt4) {
         showMessage({
           message: 'Please enter the otp',
@@ -370,7 +366,7 @@ const Signup = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-       // setForLoading(true);
+        // setForLoading(true);
 
         try {
           const OtpMsg = await axios(`${NewApi}${NewAppapi.OTPVerification}`, {
@@ -380,13 +376,12 @@ const Signup = ({navigation}) => {
             },
             data: {
               otp: OtpString,
-              email:Emailsend ,
+              email: Emailsend,
             },
           });
-    
           if (OtpMsg.data.msg == 'Email verified successfully') {
             setForLoading(false);
-       
+
             showMessage({
               message: 'Email verified successfully!',
               floating: true,
@@ -394,9 +389,9 @@ const Signup = ({navigation}) => {
               type: 'success',
               icon: {icon: 'auto', position: 'left'},
             });
-            dispatch(setUserId(OtpMsg.data?.id));
-            navigationRef.navigate('Yourself');
-            setVerifyVisible(false)
+            // dispatch(setUserId(OtpMsg.data?.id));
+            getProfileData(OtpMsg.data?.id);
+            setVerifyVisible(false);
             setTxt1('');
             setTxt2('');
             setTxt3('');
@@ -420,7 +415,33 @@ const Signup = ({navigation}) => {
         }
       }
     };
-  
+
+    const getProfileData = async user_id => {
+      try {
+        const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          data: {
+            id: user_id,
+          },
+        });
+
+        if (data.data.profile) {
+          setForLoading(false);
+          dispatch(setUserProfileData(data.data.profile));
+          navigationRef.navigate('Yourself');
+        } else {
+          setForLoading(false);
+          dispatch(setUserProfileData([]));
+          navigationRef.navigate('Yourself');
+        }
+      } catch (error) {
+        console.log('User Profile Error', error);
+        setForLoading(false);
+      }
+    };
 
     return (
       <View
@@ -441,7 +462,7 @@ const Signup = ({navigation}) => {
               styles.modalContainer,
               {backgroundColor: 'transparent', flex: 1},
             ]}>
-               {forLoading ? <ActivityLoader /> : ''}
+            {forLoading ? <ActivityLoader /> : ''}
             <KeyboardAvoidingView
               // style={{flex: 1}}
               behavior={Platform.OS === 'ios' ? 'position' : ''}>

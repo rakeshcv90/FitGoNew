@@ -169,13 +169,14 @@ const LineChart = ({resultData, zeroData}: any) => {
                   <Circle
                     cx={xValue}
                     cy={
-                      resultData[resultData.length - 1].weight ==
-                        dataPoint?.weight ||
-                      resultData[0].weight == dataPoint?.weight
-                        ? yValue
-                        : index % 2 == 0
-                        ? yValue + 20
-                        : yValue - 20
+                      yValue
+                      // resultData[resultData.length - 1].weight ==
+                      //   dataPoint?.weight ||
+                      // resultData[0].weight == dataPoint?.weight
+                      //   ? yValue
+                      //   : index % 2 == 0
+                      //   ? yValue + 0
+                      //   : yValue - 0
                     }
                     r={5}
                     color={'red'}

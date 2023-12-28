@@ -24,17 +24,17 @@ const data = [
   {
     id: 1,
     name: 'Cardio',
-    image: localImage.Abs,
+    image: localImage.GymImage,
   },
   {
     id: 2,
     name: 'Workout',
-    image: localImage.Abs,
+    image: localImage.GymImage,
   },
   {
     id: 3,
     name: 'Stretching',
-    image: localImage.Abs,
+    image: localImage.GymImage,
   },
   {
     id: 4,
@@ -54,18 +54,20 @@ const data = [
 ];
 
 const Workouts = () => {
-  const {allWorkoutData} = useSelector((state: any) => state);
+  const {allWorkoutData, getUserDataDetails} = useSelector(
+    (state: any) => state,
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // allWorkoutData.length == 0 &&
+    allWorkoutData.length == 0 &&
      allWorkoutApi();
   }, []);
 
   const allWorkoutApi = async () => {
     try {
       const payload = new FormData();
-      payload.append('id', 74);
+      payload.append('id', getUserDataDetails?.id);
       const res = await axios({
         url: NewAppapi.ALL_WORKOUTS,
         method: 'POST',
@@ -76,7 +78,7 @@ const Workouts = () => {
       });
       if (res.data) {
         console.log(res.data, 'AllWorkouts');
-        dispatch(setAllWorkoutData(res.data?.workout_details));
+        dispatch(setAllWorkoutData(res.data));
       }
     } catch (error) {
       console.error(error, 'customWorkoutDataApiError');
