@@ -13,5 +13,6 @@ export default {
   User_Profile_Data:'User_Profile_Data',
   Mindset_Data:'Mindset_Data',
   MindSetConsent:' MindSetConsent',
-  LogOut:'LogOut'
+  LogOut:'LogOut',
+  ALL_MEAL_DATA: 'ALL_MEAL_DATA',
 };

@@ -13,7 +13,6 @@ export const localImage = {
   dw4: require('../Icon/Images/DwaderImage/n4.png'),
   dw5: require('../Icon/Images/DwaderImage/n5.png'),
   dw6: require('../Icon/Images/DwaderImage/n6.png'),
-  
   dw8: require('../Icon/Images/DwaderImage/n8.png'),
   dw9: require('../Icon/Images/DwaderImage/n9.png'),
   avt: require('../Icon/Images/DwaderImage/Avatar.png'),
@@ -29,7 +28,6 @@ export const localImage = {
   GENDER: require('../Icon/Images/NewImage/Gender.png'),
   PathChargeLevel: require('../Icon/Images/NewImage/PathChargeLevel.png'),
   BACK: require('../Icon/Images/NewImage/back.png'),
-
   BELL: require('../Icon/Images/NewImage/bell.png'),
   Calories: require('../Icon/Images/NewImage/Calories.png'),
   Step: require('../Icon/Images/NewImage/Step.png'),
@@ -96,7 +94,6 @@ export const localImage = {
   Noimage: require('../Icon/Images/NewImage/no-pictures.png'),
   BlackCircle: require('../Icon/Images/NewImage/BlackCircle.png'),
   GreyCircle: require('../Icon/Images/NewImage/GreyCircle.png'),
-
-
+  Watch: require('../Icon/Images/NewImage/watch.png')
 
 };

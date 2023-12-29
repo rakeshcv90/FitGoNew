@@ -35,6 +35,7 @@ import {LoginManager, Profile} from 'react-native-fbsdk-next';
 import AnimatedLottieView from 'lottie-react-native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
+  Setmealdata,
   setCustomWorkoutData,
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
@@ -124,6 +125,7 @@ const Login = ({navigation}) => {
         setForLoading(false);
         getProfileData(data.data.id, data.data.profile_status);
         getCustomWorkout(data.data.id);
+        Meal_List(data.data.login_token);
       } else if (
         data.data.msg ==
         'User does not exist with provided Google social credentials'
@@ -148,6 +150,7 @@ const Login = ({navigation}) => {
         setForLoading(false);
         // setModalVisible(true);
         getProfileData(data.data.id, data.data.profile_status);
+        Meal_List(data.data.login_token);
       }
     } catch (error) {
       setForLoading(false);
@@ -205,6 +208,7 @@ const Login = ({navigation}) => {
         setForLoading(false);
         getProfileData(data.data.id, data.data.profile_status);
         getCustomWorkout(data.data.id);
+        Meal_List(data.data.login_token);
       } else if (
         data.data.msg ==
         'User does not exist with provided Facebook social credentials'
@@ -222,6 +226,7 @@ const Login = ({navigation}) => {
         // setModalVisible(true);
         dispatch(setCustomWorkoutData([]));
         getProfileData(data.data.id, data.data.profile_status);
+        Meal_List(data.data.login_token);
       }
     } catch (error) {
       setForLoading(false);
@@ -243,7 +248,6 @@ const Login = ({navigation}) => {
           version: appVersion,
         },
       });
-
       if (
         data.data.msg == 'Login successful' &&
         data.data.profile_status == 1
@@ -258,17 +262,19 @@ const Login = ({navigation}) => {
 
         getProfileData(data.data.id, data.data.profile_status);
         getCustomWorkout(data.data.id);
+        Meal_List(data.data.login_token);
       } else if (
         data.data.msg == 'Login successful' &&
         data.data.profile_status == 0
       ) {
         setForLoading(false);
-        //setModalVisible(true);
+      
         getProfileData(data.data.id, data.data.profile_status);
+        Meal_List(data.data.login_token);
         dispatch(setCustomWorkoutData([]));
       } else {
         setForLoading(false);
-        // setModalVisible(true);
+    
         showMessage({
           message: data.data.msg,
           floating: true,
@@ -399,7 +405,7 @@ const Login = ({navigation}) => {
           id: user_id,
         },
       });
-      // console.log('Custom Workout ', data.data.workout.length);
+
       if (data.data.workout) {
         setForLoading(false);
         dispatch(setCustomWorkoutData(data?.data));
@@ -413,7 +419,33 @@ const Login = ({navigation}) => {
       setForLoading(false);
     }
   };
+  const Meal_List = async (login_token) => {
 
+    try {
+      const data = await axios(`${NewAppapi.Meal_Categorie}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          token: login_token,
+          version: VersionNumber.appVersion,
+        },
+      });
+  
+      if (data.data.categories.length > 0) {
+        dispatch(Setmealdata(data.data.categories));
+
+    
+      } else {
+        dispatch(Setmealdata([]));
+      }
+    } catch (error) {
+
+      dispatch(Setmealdata([]));
+      console.log('Meal List Error', error);
+    }
+  };
   const ModalView = () => {
     const [forLoading, setForLoading] = useState(false);
     const handleForgotPassword = async value => {
