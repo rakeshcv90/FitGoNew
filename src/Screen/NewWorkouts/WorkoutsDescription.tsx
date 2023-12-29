@@ -13,7 +13,6 @@ import {Image} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 
 const WorkoutsDescription = ({data, open, setOpen}: any) => {
-  console.log(data?.workout_description);
   const description = data?.workout_description?.split(/<\/?p>/g) || [];
   return (
     <Modal visible={open} onRequestClose={() => null} animationType="slide">

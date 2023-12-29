@@ -74,7 +74,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
                     {
                       width: props?.horizontal
                         ? DeviceWidth / 4
-                        : DeviceWidth * 0.9,
+                        : DeviceWidth * 0.92,
                       flexDirection: props?.horizontal ? 'column' : 'row',
                       justifyContent: props?.horizontal
                         ? 'center'
