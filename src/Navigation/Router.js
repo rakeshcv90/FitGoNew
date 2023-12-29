@@ -41,8 +41,10 @@ import Profile from '../Screen/NewHome/Profile';
 import BottomTab from './BottomTab';
 import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
 import WorkoutDays from '../Screen/NewWorkouts/WorkoutDays';
+import OneDay from '../Screen/NewWorkouts/OneDay';
 import Meals from '../Screen/NewHome/Meals';
 import MealDetails from '../Screen/NewHome/MealDetails';
+
 const Stack = createNativeStackNavigator();
 
 const screenOptions = {
@@ -161,8 +163,12 @@ export const LoginStack = () => {
       <Stack.Screen name="NewEditProfile" component={NewEditProfile} />
       <Stack.Screen name="WorkoutsDescription" component={WorkoutDescription} />
       <Stack.Screen name="WorkoutDays" component={WorkoutDays} />
+
+      <Stack.Screen name="OneDay" component={OneDay} />
+
       <Stack.Screen name="Meals" component={Meals} />
       <Stack.Screen name="MealDetails" component={MealDetails} />
+
    
 
     </Stack.Navigator>

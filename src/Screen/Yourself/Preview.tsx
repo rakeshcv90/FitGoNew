@@ -81,17 +81,23 @@ const Preview = ({route, navigation}: any) => {
         ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
       const formattedDate = currentDate.format('YYYY-MM-DD');
       weightHistoryArray.push({
-        weight:
-          i % 2 === 0 ? decWeight.toFixed(2) : (decWeight - 10).toFixed(2),
+        weight: decWeight.toFixed(2),
+          // i % 2 === 0
+          //   ? decWeight.toFixed(2)
+          //   : (currentWeight - TargetWeight >= 10 || i > 2
+          //       ? decWeight - 10
+          //       : decWeight
+          //     ).toFixed(2),
         date: formattedDate,
       });
       constantWeightArray.push({weight: 0, date: formattedDate});
 
       currentDate = currentDate.add(15, 'days');
     }
-
+    console.log(weightHistoryArray, currentWeight, TargetWeight);
     setZeroData(constantWeightArray);
     setWeightHistory(weightHistoryArray);
+
     weightHistoryArray[weightHistoryArray.length - 1]?.date &&
       setFinalDate(weightHistoryArray[weightHistoryArray.length - 1]?.date);
   };
@@ -138,7 +144,7 @@ const Preview = ({route, navigation}: any) => {
           resizeMode="contain"
         />
         <GradientText
-          item={`X ${item?.exercise_reps}`}
+          text={`X ${item?.exercise_reps}`}
           fontWeight="600"
           fontSize={20}
           width={DeviceWidth / 4}
@@ -174,7 +180,7 @@ const Preview = ({route, navigation}: any) => {
             {`You'll be ${TargetWeight} Kg by`}
           </Text>
           <GradientText
-            item={moment(finalDate).format('DD MMMM YYYY')}
+            text={moment(finalDate || '').format('DD MMMM YYYY')}
             fontWeight="600"
             fontSize={20}
             width={200}
@@ -183,7 +189,7 @@ const Preview = ({route, navigation}: any) => {
         {weightHistory.length != 0 && zeroData.length != 0 && (
           <Graph resultData={weightHistory} zeroData={zeroData} />
         )}
-        <GradientText item={'Work Routine'} />
+        <GradientText text={'Work Routine'} />
         <Calendar
           onDayPress={day => {
             console.log(day.dateString);
@@ -216,21 +222,21 @@ const Preview = ({route, navigation}: any) => {
           ]}
           theme={theme}
         />
-        <GradientText item={'Plan Preview'} />
+        <GradientText text={'Plan Preview'} />
         <View style={[styles.calender, {paddingHorizontal: 10, paddingBottom: 20}]}>
           {Object.entries(currentExercise?.days).map(
             (item: any, index: number) => {
               return (
                 <>
                   <GradientText
-                    item={`Day ${index + 1}`}
+                    text={`Day ${index + 1}`}
                     fontWeight="600"
                     fontSize={14}
                     width={100}
                   />
                   {item[1] == 'Rest' ? (
                     <GradientText
-                      item={'Rest'}
+                      text={'Rest'}
                       fontWeight="600"
                       fontSize={20}
                       width={100}

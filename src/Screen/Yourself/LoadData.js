@@ -76,9 +76,10 @@ const LoadData = ({navigation}) => {
       image: require('../../Icon/Images/NewImage/testImage.png'),
     },
   ];
+  const [activeNext, setActiveNext] = useState(false);
 
   const {
-    defaultTheme,
+    currentWorkoutData,
     completeProfileData,
     getLaterButtonData,
     mindSetData,
@@ -104,12 +105,11 @@ const LoadData = ({navigation}) => {
     ).start();
   };
   useEffect(() => {
-
     DeviceInfo.getUniqueId().then(id => WholeData(id));
-
   }, []);
   const WholeData = async deviceID => {
     const mergedObject = Object.assign({}, ...getLaterButtonData);
+    console.log('USER ID', getUserDataDetails);
 
     try {
       const payload = new FormData();
@@ -143,23 +143,50 @@ const LoadData = ({navigation}) => {
             payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
           }
         }
-  
+
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        data:payload
- 
-      
+        data: payload,
       });
-      customWorkoutDataApi(deviceID);
+      console.log(data.data, payload);
+      getUserDataDetails?.id != null
+        ? getCustomWorkout(getUserDataDetails?.id)
+        : customFreeWorkoutDataApi(deviceID);
     } catch (error) {
       console.log('error', error);
     }
   };
 
-  const customWorkoutDataApi = async deviceID => {
+  const getCustomWorkout = async user_id => {
+    try {
+      const data = await axios(NewAppapi.Custom_WORKOUT_DATA, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          id: user_id,
+        },
+      });
+      console.log('Custom Workout ', data.data.workout);
+      if (data.data.workout) {
+        dispatch(setCustomWorkoutData(data?.data));
+        currentWorkoutDataApi(data.data?.workout[0]);
+      } else {
+        dispatch(setCustomWorkoutData([]));
+        setActiveNext(true);
+      }
+    } catch (error) {
+      console.log('Custom Workout Error', error);
+      dispatch(setCustomWorkoutData([]));
+      setActiveNext(true);
+    }
+  };
+
+  const customFreeWorkoutDataApi = async deviceID => {
     try {
       const payload = new FormData();
       payload.append('deviceid', deviceID);
@@ -171,19 +198,23 @@ const LoadData = ({navigation}) => {
         },
         data: payload,
       });
-     
-      if (res.data) {
-      
-        dispatch(setCustomWorkoutData(res.data?.workout));
+      console.log('CustomFreeWorkout', res.data.workout);
+      if (res.data?.workout) {
+        dispatch(setCustomWorkoutData(res.data));
         currentWorkoutDataApi(res.data?.workout[0]);
+      } else {
+        dispatch(setCustomWorkoutData([]));
+        setActiveNext(true);
       }
     } catch (error) {
       console.error(error?.response, 'customWorkoutDataApiError');
+      dispatch(setCustomWorkoutData([]));
+      setActiveNext(true);
     }
   };
 
-
   const currentWorkoutDataApi = async workout => {
+    const mergedObject = Object.assign({}, ...getLaterButtonData);
     try {
       const payload = new FormData();
       payload.append('workoutid', workout?.workout_id);
@@ -192,11 +223,10 @@ const LoadData = ({navigation}) => {
       payload.append('workoutlevel', workout?.workout_level);
       payload.append('workoutarea', workout?.workout_area);
       payload.append('workoutinjury', workout?.workout_injury);
-      payload.append('workoutage', '35'); //User Age here
+      payload.append('workoutage', mergedObject?.age); //User Age here
       payload.append('workoutequipment', workout?.workout_equipment);
-      console.log(payload)
       const res = await axios({
-        url: 'https://gofit.tentoptoday.com/adserver/public/api/userfreecustomexercise',
+        url: NewAppapi.Free_Excercise_Data,
 
         method: 'POST',
         headers: {
@@ -206,11 +236,18 @@ const LoadData = ({navigation}) => {
       });
       if (res.data) {
         console.log(res.data, 'AGE_CURRENT');
-        dispatch(setCurrentWorkoutData(res.data))
-        // navigation.navigate('Preview',{currentExercise: res.data});
-      }
+        dispatch(setCurrentWorkoutData(res.data));
+      } else dispatch(setCurrentWorkoutData([]));
+
+      setTimeout(() => {
+        setActiveNext(true);
+      }, 2000);
     } catch (error) {
-      console.error(error?.response, 'customWorkoutDataApiError');
+      console.error(error, 'customWorkoutDataApiError');
+      dispatch(setCurrentWorkoutData([]));
+      setTimeout(() => {
+        setActiveNext(true);
+      }, 2000);
     }
   };
 
@@ -282,7 +319,6 @@ const LoadData = ({navigation}) => {
           data={buttonName}
           showsHorizontalScrollIndicator={false}
           renderItem={({item, index}) => {
-         
             const translateX = translationX.interpolate({
               inputRange: [0, 1],
               outputRange: [10, -300], //
@@ -321,7 +357,7 @@ const LoadData = ({navigation}) => {
 
       <View style={styles.buttons}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => null}
           style={{
             backgroundColor: '#F7F8F8',
             width: 45,
@@ -331,21 +367,25 @@ const LoadData = ({navigation}) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Icons name="chevron-left" size={25} color={'#000'} />
+          {/* <Icons name="chevron-left" size={25} color={'#000'} /> */}
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            // toNextScreen()
-            navigation.navigate('Preview');
-          }}>
-          <LinearGradient
-            start={{x: 0, y: 1}}
-            end={{x: 1, y: 0}}
-            colors={['#941000', '#D5191A']}
-            style={[styles.nextButton]}>
-            <Icons name="chevron-right" size={25} color={'#fff'} />
-          </LinearGradient>
-        </TouchableOpacity>
+        {activeNext && (
+          <TouchableOpacity
+            onPress={() => {
+              console.log("CurrentWorkout", currentWorkoutData)
+              navigation.navigate('Preview', {
+                currentExercise: currentWorkoutData,
+              });
+            }}>
+            <LinearGradient
+              start={{x: 0, y: 1}}
+              end={{x: 1, y: 0}}
+              colors={['#941000', '#D5191A']}
+              style={[styles.nextButton]}>
+              <Icons name="chevron-right" size={25} color={'#fff'} />
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );

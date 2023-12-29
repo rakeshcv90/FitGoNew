@@ -7,11 +7,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import {AppColor} from './Color';
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {localImage} from './Image';
-import { navigationRef } from '../../App';
+import {navigationRef} from '../../App';
+import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
 
 export type Props = {
   viewAllButton?: boolean;
@@ -21,140 +22,130 @@ export type Props = {
   viewAllPress?: () => void;
 };
 
-const data = [
-  {
-    id: 1,
-    name: 'Cardio',
-    image: localImage.Abs,
-  },
-  {
-    id: 2,
-    name: 'Workout',
-    image: localImage.Abs,
-  },
-  {
-    id: 3,
-    name: 'Stretching',
-    image: localImage.Abs,
-  },
-  {
-    id: 4,
-    name: 'Weights',
-    image: localImage.Abs,
-  },
-  {
-    id: 5,
-    name: 'Cardio',
-    image: localImage.Abs,
-  },
-  {
-    id: 6,
-    name: 'Cardio',
-    image: localImage.Abs,
-  },
-];
 const RoundedCards: FC<Props> = ({...props}) => {
+  const [open, setOpen] = useState(false);
+  const [desc, setDesc] = useState([]);
   return (
-    <View style={styles.container}>
-      <View style={styles.row}>
-        <Text style={styles.category}>
-          {props.headText ? props.headText : 'Category'}
-        </Text>
-        {props.viewAllButton && (
-          <Text
-            onPress={props.viewAllPress}
-            style={[
-              styles.category,
-              {fontSize: 12, color: 'rgba(80, 80, 80, 0.6) '},
-            ]}>
-            View All
+    <>
+      <View style={styles.container}>
+        <View style={styles.row}>
+          <Text style={styles.category}>
+            {props.headText ? props.headText : 'Category'}
           </Text>
-        )}
-      </View>
-      <View
-        style={{
-          height: props.horizontal ? DeviceWidth / 3 : DeviceHeigth / 2,
-          width: 'auto',
-        }}>
-        <FlatList
-          data={props.horizontal ? props.data : props.data}
-          nestedScrollEnabled
-          keyExtractor={(item, index) => index.toString()}
-          horizontal={props.horizontal}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          renderItem={({item, index}: any) => {
-            return (
-              <TouchableOpacity
-                onPress={() => navigationRef.current?.navigate('WorkoutDays',{data: item})}
-                activeOpacity={0.8}
-                style={[
-                  styles.box,
-                  {
-                    width: props?.horizontal
-                      ? DeviceWidth / 4
-                      : DeviceWidth * 0.9,
-                    flexDirection: props?.horizontal ? 'column' : 'row',
-                    justifyContent: props?.horizontal
-                      ? 'center'
-                      : 'space-between',
-                    marginLeft: props.horizontal ? (index == 0 ? 5 : 10) : 3,
-                  },
-                ]}>
-                <Image
-                  source={
-                    props.horizontal ? item.image : {uri: item?.image_path}
+          {props.viewAllButton && (
+            <Text
+              onPress={props.viewAllPress}
+              style={[
+                styles.category,
+                {fontSize: 12, color: 'rgba(80, 80, 80, 0.6) '},
+              ]}>
+              View All
+            </Text>
+          )}
+        </View>
+        <View
+          style={{
+            height: props.horizontal ? DeviceWidth / 3 : DeviceHeigth / 2,
+            width: 'auto',
+          }}>
+          <FlatList
+            data={props.horizontal ? props.data : props.data}
+            nestedScrollEnabled
+            keyExtractor={(item, index) => index.toString()}
+            horizontal={props.horizontal}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            renderItem={({item, index}: any) => {
+              let totalTime = 0;
+              for (const day in item?.days) {
+                if (day != 'Rest') {
+                  totalTime =
+                    totalTime + parseInt(item?.days[day]?.exercise_rest);
+                }
+              }
+              return (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigationRef.current?.navigate('WorkoutDays', {data: item})
                   }
-                  style={{
-                    height: DeviceWidth / 6,
-                    width: props.horizontal ? DeviceWidth / 6 : DeviceWidth / 3,
-                  }}
-                  resizeMode="contain"
-                />
-                {props.horizontal ? (
-                  <Text style={[styles.category, {fontSize: 14}]}>
-                    {item?.name}
-                  </Text>
-                ) : (
-                  <View
-                    style={[
-                      {
-                        width: DeviceWidth - DeviceWidth / 3,
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginLeft: 10,
-                      },
-                    ]}>
+                  activeOpacity={0.8}
+                  style={[
+                    styles.box,
+                    {
+                      width: props?.horizontal
+                        ? DeviceWidth / 4
+                        : DeviceWidth * 0.9,
+                      flexDirection: props?.horizontal ? 'column' : 'row',
+                      justifyContent: props?.horizontal
+                        ? 'center'
+                        : 'space-between',
+                      marginLeft: props.horizontal ? (index == 0 ? 5 : 10) : 3,
+                    },
+                  ]}>
+                  <Image
+                    source={
+                      props.horizontal
+                        ? item.image
+                        : {uri: item?.workout_image_link}
+                    }
+                    style={{
+                      height: DeviceWidth / 6,
+                      width: props.horizontal
+                        ? DeviceWidth / 6
+                        : DeviceWidth / 3,
+                    }}
+                    resizeMode="contain"
+                  />
+                  {props.horizontal ? (
+                    <Text style={[styles.category, {fontSize: 14}]}>
+                      {item?.name}
+                    </Text>
+                  ) : (
                     <View
-                      style={{
-                        width: '70%',
-                      }}>
-                      <Text style={[styles.category]}>
-                        {item?.workout_title}
-                      </Text>
-                      <Text style={[styles.category, {fontSize: 14}]}>
-                        {item?.workout_duration}
-                      </Text>
-                    </View>
-                    <TouchableOpacity onPress={() => navigationRef.navigate('WorkoutsDescription',{data: item})} >
-                      <Image
-                        source={localImage.INFO}
+                      style={[
+                        {
+                          width: DeviceWidth - DeviceWidth / 3,
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginLeft: 10,
+                        },
+                      ]}>
+                      <View
                         style={{
-                          width: 20,
-                          height: 20,
-                          marginRight: DeviceWidth,
-                        }}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </TouchableOpacity>
-            );
-          }}
-        />
+                          width: '70%',
+                        }}>
+                        <Text style={[styles.category]}>
+                          {item?.workout_title}
+                        </Text>
+                        <Text style={[styles.category, {fontSize: 14}]}>
+                          {!isNaN(totalTime) ? totalTime : 0}
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setDesc(item);
+                          setOpen(true);
+                        }}>
+                        <Image
+                          source={localImage.INFO}
+                          style={{
+                            width: 20,
+                            height: 20,
+                            marginRight: DeviceWidth,
+                          }}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
       </View>
-    </View>
+      <WorkoutDescription open={open} setOpen={setOpen} data={desc} />
+    </>
   );
 };
 

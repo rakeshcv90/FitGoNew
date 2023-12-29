@@ -1,28 +1,79 @@
-import {Modal, Platform, StyleSheet, Text, View} from 'react-native';
+import {
+  Modal,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColor} from '../../Component/Color';
 import {Image} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 
-const WorkoutsDescription = ({navigation, route}: any) => {
-  const {data} = route.params;
-  const [open, setOpen] = useState(true);
-console.log(data)
+const WorkoutsDescription = ({data, open, setOpen}: any) => {
+  console.log(data?.workout_description);
+  const description = data?.workout_description?.split(/<\/?p>/g) || [];
   return (
     <Modal visible={open} onRequestClose={() => null} animationType="slide">
-      <View style={{flex: 1, backgroundColor: AppColor.WHITE}}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: AppColor.WHITE,
+          flexDirection: 'row',
+        }}>
         <Image
-          source={{uri: data?.image_path}}
+          source={{uri: data?.workout_image_link}}
           style={{
-            height: DeviceWidth / 2,
-            width: DeviceWidth,
+            height: DeviceWidth / 1.5,
+            width: DeviceWidth * 0.95,
             marginTop: DeviceHeigth * 0.1,
           }}
           resizeMode="contain"
         />
+        <TouchableOpacity
+          onPress={() => setOpen(false)}
+          style={{
+            marginTop: DeviceHeigth * 0.1,
+          }}>
+          <Text
+            style={{
+              color: 'grey',
+              fontSize: 20,
+              marginRight: 20,
+              fontWeight: '600',
+            }}>
+            X
+          </Text>
+        </TouchableOpacity>
         <View style={styles.container}>
-            {/* <Text>{data}</Text> */}
+          <Text
+            style={{
+              fontWeight: '700',
+              fontSize: 24,
+              lineHeight: 30,
+              fontFamily: 'Poppins',
+            }}>
+            {data?.workout_title}
+          </Text>
+          <Text />
+          <Text
+            style={{
+              fontWeight: 'normal',
+              fontSize: 12,
+              lineHeight: 18,
+              fontFamily: 'Poppins',
+            }}>
+            {description?.map((text: any, index: number) => {
+              if (index % 2 === 0) {
+                <View style={{height: 10,}} />
+              } else {
+                return text;
+                // Bold section, wrap in <BoldText>
+              }
+            })}
+          </Text>
         </View>
       </View>
     </Modal>
@@ -35,7 +86,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: AppColor.WHITE,
-    alignItems: 'center',
+    // alignItems: 'center',
     height: DeviceHeigth * 0.6,
     width: DeviceWidth,
     borderTopRightRadius: 15,
