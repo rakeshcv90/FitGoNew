@@ -13,7 +13,8 @@ const intialState = {
   getUserDataDetails: [],
   mindsetConsent: false,
   mindSetData: [],
-  showLogout:0
+  showLogout:0,
+  mealData: [],
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -41,14 +42,13 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, allWorkoutData: action.payload};
     case types.User_Profile_Data:
       return {...state, getUserDataDetails: action.payload};
+      case types.ALL_MEAL_DATA:
+        return {...state,mealData: action.payload};
     case types.LogOut:
       return {...state, showLogout: action.payload};
     case types.Mindset_Data:
       const updatedData = action.payload;
-      // Create a new copy of the state's mindSetData array
       const updatedMindSetData = [...state.mindSetData];
-
-      // Loop through the updatedData array
       updatedData.forEach(updatedItem => {
         const keyToUpdate = Object.keys(updatedItem)[0];
         const index = updatedMindSetData.findIndex(
@@ -56,13 +56,13 @@ const ThemeReducer = (state = intialState, action) => {
         );
 
         if (index !== -1) {
-          // If key already exists, update its value by creating a new object
+      
           updatedMindSetData[index] = {
             ...updatedMindSetData[index],
             ...updatedItem,
           };
         } else {
-          // If key doesn't exist, append it to the new array
+     
           updatedMindSetData.push(updatedItem);
         }
       });

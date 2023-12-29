@@ -116,7 +116,7 @@ const ProgressBar = ({progress, image, text}) => {
 
 const Home = ({navigation}) => {
   const [progress, setProgress] = useState(10);
-  const [mealList, setMealLIst] = useState(10);
+
   const [forLoading, setForLoading] = useState(false);
   const [value, setValue] = useState('Weekly');
   const [currentindex, setCurrentIndex] = useState(1);
@@ -128,8 +128,8 @@ const Home = ({navigation}) => {
     getUserDataDetails,
     mindsetConsent,
     customWorkoutData,
+    mealData
   } = useSelector(state => state);
-
   useEffect(() => {
     if (Platform.OS == 'android') {
       AskHealthPermissionAndroid();
@@ -190,7 +190,7 @@ const Home = ({navigation}) => {
     extrapolate: 'extend',
   });
   useEffect(() => {
-    Meal_List();
+    // Meal_List();
   }, []);
   useEffect(() => {
     Animated.timing(progressAnimation, {
@@ -210,32 +210,32 @@ const Home = ({navigation}) => {
     {color1: '#D7FBFF'},
     {color1: '#DFEEFE'},
   ];
-  const Meal_List = async () => {
-    setForLoading(true);
-    try {
-      const data = await axios(`${NewAppapi.Meal_Categorie}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          token: getUserDataDetails.login_token,
-          version: VersionNumber.appVersion,
-        },
-      });
-      if (data.data.categories.length > 0) {
-        setForLoading(false);
+  // const Meal_List = async () => {
+  //   setForLoading(true);
+  //   try {
+  //     const data = await axios(`${NewAppapi.Meal_Categorie}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         token: getUserDataDetails.login_token,
+  //         version: VersionNumber.appVersion,
+  //       },
+  //     });
+  //     if (data.data.categories.length > 0) {
+  //       setForLoading(false);
 
-        setMealLIst(data.data.categories);
-      } else {
-        setForLoading(false);
-      }
-    } catch (error) {
-      setMealLIst([]);
-      setForLoading(false);
-      console.log('Meal List Error', error);
-    }
-  };
+  //       setMealLIst(data.data.categories);
+  //     } else {
+  //       setForLoading(false);
+  //     }
+  //   } catch (error) {
+  //     setMealLIst([]);
+  //     setForLoading(false);
+  //     console.log('Meal List Error', error);
+  //   }
+  // };
   const ListItem = ({title, color}) => (
     <TouchableOpacity
       onPress={() => {
@@ -541,7 +541,7 @@ const Home = ({navigation}) => {
           style={[
             styles.meditionBox,
             {
-              top: DeviceHeigth * 0.09,
+              top: DeviceHeigth * 0.08,
             },
           ]}>
       
@@ -682,7 +682,7 @@ const Home = ({navigation}) => {
             }}>
             Meals
           </Text>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => {navigation.navigate("Meals")}}>
             <Icons name="chevron-right" size={25} color={'#000'} />
           </TouchableOpacity>
         </View>
@@ -695,23 +695,28 @@ const Home = ({navigation}) => {
             },
           ]}>
           <FlatList
-            data={mealList}
+            data={mealData.slice(0, 4)}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id}
             pagingEnabled
             renderItem={({item, index}) => {
+              console.log("Meal Details ",item.category_image)
               return (
                 <>
-                  <View style={styles.listItem2}>
+                  <TouchableOpacity style={styles.listItem2}
+                    onPress={()=>{
+                      navigation.navigate('MealDetails',{item:item})
+                    }}
+                  >
                     <Image
                       source={{uri: item.category_image}}
                       style={[
                         styles.img,
                         {
-                          height: 70,
-                          width: 70,
-                          borderRadius: 140 / 2,
+                          height: 90,
+                          width: 90,
+                          borderRadius: 180 / 2,
                           alignSelf: 'center',
                           top: -5,
                         },
@@ -729,9 +734,9 @@ const Home = ({navigation}) => {
                           color: colors[index % colors.length].color3,
                         },
                       ]}>
-                      {item.category_title}
+                      {item.diet_title}
                     </Text>
-                  </View>
+                  </TouchableOpacity>
                 </>
               );
             }}
@@ -967,12 +972,9 @@ var styles = StyleSheet.create({
     flexDirection: 'row',
   },
   listItem2: {
-    width: DeviceWidth * 0.3,
-    height: DeviceWidth * 0.3,
     marginHorizontal: 10,
     borderRadius: 10,
-    // paddingLeft: 10,
-    paddingRight: 10,
+    padding:20,
     marginTop: 10,
     justifyContent: 'center',
     alignItems: 'center',

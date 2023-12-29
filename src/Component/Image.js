@@ -93,7 +93,8 @@ export const localImage = {
   Play:require('../Icon/Images/NewImage/play.png'),
   dw7: require('../Icon/Images/NewImage/n7.png'),
   GymImage: require('../Icon/Images/NewImage/GymImage.png'),
-  Noimage: require('../Icon/Images/NewImage/no-pictures.png')
+  Noimage: require('../Icon/Images/NewImage/no-pictures.png'),
+  Watch: require('../Icon/Images/NewImage/watch.png')
 
 
 

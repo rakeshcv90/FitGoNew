@@ -80,3 +80,9 @@ export const SetmindsetConsent=data=>{
     payload:data
   }
 }
+export const Setmealdata=data=>{
+  return{
+    type:types.ALL_MEAL_DATA,
+    payload:data
+  }
+}

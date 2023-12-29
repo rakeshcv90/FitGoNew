@@ -44,4 +44,5 @@ export const NewAppapi = {
   Whole_data: NewApi + 'user_update_details',
   ALL_WORKOUTS: NewApi + 'allworkout',
   Meal_Categorie: NewApi + 'get_categorie',
-};
+  DietDetails:NewApi + 'getdiet',
+}
