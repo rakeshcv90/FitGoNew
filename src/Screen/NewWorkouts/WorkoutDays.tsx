@@ -20,7 +20,7 @@ import ProgressButton from '../../Component/ProgressButton';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {localImage} from '../../Component/Image';
-import OneDay from './OneDay';
+import {showMessage} from 'react-native-flash-message';
 
 const WorkoutDays = ({navigation, route}: any) => {
   const {data} = route.params;
@@ -217,9 +217,16 @@ const WorkoutDays = ({navigation, route}: any) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          setDayData(item);
-          setOpenDay(true);
-          setDay(index)
+          selected
+            ? navigation.navigate('OneDay', {
+                data: data,
+                dayData: item,
+                day: index,
+              })
+            : showMessage({
+                message: `Please complete Day ${index - 1} Exercise First !!!`,
+                type: 'danger',
+              });
         }}
         style={[
           styles.box,
@@ -436,13 +443,6 @@ const WorkoutDays = ({navigation, route}: any) => {
         </View>
       </ScrollView>
       <Time />
-      <OneDay
-        open={openDay}
-        setOpen={setOpenDay}
-        data={data}
-        dayData={dayData}
-        day={day}
-      />
     </View>
   );
 };
