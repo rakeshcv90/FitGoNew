@@ -10,5 +10,6 @@ export default {
   CUSTOM_WORKOUT_DATA: 'CUSTOM_WORKOUT_DATA',
   User_Profile_Data:'User_Profile_Data',
   Mindset_Data:'Mindset_Data',
-  MindSetConsent:' MindSetConsent'
+  MindSetConsent:' MindSetConsent',
+  HealthData:'HealthData'
 };

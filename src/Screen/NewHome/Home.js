@@ -8,6 +8,7 @@ import {
   Animated,
   ScrollView,
   Platform,
+  AppState,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
@@ -16,9 +17,11 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import VersionNumber from 'react-native-version-number';
-import AskHealthPermissionAndroid from '../../Component/AndroidHealthPermission';
-import AppleHealthKit, {
-} from 'react-native-health'
+import {useSelector, useDispatch} from 'react-redux';
+import {setHealthData} from '../../Component/ThemeRedux/Actions';
+import AppleHealthKit from 'react-native-health';
+import {NativeEventEmitter, NativeModules} from 'react-native';
+import BackgroundService from 'react-native-background-actions';
 import {
   Stop,
   Circle,
@@ -26,8 +29,15 @@ import {
   Text as SvgText,
   LinearGradient as SvgGrad,
 } from 'react-native-svg';
-
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {
+  isStepCountingSupported,
+  parseStepData,
+  startStepCounterUpdate,
+  stopStepCounterUpdate,
+} from '@dongminyu/react-native-step-counter';
+
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
 
@@ -57,37 +67,199 @@ const GradientText = ({item}) => {
   );
 };
 const Home = () => {
-  useEffect(()=>{
-    if(Platform.OS=="android"){
-      AskHealthPermissionAndroid()
-    }else{
+  // service
+  useEffect(() => {
+    new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
+      //NOT IMPLEMENTED YET
+      'healthKit:StepCount:new',
+      async () => {
+        console.log('--> observer triggered');
+      },
+    );
+  });
+  const Dispatch = useDispatch();
+  const {getHealthData} = useSelector(state => state);
+  const [steps, setSteps] = useState(
+    getHealthData[0] ? getHealthData[0].Steps : '0',
+  );
+  const [Calories, setCalories] = useState(
+    getHealthData[1] ? getHealthData[1].Calories : '0',
+  );
+  const [distance, setDistance] = useState(
+    getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
+  );
+  console.log('healthDataa', getHealthData);
+  // pedometer
+  const sleep = time =>
+    new Promise(resolve => setTimeout(() => resolve(), time)); // background
+  const veryIntensiveTask = async taskDataArguments => {
+    const {delay} = taskDataArguments;
+    const updateStepsAndNotification = async data => {
+      // Update the steps and related state
+      setSteps(data.steps);
+      setDistance(((data.steps / 20) * 0.01).toFixed(2));
+      setCalories(Math.floor(data.steps / 20));
+      Dispatch(
+        setHealthData([
+          {Steps: data.steps},
+          {Calories: Math.floor(data.steps / 20)},
+          {DistanceCovered: ((data.steps / 20) * 0.01).toFixed(2)},
+        ]),
+      );
+      // Update the notification with the current steps
+      await BackgroundService.updateNotification({
+        taskIcon: {
+          name: 'ic_launcher',
+          type: 'mipmap',
+        },
+        color: AppColor.RED,
+        taskName: 'Pedometer',
+        taskTitle: 'Steps ' + data.steps,
+        taskDesc: 'Steps ',
+        progressBar: {
+          max: 100,
+          value: data.steps,
+          indeterminate: false,
+        },
+      });
+    };
+    for (let i = 0; BackgroundService.isRunning(); i++) {
+      startStepCounterUpdate(new Date(), async data => {
+        await updateStepsAndNotification(data);
+      });
+
+      await sleep(delay);
+    }
+  };
+  const options = {
+    color: AppColor.RED,
+    taskName: 'Pedometer',
+      taskTitle: 'Steps ' + steps,
+      taskDesc: '',
+      progressBar: {
+        max: 100,
+        value: steps,
+        indeterminate: false,
+      },
+    taskIcon: {
+      name: 'ic_launcher',
+      type: 'mipmap',
+    },
+    linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
+    parameters: {
+      delay: 3000,
+    },
+  };
+  useEffect(() => {
+    PermissionAndroid();
+  },[]);
+  async function startStepCounter() {
+    startStepCounterUpdate(new Date(), data => {
+      setSteps(data.steps);
+      setDistance(((data.steps / 20) * 0.01).toFixed(2));
+      setCalories(Math.floor(data.steps / 20));
+      Dispatch(
+        setHealthData([
+          {Steps: data.steps},
+          {Calories: Math.floor(data.steps / 20)},
+          {DistanceCovered: ((data.steps / 20) * 0.01).toFixed(2)},
+        ]),
+      );
+    });
+    await BackgroundService.start(veryIntensiveTask, options);
+    await BackgroundService.updateNotification({
+      color: AppColor.RED,
+      taskName: 'Pedometer',
+      taskTitle: 'Steps ' + steps,
+      taskDesc: 'Steps ',
+      taskIcon: {
+        name: 'ic_launcher',
+        type: 'mipmap',
+      },
+      progressBar: {
+        max: 100,
+        value: steps,
+        indeterminate: false,
+      },
+    });
+  }
+  const PermissionAndroid = async () => {
+    if (Platform.OS == 'android') {
+      const result = await isStepCountingSupported();
+      console.debug('🚀 - isStepCountingSupported', result);
+      const permissionStatus = await check(
+        PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
+      );
+      if (permissionStatus === RESULTS.DENIED && result.supported == true) {
+        const permissionRequestResult = await request(
+          PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
+        );
+        if (
+          permissionRequestResult === RESULTS.GRANTED &&
+          result.supported == true
+        ) {
+          console.log('ACTIVITY_RECOGNITION permission granted');
+          console.log('Resulllttt', RESULTS.GRANTED);
+          startStepCounter();
+        } else {
+          console.log('ACTIVITY_RECOGNITION permission denied');
+          // Handle the case where the permission request is denied
+          await request(PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION);
+        }
+      } else {
+        console.log('ACTIVITY_RECOGNITION permission already granted');
+        startStepCounter();
+        // Permission was already granted previously
+      }
+    } else {
       AppleHealthKit.isAvailable((err, available) => {
-        console.log("Avialalebe=========>",available)
+        console.log('Avialable=========>', available);
         const permissions = {
           permissions: {
-            read: [
-              AppleHealthKit.Constants.Permissions.DistanceWalkingRunning,
-              AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
-              AppleHealthKit.Constants.Permissions.Steps,
-            ],
+            read: [AppleHealthKit.Constants.Permissions.Steps],
           },
         };
         if (err) {
-          console.log('error initializing Healthkit: ', err)
-        }
-        else if(available==true){
-          AppleHealthKit.initHealthKit(permissions, (error) => {
+          console.log('error initializing Healthkit: ', err);
+        } else if (available == true) {
+          AppleHealthKit.initHealthKit(permissions, error => {
             if (error) {
               console.log('[ERROR] Cannot grant permissions!', error);
-            } 
+            } else {
+              const options = {
+                startDate: new Date(
+                  new Date().getFullYear(),
+                  new Date().getMonth(),
+                  new Date().getDate(),
+                  0,
+                  0,
+                  0,
+                ),
+                endDate: new Date(),
+              };
+
+              AppleHealthKit.getStepCount(options, (callbackError, results) => {
+                if (callbackError) {
+                  console.log('Error while getting the data');
+                }
+                setSteps(results.value);
+                setDistance(((results.value / 20) * 0.0142).toFixed(2));
+                setCalories(((results.value / 20) * 0.7566).toFixed(1));
+                console.log('ios stespssss', results);
+              });
+            }
           });
-        }else{
-          Alert.alert("Attention","Health data can't be tracked in this Device due to its specifications",{
-          })
+        } else {
+          Alert.alert(
+            'Attention',
+            "Health data can't be tracked in this Device due to its specifications",
+            {},
+          );
         }
-      })
+      });
     }
-  })
+  };
+
   const [currentindex, setCurrentIndex] = useState(1);
   const props = {
     activeStrokeWidth: 25,
@@ -104,7 +276,11 @@ const Home = () => {
 
   Platform.OS == 'android'
     ? console.log('Android Version', VersionNumber.appVersion)
-    : console.log('IOS Version', VersionNumber.appVersion,VersionNumber.bundleIdentifier);
+    : console.log(
+        'IOS Version',
+        VersionNumber.appVersion,
+        VersionNumber.bundleIdentifier,
+      );
   useEffect(() => {
     Animated.timing(progressAnimation, {
       toValue: 1,
@@ -219,7 +395,7 @@ const Home = () => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#5FB67B'}]}>
-                  2215
+                  {steps}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     /5000 steps
                   </Text>
@@ -238,9 +414,9 @@ const Home = () => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#FCBB1D'}]}>
-                  2215
+                  {distance}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
-                    /5000 steps
+                    {'/goal km '}
                   </Text>
                 </Text>
               </View>
@@ -262,9 +438,9 @@ const Home = () => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#D01818'}]}>
-                  2215
+                  {Calories}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
-                    /5000 steps
+                    /goal KCal
                   </Text>
                 </Text>
               </View>
@@ -380,7 +556,7 @@ const Home = () => {
                         {
                           height: 100,
                           width: 100,
-                          overflow: '',
+
                           alignSelf: 'center',
                           zIndex: 1,
                         },
@@ -457,7 +633,7 @@ const Home = () => {
                         {
                           height: 100,
                           width: 100,
-                          overflow: '',
+
                           alignSelf: 'center',
                         },
                       ]}

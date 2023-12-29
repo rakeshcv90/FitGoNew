@@ -10,7 +10,8 @@ const intialState = {
   customWorkoutData: [],
   getUserDataDetails:[],
   mindsetConsent:false,
-  mindSetData:[]
+  mindSetData:[],
+  getHealthData:[]
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -34,6 +35,8 @@ const ThemeReducer = (state = intialState, action) => {
           return {...state, customWorkoutData: action.payload};
       case types.User_Profile_Data:
         return {...state, getUserDataDetails: action.payload};
+      case types.HealthData:
+        return {...state,getHealthData:action.payload}  
       case types.Mindset_Data:
         const updatedData = action.payload;
         // Create a new copy of the state's mindSetData array

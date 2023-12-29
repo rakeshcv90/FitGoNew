@@ -1,3 +1,4 @@
+import { type } from 'os';
 import types from '../../Component/ThemeRedux/Constants';
 export const setTheme = theme => ({
   type: types.Dark_Theme,
@@ -59,6 +60,12 @@ export const setMindset_Data = data => {
 export const SetmindsetConsent=data=>{
   return{
     type:types.MindSetConsent,
+    payload:data
+  }
+}
+export const setHealthData=(data)=>{
+  return{
+    type:types.HealthData,
     payload:data
   }
 }
