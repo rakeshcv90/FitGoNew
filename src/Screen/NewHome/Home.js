@@ -701,7 +701,7 @@ const Home = ({navigation}) => {
             keyExtractor={item => item.id}
             pagingEnabled
             renderItem={({item, index}) => {
-              console.log("Meal Details ",item.category_image)
+              console.log("Meal Details ",item)
               return (
                 <>
                   <TouchableOpacity style={styles.listItem2}
@@ -710,7 +710,7 @@ const Home = ({navigation}) => {
                     }}
                   >
                     <Image
-                      source={{uri: item.category_image}}
+                      source={{uri: item.diet_image_link}}
                       style={[
                         styles.img,
                         {

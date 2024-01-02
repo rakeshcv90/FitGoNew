@@ -5,6 +5,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   FlatList,
+  ScrollView,
 } from 'react-native';
 import React, {useEffect, useState, version} from 'react';
 import {SafeAreaView} from 'react-native';
@@ -18,44 +19,50 @@ import {useSelector} from 'react-redux';
 import axios from 'axios';
 import VersionNumber from 'react-native-version-number';
 import ActivityLoader from '../../Component/ActivityLoader';
+import HTML from 'react-native-render-html';
+import HTMLRender from 'react-native-render-html';
 
 const MealDetails = ({route, navigation}) => {
   const {getUserDataDetails} = useSelector(state => state);
   const [forLoading, setForLoading] = useState(false);
   const [appVersion, setAppVersion] = useState(0);
-  const [dietDetails, setDietDetails] = useState();
 
-  useEffect(() => {
-    getMealDetails();
-  }, []);
-  const getMealDetails = async () => {
-    setForLoading(true);
-    try {
-      const data = await axios(`${NewAppapi.DietDetails}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          login_token: getUserDataDetails.login_token,
-          diet_id: route.params.item.category_id,
-          user_id: getUserDataDetails.id,
-          version: VersionNumber.appVersion,
-        },
-      });
-      console.log("dfdsfdsfdsfdsf",data.data)
-      if (data.data.length > 0) {
-        setForLoading(false);
-        setDietDetails(data.data);
-      } else {
-        setForLoading(false);
-        setDietDetails([]);
-      }
-    } catch (error) {
-      setDietDetails([]);
-      setForLoading(false);
-      console.log('MealDetails List Error', error);
-    }
+  console.log('dfdfdfdfdfd', route.params.item);
+
+  //   const getMealDetails = async () => {
+  //     setForLoading(true);
+  //     try {
+  //       const data = await axios(`${NewAppapi.DietDetails}`, {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'multipart/form-data',
+  //         },
+  //         data: {
+  //           login_token: getUserDataDetails.login_token,
+  //           diet_id: route.params.item.category_id,
+  //           user_id: getUserDataDetails.id,
+  //           version: VersionNumber.appVersion,
+  //         },
+  //       });
+
+  //       if (data.data.length > 0) {
+  //         setForLoading(false);
+  //         setDietDetails(data.data);
+  //       } else {
+  //         setForLoading(false);
+  //         setDietDetails([]);
+  //       }
+  //     } catch (error) {
+  //       setDietDetails([]);
+  //       setForLoading(false);
+  //       console.log('MealDetails List Error', error);
+  //     }
+  //   };
+  const customStyles = {
+    fontFamily: 'Poppins',
+    fontSize: 10,
+    fontWeight: '400',
+    color: AppColor.INPUTLABLECOLOR,
   };
   return (
     <View style={styles.container}>
@@ -66,10 +73,16 @@ const MealDetails = ({route, navigation}) => {
       />
       <ImageBackground
         translucent={true}
-        style={{width: '100%', height: DeviceHeigth * 0.45}}
-        source={{uri: route.params.item.category_image}}
+        style={{width: '100%', height: DeviceHeigth * 0.4}}
+  
+        resizeMode='cover'
+        source={
+          route.params.item.diet_image_link == null
+            ? localImage.Noimage
+            : {uri: route.params.item.diet_image_link}
+        }
       />
-      {forLoading ? <ActivityLoader /> : ''}
+
       <TouchableOpacity
         onPress={() => {
           navigation.goBack();
@@ -111,7 +124,7 @@ const MealDetails = ({route, navigation}) => {
             top: 20,
             textAlign: 'center',
           }}>
-          {route.params.item.category_title}
+          {route.params.item.diet_title}
         </Text>
         <View
           style={{
@@ -138,8 +151,9 @@ const MealDetails = ({route, navigation}) => {
                 fontWeight: '500',
                 color: AppColor.INPUTLABLECOLOR,
                 marginHorizontal: 2,
+                opacity:0.7
               }}>
-              135 kcal
+              {route.params.item.diet_calories} kcal
             </Text>
           </View>
           <View
@@ -171,49 +185,198 @@ const MealDetails = ({route, navigation}) => {
                 fontWeight: '500',
                 color: AppColor.INPUTLABLECOLOR,
                 marginHorizontal: 5,
+                opacity:0.7
               }}>
-              30 minl
+              {route.params.item.diet_time}
             </Text>
           </View>
         </View>
         <View style={{marginVertical: -DeviceHeigth * 0.01}}>
-          <FlatList
-            data={dietDetails}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={item => item.id}
-            renderItem={({item, index}) => {
-              console.log('dsfdsfdsxcdfd', item);
-              return (
-                <>
-                  <View
-                    style={{
-                      width: '100%',
-                      // height: DeviceHeigth * 0.075,
-                      paddingBottom: 15,
-                      paddingTop: 10,
-                      backgroundColor: '#F4F4F4',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-evenly',
-                    }}>
-                    <View>
-                      <Text style={styles.textStyle2}>{item.diet_protein}</Text>
-                      <Text style={styles.textStyle}>Protein</Text>     
-                    </View>
-                    <View>
-                      <Text style={styles.textStyle2}>{item.diet_carbs}</Text>
-                      <Text style={styles.textStyle}>Carbs</Text>
-                    </View>
-                    <View>
-                      <Text style={styles.textStyle2}>{item.diet_fat}</Text>
-                      <Text style={styles.textStyle}>Fat</Text>
-                    </View>
-                  </View>
-                </>
-              );
-            }}
-          />
+          <View
+            style={{
+              width: '100%',
+              // height: DeviceHeigth * 0.075,
+              paddingBottom: 15,
+              paddingTop: 10,
+              backgroundColor: '#F4F4F4',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-evenly',
+            }}>
+            <View>
+              <Text style={styles.textStyle2}>
+                {route.params.item.diet_protein}
+              </Text>
+              <Text style={styles.textStyle}>Protein</Text>
+            </View>
+            <View>
+              <Text style={styles.textStyle2}>
+                {route.params.item.diet_carbs}
+              </Text>
+              <Text style={styles.textStyle}>Carbs</Text>
+            </View>
+            <View>
+              <Text style={styles.textStyle2}>
+                {route.params.item.diet_fat}
+              </Text>
+              <Text style={styles.textStyle}>Fat</Text>
+            </View>
+          </View>
         </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{flexGrow: 1}}>
+          <View style={{marginVertical: DeviceHeigth * 0.03}}>
+            <View
+              style={{
+                width: '95%',
+                alignSelf: 'center',
+                borderRadius: 15,
+                borderWidth: 1,
+                padding: 10,
+                borderColor: 'rgba(80, 80, 80, 0.6)',
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins',
+                  fontSize: 15,
+                  fontWeight: '600',
+                  color: AppColor.LITELTEXTCOLOR,
+                }}>
+                Summary
+              </Text>
+              <View style={{top: -10}}>
+                <HTMLRender
+                  source={{html: route.params.item.diet_description}}
+                  contentWidth={DeviceWidth}
+                  tagsStyles={{
+                    p: {
+                      color: '#3A4750',
+                      fontSize: 12,
+                      lineHeight: 15,
+                      fontFamily: 'Poppins',
+                    },
+                    strong: {
+                      color: '#C8170D',
+                      fontSize: 10,
+                    },
+                    li: {
+                      color: '#3A4750',
+                    },
+                    ul: {
+                      color: '#3A4750',
+                    },
+                    ol: {
+                      color: '#3A4750',
+                    },
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+          <View style={{marginVertical: -DeviceHeigth * 0.015}}>
+            <View
+              style={{
+                width: '95%',
+                alignSelf: 'center',
+                borderRadius: 15,
+                borderWidth: 1,
+                padding: 10,
+                borderColor: 'rgba(80, 80, 80, 0.6)',
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins',
+                  fontSize: 15,
+                  fontWeight: '600',
+                  color: AppColor.LITELTEXTCOLOR,
+                }}>
+                Ingredients
+              </Text>
+              <View style={{top: -10}}>
+                <HTMLRender
+                  source={{html: route.params.item.diet_ingredients}}
+                  contentWidth={DeviceWidth}
+                  tagsStyles={{
+                    p: {
+                      color: '#3A4750',
+                      fontSize: 12,
+                      lineHeight: 15,
+                      fontFamily: 'Poppins',
+                    },
+                    strong: {
+                      color: '#C8170D',
+                      fontSize: 10,
+                    },
+                    li: {
+                      color: '#3A4750',
+                    },
+                    ul: {
+                      color: '#3A4750',
+                    },
+                    ol: {
+                      color: '#3A4750',
+                    },
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+          <View
+            style={{
+              marginVertical: DeviceHeigth * 0.032,
+              marginBottom: DeviceHeigth * 0.45,
+            }}>
+            <View
+              style={{
+                width: '95%',
+                alignSelf: 'center',
+                borderRadius: 15,
+                borderWidth: 1,
+                padding: 10,
+                borderColor: 'rgba(80, 80, 80, 0.6)',
+           
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins',
+                  fontSize: 15,
+                  fontWeight: '600',
+                  color: AppColor.LITELTEXTCOLOR,
+                }}>
+                Instructions
+              </Text>
+
+              <View style={{top: -10}}>
+                <HTMLRender
+                  source={{html: route.params.item.diet_direction}}
+                  contentWidth={DeviceWidth}
+                  tagsStyles={{
+                    p: {
+                      color: '#3A4750',
+                      fontSize: 12,
+                      lineHeight: 15,
+                      fontFamily: 'Poppins',
+                    },
+                    strong: {
+                      color: '#C8170D',
+                      fontSize: 10,
+                    },
+                    li: {
+                      color: '#3A4750',
+                    },
+                    ul: {
+                      color: '#3A4750',
+                    },
+                    ol: {
+                      color: '#3A4750',
+                    },
+                  }}
+                />
+              </View>
+            </View>
+          </View>
+        </ScrollView>
       </View>
     </View>
   );
@@ -225,18 +388,20 @@ var styles = StyleSheet.create({
   },
   textStyle: {
     fontFamily: 'Poppins',
-    fontWeight: '500',
+    fontWeight: '600',
     fontSize: 12,
     textAlign: 'center',
     lineHeight: 15,
     top: 5,
+    color:'#1E1E1E'
   },
   textStyle2: {
     fontFamily: 'Poppins',
     fontWeight: '400',
     fontSize: 10,
     textAlign: 'center',
-    lineHeight: 13,
+    lineHeight: 12,
+    color:'#1E1E1E'
   },
 });
 export default MealDetails;

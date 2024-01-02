@@ -46,7 +46,8 @@ export const NewAppapi = {
   ALL_WORKOUTS: NewApi + 'allworkout',
   Meal_Categorie: NewApi + 'get_categorie',
  DietDetails:NewApi + 'getdiet',
-  Get_DAYS: NewApi + 'days'
+  Get_DAYS: NewApi + 'days',
+  Get_Product_Catogery: NewApi + 'categorydata'
 };
 
  
