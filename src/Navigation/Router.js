@@ -42,6 +42,7 @@ import BottomTab from './BottomTab';
 import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
 import WorkoutDays from '../Screen/NewWorkouts/WorkoutDays';
 import OneDay from '../Screen/NewWorkouts/OneDay';
+import Exercise from '../Screen/NewWorkouts/Exercise/Exercise';
 import Meals from '../Screen/NewHome/Meals';
 import MealDetails from '../Screen/NewHome/MealDetails';
 import ProductsList from '../Screen/NewHome/ProductsList';
@@ -165,6 +166,8 @@ export const LoginStack = () => {
       <Stack.Screen name="WorkoutsDescription" component={WorkoutDescription} />
       <Stack.Screen name="WorkoutDays" component={WorkoutDays} />
       <Stack.Screen name="OneDay" component={OneDay} />
+      <Stack.Screen name="Exercise" component={Exercise} />
+
       <Stack.Screen name="Meals" component={Meals} />
       <Stack.Screen name="MealDetails" component={MealDetails} />
       <Stack.Screen name="ProductsList" component={ProductsList} />

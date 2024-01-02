@@ -348,6 +348,7 @@ const WorkoutDays = ({navigation, route}: any) => {
         fontSize={22}
         width={150}
         x={1}
+        marginTop={-10}
       />
       <Text style={[styles.category, {marginTop: 10}]}>
         {moment().format('dddd DD MMMM')}
