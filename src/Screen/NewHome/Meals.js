@@ -8,7 +8,7 @@ import {
   Platform,
   StatusBar,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {AppColor} from '../../Component/Color';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -18,26 +18,49 @@ import {localImage} from '../../Component/Image';
 import {useSelector} from 'react-redux';
 
 const Meals = ({navigation}) => {
-
   const [selectedMeal, setSelectedMeal] = useState(null);
   const {mealData} = useSelector(state => state);
-  useEffect(() => {
-    if (mealData.length > 0) {
-      generateRandomNumber();
-    }
-  });
 
-  generateRandomNumber = () => {
-    const min = 1;
-    const max = mealData.length;
-    const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-    const filteredMeals = mealData.filter(
-      item => item.category_id === randomNumber,
-    );
-    if (filteredMeals.length > 0) {
-      setSelectedMeal(filteredMeals[0]);
-    }
-  };
+  // useEffect(() => {
+  //   if (mealData.length > 0) {
+  //     generateRandomNumber();
+  //   }
+  // },[]);
+
+  // generateRandomNumber = () => {
+  //   const min = 1;
+  //   const max = mealData.length;
+  //   const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+
+  //   const filteredMeals = mealData.filter(
+  //     (item, index) => index + 1 === randomNumber,
+  //   );
+
+  //   if (filteredMeals.length > 0) {
+  //     setSelectedMeal(filteredMeals[0]);
+  //   }
+  // };
+  
+  const generateRandomNumber = useMemo(() => {
+    return () => {
+      if (mealData.length > 0) {
+        const min = 1;
+        const max = mealData.length;
+        const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+
+        const filteredMeals = mealData.filter(
+          (item, index) => index + 1 === randomNumber,
+        );
+
+        if (filteredMeals.length > 0) {
+          setSelectedMeal(filteredMeals[0]);
+        }
+      }
+    };
+  }, [mealData]);
+  useEffect(() => {
+    generateRandomNumber();
+  }, [generateRandomNumber]);
   return (
     <View style={styles.container}>
       <NewHeader header={'Meals'} SearchButton={false} backButton={true} />
@@ -55,7 +78,7 @@ const Meals = ({navigation}) => {
             fontWeight: '700',
             lineHeight: 24,
             fontSize: 16,
-            marginLeft:20,
+            marginLeft: 20,
             justifyContent: 'flex-start',
           }}>
           Top diet recipes
@@ -63,12 +86,15 @@ const Meals = ({navigation}) => {
       </View>
       {selectedMeal && (
         <>
-        
           <View style={styles.meditionBox}>
             <Image
-              style={{width: '100%', height: '100%', borderRadius: 15,}}
+              style={{width: '100%', height: '100%', borderRadius: 15}}
               resizeMode="cover"
-              source={{uri: selectedMeal.category_image}}></Image>
+              source={
+                selectedMeal.diet_image_link == null
+                  ? localImage.Noimage
+                  : {uri: selectedMeal.diet_image_link}
+              }></Image>
           </View>
           <View
             style={{
@@ -83,11 +109,87 @@ const Meals = ({navigation}) => {
                 fontWeight: '700',
                 lineHeight: 24,
                 fontSize: 16,
-                marginLeft:20,
-            
+                marginLeft: 20,
+
                 justifyContent: 'flex-start',
               }}>
-              {selectedMeal.category_title}
+              {selectedMeal.diet_title}
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              top: DeviceHeigth * 0.03,
+              width: '86%',
+              alignSelf: 'center',
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+
+                alignSelf: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={localImage.Step1}
+                style={{width: 20, height: 20}}
+                resizeMode="contain"
+              />
+
+              <Text
+                style={{
+                  fontFamily: 'Poppins',
+                  fontSize: 13,
+                  fontWeight: '500',
+                  color: AppColor.INPUTLABLECOLOR,
+                  marginHorizontal: 5,
+                }}>
+                {selectedMeal.diet_calories} kcal
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginHorizontal: DeviceWidth * 0.07,
+                alignSelf: 'center',
+                alignSelf: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={localImage.Watch}
+                style={{width: 17, height: 17}}
+                resizeMode="contain"
+              />
+
+              <Text
+                style={{
+                  fontFamily: 'Poppins',
+                  fontSize: 13,
+                  fontWeight: '500',
+                  color: AppColor.INPUTLABLECOLOR,
+                  marginHorizontal: 5,
+                }}>
+                {selectedMeal.diet_time}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{
+              width: '95%',
+              alignSelf: 'center',
+              top: DeviceHeigth * 0.07,
+            }}>
+            <Text
+              style={{
+                color: AppColor.BoldText,
+                fontFamily: 'Poppins',
+                fontWeight: '700',
+                lineHeight: 24,
+                fontSize: 16,
+                marginLeft: 20,
+                justifyContent: 'flex-start',
+              }}>
+              Categories
             </Text>
           </View>
         </>
@@ -95,87 +197,11 @@ const Meals = ({navigation}) => {
 
       <View
         style={{
-          flexDirection: 'row',
-          top: DeviceHeigth * 0.03,
-          width: '86%',
-          alignSelf: 'center',
-        }}>
-        <View
-          style={{
-            flexDirection: 'row',
-          
-            alignSelf: 'center',
-            alignItems: 'center',
-          }}>
-          <Image
-            source={localImage.Step1}
-            style={{width: 20, height: 20}}
-            resizeMode="contain"
-          />
-
-          <Text
-            style={{
-              fontFamily: 'Poppins',
-              fontSize: 13,
-              fontWeight: '500',
-              color: AppColor.INPUTLABLECOLOR,
-              marginHorizontal: 5,
-            }}>
-            135 kcal
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginHorizontal: DeviceWidth * 0.07,
-            alignSelf: 'center',
-            alignSelf: 'center',
-            alignItems: 'center',
-          }}>
-          <Image
-            source={localImage.Watch}
-            style={{width: 17, height: 17}}
-            resizeMode="contain"
-          />
-
-          <Text
-            style={{
-              fontFamily: 'Poppins',
-              fontSize: 13,
-              fontWeight: '500',
-              color: AppColor.INPUTLABLECOLOR,
-              marginHorizontal: 5,
-            }}>
-            30 minl
-          </Text>
-        </View>
-      </View>
-      <View
-        style={{
-          width: '95%',
-          alignSelf: 'center',
-          top: DeviceHeigth * 0.07,
-        }}>
-        <Text
-          style={{
-            color: AppColor.BoldText,
-            fontFamily: 'Poppins',
-            fontWeight: '700',
-            lineHeight: 24,
-            fontSize: 16,
-             marginLeft:20,
-            justifyContent: 'flex-start',
-          }}>
-          Categories
-        </Text>
-      </View>
-      <View
-        style={{
           top: DeviceHeigth * 0.085,
           alignSelf: 'center',
           height: DeviceHeigth * 0.4,
+          
           paddingBottom: Platform.OS == 'android' ? 30 : 0,
-         
         }}>
         <FlatList
           data={mealData}
@@ -185,19 +211,24 @@ const Meals = ({navigation}) => {
           renderItem={({item, index}) => {
             return (
               <>
-                <TouchableOpacity style={styles.listItem2}
-                onPress={()=>{
-                  navigation.navigate('MealDetails',{item:item})
-                }}>
+                <TouchableOpacity
+                  style={styles.listItem2}
+                  onPress={() => {
+                    navigation.navigate('MealDetails', {item: item});
+                  }}>
                   <Image
-                    source={{uri: item.category_image}}
+                    source={
+                      item.diet_image_link == null
+                        ? localImage.Noimage
+                        : {uri: item.diet_image_link}
+                    }
                     style={{
-                      height: 60,
-                      width: 60,
-
+                      height: 70,
+                      width: 70,
+                      borderRadius: 140 / 2,
                       alignSelf: 'center',
                     }}
-                    resizeMode="contain"></Image>
+                    resizeMode="cover"></Image>
                   <Text
                     style={[
                       styles.title,
@@ -210,7 +241,7 @@ const Meals = ({navigation}) => {
                         color: AppColor.BoldText,
                       },
                     ]}>
-                    {item.category_title}
+                    {item.diet_title}
                   </Text>
                 </TouchableOpacity>
               </>
@@ -228,7 +259,7 @@ var styles = StyleSheet.create({
   },
   meditionBox: {
     width: '86%',
-    height: DeviceHeigth * 0.20,
+    height: DeviceHeigth * 0.2,
     borderRadius: 15,
     alignSelf: 'center',
     alignItems: 'center',
@@ -237,7 +268,7 @@ var styles = StyleSheet.create({
     width: DeviceWidth * 0.25,
     // height: DeviceWidth * 0.25,
     marginHorizontal: 10,
-    top:10,
+    top: 10,
     borderRadius: 10,
     paddingRight: 10,
     paddingTop: 10,

@@ -49,6 +49,7 @@ export const NewAppapi = {
   Get_DAYS: NewApi + 'days',
   CURRENT_DAY_EXERCISE: NewApi + 'user_exercise_status',
   CURRENT_DAY_EXERCISE_DETAILS: NewApi + 'user_exercise_details',
+  Get_Product_Catogery: NewApi + 'categorydata'
 };
 
  

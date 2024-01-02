@@ -432,9 +432,10 @@ const Login = ({navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-  
-      if (data.data.categories.length > 0) {
-        dispatch(Setmealdata(data.data.categories));
+    
+
+      if (data.data.diets.length > 0) {
+        dispatch(Setmealdata(data.data.diets));
 
     
       } else {

@@ -64,7 +64,7 @@ const BottomTab = () => {
         />
         <Tabs.Screen
           name="Progress"
-          component={Store}
+          component={Diets}
           options={{
             tabBarIcon: ({focused, color, size}) => (
               <Image
@@ -81,7 +81,7 @@ const BottomTab = () => {
         />
         <Tabs.Screen
           name="Store"
-          component={Diets}
+          component={Store}
           options={{
             tabBarIcon: ({focused, color, size}) => (
               <Image
