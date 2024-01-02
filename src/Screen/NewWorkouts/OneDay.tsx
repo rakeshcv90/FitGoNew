@@ -31,9 +31,6 @@ const OneDay = ({navigation, route}: any) => {
   useFocusEffect(
     useCallback(() => {
       allWorkoutApi();
-      setTimeout(() => {
-        setOpen(true);
-      }, 1000);
     }, []),
   );
   const allWorkoutApi = async () => {
@@ -49,10 +46,12 @@ const OneDay = ({navigation, route}: any) => {
       if (res.data) {
         // console.log(res.data, 'DaysData', data);
         setExerciseData(res.data);
+        setOpen(true);
       }
     } catch (error) {
-      console.error(error?.response, 'DaysAPIERror');
+      console.error(error, 'DaysAPIERror');
       setExerciseData([]);
+      setOpen(true);
     }
   };
   const getCurrentDayAPI = async () => {
@@ -66,7 +65,7 @@ const OneDay = ({navigation, route}: any) => {
         // set(res.data);
         let foundNullStatus = false;
 
-        const updatedData = res.data?.user_details.map(item => {
+        const updatedData = res.data?.user_details.map((item: any) => {
           if (!foundNullStatus && item.exercise_status === null) {
             foundNullStatus = true;
             return {...item, exercise_status: 'progress'};
@@ -90,9 +89,9 @@ const OneDay = ({navigation, route}: any) => {
     }
   };
 
-  const postCurrentDayAPI = async () => {
+  const postCurrentDayAPI = async (current: any) => {
     const payload = new FormData();
-    payload.append('user_exercise_id', currentExercise?.exercise_id);
+    payload.append('user_exercise_id', current?.exercise_id);
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('workout_id', data?.workout_id);
     payload.append('user_day', day);
@@ -108,7 +107,7 @@ const OneDay = ({navigation, route}: any) => {
         setOpen(false);
         navigation.navigate('Exercise', {
           allExercise: exerciseData,
-          currentExercise: currentExercise,
+          currentExercise: current,
           data: data,
           day: day,
         });
@@ -251,7 +250,7 @@ const OneDay = ({navigation, route}: any) => {
             onPress={() => {
               setCurrentExercise(exerciseData[0]);
               setTimeout(() => {
-                postCurrentDayAPI();
+                postCurrentDayAPI(exerciseData[0]);
               }, 1000);
             }}
           />

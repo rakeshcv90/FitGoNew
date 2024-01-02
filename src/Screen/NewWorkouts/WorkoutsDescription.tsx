@@ -13,7 +13,11 @@ import {Image} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 
 const WorkoutsDescription = ({data, open, setOpen}: any) => {
-  const description = data?.workout_description?.split(/<\/?p>/g) || [];
+  const description =
+    data?.workout_description?.split(/<\/?p>/g) ||
+    data?.exercise_instructions?.split(/<\/?ul>/g) ||
+    [];
+  console.log(description);
   return (
     <Modal visible={open} onRequestClose={() => null} animationType="slide">
       <View
@@ -54,7 +58,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
               lineHeight: 30,
               fontFamily: 'Poppins',
             }}>
-            {data?.workout_title}
+            {data?.workout_title || data?.exercise_title}
           </Text>
           <Text />
           <Text
@@ -66,7 +70,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             }}>
             {description?.map((text: any, index: number) => {
               if (index % 2 === 0) {
-                <View style={{height: 10,}} />
+                <View style={{height: 10}} />;
               } else {
                 return text;
                 // Bold section, wrap in <BoldText>

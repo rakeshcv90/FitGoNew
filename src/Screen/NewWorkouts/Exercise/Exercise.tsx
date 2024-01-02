@@ -11,6 +11,7 @@ import Play from './Play';
 import BottomSheetExercise from './BottomSheetExercise';
 import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
+import WorkoutsDescription from '../WorkoutsDescription';
 
 const Exercise = ({navigation, route}: any) => {
   const {allExercise, currentExercise, data, day} = route.params;
@@ -19,6 +20,7 @@ const Exercise = ({navigation, route}: any) => {
   const [playW, setPlayW] = useState(0);
   const [number, setNumber] = useState(0);
   const [pause, setPause] = useState(true);
+  const [open, setOpen] = useState(false);
   const [currentData, setCurrentData] = useState(currentExercise);
 
   const {allWorkoutData, getUserDataDetails} = useSelector(
@@ -28,14 +30,19 @@ const Exercise = ({navigation, route}: any) => {
   useEffect(() => {
     setTimeout(() => {
       if (pause) setPlayW(playW + 1);
+      if (playW == 100) setPause(false);
     }, 1000);
-  }, [playW, pause]);
+  }, [playW, pause, currentData]);
 
   const FAB = ({icon}: any) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          icon == 'format-list-bulleted' && setVisible(true);
+          icon == 'format-list-bulleted'
+            ? setVisible(true)
+            : icon == 'info-outline'
+            ? setOpen(true)
+            : null;
         }}
         style={{
           justifyContent: 'center',
@@ -113,9 +120,15 @@ const Exercise = ({navigation, route}: any) => {
           onLoad={() => console.log('second')}
           onVideoLoad={() => console.log('third')}
           onVideoLoadStart={() => console.log('forth')}
-          //   onBuffer={() => setPause(false)}
-          //   paused={pause}
-          //   onPlaybackResume={() => setPause(true)}
+          onBuffer={() => {
+            console.log('third');
+            setPause(false);
+          }}
+          paused={pause}
+          onPlaybackResume={() => {
+            console.log(pause);
+            setPause(true);
+          }}
           style={StyleSheet.absoluteFill}
         />
         <View style={{alignSelf: 'flex-end'}}>
@@ -169,6 +182,7 @@ const Exercise = ({navigation, route}: any) => {
         setVisible={setVisible}
         exerciseData={allExercise}
       />
+      <WorkoutsDescription open={open} setOpen={setOpen} data={currentData} />
     </SafeAreaView>
   );
 };
