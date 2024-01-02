@@ -3,7 +3,7 @@ import {Animated, Platform, View} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from '../../../Component/Config';
 import {AppColor} from '../../../Component/Color';
 
-const ExerciseProgressBar = ({INDEX, ExerciseData, time, w}: any) => {
+const ExerciseProgressBar = ({INDEX, ExerciseData, time, w, color}: any) => {
 //   const progressAnimation = useRef(new Animated.Value(0)).current;
 //   const progressBarWidth = progressAnimation.interpolate({
 //     inputRange: [0, 1],
@@ -46,7 +46,7 @@ const ExerciseProgressBar = ({INDEX, ExerciseData, time, w}: any) => {
                 index == INDEX
                   ? w
                   : (DeviceWidth * 0.9) / ExerciseData.length,
-              backgroundColor: index == INDEX ? AppColor.RED : '#D9D9D9',
+              backgroundColor: index == INDEX ? color : '#D9D9D9',
             }}></Animated.View>
         </View>
       ))}

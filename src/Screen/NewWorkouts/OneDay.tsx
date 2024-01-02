@@ -17,12 +17,14 @@ import axios from 'axios';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import GradientButton from '../../Component/GradientButton';
 import {useFocusEffect} from '@react-navigation/native';
+import ActivityLoader from '../../Component/ActivityLoader';
 
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day} = route.params;
   const [exerciseData, setExerciseData] = useState([]);
   const [currentExercise, setCurrentExercise] = useState([]);
   const [open, setOpen] = useState(true);
+  const [loader, setLoader] = useState(false);
   const {allWorkoutData, getUserDataDetails} = useSelector(
     (state: any) => state,
   );
@@ -34,6 +36,7 @@ const OneDay = ({navigation, route}: any) => {
     }, []),
   );
   const allWorkoutApi = async () => {
+    setLoader(true);
     try {
       const res = await axios({
         url:
@@ -44,48 +47,16 @@ const OneDay = ({navigation, route}: any) => {
           data?.workout_id,
       });
       if (res.data) {
-        // console.log(res.data, 'DaysData', data);
+        console.log(res.data, 'DaysData', data);
         setExerciseData(res.data);
         setOpen(true);
+        setLoader(false);
       }
     } catch (error) {
       console.error(error, 'DaysAPIERror');
       setExerciseData([]);
       setOpen(true);
-    }
-  };
-  const getCurrentDayAPI = async () => {
-    try {
-      const res = await axios({
-        url:
-          NewAppapi.CURRENT_DAY_EXERCISE_DETAILS + '/' + getUserDataDetails?.id,
-      });
-      console.log(res.data);
-      if (res.data?.msg != 'No data found') {
-        // set(res.data);
-        let foundNullStatus = false;
-
-        const updatedData = res.data?.user_details.map((item: any) => {
-          if (!foundNullStatus && item.exercise_status === null) {
-            foundNullStatus = true;
-            return {...item, exercise_status: 'progress'};
-          }
-          return item;
-        });
-        console.log(updatedData, 'DaysData');
-        // postCurrentDayAPI(updatedData);
-        // index != -1
-        //   ? setCurrentExercise(exerciseData[index])
-        //   : setCurrentExercise(exerciseData[0]);
-        setOpen(false);
-        navigation.navigate('Exercise', {
-          allExercise: exerciseData,
-          currentExercise: currentExercise,
-        });
-      } else {
-      }
-    } catch (error) {
-      console.error(error, 'DAPIERror');
+      setLoader(false);
     }
   };
 
@@ -158,7 +129,7 @@ const OneDay = ({navigation, route}: any) => {
               <Text style={[styles.small, {fontSize: 14}]}>
                 {item?.exercise_title}
               </Text>
-              <Text style={styles.small}>{item?.exercise_rest} min</Text>
+              <Text style={styles.small}>{item?.exercise_rest}</Text>
             </View>
             <Icons
               name={'chevron-right'}
@@ -232,13 +203,13 @@ const OneDay = ({navigation, route}: any) => {
               size={15}
               color={AppColor.INPUTTEXTCOLOR}
             />
-            {` ${dayData?.exercise_rest} Min. `}
+            {` ${dayData?.exercise_rest} `}
             <Icons name={'fire'} size={15} color={AppColor.INPUTTEXTCOLOR} />
             {` ${dayData?.exercise_calories} Kcal`}
           </Text>
           <ScrollView showsVerticalScrollIndicator={false}>
             {exerciseData.map((item, index) => (
-              <Box selected={-1} index={index + 1} item={item} />
+              <Box selected={-1} index={index + 1} item={item} key={index} />
             ))}
           </ScrollView>
           <GradientButton
@@ -248,14 +219,22 @@ const OneDay = ({navigation, route}: any) => {
             bR={10}
             mB={20}
             onPress={() => {
-              setCurrentExercise(exerciseData[0]);
-              setTimeout(() => {
-                postCurrentDayAPI(exerciseData[0]);
-              }, 1000);
+              // setCurrentExercise(exerciseData[0]);
+              // setTimeout(() => {
+              //   postCurrentDayAPI(exerciseData[0]);
+              // }, 1000);
+              setOpen(false);
+              navigation.navigate('Exercise', {
+                allExercise: exerciseData,
+                currentExercise: exerciseData[0],
+                data: data,
+                day: day,
+              });
             }}
           />
         </View>
       </Modal>
+      {loader && <ActivityLoader visible={loader} />}
     </View>
   );
 };
