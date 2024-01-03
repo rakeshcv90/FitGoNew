@@ -8,6 +8,10 @@ const intialState = {
   getLaterButtonData: [],
   getUserID: '',
   customWorkoutData: [],
+  getUserDataDetails:[],
+  mindsetConsent:false,
+  mindSetData:[],
+  getHealthData:[]
   currentWorkoutData: [],
   allWorkoutData: [],
   getUserDataDetails: [],
@@ -15,6 +19,7 @@ const intialState = {
   mindSetData: [],
   showLogout:0,
   mealData: [],
+
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -32,6 +37,41 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, completeProfileData: action.payload};
     case types.LATER_BUTTON_USER_DATA:
       return {...state, getLaterButtonData: action.payload};
+
+      case types.User_ID:
+        return {...state, getUserID: action.payload};
+        case types.CUSTOM_WORKOUT_DATA:
+          return {...state, customWorkoutData: action.payload};
+      case types.User_Profile_Data:
+        return {...state, getUserDataDetails: action.payload};
+      case types.HealthData:
+        return {...state,getHealthData:action.payload}  
+      case types.Mindset_Data:
+        const updatedData = action.payload;
+        // Create a new copy of the state's mindSetData array
+        const updatedMindSetData = [...state.mindSetData];
+  
+        // Loop through the updatedData array
+        updatedData.forEach((updatedItem) => {
+          const keyToUpdate = Object.keys(updatedItem)[0];
+          const index = updatedMindSetData.findIndex((item) => Object.keys(item)[0] === keyToUpdate);
+  
+          if (index !== -1) {
+            // If key already exists, update its value by creating a new object
+            updatedMindSetData[index] = { ...updatedMindSetData[index], ...updatedItem };
+          } else {
+            // If key doesn't exist, append it to the new array
+            updatedMindSetData.push(updatedItem);
+          }
+        });
+  
+        return {
+          ...state,
+          mindSetData: updatedMindSetData,
+        };
+        case types.MindSetConsent:
+          return{...state,mindsetConsent:action.payload}   
+
     case types.User_ID:
       return {...state, getUserID: action.payload};
     case types.CUSTOM_WORKOUT_DATA:
@@ -54,7 +94,6 @@ const ThemeReducer = (state = intialState, action) => {
         const index = updatedMindSetData.findIndex(
           item => Object.keys(item)[0] === keyToUpdate,
         );
-
         if (index !== -1) {
       
           updatedMindSetData[index] = {
@@ -73,6 +112,7 @@ const ThemeReducer = (state = intialState, action) => {
       };
     case types.MindSetConsent:
       return {...state, mindsetConsent: action.payload};
+
     default:
       return state;
   }
