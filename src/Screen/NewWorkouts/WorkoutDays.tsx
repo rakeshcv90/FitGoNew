@@ -33,33 +33,84 @@ const WorkoutDays = ({navigation, route}: any) => {
   const [totalCount, setTotalCount] = useState(-1);
   const [dayData, setDayData] = useState([]);
   const [exerciseData, setExerciseData] = useState([]);
-  // console.log(data);
+  // console.log(data?.days);
   const {allWorkoutData, getUserDataDetails, getCount} = useSelector(
     (state: any) => state,
   );
   let totalTime = 0;
   for (const day in data?.days) {
     if (day != 'Rest') {
-      totalTime = totalTime + parseInt(data?.days[day]?.exercise_rest);
+      totalTime = totalTime + parseInt(data?.days[day]?.total_rest);
     }
   }
   useEffect(() => {
     getCurrentDayAPI();
-    getCount != -1 && allWorkoutApi();
+    allWorkoutApi();
   }, []);
   const getCurrentDayAPI = async () => {
     try {
+      const payload = new FormData();
+      payload.append('id', getUserDataDetails?.id);
+      payload.append('workout_id', data?.workout_id);
       const res = await axios({
-        url:
-          NewAppapi.CURRENT_DAY_EXERCISE_DETAILS + '/' + getUserDataDetails?.id,
+        url: NewAppapi.CURRENT_DAY_EXERCISE_DETAILS,
+        method: 'post',
+        data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
-      console.log(res.data);
+      console.log("GET API TRACKER",res.data);
       if (res.data?.msg != 'No data found') {
         if (res.data?.final_status == 'all_completed') {
-          setSelected(res.data?.day);
+          Object.values(data?.days).map((item: any, index: number) => {
+            if (item?.total_rest == 0) {
+              console.log( index+1 ,'==' ,parseInt(res.data?.day) + 1, "INDEX")
+              index+1 == parseInt(res.data?.day) + 1 && setSelected(index + 1);
+            } else setSelected(parseInt(res.data?.day) + 1);
+          });
+          // if (
+          //   Object.values(data?.days)
+          //     .map((item: any, index: number) => {
+          //       if (item?.total_rest == 0) return index;
+          //       // return item
+          //     })
+          //     ?.includes(res.data?.day)
+          // ) {
+          //   console.log(
+          //     'res.data?.user_details,"DAY"',
+          //     Object.values(data?.days).map((item: any, index: number) => {
+          //       if (item?.total_rest == 0) return index;
+          //       // return item
+          //     }),
+          //   );
+          const temp = res.data?.user_details?.filter(
+            (item: any) =>
+              item?.user_day == res.data?.day + 1 &&
+              item?.exercise_status == 'completed',
+          );
+          setTrainingCount(temp?.length);
+          // } else {
+          //   console.log(res.data?.day);
+          //   const temp = res.data?.user_details?.filter(
+          //     (item: any) =>
+          //       item?.user_day == res.data?.day + 2 &&
+          //       item?.exercise_status == 'completed',
+          //   );
+          //   console.log(temp);
+          //   setTrainingCount(temp?.length);
+          // }
         }
         if (res.data?.final_status == null) {
-          setSelected(res.data?.day - 1);
+          Object.values(data?.days).map((item: any, index: number) => {
+            if (item?.total_rest == 0) {
+              index == res.data?.day - 1 && setSelected(index + 1);
+            } else setSelected(res.data?.day - 1);
+            console.log(index, "INDEX NULL")
+          });
+          // setSelected(res.data?.day - 1);
+          // Object.values(data?.days).map((item: any, index: number) => {
+          // if (data?.days[day]?.total_rest != 0) {
           const temp = res.data?.user_details?.filter(
             (item: any) =>
               item?.user_day == res.data?.day &&
@@ -69,6 +120,8 @@ const WorkoutDays = ({navigation, route}: any) => {
           setTrainingCount(temp?.length);
         }
       } else {
+        setSelected(0);
+        console.log('first', res.data);
       }
     } catch (error) {
       console.error(error, 'DAPIERror');
@@ -85,7 +138,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           data?.workout_id,
       });
       if (res.data) {
-        console.log(res.data, 'DaysData', data);
+        console.log(res.data?.length, 'DaysData');
         setExerciseData(res.data);
       }
     } catch (error) {
@@ -103,8 +156,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           marginLeft: 0,
           width: 40,
           overflow: 'hidden',
-          height:
-            select && getCount != -1 ? DeviceHeigth * 0.2 : DeviceHeigth * 0.1,
+          height: select ? DeviceHeigth * 0.2 : DeviceHeigth * 0.1,
           alignItems: 'center',
           justifyContent: 'center',
           marginTop: index == 0 || index == 4 ? DeviceHeigth * 0.05 : 0,
@@ -267,6 +319,7 @@ const WorkoutDays = ({navigation, route}: any) => {
   };
 
   const Box = ({selected, item, index}: any) => {
+    // console.log(selected);
     return (
       <TouchableOpacity
         activeOpacity={1}
@@ -276,11 +329,13 @@ const WorkoutDays = ({navigation, route}: any) => {
                 data: data,
                 dayData: item,
                 day: index,
+                trainingCount: trainingCount,
               })
             : showMessage({
                 message: `Please complete Day ${index - 1} Exercise First !!!`,
                 type: 'danger',
               });
+          // :navigation.navigate('SaveDayExercise')
         }}
         style={[
           styles.box,
@@ -293,10 +348,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                 : index == 3 || index == 7
                 ? '#FFE8E1'
                 : '#CEF2F9',
-            height:
-              selected && getCount != -1
-                ? DeviceHeigth * 0.2
-                : DeviceHeigth * 0.1,
+            height: selected ? DeviceHeigth * 0.2 : DeviceHeigth * 0.1,
           },
         ]}>
         <View
@@ -325,7 +377,11 @@ const WorkoutDays = ({navigation, route}: any) => {
                   {fontSize: 20},
                 ]}>{`Day ${index}`}</Text>
               <Text style={styles.small}>
-                {item?.exercise_rest} min | {item?.exercise_calories} Kcal
+                {item?.total_rest > 60
+                  ? `${(item?.total_rest / 60).toFixed(0)} min`
+                  : `${item?.total_rest} sec`}{' '}
+                | {item?.total_calories} Kcal
+                {/* {moment(139).format('S')} min | {item?.total_calories} Kcal */}
               </Text>
             </View>
             <Icons
@@ -335,20 +391,27 @@ const WorkoutDays = ({navigation, route}: any) => {
             />
           </View>
         </View>
-        {selected && getCount != -1 && (
+        {selected && (
           <ProgressButton
             text="Start Training"
             w={DeviceWidth * 0.75}
             bR={10}
-            fill={`${100 - (trainingCount / getCount) * 100}%`}
+            fill={
+              getCount == -1
+                ? '100%'
+                : `${100 - (trainingCount / getCount) * 100}%`
+            }
             h={DeviceHeigth * 0.08}
             onPress={() =>
               navigation.navigate('Exercise', {
                 allExercise: exerciseData,
-                currentExercise: exerciseData[trainingCount - 1],
+                currentExercise:
+                  trainingCount == -1
+                    ? exerciseData[0]
+                    : exerciseData[trainingCount - 1],
                 data: data,
                 day: day,
-                exerciseNumber: trainingCount - 1,
+                exerciseNumber: trainingCount == -1 ? 0 : trainingCount - 1,
               })
             }
           />
@@ -393,7 +456,9 @@ const WorkoutDays = ({navigation, route}: any) => {
             fontFamily: 'Poppins',
             fontWeight: '600',
           }}>
-          {totalTime} min
+          {totalTime > 60
+            ? `${(totalTime / 60).toFixed(0)} min`
+            : `${totalTime} sec`}
         </Text>
       </LinearGradient>
     );
@@ -471,7 +536,7 @@ const WorkoutDays = ({navigation, route}: any) => {
         </View> */}
         <View style={{alignSelf: 'flex-start'}}>
           {Object.values(data?.days).map((item: any, index: number) => {
-            if (item == 'Rest') {
+            if (item?.total_rest == 0) {
               return (
                 <View>
                   <Text>Rest</Text>

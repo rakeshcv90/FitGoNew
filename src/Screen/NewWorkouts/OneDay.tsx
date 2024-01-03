@@ -18,10 +18,10 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import GradientButton from '../../Component/GradientButton';
 import {useFocusEffect} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
-import { setCount } from '../../Component/ThemeRedux/Actions';
+import {setCount} from '../../Component/ThemeRedux/Actions';
 
 const OneDay = ({navigation, route}: any) => {
-  const {data, dayData, day} = route.params;
+  const {data, dayData, day, trainingCount} = route.params;
   const [exerciseData, setExerciseData] = useState([]);
   const [currentExercise, setCurrentExercise] = useState([]);
   const [open, setOpen] = useState(true);
@@ -52,7 +52,7 @@ const OneDay = ({navigation, route}: any) => {
         setExerciseData(res.data);
         setOpen(true);
         setLoader(false);
-        dispatch(setCount(res.data?.length))
+        dispatch(setCount(res.data?.length));
       }
     } catch (error) {
       console.error(error, 'DaysAPIERror');
@@ -83,7 +83,6 @@ const OneDay = ({navigation, route}: any) => {
           currentExercise: current,
           data: data,
           day: day,
-          exerciseNumber: -1
         });
       }
     } catch (error) {
@@ -116,7 +115,7 @@ const OneDay = ({navigation, route}: any) => {
             alignItems: 'center',
           }}>
           <Image
-            source={{uri: data?.workout_image_link}}
+            source={{uri: item?.exercise_image}}
             style={{height: 80, width: 60, marginLeft: DeviceWidth * 0.12}}
             resizeMode="contain"
           />
@@ -156,7 +155,7 @@ const OneDay = ({navigation, route}: any) => {
         source={{uri: data?.workout_image_link}}
         style={{
           height: DeviceWidth / 1.5,
-          width: DeviceWidth * 0.95,
+          width: DeviceWidth,
           marginTop: DeviceHeigth * 0.1,
         }}
         resizeMode="contain"
@@ -206,11 +205,13 @@ const OneDay = ({navigation, route}: any) => {
               size={15}
               color={AppColor.INPUTTEXTCOLOR}
             />
-            {` ${dayData?.exercise_rest} `}
+            {dayData?.total_rest > 60
+              ? ` ${(dayData?.total_rest / 60).toFixed(0)} min `
+              : ` ${dayData?.total_rest} sec `}
             <Icons name={'fire'} size={15} color={AppColor.INPUTTEXTCOLOR} />
-            {` ${dayData?.exercise_calories} Kcal`}
+            {` ${dayData?.total_calories} Kcal`}
           </Text>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView showsVerticalScrollIndicator={false} style={{marginBottom: 50}}>
             {exerciseData.map((item, index) => (
               <Box selected={-1} index={index + 1} item={item} key={index} />
             ))}
@@ -220,7 +221,7 @@ const OneDay = ({navigation, route}: any) => {
             h={80}
             alignSelf
             bR={10}
-            mB={20}
+            mB={40}
             onPress={() => {
               // setCurrentExercise(exerciseData[0]);
               // setTimeout(() => {
@@ -232,6 +233,7 @@ const OneDay = ({navigation, route}: any) => {
                 currentExercise: exerciseData[0],
                 data: data,
                 day: day,
+                exerciseNumber: trainingCount != -1 ? trainingCount - 1 : 0,
               });
             }}
           />

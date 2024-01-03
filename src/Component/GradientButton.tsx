@@ -21,7 +21,8 @@ export type Props = TouchableWithoutFeedbackProps & {
   mB?: number;
   pV?: number;
   bR?: number;
-  alignSelf?: boolean,
+  alignSelf?: boolean;
+  flex?: number;
 };
 
 const GradientButton: FC<Props> = ({...props}) => {
@@ -29,12 +30,12 @@ const GradientButton: FC<Props> = ({...props}) => {
     <TouchableOpacity
       {...props}
       style={{
-        flex: 1,
+        flex: props.flex ? props.flex : 1,
         width: props.w ? props.w : DeviceWidth * 0.9,
         justifyContent: 'center',
         alignItems: 'center',
-        alignSelf: !props.alignSelf? 'flex-start' : 'center',
-        marginBottom: props.mB
+        alignSelf: !props.alignSelf ? 'flex-start' : 'center',
+        marginBottom: props.mB,
       }}>
       <LinearGradient
         start={{x: 1, y: 0}}
@@ -47,7 +48,7 @@ const GradientButton: FC<Props> = ({...props}) => {
             height: props.h ? props.h : 50,
             marginVertical: props.mV,
             paddingVertical: props.pV,
-            borderRadius: props.bR?props.bR: 50 / 2,
+            borderRadius: props.bR ? props.bR : 50 / 2,
           },
         ]}>
         <Text
