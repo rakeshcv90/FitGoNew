@@ -8,19 +8,20 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {AppColor} from '../../Component/Color';
 import Header from '../../Component/Headers/NewHeader';
 import GradientText from '../../Component/GradientText';
 import moment from 'moment';
 import {Canvas, Circle, Group, Line, vec} from '@shopify/react-native-skia';
 import LinearGradient from 'react-native-linear-gradient';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import ProgressButton from '../../Component/ProgressButton';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {localImage} from '../../Component/Image';
 import {showMessage} from 'react-native-flash-message';
+import axios from 'axios';
 
 const WorkoutDays = ({navigation, route}: any) => {
   const {data} = route.params;
@@ -28,8 +29,10 @@ const WorkoutDays = ({navigation, route}: any) => {
   const [phase, setPhase] = useState(1);
   const [openDay, setOpenDay] = useState(false);
   const [day, setDay] = useState(1);
+  const [trainingCount, setTrainingCount] = useState(-1);
+  const [totalCount, setTotalCount] = useState(-1);
   const [dayData, setDayData] = useState([]);
-
+  // console.log(data);
   const {allWorkoutData, getUserDataDetails} = useSelector(
     (state: any) => state,
   );
@@ -40,6 +43,36 @@ const WorkoutDays = ({navigation, route}: any) => {
       totalTime = totalTime + parseInt(data?.days[day]?.exercise_rest);
     }
   }
+  useEffect(() => {
+    getCurrentDayAPI();
+  }, []);
+  const getCurrentDayAPI = async () => {
+    try {
+      const res = await axios({
+        url:
+          NewAppapi.CURRENT_DAY_EXERCISE_DETAILS + '/' + getUserDataDetails?.id,
+      });
+      console.log(res.data);
+      if (res.data?.msg != 'No data found') {
+        if (res.data?.final_status == 'all_completed') {
+          setSelected(res.data?.day);
+        }
+        if (res.data?.final_status == null) {
+          setSelected(res.data?.day - 1);
+          const temp = res.data?.user_details?.filter(
+            (item: any) =>
+              item?.user_day == res.data?.day &&
+              item?.exercise_status == 'completed',
+          );
+          // console.log(temp);
+          setTrainingCount(temp?.length);
+        }
+      } else {
+      }
+    } catch (error) {
+      console.error(error, 'DAPIERror');
+    }
+  };
   const dispatch = useDispatch();
   const BlackCircle = ({indexes, select, index}: any) => {
     return (
@@ -50,7 +83,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           marginLeft: 0,
           width: 40,
           overflow: 'hidden',
-          height: select ? DeviceHeigth * 0.2 : DeviceHeigth * 0.1,
+          height: select && totalCount != -1 ? DeviceHeigth * 0.2 : DeviceHeigth * 0.1,
           alignItems: 'center',
           justifyContent: 'center',
           marginTop: index == 0 || index == 4 ? DeviceHeigth * 0.05 : 0,
@@ -217,7 +250,7 @@ const WorkoutDays = ({navigation, route}: any) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          selected
+          selected && totalCount != -1
             ? navigation.navigate('OneDay', {
                 data: data,
                 dayData: item,
@@ -239,7 +272,10 @@ const WorkoutDays = ({navigation, route}: any) => {
                 : index == 3 || index == 7
                 ? '#FFE8E1'
                 : '#CEF2F9',
-            height: selected ? DeviceHeigth * 0.2 : DeviceHeigth * 0.1,
+            height:
+              selected && totalCount != -1
+                ? DeviceHeigth * 0.2
+                : DeviceHeigth * 0.1,
           },
         ]}>
         <View
@@ -278,12 +314,12 @@ const WorkoutDays = ({navigation, route}: any) => {
             />
           </View>
         </View>
-        {selected && (
+        {selected && totalCount != -1 && (
           <ProgressButton
             text="Start Training"
             w={DeviceWidth * 0.75}
             bR={10}
-            fill={'20%'}
+            fill={`${(trainingCount / totalCount) * 100}`}
             h={DeviceHeigth * 0.08}
           />
         )}
@@ -428,7 +464,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                   {(index == 0 || index == 4) && (
                     <Phase
                       index={index + 1}
-                      percent={80}
+                      percent={index == 0 ? (selected / 4) * 100 : 80}
                       select={index <= selected}
                     />
                   )}

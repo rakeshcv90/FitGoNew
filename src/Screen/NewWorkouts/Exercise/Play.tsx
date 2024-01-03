@@ -27,6 +27,7 @@ export type Props = TouchableWithoutFeedbackProps & {
   playy?: any;
   back?: any;
   next?: any;
+  colors?: Array<any>;
 };
 
 const Play: FC<Props> = ({...props}) => {
@@ -44,7 +45,7 @@ const Play: FC<Props> = ({...props}) => {
       <LinearGradient
         start={{x: 1, y: 0}}
         end={{x: 0, y: 1}}
-        colors={['#941000', '#D5191A']}
+        colors={props.colors ? props.colors : ['#941000', '#D5191A']}
         style={[
           styles.nextButton,
           {
@@ -60,9 +61,9 @@ const Play: FC<Props> = ({...props}) => {
         </TouchableOpacity>
         <TouchableOpacity onPress={props.playy}>
           {props.play ? (
-            <Icons name={'pause'} size={40} color={AppColor.WHITE} />
-          ) : (
             <Icons name={'play'} size={40} color={AppColor.WHITE} />
+          ) : (
+            <Icons name={'pause'} size={40} color={AppColor.WHITE} />
           )}
         </TouchableOpacity>
         <TouchableOpacity onPress={props.next}>

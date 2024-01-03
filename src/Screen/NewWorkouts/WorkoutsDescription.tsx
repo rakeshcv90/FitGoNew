@@ -17,7 +17,6 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
     data?.workout_description?.split(/<\/?p>/g) ||
     data?.exercise_instructions?.split(/<\/?ul>/g) ||
     [];
-  console.log(description);
   return (
     <Modal visible={open} onRequestClose={() => null} animationType="slide">
       <View

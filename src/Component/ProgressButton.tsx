@@ -20,7 +20,11 @@ export type Props = TouchableWithoutFeedbackProps & {
   mV?: number;
   pV?: number;
   bR?: number;
+  bW?: number;
   fill?: any;
+  flex?: number;
+  colors?: any;
+  bC?: string
 };
 
 const ProgreesButton: FC<Props> = ({...props}) => {
@@ -28,7 +32,7 @@ const ProgreesButton: FC<Props> = ({...props}) => {
     <TouchableOpacity
       {...props}
       style={{
-        flex: 1,
+        flex: props.flex ? props.flex : 1,
         width: props.w ? props.w : DeviceWidth * 0.9,
         justifyContent: 'center',
         alignItems: 'center',
@@ -37,7 +41,7 @@ const ProgreesButton: FC<Props> = ({...props}) => {
       <LinearGradient
         start={{x: 1, y: 0}}
         end={{x: 0, y: 1}}
-        colors={['#941000', '#D5191A']}
+        colors={props.colors ? props.colors : ['#941000', '#D5191A']}
         style={[
           styles.nextButton,
           {
@@ -46,6 +50,8 @@ const ProgreesButton: FC<Props> = ({...props}) => {
             marginVertical: props.mV,
             paddingVertical: props.pV,
             borderRadius: props.bR ? props.bR : 50 / 2,
+            borderWidth: props.bW ? 1 : 0,
+            borderColor: props.bC ? props.bC : 'transparent',
           },
         ]}>
         <Text
