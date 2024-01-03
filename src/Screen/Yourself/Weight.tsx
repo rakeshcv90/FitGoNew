@@ -244,6 +244,7 @@ const Weight = ({route, navigation}: any) => {
                 activeIndex={currentActiveIndex}
                 data={height}
                 posData={positions}
+                activeItem={900}
               />
               <View style={{height: DeviceHeigth * 0.2}} />
             </View>

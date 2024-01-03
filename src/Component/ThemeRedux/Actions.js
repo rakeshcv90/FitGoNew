@@ -51,9 +51,27 @@ export const setCustomWorkoutData = data => {
     payload: data,
   };
 };
+export const setCurrentWorkoutData = data => {
+  return {
+    type: types.CURRENT_WORKOUT_DATA,
+    payload: data,
+  };
+};
+export const setAllWorkoutData = data => {
+  return {
+    type: types.ALL_WORKOUTS_DATA,
+    payload: data,
+  };
+};
 export const setMindset_Data = data => {
   return {
     type: types.Mindset_Data,
+    payload: data,
+  };
+};
+export const setLogout = data => {
+  return {
+    type: types.LogOut,
     payload: data,
   };
 };
@@ -63,9 +81,15 @@ export const SetmindsetConsent=data=>{
     payload:data
   }
 }
+
 export const setHealthData=(data)=>{
   return{
     type:types.HealthData,
+
+export const Setmealdata=data=>{
+  return{
+    type:types.ALL_MEAL_DATA,
+
     payload:data
   }
 }

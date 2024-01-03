@@ -37,17 +37,22 @@ export const NewAppapi = {
   forgetPassword: 'sendemail_link',
   OTPVerification: 'user_verify',
   UserProfile: 'userprofile',
-
   Get_COMPLETE_PROFILE: NewApi + 'goals_levels_focusarea_data',
   Post_COMPLETE_PROFILE: NewApi + 'user_update_details',
   Custom_WORKOUT_DATA: NewApi + 'usercustomworkout',
-
+  Free_WORKOUT_DATA: NewApi + 'userfreecustomworkout',
+  Free_Excercise_Data: NewApi + 'userfreecustomexercise',
   Whole_data: NewApi + 'user_update_details',
-  All_Workouts: 'allworkout',
+  ALL_WORKOUTS: NewApi + 'allworkout',
+  Meal_Categorie: NewApi + 'get_categorie',
+ DietDetails:NewApi + 'getdiet',
+  Get_DAYS: NewApi + 'days',
+  CURRENT_DAY_EXERCISE: NewApi + 'user_exercise_status',
+  CURRENT_DAY_EXERCISE_DETAILS: NewApi + 'user_exercise_details',
+  Get_Product_Catogery: NewApi + 'categorydata',
+  Get_Product_List: NewApi + 'productdata',
+  Get_Mindset_Excise: NewApi + 'mindsetdata'
 };
 
-
-
-
-
+ 
 

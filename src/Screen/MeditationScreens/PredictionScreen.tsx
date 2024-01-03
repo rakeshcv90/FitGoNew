@@ -95,25 +95,26 @@ const PredictionScreen = ({navigation, route}: any) => {
         ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
       const formattedDate = currentDate.format('YYYY-MM-DD');
       weightHistoryArray.push({
-        weight:
-          i % 2 === 0 ? decWeight.toFixed(2) : (decWeight - 10).toFixed(2),
+        weight: decWeight.toFixed(2),
+          // i % 2 === 0
+          //   ? decWeight.toFixed(2)
+          //   : (currentWeight - TargetWeight >= 10 || i > 2
+          //       ? decWeight - 10
+          //       : decWeight
+          //     ).toFixed(2),
         date: formattedDate,
       });
       constantWeightArray.push({weight: 0, date: formattedDate});
 
       currentDate = currentDate.add(15, 'days');
     }
-
+    console.log(weightHistoryArray, currentWeight, TargetWeight);
     setZeroData(constantWeightArray);
     setWeightHistory(weightHistoryArray);
 
     weightHistoryArray[weightHistoryArray.length - 1]?.date &&
       setFinalDate(weightHistoryArray[weightHistoryArray.length - 1]?.date);
   };
-
-
-  
-
 
   return (
     <View style={styles.Container}>

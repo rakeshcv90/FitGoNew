@@ -1,50 +1,39 @@
 import {
   View,
   Text,
+  StyleSheet,
   TextInput,
-  FlatList,
   TouchableOpacity,
   Image,
+  Linking,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {StatusBar} from 'react-native';
-import {StyleSheet} from 'react-native';
 import {AppColor} from '../../Component/Color';
-import Icons from 'react-native-vector-icons/FontAwesome5';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
-import {Platform} from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
 import {SliderBox} from 'react-native-image-slider-box';
 import FastImage from 'react-native-fast-image';
-import {useSelector} from 'react-redux';
+import Icons from 'react-native-vector-icons/FontAwesome5';
+import {FlatList} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
 import axios from 'axios';
-import {localImage} from '../../Component/Image';
 import ActivityLoader from '../../Component/ActivityLoader';
+import {localImage} from '../../Component/Image';
 import AnimatedLottieView from 'lottie-react-native';
-import { showMessage } from 'react-native-flash-message';
 
-const Store = ({navigation}) => {
-  const {getUserDataDetails} = useSelector(state => state);
-  const [searchText, setsearchText] = useState('');
-  const [forLoading, setForLoading] = useState(false);
+const ProductsList = ({route}) => {
+  const [searchText, setsearchText] = useState();
+  const [productList, setproductList] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState([]);
-
-  const [category, setcategory] = useState([]);
-
+  const [forLoading, setForLoading] = useState(false);
   useFocusEffect(
     React.useCallback(() => {
-      getCaterogy();
+      if (route.params.item) {
+        getCaterogy(route.params.item.type_id);
+      }
     }, []),
   );
-  const updateFilteredCategories = (test) => {
-
-    const filteredItems = category.filter((item) =>
-      item.type_title.toLowerCase().includes(test.toLowerCase())
-    );
- 
-   setFilteredCategories(filteredItems);
-  };
   const data = [
     require('../../Icon/Images/product_1631791758.jpg'),
     require('../../Icon/Images/product_1631792207.jpg'),
@@ -54,42 +43,39 @@ const Store = ({navigation}) => {
     require('../../Icon/Images/recipe_1519697004.jpg'),
     require('../../Icon/Images/product_1631791758.jpg'),
   ];
-  const getCaterogy = async () => {
-    setForLoading(true)
+
+  const getCaterogy = async type => {
+    setForLoading(true);
     try {
-      const favDiet = await axios.get(
-        `${NewAppapi.Get_Product_Catogery}?token=${getUserDataDetails.login_token}`,
-      );
-
-
-      if (favDiet.data.status!='Invalid token') {
-        setForLoading(false)
-        setcategory(favDiet.data.data);
-        setFilteredCategories(favDiet.data.data)
+      const data = await axios(`${NewAppapi.Get_Product_List}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          type_id: type,
+        },
+      });
+      setForLoading(false);
+      if (data.data.status == 'data found') {
+        setForLoading(false);
+        setproductList(data.data.data);
+        setFilteredCategories(data.data.data)
       } else {
-        showMessage({
-          message: favDiet.data.status+' Login Again',
-          floating: true,
-          duration: 1000,
-          type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setcategory([]);
-        setForLoading(false)
+        setproductList([]);
+     
       }
     } catch (error) {
-      setcategory([]);
-      console.log('Product Category Error', error);
-      setForLoading(false)
+      setForLoading(false);
+      setproductList([]);
+      console.log('Product List Error', error);
     }
   };
   const emptyComponent = () => {
-
     return (
       <View
         style={{
-        
-       flex:1
+          flex: 1,
         }}>
         <AnimatedLottieView
           source={require('../../Icon/Images/NewImage/NoData.json')}
@@ -100,17 +86,28 @@ const Store = ({navigation}) => {
           style={{
             width: DeviceWidth * 0.6,
             height: DeviceHeigth * 0.3,
-       
-          
           }}
         />
       </View>
     );
   };
+  const updateFilteredCategories = (test) => {
+    
+    const filteredItems = productList.filter((item) =>
+      item.product_title.toLowerCase().includes(test.toLowerCase())
+    );
+  
+   setFilteredCategories(filteredItems);
+  };
   return (
     <View style={styles.container}>
-      <NewHeader header={'Store'} SearchButton={false} backButton={true} />
+      <NewHeader
+        header={route.params.item.type_title}
+        SearchButton={false}
+        backButton={true}
+      />
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
+
       <View
         style={{
           width: '95%',
@@ -140,8 +137,6 @@ const Store = ({navigation}) => {
           placeholder="Search Products"
           placeholderTextColor={'rgba(80, 80, 80, 0.6)'}
           value={searchText}
-    
-     
           onChangeText={text => {
             setsearchText(text);
             updateFilteredCategories(text)
@@ -209,7 +204,7 @@ const Store = ({navigation}) => {
             fontFamily: 'Poppins',
             fontWeight: '700',
             lineHeight: 21,
-            marginBottom: 20,
+            marginBottom: 0,
           }}>
           Our Products
         </Text>
@@ -218,20 +213,21 @@ const Store = ({navigation}) => {
           numColumns={3}
           showsVerticalScrollIndicator={false}
           keyExtractor={item => item.id}
-      
           renderItem={({item, index}) => {
             return (
               <>
                 <TouchableOpacity
                   style={styles.listItem2}
-                  onPress={() => {
-                    navigation.navigate('ProductsList', {item: item});
-                  }}>
+                  onPress={()=>{
+                    Linking.openURL(item.product_link)
+                  }}
+                  >
+         
                   <Image
                     source={
-                      item.type_image_link == null
+                      item.product_image_link == null
                         ? localImage.Noimage
-                        : {uri: item.type_image_link}
+                        : {uri: item.product_image_link}
                     }
                     style={{
                       height: 90,
@@ -240,20 +236,19 @@ const Store = ({navigation}) => {
                       alignSelf: 'center',
                     }}
                     resizeMode="cover"></Image>
+                  <View style={{width: 90}}>
                   <Text
-                    style={
-                 
-                      {
-                        fontSize: 12,
-                        fontWeight: '500',
-                        lineHeight: 18,
-                        fontFamily: 'Poppins',
-                        textAlign: 'center',
-                        color: AppColor.BoldText,
-                      }
-                    }>
-                    {item.type_title}
-                  </Text>
+                  numberOfLines={1}
+                    style={{
+                      fontSize: 12,
+                      fontWeight: '500',
+                      lineHeight: 18,
+                      fontFamily: 'Poppins',
+                      textAlign: 'center',
+                      color: AppColor.BoldText,
+                    }}>
+                    {item.product_title}
+                  </Text></View>
                 </TouchableOpacity>
               </>
             );
@@ -261,7 +256,6 @@ const Store = ({navigation}) => {
           ListEmptyComponent={emptyComponent}
         />
       </View>
-      
     </View>
   );
 };
@@ -307,4 +301,4 @@ var styles = StyleSheet.create({
     }),
   },
 });
-export default Store;
+export default ProductsList;

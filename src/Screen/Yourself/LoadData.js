@@ -26,6 +26,10 @@ import axios from 'axios';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
+import {
+  setCurrentWorkoutData,
+  setCustomWorkoutData,
+} from '../../Component/ThemeRedux/Actions';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
@@ -72,17 +76,19 @@ const LoadData = ({navigation}) => {
       image: require('../../Icon/Images/NewImage/testImage.png'),
     },
   ];
+  const [activeNext, setActiveNext] = useState(false);
 
   const {
-    defaultTheme,
+    currentWorkoutData,
     completeProfileData,
     getLaterButtonData,
     mindSetData,
     mindsetConsent,
+    getUserDataDetails,
   } = useSelector(state => state);
-  console.log('mindset===>', mindSetData);
-  const translationX = useRef(new Animated.Value(0)).current;
 
+  const translationX = useRef(new Animated.Value(0)).current;
+  const dispatch = useDispatch();
   useEffect(() => {
     animateList();
   }, []);
@@ -99,40 +105,128 @@ const LoadData = ({navigation}) => {
     ).start();
   };
   useEffect(() => {
-    DeviceInfo.getUniqueId().then(id=>WholeData(id));
+    DeviceInfo.getUniqueId().then(id => WholeData(id));
   }, []);
-  const WholeData = async (deviceID) => {
+  const WholeData = async deviceID => {
     const mergedObject = Object.assign({}, ...getLaterButtonData);
+    console.log('USER ID', getUserDataDetails);
 
     try {
       const payload = new FormData();
-      payload.append("deviceid",deviceID)
-      payload.append('id', null);
+      payload.append('deviceid', deviceID);
+      payload.append(
+        'id',
+        getUserDataDetails?.id != null ? getUserDataDetails?.id : null,
+      );
       payload.append('gender', mergedObject?.gender);
       payload.append('goal', mergedObject?.goal);
       payload.append('age', mergedObject?.age);
       payload.append('fitnesslevel', mergedObject?.level); // static values change  it accordingly
-      payload.append('focusarea', mergedObject?.focusArea?.join(','));
+      payload.append('focusarea', mergedObject?.focuseArea?.join(','));
       payload.append('weight', mergedObject?.currentWeight);
       payload.append('height', mergedObject?.height);
-      payload.append('injury', null);
+      payload.append(
+        'injury',
+        mergedObject?.injury != null ? mergedObject?.injury?.join(',') : null,
+      );
       payload.append('equipment', mergedObject?.equipment);
       payload.append('workoutarea', mergedObject?.workoutArea?.join(','));
 
+      if (getUserDataDetails)
+        if (mindsetConsent == true) {
+          payload.append('workoutroutine', mindSetData[0].routine);
+          payload.append('sleepduration', mindSetData[1].SleepDuration);
+          payload.append('mindstate', mindSetData[2].mState);
+          payload.append('alcoholconstent', mindSetData[3].Alcohol_Consent);
 
-      if (mindsetConsent == true) {
-        payload.append('workoutroutine', mindSetData[0].routine);
-        payload.append('sleepduration', mindSetData[1].SleepDuration);
-        payload.append('mindstate', mindSetData[2].mState);
-        payload.append('alcoholconstent', mindSetData[3].Alcohol_Consent);
+          if (mindSetData[4]) {
+            payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
+          }
+        }
 
-       if(mindSetData[4]){
-        payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
-       }
-      }
-      console.log(payload)
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: payload,
+      });
+      console.log(data.data, payload);
+      getUserDataDetails?.id != null
+        ? getCustomWorkout(getUserDataDetails?.id)
+        : customFreeWorkoutDataApi(deviceID);
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
 
+  const getCustomWorkout = async user_id => {
+    try {
+      const data = await axios(NewAppapi.Custom_WORKOUT_DATA, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          id: user_id,
+        },
+      });
+      console.log('Custom Workout ', data.data.workout);
+      if (data.data.workout) {
+        dispatch(setCustomWorkoutData(data?.data));
+        currentWorkoutDataApi(data.data?.workout[0]);
+      } else {
+        dispatch(setCustomWorkoutData([]));
+        setActiveNext(true);
+      }
+    } catch (error) {
+      console.log('Custom Workout Error', error);
+      dispatch(setCustomWorkoutData([]));
+      setActiveNext(true);
+    }
+  };
+
+  const customFreeWorkoutDataApi = async deviceID => {
+    try {
+      const payload = new FormData();
+      payload.append('deviceid', deviceID);
+      const res = await axios({
+        url: NewAppapi.Free_WORKOUT_DATA,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: payload,
+      });
+      console.log('CustomFreeWorkout', res.data.workout);
+      if (res.data?.workout) {
+        dispatch(setCustomWorkoutData(res.data));
+        currentWorkoutDataApi(res.data?.workout[0]);
+      } else {
+        dispatch(setCustomWorkoutData([]));
+        setActiveNext(true);
+      }
+    } catch (error) {
+      console.error(error?.response, 'customWorkoutDataApiError');
+      dispatch(setCustomWorkoutData([]));
+      setActiveNext(true);
+    }
+  };
+
+  const currentWorkoutDataApi = async workout => {
+    const mergedObject = Object.assign({}, ...getLaterButtonData);
+    try {
+      const payload = new FormData();
+      payload.append('workoutid', workout?.workout_id);
+      payload.append('workoutgender', workout?.workout_gender);
+      payload.append('workoutgoal', workout?.workout_goal);
+      payload.append('workoutlevel', workout?.workout_level);
+      payload.append('workoutarea', workout?.workout_area);
+      payload.append('workoutinjury', workout?.workout_injury);
+      payload.append('workoutage', mergedObject?.age); //User Age here
+      payload.append('workoutequipment', workout?.workout_equipment);
+      const res = await axios({
+        url: NewAppapi.Free_Excercise_Data,
 
         method: 'POST',
         headers: {
@@ -140,11 +234,23 @@ const LoadData = ({navigation}) => {
         },
         data: payload,
       });
-      console.log('data=======>', data.data);
+      if (res.data) {
+        console.log(res.data, 'AGE_CURRENT');
+        dispatch(setCurrentWorkoutData(res.data));
+      } else dispatch(setCurrentWorkoutData([]));
+
+      setTimeout(() => {
+        setActiveNext(true);
+      }, 2000);
     } catch (error) {
-      console.log('error', error);
+      console.error(error, 'customWorkoutDataApiError');
+      dispatch(setCurrentWorkoutData([]));
+      setTimeout(() => {
+        setActiveNext(true);
+      }, 2000);
     }
   };
+
   const renderItem1 = ({item, index}) => {
     const translateX = translationX.interpolate({
       inputRange: [0, 1],
@@ -213,7 +319,6 @@ const LoadData = ({navigation}) => {
           data={buttonName}
           showsHorizontalScrollIndicator={false}
           renderItem={({item, index}) => {
-            console.log('dsvddsfdfsd', item);
             const translateX = translationX.interpolate({
               inputRange: [0, 1],
               outputRange: [10, -300], //
@@ -252,7 +357,7 @@ const LoadData = ({navigation}) => {
 
       <View style={styles.buttons}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => null}
           style={{
             backgroundColor: '#F7F8F8',
             width: 45,
@@ -262,21 +367,25 @@ const LoadData = ({navigation}) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Icons name="chevron-left" size={25} color={'#000'} />
+          {/* <Icons name="chevron-left" size={25} color={'#000'} /> */}
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            // toNextScreen()
-            navigation.navigate('Preview');
-          }}>
-          <LinearGradient
-            start={{x: 0, y: 1}}
-            end={{x: 1, y: 0}}
-            colors={['#941000', '#D5191A']}
-            style={[styles.nextButton]}>
-            <Icons name="chevron-right" size={25} color={'#fff'} />
-          </LinearGradient>
-        </TouchableOpacity>
+        {activeNext && (
+          <TouchableOpacity
+            onPress={() => {
+              console.log("CurrentWorkout", currentWorkoutData)
+              navigation.navigate('Preview', {
+                currentExercise: currentWorkoutData,
+              });
+            }}>
+            <LinearGradient
+              start={{x: 0, y: 1}}
+              end={{x: 1, y: 0}}
+              colors={['#941000', '#D5191A']}
+              style={[styles.nextButton]}>
+              <Icons name="chevron-right" size={25} color={'#fff'} />
+            </LinearGradient>
+          </TouchableOpacity>
+        )}
       </View>
     </SafeAreaView>
   );

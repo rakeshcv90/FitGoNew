@@ -1,4 +1,11 @@
-import {FlatList, StyleSheet, Text, Vibration, View} from 'react-native';
+import {
+  FlatList,
+  FlatListProps,
+  StyleSheet,
+  Text,
+  Vibration,
+  View,
+} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {AppColor} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
@@ -7,8 +14,15 @@ const BOX_HEIGHT = DeviceHeigth * 0.7;
 const BOX_WEIGHT = DeviceWidth * 0.7;
 const ITEM_HEIGHT = 25;
 
-const Scale = ({setActiveIndex, activeIndex, data, posData, h}: any) => {
-  const ScaleRef = useRef(null);
+const Scale = ({
+  setActiveIndex,
+  activeIndex,
+  data,
+  posData,
+  h,
+  activeItem,
+}: any) => {
+  const ScaleRef = useRef<FlatList>(null);
 
   const getActiveItem = (y: number) => {
     const halfBoxH = h ? BOX_WEIGHT : BOX_HEIGHT;
@@ -17,27 +31,29 @@ const Scale = ({setActiveIndex, activeIndex, data, posData, h}: any) => {
     for (let index = 0; index < posData.length; index++) {
       const {start, end} = posData[index];
       if (center + 25 >= start && center - 25 <= end) {
-        console.log(center, index);
+        // console.log(center, index);
         setActiveIndex(index);
       }
     }
   };
-
   useEffect(() => {
-    getActiveItem(900);
+    setTimeout(() => {
+      ScaleRef.current?.scrollToOffset({
+        offset: activeItem,
+        animated: true,
+      });
+      getActiveItem(activeItem);
+    }, 1000);
   }, []);
   return (
     <View>
       {h ? (
         <View
           style={{
-          
             alignItems: 'center',
             width: DeviceWidth * 0.9,
             alignSelf: 'center',
-    
           }}>
- 
           <FlatList
             ref={ScaleRef}
             data={data}
@@ -73,10 +89,10 @@ const Scale = ({setActiveIndex, activeIndex, data, posData, h}: any) => {
                           item == '' ? 'transparent' : AppColor.RED,
                         borderRadius: 10,
                         marginRight: 10,
-                        marginBottom: 30
+                        marginBottom: 30,
                       }}
                     />
-                  ) :index % 4 == 0 ? (
+                  ) : index % 4 == 0 ? (
                     <View
                       style={{
                         height: DeviceWidth * 0.15,
@@ -85,7 +101,7 @@ const Scale = ({setActiveIndex, activeIndex, data, posData, h}: any) => {
                           item == '' ? 'transparent' : AppColor.RED,
                         borderRadius: 10,
                         marginRight: 10,
-                        marginBottom: 20
+                        marginBottom: 20,
                       }}
                     />
                   ) : (
@@ -138,7 +154,17 @@ const Scale = ({setActiveIndex, activeIndex, data, posData, h}: any) => {
                     alignItems: 'center',
                     justifyContent: 'flex-start',
                   }}>
-                  {index % 12 == 0 ? (
+                  {item == 4 ||
+                  item == 5 ||
+                  item == 6 ||
+                  item == 7 ||
+                  item == 8 ||
+                  item == 9 ||
+                  item == 10 ||
+                  item == 11 ||
+                  item == 12 ||
+                  item == 13 ||
+                  item == 14 ? (
                     <View
                       style={{
                         width: DeviceWidth * 0.25,

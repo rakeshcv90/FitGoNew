@@ -13,7 +13,6 @@ export const localImage = {
   dw4: require('../Icon/Images/DwaderImage/n4.png'),
   dw5: require('../Icon/Images/DwaderImage/n5.png'),
   dw6: require('../Icon/Images/DwaderImage/n6.png'),
-  dw7: require('../Icon/Images/DwaderImage/n7.png'),
   dw8: require('../Icon/Images/DwaderImage/n8.png'),
   dw9: require('../Icon/Images/DwaderImage/n9.png'),
   avt: require('../Icon/Images/DwaderImage/Avatar.png'),
@@ -29,7 +28,6 @@ export const localImage = {
   GENDER: require('../Icon/Images/NewImage/Gender.png'),
   PathChargeLevel: require('../Icon/Images/NewImage/PathChargeLevel.png'),
   BACK: require('../Icon/Images/NewImage/back.png'),
-
   BELL: require('../Icon/Images/NewImage/bell.png'),
   Calories: require('../Icon/Images/NewImage/Calories.png'),
   Step: require('../Icon/Images/NewImage/Step.png'),
@@ -75,7 +73,6 @@ export const localImage = {
   FemaleWeight: require('../Icon/Images/NewImage/FemaleWeight.png'),
   Leg: require('../Icon/Images/NewImage/Leg.png'),
   Abs: require('../Icon/Images/NewImage/Abs.png'),
-
   Chest: require('../Icon/Images/NewImage/Chest.png'),
   Abs2: require('../Icon/Images/NewImage/Abs2.png'),
   Leg2: require('../Icon/Images/NewImage/Leg2.png'),
@@ -90,6 +87,14 @@ export const localImage = {
   DeleteAcc:require('../Icon/Images/NewImage/Delete_account.png'),
   RateStar:require('../Icon/Images/NewImage/rate_star.png'),
   Soundimg:require('../Icon/Images/NewImage/Soundimg.png'),
-
+  INFO:require('../Icon/Images/NewImage/GroupInfo.png'),
+  Play:require('../Icon/Images/NewImage/play.png'),
+  dw7: require('../Icon/Images/NewImage/n7.png'),
+  GymImage: require('../Icon/Images/NewImage/GymImage.png'),
+  Noimage: require('../Icon/Images/NewImage/no-pictures.png'),
+  BlackCircle: require('../Icon/Images/NewImage/BlackCircle.png'),
+  GreyCircle: require('../Icon/Images/NewImage/GreyCircle.png'),
+  Watch: require('../Icon/Images/NewImage/watch.png'),
+   Play2: require('../Icon/Images/NewImage/playButton.png')
 
 };

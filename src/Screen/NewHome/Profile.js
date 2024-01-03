@@ -18,7 +18,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {Switch} from 'react-native-switch';
+import {useDispatch, useSelector} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {setLogout} from '../../Component/ThemeRedux/Actions';
+import {CommonActions} from '@react-navigation/native';
 const Profile = () => {
+  const dispatch = useDispatch();
+  const {getUserDataDetails} = useSelector(state => state);
 
   const navigation = useNavigation();
   const [isEnabled, setIsEnabled] = useState(false);
@@ -140,6 +146,26 @@ const Profile = () => {
   const SecondView = Profile_Data.slice(6);
 
   const ProfileView = () => {
+    const handleLogout = async () => {
+      // Clear AsyncStorage
+      try {
+        await AsyncStorage.clear();
+      } catch (error) {
+        console.error('Error clearing AsyncStorage:', error);
+      }
+
+      navigateToLogin(navigation);
+
+      dispatch(setLogout());
+    };
+    const navigateToLogin = navigation => {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'LogSignUp'}],
+        }),
+      );
+    };
     return (
       <View>
         <LinearGradient
@@ -154,13 +180,16 @@ const Profile = () => {
               margin: 15,
               alignItems: 'center',
             }}>
-            <View
+            <TouchableOpacity
+            onPress={()=>{
+            navigation.goBack()
+            }}
               style={{
                 width: DeviceWidth * 0.23,
                 paddingVertical: 1,
               }}>
               <Icons name="chevron-left" size={30} color={AppColor.WHITE} />
-            </View>
+            </TouchableOpacity>
             <Text
               style={{
                 fontFamily: 'Poppins-SemiBold',
@@ -175,6 +204,10 @@ const Profile = () => {
                 alignItems: 'center',
               }}>
               <TouchableOpacity
+                onPress={() => {
+                  handleLogout();
+                  navigation.navigate('SplaceScreen');
+                }}
                 activeOpacity={0.5}
                 style={{
                   width: DeviceWidth * 0.2,
@@ -222,7 +255,7 @@ const Profile = () => {
                 fontSize: 20,
                 paddingLeft: 15,
               }}>
-              {'Jane Austine'}
+              {getUserDataDetails.name}
             </Text>
             <Text
               style={{
@@ -231,7 +264,7 @@ const Profile = () => {
                 fontSize: 12,
                 paddingLeft: 15,
               }}>
-              {'abc@gmail.com'}
+              {getUserDataDetails.email}
             </Text>
           </View>
         </LinearGradient>
@@ -273,14 +306,14 @@ const Profile = () => {
                   backgroundInactive={AppColor.GRAY2}
                   circleActiveColor={AppColor.RED}
                   circleInActiveColor={AppColor.WHITE}
-                  changeValueImmediately={true} // if rendering inside circle, change state immediately or wait for animation to complete
-                  outerCircleStyle={{color: AppColor.RED}} // style for outer animated circle
+                  changeValueImmediately={true}
+                  outerCircleStyle={{color: AppColor.RED}}
                   renderActiveText={false}
                   renderInActiveText={false}
-                  switchLeftPx={2} // denominator for logic when sliding to TRUE position. Higher number = more space from RIGHT of the circle to END of the slider
-                  switchRightPx={2} // denominator for logic when sliding to FALSE position. Higher number = more space from LEFT of the circle to BEGINNING of the slider
-                  switchWidthMultiplier={2.2} // multiplied by the `circleSize` prop to calculate total width of the Switch
-                  switchBorderRadius={30} // Sets the border Radius of the switch slider. If unset, it remains the circleSize.
+                  switchLeftPx={2}
+                  switchRightPx={2}
+                  switchWidthMultiplier={2.2}
+                  switchBorderRadius={30}
                 />
               ) : value.id == 6 ? (
                 <View style={{width: 20, height: 20}}></View>

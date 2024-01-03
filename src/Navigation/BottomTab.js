@@ -3,10 +3,12 @@ import React from 'react';
 import {AnimatedTabBarNavigator} from 'react-native-animated-nav-tab-bar';
 
 import Home from '../Screen/NewHome/Home';
-import Diets from '../Screen/NewHome/Diets';
+
 import Store from '../Screen/NewHome/Store';
 
 import Workouts from '../Screen/NewHome/Workouts';
+import Report from '../Screen/NewHome/Report';
+import Trainer from '../Screen/NewHome/Trainer';
 
 const Tabs = AnimatedTabBarNavigator();
 const BottomTab = () => {
@@ -18,7 +20,16 @@ const BottomTab = () => {
           activeTintColor: '#D01818',
           inactiveTintColor: '#3D3D3D',
           activeBackgroundColor: '#EED9D6',
-        }}>
+    
+        labelStyle: {  fontFamily: 'Poppins',
+        fontWeight: '700',
+        lineHeight: 18,
+        fontSize: 12,
+        },
+
+        }}
+ 
+        >
         <Tabs.Screen
           name="Home"
           component={Home}
@@ -38,7 +49,7 @@ const BottomTab = () => {
         />
         <Tabs.Screen
           name="Workout"
-          component={Diets}
+          component={Workouts}
           options={{
             tabBarIcon: ({focused, color, size}) => (
               <Image
@@ -54,8 +65,8 @@ const BottomTab = () => {
           }}
         />
         <Tabs.Screen
-          name="Progress"
-          component={Store}
+          name="Reports"
+          component={Report}
           options={{
             tabBarIcon: ({focused, color, size}) => (
               <Image
@@ -72,7 +83,7 @@ const BottomTab = () => {
         />
         <Tabs.Screen
           name="Store"
-          component={Workouts}
+          component={Store}
           options={{
             tabBarIcon: ({focused, color, size}) => (
               <Image
@@ -89,7 +100,7 @@ const BottomTab = () => {
         />
          <Tabs.Screen
           name="Trainer"
-          component={Workouts}
+          component={Trainer}
           options={{
             tabBarIcon: ({focused, color, size}) => (
               <Image

@@ -7,21 +7,34 @@ import {
   FlatList,
   Animated,
   ScrollView,
+  TouchableOpacity,
+  Dimensions,
   Platform,
   AppState,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
 import {AppColor} from '../../Component/Color';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
+
 import VersionNumber from 'react-native-version-number';
+
 import {useSelector, useDispatch} from 'react-redux';
 import {setHealthData} from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
 import BackgroundService from 'react-native-background-actions';
+
+import AskHealthPermissionAndroid from '../../Component/AndroidHealthPermission';
+import AppleHealthKit from 'react-native-health';
+
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Dropdown} from 'react-native-element-dropdown';
+import {LineChart} from 'react-native-chart-kit';
+import AnimatedLottieView from 'lottie-react-native';
+import axios from 'axios';
 import {
   Stop,
   Circle,
@@ -30,6 +43,7 @@ import {
   LinearGradient as SvgGrad,
 } from 'react-native-svg';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
+
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {
   isStepCountingSupported,
@@ -37,6 +51,12 @@ import {
   startStepCounterUpdate,
   stopStepCounterUpdate,
 } from '@dongminyu/react-native-step-counter';
+import {navigationRef} from '../../../App';
+import {useSelector} from 'react-redux';
+import ActivityLoader from '../../Component/ActivityLoader';
+import {showMessage} from 'react-native-flash-message';
+import {getStatusBarHeight} from 'react-native-status-bar-height';
+import RoundedCards from '../../Component/RoundedCards';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -66,154 +86,222 @@ const GradientText = ({item}) => {
     </View>
   );
 };
-const Home = () => {
-  // service
-  useEffect(() => {
-    new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
-      //NOT IMPLEMENTED YET
-      'healthKit:StepCount:new',
-      async () => {
-        console.log('--> observer triggered');
-      },
-    );
-  });
-  const Dispatch = useDispatch();
-  const {getHealthData} = useSelector(state => state);
-  const [steps, setSteps] = useState(
-    getHealthData[0] ? getHealthData[0].Steps : '0',
-  );
-  const [Calories, setCalories] = useState(
-    getHealthData[1] ? getHealthData[1].Calories : '0',
-  );
-  const [distance, setDistance] = useState(
-    getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
-  );
-  console.log('healthDataa', getHealthData);
-  // pedometer
-  const sleep = time =>
-    new Promise(resolve => setTimeout(() => resolve(), time)); // background
-  const veryIntensiveTask = async taskDataArguments => {
-    const {delay} = taskDataArguments;
-    const updateStepsAndNotification = async data => {
-      // Update the steps and related state
-      setSteps(data.steps);
-      setDistance(((data.steps / 20) * 0.01).toFixed(2));
-      setCalories(Math.floor(data.steps / 20));
-      Dispatch(
-        setHealthData([
-          {Steps: data.steps},
-          {Calories: Math.floor(data.steps / 20)},
-          {DistanceCovered: ((data.steps / 20) * 0.01).toFixed(2)},
-        ]),
-      );
-      // Update the notification with the current steps
-      await BackgroundService.updateNotification({
-        taskIcon: {
-          name: 'ic_launcher',
-          type: 'mipmap',
-        },
-        color: AppColor.RED,
-        taskName: 'Pedometer',
-        taskTitle: 'Steps ' + data.steps,
-        taskDesc: 'Steps ',
-        progressBar: {
-          max: 100,
-          value: data.steps,
-          indeterminate: false,
-        },
-      });
-    };
-    for (let i = 0; BackgroundService.isRunning(); i++) {
-      startStepCounterUpdate(new Date(), async data => {
-        await updateStepsAndNotification(data);
-      });
 
-      await sleep(delay);
-    }
-  };
-  const options = {
-    color: AppColor.RED,
-    taskName: 'Pedometer',
-      taskTitle: 'Steps ' + steps,
-      taskDesc: '',
-      progressBar: {
-        max: 100,
-        value: steps,
-        indeterminate: false,
-      },
-    taskIcon: {
-      name: 'ic_launcher',
-      type: 'mipmap',
-    },
-    linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
-    parameters: {
-      delay: 3000,
-    },
-  };
+// const Home = () => {
+//   // service
+//   useEffect(() => {
+//     new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
+//       //NOT IMPLEMENTED YET
+//       'healthKit:StepCount:new',
+//       async () => {
+//         console.log('--> observer triggered');
+//       },
+//     );
+//   });
+//   const Dispatch = useDispatch();
+//   const {getHealthData} = useSelector(state => state);
+//   const [steps, setSteps] = useState(
+//     getHealthData[0] ? getHealthData[0].Steps : '0',
+//   );
+//   const [Calories, setCalories] = useState(
+//     getHealthData[1] ? getHealthData[1].Calories : '0',
+//   );
+//   const [distance, setDistance] = useState(
+//     getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
+//   );
+//   console.log('healthDataa', getHealthData);
+//   // pedometer
+//   const sleep = time =>
+//     new Promise(resolve => setTimeout(() => resolve(), time)); // background
+//   const veryIntensiveTask = async taskDataArguments => {
+//     const {delay} = taskDataArguments;
+//     const updateStepsAndNotification = async data => {
+//       // Update the steps and related state
+//       setSteps(data.steps);
+//       setDistance(((data.steps / 20) * 0.01).toFixed(2));
+//       setCalories(Math.floor(data.steps / 20));
+//       Dispatch(
+//         setHealthData([
+//           {Steps: data.steps},
+//           {Calories: Math.floor(data.steps / 20)},
+//           {DistanceCovered: ((data.steps / 20) * 0.01).toFixed(2)},
+//         ]),
+//       );
+//       // Update the notification with the current steps
+//       await BackgroundService.updateNotification({
+//         taskIcon: {
+//           name: 'ic_launcher',
+//           type: 'mipmap',
+//         },
+//         color: AppColor.RED,
+//         taskName: 'Pedometer',
+//         taskTitle: 'Steps ' + data.steps,
+//         taskDesc: 'Steps ',
+//         progressBar: {
+//           max: 100,
+//           value: data.steps,
+//           indeterminate: false,
+//         },
+//       });
+//     };
+//     for (let i = 0; BackgroundService.isRunning(); i++) {
+//       startStepCounterUpdate(new Date(), async data => {
+//         await updateStepsAndNotification(data);
+//       });
+
+//       await sleep(delay);
+//     }
+//   };
+//   const options = {
+//     color: AppColor.RED,
+//     taskName: 'Pedometer',
+//       taskTitle: 'Steps ' + steps,
+//       taskDesc: '',
+//       progressBar: {
+//         max: 100,
+//         value: steps,
+//         indeterminate: false,
+//       },
+//     taskIcon: {
+//       name: 'ic_launcher',
+//       type: 'mipmap',
+//     },
+//     linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
+//     parameters: {
+//       delay: 3000,
+//     },
+//   };
+//   useEffect(() => {
+//     PermissionAndroid();
+//   },[]);
+//   async function startStepCounter() {
+//     startStepCounterUpdate(new Date(), data => {
+//       setSteps(data.steps);
+//       setDistance(((data.steps / 20) * 0.01).toFixed(2));
+//       setCalories(Math.floor(data.steps / 20));
+//       Dispatch(
+//         setHealthData([
+//           {Steps: data.steps},
+//           {Calories: Math.floor(data.steps / 20)},
+//           {DistanceCovered: ((data.steps / 20) * 0.01).toFixed(2)},
+//         ]),
+//       );
+//     });
+//     await BackgroundService.start(veryIntensiveTask, options);
+//     await BackgroundService.updateNotification({
+//       color: AppColor.RED,
+//       taskName: 'Pedometer',
+//       taskTitle: 'Steps ' + steps,
+//       taskDesc: 'Steps ',
+//       taskIcon: {
+//         name: 'ic_launcher',
+//         type: 'mipmap',
+//       },
+//       progressBar: {
+//         max: 100,
+//         value: steps,
+//         indeterminate: false,
+//       },
+//     });
+//   }
+//   const PermissionAndroid = async () => {
+//     if (Platform.OS == 'android') {
+//       const result = await isStepCountingSupported();
+//       console.debug('🚀 - isStepCountingSupported', result);
+//       const permissionStatus = await check(
+//         PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
+//       );
+//       if (permissionStatus === RESULTS.DENIED && result.supported == true) {
+//         const permissionRequestResult = await request(
+//           PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
+//         );
+//         if (
+//           permissionRequestResult === RESULTS.GRANTED &&
+//           result.supported == true
+//         ) {
+//           console.log('ACTIVITY_RECOGNITION permission granted');
+//           console.log('Resulllttt', RESULTS.GRANTED);
+//           startStepCounter();
+//         } else {
+//           console.log('ACTIVITY_RECOGNITION permission denied');
+//           // Handle the case where the permission request is denied
+//           await request(PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION);
+//         }
+//       } else {
+//         console.log('ACTIVITY_RECOGNITION permission already granted');
+//         startStepCounter();
+//         // Permission was already granted previously
+//       }
+//     } else {
+//       AppleHealthKit.isAvailable((err, available) => {
+//         console.log('Avialable=========>', available);
+
+
+const ProgressBar = ({progress, image, text}) => {
+  return (
+    <View
+      style={[
+        styles.progressBarContainer,
+        {
+          flexDirection: 'row',
+          alignItems: 'center',
+        },
+      ]}>
+      <View
+        style={[
+          styles.progressIndicator,
+          {
+            width: `${progress}%`,
+
+            position: 'absolute',
+          },
+        ]}></View>
+      <Image
+        source={image}
+        style={[
+          styles.img,
+          {
+            height: 20,
+            width: 20,
+            marginHorizontal: 10,
+          },
+        ]}
+        resizeMode="contain"></Image>
+      <Text
+        style={{
+          fontSize: 12,
+          fontWeight: '700',
+          fontFamily: 'Poppins',
+          lineHeight: 18,
+        }}>
+        {text}
+      </Text>
+    </View>
+  );
+};
+
+const Home = ({navigation}) => {
+  const [progress, setProgress] = useState(10);
+
+  const [forLoading, setForLoading] = useState(false);
+  const [value, setValue] = useState('Weekly');
+  const [currentindex, setCurrentIndex] = useState(1);
+  const progressAnimation = useRef(new Animated.Value(0)).current;
+  const {
+    getLaterButtonData,
+    completeProfileData,
+    getUserID,
+    getUserDataDetails,
+    mindsetConsent,
+    customWorkoutData,
+    mealData,
+  } = useSelector(state => state);
   useEffect(() => {
-    PermissionAndroid();
-  },[]);
-  async function startStepCounter() {
-    startStepCounterUpdate(new Date(), data => {
-      setSteps(data.steps);
-      setDistance(((data.steps / 20) * 0.01).toFixed(2));
-      setCalories(Math.floor(data.steps / 20));
-      Dispatch(
-        setHealthData([
-          {Steps: data.steps},
-          {Calories: Math.floor(data.steps / 20)},
-          {DistanceCovered: ((data.steps / 20) * 0.01).toFixed(2)},
-        ]),
-      );
-    });
-    await BackgroundService.start(veryIntensiveTask, options);
-    await BackgroundService.updateNotification({
-      color: AppColor.RED,
-      taskName: 'Pedometer',
-      taskTitle: 'Steps ' + steps,
-      taskDesc: 'Steps ',
-      taskIcon: {
-        name: 'ic_launcher',
-        type: 'mipmap',
-      },
-      progressBar: {
-        max: 100,
-        value: steps,
-        indeterminate: false,
-      },
-    });
-  }
-  const PermissionAndroid = async () => {
     if (Platform.OS == 'android') {
-      const result = await isStepCountingSupported();
-      console.debug('🚀 - isStepCountingSupported', result);
-      const permissionStatus = await check(
-        PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
-      );
-      if (permissionStatus === RESULTS.DENIED && result.supported == true) {
-        const permissionRequestResult = await request(
-          PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
-        );
-        if (
-          permissionRequestResult === RESULTS.GRANTED &&
-          result.supported == true
-        ) {
-          console.log('ACTIVITY_RECOGNITION permission granted');
-          console.log('Resulllttt', RESULTS.GRANTED);
-          startStepCounter();
-        } else {
-          console.log('ACTIVITY_RECOGNITION permission denied');
-          // Handle the case where the permission request is denied
-          await request(PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION);
-        }
-      } else {
-        console.log('ACTIVITY_RECOGNITION permission already granted');
-        startStepCounter();
-        // Permission was already granted previously
-      }
+      AskHealthPermissionAndroid();
     } else {
       AppleHealthKit.isAvailable((err, available) => {
-        console.log('Avialable=========>', available);
+
         const permissions = {
           permissions: {
             read: [AppleHealthKit.Constants.Permissions.Steps],
@@ -225,6 +313,7 @@ const Home = () => {
           AppleHealthKit.initHealthKit(permissions, error => {
             if (error) {
               console.log('[ERROR] Cannot grant permissions!', error);
+
             } else {
               const options = {
                 startDate: new Date(
@@ -247,6 +336,8 @@ const Home = () => {
                 setCalories(((results.value / 20) * 0.7566).toFixed(1));
                 console.log('ios stespssss', results);
               });
+
+
             }
           });
         } else {
@@ -258,21 +349,32 @@ const Home = () => {
         }
       });
     }
+
   };
 
   const [currentindex, setCurrentIndex] = useState(1);
+
+  });
+
+
   const props = {
     activeStrokeWidth: 25,
     inActiveStrokeWidth: 25,
     inActiveStrokeOpacity: 0.35,
   };
-  const progressAnimation = useRef(new Animated.Value(0)).current;
 
+
+
+  const data2 = [
+    {label: 'Weekly', value: '1'},
+    {label: 'Daily', value: '2'},
+  ];
   const progressBarWidth = progressAnimation.interpolate({
     inputRange: [0, 1],
     outputRange: ['0%', '100%'],
     extrapolate: 'extend',
   });
+
 
   Platform.OS == 'android'
     ? console.log('Android Version', VersionNumber.appVersion)
@@ -281,6 +383,7 @@ const Home = () => {
         VersionNumber.appVersion,
         VersionNumber.bundleIdentifier,
       );
+
   useEffect(() => {
     Animated.timing(progressAnimation, {
       toValue: 1,
@@ -288,53 +391,64 @@ const Home = () => {
       useNativeDriver: false,
     }).start();
   }, [progressAnimation]);
+
   const colors = [
     {color1: '#E2EFFF', color2: '#9CC2F5', color3: '#425B7B'},
     {color1: '#BFF0F5', color2: '#8DD9EA', color3: '#1F6979'},
     {color1: '#FAE3FF', color2: '#C97FCD', color3: '#7C3D80'},
   ];
-
-  const data = [
-    {id: '1', title: 'Focus'},
-    {id: '2', title: 'Deep'},
-    {id: '3', title: 'Slee'},
-    {id: '4', title: 'Test'},
+  const colors1 = [
+    {color1: '#E7D9FB'},
+    {color1: '#D7FBFF'},
+    {color1: '#DFEEFE'},
   ];
-  const data1 = [
-    {id: '1', title: 'Single Arm\nBicep Curls'},
-    {id: '2', title: 'Deep'},
-    {id: '3', title: 'Slee'},
-    {id: '4', title: 'Test'},
-  ];
+  
   const ListItem = ({title, color}) => (
-    <LinearGradient
-      start={{x: 0, y: 1}}
-      end={{x: 1, y: 0}}
-      colors={[color.color1, color.color2]}
-      style={styles.listItem}>
-      <Text
-        style={[
-          styles.title,
-          {
-            color: color.color3,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Image
-        source={localImage.Money}
-        style={[
-          styles.img,
-          {
-            height: 30,
-            width: 30,
-          },
-        ]}
-        resizeMode="cover"></Image>
-    </LinearGradient>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('MeditationDetails',{item:title})
+        // showMessage({
+        //   message: 'Work in Progress',
+        //   floating: true,
+        //   duration: 500,
+        //   type: 'info',
+        //   icon: {icon: 'auto', position: 'left'},
+        // });
+      }}>
+      <LinearGradient
+        start={{x: 0, y: 1}}
+        end={{x: 1, y: 0}}
+        colors={[color.color1, color.color2]}
+        style={styles.listItem}>
+        <Text
+          style={[
+            styles.title,
+            {
+              color: color.color3,
+            },
+          ]}>
+          {title.workout_mindset_title}
+        </Text>
+
+        <Image
+          source={
+            title.workout_mindset_image_link != null
+              ? {uri: title.workout_mindset_image_link}
+              : localImage.Noimage
+          }
+          style={[
+            styles.img,
+            {
+              height: 30,
+              width: 30,
+            },
+          ]}
+          resizeMode="cover"></Image>
+      </LinearGradient>
+    </TouchableOpacity>
   );
   const getTimeOfDayMessage = () => {
-    const currentHour = new Date().getHours() + 5;
+    const currentHour = new Date().getHours();
 
     if (currentHour >= 5 && currentHour < 12) {
       return 'Good Morning';
@@ -345,6 +459,34 @@ const Home = () => {
     } else {
       return 'Good Night';
     }
+  };
+
+  const renderItem = item => {
+    return (
+      <View style={styles.item}>
+        <Text style={styles.textItem}>{item.label}</Text>
+      </View>
+    );
+  };
+  const emptyComponent = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+        }}>
+        <AnimatedLottieView
+          source={require('../../Icon/Images/NewImage/NoData.json')}
+          speed={2}
+          autoPlay
+          loop
+          resizeMode="contain"
+          style={{
+            width: DeviceWidth * 0.3,
+            height: DeviceHeigth * 0.15,
+          }}
+        />
+      </View>
+    );
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -363,14 +505,22 @@ const Home = () => {
             resizeMode="cover"></Image>
           <Text style={styles.monetText}>500</Text>
         </View>
-        <View style={styles.profileView1}>
+        <TouchableOpacity
+          style={styles.profileView1}
+          onPress={() => {
+            navigation.navigate('Profile');
+          }}>
           <Image
             source={localImage.avt}
             style={styles.img}
             resizeMode="cover"></Image>
-        </View>
+        </TouchableOpacity>
       </View>
-      <GradientText item={getTimeOfDayMessage() + ', Jane'} />
+      <GradientText
+        item={getTimeOfDayMessage() + ', ' + getUserDataDetails.name}
+      />
+      {forLoading ? <ActivityLoader /> : ''}
+
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
@@ -384,7 +534,6 @@ const Home = () => {
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
                   source={localImage.Step3}
-                  // source={localImage.Money}
                   style={[
                     styles.img,
                     {
@@ -470,111 +619,190 @@ const Home = () => {
             </View>
           </View>
         </View>
-        <Text style={styles.meditionText}>Meditation</Text>
-        <View style={styles.meditionBox}>
-          <FlatList
-            data={data}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={item => item.id}
-            renderItem={({item, index}) => {
-              return (
-                <ListItem
-                  title={item.title}
-                  color={colors[index % colors.length]}
-                />
-              );
-            }}
-          />
+
+        <>
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '95%',
+              alignSelf: 'center',
+              top: DeviceHeigth * 0.03,
+              justifyContent: 'space-between',
+            }}>
+            <Text
+              style={{
+                color: AppColor.BoldText,
+                fontFamily: 'Poppins',
+                fontWeight: '700',
+                lineHeight: 24,
+                fontSize: 16,
+                // marginLeft:20,
+                justifyContent: 'flex-start',
+              }}>
+              Meditation
+            </Text>
+            <TouchableOpacity onPress={() => {     navigation.navigate('MeditationDetails')}}>
+              <Icons name="chevron-right" size={25} color={'#000'} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.meditionBox}>
+            <FlatList
+              data={customWorkoutData?.minset_workout}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={item => item.id}
+              ListEmptyComponent={emptyComponent}
+              renderItem={({item, index}) => {
+                return (
+                  <ListItem
+                    title={item}
+                    color={colors[index % colors.length]}
+                  />
+                );
+              }}
+            />
+          </View>
+        </>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            width: '95%',
+            alignSelf: 'center',
+            top: DeviceHeigth * 0.03,
+            justifyContent: 'space-between',
+            top: DeviceHeigth * 0.07,
+          }}>
+          <Text
+            style={{
+              color: AppColor.BoldText,
+              fontFamily: 'Poppins',
+              fontWeight: '700',
+              lineHeight: 24,
+              fontSize: 16,
+              // marginLeft:20,
+              justifyContent: 'flex-start',
+            }}>
+            Workouts
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              showMessage({
+                message: 'Work in Progress',
+                floating: true,
+                duration: 500,
+                type: 'info',
+                icon: {icon: 'auto', position: 'left'},
+              });
+            }}>
+            <Icons name="chevron-right" size={25} color={'#000'} />
+          </TouchableOpacity>
         </View>
-        <Text
-          style={[
-            styles.meditionText,
-            {
-              top: DeviceHeigth * 0.07,
-            },
-          ]}>
-          Workouts
-        </Text>
         <View
           style={[
             styles.meditionBox,
             {
-              top: DeviceHeigth * 0.09,
+              top: DeviceHeigth * 0.08,
             },
           ]}>
           <FlatList
-            data={data1}
+            data={customWorkoutData?.workout}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id}
+            ListEmptyComponent={emptyComponent}
             pagingEnabled
             renderItem={({item, index}) => {
               return (
-                <>
-                  <LinearGradient
-                    start={{x: 0, y: 1}}
-                    end={{x: 1, y: 0}}
-                    colors={[
-                      colors[index % colors.length].color1,
-                      colors[index % colors.length].color2,
-                    ]}
-                    style={styles.listItem1}>
-                    <View>
-                      <Text
-                        style={[
-                          styles.title,
-                          {
-                            color: colors[index % colors.length].color3,
-                          },
-                        ]}>
-                        {item.title}
-                      </Text>
-                      <View style={{flexDirection: 'row', marginVertical: 10}}>
-                        <View
-                          style={{
-                            width: DeviceWidth * 0.25,
-                            height: DeviceHeigth * 0.05,
-                            borderRadius: 10,
-                            backgroundColor: 'red',
-                          }}></View>
-                        <View
-                          style={{
-                            width: DeviceWidth * 0.25,
-                            height: DeviceHeigth * 0.05,
-                            backgroundColor: 'red',
-                            borderRadius: 10,
-                            marginHorizontal: 10,
-                          }}></View>
-                      </View>
-                    </View>
-
-                    <Image
-                      source={localImage.Money}
+                <View
+                  style={[
+                    styles.listItem1,
+                    {
+                      backgroundColor: colors1[index % colors1.length].color1,
+                      marginTop: 20,
+                    },
+                  ]}>
+                  <View style={{marginVertical: 10}}>
+                    <Text
                       style={[
-                        styles.img,
+                        styles.title,
                         {
-                          height: 100,
-                          width: 100,
+
+//                           height: 100,
+//                           width: 100,
 
                           alignSelf: 'center',
                           zIndex: 1,
+
+                          color: AppColor.BoldText,
+                          width: DeviceHeigth * 0.2,
+
                         },
-                      ]}
-                      resizeMode="contain"></Image>
+                      ]}>
+                      {item.workout_title}
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        marginVertical: 10,
+                      }}>
+                      <View>
+                        <ProgressBar
+                          progress={progress}
+                          image={localImage.Play}
+                          text={'2 Min'}
+                        />
+                      </View>
+                      <View style={{marginHorizontal: 10}}>
+                        <ProgressBar
+                          progress={progress}
+                          image={localImage.Step1}
+                          text={'100Kcal'}
+                        />
+                      </View>
+                    </View>
+                  </View>
+
+                  <Image
+                    source={localImage.GymImage}
+                    style={{
+                      height: DeviceHeigth * 0.2,
+                      width: DeviceWidth * 0.35,
+
+                      bottom: -50,
+                      left: -30,
+                      marginTop: -DeviceHeigth * 0.11,
+                    }}
+                    resizeMode="contain"></Image>
+                  <TouchableOpacity
+                    style={[
+                      styles.img,
+                      {
+                        height: 25,
+                        width: 25,
+                        // backgroundColor:'red',
+                        left: -45,
+                        borderRadius: 0,
+                        top: -DeviceHeigth * 0.055,
+                      },
+                    ]}
+                    onPress={() => {
+                      console.log('Fevvdsvdfvgfd', item);
+                    }}>
                     <Image
-                      source={localImage.Money}
+                      source={localImage.dw7}
                       style={[
                         styles.img,
                         {
-                          height: 15,
-                          width: 15,
-                          top: -DeviceHeigth * 0.05,
+                          height: 25,
+                          width: 25,
+                          borderRadius: 0,
+                          // tintColor:'red',
                         },
                       ]}
                       resizeMode="contain"></Image>
-                  </LinearGradient>
-                </>
+                  </TouchableOpacity>
+                </View>
               );
             }}
           />
@@ -585,7 +813,7 @@ const Home = () => {
               top: DeviceHeigth * 0.01,
               justifyContent: 'center',
             }}>
-            {data.map((value, index) => (
+            {customWorkoutData?.workout.map((value, index) => (
               <View
                 key={index}
                 style={{
@@ -599,25 +827,45 @@ const Home = () => {
             ))}
           </View>
         </View>
-        <Text
-          style={[
-            styles.meditionText,
-            {
-              top: DeviceHeigth * 0.1,
-            },
-          ]}>
-          Meals
-        </Text>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            width: '95%',
+            alignSelf: 'center',
+            top: DeviceHeigth * 0.03,
+            justifyContent: 'space-between',
+            top: DeviceHeigth * 0.11,
+          }}>
+          <Text
+            style={{
+              color: AppColor.BoldText,
+              fontFamily: 'Poppins',
+              fontWeight: '700',
+              lineHeight: 24,
+              fontSize: 16,
+              // marginLeft:20,
+              justifyContent: 'flex-start',
+            }}>
+            Meals
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Meals');
+            }}>
+            <Icons name="chevron-right" size={25} color={'#000'} />
+          </TouchableOpacity>
+        </View>
+
         <View
           style={[
             styles.meditionBox,
             {
               top: DeviceHeigth * 0.12,
-              marginBottom: DeviceHeigth * 0.1,
             },
           ]}>
           <FlatList
-            data={data1}
+            data={mealData.slice(0, 4)}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id}
@@ -625,31 +873,127 @@ const Home = () => {
             renderItem={({item, index}) => {
               return (
                 <>
-                  <View style={styles.listItem2}>
+                  <TouchableOpacity
+                    style={styles.listItem2}
+                    onPress={() => {
+                      navigation.navigate('MealDetails', {item: item});
+                    }}>
                     <Image
-                      source={localImage.Money}
+                      source={{uri: item.diet_image_link}}
                       style={[
                         styles.img,
                         {
-                          height: 100,
-                          width: 100,
-
+                          height: 90,
+                          width: 90,
+                          borderRadius: 180 / 2,
                           alignSelf: 'center',
+                          top: -5,
                         },
                       ]}
-                      resizeMode="contain"></Image>
+                      resizeMode="cover"></Image>
                     <Text
                       style={[
                         styles.title,
                         {
+                          fontSize: 13,
+                          fontWeight: '500',
+                          lineHeight: 18,
+                          fontFamily: 'Poppins',
+                          textAlign: 'center',
                           color: colors[index % colors.length].color3,
                         },
                       ]}>
-                      {item.title}
+                      {item.diet_title}
                     </Text>
-                  </View>
+                  </TouchableOpacity>
                 </>
               );
+            }}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            width: '95%',
+            alignSelf: 'center',
+            alignItems: 'center',
+            top: DeviceHeigth * 0.03,
+            justifyContent: 'space-between',
+            top: DeviceHeigth * 0.1,
+          }}>
+          <Text
+            style={{
+              color: AppColor.BoldText,
+              fontFamily: 'Poppins',
+              fontWeight: '700',
+              lineHeight: 24,
+              fontSize: 16,
+              // marginLeft:20,
+              justifyContent: 'flex-start',
+            }}>
+            Activities
+          </Text>
+
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            data={data2}
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder={value}
+            value={value}
+            onChange={item => {
+              setValue(item.value);
+            }}
+            renderItem={renderItem}
+          />
+        </View>
+        <View
+          style={{
+            top: DeviceHeigth * 0.11,
+            width: '95%',
+            // height: 200,
+            marginBottom: DeviceHeigth * 0.08,
+            alignSelf: 'center',
+            borderRadius: 10,
+          }}>
+          <LineChart
+            data={{
+              labels: ['Sun', 'Mon', 'Tue', 'Thur', 'Fri', 'Sat'],
+              datasets: [
+                {
+                  data: [100, 0, 0, 0, 0, 0],
+                },
+              ],
+            }}
+            width={DeviceWidth * 0.95}
+            height={300}
+            yAxisInterval={1}
+            chartConfig={{
+              backgroundColor: 'white',
+              backgroundGradientFrom: 'white',
+              backgroundGradientTo: 'white',
+              decimalPlaces: 1,
+              color: () => {
+                '#efefef';
+              },
+              labelColor: () => {
+                '#efefef';
+              },
+              style: {
+                borderRadius: 20,
+              },
+              propsForDots: {
+                r: '3',
+                strokeWidth: '5',
+                stroke: 'red',
+              },
+            }}
+            bezier
+            style={{
+              borderRadius: 10,
             }}
           />
         </View>
@@ -770,6 +1114,7 @@ var styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: 'white',
     top: DeviceHeigth * 0.05,
+    alignItems: 'center',
   },
   meditionText: {
     width: '95%',
@@ -789,19 +1134,16 @@ var styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 10,
     paddingLeft: 10,
-    paddingRight: 10,
+    // paddingRight: 10,
     paddingBottom: 10,
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
   listItem2: {
-    width: DeviceWidth * 0.4,
-    height: DeviceWidth * 0.4,
     marginHorizontal: 10,
     borderRadius: 10,
-    paddingLeft: 10,
-    paddingRight: 10,
+    padding: 20,
     marginTop: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -819,6 +1161,46 @@ var styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  progressBarContainer: {
+    width: DeviceWidth * 0.25,
+    height: DeviceHeigth * 0.05,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  progressIndicator: {
+    height: '100%',
+    backgroundColor: '#D018184D',
+  },
+  dropdown: {
+    margin: 16,
+    height: 30,
+    width: DeviceWidth * 0.25,
+    borderColor: 'red',
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    shadowColor: '#000',
+  },
+  icon: {
+    marginRight: 5,
+  },
+  item: {
+    padding: 17,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  textItem: {
+    flex: 1,
+    fontSize: 16,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
   },
 });
 export default Home;
