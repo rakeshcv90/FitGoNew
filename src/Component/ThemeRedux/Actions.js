@@ -86,3 +86,9 @@ export const Setmealdata=data=>{
     payload:data
   }
 }
+export const setCount=data=>{
+  return{
+    type:types.COUNT,
+    payload:data
+  }
+}

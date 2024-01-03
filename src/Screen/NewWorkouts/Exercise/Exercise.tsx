@@ -24,7 +24,8 @@ import GradientText from '../../../Component/GradientText';
 import ProgreesButton from '../../../Component/ProgressButton';
 
 const Exercise = ({navigation, route}: any) => {
-  const {allExercise, currentExercise, data, day} = route.params;
+  const {allExercise, currentExercise, data, day, exerciseNumber} =
+    route.params;
   const VideoRef = useRef();
   const [visible, setVisible] = useState(false);
   const [playW, setPlayW] = useState(0);
@@ -56,20 +57,21 @@ const Exercise = ({navigation, route}: any) => {
             setPlayW(0);
             setNumber(number + 1);
             setTimer(5);
+          } else if (timer == 5) {
+            postCurrentDayAPI(number);
+            setTimer(timer - 1);
           } else setTimer(timer - 1);
         }, 1000)
       : setTimeout(() => {
           if (pause)
             setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
-          if (playW >= 100 && number < allExercise?.length - 1) {
+          if (playW >= 100) {
             console.log(number + 1, allExercise?.length);
             setPause(false);
-            postCurrentDayAPI(number);
-          } else if (playW >= 100 && number == allExercise?.length - 1) {
-            console.log(number + 1, allExercise?.length);
-            postCurrentDayAPI(number);
+            setRestStart(true);
           }
         }, 1000);
+    if (exerciseNumber != -1) setNumber(exerciseNumber);
   }, [playW, pause, currentData, timer]);
 
   useEffect(() => {
@@ -127,11 +129,11 @@ const Exercise = ({navigation, route}: any) => {
   };
 
   const postCurrentDayAPI = async (index: number) => {
-    if (isAPICalling) {
-      return; // If API call is already in progress, do not proceed
-    }
-    console.log(isAPICalling, 'isAPICalling')
-    setAPICalling(true);
+    // if (isAPICalling) {
+    //   return; // If API call is already in progress, do not proceed
+    // }
+    // console.log(isAPICalling, 'isAPICalling')
+    // setAPICalling(true);
     const payload = new FormData();
     payload.append('user_exercise_id', allExercise[index]?.exercise_id);
     payload.append('user_id', getUserDataDetails?.id);
@@ -155,8 +157,6 @@ const Exercise = ({navigation, route}: any) => {
       }
     } catch (error) {
       console.error(error, 'PostDaysAPIERror');
-    } finally {
-      setAPICalling(false);
     }
   };
 
@@ -199,15 +199,12 @@ const Exercise = ({navigation, route}: any) => {
             }}>
             {`You have finished `}
             <Text style={{color: AppColor.RED}}>
-              {(((number) / parseInt(allExercise?.length)) * 100).toFixed(
-                0,
-              ) + '%'}
+              {((number / parseInt(allExercise?.length)) * 100).toFixed(0) +
+                '%'}
             </Text>
             {'\n'}
             {' only '}
-            <Text style={{color: AppColor.RED}}>
-              {number + ' Exercises'}
-            </Text>
+            <Text style={{color: AppColor.RED}}>{number + ' Exercises'}</Text>
             {' left '}
           </Text>
           <View style={{marginTop: 30}}>
@@ -411,7 +408,11 @@ const Exercise = ({navigation, route}: any) => {
             <Icons
               name={'chevron-left'}
               size={30}
-              color={AppColor.INPUTTEXTCOLOR}
+              color={
+                number != allExercise?.length - 1
+                  ? AppColor.WHITE
+                  : AppColor.INPUTTEXTCOLOR
+              }
             />
           </TouchableOpacity>
           <View style={{height: DeviceHeigth * 0.5}}>

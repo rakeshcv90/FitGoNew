@@ -32,11 +32,11 @@ const WorkoutDays = ({navigation, route}: any) => {
   const [trainingCount, setTrainingCount] = useState(-1);
   const [totalCount, setTotalCount] = useState(-1);
   const [dayData, setDayData] = useState([]);
+  const [exerciseData, setExerciseData] = useState([]);
   // console.log(data);
-  const {allWorkoutData, getUserDataDetails} = useSelector(
+  const {allWorkoutData, getUserDataDetails, getCount} = useSelector(
     (state: any) => state,
   );
-
   let totalTime = 0;
   for (const day in data?.days) {
     if (day != 'Rest') {
@@ -45,6 +45,7 @@ const WorkoutDays = ({navigation, route}: any) => {
   }
   useEffect(() => {
     getCurrentDayAPI();
+    getCount != -1 && allWorkoutApi();
   }, []);
   const getCurrentDayAPI = async () => {
     try {
@@ -73,6 +74,25 @@ const WorkoutDays = ({navigation, route}: any) => {
       console.error(error, 'DAPIERror');
     }
   };
+  const allWorkoutApi = async () => {
+    try {
+      const res = await axios({
+        url:
+          NewAppapi.Get_DAYS +
+          '?day=' +
+          day +
+          '&workout_id=' +
+          data?.workout_id,
+      });
+      if (res.data) {
+        console.log(res.data, 'DaysData', data);
+        setExerciseData(res.data);
+      }
+    } catch (error) {
+      console.error(error, 'DaysAPIERror');
+      setExerciseData([]);
+    }
+  };
   const dispatch = useDispatch();
   const BlackCircle = ({indexes, select, index}: any) => {
     return (
@@ -83,7 +103,8 @@ const WorkoutDays = ({navigation, route}: any) => {
           marginLeft: 0,
           width: 40,
           overflow: 'hidden',
-          height: select && totalCount != -1 ? DeviceHeigth * 0.2 : DeviceHeigth * 0.1,
+          height:
+            select && getCount != -1 ? DeviceHeigth * 0.2 : DeviceHeigth * 0.1,
           alignItems: 'center',
           justifyContent: 'center',
           marginTop: index == 0 || index == 4 ? DeviceHeigth * 0.05 : 0,
@@ -250,7 +271,7 @@ const WorkoutDays = ({navigation, route}: any) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          selected && totalCount != -1
+          selected
             ? navigation.navigate('OneDay', {
                 data: data,
                 dayData: item,
@@ -273,7 +294,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                 ? '#FFE8E1'
                 : '#CEF2F9',
             height:
-              selected && totalCount != -1
+              selected && getCount != -1
                 ? DeviceHeigth * 0.2
                 : DeviceHeigth * 0.1,
           },
@@ -314,13 +335,22 @@ const WorkoutDays = ({navigation, route}: any) => {
             />
           </View>
         </View>
-        {selected && totalCount != -1 && (
+        {selected && getCount != -1 && (
           <ProgressButton
             text="Start Training"
             w={DeviceWidth * 0.75}
             bR={10}
-            fill={`${(trainingCount / totalCount) * 100}`}
+            fill={`${100 - (trainingCount / getCount) * 100}%`}
             h={DeviceHeigth * 0.08}
+            onPress={() =>
+              navigation.navigate('Exercise', {
+                allExercise: exerciseData,
+                currentExercise: exerciseData[trainingCount - 1],
+                data: data,
+                day: day,
+                exerciseNumber: trainingCount - 1,
+              })
+            }
           />
         )}
       </TouchableOpacity>

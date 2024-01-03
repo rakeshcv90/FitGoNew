@@ -15,6 +15,7 @@ const intialState = {
   mindSetData: [],
   showLogout:0,
   mealData: [],
+  getCount: -1
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -46,6 +47,8 @@ const ThemeReducer = (state = intialState, action) => {
         return {...state,mealData: action.payload};
     case types.LogOut:
       return {...state, showLogout: action.payload};
+    case types.COUNT:
+      return {...state, getCount: action.payload};
     case types.Mindset_Data:
       const updatedData = action.payload;
       const updatedMindSetData = [...state.mindSetData];

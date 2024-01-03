@@ -18,6 +18,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import GradientButton from '../../Component/GradientButton';
 import {useFocusEffect} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
+import { setCount } from '../../Component/ThemeRedux/Actions';
 
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day} = route.params;
@@ -51,6 +52,7 @@ const OneDay = ({navigation, route}: any) => {
         setExerciseData(res.data);
         setOpen(true);
         setLoader(false);
+        dispatch(setCount(res.data?.length))
       }
     } catch (error) {
       console.error(error, 'DaysAPIERror');
@@ -81,6 +83,7 @@ const OneDay = ({navigation, route}: any) => {
           currentExercise: current,
           data: data,
           day: day,
+          exerciseNumber: -1
         });
       }
     } catch (error) {
