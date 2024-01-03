@@ -3,10 +3,12 @@ import React from 'react';
 import {AnimatedTabBarNavigator} from 'react-native-animated-nav-tab-bar';
 
 import Home from '../Screen/NewHome/Home';
-import Diets from '../Screen/NewHome/Diets';
+
 import Store from '../Screen/NewHome/Store';
 
 import Workouts from '../Screen/NewHome/Workouts';
+import Report from '../Screen/NewHome/Report';
+import Trainer from '../Screen/NewHome/Trainer';
 
 const Tabs = AnimatedTabBarNavigator();
 const BottomTab = () => {
@@ -63,8 +65,8 @@ const BottomTab = () => {
           }}
         />
         <Tabs.Screen
-          name="Progress"
-          component={Diets}
+          name="Reports"
+          component={Report}
           options={{
             tabBarIcon: ({focused, color, size}) => (
               <Image
@@ -98,7 +100,7 @@ const BottomTab = () => {
         />
          <Tabs.Screen
           name="Trainer"
-          component={Diets}
+          component={Trainer}
           options={{
             tabBarIcon: ({focused, color, size}) => (
               <Image

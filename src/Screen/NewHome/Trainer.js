@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const Diets = () => {
+const Trainer = () => {
   return (
     <View>
       <Text>Diets</Text>
@@ -9,4 +9,4 @@ const Diets = () => {
   )
 }
 
-export default Diets
+export default Trainer
