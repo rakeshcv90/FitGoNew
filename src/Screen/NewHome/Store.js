@@ -20,10 +20,14 @@ import FastImage from 'react-native-fast-image';
 import {useSelector} from 'react-redux';
 import axios from 'axios';
 import {localImage} from '../../Component/Image';
+import ActivityLoader from '../../Component/ActivityLoader';
+import AnimatedLottieView from 'lottie-react-native';
+import { showMessage } from 'react-native-flash-message';
 
 const Store = ({navigation}) => {
   const {getUserDataDetails} = useSelector(state => state);
   const [searchText, setsearchText] = useState('');
+  const [forLoading, setForLoading] = useState(false);
   const [filteredCategories, setFilteredCategories] = useState([]);
 
   const [category, setcategory] = useState([]);
@@ -34,11 +38,12 @@ const Store = ({navigation}) => {
     }, []),
   );
   const updateFilteredCategories = (test) => {
+
     const filteredItems = category.filter((item) =>
       item.type_title.toLowerCase().includes(test.toLowerCase())
     );
-console.log("fgdfgfd",filteredItems)
-    setFilteredCategories(filteredItems);
+ 
+   setFilteredCategories(filteredItems);
   };
   const data = [
     require('../../Icon/Images/product_1631791758.jpg'),
@@ -50,21 +55,57 @@ console.log("fgdfgfd",filteredItems)
     require('../../Icon/Images/product_1631791758.jpg'),
   ];
   const getCaterogy = async () => {
+    setForLoading(true)
     try {
       const favDiet = await axios.get(
         `${NewAppapi.Get_Product_Catogery}?token=${getUserDataDetails.login_token}`,
       );
 
-      if (favDiet.data.data.length > 0) {
+
+      if (favDiet.data.status!='Invalid token') {
+        setForLoading(false)
         setcategory(favDiet.data.data);
         setFilteredCategories(favDiet.data.data)
       } else {
+        showMessage({
+          message: favDiet.data.status+' Login Again',
+          floating: true,
+          duration: 1000,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
         setcategory([]);
+        setForLoading(false)
       }
     } catch (error) {
       setcategory([]);
       console.log('Product Category Error', error);
+      setForLoading(false)
     }
+  };
+  const emptyComponent = () => {
+
+    return (
+      <View
+        style={{
+        
+       flex:1
+        }}>
+        <AnimatedLottieView
+          source={require('../../Icon/Images/NewImage/NoData.json')}
+          speed={2}
+          autoPlay
+          loop
+          resizeMode="cover"
+          style={{
+            width: DeviceWidth * 0.6,
+            height: DeviceHeigth * 0.3,
+       
+          
+          }}
+        />
+      </View>
+    );
   };
   return (
     <View style={styles.container}>
@@ -108,7 +149,7 @@ console.log("fgdfgfd",filteredItems)
           style={styles.inputText}
         />
       </View>
-
+      {forLoading ? <ActivityLoader /> : ''}
       <View
         style={{
           width: '95%',
@@ -160,7 +201,6 @@ console.log("fgdfgfd",filteredItems)
           borderRadius: 10,
           alignSelf: 'center',
           alignItems: 'center',
-          
           top: 20,
         }}>
         <Text
@@ -174,10 +214,11 @@ console.log("fgdfgfd",filteredItems)
           Our Products
         </Text>
         <FlatList
-          data={category}
+          data={filteredCategories}
           numColumns={3}
           showsVerticalScrollIndicator={false}
           keyExtractor={item => item.id}
+      
           renderItem={({item, index}) => {
             return (
               <>
@@ -193,15 +234,15 @@ console.log("fgdfgfd",filteredItems)
                         : {uri: item.type_image_link}
                     }
                     style={{
-                      height: 100,
-                      width: 100,
-                      borderRadius: 200 / 2,
+                      height: 90,
+                      width: 90,
+                      borderRadius: 180 / 2,
                       alignSelf: 'center',
                     }}
                     resizeMode="cover"></Image>
                   <Text
-                    style={[
-                      styles.title,
+                    style={
+                 
                       {
                         fontSize: 12,
                         fontWeight: '500',
@@ -209,16 +250,18 @@ console.log("fgdfgfd",filteredItems)
                         fontFamily: 'Poppins',
                         textAlign: 'center',
                         color: AppColor.BoldText,
-                      },
-                    ]}>
+                      }
+                    }>
                     {item.type_title}
                   </Text>
                 </TouchableOpacity>
               </>
             );
           }}
+          ListEmptyComponent={emptyComponent}
         />
       </View>
+      
     </View>
   );
 };

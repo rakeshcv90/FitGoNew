@@ -46,6 +46,7 @@ import Exercise from '../Screen/NewWorkouts/Exercise/Exercise';
 import Meals from '../Screen/NewHome/Meals';
 import MealDetails from '../Screen/NewHome/MealDetails';
 import ProductsList from '../Screen/NewHome/ProductsList';
+import MeditationDetails from '../Screen/NewHome/MeditationDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -167,10 +168,10 @@ export const LoginStack = () => {
       <Stack.Screen name="WorkoutDays" component={WorkoutDays} />
       <Stack.Screen name="OneDay" component={OneDay} />
       <Stack.Screen name="Exercise" component={Exercise} />
-
       <Stack.Screen name="Meals" component={Meals} />
       <Stack.Screen name="MealDetails" component={MealDetails} />
       <Stack.Screen name="ProductsList" component={ProductsList} />
+      <Stack.Screen name="MeditationDetails" component={MeditationDetails} />
 
    
 

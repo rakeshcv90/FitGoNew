@@ -128,14 +128,13 @@ const Home = ({navigation}) => {
     getUserDataDetails,
     mindsetConsent,
     customWorkoutData,
-    mealData
+    mealData,
   } = useSelector(state => state);
   useEffect(() => {
     if (Platform.OS == 'android') {
       AskHealthPermissionAndroid();
     } else {
       AppleHealthKit.isAvailable((err, available) => {
-   
         const permissions = {
           permissions: {
             read: [
@@ -149,7 +148,6 @@ const Home = ({navigation}) => {
           console.log('error initializing Healthkit: ', err);
         } else if (available == true) {
           AppleHealthKit.initHealthKit(permissions, error => {
-            
             if (error) {
               console.log('[ERROR] Cannot grant permissions!', error);
             }
@@ -171,15 +169,8 @@ const Home = ({navigation}) => {
     inActiveStrokeOpacity: 0.35,
   };
 
-  const data = [
-    {id: '1', title: 'Focus'},
-    {id: '2', title: 'Deep'},
-    {id: '3', title: 'Slee'},
-    {id: '4', title: 'Test'},
-  ];
-  const data1 = [
-    
-  ];
+
+
   const data2 = [
     {label: 'Weekly', value: '1'},
     {label: 'Daily', value: '2'},
@@ -189,9 +180,7 @@ const Home = ({navigation}) => {
     outputRange: ['0%', '100%'],
     extrapolate: 'extend',
   });
-  useEffect(() => {
-    // Meal_List();
-  }, []);
+
   useEffect(() => {
     Animated.timing(progressAnimation, {
       toValue: 1,
@@ -210,44 +199,19 @@ const Home = ({navigation}) => {
     {color1: '#D7FBFF'},
     {color1: '#DFEEFE'},
   ];
-  // const Meal_List = async () => {
-  //   setForLoading(true);
-  //   try {
-  //     const data = await axios(`${NewAppapi.Meal_Categorie}`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       data: {
-  //         token: getUserDataDetails.login_token,
-  //         version: VersionNumber.appVersion,
-  //       },
-  //     });
-  //     if (data.data.categories.length > 0) {
-  //       setForLoading(false);
-
-  //       setMealLIst(data.data.categories);
-  //     } else {
-  //       setForLoading(false);
-  //     }
-  //   } catch (error) {
-  //     setMealLIst([]);
-  //     setForLoading(false);
-  //     console.log('Meal List Error', error);
-  //   }
-  // };
+  
   const ListItem = ({title, color}) => (
     <TouchableOpacity
       onPress={() => {
-        showMessage({
-          message: 'Work in Progress',
-          floating: true,
-          duration: 500,
-          type: 'info',
-          icon: {icon: 'auto', position: 'left'},
-        });
+        navigation.navigate('MeditationDetails',{item:title})
+        // showMessage({
+        //   message: 'Work in Progress',
+        //   floating: true,
+        //   duration: 500,
+        //   type: 'info',
+        //   icon: {icon: 'auto', position: 'left'},
+        // });
       }}>
-
       <LinearGradient
         start={{x: 0, y: 1}}
         end={{x: 1, y: 0}}
@@ -302,12 +266,10 @@ const Home = ({navigation}) => {
     );
   };
   const emptyComponent = () => {
-
     return (
       <View
         style={{
-        
-       flex:1
+          flex: 1,
         }}>
         <AnimatedLottieView
           source={require('../../Icon/Images/NewImage/NoData.json')}
@@ -318,7 +280,6 @@ const Home = ({navigation}) => {
           style={{
             width: DeviceWidth * 0.3,
             height: DeviceHeigth * 0.15,
-          
           }}
         />
       </View>
@@ -455,53 +416,50 @@ const Home = ({navigation}) => {
             </View>
           </View>
         </View>
-  
-        {mindsetConsent == false && (
-          
-          <>
-            <View
+
+        <>
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '95%',
+              alignSelf: 'center',
+              top: DeviceHeigth * 0.03,
+              justifyContent: 'space-between',
+            }}>
+            <Text
               style={{
-                flexDirection: 'row',
-                width: '95%',
-                alignSelf: 'center',
-                top: DeviceHeigth * 0.03,
-                justifyContent: 'space-between',
+                color: AppColor.BoldText,
+                fontFamily: 'Poppins',
+                fontWeight: '700',
+                lineHeight: 24,
+                fontSize: 16,
+                // marginLeft:20,
+                justifyContent: 'flex-start',
               }}>
-              <Text
-                style={{
-                  color: AppColor.BoldText,
-                  fontFamily: 'Poppins',
-                  fontWeight: '700',
-                  lineHeight: 24,
-                  fontSize: 16,
-                  // marginLeft:20,
-                  justifyContent: 'flex-start',
-                }}>
-                Meditation
-              </Text>
-              <TouchableOpacity onPress={() => {}}>
-                <Icons name="chevron-right" size={25} color={'#000'} />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.meditionBox}>
-              <FlatList
-                data={customWorkoutData?.minset_workout}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={item => item.id}
-                ListEmptyComponent={emptyComponent}
-                renderItem={({item, index}) => {
-                  return (
-                    <ListItem
-                      title={item}
-                      color={colors[index % colors.length]}
-                    />
-                  );
-                }}
-              />
-            </View>
-          </>
-        )}
+              Meditation
+            </Text>
+            <TouchableOpacity onPress={() => {     navigation.navigate('MeditationDetails')}}>
+              <Icons name="chevron-right" size={25} color={'#000'} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.meditionBox}>
+            <FlatList
+              data={customWorkoutData?.minset_workout}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={item => item.id}
+              ListEmptyComponent={emptyComponent}
+              renderItem={({item, index}) => {
+                return (
+                  <ListItem
+                    title={item}
+                    color={colors[index % colors.length]}
+                  />
+                );
+              }}
+            />
+          </View>
+        </>
 
         <View
           style={{
@@ -544,7 +502,6 @@ const Home = ({navigation}) => {
               top: DeviceHeigth * 0.08,
             },
           ]}>
-      
           <FlatList
             data={customWorkoutData?.workout}
             horizontal
@@ -553,7 +510,6 @@ const Home = ({navigation}) => {
             ListEmptyComponent={emptyComponent}
             pagingEnabled
             renderItem={({item, index}) => {
-          
               return (
                 <View
                   style={[
@@ -569,7 +525,7 @@ const Home = ({navigation}) => {
                         styles.title,
                         {
                           color: AppColor.BoldText,
-                          width:DeviceHeigth*0.2
+                          width: DeviceHeigth * 0.2,
                         },
                       ]}>
                       {item.workout_title}
@@ -646,7 +602,7 @@ const Home = ({navigation}) => {
               top: DeviceHeigth * 0.01,
               justifyContent: 'center',
             }}>
-            {data.map((value, index) => (
+            {customWorkoutData?.workout.map((value, index) => (
               <View
                 key={index}
                 style={{
@@ -682,7 +638,10 @@ const Home = ({navigation}) => {
             }}>
             Meals
           </Text>
-          <TouchableOpacity onPress={() => {navigation.navigate("Meals")}}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Meals');
+            }}>
             <Icons name="chevron-right" size={25} color={'#000'} />
           </TouchableOpacity>
         </View>
@@ -701,14 +660,13 @@ const Home = ({navigation}) => {
             keyExtractor={item => item.id}
             pagingEnabled
             renderItem={({item, index}) => {
-              console.log("Meal Details ",item)
               return (
                 <>
-                  <TouchableOpacity style={styles.listItem2}
-                    onPress={()=>{
-                      navigation.navigate('MealDetails',{item:item})
-                    }}
-                  >
+                  <TouchableOpacity
+                    style={styles.listItem2}
+                    onPress={() => {
+                      navigation.navigate('MealDetails', {item: item});
+                    }}>
                     <Image
                       source={{uri: item.diet_image_link}}
                       style={[
@@ -945,7 +903,7 @@ var styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: 'white',
     top: DeviceHeigth * 0.05,
-    alignItems:'center'
+    alignItems: 'center',
   },
   meditionText: {
     width: '95%',
@@ -974,7 +932,7 @@ var styles = StyleSheet.create({
   listItem2: {
     marginHorizontal: 10,
     borderRadius: 10,
-    padding:20,
+    padding: 20,
     marginTop: 10,
     justifyContent: 'center',
     alignItems: 'center',

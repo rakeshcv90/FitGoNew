@@ -94,6 +94,7 @@ export const localImage = {
   Noimage: require('../Icon/Images/NewImage/no-pictures.png'),
   BlackCircle: require('../Icon/Images/NewImage/BlackCircle.png'),
   GreyCircle: require('../Icon/Images/NewImage/GreyCircle.png'),
-  Watch: require('../Icon/Images/NewImage/watch.png')
+  Watch: require('../Icon/Images/NewImage/watch.png'),
+   Play2: require('../Icon/Images/NewImage/playButton.png')
 
 };
