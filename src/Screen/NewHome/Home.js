@@ -11,6 +11,7 @@ import {
   Dimensions,
   Platform,
   AppState,
+  Modal,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
@@ -28,6 +29,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Dropdown} from 'react-native-element-dropdown';
 import {LineChart} from 'react-native-chart-kit';
 import AnimatedLottieView from 'lottie-react-native';
+
 import axios from 'axios';
 import {
   Stop,
@@ -38,6 +40,7 @@ import {
 } from 'react-native-svg';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {BlurView} from '@react-native-community/blur';
 import {
   isStepCountingSupported,
   parseStepData,
@@ -45,11 +48,12 @@ import {
   stopStepCounterUpdate,
 } from '@dongminyu/react-native-step-counter';
 import {navigationRef} from '../../../App';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import RoundedCards from '../../Component/RoundedCards';
+import {BackdropBlur, Canvas, Fill} from '@shopify/react-native-skia';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -79,157 +83,6 @@ const GradientText = ({item}) => {
     </View>
   );
 };
-
-// const Home = () => {
-//   // service
-//   useEffect(() => {
-//     new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
-//       //NOT IMPLEMENTED YET
-//       'healthKit:StepCount:new',
-//       async () => {
-//         console.log('--> observer triggered');
-//       },
-//     );
-//   });
-//   const Dispatch = useDispatch();
-//   const {getHealthData} = useSelector(state => state);
-//   const [steps, setSteps] = useState(
-//     getHealthData[0] ? getHealthData[0].Steps : '0',
-//   );
-//   const [Calories, setCalories] = useState(
-//     getHealthData[1] ? getHealthData[1].Calories : '0',
-//   );
-//   const [distance, setDistance] = useState(
-//     getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
-//   );
-//   console.log('healthDataa', getHealthData);
-//   // pedometer
-//   const sleep = time =>
-//     new Promise(resolve => setTimeout(() => resolve(), time)); // background
-//   const veryIntensiveTask = async taskDataArguments => {
-//     const {delay} = taskDataArguments;
-//     const updateStepsAndNotification = async data => {
-//       // Update the steps and related state
-//       setSteps(data.steps);
-//       setDistance(((data.steps / 20) * 0.01).toFixed(2));
-//       setCalories(Math.floor(data.steps / 20));
-//       Dispatch(
-//         setHealthData([
-//           {Steps: data.steps},
-//           {Calories: Math.floor(data.steps / 20)},
-//           {DistanceCovered: ((data.steps / 20) * 0.01).toFixed(2)},
-//         ]),
-//       );
-//       // Update the notification with the current steps
-//       await BackgroundService.updateNotification({
-//         taskIcon: {
-//           name: 'ic_launcher',
-//           type: 'mipmap',
-//         },
-//         color: AppColor.RED,
-//         taskName: 'Pedometer',
-//         taskTitle: 'Steps ' + data.steps,
-//         taskDesc: 'Steps ',
-//         progressBar: {
-//           max: 100,
-//           value: data.steps,
-//           indeterminate: false,
-//         },
-//       });
-//     };
-//     for (let i = 0; BackgroundService.isRunning(); i++) {
-//       startStepCounterUpdate(new Date(), async data => {
-//         await updateStepsAndNotification(data);
-//       });
-
-//       await sleep(delay);
-//     }
-//   };
-//   const options = {
-//     color: AppColor.RED,
-//     taskName: 'Pedometer',
-//       taskTitle: 'Steps ' + steps,
-//       taskDesc: '',
-//       progressBar: {
-//         max: 100,
-//         value: steps,
-//         indeterminate: false,
-//       },
-//     taskIcon: {
-//       name: 'ic_launcher',
-//       type: 'mipmap',
-//     },
-//     linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
-//     parameters: {
-//       delay: 3000,
-//     },
-//   };
-//   useEffect(() => {
-//     PermissionAndroid();
-//   },[]);
-//   async function startStepCounter() {
-//     startStepCounterUpdate(new Date(), data => {
-//       setSteps(data.steps);
-//       setDistance(((data.steps / 20) * 0.01).toFixed(2));
-//       setCalories(Math.floor(data.steps / 20));
-//       Dispatch(
-//         setHealthData([
-//           {Steps: data.steps},
-//           {Calories: Math.floor(data.steps / 20)},
-//           {DistanceCovered: ((data.steps / 20) * 0.01).toFixed(2)},
-//         ]),
-//       );
-//     });
-//     await BackgroundService.start(veryIntensiveTask, options);
-//     await BackgroundService.updateNotification({
-//       color: AppColor.RED,
-//       taskName: 'Pedometer',
-//       taskTitle: 'Steps ' + steps,
-//       taskDesc: 'Steps ',
-//       taskIcon: {
-//         name: 'ic_launcher',
-//         type: 'mipmap',
-//       },
-//       progressBar: {
-//         max: 100,
-//         value: steps,
-//         indeterminate: false,
-//       },
-//     });
-//   }
-//   const PermissionAndroid = async () => {
-//     if (Platform.OS == 'android') {
-//       const result = await isStepCountingSupported();
-//       console.debug('🚀 - isStepCountingSupported', result);
-//       const permissionStatus = await check(
-//         PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
-//       );
-//       if (permissionStatus === RESULTS.DENIED && result.supported == true) {
-//         const permissionRequestResult = await request(
-//           PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
-//         );
-//         if (
-//           permissionRequestResult === RESULTS.GRANTED &&
-//           result.supported == true
-//         ) {
-//           console.log('ACTIVITY_RECOGNITION permission granted');
-//           console.log('Resulllttt', RESULTS.GRANTED);
-//           startStepCounter();
-//         } else {
-//           console.log('ACTIVITY_RECOGNITION permission denied');
-//           // Handle the case where the permission request is denied
-//           await request(PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION);
-//         }
-//       } else {
-//         console.log('ACTIVITY_RECOGNITION permission already granted');
-//         startStepCounter();
-//         // Permission was already granted previously
-//       }
-//     } else {
-//       AppleHealthKit.isAvailable((err, available) => {
-//         console.log('Avialable=========>', available);
-
-
 const ProgressBar = ({progress, image, text}) => {
   return (
     <View
@@ -272,7 +125,6 @@ const ProgressBar = ({progress, image, text}) => {
     </View>
   );
 };
-
 const Home = ({navigation}) => {
   const [progress, setProgress] = useState(10);
 
@@ -281,6 +133,7 @@ const Home = ({navigation}) => {
   const [currentindex, setCurrentIndex] = useState(1);
   const progressAnimation = useRef(new Animated.Value(0)).current;
   const {
+    getHealthData,
     getLaterButtonData,
     completeProfileData,
     getUserID,
@@ -290,11 +143,39 @@ const Home = ({navigation}) => {
     mealData,
   } = useSelector(state => state);
   useEffect(() => {
+    ActivityPermission();
+  }, []);
+  const ActivityPermission = async () => {
     if (Platform.OS == 'android') {
-      AskHealthPermissionAndroid();
+      const result = await isStepCountingSupported();
+      console.debug('🚀 - isStepCountingSupported', result);
+      const permissionStatus = await check(
+        PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
+      );
+      if (permissionStatus === RESULTS.DENIED && result.supported == true) {
+        const permissionRequestResult = await request(
+          PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
+        );
+        if (
+          permissionRequestResult === RESULTS.GRANTED &&
+          result.supported == true
+        ) {
+          console.log('ACTIVITY_RECOGNITION permission granted');
+          console.log('Resulllttt', RESULTS.GRANTED);
+          startStepCounter();
+        } else {
+          console.log('ACTIVITY_RECOGNITION permission denied');
+          // Handle the case where the permission request is denied
+          await request(PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION);
+        }
+      } else {
+        console.log('ACTIVITY_RECOGNITION permission already granted');
+        startStepCounter();
+        // Permission was already granted previously
+      }
     } else {
       AppleHealthKit.isAvailable((err, available) => {
-
+        console.log('Avialable=========>', available);
         const permissions = {
           permissions: {
             read: [AppleHealthKit.Constants.Permissions.Steps],
@@ -306,7 +187,6 @@ const Home = ({navigation}) => {
           AppleHealthKit.initHealthKit(permissions, error => {
             if (error) {
               console.log('[ERROR] Cannot grant permissions!', error);
-
             } else {
               const options = {
                 startDate: new Date(
@@ -319,18 +199,15 @@ const Home = ({navigation}) => {
                 ),
                 endDate: new Date(),
               };
-
               AppleHealthKit.getStepCount(options, (callbackError, results) => {
                 if (callbackError) {
                   console.log('Error while getting the data');
                 }
-                // setSteps(results.value);
-                // setDistance(((results.value / 20) * 0.0142).toFixed(2));
-                // setCalories(((results.value / 20) * 0.7566).toFixed(1));
-             
+                setSteps(results.value);
+                setDistance(((results.value / 20) * 0.0142).toFixed(2));
+                setCalories(((results.value / 20) * 0.7566).toFixed(1));
+                console.log('ios stespssss', results);
               });
-
-
             }
           });
         } else {
@@ -341,14 +218,184 @@ const Home = ({navigation}) => {
           );
         }
       });
-    }})
+    }
+  };
+  // service
+  // useEffect(() => {
+  //   new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
+  //     //NOT IMPLEMENTED YET
+  //     'healthKit:StepCount:new',
+  //     async () => {
+  //       console.log('--> observer triggered');
+  //     },
+  //   );
+  // });
+  const Dispatch = useDispatch();
+  const [steps, setSteps] = useState(
+    getHealthData[0] ? getHealthData[0].Steps : '0',
+  );
+  const [Calories, setCalories] = useState(
+    getHealthData[1] ? getHealthData[1].Calories : '0',
+  );
+  const [distance, setDistance] = useState(
+    getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
+  );
+  // pedometers
+  const sleep = time =>
+    new Promise(resolve => setTimeout(() => resolve(), time)); // background
+  const veryIntensiveTask = async taskDataArguments => {
+    const {delay} = taskDataArguments;
 
+    const updateStepsAndNotification = async data => {
+      // Update the steps and related state
+      setSteps(data.steps);
+      setDistance(((data.steps / 20) * 0.01).toFixed(2));
+      setCalories(Math.floor(data.steps / 20));
+      Dispatch(
+        setHealthData([
+          {Steps: data.steps},
+          {Calories: Math.floor(data.steps / 20)},
+          {DistanceCovered: ((data.steps / 20) * 0.01).toFixed(2)},
+        ]),
+      );
+      // Update the notification with the current steps
+      await BackgroundService.updateNotification({
+        taskIcon: {
+          name: 'ic_launcher',
+          type: 'mipmap',
+        },
+        color: AppColor.RED,
+        taskName: 'Pedometer',
+        taskTitle: 'Steps ' + data.steps,
+        taskDesc: 'Steps ',
+        progressBar: {
+          max: 100,
+          value: data.steps,
+          indeterminate: false,
+        },
+        parameters: {
+          delay: 5000,
+        },
+      });
+    };
+    // function for checking if it is midnight or not
+    const isMidnight = date => {
+      return (
+        date.getHours() === 0 &&
+        date.getMinutes() === 0 &&
+        date.getSeconds() === 0
+      );
+    };
+    const resetSteps = () => {
+      // Your logic to reset steps and related state
+      setSteps(0);
+      setDistance(0);
+      setCalories(0);
+      Dispatch(
+        setHealthData([
+          {Steps: '0'},
+          {Calories: '0'},
+          {DistanceCovered: '0.00'},
+        ]),
+      );
+      // Update the notification after resetting steps
+      BackgroundService.updateNotification({
+        // Your notification update logic after steps reset
+        taskIcon: {
+          name: 'ic_launcher',
+          type: 'mipmap',
+        },
+        color: AppColor.RED,
+        taskName: 'Pedometer',
+        taskTitle: 'Steps ' + steps,
+        taskDesc: 'Steps ',
+        progressBar: {
+          max: 100,
+          value: steps,
+          indeterminate: false,
+        },
+      });
+    };
+    for (let i = 0; BackgroundService.isRunning(); i++) {
+      startStepCounterUpdate(new Date(), async data => {
+        await updateStepsAndNotification(data);
+      });
+      // reset the steps at midnight
+      const now = new Date();
+      // console.log('Midnight==============>', isMidnight(now));
+      if (isMidnight(now)) {
+        resetSteps();
+      }
+
+      await sleep(delay);
+    }
+  };
+  const options = {
+    color: AppColor.RED,
+    taskName: 'Pedometer',
+    taskTitle: 'Steps ' + steps,
+    taskDesc: '',
+    progressBar: {
+      max: 100,
+      value: steps,
+      indeterminate: false,
+    },
+    taskIcon: {
+      name: 'ic_launcher',
+      type: 'mipmap',
+    },
+    linkingURI: '@string/fb_login_protocol_scheme', // See Deep Linking for more info
+    parameters: {
+      delay: 5000,
+    },
+  };
+  async function startStepCounter() {
+    startStepCounterUpdate(new Date(), data => {
+      setSteps(data.steps);
+      setDistance(((data.steps / 20) * 0.01).toFixed(2));
+      setCalories(Math.floor(data.steps / 20));
+      Dispatch(
+        setHealthData([
+          {Steps: data.steps},
+          {Calories: Math.floor(data.steps / 20)},
+          {DistanceCovered: ((data.steps / 20) * 0.01).toFixed(2)},
+        ]),
+      );
+    });
+    await BackgroundService.start(veryIntensiveTask, options);
+    await BackgroundService.updateNotification(options);
+  }
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleLongPress = () => {
+    setModalVisible(true); // Show the modal when long-press is detected
+  };
+
+  const closeModal = () => {
+    setModalVisible(false); // Close the modal
+  };
+  const UpdateGoalModal = () => {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={closeModal}>
+        <BlurView
+          style={styles.modalContainer}
+          blurType="light"
+          blurAmount={1}
+          reducedTransparencyFallbackColor="white"
+        />
+        <View style={styles.modalContent}></View>
+      </Modal>
+    );
+  };
   const props = {
     activeStrokeWidth: 25,
     inActiveStrokeWidth: 25,
     inActiveStrokeOpacity: 0.35,
   };
-
   const data2 = [
     {label: 'Weekly', value: '1'},
     {label: 'Daily', value: '2'},
@@ -385,11 +432,11 @@ const Home = ({navigation}) => {
     {color1: '#D7FBFF'},
     {color1: '#DFEEFE'},
   ];
-  
+
   const ListItem = ({title, color}) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('MeditationDetails',{item:title})
+        navigation.navigate('MeditationDetails', {item: title});
         // showMessage({
         //   message: 'Work in Progress',
         //   floating: true,
@@ -503,13 +550,12 @@ const Home = ({navigation}) => {
         item={getTimeOfDayMessage() + ', ' + getUserDataDetails.name}
       />
       {forLoading ? <ActivityLoader /> : ''}
-
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled">
-        <View style={styles.CardBox}>
+        <TouchableOpacity style={styles.CardBox} onLongPress={handleLongPress}>
           <Text style={styles.healthText}>Health Overview</Text>
           <View style={styles.healthView}>
             <View style={styles.stepView}>
@@ -527,7 +573,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#5FB67B'}]}>
-            900
+                  {steps}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     /5000 steps
                   </Text>
@@ -546,7 +592,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#FCBB1D'}]}>
-                333
+                  {distance}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     {'/goal km '}
                   </Text>
@@ -570,7 +616,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#D01818'}]}>
-              44
+                  {Calories}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     /goal KCal
                   </Text>
@@ -601,7 +647,7 @@ const Home = ({navigation}) => {
               </CircularProgressBase>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
 
         <>
           <View
@@ -624,7 +670,10 @@ const Home = ({navigation}) => {
               }}>
               Meditation
             </Text>
-            <TouchableOpacity onPress={() => {     navigation.navigate('MeditationDetails')}}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('MeditationDetails');
+              }}>
               <Icons name="chevron-right" size={25} color={'#000'} />
             </TouchableOpacity>
           </View>
@@ -710,16 +759,14 @@ const Home = ({navigation}) => {
                       style={[
                         styles.title,
                         {
-
-//                           height: 100,
-//                           width: 100,
+                          //                           height: 100,
+                          //                           width: 100,
 
                           alignSelf: 'center',
                           zIndex: 1,
 
                           color: AppColor.BoldText,
                           width: DeviceHeigth * 0.2,
-
                         },
                       ]}>
                       {item.workout_title}
@@ -796,7 +843,7 @@ const Home = ({navigation}) => {
               top: DeviceHeigth * 0.01,
               justifyContent: 'center',
             }}>
-            {customWorkoutData?.workout.map((value, index) => (
+            {customWorkoutData?.map((value, index) => (
               <View
                 key={index}
                 style={{
@@ -981,9 +1028,10 @@ const Home = ({navigation}) => {
           />
         </View>
       </ScrollView>
+      {modalVisible ? <UpdateGoalModal /> : null}
     </SafeAreaView>
   );
-          }
+};
 var styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -1184,6 +1232,34 @@ var styles = StyleSheet.create({
   },
   selectedTextStyle: {
     fontSize: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // Semi-transparent background
+  },
+  modalContent: {
+    padding: 20,
+    borderRadius: 8,
+
+    width: DeviceWidth * 0.95,
+    height: DeviceHeigth*0.3,
+    backgroundColor: '#ffffff',
+    position: 'absolute',
+    top: DeviceHeigth / 6,
+    marginHorizontal:10 ,
+    ...Platform.select({
+      ios:{
+        shadowColor:'#000000',
+        shadowOpacity:0.2,
+        shadowOffset:{height:5,width:0},
+       
+      },
+      android:{
+        elevation:5
+      }
+    })
   },
 });
 export default Home;
