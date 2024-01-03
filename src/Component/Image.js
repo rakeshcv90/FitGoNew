@@ -95,6 +95,7 @@ export const localImage = {
   BlackCircle: require('../Icon/Images/NewImage/BlackCircle.png'),
   GreyCircle: require('../Icon/Images/NewImage/GreyCircle.png'),
   Watch: require('../Icon/Images/NewImage/watch.png'),
-   Play2: require('../Icon/Images/NewImage/playButton.png')
-
+   Play2: require('../Icon/Images/NewImage/playButton.png'),
+  Target:require('../Icon/Images/NewImage/Target.png'),
+  Location:require('../Icon/Images/NewImage/Location.png'),
 };

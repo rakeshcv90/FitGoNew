@@ -29,7 +29,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Dropdown} from 'react-native-element-dropdown';
 import {LineChart} from 'react-native-chart-kit';
 import AnimatedLottieView from 'lottie-react-native';
-
+import {Slider} from '@miblanchard/react-native-slider';
 import axios from 'axios';
 import {
   Stop,
@@ -54,6 +54,7 @@ import {showMessage} from 'react-native-flash-message';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import RoundedCards from '../../Component/RoundedCards';
 import {BackdropBlur, Canvas, Fill} from '@shopify/react-native-skia';
+import {color} from 'd3';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -375,6 +376,67 @@ const Home = ({navigation}) => {
     setModalVisible(false); // Close the modal
   };
   const UpdateGoalModal = () => {
+    const [Steps_Goal, setSteps_Goal] = useState(0);
+    const [Calories_Goal, setCalories_Goal] = useState(0);
+    const [Distance_Goal, setDistance_Goal] = useState(0);
+    const ThumbImage1 = () => {
+      return (
+        <View
+          style={{
+            width: 35,
+            height: 35,
+            backgroundColor: AppColor.WHITE,
+            borderRadius: 35 / 2,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image
+            source={localImage.Step3}
+            style={{width: 20, height: 20}}
+            resizeMode="contain"
+            tintColor={'#5FB67B'}
+          />
+        </View>
+      );
+    };
+    const ThumbImage2 = () => {
+      return (
+        <View
+          style={{
+            width: 35,
+            height: 35,
+            backgroundColor: AppColor.WHITE,
+            borderRadius: 35 / 2,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image
+            source={localImage.Step2}
+            style={{width: 20, height: 20}}
+            resizeMode="contain"
+          />
+        </View>
+      );
+    };
+    const ThumbImage3 = () => {
+      return (
+        <View
+          style={{
+            width: 35,
+            height: 35,
+            backgroundColor: AppColor.WHITE,
+            borderRadius: 35 / 2,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image
+            source={localImage.Step1}
+            style={{width: 20, height: 20}}
+            resizeMode="contain"
+          />
+        </View>
+      );
+    };
     return (
       <Modal
         animationType="slide"
@@ -387,7 +449,153 @@ const Home = ({navigation}) => {
           blurAmount={1}
           reducedTransparencyFallbackColor="white"
         />
-        <View style={styles.modalContent}></View>
+        <View
+          style={[styles.modalContent, {backgroundColor: AppColor.BACKGROUNG}]}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Image
+              source={localImage.Target}
+              style={{width: DeviceWidth * 0.07, height: DeviceHeigth * 0.03}}
+              resizeMode="contain"
+            />
+            <Text
+              style={[styles.title, {color: AppColor.BLACK, marginLeft: 10}]}>
+              Set Goals
+            </Text>
+          </View>
+              
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 15,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                source={localImage.Step3}
+                style={{width: 30, height: 30}}
+                tintColor={'#5FB67B'}
+              />
+              <Text style={styles.txt5}>Steps</Text>
+            </View>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text
+                style={[
+                  {
+                    color: AppColor.BoldText,
+                    marginLeft: 10,
+                    fontFamily: 'Poppins-SemiBold',
+                  },
+                ]}>
+                {Steps_Goal + ' Steps'}
+              </Text>
+              <TouchableOpacity
+                style={styles.dropButton}
+                onPress={() => navigation.goBack()}>
+                <Icons name="chevron-down" size={25} color={'#000'} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{marginTop: 5}}>
+            <Slider
+              value={Distance_Goal}
+              maximumValue={10000}
+              step={1}
+              onValueChange={value => setSteps_Goal(value)}
+              minimumTrackTintColor="#5FB67B"
+              renderThumbComponent={ThumbImage1}
+              trackStyle={{height: 10, borderRadius: 20}}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 15,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                source={localImage.Step2}
+                style={{width: 30, height:28}}
+                resizeMode='contain'
+              />
+              <Text style={styles.txt5}>Distance</Text>
+            </View>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text
+                style={[
+                  {
+                    color: AppColor.BoldText,
+                    marginLeft: 10,
+                    fontFamily: 'Poppins-SemiBold',
+                  },
+                ]}>
+                {Distance_Goal + ' km'}
+              </Text>
+              <TouchableOpacity
+                style={styles.dropButton}
+                onPress={() => navigation.goBack()}>
+                <Icons name="chevron-down" size={25} color={'#000'} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{marginTop: 5}}>
+            <Slider
+              value={Steps_Goal}
+              maximumValue={10000}
+              step={1}
+              onValueChange={value => setSteps_Goal(value)}
+              minimumTrackTintColor="#5FB67B"
+              renderThumbComponent={ThumbImage2}
+              trackStyle={{height: 10, borderRadius: 20}}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 15,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                source={localImage.Step1}
+                style={{width: 30, height: 25}}
+                resizeMode='contain'
+              />
+              <Text style={styles.txt5}>Calories</Text>
+            </View>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text
+                style={[
+                  {
+                    color: AppColor.BoldText,
+                    marginLeft: 10,
+                    fontFamily: 'Poppins-SemiBold',
+                  },
+                ]}>
+                {Calories_Goal+ ' KCal'}
+              </Text>
+              <TouchableOpacity
+                style={styles.dropButton}
+                onPress={() => navigation.goBack()}>
+                <Icons name="chevron-down" size={25} color={'#000'} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{marginTop: 5}}>
+            <Slider
+              value={Steps_Goal}
+              maximumValue={10000}
+              step={1}
+              onValueChange={value => setSteps_Goal(value)}
+              minimumTrackTintColor="#5FB67B"
+              renderThumbComponent={ThumbImage3}
+              trackStyle={{height: 10, borderRadius: 20}}
+            />
+          </View>
+        </View>
       </Modal>
     );
   };
@@ -886,7 +1094,6 @@ const Home = ({navigation}) => {
             <Icons name="chevron-right" size={25} color={'#000'} />
           </TouchableOpacity>
         </View>
-
         <View
           style={[
             styles.meditionBox,
@@ -1242,24 +1449,46 @@ var styles = StyleSheet.create({
   modalContent: {
     padding: 20,
     borderRadius: 8,
-
     width: DeviceWidth * 0.95,
-    height: DeviceHeigth*0.3,
-    backgroundColor: '#ffffff',
     position: 'absolute',
     top: DeviceHeigth / 6,
-    marginHorizontal:10 ,
+    marginHorizontal: 10,
     ...Platform.select({
-      ios:{
-        shadowColor:'#000000',
-        shadowOpacity:0.2,
-        shadowOffset:{height:5,width:0},
-       
+      ios: {
+        shadowColor: '#000000',
+        shadowOpacity: 0.2,
+        shadowOffset: {height: 5, width: 0},
       },
-      android:{
-        elevation:5
-      }
-    })
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  txt5: {
+    color: AppColor.BLACK,
+    marginLeft: 10,
+    fontFamily: 'Poppins-Regular',
+    fontWeight: '500',
+  },
+  dropButton: {
+    backgroundColor: AppColor.WHITE,
+    width: 25,
+    height: 25,
+    borderRadius: 25 / 2,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOpacity: 0.3,
+        shadowOffset: {height: 5, width: 0},
+        shadowRadius: 20,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
   },
 });
 export default Home;
