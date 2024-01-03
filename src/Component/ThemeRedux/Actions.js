@@ -85,7 +85,8 @@ export const SetmindsetConsent=data=>{
 export const setHealthData=(data)=>{
   return{
     type:types.HealthData,
-
+    payload:data
+  }}
 export const Setmealdata=data=>{
   return{
     type:types.ALL_MEAL_DATA,

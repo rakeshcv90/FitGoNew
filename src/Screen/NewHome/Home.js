@@ -18,18 +18,12 @@ import {AppColor} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
-
 import VersionNumber from 'react-native-version-number';
-
-import {useSelector, useDispatch} from 'react-redux';
 import {setHealthData} from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
 import BackgroundService from 'react-native-background-actions';
-
 import AskHealthPermissionAndroid from '../../Component/AndroidHealthPermission';
-import AppleHealthKit from 'react-native-health';
-
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Dropdown} from 'react-native-element-dropdown';
 import {LineChart} from 'react-native-chart-kit';
@@ -43,7 +37,6 @@ import {
   LinearGradient as SvgGrad,
 } from 'react-native-svg';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
-
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {
   isStepCountingSupported,
@@ -331,10 +324,10 @@ const Home = ({navigation}) => {
                 if (callbackError) {
                   console.log('Error while getting the data');
                 }
-                setSteps(results.value);
-                setDistance(((results.value / 20) * 0.0142).toFixed(2));
-                setCalories(((results.value / 20) * 0.7566).toFixed(1));
-                console.log('ios stespssss', results);
+                // setSteps(results.value);
+                // setDistance(((results.value / 20) * 0.0142).toFixed(2));
+                // setCalories(((results.value / 20) * 0.7566).toFixed(1));
+             
               });
 
 
@@ -348,22 +341,13 @@ const Home = ({navigation}) => {
           );
         }
       });
-    }
-
-  };
-
-  const [currentindex, setCurrentIndex] = useState(1);
-
-  });
-
+    }})
 
   const props = {
     activeStrokeWidth: 25,
     inActiveStrokeWidth: 25,
     inActiveStrokeOpacity: 0.35,
   };
-
-
 
   const data2 = [
     {label: 'Weekly', value: '1'},
@@ -374,7 +358,6 @@ const Home = ({navigation}) => {
     outputRange: ['0%', '100%'],
     extrapolate: 'extend',
   });
-
 
   Platform.OS == 'android'
     ? console.log('Android Version', VersionNumber.appVersion)
@@ -544,7 +527,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#5FB67B'}]}>
-                  {steps}
+            900
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     /5000 steps
                   </Text>
@@ -563,7 +546,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#FCBB1D'}]}>
-                  {distance}
+                333
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     {'/goal km '}
                   </Text>
@@ -587,7 +570,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#D01818'}]}>
-                  {Calories}
+              44
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     /goal KCal
                   </Text>
@@ -1000,7 +983,7 @@ const Home = ({navigation}) => {
       </ScrollView>
     </SafeAreaView>
   );
-};
+          }
 var styles = StyleSheet.create({
   container: {
     flex: 1,
