@@ -379,6 +379,18 @@ const Home = ({navigation}) => {
     const [Steps_Goal, setSteps_Goal] = useState(0);
     const [Calories_Goal, setCalories_Goal] = useState(0);
     const [Distance_Goal, setDistance_Goal] = useState(0);
+    const [Step_Visible, setSteps_Visible] = useState(false);
+    const [Distance_Visible, setDistance_Visible] = useState(false);
+    const [Calories_Visible, setCalories_Visible] = useState(false);
+    const ToggleVisiblity = num => {
+      if (num == 1) {
+        setSteps_Visible(!Step_Visible);
+      } else if (num == 2) {
+        setDistance_Visible(!Distance_Visible);
+      } else {
+        setCalories_Visible(!Calories_Visible);
+      }
+    };
     const ThumbImage1 = () => {
       return (
         <View
@@ -462,7 +474,7 @@ const Home = ({navigation}) => {
               Set Goals
             </Text>
           </View>
-              
+
           <View
             style={{
               flexDirection: 'row',
@@ -491,22 +503,28 @@ const Home = ({navigation}) => {
               </Text>
               <TouchableOpacity
                 style={styles.dropButton}
-                onPress={() => navigation.goBack()}>
-                <Icons name="chevron-down" size={25} color={'#000'} />
+                onPress={() => ToggleVisiblity(1)}>
+                <Icons
+                  name={Step_Visible ? 'chevron-down' : 'chevron-up'}
+                  size={25}
+                  color={'#000'}
+                />
               </TouchableOpacity>
             </View>
           </View>
           <View style={{marginTop: 5}}>
-            <Slider
-              value={Steps_Goal}
-              maximumValue={10000}
-              minimumValue={0}
-              step={1}
-              onValueChange={value => setSteps_Goal(value)}
-              minimumTrackTintColor="#5FB67B"
-              renderThumbComponent={ThumbImage1}
-              trackStyle={{height: 10, borderRadius: 20}}
-            />
+            {Step_Visible ? (
+              <Slider
+                value={Steps_Goal}
+                maximumValue={10000}
+                minimumValue={500}
+                step={1}
+                onValueChange={value => setSteps_Goal(value)}
+                minimumTrackTintColor="#5FB67B"
+                renderThumbComponent={ThumbImage1}
+                trackStyle={{height: 10, borderRadius: 20}}
+              />
+            ) : null}
           </View>
           <View
             style={{
@@ -518,8 +536,8 @@ const Home = ({navigation}) => {
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Image
                 source={localImage.Step2}
-                style={{width: 30, height:28}}
-                resizeMode='contain'
+                style={{width: 30, height: 28}}
+                resizeMode="contain"
               />
               <Text style={styles.txt5}>Distance</Text>
             </View>
@@ -536,21 +554,27 @@ const Home = ({navigation}) => {
               </Text>
               <TouchableOpacity
                 style={styles.dropButton}
-                onPress={() => navigation.goBack()}>
-                <Icons name="chevron-down" size={25} color={'#000'} />
+                onPress={() => ToggleVisiblity(2)}>
+                <Icons
+                  name={Distance_Visible ? 'chevron-down' : 'chevron-up'}
+                  size={25}
+                  color={'#000'}
+                />
               </TouchableOpacity>
             </View>
           </View>
           <View style={{marginTop: 5}}>
-            <Slider
-              value={Distance_Goal}
-              maximumValue={10000}
-              step={1}
-              onValueChange={value => setDistance_Goal(value)}
-              minimumTrackTintColor="#FCBB1D"
-              renderThumbComponent={ThumbImage2}
-              trackStyle={{height: 10, borderRadius: 20}}
-            />
+            {Distance_Visible ? (
+              <Slider
+                value={Distance_Goal}
+                maximumValue={10000}
+                step={1}
+                onValueChange={value => setDistance_Goal(value)}
+                minimumTrackTintColor="#FCBB1D"
+                renderThumbComponent={ThumbImage2}
+                trackStyle={{height: 10, borderRadius: 20}}
+              />
+            ) : null}
           </View>
           <View
             style={{
@@ -563,7 +587,7 @@ const Home = ({navigation}) => {
               <Image
                 source={localImage.Step1}
                 style={{width: 30, height: 25}}
-                resizeMode='contain'
+                resizeMode="contain"
               />
               <Text style={styles.txt5}>Calories</Text>
             </View>
@@ -576,26 +600,45 @@ const Home = ({navigation}) => {
                     fontFamily: 'Poppins-SemiBold',
                   },
                 ]}>
-                {Calories_Goal+ ' KCal'}
+                {Calories_Goal + ' KCal'}
               </Text>
               <TouchableOpacity
                 style={styles.dropButton}
-                onPress={() => navigation.goBack()}>
-                <Icons name="chevron-down" size={25} color={'#000'} />
+                onPress={() => ToggleVisiblity(3)}>
+                <Icons
+                  name={Calories_Visible ? 'chevron-down' : 'chevron-up'}
+                  size={25}
+                  color={'#000'}
+                />
               </TouchableOpacity>
             </View>
           </View>
           <View style={{marginTop: 5}}>
-            <Slider
-              value={Calories_Goal}
-              maximumValue={10000}
-              step={1}
-              onValueChange={value => setCalories_Goal(value)}
-              minimumTrackTintColor={AppColor.RED}
-              renderThumbComponent={ThumbImage3}
-              trackStyle={{height: 10, borderRadius: 20}}
-            />
+            {Calories_Visible ? (
+              <Slider
+                value={Calories_Goal}
+                maximumValue={10000}
+                step={1}
+                onValueChange={value => setCalories_Goal(value)}
+                minimumTrackTintColor={AppColor.RED}
+                renderThumbComponent={ThumbImage3}
+                trackStyle={{height: 10, borderRadius: 20}}
+              />
+            ) : null}
           </View>
+          <TouchableOpacity style={styles.Modal_Save_btton} activeOpacity={0.5} onPress={()=>{closeModal()}}>
+            <LinearGradient
+              colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
+              start={{x: 0, y: 1}}
+              end={{x: 1, y: 0}}
+              style={{
+                width: DeviceWidth * 0.3,
+                height: DeviceHeigth * 0.04,
+                borderRadius: 12,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}><Text style={[styles.title,{color:AppColor.WHITE}]}>Save</Text></LinearGradient>
+          </TouchableOpacity>
         </View>
       </Modal>
     );
@@ -1490,6 +1533,13 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 8,
+  },
+  Modal_Save_btton: {
+    width: DeviceWidth * 0.3,
+    height: DeviceHeigth * 0.04,
+    borderRadius: 12,
+    alignSelf: 'center',
+    marginTop: 8,
   },
 });
 export default Home;
