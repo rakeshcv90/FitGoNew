@@ -176,7 +176,6 @@ const Home = ({navigation}) => {
       }
     } else {
       AppleHealthKit.isAvailable((err, available) => {
-        console.log('Avialable=========>', available);
         const permissions = {
           permissions: {
             read: [AppleHealthKit.Constants.Permissions.Steps],
@@ -658,14 +657,6 @@ const Home = ({navigation}) => {
     extrapolate: 'extend',
   });
 
-  Platform.OS == 'android'
-    ? console.log('Android Version', VersionNumber.appVersion)
-    : console.log(
-        'IOS Version',
-        VersionNumber.appVersion,
-        VersionNumber.bundleIdentifier,
-      );
-
   useEffect(() => {
     Animated.timing(progressAnimation, {
       toValue: 1,
@@ -678,6 +669,7 @@ const Home = ({navigation}) => {
     {color1: '#E2EFFF', color2: '#9CC2F5', color3: '#425B7B'},
     {color1: '#BFF0F5', color2: '#8DD9EA', color3: '#1F6979'},
     {color1: '#FAE3FF', color2: '#C97FCD', color3: '#7C3D80'},
+    {color1: '#FFEBE2', color2: '#DCAF9E', color3: '#1E1E1E'},
   ];
   const colors1 = [
     {color1: '#E7D9FB'},
@@ -924,7 +916,9 @@ const Home = ({navigation}) => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('MeditationDetails');
+                navigation.navigate('MeditationDetails', {
+                  item: customWorkoutData?.minset_workout[0],
+                });
               }}>
               <Icons name="chevron-right" size={25} color={'#000'} />
             </TouchableOpacity>
@@ -1013,6 +1007,8 @@ const Home = ({navigation}) => {
                         {
                           //                           height: 100,
                           //                           width: 100,
+                          //                           height: 100,
+                          //                           width: 100,
 
                           alignSelf: 'center',
                           zIndex: 1,
@@ -1095,7 +1091,7 @@ const Home = ({navigation}) => {
               top: DeviceHeigth * 0.01,
               justifyContent: 'center',
             }}>
-            {customWorkoutData?.map((value, index) => (
+            {/* {customWorkoutData?.workout.map((value, index) => (
               <View
                 key={index}
                 style={{
@@ -1106,7 +1102,7 @@ const Home = ({navigation}) => {
                   borderRadius: 20,
                   backgroundColor: AppColor.GRAY2,
                 }}></View>
-            ))}
+            ))} */}
           </View>
         </View>
 

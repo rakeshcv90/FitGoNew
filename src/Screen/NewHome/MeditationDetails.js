@@ -1,5 +1,5 @@
 import {View, Text, Image, TouchableOpacity} from 'react-native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {StatusBar} from 'react-native';
 import {StyleSheet} from 'react-native';
@@ -31,7 +31,6 @@ const MeditationDetails = ({navigation, route}) => {
   useFocusEffect(
     React.useCallback(() => {
       if (route?.params?.item) {
-     
         getCaterogy(
           route?.params?.item.id,
           route?.params?.item.workout_mindset_level,
@@ -39,7 +38,7 @@ const MeditationDetails = ({navigation, route}) => {
       }
     }, []),
   );
-  const getCaterogy = async(id, level) => {
+  const getCaterogy = async (id, level) => {
     setForLoading(true);
     try {
       const data = await axios(`${NewAppapi.Get_Mindset_Excise}`, {
@@ -48,38 +47,29 @@ const MeditationDetails = ({navigation, route}) => {
           'Content-Type': 'multipart/form-data',
         },
         data: {
-            workout_mindset_id: id,
-            health_level:level
+          workout_mindset_id: id,
+          health_level: level,
         },
       });
       setForLoading(false);
-      console.log("Mindf Set ",data.data)
-    //   if (data.data.status == 'data found') {
-    //     setForLoading(false);
-    //     setproductList(data.data.data);
-    //     setFilteredCategories(data.data.data)
-    //   } else {
-    //     setproductList([]);
-     
-    //   }
+      console.log('Mindf Set ', data.data.data);
+      if (data.data.status == 'data found') {
+        setForLoading(false);
+        setmindsetExercise(data.data.data);
+      } else {
+        setmindsetExercise([]);
+      }
     } catch (error) {
       setForLoading(false);
-   
-      console.log('Product List Error', error);
+      setmindsetExercise([]);
+      console.log('MindSet  List Error', error);
     }
-
   };
   const ListItem = ({title, color}) => (
+
     <TouchableOpacity
       onPress={() => {
-        // navigation.navigate('MeditationDetails',{item:title})
-        showMessage({
-          message: 'Work in Progress',
-          floating: true,
-          duration: 500,
-          type: 'info',
-          icon: {icon: 'auto', position: 'left'},
-        });
+        getCaterogy(title.id, title.workout_mindset_level);
       }}>
       <LinearGradient
         start={{x: 0, y: 1}}
@@ -200,7 +190,7 @@ const MeditationDetails = ({navigation, route}) => {
         </View>
         <View style={styles.meditionBox}>
           <FlatList
-            data={customWorkoutData?.minset_workout}
+            data={mindsetExercise}
             showsVerticalScrollIndicator={false}
             keyExtractor={item => item.id}
             // ListEmptyComponent={emptyComponent}
@@ -230,12 +220,12 @@ const MeditationDetails = ({navigation, route}) => {
                       <View
                         style={{
                           width: '65%',
-                          height: 65,
+                          height: 150,
                           paddingLeft: 5,
                         }}>
                         <View
                           style={{
-                            top: -DeviceHeigth * 0.009,
+                            marginVertical: -DeviceHeigth * 0.002,
                           }}>
                           <Text
                             style={{
@@ -245,39 +235,32 @@ const MeditationDetails = ({navigation, route}) => {
                               lineHeight: 21,
                               fontSize: 14,
                             }}>
-                            How to Control Intrusive Thoughts
+                            {item.exercise_mindset_title}
                           </Text>
                           <Text
                             numberOfLines={3}
                             style={{
-                              color: '#191919',
+                              color: '#505050',
                               fontFamily: 'Poppins',
                               fontWeight: '500',
-                              lineHeight: 12,
-                              fontSize: 8,
+                              lineHeight: 15,
+                              top: 5,
+                              fontSize: 10,
                             }}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit. Nulla convallis libero eget felis lacinia, eu
-                            suscipit eros ultrices.
+                            {item.exercise_mindset_description}
                           </Text>
                         </View>
                         <View
                           style={{
                             flexDirection: 'row',
                             alignItems: 'center',
-                            top: -DeviceHeigth * 0.009,
+                            marginVertical: DeviceHeigth * 0.005,
                             left: -12,
                           }}>
                           <TouchableOpacity
                             onPress={() => {
-                              // navigation.navigate('MeditationDetails',{item:title})
-                              showMessage({
-                                message: 'Work in Progress',
-                                floating: true,
-                                duration: 500,
-                                type: 'info',
-                                icon: {icon: 'auto', position: 'left'},
-                              });
+                              navigation.navigate('MeditationExerciseDetails',{item:item})
+                         
                             }}>
                             <Image
                               source={localImage.Play2}
@@ -306,25 +289,21 @@ const MeditationDetails = ({navigation, route}) => {
                         style={{
                           width: '30%',
                           height: 150,
-                          backgroundColor: 'red',
-                          left: -10,
 
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          marginBottom: 15,
+                          left: -20,
+                          marginVertical: -DeviceHeigth * 0.01,
                         }}>
                         <Image
                           source={
-                            item.workout_mindset_image_link != null
-                              ? {uri: item.workout_mindset_image_link}
+                            item.exercise_mindset_image_link != null
+                              ? {uri: item.exercise_mindset_image_link}
                               : localImage.Noimage
                           }
                           style={{
-                            height: 120,
-
-                            width: 100,
+                            height: 130,
+                            width: DeviceWidth * 0.3,
                           }}
-                          resizeMode="contain"></Image>
+                          resizeMode="cover"></Image>
                       </View>
                     </View>
                   </LinearGradient>

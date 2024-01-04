@@ -526,6 +526,9 @@ PODS:
   - react-native-step-counter (0.2.3):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
+  - react-native-track-player (4.0.1):
+    - React-Core
+    - SwiftAudioEx (= 1.0.0)
   - react-native-version-check (3.4.7):
     - React-Core
   - react-native-version-number (0.3.6):
@@ -728,6 +731,7 @@ PODS:
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
   - SocketRocket (0.6.1)
+  - SwiftAudioEx (1.0.0)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -771,6 +775,7 @@ DEPENDENCIES:
   - "react-native-skia (from `../node_modules/@shopify/react-native-skia`)"
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - "react-native-step-counter (from `../node_modules/@dongminyu/react-native-step-counter`)"
+  - react-native-track-player (from `../node_modules/react-native-track-player`)
   - react-native-version-check (from `../node_modules/react-native-version-check`)
   - react-native-version-number (from `../node_modules/react-native-version-number`)
   - react-native-video (from `../node_modules/react-native-video`)
@@ -844,6 +849,7 @@ SPEC REPOS:
     - SDWebImage
     - SDWebImageWebPCoder
     - SocketRocket
+    - SwiftAudioEx
 
 EXTERNAL SOURCES:
   boost:
@@ -917,6 +923,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-splash-screen"
   react-native-step-counter:
     :path: "../node_modules/@dongminyu/react-native-step-counter"
+  react-native-track-player:
+    :path: "../node_modules/react-native-track-player"
   react-native-version-check:
     :path: "../node_modules/react-native-version-check"
   react-native-version-number:
@@ -1058,6 +1066,7 @@ SPEC CHECKSUMS:
   react-native-skia: f3584d32a22f197670de817c43d7f93e2aa92b4c
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   react-native-step-counter: 225ac5bc64ee01d76b920ab9ecabecf97be06567
+  react-native-track-player: 97d76dbbd35f27cc709e5f04540615e54264b3f9
   react-native-version-check: 6cd36aad4e30b8e3216747e3b4ddeb09e0647af8
   react-native-version-number: b415bbec6a13f2df62bf978e85bc0d699462f37f
   react-native-video: c26780b224543c62d5e1b2a7244a5cd1b50e8253
@@ -1099,6 +1108,7 @@ SPEC CHECKSUMS:
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
+  SwiftAudioEx: 6f511018b7a0fdfd14ed1bb4081f953588245cc0
   Yoga: 3efc43e0d48686ce2e8c60f99d4e6bd349aff981
 
 PODFILE CHECKSUM: dfbfcf3f54ed78e92d55608f17db0a6cc9066046
