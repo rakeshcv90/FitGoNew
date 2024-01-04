@@ -47,6 +47,7 @@ import Meals from '../Screen/NewHome/Meals';
 import MealDetails from '../Screen/NewHome/MealDetails';
 import ProductsList from '../Screen/NewHome/ProductsList';
 import MeditationDetails from '../Screen/NewHome/MeditationDetails';
+import MeditationExerciseDetails from '../Screen/NewHome/MeditationExerciseDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -172,6 +173,7 @@ export const LoginStack = () => {
       <Stack.Screen name="MealDetails" component={MealDetails} />
       <Stack.Screen name="ProductsList" component={ProductsList} />
       <Stack.Screen name="MeditationDetails" component={MeditationDetails} />
+      <Stack.Screen name="MeditationExerciseDetails" component={MeditationExerciseDetails} />
 
    
 
