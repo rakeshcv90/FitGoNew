@@ -44,6 +44,7 @@ export const NewAppapi = {
   Free_Excercise_Data: NewApi + 'userfreecustomexercise',
   Whole_data: NewApi + 'user_update_details',
   ALL_WORKOUTS: NewApi + 'allworkout',
+  POPULAR_WORKOUTS: NewApi + 'popularWorkout',
   Meal_Categorie: NewApi + 'get_categorie',
  DietDetails:NewApi + 'getdiet',
   Get_DAYS: NewApi + 'days',
