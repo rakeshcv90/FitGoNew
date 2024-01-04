@@ -229,7 +229,6 @@ const GradientText = ({item}) => {
 //       AppleHealthKit.isAvailable((err, available) => {
 //         console.log('Avialable=========>', available);
 
-
 const ProgressBar = ({progress, image, text}) => {
   return (
     <View
@@ -294,7 +293,6 @@ const Home = ({navigation}) => {
       AskHealthPermissionAndroid();
     } else {
       AppleHealthKit.isAvailable((err, available) => {
-
         const permissions = {
           permissions: {
             read: [AppleHealthKit.Constants.Permissions.Steps],
@@ -306,7 +304,6 @@ const Home = ({navigation}) => {
           AppleHealthKit.initHealthKit(permissions, error => {
             if (error) {
               console.log('[ERROR] Cannot grant permissions!', error);
-
             } else {
               const options = {
                 startDate: new Date(
@@ -327,10 +324,7 @@ const Home = ({navigation}) => {
                 // setSteps(results.value);
                 // setDistance(((results.value / 20) * 0.0142).toFixed(2));
                 // setCalories(((results.value / 20) * 0.7566).toFixed(1));
-             
               });
-
-
             }
           });
         } else {
@@ -341,7 +335,8 @@ const Home = ({navigation}) => {
           );
         }
       });
-    }})
+    }
+  });
 
   const props = {
     activeStrokeWidth: 25,
@@ -359,14 +354,6 @@ const Home = ({navigation}) => {
     extrapolate: 'extend',
   });
 
-  Platform.OS == 'android'
-    ? console.log('Android Version', VersionNumber.appVersion)
-    : console.log(
-        'IOS Version',
-        VersionNumber.appVersion,
-        VersionNumber.bundleIdentifier,
-      );
-
   useEffect(() => {
     Animated.timing(progressAnimation, {
       toValue: 1,
@@ -379,24 +366,18 @@ const Home = ({navigation}) => {
     {color1: '#E2EFFF', color2: '#9CC2F5', color3: '#425B7B'},
     {color1: '#BFF0F5', color2: '#8DD9EA', color3: '#1F6979'},
     {color1: '#FAE3FF', color2: '#C97FCD', color3: '#7C3D80'},
+    {color1: '#FFEBE2', color2: '#DCAF9E', color3: '#1E1E1E'},
   ];
   const colors1 = [
     {color1: '#E7D9FB'},
     {color1: '#D7FBFF'},
     {color1: '#DFEEFE'},
   ];
-  
+
   const ListItem = ({title, color}) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('MeditationDetails',{item:title})
-        // showMessage({
-        //   message: 'Work in Progress',
-        //   floating: true,
-        //   duration: 500,
-        //   type: 'info',
-        //   icon: {icon: 'auto', position: 'left'},
-        // });
+        navigation.navigate('MeditationDetails', {item: title});
       }}>
       <LinearGradient
         start={{x: 0, y: 1}}
@@ -527,7 +508,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#5FB67B'}]}>
-            900
+                  900
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     /5000 steps
                   </Text>
@@ -546,7 +527,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#FCBB1D'}]}>
-                333
+                  333
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     {'/goal km '}
                   </Text>
@@ -570,7 +551,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#D01818'}]}>
-              44
+                  44
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     /goal KCal
                   </Text>
@@ -624,7 +605,12 @@ const Home = ({navigation}) => {
               }}>
               Meditation
             </Text>
-            <TouchableOpacity onPress={() => {     navigation.navigate('MeditationDetails')}}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('MeditationDetails', {
+                  item: customWorkoutData?.minset_workout[0],
+                });
+              }}>
               <Icons name="chevron-right" size={25} color={'#000'} />
             </TouchableOpacity>
           </View>
@@ -710,16 +696,14 @@ const Home = ({navigation}) => {
                       style={[
                         styles.title,
                         {
-
-//                           height: 100,
-//                           width: 100,
+                          //                           height: 100,
+                          //                           width: 100,
 
                           alignSelf: 'center',
                           zIndex: 1,
 
                           color: AppColor.BoldText,
                           width: DeviceHeigth * 0.2,
-
                         },
                       ]}>
                       {item.workout_title}
@@ -796,7 +780,7 @@ const Home = ({navigation}) => {
               top: DeviceHeigth * 0.01,
               justifyContent: 'center',
             }}>
-            {customWorkoutData?.workout.map((value, index) => (
+            {/* {customWorkoutData?.workout.map((value, index) => (
               <View
                 key={index}
                 style={{
@@ -807,7 +791,7 @@ const Home = ({navigation}) => {
                   borderRadius: 20,
                   backgroundColor: AppColor.GRAY2,
                 }}></View>
-            ))}
+            ))} */}
           </View>
         </View>
 
@@ -983,7 +967,7 @@ const Home = ({navigation}) => {
       </ScrollView>
     </SafeAreaView>
   );
-          }
+};
 var styles = StyleSheet.create({
   container: {
     flex: 1,
