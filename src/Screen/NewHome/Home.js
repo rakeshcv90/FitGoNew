@@ -31,6 +31,7 @@ import {LineChart} from 'react-native-chart-kit';
 import AnimatedLottieView from 'lottie-react-native';
 import {Slider} from '@miblanchard/react-native-slider';
 import axios from 'axios';
+import { setPedomterData } from '../../Component/ThemeRedux/Actions';
 import {
   Stop,
   Circle,
@@ -142,7 +143,12 @@ const Home = ({navigation}) => {
     mindsetConsent,
     customWorkoutData,
     mealData,
+    getPedomterData
   } = useSelector(state => state);
+  const[stepGoalProfile,setStepGoalProfile]=useState(getPedomterData[0]?getPedomterData[0].RSteps:5000)
+  const[DistanceGoalProfile,setDistanceGoalProfile]=useState(getPedomterData[0]?getPedomterData[1].RDistance:2.5)
+  const[CalriesGoalProfile,setCaloriesGoalProfile]=useState(getPedomterData[0]?getPedomterData[2].RCalories:25)
+  console.log("pdeomter",getPedomterData)
   useEffect(() => {
     ActivityPermission();
   }, []);
@@ -204,8 +210,8 @@ const Home = ({navigation}) => {
                   console.log('Error while getting the data');
                 }
                 setSteps(results.value);
-                setDistance(((results.value / 20) * 0.0142).toFixed(2));
-                setCalories(((results.value / 20) * 0.7566).toFixed(1));
+                setDistance(((results.value / 20) * 0.01).toFixed(2));
+                setCalories(((results.value / 20) * 1).toFixed(1));
                 console.log('ios stespssss', results);
               });
             }
@@ -269,7 +275,7 @@ const Home = ({navigation}) => {
         taskTitle: 'Steps ' + data.steps,
         taskDesc: 'Steps ',
         progressBar: {
-          max: 100,
+          max: stepGoalProfile,
           value: data.steps,
           indeterminate: false,
         },
@@ -310,7 +316,7 @@ const Home = ({navigation}) => {
         taskTitle: 'Steps ' + steps,
         taskDesc: 'Steps ',
         progressBar: {
-          max: 100,
+          max: stepGoalProfile,
           value: steps,
           indeterminate: false,
         },
@@ -336,7 +342,7 @@ const Home = ({navigation}) => {
     taskTitle: 'Steps ' + steps,
     taskDesc: '',
     progressBar: {
-      max: 100,
+      max: stepGoalProfile,
       value: steps,
       indeterminate: false,
     },
@@ -370,14 +376,13 @@ const Home = ({navigation}) => {
   const handleLongPress = () => {
     setModalVisible(true); // Show the modal when long-press is detected
   };
-
   const closeModal = () => {
     setModalVisible(false); // Close the modal
   };
   const UpdateGoalModal = () => {
-    const [Steps_Goal, setSteps_Goal] = useState(0);
-    const [Calories_Goal, setCalories_Goal] = useState(0);
-    const [Distance_Goal, setDistance_Goal] = useState(0);
+    const [Steps_Goal, setSteps_Goal] = useState(500);
+    const [Calories_Goal, setCalories_Goal] = useState(25);
+    const [Distance_Goal, setDistance_Goal] = useState(0.25);
     const [Step_Visible, setSteps_Visible] = useState(false);
     const [Distance_Visible, setDistance_Visible] = useState(false);
     const [Calories_Visible, setCalories_Visible] = useState(false);
@@ -448,6 +453,14 @@ const Home = ({navigation}) => {
         </View>
       );
     };
+    const HandleSave=()=>{
+      setStepGoalProfile(Steps_Goal)
+      setDistanceGoalProfile(Distance_Goal)
+      setCaloriesGoalProfile(Calories_Goal)
+      Dispatch(setPedomterData([{"RSteps":Steps_Goal},{"RDistance":Distance_Goal},{"RCalories":Calories_Goal}]))
+      closeModal();
+    }
+   
     return (
       <Modal
         animationType="slide"
@@ -518,7 +531,11 @@ const Home = ({navigation}) => {
                 maximumValue={10000}
                 minimumValue={500}
                 step={1}
-                onValueChange={value => setSteps_Goal(value)}
+                onValueChange={value => {
+                  setSteps_Goal(value);
+                   setCalories_Goal((value*0.05).toFixed(2))
+                  setDistance_Goal((value*0.0005).toFixed(2))
+                }}
                 minimumTrackTintColor="#5FB67B"
                 renderThumbComponent={ThumbImage1}
                 trackStyle={{height: 10, borderRadius: 20}}
@@ -566,9 +583,15 @@ const Home = ({navigation}) => {
             {Distance_Visible ? (
               <Slider
                 value={Distance_Goal}
-                maximumValue={10000}
+                maximumValue={5}
                 step={1}
-                onValueChange={value => setDistance_Goal(value)}
+                onValueChange={value => {
+                  setDistance_Goal(value);
+                  setSteps_Goal((value*2000).toFixed(0));
+                  setCalories_Goal((value*100).toFixed(2))
+                }
+                }
+                minimumValue={0.25}
                 minimumTrackTintColor="#FCBB1D"
                 renderThumbComponent={ThumbImage2}
                 trackStyle={{height: 10, borderRadius: 20}}
@@ -616,16 +639,21 @@ const Home = ({navigation}) => {
             {Calories_Visible ? (
               <Slider
                 value={Calories_Goal}
-                maximumValue={10000}
+                maximumValue={500}
+                minimumValue={25}
                 step={1}
-                onValueChange={value => setCalories_Goal(value)}
+                onValueChange={value => {
+                  setCalories_Goal(value)
+                  setDistance_Goal((value*0.01).toFixed(2));
+                  setSteps_Goal((value*20))
+                }}
                 minimumTrackTintColor={AppColor.RED}
                 renderThumbComponent={ThumbImage3}
                 trackStyle={{height: 10, borderRadius: 20}}
               />
             ) : null}
           </View>
-          <TouchableOpacity style={styles.Modal_Save_btton} activeOpacity={0.5} onPress={()=>{closeModal()}}>
+          <TouchableOpacity style={styles.Modal_Save_btton} activeOpacity={0.5} onPress={()=>{HandleSave()}}>
             <LinearGradient
               colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
               start={{x: 0, y: 1}}
@@ -799,7 +827,7 @@ const Home = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled">
-        <TouchableOpacity style={styles.CardBox} onLongPress={handleLongPress}>
+        <TouchableOpacity style={styles.CardBox} onLongPress={handleLongPress} activeOpacity={0.7}>
           <Text style={styles.healthText}>Health Overview</Text>
           <View style={styles.healthView}>
             <View style={styles.stepView}>
@@ -819,7 +847,7 @@ const Home = ({navigation}) => {
                 <Text style={[styles.monetText, {color: '#5FB67B'}]}>
                   {steps}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
-                    /5000 steps
+                    {`/${stepGoalProfile} steps`}
                   </Text>
                 </Text>
               </View>
@@ -838,7 +866,7 @@ const Home = ({navigation}) => {
                 <Text style={[styles.monetText, {color: '#FCBB1D'}]}>
                   {distance}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
-                    {'/goal km '}
+                    {`/ ${DistanceGoalProfile} km `}
                   </Text>
                 </Text>
               </View>
@@ -862,7 +890,7 @@ const Home = ({navigation}) => {
                 <Text style={[styles.monetText, {color: '#D01818'}]}>
                   {Calories}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
-                    /goal KCal
+                   {`/${CalriesGoalProfile} KCal`}
                   </Text>
                 </Text>
               </View>

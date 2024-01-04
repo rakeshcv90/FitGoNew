@@ -29,7 +29,7 @@ const ITEM_HEIGHT = 25;
 const halfItemCount = Math.floor(BOX_HEIGHT / 7 / ITEM_HEIGHT);
 const myArray = [];
 
-for (let i = 4; i <= 14; i++) {
+for (let i = 4; i <= 13; i++) {
   // You can change the outer loop limit as needed
   for (let j = 0; j < 12; j++) {
     if (j === 0) {
@@ -63,6 +63,7 @@ const Height = ({route, navigation}: any) => {
   const [screen, setScreen] = useState(nextScreen);
   const [toggle, setToggle] = useState('ft');
   const [currentActiveIndex, setCurrentActiveIndex] = useState(-1);
+  console.log("Index======>",currentActiveIndex)
   useEffect(() => {
     setScreen(nextScreen);
   }, []);
@@ -147,7 +148,7 @@ const Height = ({route, navigation}: any) => {
             alignItems: 'center',
             alignSelf: 'center',
           }}>
-          {parseInt(height[currentActiveIndex]) < 7 &&
+          {parseInt(height[currentActiveIndex]) < 9 &&
           parseInt(height[currentActiveIndex]) >= 4 ? (
             toggle == 'ft' ? (
               <Text
@@ -171,7 +172,7 @@ const Height = ({route, navigation}: any) => {
                       fontWeight: '600',
                     }}>
                     {/* {parseInt(((height[currentActiveIndex] % 1) * 120).toFixed(0)) != 12 && */}
-                      {((height[currentActiveIndex] % 1) * 12).toFixed(0)}
+                      {((height[currentActiveIndex]%1) * 12).toFixed(0)}
                     <Text
                       style={{
                         color: AppColor.RED,
@@ -246,7 +247,7 @@ const Height = ({route, navigation}: any) => {
           <LinearGradient
             start={{x: 0, y: 1}}
             end={{x: 1, y: 0}}
-            colors={['#941000', '#D5191A']}
+            colors={[AppColor.RED1, AppColor.RED]}
             style={[styles.nextButton]}>
             <Icons name="chevron-right" size={25} color={'#fff'} />
           </LinearGradient>

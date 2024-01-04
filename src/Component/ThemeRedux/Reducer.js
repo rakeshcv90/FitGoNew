@@ -8,18 +8,18 @@ const intialState = {
   getLaterButtonData: [],
   getUserID: '',
   customWorkoutData: [],
-  getUserDataDetails:[],
-  mindsetConsent:false,
-  mindSetData:[],
-  getHealthData:[],
+  getUserDataDetails: [],
+  mindsetConsent: false,
+  mindSetData: [],
+  getHealthData: [],
   currentWorkoutData: [],
   allWorkoutData: [],
   getUserDataDetails: [],
   mindsetConsent: false,
-  mindSetData: [],
-  showLogout:0,
+  showLogout: 0,
   mealData: [],
-  getCount: -1
+  getCount: -1,
+  getPedomterData: [],
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -38,16 +38,16 @@ const ThemeReducer = (state = intialState, action) => {
     case types.LATER_BUTTON_USER_DATA:
       return {...state, getLaterButtonData: action.payload};
 
-      case types.User_ID:
-        return {...state, getUserID: action.payload};
-        case types.CUSTOM_WORKOUT_DATA:
-          return {...state, customWorkoutData: action.payload};
-      case types.User_Profile_Data:
-        return {...state, getUserDataDetails: action.payload};
-      case types.HealthData:
-        return {...state,getHealthData:action.payload}  
-        case types.MindSetConsent:
-          return{...state,mindsetConsent:action.payload}   
+    case types.User_ID:
+      return {...state, getUserID: action.payload};
+    case types.CUSTOM_WORKOUT_DATA:
+      return {...state, customWorkoutData: action.payload};
+    case types.User_Profile_Data:
+      return {...state, getUserDataDetails: action.payload};
+    case types.HealthData:
+      return {...state, getHealthData: action.payload};
+    case types.MindSetConsent:
+      return {...state, mindsetConsent: action.payload};
     case types.User_ID:
       return {...state, getUserID: action.payload};
     case types.CUSTOM_WORKOUT_DATA:
@@ -58,8 +58,8 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, allWorkoutData: action.payload};
     case types.User_Profile_Data:
       return {...state, getUserDataDetails: action.payload};
-      case types.ALL_MEAL_DATA:
-        return {...state,mealData: action.payload};
+    case types.ALL_MEAL_DATA:
+      return {...state, mealData: action.payload};
     case types.LogOut:
       return {...state, showLogout: action.payload};
     case types.COUNT:
@@ -73,24 +73,46 @@ const ThemeReducer = (state = intialState, action) => {
           item => Object.keys(item)[0] === keyToUpdate,
         );
         if (index !== -1) {
-      
           updatedMindSetData[index] = {
             ...updatedMindSetData[index],
             ...updatedItem,
           };
         } else {
-     
           updatedMindSetData.push(updatedItem);
         }
       });
-
       return {
         ...state,
         mindSetData: updatedMindSetData,
       };
     case types.MindSetConsent:
       return {...state, mindsetConsent: action.payload};
-
+    case types.Update_Pedometer_Data:
+      const updatePedometerData = action.payload;
+      const UpdateData = state.getPedomterData.map(item => ({...item}));
+      updatePedometerData.forEach(updatedItem => {
+        const keyToUpdate = Object.keys(updatedItem)[0];
+        const index = UpdateData.findIndex(
+          item => Object.keys(item)[0] === keyToUpdate,
+        );
+        if (index !== -1) {
+          const updatedValue = updatedItem[keyToUpdate]
+          if (Array.isArray(updatedValue)) {
+            UpdateData[index][keyToUpdate] = updatedValue[0];
+          } else {
+            UpdateData[index] = {
+              ...UpdateData[index],
+              ...updatedItem,
+            };
+          }
+        } else {
+          UpdateData.push(updatedItem);
+        }
+      });
+      return {
+        ...state,
+        getPedomterData: UpdateData,
+      };
     default:
       return state;
   }

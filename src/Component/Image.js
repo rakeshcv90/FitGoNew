@@ -106,4 +106,5 @@ export const localImage = {
   Pause: require('../Icon/Images/NewImage/Pause.png'),
   Target:require('../Icon/Images/NewImage/Target.png'),
   Location:require('../Icon/Images/NewImage/Location.png'),
+  WithoutEquipPerson:require('../Icon/Images/NewImage/WithoutEquipementPerson.png')
 };

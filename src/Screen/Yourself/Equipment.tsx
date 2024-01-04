@@ -76,7 +76,7 @@ const Equipment = ({route, navigation}: any) => {
       Animated.parallel([
         Animated.timing(translateE, {
           toValue:
-            gender == 'With\nEquipment' ? DeviceWidth * 0.2 : -DeviceWidth / 2,
+            gender == 'With\nEquipment' ? DeviceWidth * 0.23 : -DeviceWidth / 2,
           duration: 500,
           useNativeDriver: true,
           delay: gender == 'With\nEquipment' ? 0 : 500, // Delay the return to center animation for a smoother effect
@@ -84,7 +84,7 @@ const Equipment = ({route, navigation}: any) => {
         Animated.timing(translateW, {
           toValue:
             gender == 'Without\nEquipment'
-              ? -DeviceWidth * 0.3
+              ? -DeviceWidth *0.24
               : DeviceWidth / 2,
           duration: 500,
           useNativeDriver: true,
@@ -134,7 +134,7 @@ const Equipment = ({route, navigation}: any) => {
     {
       gender: 'Male',
       name: 'Without\nEquipment',
-      image: localImage.WithEquipment,
+      image: localImage.WithoutEquipment,
       image2:
         'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/8a2695c6-a5b5-47e2-d899-c827a0c26500/public',
     },
@@ -181,6 +181,7 @@ const Equipment = ({route, navigation}: any) => {
             if (getLaterButtonData[0]?.gender != item?.gender) return;
             return (
               <TouchableOpacity
+              style={{alignSelf:'center'}}
                 onPress={() => selected == '' && handleImagePress(item?.name)}
                 activeOpacity={1}>
                 <Animated.View
@@ -189,6 +190,7 @@ const Equipment = ({route, navigation}: any) => {
                     height: DeviceHeigth * 0.55,
                     justifyContent: 'center',
                     alignItems: 'center',
+                    alignSelf:'center',
                     transform: [
                       {
                         translateX:
@@ -219,8 +221,8 @@ const Equipment = ({route, navigation}: any) => {
                       borderRadius: 20,
                       padding: 5,
                       position: 'relative',
-                      top: '4%',
-                      left: '30%',
+                      top:22,
+                      left:58,
                       width: 30,
                       height: 30,
                     }}>
@@ -228,10 +230,23 @@ const Equipment = ({route, navigation}: any) => {
                       source={item?.image}
                       style={{width: 20, height: 20}}
                       resizeMode="contain"
+                      tintColor={selected?AppColor.RED:AppColor.DARKGRAY}
                     />
                   </View>
                   <View
                     style={{
+                      ...Platform.select({
+                        ios: {
+                          shadowColor: AppColor.BLACK,
+                          shadowOffset: {width: 0, height: 5},
+                          shadowOpacity: 0.3,
+                          shadowRadius: 4,
+                        },
+                        android:{
+                          elevation:5
+                        }
+                      }),
+                      backgroundColor:AppColor.WHITE,
                       padding: 20,
                       borderRadius: 15,
                       borderWidth: item?.name == selected ? 1.5 : 1,
@@ -245,10 +260,11 @@ const Equipment = ({route, navigation}: any) => {
                       style={{
                         fontSize: 16,
                         fontWeight: '600',
-                        fontFamily: 'Poppins',
+                        fontFamily: 'Poppins-SemiBold',
                         lineHeight: 18,
                         color: '#404040',
                         textAlign: 'center',
+                        
                       }}>
                       {item?.name}
                     </Text>

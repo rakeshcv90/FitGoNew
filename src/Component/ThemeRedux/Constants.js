@@ -17,4 +17,5 @@ export default {
   LogOut:'LogOut',
   ALL_MEAL_DATA: 'ALL_MEAL_DATA',
   COUNT: 'COUNT',
+  Update_Pedometer_Data:'Update_Pedometer_Data'
 };

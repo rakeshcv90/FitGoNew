@@ -50,6 +50,7 @@ const InputText = ({...Props}) => {
             color: Props.colorText ? 'green' : 'red',
             fontSize: 12,
             textAlign: 'center',
+            marginTop:5
           }}>
           {Props.errors}
         </Text>
