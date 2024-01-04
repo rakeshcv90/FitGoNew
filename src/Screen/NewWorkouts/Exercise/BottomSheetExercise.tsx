@@ -12,19 +12,16 @@ import {AppColor} from '../../../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const BottomSheetExercise = ({isVisible, setVisible, exerciseData}: any) => {
+const BottomSheetExercise = ({isVisible, setVisible, exerciseData,setCurrentData}: any) => {
   const Box = ({selected, item, index}: any) => {
     return (
       <TouchableOpacity
       key={index}
         activeOpacity={1}
-        // onPress={() => {
-        //   navigation.navigate('OneDay', {
-        //     data: data,
-        //     dayData: item,
-        //     day: index,
-        //   });
-        // }}
+        onPress={() => {
+          setVisible(false)
+          setCurrentData(item)
+        }}
         style={[
           styles.box,
           {
@@ -55,7 +52,7 @@ const BottomSheetExercise = ({isVisible, setVisible, exerciseData}: any) => {
               <Text style={[styles.small, {fontSize: 14}]}>
                 {item?.exercise_title}
               </Text>
-              <Text style={styles.small}>{item?.exercise_rest} min</Text>
+              <Text style={styles.small}>{item?.exercise_rest}</Text>
             </View>
             <Icons
               name={'chevron-right'}
@@ -88,7 +85,7 @@ const BottomSheetExercise = ({isVisible, setVisible, exerciseData}: any) => {
         onRequestClose={() => setVisible(!isVisible)}
         bottomSheetVisible={isVisible}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {exerciseData.map((item, index) => (
+          {exerciseData.map((item: any, index: number) => (
             <Box selected={-1} index={index + 1} item={item} />
           ))}
         </ScrollView>

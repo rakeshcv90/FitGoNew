@@ -43,6 +43,7 @@ import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
 import WorkoutDays from '../Screen/NewWorkouts/WorkoutDays';
 import OneDay from '../Screen/NewWorkouts/OneDay';
 import Exercise from '../Screen/NewWorkouts/Exercise/Exercise';
+import SaveDayExercise from '../Screen/NewWorkouts/Exercise/SaveDayExercise';
 import Meals from '../Screen/NewHome/Meals';
 import MealDetails from '../Screen/NewHome/MealDetails';
 import ProductsList from '../Screen/NewHome/ProductsList';
@@ -169,6 +170,7 @@ export const LoginStack = () => {
       <Stack.Screen name="WorkoutDays" component={WorkoutDays} />
       <Stack.Screen name="OneDay" component={OneDay} />
       <Stack.Screen name="Exercise" component={Exercise} />
+      <Stack.Screen name="SaveDayExercise" component={SaveDayExercise} />
       <Stack.Screen name="Meals" component={Meals} />
       <Stack.Screen name="MealDetails" component={MealDetails} />
       <Stack.Screen name="ProductsList" component={ProductsList} />

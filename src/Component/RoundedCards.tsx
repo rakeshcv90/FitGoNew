@@ -49,7 +49,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
             width: 'auto',
           }}>
           <FlatList
-            data={props.horizontal ? props.data : props.data}
+            data={props.data}
             nestedScrollEnabled
             keyExtractor={(item, index) => index.toString()}
             horizontal={props.horizontal}
@@ -59,8 +59,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
               let totalTime = 0;
               for (const day in item?.days) {
                 if (day != 'Rest') {
-                  totalTime =
-                    totalTime + parseInt(item?.days[day]?.exercise_rest);
+                  totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
                 }
               }
               return (
@@ -83,10 +82,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
                     },
                   ]}>
                   <Image
-                    source={
-                      props.horizontal
-                        ? item.image
-                        : {uri: item?.workout_image_link}
+                    source={{uri: item?.workout_image_link}
                     }
                     style={{
                       height: DeviceWidth / 6,
@@ -97,8 +93,8 @@ const RoundedCards: FC<Props> = ({...props}) => {
                     resizeMode="contain"
                   />
                   {props.horizontal ? (
-                    <Text style={[styles.category, {fontSize: 14}]}>
-                      {item?.name}
+                    <Text style={[styles.category, {fontSize: 14, width: '80%',}]} ellipsizeMode='tail' numberOfLines={1} >
+                      {item?.workout_title}
                     </Text>
                   ) : (
                     <View
@@ -119,7 +115,12 @@ const RoundedCards: FC<Props> = ({...props}) => {
                           {item?.workout_title}
                         </Text>
                         <Text style={[styles.category, {fontSize: 14}]}>
-                          {!isNaN(totalTime) ? totalTime : 0}
+                          {/* {!isNaN(totalTime) ? totalTime : 0} */}
+                          {!isNaN(totalTime)
+                            ? totalTime > 60
+                              ? `${(totalTime / 60).toFixed(0)} min`
+                              : `${totalTime} sec`
+                            : 0}
                         </Text>
                       </View>
                       <TouchableOpacity

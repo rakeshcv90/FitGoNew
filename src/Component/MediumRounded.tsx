@@ -11,6 +11,7 @@ import React, {FC} from 'react';
 import {AppColor} from './Color';
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {localImage} from './Image';
+import { navigationRef } from '../../App';
 
 export type Props = {
   viewAllButton?: boolean;
@@ -49,13 +50,21 @@ const MediumRounded: FC<Props> = ({...props}) => {
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           renderItem={({item, index}: any) => {
+            let totalTime = 0;
+            for (const day in item?.days) {
+              if (day != 'Rest') {
+                totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
+              }
+            }
             return (
               <View
                 style={{
                   height: DeviceWidth * 0.4,
                 }}>
                 <TouchableOpacity
-                  onPress={() => null}
+                  onPress={() =>
+                    navigationRef.current?.navigate('WorkoutDays', {data: item})
+                  }
                   activeOpacity={0.8}
                   style={[
                     styles.box,
@@ -66,17 +75,47 @@ const MediumRounded: FC<Props> = ({...props}) => {
                     },
                   ]}>
                   <Image
-                    source={item?.image}
+                    source={{uri: item?.workout_image_link}}
                     style={{
                       height: DeviceWidth * 0.35,
-                      width: DeviceWidth * 0.6,
+                      width: DeviceWidth * 0.55,
                     }}
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
-                <Text style={[styles.category, {fontSize: 14}]}>
-                  {item?.name}
+                <Text
+                  style={[styles.category, {fontSize: 14, marginLeft: 10}]}
+                  ellipsizeMode="tail"
+                  numberOfLines={1}>
+                  {item?.workout_title}
                 </Text>
+                {/* <Text
+                  style={[
+                    styles.category,
+                    {fontSize: 34, width: '75%', flexDirection: 'row', justifyContent: 'center',},
+                  ]}>
+                  <GradientText
+                    text={item?.level_title}
+                    width={item?.level_title?.length * 15}
+                    y={'12'}
+                  />
+                 <Text 
+                  style={[
+                    styles.category,
+                    {fontSize: 34, width: '85%', flexDirection: 'row', justifyContent: 'center',},
+                  ]} >.</Text>
+                  <GradientText
+                    y={'12'}
+                    text={
+                      !isNaN(totalTime)
+                        ? totalTime > 60
+                          ? `${(totalTime / 60).toFixed(0)} min`
+                          : `${totalTime} sec`
+                        : 0
+                    }
+                    width={100}
+                  />
+                </Text> */}
               </View>
             );
           }}

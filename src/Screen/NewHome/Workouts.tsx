@@ -5,8 +5,9 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColor} from '../../Component/Color';
 import Header from '../../Component/Headers/NewHeader';
@@ -20,52 +21,22 @@ import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {setAllWorkoutData} from '../../Component/ThemeRedux/Actions';
 
-const data = [
-  {
-    id: 1,
-    name: 'Cardio',
-    image: localImage.GymImage,
-  },
-  {
-    id: 2,
-    name: 'Workout',
-    image: localImage.GymImage,
-  },
-  {
-    id: 3,
-    name: 'Stretching',
-    image: localImage.GymImage,
-  },
-  {
-    id: 4,
-    name: 'Weights',
-    image: localImage.Abs,
-  },
-  {
-    id: 5,
-    name: 'Cardio',
-    image: localImage.Abs,
-  },
-  {
-    id: 6,
-    name: 'Cardio',
-    image: localImage.Abs,
-  },
-];
-
 const Workouts = () => {
   const {allWorkoutData, getUserDataDetails} = useSelector(
     (state: any) => state,
   );
+  const [popularData, setPopularData] = useState([]);
+  const [refresh, setRefresh] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    allWorkoutData.length == 0 &&
-     allWorkoutApi();
+    allWorkoutData?.length == 0 && allWorkoutApi();
+    popularData?.length == 0 && popularWorkoutApi();
   }, []);
 
   const allWorkoutApi = async () => {
     try {
+      setRefresh(true);
       const payload = new FormData();
       payload.append('id', getUserDataDetails?.id);
       const res = await axios({
@@ -77,12 +48,29 @@ const Workouts = () => {
         data: payload,
       });
       if (res.data) {
+        setRefresh(false);
         console.log(res.data, 'AllWorkouts');
         dispatch(setAllWorkoutData(res.data));
       }
     } catch (error) {
+      setRefresh(false);
       console.error(error, 'customWorkoutDataApiError');
       dispatch(setAllWorkoutData([]));
+    }
+  };
+  const popularWorkoutApi = async () => {
+    try {
+      setRefresh(true);
+      const res = await axios(NewAppapi.POPULAR_WORKOUTS);
+      if (res.data) {
+        setRefresh(false);
+        console.log(res.data?.length, 'Popular');
+        setPopularData(res.data);
+      }
+    } catch (error) {
+      setRefresh(false);
+      console.error(error, 'popularError');
+      setPopularData([]);
     }
   };
 
@@ -152,11 +140,27 @@ const Workouts = () => {
       <Header header={'Workouts'} SearchButton={false} backButton={false} />
       <ScrollView
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refresh}
+            onRefresh={() => {
+              allWorkoutApi();
+              popularWorkoutApi();
+            }}
+            colors={[AppColor.RED, AppColor.WHITE]}
+          />
+        }
         style={styles.container}
         nestedScrollEnabled>
-        <RoundedCards data={data} horizontal viewAllButton />
+        <RoundedCards data={allWorkoutData} horizontal viewAllButton />
         <AdCard />
-        <MediumRounded data={data} headText="Popular Workouts" viewAllButton />
+        {popularData?.length != 0 && (
+          <MediumRounded
+            data={popularData}
+            headText="Popular Workouts"
+            viewAllButton
+          />
+        )}
         <RoundedCards
           data={allWorkoutData}
           horizontal={false}

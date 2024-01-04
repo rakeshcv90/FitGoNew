@@ -16,5 +16,5 @@ export default {
   HealthData:'HealthData',
   LogOut:'LogOut',
   ALL_MEAL_DATA: 'ALL_MEAL_DATA',
-
+  COUNT: 'COUNT',
 };
