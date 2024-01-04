@@ -498,8 +498,9 @@ const Home = ({navigation}) => {
           </View>
           <View style={{marginTop: 5}}>
             <Slider
-              value={Distance_Goal}
+              value={Steps_Goal}
               maximumValue={10000}
+              minimumValue={0}
               step={1}
               onValueChange={value => setSteps_Goal(value)}
               minimumTrackTintColor="#5FB67B"
@@ -542,11 +543,11 @@ const Home = ({navigation}) => {
           </View>
           <View style={{marginTop: 5}}>
             <Slider
-              value={Steps_Goal}
+              value={Distance_Goal}
               maximumValue={10000}
               step={1}
-              onValueChange={value => setSteps_Goal(value)}
-              minimumTrackTintColor="#5FB67B"
+              onValueChange={value => setDistance_Goal(value)}
+              minimumTrackTintColor="#FCBB1D"
               renderThumbComponent={ThumbImage2}
               trackStyle={{height: 10, borderRadius: 20}}
             />
@@ -586,11 +587,11 @@ const Home = ({navigation}) => {
           </View>
           <View style={{marginTop: 5}}>
             <Slider
-              value={Steps_Goal}
+              value={Calories_Goal}
               maximumValue={10000}
               step={1}
-              onValueChange={value => setSteps_Goal(value)}
-              minimumTrackTintColor="#5FB67B"
+              onValueChange={value => setCalories_Goal(value)}
+              minimumTrackTintColor={AppColor.RED}
               renderThumbComponent={ThumbImage3}
               trackStyle={{height: 10, borderRadius: 20}}
             />
