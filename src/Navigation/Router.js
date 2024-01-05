@@ -1,10 +1,9 @@
 import {View, Text} from 'react-native';
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SplaceScreen from '../Screen/SplaceScreen';
 import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/index';
+import Yourself from '../Screen/Yourself/Index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -34,7 +33,7 @@ import Age from '../Screen/Yourself/Age';
 import Goal from '../Screen/Yourself/Goal';
 import LoadData from '../Screen/Yourself/LoadData';
 import PredictionScreen from '../Screen/MeditationScreens/PredictionScreen';
-import {CardStyleInterpolators} from '@react-navigation/stack';
+import {CardStyleInterpolators, createStackNavigator} from '@react-navigation/stack';
 
 import AlcohalConsent from '../Screen/MeditationScreens/AlcohalConsent';
 import Profile from '../Screen/NewHome/Profile';
@@ -50,25 +49,25 @@ import ProductsList from '../Screen/NewHome/ProductsList';
 import MeditationDetails from '../Screen/NewHome/MeditationDetails';
 import MeditationExerciseDetails from '../Screen/NewHome/MeditationExerciseDetails';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 const screenOptions = {
   headerShown: false,
   gestureDirection: 'horizontal',
   gesturesEnabled: true,
-  // cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-  CardStyleInterpolators: ({current, next, layouts}) => {
-    const translateX = current.progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [layouts.screen.width, 0],
-    });
+  cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+  // CardStyleInterpolators: ({current, next, layouts}) => {
+  //   const translateX = current.progress.interpolate({
+  //     inputRange: [0, 1],
+  //     outputRange: [layouts.screen.width, 0],
+  //   });
 
-    const opacity = current.progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 1],
-    });
-    return {transform: [{translateX}], opacity};
-  },
+  //   const opacity = current.progress.interpolate({
+  //     inputRange: [0, 1],
+  //     outputRange: [0, 1],
+  //   });
+  //   return {transform: [{translateX}], opacity};
+  // },
 };
 
 //   return (

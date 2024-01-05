@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {AppColor} from '../../Component/Color';
 import Header from '../../Component/Headers/NewHeader';
 import GradientText from '../../Component/GradientText';
@@ -22,31 +22,36 @@ import {useDispatch, useSelector} from 'react-redux';
 import {localImage} from '../../Component/Image';
 import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
+import {useFocusEffect} from '@react-navigation/native';
 
 const WorkoutDays = ({navigation, route}: any) => {
   const {data} = route.params;
   const [selected, setSelected] = useState(0);
   const [phase, setPhase] = useState(1);
-  const [openDay, setOpenDay] = useState(false);
+  const [open, setOpen] = useState(false);
   const [day, setDay] = useState(1);
   const [trainingCount, setTrainingCount] = useState(-1);
   const [totalCount, setTotalCount] = useState(-1);
-  const [dayData, setDayData] = useState([]);
+  const [trackerData, setTrackerData] = useState([]);
   const [exerciseData, setExerciseData] = useState([]);
   // console.log(data?.days);
   const {allWorkoutData, getUserDataDetails, getCount} = useSelector(
     (state: any) => state,
   );
-  let totalTime = 0;
+  let totalTime = 0,
+    restDays = [];
   for (const day in data?.days) {
-    if (day != 'Rest') {
-      totalTime = totalTime + parseInt(data?.days[day]?.total_rest);
+    if (data?.days[day]?.total_rest == 0) {
+      restDays.push(parseInt(day.split('day_')[1]));
     }
+    totalTime = totalTime + parseInt(data?.days[day]?.total_rest);
   }
-  useEffect(() => {
-    getCurrentDayAPI();
-    allWorkoutApi();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getCurrentDayAPI();
+      // allWorkoutApi();
+    }, []),
+  );
   const getCurrentDayAPI = async () => {
     try {
       const payload = new FormData();
@@ -60,73 +65,68 @@ const WorkoutDays = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log("GET API TRACKER",res.data);
+      // console.log('GET API TRACKER', res.data);
       if (res.data?.msg != 'No data found') {
-        if (res.data?.final_status == 'all_completed') {
+        // if(res.data?.user_details)
+        const result = analyzeExerciseData(res.data?.user_details);
+        if (result.two.length == 0) {
+          let day = parseInt(result.one[result.one.length - 1]);
           Object.values(data?.days).map((item: any, index: number) => {
-            if (item?.total_rest == 0) {
-              console.log( index+1 ,'==' ,parseInt(res.data?.day) + 1, "INDEX")
-              index+1 == parseInt(res.data?.day) + 1 && setSelected(index + 1);
-            } else setSelected(parseInt(res.data?.day) + 1);
+            if (item?.total_rest == 0 && index + 1 == day) {
+              setSelected(index + 2);
+              setDay(index + 2);
+              return;
+            } else {
+              setSelected(day + 1);
+              setDay(day + 1);
+              return;
+            }
           });
-          // if (
-          //   Object.values(data?.days)
-          //     .map((item: any, index: number) => {
-          //       if (item?.total_rest == 0) return index;
-          //       // return item
-          //     })
-          //     ?.includes(res.data?.day)
-          // ) {
-          //   console.log(
-          //     'res.data?.user_details,"DAY"',
-          //     Object.values(data?.days).map((item: any, index: number) => {
-          //       if (item?.total_rest == 0) return index;
-          //       // return item
-          //     }),
-          //   );
+          console.log(selected, 'SELEC', day);
+          setSelected(parseInt(result.one[result.one.length - 1]));
+        } else {
+          console.log('GET TRACKERw', result.one, result.two);
           const temp = res.data?.user_details?.filter(
-            (item: any) =>
-              item?.user_day == res.data?.day + 1 &&
-              item?.exercise_status == 'completed',
+            (item: any) => item?.user_day == result.two[0],
           );
-          setTrainingCount(temp?.length);
-          // } else {
-          //   console.log(res.data?.day);
-          //   const temp = res.data?.user_details?.filter(
-          //     (item: any) =>
-          //       item?.user_day == res.data?.day + 2 &&
-          //       item?.exercise_status == 'completed',
-          //   );
-          //   console.log(temp);
-          //   setTrainingCount(temp?.length);
-          // }
-        }
-        if (res.data?.final_status == null) {
-          Object.values(data?.days).map((item: any, index: number) => {
-            if (item?.total_rest == 0) {
-              index == res.data?.day - 1 && setSelected(index + 1);
-            } else setSelected(res.data?.day - 1);
-            console.log(index, "INDEX NULL")
-          });
-          // setSelected(res.data?.day - 1);
-          // Object.values(data?.days).map((item: any, index: number) => {
-          // if (data?.days[day]?.total_rest != 0) {
-          const temp = res.data?.user_details?.filter(
-            (item: any) =>
-              item?.user_day == res.data?.day &&
-              item?.exercise_status == 'completed',
-          );
-          // console.log(temp);
-          setTrainingCount(temp?.length);
+          setTrackerData(temp);
+          setTotalCount(result.two[0]);
+          setTrainingCount(result.two.length);
+          setSelected(result.two[0] - 1);
+          setDay(result.two[0]);
         }
       } else {
         setSelected(0);
-        console.log('first', res.data);
+        // console.log('first', res.data);
       }
+      allWorkoutApi();
     } catch (error) {
       console.error(error, 'DAPIERror');
     }
   };
+  function analyzeExerciseData(exerciseData: []) {
+    const daysCompletedAll = new Set();
+    const daysPartialCompletion = new Set();
+
+    exerciseData.forEach((entry: any) => {
+      const userDay = entry['user_day'];
+      const exerciseStatus = entry['exercise_status'];
+      if (entry['final_status'] == 'allcompleted')
+        daysCompletedAll.add(parseInt(userDay));
+      else {
+        if (exerciseStatus === 'completed') {
+          daysCompletedAll.add(parseInt(userDay));
+        } else {
+          daysPartialCompletion.add(parseInt(userDay));
+        }
+      }
+    });
+    const one = Array.from(daysCompletedAll);
+    const two = Array.from(daysPartialCompletion);
+
+    return {one, two};
+  }
+
   const allWorkoutApi = async () => {
     try {
       const res = await axios({
@@ -137,10 +137,10 @@ const WorkoutDays = ({navigation, route}: any) => {
           '&workout_id=' +
           data?.workout_id,
       });
-      if (res.data) {
-        console.log(res.data?.length, 'DaysData');
+      // console.log(res.data, 'DaysData', day);
+      if (res.data?.msg != 'no data found.') {
         setExerciseData(res.data);
-      }
+      } else setExerciseData([]);
     } catch (error) {
       console.error(error, 'DaysAPIERror');
       setExerciseData([]);
@@ -269,14 +269,14 @@ const WorkoutDays = ({navigation, route}: any) => {
           alignSelf: 'flex-end',
         }}>
         <GradientText
-          text={phase == 1 ? `Phase 1: Start Easily` : `Phase 2: Warm Ups`}
+          text={index == 1 ? `Phase 1: Start Easily` : `Phase 2: Warm Ups`}
           fontSize={14}
           marginTop={0}
           y={20}
           width={
-            phase == 1
+            index == 1
               ? `Phase 1: Start Easily`.length * 8
-              : `Phase 1: Warm Ups`.length * 8
+              : `Phase 1: Warm Ups`.length * 10
           }
           colors={select ? gradientColors : ['#505050', '#505050']}
         />
@@ -319,7 +319,6 @@ const WorkoutDays = ({navigation, route}: any) => {
   };
 
   const Box = ({selected, item, index}: any) => {
-    // console.log(selected);
     return (
       <TouchableOpacity
         activeOpacity={1}
@@ -397,21 +396,23 @@ const WorkoutDays = ({navigation, route}: any) => {
             w={DeviceWidth * 0.75}
             bR={10}
             fill={
-              getCount == -1
+              totalCount == -1
                 ? '100%'
-                : `${100 - (trainingCount / getCount) * 100}%`
+                : `${100 - (trainingCount / totalCount) * 100}%`
             }
             h={DeviceHeigth * 0.08}
             onPress={() =>
+              // console.log(exerciseData[trainingCount])
               navigation.navigate('Exercise', {
                 allExercise: exerciseData,
                 currentExercise:
                   trainingCount == -1
                     ? exerciseData[0]
-                    : exerciseData[trainingCount - 1],
+                    : exerciseData[trainingCount],
                 data: data,
                 day: day,
-                exerciseNumber: trainingCount == -1 ? 0 : trainingCount - 1,
+                exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
+                trackerData: trackerData,
               })
             }
           />
@@ -490,50 +491,6 @@ const WorkoutDays = ({navigation, route}: any) => {
           // flexDirection: 'row',
           alignItems: 'center',
         }}>
-        {/* <View>
-          {Array(7)
-            .fill(1, 0, 7)
-            .map((item, index) => (
-              <View
-                style={{
-                  marginTop:
-                    index == 0 ? DeviceHeigth * 0.08 : -DeviceHeigth * 0.01,
-                  marginRight: 15,
-                }}>
-                <BlackCircle
-                  indexes={index}
-                  select={index != selected}
-                  height={
-                    selected == index && index == 0
-                      ? 160
-                      : 120
-                      ? selected == index && index == 1
-                        ? 170
-                        : 120
-                      : selected == index && index == 2
-                      ? 170
-                      : 120
-                      ? selected == index && index == 3
-                        ? 170
-                        : 120
-                      : 120
-                      ? selected == index && index == 4
-                        ? 170
-                        : 120
-                      : 120
-                      ? selected == index && index == 5
-                        ? 170
-                        : 120
-                      : 120
-                      ? selected == index && index == 6
-                        ? 170
-                        : 120
-                      : 120
-                  }
-                />
-              </View>
-            ))}
-        </View> */}
         <View style={{alignSelf: 'flex-start'}}>
           {Object.values(data?.days).map((item: any, index: number) => {
             if (item?.total_rest == 0) {
@@ -559,7 +516,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                   {(index == 0 || index == 4) && (
                     <Phase
                       index={index + 1}
-                      percent={index == 0 ? (selected / 4) * 100 : 80}
+                      percent={index == 0 ? (selected / 4) * 100 : 0}
                       select={index <= selected}
                     />
                   )}

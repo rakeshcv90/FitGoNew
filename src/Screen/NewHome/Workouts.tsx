@@ -80,7 +80,7 @@ const Workouts = () => {
         <LinearGradient
           colors={['rgba(213, 25, 26, 0.3)', 'rgba(148, 16, 0, 0.3)']}
           style={{
-            width: DeviceWidth * 0.9,
+            width: DeviceWidth * 0.92,
             height: DeviceHeigth * 0.2,
             marginVertical: 20,
             borderRadius: 20,
