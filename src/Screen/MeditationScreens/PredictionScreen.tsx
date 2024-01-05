@@ -96,12 +96,12 @@ const PredictionScreen = ({navigation, route}: any) => {
       const formattedDate = currentDate.format('YYYY-MM-DD');
       weightHistoryArray.push({
         weight: decWeight.toFixed(2),
-          // i % 2 === 0
-          //   ? decWeight.toFixed(2)
-          //   : (currentWeight - TargetWeight >= 10 || i > 2
-          //       ? decWeight - 10
-          //       : decWeight
-          //     ).toFixed(2),
+        // i % 2 === 0
+        //   ? decWeight.toFixed(2)
+        //   : (currentWeight - TargetWeight >= 10 || i > 2
+        //       ? decWeight - 10
+        //       : decWeight
+        //     ).toFixed(2),
         date: formattedDate,
       });
       constantWeightArray.push({weight: 0, date: formattedDate});
@@ -127,20 +127,15 @@ const PredictionScreen = ({navigation, route}: any) => {
             alignItems: 'center',
             justifyContent: 'center',
             width: DeviceWidth,
+            marginBottom:-30
           }}>
-          <GradientText
-            item={currentWeight - TargetWeight}
-            fontWeight="600"
-            fontSize={20}
-            width={40}
-          />
+          <Text style={[styles.t, {color: AppColor.RED}]}>
+            {currentWeight - TargetWeight}
+          </Text>
           <Text style={styles.t}>Kg by</Text>
-          <GradientText
-            item={finalDate ? moment(finalDate).format('DD MMMM YYYY') : ''}
-            fontWeight="600"
-            fontSize={20}
-            width={180}
-          />
+          <Text style={[styles.t, {color: AppColor.RED,}]}>
+            {finalDate ? moment(finalDate).format('DD MMMM YYYY') : ''}
+          </Text>
         </View>
       </View>
       <View
@@ -150,7 +145,6 @@ const PredictionScreen = ({navigation, route}: any) => {
           marginTop: DeviceHeigth * 0.02,
         }}>
         <Bulb
-          screen={'Do you have Injury in any body part?'}
           header={
             'We will filter unsuitable workouts for you, Also you can select 1 or 2 Injuries only'
           }
@@ -247,12 +241,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   t: {
-    fontFamily: 'Poppins',
-    fontSize: 20,
+    fontFamily: 'Poppins-Bold',
+    fontSize: 25,
     fontWeight: '600',
     lineHeight: 30,
     color: AppColor.BLACK,
     marginTop: 5,
+    marginRight:7
   },
   nextButton: {
     backgroundColor: 'red',

@@ -55,7 +55,7 @@ const Gender = ({route, navigation}: any) => {
           delay: gender == 'Male' ? 0 : 500, // Delay the return to center animation for a smoother effect
         }),
         Animated.timing(translateX1, {
-          toValue: gender == 'Female' ? -DeviceWidth * 0.2 : DeviceWidth / 2,
+          toValue: gender == 'Female' ? -DeviceWidth * 0.25 : DeviceWidth / 2,
           duration: 500,
           useNativeDriver: true,
           delay: gender == 'Female' ? 500 : 0, // Delay the return to center animation for a smoother effect
