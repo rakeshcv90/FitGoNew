@@ -489,10 +489,11 @@ const Signup = ({navigation}) => {
                   <Text
                     style={{
                       color: '#000',
-                      fontSize: 18,
+                      fontSize: 22,
                       fontWeight: '600',
+                      fontFamily: 'Poppins-SemiBold',
                     }}>
-                    OTP Verification
+                    Verify Account
                   </Text>
                   <Text
                     style={{
@@ -501,6 +502,7 @@ const Signup = ({navigation}) => {
                       fontWeight: '600',
                       fontFamily: 'Poppins',
                       marginTop: 10,
+                      marginBottom: 5,
                     }}>
                     {'Verify your account by entering verification code'}
                   </Text>
@@ -511,7 +513,7 @@ const Signup = ({navigation}) => {
                       fontWeight: '600',
                       textAlign: 'center',
                       fontFamily: 'Poppins',
-                      marginBottom: 15,
+                      marginBottom: 17,
                     }}>
                     {' '}
                     we sent to{' '}
@@ -617,7 +619,7 @@ const Signup = ({navigation}) => {
                       }}
                     />
                   </View>
-                  <View style={{flexDirection: 'row', marginVertical: 5}}>
+                  <View style={{flexDirection: 'row', marginVertical: 15}}>
                     {timeLeft === 0 ? (
                       <TouchableOpacity>
                         <Text
@@ -641,12 +643,13 @@ const Signup = ({navigation}) => {
                         }}>
                         Resend OTP in
                         <Text style={{fontWeight: 'bold'}}> {timeLeft} </Text>
-                        seconds
+                        second
                       </Text>
                     )}
                   </View>
-                  <View style={{marginBottom: 6}}>
+                  <View style={{marginBottom: 10}}>
                     <TouchableOpacity
+                      activeOpacity={0.5}
                       style={{
                         width: (DeviceWidth * 40) / 100,
                         backgroundColor: '#C8170D',
@@ -658,9 +661,26 @@ const Signup = ({navigation}) => {
                       onPress={() => {
                         handleOTP();
                       }}>
-                      <Text style={{color: '#fff', fontSize: 15}}>
-                        Verify Code
-                      </Text>
+                      <LinearGradient
+                        colors={[AppColor.RED1, AppColor.RED]}
+                        start={{x: 0, y: 1}}
+                        end={{x: 1, y: 0}}
+                        style={{
+                          width: (DeviceWidth * 40) / 100,
+                          height: (DeviceHeigth * 4.5) / 100,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          borderRadius: 100,
+                        }}>
+                        <Text
+                          style={{
+                            color: '#fff',
+                            fontSize: 15,
+                            fontFamily: 'Poppins-SemiBold',
+                          }}>
+                          Verify Code
+                        </Text>
+                      </LinearGradient>
                     </TouchableOpacity>
                   </View>
                 </>
@@ -779,24 +799,33 @@ const Signup = ({navigation}) => {
                     onChangeText={handleChange('password')}
                     right={
                       <TextInput.Icon
-                        icon={() => (
-                          <TouchableOpacity
-                            onPress={() => {
-                              setShowPassword(!showPassword);
-                            }}>
-                            <Image
-                              source={
-                                showPassword ? localImage.EYE : localImage.EYE1
-                              }
-                              style={{width: 22, height: 22}}
-                              resizeMode="contain"
-                              tintColor="#ADA4A5"
-                            />
-                          </TouchableOpacity>
-                        )}
-                        style={{marginTop: 14}}
+                        icon={showPassword ? 'eye-off' : 'eye'}
+                        onPress={() => setShowPassword(!showPassword)}
+                        color={'#ADA4A5'}
+                        style={{marginBottom:-1,}}
                       />
                     }
+                    // right={
+                    //   <TextInput.Icon
+                    //     icon={() => (
+                    //       <TouchableOpacity
+                    //       style={{borderWidth:1}}
+                    //         onPress={() => {
+                    //           setShowPassword(!showPassword);
+                    //         }}>
+                    //         <Image
+                    //           source={
+                    //             showPassword ? localImage.EYE : localImage.EYE1
+                    //           }
+                    //           style={{width: 22, height: 22,}}
+                    //           resizeMode="contain"
+                    //           tintColor="#ADA4A5"
+                    //         />
+                    //       </TouchableOpacity>
+                    //     )}
+                    //     style={{marginTop: 14}}
+                    //   />
+                    // }
                     left={
                       <TextInput.Icon
                         icon={() => (
@@ -826,26 +855,34 @@ const Signup = ({navigation}) => {
                     onChangeText={handleChange('repeat_password')}
                     right={
                       <TextInput.Icon
-                        icon={() => (
-                          <TouchableOpacity
-                            onPress={() => {
-                              setIsvisiblepassword(!isVisiblepassword);
-                            }}>
-                            <Image
-                              source={
-                                isVisiblepassword
-                                  ? localImage.EYE
-                                  : localImage.EYE1
-                              }
-                              style={{width: 22, height: 22}}
-                              resizeMode="contain"
-                              tintColor="#ADA4A5"
-                            />
-                          </TouchableOpacity>
-                        )}
-                        style={{marginTop: 14}}
+                        icon={isVisiblepassword ? 'eye-off' : 'eye'}
+                        onPress={() => setIsvisiblepassword(!isVisiblepassword)}
+                        color={'#ADA4A5'}
+                        style={{marginBottom:-1,}}
                       />
                     }
+                    // right={
+                    //   <TextInput.Icon
+                    //     icon={() => (
+                    //       <TouchableOpacity
+                    //         onPress={() => {
+                    //           setIsvisiblepassword(!isVisiblepassword);
+                    //         }}>
+                    //         <Image
+                    //           source={
+                    //             isVisiblepassword
+                    //               ? localImage.EYE
+                    //               : localImage.EYE1
+                    //           }
+                    //           style={{width: 22, height: 22}}
+                    //           resizeMode="contain"
+                    //           tintColor="#ADA4A5"
+                    //         />
+                    //       </TouchableOpacity>
+                    //     )}
+                    //     style={{marginTop: 14}}
+                    //   />
+                    // }
                     left={
                       <TextInput.Icon
                         icon={() => (
@@ -993,6 +1030,7 @@ var styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 15,
     fontWeight: '400',
+    color: AppColor.BLACK,
   },
   policyText1: {
     // underline: {textDecorationLine: 'underline'},
@@ -1013,9 +1051,14 @@ var styles = StyleSheet.create({
     height: 55,
     margin: 5,
     backgroundColor: '#F8F9F9',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center',
   },
   OtpBox: {
     flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   modalContainer: {
     justifyContent: 'flex-end',

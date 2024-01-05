@@ -4,7 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SplaceScreen from '../Screen/SplaceScreen';
 import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/Index';
+import Yourself from '../Screen/Yourself/index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -57,7 +57,7 @@ const screenOptions = {
   gestureDirection: 'horizontal',
   gesturesEnabled: true,
   // cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-  CardStyleInterpolators:({ current, next, layouts }) => {
+  CardStyleInterpolators: ({current, next, layouts}) => {
     const translateX = current.progress.interpolate({
       inputRange: [0, 1],
       outputRange: [layouts.screen.width, 0],
@@ -67,7 +67,7 @@ const screenOptions = {
       inputRange: [0, 1],
       outputRange: [0, 1],
     });
-    return { transform: [{ translateX }], opacity };
+    return {transform: [{translateX}], opacity};
   },
 };
 
@@ -121,6 +121,7 @@ export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+
       <Stack.Screen
         name="IntroductionScreen1"
         component={IntroductionScreen1}
@@ -132,7 +133,6 @@ export const LoginStack = () => {
       <Stack.Screen
         name="IntroductionScreen3"
         component={IntroductionScreen3}
-
       />
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
@@ -162,8 +162,7 @@ export const LoginStack = () => {
       <Stack.Screen name="LoadData" component={LoadData} />
       <Stack.Screen name="Preview" component={Preview} />
       <Stack.Screen name="Goal" component={Goal} />
-      <Stack.Screen name="AlcoholConsent" component={AlcohalConsent} /> 
-       <Stack.Screen name="BottomTab" component={BottomTab}/>
+      <Stack.Screen name="AlcoholConsent" component={AlcohalConsent} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="NewEditProfile" component={NewEditProfile} />
       <Stack.Screen name="WorkoutsDescription" component={WorkoutDescription} />
@@ -175,10 +174,11 @@ export const LoginStack = () => {
       <Stack.Screen name="MealDetails" component={MealDetails} />
       <Stack.Screen name="ProductsList" component={ProductsList} />
       <Stack.Screen name="MeditationDetails" component={MeditationDetails} />
-      <Stack.Screen name="MeditationExerciseDetails" component={MeditationExerciseDetails} />
-
-   
-
+      <Stack.Screen
+        name="MeditationExerciseDetails"
+        component={MeditationExerciseDetails}
+      />
+      <Stack.Screen name="BottomTab" component={BottomTab} />
     </Stack.Navigator>
   );
 };

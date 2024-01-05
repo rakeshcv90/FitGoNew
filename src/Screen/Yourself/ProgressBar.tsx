@@ -3,6 +3,7 @@ import React from 'react';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor} from '../../Component/Color';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import LinearGradient from 'react-native-linear-gradient';
 
 const ProgressBar = ({screen, Type}: any) => {
 
@@ -36,7 +37,10 @@ const ProgressBar = ({screen, Type}: any) => {
           marginLeft: 40,
           marginTop: 5,
         }}>
-        <View
+        <LinearGradient
+        colors={[AppColor.RED1,AppColor.RED]}
+        start={{x: 0, y: 1}}
+        end={{x: 1, y: 0}}
           style={{
             width:
               screen == 0
@@ -44,7 +48,6 @@ const ProgressBar = ({screen, Type}: any) => {
                   ? '16.2%'
                   : '11%'
                 : `${Type ? 17 * screen : 9 * screen}%`,
-            backgroundColor: AppColor.RED,
             height: 5,
             borderRadius: 5,
           }}

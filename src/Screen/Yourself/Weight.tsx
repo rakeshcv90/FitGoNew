@@ -273,7 +273,7 @@ const Weight = ({route, navigation}: any) => {
               <LinearGradient
                 start={{x: 0, y: 1}}
                 end={{x: 1, y: 0}}
-                colors={['#941000', '#D5191A']}
+                colors={[AppColor.RED1, AppColor.RED]}
                 style={[styles.nextButton]}>
                 <Icons name="chevron-right" size={25} color={'#fff'} />
               </LinearGradient>
@@ -429,9 +429,9 @@ const Weight = ({route, navigation}: any) => {
             <TouchableOpacity
               onPress={() => toNextScreen(height[currentActiveIndex])}>
               <LinearGradient
-                start={{x: 1, y: 0}}
-                end={{x: 0, y: 0}}
-                colors={['#941000', '#D5191A']}
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 0}}
+                colors={[AppColor.RED1, AppColor.RED]}
                 style={{
                   backgroundColor: 'red',
                   width: DeviceWidth * 0.35,

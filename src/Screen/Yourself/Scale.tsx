@@ -31,7 +31,7 @@ const Scale = ({
     for (let index = 0; index < posData.length; index++) {
       const {start, end} = posData[index];
       if (center + 25 >= start && center - 25 <= end) {
-        // console.log(center, index);
+        console.log(center, index);
         setActiveIndex(index);
       }
     }

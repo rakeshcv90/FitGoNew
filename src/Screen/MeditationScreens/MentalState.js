@@ -18,15 +18,17 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import Carousel from 'react-native-snap-carousel';
 import Progressbar from '../../Screen/Yourself/ProgressBar';
-import { setMindset_Data } from '../../Component/ThemeRedux/Actions';
+import {setMindset_Data} from '../../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
+import {color} from 'd3';
 const MentalState = ({navigation, route}) => {
-  const [getMentalstate,setMentalState]=useState('Normal')
-  const{mindSetData}=useSelector(state=>state)
-  const Dispatch=useDispatch();
+  const [getMentalstate, setMentalState] = useState('Normal');
+  const {mindSetData} = useSelector(state => state);
+  const Dispatch = useDispatch();
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {  // for unselecting the item when user hit the back button from next screen
-      // setSelectedB(0); 
+    const unsubscribe = navigation.addListener('focus', () => {
+      // for unselecting the item when user hit the back button from next screen
+      // setSelectedB(0);
     });
 
     return unsubscribe;
@@ -61,9 +63,19 @@ const MentalState = ({navigation, route}) => {
     },
   ];
   const carouselRef = useRef(null);
-  const handleSnapToItem = useCallback((index) => {
+  const handleSnapToItem = useCallback(index => {
     setItemIndex(index);
-    setMentalState(index==0?"Normal":index==1?"Stress":index==2?"Anxiety":index==3?"Depression":"")
+    setMentalState(
+      index == 0
+        ? 'Normal'
+        : index == 1
+        ? 'Stress'
+        : index == 2
+        ? 'Anxiety'
+        : index == 3
+        ? 'Depression'
+        : '',
+    );
   }, []);
   const renderItem = ({item, index}) => {
     return (
@@ -74,8 +86,8 @@ const MentalState = ({navigation, route}) => {
           onPress={() => {
             // navigation.navigate('AlcoholConsent');
             setItemIndex(index);
-            setMentalState(item.txt)
-            console.log("value",item.txt)
+            setMentalState(item.txt);
+            console.log('value', item.txt);
           }}>
           <Text style={styles.txts}>{item.txt}</Text>
           <Image source={item.img} style={styles.img} resizeMode="contain" />
@@ -83,7 +95,7 @@ const MentalState = ({navigation, route}) => {
       </View>
     );
   };
-console.log("mental State",mindSetData)
+  console.log('mental State', mindSetData);
   return (
     <View style={styles.Container}>
       <Progressbar screen={screen} Type />
@@ -115,50 +127,66 @@ console.log("mental State",mindSetData)
         colors={['#941000', '#D5191A']}
         style={[styles.bottomProgressbar]}>
         {MentalStateData?.map((value, index) => (
-          <TouchableOpacity
-            key={index}
-            style={{
-              width: 20,
-              height: 20,
-              backgroundColor: AppColor.WHITE,
-              borderRadius: 25 / 2,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            onPress={() => {
-              setMentalState(value.txt)
-              carouselRef.current.snapToItem(index);
-            }}>
-            {itemIndex == index ? (
-              <Image
-                source={value.img1}
-                style={{width:30, height: 30}}
-                resizeMode="contain"
-              />
-            ) : (
-              <View
+          <>
+            <TouchableOpacity
+              key={index}
+              style={{
+                width: 20,
+                height: 20,
+                backgroundColor: AppColor.WHITE,
+                borderRadius: 25 / 2,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => {
+                setMentalState(value.txt);
+                carouselRef.current.snapToItem(index);
+              }}>
+              {itemIndex == index ? (
+                <Image
+                  source={value.img1}
+                  style={{width: 30, height: 30}}
+                  resizeMode="contain"
+                />
+              ) : (
+                <View
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 10 / 2,
+                    backgroundColor: AppColor.WHITE,
+                    ...Platform.select({
+                      ios: {
+                        shadowColor: '#000000',
+                        shadowOffset: {width: 0, height: 2},
+                        shadowOpacity: 0.3,
+                        shadowRadius: 4,
+                      },
+                      android: {
+                        elevation: 5,
+                      },
+                    }),
+                  }}></View>
+              )}
+              <Text
                 style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: 10 / 2,
-                  backgroundColor: AppColor.WHITE,
-                  ...Platform.select({
-                    ios: {
-                      shadowColor: '#000000',
-                      shadowOffset: {width: 0, height: 2},
-                      shadowOpacity: 0.3,
-                      shadowRadius: 4,
-                    },
-                    android: {
-                      elevation: 5,
-                    },
-                  }),
-                }}></View>
-            )}
-          </TouchableOpacity>
+                  position: 'absolute',
+                  bottom: -35,
+                  padding: 2,
+                  width: 100,
+                  textAlign: 'center',
+                  color: itemIndex == index ? AppColor.RED : AppColor.DARKGRAY,
+                  fontSize: itemIndex == index ? 15 : 12,
+                  fontFamily: 'Poppins-SemiBold',
+                  textAlign: 'center',
+                }}>
+                {value.txt}
+              </Text>
+            </TouchableOpacity>
+          </>
         ))}
       </LinearGradient>
-      <View
+      {/* <View
         style={{
           width: DeviceWidth*0.90,
           justifyContent: 'space-between',
@@ -179,7 +207,7 @@ console.log("mental State",mindSetData)
             </Text>
           </View>
         ))}
-      </View>
+      </View> */}
       <View style={styles.buttons}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -196,7 +224,9 @@ console.log("mental State",mindSetData)
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            Dispatch(setMindset_Data([...mindSetData,{mState:getMentalstate}]))
+            Dispatch(
+              setMindset_Data([...mindSetData, {mState: getMentalstate}]),
+            );
             navigation.navigate('AlcoholConsent', {nextScreen: screen + 1});
           }}>
           <LinearGradient
@@ -244,7 +274,7 @@ const styles = StyleSheet.create({
     height: DeviceHeigth * 0.4,
   },
   bottomProgressbar: {
-    width: DeviceWidth * 0.85,
+    width: DeviceWidth * 0.8,
     borderRadius: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',

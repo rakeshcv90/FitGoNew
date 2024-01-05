@@ -674,22 +674,30 @@ const Login = ({navigation}) => {
               onChangeText={text => setPassword(text)}
               right={
                 <TextInput.Icon
-                  icon={() => (
-                    <TouchableOpacity
-                      onPress={() => {
-                        setShowPassword(!showPassword);
-                      }}>
-                      <Image
-                        source={showPassword ? localImage.EYE : localImage.EYE1}
-                        style={{width: 22, height: 22}}
-                        resizeMode="contain"
-                        tintColor="#ADA4A5"
-                      />
-                    </TouchableOpacity>
-                  )}
-                  style={{marginTop: 14}}
+                  icon={showPassword ? 'eye-off' : 'eye'}
+                  onPress={() => setShowPassword(!showPassword)}
+                  color={'#ADA4A5'}
+                  style={{marginBottom:-1,}}
                 />
               }
+              // right={
+              //   <TextInput.Icon
+              //     icon={() => (
+              //       <TouchableOpacity
+              //         onPress={() => {
+              //           setShowPassword(!showPassword);
+              //         }}>
+              //         <Image
+              //           source={showPassword ? localImage.EYE : localImage.EYE1}
+              //           style={{width: 22, height: 22}}
+              //           resizeMode="contain"
+              //           tintColor="#ADA4A5"
+              //         />
+              //       </TouchableOpacity>
+              //     )}
+              //     style={{marginTop: 14}}
+              //   />
+              // }
               left={
                 <TextInput.Icon
                   icon={() => (

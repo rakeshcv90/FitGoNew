@@ -100,3 +100,9 @@ export const setCount=data=>{
     payload:data
   }
 }
+export const setPedomterData=data=>{
+  return{
+    type:types.Update_Pedometer_Data,
+    payload:data
+  }
+}

@@ -11,6 +11,7 @@ import {
   Dimensions,
   Platform,
   AppState,
+  Modal,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
@@ -28,7 +29,9 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Dropdown} from 'react-native-element-dropdown';
 import {LineChart} from 'react-native-chart-kit';
 import AnimatedLottieView from 'lottie-react-native';
+import {Slider} from '@miblanchard/react-native-slider';
 import axios from 'axios';
+import { setPedomterData } from '../../Component/ThemeRedux/Actions';
 import {
   Stop,
   Circle,
@@ -38,6 +41,7 @@ import {
 } from 'react-native-svg';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {BlurView} from '@react-native-community/blur';
 import {
   isStepCountingSupported,
   parseStepData,
@@ -45,11 +49,13 @@ import {
   stopStepCounterUpdate,
 } from '@dongminyu/react-native-step-counter';
 import {navigationRef} from '../../../App';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import RoundedCards from '../../Component/RoundedCards';
+import {BackdropBlur, Canvas, Fill} from '@shopify/react-native-skia';
+import {color} from 'd3';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -79,156 +85,6 @@ const GradientText = ({item}) => {
     </View>
   );
 };
-
-// const Home = () => {
-//   // service
-//   useEffect(() => {
-//     new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
-//       //NOT IMPLEMENTED YET
-//       'healthKit:StepCount:new',
-//       async () => {
-//         console.log('--> observer triggered');
-//       },
-//     );
-//   });
-//   const Dispatch = useDispatch();
-//   const {getHealthData} = useSelector(state => state);
-//   const [steps, setSteps] = useState(
-//     getHealthData[0] ? getHealthData[0].Steps : '0',
-//   );
-//   const [Calories, setCalories] = useState(
-//     getHealthData[1] ? getHealthData[1].Calories : '0',
-//   );
-//   const [distance, setDistance] = useState(
-//     getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
-//   );
-//   console.log('healthDataa', getHealthData);
-//   // pedometer
-//   const sleep = time =>
-//     new Promise(resolve => setTimeout(() => resolve(), time)); // background
-//   const veryIntensiveTask = async taskDataArguments => {
-//     const {delay} = taskDataArguments;
-//     const updateStepsAndNotification = async data => {
-//       // Update the steps and related state
-//       setSteps(data.steps);
-//       setDistance(((data.steps / 20) * 0.01).toFixed(2));
-//       setCalories(Math.floor(data.steps / 20));
-//       Dispatch(
-//         setHealthData([
-//           {Steps: data.steps},
-//           {Calories: Math.floor(data.steps / 20)},
-//           {DistanceCovered: ((data.steps / 20) * 0.01).toFixed(2)},
-//         ]),
-//       );
-//       // Update the notification with the current steps
-//       await BackgroundService.updateNotification({
-//         taskIcon: {
-//           name: 'ic_launcher',
-//           type: 'mipmap',
-//         },
-//         color: AppColor.RED,
-//         taskName: 'Pedometer',
-//         taskTitle: 'Steps ' + data.steps,
-//         taskDesc: 'Steps ',
-//         progressBar: {
-//           max: 100,
-//           value: data.steps,
-//           indeterminate: false,
-//         },
-//       });
-//     };
-//     for (let i = 0; BackgroundService.isRunning(); i++) {
-//       startStepCounterUpdate(new Date(), async data => {
-//         await updateStepsAndNotification(data);
-//       });
-
-//       await sleep(delay);
-//     }
-//   };
-//   const options = {
-//     color: AppColor.RED,
-//     taskName: 'Pedometer',
-//       taskTitle: 'Steps ' + steps,
-//       taskDesc: '',
-//       progressBar: {
-//         max: 100,
-//         value: steps,
-//         indeterminate: false,
-//       },
-//     taskIcon: {
-//       name: 'ic_launcher',
-//       type: 'mipmap',
-//     },
-//     linkingURI: 'yourSchemeHere://chat/jane', // See Deep Linking for more info
-//     parameters: {
-//       delay: 3000,
-//     },
-//   };
-//   useEffect(() => {
-//     PermissionAndroid();
-//   },[]);
-//   async function startStepCounter() {
-//     startStepCounterUpdate(new Date(), data => {
-//       setSteps(data.steps);
-//       setDistance(((data.steps / 20) * 0.01).toFixed(2));
-//       setCalories(Math.floor(data.steps / 20));
-//       Dispatch(
-//         setHealthData([
-//           {Steps: data.steps},
-//           {Calories: Math.floor(data.steps / 20)},
-//           {DistanceCovered: ((data.steps / 20) * 0.01).toFixed(2)},
-//         ]),
-//       );
-//     });
-//     await BackgroundService.start(veryIntensiveTask, options);
-//     await BackgroundService.updateNotification({
-//       color: AppColor.RED,
-//       taskName: 'Pedometer',
-//       taskTitle: 'Steps ' + steps,
-//       taskDesc: 'Steps ',
-//       taskIcon: {
-//         name: 'ic_launcher',
-//         type: 'mipmap',
-//       },
-//       progressBar: {
-//         max: 100,
-//         value: steps,
-//         indeterminate: false,
-//       },
-//     });
-//   }
-//   const PermissionAndroid = async () => {
-//     if (Platform.OS == 'android') {
-//       const result = await isStepCountingSupported();
-//       console.debug('🚀 - isStepCountingSupported', result);
-//       const permissionStatus = await check(
-//         PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
-//       );
-//       if (permissionStatus === RESULTS.DENIED && result.supported == true) {
-//         const permissionRequestResult = await request(
-//           PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
-//         );
-//         if (
-//           permissionRequestResult === RESULTS.GRANTED &&
-//           result.supported == true
-//         ) {
-//           console.log('ACTIVITY_RECOGNITION permission granted');
-//           console.log('Resulllttt', RESULTS.GRANTED);
-//           startStepCounter();
-//         } else {
-//           console.log('ACTIVITY_RECOGNITION permission denied');
-//           // Handle the case where the permission request is denied
-//           await request(PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION);
-//         }
-//       } else {
-//         console.log('ACTIVITY_RECOGNITION permission already granted');
-//         startStepCounter();
-//         // Permission was already granted previously
-//       }
-//     } else {
-//       AppleHealthKit.isAvailable((err, available) => {
-//         console.log('Avialable=========>', available);
-
 const ProgressBar = ({progress, image, text}) => {
   return (
     <View
@@ -271,7 +127,6 @@ const ProgressBar = ({progress, image, text}) => {
     </View>
   );
 };
-
 const Home = ({navigation}) => {
   const [progress, setProgress] = useState(10);
 
@@ -280,6 +135,7 @@ const Home = ({navigation}) => {
   const [currentindex, setCurrentIndex] = useState(1);
   const progressAnimation = useRef(new Animated.Value(0)).current;
   const {
+    getHealthData,
     getLaterButtonData,
     completeProfileData,
     getUserID,
@@ -287,10 +143,43 @@ const Home = ({navigation}) => {
     mindsetConsent,
     customWorkoutData,
     mealData,
+    getPedomterData
   } = useSelector(state => state);
+  const[stepGoalProfile,setStepGoalProfile]=useState(getPedomterData[0]?getPedomterData[0].RSteps:5000)
+  const[DistanceGoalProfile,setDistanceGoalProfile]=useState(getPedomterData[0]?getPedomterData[1].RDistance:2.5)
+  const[CalriesGoalProfile,setCaloriesGoalProfile]=useState(getPedomterData[0]?getPedomterData[2].RCalories:25)
+  console.log("pdeomter",getPedomterData)
   useEffect(() => {
+    ActivityPermission();
+  }, []);
+  const ActivityPermission = async () => {
     if (Platform.OS == 'android') {
-      AskHealthPermissionAndroid();
+      const result = await isStepCountingSupported();
+      console.debug('🚀 - isStepCountingSupported', result);
+      const permissionStatus = await check(
+        PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
+      );
+      if (permissionStatus === RESULTS.DENIED && result.supported == true) {
+        const permissionRequestResult = await request(
+          PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
+        );
+        if (
+          permissionRequestResult === RESULTS.GRANTED &&
+          result.supported == true
+        ) {
+          console.log('ACTIVITY_RECOGNITION permission granted');
+          console.log('Resulllttt', RESULTS.GRANTED);
+          startStepCounter();
+        } else {
+          console.log('ACTIVITY_RECOGNITION permission denied');
+          // Handle the case where the permission request is denied
+          await request(PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION);
+        }
+      } else {
+        console.log('ACTIVITY_RECOGNITION permission already granted');
+        startStepCounter();
+        // Permission was already granted previously
+      }
     } else {
       AppleHealthKit.isAvailable((err, available) => {
         const permissions = {
@@ -316,14 +205,14 @@ const Home = ({navigation}) => {
                 ),
                 endDate: new Date(),
               };
-
               AppleHealthKit.getStepCount(options, (callbackError, results) => {
                 if (callbackError) {
                   console.log('Error while getting the data');
                 }
-                // setSteps(results.value);
-                // setDistance(((results.value / 20) * 0.0142).toFixed(2));
-                // setCalories(((results.value / 20) * 0.7566).toFixed(1));
+                setSteps(results.value);
+                setDistance(((results.value / 20) * 0.01).toFixed(2));
+                setCalories(((results.value / 20) * 1).toFixed(1));
+                console.log('ios stespssss', results);
               });
             }
           });
@@ -336,14 +225,456 @@ const Home = ({navigation}) => {
         }
       });
     }
-  });
+  };
+  // service
+  // useEffect(() => {
+  //   new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
+  //     //NOT IMPLEMENTED YET
+  //     'healthKit:StepCount:new',
+  //     async () => {
+  //       console.log('--> observer triggered');
+  //     },
+  //   );
+  // });
+  const Dispatch = useDispatch();
+  const [steps, setSteps] = useState(
+    getHealthData[0] ? getHealthData[0].Steps : '0',
+  );
+  const [Calories, setCalories] = useState(
+    getHealthData[1] ? getHealthData[1].Calories : '0',
+  );
+  const [distance, setDistance] = useState(
+    getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
+  );
+  // pedometers
+  const sleep = time =>
+    new Promise(resolve => setTimeout(() => resolve(), time)); // background
+  const veryIntensiveTask = async taskDataArguments => {
+    const {delay} = taskDataArguments;
 
+    const updateStepsAndNotification = async data => {
+      // Update the steps and related state
+      setSteps(data.steps);
+      setDistance(((data.steps / 20) * 0.01).toFixed(2));
+      setCalories(Math.floor(data.steps / 20));
+      Dispatch(
+        setHealthData([
+          {Steps: data.steps},
+          {Calories: Math.floor(data.steps / 20)},
+          {DistanceCovered: ((data.steps / 20) * 0.01).toFixed(2)},
+        ]),
+      );
+      // Update the notification with the current steps
+      await BackgroundService.updateNotification({
+        taskIcon: {
+          name: 'ic_launcher',
+          type: 'mipmap',
+        },
+        color: AppColor.RED,
+        taskName: 'Pedometer',
+        taskTitle: 'Steps ' + data.steps,
+        taskDesc: 'Steps ',
+        progressBar: {
+          max: stepGoalProfile,
+          value: data.steps,
+          indeterminate: false,
+        },
+        parameters: {
+          delay: 5000,
+        },
+      });
+    };
+    // function for checking if it is midnight or not
+    const isMidnight = date => {
+      return (
+        date.getHours() === 0 &&
+        date.getMinutes() === 0 &&
+        date.getSeconds() === 0
+      );
+    };
+    const resetSteps = () => {
+      // Your logic to reset steps and related state
+      setSteps(0);
+      setDistance(0);
+      setCalories(0);
+      Dispatch(
+        setHealthData([
+          {Steps: '0'},
+          {Calories: '0'},
+          {DistanceCovered: '0.00'},
+        ]),
+      );
+      // Update the notification after resetting steps
+      BackgroundService.updateNotification({
+        // Your notification update logic after steps reset
+        taskIcon: {
+          name: 'ic_launcher',
+          type: 'mipmap',
+        },
+        color: AppColor.RED,
+        taskName: 'Pedometer',
+        taskTitle: 'Steps ' + steps,
+        taskDesc: 'Steps ',
+        progressBar: {
+          max: stepGoalProfile,
+          value: steps,
+          indeterminate: false,
+        },
+      });
+    };
+    for (let i = 0; BackgroundService.isRunning(); i++) {
+      startStepCounterUpdate(new Date(), async data => {
+        await updateStepsAndNotification(data);
+      });
+      // reset the steps at midnight
+      const now = new Date();
+      // console.log('Midnight==============>', isMidnight(now));
+      if (isMidnight(now)) {
+        resetSteps();
+      }
+
+      await sleep(delay);
+    }
+  };
+  const options = {
+    color: AppColor.RED,
+    taskName: 'Pedometer',
+    taskTitle: 'Steps ' + steps,
+    taskDesc: '',
+    progressBar: {
+      max: stepGoalProfile,
+      value: steps,
+      indeterminate: false,
+    },
+    taskIcon: {
+      name: 'ic_launcher',
+      type: 'mipmap',
+    },
+    linkingURI: '@string/fb_login_protocol_scheme', // See Deep Linking for more info
+    parameters: {
+      delay: 5000,
+    },
+  };
+  async function startStepCounter() {
+    startStepCounterUpdate(new Date(), data => {
+      setSteps(data.steps);
+      setDistance(((data.steps / 20) * 0.01).toFixed(2));
+      setCalories(Math.floor(data.steps / 20));
+      Dispatch(
+        setHealthData([
+          {Steps: data.steps},
+          {Calories: Math.floor(data.steps / 20)},
+          {DistanceCovered: ((data.steps / 20) * 0.01).toFixed(2)},
+        ]),
+      );
+    });
+    await BackgroundService.start(veryIntensiveTask, options);
+    await BackgroundService.updateNotification(options);
+  }
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleLongPress = () => {
+    setModalVisible(true); // Show the modal when long-press is detected
+  };
+  const closeModal = () => {
+    setModalVisible(false); // Close the modal
+  };
+  const UpdateGoalModal = () => {
+    const [Steps_Goal, setSteps_Goal] = useState(500);
+    const [Calories_Goal, setCalories_Goal] = useState(25);
+    const [Distance_Goal, setDistance_Goal] = useState(0.25);
+    const [Step_Visible, setSteps_Visible] = useState(false);
+    const [Distance_Visible, setDistance_Visible] = useState(false);
+    const [Calories_Visible, setCalories_Visible] = useState(false);
+    const ToggleVisiblity = num => {
+      if (num == 1) {
+        setSteps_Visible(!Step_Visible);
+      } else if (num == 2) {
+        setDistance_Visible(!Distance_Visible);
+      } else {
+        setCalories_Visible(!Calories_Visible);
+      }
+    };
+    const ThumbImage1 = () => {
+      return (
+        <View
+          style={{
+            width: 35,
+            height: 35,
+            backgroundColor: AppColor.WHITE,
+            borderRadius: 35 / 2,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image
+            source={localImage.Step3}
+            style={{width: 20, height: 20}}
+            resizeMode="contain"
+            tintColor={'#5FB67B'}
+          />
+        </View>
+      );
+    };
+    const ThumbImage2 = () => {
+      return (
+        <View
+          style={{
+            width: 35,
+            height: 35,
+            backgroundColor: AppColor.WHITE,
+            borderRadius: 35 / 2,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image
+            source={localImage.Step2}
+            style={{width: 20, height: 20}}
+            resizeMode="contain"
+          />
+        </View>
+      );
+    };
+    const ThumbImage3 = () => {
+      return (
+        <View
+          style={{
+            width: 35,
+            height: 35,
+            backgroundColor: AppColor.WHITE,
+            borderRadius: 35 / 2,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image
+            source={localImage.Step1}
+            style={{width: 20, height: 20}}
+            resizeMode="contain"
+          />
+        </View>
+      );
+    };
+    const HandleSave=()=>{
+      setStepGoalProfile(Steps_Goal)
+      setDistanceGoalProfile(Distance_Goal)
+      setCaloriesGoalProfile(Calories_Goal)
+      Dispatch(setPedomterData([{"RSteps":Steps_Goal},{"RDistance":Distance_Goal},{"RCalories":Calories_Goal}]))
+      closeModal();
+    }
+   
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={closeModal}>
+        <BlurView
+          style={styles.modalContainer}
+          blurType="light"
+          blurAmount={1}
+          reducedTransparencyFallbackColor="white"
+        />
+        <View
+          style={[styles.modalContent, {backgroundColor: AppColor.BACKGROUNG}]}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Image
+              source={localImage.Target}
+              style={{width: DeviceWidth * 0.07, height: DeviceHeigth * 0.03}}
+              resizeMode="contain"
+            />
+            <Text
+              style={[styles.title, {color: AppColor.BLACK, marginLeft: 10}]}>
+              Set Goals
+            </Text>
+          </View>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 15,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                source={localImage.Step3}
+                style={{width: 30, height: 30}}
+                tintColor={'#5FB67B'}
+              />
+              <Text style={styles.txt5}>Steps</Text>
+            </View>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text
+                style={[
+                  {
+                    color: AppColor.BoldText,
+                    marginLeft: 10,
+                    fontFamily: 'Poppins-SemiBold',
+                  },
+                ]}>
+                {Steps_Goal + ' Steps'}
+              </Text>
+              <TouchableOpacity
+                style={styles.dropButton}
+                onPress={() => ToggleVisiblity(1)}>
+                <Icons
+                  name={Step_Visible ? 'chevron-down' : 'chevron-up'}
+                  size={25}
+                  color={'#000'}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{marginTop: 5}}>
+            {Step_Visible ? (
+              <Slider
+                value={Steps_Goal}
+                maximumValue={10000}
+                minimumValue={500}
+                step={1}
+                onValueChange={value => {
+                  setSteps_Goal(value);
+                   setCalories_Goal((value*0.05).toFixed(2))
+                  setDistance_Goal((value*0.0005).toFixed(2))
+                }}
+                minimumTrackTintColor="#5FB67B"
+                renderThumbComponent={ThumbImage1}
+                trackStyle={{height: 10, borderRadius: 20}}
+              />
+            ) : null}
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 15,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                source={localImage.Step2}
+                style={{width: 30, height: 28}}
+                resizeMode="contain"
+              />
+              <Text style={styles.txt5}>Distance</Text>
+            </View>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text
+                style={[
+                  {
+                    color: AppColor.BoldText,
+                    marginLeft: 10,
+                    fontFamily: 'Poppins-SemiBold',
+                  },
+                ]}>
+                {Distance_Goal + ' km'}
+              </Text>
+              <TouchableOpacity
+                style={styles.dropButton}
+                onPress={() => ToggleVisiblity(2)}>
+                <Icons
+                  name={Distance_Visible ? 'chevron-down' : 'chevron-up'}
+                  size={25}
+                  color={'#000'}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{marginTop: 5}}>
+            {Distance_Visible ? (
+              <Slider
+                value={Distance_Goal}
+                maximumValue={5}
+                step={1}
+                onValueChange={value => {
+                  setDistance_Goal(value);
+                  setSteps_Goal((value*2000).toFixed(0));
+                  setCalories_Goal((value*100).toFixed(2))
+                }
+                }
+                minimumValue={0.25}
+                minimumTrackTintColor="#FCBB1D"
+                renderThumbComponent={ThumbImage2}
+                trackStyle={{height: 10, borderRadius: 20}}
+              />
+            ) : null}
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 15,
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                source={localImage.Step1}
+                style={{width: 30, height: 25}}
+                resizeMode="contain"
+              />
+              <Text style={styles.txt5}>Calories</Text>
+            </View>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text
+                style={[
+                  {
+                    color: AppColor.BoldText,
+                    marginLeft: 10,
+                    fontFamily: 'Poppins-SemiBold',
+                  },
+                ]}>
+                {Calories_Goal + ' KCal'}
+              </Text>
+              <TouchableOpacity
+                style={styles.dropButton}
+                onPress={() => ToggleVisiblity(3)}>
+                <Icons
+                  name={Calories_Visible ? 'chevron-down' : 'chevron-up'}
+                  size={25}
+                  color={'#000'}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{marginTop: 5}}>
+            {Calories_Visible ? (
+              <Slider
+                value={Calories_Goal}
+                maximumValue={500}
+                minimumValue={25}
+                step={1}
+                onValueChange={value => {
+                  setCalories_Goal(value)
+                  setDistance_Goal((value*0.01).toFixed(2));
+                  setSteps_Goal((value*20))
+                }}
+                minimumTrackTintColor={AppColor.RED}
+                renderThumbComponent={ThumbImage3}
+                trackStyle={{height: 10, borderRadius: 20}}
+              />
+            ) : null}
+          </View>
+          <TouchableOpacity style={styles.Modal_Save_btton} activeOpacity={0.5} onPress={()=>{HandleSave()}}>
+            <LinearGradient
+              colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
+              start={{x: 0, y: 1}}
+              end={{x: 1, y: 0}}
+              style={{
+                width: DeviceWidth * 0.3,
+                height: DeviceHeigth * 0.04,
+                borderRadius: 12,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}><Text style={[styles.title,{color:AppColor.WHITE}]}>Save</Text></LinearGradient>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    );
+  };
   const props = {
     activeStrokeWidth: 25,
     inActiveStrokeWidth: 25,
     inActiveStrokeOpacity: 0.35,
   };
-
   const data2 = [
     {label: 'Weekly', value: '1'},
     {label: 'Daily', value: '2'},
@@ -378,6 +709,13 @@ const Home = ({navigation}) => {
     <TouchableOpacity
       onPress={() => {
         navigation.navigate('MeditationDetails', {item: title});
+        // showMessage({
+        //   message: 'Work in Progress',
+        //   floating: true,
+        //   duration: 500,
+        //   type: 'info',
+        //   icon: {icon: 'auto', position: 'left'},
+        // });
       }}>
       <LinearGradient
         start={{x: 0, y: 1}}
@@ -484,13 +822,12 @@ const Home = ({navigation}) => {
         item={getTimeOfDayMessage() + ', ' + getUserDataDetails.name}
       />
       {forLoading ? <ActivityLoader /> : ''}
-
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled">
-        <View style={styles.CardBox}>
+        <TouchableOpacity style={styles.CardBox} onLongPress={handleLongPress} activeOpacity={0.7}>
           <Text style={styles.healthText}>Health Overview</Text>
           <View style={styles.healthView}>
             <View style={styles.stepView}>
@@ -508,9 +845,9 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#5FB67B'}]}>
-                  900
+                  {steps}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
-                    /5000 steps
+                    {`/${stepGoalProfile} steps`}
                   </Text>
                 </Text>
               </View>
@@ -527,9 +864,9 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#FCBB1D'}]}>
-                  333
+                  {distance}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
-                    {'/goal km '}
+                    {`/ ${DistanceGoalProfile} km `}
                   </Text>
                 </Text>
               </View>
@@ -551,9 +888,9 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#D01818'}]}>
-                  44
+                  {Calories}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
-                    /goal KCal
+                   {`/${CalriesGoalProfile} KCal`}
                   </Text>
                 </Text>
               </View>
@@ -582,7 +919,7 @@ const Home = ({navigation}) => {
               </CircularProgressBase>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
 
         <>
           <View
@@ -696,6 +1033,8 @@ const Home = ({navigation}) => {
                       style={[
                         styles.title,
                         {
+                          //                           height: 100,
+                          //                           width: 100,
                           //                           height: 100,
                           //                           width: 100,
 
@@ -823,7 +1162,6 @@ const Home = ({navigation}) => {
             <Icons name="chevron-right" size={25} color={'#000'} />
           </TouchableOpacity>
         </View>
-
         <View
           style={[
             styles.meditionBox,
@@ -965,6 +1303,7 @@ const Home = ({navigation}) => {
           />
         </View>
       </ScrollView>
+      {modalVisible ? <UpdateGoalModal /> : null}
     </SafeAreaView>
   );
 };
@@ -1168,6 +1507,63 @@ var styles = StyleSheet.create({
   },
   selectedTextStyle: {
     fontSize: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // Semi-transparent background
+  },
+  modalContent: {
+    padding: 20,
+    borderRadius: 8,
+    width: DeviceWidth * 0.95,
+    position: 'absolute',
+    top: DeviceHeigth / 6,
+    marginHorizontal: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOpacity: 0.2,
+        shadowOffset: {height: 5, width: 0},
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  txt5: {
+    color: AppColor.BLACK,
+    marginLeft: 10,
+    fontFamily: 'Poppins-Regular',
+    fontWeight: '500',
+  },
+  dropButton: {
+    backgroundColor: AppColor.WHITE,
+    width: 25,
+    height: 25,
+    borderRadius: 25 / 2,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOpacity: 0.3,
+        shadowOffset: {height: 5, width: 0},
+        shadowRadius: 20,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
+  },
+  Modal_Save_btton: {
+    width: DeviceWidth * 0.3,
+    height: DeviceHeigth * 0.04,
+    borderRadius: 12,
+    alignSelf: 'center',
+    marginTop: 8,
   },
 });
 export default Home;
