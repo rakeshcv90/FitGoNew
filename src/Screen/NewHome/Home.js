@@ -31,7 +31,7 @@ import {LineChart} from 'react-native-chart-kit';
 import AnimatedLottieView from 'lottie-react-native';
 import {Slider} from '@miblanchard/react-native-slider';
 import axios from 'axios';
-import { setPedomterData } from '../../Component/ThemeRedux/Actions';
+import {setPedomterData} from '../../Component/ThemeRedux/Actions';
 import {
   Stop,
   Circle,
@@ -143,12 +143,18 @@ const Home = ({navigation}) => {
     mindsetConsent,
     customWorkoutData,
     mealData,
-    getPedomterData
+    getPedomterData,
   } = useSelector(state => state);
-  const[stepGoalProfile,setStepGoalProfile]=useState(getPedomterData[0]?getPedomterData[0].RSteps:5000)
-  const[DistanceGoalProfile,setDistanceGoalProfile]=useState(getPedomterData[0]?getPedomterData[1].RDistance:2.5)
-  const[CalriesGoalProfile,setCaloriesGoalProfile]=useState(getPedomterData[0]?getPedomterData[2].RCalories:25)
-  console.log("pdeomter",getPedomterData)
+  const [stepGoalProfile, setStepGoalProfile] = useState(
+    getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
+  );
+  const [DistanceGoalProfile, setDistanceGoalProfile] = useState(
+    getPedomterData[0] ? getPedomterData[1].RDistance : 2.5,
+  );
+  const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
+    getPedomterData[0] ? getPedomterData[2].RCalories : 25,
+  );
+  console.log('pdeomter', getPedomterData);
   useEffect(() => {
     ActivityPermission();
   }, []);
@@ -453,14 +459,20 @@ const Home = ({navigation}) => {
         </View>
       );
     };
-    const HandleSave=()=>{
-      setStepGoalProfile(Steps_Goal)
-      setDistanceGoalProfile(Distance_Goal)
-      setCaloriesGoalProfile(Calories_Goal)
-      Dispatch(setPedomterData([{"RSteps":Steps_Goal},{"RDistance":Distance_Goal},{"RCalories":Calories_Goal}]))
+    const HandleSave = () => {
+      setStepGoalProfile(Steps_Goal);
+      setDistanceGoalProfile(Distance_Goal);
+      setCaloriesGoalProfile(Calories_Goal);
+      Dispatch(
+        setPedomterData([
+          {RSteps: Steps_Goal},
+          {RDistance: Distance_Goal},
+          {RCalories: Calories_Goal},
+        ]),
+      );
       closeModal();
-    }
-   
+    };
+
     return (
       <Modal
         animationType="slide"
@@ -533,8 +545,8 @@ const Home = ({navigation}) => {
                 step={1}
                 onValueChange={value => {
                   setSteps_Goal(value);
-                   setCalories_Goal((value*0.05).toFixed(2))
-                  setDistance_Goal((value*0.0005).toFixed(2))
+                  setCalories_Goal((value * 0.05).toFixed(2));
+                  setDistance_Goal((value * 0.0005).toFixed(2));
                 }}
                 minimumTrackTintColor="#5FB67B"
                 renderThumbComponent={ThumbImage1}
@@ -587,10 +599,9 @@ const Home = ({navigation}) => {
                 step={1}
                 onValueChange={value => {
                   setDistance_Goal(value);
-                  setSteps_Goal((value*2000).toFixed(0));
-                  setCalories_Goal((value*100).toFixed(2))
-                }
-                }
+                  setSteps_Goal((value * 2000).toFixed(0));
+                  setCalories_Goal((value * 100).toFixed(2));
+                }}
                 minimumValue={0.25}
                 minimumTrackTintColor="#FCBB1D"
                 renderThumbComponent={ThumbImage2}
@@ -643,9 +654,9 @@ const Home = ({navigation}) => {
                 minimumValue={25}
                 step={1}
                 onValueChange={value => {
-                  setCalories_Goal(value)
-                  setDistance_Goal((value*0.01).toFixed(2));
-                  setSteps_Goal((value*20))
+                  setCalories_Goal(value);
+                  setDistance_Goal((value * 0.01).toFixed(2));
+                  setSteps_Goal(value * 20);
                 }}
                 minimumTrackTintColor={AppColor.RED}
                 renderThumbComponent={ThumbImage3}
@@ -653,7 +664,12 @@ const Home = ({navigation}) => {
               />
             ) : null}
           </View>
-          <TouchableOpacity style={styles.Modal_Save_btton} activeOpacity={0.5} onPress={()=>{HandleSave()}}>
+          <TouchableOpacity
+            style={styles.Modal_Save_btton}
+            activeOpacity={0.5}
+            onPress={() => {
+              HandleSave();
+            }}>
             <LinearGradient
               colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
               start={{x: 0, y: 1}}
@@ -664,7 +680,9 @@ const Home = ({navigation}) => {
                 borderRadius: 12,
                 justifyContent: 'center',
                 alignItems: 'center',
-              }}><Text style={[styles.title,{color:AppColor.WHITE}]}>Save</Text></LinearGradient>
+              }}>
+              <Text style={[styles.title, {color: AppColor.WHITE}]}>Save</Text>
+            </LinearGradient>
           </TouchableOpacity>
         </View>
       </Modal>
@@ -827,7 +845,11 @@ const Home = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled">
-        <TouchableOpacity style={styles.CardBox} onLongPress={handleLongPress} activeOpacity={0.7}>
+        <View
+          style={styles.CardBox}
+          onLongPress={handleLongPress}
+          activeOpacity={0.7}
+          >
           <Text style={styles.healthText}>Health Overview</Text>
           <View style={styles.healthView}>
             <View style={styles.stepView}>
@@ -890,7 +912,7 @@ const Home = ({navigation}) => {
                 <Text style={[styles.monetText, {color: '#D01818'}]}>
                   {Calories}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
-                   {`/${CalriesGoalProfile} KCal`}
+                    {`/${CalriesGoalProfile} KCal`}
                   </Text>
                 </Text>
               </View>
@@ -919,7 +941,7 @@ const Home = ({navigation}) => {
               </CircularProgressBase>
             </View>
           </View>
-        </TouchableOpacity>
+        </View>
 
         <>
           <View

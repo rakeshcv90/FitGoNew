@@ -4,7 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SplaceScreen from '../Screen/SplaceScreen';
 import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/index';
+import Yourself from '../Screen/Yourself/Index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -49,6 +49,7 @@ import MealDetails from '../Screen/NewHome/MealDetails';
 import ProductsList from '../Screen/NewHome/ProductsList';
 import MeditationDetails from '../Screen/NewHome/MeditationDetails';
 import MeditationExerciseDetails from '../Screen/NewHome/MeditationExerciseDetails';
+import AITrainer from '../Screen/NewHome/AITrainer';
 
 const Stack = createNativeStackNavigator();
 
@@ -179,6 +180,7 @@ export const LoginStack = () => {
         component={MeditationExerciseDetails}
       />
       <Stack.Screen name="BottomTab" component={BottomTab} />
+      <Stack.Screen name="AITrainer" component={AITrainer} />
     </Stack.Navigator>
   );
 };

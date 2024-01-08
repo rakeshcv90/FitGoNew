@@ -16,18 +16,14 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
 import {useSelector} from 'react-redux';
-import axios from 'axios';
-import VersionNumber from 'react-native-version-number';
-import ActivityLoader from '../../Component/ActivityLoader';
-import HTML from 'react-native-render-html';
+
+
 import HTMLRender from 'react-native-render-html';
 
 const MealDetails = ({route, navigation}) => {
   const {getUserDataDetails} = useSelector(state => state);
   const [forLoading, setForLoading] = useState(false);
   const [appVersion, setAppVersion] = useState(0);
-
-  console.log('dfdfdfdfdfd', route.params.item);
 
   //   const getMealDetails = async () => {
   //     setForLoading(true);
@@ -388,8 +384,8 @@ var styles = StyleSheet.create({
   },
   textStyle: {
     fontFamily: 'Poppins',
-    fontWeight: '600',
-    fontSize: 12,
+    fontWeight: '500',
+    fontSize: 13,
     textAlign: 'center',
     lineHeight: 15,
     top: 5,
