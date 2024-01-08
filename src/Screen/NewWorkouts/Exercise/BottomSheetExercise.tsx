@@ -12,15 +12,20 @@ import {AppColor} from '../../../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const BottomSheetExercise = ({isVisible, setVisible, exerciseData,setCurrentData}: any) => {
+const BottomSheetExercise = ({
+  isVisible,
+  setVisible,
+  exerciseData,
+  setCurrentData,
+}: any) => {
   const Box = ({selected, item, index}: any) => {
     return (
       <TouchableOpacity
-      key={index}
+        key={index}
         activeOpacity={1}
         onPress={() => {
-          setVisible(false)
-          setCurrentData(item)
+          setVisible(false);
+          setCurrentData(item);
         }}
         style={[
           styles.box,
@@ -36,7 +41,7 @@ const BottomSheetExercise = ({isVisible, setVisible, exerciseData,setCurrentData
             alignItems: 'center',
           }}>
           <Image
-            source={{uri: 'data?.workout_image_link'}}
+            source={{uri: item?.exercise_image}}
             style={{height: 80, width: 60, marginLeft: DeviceWidth * 0.12}}
             resizeMode="contain"
           />

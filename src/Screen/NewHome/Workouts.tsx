@@ -22,17 +22,19 @@ import axios from 'axios';
 import {setAllWorkoutData} from '../../Component/ThemeRedux/Actions';
 import NewHeader from '../../Component/Headers/NewHeader';
 
-const Workouts = () => {
+const Workouts = ({navigation}: any) => {
   const {allWorkoutData, getUserDataDetails} = useSelector(
     (state: any) => state,
   );
   const [popularData, setPopularData] = useState([]);
+  const [trackerData, setTrackerData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
     allWorkoutData?.length == 0 && allWorkoutApi();
     popularData?.length == 0 && popularWorkoutApi();
+    workoutStatusApi();
   }, []);
 
   const allWorkoutApi = async () => {
@@ -62,7 +64,9 @@ const Workouts = () => {
   const popularWorkoutApi = async () => {
     try {
       setRefresh(true);
-      const res = await axios(NewAppapi.POPULAR_WORKOUTS);
+      const res = await axios(
+        NewAppapi.POPULAR_WORKOUTS + '/' + getUserDataDetails?.login_token,
+      );
       if (res.data) {
         setRefresh(false);
         console.log(res.data?.length, 'Popular');
@@ -72,6 +76,29 @@ const Workouts = () => {
       setRefresh(false);
       console.error(error, 'popularError');
       setPopularData([]);
+    }
+  };
+
+  const workoutStatusApi = async () => {
+    try {
+      const payload = new FormData();
+      payload.append('token', getUserDataDetails?.login_token);
+      payload.append('id', getUserDataDetails?.id);
+      setRefresh(true);
+      const res = await axios({
+        url: NewAppapi.TRACK_WORKOUTS,
+        method: 'post',
+        data: payload,
+      });
+      if (res.data) {
+        setRefresh(false);
+        console.log(res.data?.workout_ids?.length, 'Popular');
+        setTrackerData(res.data?.workout_ids);
+      }
+    } catch (error) {
+      setRefresh(false);
+      console.error(error, 'popularError');
+      setTrackerData([]);
     }
   };
 
@@ -90,7 +117,7 @@ const Workouts = () => {
             justifyContent: 'space-between',
             zIndex: -1,
             // overflow: 'hidden',
-            alignSelf:'center'
+            alignSelf: 'center',
           }}>
           <View>
             <Text style={[styles.category, {width: DeviceWidth * 0.35}]}>
@@ -148,13 +175,22 @@ const Workouts = () => {
             onRefresh={() => {
               allWorkoutApi();
               popularWorkoutApi();
+              workoutStatusApi()
             }}
             colors={[AppColor.RED, AppColor.WHITE]}
           />
         }
         style={styles.container}
         nestedScrollEnabled>
-        <RoundedCards data={allWorkoutData} horizontal viewAllButton />
+        <RoundedCards
+          data={allWorkoutData}
+          trackerData={trackerData}
+          viewAllPress={() =>
+            navigation?.navigate('AllWorkouts')
+          }
+          horizontal
+          viewAllButton
+        />
         <AdCard />
         {popularData?.length != 0 && (
           <MediumRounded
@@ -165,6 +201,13 @@ const Workouts = () => {
         )}
         <RoundedCards
           data={allWorkoutData}
+          trackerData={trackerData}
+          viewAllPress={() =>
+            navigation?.navigate('AllWorkouts', {
+              data: allWorkoutData,
+              trackerData,
+            })
+          }
           horizontal={false}
           headText="Core Workouts"
           viewAllButton

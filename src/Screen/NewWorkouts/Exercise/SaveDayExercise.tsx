@@ -110,7 +110,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
         </View>
       </View>
       <GradientButton
-        onPress={() => navigation.navigate('BottomTab')}
+        onPress={() => navigation.navigate('DayRewards',{data, day})}
         text="Save and Continue"
         bR={10}
         h={70}
