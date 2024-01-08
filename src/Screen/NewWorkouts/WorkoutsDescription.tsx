@@ -6,14 +6,52 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColor} from '../../Component/Color';
 import {Image} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import RenderHTML from 'react-native-render-html';
-
+import Tts from 'react-native-tts';
 const WorkoutsDescription = ({data, open, setOpen}: any) => {
+  const [ttsInitialized, setTtsInitialized] = useState(false);
+  const TextSpeech=`${data?.workout_description}`
+  const [description,SetDescription]=useState('')
+  console.log(data?.workout_description)
+  const cleanText =  TextSpeech.replace(/<\/?[^>]+(>|$)/g, '');
+  useEffect(() => {
+    const initTts = async () => {
+      const ttsStatus = await Tts.getInitStatus();
+      if (!ttsStatus.isInitialized) {
+        try {
+          Tts.voices().then(res => {
+            res.forEach(voice => console.log("id=======>", voice.id));
+          });
+          await Tts.setDefaultVoice('hi-in-x-hid-local');
+          await Tts.setDefaultLanguage('en-US');
+          await Tts.setDucking(true);
+          await Tts.setIgnoreSilentSwitch('ignore');
+          setTtsInitialized(true);
+        } catch (error) {
+          console.log("VoicessError", error);
+        }
+      }
+      // Register tts-progress event listener outside the conditional block
+      Tts.addEventListener('tts-progress', event => {
+    
+      });
+    };
+  
+    initTts();
+  }, []);
+  useEffect(()=>{
+    if(open){
+      Tts.speak(cleanText);
+    }else{
+      Tts.stop()
+    }
+  
+  },[open])
   const tag = {
     p: {
       color: '#3A4750',

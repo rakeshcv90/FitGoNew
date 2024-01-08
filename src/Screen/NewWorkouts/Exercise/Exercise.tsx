@@ -22,7 +22,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import WorkoutsDescription from '../WorkoutsDescription';
 import GradientText from '../../../Component/GradientText';
 import ProgreesButton from '../../../Component/ProgressButton';
-
+import Tts from 'react-native-tts';
+import {string} from 'yup';
 const Exercise = ({navigation, route}: any) => {
   const {allExercise, currentExercise, data, day, exerciseNumber, trackerData} =
     route.params;
@@ -33,8 +34,8 @@ const Exercise = ({navigation, route}: any) => {
   const [pause, setPause] = useState(false);
   const [open, setOpen] = useState(false);
   const [back, setBack] = useState(false);
-  const [timer, setTimer] = useState(5);
-  const [pre, setPre] = useState(5);
+  const [timer, setTimer] = useState(15);
+  const [pre, setPre] = useState(15);
   const [restStart, setRestStart] = useState(false);
   const [exerciseDoneIDs, setExerciseDoneIDs] = useState<Array<any>>([]);
   const [skipCount, setSkipCount] = useState(0);
@@ -42,30 +43,68 @@ const Exercise = ({navigation, route}: any) => {
   const {allWorkoutData, getUserDataDetails} = useSelector(
     (state: any) => state,
   );
+  const [separateTimer, setSeparateTimer] = useState(15);
+  const [ttsInitialized, setTtsInitialized] = useState(false);
+  useEffect(() => {
+    const initTts = async () => {
+      const ttsStatus = await Tts.getInitStatus();
+      if (!ttsStatus.isInitialized) {
+        await Tts.setDefaultLanguage('en-US');
+        await Tts.setDucking(true);
+        await Tts.setIgnoreSilentSwitch('ignore');
+        await Tts.addEventListener('tts-start', event => console.log('Start', event));
+        await Tts.addEventListener('tts-finish', event => console.log('Finish', event));
+        await Tts.addEventListener('tts-cancel', event => console.log('Cancel', event));
+        setTtsInitialized(true);
+      }
+    };
+
+    initTts();
+  }, []);
+  useEffect(() => {
+    // console.log('timer', separateTimer);
+    const TTStimer = async () => {
+      if (restStart) {
+        if (separateTimer > 0) {
+          const interval = setTimeout(() => {
+            setSeparateTimer(separateTimer - 1);
+            Tts.speak(`${separateTimer}`);
+            // console.log(separateTimer)
+          }, 1000);
+          return () => clearInterval(interval);
+        } 
+      }else{
+        setSeparateTimer(15)
+      }
+    };
+    TTStimer();
+  }, [separateTimer, restStart]);
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log(restStart, timer, playW);
+    // console.log('===========>', restStart, timer, playW);
     if (!back) {
       restStart
         ? setTimeout(() => {
-            if (timer <= 0) {
+            if (timer === 0) {
               if (number == allExercise?.length - 1) return;
               setRestStart(false);
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
               setCurrentData(allExercise[index + 1]);
-              setPre(5);
+              setPre(15);
               setNumber(number + 1);
-              setTimer(5);
-            } else if (timer == 5) {
+              setTimer(15);
+            } else if (timer == 15) {
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
               postCurrentExerciseAPI(index);
               setTimer(timer - 1);
               setPlayW(0);
-            } else setTimer(timer - 1);
+            } else {
+              setTimer(timer - 1);
+            }
           }, 1000)
         : setTimeout(() => {
             if (pause)
