@@ -48,6 +48,7 @@ import MealDetails from '../Screen/NewHome/MealDetails';
 import ProductsList from '../Screen/NewHome/ProductsList';
 import MeditationDetails from '../Screen/NewHome/MeditationDetails';
 import MeditationExerciseDetails from '../Screen/NewHome/MeditationExerciseDetails';
+import AITrainer from '../Screen/NewHome/AITrainer';
 
 const Stack = createStackNavigator();
 
@@ -178,6 +179,7 @@ export const LoginStack = () => {
         component={MeditationExerciseDetails}
       />
       <Stack.Screen name="BottomTab" component={BottomTab} />
+      <Stack.Screen name="AITrainer" component={AITrainer} />
     </Stack.Navigator>
   );
 };

@@ -29,7 +29,7 @@ const NewHeader = ({header, backButton, SearchButton}) => {
         },
       ]}>
       {!backButton ? (
-        <View style={{width: 0}}></View>
+        <View style={{width: 20}}></View>
       ) : (
         <TouchableOpacity
           onPress={() => {

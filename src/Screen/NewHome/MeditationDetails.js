@@ -51,8 +51,7 @@ const MeditationDetails = ({navigation, route}) => {
           health_level: level,
         },
       });
-      setForLoading(false);
-      console.log('Mindf Set ', data.data.data);
+
       if (data.data.status == 'data found') {
         setForLoading(false);
         setmindsetExercise(data.data.data);
@@ -66,7 +65,6 @@ const MeditationDetails = ({navigation, route}) => {
     }
   };
   const ListItem = ({title, color}) => (
-
     <TouchableOpacity
       onPress={() => {
         getCaterogy(title.id, title.workout_mindset_level);
@@ -259,8 +257,9 @@ const MeditationDetails = ({navigation, route}) => {
                           }}>
                           <TouchableOpacity
                             onPress={() => {
-                              navigation.navigate('MeditationExerciseDetails',{item:item})
-                         
+                              navigation.navigate('MeditationExerciseDetails', {
+                                item: item,
+                              });
                             }}>
                             <Image
                               source={localImage.Play2}
@@ -293,6 +292,18 @@ const MeditationDetails = ({navigation, route}) => {
                           left: -20,
                           marginVertical: -DeviceHeigth * 0.01,
                         }}>
+                        <AnimatedLottieView
+                          source={require('../../Icon/Images/NewImage/MusicAnimation.json')}
+                          speed={2}
+                          autoPlay
+                          loop
+                          style={{
+                            height: 130,
+                            width: DeviceWidth * 0.3,
+                            position: 'absolute',
+                            top:-20
+                          }}
+                        />
                         <Image
                           source={
                             item.exercise_mindset_image_link != null

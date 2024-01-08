@@ -25,5 +25,6 @@ export const AppColor={
     GRAY1:'#DDDADA',
     GRAY2:'#D9D9D9',
     BoldText:'#505050',
-    RED1:'#D5191A'
+    RED1:'#D5191A',
+    Gray5:"#999999"
   }

@@ -19,8 +19,10 @@ import Bulb from './Bulb';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useFocusEffect} from '@react-navigation/native';
 
 const Equipment = ({route, navigation}: any) => {
+  const [backbuttonVisiblity, setbackbuttonVisibility] = useState(true);
   const {nextScreen} = route.params;
 
   const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
@@ -33,10 +35,24 @@ const Equipment = ({route, navigation}: any) => {
   const translateE = useRef(new Animated.Value(0)).current;
   const translateW = useRef(new Animated.Value(0)).current;
   const scaleSelected = useRef(new Animated.Value(1)).current;
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener('focus', () => {
+  //     setSelected('')
+  //   });
 
-  useEffect(() => {
-    setScreen(nextScreen);
-  }, []);
+  //   return unsubscribe;
+  // }, [navigation]);
+  // useFocusEffect({
+  //   useCallBack(() => {
+  //   },[])
+  // });
+  useFocusEffect(
+    React.useCallback(() => {
+      setScreen(nextScreen);
+      handleImagePress('');
+      setbackbuttonVisibility(true);
+    }, []),
+  );
   const scaleSelectedInterpolate = scaleSelected.interpolate({
     inputRange: [0, 1],
     outputRange: [1, 1.1], // Adjust the starting and ending scale factors as needed
@@ -84,7 +100,7 @@ const Equipment = ({route, navigation}: any) => {
         Animated.timing(translateW, {
           toValue:
             gender == 'Without\nEquipment'
-              ? -DeviceWidth *0.24
+              ? -DeviceWidth * 0.24
               : DeviceWidth / 2,
           duration: 500,
           useNativeDriver: true,
@@ -98,15 +114,18 @@ const Equipment = ({route, navigation}: any) => {
           delay: 1250,
         }),
       ]).start();
+      setbackbuttonVisibility(false);
       setTimeout(() => {
         setSelected(gender);
         toNextScreen(gender);
       }, 1000);
     }
   };
+
   const toNextScreen = (gender: string) => {
     const currentData = {
-      equipment: gender == 'Without\nEquipment' ? 'Without Equipment': 'With Equipment',
+      equipment:
+        gender == 'Without\nEquipment' ? 'Without Equipment' : 'With Equipment',
     };
     {
       console.log('Equipment  Screen Data', currentData);
@@ -181,7 +200,7 @@ const Equipment = ({route, navigation}: any) => {
             if (getLaterButtonData[0]?.gender != item?.gender) return;
             return (
               <TouchableOpacity
-              style={{alignSelf:'center'}}
+                style={{alignSelf: 'center'}}
                 onPress={() => selected == '' && handleImagePress(item?.name)}
                 activeOpacity={1}>
                 <Animated.View
@@ -190,7 +209,7 @@ const Equipment = ({route, navigation}: any) => {
                     height: DeviceHeigth * 0.55,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    alignSelf:'center',
+                    alignSelf: 'center',
                     transform: [
                       {
                         translateX:
@@ -221,8 +240,8 @@ const Equipment = ({route, navigation}: any) => {
                       borderRadius: 20,
                       padding: 5,
                       position: 'relative',
-                      top:22,
-                      left:58,
+                      top: 22,
+                      left: 58,
                       width: 30,
                       height: 30,
                     }}>
@@ -230,7 +249,7 @@ const Equipment = ({route, navigation}: any) => {
                       source={item?.image}
                       style={{width: 20, height: 20}}
                       resizeMode="contain"
-                      tintColor={selected?AppColor.RED:AppColor.DARKGRAY}
+                      tintColor={selected ? AppColor.RED : AppColor.DARKGRAY}
                     />
                   </View>
                   <View
@@ -242,11 +261,11 @@ const Equipment = ({route, navigation}: any) => {
                           shadowOpacity: 0.3,
                           shadowRadius: 4,
                         },
-                        android:{
-                          elevation:5
-                        }
+                        android: {
+                          elevation: 5,
+                        },
                       }),
-                      backgroundColor:AppColor.WHITE,
+                      backgroundColor: AppColor.WHITE,
                       padding: 20,
                       borderRadius: 15,
                       borderWidth: item?.name == selected ? 1.5 : 1,
@@ -264,7 +283,6 @@ const Equipment = ({route, navigation}: any) => {
                         lineHeight: 18,
                         color: '#404040',
                         textAlign: 'center',
-                        
                       }}>
                       {item?.name}
                     </Text>
@@ -276,21 +294,23 @@ const Equipment = ({route, navigation}: any) => {
         />
       </View>
       <View style={styles.buttons}>
-        <TouchableOpacity
-          style={{
-            backgroundColor: '#F7F8F8',
-            width: 45,
-            height: 45,
-            borderRadius: 15,
-            overflow: 'hidden',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          onPress={() =>
-            selected != '' ? handleImagePress('') : navigation.goBack()
-          }>
-          <Icons name="chevron-left" size={25} color={'#000'} />
-        </TouchableOpacity>
+        {backbuttonVisiblity ? (
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#F7F8F8',
+              width: 45,
+              height: 45,
+              borderRadius: 15,
+              overflow: 'hidden',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={() =>
+              selected != '' ? handleImagePress('') : navigation.goBack()
+            }>
+            <Icons name="chevron-left" size={25} color={'#000'} />
+          </TouchableOpacity>
+        ) : null}
         <TouchableOpacity disabled>
           {/* <LinearGradient
             start={{x: 0, y: 1}}

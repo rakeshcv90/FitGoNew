@@ -30,15 +30,48 @@ const Av_Cal_Per_2_Workout = 500; // Assuming
 const currentW = 70;
 const targetW = 60;
 const Preview = ({route, navigation}: any) => {
-  const {currentExercise} = route.params;
-  const {getLaterButtonData, currentWorkoutData} = useSelector(
-    (state: any) => state,
-  );
   const [finalDate, setFinalDate] = useState('');
   const [weightHistory, setWeightHistory] = useState<[]>([]);
   const [zeroData, setZeroData] = useState<[]>([]);
   const [currentWeight, setCurrentWeight] = useState(-1);
   const [TargetWeight, setTargetWeight] = useState(-1);
+  const moment = require('moment');
+
+  const currentDate = moment(); // Get current date
+  const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  const pastDates = Array.from({length: 7}, (_, index) => {
+    const date = currentDate.clone().subtract(7 - index, 'days');
+    return {
+      month: date.format('MMM'),
+      year: date.format('YYYY'),
+      date: date.format('DD'),
+      day: daysOfWeek[date.day()],
+      isCurrent: false,
+    };
+  });
+  const futureDates = Array.from({length: 7}, (_, index) => {
+    const date = currentDate.clone().add(index + 1, 'days');
+    return {
+      month: date.format('MMM'),
+      year: date.format('YYYY'),
+      date: date.format('DD'),
+      day: daysOfWeek[date.day()],
+      isCurrent: false,
+    };
+  });
+
+  const current = {
+    month: currentDate.format('MMM'),
+    year: currentDate.format('YYYY'),
+    date: currentDate.format('DD'),
+    day: daysOfWeek[currentDate.day()],
+    isCurrent: true,
+  };
+  console.log('Dates======>', datesArray);
+  const {currentExercise} = route.params;
+  const {getLaterButtonData, currentWorkoutData} = useSelector(
+    (state: any) => state,
+  );
   useEffect(() => {
     const i = getLaterButtonData.findIndex(
       (item: any) => 'currentWeight' in item,
@@ -82,19 +115,18 @@ const Preview = ({route, navigation}: any) => {
       const formattedDate = currentDate.format('YYYY-MM-DD');
       weightHistoryArray.push({
         weight: decWeight.toFixed(2),
-          // i % 2 === 0
-          //   ? decWeight.toFixed(2)
-          //   : (currentWeight - TargetWeight >= 10 || i > 2
-          //       ? decWeight - 10
-          //       : decWeight
-          //     ).toFixed(2),
+        // i % 2 === 0
+        //   ? decWeight.toFixed(2)
+        //   : (currentWeight - TargetWeight >= 10 || i > 2
+        //       ? decWeight - 10
+        //       : decWeight
+        //     ).toFixed(2),
         date: formattedDate,
       });
       constantWeightArray.push({weight: 0, date: formattedDate});
 
       currentDate = currentDate.add(15, 'days');
     }
-    console.log(weightHistoryArray, currentWeight, TargetWeight);
     setZeroData(constantWeightArray);
     setWeightHistory(weightHistoryArray);
 
@@ -153,11 +185,102 @@ const Preview = ({route, navigation}: any) => {
       </View>
     );
   };
+  const FinalDate = moment(finalDate); // Get current date
+  const pastFinalDates = Array.from({length: 7}, (_, index) => {
+    const date = FinalDate.clone().subtract(7 - index, 'days');
+    return {
+      month: date.format('MMM'),
+      year: date.format('YYYY'),
+      date: date.format('DD'),
+      day: daysOfWeek[date.day()],
+      isCurrent: false,
+    };
+  });
+  const futureFinalDates = Array.from({length: 7}, (_, index) => {
+    const date = FinalDate.clone().add(index + 1, 'days');
+    return {
+      month: date.format('MMM'),
+      year: date.format('YYYY'),
+      date: date.format('DD'),
+      day: daysOfWeek[date.day()],
+      isCurrent: false,
+    };
+  });
 
+  const Final = {
+    month: FinalDate.format('MMM'),
+    year: FinalDate.format('YYYY'),
+    date: FinalDate.format('DD'),
+    day: daysOfWeek[FinalDate.day()],
+    isCurrent: true,
+  };
+
+  const datesArray = [
+    ...pastDates,
+    current,
+    ...futureDates,
+    ...pastFinalDates,
+    Final,
+    ...futureFinalDates,
+  ];
+  const RenderCalender = ({minIndex, maxIndex}) => {
+    // console.log("Dileeeep========>",datesArray,finalDate)
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          marginHorizontal: 16,
+          justifyContent:
+            datesArray.slice(minIndex, maxIndex).length < 7
+              ? 'flex-start'
+              : 'space-between',
+          marginVertical: 6,
+        }}>
+        {datesArray.slice(minIndex, maxIndex).map((value, index) => (
+          <View
+            key={index}
+            style={{
+              backgroundColor: value.isCurrent
+                ? AppColor.RED
+                : AppColor.BACKGROUNG,
+              paddingVertical: value.isCurrent ? 0 : 2,
+              paddingHorizontal: value.isCurrent ? 0 : 12,
+              borderRadius: value.isCurrent ? 50 / 2 : 8,
+              width: value.isCurrent ? 50 : undefined,
+              height: value.isCurrent ? 50 : undefined,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginRight:
+                datesArray.slice(minIndex, maxIndex).length < 7 ? 8 : 0,
+            }}>
+            <Text
+              style={{
+                color: value.isCurrent ? AppColor.WHITE : AppColor.Gray5,
+                fontFamily: 'Poppins-SemiBold',
+                fontSize: 14,
+                alignSelf: 'center',
+              }}>
+              {value.date}
+            </Text>
+            <Text
+              key={index}
+              style={{
+                color: value.isCurrent ? AppColor.WHITE : AppColor.Gray5,
+                fontFamily: 'Poppins-SemiBold',
+                fontSize: 10,
+                alignSelf: 'center',
+              }}>
+              {value.month}
+            </Text>
+          </View>
+        ))}
+      </View>
+    );
+  };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#F8F8F8'}}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{alignItems: 'center'}}>
+        <View style={{alignItems: 'center', backgroundColor: AppColor.WHITE}}>
           <Text
             style={{
               fontFamily: 'Poppins',
@@ -170,27 +293,37 @@ const Preview = ({route, navigation}: any) => {
           </Text>
           <Text
             style={{
-              fontFamily: 'Poppins',
-              fontSize: 20,
+              fontFamily: 'Poppins-SemiBold',
+              fontSize: 22,
               fontWeight: '600',
-              lineHeight: 30,
               color: AppColor.BLACK,
               marginTop: 10,
             }}>
             {`You'll be ${TargetWeight} Kg by`}
           </Text>
-          <GradientText
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            {/* <GradientText
             text={moment(finalDate || '').format('DD MMMM YYYY')}
             fontWeight="600"
             fontSize={20}
             width={200}
-          />
+          /> */}
+            <Text
+              style={{
+                fontFamily: 'Poppins-Bold',
+                fontSize: 22,
+                color: AppColor.RED,
+                // marginTop: 10,
+              }}>
+              {moment(finalDate || '').format('DD MMMM YYYY')}
+            </Text>
+          </View>
         </View>
         {weightHistory.length != 0 && zeroData.length != 0 && (
           <Graph resultData={weightHistory} zeroData={zeroData} />
         )}
         <GradientText text={'Work Routine'} />
-        <Calendar
+        {/* <Calendar
           onDayPress={day => {
             console.log(day.dateString);
           }}
@@ -221,9 +354,39 @@ const Preview = ({route, navigation}: any) => {
             },
           ]}
           theme={theme}
-        />
+        /> */}
+        <View style={styles.CalenderView}>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginHorizontal: 22,
+              marginVertical: 8,
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            {datesArray.slice(0, 7).map((value, index) => (
+              <Text
+                key={index}
+                style={{
+                  color: AppColor.Gray5,
+                  fontFamily: 'Poppins-SemiBold',
+                  fontSize: 16,
+                  textAlign: 'center',
+                  width: 30,
+                }}>
+                {value.day}
+              </Text>
+            ))}
+          </View>
+          <RenderCalender minIndex={0} maxIndex={7} />
+          <RenderCalender minIndex={7} maxIndex={14} />
+          <RenderCalender minIndex={14} maxIndex={21} />
+          <RenderCalender minIndex={21} maxIndex={28} />
+          <RenderCalender minIndex={28} />
+        </View>
         <GradientText text={'Plan Preview'} />
-        <View style={[styles.calender, {paddingHorizontal: 10, paddingBottom: 20}]}>
+        <View
+          style={[styles.calender, {paddingHorizontal: 10, paddingBottom: 20}]}>
           {Object.entries(currentExercise?.days).map(
             (item: any, index: number) => {
               return (
@@ -318,5 +481,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     marginTop: 20,
+  },
+  CalenderView: {
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+    width: DeviceWidth * 0.9,
+    backgroundColor: AppColor.WHITE,
+    borderRadius: 10,
+    alignSelf: 'center',
   },
 });
