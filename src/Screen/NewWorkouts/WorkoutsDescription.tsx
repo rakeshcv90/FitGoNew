@@ -11,12 +11,35 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColor} from '../../Component/Color';
 import {Image} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import RenderHTML from 'react-native-render-html';
 
 const WorkoutsDescription = ({data, open, setOpen}: any) => {
-  const description =
-    data?.workout_description?.split(/<\/?p>/g) ||
-    data?.exercise_instructions?.split(/<\/?ul>/g) ||
-    [];
+  const tag = {
+    p: {
+      color: '#3A4750',
+      fontSize: 12,
+      lineHeight: 15,
+      fontFamily: 'Poppins',
+    },
+    strong: {
+      color: '#C8170D',
+      fontSize: 10,
+    },
+    li: {
+      color: '#505050',
+      fontSize: 14,
+      lineHeight: 22,
+      fontFamily: 'Poppins',
+      fontWeight: '500',
+      marginBottom: 5
+    },
+    ul: {
+      color: '#3A4750',
+    },
+    ol: {
+      color: '#3A4750',
+    },
+  };
   return (
     <Modal visible={open} onRequestClose={() => null} animationType="slide">
       <View
@@ -26,7 +49,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
           flexDirection: 'row',
         }}>
         <Image
-          source={{uri: data?.workout_image_link}}
+          source={{uri: data?.workout_image_link || data?.exercise_image}}
           style={{
             height: DeviceWidth / 1.5,
             width: DeviceWidth * 0.95,
@@ -60,7 +83,20 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             {data?.workout_title || data?.exercise_title}
           </Text>
           <Text />
-          <Text
+          {data?.workout_description ? (
+            <RenderHTML
+              source={{html: data?.workout_description}}
+              contentWidth={DeviceWidth}
+              tagsStyles={tag}
+            />
+          ) : (
+            <RenderHTML
+              source={{html: data?.exercise_instructions}}
+              contentWidth={DeviceWidth}
+              tagsStyles={tag}
+            />
+          )}
+          {/* <Text
             style={{
               fontWeight: 'normal',
               fontSize: 12,
@@ -75,7 +111,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
                 // Bold section, wrap in <BoldText>
               }
             })}
-          </Text>
+          </Text> */}
         </View>
       </View>
     </Modal>

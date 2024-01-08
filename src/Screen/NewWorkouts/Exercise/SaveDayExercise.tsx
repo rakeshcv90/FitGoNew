@@ -8,7 +8,15 @@ import {DeviceHeigth, DeviceWidth} from '../../../Component/Config';
 import GradientButton from '../../../Component/GradientButton';
 
 const SaveDayExercise = ({navigation, route}: any) => {
-  const {data} = route?.params;
+  const {data, day} = route?.params;
+  let fire, clock, action;
+  for (const d in data?.days) {
+    if (d.split('day_')[1] == day) {
+      action = data?.days[d]?.exercises.length;
+      fire = data?.days[d]?.total_calories;
+      clock = data?.days[d]?.total_rest;
+    }
+  }
   return (
     <SafeAreaView
       style={{
@@ -27,18 +35,18 @@ const SaveDayExercise = ({navigation, route}: any) => {
         fontSize={32}
         width={DeviceWidth * 0.7}
       />
-        <Text
-          style={{
-            fontSize: 16,
-            fontFamily: 'Poppins',
-            lineHeight: 30,
-            color: AppColor.BLACK,
-            fontWeight: '600',
-            width: DeviceWidth* 0.9,
-            textAlign: 'center'
-          }}>
-          You completed your {data?.workout_title} Exercise
-        </Text>
+      <Text
+        style={{
+          fontSize: 16,
+          fontFamily: 'Poppins',
+          lineHeight: 30,
+          color: AppColor.BLACK,
+          fontWeight: '600',
+          width: DeviceWidth * 0.9,
+          textAlign: 'center',
+        }}>
+        You completed your {data?.workout_title} Exercise
+      </Text>
       <View
         style={{
           marginHorizontal: 10,
@@ -52,7 +60,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
             style={{flex: 1}}
             resizeMode="contain"
           />
-          <GradientText text={'2'} width={30} fontSize={28} x={'5'} />
+          <GradientText text={fire} width={50} fontSize={28} x={'5'} />
           <Text
             style={{
               fontSize: 16,
@@ -61,7 +69,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
               color: '#505050',
               fontWeight: '500',
             }}>
-            Min
+            Kcal
           </Text>
         </View>
         <View style={styles.container}>
@@ -70,7 +78,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
             style={{flex: 1}}
             resizeMode="contain"
           />
-          <GradientText text={'2'} width={30} fontSize={28} x={'5'} />
+          <GradientText text={clock} width={50} fontSize={28} x={'5'} />
           <Text
             style={{
               fontSize: 16,
@@ -79,7 +87,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
               color: '#505050',
               fontWeight: '500',
             }}>
-            Min
+            sec
           </Text>
         </View>
         <View style={styles.container}>
@@ -88,7 +96,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
             style={{flex: 1}}
             resizeMode="contain"
           />
-          <GradientText text={'2'} width={30} fontSize={28} x={'5'} />
+          <GradientText text={action} width={30} fontSize={28} x={'5'} />
           <Text
             style={{
               fontSize: 16,
@@ -97,12 +105,12 @@ const SaveDayExercise = ({navigation, route}: any) => {
               color: '#505050',
               fontWeight: '500',
             }}>
-            Min
+            Action
           </Text>
         </View>
       </View>
       <GradientButton
-      onPress={() => navigation.navigate('BottomTab')}
+        onPress={() => navigation.navigate('BottomTab')}
         text="Save and Continue"
         bR={10}
         h={70}

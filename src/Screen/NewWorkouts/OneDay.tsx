@@ -1,4 +1,5 @@
 import {
+  ImageBackground,
   Modal,
   Platform,
   ScrollView,
@@ -19,12 +20,16 @@ import GradientButton from '../../Component/GradientButton';
 import {useFocusEffect} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {setCount} from '../../Component/ThemeRedux/Actions';
+import {localImage} from '../../Component/Image';
+import WorkoutDescription from '../NewWorkouts/WorkoutsDescription';
 
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount} = route.params;
   const [exerciseData, setExerciseData] = useState([]);
   const [currentExercise, setCurrentExercise] = useState([]);
+  const [trackerData, setTrackerData] = useState([]);
   const [open, setOpen] = useState(true);
+  const [visible, setVisible] = useState(false);
   const [loader, setLoader] = useState(false);
   const {allWorkoutData, getUserDataDetails} = useSelector(
     (state: any) => state,
@@ -34,6 +39,7 @@ const OneDay = ({navigation, route}: any) => {
   useFocusEffect(
     useCallback(() => {
       allWorkoutApi();
+      getExerciseTrackAPI();
     }, []),
   );
   const allWorkoutApi = async () => {
@@ -48,7 +54,7 @@ const OneDay = ({navigation, route}: any) => {
           data?.workout_id,
       });
       if (res.data) {
-        console.log(res.data, 'DaysData', data);
+        // console.log(res.data, 'DaysData', data);
         setExerciseData(res.data);
         setOpen(true);
         setLoader(false);
@@ -62,27 +68,69 @@ const OneDay = ({navigation, route}: any) => {
     }
   };
 
-  const postCurrentDayAPI = async (current: any) => {
+  const getExerciseTrackAPI = async () => {
     const payload = new FormData();
-    payload.append('user_exercise_id', current?.exercise_id);
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('workout_id', data?.workout_id);
     payload.append('user_day', day);
+    try {
+      const res = await axios({
+        url: NewAppapi.TRACK_CURRENT_DAY_EXERCISE,
+        method: 'Post',
+        data: payload,
+      });
+      if (res.data?.user_details) {
+        console.log(res.data, 'Post');
+        setTrackerData(res.data?.user_details);
+      } else {
+        setTrackerData([]);
+      }
+      setOpen(true);
+    } catch (error) {
+      setOpen(true);
+      console.error(error, 'PostDaysAPIERror');
+      setTrackerData([]);
+    }
+  };
 
+  const postCurrentDayAPI = async () => {
+    // const payload = new FormData();
+    // payload.append('user_exercise_id', current?.exercise_id);
+    // payload.append('user_id', getUserDataDetails?.id);
+    // payload.append('workout_id', data?.workout_id);
+    // payload.append('user_day', day);
+    let datas = [];
+    let trainingCount = -1;
+    trainingCount = trackerData.findIndex(
+      item => item?.exercise_status == 'undone',
+    );
+    console.log(trainingCount);
+    for (const exercise of exerciseData) {
+      datas.push({
+        user_id: getUserDataDetails?.id,
+        workout_id: data?.workout_id,
+        user_day: day,
+        user_exercise_id: exercise?.exercise_id,
+      });
+    }
     try {
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EXERCISE,
         method: 'Post',
-        data: payload,
+        data: {user_details: datas},
       });
       if (res.data) {
         console.log(res.data, 'Post');
+        getExerciseTrackAPI();
         setOpen(false);
         navigation.navigate('Exercise', {
           allExercise: exerciseData,
-          currentExercise: current,
+          currentExercise:
+            trainingCount != -1 ? exerciseData[trainingCount] : exerciseData[0],
           data: data,
           day: day,
+          exerciseNumber: trainingCount != -1 ? trainingCount : 0,
+          trackerData: trackerData,
         });
       }
     } catch (error) {
@@ -95,11 +143,9 @@ const OneDay = ({navigation, route}: any) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          navigation.navigate('OneDay', {
-            data: data,
-            dayData: item,
-            day: index,
-          });
+          setOpen(false);
+          setCurrentExercise(item)
+          setVisible(true);
         }}
         style={[
           styles.box,
@@ -114,18 +160,41 @@ const OneDay = ({navigation, route}: any) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Image
-            source={{uri: item?.exercise_image}}
-            style={{height: 80, width: 60, marginLeft: DeviceWidth * 0.12}}
-            resizeMode="contain"
-          />
+          <View
+            style={{
+              height: 80,
+              width: 70,
+              backgroundColor: '#D9D9D9',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              marginLeft: DeviceWidth * 0.04,
+              borderRadius: 10,
+            }}>
+            <Image
+              source={{uri: item?.exercise_image}}
+              style={{height: 40, width: 70}}
+              resizeMode="contain"
+            />
+          </View>
+          {trackerData[index - 1]?.exercise_status == 'completed' && (
+            <Image
+              source={localImage.Complete}
+              style={{
+                height: 40,
+                width: 40,
+                marginLeft: -DeviceWidth * 0.1,
+                marginTop: -DeviceWidth * 0.1,
+              }}
+              resizeMode="contain"
+            />
+          )}
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
               marginHorizontal: 10,
-              width: '80%',
+              width: '70%',
             }}>
             <View>
               <Text style={[styles.small, {fontSize: 14}]}>
@@ -211,7 +280,9 @@ const OneDay = ({navigation, route}: any) => {
             <Icons name={'fire'} size={15} color={AppColor.INPUTTEXTCOLOR} />
             {` ${dayData?.total_calories} Kcal`}
           </Text>
-          <ScrollView showsVerticalScrollIndicator={false} style={{marginBottom: 50}}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{marginBottom: 50}}>
             {exerciseData.map((item, index) => (
               <Box selected={-1} index={index + 1} item={item} key={index} />
             ))}
@@ -223,23 +294,23 @@ const OneDay = ({navigation, route}: any) => {
             bR={10}
             mB={40}
             onPress={() => {
-              // setCurrentExercise(exerciseData[0]);
-              // setTimeout(() => {
-              //   postCurrentDayAPI(exerciseData[0]);
-              // }, 1000);
-              setOpen(false);
-              navigation.navigate('Exercise', {
-                allExercise: exerciseData,
-                currentExercise: exerciseData[0],
-                data: data,
-                day: day,
-                exerciseNumber: trainingCount != -1 ? trainingCount - 1 : 0,
-              });
+              setTimeout(() => {
+                postCurrentDayAPI();
+              }, 1000);
+              // setOpen(false);
+              // navigation.navigate('Exercise', {
+              //   allExercise: exerciseData,
+              //   currentExercise: exerciseData[0],
+              //   data: data,
+              //   day: day,
+              //   exerciseNumber: trainingCount != -1 ? trainingCount - 1 : 0,
+              // });
             }}
           />
         </View>
       </Modal>
       {loader && <ActivityLoader visible={loader} />}
+      <WorkoutDescription data={currentExercise} open={visible} setOpen={setVisible} />
     </View>
   );
 };

@@ -24,7 +24,7 @@ import GradientText from '../../../Component/GradientText';
 import ProgreesButton from '../../../Component/ProgressButton';
 
 const Exercise = ({navigation, route}: any) => {
-  const {allExercise, currentExercise, data, day, exerciseNumber} =
+  const {allExercise, currentExercise, data, day, exerciseNumber, trackerData} =
     route.params;
   const VideoRef = useRef();
   const [visible, setVisible] = useState(false);
@@ -39,12 +39,10 @@ const Exercise = ({navigation, route}: any) => {
   const [exerciseDoneIDs, setExerciseDoneIDs] = useState<Array<any>>([]);
   const [skipCount, setSkipCount] = useState(0);
   const [currentData, setCurrentData] = useState(currentExercise);
-
   const {allWorkoutData, getUserDataDetails} = useSelector(
     (state: any) => state,
   );
   const dispatch = useDispatch();
-  // console.log((100 / parseInt(currentData?.exercise_rest)))
   useEffect(() => {
     console.log(restStart, timer, playW);
     if (!back) {
@@ -57,7 +55,6 @@ const Exercise = ({navigation, route}: any) => {
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
               setCurrentData(allExercise[index + 1]);
-              setPlayW(0);
               setPre(5);
               setNumber(number + 1);
               setTimer(5);
@@ -65,8 +62,9 @@ const Exercise = ({navigation, route}: any) => {
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
-              postCurrentDayAPI(index);
+              postCurrentExerciseAPI(index);
               setTimer(timer - 1);
+              setPlayW(0);
             } else setTimer(timer - 1);
           }, 1000)
         : setTimeout(() => {
@@ -75,9 +73,9 @@ const Exercise = ({navigation, route}: any) => {
             if (playW >= 100 && number == allExercise?.length - 1) {
               console.log(number + 1, allExercise?.length);
               setPause(false);
-              postCurrentDayAPI(number);
+              postCurrentExerciseAPI(number);
               if (skipCount == 0)
-                navigation.navigate('SaveDayExercise', {data: data});
+                navigation.navigate('SaveDayExercise', {data, day});
               else navigation.goBack();
             } else if (playW >= 100 && number < allExercise?.length - 1) {
               console.log(number + 1, allExercise?.length);
@@ -85,14 +83,17 @@ const Exercise = ({navigation, route}: any) => {
               setRestStart(true);
             }
           }, 1000);
-      if (exerciseNumber != -1 && number == 0) setNumber(exerciseNumber);
+      if (exerciseNumber != -1 && number == 0) {
+        setNumber(exerciseNumber);
+        setCurrentData(currentExercise);
+      }
     }
   }, [playW, pause, currentData, timer, back]);
-  useEffect(() => {
-    setTimeout(() => {
-      pre > 0 ? setPre(pre - 1) : setPause(true);
-    }, 1000);
-  }, [pre]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     pre > 0 && setPre(pre - 1);
+  //   }, 1000);
+  // }, [pre]);
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
       // Check if goBack has been called
@@ -147,28 +148,22 @@ const Exercise = ({navigation, route}: any) => {
     );
   };
 
-  const postCurrentDayAPI = async (index: number) => {
-    // if (isAPICalling) {
-    //   return; // If API call is already in progress, do not proceed
-    // }
-    console.log(index, 'isAPICalling');
-    // setAPICalling(true);
+  const postCurrentExerciseAPI = async (index: number) => {
     const payload = new FormData();
-    payload.append('user_exercise_id', allExercise[index]?.exercise_id);
-    payload.append('user_id', getUserDataDetails?.id);
-    payload.append('workout_id', data?.workout_id);
-    payload.append('user_day', day);
-    allExercise?.length - 1 == index &&
-      payload.append('final_status', 'all_completed');
-    console.log(payload);
+    payload.append('id', trackerData[index]?.id);
+    payload.append('day', day);
     try {
       const res = await axios({
-        url: NewAppapi.CURRENT_DAY_EXERCISE,
-        method: 'Post',
+        url: NewAppapi.POST_EXERCISE,
+        method: 'post',
         data: payload,
       });
       if (res.data) {
-        console.log(res.data, 'Post');
+        console.log(
+          res.data,
+          'Post________________---------------------',
+          payload,
+        );
         setCurrentData(allExercise[index]);
         setRestStart(true);
         setPlayW(0);
@@ -178,6 +173,37 @@ const Exercise = ({navigation, route}: any) => {
       console.error(error, 'PostDaysAPIERror');
     }
   };
+  // const postCurrentDayAPI = async (index: number) => {
+  //   // if (isAPICalling) {
+  //   //   return; // If API call is already in progress, do not proceed
+  //   // }
+  //   console.log(index, 'isAPICalling');
+  //   // setAPICalling(true);
+  //   const payload = new FormData();
+  //   payload.append('user_exercise_id', trackerData[index]?.id);
+  //   payload.append('user_id', getUserDataDetails?.id);
+  //   payload.append('workout_id', data?.workout_id);
+  //   payload.append('user_day', day);
+  //   allExercise?.length - 1 == index &&
+  //     payload.append('final_status', 'all_completed');
+  //   console.log(payload);
+  //   try {
+  //     const res = await axios({
+  //       url: NewAppapi.CURRENT_DAY_EXERCISE,
+  //       method: 'Post',
+  //       data: payload,
+  //     });
+  //     if (res.data) {
+  //       console.log(res.data, 'Post');
+  //       setCurrentData(allExercise[index]);
+  //       setRestStart(true);
+  //       setPlayW(0);
+  //       // setRestStart(false)
+  //     }
+  //   } catch (error) {
+  //     console.error(error, 'PostDaysAPIERror');
+  //   }
+  // };
 
   const PauseModal = () => {
     return (
@@ -344,22 +370,23 @@ const Exercise = ({navigation, route}: any) => {
               <TouchableOpacity
                 disabled={number == allExercise?.length - 1}
                 onPress={() => {
-                  if (number == allExercise?.length - 1) return;
-                  else {
-                    setRestStart(false);
-                    const index = allExercise?.findIndex(
-                      (item: any) =>
-                        item?.exercise_id == currentData?.exercise_id,
-                    );
-                    setExerciseDoneIDs([
-                      ...exerciseDoneIDs,
-                      currentData?.exercise_id,
-                    ]);
-                    postCurrentDayAPI(index + 1);
-                    setNumber(number + 1);
-                    setTimer(5);
-                    setPlayW(0);
-                  }
+                  navigation.navigate('SaveDayExercise', {data, day});
+                  // if (number == allExercise?.length - 1) return;
+                  // else {
+                  //   setRestStart(false);
+                  //   const index = allExercise?.findIndex(
+                  //     (item: any) =>
+                  //       item?.exercise_id == currentData?.exercise_id,
+                  //   );
+                  //   setExerciseDoneIDs([
+                  //     ...exerciseDoneIDs,
+                  //     currentData?.exercise_id,
+                  //   ]);
+                  //   postCurrentExerciseAPI(index + 1);
+                  //   setNumber(number + 1);
+                  //   setTimer(5);
+                  //   setPlayW(0);
+                  // }
                 }}
                 style={{
                   borderRadius: 20,
@@ -436,15 +463,15 @@ const Exercise = ({navigation, route}: any) => {
               name={'chevron-left'}
               size={30}
               color={
-                number == allExercise?.length - 1
+                number == allExercise?.length
                   ? AppColor.WHITE
                   : AppColor.INPUTTEXTCOLOR
               }
             />
           </TouchableOpacity>
           <View style={{height: DeviceHeigth * 0.5}}>
-            <Text>{currentData?.exercise_video}</Text>
-            {!pause ? (
+            <Text>{trackerData[number]?.id}</Text>
+            {/* {!pause ? (
               <View
                 style={{alignSelf: 'center', marginTop: DeviceHeigth * 0.1}}>
                 <GradientText
@@ -456,37 +483,37 @@ const Exercise = ({navigation, route}: any) => {
                   width={DeviceWidth / 2}
                 />
               </View>
-            ) : (
-              <Video
-                source={{
-                  // uri: 'https://customer-50ey2gp6ldpfu37q.cloudflarestream.com/477addc9f11b43b3ba5a2e6f27f5200d/downloads/default.mp4',
-                  uri: currentData?.exercise_video,
-                }}
-                onReadyForDisplay={() => {
-                  setPause(true);
-                }}
-                onLoad={() => console.log('second')}
-                onVideoLoad={() => console.log('third')}
-                onVideoLoadStart={() => console.log('forth')}
-                // onBuffer={() => {
-                //   console.log('third');
-                //   setPause(false);
-                // }}
-                // onFrameChange={() => {
-                //   setTimeout(() => {
-                //     console.log(pause)
-                //     if (pause) setPlayW(playW + 1);
-                //     if (playW == 100) setPause(false);
-                //   }, 1000);
-                // }}
-                paused={!pause}
-                onPlaybackResume={() => {
-                  console.log(pause);
-                  setPause(true);
-                }}
-                style={StyleSheet.absoluteFill}
-              />
-            )}
+            ) : ( */}
+            <Video
+              source={{
+                // uri: 'https://customer-50ey2gp6ldpfu37q.cloudflarestream.com/477addc9f11b43b3ba5a2e6f27f5200d/downloads/default.mp4',
+                uri: currentData?.exercise_video,
+              }}
+              onReadyForDisplay={() => {
+                setPause(true);
+              }}
+              onLoad={() => console.log('second')}
+              onVideoLoad={() => console.log('third')}
+              onVideoLoadStart={() => console.log('forth')}
+              // onBuffer={() => {
+              //   console.log('third');
+              //   setPause(false);
+              // }}
+              // onFrameChange={() => {
+              //   setTimeout(() => {
+              //     console.log(pause)
+              //     if (pause) setPlayW(playW + 1);
+              //     if (playW == 100) setPause(false);
+              //   }, 1000);
+              // }}
+              paused={!pause}
+              onPlaybackResume={() => {
+                console.log(pause);
+                setPause(true);
+              }}
+              style={StyleSheet.absoluteFill}
+            />
+
             <View style={{alignSelf: 'flex-end'}}>
               <FAB icon="format-list-bulleted" />
               <FAB icon="info-outline" />
@@ -521,7 +548,7 @@ const Exercise = ({navigation, route}: any) => {
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
-              // postCurrentDayAPI(index + 1);
+              // postCurrentExerciseAPI(index + 1);
               setNumber(number + 1);
               setSkipCount(skipCount + 1);
               setCurrentData(allExercise[index]);
@@ -532,7 +559,7 @@ const Exercise = ({navigation, route}: any) => {
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
-              // postCurrentDayAPI(index - 1);
+              // postCurrentExerciseAPI(index - 1);
               setNumber(number - 1);
             }}
             colors={pause ? ['#941000', '#941000'] : ['#999999', '#D5191A']}
