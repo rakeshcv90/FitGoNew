@@ -16,16 +16,19 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Platform} from 'react-native';
 import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
+import AnimatedLottieView from 'lottie-react-native';
 import TrackPlayer, {
   Capability,
   usePlaybackState,
   useProgress,
   State,
 } from 'react-native-track-player';
+import SeekBar from '../../Component/SeekBar';
 
 const MeditationExerciseDetails = ({navigation, route}) => {
   const playbackState = usePlaybackState();
-  console.log('sdfcxzc44444444', route.params.item.exercise_mindset_audio);
+
+  const {position, buffered, duration} = useProgress();
   const songs = [
     {
       title: 'song 1',
@@ -47,7 +50,6 @@ const MeditationExerciseDetails = ({navigation, route}) => {
   }, []);
   const setupPlayer = async () => {
     try {
-      await TrackPlayer.setupPlayer();
       await TrackPlayer.updateOptions({
         capabilities: [
           Capability.Play,
@@ -69,15 +71,18 @@ const MeditationExerciseDetails = ({navigation, route}) => {
       playbackState.state === State.Paused ||
       playbackState.state === State.Ready
     ) {
-      //   await TrackPlayer.skip(1);
       await TrackPlayer.play();
       console.log('sdfdscxcefw', playbackState, State.Ready);
     } else {
       await TrackPlayer.pause();
       console.log('Test22222222222222');
-      //   await TrackPlayer.play();
     }
   };
+  const handleSlidingComplete = async value => {
+    await TrackPlayer.seekTo(value);
+  };
+
+  const handleValueChange = value => {};
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -113,11 +118,25 @@ const MeditationExerciseDetails = ({navigation, route}) => {
             height: 300,
             marginVertical: -10,
             alignSelf: 'center',
-            // backgroundColor: 'red',
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <ImageBackground
+          {playbackState.state=='playing'&& (
+              <AnimatedLottieView
+                source={require('../../Icon/Images/NewImage/MusicAnimation.json')}
+                speed={2}
+                autoPlay
+                loop
+                style={{
+                  width: 300,
+                  height: 300,
+                  position: 'absolute',
+                  top: -DeviceHeigth * 0.09,
+                }}
+              />
+            )}
+
+          <Image
             style={{
               width: 250,
               height: 250,
@@ -125,7 +144,8 @@ const MeditationExerciseDetails = ({navigation, route}) => {
             resizeMode="cover"
             source={{
               uri: route.params.item.exercise_mindset_image_link,
-            }}></ImageBackground>
+            }}></Image>
+
           <Text
             style={{
               fontFamily: 'Poppins',
@@ -152,20 +172,15 @@ const MeditationExerciseDetails = ({navigation, route}) => {
             style={{
               width: 350,
               height: DeviceHeigth * 0.05,
-              backgroundColor: 'green',
-            }}></View>
-          <View
-            style={{
-              width: 350,
-              height: DeviceHeigth * 0.02,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-
-              marginVertical: 5,
             }}>
-            <Text>0:25</Text>
-            <Text>3:25</Text>
+            <SeekBar
+              currentPosition={position}
+              duration={duration}
+              onSlidingComplete={handleSlidingComplete}
+              onValueChange={handleValueChange}
+            />
           </View>
+
           <View
             style={{
               width: 350,
@@ -176,9 +191,9 @@ const MeditationExerciseDetails = ({navigation, route}) => {
             }}>
             <TouchableOpacity
               style={{
-                //   alignItems: 'center',
-                //   alignSelf: 'center',
-                //   justifyContent: 'center',
+                alignItems: 'center',
+                alignSelf: 'center',
+                justifyContent: 'center',
                 left: -15,
               }}
               onPress={async () => {
@@ -225,9 +240,9 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                       : localImage.Pause
                   }
                   style={{
-                    height: 30,
-                    width: 30,
-                    
+                    height: 25,
+                    width: 25,
+                    left: playbackState.state === State.Paused && 2,
                     alignSelf: 'center',
                     tintColor: '#fff',
                   }}
@@ -279,7 +294,6 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                 lineHeight: 15,
                 fontSize: 12,
                 color: '#FFFFFF',
-                textAlign: 'center',
               }}>
               {route.params.item.exercise_mindset_description}
             </Text>

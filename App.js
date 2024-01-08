@@ -26,6 +26,7 @@ import {DeviceHeigth, DeviceWidth} from './src/Component/Config';
 import RNRestart from 'react-native-restart';
 import { requestPermissionforNotification,RemoteMessage} from './src/Component/Helper/PushNotification';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
+import TrackPlayer from 'react-native-track-player';
 const App = () => {
   const StatusBar_Bar_Height = Platform.OS === 'ios' ? getStatusBarHeight() : 0;
   useEffect(() => {
@@ -50,6 +51,15 @@ const App = () => {
     return () => {
       subscription();
     };
+  }, []);
+  useEffect(() => {
+
+    async function initializePlayer() {
+      await TrackPlayer.setupPlayer();
+ 
+    }
+
+    initializePlayer();
   }, []);
 
   // useEffect(() => {
