@@ -20,6 +20,7 @@ import MediumRounded from '../../Component/MediumRounded';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {setAllWorkoutData} from '../../Component/ThemeRedux/Actions';
+import NewHeader from '../../Component/Headers/NewHeader';
 
 const Workouts = () => {
   const {allWorkoutData, getUserDataDetails} = useSelector(
@@ -89,6 +90,7 @@ const Workouts = () => {
             justifyContent: 'space-between',
             zIndex: -1,
             // overflow: 'hidden',
+            alignSelf:'center'
           }}>
           <View>
             <Text style={[styles.category, {width: DeviceWidth * 0.35}]}>
@@ -137,7 +139,7 @@ const Workouts = () => {
 
   return (
     <>
-      <Header header={'Workouts'} SearchButton={false} backButton={false} />
+      <NewHeader header={'Workouts'} SearchButton={false} backButton={false} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={

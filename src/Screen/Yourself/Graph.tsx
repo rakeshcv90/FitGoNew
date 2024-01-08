@@ -137,7 +137,7 @@ const LineChart = ({resultData, zeroData}: any) => {
           strokeWidth={1}
         />
         {/* <Path style="stroke" path={test} strokeWidth={4} color="blue" /> */}
-        <Path style="stroke" path={path} strokeWidth={4} color="red" />
+        <Path style="stroke" path={path} strokeWidth={4} color={AppColor.RED} />
         {late &&
           resultData.map((dataPoint, index: number) => {
             const xValue = scaleTime()
@@ -179,7 +179,7 @@ const LineChart = ({resultData, zeroData}: any) => {
                       //   : yValue - 0
                     }
                     r={5}
-                    color={'red'}
+                    color={AppColor.RED}
                   />
                   {/* <RoundedRect
                 x={xValue-10}

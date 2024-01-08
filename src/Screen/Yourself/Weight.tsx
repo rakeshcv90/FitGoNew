@@ -190,7 +190,7 @@ const Weight = ({route, navigation}: any) => {
                 // backgroundColor: 'red',
                 height: DeviceHeigth * 0.4,
               }}>
-              <View style={{height: DeviceHeigth * 0.05}} />
+              <View style={{height:DeviceHeigth*0.01}}/>
               {currentActiveIndex > 7 ? (
                 toggle == 'kg' ? (
                   <Text
@@ -238,7 +238,8 @@ const Weight = ({route, navigation}: any) => {
                 </Text>
               )}
               {/* </View> */}
-              <Scale
+             <View style={{position:'absolute',top:100}}>
+             <Scale
                 h={true}
                 setActiveIndex={setCurrentActiveIndex}
                 activeIndex={currentActiveIndex}
@@ -246,6 +247,7 @@ const Weight = ({route, navigation}: any) => {
                 posData={positions}
                 activeItem={900}
               />
+             </View>
               <View style={{height: DeviceHeigth * 0.2}} />
             </View>
           </ImageBackground>
@@ -394,13 +396,15 @@ const Weight = ({route, navigation}: any) => {
                 </Text>
               )}
               {/* </View> */}
-              <Scale
+            <View style={{position:'absolute',top:110}}>
+            <Scale
                 h={true}
                 setActiveIndex={setCurrentActiveIndex}
                 activeIndex={currentActiveIndex}
                 data={height}
                 posData={positions}
               />
+            </View>
               <View style={{height: DeviceHeigth * 0.2}} />
             </View>
           </ImageBackground>
