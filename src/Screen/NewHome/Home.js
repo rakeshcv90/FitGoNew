@@ -361,17 +361,17 @@ const Home = ({navigation}) => {
       const minData = Array(60)
         .fill(0)
         .map((item, index, arr) => arr[index] + index);
-    
+
       const [hours, setHours] = useState('');
       const [min, setMin] = useState('');
       const [type, setType] = useState('AM');
-    
+
       async function onCreateTriggerNotification() {
         const date = moment().add(1, 'days');
         // Assuming you have 'hours', 'minutes', and 'type' variables
         let selectedHours = parseInt(hours);
         let selectedMinutes = parseInt(min);
-    
+
         // If 'type' is 'PM' and the selected hours are less than 12, add 12 hours
         if (type === 'PM' && selectedHours < 12) {
           selectedHours += 12;
@@ -380,15 +380,16 @@ const Home = ({navigation}) => {
         if (type === 'AM' && selectedHours === 12) {
           selectedHours = 0;
         }
-    
+
         // Set the hours, minutes, and seconds of the date
         date.set({hours: selectedHours, minutes: selectedMinutes, seconds: 0});
-    
+
         // Now 'date' holds the updated date and time
-        const tomorrow = moment().set({ hours: 12, minutes: 0, seconds: 0 });
-      console.log(tomorrow)
-      await sleep(delay);
-    }}
+        const tomorrow = moment().set({hours: 12, minutes: 0, seconds: 0});
+        console.log(tomorrow);
+        await sleep(delay);
+      }
+    }
   };
   const options = {
     color: AppColor.RED,
@@ -1004,14 +1005,16 @@ const Home = ({navigation}) => {
               }}>
               Meditation
             </Text>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('MeditationDetails', {
-                  item: customWorkoutData?.minset_workout[0],
-                });
-              }}>
-              <Icons name="chevron-right" size={25} color={'#000'} />
-            </TouchableOpacity>
+            {customWorkoutData?.minset_workout?.length > 0 && (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('MeditationDetails', {
+                    item: customWorkoutData?.minset_workout[0],
+                  });
+                }}>
+                <Icons name="chevron-right" size={25} color={'#000'} />
+              </TouchableOpacity>
+            )}
           </View>
           <View style={styles.meditionBox}>
             <FlatList
@@ -1053,18 +1056,20 @@ const Home = ({navigation}) => {
             }}>
             Workouts
           </Text>
-          <TouchableOpacity
-            onPress={() => {
-              showMessage({
-                message: 'Work in Progress',
-                floating: true,
-                duration: 500,
-                type: 'info',
-                icon: {icon: 'auto', position: 'left'},
-              });
-            }}>
-            <Icons name="chevron-right" size={25} color={'#000'} />
-          </TouchableOpacity>
+          {customWorkoutData?.workout?.length > 0 && (
+            <TouchableOpacity
+              onPress={() => {
+                showMessage({
+                  message: 'Work in Progress',
+                  floating: true,
+                  duration: 500,
+                  type: 'info',
+                  icon: {icon: 'auto', position: 'left'},
+                });
+              }}>
+              <Icons name="chevron-right" size={25} color={'#000'} />
+            </TouchableOpacity>
+          )}
         </View>
         <View
           style={[

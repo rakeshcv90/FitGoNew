@@ -19,39 +19,39 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
   const [description,SetDescription]=useState('')
   console.log(data?.workout_description)
   const cleanText =  TextSpeech.replace(/<\/?[^>]+(>|$)/g, '');
-  useEffect(() => {
-    const initTts = async () => {
-      const ttsStatus = await Tts.getInitStatus();
-      if (!ttsStatus.isInitialized) {
-        try {
-          Tts.voices().then(res => {
-            res.forEach(voice => console.log("id=======>", voice.id));
-          });
-          await Tts.setDefaultVoice('hi-in-x-hid-local');
-          await Tts.setDefaultLanguage('en-US');
-          await Tts.setDucking(true);
-          await Tts.setIgnoreSilentSwitch('ignore');
-          setTtsInitialized(true);
-        } catch (error) {
-          console.log("VoicessError", error);
-        }
-      }
-      // Register tts-progress event listener outside the conditional block
-      Tts.addEventListener('tts-progress', event => {
+  // useEffect(() => {
+  //   const initTts = async () => {
+  //     const ttsStatus = await Tts.getInitStatus();
+  //     if (!ttsStatus.isInitialized) {
+  //       try {
+  //         Tts.voices().then(res => {
+  //           res.forEach(voice => console.log("id=======>", voice.id));
+  //         });
+  //         await Tts.setDefaultVoice('hi-in-x-hid-local');
+  //         await Tts.setDefaultLanguage('en-US');
+  //         await Tts.setDucking(true);
+  //         await Tts.setIgnoreSilentSwitch('ignore');
+  //         setTtsInitialized(true);
+  //       } catch (error) {
+  //         console.log("VoicessError", error);
+  //       }
+  //     }
+  //     // Register tts-progress event listener outside the conditional block
+  //     Tts.addEventListener('tts-progress', event => {
     
-      });
-    };
+  //     });
+  //   };
   
-    initTts();
-  }, []);
-  useEffect(()=>{
-    if(open){
-      Tts.speak(cleanText);
-    }else{
-      Tts.stop()
-    }
+  //   initTts();
+  // }, []);
+  // useEffect(()=>{
+  //   if(open){
+  //     Tts.speak(cleanText);
+  //   }else{
+  //     Tts.stop()
+  //   }
   
-  },[open])
+  // },[open])
   const tag = {
     p: {
       color: '#3A4750',
@@ -92,6 +92,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             height: DeviceWidth / 1.5,
             width: DeviceWidth * 0.95,
             marginTop: DeviceHeigth * 0.1,
+            left: 10
           }}
           resizeMode="contain"
         />
