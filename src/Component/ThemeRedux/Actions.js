@@ -1,4 +1,4 @@
-import { type } from 'os';
+import {type} from 'os';
 import types from '../../Component/ThemeRedux/Constants';
 export const setTheme = theme => ({
   type: types.Dark_Theme,
@@ -75,34 +75,42 @@ export const setLogout = data => {
     payload: data,
   };
 };
-export const SetmindsetConsent=data=>{
-  return{
-    type:types.MindSetConsent,
-    payload:data
-  }
-}
+export const SetmindsetConsent = data => {
+  return {
+    type: types.MindSetConsent,
+    payload: data,
+  };
+};
 
-export const setHealthData=(data)=>{
-  return{
-    type:types.HealthData,
-    payload:data
-  }}
-export const Setmealdata=data=>{
-  return{
-    type:types.ALL_MEAL_DATA,
+export const setHealthData = data => {
+  return {
+    type: types.HealthData,
+    payload: data,
+  };
+};
+export const Setmealdata = data => {
+  return {
+    type: types.ALL_MEAL_DATA,
 
-    payload:data
-  }
-}
-export const setCount=data=>{
-  return{
-    type:types.COUNT,
-    payload:data
-  }
-}
-export const setPedomterData=data=>{
-  return{
-    type:types.Update_Pedometer_Data,
-    payload:data
-  }
-}
+    payload: data,
+  };
+};
+export const SetAIMessageHistory = data => {
+  return {
+    type: types.AiMessageHistory,
+
+    payload: data,
+  };
+};
+export const setCount = data => {
+  return {
+    type: types.COUNT,
+    payload: data,
+  };
+};
+export const setPedomterData = data => {
+  return {
+    type: types.Update_Pedometer_Data,
+    payload: data,
+  };
+};

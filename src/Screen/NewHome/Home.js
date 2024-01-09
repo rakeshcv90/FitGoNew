@@ -122,6 +122,7 @@ const ProgressBar = ({progress, image, text}) => {
           fontWeight: '700',
           fontFamily: 'Poppins',
           lineHeight: 18,
+          color: '#505050',
         }}>
         {text}
       </Text>
@@ -774,13 +775,6 @@ const Home = ({navigation}) => {
     <TouchableOpacity
       onPress={() => {
         navigation.navigate('MeditationDetails', {item: title});
-        // showMessage({
-        //   message: 'Work in Progress',
-        //   floating: true,
-        //   duration: 500,
-        //   type: 'info',
-        //   icon: {icon: 'auto', position: 'left'},
-        // });
       }}>
       <LinearGradient
         start={{x: 0, y: 1}}
@@ -1098,17 +1092,13 @@ const Home = ({navigation}) => {
                   ]}>
                   <View style={{marginVertical: 10}}>
                     <Text
+                      numberOfLines={1}
                       style={[
                         styles.title,
                         {
-                          //                           height: 100,
-                          //                           width: 100,
-                          //                           height: 100,
-                          //                           width: 100,
-
                           alignSelf: 'center',
                           zIndex: 1,
-
+                          left: -25,
                           color: AppColor.BoldText,
                           width: DeviceHeigth * 0.2,
                         },
@@ -1140,7 +1130,7 @@ const Home = ({navigation}) => {
                   <Image
                     source={localImage.GymImage}
                     style={{
-                      height: DeviceHeigth * 0.2,
+                      height: DeviceHeigth * 0.16,
                       width: DeviceWidth * 0.35,
 
                       bottom: -50,
@@ -1157,7 +1147,7 @@ const Home = ({navigation}) => {
                         // backgroundColor:'red',
                         left: -45,
                         borderRadius: 0,
-                        top: -DeviceHeigth * 0.055,
+                        top: -DeviceHeigth * 0.04,
                       },
                     ]}
                     onPress={() => {
