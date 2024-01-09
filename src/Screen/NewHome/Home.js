@@ -56,6 +56,7 @@ import {getStatusBarHeight} from 'react-native-status-bar-height';
 import RoundedCards from '../../Component/RoundedCards';
 import {BackdropBlur, Canvas, Fill} from '@shopify/react-native-skia';
 import {color} from 'd3';
+import {Form} from 'formik';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -155,7 +156,7 @@ const Home = ({navigation}) => {
   const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[2].RCalories : 25,
   );
-  console.log('pdeomter', getPedomterData);
+  console.log('userData========>', getPedomterData);
   useEffect(() => {
     ActivityPermission();
   }, []);
@@ -254,6 +255,25 @@ const Home = ({navigation}) => {
     getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
   );
   // pedometers
+  const PedoMeterData = async () => {
+    try {
+      const payload = new FormData();
+      payload.append('user_id', getUserDataDetails?.email);
+      payload.append('steps', getPedomterData[0].RSteps);
+      payload.append('distance', getPedomterData[1].RDistance);
+      payload.append('calories', getPedomterData[2].RCalories);
+      const res = await axios({
+        url: NewAppapi.PedometerAPI,
+        method: 'Post',
+        data: payload,
+      });
+      if (res.data) {
+        console.log(res.data);
+      }
+    } catch (error) {
+      console.log('PedometerAPi Error', error);
+    }
+  };
   const sleep = time =>
     new Promise(resolve => setTimeout(() => resolve(), time)); // background
   const veryIntensiveTask = async taskDataArguments => {
@@ -334,14 +354,41 @@ const Home = ({navigation}) => {
         await updateStepsAndNotification(data);
       });
       // reset the steps at midnight
-      const now = new Date();
-      // console.log('Midnight==============>', isMidnight(now));
-      if (isMidnight(now)) {
-        resetSteps();
-      }
-
+      const typeData = ['AM', 'PM'];
+      const hourData = Array(12)
+        .fill(0)
+        .map((item, index, arr) => arr[index] + index + 1);
+      const minData = Array(60)
+        .fill(0)
+        .map((item, index, arr) => arr[index] + index);
+    
+      const [hours, setHours] = useState('');
+      const [min, setMin] = useState('');
+      const [type, setType] = useState('AM');
+    
+      async function onCreateTriggerNotification() {
+        const date = moment().add(1, 'days');
+        // Assuming you have 'hours', 'minutes', and 'type' variables
+        let selectedHours = parseInt(hours);
+        let selectedMinutes = parseInt(min);
+    
+        // If 'type' is 'PM' and the selected hours are less than 12, add 12 hours
+        if (type === 'PM' && selectedHours < 12) {
+          selectedHours += 12;
+        }
+        // If 'type' is 'AM' and the selected hours is 12, set hours to 0 (midnight)
+        if (type === 'AM' && selectedHours === 12) {
+          selectedHours = 0;
+        }
+    
+        // Set the hours, minutes, and seconds of the date
+        date.set({hours: selectedHours, minutes: selectedMinutes, seconds: 0});
+    
+        // Now 'date' holds the updated date and time
+        const tomorrow = moment().set({ hours: 12, minutes: 0, seconds: 0 });
+      console.log(tomorrow)
       await sleep(delay);
-    }
+    }}
   };
   const options = {
     color: AppColor.RED,
@@ -839,7 +886,7 @@ const Home = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}
         keyboardShouldPersistTaps="handled">
-        <View
+        <TouchableOpacity
           style={styles.CardBox}
           onLongPress={handleLongPress}
           activeOpacity={0.7}>
@@ -934,7 +981,7 @@ const Home = ({navigation}) => {
               </CircularProgressBase>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
 
         <>
           <View
@@ -952,7 +999,7 @@ const Home = ({navigation}) => {
                 fontWeight: '700',
                 lineHeight: 24,
                 fontSize: 16,
-                // marginLeft:20,
+
                 justifyContent: 'flex-start',
               }}>
               Meditation

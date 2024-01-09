@@ -57,7 +57,8 @@ export const NewAppapi = {
   CURRENT_DAY_EXERCISE_DETAILS: NewApi + 'user_exercise_details',
   Get_Product_Catogery: NewApi + 'categorydata',
   Get_Product_List: NewApi + 'productdata',
-  Get_Mindset_Excise: NewApi + 'mindsetdata'
+  Get_Mindset_Excise: NewApi + 'mindsetdata',
+  PedometerAPI:NewApi+'steps_details'
 };
 
  
