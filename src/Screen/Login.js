@@ -26,7 +26,7 @@ import {StatusBar} from 'react-native';
 import axios from 'axios';
 import {
   GoogleSignin,
-  GoogleSigninButton,
+
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import ActivityLoader from '../Component/ActivityLoader';
@@ -43,9 +43,8 @@ import {useDispatch} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import CustomSwitch from '../Component/CustomSwitch';
-import Signup from './Signup';
-import {TextInput, TextInputMask} from 'react-native-paper';
+
+import {TextInput,} from 'react-native-paper';
 import {navigationRef} from '../../App';
 
 import VersionNumber from 'react-native-version-number';

@@ -44,6 +44,7 @@ const Trainer = ({navigation}) => {
             fontSize: 12,
             lineHeight: 15,
             textAlign: 'center',
+            color:AppColor.LITELTEXTCOLOR
           }}>
           Welcome to your personalized fitness journey! I'm here to be your
           trusty fitness companion, guiding you through workouts, providing

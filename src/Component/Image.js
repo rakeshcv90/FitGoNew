@@ -111,4 +111,6 @@ export const localImage = {
   WithoutEquipPerson:require('../Icon/Images/NewImage/WithoutEquipementPerson.png'),
   User:require('../Icon/Images/NewImage/User.png'),
   Boot:require('../Icon/Images/NewImage/Trainer1.png'),
+  Send:require('../Icon/Images/NewImage/send.png'),
+  ChatHistory:require('../Icon/Images/NewImage/chatHistory.png'),
 };

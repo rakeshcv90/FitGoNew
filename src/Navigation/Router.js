@@ -51,6 +51,7 @@ import ProductsList from '../Screen/NewHome/ProductsList';
 import MeditationDetails from '../Screen/NewHome/MeditationDetails';
 import MeditationExerciseDetails from '../Screen/NewHome/MeditationExerciseDetails';
 import AITrainer from '../Screen/NewHome/AITrainer';
+import AIMessageHistory from '../Screen/NewHome/AIMessageHistory';
 
 const Stack = createStackNavigator();
 
@@ -184,6 +185,7 @@ export const LoginStack = () => {
       />
       <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="AITrainer" component={AITrainer} />
+      <Stack.Screen name="AIMessageHistory" component={AIMessageHistory} />
     </Stack.Navigator>
   );
 };
