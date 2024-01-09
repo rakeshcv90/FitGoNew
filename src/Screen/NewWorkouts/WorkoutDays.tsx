@@ -28,7 +28,7 @@ const WorkoutDays = ({navigation, route}: any) => {
   const {data} = route.params;
   const [selected, setSelected] = useState(0);
   const [phase, setPhase] = useState(1);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [day, setDay] = useState(1);
   const [trainingCount, setTrainingCount] = useState(-1);
   const [totalCount, setTotalCount] = useState(-1);
@@ -65,40 +65,54 @@ const WorkoutDays = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      // console.log('GET API TRACKER', res.data);
+      console.log(res.data, 'API DATA');
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
         const result = analyzeExerciseData(res.data?.user_details);
+        console.log('GET API TRACKE', result);
         if (result.two.length == 0) {
           let day = parseInt(result.one[result.one.length - 1]);
-          Object.values(data?.days).map((item: any, index: number) => {
-            if (item?.total_rest == 0 && index + 1 == day) {
-              setSelected(index + 2);
-              setDay(index + 2);
-              return;
+          for (const item of Object.entries(data?.days)) {
+            const index = parseInt(item[0].split('day_')[1]);
+            console.log(item[0], 'items', index, day + 1);
+            if (item[1]?.total_rest == 0 && index == day + 1) {
+              setSelected(index);
+              setDay(index + 1);
+              break;
             } else {
               setSelected(day + 1);
               setDay(day + 1);
-              return;
+              // break;
             }
-          });
-          console.log(selected, 'SELEC', day);
-          setSelected(parseInt(result.one[result.one.length - 1]));
+          }
+          const temp2 = res.data?.user_details?.filter(
+            (item: any) => item?.user_day == result.one[0],
+          );
+          console.log(temp2);
+          setOpen(true);
+          // setSelected(parseInt(result.one[result.one.length - 1]));
         } else {
-          console.log('GET TRACKERw', result.one, result.two);
           const temp = res.data?.user_details?.filter(
+            (item: any) =>
+              item?.user_day == result.two[0] &&
+              item?.exercise_status == 'undone',
+          );
+          const temp2 = res.data?.user_details?.filter(
             (item: any) => item?.user_day == result.two[0],
           );
-          setTrackerData(temp);
-          setTotalCount(result.two[0]);
-          setTrainingCount(result.two.length);
+          console.log('GET TRACKERw', temp, result.one, result.two, temp2);
+          setTrackerData(temp2);
+          setTotalCount(temp2?.length);
+          setTrainingCount(temp2?.length - temp?.length);
           setSelected(result.two[0] - 1);
           setDay(result.two[0]);
+          setOpen(true);
         }
       } else {
         setSelected(0);
         // console.log('first', res.data);
       }
+      console.log(selected, 'SELEC', day);
       allWorkoutApi();
     } catch (error) {
       console.error(error, 'DAPIERror');
@@ -137,7 +151,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           '&workout_id=' +
           data?.workout_id,
       });
-      // console.log(res.data, 'DaysData', day);
+      console.log(res.data?.length, 'DaysData', day);
       if (res.data?.msg != 'no data found.') {
         setExerciseData(res.data);
       } else setExerciseData([]);
@@ -156,57 +170,14 @@ const WorkoutDays = ({navigation, route}: any) => {
           marginLeft: 0,
           width: 40,
           overflow: 'hidden',
-          height: select ? DeviceHeigth * 0.2 : DeviceHeigth * 0.1,
+          height:
+            select && trainingCount != -1
+              ? DeviceHeigth * 0.2
+              : DeviceHeigth * 0.1,
           alignItems: 'center',
           justifyContent: 'center',
           marginTop: index == 0 || index == 4 ? DeviceHeigth * 0.05 : 0,
         }}>
-        {/* {index != 0 ? (
-          <Canvas
-            style={{
-              width: 40,
-              height: select
-                ? (DeviceHeigth * 0.2) / 2.5
-                : (DeviceHeigth * 0.1) / 3,
-              left: 5,
-              // backgroundColor: 'red',
-            }}>
-            {Array(100)
-              .fill(1, 0, 21)
-              .map((item, index) => {
-                return (
-                  <Group>
-                    {index % 2 == 0 ? (
-                      <Line
-                        key={index}
-                        p1={vec(15, 8 * (index + 1))}
-                        p2={vec(15, 8 * (index + 2))}
-                        strokeWidth={2}
-                        color={'#2F3133'}
-                      />
-                    ) : (
-                      <Line
-                        key={index}
-                        p1={vec(15, 8 * (index + 1))}
-                        p2={vec(15, 8 * (index + 2))}
-                        strokeWidth={2}
-                        color="white"
-                      />
-                    )}
-                  </Group>
-                );
-              })}
-          </Canvas>
-        ) : (
-          <View
-            style={{
-              width: 40,
-              height: select
-                ? (DeviceHeigth * 0.2) / 2.5
-                : (DeviceHeigth * 0.1) / 3,
-            }}
-          />
-        )} */}
         {index < selected ? (
           <Image
             source={localImage.BlackCircle}
@@ -218,41 +189,6 @@ const WorkoutDays = ({navigation, route}: any) => {
             style={{height: 30, width: 30}}
           />
         )}
-        {/* <Canvas
-          style={{
-            width: 40,
-            height: select
-              ? (DeviceHeigth * 0.2) / 4
-              : (DeviceHeigth * 0.1) / 3,
-            left: 5,
-            // backgroundColor: 'red',
-          }}>
-          {Array(100)
-            .fill(1, 0, 21)
-            .map((item, index) => {
-              return (
-                <Group>
-                  {index % 2 == 0 ? (
-                    <Line
-                      key={index}
-                      p1={vec(15, 8 * (index + 1))}
-                      p2={vec(15, 8 * (index + 2))}
-                      strokeWidth={2}
-                      color={'#2F3133'}
-                    />
-                  ) : (
-                    <Line
-                      key={index}
-                      p1={vec(15, 8 * (index + 1))}
-                      p2={vec(15, 8 * (index + 2))}
-                      strokeWidth={2}
-                      color="white"
-                    />
-                  )}
-                </Group>
-              );
-            })}
-        </Canvas> */}
       </View>
     );
   };
@@ -280,7 +216,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           }
           colors={select ? gradientColors : ['#505050', '#505050']}
         />
-        {select && (
+        {select && open && (
           <View
             style={{
               flexDirection: 'row',
@@ -301,12 +237,12 @@ const WorkoutDays = ({navigation, route}: any) => {
                 end={{x: 1, y: 0}}
                 style={{
                   height: 5,
-                  width: `${percent}%`,
+                  width: index == 1 && day > 4 ? '100%' : `${percent}%`,
                 }}
               />
             </View>
             <GradientText
-              text={`${percent}%`}
+              text={index == 1 && day > 4 ? '100%' : `${percent}%`}
               fontSize={14}
               marginTop={0}
               y={20}
@@ -323,7 +259,14 @@ const WorkoutDays = ({navigation, route}: any) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          selected
+          index - 1 == 0
+            ? navigation.navigate('OneDay', {
+                data: data,
+                dayData: item,
+                day: index,
+                trainingCount: trainingCount,
+              })
+            : selected
             ? navigation.navigate('OneDay', {
                 data: data,
                 dayData: item,
@@ -334,7 +277,6 @@ const WorkoutDays = ({navigation, route}: any) => {
                 message: `Please complete Day ${index - 1} Exercise First !!!`,
                 type: 'danger',
               });
-          // :navigation.navigate('SaveDayExercise')
         }}
         style={[
           styles.box,
@@ -347,7 +289,10 @@ const WorkoutDays = ({navigation, route}: any) => {
                 : index == 3 || index == 7
                 ? '#FFE8E1'
                 : '#CEF2F9',
-            height: selected ? DeviceHeigth * 0.2 : DeviceHeigth * 0.1,
+            height:
+              selected && trainingCount != -1
+                ? DeviceHeigth * 0.2
+                : DeviceHeigth * 0.1,
           },
         ]}>
         <View
@@ -390,19 +335,19 @@ const WorkoutDays = ({navigation, route}: any) => {
             />
           </View>
         </View>
-        {selected && (
+        {selected && trainingCount != -1 && (
           <ProgressButton
             text="Start Training"
             w={DeviceWidth * 0.75}
             bR={10}
             fill={
               totalCount == -1
-                ? '100%'
+                ? '0%'
                 : `${100 - (trainingCount / totalCount) * 100}%`
             }
             h={DeviceHeigth * 0.08}
-            onPress={() =>
-              // console.log(exerciseData[trainingCount])
+            onPress={() => {
+              console.log(exerciseData, 'trackerData', trackerData);
               navigation.navigate('Exercise', {
                 allExercise: exerciseData,
                 currentExercise:
@@ -413,8 +358,8 @@ const WorkoutDays = ({navigation, route}: any) => {
                 day: day,
                 exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
                 trackerData: trackerData,
-              })
-            }
+              });
+            }}
           />
         )}
       </TouchableOpacity>
@@ -507,7 +452,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                 }}>
-                {index < 4 ? (
+                {index < 8 ? (
                   <BlackCircle index={index} select={index == selected} />
                 ) : (
                   <View style={{width: 40}} />
@@ -516,12 +461,18 @@ const WorkoutDays = ({navigation, route}: any) => {
                   {(index == 0 || index == 4) && (
                     <Phase
                       index={index + 1}
-                      percent={index == 0 ? (selected / 4) * 100 : 0}
+                      percent={
+                        index < selected && index == 0 && selected > 4
+                          ? '100%'
+                          : selected < 4 && index == 0
+                          ? (selected / 4) * 100
+                          : (selected / 2 / 4) * 100
+                      }
                       select={index <= selected}
                     />
                   )}
                   <Box
-                    selected={index == selected}
+                    selected={selected != 0 && index == selected}
                     index={index + 1}
                     item={item}
                   />
