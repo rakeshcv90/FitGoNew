@@ -43,12 +43,15 @@ import WorkoutDays from '../Screen/NewWorkouts/WorkoutDays';
 import OneDay from '../Screen/NewWorkouts/OneDay';
 import Exercise from '../Screen/NewWorkouts/Exercise/Exercise';
 import SaveDayExercise from '../Screen/NewWorkouts/Exercise/SaveDayExercise';
+import DayRewards from '../Screen/NewWorkouts/Exercise/DayRewards';
+import AllWorkouts from '../Screen/NewWorkouts/AllWorkouts';
 import Meals from '../Screen/NewHome/Meals';
 import MealDetails from '../Screen/NewHome/MealDetails';
 import ProductsList from '../Screen/NewHome/ProductsList';
 import MeditationDetails from '../Screen/NewHome/MeditationDetails';
 import MeditationExerciseDetails from '../Screen/NewHome/MeditationExerciseDetails';
 import AITrainer from '../Screen/NewHome/AITrainer';
+import AIMessageHistory from '../Screen/NewHome/AIMessageHistory';
 
 const Stack = createStackNavigator();
 
@@ -170,6 +173,8 @@ export const LoginStack = () => {
       <Stack.Screen name="OneDay" component={OneDay} />
       <Stack.Screen name="Exercise" component={Exercise} />
       <Stack.Screen name="SaveDayExercise" component={SaveDayExercise} />
+      <Stack.Screen name="DayRewards" component={DayRewards} />
+      <Stack.Screen name="AllWorkouts" component={AllWorkouts} />
       <Stack.Screen name="Meals" component={Meals} />
       <Stack.Screen name="MealDetails" component={MealDetails} />
       <Stack.Screen name="ProductsList" component={ProductsList} />
@@ -180,6 +185,7 @@ export const LoginStack = () => {
       />
       <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="AITrainer" component={AITrainer} />
+      <Stack.Screen name="AIMessageHistory" component={AIMessageHistory} />
     </Stack.Navigator>
   );
 };

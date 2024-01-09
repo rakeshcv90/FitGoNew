@@ -93,6 +93,8 @@ export const localImage = {
   GymImage: require('../Icon/Images/NewImage/GymImage.png'),
   Noimage: require('../Icon/Images/NewImage/no-pictures.png'),
   BlackCircle: require('../Icon/Images/NewImage/BlackCircle.png'),
+  RedCircle: require('../Icon/Images/NewImage/RedCircle.png'),
+  Heart: require('../Icon/Images/NewImage/Heart.png'),
   GreyCircle: require('../Icon/Images/NewImage/GreyCircle.png'),
   Watch: require('../Icon/Images/NewImage/watch.png'),
 
@@ -109,4 +111,6 @@ export const localImage = {
   WithoutEquipPerson:require('../Icon/Images/NewImage/WithoutEquipementPerson.png'),
   User:require('../Icon/Images/NewImage/User.png'),
   Boot:require('../Icon/Images/NewImage/Trainer1.png'),
+  Send:require('../Icon/Images/NewImage/send.png'),
+  ChatHistory:require('../Icon/Images/NewImage/chatHistory.png'),
 };

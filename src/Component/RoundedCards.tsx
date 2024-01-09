@@ -17,6 +17,7 @@ import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
 export type Props = {
   viewAllButton?: boolean;
   data: Array<any>;
+  trackerData: Array<any>;
   horizontal: boolean;
   headText?: string;
   viewAllPress?: () => void;
@@ -81,19 +82,35 @@ const RoundedCards: FC<Props> = ({...props}) => {
                       marginLeft: props.horizontal ? (index == 0 ? 5 : 10) : 3,
                     },
                   ]}>
-                  <Image
-                    source={{uri: item?.workout_image_link}
-                    }
-                    style={{
-                      height: DeviceWidth / 6,
-                      width: props.horizontal
-                        ? DeviceWidth / 6
-                        : DeviceWidth / 3,
-                    }}
-                    resizeMode="contain"
-                  />
+                  {
+                    <Image
+                      source={{uri: item?.workout_image_link}}
+                      style={{
+                        height: DeviceWidth / 6,
+                        width: props.horizontal
+                          ? DeviceWidth / 6
+                          : DeviceWidth / 3,
+                      }}
+                      resizeMode="contain"
+                    />
+                  }
+                  {props?.trackerData?.includes(item?.workout_id) && (
+                    <Image
+                      source={localImage.Complete}
+                      style={{
+                        height: 40,
+                        width: 40,
+                        marginLeft: -DeviceWidth * 0.1,
+                        marginTop: -DeviceWidth * 0.1,
+                      }}
+                      resizeMode="contain"
+                    />
+                  )}
                   {props.horizontal ? (
-                    <Text style={[styles.category, {fontSize: 14, width: '80%',}]} ellipsizeMode='tail' numberOfLines={1} >
+                    <Text
+                      style={[styles.category, {fontSize: 14, width: '80%'}]}
+                      ellipsizeMode="tail"
+                      numberOfLines={1}>
                       {item?.workout_title}
                     </Text>
                   ) : (
@@ -111,7 +128,10 @@ const RoundedCards: FC<Props> = ({...props}) => {
                         style={{
                           width: '70%',
                         }}>
-                        <Text style={[styles.category]}>
+                        <Text
+                          style={[styles.category]}
+                          numberOfLines={2}
+                          ellipsizeMode="tail">
                           {item?.workout_title}
                         </Text>
                         <Text style={[styles.category, {fontSize: 14}]}>

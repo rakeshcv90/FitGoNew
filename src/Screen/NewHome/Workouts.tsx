@@ -22,17 +22,19 @@ import axios from 'axios';
 import {setAllWorkoutData} from '../../Component/ThemeRedux/Actions';
 import NewHeader from '../../Component/Headers/NewHeader';
 
-const Workouts = () => {
+const Workouts = ({navigation}: any) => {
   const {allWorkoutData, getUserDataDetails} = useSelector(
     (state: any) => state,
   );
   const [popularData, setPopularData] = useState([]);
+  const [trackerData, setTrackerData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
     allWorkoutData?.length == 0 && allWorkoutApi();
     popularData?.length == 0 && popularWorkoutApi();
+    workoutStatusApi();
   }, []);
 
   const allWorkoutApi = async () => {
@@ -62,7 +64,9 @@ const Workouts = () => {
   const popularWorkoutApi = async () => {
     try {
       setRefresh(true);
-      const res = await axios(NewAppapi.POPULAR_WORKOUTS);
+      const res = await axios(
+        NewAppapi.POPULAR_WORKOUTS + '/' + getUserDataDetails?.login_token,
+      );
       if (res.data) {
         setRefresh(false);
         console.log(res.data?.length, 'Popular');
@@ -75,65 +79,92 @@ const Workouts = () => {
     }
   };
 
+  const workoutStatusApi = async () => {
+    try {
+      const payload = new FormData();
+      payload.append('token', getUserDataDetails?.login_token);
+      payload.append('id', getUserDataDetails?.id);
+      setRefresh(true);
+      const res = await axios({
+        url: NewAppapi.TRACK_WORKOUTS,
+        method: 'post',
+        data: payload,
+      });
+      if (res.data) {
+        setRefresh(false);
+        console.log(res.data?.workout_ids?.length, 'Popular');
+        setTrackerData(res.data?.workout_ids);
+      }
+    } catch (error) {
+      setRefresh(false);
+      console.error(error, 'popularError');
+      setTrackerData([]);
+    }
+  };
+
   const AdCard = () => {
     return (
-      <TouchableOpacity activeOpacity={1}>
-        <LinearGradient
-          colors={['rgba(213, 25, 26, 0.3)', 'rgba(148, 16, 0, 0.3)']}
-          style={{
-            width: DeviceWidth * 0.92,
-            height: DeviceHeigth * 0.2,
-            marginVertical: 20,
-            borderRadius: 20,
-            padding: 15,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            zIndex: -1,
-            // overflow: 'hidden',
-            alignSelf:'center'
-          }}>
-          <View>
-            <Text style={[styles.category, {width: DeviceWidth * 0.35}]}>
-              Full Body Toning Workout
-            </Text>
-            <Text
-              style={[
-                styles.category,
-                {
-                  width: DeviceWidth * 0.35,
-                  fontSize: 12,
-                  lineHeight: 15,
-                  marginVertical: 10,
-                },
-              ]}>
-              Includes circuits to work every muscle
-            </Text>
-            <GradientButton
-              w={DeviceWidth * 0.3}
-              h={50}
-              mV={10}
-              text="Start Training"
-              textStyle={{
+
+
+      <View
+        style={{
+          width: DeviceWidth * 0.92,
+          height: DeviceHeigth * 0.19,
+          borderRadius: 20,
+          padding: 15,
+          alignItems: 'center',
+          justifyContent: 'space-evenly',
+          flexDirection: 'row',
+          marginTop: 5,
+          backgroundColor: '#94100033',
+        }}>
+        <View style={{marginVertical: 5, marginLeft: 30}}>
+          <Text
+            numberOfLines={1}
+            style={[styles.category, {width: DeviceWidth * 0.6}]}>
+            Full Body Toning Workout
+          </Text>
+          <Text
+            style={[
+              styles.category,
+              {
+                width: DeviceWidth * 0.35,
+
                 fontSize: 12,
-                fontFamily: 'Poppins',
-                lineHeight: 18,
-                color: AppColor.WHITE,
-                fontWeight: '600',
-              }}
-            />
-          </View>
-          <Image
-            source={localImage.FemaleHeight}
-            resizeMode="contain"
-            style={{
-              height: DeviceHeigth * 0.23,
-              width: DeviceWidth * 0.4,
-              alignSelf: 'flex-end',
-              marginBottom: -15,
+                lineHeight: 15,
+                marginVertical: 10,
+              },
+            ]}>
+            Includes circuits to work every muscle
+          </Text>
+          <GradientButton
+            w={DeviceWidth * 0.3}
+            h={50}
+            mV={10}
+            text="Start Training"
+            textStyle={{
+              fontSize: 12,
+              fontFamily: 'Poppins',
+              lineHeight: 18,
+              color: AppColor.WHITE,
+              fontWeight: '600',
             }}
           />
-        </LinearGradient>
-      </TouchableOpacity>
+        </View>
+
+        <Image
+          source={localImage.GymImage}
+          style={{
+            height: DeviceHeigth * 0.45,
+            width: DeviceWidth * 0.37,
+            left: -15,
+            top:-10
+    
+          }}
+          resizeMode="contain"></Image>
+     
+      </View>
+    
     );
   };
 
@@ -148,14 +179,28 @@ const Workouts = () => {
             onRefresh={() => {
               allWorkoutApi();
               popularWorkoutApi();
+              workoutStatusApi()
             }}
             colors={[AppColor.RED, AppColor.WHITE]}
           />
         }
         style={styles.container}
         nestedScrollEnabled>
-        <RoundedCards data={allWorkoutData} horizontal viewAllButton />
+        <RoundedCards
+          data={allWorkoutData}
+          trackerData={trackerData}
+          viewAllPress={() =>
+            navigation?.navigate('AllWorkouts')
+          }
+          horizontal
+          viewAllButton
+        />
+
+        <View style={{marginVertical:15}}>
+
         <AdCard />
+        </View>
+      
         {popularData?.length != 0 && (
           <MediumRounded
             data={popularData}
@@ -165,6 +210,13 @@ const Workouts = () => {
         )}
         <RoundedCards
           data={allWorkoutData}
+          trackerData={trackerData}
+          viewAllPress={() =>
+            navigation?.navigate('AllWorkouts', {
+              data: allWorkoutData,
+              trackerData,
+            })
+          }
           horizontal={false}
           headText="Core Workouts"
           viewAllButton
@@ -185,7 +237,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: AppColor.BoldText,
-    lineHeight: 30,
+    lineHeight: 25,
   },
 });
 
