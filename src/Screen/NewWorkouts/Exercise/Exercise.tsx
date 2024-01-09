@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -44,7 +45,7 @@ const Exercise = ({navigation, route}: any) => {
   );
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log(restStart, timer, playW);
+    console.log(restStart, timer, playW, trackerData?.length);
     if (!back) {
       restStart
         ? setTimeout(() => {
@@ -54,6 +55,7 @@ const Exercise = ({navigation, route}: any) => {
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
+              console.log(allExercise[index + 1], 'allExercise[index + 1]');
               setCurrentData(allExercise[index + 1]);
               setPre(5);
               setNumber(number + 1);
@@ -83,17 +85,16 @@ const Exercise = ({navigation, route}: any) => {
               setRestStart(true);
             }
           }, 1000);
-      if (exerciseNumber != -1 && number == 0) {
-        setNumber(exerciseNumber);
-        setCurrentData(currentExercise);
-      }
+    }else{
+      console.log("MESSSSS", back, restStart)
     }
   }, [playW, pause, currentData, timer, back]);
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     pre > 0 && setPre(pre - 1);
-  //   }, 1000);
-  // }, [pre]);
+  useEffect(() => {
+    if (exerciseNumber != -1 && number == 0) {
+      setNumber(exerciseNumber);
+      setCurrentData(currentExercise);
+    }
+  }, []);
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
       // Check if goBack has been called
@@ -149,6 +150,7 @@ const Exercise = ({navigation, route}: any) => {
   };
 
   const postCurrentExerciseAPI = async (index: number) => {
+    console.log(trackerData, 'trackerData');
     const payload = new FormData();
     payload.append('id', trackerData[index]?.id);
     payload.append('day', day);
@@ -205,7 +207,7 @@ const Exercise = ({navigation, route}: any) => {
   //   }
   // };
 
-  const PauseModal = () => {
+  const PauseModal = ({back}: any) => {
     return (
       <Modal
         visible={back}
@@ -446,7 +448,13 @@ const Exercise = ({navigation, route}: any) => {
               </Text>
             </View>
           </View>
-          <View style={styles.container}></View>
+          <View style={styles.container}>
+            <Image
+              source={{uri: allExercise[number + 1]?.exercise_image}}
+              style={StyleSheet.absoluteFillObject}
+              resizeMode="contain"
+            />
+          </View>
         </View>
       ) : (
         <>
@@ -517,7 +525,7 @@ const Exercise = ({navigation, route}: any) => {
             <View style={{alignSelf: 'flex-end'}}>
               <FAB icon="format-list-bulleted" />
               <FAB icon="info-outline" />
-              <FAB icon="music" />
+              {/* <FAB icon="music" /> */}
             </View>
           </View>
           <Text style={styles.head}>Get Ready</Text>
@@ -544,15 +552,18 @@ const Exercise = ({navigation, route}: any) => {
             h={80}
             playy={() => setPause(!pause)}
             next={() => {
-              if (number == allExercise?.length - 1) return;
-              const index = allExercise?.findIndex(
-                (item: any) => item?.exercise_id == currentData?.exercise_id,
-              );
-              // postCurrentExerciseAPI(index + 1);
-              setNumber(number + 1);
-              setSkipCount(skipCount + 1);
-              setCurrentData(allExercise[index]);
+              setPause(!pause);
               setPlayW(0);
+              setTimeout(() => {
+                if (number == allExercise?.length - 1) return;
+                const index = allExercise?.findIndex(
+                  (item: any) => item?.exercise_id == currentData?.exercise_id,
+                );
+                // postCurrentExerciseAPI(index + 1);
+                setNumber(number + 1);
+                setSkipCount(skipCount + 1);
+                setCurrentData(allExercise[index + 1]);
+              }, 1500);
             }}
             back={() => {
               if (number == 0) return;
@@ -572,7 +583,7 @@ const Exercise = ({navigation, route}: any) => {
           />
         </>
       )}
-      <PauseModal />
+      <PauseModal back={back} />
       <WorkoutsDescription open={open} setOpen={setOpen} data={currentData} />
     </SafeAreaView>
   );

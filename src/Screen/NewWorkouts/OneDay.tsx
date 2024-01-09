@@ -58,7 +58,7 @@ const OneDay = ({navigation, route}: any) => {
         setExerciseData(res.data);
         setOpen(true);
         setLoader(false);
-        dispatch(setCount(res.data?.length));
+        // dispatch(setCount(res.data?.length));
       }
     } catch (error) {
       console.error(error, 'DaysAPIERror');
@@ -120,8 +120,8 @@ const OneDay = ({navigation, route}: any) => {
         data: {user_details: datas},
       });
       if (res.data) {
-        console.log(res.data, 'Post');
-        getExerciseTrackAPI();
+        console.log(res.data, 'Post', trackerData);
+        // getExerciseTrackAPI();
         setOpen(false);
         navigation.navigate('Exercise', {
           allExercise: exerciseData,
@@ -144,7 +144,7 @@ const OneDay = ({navigation, route}: any) => {
         activeOpacity={1}
         onPress={() => {
           setOpen(false);
-          setCurrentExercise(item)
+          setCurrentExercise(item);
           setVisible(true);
         }}
         style={[
@@ -288,15 +288,14 @@ const OneDay = ({navigation, route}: any) => {
             ))}
           </ScrollView>
           <GradientButton
+            // disabled={trackerData.length != 0}
             text={`Start Day ${day}`}
             h={80}
             alignSelf
             bR={10}
             mB={40}
             onPress={() => {
-              setTimeout(() => {
-                postCurrentDayAPI();
-              }, 1000);
+              postCurrentDayAPI();
               // setOpen(false);
               // navigation.navigate('Exercise', {
               //   allExercise: exerciseData,
@@ -310,7 +309,11 @@ const OneDay = ({navigation, route}: any) => {
         </View>
       </Modal>
       {loader && <ActivityLoader visible={loader} />}
-      <WorkoutDescription data={currentExercise} open={visible} setOpen={setVisible} />
+      <WorkoutDescription
+        data={currentExercise}
+        open={visible}
+        setOpen={setVisible}
+      />
     </View>
   );
 };
