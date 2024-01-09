@@ -41,16 +41,16 @@ const WorkoutDays = ({navigation, route}: any) => {
   );
   let totalTime = 0,
     restDays = [];
+    for (const day in data?.days) {
+      if (data?.days[day]?.total_rest == 0) {
+        restDays.push(parseInt(day.split('day_')[1]));
+      }
+      totalTime = totalTime + parseInt(data?.days[day]?.total_rest);
+    }
   useFocusEffect(
     useCallback(() => {
       getCurrentDayAPI();
       // allWorkoutApi();
-      for (const day in data?.days) {
-        if (data?.days[day]?.total_rest == 0) {
-          restDays.push(parseInt(day.split('day_')[1]));
-        }
-        totalTime = totalTime + parseInt(data?.days[day]?.total_rest);
-      }
     }, []),
   );
   const getCurrentDayAPI = async () => {
