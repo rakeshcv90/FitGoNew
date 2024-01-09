@@ -57,7 +57,7 @@ import RoundedCards from '../../Component/RoundedCards';
 import {BackdropBlur, Canvas, Fill} from '@shopify/react-native-skia';
 import {color} from 'd3';
 import {Form} from 'formik';
-
+import moment from 'moment';
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
 
@@ -151,15 +151,15 @@ const Home = ({navigation}) => {
     getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
   );
   const [DistanceGoalProfile, setDistanceGoalProfile] = useState(
-    getPedomterData[0] ? getPedomterData[1].RDistance : 2.5,
+    getPedomterData[1] ? getPedomterData[1].RDistance : 2.5,
   );
   const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
-    getPedomterData[0] ? getPedomterData[2].RCalories : 25,
+    getPedomterData[2] ? getPedomterData[2].RCalories : 25,
   );
-  console.log('userData========>', getPedomterData);
-  useEffect(() => {
-    ActivityPermission();
-  }, []);
+  useEffect(()=>{
+ActivityPermission()
+  },[])
+  // console.log('userData========>',getHealthData);
   const ActivityPermission = async () => {
     if (Platform.OS == 'android') {
       const result = await isStepCountingSupported();
@@ -257,21 +257,22 @@ const Home = ({navigation}) => {
   // pedometers
   const PedoMeterData = async () => {
     try {
-      const payload = new FormData();
-      payload.append('user_id', getUserDataDetails?.email);
-      payload.append('steps', getPedomterData[0].RSteps);
-      payload.append('distance', getPedomterData[1].RDistance);
-      payload.append('calories', getPedomterData[2].RCalories);
+
       const res = await axios({
         url: NewAppapi.PedometerAPI,
-        method: 'Post',
-        data: payload,
+        method: 'post',
+        data: {
+          user_id:getUserDataDetails?.id,
+          steps:getHealthData[0]?getHealthData[0].Steps:"0",
+          distance:getHealthData[1]?getHealthData[1].Calories:"0",
+          calories:getHealthData[2]?getHealthData[2].DistanceCovered:"0"
+        },
       });
       if (res.data) {
         console.log(res.data);
       }
     } catch (error) {
-      console.log('PedometerAPi Error', error);
+      console.log('PedometerAPi Error', error.response);
     }
   };
   const sleep = time =>
@@ -307,18 +308,21 @@ const Home = ({navigation}) => {
           indeterminate: false,
         },
         parameters: {
-          delay: 5000,
+          delay: 1000,
         },
       });
     };
     // function for checking if it is midnight or not
-    const isMidnight = date => {
-      return (
-        date.getHours() === 0 &&
-        date.getMinutes() === 0 &&
-        date.getSeconds() === 0
-      );
-    };
+    const isSpecificTime = (hour, minute) => {
+      const now = moment.utc(); // Get current time in UTC
+  
+      // Calculate specific time in UTC by setting hours and minutes
+      const specificTimeUTC = now.clone().set({ hour, minute, second: 0, millisecond: 0 }); 
+
+      const istTime = moment.utc().add(5, 'hours').add(30, 'minutes');
+      // Compare the times directly to check if they represent the same time in IST
+      return istTime.format() == specificTimeUTC.format()
+  };
     const resetSteps = () => {
       // Your logic to reset steps and related state
       setSteps(0);
@@ -347,6 +351,9 @@ const Home = ({navigation}) => {
           value: steps,
           indeterminate: false,
         },
+        parameters: {
+          delay: 1000,
+        },
       });
     };
     for (let i = 0; BackgroundService.isRunning(); i++) {
@@ -354,42 +361,15 @@ const Home = ({navigation}) => {
         await updateStepsAndNotification(data);
       });
       // reset the steps at midnight
-      const typeData = ['AM', 'PM'];
-      const hourData = Array(12)
-        .fill(0)
-        .map((item, index, arr) => arr[index] + index + 1);
-      const minData = Array(60)
-        .fill(0)
-        .map((item, index, arr) => arr[index] + index);
-
-      const [hours, setHours] = useState('');
-      const [min, setMin] = useState('');
-      const [type, setType] = useState('AM');
-
-      async function onCreateTriggerNotification() {
-        const date = moment().add(1, 'days');
-        // Assuming you have 'hours', 'minutes', and 'type' variables
-        let selectedHours = parseInt(hours);
-        let selectedMinutes = parseInt(min);
-
-        // If 'type' is 'PM' and the selected hours are less than 12, add 12 hours
-        if (type === 'PM' && selectedHours < 12) {
-          selectedHours += 12;
-        }
-        // If 'type' is 'AM' and the selected hours is 12, set hours to 0 (midnight)
-        if (type === 'AM' && selectedHours === 12) {
-          selectedHours = 0;
-        }
-
-        // Set the hours, minutes, and seconds of the date
-        date.set({hours: selectedHours, minutes: selectedMinutes, seconds: 0});
-
-        // Now 'date' holds the updated date and time
-        const tomorrow = moment().set({hours: 12, minutes: 0, seconds: 0});
-        console.log(tomorrow);
+      // console.log("specificTime=======>",isSpecificTime(12,40))
+      if(isSpecificTime(0,0)){
+        PedoMeterData()
+        // console.log("Pedommmmmmttteeer")
+      }else{
+        // console.log("condtiom not met")
+      }
         await sleep(delay);
       }
-    }
   };
   const options = {
     color: AppColor.RED,
@@ -407,12 +387,13 @@ const Home = ({navigation}) => {
     },
     linkingURI: '@string/fb_login_protocol_scheme', // See Deep Linking for more info
     parameters: {
-      delay: 5000,
+      delay: 1000,
     },
   };
   async function startStepCounter() {
     startStepCounterUpdate(new Date(), data => {
       setSteps(data.steps);
+      // console.log("stepssss>>>>>>>>>",data.steps)
       setDistance(((data.steps / 20) * 0.01).toFixed(2));
       setCalories(Math.floor(data.steps / 20));
       Dispatch(

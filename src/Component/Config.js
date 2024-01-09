@@ -46,7 +46,7 @@ export const NewAppapi = {
   ALL_WORKOUTS: NewApi + 'allworkout',
   POPULAR_WORKOUTS: NewApi + 'popularWorkout',
   Meal_Categorie: NewApi + 'get_categorie',
- DietDetails:NewApi + 'getdiet',
+  DietDetails: NewApi + 'getdiet',
   Get_DAYS: NewApi + 'days',
   POST_EXERCISE: NewApi + 'user_status',
   CURRENT_DAY_EXERCISE: NewApi + 'user_exercise_status',
@@ -58,8 +58,5 @@ export const NewAppapi = {
   Get_Product_Catogery: NewApi + 'categorydata',
   Get_Product_List: NewApi + 'productdata',
   Get_Mindset_Excise: NewApi + 'mindsetdata',
-  PedometerAPI:NewApi+'steps_details'
+  PedometerAPI: NewApi + 'steps_details',
 };
-
- 
-
