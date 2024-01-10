@@ -156,10 +156,11 @@ const Home = ({navigation}) => {
   const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[2].RCalories : 25,
   );
-  console.log('userData========>', getPedomterData);
+
   useEffect(() => {
     ActivityPermission();
   }, []);
+  
   const ActivityPermission = async () => {
     if (Platform.OS == 'android') {
       const result = await isStepCountingSupported();
@@ -869,7 +870,8 @@ const Home = ({navigation}) => {
         <TouchableOpacity
           style={styles.profileView1}
           onPress={() => {
-            navigation.navigate('Profile');
+            // navigation.navigate('Profile');
+            navigation.navigate('Subscription');
           }}>
           <Image
             source={localImage.avt}

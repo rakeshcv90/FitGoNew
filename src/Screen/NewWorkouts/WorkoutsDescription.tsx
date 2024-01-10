@@ -24,9 +24,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
       const ttsStatus = await Tts.getInitStatus();
       if (!ttsStatus.isInitialized) {
         try {
-          Tts.voices().then(res => {
-            res.forEach(voice => console.log("id=======>", voice.id));
-          });
+       
           await Tts.setDefaultVoice('hi-in-x-hid-local');
           await Tts.setDefaultLanguage('en-US');
           await Tts.setDucking(true);

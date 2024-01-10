@@ -108,6 +108,12 @@ export const setCount = data => {
     payload: data,
   };
 };
+export const setInappPurchase = data => {
+  return {
+    type: types.IN_APP_PURCHASE,
+    payload: data,
+  };
+};
 export const setPedomterData = data => {
   return {
     type: types.Update_Pedometer_Data,
