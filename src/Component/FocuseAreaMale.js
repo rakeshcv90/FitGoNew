@@ -171,7 +171,7 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
                 )}
               </View>
               <View>
-                {console.log('DEVICE HIGHT', DeviceHeigth)}
+             
                 {imageView.find(num => num === 'Shoulders') && (
                   <View
                     style={{

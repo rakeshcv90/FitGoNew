@@ -39,7 +39,7 @@ import {
   setCustomWorkoutData,
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
@@ -66,6 +66,9 @@ const Login = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [IsVerifyVisible, setVerifyVisible] = useState(false);
   const [appVersion, setAppVersion] = useState(0);
+
+
+
 
   useEffect(() => {
     GoogleSignin.configure({

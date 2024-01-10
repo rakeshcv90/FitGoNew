@@ -17,6 +17,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		186A6F322B1DA2D00005DC45 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 186A6F312B1DA2D00005DC45 /* GoogleService-Info.plist */; };
 		186A6F332B1DA2D00005DC45 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 186A6F312B1DA2D00005DC45 /* GoogleService-Info.plist */; };
+		2A2243F22B4E4D6800588914 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2243F12B4E4D6800588914 /* StoreKit.framework */; };
 		2AAC3EDF2B4530CD007908D0 /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC3EDE2B4530CD007908D0 /* dummy.swift */; };
 		2F00073507654D75841C795C /* Poppins-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95622B5E21EA4AC18278A99D /* Poppins-MediumItalic.ttf */; };
 		32D21DDA69B0415C9E7E217A /* Poppins-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E5764529188460884B6D464 /* Poppins-ExtraLight.ttf */; };
@@ -67,6 +68,7 @@
 		1F9FB247D2AE475BBAFFE601 /* Poppins-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-LightItalic.ttf"; path = "../assets/fonts/Poppins-LightItalic.ttf"; sourceTree = "<group>"; };
 		240A377C434C4E928F6D825E /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		246C12EBF2EE4BB8B8C585D0 /* Poppins-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Thin.ttf"; path = "../assets/fonts/Poppins-Thin.ttf"; sourceTree = "<group>"; };
+		2A2243F12B4E4D6800588914 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		2AAC3EDD2B4530CD007908D0 /* FitGo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FitGo-Bridging-Header.h"; sourceTree = "<group>"; };
 		2AAC3EDE2B4530CD007908D0 /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
 		308645BBC7D648C0963D3D24 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C80B921A6F3F58F76C31292 /* libPods-FitGo.a in Frameworks */,
+				2A2243F22B4E4D6800588914 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,6 +160,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2A2243F12B4E4D6800588914 /* StoreKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				5DCACB8F33CDC322A6C60F78 /* libPods-FitGo.a */,
 				19F6CBCC0A4E27FBF8BF4A61 /* libPods-FitGo-FitGoTests.a */,

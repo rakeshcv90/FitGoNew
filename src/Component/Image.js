@@ -113,4 +113,5 @@ export const localImage = {
   Boot:require('../Icon/Images/NewImage/Trainer1.png'),
   Send:require('../Icon/Images/NewImage/send.png'),
   ChatHistory:require('../Icon/Images/NewImage/chatHistory.png'),
+  Tick2:require('../Icon/Images/NewImage/Tick2.png'),
 };
