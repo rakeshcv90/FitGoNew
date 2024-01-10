@@ -66,10 +66,8 @@ const Login = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [IsVerifyVisible, setVerifyVisible] = useState(false);
   const [appVersion, setAppVersion] = useState(0);
-
-
-
-
+  const {getFcmToken}=useSelector(state=>state)
+  console.log("FCM TOKEN========>",getFcmToken)
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
@@ -196,6 +194,7 @@ const Login = ({navigation}) => {
           socialtoken: '',
           socialtype: 'facebook',
           version: appVersion,
+          devicetoken:getFcmToken
         },
       });
       if (data.data.profile_status == 1) {

@@ -21,7 +21,11 @@ const intialState = {
   getCount: -1,
   getPedomterData: [],
   getAIMessageHistory: [],
+
+  getFcmToken:'',
+
   getInAppPurchase: [],
+
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -119,6 +123,8 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         getPedomterData: UpdateData,
       };
+    case types.FCM_TOKEN:
+      return  {...state,getFcmToken:action.payload}
     default:
       return state;
   }

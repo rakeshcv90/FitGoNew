@@ -120,3 +120,9 @@ export const setPedomterData = data => {
     payload: data,
   };
 };
+export const setFcmToken=data=>{
+  return{
+    type:types.FCM_TOKEN,
+    payload:data
+  }
+}

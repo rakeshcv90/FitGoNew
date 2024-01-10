@@ -19,5 +19,7 @@ export default {
   COUNT: 'COUNT',
   Update_Pedometer_Data:'Update_Pedometer_Data',
   AiMessageHistory:'AiMessageHistory',
+  FCM_TOKEN:'FCM_TOKEN',
   IN_APP_PURCHASE:'IN_APP_PURCHASE',
+
 };

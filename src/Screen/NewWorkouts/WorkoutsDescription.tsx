@@ -90,6 +90,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             height: DeviceWidth / 1.5,
             width: DeviceWidth * 0.95,
             marginTop: DeviceHeigth * 0.1,
+            left: 10
           }}
           resizeMode="contain"
         />

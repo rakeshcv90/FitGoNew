@@ -23,12 +23,14 @@ import {localImage} from '../../Component/Image';
 import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
 import {useFocusEffect} from '@react-navigation/native';
+import ActivityLoader from '../../Component/ActivityLoader';
 
 const WorkoutDays = ({navigation, route}: any) => {
   const {data} = route.params;
   const [selected, setSelected] = useState(0);
-  const [phase, setPhase] = useState(1);
+  const [refresh, setRefresh] = useState(false);
   const [open, setOpen] = useState(true);
+  const [phase, setPhase] = useState(1);
   const [day, setDay] = useState(1);
   const [trainingCount, setTrainingCount] = useState(-1);
   const [totalCount, setTotalCount] = useState(-1);
@@ -40,20 +42,21 @@ const WorkoutDays = ({navigation, route}: any) => {
   );
   let totalTime = 0,
     restDays = [];
-  for (const day in data?.days) {
-    if (data?.days[day]?.total_rest == 0) {
-      restDays.push(parseInt(day.split('day_')[1]));
-    }
-    totalTime = totalTime + parseInt(data?.days[day]?.total_rest);
-  }
   useFocusEffect(
     useCallback(() => {
       getCurrentDayAPI();
       // allWorkoutApi();
+      for (const day in data?.days) {
+        if (data?.days[day]?.total_rest == 0) {
+          restDays.push(parseInt(day.split('day_')[1]));
+        }
+        totalTime = totalTime + parseInt(data?.days[day]?.total_rest);
+      }
     }, []),
   );
   const getCurrentDayAPI = async () => {
     try {
+      setRefresh(true);
       const payload = new FormData();
       payload.append('id', getUserDataDetails?.id);
       payload.append('workout_id', data?.workout_id);
@@ -116,6 +119,7 @@ const WorkoutDays = ({navigation, route}: any) => {
       allWorkoutApi();
     } catch (error) {
       console.error(error, 'DAPIERror');
+      setRefresh(false);
     }
   };
   function analyzeExerciseData(exerciseData: []) {
@@ -155,9 +159,11 @@ const WorkoutDays = ({navigation, route}: any) => {
       if (res.data?.msg != 'no data found.') {
         setExerciseData(res.data);
       } else setExerciseData([]);
+      setRefresh(false);
     } catch (error) {
       console.error(error, 'DaysAPIERror');
       setExerciseData([]);
+      setRefresh(false);
     }
   };
   const dispatch = useDispatch();
@@ -430,6 +436,64 @@ const WorkoutDays = ({navigation, route}: any) => {
       <Text style={[styles.category, {marginTop: 10}]}>
         {moment().format('dddd DD MMMM')}
       </Text>
+      {!refresh && (
+        <>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              // flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <View style={{alignSelf: 'flex-start'}}>
+              {Object.values(data?.days).map((item: any, index: number) => {
+                if (item?.total_rest == 0) {
+                  return (
+                    <View>
+                      <Text>Rest</Text>
+                    </View>
+                  );
+                }
+                return (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}>
+                    {index < 8 ? (
+                      <BlackCircle index={index} select={index == selected} />
+                    ) : (
+                      <View style={{width: 40}} />
+                    )}
+                    <View>
+                      {(index == 0 || index == 4) && (
+                        <Phase
+                          index={index + 1}
+                          percent={
+                            index < selected && index == 0 && selected > 4
+                              ? '100%'
+                              : selected < 4 && index == 0
+                              ? (selected / 4) * 100
+                              : (selected / 2 / 4) * 100
+                          }
+                          select={index <= selected}
+                        />
+                      )}
+                      <Box
+                        selected={selected != 0 && index == selected}
+                        index={index + 1}
+                        item={item}
+                      />
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          </ScrollView>
+          <Time />
+        </>
+      )}
+      <ActivityLoader visible={refresh} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
