@@ -10,11 +10,51 @@ import {
 import React, {useEffect, useState, useRef} from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import {localImage} from '../Component/Image';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
+import * as RNIap from 'react-native-iap';
+import {setInappPurchase} from '../Component/ThemeRedux/Actions';
+
+const products = Platform.select({
+  ios: ['a_month', 'b_quaterly', 'c_annual'],
+  android: ['a_month', 'b_quaterly', 'c_annual'],
+});
 
 const SplaceScreen = ({navigation}) => {
+  const dispatch = useDispatch();
   const {showIntro} = useSelector(state => state);
+  useEffect(() => {
+    getPlanData();
+  }, []);
+  const getPlanData = () => {
+    Platform.OS === 'ios'
+      ? RNIap.initConnection()
+          .catch(() => {
+            console.log('error connecting to store');
+          })
+          .then(() => {
+            RNIap.getProducts({skus: products})
+              .catch(() => {
+                console.log('error finding purchase');
+              })
+              .then(res => {
+                dispatch(setInappPurchase(res));
+              });
+          })
+      : RNIap.initConnection()
+          .catch(() => {
+            console.log('error connecting to store');
+          })
+          .then(() => {
+            RNIap.getSubscriptions({skus: products})
+              .catch(() => {
+                console.log('error finding purchase');
+              })
+              .then(res => {
+                dispatch(setInappPurchase(res));
+              });
+          });
+  };
   useEffect(() => {
     setTimeout(() => {
       if (showIntro) {
@@ -30,9 +70,8 @@ const SplaceScreen = ({navigation}) => {
       style={styels.container}
       start={{x: 0, y: 0}}
       end={{x: 0.5, y: 0.5}}
-      colors={['#D01818', '#941000']}
-       >
-        <StatusBar backgroundColor={'transparent'} translucent/>
+      colors={['#D01818', '#941000']}>
+      <StatusBar backgroundColor={'transparent'} translucent />
       <Image
         source={localImage.SplashText}
         style={styels.Textlogo}
@@ -50,7 +89,5 @@ const styels = StyleSheet.create({
   Textlogo: {
     width: DeviceWidth * 0.4,
   },
-
 });
 export default SplaceScreen;
-
