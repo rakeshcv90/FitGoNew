@@ -95,7 +95,6 @@ const Gender = ({route, navigation}: any) => {
         backgroundColor: AppColor.WHITE,
       }}>
       <ProgressBar screen={screen} />
-      {/* <Bulb screen={screen} /> */}
       <Bulb
         screen={'Select your Gender'}
         header={

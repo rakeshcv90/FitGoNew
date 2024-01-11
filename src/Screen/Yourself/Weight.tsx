@@ -22,7 +22,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Scale from './Scale';
 import Toggle from '../../Component/Toggle';
-import { showMessage } from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 
 const BOX_HEIGHT = DeviceHeigth * 0.7;
 const ITEM_HEIGHT = 25;
@@ -104,7 +104,6 @@ const Weight = ({route, navigation}: any) => {
       }
       dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
       navigation.navigate('Age', {nextScreen: screen + 1});
-   
     } else {
       showMessage({
         message: 'Current Weight can not be equal to Target weight',
@@ -139,94 +138,76 @@ const Weight = ({route, navigation}: any) => {
           justifyContent: 'center',
           alignItems: 'center',
           // backgroundColor: AppColor.RED,
-          height: DeviceHeigth * 0.55,
+          height: DeviceHeigth * 0.58,
         }}>
-          <ProgressBar screen={screen} />
+        <ProgressBar screen={screen} />
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Bulb
+            screen={'What’s your Current weight?'}
+            header={
+              'Knowing your weight can help us for you based on different metabolic rates.'
+            }
+          />
+          <View style={{marginTop: 20}} />
+          <Toggle
+            data={toggleH}
+            highlightColor={AppColor.RED}
+            baseColor={AppColor.SOCIALBUTTON}
+            selected={toggle}
+            setSelected={setToggle}
+          />
+        </View>
+
+        <ImageBackground
+          resizeMode="contain"
+          source={
+            getLaterButtonData[0]?.gender == 'Male'
+              ? localImage.MaleWeight
+              : localImage.FemaleWeight
+          }
+          style={{
+            flexDirection: 'row',
+            width: DeviceWidth,
+            height: DeviceHeigth * 0.55,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          imageStyle={{
+            width: DeviceWidth,
+            height: DeviceHeigth * 0.5,
+            opacity: 0.3,
+            marginLeft: -10,
+          }}>
           <View
             style={{
               justifyContent: 'center',
               alignItems: 'center',
+              // backgroundColor: 'red',
+              height: DeviceHeigth * 0.4,
             }}>
-            <Bulb
-              screen={'What’s your Current weight?'}
-              header={
-                'Knowing your weight can help us for you based on different metabolic rates.'
-              }
-            />
-            <View style={{marginTop: 20}} />
-            <Toggle
-              data={toggleH}
-              highlightColor={AppColor.RED}
-              baseColor={AppColor.SOCIALBUTTON}
-              selected={toggle}
-              setSelected={setToggle}
-            />
-          </View>
-
-          <ImageBackground
-            resizeMode="contain"
-            source={
-              getLaterButtonData[0]?.gender == 'Male'
-                ? localImage.MaleWeight
-                : localImage.FemaleWeight
-            }
-            style={{
-              flexDirection: 'row',
-              width: DeviceWidth,
-              height: DeviceHeigth * 0.55,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            imageStyle={{
-              width: DeviceWidth,
-              height: DeviceHeigth * 0.5,
-              opacity: 0.3,
-              marginLeft: -10,
-            }}>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                // backgroundColor: 'red',
-                height: DeviceHeigth * 0.4,
-              }}>
-              <View style={{height:DeviceHeigth*0.01}}/>
-              {currentActiveIndex > 7 ? (
-                toggle == 'kg' ? (
+            <View style={{height: DeviceHeigth * 0.01}} />
+            {currentActiveIndex > 7 ? (
+              toggle == 'kg' ? (
+                <Text
+                  style={{
+                    color: AppColor.RED,
+                    fontSize: 36,
+                    fontWeight: '600',
+                  }}>
+                  {height[currentActiveIndex]}
                   <Text
                     style={{
                       color: AppColor.RED,
-                      fontSize: 36,
-                      fontWeight: '600',
+                      fontSize: 16,
+                      fontWeight: '400',
                     }}>
-                    {height[currentActiveIndex]}
-                    <Text
-                      style={{
-                        color: AppColor.RED,
-                        fontSize: 16,
-                        fontWeight: '400',
-                      }}>
-                      {' kg '}
-                    </Text>
+                    {' kg '}
                   </Text>
-                ) : (
-                  <Text
-                    style={{
-                      color: AppColor.RED,
-                      fontSize: 36,
-                      fontWeight: '600',
-                    }}>
-                    {(height[currentActiveIndex] * 2.2).toFixed(2)}
-                    <Text
-                      style={{
-                        color: AppColor.RED,
-                        fontSize: 16,
-                        fontWeight: '400',
-                      }}>
-                      {' lbs '}
-                    </Text>
-                  </Text>
-                )
+                </Text>
               ) : (
                 <Text
                   style={{
@@ -234,12 +215,30 @@ const Weight = ({route, navigation}: any) => {
                     fontSize: 36,
                     fontWeight: '600',
                   }}>
-                  0 kg
+                  {(height[currentActiveIndex] * 2.2).toFixed(2)}
+                  <Text
+                    style={{
+                      color: AppColor.RED,
+                      fontSize: 16,
+                      fontWeight: '400',
+                    }}>
+                    {' lbs '}
+                  </Text>
                 </Text>
-              )}
-              {/* </View> */}
-             <View style={{position:'absolute',top:100}}>
-             <Scale
+              )
+            ) : (
+              <Text
+                style={{
+                  color: AppColor.RED,
+                  fontSize: 36,
+                  fontWeight: '600',
+                }}>
+                0 kg
+              </Text>
+            )}
+            {/* </View> */}
+            <View style={{position: 'absolute', top: 100}}>
+              <Scale
                 h={true}
                 setActiveIndex={setCurrentActiveIndex}
                 activeIndex={currentActiveIndex}
@@ -247,40 +246,44 @@ const Weight = ({route, navigation}: any) => {
                 posData={positions}
                 activeItem={900}
               />
-             </View>
-              <View style={{height: DeviceHeigth * 0.2}} />
             </View>
-          </ImageBackground>
-          <View style={[styles.buttons,{
-             bottom: -DeviceHeigth * 0.17,
-          }]}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#F7F8F8',
-                width: 45,
-                height: 45,
-                borderRadius: 15,
-                overflow: 'hidden',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              onPress={() =>
-                //   selected != '' ? handleImagePress('') :
-                navigation.goBack()
-              }>
-              <Icons name="chevron-left" size={25} color={'#000'} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => handleAnimation(height[currentActiveIndex])}>
-              <LinearGradient
-                start={{x: 0, y: 1}}
-                end={{x: 1, y: 0}}
-                colors={[AppColor.RED1, AppColor.RED]}
-                style={[styles.nextButton]}>
-                <Icons name="chevron-right" size={25} color={'#fff'} />
-              </LinearGradient>
-            </TouchableOpacity>
+            <View style={{height: DeviceHeigth * 0.2}} />
           </View>
+        </ImageBackground>
+        <View
+          style={[
+            styles.buttons,
+            {
+              bottom: -DeviceHeigth * 0.17,
+            },
+          ]}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#F7F8F8',
+              width: 45,
+              height: 45,
+              borderRadius: 15,
+              overflow: 'hidden',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            onPress={() =>
+              //   selected != '' ? handleImagePress('') :
+              navigation.goBack()
+            }>
+            <Icons name="chevron-left" size={25} color={'#000'} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => handleAnimation(height[currentActiveIndex])}>
+            <LinearGradient
+              start={{x: 0, y: 1}}
+              end={{x: 1, y: 0}}
+              colors={[AppColor.RED1, AppColor.RED]}
+              style={[styles.nextButton]}>
+              <Icons name="chevron-right" size={25} color={'#fff'} />
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
       </Animated.View>
       <Animated.View
         style={{
@@ -288,103 +291,85 @@ const Weight = ({route, navigation}: any) => {
           // justifyContent: 'flex-start',
           // alignItems: 'center',
           //   alignSelf: 'flex-start',
-          height: DeviceHeigth * 0.55,
+          height: DeviceHeigth * 0.6,
           width: DeviceWidth,
           transform: [{translateY: translateTarget}],
-          paddingTop: DeviceHeigth * 0.11,
+          paddingTop: DeviceHeigth * 0.04,
           backgroundColor: AppColor.WHITE,
           display: targetSelected ? 'flex' : 'none',
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-          <ProgressBar screen={screen} />
+        <ProgressBar screen={screen} />
+        <View
+          style={{
+            // marginTop: 30,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Bulb
+            screen={'What’s your Target weight?'}
+            header={
+              'Knowing your weight can help us for you based on different metabolic rates.'
+            }
+          />
+          <View style={{marginTop: 10}} />
+          <Toggle
+            data={toggleH}
+            highlightColor={AppColor.RED}
+            baseColor={AppColor.SOCIALBUTTON}
+            selected={toggle}
+            setSelected={setToggle}
+          />
+        </View>
+
+        <ImageBackground
+          resizeMode="contain"
+          source={
+            getLaterButtonData[0]?.gender == 'Male'
+              ? localImage.MaleWeight
+              : localImage.FemaleWeight
+          }
+          style={{
+            flexDirection: 'row',
+            width: DeviceWidth,
+            height: DeviceHeigth * 0.45,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginVertical: 20,
+          }}
+          imageStyle={{
+            width: DeviceWidth,
+            height: DeviceHeigth * 0.45,
+            opacity: 0.3,
+            marginLeft: -10,
+          }}>
           <View
             style={{
-              // marginTop: 30,
               justifyContent: 'center',
               alignItems: 'center',
+              // backgroundColor: 'red',
+              height: DeviceHeigth * 0.4,
             }}>
-            <Bulb
-              screen={'What’s your Target weight?'}
-              header={
-                'Knowing your weight can help us for you based on different metabolic rates.'
-              }
-            />
-            <View style={{marginTop: 10}} />
-            <Toggle
-              data={toggleH}
-              highlightColor={AppColor.RED}
-              baseColor={AppColor.SOCIALBUTTON}
-              selected={toggle}
-              setSelected={setToggle}
-            />
-          </View>
-
-          <ImageBackground
-            resizeMode="contain"
-            source={
-              getLaterButtonData[0]?.gender == 'Male'
-                ? localImage.MaleWeight
-                : localImage.FemaleWeight
-            }
-            style={{
-              flexDirection: 'row',
-              width: DeviceWidth,
-              height: DeviceHeigth * 0.45,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginVertical: 20
-            }}
-            imageStyle={{
-              width: DeviceWidth,
-              height: DeviceHeigth * 0.45,
-              opacity: 0.3,
-              marginLeft: -10,
-            }}>
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                // backgroundColor: 'red',
-                height: DeviceHeigth * 0.4,
-              }}>
-              <View style={{height: DeviceHeigth * 0.05}} />
-              {currentActiveIndex > 7 ? (
-                toggle == 'kg' ? (
+            <View style={{height: DeviceHeigth * 0.05}} />
+            {currentActiveIndex > 7 ? (
+              toggle == 'kg' ? (
+                <Text
+                  style={{
+                    color: AppColor.RED,
+                    fontSize: 36,
+                    fontWeight: '600',
+                  }}>
+                  {height[currentActiveIndex]}
                   <Text
                     style={{
                       color: AppColor.RED,
-                      fontSize: 36,
-                      fontWeight: '600',
+                      fontSize: 16,
+                      fontWeight: '400',
                     }}>
-                    {height[currentActiveIndex]}
-                    <Text
-                      style={{
-                        color: AppColor.RED,
-                        fontSize: 16,
-                        fontWeight: '400',
-                      }}>
-                      {' kg '}
-                    </Text>
+                    {' kg '}
                   </Text>
-                ) : (
-                  <Text
-                    style={{
-                      color: AppColor.RED,
-                      fontSize: 36,
-                      fontWeight: '600',
-                    }}>
-                    {(height[currentActiveIndex] * 2.2).toFixed(2)}
-                    <Text
-                      style={{
-                        color: AppColor.RED,
-                        fontSize: 16,
-                        fontWeight: '400',
-                      }}>
-                      {' lbs '}
-                    </Text>
-                  </Text>
-                )
+                </Text>
               ) : (
                 <Text
                   style={{
@@ -392,12 +377,30 @@ const Weight = ({route, navigation}: any) => {
                     fontSize: 36,
                     fontWeight: '600',
                   }}>
-                  0 kg
+                  {(height[currentActiveIndex] * 2.2).toFixed(2)}
+                  <Text
+                    style={{
+                      color: AppColor.RED,
+                      fontSize: 16,
+                      fontWeight: '400',
+                    }}>
+                    {' lbs '}
+                  </Text>
                 </Text>
-              )}
-              {/* </View> */}
-            <View style={{position:'absolute',top:110}}>
-            <Scale
+              )
+            ) : (
+              <Text
+                style={{
+                  color: AppColor.RED,
+                  fontSize: 36,
+                  fontWeight: '600',
+                }}>
+                0 kg
+              </Text>
+            )}
+            {/* </View> */}
+            <View style={{position: 'absolute', top: 110}}>
+              <Scale
                 h={true}
                 setActiveIndex={setCurrentActiveIndex}
                 activeIndex={currentActiveIndex}
@@ -405,14 +408,14 @@ const Weight = ({route, navigation}: any) => {
                 posData={positions}
               />
             </View>
-              <View style={{height: DeviceHeigth * 0.2}} />
-            </View>
-          </ImageBackground>
-
-          <View style={[styles.buttons, {
-            position:'relative',
-            bottom: 0,
-          }]}>
+            <View style={{height: DeviceHeigth * 0.2}} />
+          </View>
+        </ImageBackground>
+        <View>
+          <View
+            style={[
+              styles.buttons
+            ]}>
             <TouchableOpacity
               style={{
                 backgroundColor: '#F7F8F8',
@@ -460,6 +463,7 @@ const Weight = ({route, navigation}: any) => {
               </LinearGradient>
             </TouchableOpacity>
           </View>
+        </View>
       </Animated.View>
     </View>
   );
@@ -498,7 +502,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     position: 'absolute',
-    bottom: -DeviceHeigth * 0.11,
+    bottom: -DeviceHeigth * 0.14,
   },
   nextButton: {
     backgroundColor: 'red',
@@ -508,5 +512,15 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  buttons1: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: DeviceWidth * 0.9,
+    alignItems: 'center',
+    alignSelf: 'center',
+
+    bottom: DeviceHeigth * 0.02,
+    position: 'absolute',
   },
 });

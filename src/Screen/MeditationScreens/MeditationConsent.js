@@ -125,15 +125,16 @@ const MeditationConsent = ({navigation}) => {
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={{
-            backgroundColor: '#F7F8F8',
+            backgroundColor:'#F7F8F8',
             width: 45,
             height: 45,
             borderRadius: 15,
             overflow: 'hidden',
             justifyContent: 'center',
             alignItems: 'center',
+          
           }}>
-          <Icons name="chevron-left" size={25} color={'#000'} />
+          <Icons name="chevron-left" size={25} color={'#000'}/>
         </TouchableOpacity>
         {/* <TouchableOpacity
           onPress={() => {
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
   Container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: AppColor.BACKGROUNG,
+    backgroundColor: AppColor.WHITE,
   },
   img: {
     width: DeviceWidth * 0.07,
@@ -210,6 +211,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     bottom: DeviceHeigth * 0.02,
     position: 'absolute',
+   
   },
   nextButton: {
     backgroundColor: 'red',
