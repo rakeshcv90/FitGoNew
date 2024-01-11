@@ -21,7 +21,11 @@ const intialState = {
   getCount: -1,
   getPedomterData: [],
   getAIMessageHistory: [],
-  getFcmToken:''
+
+  getFcmToken:'',
+
+  getInAppPurchase: [],
+
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -66,8 +70,10 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, showLogout: action.payload};
     case types.COUNT:
       return {...state, getCount: action.payload};
-      case types.AiMessageHistory:
-        return {...state, getAIMessageHistory: action.payload};
+    case types.IN_APP_PURCHASE:
+      return {...state, getInAppPurchase: action.payload};
+    case types.AiMessageHistory:
+      return {...state, getAIMessageHistory: action.payload};
     case types.Mindset_Data:
       const updatedData = action.payload;
       const updatedMindSetData = [...state.mindSetData];
@@ -100,7 +106,7 @@ const ThemeReducer = (state = intialState, action) => {
           item => Object.keys(item)[0] === keyToUpdate,
         );
         if (index !== -1) {
-          const updatedValue = updatedItem[keyToUpdate]
+          const updatedValue = updatedItem[keyToUpdate];
           if (Array.isArray(updatedValue)) {
             UpdateData[index][keyToUpdate] = updatedValue[0];
           } else {

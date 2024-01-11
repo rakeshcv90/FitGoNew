@@ -24,7 +24,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {SetAIMessageHistory} from '../../Component/ThemeRedux/Actions';
 
 // const apiKey = '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';
-const apiKey = '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';
+// const apiKey = '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';
 const systemMessage = {
   role: 'system',
   content: `You are a Gym Traineer and you give response to uswho are  only related Gym Traineer, how to do Workouts,
