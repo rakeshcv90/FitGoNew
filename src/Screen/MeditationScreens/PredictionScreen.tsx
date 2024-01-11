@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     width: DeviceWidth * 0.9,
     alignItems: 'center',
     alignSelf: 'center',
-    bottom: DeviceHeigth * 0.05,
+    bottom: DeviceHeigth * 0.02,
     position: 'absolute',
   },
   t: {

@@ -119,18 +119,19 @@ const WorkoutArea = ({route, navigation}) => {
         style={{
           justifyContent: 'center',
           alignItems: 'center',
-
-          marginTop: DeviceHeigth * 0.03,
+          //position: 'absolute',
+          marginTop:
+             DeviceHeigth * 0.11,
         }}>
-        <ProgressBar screen={screen} />
       </View>
       <View
         style={{
           justifyContent: 'center',
           alignItems: 'center',
 
-          marginTop: -DeviceHeigth * 0.02,
+         
         }}>
+           <ProgressBar screen={screen} />
         <Bulb
           screen={'What’s your comfort place to workout ?'}
           header={'You can select any 2 options among below given options'}

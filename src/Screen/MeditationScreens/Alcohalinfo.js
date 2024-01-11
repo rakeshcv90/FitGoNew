@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   Container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: AppColor.BACKGROUNG,
+    backgroundColor: AppColor.WHITE,
   },
   img: {
     width: DeviceWidth * 0.07,

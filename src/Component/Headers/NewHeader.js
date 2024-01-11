@@ -22,7 +22,7 @@ const NewHeader = ({header, backButton, SearchButton}) => {
         {
           height:
             Platform.OS == 'ios'
-              ? (DeviceHeigth * 13) / 100  //adding statusbar height for the ios
+              ? (DeviceHeigth * 13) / 100  
               : (DeviceHeigth * 10) / 100,
           left: 1,
           paddingTop: Platform.OS == 'android' ? DeviceHeigth * 0.03 : 0.01,
@@ -49,6 +49,9 @@ const NewHeader = ({header, backButton, SearchButton}) => {
           {
             color: AppColor.INPUTTEXTCOLOR,
             fontFamily: 'Verdana',
+      
+            width:DeviceWidth*0.8,
+            textAlign:'center'
           },
         ]}>
         {header}

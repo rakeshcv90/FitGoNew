@@ -494,59 +494,6 @@ const WorkoutDays = ({navigation, route}: any) => {
         </>
       )}
       <ActivityLoader visible={refresh} />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          // flexDirection: 'row',
-          alignItems: 'center',
-        }}>
-        <View style={{alignSelf: 'flex-start'}}>
-          {Object.values(data?.days).map((item: any, index: number) => {
-            if (item?.total_rest == 0) {
-              return (
-                <View>
-                  <Text>Rest</Text>
-                </View>
-              );
-            }
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}>
-                {index < 8 ? (
-                  <BlackCircle index={index} select={index == selected} />
-                ) : (
-                  <View style={{width: 40}} />
-                )}
-                <View>
-                  {(index == 0 || index == 4) && (
-                    <Phase
-                      index={index + 1}
-                      percent={
-                        index < selected && index == 0 && selected > 4
-                          ? '100%'
-                          : selected < 4 && index == 0
-                          ? (selected / 4) * 100
-                          : (selected / 2 / 4) * 100
-                      }
-                      select={index <= selected}
-                    />
-                  )}
-                  <Box
-                    selected={selected != 0 && index == selected}
-                    index={index + 1}
-                    item={item}
-                  />
-                </View>
-              </View>
-            );
-          })}
-        </View>
-      </ScrollView>
-      <Time />
     </View>
   );
 };
@@ -575,6 +522,7 @@ const styles = StyleSheet.create({
   },
   box: {
     //   flex: 1,
+    alignSelf:'center',
     width: DeviceWidth * 0.8,
     justifyContent: 'center',
     alignItems: 'center',

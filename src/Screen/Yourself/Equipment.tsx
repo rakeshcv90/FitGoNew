@@ -24,7 +24,7 @@ import {useFocusEffect} from '@react-navigation/native';
 const Equipment = ({route, navigation}: any) => {
   const [backbuttonVisiblity, setbackbuttonVisibility] = useState(true);
   const {nextScreen} = route.params;
-
+  console.log('=======>', nextScreen);
   const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
     (state: any) => state,
   );
@@ -35,24 +35,29 @@ const Equipment = ({route, navigation}: any) => {
   const translateE = useRef(new Animated.Value(0)).current;
   const translateW = useRef(new Animated.Value(0)).current;
   const scaleSelected = useRef(new Animated.Value(1)).current;
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('focus', () => {
-  //     setSelected('')
-  //   });
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setScreen(nextScreen);
+      handleImagePress('');
+      setbackbuttonVisibility(true);
+    });
 
+    return unsubscribe;
+  }, [navigation]);
+  console.log('=>>>>>>>>>', screen);
   //   return unsubscribe;
   // }, [navigation]);
   // useFocusEffect({
   //   useCallBack(() => {
   //   },[])
   // });
-  useFocusEffect(
-    React.useCallback(() => {
-      setScreen(nextScreen);
-      handleImagePress('');
-      setbackbuttonVisibility(true);
-    }, []),
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     setScreen(nextScreen);
+  //     handleImagePress('');
+  //     setbackbuttonVisibility(true);
+  //   }, []),
+  // );
   const scaleSelectedInterpolate = scaleSelected.interpolate({
     inputRange: [0, 1],
     outputRange: [1, 1.1], // Adjust the starting and ending scale factors as needed
@@ -84,7 +89,7 @@ const Equipment = ({route, navigation}: any) => {
         }),
       ]).start();
       setTimeout(() => {
-        setScreen(screen - 1);
+        // setScreen(screen - 1);
         setSelected('');
       }, 1000);
     } else {
@@ -176,7 +181,7 @@ const Equipment = ({route, navigation}: any) => {
       }}>
       <ProgressBar screen={screen} />
       <Bulb
-        screen={'Choose you fitness goal'}
+        screen={'Choose your fitness goal'}
         header={
           'We will filter unsuitable workouts for you, Also you can select 1 or 2 Injuries only'
         }

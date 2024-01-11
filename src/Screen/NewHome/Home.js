@@ -156,10 +156,15 @@ const Home = ({navigation}) => {
   const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
     getPedomterData[2] ? getPedomterData[2].RCalories : 25,
   );
+
   useEffect(()=>{
 ActivityPermission()
   },[])
-  // console.log('userData========>',getHealthData);
+
+
+//   useEffect(() => {
+//     ActivityPermission();
+//   }, []);
   const ActivityPermission = async () => {
     if (Platform.OS == 'android') {
       const result = await isStepCountingSupported();
@@ -505,7 +510,7 @@ ActivityPermission()
 
     return (
       <Modal
-        animationType="slide"
+        animationType='fade'
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}>
@@ -851,7 +856,8 @@ ActivityPermission()
         <TouchableOpacity
           style={styles.profileView1}
           onPress={() => {
-            navigation.navigate('Profile');
+            // navigation.navigate('Profile');
+            navigation.navigate('Subscription');
           }}>
           <Image
             source={localImage.avt}
