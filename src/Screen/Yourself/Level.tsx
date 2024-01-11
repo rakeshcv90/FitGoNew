@@ -97,9 +97,9 @@ const Level = ({route, navigation}: any) => {
           justifyContent: 'center',
           alignItems: 'center',
           alignSelf: 'center',
-          height: DeviceHeigth * 0.65,
+          height: DeviceHeigth * 0.6,
           // backgroundColor: 'red',
-          marginTop: -50,
+          // marginTop: -50,
           // width: DeviceWidth,
         }}>
         <View
@@ -143,7 +143,7 @@ const Level = ({route, navigation}: any) => {
             style={{
               width: DeviceWidth * 0.8,
               backgroundColor: AppColor.RED,
-              height: 20,
+              height: 25,
               borderRadius: 20,
               justifyContent: 'space-between',
               alignItems: 'center',
@@ -160,6 +160,7 @@ const Level = ({route, navigation}: any) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     // flex: 1,
+                   
                   }}>
                   {selected == item?.level_id ? (
                     <Image
@@ -191,16 +192,19 @@ const Level = ({route, navigation}: any) => {
                         setSelected(item?.level_id);
                       }}
                       style={{
-                        width: 18,
+                        width: 22,
                         backgroundColor: AppColor.WHITE,
-                        height: 18,
-                        borderRadius: 20,
+                        height: 22,
+                        borderRadius: 22,
                         justifyContent: 'center',
                         alignItems: 'center',
+
+                      // 
                       }}>
                       <View
                         style={{
                           width: 10,
+                          
                           backgroundColor: AppColor.WHITE,
                           height: 10,
                           borderRadius: 20,
