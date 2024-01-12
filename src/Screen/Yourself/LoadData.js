@@ -26,7 +26,9 @@ import axios from 'axios';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
+import VersionNumber from 'react-native-version-number';
 import {
+  Setmealdata,
   setCurrentWorkoutData,
   setCustomWorkoutData,
 } from '../../Component/ThemeRedux/Actions';
@@ -34,6 +36,7 @@ import {
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const LoadData = ({navigation}) => {
+  const {getFcmToken} = useSelector(state => state);
   const buttonName = [
     {
       id: 1,
@@ -114,6 +117,7 @@ const LoadData = ({navigation}) => {
     try {
       const payload = new FormData();
       payload.append('deviceid', deviceID);
+      payload.append('devicetoken', getFcmToken);
       payload.append(
         'id',
         getUserDataDetails?.id != null ? getUserDataDetails?.id : null,
@@ -143,7 +147,7 @@ const LoadData = ({navigation}) => {
             payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
           }
         }
-
+      console.log('Free User Data ', payload);
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {
@@ -152,6 +156,7 @@ const LoadData = ({navigation}) => {
         data: payload,
       });
       console.log(data.data, payload);
+      Meal_List(deviceID);
       getUserDataDetails?.id != null
         ? getCustomWorkout(getUserDataDetails?.id)
         : customFreeWorkoutDataApi(deviceID);
@@ -198,7 +203,7 @@ const LoadData = ({navigation}) => {
         },
         data: payload,
       });
-      console.log('CustomFreeWorkout', res.data.workout);
+      console.log('CustomFreeWorkout', res.data);
       if (res.data?.workout) {
         dispatch(setCustomWorkoutData(res.data));
         currentWorkoutDataApi(res.data?.workout[0]);
@@ -251,6 +256,29 @@ const LoadData = ({navigation}) => {
     }
   };
 
+  const Meal_List = async login_token => {
+    try {
+      const data = await axios(`${NewAppapi.Meal_Categorie}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          deviceid: login_token,
+          version: VersionNumber.appVersion,
+        },
+      });
+
+      if (data.data.diets.length > 0) {
+        dispatch(Setmealdata(data.data.diets));
+      } else {
+        dispatch(Setmealdata([]));
+      }
+    } catch (error) {
+      dispatch(Setmealdata([]));
+      console.log('Meal List Error', error);
+    }
+  };
   const renderItem1 = ({item, index}) => {
     const translateX = translationX.interpolate({
       inputRange: [0, 1],
@@ -372,7 +400,7 @@ const LoadData = ({navigation}) => {
         {activeNext && (
           <TouchableOpacity
             onPress={() => {
-              console.log("CurrentWorkout", currentWorkoutData)
+              console.log('CurrentWorkout', currentWorkoutData);
               navigation.navigate('Preview', {
                 currentExercise: currentWorkoutData,
               });

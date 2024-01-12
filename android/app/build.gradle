@@ -79,8 +79,9 @@ android {
         applicationId "fitme.health.fitness.homeworkouts.equipment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 4
-        versionName "1.3"
+        versionCode 5
+        versionName "1.5"
+        missingDimensionStrategy "store", "play"
     }
      signingConfigs {
          release {
@@ -107,6 +108,7 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    implementation project(':react-native-iap')
     implementation 'com.facebook.android:facebook-android-sdk:latest.release'
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
