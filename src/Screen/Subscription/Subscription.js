@@ -6,7 +6,7 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {AppColor} from '../../Component/Color';
 
 import {StatusBar} from 'react-native';
@@ -15,16 +15,19 @@ import NewHeader from '../../Component/Headers/NewHeader2';
 import {SliderBox} from 'react-native-image-slider-box';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import {Image} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
 import Button from '../../Component/Button';
 import {useSelector} from 'react-redux';
 import * as RNIap from 'react-native-iap';
+import axios from 'axios';
 
 const Subscription = () => {
-  const {getInAppPurchase} = useSelector(state => state);
+  const {getInAppPurchase, getUserDataDetails, getPurchaseHistory} =
+    useSelector(state => state);
+  const [purchaseData, setpuchaseData] = useState([]);
 
   const data = [
     require('../../Icon/Images/product_1631791758.jpg'),
@@ -41,13 +44,122 @@ const Subscription = () => {
         sku: items.productId,
       });
 
-      fetchPurchaseHistory(purchase.productId);
+      setpuchaseData(purchase);
+      fetchPurchaseHistory1(purchase);
     } catch (error) {
       console.log('Failed to purchase ios product', error);
     }
   };
-  const fetchPurchaseHistory = data => {
-    console.log("AAAAAAAAAAAAAAAAAA",data)
+  const purchaseItems1 = async (sku, offerToken) => {
+    try {
+      const purchase = await RNIap.requestSubscription({
+        sku,
+        ...(offerToken && {subscriptionOffers: [{sku, offerToken}]}),
+      });
+      setpuchaseData(purchase[0].dataAndroid);
+      fetchPurchaseHistory(purchase[0].dataAndroid);
+    } catch (error) {
+      console.log('Failed to purchase ios product', error);
+    }
+  };
+  const fetchPurchaseHistory = async data => {
+    const jsonObject = JSON.parse(data);
+    const timestamp = jsonObject.purchaseTime;
+    const date = new Date(timestamp);
+    const startDate = `${date.getDate()}-${
+      date.getMonth() + 1
+    }-${date.getFullYear()} `;
+    date.setDate(
+      date.getDate() + jsonObject.productId == 'a_monthly'
+        ? 30
+        : jsonObject.productId == 'b_quaterly'
+        ? 90
+        : 365,
+    );
+    const endDate = `${date.getDate()}-${
+      date.getMonth() + 1
+    }-${date.getFullYear()} `;
+
+    try {
+      const res = await axios(`${NewAppapi.Transctions}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          user_id: getUserDataDetails.id,
+          planname:
+            jsonObject.productId == 'a_monthly'
+              ? 'Monthly'
+              : jsonObject.productId == 'b_quaterly'
+              ? 'Quaterly'
+              : 'Yearly',
+          transaction_id: jsonObject.orderId,
+          planid: jsonObject.productId,
+          startdate: startDate,
+          enddate: endDate,
+          planstatus: 'Active',
+        },
+      });
+      console.log('Purchase Response ', res.data);
+    } catch (error) {
+      console.log('Purchase Store Data Error', error);
+    }
+  };
+  const fetchPurchaseHistory1 = async data => {
+    const timestamp = data.transactionDate;
+    const date = new Date(timestamp);
+    const startDate = `${date.getDate()}-${
+      date.getMonth() + 1
+    }-${date.getFullYear()} `;
+    date.setDate(
+      date.getDate() + data.productId == 'a_month'
+        ? 30
+        : data.productId == 'b_quaterly'
+        ? 90
+        : 365,
+    );
+    const endDate = `${date.getDate()}-${
+      date.getMonth() + 1
+    }-${date.getFullYear()} `;
+    console.log('FFFFFFFFFFFFFF11', getUserDataDetails.id);
+    try {
+      const res = await axios(`${NewAppapi.Transctions}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          user_id: getUserDataDetails.id,
+          planname:
+            data.productId == 'a_month'
+              ? 'Monthly'
+              : data.productId == 'b_quaterly'
+              ? 'Quaterly'
+              : 'Yearly',
+          transaction_id: data.transactionId,
+          planid: data.productId,
+          startdate: startDate,
+          enddate: endDate,
+          planstatus: 'Active',
+        },
+      });
+      console.log('Purchase Response ', res.data);
+    } catch (error) {
+      console.log('Purchase Store Data Error', error);
+    }
+  };
+  const getName = item => {
+    if (Platform.OS == 'android') {
+      console.log('Purchase Data  token ', item.productId,getPurchaseHistory[0].plan_id);
+      if (
+        item.productId == getPurchaseHistory[0].plan_id &&
+        getPurchaseHistory[0].plan_status == 'Active'
+      ) {
+        console.log('Purchase Data  token ', getPurchaseHistory[0].plan_name);
+        return getPurchaseHistory[0].plan_name;
+      }
+    }
   };
   return (
     <View style={styles.container}>
@@ -274,7 +386,14 @@ const Subscription = () => {
                     style={styles.button}
                     activeOpacity={0.5}
                     onPress={() => {
-                      purchaseItems(item);
+                      if (Platform.OS == 'ios') {
+                        purchaseItems(item);
+                      } else {
+                        purchaseItems1(
+                          item.productId,
+                          item.subscriptionOfferDetails[0].offerToken,
+                        );
+                      }
                     }}>
                     <Text
                       style={{
@@ -283,29 +402,51 @@ const Subscription = () => {
                         lineHeight: 20,
                         color: '#272727',
                       }}>
-                      {item.title}
+                      {Platform.OS == 'ios' ? item.title : item.name}
                     </Text>
-
-                    <Text
+                    <View
                       style={{
-                        fontWeight: '500',
-                        fontSize: 20,
-                        lineHeight: 24,
-                        top: 5,
-                        color: '#D5191A',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
                       }}>
-                      ₹ {item.price}
                       <Text
                         style={{
                           fontWeight: '500',
-                          fontSize: 18,
+                          fontSize: 20,
                           lineHeight: 24,
-                          color: '#000000',
+                          top: 5,
+                          color: '#D5191A',
                         }}>
-                        {' '}
-                        / {item.title}
+                        ₹{' '}
+                        {Platform.OS == 'ios'
+                          ? item.price
+                          : item.subscriptionOfferDetails[0].pricingPhases
+                              .pricingPhaseList[0].formattedPrice}
+                        <Text
+                          style={{
+                            fontWeight: '500',
+                            fontSize: 18,
+                            lineHeight: 24,
+                            color: '#000000',
+                          }}>
+                          {' '}
+                          / {Platform.OS == 'ios' ? item.title : item.name}
+                        </Text>
                       </Text>
-                    </Text>
+                      <Text
+                        style={{
+                          fontWeight: '500',
+                          fontSize: 20,
+                          lineHeight: 24,
+                          top: 5,
+                          right: 10,
+
+                          color: '#D5191A',
+                        }}>
+                        {getName(item)}
+                      </Text>
+                    </View>
                   </TouchableOpacity>
                 </>
               );
@@ -314,7 +455,12 @@ const Subscription = () => {
         </View>
       </ScrollView>
       <View style={{bottom: 18, alignSelf: 'center', position: 'absolute'}}>
-        <Button buttonText={'Proceed'} />
+        <Button
+          buttonText={'Proceed'}
+          onPresh={() => {
+            fetchPurchaseHistory1(purchaseData);
+          }}
+        />
       </View>
     </View>
   );

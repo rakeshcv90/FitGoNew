@@ -25,7 +25,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import { showMessage } from 'react-native-flash-message';
 
 const Store = ({navigation}) => {
-  const {getUserDataDetails} = useSelector(state => state);
+  const {getUserDataDetails,getStoreData} = useSelector(state => state);
   const [searchText, setsearchText] = useState('');
   const [forLoading, setForLoading] = useState(false);
   const [filteredCategories, setFilteredCategories] = useState([]);
@@ -34,7 +34,8 @@ const Store = ({navigation}) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      getCaterogy();
+     getCaterogy();
+     setcategory(getStoreData)
     }, []),
   );
   const updateFilteredCategories = (test) => {
@@ -54,10 +55,11 @@ const Store = ({navigation}) => {
     require('../../Icon/Images/recipe_1519697004.jpg'),
     require('../../Icon/Images/product_1631791758.jpg'),
   ];
+
   const getCaterogy = async () => {
     setForLoading(true)
     try {
-      const favDiet = await axios.get(
+      const favDiet = await axios.post(
         `${NewAppapi.Get_Product_Catogery}?token=${getUserDataDetails.login_token}`,
       );
 
@@ -214,7 +216,7 @@ const Store = ({navigation}) => {
           Our Products
         </Text>
         <FlatList
-          data={filteredCategories}
+          data={category}
           numColumns={3}
           showsVerticalScrollIndicator={false}
           keyExtractor={item => item.id}

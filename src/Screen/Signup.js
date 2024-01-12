@@ -57,6 +57,7 @@ const Signup = ({navigation}) => {
   const [appVersion, setAppVersion] = useState(0);
   const dispatch = useDispatch();
 
+  const {getFcmToken}=useSelector(state=>state)
   const PasswordRegex =
     // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%&*()-_+='":;,.?/~`[{}<>€£¥÷×])[A-Za-z\d!@#$%&*()-_+='":;,.?/~`[{}<>€£¥÷×]{8,}$/;
@@ -159,6 +160,7 @@ const Signup = ({navigation}) => {
           social_type: '',
           deviceid: deviceId,
           version: appVersion,
+          devicetoken:getFcmToken
         },
       });
 
@@ -207,6 +209,7 @@ const Signup = ({navigation}) => {
           socialtype: 'google',
           deviceid: deviceId,
           version: appVersion,
+          devicetoken:getFcmToken
         },
       });
       if (
@@ -255,6 +258,7 @@ const Signup = ({navigation}) => {
           socialtype: 'facebook',
           deviceid: deviceId,
           version: appVersion,
+          devicetoken:getFcmToken
         },
       });
 

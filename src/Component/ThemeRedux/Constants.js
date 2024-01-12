@@ -21,5 +21,7 @@ export default {
   AiMessageHistory:'AiMessageHistory',
   FCM_TOKEN:'FCM_TOKEN',
   IN_APP_PURCHASE:'IN_APP_PURCHASE',
+  STORE_DATA:'STORE_DATA',
+  PURCHASE_HISTORY:'PURCHASE_HISTORY'
 
 };

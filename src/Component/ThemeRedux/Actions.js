@@ -120,6 +120,18 @@ export const setPedomterData = data => {
     payload: data,
   };
 };
+export const setStoreData = data => {
+  return {
+    type: types.STORE_DATA,
+    payload: data,
+  };
+};
+export const setPurchaseHistory = data => {
+  return {
+    type: types.PURCHASE_HISTORY,
+    payload: data,
+  };
+};
 export const setFcmToken=data=>{
   return{
     type:types.FCM_TOKEN,

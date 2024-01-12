@@ -26,7 +26,6 @@ import {StatusBar} from 'react-native';
 import axios from 'axios';
 import {
   GoogleSignin,
-
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import ActivityLoader from '../Component/ActivityLoader';
@@ -37,6 +36,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Setmealdata,
   setCustomWorkoutData,
+  setPurchaseHistory,
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
@@ -44,7 +44,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 
-import {TextInput,} from 'react-native-paper';
+import {TextInput} from 'react-native-paper';
 import {navigationRef} from '../../App';
 
 import VersionNumber from 'react-native-version-number';
@@ -66,8 +66,8 @@ const Login = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [IsVerifyVisible, setVerifyVisible] = useState(false);
   const [appVersion, setAppVersion] = useState(0);
-  const {getFcmToken}=useSelector(state=>state)
-  console.log("FCM TOKEN========>",getFcmToken)
+  const {getFcmToken} = useSelector(state => state);
+
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
@@ -110,6 +110,7 @@ const Login = ({navigation}) => {
           socialtoken: token,
           socialtype: 'google',
           version: appVersion,
+          devicetoken: getFcmToken,
         },
       });
 
@@ -126,6 +127,7 @@ const Login = ({navigation}) => {
         getProfileData(data.data.id, data.data.profile_status);
         getCustomWorkout(data.data.id);
         Meal_List(data.data.login_token);
+        PurchaseDetails(data.data.id, data.data.login_token);
       } else if (
         data.data.msg ==
         'User does not exist with provided Google social credentials'
@@ -194,7 +196,7 @@ const Login = ({navigation}) => {
           socialtoken: '',
           socialtype: 'facebook',
           version: appVersion,
-          devicetoken:getFcmToken
+          devicetoken: getFcmToken,
         },
       });
       if (data.data.profile_status == 1) {
@@ -210,6 +212,7 @@ const Login = ({navigation}) => {
         getProfileData(data.data.id, data.data.profile_status);
         getCustomWorkout(data.data.id);
         Meal_List(data.data.login_token);
+        PurchaseDetails(data.data.id, data.data.login_token);
       } else if (
         data.data.msg ==
         'User does not exist with provided Facebook social credentials'
@@ -247,6 +250,7 @@ const Login = ({navigation}) => {
           email: email,
           password: password,
           version: appVersion,
+          devicetoken: getFcmToken,
         },
       });
       if (
@@ -260,22 +264,27 @@ const Login = ({navigation}) => {
           type: 'success',
           icon: {icon: 'auto', position: 'left'},
         });
-
+        setEmail('');
+        setPassword('');
         getProfileData(data.data.id, data.data.profile_status);
         getCustomWorkout(data.data.id);
         Meal_List(data.data.login_token);
+        PurchaseDetails(data.data.id, data.data.login_token);
       } else if (
         data.data.msg == 'Login successful' &&
         data.data.profile_status == 0
       ) {
         setForLoading(false);
-      
+        setEmail('');
+        setPassword('');
         getProfileData(data.data.id, data.data.profile_status);
         Meal_List(data.data.login_token);
         dispatch(setCustomWorkoutData([]));
+        PurchaseDetails(data.data.id, data.data.login_token);
       } else {
         setForLoading(false);
-    
+        setEmail('');
+        setPassword('');
         showMessage({
           message: data.data.msg,
           floating: true,
@@ -287,6 +296,8 @@ const Login = ({navigation}) => {
     } catch (error) {
       console.log('Form  Login Error', error);
       setForLoading(false);
+      setEmail('');
+      setPassword('');
     }
   };
   const getProfileData = async (user_id, status) => {
@@ -394,10 +405,8 @@ const Login = ({navigation}) => {
   };
 
   const getCustomWorkout = async user_id => {
-    
     try {
       const data = await axios(NewAppapi.Custom_WORKOUT_DATA, {
-        
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -420,8 +429,7 @@ const Login = ({navigation}) => {
       setForLoading(false);
     }
   };
-  const Meal_List = async (login_token) => {
-
+  const Meal_List = async login_token => {
     try {
       const data = await axios(`${NewAppapi.Meal_Categorie}`, {
         method: 'POST',
@@ -433,19 +441,39 @@ const Login = ({navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-    
 
       if (data.data.diets.length > 0) {
         dispatch(Setmealdata(data.data.diets));
-
-    
       } else {
         dispatch(Setmealdata([]));
       }
     } catch (error) {
-
       dispatch(Setmealdata([]));
       console.log('Meal List Error', error);
+    }
+  };
+
+  const PurchaseDetails = async (id, login_token) => {
+    try {
+      const res = await axios(`${NewAppapi.TransctionsDetails}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          id: id,
+          token: login_token,
+        },
+      });
+      console.log('Purchase Data',res.data.data);
+      if (res.data.data.length > 0) {
+        dispatch(setPurchaseHistory(res.data.data));
+      } else {
+        dispatch(setPurchaseHistory([]));
+      }
+    } catch (error) {
+      dispatch(setPurchaseHistory([]));
+      console.log('Purchase List Error', error);
     }
   };
   const ModalView = () => {
@@ -678,7 +706,7 @@ const Login = ({navigation}) => {
                   icon={showPassword ? 'eye-off' : 'eye'}
                   onPress={() => setShowPassword(!showPassword)}
                   color={'#ADA4A5'}
-                  style={{marginBottom:-1,}}
+                  style={{marginBottom: -1}}
                 />
               }
               // right={
@@ -741,7 +769,7 @@ const Login = ({navigation}) => {
             </Text>
           </View>
         </KeyboardAvoidingView>
-        <View style={{marginTop: DeviceHeigth * 0.02,paddingBottom: 10}}>
+        <View style={{marginTop: DeviceHeigth * 0.02, paddingBottom: 10}}>
           <Button2 onGooglePress={GoogleSignup} onFBPress={FacebookLogin} />
         </View>
       </ScrollView>
