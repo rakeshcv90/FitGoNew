@@ -9,12 +9,13 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {AppColor} from '../Component/Color';
+import {AppColor} from '../../Component/Color';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {localImage} from '../Component/Image';
-import {DeviceHeigth, DeviceWidth} from '../Component/Config';
+import {localImage} from '../../Component/Image';
+import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {Svg, Circle, Line} from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
+import {Dropdown} from 'react-native-element-dropdown';
 import {
   LineChart,
   BarChart,
@@ -25,9 +26,10 @@ import {
 } from 'react-native-chart-kit';
 import {index} from 'd3';
 import moment from 'moment';
-import Button from '../Component/Button';
-const NewProgressScreen = () => {
+import Button from '../../Component/Button';
+const NewProgressScreen = ({navigation}) => {
   const [dates, setDates] = useState([]);
+  const [value, setValue] = useState('Weekly');
   const textData = [
     {value: 10},
     {value: 15},
@@ -127,6 +129,17 @@ const NewProgressScreen = () => {
       txt2: 'Actions',
     },
   ];
+  const data2 = [
+    {label: 'Weekly', value: '1'},
+    {label: 'Daily', value: '2'},
+  ];
+  const renderItem = item => {
+    return (
+      <View style={styles.item}>
+        <Text style={styles.textItem}>{item.label}</Text>
+      </View>
+    );
+  };
   const LineText = ({Txt1, Txt2}) => {
     return (
       <View
@@ -154,20 +167,23 @@ const NewProgressScreen = () => {
           </Text>
         </View>
         {Txt2 ? (
-          <TouchableOpacity style={styles.Weekly_B}>
-            <Text
-              style={{
-                textAlign: 'center',
-                color: AppColor.BLACK,
-                fontSize: 12,
-                marginLeft: 3,
-              }}>
-              {Txt2}
-            </Text>
-            <Icons name={'chevron-down'} size={25} color={'#000'} />
-          </TouchableOpacity>
+            <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            data={data2}
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder={value}
+            value={value}
+            onChange={item => {
+              setValue(item.value);
+            }}
+            renderItem={renderItem}
+          />
         ) : (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>{navigation.navigate("NewProgressScreen")}}>
             <Icons name={'chevron-right'} size={25} color={'#000'} />
           </TouchableOpacity>
         )}
@@ -307,7 +323,7 @@ const NewProgressScreen = () => {
         <View style={styles.card}>
           <LineChart
             data={data}
-            width={DeviceWidth * 0.9}
+            width={DeviceWidth * 0.85}
             height={DeviceHeigth * 0.25}
             chartConfig={chartConfig}
             withInnerLines={false}
@@ -326,9 +342,8 @@ const NewProgressScreen = () => {
         <LineText Txt1={'Workout Duration'} Txt2={'Weekly'} />
         <View style={styles.card}>
           <BarChart
-            // style={graphStyle}
             data={data}
-            width={DeviceWidth * 0.9}
+            width={DeviceWidth * 0.85}
             height={DeviceHeigth * 0.25}
             chartConfig={chartConfig1}
             withInnerLines={false}
@@ -401,6 +416,29 @@ const NewProgressScreen = () => {
           </TouchableOpacity>
         </View>
         <View style={[styles.card, {flexDirection: 'column'}]}>
+          <View style={{width: DeviceWidth * 0.9, alignSelf: 'center'}}>
+            <View
+              style={{
+                width: 100,
+                marginLeft: DeviceWidth * 0.6,
+              }}>
+              <View
+                style={{
+                  backgroundColor: '#F25C19',
+                  borderRadius: 8,
+                  padding: 5,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{fontWeight: '500', color: AppColor.WHITE}}>
+                  {'Over Weight'}
+                </Text>
+              </View>
+              <View style={styles.arrowheadContainer}>
+                <View style={styles.arrowhead} />
+              </View>
+            </View>
+          </View>
           <LinearGradient
             colors={[
               '#BCFFF7',
@@ -411,7 +449,12 @@ const NewProgressScreen = () => {
               '#D5191A',
               '#941000',
             ]}
-            style={{width: DeviceWidth * 0.9, height: 18, borderRadius: 8}}
+            style={{
+              width: DeviceWidth * 0.9,
+              height: 18,
+              borderRadius: 8,
+              alignSelf: 'center',
+            }}
             start={{x: 0, y: 1}}
             end={{x: 1, y: 0}}
           />
@@ -420,14 +463,36 @@ const NewProgressScreen = () => {
               flexDirection: 'row',
               flexDirection: 'row',
               justifyContent: 'space-between',
-              width: DeviceWidth * 0.9,
+              width: DeviceWidth * 0.85,
               marginTop: 5,
+              alignSelf: 'center',
             }}>
             {textData.map((value, index) => (
-              <Text key={index}>{value.value}</Text>
+              <Text
+                key={index}
+                style={{color: AppColor.BLACK, textAlign: 'center'}}>
+                {value.value}
+              </Text>
             ))}
           </View>
-         
+          <TouchableOpacity
+            style={[styles.button_b, {marginVertical: 20}]}
+            activeOpacity={0.5}>
+            <LinearGradient
+              colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
+              style={[styles.button_b, {padding: 5}]}
+              start={{x: 0, y: 1}}
+              end={{x: 1, y: 0}}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins-SemiBold',
+                  fontSize: 18,
+                  color: AppColor.WHITE,
+                }}>
+                {"Enter Today's weight"}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -507,6 +572,60 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  button_b: {
+    width: DeviceWidth * 0.6,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+  },
+  arrowheadContainer: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 10,
+    borderRightWidth: 10,
+    borderTopWidth: 20,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: '#F25C19', // Adjust the color of the arrowhead
+    borderStyle: 'solid',
+    alignSelf: 'center',
+    marginTop: -1,
+  },
+  arrowhead: {
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+  },
+  dropdown: {
+    marginVertical: 10,
+    height: 30,
+    width: DeviceWidth * 0.25,
+    borderColor: AppColor.RED,
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    shadowColor: '#000',
+  },
+  item: {
+    padding: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    color:AppColor.BLACK
+  },
+  textItem: {
+    flex: 1,
+    fontSize: 16,
+    color:AppColor.BLACK
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+    color:AppColor.BLACK
   },
 });
 export default NewProgressScreen;

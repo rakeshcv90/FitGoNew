@@ -9,6 +9,7 @@ import Store from '../Screen/NewHome/Store';
 import Workouts from '../Screen/NewHome/Workouts';
 import Report from '../Screen/NewHome/Report';
 import Trainer from '../Screen/NewHome/Trainer';
+import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
 
 const Tabs = AnimatedTabBarNavigator();
 const BottomTab = () => {
@@ -66,7 +67,7 @@ const BottomTab = () => {
         />
         <Tabs.Screen
           name="Reports"
-          component={Report}
+          component={NewProgressScreen}
           options={{
             tabBarIcon: ({focused, color, size}) => (
               <Image
