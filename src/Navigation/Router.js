@@ -3,7 +3,7 @@ import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/Index';
+import Yourself from '../Screen/Yourself/index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -53,6 +53,7 @@ import MeditationExerciseDetails from '../Screen/NewHome/MeditationExerciseDetai
 import AITrainer from '../Screen/NewHome/AITrainer';
 import AIMessageHistory from '../Screen/NewHome/AIMessageHistory';
 import Subscription from '../Screen/Subscription/Subscription';
+import NewProgressScreen from '../Screen/NewProgressScreen';
 
 const Stack = createStackNavigator();
 
@@ -66,6 +67,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Screen name="NewProgressScreen" component={NewProgressScreen}/>
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
 
       <Stack.Screen

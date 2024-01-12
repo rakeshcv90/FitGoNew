@@ -218,30 +218,15 @@ const OneDay = ({navigation, route}: any) => {
       style={{
         flex: 1,
         backgroundColor: AppColor.WHITE,
-        // flexDirection: 'row',
+        padding:10,
       }}>
-      <Image
-        source={{uri: data?.workout_image_link}}
-        style={{
-          height: DeviceWidth / 1.5,
-          width: DeviceWidth,
-          marginTop: DeviceHeigth * 0.1,
-        }}
-        resizeMode="contain"
-      />
-      <Modal
-        visible={open}
-        onRequestClose={() => null}
-        animationType="slide"
-        transparent>
-        <View style={{height: DeviceHeigth * 0.4, marginLeft: 5}}>
-          <TouchableOpacity
+         <TouchableOpacity
             onPress={() => {
               setOpen(false);
               navigation.goBack();
             }}
             style={{
-              marginTop: DeviceHeigth * 0.1,
+            marginTop:DeviceHeigth*0.03
             }}>
             <Icons
               name={'chevron-left'}
@@ -249,6 +234,17 @@ const OneDay = ({navigation, route}: any) => {
               color={AppColor.INPUTTEXTCOLOR}
             />
           </TouchableOpacity>
+      <Image
+        source={{uri: data?.workout_image_link}}
+        style={{
+          height: DeviceWidth / 1.5,
+          width: DeviceWidth,
+          alignSelf:'center'
+        }}
+        resizeMode='contain'
+      />
+        <View style={{height: DeviceHeigth * 0.4, marginLeft: 5}}>
+         
         </View>
         <View style={styles.container}>
           <Text
@@ -256,7 +252,8 @@ const OneDay = ({navigation, route}: any) => {
               fontWeight: '700',
               fontSize: 30,
               lineHeight: 40,
-              fontFamily: 'Poppins',
+              fontFamily: 'Poppins-SemiBold',
+              color:AppColor.BLACK
             }}>
             Day {day}
           </Text>
@@ -307,7 +304,6 @@ const OneDay = ({navigation, route}: any) => {
             }}
           />
         </View>
-      </Modal>
       {loader && <ActivityLoader visible={loader} />}
       <WorkoutDescription
         data={currentExercise}

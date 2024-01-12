@@ -104,7 +104,7 @@ const MentalState = ({navigation, route}) => {
         screen={'What is your mental state ?'}
       />
       <View
-        style={{height: DeviceHeigth * 0.4, marginBottom: DeviceHeigth * 0.08}}>
+        style={{height: DeviceHeigth * 0.4, marginBottom: DeviceHeigth * 0.05}}>
         <Carousel
           ref={carouselRef}
           data={MentalStateData}
@@ -171,7 +171,7 @@ const MentalState = ({navigation, route}) => {
               <Text
                 style={{
                   position: 'absolute',
-                  bottom: -35,
+                  bottom: -45,
                   padding: 2,
                   width: 100,
                   textAlign: 'center',
@@ -245,6 +245,7 @@ const styles = StyleSheet.create({
   Container: {
     flex: 1,
     alignItems: 'center',
+    backgroundColor:AppColor.WHITE
   },
   img: {
     width: DeviceWidth * 0.6,

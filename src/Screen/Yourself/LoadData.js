@@ -384,19 +384,7 @@ const LoadData = ({navigation}) => {
       </View>
 
       <View style={styles.buttons}>
-        <TouchableOpacity
-          onPress={() => null}
-          style={{
-            backgroundColor: '#F7F8F8',
-            width: 45,
-            height: 45,
-            borderRadius: 15,
-            overflow: 'hidden',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          {/* <Icons name="chevron-left" size={25} color={'#000'} /> */}
-        </TouchableOpacity>
+   <View></View>
         {activeNext && (
           <TouchableOpacity
             onPress={() => {
@@ -455,7 +443,7 @@ const styles = StyleSheet.create({
     width: DeviceWidth * 0.9,
     alignItems: 'center',
     alignSelf: 'center',
-    bottom: DeviceHeigth * 0.05,
+    bottom: DeviceHeigth * 0.02,
     position: 'absolute',
   },
   nextButton: {
