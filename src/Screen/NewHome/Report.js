@@ -1,15 +1,227 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import {View, Platform, Text, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import NewHeader from '../../Component/Headers/NewHeader';
+import {StatusBar} from 'react-native';
+import {StyleSheet} from 'react-native';
+import {AppColor} from '../../Component/Color';
+import {Switch} from 'react-native-switch';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import KeepAwake from 'react-native-keep-awake';
+import {useDispatch, useSelector} from 'react-redux';
+import { setScreenAwake } from '../../Component/ThemeRedux/Actions';
+const Report = ({navigation}) => {
+  const {getScreenAwake} = useSelector(state => state);
+  const dispatch = useDispatch();
+  
+  const [isSoundEnabled, setIsSoundEnabled] = useState(false);
+ // const [isScreenEnabled, setScreenIsEnabled] = useState(getScreenAwake);
+  const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
 
-const Report = ({ route }) => {
+  const toggleSwitch = () => {
+    setIsSoundEnabled(previousState => !previousState);
+  };
+  // const toggleSwitch2 = () => {
+  //   setScreenIsEnabled(previousState => !previousState);
+  //   dispatch(setScreenAwake(isScreenEnabled))
+  // };
+  const toggleSwitch3 = () => {
+    setAlarmIsEnabled(previousState => !previousState);
+  };
+  useEffect(() => {
+    console.log("GGGGGGGGGG",getScreenAwake)
+  if(getScreenAwake==true){
+    KeepAwake.activate();
+  }else{
+    KeepAwake.deactivate();
+  }
+   
+  }, [getScreenAwake]);
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Text>Profile!</Text>
-    <Text>
-      {route?.params?.owner ? `${route.params.owner}'s Profile` : ''}
-    </Text>
-  </View>
-  )
-}
+    <View style={styles.container}>
+      <NewHeader header={'Settings'} SearchButton={false} backButton={true} />
+      <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
+      <View style={styles.listItem2}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Subscription');
+          }}
+          activeOpacity={0.5}
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginVertical: 5,
+            alignItems: 'center',
+          }}>
+          <Text style={styles.textStyle}>Subscription</Text>
+          <Icons
+            name={'chevron-right'}
+            size={25}
+            color={AppColor.INPUTTEXTCOLOR}
+          />
+        </TouchableOpacity>
+        {/* <View
+          style={{
+            width: '100%',
+            height: 0.5,
+            backgroundColor: '#ABABAB',
+            marginVertical: 10,
+          }}></View> */}
+        {/* <TouchableOpacity
+          onPress={() => {}}
+          activeOpacity={0.5}
+          style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Text style={styles.textStyle}>Restore Suscription</Text>
+          <Icons
+            name={'chevron-right'}
+            size={25}
+            color={AppColor.INPUTTEXTCOLOR}
+          />
+        </TouchableOpacity> */}
+      </View>
+      <Text
+        style={[styles.textStyle, {marginHorizontal: 15, marginVertical: 20}]}>
+        Timer Setting
+      </Text>
+      <View style={styles.listItem2}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginVertical: 5,
+            alignItems: 'center',
+          }}>
+          <Text style={styles.textStyle}>Sound</Text>
+          <Switch
+            onValueChange={toggleSwitch}
+            value={isSoundEnabled}
+            disabled={false}
+            circleSize={19}
+            barHeight={21}
+            circleBorderWidth={0.1}
+            backgroundActive={'#FFE3E3'}
+            backgroundInactive={AppColor.GRAY2}
+            circleActiveColor={AppColor.RED}
+            circleInActiveColor={AppColor.WHITE}
+            changeValueImmediately={true}
+            outerCircleStyle={{color: AppColor.RED}}
+            renderActiveText={false}
+            renderInActiveText={false}
+            switchLeftPx={2}
+            switchRightPx={2}
+            switchWidthMultiplier={2.2}
+            switchBorderRadius={30}
+          />
+        </View>
+        <View
+          style={{
+            width: '100%',
+            height: 0.5,
+            backgroundColor: '#ABABAB',
+            marginVertical: 10,
+          }}></View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <Text style={styles.textStyle}>Screen Always On</Text>
+          <Switch
+            onValueChange={(test)=>{
+           
+                dispatch(setScreenAwake(test))
+     
+            }}
+            value={getScreenAwake}
+            disabled={false}
+            circleSize={19}
+            barHeight={21}
+            circleBorderWidth={0.1}
+            backgroundActive={'#FFE3E3'}
+            backgroundInactive={AppColor.GRAY2}
+            circleActiveColor={AppColor.RED}
+            circleInActiveColor={AppColor.WHITE}
+            changeValueImmediately={true}
+            outerCircleStyle={{color: AppColor.RED}}
+            renderActiveText={false}
+            renderInActiveText={false}
+            switchLeftPx={2}
+            switchRightPx={2}
+            switchWidthMultiplier={2.2}
+            switchBorderRadius={30}
+          />
+        </View>
+        <View
+          style={{
+            width: '100%',
+            height: 0.5,
+            backgroundColor: '#ABABAB',
+            marginVertical: 10,
+          }}></View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <Text style={styles.textStyle}>Schedule Alarm</Text>
+          <Switch
+            onValueChange={toggleSwitch3}
+            value={isAlarmEnabled}
+            disabled={false}
+            circleSize={19}
+            barHeight={21}
+            circleBorderWidth={0.1}
+            backgroundActive={'#FFE3E3'}
+            backgroundInactive={AppColor.GRAY2}
+            circleActiveColor={AppColor.RED}
+            circleInActiveColor={AppColor.WHITE}
+            changeValueImmediately={true}
+            outerCircleStyle={{color: AppColor.RED}}
+            renderActiveText={false}
+            renderInActiveText={false}
+            switchLeftPx={2}
+            switchRightPx={2}
+            switchWidthMultiplier={2.2}
+            switchBorderRadius={30}
+          />
+        </View>
+      </View>
+    </View>
+  );
+};
+var styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: AppColor.WHITE,
+  },
 
-export default Report
+  listItem2: {
+    marginHorizontal: 15,
+
+    borderRadius: 16,
+    justifyContent: 'center',
+    backgroundColor: AppColor.WHITE,
+    padding: 15,
+    shadowColor: 'rgba(0, 0, 0, 1)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  textStyle: {
+    fontFamily: 'Poppins',
+    fontWeight: '500',
+    fontSize: 15,
+    lineHeight: 18,
+    color: AppColor.LITELTEXTCOLOR,
+  },
+});
+export default Report;
