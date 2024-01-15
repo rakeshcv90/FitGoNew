@@ -120,4 +120,5 @@ export const localImage = {
   Clock_p:require('../Icon/Images/NewImage/Chronometer.png'),
   Biceps_p:require('../Icon/Images/NewImage/biceps_p.png'),
   Pen_p:require('../Icon/Images/NewImage/Pen_p.png'),
+  face0:require('../Icon/Images/NewImage/angry_p.png'),
 };
