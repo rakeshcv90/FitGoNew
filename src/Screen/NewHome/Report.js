@@ -8,27 +8,16 @@ import {Switch} from 'react-native-switch';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import KeepAwake from 'react-native-keep-awake';
 import {useDispatch, useSelector} from 'react-redux';
-import { setScreenAwake } from '../../Component/ThemeRedux/Actions';
+import { setScreenAwake, setSoundOnOff } from '../../Component/ThemeRedux/Actions';
 const Report = ({navigation}) => {
-  const {getScreenAwake} = useSelector(state => state);
+  const {getScreenAwake,getSoundOffOn} = useSelector(state => state);
   const dispatch = useDispatch();
-  
-  const [isSoundEnabled, setIsSoundEnabled] = useState(false);
- // const [isScreenEnabled, setScreenIsEnabled] = useState(getScreenAwake);
   const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
-
-  const toggleSwitch = () => {
-    setIsSoundEnabled(previousState => !previousState);
-  };
-  // const toggleSwitch2 = () => {
-  //   setScreenIsEnabled(previousState => !previousState);
-  //   dispatch(setScreenAwake(isScreenEnabled))
-  // };
   const toggleSwitch3 = () => {
     setAlarmIsEnabled(previousState => !previousState);
   };
   useEffect(() => {
-    console.log("GGGGGGGGGG",getScreenAwake)
+
   if(getScreenAwake==true){
     KeepAwake.activate();
   }else{
@@ -36,6 +25,7 @@ const Report = ({navigation}) => {
   }
    
   }, [getScreenAwake]);
+  console.log("DDDDDDD",getSoundOffOn)
   return (
     <View style={styles.container}>
       <NewHeader header={'Settings'} SearchButton={false} backButton={true} />
@@ -92,8 +82,11 @@ const Report = ({navigation}) => {
           }}>
           <Text style={styles.textStyle}>Sound</Text>
           <Switch
-            onValueChange={toggleSwitch}
-            value={isSoundEnabled}
+            onValueChange={(text)=>{
+              
+              dispatch(setSoundOnOff(text))
+            }}
+            value={getSoundOffOn}
             disabled={false}
             circleSize={19}
             barHeight={21}
