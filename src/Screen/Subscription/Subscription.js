@@ -24,7 +24,7 @@ import {useSelector} from 'react-redux';
 import * as RNIap from 'react-native-iap';
 import axios from 'axios';
 
-const Subscription = () => {
+const Subscription = ({navigation}) => {
   const {getInAppPurchase, getUserDataDetails, getPurchaseHistory} =
     useSelector(state => state);
   const [purchaseData, setpuchaseData] = useState([]);
@@ -151,12 +151,12 @@ const Subscription = () => {
   };
   const getName = item => {
     if (Platform.OS == 'android') {
-      console.log('Purchase Data  token ', item.productId,getPurchaseHistory[0].plan_id);
+   
       if (
         item.productId == getPurchaseHistory[0].plan_id &&
         getPurchaseHistory[0].plan_status == 'Active'
       ) {
-        console.log('Purchase Data  token ', getPurchaseHistory[0].plan_name);
+       
         return getPurchaseHistory[0].plan_name;
       }
     }
@@ -167,7 +167,7 @@ const Subscription = () => {
         header={'Fitness Coach'}
         backButton={true}
         onPress={() => {
-          console.log('Hebhcdfefdffdsfdsf');
+          navigation.goBack()
         }}
       />
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />

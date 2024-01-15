@@ -26,7 +26,7 @@ import {
 import {index} from 'd3';
 import moment from 'moment';
 import Button from '../Component/Button';
-const NewProgressScreen = () => {
+const NewProgressScreen = ({navigation}) => {
   const [dates, setDates] = useState([]);
   const textData = [
     {value: 10},
@@ -248,10 +248,12 @@ const NewProgressScreen = () => {
               {'Feedback'}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.5}>
+          <TouchableOpacity activeOpacity={0.5} onPress={()=>{
+       navigation.navigate('Report');
+          }}>
             <Image
               source={localImage.Settings_v}
-              style={{height: 30, width: 30}}
+              style={{height: 20, width: 20}}
               resizeMode="contain"
             />
           </TouchableOpacity>

@@ -856,8 +856,8 @@ ActivityPermission()
         <TouchableOpacity
           style={styles.profileView1}
           onPress={() => {
-            // navigation.navigate('Profile');
-            navigation.navigate('Subscription');
+            navigation.navigate('Profile');
+         
           }}>
           <Image
             source={localImage.avt}

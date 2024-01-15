@@ -3,7 +3,7 @@ import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/index';
+import Yourself from '../Screen/Yourself/Index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -54,6 +54,7 @@ import AITrainer from '../Screen/NewHome/AITrainer';
 import AIMessageHistory from '../Screen/NewHome/AIMessageHistory';
 import Subscription from '../Screen/Subscription/Subscription';
 import NewProgressScreen from '../Screen/NewProgressScreen';
+import Report from '../Screen/NewHome/Report';
 
 const Stack = createStackNavigator();
 
@@ -67,7 +68,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="NewProgressScreen" component={NewProgressScreen}/>
+     
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
 
       <Stack.Screen
@@ -128,10 +129,13 @@ export const LoginStack = () => {
         name="MeditationExerciseDetails"
         component={MeditationExerciseDetails}
       />
+        <Stack.Screen name="Report" component={Report}/>
       <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="AITrainer" component={AITrainer} />
       <Stack.Screen name="AIMessageHistory" component={AIMessageHistory} />
       <Stack.Screen name="Subscription" component={Subscription} />
+       <Stack.Screen name="NewProgressScreen" component={NewProgressScreen}/>
+      
     </Stack.Navigator>
   );
 };
