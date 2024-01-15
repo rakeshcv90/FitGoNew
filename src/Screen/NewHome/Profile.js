@@ -289,7 +289,20 @@ const Profile = () => {
             style={styles.SingleButton}
             navigation
             onPress={() => {
-              navigation.navigate('Personal Details');
+              if(value.text1=='Personal Details'){
+                navigation.navigate('NewPersonalDetails');
+              }else{
+                showMessage({
+                  message: 'Work In Progress',
+                  type: 'info',
+                  animationDuration: 500,
+        
+                  floating: true,
+                  icon: {icon: 'auto', position: 'left'},
+                });
+              }
+           
+            
             }}>
             {value.icon1}
             <View style={styles.View1}>

@@ -68,7 +68,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-     
+  
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
 
       <Stack.Screen
@@ -92,7 +92,7 @@ export const LoginStack = () => {
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
       <Stack.Screen name="OtpVerification" component={OtpVerification} />
       <Stack.Screen name="Edit_Profile" component={NewEditProfile} />
-      <Stack.Screen name="Personal Details" component={NewPersonalDetails} />
+      <Stack.Screen name="NewPersonalDetails" component={NewPersonalDetails} />
       <Stack.Screen name="StepCounter" component={NewStepCounter} />
       <Stack.Screen name="Scale" component={Scale} />
       <Stack.Screen name="Gender" component={Gender} />

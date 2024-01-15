@@ -26,6 +26,7 @@ const intialState = {
   getStoreData: [],
   getPurchaseHistory: [],
   getScreenAwake: false,
+  getSoundOffOn:false
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -131,6 +132,8 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, getFcmToken: action.payload};
     case types.SCREENAWAKE:
       return {...state, getScreenAwake: action.payload};
+    case types.SOUND_ON_OFF:
+      return {...state, getSoundOffOn: action.payload};
     default:
       return state;
   }

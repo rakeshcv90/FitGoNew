@@ -86,11 +86,11 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
         <TouchableOpacity
           onPress={() => setOpen(false)}
           style={{
-            justifyContent: 'flex-end',
-            alignItems: 'flex-end',
-            width: DeviceWidth * 0.95,
-            alignSelf: 'center',
-            marginTop: DeviceHeigth * 0.04,
+            width:25,
+            height:25,
+            alignSelf: 'flex-end',
+            left:-10,
+            marginTop: DeviceHeigth * 0.045,
           }}>
           <Icon name="close" color={AppColor.DARKGRAY} size={25} />
         </TouchableOpacity>
