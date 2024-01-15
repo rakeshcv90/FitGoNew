@@ -30,6 +30,7 @@ const WorkoutDays = ({navigation, route}: any) => {
   const [selected, setSelected] = useState(0);
   const [refresh, setRefresh] = useState(false);
   const [open, setOpen] = useState(true);
+  const [phase, setPhase] = useState(1);
   const [day, setDay] = useState(1);
   const [trainingCount, setTrainingCount] = useState(-1);
   const [totalCount, setTotalCount] = useState(-1);
@@ -521,6 +522,7 @@ const styles = StyleSheet.create({
   },
   box: {
     //   flex: 1,
+    alignSelf:'center',
     width: DeviceWidth * 0.8,
     justifyContent: 'center',
     alignItems: 'center',

@@ -148,8 +148,6 @@ const Injury = ({route, navigation}) => {
         style={{
           justifyContent: 'center',
           alignItems: 'center',
-
-          marginTop: -DeviceHeigth * 0.015,
         }}>
         <Bulb
           screen={'Do you have Injury in any body part?'}

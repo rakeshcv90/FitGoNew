@@ -108,9 +108,39 @@ export const setCount = data => {
     payload: data,
   };
 };
+export const setInappPurchase = data => {
+  return {
+    type: types.IN_APP_PURCHASE,
+    payload: data,
+  };
+};
 export const setPedomterData = data => {
   return {
     type: types.Update_Pedometer_Data,
     payload: data,
   };
 };
+export const setStoreData = data => {
+  return {
+    type: types.STORE_DATA,
+    payload: data,
+  };
+};
+export const setPurchaseHistory = data => {
+  return {
+    type: types.PURCHASE_HISTORY,
+    payload: data,
+  };
+};
+export const setScreenAwake = data => {
+  return {
+    type: types.SCREENAWAKE,
+    payload: data,
+  };
+};
+export const setFcmToken=data=>{
+  return{
+    type:types.FCM_TOKEN,
+    payload:data
+  }
+}

@@ -113,4 +113,11 @@ export const localImage = {
   Boot:require('../Icon/Images/NewImage/Trainer1.png'),
   Send:require('../Icon/Images/NewImage/send.png'),
   ChatHistory:require('../Icon/Images/NewImage/chatHistory.png'),
+  Tick2:require('../Icon/Images/NewImage/Tick2.png'),
+  Feedback:require('../Icon/Images/NewImage/Feedback.png'),
+  Settings_v:require('../Icon/Images/NewImage/Settings_v.png'),
+  Fire1:require('../Icon/Images/NewImage/Fire1.png'),
+  Clock_p:require('../Icon/Images/NewImage/Chronometer.png'),
+  Biceps_p:require('../Icon/Images/NewImage/biceps_p.png'),
+  Pen_p:require('../Icon/Images/NewImage/Pen_p.png'),
 };

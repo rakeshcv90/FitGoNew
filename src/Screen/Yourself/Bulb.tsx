@@ -34,7 +34,7 @@ const Bulb = ({screen, header}: any) => {
         style={{
           color: 'black',
           fontSize: 20,
-          fontFamily: 'Poppins',
+          fontFamily: 'Poppins-SemiBold',
           fontWeight: 'bold',
           lineHeight: 30,
         }}>

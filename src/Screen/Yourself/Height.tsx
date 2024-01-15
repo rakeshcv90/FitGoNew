@@ -115,7 +115,7 @@ const Height = ({route, navigation}: any) => {
       />
       <View
         style={{
-          marginTop: 20,
+          // marginTop: 20,
         }}>
         <Toggle
           data={toggleH}
@@ -131,7 +131,7 @@ const Height = ({route, navigation}: any) => {
           justifyContent: 'flex-start',
           alignItems: 'flex-start',
           //   alignSelf: 'flex-start',
-          height: DeviceHeigth * 0.55,
+          height: DeviceHeigth * 0.58,
           width: DeviceWidth,
         }}>
         <Scale

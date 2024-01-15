@@ -98,7 +98,7 @@ const Goal = ({navigation, route}: any) => {
           justifyContent: 'center',
           alignItems: 'center',
           alignSelf: 'center',
-          height: DeviceHeigth * 0.55,
+          height: DeviceHeigth * 0.6,
           transform: [{translateX: goalsAnimation}],
           width: DeviceWidth,
           marginLeft: gender == 'Female' ? 50 : 30,
@@ -163,17 +163,20 @@ const Goal = ({navigation, route}: any) => {
       </Animated.View>
       {gender != '' ? (
         <TouchableOpacity
-          style={{
-            alignSelf: 'flex-start',
-            marginLeft: DeviceWidth * 0.04,
-            backgroundColor: '#F7F8F8',
-            width: 45,
-            height: 45,
-            borderRadius: 15,
-            overflow: 'hidden',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
+        style={{
+          alignSelf: 'flex-start',
+          marginLeft: DeviceWidth * 0.04,
+          backgroundColor: '#F7F8F8',
+          width: 45,
+          height: 45,
+          borderRadius: 15,
+          overflow: 'hidden',
+          justifyContent: 'center',
+          alignItems: 'center',
+
+          bottom: DeviceHeigth * 0.02,
+          position: 'absolute',
+        }}
           onPress={() => {
             navigation.navigate('Gender', {data: data, nextScreen: screen - 1});
             //navigation.goBack()
@@ -182,7 +185,20 @@ const Goal = ({navigation, route}: any) => {
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
-          style={{alignSelf: 'flex-start', marginLeft: DeviceWidth * 0.1}}
+        style={{
+          alignSelf: 'flex-start',
+          marginLeft: DeviceWidth * 0.04,
+          backgroundColor: '#F7F8F8',
+          width: 45,
+          height: 45,
+          borderRadius: 15,
+          overflow: 'hidden',
+          justifyContent: 'center',
+          alignItems: 'center',
+
+          bottom: DeviceHeigth * 0.02,
+          position: 'absolute',
+        }}
           onPress={() => {
             null;
           }}>

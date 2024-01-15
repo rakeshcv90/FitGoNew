@@ -28,7 +28,7 @@ import Svg, {
 } from 'react-native-svg';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 import Carousel from 'react-native-snap-carousel';
-import { showMessage } from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 
 const GradientText = ({item}: any) => {
   const gradientColors = ['#D5191A', '#941000'];
@@ -76,7 +76,7 @@ const positions = data.map(
 );
 const Age = ({route, navigation}: any) => {
   const {nextScreen} = route.params;
-  console.log('center, index',nextScreen);
+  console.log('center, index', nextScreen);
   const translateLevel = useRef(new Animated.Value(0)).current;
 
   const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
@@ -88,11 +88,10 @@ const Age = ({route, navigation}: any) => {
   const [screen, setScreen] = useState(nextScreen);
   const [focused, setFocused] = useState(false);
   const flatListRef = useRef(null);
-  //  
+  //
   useEffect(() => {
     setScreen(nextScreen);
     getActiveItem(15);
-
   }, []);
   const getActiveItem = (y: number) => {
     const halfBoxH = BOX_HEIGHT * 0.4;
@@ -108,7 +107,7 @@ const Age = ({route, navigation}: any) => {
   };
 
   const toNextScreen = () => {
-    if(selected.length == 0){
+    if (selected.length == 0) {
       showMessage({
         message: 'Please Enter your Age!!!',
         type: 'danger',
@@ -116,7 +115,7 @@ const Age = ({route, navigation}: any) => {
         floating: true,
         icon: {icon: 'auto', position: 'left'},
       });
-      return
+      return;
     }
     const currentData = {
       age: selected,
@@ -126,8 +125,8 @@ const Age = ({route, navigation}: any) => {
   };
   return (
     <TouchableOpacity
-    activeOpacity={1}
-    onPress={() => Keyboard.dismiss()}
+      activeOpacity={1}
+      onPress={() => Keyboard.dismiss()}
       style={{
         flex: 1,
         justifyContent: 'center',
@@ -155,19 +154,19 @@ const Age = ({route, navigation}: any) => {
       <View
         style={{
           width: DeviceWidth,
-          height: DeviceHeigth * 0.6,
+          height: DeviceHeigth * 0.58,
           justifyContent: 'center',
           alignItems: 'center',
           alignSelf: 'center',
           // flex: 1
           flexDirection: 'row',
-          top: -DeviceHeigth * 0.1
+          top: -DeviceHeigth * 0.1,
         }}>
         <TextInput
           keyboardType="number-pad"
           value={selected}
-          onChangeText={(text) => {
-            if(text == '.'){
+          onChangeText={text => {
+            if (text == '.') {
               showMessage({
                 message: 'Wrong Input',
                 type: 'danger',
@@ -175,8 +174,7 @@ const Age = ({route, navigation}: any) => {
                 floating: true,
                 icon: {icon: 'auto', position: 'left'},
               });
-            }
-            else setSelected(text)
+            } else setSelected(text);
           }}
           onFocus={setFocused}
           cursorColor={AppColor.RED}
@@ -258,7 +256,17 @@ const Age = ({route, navigation}: any) => {
         {/* </View> */}
       </View>
       <View style={styles.buttons}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            backgroundColor: '#F7F8F8',
+            width: 45,
+            height: 45,
+            borderRadius: 15,
+            overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
           <Icons name="chevron-left" size={25} color={'#000'} />
         </TouchableOpacity>
         <TouchableOpacity onPress={toNextScreen}>
@@ -307,8 +315,7 @@ const styles = StyleSheet.create({
     width: DeviceWidth * 0.9,
     alignItems: 'center',
     alignSelf: 'center',
-
-    bottom: DeviceHeigth * 0.05,
+    bottom: DeviceHeigth * 0.02,
     position: 'absolute',
   },
   nextButton: {

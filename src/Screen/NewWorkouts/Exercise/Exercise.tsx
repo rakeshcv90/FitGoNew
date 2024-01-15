@@ -63,14 +63,12 @@ const Exercise = ({navigation, route}: any) => {
     initTts();
   }, []);
   useEffect(() => {
-    // console.log('timer', separateTimer);
     const TTStimer = async () => {
       if (restStart) {
         if (separateTimer > 0) {
           const interval = setTimeout(() => {
             setSeparateTimer(separateTimer - 1);
             Tts.speak(`${separateTimer}`);
-            // console.log(separateTimer)
           }, 1000);
           return () => clearInterval(interval);
         } 
