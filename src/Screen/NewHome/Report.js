@@ -7,15 +7,18 @@ import {AppColor} from '../../Component/Color';
 import {Switch} from 'react-native-switch';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import KeepAwake from 'react-native-keep-awake';
+import Reminder from '../../Component/Reminder';
 import {useDispatch, useSelector} from 'react-redux';
-import { setScreenAwake } from '../../Component/ThemeRedux/Actions';
+import {setScreenAwake} from '../../Component/ThemeRedux/Actions';
+import notifee from '@notifee/react-native';
 const Report = ({navigation}) => {
   const {getScreenAwake} = useSelector(state => state);
   const dispatch = useDispatch();
-  
+
   const [isSoundEnabled, setIsSoundEnabled] = useState(false);
- // const [isScreenEnabled, setScreenIsEnabled] = useState(getScreenAwake);
+  // const [isScreenEnabled, setScreenIsEnabled] = useState(getScreenAwake);
   const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const toggleSwitch = () => {
     setIsSoundEnabled(previousState => !previousState);
@@ -25,17 +28,22 @@ const Report = ({navigation}) => {
   //   dispatch(setScreenAwake(isScreenEnabled))
   // };
   const toggleSwitch3 = () => {
+    !isAlarmEnabled && setVisible(true);
     setAlarmIsEnabled(previousState => !previousState);
   };
   useEffect(() => {
-    console.log("GGGGGGGGGG",getScreenAwake)
-  if(getScreenAwake==true){
-    KeepAwake.activate();
-  }else{
-    KeepAwake.deactivate();
-  }
-   
+    checkAlarm();
+    if (getScreenAwake == true) {
+      KeepAwake.activate();
+    } else {
+      KeepAwake.deactivate();
+    }
   }, [getScreenAwake]);
+  const checkAlarm = async () => {
+    const trigger = await notifee.getTriggerNotifications();
+    console.log('GGGGGGGGGG', getScreenAwake, trigger);
+    trigger.length != 0 && setAlarmIsEnabled(true);
+  };
   return (
     <View style={styles.container}>
       <NewHeader header={'Settings'} SearchButton={false} backButton={true} />
@@ -127,10 +135,8 @@ const Report = ({navigation}) => {
           }}>
           <Text style={styles.textStyle}>Screen Always On</Text>
           <Switch
-            onValueChange={(test)=>{
-           
-                dispatch(setScreenAwake(test))
-     
+            onValueChange={test => {
+              dispatch(setScreenAwake(test));
             }}
             value={getScreenAwake}
             disabled={false}
@@ -187,6 +193,11 @@ const Report = ({navigation}) => {
           />
         </View>
       </View>
+      <Reminder
+        visible={visible}
+        setVisible={setVisible}
+        setAlarmIsEnabled={setAlarmIsEnabled}
+      />
     </View>
   );
 };
