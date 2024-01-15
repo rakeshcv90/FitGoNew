@@ -9,12 +9,22 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {AppColor} from '../Component/Color';
+import {AppColor} from '../../Component/Color';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {localImage} from '../Component/Image';
-import {DeviceHeigth, DeviceWidth} from '../Component/Config';
+import {localImage} from '../../Component/Image';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {Svg, Circle, Line} from 'react-native-svg';
 import LinearGradient from 'react-native-linear-gradient';
+import {Dropdown} from 'react-native-element-dropdown';
+import axios from 'axios';
+import {useSelector, useDispatch} from 'react-redux';
+import {
+  VictoryBar,
+  VictoryChart,
+  VictoryAxis,
+  VictoryTheme,
+  VictoryDefs,
+} from 'victory-native';
 import {
   LineChart,
   BarChart,
@@ -23,11 +33,49 @@ import {
   ContributionGraph,
   StackedBarChart,
 } from 'react-native-chart-kit';
-import {index} from 'd3';
+import {index, local} from 'd3';
 import moment from 'moment';
-import Button from '../Component/Button';
+import Button from '../../Component/Button';
 const NewProgressScreen = ({navigation}) => {
+  const {getUserDataDetails,getHealthData} = useSelector(state => state);
+  console.log('=======>userDta', getUserDataDetails.weight,getHealthData);
   const [dates, setDates] = useState([]);
+  const [value, setValue] = useState('Weekly');
+  const [array, setArray] = useState([]);
+  const arrayForData = [];
+  useEffect(() => {
+    userData();
+  }, []);
+  const userData = async () => {
+    try {
+      const res = await axios({
+        url: NewAppapi.total_Calories,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          user_id: 111,
+        },
+      });
+      if (res) {
+        for (i = 1; i < 7; i++) {
+          const dayWiseWeight = res.data.data
+            .filter(value => value.user_day == i)
+            .map(obj => parseInt(obj.calories));
+          const sum = arrayForData.push(
+            getUserDataDetails?.weight -
+              (dayWiseWeight.reduce((acc, value) => acc + value, 0) * 0.3) /
+                500,
+          );
+          console.log('sum=====>', arrayForData);
+        }
+        setArray(arrayForData);
+      }
+    } catch (error) {
+      console.log('Calories Api Error', error);
+    }
+  };
   const textData = [
     {value: 10},
     {value: 15},
@@ -127,6 +175,17 @@ const NewProgressScreen = ({navigation}) => {
       txt2: 'Actions',
     },
   ];
+  const data2 = [
+    {label: 'Weekly', value: '1'},
+    {label: 'Daily', value: '2'},
+  ];
+  const renderItem = item => {
+    return (
+      <View style={styles.item}>
+        <Text style={styles.textItem}>{item.label}</Text>
+      </View>
+    );
+  };
   const LineText = ({Txt1, Txt2}) => {
     return (
       <View
@@ -154,34 +213,118 @@ const NewProgressScreen = ({navigation}) => {
           </Text>
         </View>
         {Txt2 ? (
-          <TouchableOpacity style={styles.Weekly_B}>
-            <Text
-              style={{
-                textAlign: 'center',
-                color: AppColor.BLACK,
-                fontSize: 12,
-                marginLeft: 3,
-              }}>
-              {Txt2}
-            </Text>
-            <Icons name={'chevron-down'} size={25} color={'#000'} />
-          </TouchableOpacity>
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            data={data2}
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder={value}
+            value={value}
+            onChange={item => {
+              setValue(item.value);
+            }}
+            renderItem={renderItem}
+          />
         ) : (
-          <TouchableOpacity>
-            <Icons name={'chevron-right'} size={25} color={'#000'} />
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('NewProgressScreen');
+            }}>
+            <Icons name={'chevron-right'} size={25} color={AppColor.BLACK} />
           </TouchableOpacity>
         )}
       </View>
     );
   };
+  console.log('array', array);
   const data = {
     labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     datasets: [
       {
-        data: [20, 45, 28, 80, 99, 43, 69],
+        data: [getUserDataDetails?.weight, ...array],
         color: () => AppColor.RED, // optional
       },
     ],
+  };
+  const emojiData = [
+    {day: 'Sun', value: 2000},
+    {day: 'Mon', value: 3500},
+    {day: 'Tue', value: 2800},
+    {day: 'Wed', value: 8000},
+    {day: 'Thu', value: 9900},
+    {day: 'Fri', value: 4300},
+    {day: 'Sat', value: 6900},
+  ];
+  const Emojis = [
+    {
+      id: 1,
+      emojis: (
+        <Image
+          source={localImage.face1}
+          style={{height: 25, width: 25}}
+          resizeMode="contain"
+        />
+      ),
+    },
+    {
+      id: 2,
+      emojis: (
+        <Image
+          source={localImage.face2}
+          style={{height: 25, width: 25}}
+          resizeMode="contain"
+        />
+      ),
+    },
+    {
+      id: 3,
+      emojis: (
+        <Image
+          source={localImage.face3}
+          style={{height: 25, width: 25}}
+          resizeMode="contain"
+        />
+      ),
+    },
+    {
+      id: 4,
+      emojis: (
+        <Image
+          source={localImage.face4}
+          style={{height: 25, width: 25}}
+          resizeMode="contain"
+        />
+      ),
+    },
+    {
+      id: 5,
+      emojis: (
+        <Image
+          source={localImage.face0}
+          style={{height: 25, width: 25}}
+          resizeMode="contain"
+        />
+      ),
+    },
+  ];
+  const linearGradientColors = {
+    start: '#FFD700', // Start color of the gradient
+    end: '#FF4500', // End color of the gradient
+  };
+
+  const RenderEmojis = () => {
+    return (
+      <View style={{position: 'absolute', alignSelf: 'center', left: 18}}>
+        {Emojis.map((value, index) => (
+          <View key={index} style={{height: DeviceHeigth * 0.055}}>
+            {value.emojis}
+          </View>
+        ))}
+      </View>
+    );
   };
   const chartConfig = {
     backgroundGradientFrom: AppColor.WHITE,
@@ -194,13 +337,7 @@ const NewProgressScreen = ({navigation}) => {
     barPercentage: 0,
     useShadowColorFromDataset: false, // optional
   };
-  const chartConfig1 = {
-    backgroundGradientFrom: '#ffffff',
-    backgroundGradientTo: '#ffffff',
-    color: () => AppColor.RED, // Bar color
-    strokeWidth: 5,
-  };
-  const specificDataIndex = 4; // Index of the specific data point you want to emphasize
+  const specificDataIndex = 1; // Index of the specific data point you want to emphasize
 
   const renderCustomPoint = ({x, y, index, value}) => {
     if (index === specificDataIndex) {
@@ -248,12 +385,10 @@ const NewProgressScreen = ({navigation}) => {
               {'Feedback'}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.5} onPress={()=>{
-       navigation.navigate('Report');
-          }}>
+          <TouchableOpacity activeOpacity={0.5}>
             <Image
               source={localImage.Settings_v}
-              style={{height: 20, width: 20}}
+              style={{height: 30, width: 30}}
               resizeMode="contain"
             />
           </TouchableOpacity>
@@ -309,7 +444,7 @@ const NewProgressScreen = ({navigation}) => {
         <View style={styles.card}>
           <LineChart
             data={data}
-            width={DeviceWidth * 0.9}
+            width={DeviceWidth * 0.85}
             height={DeviceHeigth * 0.25}
             chartConfig={chartConfig}
             withInnerLines={false}
@@ -327,16 +462,38 @@ const NewProgressScreen = ({navigation}) => {
         </View>
         <LineText Txt1={'Workout Duration'} Txt2={'Weekly'} />
         <View style={styles.card}>
-          <BarChart
-            // style={graphStyle}
+          <RenderEmojis />
+
+          {/* <BarChart
             data={data}
-            width={DeviceWidth * 0.9}
+            width={DeviceWidth * 0.85}
             height={DeviceHeigth * 0.25}
             chartConfig={chartConfig1}
             withInnerLines={false}
             fromZero={true}
-          />
+          /> */}
+          <VictoryChart
+            theme={VictoryTheme.material}
+            domainPadding={20}
+            width={DeviceWidth * 0.95}>
+            <VictoryAxis
+              tickValues={emojiData.map((dataPoint, index) => index + 1)}
+              tickFormat={emojiData.map(dataPoint => dataPoint.day)}
+            />
+            <VictoryAxis dependentAxis tickFormat={x => ''} />
+            <VictoryBar
+              data={emojiData}
+              x="day"
+              y="value"
+              style={{
+                data: {
+                  fill: AppColor.RED, // Reference to the linear gradient
+                },
+              }}
+            />
+          </VictoryChart>
         </View>
+
         <LineText Txt1={'Monthly Achievement'} />
         <View style={[styles.card, {flexDirection: 'column'}]}>
           <View
@@ -403,6 +560,29 @@ const NewProgressScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <View style={[styles.card, {flexDirection: 'column'}]}>
+          <View style={{width: DeviceWidth * 0.9, alignSelf: 'center'}}>
+            <View
+              style={{
+                width: 100,
+                marginLeft: DeviceWidth * 0.6,
+              }}>
+              <View
+                style={{
+                  backgroundColor: '#F25C19',
+                  borderRadius: 8,
+                  padding: 5,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={{fontWeight: '500', color: AppColor.WHITE}}>
+                  {'Over Weight'}
+                </Text>
+              </View>
+              <View style={styles.arrowheadContainer}>
+                <View style={styles.arrowhead} />
+              </View>
+            </View>
+          </View>
           <LinearGradient
             colors={[
               '#BCFFF7',
@@ -413,7 +593,12 @@ const NewProgressScreen = ({navigation}) => {
               '#D5191A',
               '#941000',
             ]}
-            style={{width: DeviceWidth * 0.9, height: 18, borderRadius: 8}}
+            style={{
+              width: DeviceWidth * 0.9,
+              height: 18,
+              borderRadius: 8,
+              alignSelf: 'center',
+            }}
             start={{x: 0, y: 1}}
             end={{x: 1, y: 0}}
           />
@@ -422,14 +607,36 @@ const NewProgressScreen = ({navigation}) => {
               flexDirection: 'row',
               flexDirection: 'row',
               justifyContent: 'space-between',
-              width: DeviceWidth * 0.9,
+              width: DeviceWidth * 0.85,
               marginTop: 5,
+              alignSelf: 'center',
             }}>
             {textData.map((value, index) => (
-              <Text key={index}>{value.value}</Text>
+              <Text
+                key={index}
+                style={{color: AppColor.BLACK, textAlign: 'center'}}>
+                {value.value}
+              </Text>
             ))}
           </View>
-         
+          <TouchableOpacity
+            style={[styles.button_b, {marginVertical: 20}]}
+            activeOpacity={0.5}>
+            <LinearGradient
+              colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
+              style={[styles.button_b, {padding: 5}]}
+              start={{x: 0, y: 1}}
+              end={{x: 1, y: 0}}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins-SemiBold',
+                  fontSize: 18,
+                  color: AppColor.WHITE,
+                }}>
+                {"Enter Today's weight"}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -509,6 +716,60 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  button_b: {
+    width: DeviceWidth * 0.6,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+  },
+  arrowheadContainer: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 10,
+    borderRightWidth: 10,
+    borderTopWidth: 20,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderTopColor: '#F25C19', // Adjust the color of the arrowhead
+    borderStyle: 'solid',
+    alignSelf: 'center',
+    marginTop: -1,
+  },
+  arrowhead: {
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+  },
+  dropdown: {
+    marginVertical: 10,
+    height: 30,
+    width: DeviceWidth * 0.25,
+    borderColor: AppColor.RED,
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    shadowColor: '#000',
+  },
+  item: {
+    padding: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    color: AppColor.BLACK,
+  },
+  textItem: {
+    flex: 1,
+    fontSize: 16,
+    color: AppColor.BLACK,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+    color: AppColor.BLACK,
   },
 });
 export default NewProgressScreen;

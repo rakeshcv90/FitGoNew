@@ -9,7 +9,7 @@ import Store from '../Screen/NewHome/Store';
 import Workouts from '../Screen/NewHome/Workouts';
 
 import Trainer from '../Screen/NewHome/Trainer';
-import NewProgressScreen from '../Screen/NewProgressScreen';
+import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
 
 const Tabs = AnimatedTabBarNavigator();
 const BottomTab = () => {

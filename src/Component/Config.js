@@ -61,5 +61,6 @@ export const NewAppapi = {
   PedometerAPI: NewApi + 'steps_details',
   Transctions: NewApi + 'transactions',
   TransctionsDetails: NewApi + 'transactionsdetails',
+  total_Calories:NewApi+'exercisecalo'
 
 };

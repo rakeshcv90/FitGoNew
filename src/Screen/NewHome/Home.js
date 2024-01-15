@@ -1345,7 +1345,7 @@ ActivityPermission()
             placeholderStyle={styles.placeholderStyle}
             selectedTextStyle={styles.selectedTextStyle}
             data={data2}
-            maxHeight={300}
+            maxHeight={300}X
             labelField="label"
             valueField="value"
             placeholder={value}

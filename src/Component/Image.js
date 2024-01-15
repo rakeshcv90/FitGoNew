@@ -121,4 +121,5 @@ export const localImage = {
   Biceps_p:require('../Icon/Images/NewImage/biceps_p.png'),
   Pen_p:require('../Icon/Images/NewImage/Pen_p.png'),
   Down:require('../Icon/Images/NewImage/ArrowDown.png'),
+  face0:require('../Icon/Images/NewImage/angry_p.png'),
 };
