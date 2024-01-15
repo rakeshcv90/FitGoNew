@@ -53,6 +53,7 @@ export const RemoteMessage = () => {
         {
           id: 'Stop',
           title: 'Stop',
+          destructive: true,
         },
       ],
     },

@@ -7,26 +7,58 @@ import {AppColor} from '../../Component/Color';
 import {Switch} from 'react-native-switch';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import KeepAwake from 'react-native-keep-awake';
+import Reminder from '../../Component/Reminder';
 import {useDispatch, useSelector} from 'react-redux';
+
+import {setScreenAwake} from '../../Component/ThemeRedux/Actions';
+import notifee from '@notifee/react-native';
+
 import {
   setScreenAwake,
   setSoundOnOff,
 } from '../../Component/ThemeRedux/Actions';
 import {showMessage} from 'react-native-flash-message';
+
 const Report = ({navigation}) => {
   const {getScreenAwake, getSoundOffOn} = useSelector(state => state);
   const dispatch = useDispatch();
+
+
+  const [isSoundEnabled, setIsSoundEnabled] = useState(false);
+  // const [isScreenEnabled, setScreenIsEnabled] = useState(getScreenAwake);
   const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  const toggleSwitch = () => {
+    setIsSoundEnabled(previousState => !previousState);
+  };
+  // const toggleSwitch2 = () => {
+  //   setScreenIsEnabled(previousState => !previousState);
+  //   dispatch(setScreenAwake(isScreenEnabled))
+  // };
+
+  const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
+
   const toggleSwitch3 = () => {
+    !isAlarmEnabled && setVisible(true);
     setAlarmIsEnabled(previousState => !previousState);
   };
   useEffect(() => {
+
+    checkAlarm();
+
     if (getScreenAwake == true) {
       KeepAwake.activate();
     } else {
       KeepAwake.deactivate();
     }
   }, [getScreenAwake]);
+
+  const checkAlarm = async () => {
+    const trigger = await notifee.getTriggerNotifications();
+    console.log('GGGGGGGGGG', getScreenAwake, trigger);
+    trigger.length != 0 && setAlarmIsEnabled(true);
+  };
 
   return (
     <View style={styles.container}>
@@ -142,6 +174,7 @@ const Report = ({navigation}) => {
           <Text style={styles.textStyle}>Screen Always On</Text>
           <Switch
             onValueChange={test => {
+
               if (test == false) {
                 showMessage({
                   message: 'Alway On Screen Is Off ',
@@ -159,6 +192,7 @@ const Report = ({navigation}) => {
                   icon: {icon: 'auto', position: 'left'},
                 });
               }
+
               dispatch(setScreenAwake(test));
             }}
             value={getScreenAwake}
@@ -216,6 +250,11 @@ const Report = ({navigation}) => {
           />
         </View>
       </View>
+      <Reminder
+        visible={visible}
+        setVisible={setVisible}
+        setAlarmIsEnabled={setAlarmIsEnabled}
+      />
     </View>
   );
 };

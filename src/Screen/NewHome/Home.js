@@ -134,6 +134,7 @@ const Home = ({navigation}) => {
 
   const [forLoading, setForLoading] = useState(false);
   const [value, setValue] = useState('Weekly');
+  const [likeData, setLikeData] = useState([]);
   const [currentindex, setCurrentIndex] = useState(1);
   const progressAnimation = useRef(new Animated.Value(0)).current;
   const {
@@ -249,6 +250,51 @@ ActivityPermission()
   //     },
   //   );
   // });
+
+  const likeStatusApi = async () => {
+    try {
+      const payload = new FormData();
+      payload.append('login_token', getUserDataDetails?.login_token);
+      payload.append('user_id', getUserDataDetails?.id);
+      setForLoading(true);
+      const res = await axios({
+        url: NewAppapi.GET_LIKE_WORKOUTS,
+        method: 'post',
+        data: payload,
+      });
+      if (res.data) {
+        setForLoading(false);
+        console.log(...res.data, 'GET LIKES ');
+        setLikeData(...res.data);
+      }
+    } catch (error) {
+      setForLoading(false);
+      console.error(error, 'LikeError');
+      setLikeData([]);
+    }
+  };
+
+  const postLike = async workoutID => {
+    try {
+      const payload = new FormData();
+      payload.append('user_id', getUserDataDetails?.id);
+      payload.append('workout_id', workoutID);
+      setForLoading(true);
+      const res = await axios({
+        url: NewAppapi.POST_LIKE_WORKOUT,
+        method: 'post',
+        data: payload,
+      });
+      if (res.data) {
+        setForLoading(false);
+        console.log(res.data, 'POST LIKE');
+        likeStatusApi();
+      }
+    } catch (error) {
+      setForLoading(false);
+      console.error(error, 'likeERRPost');
+    }
+  };
   const Dispatch = useDispatch();
   const [steps, setSteps] = useState(
     getHealthData[0] ? getHealthData[0].Steps : '0',
@@ -1074,7 +1120,11 @@ ActivityPermission()
             pagingEnabled
             renderItem={({item, index}) => {
               return (
-                <View
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('WorkoutDays', {data: item})
+                  }
+                  activeOpacity={0.8}
                   style={[
                     styles.listItem1,
                     {
@@ -1142,23 +1192,22 @@ ActivityPermission()
                         top: -DeviceHeigth * 0.04,
                       },
                     ]}
-                    onPress={() => {
-                      console.log('Fevvdsvdfvgfd', item);
-                    }}>
-                    <Image
-                      source={localImage.dw7}
-                      style={[
-                        styles.img,
-                        {
-                          height: 25,
-                          width: 25,
-                          borderRadius: 0,
-                          // tintColor:'red',
-                        },
-                      ]}
-                      resizeMode="contain"></Image>
+                    onPress={() => postLike(item?.workout_id)}>
+                    {likeData.includes(item?.workout_id) ? (
+                      <Image
+                        source={localImage.Heart}
+                        resizeMode="contain"
+                        style={{height: 25, width: 25}}
+                      />
+                    ) : (
+                      <Image
+                        source={localImage.dw7}
+                        resizeMode="contain"
+                        style={{height: 25, width: 25}}
+                      />
+                    )}
                   </TouchableOpacity>
-                </View>
+                </TouchableOpacity>
               );
             }}
           />
