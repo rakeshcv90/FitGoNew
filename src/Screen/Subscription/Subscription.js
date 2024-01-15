@@ -20,14 +20,17 @@ import {localImage} from '../../Component/Image';
 import {Image} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
 import Button from '../../Component/Button';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import * as RNIap from 'react-native-iap';
 import axios from 'axios';
+import {setPurchaseHistory} from '../../Component/ThemeRedux/Actions';
 
 const Subscription = ({navigation}) => {
+  const dispatch = useDispatch();
   const {getInAppPurchase, getUserDataDetails, getPurchaseHistory} =
     useSelector(state => state);
-  const [purchaseData, setpuchaseData] = useState([]);
+
+  const [selectedItems, setSelectedItems] = useState([]);
 
   const data = [
     require('../../Icon/Images/product_1631791758.jpg'),
@@ -44,7 +47,6 @@ const Subscription = ({navigation}) => {
         sku: items.productId,
       });
 
-      setpuchaseData(purchase);
       fetchPurchaseHistory1(purchase);
     } catch (error) {
       console.log('Failed to purchase ios product', error);
@@ -56,7 +58,7 @@ const Subscription = ({navigation}) => {
         sku,
         ...(offerToken && {subscriptionOffers: [{sku, offerToken}]}),
       });
-      setpuchaseData(purchase[0].dataAndroid);
+
       fetchPurchaseHistory(purchase[0].dataAndroid);
     } catch (error) {
       console.log('Failed to purchase ios product', error);
@@ -101,7 +103,18 @@ const Subscription = ({navigation}) => {
           planstatus: 'Active',
         },
       });
-      console.log('Purchase Response ', res.data);
+      if (res.data.status == 'transaction completed') {
+        PurchaseDetails(getUserDataDetails.id, getUserDataDetails.login_token);
+      } else {
+        showMessage({
+          message: 'Some Issue In Puchase Data!',
+          type: 'danger',
+          animationDuration: 500,
+
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      }
     } catch (error) {
       console.log('Purchase Store Data Error', error);
     }
@@ -144,21 +157,87 @@ const Subscription = ({navigation}) => {
           planstatus: 'Active',
         },
       });
-      console.log('Purchase Response ', res.data);
+      if (res.data.status == 'transaction completed') {
+        PurchaseDetails(getUserDataDetails.id, getUserDataDetails.login_token);
+      } else {
+        showMessage({
+          message: 'Some Issue In Puchase Data!',
+          type: 'danger',
+          animationDuration: 500,
+
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      }
     } catch (error) {
       console.log('Purchase Store Data Error', error);
     }
   };
   const getName = item => {
-    if (Platform.OS == 'android') {
-   
-      if (
-        item.productId == getPurchaseHistory[0].plan_id &&
-        getPurchaseHistory[0].plan_status == 'Active'
-      ) {
-       
-        return getPurchaseHistory[0].plan_name;
+    if (getPurchaseHistory.length > 0) {
+      if (Platform.OS == 'android') {
+        if (
+          item.productId == getPurchaseHistory[0].plan_id &&
+          getPurchaseHistory[0].plan_status == 'Active'
+        ) {
+          return getPurchaseHistory[0].plan_name;
+        }else{
+          
+        }
+      }else{
+        if (
+          item.productId == getPurchaseHistory[0].plan_id &&
+          getPurchaseHistory[0].plan_status == 'Active'
+        ) {
+          return getPurchaseHistory[0].plan_name;
+        }else{
+          
+        }
       }
+    }
+  };
+  const puchasePackage = item => {
+    if (item.length > 0 || item.length == undefined) {
+      if (Platform.OS == 'ios') {
+        purchaseItems(item);
+      } else {
+        purchaseItems1(
+          item.productId,
+          item.subscriptionOfferDetails[0].offerToken,
+        );
+      }
+    } else {
+      showMessage({
+        message: 'Please Select Package!',
+        type: 'danger',
+        animationDuration: 500,
+
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+    }
+  };
+  const PurchaseDetails = async (id, login_token) => {
+    try {
+      const res = await axios(`${NewAppapi.TransctionsDetails}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          id: id,
+          token: login_token,
+        },
+      });
+
+      if (res.data.data.length > 0) {
+        dispatch(setPurchaseHistory(res.data.data));
+      } else {
+        dispatch(setPurchaseHistory([]));
+      }
+    } catch (error) {
+      dispatch(setPurchaseHistory([]));
+      console.log('Purchase List Error', error);
     }
   };
   return (
@@ -167,7 +246,7 @@ const Subscription = ({navigation}) => {
         header={'Fitness Coach'}
         backButton={true}
         onPress={() => {
-          navigation.goBack()
+          navigation.goBack();
         }}
       />
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -380,20 +459,22 @@ const Subscription = ({navigation}) => {
             scrollEnabled={false}
             extraData={({item, index}) => index.toString()}
             renderItem={({item, index}) => {
+              // const isSelected = selectedItems.includes(item.productId);
               return (
                 <>
                   <TouchableOpacity
-                    style={styles.button}
+                    style={[
+                      styles.button,
+                      {
+                        borderColor:
+                          selectedItems.productId == item.productId
+                            ? 'red'
+                            : 'white',
+                      },
+                    ]}
                     activeOpacity={0.5}
                     onPress={() => {
-                      if (Platform.OS == 'ios') {
-                        purchaseItems(item);
-                      } else {
-                        purchaseItems1(
-                          item.productId,
-                          item.subscriptionOfferDetails[0].offerToken,
-                        );
-                      }
+                      setSelectedItems(item);
                     }}>
                     <Text
                       style={{
@@ -458,7 +539,7 @@ const Subscription = ({navigation}) => {
         <Button
           buttonText={'Proceed'}
           onPresh={() => {
-            fetchPurchaseHistory1(purchaseData);
+            puchasePackage(selectedItems);
           }}
         />
       </View>
