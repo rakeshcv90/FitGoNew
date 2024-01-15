@@ -8,24 +8,26 @@ import {Switch} from 'react-native-switch';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import KeepAwake from 'react-native-keep-awake';
 import {useDispatch, useSelector} from 'react-redux';
-import { setScreenAwake, setSoundOnOff } from '../../Component/ThemeRedux/Actions';
+import {
+  setScreenAwake,
+  setSoundOnOff,
+} from '../../Component/ThemeRedux/Actions';
+import {showMessage} from 'react-native-flash-message';
 const Report = ({navigation}) => {
-  const {getScreenAwake,getSoundOffOn} = useSelector(state => state);
+  const {getScreenAwake, getSoundOffOn} = useSelector(state => state);
   const dispatch = useDispatch();
   const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
   const toggleSwitch3 = () => {
     setAlarmIsEnabled(previousState => !previousState);
   };
   useEffect(() => {
-
-  if(getScreenAwake==true){
-    KeepAwake.activate();
-  }else{
-    KeepAwake.deactivate();
-  }
-   
+    if (getScreenAwake == true) {
+      KeepAwake.activate();
+    } else {
+      KeepAwake.deactivate();
+    }
   }, [getScreenAwake]);
-  console.log("DDDDDDD",getSoundOffOn)
+
   return (
     <View style={styles.container}>
       <NewHeader header={'Settings'} SearchButton={false} backButton={true} />
@@ -82,9 +84,28 @@ const Report = ({navigation}) => {
           }}>
           <Text style={styles.textStyle}>Sound</Text>
           <Switch
-            onValueChange={(text)=>{
-              
-              dispatch(setSoundOnOff(text))
+            onValueChange={text => {
+              if (text == false) {
+                showMessage({
+                  message: 'Sound Is Unmute',
+                  type: 'success',
+                  animationDuration: 500,
+
+                  floating: true,
+                  icon: {icon: 'auto', position: 'left'},
+                });
+              } else {
+                showMessage({
+                  message: 'Sound Is Mute',
+
+                  animationDuration: 500,
+                  type: 'danger',
+                  floating: true,
+                  icon: {icon: 'auto', position: 'left'},
+                });
+              }
+
+              dispatch(setSoundOnOff(text));
             }}
             value={getSoundOffOn}
             disabled={false}
@@ -120,10 +141,25 @@ const Report = ({navigation}) => {
           }}>
           <Text style={styles.textStyle}>Screen Always On</Text>
           <Switch
-            onValueChange={(test)=>{
-           
-                dispatch(setScreenAwake(test))
-     
+            onValueChange={test => {
+              if (test == false) {
+                showMessage({
+                  message: 'Alway On Screen Is Off ',
+                  type: 'success',
+                  animationDuration: 500,
+                  floating: true,
+                  icon: {icon: 'auto', position: 'left'},
+                });
+              } else {
+                showMessage({
+                  message: 'Alway On Screen Is On ',
+                  animationDuration: 500,
+                  type: 'danger',
+                  floating: true,
+                  icon: {icon: 'auto', position: 'left'},
+                });
+              }
+              dispatch(setScreenAwake(test));
             }}
             value={getScreenAwake}
             disabled={false}

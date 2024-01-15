@@ -1247,6 +1247,7 @@ ActivityPermission()
                       ]}
                       resizeMode="cover"></Image>
                     <Text
+                    numberOfLines={1}
                       style={[
                         styles.title,
                         {
@@ -1255,6 +1256,7 @@ ActivityPermission()
                           lineHeight: 18,
                           fontFamily: 'Poppins',
                           textAlign: 'center',
+                          width:50,
                           color: colors[index % colors.length].color3,
                         },
                       ]}>
