@@ -7,7 +7,7 @@ import Home from '../Screen/NewHome/Home';
 import Store from '../Screen/NewHome/Store';
 
 import Workouts from '../Screen/NewHome/Workouts';
-import Report from '../Screen/NewHome/Report';
+
 import Trainer from '../Screen/NewHome/Trainer';
 import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
 

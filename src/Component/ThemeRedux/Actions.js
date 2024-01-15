@@ -132,6 +132,18 @@ export const setPurchaseHistory = data => {
     payload: data,
   };
 };
+export const setScreenAwake = data => {
+  return {
+    type: types.SCREENAWAKE,
+    payload: data,
+  };
+};
+export const setSoundOnOff = data => {
+  return {
+    type: types.SOUND_ON_OFF,
+    payload: data,
+  };
+};
 export const setFcmToken=data=>{
   return{
     type:types.FCM_TOKEN,

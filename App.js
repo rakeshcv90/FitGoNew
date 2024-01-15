@@ -33,6 +33,7 @@ const App = () => {
   const dispatch=useDispatch()
   useEffect(() => {
    requestPermissionforNotification(dispatch)
+   RemoteMessage()
   }, []);
   const [isLogged, setIsLogged] = useState();
   const [update, setUpdate] = useState(0);

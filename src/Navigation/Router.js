@@ -3,7 +3,7 @@ import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/index';
+import Yourself from '../Screen/Yourself/Index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -53,6 +53,8 @@ import MeditationExerciseDetails from '../Screen/NewHome/MeditationExerciseDetai
 import AITrainer from '../Screen/NewHome/AITrainer';
 import AIMessageHistory from '../Screen/NewHome/AIMessageHistory';
 import Subscription from '../Screen/Subscription/Subscription';
+
+import Report from '../Screen/NewHome/Report';
 import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
 
@@ -69,6 +71,7 @@ export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
      
+  
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
 
       <Stack.Screen
@@ -92,7 +95,7 @@ export const LoginStack = () => {
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
       <Stack.Screen name="OtpVerification" component={OtpVerification} />
       <Stack.Screen name="Edit_Profile" component={NewEditProfile} />
-      <Stack.Screen name="Personal Details" component={NewPersonalDetails} />
+      <Stack.Screen name="NewPersonalDetails" component={NewPersonalDetails} />
       <Stack.Screen name="StepCounter" component={NewStepCounter} />
       <Stack.Screen name="Scale" component={Scale} />
       <Stack.Screen name="Gender" component={Gender} />
@@ -129,6 +132,7 @@ export const LoginStack = () => {
         name="MeditationExerciseDetails"
         component={MeditationExerciseDetails}
       />
+        <Stack.Screen name="Report" component={Report}/>
       <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="AITrainer" component={AITrainer} />
       <Stack.Screen name="AIMessageHistory" component={AIMessageHistory} />

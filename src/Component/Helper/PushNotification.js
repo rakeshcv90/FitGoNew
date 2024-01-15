@@ -13,8 +13,8 @@ export const requestPermissionforNotification = async (dispatch) => {
     );
     await messaging().registerDeviceForRemoteMessages();
     token = await messaging().getToken();
-    console.log('Android token is', token);
     dispatch(setFcmToken(token))
+
   } else {
     const authStatus = await messaging().requestPermission();
     const enabled =
@@ -25,6 +25,7 @@ export const requestPermissionforNotification = async (dispatch) => {
       token = await messaging().getToken();
       console.log('Ios token is', token);
       dispatch(setFcmToken(token))
+    
     }
   }
 };
@@ -39,6 +40,7 @@ export const RemoteMessage = () => {
   }
   messaging().setBackgroundMessageHandler(async remoteMessage => {
     DisplayNotification(remoteMessage);
+  
   });
   notifee.setNotificationCategories([
     {
@@ -51,6 +53,7 @@ export const RemoteMessage = () => {
         {
           id: 'Stop',
           title: 'Stop',
+          destructive: true,
         },
       ],
     },
@@ -58,9 +61,11 @@ export const RemoteMessage = () => {
 
   messaging().getInitialNotification(async remoteMessage => {
     DisplayNotification(remoteMessage);
+   
   });
 };
 const DisplayNotification = async Notification => {
+ 
   try {
     await notifee.displayNotification({
       title: Notification.notification.title,
