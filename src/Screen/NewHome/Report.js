@@ -10,7 +10,7 @@ import KeepAwake from 'react-native-keep-awake';
 import Reminder from '../../Component/Reminder';
 import {useDispatch, useSelector} from 'react-redux';
 
-import {setScreenAwake} from '../../Component/ThemeRedux/Actions';
+
 import notifee from '@notifee/react-native';
 
 import {
@@ -26,7 +26,7 @@ const Report = ({navigation}) => {
 
   const [isSoundEnabled, setIsSoundEnabled] = useState(false);
   // const [isScreenEnabled, setScreenIsEnabled] = useState(getScreenAwake);
-  const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
+
   const [visible, setVisible] = useState(false);
 
   const toggleSwitch = () => {
