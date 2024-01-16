@@ -37,11 +37,12 @@ import {index, local} from 'd3';
 import moment from 'moment';
 import Button from '../../Component/Button';
 const NewProgressScreen = ({navigation}) => {
-  const {getUserDataDetails,getHealthData} = useSelector(state => state);
-  console.log('=======>userDta', getUserDataDetails.weight,getHealthData);
+  const {getUserDataDetails, getHealthData} = useSelector(state => state);
+  console.log('=======>userDta', getUserDataDetails.weight, getHealthData);
   const [dates, setDates] = useState([]);
   const [value, setValue] = useState('Weekly');
   const [array, setArray] = useState([]);
+  const CurrentWeight= getUserDataDetails?.weight
   const arrayForData = [];
   useEffect(() => {
     userData();
@@ -60,14 +61,18 @@ const NewProgressScreen = ({navigation}) => {
       });
       if (res) {
         for (i = 1; i < 7; i++) {
-          const dayWiseWeight = res.data.data
-            .filter(value => value.user_day == i)
-            .map(obj => parseInt(obj.calories));
-          const sum = arrayForData.push(
-            getUserDataDetails?.weight -
-              (dayWiseWeight.reduce((acc, value) => acc + value, 0) * 0.3) /
-                500,
+          const dayWiseWeight = res.data.data.filter(
+            value => value.user_day == i,
           );
+          if (dayWiseWeight.length < 1) {
+            // do nothing
+          } else {
+            const weight = dayWiseWeight.map(obj => parseInt(obj.calories));
+            const currentWeight =
+              getUserDataDetails?.weight -
+              (weight.reduce((acc, res) => acc + res, 0) * 0.3) / 500;
+            arrayForData.push(currentWeight);
+          }
           console.log('sum=====>', arrayForData);
         }
         setArray(arrayForData);
@@ -239,7 +244,7 @@ const NewProgressScreen = ({navigation}) => {
       </View>
     );
   };
-  console.log('array', array);
+  // console.log('array', array);
   const data = {
     labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     datasets: [
@@ -310,11 +315,6 @@ const NewProgressScreen = ({navigation}) => {
       ),
     },
   ];
-  const linearGradientColors = {
-    start: '#FFD700', // Start color of the gradient
-    end: '#FF4500', // End color of the gradient
-  };
-
   const RenderEmojis = () => {
     return (
       <View style={{position: 'absolute', alignSelf: 'center', left: 18}}>
@@ -385,10 +385,13 @@ const NewProgressScreen = ({navigation}) => {
               {'Feedback'}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.5}
-          onPress={()=>{
-            navigation.navigate("Report")
-          }}>
+
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => {
+              navigation.navigate('Report');
+            }}>
+
             <Image
               source={localImage.Settings_v}
               style={{height: 30, width: 30}}
