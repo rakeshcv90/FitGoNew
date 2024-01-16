@@ -385,7 +385,10 @@ const NewProgressScreen = ({navigation}) => {
               {'Feedback'}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.5}>
+          <TouchableOpacity activeOpacity={0.5}
+          onPress={()=>{
+            navigation.navigate("Report")
+          }}>
             <Image
               source={localImage.Settings_v}
               style={{height: 30, width: 30}}
