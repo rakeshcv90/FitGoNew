@@ -9,6 +9,8 @@ import {
   StatusBar,
   SafeAreaView,
   Alert,
+  ActivityIndicator,
+  Modal
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {localImage} from '../../Component/Image';
@@ -16,16 +18,23 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor} from '../../Component/Color';
 import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {Switch} from 'react-native-switch';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {setLogout} from '../../Component/ThemeRedux/Actions';
 import {CommonActions} from '@react-navigation/native';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import {request, PERMISSIONS, openSettings} from 'react-native-permissions';
+import VersionNumber from 'react-native-version-number';
 const Profile = () => {
   const dispatch = useDispatch();
-  const {getUserDataDetails} = useSelector(state => state);
-
+  const {getUserDataDetails,ProfilePhoto} = useSelector(state => state);
+  const [UpdateScreenVisibility, setUpadteScreenVisibilty] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [PhotoUploaded, setPhotoUploaded] = useState(true);
   const navigation = useNavigation();
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -144,7 +153,280 @@ const Profile = () => {
   ];
   const FirstView = Profile_Data.slice(0, 6);
   const SecondView = Profile_Data.slice(6);
-
+  const UpdateProfileModal = () => {
+    const [modalImageUploaded, setModalImageUploaded] = useState(false);
+    const [IsimgUploaded, setImguploaded] = useState(true);
+    const [userAvatar, setUserAvatar] = useState(null);
+    // const UploadImage = async () => {
+    //   // console.log("upload img")
+    //   const data = JSON.parse(await AsyncStorage.getItem('Data'));
+    //   try {
+    //     let payload = new FormData();
+    //     payload.append('image', {
+    //       name: userAvatar.fileName,
+    //       type: userAvatar.type,
+    //       uri: userAvatar.uri,
+    //     });
+    //     payload.append('email', data[0].email);
+    //     const ProfileData = await axios(`${Api}/${Appapi.UpdateProfile}`, {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'multipart/form-data',
+    //       },
+    //       data: payload,
+    //     });
+    //     console.log(ProfileData.data[0]);
+    //     if (ProfileData.data[0].msg == 'profile updated') {
+    //       await AsyncStorage.setItem(
+    //         'UserData',
+    //         JSON.stringify(ProfileData.data),
+    //       );
+    //       UpdatePhoto();
+    //       setImguploaded(true);
+    //       if (IsimgUploaded == true) {
+    //         setUpadteScreenVisibilty(false);
+    //         setPhotoUploaded(false);
+    //       }
+    //     }
+    //     // console.log('ProfileData', ProfileData.data);
+    //   } catch (error) {
+    //     setImguploaded(true);
+    //     if (IsimgUploaded == true) {
+    //       setPhotoUploaded(false); // for Loader on profile picture
+    //       setUpadteScreenVisibilty(false);
+    //     }
+    //     console.log('UpdateProfileError', error);
+    //   }
+    // };
+    const askPermissionForCamera = async permission => {
+      const result = await request(permission);
+      //  console.log("camera result",result)
+      if (result == 'granted') {
+        try {
+          const resultCamera = await launchCamera({
+            mediaType: 'photo',
+            quality: 0.5,
+          });
+          setUserAvatar(resultCamera.assets[0]);
+          if (resultCamera) {
+            setModalImageUploaded(true);
+          }
+        } catch (error) {
+          console.log('CameraimageError', error);
+        }
+      } else if (Platform.OS == 'ios') {
+        Alert.alert(
+          'Permission Required',
+          'To use the camera feature ,Please enable camera access in settings',
+          [
+            {
+              text: 'cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Open settings',
+              onPress: openSettings,
+            },
+          ],
+          {cancelable: false},
+        );
+      } else {
+        console.log('error occured');
+      }
+    };
+    const askPermissionForLibrary = async permission => {
+      //Library permission
+      const resultLib = await request(permission);
+      // console.log("result",resultLib)
+      if (resultLib == 'granted') {
+        try {
+          const resultLibrary = await launchImageLibrary({
+            mediaType: 'photo',
+            quality: 0.5,
+          });
+          setUserAvatar(resultLibrary.assets[0]);
+          if (resultLibrary) {
+            setModalImageUploaded(true);
+          }
+        } catch (error) {
+          console.log('LibimageError', error);
+        }
+      } else if (Platform.OS == 'ios') {
+        Alert.alert(
+          'Permission Required',
+          'To use the photo library ,Please enable library access in settings',
+          [
+            {
+              text: 'cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Open settings',
+              onPress: openSettings,
+            },
+          ],
+          {cancelable: false},
+        );
+      } else {
+        console.log('error occured');
+      }
+      // });
+    };
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor:  '#fff',
+          position: 'absolute',
+        }}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={true}
+          onRequestClose={() => {
+            setUpadteScreenVisibilty(false);
+          }}>
+          <View
+            style={[
+              styles.modalContainer,
+              {backgroundColor: 'transparent', flex: 1},
+            ]}>
+            <View
+              style={[
+                styles.modalContent,
+                {backgroundColor: '#fff'},
+              ]}>
+              <View
+                style={[
+                  styles.closeButton,
+                  ,
+                  {
+                    width: (DeviceWidth * 85) / 100,
+                    marginTop: 8,
+                    backgroundColor: 'fff',
+                  },
+                ]}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setUpadteScreenVisibilty(false);
+                  }}>
+                  <Icons
+                    name="close"
+                    size={27}
+                    color={ '#000'}
+                  />
+                </TouchableOpacity>
+              </View>
+              <Image
+                source={{ uri:
+                userAvatar != null
+                  ? userAvatar.uri
+                  : 'https://gofit.tentoptoday.com/json/image/Avatar.png',
+            }}
+                style={styles.Icon}/>
+              <View
+                style={{
+                  justifyContent: 'space-around',
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  width: (DeviceWidth * 80) / 100,
+                  height: (DeviceHeigth * 10) / 100,
+                  marginBottom: 2,
+                  // borderWidth:1
+                }}>
+                <TouchableOpacity
+                  style={styles.cameraButton}
+                  onPress={() => {
+                    if (Platform.OS == 'ios') {
+                      askPermissionForCamera(PERMISSIONS.IOS.CAMERA);
+                    } else {
+                      askPermissionForCamera(PERMISSIONS.ANDROID.CAMERA);
+                    }
+                  }}>
+                  <Icon
+                    name="camera"
+                    size={30}
+                    color= '#000'
+                  />
+                  <Text style={{color:  '#000'}}>
+                    Camera
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.cameraButton}
+                  onPress={() => {
+                    if (Platform.OS == 'ios') {
+                      askPermissionForLibrary(PERMISSIONS.IOS.PHOTO_LIBRARY);
+                    } else {
+                      askPermissionForLibrary(
+                        PERMISSIONS.ANDROID.READ_MEDIA_IMAGES,
+                      );
+                    }
+                  }}>
+                  <Icon
+                    name="camera-image"
+                    size={30}
+                    color={ '#000'}
+                  />
+                  <Text style={{color:'#000'}}>
+                    Gallery
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              {IsimgUploaded ? (
+                <>
+                  {modalImageUploaded ? (
+                    <TouchableOpacity
+                      style={{
+                        width: DeviceWidth * 0.4,
+                        height: (DeviceHeigth * 4) / 100,
+                        backgroundColor: AppColor.RED,
+                        justifyContent: 'center',
+                        borderRadius: 20,
+                        alignItems: 'center',
+                        margin: 5,
+                      }}
+                      onPress={() => {
+                        setImguploaded(false);
+                        UploadImage();
+                      }}>
+                      <Text style={[styles.cameraText]}>Upload Image</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      style={{
+                        width: DeviceWidth * 0.4,
+                        height: (DeviceHeigth * 3) / 100,
+                        backgroundColor: 
+                           'rgba(0,0,0,0.7)',
+                        justifyContent: 'center',
+                        borderRadius: 20,
+                        alignItems: 'center',
+                        margin: 5,
+                      }}
+                      onPress={() => {
+                        showMessage({
+                          message: 'Please insert an Image first',
+                          statusBarHeight: getStatusBarHeight(),
+                          floating: true,
+                          type: 'danger',
+                          animationDuration: 750,
+                          icon: {icon: 'none', position: 'left'},
+                        });
+                      }}>
+                      <Text style={[styles.cameraText]}>Upload Image</Text>
+                    </TouchableOpacity>
+                  )}
+                </>
+              ) : (
+                <ActivityIndicator color={AppColor.RED} size={35} />
+              )}
+            </View>
+          </View>
+        </Modal>
+      </View>
+    );
+  };
   const ProfileView = () => {
     const handleLogout = async () => {
       // Clear AsyncStorage
@@ -166,6 +448,7 @@ const Profile = () => {
         }),
       );
     };
+
     return (
       <View>
         <LinearGradient
@@ -234,7 +517,7 @@ const Profile = () => {
               source={localImage.avt}
               style={styles.img}
               resizeMode="cover"></Image>
-            <TouchableOpacity style={styles.ButtonPen} activeOpacity={0.6}>
+            <TouchableOpacity style={styles.ButtonPen} activeOpacity={0.6} onPress={()=>setUpadteScreenVisibilty(true)}>
               <Image
                 source={localImage.Pen}
                 style={styles.pen}
@@ -272,6 +555,7 @@ const Profile = () => {
     );
   };
   const profileViewHeight = DeviceHeigth * 0.4;
+  console.log('userData',getUserDataDetails?.login_token)
   return (
     <SafeAreaView style={styles.Container}>
       <ProfileView />
@@ -359,6 +643,7 @@ const Profile = () => {
           ))}
         </View>
       </ScrollView>
+      {UpdateScreenVisibility?<UpdateProfileModal/>:null}
     </SafeAreaView>
   );
 };
@@ -482,6 +767,58 @@ const styles = StyleSheet.create({
     bottom: -22,
     right: -8,
     backgroundColor: AppColor.RED,
+  },
+  modalContainer: {
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  closeButton: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  cameraButton: {
+    margin: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cameraText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+  modalContent: {
+    height: DeviceHeigth / 2.5,
+    width: '95%',
+    backgroundColor: 'white',
+
+    borderRadius: 20,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'lightgray',
+
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: {width: 2, height: 2},
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 20,
+        shadowColor: '#000000',
+        shadowOffset: {width: 2, height: 2},
+        shadowOpacity: 0.7,
+        shadowRadius: 10,
+      },
+    }),
+  },
+  Icon: {
+    width: 120,
+    height: 120,
+    borderRadius: 120 / 2,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
   },
 });
 export default Profile;
