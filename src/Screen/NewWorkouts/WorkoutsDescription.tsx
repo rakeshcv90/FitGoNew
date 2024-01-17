@@ -18,16 +18,13 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const TextSpeech = `${data?.workout_description}`;
   const [description, SetDescription] = useState('');
-  console.log(data?.workout_description);
+  // console.log(data?.workout_description);
   const cleanText = TextSpeech.replace(/<\/?[^>]+(>|$)/g, '');
   useEffect(() => {
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
       if (!ttsStatus.isInitialized) {
         try {
-          Tts.voices().then(res => {
-            res.forEach(voice => console.log('id=======>', voice.id));
-          });
           await Tts.setDefaultVoice('hi-in-x-hid-local');
           await Tts.setDefaultLanguage('en-US');
           await Tts.setDucking(true);

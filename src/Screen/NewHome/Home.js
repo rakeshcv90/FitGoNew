@@ -32,6 +32,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import {Slider} from '@miblanchard/react-native-slider';
 import axios from 'axios';
 import {setPedomterData} from '../../Component/ThemeRedux/Actions';
+import { throttle, debounce } from 'lodash';
 import {
   Stop,
   Circle,
@@ -157,7 +158,7 @@ const Home = ({navigation}) => {
   const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
     getPedomterData[2] ? getPedomterData[2].RCalories : 25,
   );
-
+ console.log('healthData',getHealthData)
   useEffect(()=>{
 ActivityPermission()
   },[])
@@ -326,23 +327,34 @@ ActivityPermission()
       console.log('PedometerAPi Error', error.response);
     }
   };
-  const sleep = time =>
-    new Promise(resolve => setTimeout(() => resolve(), time)); // background
-  const veryIntensiveTask = async taskDataArguments => {
-    const {delay} = taskDataArguments;
-
-    const updateStepsAndNotification = async data => {
-      // Update the steps and related state
-      setSteps(data.steps);
-      setDistance(((data.steps / 20) * 0.01).toFixed(2));
-      setCalories(Math.floor(data.steps / 20));
+  const throttledDispatch = throttle(
+    (steps) => {
       Dispatch(
         setHealthData([
-          {Steps: data.steps},
-          {Calories: Math.floor(data.steps / 20)},
-          {DistanceCovered: ((data.steps / 20) * 0.01).toFixed(2)},
-        ]),
+          { Steps: steps },
+          { Calories: Math.floor(steps / 20) },
+          { DistanceCovered: ((steps / 20) * 0.01).toFixed(2) },
+        ])
       );
+    },
+    30000,
+    { trailing: false }
+  );
+  const sleep = time =>
+    new Promise(resolve => setTimeout(() => resolve(), time)); // background
+  
+  const veryIntensiveTask = async taskDataArguments => {
+    const {delay} = taskDataArguments;
+  
+    const throttledUpdateStepsAndNotification = throttle(async data => {
+      setSteps(data.steps);
+      console.log("stepssss>>>>>>>>>", data.steps);
+      setDistance(((data.steps / 20) * 0.01).toFixed(2));
+      setCalories(Math.floor(data.steps / 20));
+      // Add your dispatch logic here
+     throttledDispatch(data.steps)
+   
+    
       // Update the notification with the current steps
       await BackgroundService.updateNotification({
         taskIcon: {
@@ -362,7 +374,8 @@ ActivityPermission()
           delay: 1000,
         },
       });
-    };
+    }, 30000); // 30 seconds delay
+    
     // function for checking if it is midnight or not
     const isSpecificTime = (hour, minute) => {
       const now = moment.utc(); // Get current time in UTC
@@ -374,53 +387,57 @@ ActivityPermission()
       // Compare the times directly to check if they represent the same time in IST
       return istTime.format() == specificTimeUTC.format()
   };
-    const resetSteps = () => {
-      // Your logic to reset steps and related state
-      setSteps(0);
-      setDistance(0);
-      setCalories(0);
-      Dispatch(
-        setHealthData([
-          {Steps: '0'},
-          {Calories: '0'},
-          {DistanceCovered: '0.00'},
-        ]),
-      );
-      // Update the notification after resetting steps
-      BackgroundService.updateNotification({
-        // Your notification update logic after steps reset
-        taskIcon: {
-          name: 'ic_launcher',
-          type: 'mipmap',
-        },
-        color: AppColor.RED,
-        taskName: 'Pedometer',
-        taskTitle: 'Steps ' + steps,
-        taskDesc: 'Steps ',
-        progressBar: {
-          max: stepGoalProfile,
-          value: steps,
-          indeterminate: false,
-        },
-        parameters: {
-          delay: 1000,
-        },
-      });
-    };
+  const debouncedResetSteps = () => {
+    // Your logic to reset steps and related state
+    setSteps(0);
+    setDistance(0);
+    setCalories(0);
+    Dispatch(
+      setHealthData([
+        { Steps: '0' },
+        { Calories: '0' },
+        { DistanceCovered: '0.00' },
+      ]),
+    );
+  
+    // Update the notification after resetting steps
+    BackgroundService.updateNotification({
+      // Your notification update logic after steps reset
+      taskIcon: {
+        name: 'ic_launcher',
+        type: 'mipmap',
+      },
+      color: AppColor.RED,
+      taskName: 'Pedometer',
+      taskTitle: 'Steps ' + steps,
+      taskDesc: 'Steps ',
+      progressBar: {
+        max: stepGoalProfile,
+        value: steps,
+        indeterminate: false,
+      },
+      parameters: {
+        delay: 30000,
+      },
+    });
+  } // 30 seconds d
     for (let i = 0; BackgroundService.isRunning(); i++) {
       startStepCounterUpdate(new Date(), async data => {
-        await updateStepsAndNotification(data);
+        // Call the throttled function
+        await throttledUpdateStepsAndNotification(data);
+    
+        // Call the debounced function
       });
+    
       // reset the steps at midnight
-      // console.log("specificTime=======>",isSpecificTime(12,40))
-      if(isSpecificTime(0,0)){
-        PedoMeterData()
-        // console.log("Pedommmmmmttteeer")
-      }else{
-        // console.log("condtiom not met")
+      if (isSpecificTime(0, 0)) {
+        PedoMeterData();
+        debouncedResetSteps();
       }
-        await sleep(delay);
-      }
+    
+      // Use sleep with a delay of 30 seconds
+      await sleep(delay);
+    }
   };
   const options = {
     color: AppColor.RED,
@@ -444,16 +461,10 @@ ActivityPermission()
   async function startStepCounter() {
     startStepCounterUpdate(new Date(), data => {
       setSteps(data.steps);
-      // console.log("stepssss>>>>>>>>>",data.steps)
+      console.log("stepssss>>>>>>>>>",data.steps)
       setDistance(((data.steps / 20) * 0.01).toFixed(2));
       setCalories(Math.floor(data.steps / 20));
-      Dispatch(
-        setHealthData([
-          {Steps: data.steps},
-          {Calories: Math.floor(data.steps / 20)},
-          {DistanceCovered: ((data.steps / 20) * 0.01).toFixed(2)},
-        ]),
-      );
+    throttledDispatch(data.steps)
     });
     await BackgroundService.start(veryIntensiveTask, options);
     await BackgroundService.updateNotification(options);

@@ -53,9 +53,15 @@ const Exercise = ({navigation, route}: any) => {
         await Tts.setDefaultLanguage('en-US');
         await Tts.setDucking(true);
         await Tts.setIgnoreSilentSwitch('ignore');
-        await Tts.addEventListener('tts-start', event => console.log('Start', event));
-        await Tts.addEventListener('tts-finish', event => console.log('Finish', event));
-        await Tts.addEventListener('tts-cancel', event => console.log('Cancel', event));
+        await Tts.addEventListener('tts-start', event =>
+          console.log('Start', event),
+        );
+        await Tts.addEventListener('tts-finish', event =>
+          console.log('Finish', event),
+        );
+        await Tts.addEventListener('tts-cancel', event =>
+          console.log('Cancel', event),
+        );
         setTtsInitialized(true);
       }
     };
@@ -71,16 +77,15 @@ const Exercise = ({navigation, route}: any) => {
             Tts.speak(`${separateTimer}`);
           }, 1000);
           return () => clearInterval(interval);
-        } 
-      }else{
-        setSeparateTimer(15)
+        }
+      } else {
+        setSeparateTimer(15);
       }
     };
     TTStimer();
   }, [separateTimer, restStart]);
   const dispatch = useDispatch();
   useEffect(() => {
-
     if (!back) {
       restStart
         ? setTimeout(() => {
@@ -122,8 +127,8 @@ const Exercise = ({navigation, route}: any) => {
               setRestStart(true);
             }
           }, 1000);
-    }else{
-      console.log("MESSSSS", back, restStart)
+    } else {
+      console.log('MESSSSS', back, restStart);
     }
   }, [playW, pause, currentData, timer, back]);
   useEffect(() => {
@@ -257,25 +262,32 @@ const Exercise = ({navigation, route}: any) => {
           style={{
             flex: 1,
             backgroundColor: AppColor.WHITE,
-            paddingHorizontal: 20,
-            justifyContent: 'center',
+
+            justifyContent: 'flex-end',
             alignItems: 'center',
+            marginBottom: 20,
           }}>
-          <View style={{height: DeviceHeigth * 0.4}} />
-          <GradientText
-            text={'Hold on!'}
-            fontWeight={'700'}
-            fontSize={32}
-            width={300}
-            x={DeviceWidth * 0.185}
-          />
-          <GradientText
-            x={DeviceWidth * 0.32}
-            width={500}
-            text={`Don't give up!`}
-            fontWeight={'700'}
-            fontSize={32}
-          />
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginLeft: '50%',
+            }}>
+            <GradientText
+              text={'Hold on!'}
+              fontWeight={'700'}
+              fontSize={32}
+              width={300}
+              x={6}
+            />
+            <GradientText
+              // x={DeviceWidth * 0.32}
+              width={400}
+              text={`Don't give up!`}
+              fontWeight={'700'}
+              fontSize={32}
+            />
+          </View>
           <Text
             style={{
               fontSize: 20,
@@ -299,8 +311,8 @@ const Exercise = ({navigation, route}: any) => {
           <View style={{marginTop: 30}}>
             <ProgreesButton
               text="Resume"
-              h={70}
-              bR={10}
+              h={55}
+              bR={30}
               flex={-1}
               mV={20}
               onPress={() => setBack(false)}
@@ -309,8 +321,8 @@ const Exercise = ({navigation, route}: any) => {
             <ProgreesButton
               onPress={() => setPlayW(0)}
               text="Restart this Exercise"
-              h={70}
-              bR={10}
+              h={55}
+              bR={30}
               flex={-1}
               colors={['#F3F3F3', '#F3F3F3']}
               textStyle={{
@@ -503,7 +515,8 @@ const Exercise = ({navigation, route}: any) => {
               setBack(true);
             }}
             style={{
-              marginTop: DeviceHeigth * 0.06,
+              // marginTop: DeviceHeigth * 0.004,
+
               // backgroundColor: 'black',
               width: 40,
             }}>

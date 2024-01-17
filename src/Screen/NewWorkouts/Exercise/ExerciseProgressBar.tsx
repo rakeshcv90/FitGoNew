@@ -23,7 +23,7 @@ const ExerciseProgressBar = ({INDEX, ExerciseData, time, w, color}: any) => {
         width: DeviceWidth * 0.9,
         flexDirection: 'row',
         justifyContent: 'center',
-        height: Platform.OS == 'ios' ? 0 : DeviceHeigth * 0.09,
+        height: Platform.OS == 'ios' ? 0 : DeviceHeigth * 0.05,
         alignSelf: 'center',
         marginTop: DeviceHeigth * 0.02,
       }}>

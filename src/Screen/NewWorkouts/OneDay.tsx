@@ -163,13 +163,24 @@ const OneDay = ({navigation, route}: any) => {
           }}>
           <View
             style={{
-              height: 80,
+              height: 70,
               width: 70,
-              backgroundColor: '#D9D9D9',
+              backgroundColor: AppColor.WHITE,
               justifyContent: 'center',
               alignItems: 'center',
-              marginLeft: DeviceWidth * 0.04,
+              marginLeft: DeviceWidth * 0.07,
               borderRadius: 10,
+              ...Platform.select({
+                ios:{
+                shadowColor:AppColor.BLACK,
+                shadowOffset:{width:5,height:5},
+                shadowOpacity:0.3,
+                shadowRadius:5
+                },
+                android:{
+                  elevation:5
+                }
+              })
             }}>
             <Image
               source={{uri: item?.exercise_image}}
@@ -238,15 +249,15 @@ const OneDay = ({navigation, route}: any) => {
       <Image
         source={{uri: data?.workout_image_link}}
         style={{
-          height: DeviceWidth / 1.4,
+          height: DeviceWidth *0.5,
           width: DeviceWidth,
           alignSelf:'center'
         }}
         resizeMode='contain'
       />
-        <View style={{height: DeviceHeigth * 0.4, marginLeft: 5}}>
+        {/* <View style={{height: DeviceHeigth * 0.4, marginLeft: 5}}>
          
-        </View>
+        </View> */}
         <View style={styles.container}>
           <Text
             style={{
