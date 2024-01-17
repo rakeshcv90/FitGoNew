@@ -515,7 +515,7 @@ const Exercise = ({navigation, route}: any) => {
               setBack(true);
             }}
             style={{
-              // marginTop: DeviceHeigth * 0.004,
+              marginTop: DeviceHeigth * 0.04,
 
               // backgroundColor: 'black',
               width: 40,

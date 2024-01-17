@@ -33,7 +33,7 @@ const DayRewards = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      //   console.log('GET API TRACKER', res.data);
+        console.log('GET API TRACKER', res.data);
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
         analyzeExerciseData(res.data?.user_details);
@@ -62,7 +62,7 @@ const DayRewards = ({navigation, route}: any) => {
       <GradientText
         text="Congratulations!"
         fontSize={32}
-        width={DeviceWidth * 0.7}
+        width={DeviceWidth * 0.8}
         y={'70'}
         height={150}
       />
