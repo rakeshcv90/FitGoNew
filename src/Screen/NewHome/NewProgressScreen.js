@@ -9,7 +9,7 @@ import {
   Modal,
   TextInput,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColor} from '../../Component/Color';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -22,6 +22,7 @@ import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
 import {BlurView} from '@react-native-community/blur';
 import {setBmi} from '../../Component/ThemeRedux/Actions';
+import {Calendar} from 'react-native-calendars';
 import {
   VictoryBar,
   VictoryChart,
@@ -43,20 +44,20 @@ import Button from '../../Component/Button';
 import {showMessage} from 'react-native-flash-message';
 const NewProgressScreen = ({navigation}) => {
   const {getUserDataDetails, getHealthData} = useSelector(state => state);
-  console.log('=======>userDta', getUserDataDetails.weight, getHealthData);
+  const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
+  const [selected, setSelected] = useState(false);
+  // console.log('=======>userDta', getUserDataDetails.weight, getHealthData);
   const [dates, setDates] = useState([]);
   const [value, setValue] = useState('Weekly');
   const [array, setArray] = useState([]);
-  const [getBmi, setBmi] = useState(
-    (
-      getUserDataDetails?.weight /
-      (getUserDataDetails?.height * 0.3048) ** 2
-    ).toFixed(2),
-  );
+  const [getBmi, setBmi] = useState(0);
   const CurrentWeight = getUserDataDetails?.weight;
   const arrayForData = [];
   useEffect(() => {
-    userData();
+    setBmi((
+      getUserDataDetails?.weight /
+      (getUserDataDetails?.height * 0.3048) ** 2).toFixed(2))
+    // userData();
     // dispatch(setBmi(getBmi))
   }, []);
   const userData = async () => {
@@ -72,99 +73,99 @@ const NewProgressScreen = ({navigation}) => {
         },
       });
       if (res) {
-        for (i = 1; i < 7; i++) {
-          const dayWiseWeight = res.data.data.filter(
-            value => value.user_day == i,
-          );
-          if (dayWiseWeight.length < 1) {
-            // do nothing
-          } else {
-            const weight = dayWiseWeight.map(obj => parseInt(obj.calories));
-            const currentWeight =
-              getUserDataDetails?.weight -
-              (weight.reduce((acc, res) => acc + res, 0) * 0.3) / 500;
-            arrayForData.push(currentWeight);
-          }
-          console.log('sum=====>', arrayForData);
-        }
-        setArray(arrayForData);
+        // for (i = 1; i < 7; i++) {
+        //   const dayWiseWeight = res.data.data.filter(
+        //     value => value.user_day == i,
+        //   );
+        //   if (dayWiseWeight.length < 1) {
+        //     // do nothing
+        //   } else {
+        //     const weight = dayWiseWeight.map(obj => parseInt(obj.calories));
+        //     const currentWeight =
+        //       getUserDataDetails?.weight -
+        //       (weight.reduce((acc, res) => acc + res, 0) * 0.3) / 500;
+        //     arrayForData.push(currentWeight);
+        //   }
+        //   // console.log('sum=====>', arrayForData);
+        // }
+        // setArray(arrayForData);
       }
     } catch (error) {
       console.log('Calories Api Error', error);
     }
   };
   const textData = [{value: getBmi}];
-  useEffect(() => {
-    const currentDate = moment();
-    const daysInMonth = currentDate.daysInMonth();
-    const firstDayOfMonth = moment(currentDate).startOf('month');
+  // useEffect(() => {
+  //   const currentDate = moment();
+  //   const daysInMonth = currentDate.daysInMonth();
+  //   const firstDayOfMonth = moment(currentDate).startOf('month');
 
-    const dateArray = Array.from({length: daysInMonth}, (_, index) => {
-      const date = moment(firstDayOfMonth).add(index, 'days');
-      return {
-        month: date.format('MMM'),
-        year: date.format('YYYY'),
-        date: date.format('DD'),
-        day: date.format('dd'),
-        isCurrent: date.isSame(moment(), 'day'), // Check if the date is the current date
-      };
-    });
+  //   const dateArray = Array.from({length: daysInMonth}, (_, index) => {
+  //     const date = moment(firstDayOfMonth).add(index, 'days');
+  //     return {
+  //       month: date.format('MMM'),
+  //       year: date.format('YYYY'),
+  //       date: date.format('DD'),
+  //       day: date.format('dd'),
+  //       isCurrent: date.isSame(moment(), 'day'), // Check if the date is the current date
+  //     };
+  //   });
 
-    setDates(dateArray);
-  }, []);
-  const RenderCalender = ({minIndex, maxIndex}) => {
+  //   setDates(dateArray);
+  // }, []);
+  // const RenderCalender = ({minIndex, maxIndex}) => {
 
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          marginHorizontal: 16,
-          justifyContent:
-            dates.slice(minIndex, maxIndex).length < 7
-              ? 'flex-start'
-              : 'space-between',
-          marginVertical: 6,
-        }}>
-        {dates?.slice(minIndex, maxIndex).map((value, index) => (
-          <View
-            key={index}
-            style={{
-              backgroundColor: value.isCurrent
-                ? AppColor.RED
-                : AppColor.BACKGROUNG,
-              paddingVertical: value.isCurrent ? 1 : 2,
-              paddingHorizontal: value.isCurrent ? 0 : 12,
-              borderRadius: value.isCurrent ? 40 / 2 : 8,
-              width: value.isCurrent ? 40 : undefined,
-              height: value.isCurrent ? 40 : undefined,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginRight: dates.slice(minIndex, maxIndex).length < 7 ? 6 : 0,
-            }}>
-            <Text
-              style={{
-                color: value.isCurrent ? AppColor.WHITE : AppColor.Gray5,
-                fontFamily: 'Poppins-SemiBold',
-                fontSize: 14,
-                alignSelf: 'center',
-              }}>
-              {value.date}
-            </Text>
-            <Text
-              key={index}
-              style={{
-                color: value.isCurrent ? AppColor.WHITE : AppColor.Gray5,
-                fontFamily: 'Poppins-SemiBold',
-                fontSize: 10,
-                alignSelf: 'center',
-              }}>
-              {value.month}
-            </Text>
-          </View>
-        ))}
-      </View>
-    );
-  };
+  //   return (
+  //     <View
+  //       style={{
+  //         flexDirection: 'row',
+  //         marginHorizontal: 16,
+  //         justifyContent:
+  //           dates.slice(minIndex, maxIndex).length < 7
+  //             ? 'flex-start'
+  //             : 'space-between',
+  //         marginVertical: 6,
+  //       }}>
+  //       {dates?.slice(minIndex, maxIndex).map((value, index) => (
+  //         <View
+  //           key={index}
+  //           style={{
+  //             backgroundColor: value.isCurrent
+  //               ? AppColor.RED
+  //               : AppColor.BACKGROUNG,
+  //             paddingVertical: value.isCurrent ? 1 : 2,
+  //             paddingHorizontal: value.isCurrent ? 0 : 12,
+  //             borderRadius: value.isCurrent ? 40 / 2 : 8,
+  //             width: value.isCurrent ? 40 : undefined,
+  //             height: value.isCurrent ? 40 : undefined,
+  //             justifyContent: 'center',
+  //             alignItems: 'center',
+  //             marginRight: dates.slice(minIndex, maxIndex).length < 7 ? 6 : 0,
+  //           }}>
+  //           <Text
+  //             style={{
+  //               color: value.isCurrent ? AppColor.WHITE : AppColor.Gray5,
+  //               fontFamily: 'Poppins-SemiBold',
+  //               fontSize: 14,
+  //               alignSelf: 'center',
+  //             }}>
+  //             {value.date}
+  //           </Text>
+  //           <Text
+  //             key={index}
+  //             style={{
+  //               color: value.isCurrent ? AppColor.WHITE : AppColor.Gray5,
+  //               fontFamily: 'Poppins-SemiBold',
+  //               fontSize: 10,
+  //               alignSelf: 'center',
+  //             }}>
+  //             {value.month}
+  //           </Text>
+  //         </View>
+  //       ))}
+  //     </View>
+  //   );
+  // };
   const Card_Data = [
     {
       id: 1,
@@ -254,7 +255,7 @@ const NewProgressScreen = ({navigation}) => {
     labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     datasets: [
       {
-        data: [getUserDataDetails?.weight, ...array],
+        data: [getUserDataDetails?.weight, 33,60,25,100],
         color: () => AppColor.RED, // optional
       },
     ],
@@ -383,7 +384,7 @@ const NewProgressScreen = ({navigation}) => {
       const BMI =
         (selected == '' ? getUserDataDetails?.weight : selected) /
         (getUserDataDetails?.height * 0.3048) ** 2;
-      console.log('BMI>>>>>>>', BMI.toFixed(2));
+      // console.log('BMI>>>>>>>', BMI.toFixed(2));
       setBmi(BMI.toFixed(2));
       setModalVisible(false);
     };
@@ -487,7 +488,23 @@ const NewProgressScreen = ({navigation}) => {
       </Modal>
     );
   };
-  console.log('.........>>>>>', getUserDataDetails);
+  // console.log('.........>>>>>', getUserDataDetails);
+  const theme = useMemo(() => {
+    return {
+      backgroundColor: AppColor.WHITE,
+      calendarBackground: AppColor.WHITE,
+      selectedDayBackgroundColor: AppColor.RED,
+      selectedDayTextColor: AppColor.WHITE,
+      todayTextColor: AppColor.BLACK,
+      arrowColor: AppColor.RED,
+      monthTextColor: AppColor.RED,
+      indicatorColor: AppColor.RED,
+      textMonthFontSize: 17,
+      textDayFontFamily: 'Poppins-SemiBold',
+      textMonthFontFamily: 'Poppins-SemiBold',
+      dayTextColor: AppColor.BLACK,
+    };
+  }, []);
   return (
     <SafeAreaView style={styles.Container}>
       <ScrollView showsHorizontalScrollIndicator={false}>
@@ -594,15 +611,6 @@ const NewProgressScreen = ({navigation}) => {
         <LineText Txt1={'Workout Duration'} Txt2={'Weekly'} />
         <View style={styles.card}>
           <RenderEmojis />
-
-          {/* <BarChart
-            data={data}
-            width={DeviceWidth * 0.85}
-            height={DeviceHeigth * 0.25}
-            chartConfig={chartConfig1}
-            withInnerLines={false}
-            fromZero={true}
-          /> */}
           <VictoryChart
             theme={VictoryTheme.material}
             domainPadding={20}
@@ -649,11 +657,38 @@ const NewProgressScreen = ({navigation}) => {
               </Text>
             ))}
           </View>
-          <RenderCalender minIndex={0} maxIndex={7} />
+          {/* <RenderCalender minIndex={0} maxIndex={7} />
           <RenderCalender minIndex={7} maxIndex={14} />
           <RenderCalender minIndex={14} maxIndex={21} />
           <RenderCalender minIndex={21} maxIndex={28} />
-          <RenderCalender minIndex={28} />
+          <RenderCalender minIndex={28} /> */}
+              <Calendar
+          onDayPress={day => {
+            console.log(day);
+            setDate(day.dateString);
+            setSelected(true);
+          }}
+          markingType="period"
+          hideArrows
+          enableSwipeMonths={false}
+          hideExtraDays={true}
+          hideDayNames={false}
+          markedDates={{
+            [getDate]: {
+              startingDay: true,
+              color: AppColor.RED,
+              endingDay: true,
+              textColor: AppColor.WHITE,
+            },
+          }}
+          style={[
+            styles.calender,
+            {
+              width: DeviceWidth * 0.85,
+            },
+          ]}
+          theme={theme}
+        />
         </View>
         <View
           style={{
