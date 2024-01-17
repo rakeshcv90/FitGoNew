@@ -201,7 +201,7 @@ const AllWorkouts = ({navigation, route}: any) => {
         style={[
           {
             width: DeviceWidth,
-            height: 100,
+            height: 80,
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
             marginLeft: -15,
@@ -265,7 +265,14 @@ const AllWorkouts = ({navigation, route}: any) => {
           ]}>
           <Image
             source={{uri: item?.workout_image_link}}
-            style={{height: DeviceHeigth * 0.18, width: DeviceWidth * 0.7}}
+            style={{
+              height: DeviceHeigth * 0.18,
+              width: DeviceWidth * 0.7,
+              bottom: 0,
+              // position: 'absolute',
+              left: 10,
+              // right: 30,
+            }}
             resizeMode="contain"
           />
           <TouchableOpacity onPress={() => postLike(item?.workout_id)}>
@@ -273,13 +280,13 @@ const AllWorkouts = ({navigation, route}: any) => {
               <Image
                 source={localImage.Heart}
                 resizeMode="contain"
-                style={{height: 25, width: 25}}
+                style={{height: 25, width: 25, right: 10}}
               />
             ) : (
               <Image
                 source={localImage.dw7}
                 resizeMode="contain"
-                style={{height: 25, width: 25}}
+                style={{height: 25, width: 25, right: 10}}
               />
             )}
           </TouchableOpacity>
@@ -430,6 +437,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     marginVertical: 8,
     marginRight: 8,
+    marginLeft: -8,
     paddingRight: 8,
     flexDirection: 'row',
     ...Platform.select({

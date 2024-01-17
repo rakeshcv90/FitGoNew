@@ -18,6 +18,8 @@ export type Props = TouchableWithoutFeedbackProps & {
   text: string;
   textStyle?: StyleProp<TextStyle>;
   mV?: number;
+  mB?: number;
+  mT?: number;
   pV?: number;
   bR?: number;
   bW?: number;
@@ -48,6 +50,8 @@ const ProgreesButton: FC<Props> = ({...props}) => {
             width: props.w ? props.w : DeviceWidth * 0.9,
             height: props.h ? props.h : 50,
             marginVertical: props.mV,
+            marginBottom: props.mB,
+            marginTop: props.mT,
             paddingVertical: props.pV,
             borderRadius: props.bR ? props.bR : 50 / 2,
             borderWidth: props.bW ? 1 : 0,

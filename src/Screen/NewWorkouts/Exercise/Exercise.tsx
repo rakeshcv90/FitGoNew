@@ -136,6 +136,7 @@ const Exercise = ({navigation, route}: any) => {
     const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
       // Check if goBack has been called
       if (!e.data.action) {
+        setPause(false)
         console.log('navigation.goBack was called');
         setBack(true);
       }
@@ -191,6 +192,8 @@ const Exercise = ({navigation, route}: any) => {
     const payload = new FormData();
     payload.append('id', trackerData[index]?.id);
     payload.append('day', day);
+    payload.append('workout_id', data?.workout_id);
+    payload.append('user_id', getUserDataDetails?.id);
     try {
       const res = await axios({
         url: NewAppapi.POST_EXERCISE,
@@ -409,23 +412,23 @@ const Exercise = ({navigation, route}: any) => {
               <TouchableOpacity
                 disabled={number == allExercise?.length - 1}
                 onPress={() => {
-                  navigation.navigate('SaveDayExercise', {data, day});
-                  // if (number == allExercise?.length - 1) return;
-                  // else {
-                  //   setRestStart(false);
-                  //   const index = allExercise?.findIndex(
-                  //     (item: any) =>
-                  //       item?.exercise_id == currentData?.exercise_id,
-                  //   );
-                  //   setExerciseDoneIDs([
-                  //     ...exerciseDoneIDs,
-                  //     currentData?.exercise_id,
-                  //   ]);
-                  //   postCurrentExerciseAPI(index + 1);
-                  //   setNumber(number + 1);
-                  //   setTimer(5);
-                  //   setPlayW(0);
-                  // }
+                  // navigation.navigate('SaveDayExercise', {data, day});
+                  if (number == allExercise?.length - 1) return;
+                  else {
+                    setRestStart(false);
+                    const index = allExercise?.findIndex(
+                      (item: any) =>
+                        item?.exercise_id == currentData?.exercise_id,
+                    );
+                    setExerciseDoneIDs([
+                      ...exerciseDoneIDs,
+                      currentData?.exercise_id,
+                    ]);
+                    postCurrentExerciseAPI(index + 1);
+                    setNumber(number + 1);
+                    setTimer(5);
+                    setPlayW(0);
+                  }
                 }}
                 style={{
                   borderRadius: 20,

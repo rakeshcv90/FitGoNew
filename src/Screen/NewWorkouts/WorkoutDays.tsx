@@ -42,12 +42,12 @@ const WorkoutDays = ({navigation, route}: any) => {
   );
   let totalTime = 0,
     restDays = [];
-    for (const day in data?.days) {
-      if (data?.days[day]?.total_rest == 0) {
-        restDays.push(parseInt(day.split('day_')[1]));
-      }
-      totalTime = totalTime + parseInt(data?.days[day]?.total_rest);
+  for (const day in data?.days) {
+    if (data?.days[day]?.total_rest == 0) {
+      restDays.push(parseInt(day.split('day_')[1]));
     }
+    totalTime = totalTime + parseInt(data?.days[day]?.total_rest);
+  }
   useFocusEffect(
     useCallback(() => {
       getCurrentDayAPI();
@@ -174,7 +174,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           backgroundColor: 'white',
           marginRight: 10,
           marginLeft: 0,
-          width: 40,
+          width: 30,
           overflow: 'hidden',
           height:
             select && trainingCount != -1
@@ -287,14 +287,14 @@ const WorkoutDays = ({navigation, route}: any) => {
         style={[
           styles.box,
           {
-            backgroundColor:
-              index == 1 || index == 5
-                ? '#F3F4F7'
-                : index == 2 || index == 6
-                ? '#EAEBFF'
-                : index == 3 || index == 7
-                ? '#FFE8E1'
-                : '#CEF2F9',
+            backgroundColor: AppColor.WHITE,
+              // index == 1 || index == 5
+              //   ? '#F3F4F7'
+              //   : index == 2 || index == 6
+              //   ? '#EAEBFF'
+              //   : index == 3 || index == 7
+              //   ? '#FFE8E1'
+              //   : '#CEF2F9',
             height:
               selected && trainingCount != -1
                 ? DeviceHeigth * 0.2
@@ -307,11 +307,19 @@ const WorkoutDays = ({navigation, route}: any) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Image
-            source={{uri: data?.workout_image_link}}
-            style={{height: 80, width: 60, marginLeft: DeviceWidth * 0.12}}
-            resizeMode="contain"
-          />
+          {item?.total_rest == 0 ? (
+            <Image
+              source={localImage.Rest}
+              style={{height: 60, width: 60, marginLeft: DeviceWidth * 0.12}}
+              resizeMode="contain"
+            />
+          ) : (
+            <Image
+              source={{uri: data?.workout_image_link}}
+              style={{height: 80, width: 60, marginLeft: DeviceWidth * 0.12}}
+              resizeMode="contain"
+            />
+          )}
           <View
             style={{
               flexDirection: 'row',
@@ -326,19 +334,25 @@ const WorkoutDays = ({navigation, route}: any) => {
                   styles.category,
                   {fontSize: 20},
                 ]}>{`Day ${index}`}</Text>
-              <Text style={styles.small}>
-                {item?.total_rest > 60
-                  ? `${(item?.total_rest / 60).toFixed(0)} min`
-                  : `${item?.total_rest} sec`}{' '}
-                | {item?.total_calories} Kcal
-                {/* {moment(139).format('S')} min | {item?.total_calories} Kcal */}
-              </Text>
+              {item?.total_rest == 0 ? (
+                <Text style={styles.small}>Rest</Text>
+              ) : (
+                <Text style={styles.small}>
+                  {item?.total_rest > 60
+                    ? `${(item?.total_rest / 60).toFixed(0)} min`
+                    : `${item?.total_rest} sec`}{' '}
+                  | {item?.total_calories} Kcal
+                  {/* {moment(139).format('S')} min | {item?.total_calories} Kcal */}
+                </Text>
+              )}
             </View>
-            <Icons
-              name={'chevron-right'}
-              size={25}
-              color={AppColor.INPUTTEXTCOLOR}
-            />
+            {item?.total_rest != 0 && (
+              <Icons
+                name={'chevron-right'}
+                size={25}
+                color={AppColor.INPUTTEXTCOLOR}
+              />
+            )}
           </View>
         </View>
         {selected && trainingCount != -1 && (
@@ -346,6 +360,7 @@ const WorkoutDays = ({navigation, route}: any) => {
             text="Start Training"
             w={DeviceWidth * 0.75}
             bR={10}
+            mB={10}
             fill={
               totalCount == -1
                 ? '0%'
@@ -381,7 +396,7 @@ const WorkoutDays = ({navigation, route}: any) => {
         style={[
           {
             width: DeviceWidth,
-            height: 100,
+            height: 80,
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
             marginLeft: -15,
@@ -446,13 +461,14 @@ const WorkoutDays = ({navigation, route}: any) => {
             }}>
             <View style={{alignSelf: 'flex-start'}}>
               {Object.values(data?.days).map((item: any, index: number) => {
-                if (item?.total_rest == 0) {
-                  return (
-                    <View>
-                      <Text>Rest</Text>
-                    </View>
-                  );
-                }
+                // if (item?.total_rest == 0) {
+                //   return (
+                //     <View>
+                //       {/* <Text>Rest</Text> */}
+                //       <Image source={localImage.Rest} style={{height: 50, width: 50,}} />
+                //     </View>
+                //   );
+                // }
                 return (
                   <View
                     style={{
@@ -463,7 +479,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                     {index < 8 ? (
                       <BlackCircle index={index} select={index == selected} />
                     ) : (
-                      <View style={{width: 40}} />
+                      <View style={{width: 30}} />
                     )}
                     <View>
                       {(index == 0 || index == 4) && (

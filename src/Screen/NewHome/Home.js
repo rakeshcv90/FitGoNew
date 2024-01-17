@@ -78,7 +78,7 @@ const GradientText = ({item}) => {
           fontWeight={'600'}
           fontSize={23}
           fill="url(#grad)"
-          x="10"
+          x="0"
           y="25">
           {item}
         </SvgText>

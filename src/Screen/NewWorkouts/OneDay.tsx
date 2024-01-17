@@ -152,6 +152,7 @@ const OneDay = ({navigation, route}: any) => {
           {
             backgroundColor: AppColor.WHITE,
             height: DeviceHeigth * 0.1,
+            marginVertical: 5
           },
         ]}>
         <View
@@ -165,14 +166,14 @@ const OneDay = ({navigation, route}: any) => {
               height: 80,
               width: 70,
               backgroundColor: '#D9D9D9',
-              justifyContent: 'flex-end',
+              justifyContent: 'center',
               alignItems: 'center',
               marginLeft: DeviceWidth * 0.04,
               borderRadius: 10,
             }}>
             <Image
               source={{uri: item?.exercise_image}}
-              style={{height: 40, width: 70}}
+              style={{height: 80, width: 70}}
               resizeMode="contain"
             />
           </View>
@@ -194,7 +195,7 @@ const OneDay = ({navigation, route}: any) => {
               justifyContent: 'space-between',
               alignItems: 'center',
               marginHorizontal: 10,
-              width: '70%',
+              width: '65%',
             }}>
             <View>
               <Text style={[styles.small, {fontSize: 14}]}>
@@ -237,7 +238,7 @@ const OneDay = ({navigation, route}: any) => {
       <Image
         source={{uri: data?.workout_image_link}}
         style={{
-          height: DeviceWidth / 1.5,
+          height: DeviceWidth / 1.4,
           width: DeviceWidth,
           alignSelf:'center'
         }}
@@ -289,7 +290,7 @@ const OneDay = ({navigation, route}: any) => {
             text={`Start Day ${day}`}
             h={80}
             alignSelf
-            bR={10}
+            bR={40}
             mB={40}
             onPress={() => {
               postCurrentDayAPI();
@@ -361,12 +362,14 @@ const styles = StyleSheet.create({
   },
   box: {
     // flex: 1,
-    width: DeviceWidth * 0.95,
+    width: DeviceWidth,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'flex-start',
     padding: 0,
+    paddingRight: 20,
     borderRadius: 15,
-    marginLeft: -20,
+    marginLeft: -10,
     // marginVertical: 5,
   },
 });
