@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
@@ -22,10 +23,10 @@ import axios from 'axios';
 import {localImage} from '../../Component/Image';
 import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
-import { showMessage } from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 
 const Store = ({navigation}) => {
-  const {getUserDataDetails,getStoreData} = useSelector(state => state);
+  const {getUserDataDetails, getStoreData} = useSelector(state => state);
   const [searchText, setsearchText] = useState('');
   const [forLoading, setForLoading] = useState(false);
   const [filteredCategories, setFilteredCategories] = useState([]);
@@ -34,17 +35,16 @@ const Store = ({navigation}) => {
 
   useFocusEffect(
     React.useCallback(() => {
-     getCaterogy();
-     setcategory(getStoreData)
+      getCaterogy();
+      setcategory(getStoreData);
     }, []),
   );
-  const updateFilteredCategories = (test) => {
-
-    const filteredItems = category.filter((item) =>
-      item.type_title.toLowerCase().includes(test.toLowerCase())
+  const updateFilteredCategories = test => {
+    const filteredItems = category.filter(item =>
+      item.type_title.toLowerCase().includes(test.toLowerCase()),
     );
- 
-   setFilteredCategories(filteredItems);
+
+    setFilteredCategories(filteredItems);
   };
   const data = [
     require('../../Icon/Images/product_1631791758.jpg'),
@@ -57,41 +57,38 @@ const Store = ({navigation}) => {
   ];
 
   const getCaterogy = async () => {
-    setForLoading(true)
+    setForLoading(true);
     try {
       const favDiet = await axios.post(
         `${NewAppapi.Get_Product_Catogery}?token=${getUserDataDetails.login_token}`,
       );
 
-
-      if (favDiet.data.status!='Invalid token') {
-        setForLoading(false)
+      if (favDiet.data.status != 'Invalid token') {
+        setForLoading(false);
         setcategory(favDiet.data.data);
-        setFilteredCategories(favDiet.data.data)
+        setFilteredCategories(favDiet.data.data);
       } else {
         showMessage({
-          message: favDiet.data.status+' Login Again',
+          message: favDiet.data.status + ' Login Again',
           floating: true,
           duration: 1000,
           type: 'danger',
           icon: {icon: 'auto', position: 'left'},
         });
         setcategory([]);
-        setForLoading(false)
+        setForLoading(false);
       }
     } catch (error) {
       setcategory([]);
       console.log('Product Category Error', error);
-      setForLoading(false)
+      setForLoading(false);
     }
   };
   const emptyComponent = () => {
-
     return (
       <View
         style={{
-        
-       flex:1
+          flex: 1,
         }}>
         <AnimatedLottieView
           source={require('../../Icon/Images/NewImage/NoData.json')}
@@ -102,8 +99,6 @@ const Store = ({navigation}) => {
           style={{
             width: DeviceWidth * 0.6,
             height: DeviceHeigth * 0.3,
-       
-          
           }}
         />
       </View>
@@ -142,11 +137,9 @@ const Store = ({navigation}) => {
           placeholder="Search Products"
           placeholderTextColor={'rgba(80, 80, 80, 0.6)'}
           value={searchText}
-    
-     
           onChangeText={text => {
             setsearchText(text);
-            updateFilteredCategories(text)
+            updateFilteredCategories(text);
           }}
           style={styles.inputText}
         />
@@ -204,6 +197,7 @@ const Store = ({navigation}) => {
           alignSelf: 'center',
           alignItems: 'center',
           top: 20,
+           marginBottom: DeviceHeigth * 0.42,
         }}>
         <Text
           style={{
@@ -215,12 +209,12 @@ const Store = ({navigation}) => {
           }}>
           Our Products
         </Text>
+
         <FlatList
           data={category}
           numColumns={3}
           showsVerticalScrollIndicator={false}
           keyExtractor={item => item.id}
-      
           renderItem={({item, index}) => {
             return (
               <>
@@ -243,17 +237,14 @@ const Store = ({navigation}) => {
                     }}
                     resizeMode="cover"></Image>
                   <Text
-                    style={
-                 
-                      {
-                        fontSize: 12,
-                        fontWeight: '500',
-                        lineHeight: 18,
-                        fontFamily: 'Poppins',
-                        textAlign: 'center',
-                        color: AppColor.BoldText,
-                      }
-                    }>
+                    style={{
+                      fontSize: 12,
+                      fontWeight: '500',
+                      lineHeight: 18,
+                      fontFamily: 'Poppins',
+                      textAlign: 'center',
+                      color: AppColor.BoldText,
+                    }}>
                     {item.type_title}
                   </Text>
                 </TouchableOpacity>
@@ -263,7 +254,6 @@ const Store = ({navigation}) => {
           ListEmptyComponent={emptyComponent}
         />
       </View>
-      
     </View>
   );
 };
@@ -283,9 +273,12 @@ var styles = StyleSheet.create({
     fontFamily: 'Poppins',
     color: 'rgba(80, 80, 80, 0.6)',
   },
+  lastItemMargin: {
+    marginBottom: 0, // Set your desired margin for the last item
+  },
   listItem2: {
     marginHorizontal: 5,
-    top: 10,
+    // top: -10,
     borderRadius: 10,
     paddingRight: 10,
     paddingTop: 10,
@@ -294,7 +287,7 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: 10,
     backgroundColor: AppColor.WHITE,
-    marginBottom: 20,
+    marginBottom: 10,
     shadowColor: 'rgba(0, 0, 0, 1)',
     ...Platform.select({
       ios: {

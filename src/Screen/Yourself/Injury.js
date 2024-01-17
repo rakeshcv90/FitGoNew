@@ -166,8 +166,8 @@ const Injury = ({route, navigation}) => {
             style={{
               top:
                 DeviceHeigth <= '667'
-                  ? DeviceHeigth * 0.02
-                  : DeviceHeigth * 0.13,
+                  ? DeviceHeigth * 0.05
+                  : DeviceHeigth * 0.05,
               height: DeviceHeigth * 0.7,
             }}>
             <FlatList
@@ -238,7 +238,7 @@ const Injury = ({route, navigation}) => {
               top:
                 DeviceHeigth <= '667'
                   ? DeviceHeigth * 0.02
-                  : DeviceHeigth * 0.05,
+                  : DeviceHeigth * 0.00,
               left:
                 getLaterButtonData[0].gender == 'M'
                   ? -DeviceWidth * 0.2
@@ -268,7 +268,7 @@ const Injury = ({route, navigation}) => {
           }}>
           <View
             style={{
-              top: DeviceHeigth * 0.15,
+              top: DeviceHeigth * 0.1,
               height: DeviceHeigth * 0.7,
               left:
                 getLaterButtonData[0].gender == 'F'
@@ -289,7 +289,7 @@ const Injury = ({route, navigation}) => {
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
-                      marginVertical: DeviceHeigth * 0.01,
+                      marginVertical: -DeviceHeigth * 0.00,
                     }}>
                     <Animated.View
                       style={[

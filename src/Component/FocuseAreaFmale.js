@@ -76,7 +76,7 @@ const FocuseAreaFmale = ({selectedItems, setSelectedItems}) => {
             height: DeviceHeigth,
             padding: 5,
           }}>
-          <View style={{top: DeviceHeigth * 0.06, height: DeviceHeigth * 0.7}}>
+          <View style={{top: DeviceHeigth * 0.02, height: DeviceHeigth * 0.7}}>
             <FlatList
               data={bodyPart}
               scrollEnabled={false}
@@ -386,7 +386,7 @@ const FocuseAreaFmale = ({selectedItems, setSelectedItems}) => {
           }}>
           <View
             style={{
-              top: DeviceHeigth * 0.13,
+              top: DeviceHeigth * 0.07,
               height: DeviceHeigth * 0.7,
               left: -DeviceWidth * 0.23,
             }}>
