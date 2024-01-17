@@ -27,6 +27,11 @@ import RNRestart from 'react-native-restart';
 import { requestPermissionforNotification,RemoteMessage} from './src/Component/Helper/PushNotification';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import TrackPlayer from 'react-native-track-player';
+import {
+  initConnection,
+  endConnection,
+  flushFailedPurchasesCachedAsPendingAndroid,
+} from 'react-native-iap';
 
 const App = () => {
   const StatusBar_Bar_Height = Platform.OS === 'ios' ? getStatusBarHeight() : 0;
@@ -41,7 +46,7 @@ const App = () => {
   const [isConnected, setConnected] = useState(true);
   const {defaultTheme} = useSelector(state => state);
   const {isLogin} = useSelector(state => state);
-  // Checking if the App is Connected to the internet or not
+ 
   useEffect(() => {
     const subscription = NetInfo.addEventListener(state => {
       if (state.isConnected) {

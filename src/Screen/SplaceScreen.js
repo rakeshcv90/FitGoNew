@@ -23,7 +23,7 @@ import DeviceInfo from 'react-native-device-info';
 import axios from 'axios';
 
 const products = Platform.select({
-  ios: ['a_month', 'b_quaterly', 'c_annual'],
+  ios: ['a_monthly', 'b_quaterly', 'c_annual'],
   android: ['a_monthly', 'b_quaterly', 'c_annual', 'base-plan'],
 });
 
