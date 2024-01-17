@@ -11,9 +11,7 @@ import React, {useEffect, useState} from 'react';
 import NewHeader from '../Component/Headers/NewHeader';
 import {AppColor} from '../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../Component/Config';
-
 import {useDispatch, useSelector} from 'react-redux';
-import axios from 'axios';
 import {
   setCompleteProfileData,
   setUserProfileData,
@@ -31,8 +29,8 @@ import {TextInput} from 'react-native-paper';
 import {localImage} from '../Component/Image';
 import Button from '../Component/Button';
 import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
-
-
+import axios from 'axios';
+import ActivityLoader from '../Component/ActivityLoader';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -47,7 +45,8 @@ const NewPersonalDetails = ({route, navigation}) => {
   const [isEditible, setEditable] = useState(false);
   const {getUserDataDetails, completeProfileData} = useSelector(state => state);
   const [isFocus, setIsFocus] = useState(false);
-console.log("FFFFFFff",getUserDataDetails)
+
+  
 
   useEffect(() => {
     ProfileDataAPI();
@@ -93,13 +92,12 @@ console.log("FFFFFFff",getUserDataDetails)
   ];
   const focusarea = [
     {value: 1, label: 'Biceps'},
-    {value: 2, label: 'Quads'},
     {value: 3, label: 'Chest'},
     {value: 4, label: 'Legs'},
     {value: 5, label: 'Triceps'},
     {value: 8, label: 'Abs'},
     {value: 9, label: 'Shoulders'},
-    {value: 10, label: 'Back'},
+
   ];
   const workoutarea = [
     {
@@ -152,14 +150,58 @@ console.log("FFFFFFff",getUserDataDetails)
     }
     return null;
   };
-const handleFormSubmit=(values, action)=>{
-  console.log("Value Items ",values)
-
-}
+  const handleFormSubmit = async (values, action) => {
+   const data={
+      name: values.name,
+      user_id: getUserDataDetails.id,
+      token: getUserDataDetails.login_token,
+      version: VersionNumber.appVersion,
+      goal: values.goal,
+      injury: values.injury,
+      weight: values.name,
+      target_weight: values.targetWeight,
+      equipment_type: values.equipment,
+      focusarea:  values.focuseAres.length>0?values.focuseAres:getUserDataDetails.focus_area,
+      place: values.workPlace,
+      gender: values.gender,
+    }
+  //   const arrayAsString = values.focuseAres.join(',');
+  // console.log('FFFFFFff', arrayAsString);
+    setForLoading(true);
+    try {
+      const data = await axios(`${NewAppapi.UpdateUserProfile}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          name: values.name,
+          id: getUserDataDetails.id,
+          token: getUserDataDetails.login_token,
+          version: VersionNumber.appVersion,
+          goal: values.goal,
+          injury: values.injury,
+          weight: values.name,
+          target_weight: values.targetWeight,
+          equipment_type: values.equipment,
+          focusarea:  values.focuseAres.length>0?values.focuseAres.join(','):getUserDataDetails.focus_area,
+          place: values.workPlace,
+          gender: values.gender,
+        },
+       
+      });
+      console.log('Value Items ', data.data);
+      setForLoading(false);
+    } catch (error) {
+      setForLoading(false);
+      console.log('Update Profile Data', error);
+    }
+  };
   return (
     <View style={styles.Container}>
       <NewHeader header={'Details'} backButton />
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
+      {forLoading ? <ActivityLoader /> : ''}
       <Formik
         initialValues={{
           name: getUserDataDetails?.name,
@@ -170,12 +212,11 @@ const handleFormSubmit=(values, action)=>{
 
           targetWeight: getUserDataDetails?.target_weight,
           equipment: getUserDataDetails?.equipment,
-          focuseAres:getUserDataDetails?.focusarea_title,
+          focuseAres: [],
           workPlace: getUserDataDetails?.workoutarea,
         }}
         onSubmit={(values, action) => {
           handleFormSubmit(values, action);
-          
         }}
         validationSchema={validationSchema}>
         {({
@@ -265,29 +306,7 @@ const handleFormSubmit=(values, action)=>{
                       editable={false}
                     />
                   </View>
-                  {/* <View
-                    style={{
-                      marginTop: DeviceHeigth * 0.02,
-
-                      alignItems: 'center',
-                    }}>
-                    {renderLabel('Gender')}
-                    <Dropdown
-                      style={[styles.dropdown]}
-                      placeholderStyle={styles.placeholderStyle}
-                      selectedTextStyle={styles.selectedTextStyle}
-                      data={data}
-                      labelField="label"
-                      valueField="value"
-                      placeholder={getUserDataDetails?.gender}
-                      value={values.gender}
-                      onFocus={() => setIsFocus(true)}
-                      onBlur={() => setIsFocus(false)}
-                      onChange={item => {
-                        setFieldValue('gender', item.value);
-                      }}
-                    />
-                  </View> */}
+                
                   <View
                     style={{
                       marginTop: DeviceHeigth * 0.02,
@@ -302,14 +321,14 @@ const handleFormSubmit=(values, action)=>{
                       selectedTextStyle={styles.selectedTextStyle}
                       data={values.gender == 'Female' ? fmaleGole : maleGole}
                       labelField="label"
-                      valueField="value"
+                      valueField="label"
                       placeholder={getUserDataDetails?.goal_title}
                       value={values.goal}
                       onFocus={() => setIsFocus(true)}
                       onBlur={() => setIsFocus(false)}
                       onChange={item => {
-                       
-                        setFieldValue('goal', item.value);
+                        
+                        setFieldValue('goal', item.label);
                       }}
                     />
                   </View>
@@ -332,7 +351,6 @@ const handleFormSubmit=(values, action)=>{
                       onFocus={() => setIsFocus(true)}
                       onBlur={() => setIsFocus(false)}
                       onChange={item => {
-                  
                         setFieldValue('injury', item.injury_title);
                       }}
                     />
@@ -352,10 +370,7 @@ const handleFormSubmit=(values, action)=>{
                       right={
                         <TextInput.Icon
                           icon={() => (
-                            <TouchableOpacity
-                              onPress={() => {
-                              
-                              }}>
+                            <TouchableOpacity onPress={() => {}}>
                               <Image
                                 source={localImage.Down}
                                 tintColor={AppColor.BoldText}
@@ -368,7 +383,6 @@ const handleFormSubmit=(values, action)=>{
                         />
                       }
                       label="Target Weight"
-                
                       placeholder="Target Weight"
                     />
                   </View>
@@ -392,7 +406,6 @@ const handleFormSubmit=(values, action)=>{
                       onFocus={() => setIsFocus(true)}
                       onBlur={() => setIsFocus(false)}
                       onChange={item => {
-                   
                         setFieldValue('equipment', item.value);
                       }}
                     />
@@ -416,7 +429,6 @@ const handleFormSubmit=(values, action)=>{
                       onFocus={() => setIsFocus(true)}
                       onBlur={() => setIsFocus(false)}
                       onChange={item => {
-                  
                         setFieldValue('focuseAres', item);
                       }}
                       selectedStyle={styles.selectedStyle}
@@ -441,12 +453,10 @@ const handleFormSubmit=(values, action)=>{
                       onFocus={() => setIsFocus(true)}
                       onBlur={() => setIsFocus(false)}
                       onChange={item => {
-                   
                         setFieldValue('workPlace', item.workoutarea_title);
                       }}
                     />
                   </View>
-                 
                 </KeyboardAvoidingView>
               </ScrollView>
             </View>

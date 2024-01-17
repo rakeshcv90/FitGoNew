@@ -327,6 +327,9 @@ const Login = ({navigation}) => {
       }
     } catch (error) {
       console.log('User Profile Error', error);
+      status == 1
+      ? navigation.navigate('BottomTab')
+      : navigationRef.navigate('Yourself');
       setForLoading(false);
     }
   };

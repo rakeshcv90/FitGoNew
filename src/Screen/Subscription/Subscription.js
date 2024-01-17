@@ -5,6 +5,7 @@ import {
   Platform,
   ScrollView,
   FlatList,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {AppColor} from '../../Component/Color';
@@ -41,13 +42,37 @@ const Subscription = ({navigation}) => {
     require('../../Icon/Images/recipe_1519697004.jpg'),
     require('../../Icon/Images/product_1631791758.jpg'),
   ];
+  useEffect(async() => {
+    const purchaseUpdateSubscription = RNIap.purchaseUpdatedListener(
+      async purchase => {
+     
+        const purchases = await RNIap.getAvailablePurchases();
+        console.log('Payment cancelled by user1111',purchases[purchases.length - 1]);
+        // if (purchase.purchaseState === 'cancelled') {
+        //   Alert('Payment cancelled by user');
+        //   console.log('Payment cancelled by user');
+        // }
+      },
+    );
+    const purchaseErrorSubscription = RNIap.purchaseErrorListener(error =>
+      console.error('Purchase error', error.message),
+    );
+
+    // purchaseUpdateSubscription.remove();
+    // purchaseUpdateSubscription.add();
+
+    return () => {
+      purchaseErrorSubscription.remove();
+      purchaseUpdateSubscription.remove();
+    };
+  }, []);
   const purchaseItems = async items => {
     try {
       const purchase = await RNIap.requestSubscription({
         sku: items.productId,
       });
 
-      fetchPurchaseHistory1(purchase);
+      // fetchPurchaseHistory1(purchase);
     } catch (error) {
       console.log('Failed to purchase ios product', error);
     }
@@ -58,8 +83,8 @@ const Subscription = ({navigation}) => {
         sku,
         ...(offerToken && {subscriptionOffers: [{sku, offerToken}]}),
       });
-
-      fetchPurchaseHistory(purchase[0].dataAndroid);
+      console.log('Purchase Data', purchase);
+      // fetchPurchaseHistory(purchase[0].dataAndroid);
     } catch (error) {
       console.log('Failed to purchase ios product', error);
     }
@@ -135,7 +160,7 @@ const Subscription = ({navigation}) => {
     const endDate = `${date.getDate()}-${
       date.getMonth() + 1
     }-${date.getFullYear()} `;
-  
+
     try {
       const res = await axios(`${NewAppapi.Transctions}`, {
         method: 'POST',
@@ -180,18 +205,16 @@ const Subscription = ({navigation}) => {
           item.productId == getPurchaseHistory[0].plan_id &&
           getPurchaseHistory[0].plan_status == 'Active'
         ) {
-          return localImage.PurchaseTick
-        }else{
-          
+          return localImage.PurchaseTick;
+        } else {
         }
-      }else{
+      } else {
         if (
           item.productId == getPurchaseHistory[0].plan_id &&
           getPurchaseHistory[0].plan_status == 'Active'
         ) {
-          return getPurchaseHistory[0].plan_name;
-        }else{
-          
+          return localImage.PurchaseTick;
+        } else {
         }
       }
     }
@@ -515,17 +538,16 @@ const Subscription = ({navigation}) => {
                           / {Platform.OS == 'ios' ? item.title : item.name}
                         </Text>
                       </Text>
-             
-                      <Image source={getName(item)}
-                      resizeMode='contain'
-                      style={{
-                        height:25,
-                        width:25,
-                        marginRight:20
 
-                      }}/>
-
-                    
+                      <Image
+                        source={getName(item)}
+                        resizeMode="contain"
+                        style={{
+                          height: 25,
+                          width: 25,
+                          marginRight: 20,
+                        }}
+                      />
                     </View>
                   </TouchableOpacity>
                 </>
@@ -558,7 +580,7 @@ var styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: AppColor.WHITE,
     paddingLeft: 30,
-    paddingTop: 15,
+    paddingTop: DeviceHeigth*0.015,
     borderWidth: 1,
 
     ...Platform.select({
