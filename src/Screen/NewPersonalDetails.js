@@ -23,40 +23,22 @@ import {StatusBar} from 'react-native';
 import {Platform} from 'react-native';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import DeviceInfo from 'react-native-device-info';
 import VersionNumber from 'react-native-version-number';
 import InputText from '../Component/InputText';
 import {TextInput} from 'react-native-paper';
 import {localImage} from '../Component/Image';
 import Button from '../Component/Button';
+import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
 
-let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-const PasswordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%&*()-_+='":;,.?/~`[{}<>€£¥÷×])[A-Za-z\d!@#$%&*()-_+='":;,.?/~`[{}<>€£¥÷×]{8,}$/;
+
+
 const validationSchema = Yup.object().shape({
   name: Yup.string()
     .required('Full Name is Required')
     .matches(/^[A-Za-z].*/, 'First Name must start with a character')
     .min(3, 'First Name must contain atleast 3 characters'),
-
-  email: Yup.string()
-    .matches(/^[\w.\-]+@[\w.\-]+\.\w{2,4}$/, 'Invalid Email Format')
-    .required('Email is Required'),
-
-  password: Yup.string()
-    .matches(
-      PasswordRegex,
-      'Password must contain 1 Upper-Case letter, 1 Lower-Case letter, 1 Digit, 1 Special Character(@,$,-,^,&, !), and the length must be at least 8 characters',
-    )
-    .required('Password is Required'),
-  repeat_password: Yup.string()
-    .matches(
-      PasswordRegex,
-      'Password must contain 1 Upper-Case letter, 1 Lower-Case letter, 1 Digit, 1 Special Character(@,$,-,^,&, !), and the length must be at least 8 characters',
-    )
-    .required('Confirm Password is Required')
-    .oneOf([Yup.ref('password')], 'Passwords must match'),
 });
 
 const NewPersonalDetails = ({route, navigation}) => {
@@ -64,19 +46,90 @@ const NewPersonalDetails = ({route, navigation}) => {
   const [forLoading, setForLoading] = useState(false);
   const [isEditible, setEditable] = useState(false);
   const {getUserDataDetails, completeProfileData} = useSelector(state => state);
-  console.log('FFFFFFFFFFF', getUserDataDetails);
+  const [isFocus, setIsFocus] = useState(false);
+console.log("FFFFFFff",getUserDataDetails)
 
   useEffect(() => {
     ProfileDataAPI();
   }, []);
+  const data = [
+    {label: 'Male', value: 'Male'},
+    {label: 'Female', value: 'Female'},
+  ];
+  const maleGole = [
+    {label: 'Weight Loss', value: 1},
+    {label: 'Build Muscle', value: 2},
+  ];
+  const fmaleGole = [
+    {label: 'Weight Loss', value: 3},
+    {label: 'Build Muscle', value: 6},
+    {label: 'Strength', value: 4},
+  ];
+  const injury = [
+    {
+      injury_id: 4,
+      injury_title: 'Shoulder',
+    },
+    {
+      injury_id: 9,
+      injury_title: 'Knee',
+    },
+    {
+      injury_id: 10,
+      injury_title: 'Ankle',
+    },
+    {
+      injury_id: 11,
+      injury_title: 'Elbow',
+    },
+    {
+      injury_id: 12,
+      injury_title: 'Back',
+    },
+  ];
+  const equipment = [
+    {label: 'WithEquipment', value: 'WithEquipment'},
+    {label: 'WithoutEquipment', value: 'WithoutEquipment'},
+  ];
+  const focusarea = [
+    {value: 1, label: 'Biceps'},
+    {value: 2, label: 'Quads'},
+    {value: 3, label: 'Chest'},
+    {value: 4, label: 'Legs'},
+    {value: 5, label: 'Triceps'},
+    {value: 8, label: 'Abs'},
+    {value: 9, label: 'Shoulders'},
+    {value: 10, label: 'Back'},
+  ];
+  const workoutarea = [
+    {
+      workoutarea_id: 4,
 
+      workoutarea_title: 'Anywhere',
+    },
+    {
+      workoutarea_id: 5,
+
+      workoutarea_title: 'At Bed',
+    },
+    {
+      workoutarea_id: 6,
+
+      workoutarea_title: 'Outdoor',
+    },
+    {
+      workoutarea_id: 7,
+
+      workoutarea_title: 'At Home',
+    },
+  ];
   const ProfileDataAPI = async () => {
     try {
       const res = await axios({
         url: NewAppapi.Get_COMPLETE_PROFILE,
         method: 'get',
       });
-   
+
       if (res.data) {
         dispatch(setCompleteProfileData(res.data));
       } else {
@@ -88,7 +141,21 @@ const NewPersonalDetails = ({route, navigation}) => {
       console.log(error);
     }
   };
-  console.log('FFFFFFFFFFF', completeProfileData);
+
+  const renderLabel = item => {
+    if (isFocus) {
+      return (
+        <Text style={[styles.label, isFocus && {color: '#707070'}]}>
+          {item}
+        </Text>
+      );
+    }
+    return null;
+  };
+const handleFormSubmit=(values, action)=>{
+  console.log("Value Items ",values)
+
+}
   return (
     <View style={styles.Container}>
       <NewHeader header={'Details'} backButton />
@@ -103,11 +170,12 @@ const NewPersonalDetails = ({route, navigation}) => {
 
           targetWeight: getUserDataDetails?.target_weight,
           equipment: getUserDataDetails?.equipment,
-          focuseAres: getUserDataDetails?.focusarea_title,
+          focuseAres:getUserDataDetails?.focusarea_title,
           workPlace: getUserDataDetails?.workoutarea,
         }}
         onSubmit={(values, action) => {
           handleFormSubmit(values, action);
+          
         }}
         validationSchema={validationSchema}>
         {({
@@ -117,6 +185,7 @@ const NewPersonalDetails = ({route, navigation}) => {
           handleBlur,
           errors,
           touched,
+          setFieldValue,
         }) => (
           <>
             <View style={{flex: 8.5}}>
@@ -192,77 +261,80 @@ const NewPersonalDetails = ({route, navigation}) => {
                       value={values.gender}
                       onChangeText={handleChange('gender')}
                       label="Gender"
-                      placeholder="Enter Gender"
+                      placeholder={getUserDataDetails?.gender}
                       editable={false}
                     />
                   </View>
+                  {/* <View
+                    style={{
+                      marginTop: DeviceHeigth * 0.02,
 
+                      alignItems: 'center',
+                    }}>
+                    {renderLabel('Gender')}
+                    <Dropdown
+                      style={[styles.dropdown]}
+                      placeholderStyle={styles.placeholderStyle}
+                      selectedTextStyle={styles.selectedTextStyle}
+                      data={data}
+                      labelField="label"
+                      valueField="value"
+                      placeholder={getUserDataDetails?.gender}
+                      value={values.gender}
+                      onFocus={() => setIsFocus(true)}
+                      onBlur={() => setIsFocus(false)}
+                      onChange={item => {
+                        setFieldValue('gender', item.value);
+                      }}
+                    />
+                  </View> */}
                   <View
                     style={{
                       marginTop: DeviceHeigth * 0.02,
-                      marginLeft: 10,
+
+                      alignItems: 'center',
                     }}>
-                    <InputText
-                      errors={errors.goal}
-                      touched={touched.goal}
+                    {renderLabel('Fitness Goal')}
+
+                    <Dropdown
+                      style={[styles.dropdown]}
+                      placeholderStyle={styles.placeholderStyle}
+                      selectedTextStyle={styles.selectedTextStyle}
+                      data={values.gender == 'Female' ? fmaleGole : maleGole}
+                      labelField="label"
+                      valueField="value"
+                      placeholder={getUserDataDetails?.goal_title}
                       value={values.goal}
-                      onBlur={handleBlur('goal')}
-                      onChangeText={handleChange('goal')}
-                      right={
-                        <TextInput.Icon
-                          icon={() => (
-                            <TouchableOpacity
-                              onPress={() => {
-                                console.log('VDSFdsfvdsvdfs');
-                              }}>
-                              <Image
-                                source={localImage.Down}
-                                tintColor={AppColor.BoldText}
-                                style={{width: 18, height: 18}}
-                                resizeMode="contain"
-                              />
-                            </TouchableOpacity>
-                          )}
-                          style={{marginTop: 14}}
-                        />
-                      }
-                      label="Fitness Goal"
-                      editable={false}
-                      placeholder="Fitness Goal"
+                      onFocus={() => setIsFocus(true)}
+                      onBlur={() => setIsFocus(false)}
+                      onChange={item => {
+                       
+                        setFieldValue('goal', item.value);
+                      }}
                     />
                   </View>
                   <View
                     style={{
                       marginTop: DeviceHeigth * 0.02,
-                      marginLeft: 10,
+
+                      alignItems: 'center',
                     }}>
-                    <InputText
-                      errors={errors.injury}
-                      touched={touched.injury}
+                    {renderLabel('Injuries In Body Part')}
+                    <Dropdown
+                      style={[styles.dropdown]}
+                      placeholderStyle={styles.placeholderStyle}
+                      selectedTextStyle={styles.selectedTextStyle}
+                      data={injury}
+                      labelField="injury_title"
+                      valueField="injury_title"
+                      placeholder={getUserDataDetails?.injury}
                       value={values.injury}
-                      onBlur={handleBlur('injury')}
-                      onChangeText={handleChange('injury')}
-                      right={
-                        <TextInput.Icon
-                          icon={() => (
-                            <TouchableOpacity
-                              onPress={() => {
-                                console.log('VDSFdsfvdsvdfs');
-                              }}>
-                              <Image
-                                source={localImage.Down}
-                                tintColor={AppColor.BoldText}
-                                style={{width: 18, height: 18}}
-                                resizeMode="contain"
-                              />
-                            </TouchableOpacity>
-                          )}
-                          style={{marginTop: 14}}
-                        />
-                      }
-                      label="Injuries In Body Part"
-                      editable={false}
-                      placeholder="Injuries In Body Part"
+                      onFocus={() => setIsFocus(true)}
+                      onBlur={() => setIsFocus(false)}
+                      onChange={item => {
+                  
+                        setFieldValue('injury', item.injury_title);
+                      }}
                     />
                   </View>
 
@@ -282,12 +354,12 @@ const NewPersonalDetails = ({route, navigation}) => {
                           icon={() => (
                             <TouchableOpacity
                               onPress={() => {
-                                console.log('VDSFdsfvdsvdfs');
+                              
                               }}>
                               <Image
                                 source={localImage.Down}
                                 tintColor={AppColor.BoldText}
-                                style={{width: 18, height: 18}}
+                                style={{width: 10, height: 10}}
                                 resizeMode="contain"
                               />
                             </TouchableOpacity>
@@ -296,114 +368,85 @@ const NewPersonalDetails = ({route, navigation}) => {
                         />
                       }
                       label="Target Weight"
-                      editable={false}
+                
                       placeholder="Target Weight"
                     />
                   </View>
                   <View
                     style={{
                       marginTop: DeviceHeigth * 0.02,
-                      marginLeft: 10,
-                    }}>
-                    <InputText
-                      errors={errors.equipment}
-                      touched={touched.equipment}
-                      value={values.equipment}
-                      onBlur={handleBlur('equipment')}
-                      onChangeText={handleChange('equipment')}
-                      right={
-                        <TextInput.Icon
-                          icon={() => (
-                            <TouchableOpacity
-                              onPress={() => {
-                                console.log('VDSFdsfvdsvdfs');
-                              }}>
-                              <Image
-                                source={localImage.Down}
-                                tintColor={AppColor.BoldText}
-                                style={{width: 18, height: 18}}
-                                resizeMode="contain"
-                              />
-                            </TouchableOpacity>
-                          )}
-                          style={{marginTop: 14}}
-                        />
-                      }
-                      label="Choose Your Type"
-                      editable={false}
-                      placeholder="Choose Your Type"
-                    />
-                  </View>
 
+                      alignItems: 'center',
+                    }}>
+                    {renderLabel('Choose Your Type')}
+
+                    <Dropdown
+                      style={[styles.dropdown]}
+                      placeholderStyle={styles.placeholderStyle}
+                      selectedTextStyle={styles.selectedTextStyle}
+                      data={equipment}
+                      labelField="label"
+                      valueField="value"
+                      placeholder={getUserDataDetails?.equipment}
+                      value={values.equipment}
+                      onFocus={() => setIsFocus(true)}
+                      onBlur={() => setIsFocus(false)}
+                      onChange={item => {
+                   
+                        setFieldValue('equipment', item.value);
+                      }}
+                    />
+                  </View>
                   <View
                     style={{
                       marginTop: DeviceHeigth * 0.02,
-                      marginLeft: 10,
+
+                      alignItems: 'center',
                     }}>
-                    <InputText
-                      errors={errors.focuseAres}
-                      touched={touched.focuseAres}
+                    {renderLabel('Focus Area')}
+                    <MultiSelect
+                      style={[styles.dropdown]}
+                      placeholderStyle={styles.placeholderStyle}
+                      selectedTextStyle={styles.selectedTextStyle}
+                      data={focusarea}
+                      labelField="label"
+                      valueField="value"
+                      placeholder={getUserDataDetails?.focusarea_title}
                       value={values.focuseAres}
-                      onBlur={handleBlur('focuseAres')}
-                      onChangeText={handleChange('focuseAres')}
-                      right={
-                        <TextInput.Icon
-                          icon={() => (
-                            <TouchableOpacity
-                              onPress={() => {
-                                console.log('VDSFdsfvdsvdfs');
-                              }}>
-                              <Image
-                                source={localImage.Down}
-                                tintColor={AppColor.BoldText}
-                                style={{width: 18, height: 18}}
-                                resizeMode="contain"
-                              />
-                            </TouchableOpacity>
-                          )}
-                          style={{marginTop: 14}}
-                        />
-                      }
-                      label="Focus Area"
-                      editable={false}
-                      placeholder="Focus Area"
+                      onFocus={() => setIsFocus(true)}
+                      onBlur={() => setIsFocus(false)}
+                      onChange={item => {
+                  
+                        setFieldValue('focuseAres', item);
+                      }}
+                      selectedStyle={styles.selectedStyle}
                     />
                   </View>
                   <View
                     style={{
                       marginTop: DeviceHeigth * 0.02,
-                      marginLeft: 10,
-                      marginBottom: DeviceHeigth * 0.05,
+
+                      alignItems: 'center',
                     }}>
-                    <InputText
-                      errors={errors.workPlace}
-                      touched={touched.workPlace}
+                    {renderLabel('Comfort Place')}
+                    <Dropdown
+                      style={[styles.dropdown]}
+                      placeholderStyle={styles.placeholderStyle}
+                      selectedTextStyle={styles.selectedTextStyle}
+                      data={workoutarea}
+                      labelField="workoutarea_title"
+                      valueField="workoutarea_title"
+                      placeholder={getUserDataDetails?.workoutarea}
                       value={values.workPlace}
-                      onBlur={handleBlur('workPlace')}
-                      onChangeText={handleChange('workPlace')}
-                      right={
-                        <TextInput.Icon
-                          icon={() => (
-                            <TouchableOpacity
-                              onPress={() => {
-                                console.log('VDSFdsfvdsvdfs');
-                              }}>
-                              <Image
-                                source={localImage.Down}
-                                tintColor={AppColor.BoldText}
-                                style={{width: 18, height: 18}}
-                                resizeMode="contain"
-                              />
-                            </TouchableOpacity>
-                          )}
-                          style={{marginTop: 14}}
-                        />
-                      }
-                      label="Comfort Place"
-                      //editable={false}
-                      placeholder="Comfort Place"
+                      onFocus={() => setIsFocus(true)}
+                      onBlur={() => setIsFocus(false)}
+                      onChange={item => {
+                   
+                        setFieldValue('workPlace', item.workoutarea_title);
+                      }}
                     />
                   </View>
+                 
                 </KeyboardAvoidingView>
               </ScrollView>
             </View>
@@ -413,7 +456,7 @@ const NewPersonalDetails = ({route, navigation}) => {
 
                 justifyContent: 'center',
               }}>
-              <Button buttonText={'Register'} />
+              <Button buttonText={'Register'} onPresh={handleSubmit} />
             </View>
           </>
         )}
@@ -425,6 +468,43 @@ const styles = StyleSheet.create({
   Container: {
     flex: 1,
     backgroundColor: 'white',
+  },
+  dropdown: {
+    height: 55,
+    borderColor: '#707070',
+    borderWidth: 1,
+    borderRadius: 15,
+    paddingHorizontal: 15,
+    width: '91%',
+  },
+  icon: {
+    marginRight: 5,
+  },
+  label: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    left: 22,
+    top: -5,
+    zIndex: 999,
+    paddingHorizontal: 15,
+    fontSize: 14,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
+  selectedStyle: {
+    borderRadius: 12,
   },
 });
 export default NewPersonalDetails;

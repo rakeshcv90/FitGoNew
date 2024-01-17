@@ -236,7 +236,7 @@ const MealDetails = ({route, navigation}) => {
                 style={{
                   fontFamily: 'Poppins',
                   fontSize: 15,
-                  fontWeight: '600',
+                  fontWeight: '700',
                   color: AppColor.LITELTEXTCOLOR,
                 }}>
                 Summary
@@ -284,7 +284,7 @@ const MealDetails = ({route, navigation}) => {
                 style={{
                   fontFamily: 'Poppins',
                   fontSize: 15,
-                  fontWeight: '600',
+                  fontWeight: '700',
                   color: AppColor.LITELTEXTCOLOR,
                 }}>
                 Ingredients
@@ -337,7 +337,7 @@ const MealDetails = ({route, navigation}) => {
                 style={{
                   fontFamily: 'Poppins',
                   fontSize: 15,
-                  fontWeight: '600',
+                  fontWeight: '700',
                   color: AppColor.LITELTEXTCOLOR,
                 }}>
                 Instructions

@@ -19,6 +19,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Progressbar from '../../Screen/Yourself/ProgressBar';
 import {useDispatch, useSelector} from 'react-redux';
 import {SetmindsetConsent} from '../../Component/ThemeRedux/Actions';
+import { StatusBar } from 'react-native';
 const MeditationConsent = ({navigation}) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -75,6 +76,8 @@ const MeditationConsent = ({navigation}) => {
   };
   return (
     <View style={styles.Container}>
+        <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
+        <View></View>
       <Progressbar screen={screen} Type />
       <Bulb
         header={

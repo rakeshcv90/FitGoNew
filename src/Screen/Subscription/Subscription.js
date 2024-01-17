@@ -135,7 +135,7 @@ const Subscription = ({navigation}) => {
     const endDate = `${date.getDate()}-${
       date.getMonth() + 1
     }-${date.getFullYear()} `;
-    console.log('FFFFFFFFFFFFFF11', getUserDataDetails.id);
+  
     try {
       const res = await axios(`${NewAppapi.Transctions}`, {
         method: 'POST',
@@ -180,7 +180,7 @@ const Subscription = ({navigation}) => {
           item.productId == getPurchaseHistory[0].plan_id &&
           getPurchaseHistory[0].plan_status == 'Active'
         ) {
-          return getPurchaseHistory[0].plan_name;
+          return localImage.PurchaseTick
         }else{
           
         }
@@ -515,18 +515,17 @@ const Subscription = ({navigation}) => {
                           / {Platform.OS == 'ios' ? item.title : item.name}
                         </Text>
                       </Text>
-                      <Text
-                        style={{
-                          fontWeight: '500',
-                          fontSize: 20,
-                          lineHeight: 24,
-                          top: 5,
-                          right: 10,
+             
+                      <Image source={getName(item)}
+                      resizeMode='contain'
+                      style={{
+                        height:25,
+                        width:25,
+                        marginRight:20
 
-                          color: '#D5191A',
-                        }}>
-                        {getName(item)}
-                      </Text>
+                      }}/>
+
+                    
                     </View>
                   </TouchableOpacity>
                 </>

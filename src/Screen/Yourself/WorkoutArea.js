@@ -114,14 +114,35 @@ const WorkoutArea = ({route, navigation}) => {
   return (
     <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-
       <View
         style={{
           justifyContent: 'center',
           alignItems: 'center',
           //position: 'absolute',
           marginTop:
-             DeviceHeigth * 0.11,
+             DeviceHeigth * 0.07,
+        }}>
+        <ProgressBar screen={screen} />
+      </View>
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop:-(Platform.OS=='android'?DeviceHeigth * 0.035:DeviceHeigth * 0.06)
+          
+        }}>
+        <Bulb
+          screen={'What’s your comfort place to workout ?'}
+          header={'You can select any 2 options among below given options'}
+        />
+      </View>
+      {/* <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          //position: 'absolute',
+        marginTop:
+             DeviceHeigth * 0.07,
         }}>
       </View>
       <View
@@ -136,7 +157,7 @@ const WorkoutArea = ({route, navigation}) => {
           screen={'What’s your comfort place to workout ?'}
           header={'You can select any 2 options among below given options'}
         />
-      </View>
+      </View> */}
 
       <View
         style={{

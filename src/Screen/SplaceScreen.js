@@ -51,7 +51,7 @@ const SplaceScreen = ({navigation}) => {
                 console.log('error finding purchase');
               })
               .then(res => {
-              
+                console.log("IOS Subscription",res)
                 dispatch(setInappPurchase(res));
               });
           })
@@ -65,7 +65,7 @@ const SplaceScreen = ({navigation}) => {
                 console.log('error finding purchase');
               })
               .then(res => {
-               
+               console.log("Android Subscription",res)
                 dispatch(setInappPurchase(res));
               });
           });

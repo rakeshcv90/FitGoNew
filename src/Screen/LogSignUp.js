@@ -108,7 +108,7 @@ const LogSignUp = () => {
           alignSelf: 'flex-end',
           marginRight: 30,
           borderRadius: 30,
-          marginTop:Platform.OS=='ios'?DeviceHeigth*0.1:DeviceHeigth*0.08,
+          marginTop:Platform.OS=='ios'?DeviceHeigth*0.08:DeviceHeigth*0.03,
           borderWidth: 1.5,
           borderColor: 'red',
         }}>
