@@ -150,3 +150,9 @@ export const setFcmToken=data=>{
     payload:data
   }
 }
+export const setBmi=data=>{
+  return{
+    type:types.BMI,
+    payload:data
+  }
+}

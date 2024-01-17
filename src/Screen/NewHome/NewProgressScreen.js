@@ -6,6 +6,8 @@ import {
   Image,
   Platform,
   ScrollView,
+  Modal,
+  TextInput,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -18,6 +20,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import {Dropdown} from 'react-native-element-dropdown';
 import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
+import {BlurView} from '@react-native-community/blur';
+import {setBmi} from '../../Component/ThemeRedux/Actions';
 import {
   VictoryBar,
   VictoryChart,
@@ -33,19 +37,27 @@ import {
   ContributionGraph,
   StackedBarChart,
 } from 'react-native-chart-kit';
-import {index, local} from 'd3';
+import {dispatch, index, local} from 'd3';
 import moment from 'moment';
 import Button from '../../Component/Button';
+import {showMessage} from 'react-native-flash-message';
 const NewProgressScreen = ({navigation}) => {
   const {getUserDataDetails, getHealthData} = useSelector(state => state);
   console.log('=======>userDta', getUserDataDetails.weight, getHealthData);
   const [dates, setDates] = useState([]);
   const [value, setValue] = useState('Weekly');
   const [array, setArray] = useState([]);
-  const CurrentWeight= getUserDataDetails?.weight
+  const [getBmi, setBmi] = useState(
+    (
+      getUserDataDetails?.weight /
+      (getUserDataDetails?.height * 0.3048) ** 2
+    ).toFixed(2),
+  );
+  const CurrentWeight = getUserDataDetails?.weight;
   const arrayForData = [];
   useEffect(() => {
     userData();
+    // dispatch(setBmi(getBmi))
   }, []);
   const userData = async () => {
     try {
@@ -81,13 +93,7 @@ const NewProgressScreen = ({navigation}) => {
       console.log('Calories Api Error', error);
     }
   };
-  const textData = [
-    {value: 10},
-    {value: 15},
-    {value: 16.8},
-    {value: 19},
-    {value: 28},
-  ];
+  const textData = [{value: getBmi}];
   useEffect(() => {
     const currentDate = moment();
     const daysInMonth = currentDate.daysInMonth();
@@ -107,7 +113,6 @@ const NewProgressScreen = ({navigation}) => {
     setDates(dateArray);
   }, []);
   const RenderCalender = ({minIndex, maxIndex}) => {
-    // console.log("Dileeeep========>",datesArray,finalDate)
 
     return (
       <View
@@ -127,14 +132,14 @@ const NewProgressScreen = ({navigation}) => {
               backgroundColor: value.isCurrent
                 ? AppColor.RED
                 : AppColor.BACKGROUNG,
-              paddingVertical: value.isCurrent ? 0 : 2,
+              paddingVertical: value.isCurrent ? 1 : 2,
               paddingHorizontal: value.isCurrent ? 0 : 12,
-              borderRadius: value.isCurrent ? 50 / 2 : 8,
-              width: value.isCurrent ? 50 : undefined,
-              height: value.isCurrent ? 50 : undefined,
+              borderRadius: value.isCurrent ? 40 / 2 : 8,
+              width: value.isCurrent ? 40 : undefined,
+              height: value.isCurrent ? 40 : undefined,
               justifyContent: 'center',
               alignItems: 'center',
-              marginRight: dates.slice(minIndex, maxIndex).length < 7 ? 8 : 0,
+              marginRight: dates.slice(minIndex, maxIndex).length < 7 ? 6 : 0,
             }}>
             <Text
               style={{
@@ -365,6 +370,124 @@ const NewProgressScreen = ({navigation}) => {
     }
     return null; // Render nothing for other data points
   };
+  //BMI
+  const [modalVisible, setModalVisible] = useState(false);
+  // Close the modal
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+  const BMImodal = () => {
+    const [selected, setSelected] = useState('');
+    const [focused, setFocused] = useState(false);
+    const HandleSubmitBMI = () => {
+      const BMI =
+        (selected == '' ? getUserDataDetails?.weight : selected) /
+        (getUserDataDetails?.height * 0.3048) ** 2;
+      console.log('BMI>>>>>>>', BMI.toFixed(2));
+      setBmi(BMI.toFixed(2));
+      setModalVisible(false);
+    };
+    return (
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={closeModal}>
+        <BlurView
+          style={styles.modalContainer}
+          blurType="light"
+          blurAmount={1}
+          reducedTransparencyFallbackColor="white"
+        />
+        <View style={[styles.modalContent, {backgroundColor: AppColor.WHITE}]}>
+          <View>
+            <Text
+              style={{
+                color: AppColor.BoldText,
+                fontFamily: 'Poppins-SemiBold',
+                textAlign: 'center',
+                fontSize: 18,
+              }}>
+              {'Enter your current weight'}
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignSelf: 'center',
+                marginVertical: 8,
+              }}>
+              <TextInput
+                keyboardType="number-pad"
+                value={selected}
+                onChangeText={text => {
+                  if (text == '.') {
+                    showMessage({
+                      message: 'Wrong Input',
+                      type: 'danger',
+                      animationDuration: 500,
+                      floating: true,
+                      icon: {icon: 'auto', position: 'left'},
+                    });
+                  } else setSelected(text);
+                }}
+                onFocus={setFocused}
+                cursorColor={AppColor.RED}
+                placeholder={focused ? selected : getUserDataDetails?.weight}
+                placeholderTextColor={focused ? AppColor.RED : AppColor.GRAY1}
+                maxLength={3}
+                style={{
+                  width: DeviceWidth * 0.15,
+                  fontSize: 30,
+                  fontFamily: 'Poppins-SemiBold',
+                  color: AppColor.BLACK,
+
+                  borderColor: focused ? AppColor.RED : AppColor.DARKGRAY,
+                  borderBottomWidth: 1,
+                  alignSelf: 'center',
+                  paddingLeft: 4,
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: 'Poppins-SemiBold',
+                  color: AppColor.BoldText,
+                  fontSize: 30,
+                  textAlign: 'center',
+                }}>
+                {'Kg'}
+              </Text>
+            </View>
+          </View>
+          <TouchableOpacity
+            style={{
+              width: DeviceWidth * 0.4,
+              borderRadius: 8,
+              alignSelf: 'center',
+              marginTop: 20,
+            }}
+            onPress={() => {
+              HandleSubmitBMI();
+            }}>
+            <LinearGradient
+              colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
+              style={[styles.button_b, {padding: 5}]}
+              start={{x: 0, y: 1}}
+              end={{x: 1, y: 0}}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins-SemiBold',
+                  fontSize: 18,
+                  color: AppColor.WHITE,
+                }}>
+                {'Submit'}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    );
+  };
+  console.log('.........>>>>>', getUserDataDetails);
   return (
     <SafeAreaView style={styles.Container}>
       <ScrollView showsHorizontalScrollIndicator={false}>
@@ -372,15 +495,17 @@ const NewProgressScreen = ({navigation}) => {
           <TouchableOpacity style={styles.Feedback_B} activeOpacity={0.5}>
             <Image
               source={localImage.Feedback}
-              style={{width: 20, height: 20}}
+              style={{width: 15, height: 15}}
               resizeMode="contain"
             />
             <Text
               style={{
                 color: AppColor.RED,
                 textAlign: 'center',
-                fontSize: 18,
-                marginLeft: 4,
+                fontSize: 12,
+                marginLeft: 8,
+                // fontFamily:'Poppins-Regular',
+                fontWeight:'600'
               }}>
               {'Feedback'}
             </Text>
@@ -391,10 +516,9 @@ const NewProgressScreen = ({navigation}) => {
             onPress={() => {
               navigation.navigate('Report');
             }}>
-
             <Image
               source={localImage.Settings_v}
-              style={{height: 30, width: 30}}
+              style={{height: 20, width: 20}}
               resizeMode="contain"
             />
           </TouchableOpacity>
@@ -447,8 +571,9 @@ const NewProgressScreen = ({navigation}) => {
           ))}
         </View>
         <LineText Txt1={'Weight'} Txt2={'Weekly'} />
-        <View style={styles.card}>
+        <View style={[styles.card,{}]}>
           <LineChart
+          style={{paddingRight:30}}
             data={data}
             width={DeviceWidth * 0.85}
             height={DeviceHeigth * 0.25}
@@ -547,30 +672,22 @@ const NewProgressScreen = ({navigation}) => {
               {'BMI: '}
             </Text>
             <Text style={{fontFamily: 'Poppins-SemiBold', color: '#00A930'}}>
-              {'25.5'}
+              {getBmi}
             </Text>
           </View>
-          <TouchableOpacity
-            style={[
-              styles.Feedback_B,
-              {justifyContent: 'center', alignItems: 'center'},
-            ]}>
-            <Image
-              source={localImage.Pen_p}
-              style={{width: 10, height: 10}}
-              resizeMode="contain"
-            />
-            <Text style={{fontSize: 10, marginLeft: 3, color: AppColor.RED}}>
-              Edit
-            </Text>
-          </TouchableOpacity>
+          <View />
         </View>
-        <View style={[styles.card, {flexDirection: 'column'}]}>
+        <View style={[styles.card, {flexDirection: 'column',marginBottom:10}]}>
           <View style={{width: DeviceWidth * 0.9, alignSelf: 'center'}}>
             <View
               style={{
                 width: 100,
-                marginLeft: DeviceWidth * 0.6,
+                marginLeft:
+                  getBmi > 0 && getBmi <= 18
+                    ? DeviceWidth * 0.1
+                    : getBmi > 18 && getBmi < 25
+                    ? DeviceWidth * 0.35
+                    : DeviceWidth * 0.6,
               }}>
               <View
                 style={{
@@ -581,7 +698,11 @@ const NewProgressScreen = ({navigation}) => {
                   alignItems: 'center',
                 }}>
                 <Text style={{fontWeight: '500', color: AppColor.WHITE}}>
-                  {'Over Weight'}
+                  {getBmi <= 18
+                    ? 'Under Weight'
+                    : getBmi > 18 && getBmi < 25
+                    ? 'Normal'
+                    : 'Over Weight'}
                 </Text>
               </View>
               <View style={styles.arrowheadContainer}>
@@ -613,21 +734,51 @@ const NewProgressScreen = ({navigation}) => {
               flexDirection: 'row',
               flexDirection: 'row',
               justifyContent: 'space-between',
-              width: DeviceWidth * 0.85,
+              width: DeviceWidth * 0.88,
               marginTop: 5,
               alignSelf: 'center',
             }}>
+            <Text
+              style={{
+                color: AppColor.BLACK,
+                position: 'absolute',
+                fontFamily: 'Poppins-SemiBold',
+              }}>
+              {'0'}
+            </Text>
             {textData.map((value, index) => (
               <Text
                 key={index}
-                style={{color: AppColor.BLACK, textAlign: 'center'}}>
+                style={{
+                  color: AppColor.BLACK,
+                  fontFamily: 'Poppins-SemiBold',
+                  width: 100,
+                  textAlign: 'center',
+                  marginLeft:
+                    getBmi > 0 && getBmi <= 18
+                      ? DeviceWidth * 0.1
+                      : getBmi > 18 && getBmi < 25
+                      ? DeviceWidth * 0.35
+                      : DeviceWidth * 0.6,
+                }}>
                 {value.value}
               </Text>
             ))}
+            <Text
+              style={{color: AppColor.BLACK, fontFamily: 'Poppins-SemiBold'}}>
+              {getBmi < 18
+                ? (getBmi * 2 + 10).toFixed(0)
+                : getBmi > 18 && getBmi < 25
+                ? (getBmi * 2).toFixed(0)
+                : (getBmi * 2 - 8).toFixed(0)}
+            </Text>
           </View>
           <TouchableOpacity
             style={[styles.button_b, {marginVertical: 20}]}
-            activeOpacity={0.5}>
+            activeOpacity={0.5}
+            onPress={() => {
+              setModalVisible(true);
+            }}>
             <LinearGradient
               colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
               style={[styles.button_b, {padding: 5}]}
@@ -645,6 +796,7 @@ const NewProgressScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <BMImodal />
     </SafeAreaView>
   );
 };
@@ -663,9 +815,9 @@ const styles = StyleSheet.create({
     width: DeviceWidth * 0.95,
   },
   Feedback_B: {
-    borderWidth: 1,
-    borderRadius: 12,
-    padding: 6,
+    borderWidth: 0.5,
+    borderRadius: 10,
+    padding:5 ,
     borderColor: AppColor.RED,
     flexDirection: 'row',
   },
@@ -776,6 +928,30 @@ const styles = StyleSheet.create({
   selectedTextStyle: {
     fontSize: 16,
     color: AppColor.BLACK,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // Semi-transparent background
+  },
+  modalContent: {
+    padding: 20,
+    borderRadius: 8,
+    width: DeviceWidth * 0.95,
+    position: 'absolute',
+    top: DeviceHeigth / 6,
+    marginHorizontal: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOpacity: 0.2,
+        shadowOffset: {height: 5, width: 0},
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
 });
 export default NewProgressScreen;

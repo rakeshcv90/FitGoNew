@@ -1,3 +1,4 @@
+
 import types from '../../Component/ThemeRedux/Constants';
 const intialState = {
   defaultTheme: false,
@@ -26,7 +27,8 @@ const intialState = {
   getStoreData: [],
   getPurchaseHistory: [],
   getScreenAwake: false,
-  getSoundOffOn:false
+  getSoundOffOn:false,
+  getBmi:''
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
