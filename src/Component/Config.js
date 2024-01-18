@@ -63,5 +63,6 @@ export const NewAppapi = {
   TransctionsDetails: NewApi + 'transactionsdetails',
   total_Calories:NewApi+'exercisecalo',
   UpdateUserProfile: NewApi + 'update_details',
+  HOME_GRAPH_DATA: NewApi + 'weekly_history',
 
 };

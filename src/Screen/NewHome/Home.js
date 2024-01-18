@@ -20,7 +20,10 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import VersionNumber from 'react-native-version-number';
-import {setHealthData} from '../../Component/ThemeRedux/Actions';
+import {
+  setHealthData,
+  setHomeGraphData,
+} from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
 import BackgroundService from 'react-native-background-actions';
@@ -59,6 +62,13 @@ import {BackdropBlur, Canvas, Fill} from '@shopify/react-native-skia';
 import {color} from 'd3';
 import {Form} from 'formik';
 import moment from 'moment';
+import Graph from '../Yourself/Graph';
+const zeroData = Array(7)
+  .fill()
+  .map((_, index) => {
+    const currentDate = moment().subtract(index + 1, 'days');
+    return {weight: 0, date: currentDate.date()};
+  });
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
 
@@ -136,6 +146,7 @@ const Home = ({navigation}) => {
   const [forLoading, setForLoading] = useState(false);
   const [value, setValue] = useState('Weekly');
   const [likeData, setLikeData] = useState([]);
+  const [weeklyGraph, setWeeklyGraph] = useState([]);
   const [currentindex, setCurrentIndex] = useState(1);
   const progressAnimation = useRef(new Animated.Value(0)).current;
   const {
@@ -148,7 +159,9 @@ const Home = ({navigation}) => {
     customWorkoutData,
     mealData,
     getPedomterData,
+    getHomeGraphData,
   } = useSelector(state => state);
+  const dispatch = useDispatch();
   const [stepGoalProfile, setStepGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
   );
@@ -161,6 +174,9 @@ const Home = ({navigation}) => {
   console.log('healthData', getHealthData);
   useEffect(() => {
     ActivityPermission();
+
+    getGraphData();
+
   }, []);
 
   //   useEffect(() => {
@@ -250,6 +266,43 @@ const Home = ({navigation}) => {
   //     },
   //   );
   // });
+
+  const getGraphData = async () => {
+    try {
+      const payload = new FormData();
+      payload.append('user_id', 112);
+      // payload.append('user_id', getUserDataDetails?.id);
+      setForLoading(true);
+      const res = await axios({
+        url: NewAppapi.HOME_GRAPH_DATA,
+        method: 'post',
+        data: payload,
+      });
+      if (res.data?.message != 'No data found') {
+        setForLoading(false);
+        console.log(res.data?.weekly_data?.total_calories, 'Graph Data ');
+        dispatch(setHomeGraphData(res.data));
+        // const test = [];
+        // zeroData?.map((_, index) => {
+        //   test.push({
+        //     date: parseInt(moment(res.data?.weekly_data[index]?.created_at).format('DD')),
+        //     weight: parseInt(res.data?.weekly_data[index]?.total_calories),
+        //   });
+        // });
+        // const jsonString = JSON.stringify(test);
+        // console.log(test);
+        // setWeeklyGraph(cleanedData);
+      } else {
+        setForLoading(false);
+        console.log(res.data, 'Graph Data message ');
+        dispatch(setHomeGraphData([]));
+      }
+    } catch (error) {
+      setForLoading(false);
+      console.error(error, 'GraphError');
+      dispatch(setHomeGraphData([]));
+    }
+  };
 
   const likeStatusApi = async () => {
     try {
@@ -909,6 +962,7 @@ const Home = ({navigation}) => {
             resizeMode="cover"></Image>
           <Text style={styles.monetText}>500</Text> */}
         </View>
+
         {/* {console.log("User Data",getUserDataDetails )} */}
         {Object.keys(getUserDataDetails).length > 0 ? (
           <TouchableOpacity
@@ -937,6 +991,7 @@ const Home = ({navigation}) => {
               resizeMode="cover"></Image>
           </TouchableOpacity>
         )}
+
       </View>
       <GradientText
         item={getTimeOfDayMessage() + ', ' + (Object.keys(getUserDataDetails).length > 0?getUserDataDetails.name:'Guest')}

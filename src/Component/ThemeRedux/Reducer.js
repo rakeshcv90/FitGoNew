@@ -28,7 +28,8 @@ const intialState = {
   getPurchaseHistory: [],
   getScreenAwake: false,
   getSoundOffOn:false,
-  getBmi:''
+  getBmi:'',
+  getHomeGraphData: [],
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -136,6 +137,8 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, getScreenAwake: action.payload};
     case types.SOUND_ON_OFF:
       return {...state, getSoundOffOn: action.payload};
+    case types.HOME_GRAPH_DATA:
+      return {...state, getHomeGraphData: action.payload};
     default:
       return state;
   }
