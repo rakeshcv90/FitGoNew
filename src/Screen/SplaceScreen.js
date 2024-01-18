@@ -33,7 +33,7 @@ const SplaceScreen = ({navigation}) => {
 
   const {showIntro, getUserDataDetails} = useSelector(state => state);
 
-
+console.log("User Data",getUserDataDetails)
   useEffect(() => {
     DeviceInfo.syncUniqueId().then(uniqueId => {
       setDeviceId(uniqueId);

@@ -31,6 +31,7 @@ import {
   Setmealdata,
   setCurrentWorkoutData,
   setCustomWorkoutData,
+  setUserProfileData,
 } from '../../Component/ThemeRedux/Actions';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
@@ -129,6 +130,7 @@ const LoadData = ({navigation}) => {
       payload.append('focusarea', mergedObject?.focuseArea?.join(','));
       payload.append('weight', mergedObject?.currentWeight);
       payload.append('height', mergedObject?.height);
+      //targetWeight
       payload.append(
         'injury',
         mergedObject?.injury != null ? mergedObject?.injury?.join(',') : null,
@@ -157,6 +159,7 @@ const LoadData = ({navigation}) => {
       });
       console.log(data.data, payload);
       Meal_List(deviceID);
+      getUserDataDetails?.id != null && getProfileData(getUserDataDetails?.id);
       getUserDataDetails?.id != null
         ? getCustomWorkout(getUserDataDetails?.id)
         : customFreeWorkoutDataApi(deviceID);
@@ -287,6 +290,27 @@ const LoadData = ({navigation}) => {
       console.log('Meal List Error', error);
     }
   };
+  const getProfileData = async user_id => {
+    try {
+      const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          id: user_id,
+        },
+      });
+
+      if (data.data.profile) {
+        dispatch(setUserProfileData(data.data.profile));
+      } else {
+        dispatch(setUserProfileData([]));
+      }
+    } catch (error) {
+      console.log('User Profile Error', error);
+    }
+  };
   const renderItem1 = ({item, index}) => {
     const translateX = translationX.interpolate({
       inputRange: [0, 1],
@@ -392,7 +416,7 @@ const LoadData = ({navigation}) => {
       </View>
 
       <View style={styles.buttons}>
-   <View></View>
+        <View></View>
         {activeNext && (
           <TouchableOpacity
             onPress={() => {
