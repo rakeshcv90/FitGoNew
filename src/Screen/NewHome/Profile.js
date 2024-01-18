@@ -373,7 +373,7 @@ const Profile = () => {
                       }}
                       onPress={() => {
                         setImguploaded(false);
-                        UploadImage();
+                        // UploadImage();
                       }}>
                       <Text style={[styles.cameraText]}>Upload Image</Text>
                     </TouchableOpacity>
