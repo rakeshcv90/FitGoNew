@@ -10,7 +10,7 @@ import {
   SafeAreaView,
   Alert,
   ActivityIndicator,
-  Modal
+  Modal,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {localImage} from '../../Component/Image';
@@ -25,12 +25,15 @@ import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {setLogout} from '../../Component/ThemeRedux/Actions';
 import {CommonActions} from '@react-navigation/native';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {request, PERMISSIONS, openSettings} from 'react-native-permissions';
 import VersionNumber from 'react-native-version-number';
+import {showMessage} from 'react-native-flash-message';
+import {persistor} from '../../Component/ThemeRedux/Store';
+import LogOut from '../../Component/LogOut';
 const Profile = () => {
   const dispatch = useDispatch();
-  const {getUserDataDetails,ProfilePhoto} = useSelector(state => state);
+  const {getUserDataDetails, ProfilePhoto} = useSelector(state => state);
   const [UpdateScreenVisibility, setUpadteScreenVisibilty] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -50,17 +53,17 @@ const Profile = () => {
       ),
       text1: 'Personal Details',
     },
-    {
-      id: 2,
-      icon1: (
-        <Image
-          source={localImage.Documents}
-          style={[styles.IconView, {height: 23, width: 23}]}
-          resizeMode="contain"
-        />
-      ),
-      text1: 'My plans',
-    },
+    // {
+    //   id: 2,
+    //   icon1: (
+    //     <Image
+    //       source={localImage.Documents}
+    //       style={[styles.IconView, {height: 23, width: 23}]}
+    //       resizeMode="contain"
+    //     />
+    //   ),
+    //   text1: 'My plans',
+    // },
     {
       id: 3,
       icon1: (
@@ -276,7 +279,7 @@ const Profile = () => {
       <View
         style={{
           flex: 1,
-          backgroundColor:  '#fff',
+          backgroundColor: '#fff',
           position: 'absolute',
         }}>
         <Modal
@@ -291,11 +294,7 @@ const Profile = () => {
               styles.modalContainer,
               {backgroundColor: 'transparent', flex: 1},
             ]}>
-            <View
-              style={[
-                styles.modalContent,
-                {backgroundColor: '#fff'},
-              ]}>
+            <View style={[styles.modalContent, {backgroundColor: '#fff'}]}>
               <View
                 style={[
                   styles.closeButton,
@@ -310,20 +309,18 @@ const Profile = () => {
                   onPress={() => {
                     setUpadteScreenVisibilty(false);
                   }}>
-                  <Icons
-                    name="close"
-                    size={27}
-                    color={ '#000'}
-                  />
+                  <Icons name="close" size={27} color={'#000'} />
                 </TouchableOpacity>
               </View>
               <Image
-                source={{ uri:
-                userAvatar != null
-                  ? userAvatar.uri
-                  : 'https://gofit.tentoptoday.com/json/image/Avatar.png',
-            }}
-                style={styles.Icon}/>
+                source={{
+                  uri:
+                    userAvatar != null
+                      ? userAvatar.uri
+                      : 'https://gofit.tentoptoday.com/json/image/Avatar.png',
+                }}
+                style={styles.Icon}
+              />
               <View
                 style={{
                   justifyContent: 'space-around',
@@ -343,14 +340,8 @@ const Profile = () => {
                       askPermissionForCamera(PERMISSIONS.ANDROID.CAMERA);
                     }
                   }}>
-                  <Icon
-                    name="camera"
-                    size={30}
-                    color= '#000'
-                  />
-                  <Text style={{color:  '#000'}}>
-                    Camera
-                  </Text>
+                  <Icon name="camera" size={30} color="#000" />
+                  <Text style={{color: '#000'}}>Camera</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.cameraButton}
@@ -363,14 +354,8 @@ const Profile = () => {
                       );
                     }
                   }}>
-                  <Icon
-                    name="camera-image"
-                    size={30}
-                    color={ '#000'}
-                  />
-                  <Text style={{color:'#000'}}>
-                    Gallery
-                  </Text>
+                  <Icon name="camera-image" size={30} color={'#000'} />
+                  <Text style={{color: '#000'}}>Gallery</Text>
                 </TouchableOpacity>
               </View>
               {IsimgUploaded ? (
@@ -397,8 +382,7 @@ const Profile = () => {
                       style={{
                         width: DeviceWidth * 0.4,
                         height: (DeviceHeigth * 3) / 100,
-                        backgroundColor: 
-                           'rgba(0,0,0,0.7)',
+                        backgroundColor: 'rgba(0,0,0,0.7)',
                         justifyContent: 'center',
                         borderRadius: 20,
                         alignItems: 'center',
@@ -429,24 +413,8 @@ const Profile = () => {
   };
   const ProfileView = () => {
     const handleLogout = async () => {
-      // Clear AsyncStorage
-      try {
-        await AsyncStorage.clear();
-      } catch (error) {
-        console.error('Error clearing AsyncStorage:', error);
-      }
-
-      navigateToLogin(navigation);
-
-      dispatch(setLogout());
-    };
-    const navigateToLogin = navigation => {
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{name: 'LogSignUp'}],
-        }),
-      );
+      LogOut();
+   
     };
 
     return (
@@ -464,9 +432,9 @@ const Profile = () => {
               alignItems: 'center',
             }}>
             <TouchableOpacity
-            onPress={()=>{
-            navigation.goBack()
-            }}
+              onPress={() => {
+                navigation.goBack();
+              }}
               style={{
                 width: DeviceWidth * 0.23,
                 paddingVertical: 1,
@@ -517,7 +485,10 @@ const Profile = () => {
               source={localImage.avt}
               style={styles.img}
               resizeMode="cover"></Image>
-            <TouchableOpacity style={styles.ButtonPen} activeOpacity={0.6} onPress={()=>setUpadteScreenVisibilty(true)}>
+            <TouchableOpacity
+              style={styles.ButtonPen}
+              activeOpacity={0.6}
+              onPress={() => setUpadteScreenVisibilty(true)}>
               <Image
                 source={localImage.Pen}
                 style={styles.pen}
@@ -555,7 +526,7 @@ const Profile = () => {
     );
   };
   const profileViewHeight = DeviceHeigth * 0.4;
-  console.log('userData',getUserDataDetails?.login_token)
+
   return (
     <SafeAreaView style={styles.Container}>
       <ProfileView />
@@ -573,20 +544,18 @@ const Profile = () => {
             style={styles.SingleButton}
             navigation
             onPress={() => {
-              if(value.text1=='Personal Details'){
+              if (value.text1 == 'Personal Details') {
                 navigation.navigate('NewPersonalDetails');
-              }else{
+              } else {
                 showMessage({
                   message: 'Work In Progress',
                   type: 'info',
                   animationDuration: 500,
-        
+
                   floating: true,
                   icon: {icon: 'auto', position: 'left'},
                 });
               }
-           
-            
             }}>
             {value.icon1}
             <View style={styles.View1}>
@@ -643,7 +612,7 @@ const Profile = () => {
           ))}
         </View>
       </ScrollView>
-      {UpdateScreenVisibility?<UpdateProfileModal/>:null}
+      {UpdateScreenVisibility ? <UpdateProfileModal /> : null}
     </SafeAreaView>
   );
 };

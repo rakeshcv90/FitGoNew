@@ -39,7 +39,9 @@ const MeditationDetails = ({navigation, route}) => {
     }, []),
   );
   const getCaterogy = async (id, level) => {
+    console.log("Mindset Data",id, level)
     setForLoading(true);
+ 
     try {
       const data = await axios(`${NewAppapi.Get_Mindset_Excise}`, {
         method: 'POST',
@@ -51,12 +53,15 @@ const MeditationDetails = ({navigation, route}) => {
           health_level: level,
         },
       });
-
+      setForLoading(false);
+      console.log("GGGGGGGGGGG",data.data)
       if (data.data.status == 'data found') {
         setForLoading(false);
         setmindsetExercise(data.data.data);
       } else {
+        setForLoading(false);
         setmindsetExercise([]);
+
       }
     } catch (error) {
       setForLoading(false);
@@ -67,6 +72,7 @@ const MeditationDetails = ({navigation, route}) => {
   const ListItem = ({title, color}) => (
     <TouchableOpacity
       onPress={() => {
+      
         getCaterogy(title.id, title.workout_mindset_level);
       }}>
       <LinearGradient
@@ -100,6 +106,27 @@ const MeditationDetails = ({navigation, route}) => {
       </LinearGradient>
     </TouchableOpacity>
   );
+  const emptyComponent = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+        }}>
+        <AnimatedLottieView
+          source={require('../../Icon/Images/NewImage/NoData.json')}
+          speed={2}
+          autoPlay
+          loop
+          resizeMode="contain"
+          style={{
+            width: DeviceWidth * 0.3,
+            height: DeviceHeigth * 0.15,alignSelf:'center'
+
+          }}
+        />
+      </View>
+    );
+  };
   return (
     <View style={styles.container}>
       <NewHeader
@@ -149,8 +176,9 @@ const MeditationDetails = ({navigation, route}) => {
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id}
-            // ListEmptyComponent={emptyComponent}
+             ListEmptyComponent={emptyComponent}
             renderItem={({item, index}) => {
+           
               return (
                 <ListItem title={item} color={colors[index % colors.length]} />
               );
@@ -191,7 +219,7 @@ const MeditationDetails = ({navigation, route}) => {
             data={mindsetExercise}
             showsVerticalScrollIndicator={false}
             keyExtractor={item => item.id}
-            // ListEmptyComponent={emptyComponent}
+            ListEmptyComponent={emptyComponent}
 
             renderItem={({item, index}) => {
               return (
