@@ -176,7 +176,7 @@ const LoadData = ({navigation}) => {
           id: user_id,
         },
       });
-      console.log('Custom Workout ', data.data.workout);
+      console.log('Custom Workout123', data.data.workout);
       if (data.data.workout) {
         dispatch(setCustomWorkoutData(data?.data));
         currentWorkoutDataApi(data.data?.workout[0]);
@@ -203,7 +203,7 @@ const LoadData = ({navigation}) => {
         },
         data: payload,
       });
-      console.log('CustomFreeWorkout', res.data);
+      console.log('CustomFreeWorkout11', res.data);
       if (res.data?.workout) {
         dispatch(setCustomWorkoutData(res.data));
         currentWorkoutDataApi(res.data?.workout[0]);

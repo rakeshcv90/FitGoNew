@@ -32,7 +32,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import {Slider} from '@miblanchard/react-native-slider';
 import axios from 'axios';
 import {setPedomterData} from '../../Component/ThemeRedux/Actions';
-import { throttle, debounce } from 'lodash';
+import {throttle, debounce} from 'lodash';
 import {
   Stop,
   Circle,
@@ -76,8 +76,8 @@ const GradientText = ({item}) => {
         </SvgGrad>
         <SvgText
           fontFamily="Poppins"
-          fontWeight={'600'}
-          fontSize={23}
+          fontWeight={'700'}
+          fontSize={20}
           fill="url(#grad)"
           x="0"
           y="25">
@@ -158,15 +158,14 @@ const Home = ({navigation}) => {
   const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
     getPedomterData[2] ? getPedomterData[2].RCalories : 25,
   );
- console.log('healthData',getHealthData)
-  useEffect(()=>{
-ActivityPermission()
-  },[])
+  console.log('healthData', getHealthData);
+  useEffect(() => {
+    ActivityPermission();
+  }, []);
 
-
-//   useEffect(() => {
-//     ActivityPermission();
-//   }, []);
+  //   useEffect(() => {
+  //     ActivityPermission();
+  //   }, []);
   const ActivityPermission = async () => {
     if (Platform.OS == 'android') {
       const result = await isStepCountingSupported();
@@ -309,15 +308,14 @@ ActivityPermission()
   // pedometers
   const PedoMeterData = async () => {
     try {
-
       const res = await axios({
         url: NewAppapi.PedometerAPI,
         method: 'post',
         data: {
-          user_id:getUserDataDetails?.id,
-          steps:getHealthData[0]?getHealthData[0].Steps:"0",
-          distance:getHealthData[1]?getHealthData[1].Calories:"0",
-          calories:getHealthData[2]?getHealthData[2].DistanceCovered:"0"
+          user_id: getUserDataDetails?.id,
+          steps: getHealthData[0] ? getHealthData[0].Steps : '0',
+          distance: getHealthData[1] ? getHealthData[1].Calories : '0',
+          calories: getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
         },
       });
       if (res.data) {
@@ -328,33 +326,32 @@ ActivityPermission()
     }
   };
   const throttledDispatch = throttle(
-    (steps) => {
+    steps => {
       Dispatch(
         setHealthData([
-          { Steps: steps },
-          { Calories: Math.floor(steps / 20) },
-          { DistanceCovered: ((steps / 20) * 0.01).toFixed(2) },
-        ])
+          {Steps: steps},
+          {Calories: Math.floor(steps / 20)},
+          {DistanceCovered: ((steps / 20) * 0.01).toFixed(2)},
+        ]),
       );
     },
     30000,
-    { trailing: false }
+    {trailing: false},
   );
   const sleep = time =>
     new Promise(resolve => setTimeout(() => resolve(), time)); // background
-  
+
   const veryIntensiveTask = async taskDataArguments => {
     const {delay} = taskDataArguments;
-  
+
     const throttledUpdateStepsAndNotification = throttle(async data => {
       setSteps(data.steps);
-      console.log("stepssss>>>>>>>>>", data.steps);
+      console.log('stepssss>>>>>>>>>', data.steps);
       setDistance(((data.steps / 20) * 0.01).toFixed(2));
       setCalories(Math.floor(data.steps / 20));
       // Add your dispatch logic here
-     throttledDispatch(data.steps)
-   
-    
+      throttledDispatch(data.steps);
+
       // Update the notification with the current steps
       await BackgroundService.updateNotification({
         taskIcon: {
@@ -375,66 +372,68 @@ ActivityPermission()
         },
       });
     }, 30000); // 30 seconds delay
-    
+
     // function for checking if it is midnight or not
     const isSpecificTime = (hour, minute) => {
       const now = moment.utc(); // Get current time in UTC
-  
+
       // Calculate specific time in UTC by setting hours and minutes
-      const specificTimeUTC = now.clone().set({ hour, minute, second: 0, millisecond: 0 }); 
+      const specificTimeUTC = now
+        .clone()
+        .set({hour, minute, second: 0, millisecond: 0});
 
       const istTime = moment.utc().add(5, 'hours').add(30, 'minutes');
       // Compare the times directly to check if they represent the same time in IST
-      return istTime.format() == specificTimeUTC.format()
-  };
-  const debouncedResetSteps = () => {
-    // Your logic to reset steps and related state
-    setSteps(0);
-    setDistance(0);
-    setCalories(0);
-    Dispatch(
-      setHealthData([
-        { Steps: '0' },
-        { Calories: '0' },
-        { DistanceCovered: '0.00' },
-      ]),
-    );
-  
-    // Update the notification after resetting steps
-    BackgroundService.updateNotification({
-      // Your notification update logic after steps reset
-      taskIcon: {
-        name: 'ic_launcher',
-        type: 'mipmap',
-      },
-      color: AppColor.RED,
-      taskName: 'Pedometer',
-      taskTitle: 'Steps ' + steps,
-      taskDesc: 'Steps ',
-      progressBar: {
-        max: stepGoalProfile,
-        value: steps,
-        indeterminate: false,
-      },
-      parameters: {
-        delay: 30000,
-      },
-    });
-  } // 30 seconds d
+      return istTime.format() == specificTimeUTC.format();
+    };
+    const debouncedResetSteps = () => {
+      // Your logic to reset steps and related state
+      setSteps(0);
+      setDistance(0);
+      setCalories(0);
+      Dispatch(
+        setHealthData([
+          {Steps: '0'},
+          {Calories: '0'},
+          {DistanceCovered: '0.00'},
+        ]),
+      );
+
+      // Update the notification after resetting steps
+      BackgroundService.updateNotification({
+        // Your notification update logic after steps reset
+        taskIcon: {
+          name: 'ic_launcher',
+          type: 'mipmap',
+        },
+        color: AppColor.RED,
+        taskName: 'Pedometer',
+        taskTitle: 'Steps ' + steps,
+        taskDesc: 'Steps ',
+        progressBar: {
+          max: stepGoalProfile,
+          value: steps,
+          indeterminate: false,
+        },
+        parameters: {
+          delay: 30000,
+        },
+      });
+    }; // 30 seconds d
     for (let i = 0; BackgroundService.isRunning(); i++) {
       startStepCounterUpdate(new Date(), async data => {
         // Call the throttled function
         await throttledUpdateStepsAndNotification(data);
-    
+
         // Call the debounced function
       });
-    
+
       // reset the steps at midnight
       if (isSpecificTime(0, 0)) {
         PedoMeterData();
         debouncedResetSteps();
       }
-    
+
       // Use sleep with a delay of 30 seconds
       await sleep(delay);
     }
@@ -461,10 +460,10 @@ ActivityPermission()
   async function startStepCounter() {
     startStepCounterUpdate(new Date(), data => {
       setSteps(data.steps);
-      console.log("stepssss>>>>>>>>>",data.steps)
+      console.log('stepssss>>>>>>>>>', data.steps);
       setDistance(((data.steps / 20) * 0.01).toFixed(2));
       setCalories(Math.floor(data.steps / 20));
-    throttledDispatch(data.steps)
+      throttledDispatch(data.steps);
     });
     await BackgroundService.start(veryIntensiveTask, options);
     await BackgroundService.updateNotification(options);
@@ -567,7 +566,7 @@ ActivityPermission()
 
     return (
       <Modal
-        animationType='fade'
+        animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}>
@@ -898,7 +897,7 @@ ActivityPermission()
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <View style={styles.profileView}>
         <View style={styles.rewardView}>
-          <Image
+          {/* <Image
             source={localImage.Money}
             style={[
               styles.img,
@@ -908,22 +907,39 @@ ActivityPermission()
               },
             ]}
             resizeMode="cover"></Image>
-          <Text style={styles.monetText}>500</Text>
+          <Text style={styles.monetText}>500</Text> */}
         </View>
-        <TouchableOpacity
-          style={styles.profileView1}
-          onPress={() => {
-            navigation.navigate('Profile');
-         
-          }}>
-          <Image
-            source={localImage.avt}
-            style={styles.img}
-            resizeMode="cover"></Image>
-        </TouchableOpacity>
+        {/* {console.log("User Data",getUserDataDetails )} */}
+        {Object.keys(getUserDataDetails).length > 0 ? (
+          <TouchableOpacity
+            style={styles.profileView1}
+            onPress={() => {
+              navigation.navigate('Profile');
+            }}>
+            <Image
+              source={
+                getUserDataDetails.image_path == null
+                  ? localImage.avt
+                  : getUserDataDetails.image_path
+              }
+              style={styles.img}
+              resizeMode="cover"></Image>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.profileView1}
+            onPress={() => {
+              navigation.navigate('Report');
+            }}>
+            <Image
+              source={localImage.avt}
+              style={styles.img}
+              resizeMode="cover"></Image>
+          </TouchableOpacity>
+        )}
       </View>
       <GradientText
-        item={getTimeOfDayMessage() + ', ' + getUserDataDetails.name}
+        item={getTimeOfDayMessage() + ', ' + (Object.keys(getUserDataDetails).length > 0?getUserDataDetails.name:'Guest')}
       />
       {forLoading ? <ActivityLoader /> : ''}
       <ScrollView
@@ -1130,6 +1146,18 @@ ActivityPermission()
             ListEmptyComponent={emptyComponent}
             pagingEnabled
             renderItem={({item, index}) => {
+              // console.log("WOrkout Details",item.days)
+              let totalTime = 0
+              let totalCal=0
+              
+            for (const day in item?.days) {
+              // if (item?.days[day]?.total_rest == 0) {
+              //   restDays.push(parseInt(day.split('day_')[1]));
+              // }
+              totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
+              totalCal=totalCal+parseInt(item?.days[day]?.total_calories);
+            }
+           console.log("WOrkout Details",item)
               return (
                 <TouchableOpacity
                   onPress={() =>
@@ -1167,14 +1195,16 @@ ActivityPermission()
                         <ProgressBar
                           progress={progress}
                           image={localImage.Play}
-                          text={'2 Min'}
+                          text={  totalTime > 60
+                            ? `${(totalTime / 60).toFixed(0)} min`
+                            : `${totalTime} sec`}
                         />
                       </View>
                       <View style={{marginHorizontal: 10}}>
                         <ProgressBar
                           progress={progress}
                           image={localImage.Step1}
-                          text={'100Kcal'}
+                          text={totalCal+'Kcal'}
                         />
                       </View>
                     </View>
@@ -1307,7 +1337,7 @@ ActivityPermission()
                       ]}
                       resizeMode="cover"></Image>
                     <Text
-                    numberOfLines={1}
+                      numberOfLines={1}
                       style={[
                         styles.title,
                         {
@@ -1316,7 +1346,7 @@ ActivityPermission()
                           lineHeight: 18,
                           fontFamily: 'Poppins',
                           textAlign: 'center',
-                          width:50,
+                          width: 50,
                           color: colors[index % colors.length].color3,
                         },
                       ]}>
@@ -1356,7 +1386,8 @@ ActivityPermission()
             placeholderStyle={styles.placeholderStyle}
             selectedTextStyle={styles.selectedTextStyle}
             data={data2}
-            maxHeight={300}X
+            maxHeight={300}
+            X
             labelField="label"
             valueField="value"
             placeholder={value}
@@ -1445,9 +1476,9 @@ var styles = StyleSheet.create({
   rewardView: {
     height: 40,
     width: 80,
-    borderRadius: 30,
-    borderColor: AppColor.RED,
-    borderWidth: 1,
+    // borderRadius: 30,
+    // borderColor: AppColor.RED,
+    // borderWidth: 1,
     marginLeft: 20,
     flexDirection: 'row',
     alignItems: 'center',

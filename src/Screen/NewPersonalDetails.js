@@ -14,6 +14,7 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../Component/Config';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   setCompleteProfileData,
+  setCustomWorkoutData,
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
 import {StatusBar} from 'react-native';
@@ -31,6 +32,7 @@ import Button from '../Component/Button';
 import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
 import axios from 'axios';
 import ActivityLoader from '../Component/ActivityLoader';
+import {showMessage} from 'react-native-flash-message';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -45,9 +47,7 @@ const NewPersonalDetails = ({route, navigation}) => {
   const [isEditible, setEditable] = useState(false);
   const {getUserDataDetails, completeProfileData} = useSelector(state => state);
   const [isFocus, setIsFocus] = useState(false);
-
-  
-
+console.log("Uswer Daytaaaa",getUserDataDetails)
   useEffect(() => {
     ProfileDataAPI();
   }, []);
@@ -56,12 +56,12 @@ const NewPersonalDetails = ({route, navigation}) => {
     {label: 'Female', value: 'Female'},
   ];
   const maleGole = [
-    {label: 'Weight Loss', value: 1},
-    {label: 'Build Muscle', value: 2},
-  ];
-  const fmaleGole = [
     {label: 'Weight Loss', value: 3},
     {label: 'Build Muscle', value: 6},
+  ];
+  const fmaleGole = [
+    {label: 'Weight Loss', value: 1},
+    {label: 'Build Muscle', value: 2},
     {label: 'Strength', value: 4},
   ];
   const injury = [
@@ -87,8 +87,8 @@ const NewPersonalDetails = ({route, navigation}) => {
     },
   ];
   const equipment = [
-    {label: 'WithEquipment', value: 'WithEquipment'},
-    {label: 'WithoutEquipment', value: 'WithoutEquipment'},
+    {label: 'With Equipment', value: 'With Equipment'},
+    {label: 'Without Equipment', value: 'Without Equipment'},
   ];
   const focusarea = [
     {value: 1, label: 'Biceps'},
@@ -97,7 +97,6 @@ const NewPersonalDetails = ({route, navigation}) => {
     {value: 5, label: 'Triceps'},
     {value: 8, label: 'Abs'},
     {value: 9, label: 'Shoulders'},
-
   ];
   const workoutarea = [
     {
@@ -151,22 +150,7 @@ const NewPersonalDetails = ({route, navigation}) => {
     return null;
   };
   const handleFormSubmit = async (values, action) => {
-   const data={
-      name: values.name,
-      user_id: getUserDataDetails.id,
-      token: getUserDataDetails.login_token,
-      version: VersionNumber.appVersion,
-      goal: values.goal,
-      injury: values.injury,
-      weight: values.name,
-      target_weight: values.targetWeight,
-      equipment_type: values.equipment,
-      focusarea:  values.focuseAres.length>0?values.focuseAres:getUserDataDetails.focus_area,
-      place: values.workPlace,
-      gender: values.gender,
-    }
-  //   const arrayAsString = values.focuseAres.join(',');
-  // console.log('FFFFFFff', arrayAsString);
+    console.log("SELECTEDGFDD",values.focuseAres)
     setForLoading(true);
     try {
       const data = await axios(`${NewAppapi.UpdateUserProfile}`, {
@@ -184,19 +168,49 @@ const NewPersonalDetails = ({route, navigation}) => {
           weight: values.name,
           target_weight: values.targetWeight,
           equipment_type: values.equipment,
-          focusarea:  values.focuseAres.length>0?values.focuseAres.join(','):getUserDataDetails.focus_area,
+          focusarea:
+            values.focuseAres.length > 0
+              ? values.focuseAres.join(',')
+              : getUserDataDetails.focus_area,
           place: values.workPlace,
           gender: values.gender,
         },
-       
       });
-      console.log('Value Items ', data.data);
-      setForLoading(false);
+      if (data.data.msg == 'User Updated Successfully') {
+        showMessage({
+          message: data.data.msg,
+          floating: true,
+          type: 'success',
+          animationDuration: 750,
+          icon: {icon: 'none', position: 'left'},
+        });
+        setForLoading(false);
+        dispatch(setUserProfileData(data.data.profile));
+        dispatch(setCustomWorkoutData(data?.data.allworkouts));
+      } else {
+        showMessage({
+          message: data.data.msg,
+          floating: true,
+          type: 'danger',
+          animationDuration: 750,
+          icon: {icon: 'none', position: 'left'},
+        });
+        setForLoading(false);
+      }
     } catch (error) {
       setForLoading(false);
       console.log('Update Profile Data', error);
+      //  showMessage({
+      //     message: data.data.msg,
+      //     floating: true,
+      //     type: 'danger',
+      //     animationDuration: 750,
+      //     icon: {icon: 'none', position: 'left'},
+      //   });
     }
   };
+
+
   return (
     <View style={styles.Container}>
       <NewHeader header={'Details'} backButton />
@@ -306,7 +320,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                       editable={false}
                     />
                   </View>
-                
+
                   <View
                     style={{
                       marginTop: DeviceHeigth * 0.02,
@@ -327,7 +341,6 @@ const NewPersonalDetails = ({route, navigation}) => {
                       onFocus={() => setIsFocus(true)}
                       onBlur={() => setIsFocus(false)}
                       onChange={item => {
-                        
                         setFieldValue('goal', item.label);
                       }}
                     />
@@ -429,6 +442,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                       onFocus={() => setIsFocus(true)}
                       onBlur={() => setIsFocus(false)}
                       onChange={item => {
+                     
                         setFieldValue('focuseAres', item);
                       }}
                       selectedStyle={styles.selectedStyle}
