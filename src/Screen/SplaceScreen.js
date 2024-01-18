@@ -76,9 +76,9 @@ console.log("User Data",getUserDataDetails)
   useEffect(() => {
     setTimeout(() => {
       if (showIntro) {
-        // navigation.replace('LogSignUp');
-        if (getUserDataDetails?.id) navigation.replace('BottomTab');
-        else navigation.replace('LogSignUp');
+         navigation.replace('LogSignUp');
+        // if (getUserDataDetails?.id) navigation.replace('BottomTab');
+        // else navigation.replace('LogSignUp');
       } else {
         navigation.replace('IntroductionScreen1');
       }
