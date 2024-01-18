@@ -16,7 +16,7 @@ import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
-import Progressbar from '../../Screen/Yourself/ProgressBar';
+import ProgressBar from '../../Screen/Yourself/ProgressBar';
 import {useDispatch, useSelector} from 'react-redux';
 import {SetmindsetConsent} from '../../Component/ThemeRedux/Actions';
 import { StatusBar } from 'react-native';
@@ -78,7 +78,7 @@ const MeditationConsent = ({navigation}) => {
     <View style={styles.Container}>
         <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
         <View></View>
-      <Progressbar screen={screen} Type />
+      <ProgressBar screen={screen} Type />
       <Bulb
         header={
           'Meditation helps in keep your body and mind calm, peaceful and relax.'
@@ -139,18 +139,6 @@ const MeditationConsent = ({navigation}) => {
           }}>
           <Icons name="chevron-left" size={25} color={'#000'}/>
         </TouchableOpacity>
-        {/* <TouchableOpacity
-          onPress={() => {
-            // toNextScreen()
-          }}>
-          <LinearGradient
-            start={{x: 0, y: 1}}
-            end={{x: 1, y: 0}}
-            colors={['#941000', '#D5191A']}
-            style={[styles.nextButton]}>
-            <Icons name="chevron-right" size={25} color={'#fff'} />
-          </LinearGradient>
-        </TouchableOpacity> */}
       </View>
     </View>
   );

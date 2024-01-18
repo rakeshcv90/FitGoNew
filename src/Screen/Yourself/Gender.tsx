@@ -166,7 +166,7 @@ const Gender = ({route, navigation}: any) => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={{
           alignSelf: 'flex-start',
           marginLeft: DeviceWidth * 0.04,
@@ -185,7 +185,7 @@ const Gender = ({route, navigation}: any) => {
           handleImagePress('');
         }}>
         <Icons name="chevron-left" size={25} color={'#000'} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

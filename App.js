@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Linking,
   Platform,
+  BackHandler,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {
@@ -34,6 +35,20 @@ import {
 } from 'react-native-iap';
 
 const App = () => {
+  const handleBackPress = () => {
+    // Do nothing to stop the hardware back press
+    return true;
+  };
+
+  useEffect(() => {
+    // Add an event listener to handle the hardware back press
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+    // Remove the event listener when the component is unmounted
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+  }, []);
   const StatusBar_Bar_Height = Platform.OS === 'ios' ? getStatusBarHeight() : 0;
   const dispatch=useDispatch()
   useEffect(() => {

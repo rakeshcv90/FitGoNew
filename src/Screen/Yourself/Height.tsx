@@ -63,6 +63,8 @@ const Height = ({route, navigation}: any) => {
   const [screen, setScreen] = useState(nextScreen);
   const [toggle, setToggle] = useState('ft');
   const [currentActiveIndex, setCurrentActiveIndex] = useState(-1);
+  const [getFeet,setFeet]=useState('4')
+  const [getInches,setInches]=useState('0')
   // console.log("Index======>",currentActiveIndex)
   useEffect(() => {
     setScreen(nextScreen);
@@ -115,7 +117,8 @@ const Height = ({route, navigation}: any) => {
       />
       <View
         style={{
-          // marginTop: 20,
+          paddingTop: 20,
+          
         }}>
         <Toggle
           data={toggleH}
@@ -131,7 +134,7 @@ const Height = ({route, navigation}: any) => {
           justifyContent: 'flex-start',
           alignItems: 'flex-start',
           //   alignSelf: 'flex-start',
-          height: DeviceHeigth * 0.58,
+          height: DeviceHeigth * 0.55,
           width: DeviceWidth,
         }}>
         <Scale
@@ -156,13 +159,14 @@ const Height = ({route, navigation}: any) => {
                 const remainingInches = (height[currentActiveIndex] - totalFeet) * 12;
                 const feet = Math.floor(totalFeet + remainingInches / 12);
                 const inches = Math.round(remainingInches % 12);
+                console.log('feet inches',feet,inches,currentActiveIndex)
                 return (
                   <Text style={{ color: AppColor.RED, fontSize: 36, fontWeight: '600' }}>
-                    {feet}
+                    {feet!<4?feet:4}
                     <Text style={{ color: AppColor.RED, fontSize: 16, fontWeight: '400' }}>
                       {' ft '}
                       <Text style={{ color: AppColor.RED, fontSize: 36, fontWeight: '600' }}>
-                        {inches}
+                        {inches?inches:0}
                         <Text style={{ color: AppColor.RED, fontSize: 16, fontWeight: '400' }}>
                           {' inch '}
                         </Text>

@@ -189,7 +189,7 @@ const Weight = ({route, navigation}: any) => {
               // backgroundColor: 'red',
               height: DeviceHeigth * 0.4,
             }}>
-            <View style={{height: DeviceHeigth * 0.01}} />
+            {/* <View style={{height: DeviceHeigth * 0.01}} /> */}
             {currentActiveIndex > 7 ? (
               toggle == 'kg' ? (
                 <Text
@@ -254,7 +254,7 @@ const Weight = ({route, navigation}: any) => {
           style={[
             styles.buttons,
             {
-              bottom: -DeviceHeigth * 0.17,
+              // bottom: -DeviceHeigth * 0.17,
             },
           ]}>
           <TouchableOpacity
@@ -291,10 +291,9 @@ const Weight = ({route, navigation}: any) => {
           // justifyContent: 'flex-start',
           // alignItems: 'center',
           //   alignSelf: 'flex-start',
-          height: DeviceHeigth * 0.6,
+          height: DeviceHeigth * 0.58,
           width: DeviceWidth,
           transform: [{translateY: translateTarget}],
-          paddingTop: DeviceHeigth * 0.04,
           backgroundColor: AppColor.WHITE,
           display: targetSelected ? 'flex' : 'none',
           justifyContent: 'center',
@@ -313,7 +312,7 @@ const Weight = ({route, navigation}: any) => {
               'Knowing your weight can help us for you based on different metabolic rates.'
             }
           />
-          <View style={{marginTop: 10}} />
+          <View style={{marginTop: 20}} />
           <Toggle
             data={toggleH}
             highlightColor={AppColor.RED}
@@ -336,7 +335,6 @@ const Weight = ({route, navigation}: any) => {
             height: DeviceHeigth * 0.45,
             justifyContent: 'center',
             alignItems: 'center',
-            marginVertical: 20,
           }}
           imageStyle={{
             width: DeviceWidth,
@@ -399,7 +397,7 @@ const Weight = ({route, navigation}: any) => {
               </Text>
             )}
             {/* </View> */}
-            <View style={{position: 'absolute', top: 110}}>
+            <View style={{position: 'absolute', top: 100}}>
               <Scale
                 h={true}
                 setActiveIndex={setCurrentActiveIndex}

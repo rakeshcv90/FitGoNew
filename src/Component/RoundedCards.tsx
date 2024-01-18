@@ -13,6 +13,8 @@ import {DeviceHeigth, DeviceWidth} from './Config';
 import {localImage} from './Image';
 import {navigationRef} from '../../App';
 import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
+import Index from '../Screen/Yourself';
+import { date } from 'yup';
 
 export type Props = {
   viewAllButton?: boolean;
@@ -80,6 +82,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
                         ? 'center'
                         : 'space-between',
                       marginLeft: props.horizontal ? (index == 0 ? 5 : 10) : 3,
+                      // marginBottom:index===data.lenght-1?
                     },
                   ]}>
                   {

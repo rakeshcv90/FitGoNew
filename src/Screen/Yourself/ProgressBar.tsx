@@ -14,7 +14,7 @@ const ProgressBar = ({screen, Type}: any) => {
         alignItems: 'center',
         width: DeviceWidth * 0.9,
         marginBottom: DeviceHeigth * 0.05,
-        marginTop: Type ? DeviceHeigth * 0.06 : -DeviceHeigth*0.06,
+        marginTop: Type ? DeviceHeigth * 0.02 : -DeviceHeigth*0.06,
       }}>
       <View style={{flexDirection: 'row-reverse', alignSelf: 'flex-end'}}>
         <Text
