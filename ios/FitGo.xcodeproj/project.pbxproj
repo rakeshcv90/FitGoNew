@@ -17,6 +17,8 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		186A6F322B1DA2D00005DC45 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 186A6F312B1DA2D00005DC45 /* GoogleService-Info.plist */; };
 		186A6F332B1DA2D00005DC45 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 186A6F312B1DA2D00005DC45 /* GoogleService-Info.plist */; };
+		2A216FF72B593B6A0064CD70 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A216FF62B593B6A0064CD70 /* Launch Screen.storyboard */; };
+		2A216FF82B593B6A0064CD70 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A216FF62B593B6A0064CD70 /* Launch Screen.storyboard */; };
 		2A2243F22B4E4D6800588914 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2243F12B4E4D6800588914 /* StoreKit.framework */; };
 		2AAC3EDF2B4530CD007908D0 /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC3EDE2B4530CD007908D0 /* dummy.swift */; };
 		2F00073507654D75841C795C /* Poppins-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95622B5E21EA4AC18278A99D /* Poppins-MediumItalic.ttf */; };
@@ -29,7 +31,6 @@
 		700256FADB1A406AB46E2C6D /* Poppins-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DC2D8CE17F8492F8BDEFC34 /* Poppins-ExtraLightItalic.ttf */; };
 		74D0ECF484A64CABB39F4879 /* Poppins-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CC6A13618FFB49CF8BC9E99F /* Poppins-BlackItalic.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-FitGo-FitGoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-FitGo-FitGoTests.a */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		98BA6F8560CA4D0989E9CB30 /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB9B4C9949864EE89BA7646B /* Poppins-Light.ttf */; };
 		A6B561ED93DE4B4D93BAA048 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CF0A1BF12FC24968AE7691EE /* Poppins-Bold.ttf */; };
 		B7094B111369459D9D2A0D6B /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9AE6536023D9436591107682 /* Poppins-ThinItalic.ttf */; };
@@ -68,6 +69,7 @@
 		1F9FB247D2AE475BBAFFE601 /* Poppins-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-LightItalic.ttf"; path = "../assets/fonts/Poppins-LightItalic.ttf"; sourceTree = "<group>"; };
 		240A377C434C4E928F6D825E /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
 		246C12EBF2EE4BB8B8C585D0 /* Poppins-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Thin.ttf"; path = "../assets/fonts/Poppins-Thin.ttf"; sourceTree = "<group>"; };
+		2A216FF62B593B6A0064CD70 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		2A2243F12B4E4D6800588914 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		2AAC3EDD2B4530CD007908D0 /* FitGo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FitGo-Bridging-Header.h"; sourceTree = "<group>"; };
 		2AAC3EDE2B4530CD007908D0 /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
@@ -86,7 +88,6 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-FitGo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FitGo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		65BC5F94CA7041BD8D273AFD /* Poppins-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-BoldItalic.ttf"; path = "../assets/fonts/Poppins-BoldItalic.ttf"; sourceTree = "<group>"; };
 		75EFC1A2F023475C8F4707D9 /* Poppins-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Black.ttf"; path = "../assets/fonts/Poppins-Black.ttf"; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = FitGo/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-FitGo-FitGoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FitGo-FitGoTests.release.xcconfig"; path = "Target Support Files/Pods-FitGo-FitGoTests/Pods-FitGo-FitGoTests.release.xcconfig"; sourceTree = "<group>"; };
 		9507F384785345BBB8C57EBB /* Poppins-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Italic.ttf"; path = "../assets/fonts/Poppins-Italic.ttf"; sourceTree = "<group>"; };
 		95622B5E21EA4AC18278A99D /* Poppins-MediumItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-MediumItalic.ttf"; path = "../assets/fonts/Poppins-MediumItalic.ttf"; sourceTree = "<group>"; };
@@ -149,10 +150,10 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				4C426F642AF209950063F75E /* BootSplash.storyboard */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				2AAC3EDE2B4530CD007908D0 /* dummy.swift */,
 				2AAC3EDD2B4530CD007908D0 /* FitGo-Bridging-Header.h */,
+				2A216FF62B593B6A0064CD70 /* Launch Screen.storyboard */,
 			);
 			name = FitGo;
 			sourceTree = "<group>";
@@ -330,6 +331,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A216FF82B593B6A0064CD70 /* Launch Screen.storyboard in Resources */,
 				186A6F332B1DA2D00005DC45 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -339,7 +341,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4CF7BFBF2AC13D4B00F8EF48 /* Fonts in Resources */,
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				4C426F652AF209950063F75E /* BootSplash.storyboard in Resources */,
 				0E315DD12F784527A066C6D7 /* Poppins-Black.ttf in Resources */,
@@ -352,6 +353,7 @@
 				32D21DDA69B0415C9E7E217A /* Poppins-ExtraLight.ttf in Resources */,
 				700256FADB1A406AB46E2C6D /* Poppins-ExtraLightItalic.ttf in Resources */,
 				EE9744819A304788A52BC030 /* Poppins-Italic.ttf in Resources */,
+				2A216FF72B593B6A0064CD70 /* Launch Screen.storyboard in Resources */,
 				98BA6F8560CA4D0989E9CB30 /* Poppins-Light.ttf in Resources */,
 				133D0F21EED643C791013C35 /* Poppins-LightItalic.ttf in Resources */,
 				CFA5D2594052407DAB49E273 /* Poppins-Medium.ttf in Resources */,
