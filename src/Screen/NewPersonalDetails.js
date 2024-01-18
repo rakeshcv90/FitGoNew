@@ -150,7 +150,7 @@ console.log("Uswer Daytaaaa",getUserDataDetails)
     return null;
   };
   const handleFormSubmit = async (values, action) => {
-    console.log("SELECTEDGFDD",values.focuseAres)
+   
     setForLoading(true);
     try {
       const data = await axios(`${NewAppapi.UpdateUserProfile}`, {
@@ -176,6 +176,7 @@ console.log("Uswer Daytaaaa",getUserDataDetails)
           gender: values.gender,
         },
       });
+      console.log("SELECTEDGFDD",data.data)
       if (data.data.msg == 'User Updated Successfully') {
         showMessage({
           message: data.data.msg,

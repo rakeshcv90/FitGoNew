@@ -315,6 +315,7 @@ const Home = ({navigation}) => {
         method: 'post',
         data: payload,
       });
+      setForLoading(false);
       if (res.data) {
         setForLoading(false);
         console.log(...res.data, 'GET LIKES ');
@@ -338,6 +339,7 @@ const Home = ({navigation}) => {
         method: 'post',
         data: payload,
       });
+      setForLoading(false);
       if (res.data) {
         setForLoading(false);
         console.log(res.data, 'POST LIKE');

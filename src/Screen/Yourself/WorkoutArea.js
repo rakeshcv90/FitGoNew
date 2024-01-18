@@ -233,8 +233,8 @@ const WorkoutArea = ({route, navigation}) => {
                 style={[
                   styles.shadowProp,
                   {
-                    borderWidth: imageView.find(num => num === 'At Bed') && 1,
-                    borderColor: imageView.find(num => num === 'At Bed')
+                    borderWidth: imageView.find(num => num === 'At Gym') && 1,
+                    borderColor: imageView.find(num => num === 'At Gym')
                       ? 'red'
                       : 'white',
                   },
