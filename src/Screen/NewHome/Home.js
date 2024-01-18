@@ -54,7 +54,7 @@ import {
 } from '@dongminyu/react-native-step-counter';
 import {navigationRef} from '../../../App';
 import {useSelector, useDispatch} from 'react-redux';
-import ActivityLoader from '../../Component/ActivityLoader';
+// import ActivityLoader from '../../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import RoundedCards from '../../Component/RoundedCards';
@@ -998,7 +998,7 @@ const Home = ({navigation}) => {
       <GradientText
         item={getTimeOfDayMessage() + ', ' + (Object.keys(getUserDataDetails).length > 0?getUserDataDetails.name:'Guest')}
       />
-      {forLoading ? <ActivityLoader /> : ''}
+      {/* {forLoading ? <ActivityLoader /> : ''} */}
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
