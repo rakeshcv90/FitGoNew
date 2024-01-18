@@ -418,7 +418,8 @@ const Login = ({navigation}) => {
           id: user_id,
         },
       });
-
+      
+      // console.log('Custom Workout', data.data);
       if (data.data.workout) {
         setForLoading(false);
         dispatch(setCustomWorkoutData(data?.data));

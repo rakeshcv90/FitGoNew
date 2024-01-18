@@ -118,10 +118,10 @@ const Workouts = ({navigation}: any) => {
           marginTop: 5,
           backgroundColor: '#94100033',
         }}>
-        <View style={{marginVertical: 5, marginLeft: 30}}>
+        <View style={{ marginLeft: -5}}>
           <Text
             numberOfLines={1}
-            style={[styles.category, {width: DeviceWidth * 0.6}]}>
+            style={[styles.category, {width: DeviceWidth * 0.5}]}>
             Full Body Toning Workout
           </Text>
           <Text
@@ -129,7 +129,7 @@ const Workouts = ({navigation}: any) => {
               styles.category,
               {
                 width: DeviceWidth * 0.35,
-
+                fontWeight: '600',
                 fontSize: 12,
                 lineHeight: 15,
                 marginVertical: 10,
@@ -138,9 +138,9 @@ const Workouts = ({navigation}: any) => {
             Includes circuits to work every muscle
           </Text>
           <GradientButton
-            w={DeviceWidth * 0.3}
-            h={50}
-            mV={10}
+            w={DeviceWidth * 0.30}
+            h={35}
+            mV={20}
             text="Start Training"
             textStyle={{
               fontSize: 12,
@@ -157,7 +157,7 @@ const Workouts = ({navigation}: any) => {
           style={{
             height: DeviceHeigth * 0.45,
             width: DeviceWidth * 0.37,
-            left: -15,
+            left: 10,
             top:-10
     
           }}
@@ -234,8 +234,8 @@ const styles = StyleSheet.create({
   },
   category: {
     fontFamily: 'Poppins',
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 16,
+    fontWeight: '700',
     color: AppColor.BoldText,
     lineHeight: 25,
   },

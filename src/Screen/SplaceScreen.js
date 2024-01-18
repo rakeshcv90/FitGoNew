@@ -30,7 +30,10 @@ const products = Platform.select({
 const SplaceScreen = ({navigation}) => {
   const [deviceId, setDeviceId] = useState(0);
   const dispatch = useDispatch();
+
   const {showIntro, getUserDataDetails} = useSelector(state => state);
+
+
   useEffect(() => {
     DeviceInfo.syncUniqueId().then(uniqueId => {
       setDeviceId(uniqueId);

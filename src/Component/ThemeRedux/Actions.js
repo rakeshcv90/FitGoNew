@@ -69,10 +69,9 @@ export const setMindset_Data = data => {
     payload: data,
   };
 };
-export const setLogout = data => {
+export const setLogout = () => {
   return {
     type: types.LogOut,
-    payload: data,
   };
 };
 export const SetmindsetConsent = data => {
@@ -153,6 +152,12 @@ export const setFcmToken=data=>{
 export const setBmi=data=>{
   return{
     type:types.BMI,
+    payload:data
+  }
+}
+export const setHomeGraphData=data=>{
+  return{
+    type:types.HOME_GRAPH_DATA,
     payload:data
   }
 }

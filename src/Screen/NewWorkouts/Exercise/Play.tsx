@@ -1,4 +1,5 @@
 import {
+  Platform,
   StyleProp,
   StyleSheet,
   Text,
@@ -56,19 +57,33 @@ const Play: FC<Props> = ({...props}) => {
             borderRadius: props.bR ? props.bR : 20 / 2,
           },
         ]}>
-        <TouchableOpacity onPress={props.back}>
-          <Icons name={'chevron-left'} size={40} color={AppColor.WHITE} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={props.playy}>
-          {props.play ? (
-            <Icons name={'play'} size={40} color={AppColor.WHITE} />
-          ) : (
-            <Icons name={'pause'} size={40} color={AppColor.WHITE} />
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity onPress={props.next}>
-          <Icons name={'chevron-right'} size={40} color={AppColor.WHITE} />
-        </TouchableOpacity>
+        <>
+          <TouchableOpacity
+            style={{
+              zIndex: 1,
+            }}
+            onPress={props.back}>
+            <Icons name={'chevron-left'} size={40} color={AppColor.WHITE} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              zIndex: 1,
+            }}
+            onPress={props.playy}>
+            {props.play ? (
+              <Icons name={'play'} size={40} color={AppColor.WHITE} />
+            ) : (
+              <Icons name={'pause'} size={40} color={AppColor.WHITE} />
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              zIndex: 1,
+            }}
+            onPress={props.next}>
+            <Icons name={'chevron-right'} size={40} color={AppColor.WHITE} />
+          </TouchableOpacity>
+        </>
         <View
           style={{
             backgroundColor: '#D9D9D9',
@@ -78,7 +93,7 @@ const Play: FC<Props> = ({...props}) => {
             // borderBottomRightRadius: props.bR ? props.bR : 50 / 2,
             right: 0,
             position: 'absolute',
-            zIndex: -1,
+            // zIndex: -1,
           }}
         />
       </LinearGradient>

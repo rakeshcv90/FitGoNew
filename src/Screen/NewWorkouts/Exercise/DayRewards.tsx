@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, Platform, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColor} from '../../../Component/Color';
@@ -33,7 +33,7 @@ const DayRewards = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-        console.log('GET API TRACKER', res.data);
+      console.log('GET API TRACKER', res.data);
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
         analyzeExerciseData(res.data?.user_details);
@@ -57,14 +57,14 @@ const DayRewards = ({navigation, route}: any) => {
     setDays(Array.from(daysCompletedAll));
   }
   return (
-    <SafeAreaView
+    <ScrollView
       style={{flex: 1, backgroundColor: AppColor.WHITE, alignItems: 'center'}}>
       <GradientText
         text="Congratulations!"
         fontSize={32}
-        width={DeviceWidth * 0.8}
+        width={Platform.OS == 'ios' ? DeviceWidth * 0.8 : DeviceWidth * 0.7}
         y={'70'}
-        height={150}
+        height={100}
       />
       <AnimatedLottieView
         // source={{
@@ -76,7 +76,7 @@ const DayRewards = ({navigation, route}: any) => {
         loop
         style={{
           width: DeviceWidth * 0.5,
-          height: DeviceHeigth * 0.3,
+          height: DeviceHeigth * 0.2,
           right: 10,
         }}
       />
@@ -123,13 +123,13 @@ const DayRewards = ({navigation, route}: any) => {
                 {days.includes(item) ? (
                   <Image
                     source={localImage.RedCircle}
-                    style={{height: 50, width: 50}}
+                    style={{height: 40, width: 40}}
                   />
                 ) : (
                   <View
                     style={{
-                      height: 50,
-                      width: 50,
+                      height: 40,
+                      width: 40,
                       borderRadius: 50,
                       backgroundColor: '#EDF1F4',
                     }}
@@ -182,7 +182,7 @@ const DayRewards = ({navigation, route}: any) => {
           alignSelf
         />
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 

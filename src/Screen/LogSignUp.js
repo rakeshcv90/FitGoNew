@@ -97,7 +97,7 @@ const LogSignUp = () => {
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <TouchableOpacity
       onPress={()=>{
-        navigationRef.navigate('Yourself');
+       // navigationRef.navigate('Yourself');
    
       }}
         style={{
@@ -107,12 +107,12 @@ const LogSignUp = () => {
           alignItems: 'center',
           alignSelf: 'flex-end',
           marginRight: 30,
-          borderRadius: 30,
+         // borderRadius: 30,
           marginTop:Platform.OS=='ios'?DeviceHeigth*0.08:DeviceHeigth*0.03,
-          borderWidth: 1.5,
-          borderColor: 'red',
+          //borderWidth: 1.5,
+          //borderColor: 'red',
         }}>
-        <Text
+        {/* <Text
           style={{
             fontSize: 12,
             fontWeight: '500',
@@ -120,7 +120,7 @@ const LogSignUp = () => {
             color: AppColor.BLACK,
           }}>
           Later
-        </Text>
+        </Text> */}
       </TouchableOpacity>
       <View style={styles.TextContainer}>
         <Text style={styles.LoginText2}>{'Hey there,'}</Text>
