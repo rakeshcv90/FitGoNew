@@ -63,8 +63,8 @@ const Height = ({route, navigation}: any) => {
   const [screen, setScreen] = useState(nextScreen);
   const [toggle, setToggle] = useState('ft');
   const [currentActiveIndex, setCurrentActiveIndex] = useState(-1);
-  const [getFeet,setFeet]=useState('4')
-  const [getInches,setInches]=useState('0')
+  const [getFeet, setFeet] = useState('4');
+  const [getInches, setInches] = useState('0');
   // console.log("Index======>",currentActiveIndex)
   useEffect(() => {
     setScreen(nextScreen);
@@ -98,6 +98,10 @@ const Height = ({route, navigation}: any) => {
         icon: {icon: 'auto', position: 'left'},
       });
   };
+  console.log(
+    height[currentActiveIndex].toString().split('.')[1],
+    height[currentActiveIndex],
+  );
   const toggleH = ['ft', 'cm'];
   return (
     <View
@@ -118,7 +122,6 @@ const Height = ({route, navigation}: any) => {
       <View
         style={{
           paddingTop: 20,
-          
         }}>
         <Toggle
           data={toggleH}
@@ -154,29 +157,68 @@ const Height = ({route, navigation}: any) => {
           {parseInt(height[currentActiveIndex]) < 9 &&
           parseInt(height[currentActiveIndex]) >= 4 ? (
             toggle === 'ft' ? (
-              (() => {
-                const totalFeet = Math.floor(height[currentActiveIndex]);
-                const remainingInches = (height[currentActiveIndex] - totalFeet) * 12;
-                const feet = Math.floor(totalFeet + remainingInches / 12);
-                const inches = Math.round(remainingInches % 12);
-                console.log('feet inches',feet,inches,currentActiveIndex)
-                return (
-                  <Text style={{ color: AppColor.RED, fontSize: 36, fontWeight: '600' }}>
-                    {feet!<4?feet:4}
-                    <Text style={{ color: AppColor.RED, fontSize: 16, fontWeight: '400' }}>
-                      {' ft '}
-                      <Text style={{ color: AppColor.RED, fontSize: 36, fontWeight: '600' }}>
-                        {inches?inches:0}
-                        <Text style={{ color: AppColor.RED, fontSize: 16, fontWeight: '400' }}>
-                          {' inch '}
-                        </Text>
-                      </Text>
+              //   (() => {
+              //     const totalFeet = Math.floor(height[currentActiveIndex]);
+              //     const decimalPart = (height[currentActiveIndex] % 1).toFixed(2).split('.')[1];
+              //     const remainingInches = (height[currentActiveIndex] - totalFeet) * 12;
+              //     const feet = Math.floor(totalFeet + remainingInches / 12);
+              //     const inches = Math.round(remainingInches % 12);
+              //     console.log('feet inches',height[currentActiveIndex],decimalPart,currentActiveIndex)
+              //     return (
+              //       <Text style={{ color: AppColor.RED, fontSize: 36, fontWeight: '600' }}>
+              //         {feet}
+              //         <Text style={{ color: AppColor.RED, fontSize: 16, fontWeight: '400' }}>
+              //           {' ft '}
+              //           <Text style={{ color: AppColor.RED, fontSize: 36, fontWeight: '600' }}>
+              //             {inches}
+              //             <Text style={{ color: AppColor.RED, fontSize: 16, fontWeight: '400' }}>
+              //               {' inch '}
+              //             </Text>
+              //           </Text>
+              //         </Text>
+              //       </Text>
+              //     );
+              //   })()
+              <Text
+                style={{color: AppColor.RED, fontSize: 36, fontWeight: '600'}}>
+                {height[currentActiveIndex - 1].toString().split('.')[0]}
+                <Text
+                  style={{
+                    color: AppColor.RED,
+                    fontSize: 16,
+                    fontWeight: '400',
+                  }}>
+                  {' ft '}
+                  <Text
+                    style={{
+                      color: AppColor.RED,
+                      fontSize: 36,
+                      fontWeight: '600',
+                    }}>
+                    {height[currentActiveIndex - 1].toString().split('.')[1] ==
+                    undefined
+                      ? ''
+                      : height[currentActiveIndex - 1]
+                          .toString()
+                          .split('.')[1] == 9
+                      ? 10
+                      : height[currentActiveIndex].toString().split('.')[1]}
+                    <Text
+                      style={{
+                        color: AppColor.RED,
+                        fontSize: 16,
+                        fontWeight: '400',
+                      }}>
+                      {height[currentActiveIndex - 1]
+                        .toString()
+                        .split('.')[1] == undefined
+                        ? ''
+                        : ' inch '}
                     </Text>
                   </Text>
-                );
-              })()
-            ) 
-         : (
+                </Text>
+              </Text>
+            ) : (
               <Text
                 style={{
                   color: AppColor.RED,
@@ -194,7 +236,7 @@ const Height = ({route, navigation}: any) => {
                 </Text>
               </Text>
             )
-          ) : (
+          ) : parseInt(height[currentActiveIndex]) > 9 ? (
             <Text
               style={{
                 color: AppColor.WHITE,
@@ -202,6 +244,15 @@ const Height = ({route, navigation}: any) => {
                 fontWeight: '600',
               }}>
               0
+            </Text>
+          ) : (
+            <Text
+              style={{
+                color: AppColor.RED,
+                fontSize: 36,
+                fontWeight: '600',
+              }}>
+              {toggle === 'ft' ? '4ft' : '48cm'}
             </Text>
           )}
           <Image
