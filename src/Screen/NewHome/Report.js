@@ -64,7 +64,7 @@ const Report = ({navigation}) => {
     <View style={styles.container}>
       <NewHeader header={'Settings'} SearchButton={false} backButton={true} />
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <View style={styles.listItem2}>
+      {/* <View style={styles.listItem2}>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate('Subscription');
@@ -83,25 +83,8 @@ const Report = ({navigation}) => {
             color={AppColor.INPUTTEXTCOLOR}
           />
         </TouchableOpacity>
-        {/* <View
-          style={{
-            width: '100%',
-            height: 0.5,
-            backgroundColor: '#ABABAB',
-            marginVertical: 10,
-          }}></View> */}
-        {/* <TouchableOpacity
-          onPress={() => {}}
-          activeOpacity={0.5}
-          style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text style={styles.textStyle}>Restore Suscription</Text>
-          <Icons
-            name={'chevron-right'}
-            size={25}
-            color={AppColor.INPUTTEXTCOLOR}
-          />
-        </TouchableOpacity> */}
-      </View>
+   
+      </View> */}
       <Text
         style={[styles.textStyle, {marginHorizontal: 15, marginVertical: 20}]}>
         Timer Setting

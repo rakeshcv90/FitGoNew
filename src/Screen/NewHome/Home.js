@@ -86,8 +86,8 @@ const GradientText = ({item}) => {
         </SvgGrad>
         <SvgText
           fontFamily="Poppins"
-          fontWeight={'600'}
-          fontSize={23}
+          fontWeight={'700'}
+          fontSize={20}
           fill="url(#grad)"
           x="0"
           y="25">
@@ -174,7 +174,9 @@ const Home = ({navigation}) => {
   console.log('healthData', getHealthData);
   useEffect(() => {
     ActivityPermission();
+
     getGraphData();
+
   }, []);
 
   //   useEffect(() => {
@@ -948,7 +950,7 @@ const Home = ({navigation}) => {
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <View style={styles.profileView}>
         <View style={styles.rewardView}>
-          <Image
+          {/* <Image
             source={localImage.Money}
             style={[
               styles.img,
@@ -958,21 +960,41 @@ const Home = ({navigation}) => {
               },
             ]}
             resizeMode="cover"></Image>
-          <Text style={styles.monetText}>500</Text>
+          <Text style={styles.monetText}>500</Text> */}
         </View>
-        <TouchableOpacity
-          style={styles.profileView1}
-          onPress={() => {
-            navigation.navigate('Profile');
-          }}>
-          <Image
-            source={localImage.avt}
-            style={styles.img}
-            resizeMode="cover"></Image>
-        </TouchableOpacity>
+
+        {/* {console.log("User Data",getUserDataDetails )} */}
+        {Object.keys(getUserDataDetails).length > 0 ? (
+          <TouchableOpacity
+            style={styles.profileView1}
+            onPress={() => {
+              navigation.navigate('Profile');
+            }}>
+            <Image
+              source={
+                getUserDataDetails.image_path == null
+                  ? localImage.avt
+                  : getUserDataDetails.image_path
+              }
+              style={styles.img}
+              resizeMode="cover"></Image>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.profileView1}
+            onPress={() => {
+              navigation.navigate('Report');
+            }}>
+            <Image
+              source={localImage.avt}
+              style={styles.img}
+              resizeMode="cover"></Image>
+          </TouchableOpacity>
+        )}
+
       </View>
       <GradientText
-        item={getTimeOfDayMessage() + ', ' + getUserDataDetails.name}
+        item={getTimeOfDayMessage() + ', ' + (Object.keys(getUserDataDetails).length > 0?getUserDataDetails.name:'Guest')}
       />
       {forLoading ? <ActivityLoader /> : ''}
       <ScrollView
@@ -1179,6 +1201,18 @@ const Home = ({navigation}) => {
             ListEmptyComponent={emptyComponent}
             pagingEnabled
             renderItem={({item, index}) => {
+              // console.log("WOrkout Details",item.days)
+              let totalTime = 0
+              let totalCal=0
+              
+            for (const day in item?.days) {
+              // if (item?.days[day]?.total_rest == 0) {
+              //   restDays.push(parseInt(day.split('day_')[1]));
+              // }
+              totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
+              totalCal=totalCal+parseInt(item?.days[day]?.total_calories);
+            }
+           console.log("WOrkout Details",item)
               return (
                 <TouchableOpacity
                   onPress={() =>
@@ -1216,14 +1250,16 @@ const Home = ({navigation}) => {
                         <ProgressBar
                           progress={progress}
                           image={localImage.Play}
-                          text={'2 Min'}
+                          text={  totalTime > 60
+                            ? `${(totalTime / 60).toFixed(0)} min`
+                            : `${totalTime} sec`}
                         />
                       </View>
                       <View style={{marginHorizontal: 10}}>
                         <ProgressBar
                           progress={progress}
                           image={localImage.Step1}
-                          text={'100Kcal'}
+                          text={totalCal+'Kcal'}
                         />
                       </View>
                     </View>
@@ -1495,9 +1531,9 @@ var styles = StyleSheet.create({
   rewardView: {
     height: 40,
     width: 80,
-    borderRadius: 30,
-    borderColor: AppColor.RED,
-    borderWidth: 1,
+    // borderRadius: 30,
+    // borderColor: AppColor.RED,
+    // borderWidth: 1,
     marginLeft: 20,
     flexDirection: 'row',
     alignItems: 'center',
