@@ -25,6 +25,7 @@ import GradientText from '../../../Component/GradientText';
 import ProgreesButton from '../../../Component/ProgressButton';
 import Tts from 'react-native-tts';
 import {string} from 'yup';
+import {showMessage} from 'react-native-flash-message';
 const Exercise = ({navigation, route}: any) => {
   const {allExercise, currentExercise, data, day, exerciseNumber, trackerData} =
     route.params;
@@ -32,11 +33,11 @@ const Exercise = ({navigation, route}: any) => {
   const [visible, setVisible] = useState(false);
   const [playW, setPlayW] = useState(0);
   const [number, setNumber] = useState(0);
+  const [defaultPre, setDefaultPre] = useState(1);
   const [pause, setPause] = useState(false);
   const [open, setOpen] = useState(false);
   const [back, setBack] = useState(false);
   const [timer, setTimer] = useState(15);
-  const [pre, setPre] = useState(15);
   const [restStart, setRestStart] = useState(false);
   const [exerciseDoneIDs, setExerciseDoneIDs] = useState<Array<any>>([]);
   const [skipCount, setSkipCount] = useState(0);
@@ -97,7 +98,7 @@ const Exercise = ({navigation, route}: any) => {
               );
               console.log(allExercise[index + 1], 'allExercise[index + 1]');
               setCurrentData(allExercise[index + 1]);
-              setPre(15);
+              // setPre(15);
               setNumber(number + 1);
               setTimer(15);
             } else if (timer == 15) {
@@ -141,7 +142,7 @@ const Exercise = ({navigation, route}: any) => {
     const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
       // Check if goBack has been called
       if (!e.data.action) {
-        setPause(false)
+        setPause(false);
         console.log('navigation.goBack was called');
         setBack(true);
       }
@@ -150,6 +151,11 @@ const Exercise = ({navigation, route}: any) => {
     return unsubscribe;
   }, [navigation]);
 
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     !pause && setDefaultPre(defaultPre + 1);
+  //   }, 1000);
+  // }, [defaultPre, pause]);
   const FAB = ({icon}: any) => {
     return (
       <TouchableOpacity
@@ -354,7 +360,68 @@ const Exercise = ({navigation, route}: any) => {
       </Modal>
     );
   };
-
+  // const StartModal = ({pause, defaultPre}: any) => {
+  //   const [pre, setPre] = useState(1);
+  //   useEffect(() => {
+  //     setTimeout(() => {
+  //       !pause && setPre(pre + 1);
+  //     }, 1000);
+  //   }, [pre, pause]);
+  //   return (
+  //     <Modal visible={pause && defaultPre < 1} transparent>
+  //       <View
+  //         style={{
+  //           flex: 1,
+  //           height: DeviceHeigth,
+  //           width: DeviceWidth,
+  //           backgroundColor: '#000000B2',
+  //           alignItems: 'center',
+  //           justifyContent: 'center',
+  //         }}>
+  //         <View
+  //           style={{
+  //             alignSelf: 'center',
+  //             alignItems: 'center',
+  //             justifyContent: 'center',
+  //             height: DeviceHeigth * 0.8,
+  //             width: DeviceWidth,
+  //           }}>
+  //           <TouchableOpacity
+  //             onPress={() => {
+  //               navigation.goBack()
+  //             }}
+  //             style={{
+  //               top: DeviceHeigth * 0.04,
+  //               left: 20,
+  //               // backgroundColor: 'black',
+  //               width: 40,
+  //               position: 'absolute',
+  //             }}>
+  //             <Icons name={'chevron-left'} size={30} color={AppColor.WHITE} />
+  //           </TouchableOpacity>
+  //           <Text
+  //             style={{
+  //               fontSize: 40,
+  //               fontFamily: 'Poppins',
+  //               fontWeight: 'bold',
+  //               lineHeight: 60,
+  //               color: AppColor.WHITE,
+  //             }}>
+  //             {currentData?.exercise_title}
+  //           </Text>
+  //           <Text
+  //             style={{
+  //               fontSize: 100,
+  //               fontFamily: 'Poppins',
+  //               fontWeight: 'bold',
+  //               lineHeight: 120,
+  //               color: AppColor.WHITE,
+  //             }}>{`${pre}`}</Text>
+  //         </View>
+  //       </View>
+  //     </Modal>
+  //   );
+  // };
   return (
     <SafeAreaView
       style={{
@@ -532,19 +599,23 @@ const Exercise = ({navigation, route}: any) => {
           </TouchableOpacity>
           <View style={{height: DeviceHeigth * 0.5}}>
             <Text>{trackerData[number]?.id}</Text>
-            {/* {!pause ? (
+            {/* {defaultPre >= 1 && (
               <View
-                style={{alignSelf: 'center', marginTop: DeviceHeigth * 0.1}}>
-                <GradientText
-                  text={`${pre}`}
-                  fontSize={40}
-                  x={'100'}
-                  y={'50'}
-                  height={DeviceHeigth * 0.1}
-                  width={DeviceWidth / 2}
-                />
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  top: DeviceHeigth * 0.2,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 100,
+                    fontFamily: 'Poppins',
+                    fontWeight: 'bold',
+                    lineHeight: 120,
+                    color: AppColor.BLACK,
+                  }}>{`${defaultPre}`}</Text>
               </View>
-            ) : ( */}
+            )} */}
             <Video
               source={{
                 // uri: 'https://customer-50ey2gp6ldpfu37q.cloudflarestream.com/477addc9f11b43b3ba5a2e6f27f5200d/downloads/default.mp4',
@@ -552,8 +623,13 @@ const Exercise = ({navigation, route}: any) => {
               }}
               onReadyForDisplay={() => {
                 setPause(true);
+                // setDefaultPre(0);
               }}
-              onLoad={() => console.log('second')}
+              onLoad={() => {
+                console.log('second');
+                setPause(true);
+                // setDefaultPre(0);
+              }}
               onVideoLoad={() => console.log('third')}
               onVideoLoadStart={() => console.log('forth')}
               // onBuffer={() => {
@@ -589,7 +665,9 @@ const Exercise = ({navigation, route}: any) => {
               alignItems: 'center',
               marginTop: 10,
             }}>
-            <Text style={styles.name}>{currentData?.exercise_title}</Text>
+            <Text style={[styles.name, {width: DeviceWidth * 0.7}]}>
+              {currentData?.exercise_title}
+            </Text>
             <Text style={[styles.name, {color: '#505050'}]}>
               <Icons
                 name={'clock-outline'}
@@ -602,10 +680,25 @@ const Exercise = ({navigation, route}: any) => {
           <Play
             play={!pause}
             fill={`${100 - playW}%`}
+            // fill={`${playW}%`}
             h={80}
-            playy={() => setPause(!pause)}
+            playy={() => {
+              // if (defaultPre >= 1) {
+              //   showMessage({
+              //     message: 'Video is not loaded yet.',
+              //     type: 'success',
+              //     animationDuration: 500,
+
+              //     floating: true,
+              //     icon: {icon: 'auto', position: 'left'},
+              //   });
+              //   return;
+              // }
+              setPause(!pause);
+            }}
             next={() => {
               setPause(!pause);
+              // setDefaultPre(0);
               setPlayW(0);
               setTimeout(() => {
                 if (number == allExercise?.length - 1) return;
@@ -624,6 +717,7 @@ const Exercise = ({navigation, route}: any) => {
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
               // postCurrentExerciseAPI(index - 1);
+              setCurrentData(allExercise[index - 1]);
               setNumber(number - 1);
             }}
             colors={pause ? ['#941000', '#941000'] : ['#999999', '#D5191A']}
@@ -637,6 +731,7 @@ const Exercise = ({navigation, route}: any) => {
         </>
       )}
       <PauseModal back={back} />
+      {/* <StartModal pause={pause} defaultPre={defaultPre} /> */}
       <WorkoutsDescription open={open} setOpen={setOpen} data={currentData} />
     </SafeAreaView>
   );

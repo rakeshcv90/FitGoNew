@@ -20,7 +20,10 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import VersionNumber from 'react-native-version-number';
-import {setHealthData} from '../../Component/ThemeRedux/Actions';
+import {
+  setHealthData,
+  setHomeGraphData,
+} from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
 import BackgroundService from 'react-native-background-actions';
@@ -32,7 +35,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import {Slider} from '@miblanchard/react-native-slider';
 import axios from 'axios';
 import {setPedomterData} from '../../Component/ThemeRedux/Actions';
-import { throttle, debounce } from 'lodash';
+import {throttle, debounce} from 'lodash';
 import {
   Stop,
   Circle,
@@ -59,6 +62,13 @@ import {BackdropBlur, Canvas, Fill} from '@shopify/react-native-skia';
 import {color} from 'd3';
 import {Form} from 'formik';
 import moment from 'moment';
+import Graph from '../Yourself/Graph';
+const zeroData = Array(7)
+  .fill()
+  .map((_, index) => {
+    const currentDate = moment().subtract(index + 1, 'days');
+    return {weight: 0, date: currentDate.date()};
+  });
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
 
@@ -136,6 +146,7 @@ const Home = ({navigation}) => {
   const [forLoading, setForLoading] = useState(false);
   const [value, setValue] = useState('Weekly');
   const [likeData, setLikeData] = useState([]);
+  const [weeklyGraph, setWeeklyGraph] = useState([]);
   const [currentindex, setCurrentIndex] = useState(1);
   const progressAnimation = useRef(new Animated.Value(0)).current;
   const {
@@ -148,7 +159,9 @@ const Home = ({navigation}) => {
     customWorkoutData,
     mealData,
     getPedomterData,
+    getHomeGraphData,
   } = useSelector(state => state);
+  const dispatch = useDispatch();
   const [stepGoalProfile, setStepGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
   );
@@ -158,15 +171,15 @@ const Home = ({navigation}) => {
   const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
     getPedomterData[2] ? getPedomterData[2].RCalories : 25,
   );
- console.log('healthData',getHealthData)
-  useEffect(()=>{
-ActivityPermission()
-  },[])
+  console.log('healthData', getHealthData);
+  useEffect(() => {
+    ActivityPermission();
+    getGraphData();
+  }, []);
 
-
-//   useEffect(() => {
-//     ActivityPermission();
-//   }, []);
+  //   useEffect(() => {
+  //     ActivityPermission();
+  //   }, []);
   const ActivityPermission = async () => {
     if (Platform.OS == 'android') {
       const result = await isStepCountingSupported();
@@ -252,6 +265,43 @@ ActivityPermission()
   //   );
   // });
 
+  const getGraphData = async () => {
+    try {
+      const payload = new FormData();
+      payload.append('user_id', 112);
+      // payload.append('user_id', getUserDataDetails?.id);
+      setForLoading(true);
+      const res = await axios({
+        url: NewAppapi.HOME_GRAPH_DATA,
+        method: 'post',
+        data: payload,
+      });
+      if (res.data?.message != 'No data found') {
+        setForLoading(false);
+        console.log(res.data?.weekly_data?.total_calories, 'Graph Data ');
+        dispatch(setHomeGraphData(res.data));
+        // const test = [];
+        // zeroData?.map((_, index) => {
+        //   test.push({
+        //     date: parseInt(moment(res.data?.weekly_data[index]?.created_at).format('DD')),
+        //     weight: parseInt(res.data?.weekly_data[index]?.total_calories),
+        //   });
+        // });
+        // const jsonString = JSON.stringify(test);
+        // console.log(test);
+        // setWeeklyGraph(cleanedData);
+      } else {
+        setForLoading(false);
+        console.log(res.data, 'Graph Data message ');
+        dispatch(setHomeGraphData([]));
+      }
+    } catch (error) {
+      setForLoading(false);
+      console.error(error, 'GraphError');
+      dispatch(setHomeGraphData([]));
+    }
+  };
+
   const likeStatusApi = async () => {
     try {
       const payload = new FormData();
@@ -309,15 +359,14 @@ ActivityPermission()
   // pedometers
   const PedoMeterData = async () => {
     try {
-
       const res = await axios({
         url: NewAppapi.PedometerAPI,
         method: 'post',
         data: {
-          user_id:getUserDataDetails?.id,
-          steps:getHealthData[0]?getHealthData[0].Steps:"0",
-          distance:getHealthData[1]?getHealthData[1].Calories:"0",
-          calories:getHealthData[2]?getHealthData[2].DistanceCovered:"0"
+          user_id: getUserDataDetails?.id,
+          steps: getHealthData[0] ? getHealthData[0].Steps : '0',
+          distance: getHealthData[1] ? getHealthData[1].Calories : '0',
+          calories: getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
         },
       });
       if (res.data) {
@@ -328,33 +377,32 @@ ActivityPermission()
     }
   };
   const throttledDispatch = throttle(
-    (steps) => {
+    steps => {
       Dispatch(
         setHealthData([
-          { Steps: steps },
-          { Calories: Math.floor(steps / 20) },
-          { DistanceCovered: ((steps / 20) * 0.01).toFixed(2) },
-        ])
+          {Steps: steps},
+          {Calories: Math.floor(steps / 20)},
+          {DistanceCovered: ((steps / 20) * 0.01).toFixed(2)},
+        ]),
       );
     },
     30000,
-    { trailing: false }
+    {trailing: false},
   );
   const sleep = time =>
     new Promise(resolve => setTimeout(() => resolve(), time)); // background
-  
+
   const veryIntensiveTask = async taskDataArguments => {
     const {delay} = taskDataArguments;
-  
+
     const throttledUpdateStepsAndNotification = throttle(async data => {
       setSteps(data.steps);
-      console.log("stepssss>>>>>>>>>", data.steps);
+      console.log('stepssss>>>>>>>>>', data.steps);
       setDistance(((data.steps / 20) * 0.01).toFixed(2));
       setCalories(Math.floor(data.steps / 20));
       // Add your dispatch logic here
-     throttledDispatch(data.steps)
-   
-    
+      throttledDispatch(data.steps);
+
       // Update the notification with the current steps
       await BackgroundService.updateNotification({
         taskIcon: {
@@ -375,66 +423,68 @@ ActivityPermission()
         },
       });
     }, 30000); // 30 seconds delay
-    
+
     // function for checking if it is midnight or not
     const isSpecificTime = (hour, minute) => {
       const now = moment.utc(); // Get current time in UTC
-  
+
       // Calculate specific time in UTC by setting hours and minutes
-      const specificTimeUTC = now.clone().set({ hour, minute, second: 0, millisecond: 0 }); 
+      const specificTimeUTC = now
+        .clone()
+        .set({hour, minute, second: 0, millisecond: 0});
 
       const istTime = moment.utc().add(5, 'hours').add(30, 'minutes');
       // Compare the times directly to check if they represent the same time in IST
-      return istTime.format() == specificTimeUTC.format()
-  };
-  const debouncedResetSteps = () => {
-    // Your logic to reset steps and related state
-    setSteps(0);
-    setDistance(0);
-    setCalories(0);
-    Dispatch(
-      setHealthData([
-        { Steps: '0' },
-        { Calories: '0' },
-        { DistanceCovered: '0.00' },
-      ]),
-    );
-  
-    // Update the notification after resetting steps
-    BackgroundService.updateNotification({
-      // Your notification update logic after steps reset
-      taskIcon: {
-        name: 'ic_launcher',
-        type: 'mipmap',
-      },
-      color: AppColor.RED,
-      taskName: 'Pedometer',
-      taskTitle: 'Steps ' + steps,
-      taskDesc: 'Steps ',
-      progressBar: {
-        max: stepGoalProfile,
-        value: steps,
-        indeterminate: false,
-      },
-      parameters: {
-        delay: 30000,
-      },
-    });
-  } // 30 seconds d
+      return istTime.format() == specificTimeUTC.format();
+    };
+    const debouncedResetSteps = () => {
+      // Your logic to reset steps and related state
+      setSteps(0);
+      setDistance(0);
+      setCalories(0);
+      Dispatch(
+        setHealthData([
+          {Steps: '0'},
+          {Calories: '0'},
+          {DistanceCovered: '0.00'},
+        ]),
+      );
+
+      // Update the notification after resetting steps
+      BackgroundService.updateNotification({
+        // Your notification update logic after steps reset
+        taskIcon: {
+          name: 'ic_launcher',
+          type: 'mipmap',
+        },
+        color: AppColor.RED,
+        taskName: 'Pedometer',
+        taskTitle: 'Steps ' + steps,
+        taskDesc: 'Steps ',
+        progressBar: {
+          max: stepGoalProfile,
+          value: steps,
+          indeterminate: false,
+        },
+        parameters: {
+          delay: 30000,
+        },
+      });
+    }; // 30 seconds d
     for (let i = 0; BackgroundService.isRunning(); i++) {
       startStepCounterUpdate(new Date(), async data => {
         // Call the throttled function
         await throttledUpdateStepsAndNotification(data);
-    
+
         // Call the debounced function
       });
-    
+
       // reset the steps at midnight
       if (isSpecificTime(0, 0)) {
         PedoMeterData();
         debouncedResetSteps();
       }
-    
+
       // Use sleep with a delay of 30 seconds
       await sleep(delay);
     }
@@ -461,10 +511,10 @@ ActivityPermission()
   async function startStepCounter() {
     startStepCounterUpdate(new Date(), data => {
       setSteps(data.steps);
-      console.log("stepssss>>>>>>>>>",data.steps)
+      console.log('stepssss>>>>>>>>>', data.steps);
       setDistance(((data.steps / 20) * 0.01).toFixed(2));
       setCalories(Math.floor(data.steps / 20));
-    throttledDispatch(data.steps)
+      throttledDispatch(data.steps);
     });
     await BackgroundService.start(veryIntensiveTask, options);
     await BackgroundService.updateNotification(options);
@@ -567,7 +617,7 @@ ActivityPermission()
 
     return (
       <Modal
-        animationType='fade'
+        animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}>
@@ -914,7 +964,6 @@ ActivityPermission()
           style={styles.profileView1}
           onPress={() => {
             navigation.navigate('Profile');
-         
           }}>
           <Image
             source={localImage.avt}
@@ -1307,7 +1356,7 @@ ActivityPermission()
                       ]}
                       resizeMode="cover"></Image>
                     <Text
-                    numberOfLines={1}
+                      numberOfLines={1}
                       style={[
                         styles.title,
                         {
@@ -1316,7 +1365,7 @@ ActivityPermission()
                           lineHeight: 18,
                           fontFamily: 'Poppins',
                           textAlign: 'center',
-                          width:50,
+                          width: 50,
                           color: colors[index % colors.length].color3,
                         },
                       ]}>
@@ -1356,7 +1405,8 @@ ActivityPermission()
             placeholderStyle={styles.placeholderStyle}
             selectedTextStyle={styles.selectedTextStyle}
             data={data2}
-            maxHeight={300}X
+            maxHeight={300}
+            X
             labelField="label"
             valueField="value"
             placeholder={value}

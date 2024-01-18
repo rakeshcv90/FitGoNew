@@ -156,3 +156,9 @@ export const setBmi=data=>{
     payload:data
   }
 }
+export const setHomeGraphData=data=>{
+  return{
+    type:types.HOME_GRAPH_DATA,
+    payload:data
+  }
+}
