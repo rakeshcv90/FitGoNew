@@ -30,7 +30,7 @@ const products = Platform.select({
 const SplaceScreen = ({navigation}) => {
   const [deviceId, setDeviceId] = useState(0);
   const dispatch = useDispatch();
-  const {showIntro} = useSelector(state => state);
+  const {showIntro, getUserDataDetails} = useSelector(state => state);
   useEffect(() => {
     DeviceInfo.syncUniqueId().then(uniqueId => {
       setDeviceId(uniqueId);
@@ -51,7 +51,7 @@ const SplaceScreen = ({navigation}) => {
                 console.log('error finding purchase');
               })
               .then(res => {
-                console.log("IOS Subscription",res)
+                console.log('IOS Subscription', res);
                 dispatch(setInappPurchase(res));
               });
           })
@@ -65,7 +65,7 @@ const SplaceScreen = ({navigation}) => {
                 console.log('error finding purchase');
               })
               .then(res => {
-               console.log("Android Subscription",res)
+                console.log('Android Subscription', res);
                 dispatch(setInappPurchase(res));
               });
           });
@@ -73,7 +73,9 @@ const SplaceScreen = ({navigation}) => {
   useEffect(() => {
     setTimeout(() => {
       if (showIntro) {
-        navigation.replace('LogSignUp');
+        // navigation.replace('LogSignUp');
+        if (getUserDataDetails?.id) navigation.replace('BottomTab');
+        else navigation.replace('LogSignUp');
       } else {
         navigation.replace('IntroductionScreen1');
       }

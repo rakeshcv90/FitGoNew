@@ -271,7 +271,7 @@ const Exercise = ({navigation, route}: any) => {
             style={{
               justifyContent: 'center',
               alignItems: 'center',
-              marginLeft: '50%',
+              paddingLeft: DeviceWidth/2,
             }}>
             <GradientText
               text={'Hold on!'}
@@ -295,6 +295,7 @@ const Exercise = ({navigation, route}: any) => {
               fontFamily: 'Poppins',
               lineHeight: 30,
               marginTop: 20,
+              color:AppColor.BLACK
             }}>
             {`You have finished `}
             <Text style={{color: AppColor.RED}}>

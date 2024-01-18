@@ -176,7 +176,7 @@ const MentalState = ({navigation, route}) => {
                   width: 100,
                   textAlign: 'center',
                   color: itemIndex == index ? AppColor.RED : AppColor.DARKGRAY,
-                  fontSize: itemIndex == index ? 15 : 12,
+                  fontSize: 14,
                   fontFamily: 'Poppins-SemiBold',
                   textAlign: 'center',
                 }}>

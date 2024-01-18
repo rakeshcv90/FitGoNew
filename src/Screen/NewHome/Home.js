@@ -481,7 +481,7 @@ ActivityPermission()
     const [Steps_Goal, setSteps_Goal] = useState(500);
     const [Calories_Goal, setCalories_Goal] = useState(25);
     const [Distance_Goal, setDistance_Goal] = useState(0.25);
-    const [Step_Visible, setSteps_Visible] = useState(false);
+    const [Step_Visible, setSteps_Visible] = useState(true);
     const [Distance_Visible, setDistance_Visible] = useState(false);
     const [Calories_Visible, setCalories_Visible] = useState(false);
     const ToggleVisiblity = num => {
@@ -621,7 +621,7 @@ ActivityPermission()
                 style={styles.dropButton}
                 onPress={() => ToggleVisiblity(1)}>
                 <Icons
-                  name={Step_Visible ? 'chevron-down' : 'chevron-up'}
+                  name={Step_Visible ? 'chevron-up' :  'chevron-down'}
                   size={25}
                   color={'#000'}
                 />
@@ -676,7 +676,7 @@ ActivityPermission()
                 style={styles.dropButton}
                 onPress={() => ToggleVisiblity(2)}>
                 <Icons
-                  name={Distance_Visible ? 'chevron-down' : 'chevron-up'}
+                  name={Distance_Visible ? 'chevron-up' :  'chevron-down'}
                   size={25}
                   color={'#000'}
                 />
@@ -731,7 +731,7 @@ ActivityPermission()
                 style={styles.dropButton}
                 onPress={() => ToggleVisiblity(3)}>
                 <Icons
-                  name={Calories_Visible ? 'chevron-down' : 'chevron-up'}
+                  name={Calories_Visible ? 'chevron-up' :  'chevron-down'}
                   size={25}
                   color={'#000'}
                 />
