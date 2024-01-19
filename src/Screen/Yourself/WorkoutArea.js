@@ -19,6 +19,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {localImage} from '../../Component/Image';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
+import { showMessage } from 'react-native-flash-message';
 
 const WorkoutArea = ({route, navigation}) => {
   const {nextScreen} = route.params;
