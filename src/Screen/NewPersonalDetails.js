@@ -185,6 +185,7 @@ console.log("Uswer Daytaaaa",getUserDataDetails)
           animationDuration: 750,
           icon: {icon: 'none', position: 'left'},
         });
+        console.log("DDDDD#########",data?.data.allworkouts.minset_workout)
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));
         dispatch(setCustomWorkoutData(data?.data.allworkouts));

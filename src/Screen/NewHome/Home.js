@@ -59,6 +59,13 @@ import {BackdropBlur, Canvas, Fill} from '@shopify/react-native-skia';
 import {color} from 'd3';
 import {Form} from 'formik';
 import moment from 'moment';
+import Graph from '../Yourself/Graph';
+const zeroData = Array(7)
+  .fill()
+  .map((_, index) => {
+    const currentDate = moment().subtract(index + 1, 'days');
+    return {weight: 0, date: currentDate.date()};
+  });
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
 
@@ -1493,8 +1500,8 @@ const Home = ({navigation}) => {
             alignSelf: 'center',
             borderRadius: 10,
           }}>
-          {weeklyGraph.length != 0  ? (
-            <Graph resultData={weeklyGraph} zeroData={[]} home={false} />
+      {weeklyGraph.length != 0 && zeroData.length != 0 ? (
+            <Graph resultData={weeklyGraph} zeroData={zeroData} home={false} />
           ) : (
             <View style={{justifyContent: 'center', alignItems: 'center', height: DeviceHeigth* 0.2}}>
               {emptyComponent()}
