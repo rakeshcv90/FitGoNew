@@ -19,6 +19,7 @@ import {
 import {curveBasis, line, scaleLinear, scaleTime} from 'd3';
 import {Easing, View, Pressable, Text, StyleSheet} from 'react-native';
 import {AppColor} from '../../Component/Color';
+import { DeviceHeigth } from '../../Component/Config';
 
 interface GraphData {
   min: number;
@@ -53,7 +54,7 @@ const LineChart = ({resultData, zeroData}: any) => {
   //     setCircle(x);
   //   }, 500);
   // }, []);
-  const GRAPH_HEIGHT = 400;
+  const GRAPH_HEIGHT = 360;
   const GRAPH_WIDTH = 360;
   const [late, setLate] = useState(false);
   const [circles, setCircle] = useState([]);
@@ -114,6 +115,7 @@ const LineChart = ({resultData, zeroData}: any) => {
         style={{
           width: GRAPH_WIDTH,
           height: GRAPH_HEIGHT,
+          marginTop: -DeviceHeigth * 0.04
         }}>
         <Line
           p1={vec(10, 130)}

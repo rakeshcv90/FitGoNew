@@ -13,8 +13,6 @@ import {DeviceHeigth, DeviceWidth} from './Config';
 import {localImage} from './Image';
 import {navigationRef} from '../../App';
 import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
-import Index from '../Screen/Yourself';
-import { date } from 'yup';
 
 export type Props = {
   viewAllButton?: boolean;
@@ -23,6 +21,7 @@ export type Props = {
   horizontal: boolean;
   headText?: string;
   viewAllPress?: () => void;
+  type?: 'core' | 'category';
 };
 
 const RoundedCards: FC<Props> = ({...props}) => {
@@ -59,6 +58,9 @@ const RoundedCards: FC<Props> = ({...props}) => {
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             renderItem={({item, index}: any) => {
+              if (props.type == 'core' && index <= 4) return;
+              else if (props.type == 'core' && index > 9) return;
+              if (props.type == 'category' && index > 4) return;
               let totalTime = 0;
               for (const day in item?.days) {
                 if (day != 'Rest') {

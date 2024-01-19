@@ -63,7 +63,7 @@ const Height = ({route, navigation}: any) => {
   const [screen, setScreen] = useState(nextScreen);
   const [toggle, setToggle] = useState('ft');
   const [currentActiveIndex, setCurrentActiveIndex] = useState(-1);
-  console.log("Index======>",currentActiveIndex)
+  console.log('Index======>', currentActiveIndex);
   useEffect(() => {
     setScreen(nextScreen);
   }, []);
@@ -148,68 +148,71 @@ const Height = ({route, navigation}: any) => {
             alignItems: 'center',
             alignSelf: 'center',
           }}>
-          {parseInt(height[currentActiveIndex]) < 9 &&
+          {toggle == 'ft' &&
+          parseInt(height[currentActiveIndex]) < 9 &&
           parseInt(height[currentActiveIndex]) >= 4 ? (
-            toggle == 'ft' ? (
-              <Text
-                style={{
-                  color: AppColor.RED,
-                  fontSize: 36,
-                  fontWeight: '600',
-                }}>
-                {parseInt(height[currentActiveIndex])}
-                <Text
-                  style={{
-                    color: AppColor.RED,
-                    fontSize: 16,
-                    fontWeight: '400',
-                  }}>
-                  {' ft '}
-                  <Text
-                    style={{
-                      color: AppColor.RED,
-                      fontSize: 36,
-                      fontWeight: '600',
-                    }}>
-                    {/* {parseInt(((height[currentActiveIndex] % 1) * 120).toFixed(0)) != 12 && */}
-                      {((height[currentActiveIndex]%1) * 12).toFixed(0)}
-                    <Text
-                      style={{
-                        color: AppColor.RED,
-                        fontSize: 16,
-                        fontWeight: '400',
-                      }}>
-                      {' inch '}
-                    </Text>
-                  </Text>
-                </Text>
-              </Text>
-            ) : (
-              <Text
-                style={{
-                  color: AppColor.RED,
-                  fontSize: 36,
-                  fontWeight: '600',
-                }}>
-                {height[currentActiveIndex]*10}
-                <Text
-                  style={{
-                    color: AppColor.RED,
-                    fontSize: 16,
-                    fontWeight: '400',
-                  }}>
-                  {' cm '}
-                </Text>
-              </Text>
-            )
-          ) : (
             <Text
               style={{
-                color: AppColor.WHITE,
+                color: AppColor.RED,
                 fontSize: 36,
                 fontWeight: '600',
               }}>
-              0
+              {parseInt(height[currentActiveIndex])}
+              <Text
+                style={{
+                  color: AppColor.RED,
+                  fontSize: 16,
+                  fontWeight: '400',
+                }}>
+                {' ft '}
+                <Text
+                  style={{
+                    color: AppColor.RED,
+                    fontSize: 36,
+                    fontWeight: '600',
+                  }}>
+                  {/* {parseInt(((height[currentActiveIndex] % 1) * 120).toFixed(0)) != 12 && */}
+                  {Math.floor(
+                    parseInt(
+                      ((height[currentActiveIndex] % 1) * 12).toFixed(1),
+                    ),
+                  )}
+                  <Text
+                    style={{
+                      color: AppColor.RED,
+                      fontSize: 16,
+                      fontWeight: '400',
+                    }}>
+                    {' inch '}
+                  </Text>
+                </Text>
+              </Text>
+            </Text>
+          ) : toggle != 'ft' ? (
+            <Text
+              style={{
+                color: AppColor.RED,
+                fontSize: 36,
+                fontWeight: '600',
+              }}>
+              {(height[currentActiveIndex] * 10).toFixed(0)}
+              <Text
+                style={{
+                  color: AppColor.RED,
+                  fontSize: 16,
+                  fontWeight: '400',
+                }}>
+                {' cm '}
+              </Text>
+            </Text>
+          ) : (
+            <Text
+              style={{
+                color: AppColor.RED,
+                fontSize: 36,
+                fontWeight: '600',
+              }}>
+              --
             </Text>
           )}
           <Image
@@ -243,15 +246,29 @@ const Height = ({route, navigation}: any) => {
           }>
           <Icons name="chevron-left" size={25} color={'#000'} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={toNextScreen}>
-          <LinearGradient
-            start={{x: 0, y: 1}}
-            end={{x: 1, y: 0}}
-            colors={[AppColor.RED1, AppColor.RED]}
-            style={[styles.nextButton]}>
-            <Icons name="chevron-right" size={25} color={'#fff'} />
-          </LinearGradient>
-        </TouchableOpacity>
+        {toggle == 'ft' &&
+        parseInt(height[currentActiveIndex]) < 9 &&
+        parseInt(height[currentActiveIndex]) >= 4 ? (
+          <TouchableOpacity onPress={toNextScreen}>
+            <LinearGradient
+              start={{x: 0, y: 1}}
+              end={{x: 1, y: 0}}
+              colors={[AppColor.RED1, AppColor.RED]}
+              style={[styles.nextButton]}>
+              <Icons name="chevron-right" size={25} color={'#fff'} />
+            </LinearGradient>
+          </TouchableOpacity>
+        ) : toggle != 'ft' && currentActiveIndex != -1 ? (
+          <TouchableOpacity onPress={toNextScreen}>
+            <LinearGradient
+              start={{x: 0, y: 1}}
+              end={{x: 1, y: 0}}
+              colors={[AppColor.RED1, AppColor.RED]}
+              style={[styles.nextButton]}>
+              <Icons name="chevron-right" size={25} color={'#fff'} />
+            </LinearGradient>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </View>
   );

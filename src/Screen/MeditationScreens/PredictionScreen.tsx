@@ -77,7 +77,15 @@ const PredictionScreen = ({navigation, route}: any) => {
   }, [currentWeight, TargetWeight]);
 
   const CalculateWeight = () => {
-    const TotalW = currentWeight - TargetWeight;
+    let TotalW = 0;
+    if (currentWeight > TargetWeight) {
+      TotalW = currentWeight - TargetWeight;
+    } else {
+      const t = TargetWeight - currentWeight;
+      TotalW = t + currentWeight;
+      console.log('WEIGHT TOTAL', TotalW, t);
+    }
+    // const TotalW = currentWeight - TargetWeight;
     // if (TotalW <= 0) {
     //   // Avoid unnecessary calculations when the weights are not valid
     //   return;
@@ -90,9 +98,11 @@ const PredictionScreen = ({navigation, route}: any) => {
     let currentDate = moment();
 
     for (let i = Result_Number_Of_Days; i > 0; i -= 15) {
-      const decWeight =
-        currentWeight -
+      const weight15 =
         ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
+      const decWeight =
+        currentWeight > TargetWeight ? currentWeight - weight15 : weight15;
+      console.log(weight15, decWeight);
       const formattedDate = currentDate.format('YYYY-MM-DD');
       weightHistoryArray.push({
         weight: decWeight.toFixed(2),
@@ -120,17 +130,22 @@ const PredictionScreen = ({navigation, route}: any) => {
     <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <View style={{alignItems: 'center', marginTop: DeviceHeigth * 0.1}}>
-        <Text style={styles.t}>We predict that you’ll be</Text>
+        <Text style={styles.t}>
+          We predict that you’ll{' '}
+          {currentWeight > TargetWeight ? 'loss' : 'gain'}
+        </Text>
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
             width: DeviceWidth,
-            marginBottom:-30
+            marginBottom: -30,
           }}>
           <Text style={[styles.t, {color: AppColor.RED}]}>
-            {currentWeight - TargetWeight}
+            {currentWeight > TargetWeight
+              ? currentWeight - TargetWeight
+              : TargetWeight - currentWeight}
           </Text>
           <Text style={styles.t}>Kg by</Text>
           <Text style={[styles.t, {color: AppColor.RED,}]}>
@@ -153,13 +168,18 @@ const PredictionScreen = ({navigation, route}: any) => {
           <Graph resultData={weightHistory} zeroData={zeroData} />
         )}
       </View>
-      {/* <Image
+      <Image
         source={{
           uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/25357fb6-c174-4a3d-995c-77641d9ea900/public',
         }}
-        style={styles.Image}
+        style={[
+          styles.Image,
+          {
+            alignSelf: currentWeight < TargetWeight ? 'flex-start' : 'flex-end',
+          },
+        ]}
         resizeMode="contain"
-      /> */}
+      />
       <View
         style={{
           bottom: DeviceHeigth * 0.1,
@@ -261,7 +281,6 @@ const styles = StyleSheet.create({
   Image: {
     width: DeviceWidth * 0.3,
     height: DeviceHeigth * 0.5,
-    alignSelf: 'flex-end',
     marginRight: DeviceWidth * 0.05,
   },
 });
