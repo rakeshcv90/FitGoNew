@@ -163,7 +163,7 @@ const Home = ({navigation}) => {
   const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
     getPedomterData[2] ? getPedomterData[2].RCalories : 25,
   );
- console.log('healthData',getHealthData)
+ console.log('healthData',getPedomterData)
 
 //   useEffect(() => {
 //     ActivityPermission();
@@ -1021,19 +1021,22 @@ const Home = ({navigation}) => {
             <View style={styles.stepImageView}>
               <CircularProgressBase
                 {...props}
-                value={80}
+                value={Calories}
+                maxValue={getPedomterData[3]?getPedomterData[3].RCalories:500}
                 radius={32}
                 activeStrokeColor={'#941000'}
                 inActiveStrokeColor={'#941000'}>
                 <CircularProgressBase
                   {...props}
-                  value={30}
+                  value={distance}
+                  maxValue={getPedomterData[2]?getPedomterData[2].RDistance:2.5}
                   radius={55}
                   activeStrokeColor={'#FCBB1D'}
                   inActiveStrokeColor={'#FCBB1D'}>
                   <CircularProgressBase
                     {...props}
-                    value={62}
+                    value={steps}
+                    maxValue={getPedomterData[0]?getPedomterData[0].RSteps:5000}
                     radius={80}
                     activeStrokeColor={'#397E54'}
                     inActiveStrokeColor={'#397E54'}
