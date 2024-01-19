@@ -20,7 +20,7 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import VersionNumber from 'react-native-version-number';
-import {setHealthData} from '../../Component/ThemeRedux/Actions';
+import {setHealthData, setHomeGraphData} from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
 import BackgroundService from 'react-native-background-actions';
@@ -141,6 +141,7 @@ const Home = ({navigation}) => {
   const [value, setValue] = useState('Weekly');
   const [likeData, setLikeData] = useState([]);
   const [currentindex, setCurrentIndex] = useState(1);
+  const [weeklyGraph,setWeeklyGraph]= useState([]);
   const progressAnimation = useRef(new Animated.Value(0)).current;
   const {
     getHealthData,
@@ -263,6 +264,7 @@ const Home = ({navigation}) => {
   // });
 
   const getGraphData = async () => {
+    console.log("FFFSDSAFSDFSDFESXZDSF" ,getUserDataDetails?.id)
     try {
       const payload = new FormData();
       // payload.append('user_id', 166);
@@ -271,11 +273,12 @@ const Home = ({navigation}) => {
       const res = await axios({
         url: NewAppapi.HOME_GRAPH_DATA,
         method: 'post',
-        data: payload,
+        data: {
+          user_id:getUserDataDetails?.id}
       });
       if (res.data?.message != 'No data found') {
         setForLoading(false);
-        // console.log(res.data?.weekly_data, 'Graph Data ');
+       console.log(res.data?.weekly_data, 'Graph Data ');
         dispatch(setHomeGraphData(res.data));
         const test = [];
         zeroData?.map((_, index) => {
@@ -365,6 +368,7 @@ const Home = ({navigation}) => {
       console.error(error, 'likeERRPost');
     }
   };
+  const dispatch = useDispatch();
   const Dispatch = useDispatch();
   const [steps, setSteps] = useState(
     getHealthData[0] ? getHealthData[0].Steps : '0',
@@ -1489,8 +1493,8 @@ const Home = ({navigation}) => {
             alignSelf: 'center',
             borderRadius: 10,
           }}>
-          {weeklyGraph.length != 0 && zeroData.length != 0 ? (
-            <Graph resultData={weeklyGraph} zeroData={zeroData} home={false} />
+          {weeklyGraph.length != 0  ? (
+            <Graph resultData={weeklyGraph} zeroData={[]} home={false} />
           ) : (
             <View style={{justifyContent: 'center', alignItems: 'center', height: DeviceHeigth* 0.2}}>
               {emptyComponent()}
