@@ -36,7 +36,6 @@ const Workouts = ({navigation}: any) => {
     popularData?.length == 0 && popularWorkoutApi();
     workoutStatusApi();
   }, []);
-
   const allWorkoutApi = async () => {
     try {
       setRefresh(true);
@@ -52,7 +51,7 @@ const Workouts = ({navigation}: any) => {
       });
       if (res.data) {
         setRefresh(false);
-        console.log(res.data, 'AllWorkouts');
+        console.log(res.data?.length, 'AllWorkouts');
         dispatch(setAllWorkoutData(res.data));
       }
     } catch (error) {
@@ -67,10 +66,13 @@ const Workouts = ({navigation}: any) => {
       const res = await axios(
         NewAppapi.POPULAR_WORKOUTS + '/' + getUserDataDetails?.login_token,
       );
-      if (res.data) {
+      if (res.data?.status != 'Invalid token') {
         setRefresh(false);
-        console.log(res.data?.length, 'Popular');
+        console.log(res.data, 'Popular');
         setPopularData(res.data);
+      }else{
+        console.log(res.data, 'Popular Status');
+        setPopularData([])
       }
     } catch (error) {
       setRefresh(false);
@@ -104,8 +106,6 @@ const Workouts = ({navigation}: any) => {
 
   const AdCard = () => {
     return (
-
-
       <View
         style={{
           width: DeviceWidth * 0.92,
@@ -118,7 +118,7 @@ const Workouts = ({navigation}: any) => {
           marginTop: 5,
           backgroundColor: '#94100033',
         }}>
-        <View style={{ marginLeft: -5}}>
+        <View style={{marginLeft: -5}}>
           <Text
             numberOfLines={1}
             style={[styles.category, {width: DeviceWidth * 0.5}]}>
@@ -138,7 +138,8 @@ const Workouts = ({navigation}: any) => {
             Includes circuits to work every muscle
           </Text>
           <GradientButton
-            w={DeviceWidth * 0.30}
+            w={DeviceWidth * 0.3}
+            onPress={() => navigation?.navigate('AllWorkouts')}
             h={35}
             mV={20}
             text="Start Training"
@@ -158,13 +159,10 @@ const Workouts = ({navigation}: any) => {
             height: DeviceHeigth * 0.45,
             width: DeviceWidth * 0.37,
             left: 10,
-            top:-10
-    
+            top: -10,
           }}
           resizeMode="contain"></Image>
-     
       </View>
-    
     );
   };
 
@@ -179,7 +177,7 @@ const Workouts = ({navigation}: any) => {
             onRefresh={() => {
               allWorkoutApi();
               popularWorkoutApi();
-              workoutStatusApi()
+              workoutStatusApi();
             }}
             colors={[AppColor.RED, AppColor.WHITE]}
           />
@@ -189,18 +187,16 @@ const Workouts = ({navigation}: any) => {
         <RoundedCards
           data={allWorkoutData}
           trackerData={trackerData}
-          viewAllPress={() =>
-            navigation?.navigate('AllWorkouts')
-          }
+          viewAllPress={() => navigation?.navigate('AllWorkouts')}
           horizontal
           viewAllButton
+          type='category'
         />
 
-        <View style={{marginVertical:15}}>
-
-        <AdCard />
+        <View style={{marginVertical: 15}}>
+          <AdCard />
         </View>
-      
+
         {popularData?.length != 0 && (
           <MediumRounded
             data={popularData}
@@ -219,6 +215,7 @@ const Workouts = ({navigation}: any) => {
           }
           horizontal={false}
           headText="Core Workouts"
+          type='core'
           viewAllButton
         />
       </ScrollView>

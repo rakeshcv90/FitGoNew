@@ -164,6 +164,13 @@ const Home = ({navigation}) => {
   );
   console.log('healthData', getHealthData);
 
+  useEffect(() => {
+    ActivityPermission();
+
+    getGraphData();
+  }, []);
+
+
   //   useEffect(() => {
   //     ActivityPermission();
   //   }, []);
@@ -242,6 +249,55 @@ const Home = ({navigation}) => {
     }
   };
   // service
+
+  // useEffect(() => {
+  //   new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
+  //     //NOT IMPLEMENTED YET
+  //     'healthKit:StepCount:new',
+  //     async () => {
+  //       console.log('--> observer triggered');
+  //     },
+  //   );
+  // });
+
+  const getGraphData = async () => {
+    try {
+      const payload = new FormData();
+      // payload.append('user_id', 166);
+      payload.append('user_id', getUserDataDetails?.id);
+      setForLoading(true);
+      const res = await axios({
+        url: NewAppapi.HOME_GRAPH_DATA,
+        method: 'post',
+        data: payload,
+      });
+      if (res.data?.message != 'No data found') {
+        setForLoading(false);
+        // console.log(res.data?.weekly_data, 'Graph Data ');
+        dispatch(setHomeGraphData(res.data));
+        const test = [];
+        zeroData?.map((_, index) => {
+          test.push({
+            date: moment(res.data?.weekly_data[index]?.created_at).format(
+              'DD-MM',
+            ),
+            weight: parseInt(res.data?.weekly_data[index]?.total_calories),
+          });
+        });
+        console.log(test);
+        setWeeklyGraph(test);
+      } else {
+        setForLoading(false);
+        console.log(res.data, 'Graph Data message ');
+        dispatch(setHomeGraphData([]));
+      }
+    } catch (error) {
+      setForLoading(false);
+      console.error(error, 'GraphError');
+      dispatch(setHomeGraphData([]));
+    }
+  };
+
   /// backgrounf listner
   new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
     //NOT IMPLEMENTED YET
@@ -259,6 +315,7 @@ const Home = ({navigation}) => {
       });
     },
   );
+
 
   const likeStatusApi = async () => {
     try {
@@ -1162,6 +1219,7 @@ const Home = ({navigation}) => {
             ListEmptyComponent={emptyComponent}
             pagingEnabled
             renderItem={({item, index}) => {
+
               let totalTime = 0;
               let totalCal = 0;
 
@@ -1172,6 +1230,7 @@ const Home = ({navigation}) => {
                 totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
                 totalCal = totalCal + parseInt(item?.days[day]?.total_calories);
               }
+
               return (
                 <TouchableOpacity
                   onPress={() =>
@@ -1423,7 +1482,14 @@ const Home = ({navigation}) => {
             alignSelf: 'center',
             borderRadius: 10,
           }}>
-          <LineChart
+          {weeklyGraph.length != 0 && zeroData.length != 0 ? (
+            <Graph resultData={weeklyGraph} zeroData={zeroData} home={false} />
+          ) : (
+            <View style={{justifyContent: 'center', alignItems: 'center', height: DeviceHeigth* 0.2}}>
+              {emptyComponent()}
+            </View>
+          )}
+          {/* <LineChart
             data={{
               labels: ['Sun', 'Mon', 'Tue', 'Thur', 'Fri', 'Sat'],
               datasets: [
@@ -1459,7 +1525,7 @@ const Home = ({navigation}) => {
             style={{
               borderRadius: 10,
             }}
-          />
+          /> */}
         </View>
       </ScrollView>
       {modalVisible ? <UpdateGoalModal /> : null}
