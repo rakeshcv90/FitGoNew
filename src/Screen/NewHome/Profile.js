@@ -14,7 +14,12 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {localImage} from '../../Component/Image';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {
+  DeviceHeigth,
+  DeviceWidth,
+  NewApi,
+  NewAppapi,
+} from '../../Component/Config';
 import {AppColor} from '../../Component/Color';
 import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -23,17 +28,22 @@ import {useNavigation} from '@react-navigation/native';
 import {Switch} from 'react-native-switch';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {setLogout} from '../../Component/ThemeRedux/Actions';
+import {setLogout, setUserProfileData} from '../../Component/ThemeRedux/Actions';
 import {CommonActions} from '@react-navigation/native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {request, PERMISSIONS, openSettings} from 'react-native-permissions';
 import VersionNumber from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
 import {persistor} from '../../Component/ThemeRedux/Store';
+import { updatePhoto } from '../../Component/ThemeRedux/Actions';
 import LogOut from '../../Component/LogOut';
+import { setProfileImg_Data } from '../../Component/ThemeRedux/Actions';
+import axios from 'axios';
+import { stack } from 'd3';
+import { ColorShader } from '@shopify/react-native-skia';
 const Profile = () => {
-  const dispatch = useDispatch();
-  const {getUserDataDetails, ProfilePhoto} = useSelector(state => state);
+ 
+  const {getUserDataDetails, ProfilePhoto,} = useSelector(state => state);
   const [UpdateScreenVisibility, setUpadteScreenVisibilty] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -156,51 +166,78 @@ const Profile = () => {
   ];
   const FirstView = Profile_Data.slice(0, 6);
   const SecondView = Profile_Data.slice(6);
+
   const UpdateProfileModal = () => {
+   const dispatch = useDispatch();
     const [modalImageUploaded, setModalImageUploaded] = useState(false);
     const [IsimgUploaded, setImguploaded] = useState(true);
     const [userAvatar, setUserAvatar] = useState(null);
-    // const UploadImage = async () => {
-    //   // console.log("upload img")
-    //   const data = JSON.parse(await AsyncStorage.getItem('Data'));
-    //   try {
-    //     let payload = new FormData();
-    //     payload.append('image', {
-    //       name: userAvatar.fileName,
-    //       type: userAvatar.type,
-    //       uri: userAvatar.uri,
-    //     });
-    //     payload.append('email', data[0].email);
-    //     const ProfileData = await axios(`${Api}/${Appapi.UpdateProfile}`, {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'multipart/form-data',
-    //       },
-    //       data: payload,
-    //     });
-    //     console.log(ProfileData.data[0]);
-    //     if (ProfileData.data[0].msg == 'profile updated') {
-    //       await AsyncStorage.setItem(
-    //         'UserData',
-    //         JSON.stringify(ProfileData.data),
-    //       );
-    //       UpdatePhoto();
-    //       setImguploaded(true);
-    //       if (IsimgUploaded == true) {
-    //         setUpadteScreenVisibilty(false);
-    //         setPhotoUploaded(false);
-    //       }
-    //     }
-    //     // console.log('ProfileData', ProfileData.data);
-    //   } catch (error) {
-    //     setImguploaded(true);
-    //     if (IsimgUploaded == true) {
-    //       setPhotoUploaded(false); // for Loader on profile picture
-    //       setUpadteScreenVisibilty(false);
-    //     }
-    //     console.log('UpdateProfileError', error);
-    //   }
-    // };
+    const {getProfile_imgData}=useSelector(state=>state)
+    const [userPhoto,setUserPhoto]=useState('')  
+    const getProfileData = async user_id => {
+      try {
+        const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          data: {
+            id: user_id,
+          },
+        });
+  
+        if (data.data.profile) {
+          dispatch(setUserProfileData(data.data.profile));
+          console.log("Profile Data====---->",data.data)
+
+        } else {
+          dispatch(setUserProfileData([]));
+        }
+      } catch (error) {
+        console.log('User Profile Error', error);
+      }
+    };
+    const UploadImage = async (selectedImage) => {
+      // console.log("upload img")
+      try {
+        let payload = new FormData();
+        payload.append('token', getUserDataDetails?.login_token);
+        payload.append('version', VersionNumber.appVersion);
+        payload.append('user_id', getUserDataDetails?.id);
+        payload.append('image', {
+          name: selectedImage?.fileName,
+          type: selectedImage?.type,
+          uri: selectedImage?.uri,
+        });
+        // console.log('payload=====>',payload)
+        const ProfileData = await axios({
+          url: NewAppapi.Upload_Profile_picture,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          data: payload,
+        });
+        // console.log(ProfileData.data[0]);
+        if (ProfileData.data) {
+          console.log('APi Profile Data===>', ProfileData.data);
+          getProfileData(getUserDataDetails?.id)
+          setImguploaded(true);
+          if (IsimgUploaded == true) {
+            setUpadteScreenVisibilty(false);
+            setPhotoUploaded(false);
+          }
+        }
+        // console.log('ProfileData', ProfileData.data);
+      } catch (error) {
+        setImguploaded(true);
+        if (IsimgUploaded == true) {
+          setPhotoUploaded(false); // for Loader on profile picture
+          setUpadteScreenVisibilty(false);
+        }
+        console.log('UpdateProfileError', error);
+      }
+    };
     const askPermissionForCamera = async permission => {
       const result = await request(permission);
       //  console.log("camera result",result)
@@ -210,9 +247,11 @@ const Profile = () => {
             mediaType: 'photo',
             quality: 0.5,
           });
-          setUserAvatar(resultCamera.assets[0]);
+          setUserAvatar(resultCamera.assets[0])
           if (resultCamera) {
             setModalImageUploaded(true);
+            // dispatch(setProfileImg_Data(resultCamera.assets[0]))
+        
           }
         } catch (error) {
           console.log('CameraimageError', error);
@@ -248,6 +287,7 @@ const Profile = () => {
             quality: 0.5,
           });
           setUserAvatar(resultLibrary.assets[0]);
+          
           if (resultLibrary) {
             setModalImageUploaded(true);
           }
@@ -315,9 +355,10 @@ const Profile = () => {
               <Image
                 source={{
                   uri:
-                    userAvatar != null
-                      ? userAvatar.uri
-                      : 'https://gofit.tentoptoday.com/json/image/Avatar.png',
+                 
+                  userAvatar != null
+                    ? userAvatar.uri
+                    :  getUserDataDetails.image_path
                 }}
                 style={styles.Icon}
               />
@@ -373,7 +414,8 @@ const Profile = () => {
                       }}
                       onPress={() => {
                         setImguploaded(false);
-                        // UploadImage();
+                        UploadImage(userAvatar)
+                        console.log(userAvatar)
                       }}>
                       <Text style={[styles.cameraText]}>Upload Image</Text>
                     </TouchableOpacity>
@@ -424,7 +466,6 @@ const Profile = () => {
           ],
         }),
       );
-   
     };
 
     return (
@@ -492,7 +533,11 @@ const Profile = () => {
           </View>
           <View style={styles.profileView}>
             <Image
-              source={localImage.avt}
+             source={
+              getUserDataDetails.image_path == null
+                ? localImage.avt
+                :{uri:getUserDataDetails.image_path} 
+            }
               style={styles.img}
               resizeMode="cover"></Image>
             <TouchableOpacity

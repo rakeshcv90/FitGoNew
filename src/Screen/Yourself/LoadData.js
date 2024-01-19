@@ -304,6 +304,7 @@ const LoadData = ({navigation}) => {
 
       if (data.data.profile) {
         dispatch(setUserProfileData(data.data.profile));
+        
       } else {
         dispatch(setUserProfileData([]));
       }

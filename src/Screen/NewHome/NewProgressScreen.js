@@ -43,16 +43,15 @@ import moment from 'moment';
 import Button from '../../Component/Button';
 import {showMessage} from 'react-native-flash-message';
 const NewProgressScreen = ({navigation}) => {
-  const {getUserDataDetails, getHealthData} = useSelector(state => state);
+  const {getUserDataDetails, ProfilePhoto} = useSelector(state => state);
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [selected, setSelected] = useState(false);
-  // console.log('=======>userDta', getUserDataDetails.weight, getHealthData);
+  console.log('=======>userData', getUserDataDetails);
   const [dates, setDates] = useState([]);
   const [value, setValue] = useState('Weekly');
   const [array, setArray] = useState([]);
   const [getBmi, setBmi] = useState(0);
-  const CurrentWeight = getUserDataDetails?.weight;
-  const arrayForData = [];
+  let arrayForData = [];
   useEffect(() => {
     setBmi(
       (
@@ -95,6 +94,86 @@ const NewProgressScreen = ({navigation}) => {
       }
     } catch (error) {
       console.log('Calories Api Error', error);
+    }
+  };
+  const handleGraph = data => {
+    console.log('data', data);
+    if (data == 1) {
+      WeeklyData();
+    } else if (data == 2) {
+      MonthlyData();
+    } else {
+      console.log('No matching');
+    }
+  };
+  const MonthlyData = async () => {
+    try {
+      const payload = new FormData();
+      payload.append('user_id', getUserDataDetails?.id);
+      const res = await axios({
+        url: NewAppapi.monthly_history,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: payload,
+      });
+      if (res) {
+        // console.log('res----data',res.data)
+        // console.log(res?.data?.weekly_data?.map((value)=>
+        // getUserDataDetails?.weight-parseFloat(value.total_burn_weight))
+        // )
+        let currentWeight = getUserDataDetails?.weight;
+        // const currentweight1=currentWeight
+        // setArray(res?.data?.weekly_data?.map((value)=>
+        // currentWeight-parseFloat(value.total_burn_weight
+        //   )))
+        for (i = 0; i < res?.data?.monthly_data?.length; i++) {
+          let NewWeight =
+            currentWeight - res?.data?.monthly_data[0]?.total_burn_weight;
+          currentWeight = NewWeight;
+          arrayForData.push(parseFloat(NewWeight).toFixed(3));
+          console.log('array Monthly', arrayForData);
+        }
+        setArray(arrayForData);
+      }
+    } catch (error) {
+      console.log('graphData Error', error);
+    }
+  };
+  const WeeklyData = async () => {
+    try {
+      const payload = new FormData();
+      payload.append('user_id', getUserDataDetails?.id);
+      const res = await axios({
+        url: NewAppapi.HOME_GRAPH_DATA,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: payload,
+      });
+      if (res) {
+        // console.log('res----data',res.data)
+        // console.log(res?.data?.weekly_data?.map((value)=>
+        // getUserDataDetails?.weight-parseFloat(value.total_burn_weight))
+        // )
+        let currentWeight = getUserDataDetails?.weight;
+        // const currentweight1=currentWeight
+        // setArray(res?.data?.weekly_data?.map((value)=>
+        // currentWeight-parseFloat(value.total_burn_weight
+        //   )))
+        for (i = 0; i < res?.data?.weekly_data?.length; i++) {
+          let NewWeight =
+            currentWeight - res?.data?.weekly_data[0]?.total_burn_weight;
+          currentWeight = NewWeight;
+          // console.log("array",arrayForData)
+          arrayForData.push(parseFloat(NewWeight).toFixed(3));
+        }
+        setArray(arrayForData);
+      }
+    } catch (error) {
+      console.log('graphData Error', error);
     }
   };
   const textData = [{value: getBmi}];
@@ -191,7 +270,7 @@ const NewProgressScreen = ({navigation}) => {
   ];
   const data2 = [
     {label: 'Weekly', value: '1'},
-    {label: 'Daily', value: '2'},
+    {label: 'Monthly', value: '2'},
   ];
   const renderItem = item => {
     return (
@@ -239,6 +318,7 @@ const NewProgressScreen = ({navigation}) => {
             value={value}
             onChange={item => {
               setValue(item.value);
+              handleGraph(item.value);
             }}
             renderItem={renderItem}
           />
@@ -253,12 +333,16 @@ const NewProgressScreen = ({navigation}) => {
       </View>
     );
   };
-  // console.log('array', array);
+  console.log('arrayForData', array);
   const data = {
     labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     datasets: [
       {
-        data: [getUserDataDetails?.weight, 33, 60, 25, 100],
+        data: [
+          getUserDataDetails?.weight,
+          ...array,
+          getUserDataDetails?.target_weight,
+        ],
         color: () => AppColor.RED, // optional
       },
     ],
@@ -346,7 +430,7 @@ const NewProgressScreen = ({navigation}) => {
     barPercentage: 0,
     useShadowColorFromDataset: false, // optional
   };
-  const specificDataIndex = 1; // Index of the specific data point you want to emphasize
+  const specificDataIndex = array.length; // Index of the specific data point you want to emphasize
 
   const renderCustomPoint = ({x, y, index, value}) => {
     if (index === specificDataIndex) {
@@ -545,7 +629,11 @@ const NewProgressScreen = ({navigation}) => {
         </View>
         <View style={styles.profileView}>
           <Image
-            source={localImage.avt}
+            source={
+              getUserDataDetails.image_path == null
+                ? localImage.avt
+                : {uri: getUserDataDetails.image_path}
+            }
             style={styles.img}
             resizeMode="contain"
           />
@@ -560,7 +648,11 @@ const NewProgressScreen = ({navigation}) => {
             color: AppColor.BLACK,
             fontSize: 22,
           }}>
-          {'Hi, Jane'}
+          {`Hi, ${
+            getUserDataDetails?.name
+              ? getUserDataDetails?.name.split(' ')[0]
+              : 'Guest'
+          }`}
         </Text>
         <View style={styles.card}>
           {Card_Data.map((value, index) => (
@@ -608,7 +700,9 @@ const NewProgressScreen = ({navigation}) => {
               console.log('PointData=====>', data.value)
             }
             withShadow={false}
-            fromZero={true}
+            yAxisInterval={10}
+
+            // fromZero={true}
           />
         </View>
         <LineText Txt1={'Workout Duration'} Txt2={'Weekly'} />

@@ -152,6 +152,7 @@ const Home = ({navigation}) => {
     customWorkoutData,
     mealData,
     getPedomterData,
+    ProfilePhoto
   } = useSelector(state => state);
   const [stepGoalProfile, setStepGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
@@ -928,7 +929,11 @@ const Home = ({navigation}) => {
          
           }}>
           <Image
-            source={localImage.avt}
+              source={
+                getUserDataDetails.image_path == null
+                  ? localImage.avt
+                  :{uri:getUserDataDetails.image_path} 
+              }
             style={styles.img}
             resizeMode="cover"></Image>
         </TouchableOpacity>
