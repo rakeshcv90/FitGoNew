@@ -161,3 +161,9 @@ export const setHomeGraphData=data=>{
     payload:data
   }
 }
+export const setProfileImg_Data=data=>{
+  return{
+    type:types.Profile_imgData,
+    payload:data
+  }
+}

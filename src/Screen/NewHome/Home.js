@@ -152,6 +152,7 @@ const Home = ({navigation}) => {
     customWorkoutData,
     mealData,
     getPedomterData,
+    ProfilePhoto
   } = useSelector(state => state);
   const [stepGoalProfile, setStepGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
@@ -162,10 +163,11 @@ const Home = ({navigation}) => {
   const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
     getPedomterData[2] ? getPedomterData[2].RCalories : 25,
   );
-  console.log('healthData', getHealthData);
+
 
   useEffect(() => {
     ActivityPermission();
+
 
     getGraphData();
   }, []);
@@ -977,20 +979,21 @@ const Home = ({navigation}) => {
             resizeMode="cover"></Image> */}
           {/* <Text style={styles.monetText}>500</Text> */}
         </View>
+
         {Object.keys(getUserDataDetails).length > 0 ? (
           <TouchableOpacity
             style={styles.profileView1}
             onPress={() => {
               navigation.navigate('Profile');
             }}>
-            <Image
+         <Image
               source={
                 getUserDataDetails.image_path == null
                   ? localImage.avt
-                  : getUserDataDetails.image_path
+                  :{uri:getUserDataDetails.image_path} 
               }
-              style={styles.img}
-              resizeMode="cover"></Image>
+            style={styles.img}
+            resizeMode="cover"></Image>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -1004,6 +1007,7 @@ const Home = ({navigation}) => {
               resizeMode="cover"></Image>
           </TouchableOpacity>
         )}
+
       </View>
       <GradientText
         item={
@@ -1094,19 +1098,22 @@ const Home = ({navigation}) => {
             <View style={styles.stepImageView}>
               <CircularProgressBase
                 {...props}
-                value={80}
+                value={Calories}
+                maxValue={getPedomterData[3]?getPedomterData[3].RCalories:500}
                 radius={32}
                 activeStrokeColor={'#941000'}
                 inActiveStrokeColor={'#941000'}>
                 <CircularProgressBase
                   {...props}
-                  value={30}
+                  value={distance}
+                  maxValue={getPedomterData[2]?getPedomterData[2].RDistance:2.5}
                   radius={55}
                   activeStrokeColor={'#FCBB1D'}
                   inActiveStrokeColor={'#FCBB1D'}>
                   <CircularProgressBase
                     {...props}
-                    value={62}
+                    value={steps}
+                    maxValue={getPedomterData[0]?getPedomterData[0].RSteps:5000}
                     radius={80}
                     activeStrokeColor={'#397E54'}
                     inActiveStrokeColor={'#397E54'}

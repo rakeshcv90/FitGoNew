@@ -30,6 +30,7 @@ const intialState = {
   getSoundOffOn:false,
   getBmi:'',
   getHomeGraphData: [],
+  getProfile_imgData:[]
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -139,6 +140,10 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, getSoundOffOn: action.payload};
     case types.HOME_GRAPH_DATA:
       return {...state, getHomeGraphData: action.payload};
+    case types.Profile_imgData:
+      return {
+        ...state,getProfile_imgData:action.payload
+      }  
     default:
       return state;
   }

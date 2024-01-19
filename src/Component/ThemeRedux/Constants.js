@@ -27,5 +27,6 @@ export default {
   SOUND_ON_OFF:'SOUND_ON_OFF',
   BMI:'BMI',
   HOME_GRAPH_DATA:'HOME_GRAPH_DATA',
+  Profile_imgData:'Profile_imgData'
 
 };

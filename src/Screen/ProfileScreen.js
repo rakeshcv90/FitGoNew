@@ -243,8 +243,9 @@ const ProfileScreen = () => {
   const UpdateProfileModal = () => {
     const [modalImageUploaded, setModalImageUploaded] = useState(false);
     const [IsimgUploaded, setImguploaded] = useState(true);
-    const [userAvatar, setUserAvatar] = useState(null);
+    
     const UploadImage = async () => {
+      const [userAvatar, setUserAvatar] = useState(null);
       // console.log("upload img")
       const data = JSON.parse(await AsyncStorage.getItem('Data'));
       try {
