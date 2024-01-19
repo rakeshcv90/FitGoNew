@@ -232,10 +232,10 @@ const ProductsList = ({route}) => {
                     style={{
                       height: 90,
                       width: 90,
-                      borderRadius: 180 / 2,
+                      // borderRadius: 180 / 2,
                       alignSelf: 'center',
                     }}
-                    resizeMode="cover"></Image>
+                    resizeMode="contain"></Image>
                   <View style={{width: 90}}>
                   <Text
                   numberOfLines={1}

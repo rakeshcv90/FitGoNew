@@ -14,6 +14,7 @@ import {
 import React, {useEffect, useRef, useState} from 'react';
 import AnimatedLottieView from 'lottie-react-native';
 import DeviceInfo from 'react-native-device-info';
+import CircularProgress from 'react-native-circular-progress-indicator';
 
 import {
   DeviceHeigth,
@@ -27,6 +28,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
 import VersionNumber from 'react-native-version-number';
+
 import {
   Setmealdata,
   setCurrentWorkoutData,
@@ -38,6 +40,7 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const LoadData = ({navigation}) => {
   const {getFcmToken} = useSelector(state => state);
+  const [loadData, setLoadData] = useState(0);
   const buttonName = [
     {
       id: 1,
@@ -89,6 +92,7 @@ const LoadData = ({navigation}) => {
     mindSetData,
     mindsetConsent,
     getUserDataDetails,
+    getUserID,
   } = useSelector(state => state);
 
   const translationX = useRef(new Animated.Value(0)).current;
@@ -109,47 +113,44 @@ const LoadData = ({navigation}) => {
     ).start();
   };
   useEffect(() => {
-    DeviceInfo.getUniqueId().then(id => WholeData(id));
+    DeviceInfo.getUniqueId().then(id => {
+      Meal_List(id);
+      WholeData(id);
+    });
   }, []);
   const WholeData = async deviceID => {
     const mergedObject = Object.assign({}, ...getLaterButtonData);
-    console.log('USER ID', getUserDataDetails);
 
     try {
       const payload = new FormData();
       payload.append('deviceid', deviceID);
       payload.append('devicetoken', getFcmToken);
-      payload.append(
-        'id',
-        getUserDataDetails?.id != null ? getUserDataDetails?.id : null,
-      );
+      payload.append('id', getUserID != 0 ? getUserID : null);
       payload.append('gender', mergedObject?.gender);
       payload.append('goal', mergedObject?.goal);
       payload.append('age', mergedObject?.age);
       payload.append('fitnesslevel', mergedObject?.level); // static values change  it accordingly
       payload.append('focusarea', mergedObject?.focuseArea?.join(','));
       payload.append('weight', mergedObject?.currentWeight);
+      payload.append('targetweight', mergedObject?.targetWeight);
       payload.append('height', mergedObject?.height);
-      //targetWeight
       payload.append(
         'injury',
         mergedObject?.injury != null ? mergedObject?.injury?.join(',') : null,
       );
       payload.append('equipment', mergedObject?.equipment);
       payload.append('workoutarea', mergedObject?.workoutArea?.join(','));
+      if (mindsetConsent == true) {
+        payload.append('workoutroutine', mindSetData[0].routine);
+        payload.append('sleepduration', mindSetData[1].SleepDuration);
+        payload.append('mindstate', mindSetData[2].mState);
+        payload.append('alcoholconstent', mindSetData[3].Alcohol_Consent);
 
-      if (getUserDataDetails)
-        if (mindsetConsent == true) {
-          payload.append('workoutroutine', mindSetData[0].routine);
-          payload.append('sleepduration', mindSetData[1].SleepDuration);
-          payload.append('mindstate', mindSetData[2].mState);
-          payload.append('alcoholconstent', mindSetData[3].Alcohol_Consent);
-
-          if (mindSetData[4]) {
-            payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
-          }
+        if (mindSetData[4]) {
+          payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
         }
-      console.log('Free User Data ', payload);
+      }
+
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {
@@ -157,14 +158,13 @@ const LoadData = ({navigation}) => {
         },
         data: payload,
       });
-      console.log(data.data, payload);
-      Meal_List(deviceID);
-      getUserDataDetails?.id != null && getProfileData(getUserDataDetails?.id);
-      getUserDataDetails?.id != null
-        ? getCustomWorkout(getUserDataDetails?.id)
+
+      getUserID != 0 && getProfileData(getUserID);
+      getUserID != 0
+        ? getCustomWorkout(getUserID)
         : customFreeWorkoutDataApi(deviceID);
     } catch (error) {
-      console.log('error', error);
+      console.log('Whole Data Error', error);
     }
   };
 
@@ -180,17 +180,22 @@ const LoadData = ({navigation}) => {
         },
       });
       console.log('Custom Workout123', data.data.workout);
+
       if (data.data.workout) {
         dispatch(setCustomWorkoutData(data?.data));
-        currentWorkoutDataApi(data.data?.workout[0]);
+        setActiveNext(true);
+        // currentWorkoutDataApi(data.data?.workout[0]);
+        setLoadData(100);
       } else {
         dispatch(setCustomWorkoutData([]));
         setActiveNext(true);
+        setLoadData(100);
       }
     } catch (error) {
       console.log('Custom Workout Error', error);
       dispatch(setCustomWorkoutData([]));
       setActiveNext(true);
+      setLoadData(100);
     }
   };
 
@@ -208,64 +213,70 @@ const LoadData = ({navigation}) => {
       });
       console.log('CustomFreeWorkout11', res.data);
       if (res.data?.workout) {
+        setLoadData(100);
+        setActiveNext(true);
         dispatch(setCustomWorkoutData(res.data));
-        currentWorkoutDataApi(res.data?.workout[0]);
+        // currentWorkoutDataApi(res.data?.workout[0]);
       } else {
         dispatch(setCustomWorkoutData([]));
         setActiveNext(true);
+        setLoadData(100);
       }
     } catch (error) {
       console.error(error?.response, 'customWorkoutDataApiError');
       dispatch(setCustomWorkoutData([]));
       setActiveNext(true);
+      setLoadData(100);
     }
   };
 
-  const currentWorkoutDataApi = async workout => {
-    const mergedObject = Object.assign({}, ...getLaterButtonData);
-    try {
-      const payload = new FormData();
-      payload.append('workoutid', workout?.workout_id);
-      payload.append('workoutgender', workout?.workout_gender);
-      payload.append('workoutgoal', workout?.workout_goal);
-      payload.append('workoutlevel', workout?.workout_level);
-      payload.append('workoutarea', workout?.workout_area);
-      payload.append('workoutinjury', workout?.workout_injury);
-      payload.append('workoutage', mergedObject?.age); //User Age here
-      payload.append('workoutequipment', workout?.workout_equipment);
-      const res = await axios({
-        url: NewAppapi.Free_Excercise_Data,
+  // const currentWorkoutDataApi = async workout => {
+  //   const mergedObject = Object.assign({}, ...getLaterButtonData);
+  //   try {
+  //     const payload = new FormData();
+  //     payload.append('workoutid', workout?.workout_id);
+  //     payload.append('workoutgender', workout?.workout_gender);
+  //     payload.append('workoutgoal', workout?.workout_goal);
+  //     payload.append('workoutlevel', workout?.workout_level);
+  //     payload.append('workoutarea', workout?.workout_area);
+  //     payload.append('workoutinjury', workout?.workout_injury);
+  //     payload.append('workoutage', mergedObject?.age); //User Age here
+  //     payload.append('workoutequipment', workout?.workout_equipment);
+  //     const res = await axios({
+  //       url: NewAppapi.Free_Excercise_Data,
 
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: payload,
-      });
-      if (res.data) {
-        console.log(res.data, 'AGE_CURRENT');
-        dispatch(setCurrentWorkoutData(res.data));
-      } else dispatch(setCurrentWorkoutData([]));
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: payload,
+  //     });
+  //     if (res.data) {
 
-      setTimeout(() => {
-        setActiveNext(true);
-        // showMessage({
-        //   message: 'Your Custom Workout has beeen created Successfully!!',
-        //   type: 'success',
-        //   animationDuration: 500,
-        //   // statusBarHeight: StatusBar_Bar_Height+,
-        //   floating: true,
-        //   icon: {icon: 'auto', position: 'left'},
-        // });
-      }, 2000);
-    } catch (error) {
-      console.error(error, 'customWorkoutDataApiError');
-      dispatch(setCurrentWorkoutData([]));
-      setTimeout(() => {
-        setActiveNext(true);
-      }, 2000);
-    }
-  };
+  //       dispatch(setCurrentWorkoutData(res.data));
+  //       setLoadData(100);
+  //     } else dispatch(setCurrentWorkoutData([]));
+
+  //     setLoadData(100);
+  //     setTimeout(() => {
+  //       setActiveNext(true);
+  //       // showMessage({
+  //       //   message: 'Your Custom Workout has beeen created Successfully!!',
+  //       //   type: 'success',
+  //       //   animationDuration: 500,
+  //       //   // statusBarHeight: StatusBar_Bar_Height+,
+  //       //   floating: true,
+  //       //   icon: {icon: 'auto', position: 'left'},
+  //       // });
+  //     }, 2000);
+  //   } catch (error) {
+  //     console.error(error, 'customWorkoutDataApiError');
+  //     dispatch(setCurrentWorkoutData([]));
+  //     setTimeout(() => {
+  //       setActiveNext(true);
+  //     }, 2000);
+  //   }
+  // };
 
   const Meal_List = async login_token => {
     try {
@@ -275,7 +286,6 @@ const LoadData = ({navigation}) => {
           'Content-Type': 'multipart/form-data',
         },
         data: {
-          deviceid: login_token,
           version: VersionNumber.appVersion,
         },
       });
@@ -301,7 +311,7 @@ const LoadData = ({navigation}) => {
           id: user_id,
         },
       });
-
+      console.log('User Profile Data',data.data);
       if (data.data.profile) {
         dispatch(setUserProfileData(data.data.profile));
       } else {
@@ -335,25 +345,32 @@ const LoadData = ({navigation}) => {
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <View
         style={{
-          width: DeviceWidth * 0.5,
           height: DeviceHeigth * 0.2,
-          top: 60,
+          top: DeviceHeigth * 0.03,
           alignSelf: 'center',
-          //backgroundColor: 'red',
+          backgroundColor: '#fff',
         }}>
-        <AnimatedLottieView
-          source={require('../../Icon/Images/NewImage/circle.json')}
-          resizeMode="contain"
-          speed={1}
-          autoPlay
-          loop
-          style={{
-            width: DeviceWidth * 0.5,
-            height: DeviceHeigth * 0.2,
+        <CircularProgress
+          value={loadData}
+          radius={80}
+          progressValueColor={'rgb(197, 23, 20)'}
+          inActiveStrokeColor={AppColor.GRAY2}
+          activeStrokeColor={'rgb(197, 23, 20)'}
+          inActiveStrokeOpacity={0.3}
+          maxValue={100}
+          valueSuffix={'%'}
+          titleColor={'black'}
+          titleStyle={{
+            textAlign: 'center',
+            fontSize: 28,
+            fontWeight: '700',
+            lineHeight: 35,
+            fontFamily: 'Poppins',
+            color: 'rgb(0, 0, 0)',
           }}
         />
       </View>
-      <Text style={styles.text}>49%</Text>
+      {/* <Text style={styles.text}>49%</Text> */}
       <Text style={styles.text1}>Creating your personalized plan...</Text>
       <Text style={styles.text2}>10,00,000+</Text>
       <Text style={styles.text2}>Training Plan</Text>
@@ -417,13 +434,11 @@ const LoadData = ({navigation}) => {
 
       <View style={styles.buttons}>
         <View></View>
+        {console.log('VBVBVBVB', activeNext)}
         {activeNext && (
           <TouchableOpacity
             onPress={() => {
-              console.log('CurrentWorkout', currentWorkoutData);
-              navigation.navigate('Preview', {
-                currentExercise: currentWorkoutData,
-              });
+              navigation.navigate('BottomTab');
             }}>
             <LinearGradient
               start={{x: 0, y: 1}}
