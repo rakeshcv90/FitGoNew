@@ -413,7 +413,17 @@ const Profile = () => {
   };
   const ProfileView = () => {
     const handleLogout = async () => {
-      LogOut();
+      // LogOut();
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'LogSignUp',
+            },
+          ],
+        }),
+      );
    
     };
 

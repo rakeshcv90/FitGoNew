@@ -57,7 +57,7 @@ const Signup = ({navigation}) => {
   const [appVersion, setAppVersion] = useState(0);
   const dispatch = useDispatch();
 
-  const {getFcmToken}=useSelector(state=>state)
+  const {getFcmToken} = useSelector(state => state);
   const PasswordRegex =
     // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%&*()-_+='":;,.?/~`[{}<>€£¥÷×])[A-Za-z\d!@#$%&*()-_+='":;,.?/~`[{}<>€£¥÷×]{8,}$/;
@@ -142,8 +142,8 @@ const Signup = ({navigation}) => {
     );
   };
   const handleFormSubmit = async (value, action) => {
-    console.log('Device Id', deviceId, appVersion);
-    setForLoading(true);
+   
+    //setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
         method: 'POST',
@@ -158,12 +158,12 @@ const Signup = ({navigation}) => {
           social_id: 0,
           social_token: 0,
           social_type: '',
-          deviceid: deviceId,
+          //deviceid: deviceId,
           version: appVersion,
-          devicetoken:getFcmToken
+          devicetoken: getFcmToken,
         },
       });
-
+      console.log('Device Id',data.data);
       if (data.data.status == 0) {
         setForLoading(false);
         showMessage({
@@ -175,7 +175,7 @@ const Signup = ({navigation}) => {
         });
         setVerifyVisible(true);
         setEmailSent(data.data.email);
-        action.resetForm();
+        //action.resetForm();
       } else {
         setForLoading(false);
         showMessage({
@@ -194,6 +194,7 @@ const Signup = ({navigation}) => {
   };
   const socialLogiIn = async (value, token) => {
     // setForLoading(true);
+ 
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
         method: 'POST',
@@ -207,11 +208,12 @@ const Signup = ({navigation}) => {
           socialid: value.id,
           socialtoken: token,
           socialtype: 'google',
-          deviceid: deviceId,
+       //  deviceid: deviceId,
           version: appVersion,
-          devicetoken:getFcmToken
+          devicetoken: getFcmToken,
         },
       });
+    console.log("DFDFDFDFDFDFRDF",data.data)
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
@@ -231,10 +233,13 @@ const Signup = ({navigation}) => {
         data.data.profile_compl_status == 1
       ) {
         setForLoading(false);
+        dispatch(setUserId(data.data?.id));
         navigationRef.navigate('BottomTab');
       } else {
         setForLoading(false);
-        console.log('user not found');
+        // console.log('user not found');
+        dispatch(setUserId(data.data?.id));
+        navigationRef.navigate('Yourself');
       }
     } catch (error) {
       setForLoading(false);
@@ -256,12 +261,12 @@ const Signup = ({navigation}) => {
           socialid: value.userID,
           socialtoken: '',
           socialtype: 'facebook',
-          deviceid: deviceId,
+         // deviceid: deviceId,
           version: appVersion,
-          devicetoken:getFcmToken
+          devicetoken: getFcmToken,
         },
       });
-
+  
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
@@ -286,11 +291,13 @@ const Signup = ({navigation}) => {
         navigationRef.navigate('BottomTab');
       } else {
         setForLoading(false);
-        console.log('user not found');
+             // console.log('user not found');
+             dispatch(setUserId(data.data?.id));
+             navigationRef.navigate('Yourself');
       }
     } catch (error) {
       setForLoading(false);
-      console.log('google Signup Error', error?.response);
+      console.log('FaceBook Signup Error', error?.response);
     }
   };
   const ModalView = () => {
@@ -395,6 +402,7 @@ const Signup = ({navigation}) => {
             });
             // dispatch(setUserId(OtpMsg.data?.id));
             getProfileData(OtpMsg.data?.id);
+            dispatch(setUserId(OtpMsg.data?.id));
             setVerifyVisible(false);
             setTxt1('');
             setTxt2('');
@@ -806,7 +814,7 @@ const Signup = ({navigation}) => {
                         icon={showPassword ? 'eye-off' : 'eye'}
                         onPress={() => setShowPassword(!showPassword)}
                         color={'#ADA4A5'}
-                        style={{marginBottom:-1,}}
+                        style={{marginBottom: -1}}
                       />
                     }
                     // right={
@@ -862,7 +870,7 @@ const Signup = ({navigation}) => {
                         icon={isVisiblepassword ? 'eye-off' : 'eye'}
                         onPress={() => setIsvisiblepassword(!isVisiblepassword)}
                         color={'#ADA4A5'}
-                        style={{marginBottom:-1,}}
+                        style={{marginBottom: -1}}
                       />
                     }
                     // right={

@@ -328,8 +328,8 @@ const Login = ({navigation}) => {
     } catch (error) {
       console.log('User Profile Error', error);
       status == 1
-      ? navigation.navigate('BottomTab')
-      : navigationRef.navigate('Yourself');
+        ? navigation.navigate('BottomTab')
+        : navigationRef.navigate('Yourself');
       setForLoading(false);
     }
   };
@@ -418,7 +418,7 @@ const Login = ({navigation}) => {
           id: user_id,
         },
       });
-      
+
       // console.log('Custom Workout', data.data);
       if (data.data.workout) {
         setForLoading(false);
@@ -469,7 +469,7 @@ const Login = ({navigation}) => {
           token: login_token,
         },
       });
-      console.log('Purchase Data',res.data.data);
+      console.log('Purchase Data', res.data.data);
       if (res.data.data.length > 0) {
         dispatch(setPurchaseHistory(res.data.data));
       } else {
@@ -494,7 +494,8 @@ const Login = ({navigation}) => {
             email: value.email,
           },
         });
-        if (data.data.msg == 'Mail Sent') {
+        setForLoading(false);
+        if (data.data[0].msg == 'Mail sent') {
           setForLoading(false);
           showMessage({
             message: 'Reset Password link sent!',

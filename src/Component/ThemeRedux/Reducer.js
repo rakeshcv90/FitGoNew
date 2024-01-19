@@ -7,7 +7,7 @@ const intialState = {
   showIntro: false,
   completeProfileData: [],
   getLaterButtonData: [],
-  getUserID: '',
+  getUserID:0,
   customWorkoutData: [],
   getUserDataDetails: [],
   mindsetConsent: false,

@@ -19,6 +19,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {localImage} from '../../Component/Image';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
+import { showMessage } from 'react-native-flash-message';
 
 const WorkoutArea = ({route, navigation}) => {
   const {nextScreen} = route.params;
@@ -96,8 +97,19 @@ const WorkoutArea = ({route, navigation}) => {
     const newSelectedItems = [...selectedItems];
     const newImageVIew = [...imageView];
     if (index === -1) {
-      newSelectedItems.push(item);
-      newImageVIew.push(item);
+      if (newImageVIew.length <1) {
+        newSelectedItems.push(item);
+        newImageVIew.push(item);
+      } else {
+        showMessage({
+          message: 'You Can select only One Item',
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
+      }
+     
     } else {
       newSelectedItems.splice(index, 1);
 
@@ -233,8 +245,8 @@ const WorkoutArea = ({route, navigation}) => {
                 style={[
                   styles.shadowProp,
                   {
-                    borderWidth: imageView.find(num => num === 'At Bed') && 1,
-                    borderColor: imageView.find(num => num === 'At Bed')
+                    borderWidth: imageView.find(num => num === 'At Gym') && 1,
+                    borderColor: imageView.find(num => num === 'At Gym')
                       ? 'red'
                       : 'white',
                   },

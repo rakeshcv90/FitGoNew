@@ -20,10 +20,7 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import VersionNumber from 'react-native-version-number';
-import {
-  setHealthData,
-  setHomeGraphData,
-} from '../../Component/ThemeRedux/Actions';
+import {setHealthData} from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
 import BackgroundService from 'react-native-background-actions';
@@ -54,7 +51,7 @@ import {
 } from '@dongminyu/react-native-step-counter';
 import {navigationRef} from '../../../App';
 import {useSelector, useDispatch} from 'react-redux';
-import ActivityLoader from '../../Component/ActivityLoader';
+// import ActivityLoader from '../../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import RoundedCards from '../../Component/RoundedCards';
@@ -62,13 +59,6 @@ import {BackdropBlur, Canvas, Fill} from '@shopify/react-native-skia';
 import {color} from 'd3';
 import {Form} from 'formik';
 import moment from 'moment';
-import Graph from '../Yourself/Graph';
-const zeroData = Array(7)
-  .fill()
-  .map((_, index) => {
-    const currentDate = moment().subtract(index + 1, 'days');
-    return {weight: 0, date: currentDate.date()};
-  });
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
 
@@ -86,8 +76,8 @@ const GradientText = ({item}) => {
         </SvgGrad>
         <SvgText
           fontFamily="Poppins"
-          fontWeight={'700'}
-          fontSize={20}
+          fontWeight={'600'}
+          fontSize={23}
           fill="url(#grad)"
           x="0"
           y="25">
@@ -141,12 +131,15 @@ const ProgressBar = ({progress, image, text}) => {
   );
 };
 const Home = ({navigation}) => {
+  useEffect(() => {
+    setTimeout(() => {
+      ActivityPermission();
+    }, 3000);
+  }, []);
   const [progress, setProgress] = useState(10);
-
   const [forLoading, setForLoading] = useState(false);
   const [value, setValue] = useState('Weekly');
   const [likeData, setLikeData] = useState([]);
-  const [weeklyGraph, setWeeklyGraph] = useState([]);
   const [currentindex, setCurrentIndex] = useState(1);
   const progressAnimation = useRef(new Animated.Value(0)).current;
   const {
@@ -159,9 +152,7 @@ const Home = ({navigation}) => {
     customWorkoutData,
     mealData,
     getPedomterData,
-    getHomeGraphData,
   } = useSelector(state => state);
-  const dispatch = useDispatch();
   const [stepGoalProfile, setStepGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
   );
@@ -172,11 +163,13 @@ const Home = ({navigation}) => {
     getPedomterData[2] ? getPedomterData[2].RCalories : 25,
   );
   console.log('healthData', getHealthData);
+
   useEffect(() => {
     ActivityPermission();
 
     getGraphData();
   }, []);
+
 
   //   useEffect(() => {
   //     ActivityPermission();
@@ -209,7 +202,7 @@ const Home = ({navigation}) => {
         startStepCounter();
         // Permission was already granted previously
       }
-    } else {
+    } else if (Platform.OS == 'ios') {
       AppleHealthKit.isAvailable((err, available) => {
         const permissions = {
           permissions: {
@@ -256,6 +249,7 @@ const Home = ({navigation}) => {
     }
   };
   // service
+
   // useEffect(() => {
   //   new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
   //     //NOT IMPLEMENTED YET
@@ -304,6 +298,25 @@ const Home = ({navigation}) => {
     }
   };
 
+  /// backgrounf listner
+  new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
+    //NOT IMPLEMENTED YET
+    'healthKit:StepCount:new',
+    async () => {
+      // console.log('--> observer triggered');
+      AppleHealthKit.getStepCount(options, (callbackError, results) => {
+        if (callbackError) {
+          console.log('Error while getting the data');
+        }
+        setSteps(results.value);
+        setDistance(((results.value / 20) * 0.01).toFixed(2));
+        setCalories(((results.value / 20) * 1).toFixed(1));
+        console.log('ios stespssss', results);
+      });
+    },
+  );
+
+
   const likeStatusApi = async () => {
     try {
       const payload = new FormData();
@@ -315,6 +328,7 @@ const Home = ({navigation}) => {
         method: 'post',
         data: payload,
       });
+      setForLoading(false);
       if (res.data) {
         setForLoading(false);
         console.log(...res.data, 'GET LIKES ');
@@ -338,6 +352,7 @@ const Home = ({navigation}) => {
         method: 'post',
         data: payload,
       });
+      setForLoading(false);
       if (res.data) {
         setForLoading(false);
         console.log(res.data, 'POST LIKE');
@@ -959,11 +974,9 @@ const Home = ({navigation}) => {
                 width: 30,
               },
             ]}
-            resizeMode="cover"></Image>
-          <Text style={styles.monetText}>500</Text> */}
+            resizeMode="cover"></Image> */}
+          {/* <Text style={styles.monetText}>500</Text> */}
         </View>
-
-        {/* {console.log("User Data",getUserDataDetails )} */}
         {Object.keys(getUserDataDetails).length > 0 ? (
           <TouchableOpacity
             style={styles.profileView1}
@@ -1206,7 +1219,7 @@ const Home = ({navigation}) => {
             ListEmptyComponent={emptyComponent}
             pagingEnabled
             renderItem={({item, index}) => {
-              // console.log("WOrkout Details",item.days)
+
               let totalTime = 0;
               let totalCal = 0;
 
@@ -1217,7 +1230,7 @@ const Home = ({navigation}) => {
                 totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
                 totalCal = totalCal + parseInt(item?.days[day]?.total_calories);
               }
-              console.log('WOrkout Details', item);
+
               return (
                 <TouchableOpacity
                   onPress={() =>
@@ -1251,7 +1264,7 @@ const Home = ({navigation}) => {
                         flexDirection: 'row',
                         marginVertical: 10,
                       }}>
-                      <View>
+                      <View style={{top: 15}}>
                         <ProgressBar
                           progress={progress}
                           image={localImage.Play}
@@ -1262,7 +1275,7 @@ const Home = ({navigation}) => {
                           }
                         />
                       </View>
-                      <View style={{marginHorizontal: 10}}>
+                      <View style={{marginHorizontal: 10, top: 15}}>
                         <ProgressBar
                           progress={progress}
                           image={localImage.Step1}
@@ -1283,7 +1296,7 @@ const Home = ({navigation}) => {
                       marginTop: -DeviceHeigth * 0.11,
                     }}
                     resizeMode="contain"></Image>
-                  <TouchableOpacity
+                  {/* <TouchableOpacity
                     style={[
                       styles.img,
                       {
@@ -1309,7 +1322,7 @@ const Home = ({navigation}) => {
                         style={{height: 25, width: 25}}
                       />
                     )}
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </TouchableOpacity>
               );
             }}
@@ -1546,7 +1559,7 @@ var styles = StyleSheet.create({
     height: 40,
     width: 80,
     // borderRadius: 30,
-    // borderColor: AppColor.RED,
+    //borderColor: AppColor.RED,
     // borderWidth: 1,
     marginLeft: 20,
     flexDirection: 'row',

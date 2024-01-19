@@ -54,9 +54,12 @@ const NewProgressScreen = ({navigation}) => {
   const CurrentWeight = getUserDataDetails?.weight;
   const arrayForData = [];
   useEffect(() => {
-    setBmi((
-      getUserDataDetails?.weight /
-      (getUserDataDetails?.height * 0.3048) ** 2).toFixed(2))
+    setBmi(
+      (
+        getUserDataDetails?.weight /
+        (getUserDataDetails?.height * 0.3048) ** 2
+      ).toFixed(2),
+    );
     // userData();
     // dispatch(setBmi(getBmi))
   }, []);
@@ -255,7 +258,7 @@ const NewProgressScreen = ({navigation}) => {
     labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     datasets: [
       {
-        data: [getUserDataDetails?.weight, 33,60,25,100],
+        data: [getUserDataDetails?.weight, 33, 60, 25, 100],
         color: () => AppColor.RED, // optional
       },
     ],
@@ -522,7 +525,7 @@ const NewProgressScreen = ({navigation}) => {
                 fontSize: 12,
                 marginLeft: 8,
                 // fontFamily:'Poppins-Regular',
-                fontWeight:'600'
+                fontWeight: '600',
               }}>
               {'Feedback'}
             </Text>
@@ -588,9 +591,9 @@ const NewProgressScreen = ({navigation}) => {
           ))}
         </View>
         <LineText Txt1={'Weight'} Txt2={'Weekly'} />
-        <View style={[styles.card,{}]}>
+        <View style={[styles.card, {}]}>
           <LineChart
-          style={{paddingRight:30}}
+            style={{paddingRight: 30}}
             data={data}
             width={DeviceWidth * 0.85}
             height={DeviceHeigth * 0.25}
@@ -613,6 +616,7 @@ const NewProgressScreen = ({navigation}) => {
           <RenderEmojis />
           <VictoryChart
             theme={VictoryTheme.material}
+            horizontal={false}
             domainPadding={20}
             width={DeviceWidth * 0.95}>
             <VictoryAxis
@@ -662,33 +666,33 @@ const NewProgressScreen = ({navigation}) => {
           <RenderCalender minIndex={14} maxIndex={21} />
           <RenderCalender minIndex={21} maxIndex={28} />
           <RenderCalender minIndex={28} /> */}
-              <Calendar
-          onDayPress={day => {
-            console.log(day);
-            setDate(day.dateString);
-            setSelected(true);
-          }}
-          markingType="period"
-          hideArrows
-          enableSwipeMonths={false}
-          hideExtraDays={true}
-          hideDayNames={false}
-          markedDates={{
-            [getDate]: {
-              startingDay: true,
-              color: AppColor.RED,
-              endingDay: true,
-              textColor: AppColor.WHITE,
-            },
-          }}
-          style={[
-            styles.calender,
-            {
-              width: DeviceWidth * 0.85,
-            },
-          ]}
-          theme={theme}
-        />
+          <Calendar
+            onDayPress={day => {
+              console.log(day);
+              setDate(day.dateString);
+              setSelected(true);
+            }}
+            markingType="period"
+            hideArrows
+            enableSwipeMonths={false}
+            hideExtraDays={true}
+            hideDayNames={false}
+            markedDates={{
+              [getDate]: {
+                startingDay: true,
+                color: AppColor.RED,
+                endingDay: true,
+                textColor: AppColor.WHITE,
+              },
+            }}
+            style={[
+              styles.calender,
+              {
+                width: DeviceWidth * 0.85,
+              },
+            ]}
+            theme={theme}
+          />
         </View>
         <View
           style={{
@@ -712,7 +716,8 @@ const NewProgressScreen = ({navigation}) => {
           </View>
           <View />
         </View>
-        <View style={[styles.card, {flexDirection: 'column',marginBottom:10}]}>
+        <View
+          style={[styles.card, {flexDirection: 'column', marginBottom: 10}]}>
           <View style={{width: DeviceWidth * 0.9, alignSelf: 'center'}}>
             <View
               style={{
@@ -852,7 +857,7 @@ const styles = StyleSheet.create({
   Feedback_B: {
     borderWidth: 0.5,
     borderRadius: 10,
-    padding:5 ,
+    padding: 5,
     borderColor: AppColor.RED,
     flexDirection: 'row',
   },

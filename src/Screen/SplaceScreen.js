@@ -31,54 +31,54 @@ const SplaceScreen = ({navigation}) => {
   const [deviceId, setDeviceId] = useState(0);
   const dispatch = useDispatch();
 
-  const {showIntro, getUserDataDetails} = useSelector(state => state);
+  const {showIntro, getUserDataDetails,getUserID} = useSelector(state => state);
 
 
   useEffect(() => {
     DeviceInfo.syncUniqueId().then(uniqueId => {
       setDeviceId(uniqueId);
     });
-    getPlanData();
+    // getPlanData();
     Meal_List();
     getCaterogy();
   }, []);
-  const getPlanData = () => {
-    Platform.OS === 'ios'
-      ? RNIap.initConnection()
-          .catch(() => {
-            console.log('error connecting to store');
-          })
-          .then(() => {
-            RNIap.getProducts({skus: products})
-              .catch(() => {
-                console.log('error finding purchase');
-              })
-              .then(res => {
-                console.log('IOS Subscription', res);
-                dispatch(setInappPurchase(res));
-              });
-          })
-      : RNIap.initConnection()
-          .catch(() => {
-            console.log('error connecting to store');
-          })
-          .then(() => {
-            RNIap.getSubscriptions({skus: products})
-              .catch(() => {
-                console.log('error finding purchase');
-              })
-              .then(res => {
-                console.log('Android Subscription', res);
-                dispatch(setInappPurchase(res));
-              });
-          });
-  };
+  // const getPlanData = () => {
+  //   Platform.OS === 'ios'
+  //     ? RNIap.initConnection()
+  //         .catch(() => {
+  //           console.log('error connecting to store');
+  //         })
+  //         .then(() => {
+  //           RNIap.getProducts({skus: products})
+  //             .catch(() => {
+  //               console.log('error finding purchase');
+  //             })
+  //             .then(res => {
+  //               console.log('IOS Subscription', res);
+  //               dispatch(setInappPurchase(res));
+  //             });
+  //         })
+  //     : RNIap.initConnection()
+  //         .catch(() => {
+  //           console.log('error connecting to store');
+  //         })
+  //         .then(() => {
+  //           RNIap.getSubscriptions({skus: products})
+  //             .catch(() => {
+  //               console.log('error finding purchase');
+  //             })
+  //             .then(res => {
+  //               console.log('Android Subscription', res);
+  //               dispatch(setInappPurchase(res));
+  //             });
+  //         });
+  // };
   useEffect(() => {
     setTimeout(() => {
       if (showIntro) {
-        // navigation.replace('LogSignUp');
-        if (getUserDataDetails?.id) navigation.replace('BottomTab');
-        else navigation.replace('LogSignUp');
+         navigation.replace('LogSignUp');
+        // if (getUserDataDetails?.id) navigation.replace('BottomTab');
+        // else navigation.replace('LogSignUp');
       } else {
         navigation.replace('IntroductionScreen1');
       }

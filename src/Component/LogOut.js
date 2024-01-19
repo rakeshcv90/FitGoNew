@@ -1,13 +1,15 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+
 import { setLogout } from './ThemeRedux/Actions';
 import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import {CommonActions} from '@react-navigation/native';
+import {persistor} from '../Component/ThemeRedux/Store'
 
-const LogOut = () => {
+const LogOut = async() => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
+    await AsyncStorage.clear();
+    await persistor.purge();
     dispatch(setLogout());
     navigation.dispatch(
       CommonActions.reset({

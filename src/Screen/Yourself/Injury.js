@@ -105,12 +105,12 @@ const Injury = ({route, navigation}) => {
     const newSelectedItems = [...selectedItems];
     const newImageVIew = [...imageView];
     if (index === -1) {
-      if (imageView.length < 2) {
+      if (imageView.length <1) {
         newSelectedItems.push(itemId);
         newImageVIew.push(item);
       } else {
         showMessage({
-          message: 'You Can select only Two Item',
+          message: 'You Can select only One Item',
           floating: true,
           duration: 500,
           type: 'danger',
