@@ -16,9 +16,10 @@ import {
   Text as SkiaText,
 } from '@shopify/react-native-skia';
 
-import {curveBasis, line, scaleLinear, scaleTime} from 'd3';
+import {curveBasis, line, scaleLinear, scaleSequential, scaleTime} from 'd3';
 import {Easing, View, Pressable, Text, StyleSheet} from 'react-native';
 import {AppColor} from '../../Component/Color';
+import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 
 interface GraphData {
   min: number;
@@ -27,10 +28,10 @@ interface GraphData {
 }
 export type DataPoint = {
   date: string;
-  value: number;
+  weight: number;
 };
 
-const LineChart = ({resultData, zeroData}: any) => {
+const LineChart = ({resultData, zeroData, home}: any) => {
   const transition = useValue(1);
   const state = useValue({
     current: 0,
@@ -57,7 +58,8 @@ const LineChart = ({resultData, zeroData}: any) => {
   const GRAPH_WIDTH = 360;
   const [late, setLate] = useState(false);
   const [circles, setCircle] = useState([]);
-  const t = Array(resultData.length).fill(0);
+  const maxWeight = Math.max(...resultData.map((dataPoint: DataPoint) => dataPoint.weight));
+  const minWeight = Math.min(...resultData.map((dataPoint: DataPoint) => dataPoint.weight));
 
   const makeGraph = (data: DataPoint[]): GraphData => {
     const max = Math.max(...data.map((val: any) => val.weight));
@@ -94,7 +96,11 @@ const LineChart = ({resultData, zeroData}: any) => {
     });
   };
   const graphData = [makeGraph(zeroData), makeGraph(resultData)];
-
+  const uniformValues = Array.from({ length: 7 }, (_, index) => {
+    const factor = index / 7; // Linear interpolation factor
+    return minWeight + factor * (maxWeight - minWeight);
+  });
+  
   const path = useComputedValue(() => {
     const start = graphData[state.current.current].curve;
     const end = graphData[state.current.next].curve;
@@ -114,6 +120,7 @@ const LineChart = ({resultData, zeroData}: any) => {
         style={{
           width: GRAPH_WIDTH,
           height: GRAPH_HEIGHT,
+          marginTop: -DeviceHeigth * 0.04,
         }}>
         <Line
           p1={vec(10, 130)}
@@ -136,9 +143,41 @@ const LineChart = ({resultData, zeroData}: any) => {
           style="stroke"
           strokeWidth={1}
         />
+        {/* <Line
+          p1={vec(0, 0)}
+          p2={vec(360, 350)}
+          color="lightgrey"
+          style="stroke"
+          strokeWidth={1}
+        /> */}
+        {resultData.map((dataPoint: DataPoint, index: number) => {
+          const xValue = scaleTime()
+            .domain([
+              new Date(resultData[0].date),
+              new Date(resultData[resultData.length - 1].date),
+            ])
+            .range([5, GRAPH_WIDTH - 45])(new Date(dataPoint.date));
+          return (
+            <>
+              <SkiaText
+                x={xValue}
+                y={400}
+                text={dataPoint?.date}
+                color={AppColor.BLACK}
+              />
+              <SkiaText
+                x={0}
+                y={uniformValues[index]}
+                text={uniformValues[uniformValues.length - 1 -index].toFixed()}
+                color={AppColor.BLACK}
+              />
+            </>
+          );
+        })}
         {/* <Path style="stroke" path={test} strokeWidth={4} color="blue" /> */}
-        <Path style="stroke" path={path} strokeWidth={4} color={AppColor.RED} />
+        <Path style="stroke" path={path} strokeWidth={4} color={'rgba(208, 24, 24, 0.6)'} />
         {late &&
+          home &&
           resultData.map((dataPoint, index: number) => {
             const xValue = scaleTime()
               .domain([
@@ -150,7 +189,7 @@ const LineChart = ({resultData, zeroData}: any) => {
             const yValue = scaleLinear()
               .domain([0, max])
               .range([GRAPH_HEIGHT, 150])(dataPoint.weight);
-            // console.log('xValue', dataPoint?.weight, yValue);
+            //console.log('xValue', dataPoint?.weight, yValue);
             // function isApproximatelyEqual(value, array, tolerance) {
             //   return array.some(item => Math.abs(value - item) <= tolerance);
             // }
@@ -221,6 +260,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     flex: 1,
+    height: DeviceHeigth * 0.6,
+    width: DeviceWidth,
+    alignSelf: 'center',
+    // justifyContent: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',

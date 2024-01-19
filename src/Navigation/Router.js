@@ -70,8 +70,8 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-     
-     {/* <Stack.Screen name="NewPersonalDetails" component={NewPersonalDetails} /> */}
+      
+
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
 
       <Stack.Screen

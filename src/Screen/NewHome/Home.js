@@ -13,14 +13,14 @@ import {
   AppState,
   Modal,
 } from 'react-native';
-import React, {useCallback, useEffect, useRef, useState,} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
 import {AppColor} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import VersionNumber from 'react-native-version-number';
-import {setHealthData,} from '../../Component/ThemeRedux/Actions';
+import {setHealthData} from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
 import BackgroundService from 'react-native-background-actions';
@@ -32,7 +32,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import {Slider} from '@miblanchard/react-native-slider';
 import axios from 'axios';
 import {setPedomterData} from '../../Component/ThemeRedux/Actions';
-import { throttle, debounce } from 'lodash';
+import {throttle, debounce} from 'lodash';
 import {
   Stop,
   Circle,
@@ -131,11 +131,11 @@ const ProgressBar = ({progress, image, text}) => {
   );
 };
 const Home = ({navigation}) => {
-  useEffect(()=>{
-    setTimeout(()=>{
-      ActivityPermission()
-    },3000)
-      },[])
+  useEffect(() => {
+    setTimeout(() => {
+      ActivityPermission();
+    }, 3000);
+  }, []);
   const [progress, setProgress] = useState(10);
   const [forLoading, setForLoading] = useState(false);
   const [value, setValue] = useState('Weekly');
@@ -163,11 +163,19 @@ const Home = ({navigation}) => {
   const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
     getPedomterData[2] ? getPedomterData[2].RCalories : 25,
   );
- console.log('healthData',getPedomterData)
 
-//   useEffect(() => {
-//     ActivityPermission();
-//   }, []);
+
+  useEffect(() => {
+    ActivityPermission();
+
+
+    getGraphData();
+  }, []);
+
+
+  //   useEffect(() => {
+  //     ActivityPermission();
+  //   }, []);
   const ActivityPermission = async () => {
     if (Platform.OS == 'android') {
       const result = await isStepCountingSupported();
@@ -196,7 +204,7 @@ const Home = ({navigation}) => {
         startStepCounter();
         // Permission was already granted previously
       }
-    } else if(Platform.OS=='ios'){
+    } else if (Platform.OS == 'ios') {
       AppleHealthKit.isAvailable((err, available) => {
         const permissions = {
           permissions: {
@@ -243,23 +251,72 @@ const Home = ({navigation}) => {
     }
   };
   // service
-/// backgrounf listner
-    new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
-      //NOT IMPLEMENTED YET
-      'healthKit:StepCount:new',
-      async () => {
-        // console.log('--> observer triggered');
-        AppleHealthKit.getStepCount(options, (callbackError, results) => {
-          if (callbackError) {
-            console.log('Error while getting the data');
-          }
-          setSteps(results.value);
-          setDistance(((results.value / 20) * 0.01).toFixed(2));
-          setCalories(((results.value / 20) * 1).toFixed(1));
-          console.log('ios stespssss', results);
+
+  // useEffect(() => {
+  //   new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
+  //     //NOT IMPLEMENTED YET
+  //     'healthKit:StepCount:new',
+  //     async () => {
+  //       console.log('--> observer triggered');
+  //     },
+  //   );
+  // });
+
+  const getGraphData = async () => {
+    try {
+      const payload = new FormData();
+      // payload.append('user_id', 166);
+      payload.append('user_id', getUserDataDetails?.id);
+      setForLoading(true);
+      const res = await axios({
+        url: NewAppapi.HOME_GRAPH_DATA,
+        method: 'post',
+        data: payload,
+      });
+      if (res.data?.message != 'No data found') {
+        setForLoading(false);
+        // console.log(res.data?.weekly_data, 'Graph Data ');
+        dispatch(setHomeGraphData(res.data));
+        const test = [];
+        zeroData?.map((_, index) => {
+          test.push({
+            date: moment(res.data?.weekly_data[index]?.created_at).format(
+              'DD-MM',
+            ),
+            weight: parseInt(res.data?.weekly_data[index]?.total_calories),
+          });
         });
-      },
-    );
+        console.log(test);
+        setWeeklyGraph(test);
+      } else {
+        setForLoading(false);
+        console.log(res.data, 'Graph Data message ');
+        dispatch(setHomeGraphData([]));
+      }
+    } catch (error) {
+      setForLoading(false);
+      console.error(error, 'GraphError');
+      dispatch(setHomeGraphData([]));
+    }
+  };
+
+  /// backgrounf listner
+  new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
+    //NOT IMPLEMENTED YET
+    'healthKit:StepCount:new',
+    async () => {
+      // console.log('--> observer triggered');
+      AppleHealthKit.getStepCount(options, (callbackError, results) => {
+        if (callbackError) {
+          console.log('Error while getting the data');
+        }
+        setSteps(results.value);
+        setDistance(((results.value / 20) * 0.01).toFixed(2));
+        setCalories(((results.value / 20) * 1).toFixed(1));
+        console.log('ios stespssss', results);
+      });
+    },
+  );
 
 
   const likeStatusApi = async () => {
@@ -321,15 +378,14 @@ const Home = ({navigation}) => {
   // pedometers
   const PedoMeterData = async () => {
     try {
-
       const res = await axios({
         url: NewAppapi.PedometerAPI,
         method: 'post',
         data: {
-          user_id:getUserDataDetails?.id,
-          steps:getHealthData[0]?getHealthData[0].Steps:"0",
-          distance:getHealthData[1]?getHealthData[1].Calories:"0",
-          calories:getHealthData[2]?getHealthData[2].DistanceCovered:"0"
+          user_id: getUserDataDetails?.id,
+          steps: getHealthData[0] ? getHealthData[0].Steps : '0',
+          distance: getHealthData[1] ? getHealthData[1].Calories : '0',
+          calories: getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
         },
       });
       if (res.data) {
@@ -340,33 +396,32 @@ const Home = ({navigation}) => {
     }
   };
   const throttledDispatch = throttle(
-    (steps) => {
+    steps => {
       Dispatch(
         setHealthData([
-          { Steps: steps },
-          { Calories: Math.floor(steps / 20) },
-          { DistanceCovered: ((steps / 20) * 0.01).toFixed(2) },
-        ])
+          {Steps: steps},
+          {Calories: Math.floor(steps / 20)},
+          {DistanceCovered: ((steps / 20) * 0.01).toFixed(2)},
+        ]),
       );
     },
     30000,
-    { trailing: false }
+    {trailing: false},
   );
   const sleep = time =>
     new Promise(resolve => setTimeout(() => resolve(), time)); // background
-  
+
   const veryIntensiveTask = async taskDataArguments => {
     const {delay} = taskDataArguments;
-  
+
     const throttledUpdateStepsAndNotification = throttle(async data => {
       setSteps(data.steps);
-      console.log("stepssss>>>>>>>>>", data.steps);
+      console.log('stepssss>>>>>>>>>', data.steps);
       setDistance(((data.steps / 20) * 0.01).toFixed(2));
       setCalories(Math.floor(data.steps / 20));
       // Add your dispatch logic here
-     throttledDispatch(data.steps)
-   
-    
+      throttledDispatch(data.steps);
+
       // Update the notification with the current steps
       await BackgroundService.updateNotification({
         taskIcon: {
@@ -387,66 +442,68 @@ const Home = ({navigation}) => {
         },
       });
     }, 30000); // 30 seconds delay
-    
+
     // function for checking if it is midnight or not
     const isSpecificTime = (hour, minute) => {
       const now = moment.utc(); // Get current time in UTC
-  
+
       // Calculate specific time in UTC by setting hours and minutes
-      const specificTimeUTC = now.clone().set({ hour, minute, second: 0, millisecond: 0 }); 
+      const specificTimeUTC = now
+        .clone()
+        .set({hour, minute, second: 0, millisecond: 0});
 
       const istTime = moment.utc().add(5, 'hours').add(30, 'minutes');
       // Compare the times directly to check if they represent the same time in IST
-      return istTime.format() == specificTimeUTC.format()
-  };
-  const debouncedResetSteps = () => {
-    // Your logic to reset steps and related state
-    setSteps(0);
-    setDistance(0);
-    setCalories(0);
-    Dispatch(
-      setHealthData([
-        { Steps: '0' },
-        { Calories: '0' },
-        { DistanceCovered: '0.00' },
-      ]),
-    );
-  
-    // Update the notification after resetting steps
-    BackgroundService.updateNotification({
-      // Your notification update logic after steps reset
-      taskIcon: {
-        name: 'ic_launcher',
-        type: 'mipmap',
-      },
-      color: AppColor.RED,
-      taskName: 'Pedometer',
-      taskTitle: 'Steps ' + steps,
-      taskDesc: 'Steps ',
-      progressBar: {
-        max: stepGoalProfile,
-        value: steps,
-        indeterminate: false,
-      },
-      parameters: {
-        delay: 30000,
-      },
-    });
-  } // 30 seconds d
+      return istTime.format() == specificTimeUTC.format();
+    };
+    const debouncedResetSteps = () => {
+      // Your logic to reset steps and related state
+      setSteps(0);
+      setDistance(0);
+      setCalories(0);
+      Dispatch(
+        setHealthData([
+          {Steps: '0'},
+          {Calories: '0'},
+          {DistanceCovered: '0.00'},
+        ]),
+      );
+
+      // Update the notification after resetting steps
+      BackgroundService.updateNotification({
+        // Your notification update logic after steps reset
+        taskIcon: {
+          name: 'ic_launcher',
+          type: 'mipmap',
+        },
+        color: AppColor.RED,
+        taskName: 'Pedometer',
+        taskTitle: 'Steps ' + steps,
+        taskDesc: 'Steps ',
+        progressBar: {
+          max: stepGoalProfile,
+          value: steps,
+          indeterminate: false,
+        },
+        parameters: {
+          delay: 30000,
+        },
+      });
+    }; // 30 seconds d
     for (let i = 0; BackgroundService.isRunning(); i++) {
       startStepCounterUpdate(new Date(), async data => {
         // Call the throttled function
         await throttledUpdateStepsAndNotification(data);
-    
+
         // Call the debounced function
       });
-    
+
       // reset the steps at midnight
       if (isSpecificTime(0, 0)) {
         PedoMeterData();
         debouncedResetSteps();
       }
-    
+
       // Use sleep with a delay of 30 seconds
       await sleep(delay);
     }
@@ -473,10 +530,10 @@ const Home = ({navigation}) => {
   async function startStepCounter() {
     startStepCounterUpdate(new Date(), data => {
       setSteps(data.steps);
-      console.log("stepssss>>>>>>>>>",data.steps)
+      console.log('stepssss>>>>>>>>>', data.steps);
       setDistance(((data.steps / 20) * 0.01).toFixed(2));
       setCalories(Math.floor(data.steps / 20));
-    throttledDispatch(data.steps)
+      throttledDispatch(data.steps);
     });
     await BackgroundService.start(veryIntensiveTask, options);
     await BackgroundService.updateNotification(options);
@@ -579,7 +636,7 @@ const Home = ({navigation}) => {
 
     return (
       <Modal
-        animationType='fade'
+        animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}>
@@ -633,7 +690,7 @@ const Home = ({navigation}) => {
                 style={styles.dropButton}
                 onPress={() => ToggleVisiblity(1)}>
                 <Icons
-                  name={Step_Visible ? 'chevron-up' :  'chevron-down'}
+                  name={Step_Visible ? 'chevron-up' : 'chevron-down'}
                   size={25}
                   color={'#000'}
                 />
@@ -688,7 +745,7 @@ const Home = ({navigation}) => {
                 style={styles.dropButton}
                 onPress={() => ToggleVisiblity(2)}>
                 <Icons
-                  name={Distance_Visible ? 'chevron-up' :  'chevron-down'}
+                  name={Distance_Visible ? 'chevron-up' : 'chevron-down'}
                   size={25}
                   color={'#000'}
                 />
@@ -743,7 +800,7 @@ const Home = ({navigation}) => {
                 style={styles.dropButton}
                 onPress={() => ToggleVisiblity(3)}>
                 <Icons
-                  name={Calories_Visible ? 'chevron-up' :  'chevron-down'}
+                  name={Calories_Visible ? 'chevron-up' : 'chevron-down'}
                   size={25}
                   color={'#000'}
                 />
@@ -910,7 +967,7 @@ const Home = ({navigation}) => {
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <View style={styles.profileView}>
         <View style={styles.rewardView}>
-          <Image
+          {/* <Image
             source={localImage.Money}
             style={[
               styles.img,
@@ -919,16 +976,17 @@ const Home = ({navigation}) => {
                 width: 30,
               },
             ]}
-            resizeMode="cover"></Image>
-          <Text style={styles.monetText}>500</Text>
+            resizeMode="cover"></Image> */}
+          {/* <Text style={styles.monetText}>500</Text> */}
         </View>
-        <TouchableOpacity
-          style={styles.profileView1}
-          onPress={() => {
-            navigation.navigate('Profile');
-         
-          }}>
-          <Image
+
+        {Object.keys(getUserDataDetails).length > 0 ? (
+          <TouchableOpacity
+            style={styles.profileView1}
+            onPress={() => {
+              navigation.navigate('Profile');
+            }}>
+         <Image
               source={
                 getUserDataDetails.image_path == null
                   ? localImage.avt
@@ -936,10 +994,29 @@ const Home = ({navigation}) => {
               }
             style={styles.img}
             resizeMode="cover"></Image>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.profileView1}
+            onPress={() => {
+              navigation.navigate('Report');
+            }}>
+            <Image
+              source={localImage.avt}
+              style={styles.img}
+              resizeMode="cover"></Image>
+          </TouchableOpacity>
+        )}
+
       </View>
       <GradientText
-        item={getTimeOfDayMessage() + ', ' + getUserDataDetails.name}
+        item={
+          getTimeOfDayMessage() +
+          ', ' +
+          (Object.keys(getUserDataDetails).length > 0
+            ? getUserDataDetails.name
+            : 'Guest')
+        }
       />
       {/* {forLoading ? <ActivityLoader /> : ''} */}
       <ScrollView
@@ -1149,6 +1226,18 @@ const Home = ({navigation}) => {
             ListEmptyComponent={emptyComponent}
             pagingEnabled
             renderItem={({item, index}) => {
+
+              let totalTime = 0;
+              let totalCal = 0;
+
+              for (const day in item?.days) {
+                // if (item?.days[day]?.total_rest == 0) {
+                //   restDays.push(parseInt(day.split('day_')[1]));
+                // }
+                totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
+                totalCal = totalCal + parseInt(item?.days[day]?.total_calories);
+              }
+
               return (
                 <TouchableOpacity
                   onPress={() =>
@@ -1182,18 +1271,22 @@ const Home = ({navigation}) => {
                         flexDirection: 'row',
                         marginVertical: 10,
                       }}>
-                      <View>
+                      <View style={{top: 15}}>
                         <ProgressBar
                           progress={progress}
                           image={localImage.Play}
-                          text={'2 Min'}
+                          text={
+                            totalTime > 60
+                              ? `${(totalTime / 60).toFixed(0)} min`
+                              : `${totalTime} sec`
+                          }
                         />
                       </View>
-                      <View style={{marginHorizontal: 10}}>
+                      <View style={{marginHorizontal: 10, top: 15}}>
                         <ProgressBar
                           progress={progress}
                           image={localImage.Step1}
-                          text={'100Kcal'}
+                          text={totalCal + 'Kcal'}
                         />
                       </View>
                     </View>
@@ -1210,7 +1303,7 @@ const Home = ({navigation}) => {
                       marginTop: -DeviceHeigth * 0.11,
                     }}
                     resizeMode="contain"></Image>
-                  <TouchableOpacity
+                  {/* <TouchableOpacity
                     style={[
                       styles.img,
                       {
@@ -1236,7 +1329,7 @@ const Home = ({navigation}) => {
                         style={{height: 25, width: 25}}
                       />
                     )}
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </TouchableOpacity>
               );
             }}
@@ -1326,7 +1419,7 @@ const Home = ({navigation}) => {
                       ]}
                       resizeMode="cover"></Image>
                     <Text
-                    numberOfLines={1}
+                      numberOfLines={1}
                       style={[
                         styles.title,
                         {
@@ -1335,7 +1428,7 @@ const Home = ({navigation}) => {
                           lineHeight: 18,
                           fontFamily: 'Poppins',
                           textAlign: 'center',
-                          width:50,
+                          width: 50,
                           color: colors[index % colors.length].color3,
                         },
                       ]}>
@@ -1375,7 +1468,8 @@ const Home = ({navigation}) => {
             placeholderStyle={styles.placeholderStyle}
             selectedTextStyle={styles.selectedTextStyle}
             data={data2}
-            maxHeight={300}X
+            maxHeight={300}
+            X
             labelField="label"
             valueField="value"
             placeholder={value}
@@ -1395,7 +1489,14 @@ const Home = ({navigation}) => {
             alignSelf: 'center',
             borderRadius: 10,
           }}>
-          <LineChart
+          {weeklyGraph.length != 0 && zeroData.length != 0 ? (
+            <Graph resultData={weeklyGraph} zeroData={zeroData} home={false} />
+          ) : (
+            <View style={{justifyContent: 'center', alignItems: 'center', height: DeviceHeigth* 0.2}}>
+              {emptyComponent()}
+            </View>
+          )}
+          {/* <LineChart
             data={{
               labels: ['Sun', 'Mon', 'Tue', 'Thur', 'Fri', 'Sat'],
               datasets: [
@@ -1431,7 +1532,7 @@ const Home = ({navigation}) => {
             style={{
               borderRadius: 10,
             }}
-          />
+          /> */}
         </View>
       </ScrollView>
       {modalVisible ? <UpdateGoalModal /> : null}
@@ -1464,9 +1565,9 @@ var styles = StyleSheet.create({
   rewardView: {
     height: 40,
     width: 80,
-    borderRadius: 30,
-    borderColor: AppColor.RED,
-    borderWidth: 1,
+    // borderRadius: 30,
+    //borderColor: AppColor.RED,
+    // borderWidth: 1,
     marginLeft: 20,
     flexDirection: 'row',
     alignItems: 'center',

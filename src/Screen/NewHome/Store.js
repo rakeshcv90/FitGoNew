@@ -232,10 +232,10 @@ const Store = ({navigation}) => {
                     style={{
                       height: 90,
                       width: 90,
-                      borderRadius: 180 / 2,
+                  
                       alignSelf: 'center',
                     }}
-                    resizeMode="cover"></Image>
+                    resizeMode="contain"></Image>
                   <Text
                     style={{
                       fontSize: 12,
