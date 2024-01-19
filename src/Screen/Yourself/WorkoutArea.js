@@ -96,8 +96,19 @@ const WorkoutArea = ({route, navigation}) => {
     const newSelectedItems = [...selectedItems];
     const newImageVIew = [...imageView];
     if (index === -1) {
-      newSelectedItems.push(item);
-      newImageVIew.push(item);
+      if (newImageVIew.length <1) {
+        newSelectedItems.push(item);
+        newImageVIew.push(item);
+      } else {
+        showMessage({
+          message: 'You Can select only One Item',
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
+      }
+     
     } else {
       newSelectedItems.splice(index, 1);
 

@@ -6,6 +6,8 @@
 	<array>
 		<string>'fitme.health.fitness.homeworkouts.equipment'</string>
 	</array>
+  <key>ITSAppUsesNonExemptEncryption</key>
+  <false/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
