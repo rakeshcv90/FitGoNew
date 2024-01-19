@@ -176,7 +176,6 @@ const Home = ({navigation}) => {
     ActivityPermission();
 
     getGraphData();
-
   }, []);
 
   //   useEffect(() => {
@@ -270,8 +269,8 @@ const Home = ({navigation}) => {
   const getGraphData = async () => {
     try {
       const payload = new FormData();
-      payload.append('user_id', 112);
-      // payload.append('user_id', getUserDataDetails?.id);
+      // payload.append('user_id', 166);
+      payload.append('user_id', getUserDataDetails?.id);
       setForLoading(true);
       const res = await axios({
         url: NewAppapi.HOME_GRAPH_DATA,
@@ -280,18 +279,19 @@ const Home = ({navigation}) => {
       });
       if (res.data?.message != 'No data found') {
         setForLoading(false);
-        console.log(res.data?.weekly_data?.total_calories, 'Graph Data ');
+        // console.log(res.data?.weekly_data, 'Graph Data ');
         dispatch(setHomeGraphData(res.data));
-        // const test = [];
-        // zeroData?.map((_, index) => {
-        //   test.push({
-        //     date: parseInt(moment(res.data?.weekly_data[index]?.created_at).format('DD')),
-        //     weight: parseInt(res.data?.weekly_data[index]?.total_calories),
-        //   });
-        // });
-        // const jsonString = JSON.stringify(test);
-        // console.log(test);
-        // setWeeklyGraph(cleanedData);
+        const test = [];
+        zeroData?.map((_, index) => {
+          test.push({
+            date: moment(res.data?.weekly_data[index]?.created_at).format(
+              'DD-MM',
+            ),
+            weight: parseInt(res.data?.weekly_data[index]?.total_calories),
+          });
+        });
+        console.log(test);
+        setWeeklyGraph(test);
       } else {
         setForLoading(false);
         console.log(res.data, 'Graph Data message ');
@@ -673,7 +673,7 @@ const Home = ({navigation}) => {
                 style={styles.dropButton}
                 onPress={() => ToggleVisiblity(1)}>
                 <Icons
-                  name={Step_Visible ? 'chevron-up' :  'chevron-down'}
+                  name={Step_Visible ? 'chevron-up' : 'chevron-down'}
                   size={25}
                   color={'#000'}
                 />
@@ -728,7 +728,7 @@ const Home = ({navigation}) => {
                 style={styles.dropButton}
                 onPress={() => ToggleVisiblity(2)}>
                 <Icons
-                  name={Distance_Visible ? 'chevron-up' :  'chevron-down'}
+                  name={Distance_Visible ? 'chevron-up' : 'chevron-down'}
                   size={25}
                   color={'#000'}
                 />
@@ -783,7 +783,7 @@ const Home = ({navigation}) => {
                 style={styles.dropButton}
                 onPress={() => ToggleVisiblity(3)}>
                 <Icons
-                  name={Calories_Visible ? 'chevron-up' :  'chevron-down'}
+                  name={Calories_Visible ? 'chevron-up' : 'chevron-down'}
                   size={25}
                   color={'#000'}
                 />
@@ -991,12 +991,17 @@ const Home = ({navigation}) => {
               resizeMode="cover"></Image>
           </TouchableOpacity>
         )}
-
       </View>
       <GradientText
-        item={getTimeOfDayMessage() + ', ' + (Object.keys(getUserDataDetails).length > 0?getUserDataDetails.name:'Guest')}
+        item={
+          getTimeOfDayMessage() +
+          ', ' +
+          (Object.keys(getUserDataDetails).length > 0
+            ? getUserDataDetails.name
+            : 'Guest')
+        }
       />
-      {forLoading ? <ActivityLoader /> : ''}
+      {/* {forLoading ? <ActivityLoader /> : ''} */}
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
@@ -1202,17 +1207,17 @@ const Home = ({navigation}) => {
             pagingEnabled
             renderItem={({item, index}) => {
               // console.log("WOrkout Details",item.days)
-              let totalTime = 0
-              let totalCal=0
-              
-            for (const day in item?.days) {
-              // if (item?.days[day]?.total_rest == 0) {
-              //   restDays.push(parseInt(day.split('day_')[1]));
-              // }
-              totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
-              totalCal=totalCal+parseInt(item?.days[day]?.total_calories);
-            }
-           console.log("WOrkout Details",item)
+              let totalTime = 0;
+              let totalCal = 0;
+
+              for (const day in item?.days) {
+                // if (item?.days[day]?.total_rest == 0) {
+                //   restDays.push(parseInt(day.split('day_')[1]));
+                // }
+                totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
+                totalCal = totalCal + parseInt(item?.days[day]?.total_calories);
+              }
+              console.log('WOrkout Details', item);
               return (
                 <TouchableOpacity
                   onPress={() =>
@@ -1250,16 +1255,18 @@ const Home = ({navigation}) => {
                         <ProgressBar
                           progress={progress}
                           image={localImage.Play}
-                          text={  totalTime > 60
-                            ? `${(totalTime / 60).toFixed(0)} min`
-                            : `${totalTime} sec`}
+                          text={
+                            totalTime > 60
+                              ? `${(totalTime / 60).toFixed(0)} min`
+                              : `${totalTime} sec`
+                          }
                         />
                       </View>
                       <View style={{marginHorizontal: 10}}>
                         <ProgressBar
                           progress={progress}
                           image={localImage.Step1}
-                          text={totalCal+'Kcal'}
+                          text={totalCal + 'Kcal'}
                         />
                       </View>
                     </View>
@@ -1462,7 +1469,14 @@ const Home = ({navigation}) => {
             alignSelf: 'center',
             borderRadius: 10,
           }}>
-          <LineChart
+          {weeklyGraph.length != 0 && zeroData.length != 0 ? (
+            <Graph resultData={weeklyGraph} zeroData={zeroData} home={false} />
+          ) : (
+            <View style={{justifyContent: 'center', alignItems: 'center', height: DeviceHeigth* 0.2}}>
+              {emptyComponent()}
+            </View>
+          )}
+          {/* <LineChart
             data={{
               labels: ['Sun', 'Mon', 'Tue', 'Thur', 'Fri', 'Sat'],
               datasets: [
@@ -1498,7 +1512,7 @@ const Home = ({navigation}) => {
             style={{
               borderRadius: 10,
             }}
-          />
+          /> */}
         </View>
       </ScrollView>
       {modalVisible ? <UpdateGoalModal /> : null}

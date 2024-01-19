@@ -165,7 +165,7 @@ const PredictionScreen = ({navigation, route}: any) => {
           }
         />
         {weightHistory.length != 0 && zeroData.length != 0 && (
-          <Graph resultData={weightHistory} zeroData={zeroData} />
+          <Graph resultData={weightHistory} zeroData={zeroData} home={true} />
         )}
       </View>
       <Image

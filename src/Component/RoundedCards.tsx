@@ -29,7 +29,13 @@ const RoundedCards: FC<Props> = ({...props}) => {
   const [desc, setDesc] = useState([]);
   return (
     <>
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          {
+            marginBottom: props.type == 'core' ? DeviceHeigth * 0.05 : 0,
+          },
+        ]}>
         <View style={styles.row}>
           <Text style={styles.category}>
             {props.headText ? props.headText : 'Category'}

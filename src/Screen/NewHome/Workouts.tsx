@@ -51,7 +51,7 @@ const Workouts = ({navigation}: any) => {
       });
       if (res.data) {
         setRefresh(false);
-        console.log(res.data, 'AllWorkouts');
+        console.log(res.data?.length, 'AllWorkouts');
         dispatch(setAllWorkoutData(res.data));
       }
     } catch (error) {
@@ -66,10 +66,13 @@ const Workouts = ({navigation}: any) => {
       const res = await axios(
         NewAppapi.POPULAR_WORKOUTS + '/' + getUserDataDetails?.login_token,
       );
-      if (res.data) {
+      if (res.data?.status != 'Invalid token') {
         setRefresh(false);
-        console.log(res.data?.length, 'Popular');
+        console.log(res.data, 'Popular');
         setPopularData(res.data);
+      }else{
+        console.log(res.data, 'Popular Status');
+        setPopularData([])
       }
     } catch (error) {
       setRefresh(false);
