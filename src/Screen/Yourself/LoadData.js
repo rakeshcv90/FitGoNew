@@ -353,7 +353,7 @@ const LoadData = ({navigation}) => {
         }}>
         <CircularProgress
           value={loadData}
-          radius={80}
+          radius={70}
           progressValueColor={'rgb(197, 23, 20)'}
           inActiveStrokeColor={AppColor.GRAY2}
           activeStrokeColor={'rgb(197, 23, 20)'}
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     fontFamily: 'Poppins',
     color: '#424242',
-    top: 10,
+    top: 15,
   },
   text2: {
     textAlign: 'center',

@@ -70,10 +70,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      
-
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
-
       <Stack.Screen
         name="IntroductionScreen1"
         component={IntroductionScreen1}

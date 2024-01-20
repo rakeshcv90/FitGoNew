@@ -84,7 +84,7 @@ const GradientText = ({item}) => {
         <SvgText
           fontFamily="Poppins"
           fontWeight={'600'}
-          fontSize={23}
+          fontSize={17}
           fill="url(#grad)"
           x="0"
           y="25">
