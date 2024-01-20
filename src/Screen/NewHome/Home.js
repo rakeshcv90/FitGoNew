@@ -164,19 +164,9 @@ const Home = ({navigation}) => {
   const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
     getPedomterData[2] ? getPedomterData[2].RCalories : 25,
   );
-
-
   useEffect(() => {
-    ActivityPermission();
-
-
     getGraphData();
   }, []);
-
-
-  //   useEffect(() => {
-  //     ActivityPermission();
-  //   }, []);
   const ActivityPermission = async () => {
     if (Platform.OS == 'android') {
       const result = await isStepCountingSupported();
