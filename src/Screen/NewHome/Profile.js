@@ -34,9 +34,8 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {request, PERMISSIONS, openSettings} from 'react-native-permissions';
 import VersionNumber from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
-import {persistor} from '../../Component/ThemeRedux/Store';
 import { updatePhoto } from '../../Component/ThemeRedux/Actions';
-import LogOut from '../../Component/LogOut';
+import {LogOut} from '../../Component/LogOut';
 import { setProfileImg_Data } from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import { stack } from 'd3';
@@ -44,6 +43,7 @@ import { ColorShader } from '@shopify/react-native-skia';
 const Profile = () => {
  
   const {getUserDataDetails, ProfilePhoto,} = useSelector(state => state);
+  const dispatch = useDispatch();
   const [UpdateScreenVisibility, setUpadteScreenVisibilty] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -168,7 +168,6 @@ const Profile = () => {
   const SecondView = Profile_Data.slice(6);
 
   const UpdateProfileModal = () => {
-   const dispatch = useDispatch();
     const [modalImageUploaded, setModalImageUploaded] = useState(false);
     const [IsimgUploaded, setImguploaded] = useState(true);
     const [userAvatar, setUserAvatar] = useState(null);
@@ -454,19 +453,6 @@ const Profile = () => {
     );
   };
   const ProfileView = () => {
-    const handleLogout = async () => {
-      // LogOut();
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [
-            {
-              name: 'LogSignUp',
-            },
-          ],
-        }),
-      );
-    };
 
     return (
       <View>
@@ -507,8 +493,8 @@ const Profile = () => {
               }}>
               <TouchableOpacity
                 onPress={() => {
-                  handleLogout();
-                  navigation.navigate('SplaceScreen');
+                  LogOut(dispatch);
+                  // navigation.navigate('SplaceScreen');
                 }}
                 activeOpacity={0.5}
                 style={{

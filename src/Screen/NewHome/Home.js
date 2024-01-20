@@ -23,7 +23,10 @@ import VersionNumber from 'react-native-version-number';
 import {
   setHealthData,
   setHomeGraphData,
+
+
   setWorkoutTimeCal,
+
 } from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
@@ -66,6 +69,12 @@ import {Form} from 'formik';
 import moment from 'moment';
 import Graph from '../Yourself/Graph';
 const zeroData = Array(7)
+  .fill()
+  .map((_, index) => {
+    const currentDate = moment().subtract(index + 1, 'days');
+    return {weight: 0, date: currentDate.date()};
+  });
+const zeroDataM = Array(21)
   .fill()
   .map((_, index) => {
     const currentDate = moment().subtract(index + 1, 'days');
@@ -154,7 +163,11 @@ const Home = ({navigation}) => {
   const [likeData, setLikeData] = useState([]);
   const [currentindex, setCurrentIndex] = useState(1);
   const [weeklyGraph, setWeeklyGraph] = useState([]);
+
+  const [monthlyGraph, setMonthlyGraph] = useState([]);
+
   const progressAnimation = useRef(new Animated.Value(0)).current;
+  const Dispatch = useDispatch();
   const {
     getHealthData,
     getLaterButtonData,
@@ -167,6 +180,7 @@ const Home = ({navigation}) => {
     ProfilePhoto,
     getUserID,
     getCustttomeTimeCal
+
   } = useSelector(state => state);
   const [stepGoalProfile, setStepGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
@@ -183,11 +197,13 @@ const Home = ({navigation}) => {
 
     getGraphData();
   }, []);
+
   useFocusEffect(
     React.useCallback(() => {
       getCustomeWorkoutTimeDetails();
     }, []),
   );
+
 
   //   useEffect(() => {
   //     ActivityPermission();
@@ -299,10 +315,11 @@ const Home = ({navigation}) => {
     }
   };
   const getGraphData = async () => {
+
     try {
       const payload = new FormData();
       // payload.append('user_id', 166);
-      payload.append('user_id', getUserDataDetails?.id);
+      // payload.append('user_id', getUserDataDetails?.id);
       setForLoading(true);
       const res = await axios({
         url: NewAppapi.HOME_GRAPH_DATA,
@@ -314,27 +331,43 @@ const Home = ({navigation}) => {
       if (res.data?.message != 'No data found') {
         setForLoading(false);
 
-        dispatch(setHomeGraphData(res.data));
-        const test = [];
+        console.log(res.data, 'Graph Data ');
+        Dispatch(setHomeGraphData(res.data));
+        const test = [],
+          test2 = [];
+
+
+   
         zeroData?.map((_, index) => {
           test.push({
-            date: moment(res.data?.weekly_data[index]?.created_at).format(
-              'DD-MM',
-            ),
+            id: res.data?.weekly_data[index]?.id,
+            date: res.data?.weekly_data[index]?.created_at,
             weight: parseInt(res.data?.weekly_data[index]?.total_calories),
           });
         });
 
+        zeroDataM?.map((_, index) => {
+          test2.push({
+            id: res.data?.monthly_data[index]?.id,
+            date: res.data?.monthly_data[index]?.created_at,
+            weight: parseInt(res.data?.monthly_data[index]?.total_calories),
+          });
+        });
+      
+
         setWeeklyGraph(test);
+        setMonthlyGraph(test2);
       } else {
         setForLoading(false);
 
-        dispatch(setHomeGraphData([]));
+        console.log(res.data, 'Graph Data message ');
+        Dispatch(setHomeGraphData([]));
+
       }
     } catch (error) {
       setForLoading(false);
       console.error(error, 'GraphError');
-      dispatch(setHomeGraphData([]));
+      Dispatch(setHomeGraphData([]));
     }
   };
 
@@ -355,54 +388,10 @@ const Home = ({navigation}) => {
     },
   );
 
-  const likeStatusApi = async () => {
-    try {
-      const payload = new FormData();
-      payload.append('login_token', getUserDataDetails?.login_token);
-      payload.append('user_id', getUserDataDetails?.id);
-      setForLoading(true);
-      const res = await axios({
-        url: NewAppapi.GET_LIKE_WORKOUTS,
-        method: 'post',
-        data: payload,
-      });
-      setForLoading(false);
-      if (res.data) {
-        setForLoading(false);
 
-        setLikeData(...res.data);
-      }
-    } catch (error) {
-      setForLoading(false);
-      console.error(error, 'LikeError');
-      setLikeData([]);
-    }
-  };
 
-  const postLike = async workoutID => {
-    try {
-      const payload = new FormData();
-      payload.append('user_id', getUserDataDetails?.id);
-      payload.append('workout_id', workoutID);
-      setForLoading(true);
-      const res = await axios({
-        url: NewAppapi.POST_LIKE_WORKOUT,
-        method: 'post',
-        data: payload,
-      });
-      setForLoading(false);
-      if (res.data) {
-        setForLoading(false);
 
-        likeStatusApi();
-      }
-    } catch (error) {
-      setForLoading(false);
-      console.error(error, 'likeERRPost');
-    }
-  };
-  const dispatch = useDispatch();
-  const Dispatch = useDispatch();
+
   const [steps, setSteps] = useState(
     getHealthData[0] ? getHealthData[0].Steps : '0',
   );
@@ -890,7 +879,7 @@ const Home = ({navigation}) => {
   };
   const data2 = [
     {label: 'Weekly', value: '1'},
-    {label: 'Daily', value: '2'},
+    {label: 'Monthly', value: '2'},
   ];
   const progressBarWidth = progressAnimation.interpolate({
     inputRange: [0, 1],
@@ -1239,12 +1228,9 @@ const Home = ({navigation}) => {
           {customWorkoutData?.workout?.length > 0 && (
             <TouchableOpacity
               onPress={() => {
-                showMessage({
-                  message: 'Work in Progress',
-                  floating: true,
-                  duration: 500,
-                  type: 'info',
-                  icon: {icon: 'auto', position: 'left'},
+                navigation?.navigate('AllWorkouts', {
+                  data: customWorkoutData?.workout,
+                  type: 'custom',
                 });
               }}>
               <Icons name="chevron-right" size={25} color={'#000'} />
@@ -1530,8 +1516,14 @@ return item1})
             alignSelf: 'center',
             borderRadius: 10,
           }}>
-          {weeklyGraph.length != 0 && zeroData.length != 0 ? (
-            <Graph resultData={weeklyGraph} zeroData={zeroData} home={false} />
+
+          {weeklyGraph.length != 0 && monthlyGraph.length != 0 ? (
+            <Graph
+              resultData={value == 'Weekly' ? weeklyGraph : monthlyGraph}
+              zeroData={value == 'Weekly' ? zeroData : zeroDataM}
+              home={false}
+            />
+
           ) : (
             <View
               style={{
@@ -1760,7 +1752,7 @@ var styles = StyleSheet.create({
   dropdown: {
     margin: 16,
     height: 30,
-    width: DeviceWidth * 0.25,
+    width: DeviceWidth * 0.3,
     borderColor: 'red',
     borderRadius: 12,
     padding: 12,

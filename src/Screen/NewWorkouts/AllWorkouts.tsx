@@ -23,6 +23,7 @@ import {showMessage} from 'react-native-flash-message';
 import LinearGradient from 'react-native-linear-gradient';
 
 const AllWorkouts = ({navigation, route}: any) => {
+  const {data, type} = route.params;
   const {allWorkoutData, getUserDataDetails} = useSelector(
     (state: any) => state,
   );
@@ -39,10 +40,18 @@ const AllWorkouts = ({navigation, route}: any) => {
   const dispatch = useDispatch();
   let total_Workouts_Time = 0;
   useEffect(() => {
-    allWorkoutApi();
+    // allWorkoutApi();
     popularData?.length == 0 && popularWorkoutApi();
     workoutStatusApi();
     likeStatusApi();
+    data?.map((item: any) => {
+      let totalTime = 0;
+      for (const day in item?.days) {
+        totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
+      }
+      total_Workouts_Time = total_Workouts_Time + totalTime;
+    });
+    setTotalCount(total_Workouts_Time);
   }, []);
 
   const allWorkoutApi = async () => {
@@ -60,14 +69,6 @@ const AllWorkouts = ({navigation, route}: any) => {
       });
       if (res.data) {
         setRefresh(false);
-        res.data?.map((item: any) => {
-          let totalTime = 0;
-          for (const day in item?.days) {
-            totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
-          }
-          total_Workouts_Time = total_Workouts_Time + totalTime;
-        });
-        setTotalCount(total_Workouts_Time);
         console.log(res.data?.length, 'AllWorkouts', total_Workouts_Time);
         dispatch(setAllWorkoutData(res.data));
       }
@@ -275,21 +276,23 @@ const AllWorkouts = ({navigation, route}: any) => {
             }}
             resizeMode="contain"
           />
-          <TouchableOpacity onPress={() => postLike(item?.workout_id)}>
-            {likeData.includes(item?.workout_id) ? (
-              <Image
-                source={localImage.Heart}
-                resizeMode="contain"
-                style={{height: 25, width: 25, right: 10}}
-              />
-            ) : (
-              <Image
-                source={localImage.dw7}
-                resizeMode="contain"
-                style={{height: 25, width: 25, right: 10}}
-              />
-            )}
-          </TouchableOpacity>
+          {type != 'custom' && (
+            <TouchableOpacity onPress={() => postLike(item?.workout_id)}>
+              {likeData.includes(item?.workout_id) ? (
+                <Image
+                  source={localImage.Heart}
+                  resizeMode="contain"
+                  style={{height: 25, width: 25, right: 10}}
+                />
+              ) : (
+                <Image
+                  source={localImage.dw7}
+                  resizeMode="contain"
+                  style={{height: 25, width: 25, right: 10}}
+                />
+              )}
+            </TouchableOpacity>
+          )}
         </TouchableOpacity>
 
         <View
@@ -307,19 +310,23 @@ const AllWorkouts = ({navigation, route}: any) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                width: '84%',
+                // width: '80%',
               }}>
-              {trackerData?.includes(item?.workout_id) ? (
-                <Text style={[styles.small, {color: '#008C28'}]}>
-                  Completed
-                </Text>
-              ) : index + 1 ? (
-                <Text style={[styles.small, {color: '#E0855C'}]}>
-                  In Progress
-                </Text>
-              ) : (
-                <Text style={[styles.small, {color: '#D5191A'}]}>Upcoming</Text>
-              )}
+              <View style={{width: DeviceWidth * 0.5}}>
+                {trackerData?.includes(item?.workout_id) ? (
+                  <Text style={[styles.small, {color: '#008C28'}]}>
+                    Completed
+                  </Text>
+                ) : index + 1 ? (
+                  <Text style={[styles.small, {color: '#E0855C'}]}>
+                    In Progress
+                  </Text>
+                ) : (
+                  <Text style={[styles.small, {color: '#D5191A'}]}>
+                    Upcoming
+                  </Text>
+                )}
+              </View>
               <Text style={styles.small}>
                 Approx.{' '}
                 {totalTime > 60
@@ -334,7 +341,17 @@ const AllWorkouts = ({navigation, route}: any) => {
   };
   return (
     <View style={styles.container}>
-      <NewHeader header={'All Workouts'} SearchButton={false} backButton />
+      <NewHeader
+        header={
+          type == 'custom'
+            ? 'Custom Workouts'
+            : type == 'popular'
+            ? 'Popular Workouts'
+            : 'All Workouts'
+        }
+        SearchButton={false}
+        backButton
+      />
       <GradientText
         text={'Today'}
         fontWeight={'500'}
@@ -379,27 +396,28 @@ const AllWorkouts = ({navigation, route}: any) => {
         }
         // style={styles.container}
         nestedScrollEnabled>
-        {allWorkoutData.map((item: any, index: number) => {
-          return (
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}>
-              <BlackCircle
-                index={index}
-                select={index == selected}
-                item={item}
-              />
-              <Box
-                selected={selected != 0 && index == selected}
-                index={index + 1}
-                item={item}
-              />
-            </View>
-          );
-        })}
+        {data &&
+          data?.map((item: any, index: number) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <BlackCircle
+                  index={index}
+                  select={index == selected}
+                  item={item}
+                />
+                <Box
+                  selected={selected != 0 && index == selected}
+                  index={index + 1}
+                  item={item}
+                />
+              </View>
+            );
+          })}
       </ScrollView>
       <Time />
     </View>

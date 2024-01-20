@@ -1,26 +1,23 @@
 
 import { setLogout } from './ThemeRedux/Actions';
-import { useDispatch } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
 import {CommonActions} from '@react-navigation/native';
-import {persistor} from '../Component/ThemeRedux/Store'
+import { navigationRef } from '../../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const LogOut = async() => {
-    const dispatch = useDispatch();
-    const navigation = useNavigation();
+export const LogOut = async(dispatch) => {
     await AsyncStorage.clear();
-    await persistor.purge();
     dispatch(setLogout());
-    navigation.dispatch(
+    // await persistor.purge();
+    navigationRef.dispatch(
       CommonActions.reset({
         index: 0,
         routes: [
           {
-            name: 'LogSignUp',
+            name: 'SplaceScreen',
           },
         ],
       }),
     );
 }
 
-export default LogOut
+// export default LogOut
