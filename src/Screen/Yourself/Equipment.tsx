@@ -24,7 +24,7 @@ import {useFocusEffect} from '@react-navigation/native';
 const Equipment = ({route, navigation}: any) => {
   const [backbuttonVisiblity, setbackbuttonVisibility] = useState(true);
   const {nextScreen} = route.params;
-  console.log('=======>', nextScreen);
+
   const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
     (state: any) => state,
   );
@@ -44,7 +44,7 @@ const Equipment = ({route, navigation}: any) => {
 
     return unsubscribe;
   }, [navigation]);
-  console.log('=>>>>>>>>>', screen);
+
   //   return unsubscribe;
   // }, [navigation]);
   // useFocusEffect({

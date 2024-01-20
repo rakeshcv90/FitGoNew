@@ -161,6 +161,12 @@ export const setHomeGraphData=data=>{
     payload:data
   }
 }
+export const setWorkoutTimeCal=data=>{
+  return{
+    type:types.Custome_Time_Cal,
+    payload:data
+  }
+}
 export const setProfileImg_Data=data=>{
   return{
     type:types.Profile_imgData,

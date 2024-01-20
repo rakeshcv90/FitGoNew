@@ -95,7 +95,7 @@ const MentalState = ({navigation, route}) => {
       </View>
     );
   };
-  console.log('mental State', mindSetData);
+
   return (
     <View style={styles.Container}>
       <Progressbar screen={screen} Type />

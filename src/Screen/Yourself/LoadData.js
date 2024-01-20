@@ -435,7 +435,7 @@ const LoadData = ({navigation}) => {
 
       <View style={styles.buttons}>
         <View></View>
-        {console.log('VBVBVBVB', activeNext)}
+     
         {activeNext && (
           <TouchableOpacity
             onPress={() => {

@@ -23,6 +23,10 @@ import VersionNumber from 'react-native-version-number';
 import {
   setHealthData,
   setHomeGraphData,
+
+
+  setWorkoutTimeCal,
+
 } from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
@@ -35,6 +39,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import {Slider} from '@miblanchard/react-native-slider';
 import axios from 'axios';
 import {setPedomterData} from '../../Component/ThemeRedux/Actions';
+import {useFocusEffect} from '@react-navigation/native';
 import {throttle, debounce} from 'lodash';
 import {
   Stop,
@@ -158,20 +163,24 @@ const Home = ({navigation}) => {
   const [likeData, setLikeData] = useState([]);
   const [currentindex, setCurrentIndex] = useState(1);
   const [weeklyGraph, setWeeklyGraph] = useState([]);
+
   const [monthlyGraph, setMonthlyGraph] = useState([]);
+
   const progressAnimation = useRef(new Animated.Value(0)).current;
   const Dispatch = useDispatch();
   const {
     getHealthData,
     getLaterButtonData,
     completeProfileData,
-    getUserID,
     getUserDataDetails,
     mindsetConsent,
     customWorkoutData,
     mealData,
     getPedomterData,
     ProfilePhoto,
+    getUserID,
+    getCustttomeTimeCal
+
   } = useSelector(state => state);
   const [stepGoalProfile, setStepGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
@@ -189,13 +198,20 @@ const Home = ({navigation}) => {
     getGraphData();
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      getCustomeWorkoutTimeDetails();
+    }, []),
+  );
+
+
   //   useEffect(() => {
   //     ActivityPermission();
   //   }, []);
   const ActivityPermission = async () => {
     if (Platform.OS == 'android') {
       const result = await isStepCountingSupported();
-      console.debug('🚀 - isStepCountingSupported', result);
+
       const permissionStatus = await check(
         PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
       );
@@ -207,11 +223,8 @@ const Home = ({navigation}) => {
           permissionRequestResult === RESULTS.GRANTED &&
           result.supported == true
         ) {
-          console.log('ACTIVITY_RECOGNITION permission granted');
-          console.log('Resulllttt', RESULTS.GRANTED);
           startStepCounter();
         } else {
-          console.log('ACTIVITY_RECOGNITION permission denied');
           // Handle the case where the permission request is denied
           await request(PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION);
         }
@@ -252,7 +265,6 @@ const Home = ({navigation}) => {
                 setSteps(results.value);
                 setDistance(((results.value / 20) * 0.01).toFixed(2));
                 setCalories(((results.value / 20) * 1).toFixed(1));
-                console.log('ios stespssss', results);
               });
             }
           });
@@ -277,9 +289,33 @@ const Home = ({navigation}) => {
   //     },
   //   );
   // });
+  const getCustomeWorkoutTimeDetails = async () => {
+  
+    try {
+      const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          user_id:  getUserID != 0?getUserID:getUserDataDetails.id,
+        },
+      });
+   
+      if(data.data.results.length>0){
+    
+        dispatch(setWorkoutTimeCal(data.data.results))
 
+      }else{
+        dispatch(setWorkoutTimeCal([]))
+      }
+   
+    } catch (error) {
+      console.log('UCustomeCorkout details', error);
+    }
+  };
   const getGraphData = async () => {
-    console.log('FFFSDSAFSDFSDFESXZDSF', getUserDataDetails?.id);
+
     try {
       const payload = new FormData();
       // payload.append('user_id', 166);
@@ -289,14 +325,19 @@ const Home = ({navigation}) => {
         url: NewAppapi.HOME_GRAPH_DATA,
         method: 'post',
         data: {
-          user_id:getUserDataDetails?.id}
+          user_id: getUserDataDetails?.id,
+        },
       });
       if (res.data?.message != 'No data found') {
         setForLoading(false);
+
         console.log(res.data, 'Graph Data ');
         Dispatch(setHomeGraphData(res.data));
         const test = [],
           test2 = [];
+
+
+   
         zeroData?.map((_, index) => {
           test.push({
             id: res.data?.weekly_data[index]?.id,
@@ -304,6 +345,7 @@ const Home = ({navigation}) => {
             weight: parseInt(res.data?.weekly_data[index]?.total_calories),
           });
         });
+
         zeroDataM?.map((_, index) => {
           test2.push({
             id: res.data?.monthly_data[index]?.id,
@@ -311,14 +353,16 @@ const Home = ({navigation}) => {
             weight: parseInt(res.data?.monthly_data[index]?.total_calories),
           });
         });
-        // console.log(test);
-        // console.log(test2);
+      
+
         setWeeklyGraph(test);
         setMonthlyGraph(test2);
       } else {
         setForLoading(false);
+
         console.log(res.data, 'Graph Data message ');
         Dispatch(setHomeGraphData([]));
+
       }
     } catch (error) {
       setForLoading(false);
@@ -340,10 +384,13 @@ const Home = ({navigation}) => {
         setSteps(results.value);
         setDistance(((results.value / 20) * 0.01).toFixed(2));
         setCalories(((results.value / 20) * 1).toFixed(1));
-        console.log('ios stespssss', results);
       });
     },
   );
+
+
+
+
 
   const [steps, setSteps] = useState(
     getHealthData[0] ? getHealthData[0].Steps : '0',
@@ -367,9 +414,6 @@ const Home = ({navigation}) => {
           calories: getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
         },
       });
-      if (res.data) {
-        console.log(res.data);
-      }
     } catch (error) {
       console.log('PedometerAPi Error', error.response);
     }
@@ -395,7 +439,7 @@ const Home = ({navigation}) => {
 
     const throttledUpdateStepsAndNotification = throttle(async data => {
       setSteps(data.steps);
-      console.log('stepssss>>>>>>>>>', data.steps);
+
       setDistance(((data.steps / 20) * 0.01).toFixed(2));
       setCalories(Math.floor(data.steps / 20));
       // Add your dispatch logic here
@@ -509,7 +553,7 @@ const Home = ({navigation}) => {
   async function startStepCounter() {
     startStepCounterUpdate(new Date(), data => {
       setSteps(data.steps);
-      console.log('stepssss>>>>>>>>>', data.steps);
+
       setDistance(((data.steps / 20) * 0.01).toFixed(2));
       setCalories(Math.floor(data.steps / 20));
       throttledDispatch(data.steps);
@@ -1129,6 +1173,7 @@ const Home = ({navigation}) => {
               }}>
               Meditation
             </Text>
+
             {customWorkoutData?.minset_workout?.length > 0 && (
               <TouchableOpacity
                 onPress={() => {
@@ -1209,7 +1254,8 @@ const Home = ({navigation}) => {
             renderItem={({item, index}) => {
               let totalTime = 0;
               let totalCal = 0;
-
+let time=getCustttomeTimeCal.filter((item1)=>{item1.workout_id==item.workout_id
+return item1})
               for (const day in item?.days) {
                 // if (item?.days[day]?.total_rest == 0) {
                 //   restDays.push(parseInt(day.split('day_')[1]));
@@ -1252,8 +1298,9 @@ const Home = ({navigation}) => {
                         marginVertical: 10,
                       }}>
                       <View style={{top: 15}}>
+                       {console.log("FFF%%%%%%%%%%%",)}
                         <ProgressBar
-                          progress={progress}
+                          progress={time[0].totalRestTime}
                           image={localImage.Play}
                           text={
                             totalTime > 60
@@ -1264,7 +1311,7 @@ const Home = ({navigation}) => {
                       </View>
                       <View style={{marginHorizontal: 10, top: 15}}>
                         <ProgressBar
-                          progress={progress}
+                          progress={time[0].totalCalories}
                           image={localImage.Step1}
                           text={totalCal + 'Kcal'}
                         />
@@ -1469,12 +1516,14 @@ const Home = ({navigation}) => {
             alignSelf: 'center',
             borderRadius: 10,
           }}>
+
           {weeklyGraph.length != 0 && monthlyGraph.length != 0 ? (
             <Graph
               resultData={value == 'Weekly' ? weeklyGraph : monthlyGraph}
               zeroData={value == 'Weekly' ? zeroData : zeroDataM}
               home={false}
             />
+
           ) : (
             <View
               style={{

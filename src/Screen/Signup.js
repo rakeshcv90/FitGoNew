@@ -163,7 +163,7 @@ const Signup = ({navigation}) => {
           devicetoken: getFcmToken,
         },
       });
-      console.log('Device Id',data.data);
+  
       if (data.data.status == 0) {
         setForLoading(false);
         showMessage({
@@ -392,7 +392,6 @@ const Signup = ({navigation}) => {
           });
           if (OtpMsg.data.msg == 'Email verified successfully') {
             setForLoading(false);
-
             showMessage({
               message: 'Email verified successfully!',
               floating: true,
@@ -400,7 +399,7 @@ const Signup = ({navigation}) => {
               type: 'success',
               icon: {icon: 'auto', position: 'left'},
             });
-            // dispatch(setUserId(OtpMsg.data?.id));
+           
             getProfileData(OtpMsg.data?.id);
             dispatch(setUserId(OtpMsg.data?.id));
             setVerifyVisible(false);
@@ -443,7 +442,7 @@ const Signup = ({navigation}) => {
         if (data.data.profile) {
           setForLoading(false);
           dispatch(setUserProfileData(data.data.profile));
-          navigationRef.navigate('Yourself');
+         navigationRef.navigate('Yourself');
         } else {
           setForLoading(false);
           dispatch(setUserProfileData([]));

@@ -176,7 +176,7 @@ const NewPersonalDetails = ({route, navigation}) => {
           gender: values.gender,
         },
       });
-      console.log("DDDDD#########",data.data.profile)
+   
       if (data.data.msg == 'User Updated Successfully') {
         showMessage({
           message: data.data.msg,
