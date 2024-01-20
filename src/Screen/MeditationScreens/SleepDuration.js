@@ -82,7 +82,6 @@ const SleepDuration = ({navigation,route}) => {
       navigation.navigate('MentalState',{nextScreen:screen+1});
     }, 250);
   };
-  console.log("minsetData",mindSetData)
   return (
     <View style={styles.Container}>
       <Progressbar screen={screen} Type/>

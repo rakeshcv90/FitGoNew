@@ -17,6 +17,7 @@ export type Props = {
   viewAllButton?: boolean;
   data: Array<any>;
   headText?: string;
+  viewAllPress?: () => void;
 };
 
 const MediumRounded: FC<Props> = ({...props}) => {
@@ -28,7 +29,7 @@ const MediumRounded: FC<Props> = ({...props}) => {
         </Text>
         {props.viewAllButton && (
           <Text
-            //   onPress={}
+          onPress={props.viewAllPress}
             style={[
               styles.category,
               {fontSize: 12, color: 'rgba(80, 80, 80, 0.6) '},

@@ -76,7 +76,7 @@ const Alcohalinfo = ({navigation, route}) => {
       navigation.navigate("LoadData");
     }, 250);
   };
-  console.log("mindsetData",mindSetData)
+
   return (
     <View style={styles.Container}>
       <Progressbar screen={screen} Type />

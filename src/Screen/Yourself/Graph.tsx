@@ -20,6 +20,7 @@ import {curveBasis, line, scaleLinear, scaleSequential, scaleTime} from 'd3';
 import {Easing, View, Pressable, Text, StyleSheet} from 'react-native';
 import {AppColor} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import moment from 'moment';
 
 interface GraphData {
   min: number;
@@ -55,16 +56,19 @@ const LineChart = ({resultData, zeroData, home}: any) => {
   //   }, 500);
   // }, []);
   const GRAPH_HEIGHT = 400;
-  const GRAPH_WIDTH = 360;
+  const GRAPH_WIDTH = DeviceWidth * 0.9;
   const [late, setLate] = useState(false);
-  const [circles, setCircle] = useState([]);
-  const maxWeight = Math.max(...resultData.map((dataPoint: DataPoint) => dataPoint.weight));
-  const minWeight = Math.min(...resultData.map((dataPoint: DataPoint) => dataPoint.weight));
+  const maxWeight = Math.max(
+    ...resultData.map((dataPoint: DataPoint) => dataPoint.weight),
+  );
+  const minWeight = Math.min(
+    ...resultData.map((dataPoint: DataPoint) => dataPoint.weight),
+  );
 
   const makeGraph = (data: DataPoint[]): GraphData => {
     const max = Math.max(...data.map((val: any) => val.weight));
     const min = Math.min(...data.map((val: any) => val.weight));
-    const y = scaleLinear().domain([0, max]).range([GRAPH_HEIGHT, 150]);
+    const y = scaleLinear().domain([0, max]).range([300, 150]);
 
     const x = scaleTime()
       .domain([new Date(data[0].date), new Date(data[data.length - 1].date)])
@@ -82,7 +86,6 @@ const LineChart = ({resultData, zeroData, home}: any) => {
       curve: skPath!,
     };
   };
-  const max = Math.max(...resultData.map((val: any) => val.weight));
 
   const transitionStart = (end: number) => {
     state.current = {
@@ -91,16 +94,16 @@ const LineChart = ({resultData, zeroData, home}: any) => {
     };
     transition.current = 0;
     runTiming(transition, 1, {
-      duration: 750,
+      duration: 1000,
       easing: Easing.inOut(Easing.cubic),
     });
   };
   const graphData = [makeGraph(zeroData), makeGraph(resultData)];
-  const uniformValues = Array.from({ length: 7 }, (_, index) => {
+  const uniformValues = Array.from({length: 7}, (_, index) => {
     const factor = index / 7; // Linear interpolation factor
     return minWeight + factor * (maxWeight - minWeight);
   });
-  
+
   const path = useComputedValue(() => {
     const start = graphData[state.current.current].curve;
     const end = graphData[state.current.next].curve;
@@ -108,12 +111,6 @@ const LineChart = ({resultData, zeroData, home}: any) => {
     return result?.toSVGString() ?? '0';
   }, [state, transition]);
 
-  const final = path.current
-    .split(' ')
-    .map(item => parseFloat(item.match(/-?\d+(\.\d+)?/)?.[0]))
-    .filter(num => !isNaN(num));
-  const test =
-    '  M15 275L24.306 275C33.611 275 52.222 275 70.833 275C89.444 275 108.056 275 126.667 275C145.278 275 163.889 275 182.5 275C201.111 275 219.722 275 238.333 275C256.944 275 275.556 275 294.167 275C312.778 275 331.389 275 340.694 275L350 275';
   return (
     <View style={styles.container}>
       <Canvas
@@ -123,22 +120,22 @@ const LineChart = ({resultData, zeroData, home}: any) => {
           marginTop: -DeviceHeigth * 0.04,
         }}>
         <Line
-          p1={vec(10, 130)}
-          p2={vec(400, 130)}
+          p1={vec(10, 80)}
+          p2={vec(400, 80)}
           color="lightgrey"
           style="stroke"
           strokeWidth={1}
         />
         <Line
-          p1={vec(10, 250)}
-          p2={vec(400, 250)}
+          p1={vec(10, 200)}
+          p2={vec(400, 200)}
           color="lightgrey"
           style="stroke"
           strokeWidth={1}
         />
         <Line
-          p1={vec(10, 370)}
-          p2={vec(400, 370)}
+          p1={vec(10, 320)}
+          p2={vec(400, 320)}
           color="lightgrey"
           style="stroke"
           strokeWidth={1}
@@ -150,35 +147,33 @@ const LineChart = ({resultData, zeroData, home}: any) => {
           style="stroke"
           strokeWidth={1}
         /> */}
-        {resultData.map((dataPoint: DataPoint, index: number) => {
-          const xValue = scaleTime()
-            .domain([
-              new Date(resultData[0].date),
-              new Date(resultData[resultData.length - 1].date),
-            ])
-            .range([5, GRAPH_WIDTH - 45])(new Date(dataPoint.date));
-          return (
-            <>
-              <SkiaText
-                x={xValue}
-                y={400}
-                text={dataPoint?.date}
-                color={AppColor.BLACK}
-              />
+        {!home &&
+          uniformValues.map((item: any, index: number) => {
+            return (
               <SkiaText
                 x={0}
-                y={uniformValues[index]}
-                text={uniformValues[uniformValues.length - 1 -index].toFixed()}
+                y={item}
+                text={item.toFixed()}
                 color={AppColor.BLACK}
               />
-            </>
-          );
-        })}
+            );
+          })}
         {/* <Path style="stroke" path={test} strokeWidth={4} color="blue" /> */}
-        <Path style="stroke" path={path} strokeWidth={4} color={'rgba(208, 24, 24, 0.6)'} />
+        <Path
+          style="stroke"
+          path={path}
+          strokeWidth={4}
+          color={'rgba(208, 24, 24, 0.6)'}
+        />
         {late &&
           home &&
-          resultData.map((dataPoint, index: number) => {
+          resultData.map((dataPoint: DataPoint, index: number) => {
+            const xValue1 = scaleTime()
+              .domain([
+                new Date(resultData[0].date),
+                new Date(resultData[resultData.length - 1].date),
+              ])
+              .range([5, GRAPH_WIDTH - 45])(new Date(dataPoint.date));
             const xValue = scaleTime()
               .domain([
                 new Date(resultData[0].date),
@@ -187,8 +182,8 @@ const LineChart = ({resultData, zeroData, home}: any) => {
               .range([15, GRAPH_WIDTH - 10])(new Date(dataPoint.date));
 
             const yValue = scaleLinear()
-              .domain([0, max])
-              .range([GRAPH_HEIGHT, 150])(dataPoint.weight);
+              .domain([0, maxWeight])
+              .range([300, 150])(dataPoint.weight);
             //console.log('xValue', dataPoint?.weight, yValue);
             // function isApproximatelyEqual(value, array, tolerance) {
             //   return array.some(item => Math.abs(value - item) <= tolerance);
@@ -220,14 +215,19 @@ const LineChart = ({resultData, zeroData, home}: any) => {
                     r={5}
                     color={AppColor.RED}
                   />
-                  {/* <RoundedRect
-                x={xValue-10}
-                y={yValue+40}
-                width={80}
-                height={50}
-                r={10}
-                color={AppColor.RED}
-              > */}
+
+                  <SkiaText
+                    x={xValue1}
+                    y={335}
+                    text={moment(dataPoint?.date).format('DD')}
+                    color={AppColor.BLACK}
+                  />
+                  <SkiaText
+                    x={xValue1-5}
+                    y={350}
+                    text={moment(dataPoint?.date).format('MMM')}
+                    color={AppColor.BLACK}
+                  />
                   {(resultData[resultData.length - 1].weight ==
                     dataPoint?.weight ||
                     resultData[0].weight == dataPoint?.weight) && (

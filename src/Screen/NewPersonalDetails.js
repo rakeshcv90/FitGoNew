@@ -47,7 +47,7 @@ const NewPersonalDetails = ({route, navigation}) => {
   const [isEditible, setEditable] = useState(false);
   const {getUserDataDetails, completeProfileData} = useSelector(state => state);
   const [isFocus, setIsFocus] = useState(false);
-console.log("Uswer Daytaaaa",getUserDataDetails)
+
   useEffect(() => {
     ProfileDataAPI();
   }, []);
@@ -176,7 +176,7 @@ console.log("Uswer Daytaaaa",getUserDataDetails)
           gender: values.gender,
         },
       });
-  
+   
       if (data.data.msg == 'User Updated Successfully') {
         showMessage({
           message: data.data.msg,
@@ -185,6 +185,7 @@ console.log("Uswer Daytaaaa",getUserDataDetails)
           animationDuration: 750,
           icon: {icon: 'none', position: 'left'},
         });
+
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));
         dispatch(setCustomWorkoutData(data?.data.allworkouts));

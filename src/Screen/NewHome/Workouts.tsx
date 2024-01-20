@@ -70,9 +70,9 @@ const Workouts = ({navigation}: any) => {
         setRefresh(false);
         console.log(res.data, 'Popular');
         setPopularData(res.data);
-      }else{
+      } else {
         console.log(res.data, 'Popular Status');
-        setPopularData([])
+        setPopularData([]);
       }
     } catch (error) {
       setRefresh(false);
@@ -187,10 +187,12 @@ const Workouts = ({navigation}: any) => {
         <RoundedCards
           data={allWorkoutData}
           trackerData={trackerData}
-          viewAllPress={() => navigation?.navigate('AllWorkouts')}
+          viewAllPress={() =>
+            navigation?.navigate('AllWorkouts', {data: allWorkoutData, type: ''})
+          }
           horizontal
           viewAllButton
-          type='category'
+          type="category"
         />
 
         <View style={{marginVertical: 15}}>
@@ -202,6 +204,9 @@ const Workouts = ({navigation}: any) => {
             data={popularData}
             headText="Popular Workouts"
             viewAllButton
+            viewAllPress={() =>
+              navigation?.navigate('AllWorkouts', {data: popularData, type: 'popular'})
+            }
           />
         )}
         <RoundedCards
@@ -210,12 +215,12 @@ const Workouts = ({navigation}: any) => {
           viewAllPress={() =>
             navigation?.navigate('AllWorkouts', {
               data: allWorkoutData,
-              trackerData,
+              type: '',
             })
           }
           horizontal={false}
           headText="Core Workouts"
-          type='core'
+          type="core"
           viewAllButton
         />
       </ScrollView>

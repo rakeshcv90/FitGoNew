@@ -47,7 +47,7 @@ const NewProgressScreen = ({navigation}) => {
   const {getUserDataDetails, ProfilePhoto} = useSelector(state => state);
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [selected, setSelected] = useState(false);
-  // console.log('=======>userData', getUserDataDetails);
+
   const [dates, setDates] = useState([]);
   const [value, setValue] = useState('Weekly');
   const [value1, setValue1] = useState('Weekly');
@@ -92,7 +92,7 @@ const NewProgressScreen = ({navigation}) => {
         //       (weight.reduce((acc, res) => acc + res, 0) * 0.3) / 500;
         //     arrayForData.push(currentWeight);
         //   }
-        //   // console.log('sum=====>', arrayForData);
+
         // }
         // setArray(arrayForData);
       }
@@ -178,7 +178,7 @@ const NewProgressScreen = ({navigation}) => {
           let NewWeight =
             currentWeight - res?.data?.weekly_data[i]?.total_burn_weight;
           currentWeight = NewWeight;
-         
+
           arrayForData.push(parseFloat(NewWeight).toFixed(3));
         }
         setArray(arrayForData);
@@ -375,7 +375,7 @@ const NewProgressScreen = ({navigation}) => {
       </View>
     );
   };
-  // console.log('arrayForData', array);
+
   const data = {
     labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     datasets: [

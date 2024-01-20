@@ -20,7 +20,14 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import VersionNumber from 'react-native-version-number';
-import {setHealthData, setHomeGraphData} from '../../Component/ThemeRedux/Actions';
+import {
+  setHealthData,
+  setHomeGraphData,
+
+
+  setWorkoutTimeCal,
+
+} from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
 import BackgroundService from 'react-native-background-actions';
@@ -32,6 +39,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import {Slider} from '@miblanchard/react-native-slider';
 import axios from 'axios';
 import {setPedomterData} from '../../Component/ThemeRedux/Actions';
+import {useFocusEffect} from '@react-navigation/native';
 import {throttle, debounce} from 'lodash';
 import {
   Stop,
@@ -59,6 +67,19 @@ import {BackdropBlur, Canvas, Fill} from '@shopify/react-native-skia';
 import {color} from 'd3';
 import {Form} from 'formik';
 import moment from 'moment';
+import Graph from '../Yourself/Graph';
+const zeroData = Array(7)
+  .fill()
+  .map((_, index) => {
+    const currentDate = moment().subtract(index + 1, 'days');
+    return {weight: 0, date: currentDate.date()};
+  });
+const zeroDataM = Array(21)
+  .fill()
+  .map((_, index) => {
+    const currentDate = moment().subtract(index + 1, 'days');
+    return {weight: 0, date: currentDate.date()};
+  });
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
 
@@ -77,7 +98,7 @@ const GradientText = ({item}) => {
         <SvgText
           fontFamily="Poppins"
           fontWeight={'600'}
-          fontSize={23}
+          fontSize={17}
           fill="url(#grad)"
           x="0"
           y="25">
@@ -141,19 +162,25 @@ const Home = ({navigation}) => {
   const [value, setValue] = useState('Weekly');
   const [likeData, setLikeData] = useState([]);
   const [currentindex, setCurrentIndex] = useState(1);
-  const [weeklyGraph,setWeeklyGraph]= useState([]);
+  const [weeklyGraph, setWeeklyGraph] = useState([]);
+
+  const [monthlyGraph, setMonthlyGraph] = useState([]);
+
   const progressAnimation = useRef(new Animated.Value(0)).current;
+  const Dispatch = useDispatch();
   const {
     getHealthData,
     getLaterButtonData,
     completeProfileData,
-    getUserID,
     getUserDataDetails,
     mindsetConsent,
     customWorkoutData,
     mealData,
     getPedomterData,
-    ProfilePhoto
+    ProfilePhoto,
+    getUserID,
+    getCustttomeTimeCal
+
   } = useSelector(state => state);
   const [stepGoalProfile, setStepGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
@@ -164,13 +191,29 @@ const Home = ({navigation}) => {
   const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
     getPedomterData[2] ? getPedomterData[2].RCalories : 25,
   );
+
+
   useEffect(() => {
+    ActivityPermission();
+
     getGraphData();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getCustomeWorkoutTimeDetails();
+    }, []),
+  );
+
+
+  //   useEffect(() => {
+  //     ActivityPermission();
+  //   }, []);
+
   const ActivityPermission = async () => {
     if (Platform.OS == 'android') {
       const result = await isStepCountingSupported();
-      console.debug('🚀 - isStepCountingSupported', result);
+
       const permissionStatus = await check(
         PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
       );
@@ -182,11 +225,8 @@ const Home = ({navigation}) => {
           permissionRequestResult === RESULTS.GRANTED &&
           result.supported == true
         ) {
-          console.log('ACTIVITY_RECOGNITION permission granted');
-          console.log('Resulllttt', RESULTS.GRANTED);
           startStepCounter();
         } else {
-          console.log('ACTIVITY_RECOGNITION permission denied');
           // Handle the case where the permission request is denied
           await request(PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION);
         }
@@ -227,7 +267,6 @@ const Home = ({navigation}) => {
                 setSteps(results.value);
                 setDistance(((results.value / 20) * 0.01).toFixed(2));
                 setCalories(((results.value / 20) * 1).toFixed(1));
-                console.log('ios stespssss', results);
               });
             }
           });
@@ -252,44 +291,85 @@ const Home = ({navigation}) => {
   //     },
   //   );
   // });
+  const getCustomeWorkoutTimeDetails = async () => {
+  
+    try {
+      const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          user_id:  getUserID != 0?getUserID:getUserDataDetails.id,
+        },
+      });
+   
+      if(data.data.results.length>0){
+    
+        dispatch(setWorkoutTimeCal(data.data.results))
 
+      }else{
+        dispatch(setWorkoutTimeCal([]))
+      }
+   
+    } catch (error) {
+      console.log('UCustomeCorkout details', error);
+    }
+  };
   const getGraphData = async () => {
-    console.log("FFFSDSAFSDFSDFESXZDSF" ,getUserDataDetails?.id)
+
     try {
       const payload = new FormData();
       // payload.append('user_id', 166);
-      payload.append('user_id', getUserDataDetails?.id);
+      // payload.append('user_id', getUserDataDetails?.id);
       setForLoading(true);
       const res = await axios({
         url: NewAppapi.HOME_GRAPH_DATA,
         method: 'post',
         data: {
-          user_id:getUserDataDetails?.id}
+          user_id: getUserDataDetails?.id,
+        },
       });
       if (res.data?.message != 'No data found') {
         setForLoading(false);
-       console.log(res.data?.weekly_data, 'Graph Data ');
-        dispatch(setHomeGraphData(res.data));
-        const test = [];
+
+        console.log(res.data, 'Graph Data ');
+        Dispatch(setHomeGraphData(res.data));
+        const test = [],
+          test2 = [];
+
+
+   
         zeroData?.map((_, index) => {
           test.push({
-            date: moment(res.data?.weekly_data[index]?.created_at).format(
-              'DD-MM',
-            ),
+            id: res.data?.weekly_data[index]?.id,
+            date: res.data?.weekly_data[index]?.created_at,
             weight: parseInt(res.data?.weekly_data[index]?.total_calories),
           });
         });
-        console.log(test);
+
+        zeroDataM?.map((_, index) => {
+          test2.push({
+            id: res.data?.monthly_data[index]?.id,
+            date: res.data?.monthly_data[index]?.created_at,
+            weight: parseInt(res.data?.monthly_data[index]?.total_calories),
+          });
+        });
+      
+
         setWeeklyGraph(test);
+        setMonthlyGraph(test2);
       } else {
         setForLoading(false);
+
         console.log(res.data, 'Graph Data message ');
-        dispatch(setHomeGraphData([]));
+        Dispatch(setHomeGraphData([]));
+
       }
     } catch (error) {
       setForLoading(false);
       console.error(error, 'GraphError');
-      dispatch(setHomeGraphData([]));
+      Dispatch(setHomeGraphData([]));
     }
   };
 
@@ -306,60 +386,14 @@ const Home = ({navigation}) => {
         setSteps(results.value);
         setDistance(((results.value / 20) * 0.01).toFixed(2));
         setCalories(((results.value / 20) * 1).toFixed(1));
-        console.log('ios stespssss', results);
       });
     },
   );
 
 
-  const likeStatusApi = async () => {
-    try {
-      const payload = new FormData();
-      payload.append('login_token', getUserDataDetails?.login_token);
-      payload.append('user_id', getUserDataDetails?.id);
-      setForLoading(true);
-      const res = await axios({
-        url: NewAppapi.GET_LIKE_WORKOUTS,
-        method: 'post',
-        data: payload,
-      });
-      setForLoading(false);
-      if (res.data) {
-        setForLoading(false);
-        console.log(...res.data, 'GET LIKES ');
-        setLikeData(...res.data);
-      }
-    } catch (error) {
-      setForLoading(false);
-      console.error(error, 'LikeError');
-      setLikeData([]);
-    }
-  };
 
-  const postLike = async workoutID => {
-    try {
-      const payload = new FormData();
-      payload.append('user_id', getUserDataDetails?.id);
-      payload.append('workout_id', workoutID);
-      setForLoading(true);
-      const res = await axios({
-        url: NewAppapi.POST_LIKE_WORKOUT,
-        method: 'post',
-        data: payload,
-      });
-      setForLoading(false);
-      if (res.data) {
-        setForLoading(false);
-        console.log(res.data, 'POST LIKE');
-        likeStatusApi();
-      }
-    } catch (error) {
-      setForLoading(false);
-      console.error(error, 'likeERRPost');
-    }
-  };
-  const dispatch = useDispatch();
-  const Dispatch = useDispatch();
+
+
   const [steps, setSteps] = useState(
     getHealthData[0] ? getHealthData[0].Steps : '0',
   );
@@ -382,9 +416,6 @@ const Home = ({navigation}) => {
           calories: getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
         },
       });
-      if (res.data) {
-        console.log(res.data);
-      }
     } catch (error) {
       console.log('PedometerAPi Error', error.response);
     }
@@ -410,7 +441,7 @@ const Home = ({navigation}) => {
 
     const throttledUpdateStepsAndNotification = throttle(async data => {
       setSteps(data.steps);
-      console.log('stepssss>>>>>>>>>', data.steps);
+
       setDistance(((data.steps / 20) * 0.01).toFixed(2));
       setCalories(Math.floor(data.steps / 20));
       // Add your dispatch logic here
@@ -524,7 +555,7 @@ const Home = ({navigation}) => {
   async function startStepCounter() {
     startStepCounterUpdate(new Date(), data => {
       setSteps(data.steps);
-      console.log('stepssss>>>>>>>>>', data.steps);
+
       setDistance(((data.steps / 20) * 0.01).toFixed(2));
       setCalories(Math.floor(data.steps / 20));
       throttledDispatch(data.steps);
@@ -850,7 +881,7 @@ const Home = ({navigation}) => {
   };
   const data2 = [
     {label: 'Weekly', value: '1'},
-    {label: 'Daily', value: '2'},
+    {label: 'Monthly', value: '2'},
   ];
   const progressBarWidth = progressAnimation.interpolate({
     inputRange: [0, 1],
@@ -980,14 +1011,14 @@ const Home = ({navigation}) => {
             onPress={() => {
               navigation.navigate('Profile');
             }}>
-         <Image
+            <Image
               source={
                 getUserDataDetails.image_path == null
                   ? localImage.avt
-                  :{uri:getUserDataDetails.image_path} 
+                  : {uri: getUserDataDetails.image_path}
               }
-            style={styles.img}
-            resizeMode="cover"></Image>
+              style={styles.img}
+              resizeMode="cover"></Image>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -1001,7 +1032,6 @@ const Home = ({navigation}) => {
               resizeMode="cover"></Image>
           </TouchableOpacity>
         )}
-
       </View>
       <GradientText
         item={
@@ -1093,21 +1123,27 @@ const Home = ({navigation}) => {
               <CircularProgressBase
                 {...props}
                 value={Calories}
-                maxValue={getPedomterData[3]?getPedomterData[3].RCalories:500}
+                maxValue={
+                  getPedomterData[3] ? getPedomterData[3].RCalories : 500
+                }
                 radius={32}
                 activeStrokeColor={'#941000'}
                 inActiveStrokeColor={'#941000'}>
                 <CircularProgressBase
                   {...props}
                   value={distance}
-                  maxValue={getPedomterData[2]?getPedomterData[2].RDistance:2.5}
+                  maxValue={
+                    getPedomterData[2] ? getPedomterData[2].RDistance : 2.5
+                  }
                   radius={55}
                   activeStrokeColor={'#FCBB1D'}
                   inActiveStrokeColor={'#FCBB1D'}>
                   <CircularProgressBase
                     {...props}
                     value={steps}
-                    maxValue={getPedomterData[0]?getPedomterData[0].RSteps:5000}
+                    maxValue={
+                      getPedomterData[0] ? getPedomterData[0].RSteps : 5000
+                    }
                     radius={80}
                     activeStrokeColor={'#397E54'}
                     inActiveStrokeColor={'#397E54'}
@@ -1139,6 +1175,7 @@ const Home = ({navigation}) => {
               }}>
               Meditation
             </Text>
+
             {customWorkoutData?.minset_workout?.length > 0 && (
               <TouchableOpacity
                 onPress={() => {
@@ -1193,12 +1230,9 @@ const Home = ({navigation}) => {
           {customWorkoutData?.workout?.length > 0 && (
             <TouchableOpacity
               onPress={() => {
-                showMessage({
-                  message: 'Work in Progress',
-                  floating: true,
-                  duration: 500,
-                  type: 'info',
-                  icon: {icon: 'auto', position: 'left'},
+                navigation?.navigate('AllWorkouts', {
+                  data: customWorkoutData?.workout,
+                  type: 'custom',
                 });
               }}>
               <Icons name="chevron-right" size={25} color={'#000'} />
@@ -1220,10 +1254,10 @@ const Home = ({navigation}) => {
             ListEmptyComponent={emptyComponent}
             pagingEnabled
             renderItem={({item, index}) => {
-
               let totalTime = 0;
               let totalCal = 0;
-
+let time=getCustttomeTimeCal.filter((item1)=>{item1.workout_id==item.workout_id
+return item1})
               for (const day in item?.days) {
                 // if (item?.days[day]?.total_rest == 0) {
                 //   restDays.push(parseInt(day.split('day_')[1]));
@@ -1266,8 +1300,9 @@ const Home = ({navigation}) => {
                         marginVertical: 10,
                       }}>
                       <View style={{top: 15}}>
+                       {console.log("FFF%%%%%%%%%%%",)}
                         <ProgressBar
-                          progress={progress}
+                          progress={time[0].totalRestTime}
                           image={localImage.Play}
                           text={
                             totalTime > 60
@@ -1278,7 +1313,7 @@ const Home = ({navigation}) => {
                       </View>
                       <View style={{marginHorizontal: 10, top: 15}}>
                         <ProgressBar
-                          progress={progress}
+                          progress={time[0].totalCalories}
                           image={localImage.Step1}
                           text={totalCal + 'Kcal'}
                         />
@@ -1483,10 +1518,21 @@ const Home = ({navigation}) => {
             alignSelf: 'center',
             borderRadius: 10,
           }}>
-          {weeklyGraph.length != 0  ? (
-            <Graph resultData={weeklyGraph} zeroData={[]} home={false} />
+
+          {weeklyGraph.length != 0 && monthlyGraph.length != 0 ? (
+            <Graph
+              resultData={value == 'Weekly' ? weeklyGraph : monthlyGraph}
+              zeroData={value == 'Weekly' ? zeroData : zeroDataM}
+              home={false}
+            />
+
           ) : (
-            <View style={{justifyContent: 'center', alignItems: 'center', height: DeviceHeigth* 0.2}}>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: DeviceHeigth * 0.2,
+              }}>
               {emptyComponent()}
             </View>
           )}
@@ -1708,7 +1754,7 @@ var styles = StyleSheet.create({
   dropdown: {
     margin: 16,
     height: 30,
-    width: DeviceWidth * 0.25,
+    width: DeviceWidth * 0.3,
     borderColor: 'red',
     borderRadius: 12,
     padding: 12,

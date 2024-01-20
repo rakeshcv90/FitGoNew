@@ -22,20 +22,9 @@ import {showMessage} from 'react-native-flash-message';
 const Report = ({navigation}) => {
   const {getScreenAwake, getSoundOffOn} = useSelector(state => state);
   const dispatch = useDispatch();
-
-
-  const [isSoundEnabled, setIsSoundEnabled] = useState(false);
-  // const [isScreenEnabled, setScreenIsEnabled] = useState(getScreenAwake);
-
   const [visible, setVisible] = useState(false);
 
-  const toggleSwitch = () => {
-    setIsSoundEnabled(previousState => !previousState);
-  };
-  // const toggleSwitch2 = () => {
-  //   setScreenIsEnabled(previousState => !previousState);
-  //   dispatch(setScreenAwake(isScreenEnabled))
-  // };
+
 
   const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
 
@@ -56,7 +45,7 @@ const Report = ({navigation}) => {
 
   const checkAlarm = async () => {
     const trigger = await notifee.getTriggerNotifications();
-    console.log('GGGGGGGGGG', getScreenAwake, trigger);
+
     trigger.length != 0 && setAlarmIsEnabled(true);
   };
 
@@ -100,19 +89,17 @@ const Report = ({navigation}) => {
           <Text style={styles.textStyle}>Sound</Text>
           <Switch
             onValueChange={text => {
-              if (text == false) {
+              if (text ==true) {
                 showMessage({
                   message: 'Sound Is Unmute',
                   type: 'success',
                   animationDuration: 500,
-
                   floating: true,
                   icon: {icon: 'auto', position: 'left'},
                 });
               } else {
                 showMessage({
                   message: 'Sound Is Mute',
-
                   animationDuration: 500,
                   type: 'danger',
                   floating: true,
@@ -158,25 +145,27 @@ const Report = ({navigation}) => {
           <Switch
             onValueChange={test => {
 
-              if (test == false) {
+              if (test == true) {
                 showMessage({
-                  message: 'Alway On Screen Is Off ',
+                  message: 'Alway On Screen Is On ',
                   type: 'success',
                   animationDuration: 500,
                   floating: true,
                   icon: {icon: 'auto', position: 'left'},
                 });
+                dispatch(setScreenAwake(test));
               } else {
                 showMessage({
-                  message: 'Alway On Screen Is On ',
+                  message: 'Alway On Screen Is Off ',
                   animationDuration: 500,
                   type: 'danger',
                   floating: true,
                   icon: {icon: 'auto', position: 'left'},
                 });
+                dispatch(setScreenAwake(test));
               }
 
-              dispatch(setScreenAwake(test));
+         
             }}
             value={getScreenAwake}
             disabled={false}

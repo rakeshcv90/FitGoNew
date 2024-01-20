@@ -52,31 +52,22 @@ const PredictionScreen = ({navigation, route}: any) => {
   const [currentWeight, setCurrentWeight] = useState(-1);
   const [TargetWeight, setTargetWeight] = useState(-1);
 
+  const mergedObject = Object.assign({}, ...getLaterButtonData);
   useEffect(() => {
-    const i = getLaterButtonData.findIndex(
-      (item: any) => 'currentWeight' in item,
-    );
-    if (i !== -1) {
-      const currentW =
-        getLaterButtonData[i].type === 'kg'
-          ? getLaterButtonData[i].currentWeight
-          : getLaterButtonData[i].currentWeight * 2.2;
-      const targetW =
-        getLaterButtonData[i].type === 'kg'
-          ? getLaterButtonData[i].targetWeight
-          : getLaterButtonData[i].targetWeight * 2.2;
-      setCurrentWeight(currentW);
-      setTargetWeight(targetW);
-    }
-  }, [getLaterButtonData]);
+    const currentW =
+      mergedObject.type === 'kg'
+        ? mergedObject.currentWeight
+        : mergedObject.currentWeight * 2.2;
+    const targetW =
+      mergedObject.type === 'kg'
+        ? mergedObject.targetWeight
+        : mergedObject.targetWeight * 2.2;
+    CalculateWeight(currentW, targetW);
+    setCurrentWeight(currentW);
+    setTargetWeight(targetW);
+  }, []);
 
-  useEffect(() => {
-    if (currentWeight !== null && TargetWeight !== null) {
-      CalculateWeight();
-    }
-  }, [currentWeight, TargetWeight]);
-
-  const CalculateWeight = () => {
+  const CalculateWeight = (currentWeight: number, TargetWeight: number) => {
     let TotalW = 0;
     if (currentWeight > TargetWeight) {
       TotalW = currentWeight - TargetWeight;
@@ -96,8 +87,8 @@ const PredictionScreen = ({navigation, route}: any) => {
     let constantWeightArray = [];
     let weightHistoryArray = [];
     let currentDate = moment();
-
-    for (let i = Result_Number_Of_Days; i > 0; i -= 15) {
+    const No_Of_Points = Result_Number_Of_Days / 15 > 7 ? 30 : 15;
+    for (let i = Result_Number_Of_Days; i > 0; i -= No_Of_Points) {
       const weight15 =
         ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
       const decWeight =
@@ -116,7 +107,7 @@ const PredictionScreen = ({navigation, route}: any) => {
       });
       constantWeightArray.push({weight: 0, date: formattedDate});
 
-      currentDate = currentDate.add(15, 'days');
+      currentDate = currentDate.add(No_Of_Points, 'days');
     }
     console.log(weightHistoryArray, currentWeight, TargetWeight);
     setZeroData(constantWeightArray);
@@ -168,7 +159,7 @@ const PredictionScreen = ({navigation, route}: any) => {
           <Graph resultData={weightHistory} zeroData={zeroData} home={true} />
         )}
       </View>
-      <Image
+      {/* <Image
         source={{
           uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/25357fb6-c174-4a3d-995c-77641d9ea900/public',
         }}
@@ -179,7 +170,7 @@ const PredictionScreen = ({navigation, route}: any) => {
           },
         ]}
         resizeMode="contain"
-      />
+      /> */}
       <View
         style={{
           bottom: DeviceHeigth * 0.1,
