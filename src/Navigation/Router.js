@@ -3,7 +3,7 @@ import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/index';
+import Yourself from '../Screen/Yourself/Index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -70,10 +70,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      
-
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
-
       <Stack.Screen
         name="IntroductionScreen1"
         component={IntroductionScreen1}
