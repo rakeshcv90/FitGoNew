@@ -1,14 +1,32 @@
-import {View, Text, SafeAreaView, StyleSheet, Image} from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  Image,
+  ScrollView,
+  FlatList,
+  Platform,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useMemo, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {AppColor} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {Calendar} from 'react-native-calendars';
+import AppleHealthKit from 'react-native-health';
 import moment from 'moment';
+import {useSelector, useDispatch} from 'react-redux';
+import axios from 'axios';
 const NewMonthlyAchievement = () => {
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [selected, setSelected] = useState(false);
+  const [steps, setSteps] = useState(0);
+  const [Distance, setDistance] = useState(0);
+  const [calories, setCalories] = useState(0);
+  const {getUserDataDetails} = useSelector(state => state);
+  const [ApiData, setApiData] = useState([]);
   const Card_Data = [
     {
       id: 1,
@@ -45,6 +63,48 @@ const NewMonthlyAchievement = () => {
       dayTextColor: AppColor.BLACK,
     };
   }, []);
+  const HandleStepsAndCalories = Date1 => {
+    if (Platform.OS == 'ios') {
+      let options = {
+        date: new Date(Date1).toISOString(), // optional; default now
+        includeManuallyAdded: true, // optional: default true
+      };
+      // console.log('options====>', options);
+      AppleHealthKit.getStepCount(options, (callbackError, results) => {
+        if (callbackError) {
+          console.error('Error while getting the data:', callbackError);
+          // Handle the error as needed
+        } else {
+          console.log('iOS ', results);
+          setSteps(results?.value);
+          setDistance(((results?.value / 20) * 0.01).toFixed(2));
+          setCalories(((results?.value / 20) * 1).toFixed(1));
+        }
+      });
+    } else if (Platform.OS == 'android') {
+      console.log('android======>');
+    }
+  };
+
+  const DateWiseData = async Date1 => {
+    const payload = new FormData();
+    payload.append('user_id', getUserDataDetails?.id);
+    payload.append('date', Date1);
+    try {
+      const res = await axios({
+        url: NewAppapi.DateWiseData,
+        method: 'POST',
+        headers: {'Content-Type': 'multipart/form-data'},
+        data: payload,
+      });
+      if (res) {
+        console.log('DateWiseData===>', res.data);
+        setApiData(res.data.data);
+      }
+    } catch (error) {
+      console.log('DatwWiseDataError', error);
+    }
+  };
   return (
     <SafeAreaView style={styles.Container}>
       <NewHeader header={'Monthly Achievement'} backButton={true} />
@@ -63,7 +123,7 @@ const NewMonthlyAchievement = () => {
               resizeMode="contain"
             />
             <Text style={[styles.txts, {color: AppColor.RED}]}>
-              {value.txt1}
+              {value?.txt1}
             </Text>
             <Text style={styles.txts}>{value.txt2}</Text>
           </View>
@@ -75,9 +135,11 @@ const NewMonthlyAchievement = () => {
             console.log(day);
             setDate(day.dateString);
             setSelected(true);
+            HandleStepsAndCalories(day.dateString);
+            DateWiseData(day.dateString);
           }}
+          allowSelectionOutOfRange={false}
           markingType="period"
-          
           enableSwipeMonths
           hideExtraDays={true}
           hideDayNames={false}
@@ -113,6 +175,53 @@ const NewMonthlyAchievement = () => {
           {moment(getDate).format('MMM DD, YYYY')}
         </Text>
       </View>
+      <View
+        style={{
+          marginBottom: 20,
+          width: DeviceWidth * 0.9,
+          alignSelf: 'center',
+        }}>
+        <Text
+          style={{
+            color: AppColor.BoldText,
+            fontFamily: 'Poppins-SemiBold',
+            fontSize: 14,
+          }}>
+          {'3 Workouts'}
+        </Text>
+      </View>
+      {/* <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{alignSelf:'center'}}> */}
+        <View style={styles.card}>
+          <FlatList
+            data={ApiData}
+            horizontal
+            renderItem={(value, index) => {
+              console.log("image link",value)
+              return (
+                <View>
+                 <TouchableOpacity
+                  style={{
+                    width: DeviceWidth * 0.16,
+                    height: DeviceHeigth * 0.12,
+                    marginHorizontal: 10,
+                    borderRadius: 20,
+                    justifyContent:'center',
+                    alignItems:'center',
+                    backgroundColor:AppColor.GRAY
+                  }}>
+                  <Image
+                    source={{uri: value.item.exercise_image_link}}
+                    style={{height: 100, width: 40}}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
+                <Text style={{textAlign:'center',marginVertical:10,width:DeviceWidth*0.16,}}>{value.item.exercise_title}</Text>
+                </View>
+              );
+            }}
+          />
+        </View>
+      {/* </ScrollView> */}
     </SafeAreaView>
   );
 };

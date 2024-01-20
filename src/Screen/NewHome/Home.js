@@ -192,6 +192,7 @@ const Home = ({navigation}) => {
     getPedomterData[2] ? getPedomterData[2].RCalories : 25,
   );
 
+
   useEffect(() => {
     ActivityPermission();
 
@@ -208,6 +209,7 @@ const Home = ({navigation}) => {
   //   useEffect(() => {
   //     ActivityPermission();
   //   }, []);
+
   const ActivityPermission = async () => {
     if (Platform.OS == 'android') {
       const result = await isStepCountingSupported();

@@ -23,6 +23,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {BlurView} from '@react-native-community/blur';
 import {setBmi} from '../../Component/ThemeRedux/Actions';
 import {Calendar} from 'react-native-calendars';
+import {useFocusEffect} from '@react-navigation/native';
 import {
   VictoryBar,
   VictoryChart,
@@ -49,9 +50,12 @@ const NewProgressScreen = ({navigation}) => {
 
   const [dates, setDates] = useState([]);
   const [value, setValue] = useState('Weekly');
+  const [value1, setValue1] = useState('Weekly');
   const [array, setArray] = useState([]);
   const [getBmi, setBmi] = useState(0);
+  const [array1, setArray1] = useState([]);
   let arrayForData = [];
+  let arrayForData1=[]
   useEffect(() => {
     setBmi(
       (
@@ -96,17 +100,33 @@ const NewProgressScreen = ({navigation}) => {
       console.log('Calories Api Error', error);
     }
   };
-  const handleGraph = data => {
+  useFocusEffect(
+    React.useCallback(() => {
+      WeeklyData(1);
+      WeeklyData(2);
+    }, [navigation]),
+  );
+  const handleGraph1 = data => {
     console.log('data', data);
     if (data == 1) {
-      WeeklyData();
+      WeeklyData(1);
     } else if (data == 2) {
-      MonthlyData();
+      MonthlyData(1);
     } else {
       console.log('No matching');
     }
   };
-  const MonthlyData = async () => {
+  const handleGraph2 = data => {
+    console.log('data', data);
+    if (data == 1) {
+      WeeklyData(2);
+    } else if (data == 2) {
+      MonthlyData(2);
+    } else {
+      console.log('No matching');
+    }
+  };
+  const MonthlyData = async Key => {
     try {
       const payload = new FormData();
       payload.append('user_id', getUserDataDetails?.id);
@@ -118,30 +138,28 @@ const NewProgressScreen = ({navigation}) => {
         },
         data: payload,
       });
-      if (res) {
-        // console.log('res----data',res.data)
-        // console.log(res?.data?.weekly_data?.map((value)=>
-        // getUserDataDetails?.weight-parseFloat(value.total_burn_weight))
-        // )
+      if (res && Key == 1) {
         let currentWeight = getUserDataDetails?.weight;
-        // const currentweight1=currentWeight
-        // setArray(res?.data?.weekly_data?.map((value)=>
-        // currentWeight-parseFloat(value.total_burn_weight
-        //   )))
         for (i = 0; i < res?.data?.monthly_data?.length; i++) {
           let NewWeight =
-            currentWeight - res?.data?.monthly_data[0]?.total_burn_weight;
+            currentWeight - res?.data?.monthly_data[i]?.total_burn_weight;
           currentWeight = NewWeight;
           arrayForData.push(parseFloat(NewWeight).toFixed(3));
-          console.log('array Monthly', arrayForData);
+          // console.log('array Monthly', arrayForData);
         }
         setArray(arrayForData);
+      } else if (res && Key == 2) {
+        for (i = 0; i < res?.data?.monthly_data?.length; i++) {
+          let Total_Duration = res?.data?.monthly_data[i]?.total_duration;
+          arrayForData1.push(parseInt(Total_Duration));
+        }
+        setArray1(arrayForData1);
       }
     } catch (error) {
       console.log('graphData Error', error);
     }
   };
-  const WeeklyData = async () => {
+  const WeeklyData = async Key => {
     try {
       const payload = new FormData();
       payload.append('user_id', getUserDataDetails?.id);
@@ -153,24 +171,25 @@ const NewProgressScreen = ({navigation}) => {
         },
         data: payload,
       });
-      if (res) {
-        // console.log('res----data',res.data)
-        // console.log(res?.data?.weekly_data?.map((value)=>
-        // getUserDataDetails?.weight-parseFloat(value.total_burn_weight))
-        // )
+      if (res && Key == 1) {
+
         let currentWeight = getUserDataDetails?.weight;
-        // const currentweight1=currentWeight
-        // setArray(res?.data?.weekly_data?.map((value)=>
-        // currentWeight-parseFloat(value.total_burn_weight
-        //   )))
         for (i = 0; i < res?.data?.weekly_data?.length; i++) {
           let NewWeight =
-            currentWeight - res?.data?.weekly_data[0]?.total_burn_weight;
+            currentWeight - res?.data?.weekly_data[i]?.total_burn_weight;
           currentWeight = NewWeight;
-        
+
           arrayForData.push(parseFloat(NewWeight).toFixed(3));
         }
         setArray(arrayForData);
+      } else if (res && Key == 2) {
+        // console.log('ressss=====',res.data)
+        for (i = 0; i < res?.data?.weekly_data?.length; i++) {
+          let Total_Duration = res?.data?.weekly_data[i]?.total_duration;
+          arrayForData1.push(parseInt(Total_Duration));
+          // console.log('weeklyData',arrayForData1)
+        }
+        setArray1(arrayForData1);
       }
     } catch (error) {
       console.log('graphData Error', error);
@@ -272,6 +291,10 @@ const NewProgressScreen = ({navigation}) => {
     {label: 'Weekly', value: '1'},
     {label: 'Monthly', value: '2'},
   ];
+  const data3 = [
+    {label: 'Weekly', value: '1'},
+    {label: 'Monthly', value: '2'},
+  ];
   const renderItem = item => {
     return (
       <View style={styles.item}>
@@ -279,7 +302,7 @@ const NewProgressScreen = ({navigation}) => {
       </View>
     );
   };
-  const LineText = ({Txt1, Txt2}) => {
+  const LineText = ({Txt1, Txt2, Duration}) => {
     return (
       <View
         style={{
@@ -306,22 +329,41 @@ const NewProgressScreen = ({navigation}) => {
           </Text>
         </View>
         {Txt2 ? (
-          <Dropdown
-            style={styles.dropdown}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            data={data2}
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            placeholder={value}
-            value={value}
-            onChange={item => {
-              setValue(item.value);
-              handleGraph(item.value);
-            }}
-            renderItem={renderItem}
-          />
+          Duration ? (
+            <Dropdown
+              style={styles.dropdown}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              data={data3}
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder={value1}
+              value={value1}
+              onChange={item => {
+                setValue1(item.value);
+                handleGraph2(item.value);
+              }}
+              renderItem={renderItem}
+            />
+          ) : (
+            <Dropdown
+              style={styles.dropdown}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              data={data2}
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder={value}
+              value={value}
+              onChange={item => {
+                setValue(item.value);
+                handleGraph1(item.value);
+              }}
+              renderItem={renderItem}
+            />
+          )
         ) : (
           <TouchableOpacity
             onPress={() => {
@@ -333,6 +375,7 @@ const NewProgressScreen = ({navigation}) => {
       </View>
     );
   };
+
   const data = {
     labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     datasets: [
@@ -355,6 +398,11 @@ const NewProgressScreen = ({navigation}) => {
     {day: 'Fri', value: 4300},
     {day: 'Sat', value: 6900},
   ];
+  const updatedEmojiData = emojiData.map((item, index) => ({
+    day: item.day,
+    value: array1[index]?array1[index]: Math.random(),
+  }));
+  console.log('array=====>',array1);
   const Emojis = [
     {
       id: 1,
@@ -634,7 +682,7 @@ const NewProgressScreen = ({navigation}) => {
                 : {uri: getUserDataDetails.image_path}
             }
             style={styles.img}
-            resizeMode="contain"
+            resizeMode="cover"
           />
         </View>
         <Text
@@ -700,11 +748,10 @@ const NewProgressScreen = ({navigation}) => {
             }
             withShadow={false}
             yAxisInterval={10}
-
-            // fromZero={true}
+            fromZero={true}
           />
         </View>
-        <LineText Txt1={'Workout Duration'} Txt2={'Weekly'} />
+        <LineText Txt1={'Workout Duration'} Txt2={'Weekly'} Duration />
         <View style={styles.card}>
           <RenderEmojis />
           <VictoryChart
@@ -718,7 +765,7 @@ const NewProgressScreen = ({navigation}) => {
             />
             <VictoryAxis dependentAxis tickFormat={x => ''} />
             <VictoryBar
-              data={emojiData}
+              data={updatedEmojiData}
               x="day"
               y="value"
               style={{
