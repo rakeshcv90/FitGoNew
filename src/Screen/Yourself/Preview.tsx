@@ -224,7 +224,7 @@ const Preview = ({route, navigation}: any) => {
     ...futureFinalDates,
   ];
   const RenderCalender = ({minIndex, maxIndex}) => {
-    // console.log("Dileeeep========>",datesArray,finalDate)
+
     return (
       <View
         style={{

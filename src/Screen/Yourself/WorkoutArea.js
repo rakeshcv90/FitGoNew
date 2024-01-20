@@ -30,7 +30,7 @@ const WorkoutArea = ({route, navigation}) => {
   const {getLaterButtonData, completeProfileData, getUserID} = useSelector(
     state => state,
   );
-  console.log('Workout ARe', imageView);
+
   useEffect(() => {
     setScreen(nextScreen);
   }, []);

@@ -1,4 +1,3 @@
-
 import types from '../../Component/ThemeRedux/Constants';
 const intialState = {
   defaultTheme: false,
@@ -7,7 +6,7 @@ const intialState = {
   showIntro: false,
   completeProfileData: [],
   getLaterButtonData: [],
-  getUserID:0,
+  getUserID: 0,
   customWorkoutData: [],
   getUserDataDetails: [],
   mindsetConsent: false,
@@ -27,10 +26,11 @@ const intialState = {
   getStoreData: [],
   getPurchaseHistory: [],
   getScreenAwake: false,
-  getSoundOffOn:false,
-  getBmi:'',
+  getSoundOffOn: false,
+  getBmi: '',
   getHomeGraphData: [],
-  getProfile_imgData:[]
+  getProfile_imgData: [],
+  getCustttomeTimeCal: [],
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -72,7 +72,7 @@ const ThemeReducer = (state = intialState, action) => {
     case types.ALL_MEAL_DATA:
       return {...state, mealData: action.payload};
     case types.LogOut:
-    return {...intialState};
+      return {...intialState};
     case types.COUNT:
       return {...state, getCount: action.payload};
     case types.IN_APP_PURCHASE:
@@ -106,6 +106,9 @@ const ThemeReducer = (state = intialState, action) => {
       };
     case types.MindSetConsent:
       return {...state, mindsetConsent: action.payload};
+
+    case types.Custome_Time_Cal:
+      return {...state, getCustttomeTimeCal: action.payload};
     case types.Update_Pedometer_Data:
       const updatePedometerData = action.payload;
       const UpdateData = state.getPedomterData.map(item => ({...item}));
@@ -142,8 +145,9 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, getHomeGraphData: action.payload};
     case types.Profile_imgData:
       return {
-        ...state,getProfile_imgData:action.payload
-      }  
+        ...state,
+        getProfile_imgData: action.payload,
+      };
     default:
       return state;
   }

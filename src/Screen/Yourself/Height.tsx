@@ -63,7 +63,7 @@ const Height = ({route, navigation}: any) => {
   const [screen, setScreen] = useState(nextScreen);
   const [toggle, setToggle] = useState('ft');
   const [currentActiveIndex, setCurrentActiveIndex] = useState(-1);
-  console.log('Index======>', currentActiveIndex);
+
   useEffect(() => {
     setScreen(nextScreen);
   }, []);

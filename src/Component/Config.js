@@ -65,5 +65,6 @@ export const NewAppapi = {
   UpdateUserProfile: NewApi + 'update_details',
   HOME_GRAPH_DATA: NewApi + 'weekly_history',
   Upload_Profile_picture:NewApi+'update_profile_image',
-  monthly_history:NewApi+'monthly_history'
+  monthly_history:NewApi+'monthly_history',
+  Custome_Workout_Cal_Time:NewApi+'exercise_total_calo'
 };
