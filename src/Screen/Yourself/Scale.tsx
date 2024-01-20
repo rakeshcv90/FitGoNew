@@ -24,6 +24,7 @@ const Scale = ({
 }: any) => {
   const ScaleRef = useRef<FlatList>(null);
   const ONE_SECOND_IN_MS = 1000;
+  const [vibrationTimeout, setVibrationTimeout] = useState(null);
 
   const getActiveItem = (y: number) => {
     const halfBoxH = h ? BOX_WEIGHT : BOX_HEIGHT;
@@ -68,7 +69,10 @@ const Scale = ({
               alignItems: 'center',
             }}
             onScroll={event => {
-              Vibration.vibrate(ONE_SECOND_IN_MS/100);
+              if (!vibrationTimeout) {
+                Vibration.vibrate(ONE_SECOND_IN_MS/10,false);
+                setVibrationTimeout(setTimeout(() => setVibrationTimeout(null), 1000));
+              }
               const y = event.nativeEvent.contentOffset.x;
               getActiveItem(y);
             }}
@@ -143,7 +147,10 @@ const Scale = ({
             windowSize={10}
             contentContainerStyle={{width: '50%'}}
             onScroll={event => {
-              Vibration.vibrate(ONE_SECOND_IN_MS/100);
+              if (!vibrationTimeout) {
+                Vibration.vibrate(ONE_SECOND_IN_MS/10, false);
+                setVibrationTimeout(setTimeout(() => setVibrationTimeout(null), 1000));
+              }
               const y = event.nativeEvent.contentOffset.y;
               getActiveItem(y);
             }}
