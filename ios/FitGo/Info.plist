@@ -78,7 +78,7 @@
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Share workout data with other apps.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>We need access to your location when the app is in use to provide location-based services and enhance your user experience.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string> FitGo needs library access for user's profile photo</string>
 	<key>UIAppFonts</key>

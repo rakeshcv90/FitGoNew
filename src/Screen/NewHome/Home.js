@@ -152,11 +152,7 @@ const ProgressBar = ({progress, image, text}) => {
   );
 };
 const Home = ({navigation}) => {
-  useEffect(() => {
-    setTimeout(() => {
-      ActivityPermission();
-    }, 3000);
-  }, []);
+
   const [progress, setProgress] = useState(10);
   const [forLoading, setForLoading] = useState(false);
   const [value, setValue] = useState('Weekly');
@@ -192,10 +188,14 @@ const Home = ({navigation}) => {
     getPedomterData[2] ? getPedomterData[2].RCalories : 25,
   );
 
-
   useEffect(() => {
-    ActivityPermission();
-
+   
+    setTimeout(() => {
+      ActivityPermission();
+   
+    }, 3000);
+  }, []);
+  useEffect(() => {
     getGraphData();
   }, []);
 
@@ -204,12 +204,6 @@ const Home = ({navigation}) => {
       getCustomeWorkoutTimeDetails();
     }, []),
   );
-
-
-  //   useEffect(() => {
-  //     ActivityPermission();
-  //   }, []);
-
   const ActivityPermission = async () => {
     if (Platform.OS == 'android') {
       const result = await isStepCountingSupported();
@@ -235,11 +229,11 @@ const Home = ({navigation}) => {
         startStepCounter();
         // Permission was already granted previously
       }
-    } else if (Platform.OS == 'ios') {
+    } else if(Platform.OS=='ios'){
       AppleHealthKit.isAvailable((err, available) => {
         const permissions = {
           permissions: {
-            read: [AppleHealthKit.Constants.Permissions.Steps],
+            read: [AppleHealthKit.Constants.Permissions.StepCount],
           },
         };
         if (err) {
@@ -264,6 +258,7 @@ const Home = ({navigation}) => {
                 if (callbackError) {
                   console.log('Error while getting the data');
                 }
+                console.log("resulttttsss======>",results)
                 setSteps(results.value);
                 setDistance(((results.value / 20) * 0.01).toFixed(2));
                 setCalories(((results.value / 20) * 1).toFixed(1));
@@ -306,10 +301,10 @@ const Home = ({navigation}) => {
    
       if(data.data.results.length>0){
     
-        dispatch(setWorkoutTimeCal(data.data.results))
+        Dispatch(setWorkoutTimeCal(data.data.results))
 
       }else{
-        dispatch(setWorkoutTimeCal([]))
+        Dispatch(setWorkoutTimeCal([]))
       }
    
     } catch (error) {
@@ -332,7 +327,6 @@ const Home = ({navigation}) => {
       });
       if (res.data?.message != 'No data found') {
         setForLoading(false);
-
         console.log(res.data, 'Graph Data ');
         Dispatch(setHomeGraphData(res.data));
         const test = [],
@@ -389,11 +383,6 @@ const Home = ({navigation}) => {
       });
     },
   );
-
-
-
-
-
   const [steps, setSteps] = useState(
     getHealthData[0] ? getHealthData[0].Steps : '0',
   );
@@ -1300,8 +1289,8 @@ return item1})
                         marginVertical: 10,
                       }}>
                       <View style={{top: 15}}>
-                       {console.log("FFF%%%%%%%%%%%",)}
-                        <ProgressBar
+                       {/* {console.log("FFF%%%%%%%%%%%",)} */}
+                        {/* <ProgressBar
                           progress={time[0].totalRestTime}
                           image={localImage.Play}
                           text={
@@ -1316,7 +1305,7 @@ return item1})
                           progress={time[0].totalCalories}
                           image={localImage.Step1}
                           text={totalCal + 'Kcal'}
-                        />
+                        /> */}
                       </View>
                     </View>
                   </View>
