@@ -58,12 +58,13 @@ const DayRewards = ({navigation, route}: any) => {
   }
   return (
     <ScrollView
-      style={{flex: 1, backgroundColor: AppColor.WHITE, alignItems: 'center'}}>
+      style={{flex: 1, backgroundColor: AppColor.WHITE,}}>
       <GradientText
         text="Congratulations!"
         fontSize={32}
-        width={Platform.OS == 'ios' ? DeviceWidth * 0.8 : DeviceWidth * 0.7}
+        width={Platform.OS == 'ios' ? DeviceWidth * 0.9 : DeviceWidth * 0.7}
         y={'70'}
+        x={'10%'}
         height={100}
       />
       <AnimatedLottieView
@@ -78,6 +79,7 @@ const DayRewards = ({navigation, route}: any) => {
           width: DeviceWidth * 0.5,
           height: DeviceHeigth * 0.2,
           right: 10,
+          alignSelf:'center'
         }}
       />
       <View

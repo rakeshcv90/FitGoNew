@@ -68,7 +68,7 @@ export const NewAppapi = {
   monthly_history:NewApi+'monthly_history',
 
   DateWiseData:NewApi+'selectDate_exercise',
-
+  Delete_Account:NewAppapi+'deleteAccount',
   Custome_Workout_Cal_Time:NewApi+'exercise_total_calo'
 
 };

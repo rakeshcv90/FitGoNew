@@ -42,7 +42,7 @@ const Exercise = ({navigation, route}: any) => {
   const [exerciseDoneIDs, setExerciseDoneIDs] = useState<Array<any>>([]);
   const [skipCount, setSkipCount] = useState(0);
   const [currentData, setCurrentData] = useState(currentExercise);
-  const {allWorkoutData, getUserDataDetails} = useSelector(
+  const {allWorkoutData, getUserDataDetails,getSoundOffOn} = useSelector(
     (state: any) => state,
   );
   const [separateTimer, setSeparateTimer] = useState(15);
@@ -69,9 +69,10 @@ const Exercise = ({navigation, route}: any) => {
 
     initTts();
   }, []);
+  // console.log("currentDatatatata",allExercise.length,exerciseNumber)
   useEffect(() => {
     const TTStimer = async () => {
-      if (restStart) {
+      if (restStart && allExercise.length-1!=exerciseNumber && getSoundOffOn==true) {
         if (separateTimer > 0) {
           const interval = setTimeout(() => {
             setSeparateTimer(separateTimer - 1);

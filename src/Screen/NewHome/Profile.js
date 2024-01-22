@@ -43,9 +43,13 @@ import {updatePhoto} from '../../Component/ThemeRedux/Actions';
 import {LogOut} from '../../Component/LogOut';
 import {setProfileImg_Data} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
+import { stack } from 'd3';
+import { ColorShader } from '@shopify/react-native-skia';
+import DeleteAccount from '../../Component/DeleteAccount';
 import {stack} from 'd3';
 import {ColorShader} from '@shopify/react-native-skia';
 import {navigationRef} from '../../../App';
+
 const Profile = () => {
   const {getUserDataDetails, ProfilePhoto, getSoundOffOn} = useSelector(
     state => state,
@@ -159,17 +163,17 @@ const Profile = () => {
       ),
       text1: 'Rate Us',
     },
-    {
-      id: 10,
-      icon1: (
-        <Image
-          source={localImage.DeleteAcc}
-          style={[styles.IconView, {height: 29, width: 22}]}
-          resizeMode="contain"
-        />
-      ),
-      text1: 'Delete Account',
-    },
+    // {
+    //   id: 10,
+    //   icon1: (
+    //     <Image
+    //       source={localImage.DeleteAcc}
+    //       style={[styles.IconView, {height: 29, width: 22}]}
+    //       resizeMode="contain"
+    //     />
+    //   ),
+    //   text1: 'Delete Account',
+    // },
   ];
   const FirstView = Profile_Data.slice(0, 6);
   const SecondView = Profile_Data.slice(6);
@@ -713,8 +717,10 @@ const Profile = () => {
             </TouchableOpacity>
           ))}
         </View>
+        {/* <DeleteAccount/> */}
       </ScrollView>
       {UpdateScreenVisibility ? <UpdateProfileModal /> : null}
+    
     </SafeAreaView>
   );
 };
