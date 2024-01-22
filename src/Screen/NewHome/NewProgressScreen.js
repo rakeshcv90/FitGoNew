@@ -21,6 +21,7 @@ import {Dropdown} from 'react-native-element-dropdown';
 import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
 import {BlurView} from '@react-native-community/blur';
+import AppleHealthKit from 'react-native-health';
 import {setBmi} from '../../Component/ThemeRedux/Actions';
 import {Calendar} from 'react-native-calendars';
 import {useFocusEffect} from '@react-navigation/native';
@@ -44,18 +45,26 @@ import moment from 'moment';
 import Button from '../../Component/Button';
 import {showMessage} from 'react-native-flash-message';
 const NewProgressScreen = ({navigation}) => {
-  const {getUserDataDetails, ProfilePhoto} = useSelector(state => state);
+  const {
+    getUserDataDetails,
+    ProfilePhoto,
+    getHomeGraphData,
+    getCustttomeTimeCal,
+    getHealthData,
+  } = useSelector(state => state);
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [selected, setSelected] = useState(false);
-
+  // console.log("datata==>",getCustttomeTimeCal,getHealthData)
   const [dates, setDates] = useState([]);
   const [value, setValue] = useState('Weekly');
   const [value1, setValue1] = useState('Weekly');
   const [array, setArray] = useState([]);
   const [getBmi, setBmi] = useState(0);
   const [array1, setArray1] = useState([]);
+  const [Calories, setCalories] = useState(0);
+  const [Wtime,setWtime]=useState(0)
   let arrayForData = [];
-  let arrayForData1=[]
+  let arrayForData1 = [];
   useEffect(() => {
     setBmi(
       (
@@ -92,7 +101,6 @@ const NewProgressScreen = ({navigation}) => {
         //       (weight.reduce((acc, res) => acc + res, 0) * 0.3) / 500;
         //     arrayForData.push(currentWeight);
         //   }
-
         // }
         // setArray(arrayForData);
       }
@@ -100,12 +108,39 @@ const NewProgressScreen = ({navigation}) => {
       console.log('Calories Api Error', error);
     }
   };
-  useFocusEffect(
-    React.useCallback(() => {
+  useEffect(()=>{
       WeeklyData(1);
       WeeklyData(2);
-    }, [navigation]),
-  );
+    },[])
+  
+  useEffect(() => {
+    const Calories1 = getCustttomeTimeCal.map(value => value.totalCalories);
+    const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
+    const time1=getCustttomeTimeCal?.map(value => parseInt(value.totalRestTime))
+    const Time2=time1?.reduce((acc,ind)=>Math.ceil((acc+ind)/60),0)
+    setWtime(Time2)
+    // console.log('>>>>>>',Time2)
+    if (Platform.OS == 'ios') {
+      let options = {
+        date: new Date().toISOString(), // optional; default now
+        includeManuallyAdded: true, // optional: default true
+      };
+      AppleHealthKit.getStepCount(options, (callbackError, results) => {
+        if (callbackError) {
+          console.error('Error while getting the data:', callbackError);
+          // Handle the error as needed
+        } else {
+          // console.log('iOS ', results);
+          setCalories(
+            parseInt(((results?.value / 20) * 1).toFixed(0)) +
+              parseInt(Calories2),
+          );
+        }
+      });
+    } else if (Platform.OS == 'android') {
+      console.log('android======>');
+    }
+  }, []);
   const handleGraph1 = data => {
     console.log('data', data);
     if (data == 1) {
@@ -127,36 +162,22 @@ const NewProgressScreen = ({navigation}) => {
     }
   };
   const MonthlyData = async Key => {
-    try {
-      const payload = new FormData();
-      payload.append('user_id', getUserDataDetails?.id);
-      const res = await axios({
-        url: NewAppapi.monthly_history,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: payload,
-      });
-      if (res && Key == 1) {
-        let currentWeight = getUserDataDetails?.weight;
-        for (i = 0; i < res?.data?.monthly_data?.length; i++) {
-          let NewWeight =
-            currentWeight - res?.data?.monthly_data[i]?.total_burn_weight;
-          currentWeight = NewWeight;
-          arrayForData.push(parseFloat(NewWeight).toFixed(3));
-          // console.log('array Monthly', arrayForData);
-        }
-        setArray(arrayForData);
-      } else if (res && Key == 2) {
-        for (i = 0; i < res?.data?.monthly_data?.length; i++) {
-          let Total_Duration = res?.data?.monthly_data[i]?.total_duration;
-          arrayForData1.push(parseInt(Total_Duration));
-        }
-        setArray1(arrayForData1);
+    if (Key == 1) {
+      let currentWeight = getUserDataDetails?.weight;
+      for (i = 0; i < getHomeGraphData?.monthly_data?.length; i++) {
+        let NewWeight =
+          currentWeight - getHomeGraphData?.monthly_data[i]?.total_burn_weight;
+        currentWeight = NewWeight;
+        arrayForData.push(parseFloat(NewWeight).toFixed(3));
+        // console.log('array Monthly', arrayForData);
       }
-    } catch (error) {
-      console.log('graphData Error', error);
+      setArray(arrayForData);
+    } else if (Key == 2) {
+      for (i = 0; i < getHomeGraphData?.monthly_data?.length; i++) {
+        let Total_Duration = getHomeGraphData?.monthly_data[i]?.total_duration;
+        arrayForData1.push(parseInt(Total_Duration));
+      }
+      setArray1(arrayForData1);
     }
   };
   const WeeklyData = async Key => {
@@ -172,20 +193,18 @@ const NewProgressScreen = ({navigation}) => {
         data: payload,
       });
       if (res && Key == 1) {
-
         let currentWeight = getUserDataDetails?.weight;
-        for (i = 0; i < res?.data?.weekly_data?.length; i++) {
+        for (i = 0; i < getHomeGraphData.weekly_data?.length; i++) {
           let NewWeight =
-            currentWeight - res?.data?.weekly_data[i]?.total_burn_weight;
+            currentWeight - getHomeGraphData?.weekly_data[i]?.total_burn_weight;
           currentWeight = NewWeight;
-
           arrayForData.push(parseFloat(NewWeight).toFixed(3));
         }
         setArray(arrayForData);
       } else if (res && Key == 2) {
         // console.log('ressss=====',res.data)
-        for (i = 0; i < res?.data?.weekly_data?.length; i++) {
-          let Total_Duration = res?.data?.weekly_data[i]?.total_duration;
+        for (i = 0; i < getHomeGraphData?.weekly_data?.length; i++) {
+          let Total_Duration = getHomeGraphData?.weekly_data[i]?.total_duration;
           arrayForData1.push(parseInt(Total_Duration));
           // console.log('weeklyData',arrayForData1)
         }
@@ -215,7 +234,6 @@ const NewProgressScreen = ({navigation}) => {
   //   setDates(dateArray);
   // }, []);
   // const RenderCalender = ({minIndex, maxIndex}) => {
-
   //   return (
   //     <View
   //       style={{
@@ -271,19 +289,19 @@ const NewProgressScreen = ({navigation}) => {
     {
       id: 1,
       img: localImage.Fire1,
-      txt1: '4',
+      txt1: `${Calories}`,
       txt2: 'KCal',
     },
     {
       id: 2,
       img: localImage.Clock_p,
-      txt1: '2',
+      txt1: Wtime,
       txt2: 'Min',
     },
     {
       id: 3,
       img: localImage.Biceps_p,
-      txt1: '3',
+      txt1:getCustttomeTimeCal[0]?getCustttomeTimeCal[0]?.exerciseCount:'0',
       txt2: 'Actions',
     },
   ];
@@ -400,9 +418,9 @@ const NewProgressScreen = ({navigation}) => {
   ];
   const updatedEmojiData = emojiData.map((item, index) => ({
     day: item.day,
-    value: array1[index]?array1[index]: Math.random(),
+    value: array1[index] ? array1[index] : Math.random(),
   }));
-  console.log('array=====>',array1);
+  // console.log('array=====>',array1);
   const Emojis = [
     {
       id: 1,
@@ -1081,10 +1099,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   dropdown: {
-    marginVertical: 10,
+    margin: 16,
     height: 30,
-    width: DeviceWidth * 0.25,
-    borderColor: AppColor.RED,
+    width: DeviceWidth * 0.3,
+    borderColor: 'red',
     borderRadius: 12,
     padding: 12,
     borderWidth: 1,

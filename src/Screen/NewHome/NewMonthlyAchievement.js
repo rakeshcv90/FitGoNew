@@ -9,7 +9,7 @@ import {
   Platform,
   TouchableOpacity,
 } from 'react-native';
-import React, {useMemo, useState} from 'react';
+import React, {useMemo, useState,useEffect} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {AppColor} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
@@ -19,38 +19,57 @@ import AppleHealthKit from 'react-native-health';
 import moment from 'moment';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
+import AnimatedLottieView from 'lottie-react-native';
+import Calories from '../../Component/Calories';
+import ActivityLoader from '../../Component/ActivityLoader';
 const NewMonthlyAchievement = () => {
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [selected, setSelected] = useState(false);
   const [steps, setSteps] = useState(0);
   const [Distance, setDistance] = useState(0);
   const [calories, setCalories] = useState(0);
-  const {getUserDataDetails} = useSelector(state => state);
+  const {getUserDataDetails,getCustttomeTimeCal} = useSelector(state => state);
   const [ApiData, setApiData] = useState([]);
-  const Card_Data = [
-    {
-      id: 1,
-      img: localImage.Fire1,
-      txt1: '4',
-      txt2: 'KCal',
-    },
-    {
-      id: 2,
-      img: localImage.Clock_p,
-      txt1: '2',
-      txt2: 'Min',
-    },
-    {
-      id: 3,
-      img: localImage.Biceps_p,
-      txt1: '3',
-      txt2: 'Actions',
-    },
-  ];
+  const [WorkoutCount, setWorkoutCount] = useState(0);
+  const [WokoutCalories, setWorkoutCalories] = useState(0);
+  const [WokroutTime_m, setWorkoutTime_m] = useState(0);
+  const [WokroutTime_s, setWorkoutTime_s] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [calories1, setCalories1] = useState(0);
+  const [Wtime,setWtime]=useState(0)
+ 
+  useEffect(() => {
+    console.log("heloo===>",getCustttomeTimeCal[0].exerciseCount)
+    const Calories1 = getCustttomeTimeCal.map(value => value.totalCalories);
+    const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
+    const time1=getCustttomeTimeCal?.map(value => parseInt(value.totalRestTime))
+    const Time2=time1?.reduce((acc,ind)=>Math.ceil((acc+ind)/60),0)
+    setWtime(Time2)
+    // console.log('>>>>>>',Time2)
+    if (Platform.OS == 'ios') {
+      let options = {
+        date: new Date().toISOString(), // optional; default now
+        includeManuallyAdded: true, // optional: default true
+      };
+      AppleHealthKit.getStepCount(options, (callbackError, results) => {
+        if (callbackError) {
+          console.error('Error while getting the data:', callbackError);
+          // Handle the error as needed
+        } else {
+          // console.log('iOS ', results);
+          setCalories1(
+            parseInt(((results?.value / 20) * 1).toFixed(0)) +
+              parseInt(Calories2),
+          );
+        }
+      });
+    } else if (Platform.OS == 'android') {
+      console.log('android======>');
+    }
+  }, []);
   const theme = useMemo(() => {
     return {
-      backgroundColor: AppColor.WHITE,
-      calendarBackground: AppColor.WHITE,
+      calendarBackground: AppColor.BACKGROUNG,
       selectedDayBackgroundColor: AppColor.RED,
       selectedDayTextColor: AppColor.WHITE,
       todayTextColor: AppColor.BLACK,
@@ -69,7 +88,6 @@ const NewMonthlyAchievement = () => {
         date: new Date(Date1).toISOString(), // optional; default now
         includeManuallyAdded: true, // optional: default true
       };
-      // console.log('options====>', options);
       AppleHealthKit.getStepCount(options, (callbackError, results) => {
         if (callbackError) {
           console.error('Error while getting the data:', callbackError);
@@ -78,14 +96,13 @@ const NewMonthlyAchievement = () => {
           console.log('iOS ', results);
           setSteps(results?.value);
           setDistance(((results?.value / 20) * 0.01).toFixed(2));
-          setCalories(((results?.value / 20) * 1).toFixed(1));
+          setCalories(((results?.value / 20) * 1).toFixed(0));
         }
       });
     } else if (Platform.OS == 'android') {
       console.log('android======>');
     }
   };
-
   const DateWiseData = async Date1 => {
     const payload = new FormData();
     payload.append('user_id', getUserDataDetails?.id);
@@ -98,130 +115,270 @@ const NewMonthlyAchievement = () => {
         data: payload,
       });
       if (res) {
-        console.log('DateWiseData===>', res.data);
+        // console.log('DateWiseData===>', res.data);
         setApiData(res.data.data);
+        const Calories = res.data.data.map(value =>
+          parseInt(value.exercise_calories),
+        );
+        //  cont Time=res.data.data.map((value)=>parseInt(value.))
+        setWorkoutCalories(Calories?.reduce((acc, num) => acc + num, 0));
+        setIsLoaded(true);
+      }else{
+        isLoaded(true)
       }
     } catch (error) {
       console.log('DatwWiseDataError', error);
+      setIsLoaded(true);
     }
   };
+  const EmptyComponent = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        {/* {isLoaded ? null : <ActivityLoader />} */}
+        <AnimatedLottieView
+          source={require('../../Icon/Images/NewImage/NoData.json')}
+          speed={2}
+          autoPlay
+          loop
+          resizeMode="contain"
+          style={{
+            width: DeviceWidth * 0.3,
+            height: DeviceHeigth * 0.15,
+          }}
+        />
+      </View>
+    );
+  };
+  const DailyData = [
+    {
+      id: 1,
+      img: (
+        <Image
+          source={localImage.Step1}
+          style={{height: 25, width: 25}}
+          resizeMode="contain"
+        />
+      ),
+      txt: `${parseInt(calories) + WokoutCalories} Kcal`,
+    },
+    {
+      id: 2,
+      img: (
+        <Image
+          source={localImage.Step2}
+          style={{height: 25, width: 25}}
+          resizeMode="contain"
+        />
+      ),
+      txt: `${Distance} Km`,
+    },
+    {
+      id: 3,
+      img: (
+        <Image
+          source={localImage.Step3}
+          style={{height: 25, width: 25}}
+          resizeMode="contain"
+          tintColor={AppColor.RED}
+        />
+      ),
+      txt: steps,
+    },
+  ];
+  const Card_Data = [
+    {
+      id: 1,
+      img: localImage.Fire1,
+      txt1: calories1,
+      txt2: 'KCal',
+    },
+    {
+      id: 2,
+      img: localImage.Clock_p,
+      txt1: Wtime,
+      txt2: 'Min',
+    },
+    {
+      id: 3,
+      img: localImage.Biceps_p,
+      txt1: getCustttomeTimeCal[0]?getCustttomeTimeCal[0]?.exerciseCount:'0',
+      txt2: 'Actions',
+    },
+  ];
   return (
     <SafeAreaView style={styles.Container}>
       <NewHeader header={'Monthly Achievement'} backButton={true} />
-      <View
-        style={{
-          width: DeviceWidth * 0.9,
-          alignSelf: 'center',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}>
-        {Card_Data.map((value, index) => (
-          <View key={index} style={styles.cards}>
-            <Image
-              source={value.img}
-              style={{width: 50, height: 50, alignSelf: 'center'}}
-              resizeMode="contain"
-            />
-            <Text style={[styles.txts, {color: AppColor.RED}]}>
-              {value?.txt1}
-            </Text>
-            <Text style={styles.txts}>{value.txt2}</Text>
-          </View>
-        ))}
-      </View>
-      <View style={styles.card}>
-        <Calendar
-          onDayPress={day => {
-            console.log(day);
-            setDate(day.dateString);
-            setSelected(true);
-            HandleStepsAndCalories(day.dateString);
-            DateWiseData(day.dateString);
-          }}
-          allowSelectionOutOfRange={false}
-          markingType="period"
-          enableSwipeMonths
-          hideExtraDays={true}
-          hideDayNames={false}
-          markedDates={{
-            [getDate]: {
-              startingDay: true,
-              color: AppColor.RED,
-              endingDay: true,
-              textColor: AppColor.WHITE,
-            },
-          }}
-          style={[
-            styles.calender,
-            {
-              width: DeviceWidth * 0.85,
-            },
-          ]}
-          theme={theme}
-        />
-      </View>
-      <View
-        style={{
-          marginVertical: 20,
-          width: DeviceWidth * 0.9,
-          alignSelf: 'center',
-        }}>
-        <Text
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View
           style={{
-            color: AppColor.BoldText,
-            fontFamily: 'Poppins-SemiBold',
-            fontSize: 24,
+            width: DeviceWidth * 0.9,
+            alignSelf: 'center',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
           }}>
-          {moment(getDate).format('MMM DD, YYYY')}
-        </Text>
-      </View>
-      <View
-        style={{
-          marginBottom: 20,
-          width: DeviceWidth * 0.9,
-          alignSelf: 'center',
-        }}>
-        <Text
-          style={{
-            color: AppColor.BoldText,
-            fontFamily: 'Poppins-SemiBold',
-            fontSize: 14,
-          }}>
-          {'3 Workouts'}
-        </Text>
-      </View>
-      {/* <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{alignSelf:'center'}}> */}
+          {Card_Data.map((value, index) => (
+            <View key={index} style={styles.cards}>
+              <Image
+                source={value.img}
+                style={{width: 50, height: 50, alignSelf: 'center'}}
+                resizeMode="contain"
+              />
+              <Text style={[styles.txts, {color: AppColor.RED}]}>
+                {value?.txt1}
+              </Text>
+              <Text style={styles.txts}>{value.txt2}</Text>
+            </View>
+          ))}
+        </View>
+
         <View style={styles.card}>
-          <FlatList
-            data={ApiData}
-            horizontal
-            renderItem={(value, index) => {
-              console.log("image link",value)
-              return (
-                <View>
-                 <TouchableOpacity
-                  style={{
-                    width: DeviceWidth * 0.16,
-                    height: DeviceHeigth * 0.12,
-                    marginHorizontal: 10,
-                    borderRadius: 20,
-                    justifyContent:'center',
-                    alignItems:'center',
-                    backgroundColor:AppColor.GRAY
-                  }}>
-                  <Image
-                    source={{uri: value.item.exercise_image_link}}
-                    style={{height: 100, width: 40}}
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
-                <Text style={{textAlign:'center',marginVertical:10,width:DeviceWidth*0.16,}}>{value.item.exercise_title}</Text>
-                </View>
-              );
+          <Calendar
+            onDayPress={day => {
+              console.log(day);
+              setDate(day.dateString);
+              setSelected(true);
+              HandleStepsAndCalories(day.dateString);
+              DateWiseData(day.dateString);
             }}
+            allowSelectionOutOfRange={false}
+            markingType="period"
+            enableSwipeMonths
+            hideExtraDays={true}
+            hideDayNames={false}
+            markedDates={{
+              [getDate]: {
+                startingDay: true,
+                color: AppColor.RED,
+                endingDay: true,
+                textColor: AppColor.WHITE,
+              },
+            }}
+            style={[
+              styles.calender,
+              {
+                width: DeviceWidth * 0.85,
+                backgroundColor:AppColor.BACKGROUNG
+              },
+            ]}
+            theme={theme}
           />
         </View>
-      {/* </ScrollView> */}
+        <View
+          style={{
+            marginVertical: 20,
+            width: DeviceWidth * 0.9,
+            alignSelf: 'center',
+          }}>
+          <Text
+            style={{
+              color: AppColor.BoldText,
+              fontFamily: 'Poppins-SemiBold',
+              fontSize: 24,
+            }}>
+            {moment(getDate).format('MMM DD, YYYY')}
+          </Text>
+        </View>
+        <View
+          style={{
+            marginBottom: 20,
+            width: DeviceWidth * 0.9,
+            alignSelf: 'center',
+          }}>
+          {ApiData.length == 0 ? null : (
+            <Text
+              style={{
+                color: AppColor.BoldText,
+                fontFamily: 'Poppins-SemiBold',
+                fontSize: 14,
+              }}>
+              {`${ApiData?.length} Workouts`}
+            </Text>
+          )}
+        </View>
+
+        {ApiData.length == 0 ? (
+          <EmptyComponent />
+        ) : (
+          <View style={[styles.card, {flexDirection: 'column',}]}>
+            {isLoaded ? null : <ActivityLoader />}
+            <FlatList
+              data={ApiData}
+              horizontal
+              renderItem={(value, index) => {
+                return (
+                  <View>
+                    <View
+                      style={{
+                        width: 90,
+                        height: 80,
+                        marginHorizontal: 10,
+                        borderRadius: 20,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: AppColor.GRAY,
+                      }}>
+                      <Image
+                        source={{uri: value.item.exercise_image_link}}
+                        style={{
+                          height: 70,
+                          width: 70,
+                        }}
+                        resizeMode="contain"
+                      />
+                    </View>
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        marginVertical: 10,
+                        width: 90,
+                        fontFamily: 'Poppins-SemiBold',
+                        color: AppColor.BoldText,
+                        fontSize: 12,
+                        marginLeft: 4,
+                      }}>
+                      {value.item.exercise_title}
+                    </Text>
+                  </View>
+                );
+              }}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginVertical: 10,
+              }}>
+              {DailyData.map((value, index) => (
+                <View
+                  key={index}
+                  style={{
+                    marginHorizontal: 10,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  {value.img}
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: AppColor.BoldText,
+                      fontSize: 14,
+                      fontWeight: '600',
+                      marginLeft: 8,
+                    }}>
+                    {value.txt}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -234,9 +391,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 20,
-    backgroundColor: AppColor.WHITE,
+    backgroundColor:AppColor.BACKGROUNG,
     width: DeviceWidth * 0.95,
     borderRadius: 20,
+    marginVertical: 10,
     alignSelf: 'center',
     ...Platform.select({
       ios: {

@@ -124,4 +124,5 @@ export const localImage = {
   Down:require('../Icon/Images/NewImage/ArrowDown.png'),
   face0:require('../Icon/Images/NewImage/angry_p.png'),
   PurchaseTick:require('../Icon/Images/NewImage/PurchaseTick.png'),
+  Clock1:require('../Icon/Images/NewImage/Clock1.png'),
 };
