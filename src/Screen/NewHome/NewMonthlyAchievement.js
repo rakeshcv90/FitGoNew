@@ -39,7 +39,7 @@ const NewMonthlyAchievement = () => {
   const [Wtime,setWtime]=useState(0)
  
   useEffect(() => {
-    console.log("heloo===>",getCustttomeTimeCal[0].exerciseCount)
+    console.log("heloo===>",getCustttomeTimeCal[0])
     const Calories1 = getCustttomeTimeCal.map(value => value.totalCalories);
     const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
     const time1=getCustttomeTimeCal?.map(value => parseInt(value.totalRestTime))

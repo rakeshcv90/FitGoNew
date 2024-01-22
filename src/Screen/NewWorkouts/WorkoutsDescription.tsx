@@ -14,19 +14,24 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import RenderHTML from 'react-native-render-html';
 import Tts from 'react-native-tts';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useSelector, useDispatch} from 'react-redux';
 const WorkoutsDescription = ({data, open, setOpen}: any) => {
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const TextSpeech = `${data?.workout_description}`;
   const [description, SetDescription] = useState('');
   // console.log(data?.workout_description);
+  const {
+    getSoundOffOn
+  } = useSelector(state => state);
   const cleanText = TextSpeech.replace(/<\/?[^>]+(>|$)/g, '');
   useEffect(() => {
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
+    //  Tts.voices().then((voices)=>console.log("voicess====>",voices.map((values)=>values.id)))
       if (!ttsStatus.isInitialized) {
         try {
-          await Tts.setDefaultVoice('hi-in-x-hid-local');
-          await Tts.setDefaultLanguage('en-US');
+          await Tts.setDefaultVoice(Platform.OS=='android'?'hi-in-x-hid-local':'com.apple.voice.compact.en-IN.Rishi');
+          await Tts.setDefaultLanguage('en-IN');
           await Tts.setDucking(true);
           await Tts.setIgnoreSilentSwitch('ignore');
           setTtsInitialized(true);
@@ -41,7 +46,8 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
     initTts();
   }, []);
   useEffect(() => {
-    if (open) {
+  
+    if (open && getSoundOffOn==true) {
       Tts.speak(cleanText);
     } else {
       Tts.stop();

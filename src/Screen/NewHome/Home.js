@@ -23,10 +23,7 @@ import VersionNumber from 'react-native-version-number';
 import {
   setHealthData,
   setHomeGraphData,
-
-
   setWorkoutTimeCal,
-
 } from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
@@ -34,7 +31,6 @@ import BackgroundService from 'react-native-background-actions';
 import AskHealthPermissionAndroid from '../../Component/AndroidHealthPermission';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Dropdown} from 'react-native-element-dropdown';
-import {LineChart} from 'react-native-chart-kit';
 import AnimatedLottieView from 'lottie-react-native';
 import {Slider} from '@miblanchard/react-native-slider';
 import axios from 'axios';
@@ -45,6 +41,7 @@ import {
   Stop,
   Circle,
   Svg,
+  Line,
   Text as SvgText,
   LinearGradient as SvgGrad,
 } from 'react-native-svg';
@@ -68,18 +65,23 @@ import {color} from 'd3';
 import {Form} from 'formik';
 import moment from 'moment';
 import Graph from '../Yourself/Graph';
-const zeroData = Array(7)
-  .fill()
-  .map((_, index) => {
-    const currentDate = moment().subtract(index + 1, 'days');
-    return {weight: 0, date: currentDate.date()};
-  });
-const zeroDataM = Array(21)
-  .fill()
-  .map((_, index) => {
-    const currentDate = moment().subtract(index + 1, 'days');
-    return {weight: 0, date: currentDate.date()};
-  });
+import {
+  LineChart,
+} from 'react-native-chart-kit';
+// const zeroData = Array(7)
+//   .fill()
+//   .map((_, index) => {
+//     const currentDate = moment().subtract(index + 1, 'days');
+//     return {weight: 0, date: currentDate.date()};
+//   });
+// const zeroDataM = Array(21)
+//   .fill()
+//   .map((_, index) => {
+//     const currentDate = moment().subtract(index + 1, 'days');
+//     return {weight: 0, date: currentDate.date()};
+//   });
+let zeroData = [];
+let zeroDataM = [];
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
 
@@ -152,7 +154,6 @@ const ProgressBar = ({progress, image, text}) => {
   );
 };
 const Home = ({navigation}) => {
-
   const [progress, setProgress] = useState(10);
   const [forLoading, setForLoading] = useState(false);
   const [value, setValue] = useState('Weekly');
@@ -175,8 +176,7 @@ const Home = ({navigation}) => {
     getPedomterData,
     ProfilePhoto,
     getUserID,
-    getCustttomeTimeCal
-
+    getCustttomeTimeCal,
   } = useSelector(state => state);
   const [stepGoalProfile, setStepGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
@@ -189,14 +189,12 @@ const Home = ({navigation}) => {
   );
 
   useEffect(() => {
-   
     setTimeout(() => {
       ActivityPermission();
-   
     }, 3000);
   }, []);
   useEffect(() => {
-    getGraphData();
+    getGraphData(1);
   }, []);
 
   useFocusEffect(
@@ -229,7 +227,7 @@ const Home = ({navigation}) => {
         startStepCounter();
         // Permission was already granted previously
       }
-    } else if(Platform.OS=='ios'){
+    } else if (Platform.OS == 'ios') {
       AppleHealthKit.isAvailable((err, available) => {
         const permissions = {
           permissions: {
@@ -258,7 +256,7 @@ const Home = ({navigation}) => {
                 if (callbackError) {
                   console.log('Error while getting the data');
                 }
-                console.log("resulttttsss======>",results)
+                console.log('resulttttsss======>', results);
                 setSteps(results.value);
                 setDistance(((results.value / 20) * 0.01).toFixed(2));
                 setCalories(((results.value / 20) * 1).toFixed(1));
@@ -287,7 +285,6 @@ const Home = ({navigation}) => {
   //   );
   // });
   const getCustomeWorkoutTimeDetails = async () => {
-  
     try {
       const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
         method: 'POST',
@@ -295,24 +292,20 @@ const Home = ({navigation}) => {
           'Content-Type': 'multipart/form-data',
         },
         data: {
-          user_id:  getUserID != 0?getUserID:getUserDataDetails.id,
+          user_id: getUserID != 0 ? getUserID : getUserDataDetails.id,
         },
       });
-   
-      if(data.data.results.length>0){
-    
-        Dispatch(setWorkoutTimeCal(data.data.results))
 
-      }else{
-        Dispatch(setWorkoutTimeCal([]))
+      if (data.data.results.length > 0) {
+        Dispatch(setWorkoutTimeCal(data.data.results));
+      } else {
+        Dispatch(setWorkoutTimeCal([]));
       }
-   
     } catch (error) {
       console.log('UCustomeCorkout details', error);
     }
   };
-  const getGraphData = async () => {
-
+  const getGraphData = async (Key) => {
     try {
       const payload = new FormData();
       // payload.append('user_id', 166);
@@ -327,38 +320,49 @@ const Home = ({navigation}) => {
       });
       if (res.data?.message != 'No data found') {
         setForLoading(false);
-        console.log(res.data, 'Graph Data ');
+        // console.log(res.data, 'Graph Data ');
         Dispatch(setHomeGraphData(res.data));
         const test = [],
           test2 = [];
-
-
-   
-        zeroData?.map((_, index) => {
-          test.push({
-            id: res.data?.weekly_data[index]?.id,
-            date: res.data?.weekly_data[index]?.created_at,
-            weight: parseInt(res.data?.weekly_data[index]?.total_calories),
-          });
-        });
-
-        zeroDataM?.map((_, index) => {
-          test2.push({
-            id: res.data?.monthly_data[index]?.id,
-            date: res.data?.monthly_data[index]?.created_at,
-            weight: parseInt(res.data?.monthly_data[index]?.total_calories),
-          });
-        });
-      
-
-        setWeeklyGraph(test);
-        setMonthlyGraph(test2);
+        // zeroData?.map((_, index) => {
+        //   test.push({
+        //     id: res.data?.weekly_data[index]?.id,
+        //     date: res.data?.weekly_data[index]?.created_at,
+        //     weight: parseInt(res.data?.weekly_data[index]?.total_calories),
+        //   });
+        // });
+        // zeroDataM?.map((_, index) => {
+        //   test2.push({
+        //     id: res.data?.monthly_data[index]?.id,
+        //     date: res.data?.monthly_data[index]?.created_at,
+        //     weight: parseInt(res.data?.monthly_data[index]?.total_calories),
+        //   });
+        // });
+        if(Key==1){
+          zeroData=[]
+          for (i = 0; i < res?.data?.weekly_data?.length; i++) {
+            const data1 = res.data.weekly_data[i].total_calories;
+            zeroData.push(parseFloat(data1));
+          }
+          setWeeklyGraph(zeroData);
+          console.log('Weeekly====>', zeroData);
+        }
+          else if(Key==2){
+            zeroDataM=[]
+            for (i = 0; i < res?.data?.monthly_data?.length; i++) {
+              const data1 = res.data.monthly_data[i].total_calories;
+              zeroDataM.push(parseFloat(data1));
+            }
+            setMonthlyGraph(zeroDataM);
+            console.log(' monthly Data====>', zeroDataM);
+          }
+        // setWeeklyGraph(test);
+        // setMonthlyGraph(test2);
       } else {
         setForLoading(false);
 
-        console.log(res.data, 'Graph Data message ');
+        // console.log(res.data, 'Graph Data message ');
         Dispatch(setHomeGraphData([]));
-
       }
     } catch (error) {
       setForLoading(false);
@@ -976,6 +980,53 @@ const Home = ({navigation}) => {
       </View>
     );
   };
+  const data = {
+    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    datasets: [
+      {
+        data: value=="Weekly"?[...weeklyGraph]:[...monthlyGraph],
+        color: () => AppColor.RED, // optional
+      },
+    ],
+  };
+  const chartConfig = {
+    backgroundGradientFrom: AppColor.WHITE,
+    backgroundGradientFromOpacity: 0,
+    backgroundGradientTo: AppColor.RED,
+    backgroundGradientToOpacity: 0,
+    color: () => AppColor.BoldText,
+    decimalPlaces: 0,
+    strokeWidth: 4, // optional, default 3
+    barPercentage: 0,
+    useShadowColorFromDataset: false, // optional
+  };
+  const specificDataIndex=value=='Weekly'?weeklyGraph?.length-1:monthlyGraph?.length
+  const renderCustomPoint = ({x, y, index, value}) => {
+    if (index === specificDataIndex) {
+      return (
+        <React.Fragment key={index}>
+          <Line
+            x1={x}
+            y1={y}
+            x2={x}
+            y2={DeviceHeigth * 0.2} // Adjust this value based on your chart height
+            stroke={AppColor.RED} // Line color
+            strokeWidth={1}
+            strokeDasharray={[4, 4]}
+          />
+          <Circle
+            cx={x}
+            cy={y}
+            r={7}
+            fill={AppColor.WHITE}
+            stroke={AppColor.RED}
+            strokeWidth={3}
+          />
+        </React.Fragment>
+      );
+    }
+    return null; // Render nothing for other data points
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -1245,10 +1296,11 @@ const Home = ({navigation}) => {
             renderItem={({item, index}) => {
               let totalTime = 0;
               let totalCal = 0;
-let time=getCustttomeTimeCal.filter((item1)=>{item1.workout_id==item.workout_id
-return item1})
+              let time = getCustttomeTimeCal.filter(item1 => {
+                item1.workout_id == item.workout_id;
+                return item1;
+              });
               for (const day in item?.days) {
-              
                 totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
                 totalCal = totalCal + parseInt(item?.days[day]?.total_calories);
               }
@@ -1287,8 +1339,7 @@ return item1})
                         marginVertical: 10,
                       }}>
                       <View style={{top: 15}}>
-                    
-                       <ProgressBar
+                        <ProgressBar
                            progress={time.length>0&&time[0].totalRestTime}
                           image={localImage.Play}
                           text={
@@ -1491,7 +1542,13 @@ return item1})
             placeholder={value}
             value={value}
             onChange={item => {
-              setValue(item.value);
+              setValue(item.label);
+              console.log('item===>',item.value)
+              if(item.value==1){
+                getGraphData(1)
+              }else{
+                getGraphData(2)
+              }
             }}
             renderItem={renderItem}
           />
@@ -1505,14 +1562,28 @@ return item1})
             alignSelf: 'center',
             borderRadius: 10,
           }}>
-
-          {weeklyGraph.length != 0 && monthlyGraph.length != 0 ? (
-            <Graph
-              resultData={value == 'Weekly' ? weeklyGraph : monthlyGraph}
-              zeroData={value == 'Weekly' ? zeroData : zeroDataM}
-              home={false}
-            />
-
+          {weeklyGraph.length != 0 || monthlyGraph.length!=0 ?(
+             <View style={[styles.card, {}]}>
+             <LineChart
+               style={{paddingRight: 40}}
+               data={data}
+               width={DeviceWidth * 0.85}
+               height={DeviceHeigth * 0.25}
+               chartConfig={chartConfig}
+               withInnerLines={false}
+               withOuterLines={true}
+               withDots={true}
+               bezier
+               segments={4}
+               renderDotContent={renderCustomPoint}
+               onDataPointClick={data =>
+                 console.log('PointData=====>', data.value)
+               }
+               withShadow={false}
+               yAxisInterval={10}
+               fromZero={true}
+             />
+           </View>
           ) : (
             <View
               style={{
@@ -1823,6 +1894,26 @@ var styles = StyleSheet.create({
     borderRadius: 12,
     alignSelf: 'center',
     marginTop: 8,
+  },
+  card: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 20,
+    backgroundColor: AppColor.WHITE,
+    width: DeviceWidth * 0.95,
+    borderRadius: 20,
+    alignSelf: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 5, height: 5},
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
 });
 export default Home;
