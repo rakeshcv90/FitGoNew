@@ -54,7 +54,7 @@ const MeditationDetails = ({navigation, route}) => {
         },
       });
       setForLoading(false);
-      console.log("GGGGGGGGGGG",data.data)
+
       if (data.data.status == 'data found') {
         setForLoading(false);
         setmindsetExercise(data.data.data);
