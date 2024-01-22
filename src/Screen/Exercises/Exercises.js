@@ -29,9 +29,6 @@ const Exercises = () => {
   const { defaultTheme } = useSelector((state) => state)
   useEffect(() => {
     getData();
-    console.log(Dimensions.get("screen").height)
-    console.log(Dimensions.get("window").height)
-    console.log(StatusBar.currentHeight)
   }, []);
   const getData = async () => {
     try {

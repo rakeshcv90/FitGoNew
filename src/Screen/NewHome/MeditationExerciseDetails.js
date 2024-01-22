@@ -26,23 +26,18 @@ import TrackPlayer, {
 import SeekBar from '../../Component/SeekBar';
 
 const MeditationExerciseDetails = ({navigation, route}) => {
+ console.log("HHHHHH$$$$$4",route.params.item.exercise_mindset_audio)
   const playbackState = usePlaybackState();
 
   const {position, buffered, duration} = useProgress();
   const songs = [
-    {
-      title: 'song 1',
-      artist: 'XYZ',
-      artwork: localImage.Play3,
 
-      url: require('../../Icon/Images/NewImage/track1.mp3'),
-    },
     {
       title: 'song 1',
       artist: 'XYZ',
       artwork: localImage.Play3,
       //   url: require('../../Icon/Images/NewImage/track1.mp3'),
-      url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+      url:route.params.item.exercise_mindset_audio,
     },
   ];
   useEffect(() => {
@@ -66,7 +61,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
     }
   };
   const togglePlayback = async playbackState => {
-    console.log('sdfdscxcefw', playbackState, State.Ready);
+   
     if (
       playbackState.state === State.Paused ||
       playbackState.state === State.Ready
@@ -75,7 +70,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
       console.log('sdfdscxcefw', playbackState, State.Ready);
     } else {
       await TrackPlayer.pause();
-      console.log('Test22222222222222');
+      
     }
   };
   const handleSlidingComplete = async value => {
@@ -99,6 +94,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                 : DeviceHeigth * 0.06,
           }}
           onPress={() => {
+            TrackPlayer.reset()
             navigation.goBack();
           }}>
           <Icons

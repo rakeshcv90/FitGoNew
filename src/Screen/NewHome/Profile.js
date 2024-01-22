@@ -11,6 +11,7 @@ import {
   Alert,
   ActivityIndicator,
   Modal,
+  Linking,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {localImage} from '../../Component/Image';
@@ -28,21 +29,27 @@ import {useNavigation} from '@react-navigation/native';
 import {Switch} from 'react-native-switch';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {setLogout, setUserProfileData} from '../../Component/ThemeRedux/Actions';
+import {
+  setLogout,
+  setSoundOnOff,
+  setUserProfileData,
+} from '../../Component/ThemeRedux/Actions';
 import {CommonActions} from '@react-navigation/native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {request, PERMISSIONS, openSettings} from 'react-native-permissions';
 import VersionNumber from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
-import { updatePhoto } from '../../Component/ThemeRedux/Actions';
+import {updatePhoto} from '../../Component/ThemeRedux/Actions';
 import {LogOut} from '../../Component/LogOut';
-import { setProfileImg_Data } from '../../Component/ThemeRedux/Actions';
+import {setProfileImg_Data} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
-import { stack } from 'd3';
-import { ColorShader } from '@shopify/react-native-skia';
+import {stack} from 'd3';
+import {ColorShader} from '@shopify/react-native-skia';
+import {navigationRef} from '../../../App';
 const Profile = () => {
- 
-  const {getUserDataDetails, ProfilePhoto,} = useSelector(state => state);
+  const {getUserDataDetails, ProfilePhoto, getSoundOffOn} = useSelector(
+    state => state,
+  );
   const dispatch = useDispatch();
   const [UpdateScreenVisibility, setUpadteScreenVisibilty] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
@@ -171,8 +178,8 @@ const Profile = () => {
     const [modalImageUploaded, setModalImageUploaded] = useState(false);
     const [IsimgUploaded, setImguploaded] = useState(true);
     const [userAvatar, setUserAvatar] = useState(null);
-    const {getProfile_imgData}=useSelector(state=>state)
-    const [userPhoto,setUserPhoto]=useState('')  
+    const {getProfile_imgData} = useSelector(state => state);
+    const [userPhoto, setUserPhoto] = useState('');
     const getProfileData = async user_id => {
       try {
         const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
@@ -184,11 +191,10 @@ const Profile = () => {
             id: user_id,
           },
         });
-  
+
         if (data.data.profile) {
           dispatch(setUserProfileData(data.data.profile));
-          console.log("Profile Data====---->",data.data)
-
+          console.log('Profile Data====---->', data.data);
         } else {
           dispatch(setUserProfileData([]));
         }
@@ -196,7 +202,7 @@ const Profile = () => {
         console.log('User Profile Error', error);
       }
     };
-    const UploadImage = async (selectedImage) => {
+    const UploadImage = async selectedImage => {
       // console.log("upload img")
       try {
         let payload = new FormData();
@@ -220,7 +226,7 @@ const Profile = () => {
         // console.log(ProfileData.data[0]);
         if (ProfileData.data) {
           console.log('APi Profile Data===>', ProfileData.data);
-          getProfileData(getUserDataDetails?.id)
+          getProfileData(getUserDataDetails?.id);
           setImguploaded(true);
           if (IsimgUploaded == true) {
             setUpadteScreenVisibilty(false);
@@ -246,11 +252,10 @@ const Profile = () => {
             mediaType: 'photo',
             quality: 0.5,
           });
-          setUserAvatar(resultCamera.assets[0])
+          setUserAvatar(resultCamera.assets[0]);
           if (resultCamera) {
             setModalImageUploaded(true);
             // dispatch(setProfileImg_Data(resultCamera.assets[0]))
-        
           }
         } catch (error) {
           console.log('CameraimageError', error);
@@ -286,7 +291,7 @@ const Profile = () => {
             quality: 0.5,
           });
           setUserAvatar(resultLibrary.assets[0]);
-          
+
           if (resultLibrary) {
             setModalImageUploaded(true);
           }
@@ -354,10 +359,9 @@ const Profile = () => {
               <Image
                 source={{
                   uri:
-                 
-                  userAvatar != null
-                    ? userAvatar.uri
-                    :  getUserDataDetails.image_path
+                    userAvatar != null
+                      ? userAvatar.uri
+                      : getUserDataDetails.image_path,
                 }}
                 style={styles.Icon}
               />
@@ -413,8 +417,8 @@ const Profile = () => {
                       }}
                       onPress={() => {
                         setImguploaded(false);
-                        UploadImage(userAvatar)
-                        console.log(userAvatar)
+                        UploadImage(userAvatar);
+                        console.log(userAvatar);
                       }}>
                       <Text style={[styles.cameraText]}>Upload Image</Text>
                     </TouchableOpacity>
@@ -453,7 +457,6 @@ const Profile = () => {
     );
   };
   const ProfileView = () => {
-
     return (
       <View>
         <LinearGradient
@@ -519,11 +522,11 @@ const Profile = () => {
           </View>
           <View style={styles.profileView}>
             <Image
-             source={
-              getUserDataDetails.image_path == null
-                ? localImage.avt
-                :{uri:getUserDataDetails.image_path} 
-            }
+              source={
+                getUserDataDetails.image_path == null
+                  ? localImage.avt
+                  : {uri: getUserDataDetails.image_path}
+              }
               style={styles.img}
               resizeMode="cover"></Image>
             <TouchableOpacity
@@ -567,7 +570,11 @@ const Profile = () => {
     );
   };
   const profileViewHeight = DeviceHeigth * 0.4;
-
+  const openMailApp = () => {
+    Linking.openURL(
+      'mailto:thefitnessandworkout@gmail.com?subject=Feedback&body=Hello%20there!',
+    );
+  };
   return (
     <SafeAreaView style={styles.Container}>
       <ProfileView />
@@ -585,8 +592,11 @@ const Profile = () => {
             style={styles.SingleButton}
             navigation
             onPress={() => {
+              console.log('JHDHD', value.text1);
               if (value.text1 == 'Personal Details') {
                 navigation.navigate('NewPersonalDetails');
+              } else if (value.text1 == 'Contact Us') {
+                openMailApp();
               } else {
                 showMessage({
                   message: 'Work In Progress',
@@ -609,21 +619,62 @@ const Profile = () => {
                   circleSize={19}
                   barHeight={21}
                   circleBorderWidth={0.1}
-                  backgroundActive={AppColor.RED1}
-                  backgroundInactive={AppColor.GRAY2}
-                  circleActiveColor={AppColor.RED}
-                  circleInActiveColor={AppColor.WHITE}
-                  changeValueImmediately={true}
-                  outerCircleStyle={{color: AppColor.RED}}
                   renderActiveText={false}
                   renderInActiveText={false}
                   switchLeftPx={2}
                   switchRightPx={2}
                   switchWidthMultiplier={2.2}
                   switchBorderRadius={30}
+                  backgroundActive={'#FFE3E3'}
+                  backgroundInactive={AppColor.GRAY2}
+                  circleActiveColor={AppColor.RED}
+                  circleInActiveColor={AppColor.WHITE}
+                  changeValueImmediately={true}
+                  outerCircleStyle={{color: AppColor.RED}}
                 />
               ) : value.id == 6 ? (
-                <View style={{width: 20, height: 20}}></View>
+                <View>
+                  <Switch
+                    value={getSoundOffOn}
+                    onValueChange={text => {
+                      if (text == true) {
+                        showMessage({
+                          message: 'Sound Is Unmute',
+                          type: 'success',
+                          animationDuration: 500,
+                          floating: true,
+                          icon: {icon: 'auto', position: 'left'},
+                        });
+                      } else {
+                        showMessage({
+                          message: 'Sound Is Mute',
+                          animationDuration: 500,
+                          type: 'danger',
+                          floating: true,
+                          icon: {icon: 'auto', position: 'left'},
+                        });
+                      }
+
+                      dispatch(setSoundOnOff(text));
+                    }}
+                    disabled={false}
+                    circleSize={19}
+                    barHeight={21}
+                    circleBorderWidth={0.1}
+                    renderActiveText={false}
+                    renderInActiveText={false}
+                    switchLeftPx={2}
+                    switchRightPx={2}
+                    switchWidthMultiplier={2.2}
+                    switchBorderRadius={30}
+                    backgroundActive={'#FFE3E3'}
+                    backgroundInactive={AppColor.GRAY2}
+                    circleActiveColor={AppColor.RED}
+                    circleInActiveColor={AppColor.WHITE}
+                    changeValueImmediately={true}
+                    outerCircleStyle={{color: AppColor.RED}}
+                  />
+                </View>
               ) : (
                 <Icons
                   name="chevron-right"
@@ -644,6 +695,16 @@ const Profile = () => {
               navigation
               onPress={() => {
                 // navigation.navigate('Personal Details');
+                if (value.text1 == 'Privacy Policy') {
+                  navigation.navigate('TermaAndCondition');
+                } else if (value.text1 == 'Rate Us') {
+                  if (Platform.OS == 'ios') {
+                    Linking.openURL(
+                      'https://apps.apple.com/us/app/fitme-health-and-fitness-app/id6470018217',
+                    );
+                  } else {
+                  }
+                }
               }}>
               {value.icon1}
               <View style={styles.View1}>
