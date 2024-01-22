@@ -301,7 +301,7 @@ const NewProgressScreen = ({navigation}) => {
     {
       id: 3,
       img: localImage.Biceps_p,
-      txt1: '3',
+      txt1:getCustttomeTimeCal[0]?getCustttomeTimeCal[0]?.exerciseCount:'0',
       txt2: 'Actions',
     },
   ];

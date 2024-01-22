@@ -37,7 +37,9 @@ const NewMonthlyAchievement = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [calories1, setCalories1] = useState(0);
   const [Wtime,setWtime]=useState(0)
+ 
   useEffect(() => {
+    console.log("heloo===>",getCustttomeTimeCal[0].exerciseCount)
     const Calories1 = getCustttomeTimeCal.map(value => value.totalCalories);
     const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
     const time1=getCustttomeTimeCal?.map(value => parseInt(value.totalRestTime))
@@ -113,7 +115,7 @@ const NewMonthlyAchievement = () => {
         data: payload,
       });
       if (res) {
-        console.log('DateWiseData===>', res.data);
+        // console.log('DateWiseData===>', res.data);
         setApiData(res.data.data);
         const Calories = res.data.data.map(value =>
           parseInt(value.exercise_calories),
@@ -204,7 +206,7 @@ const NewMonthlyAchievement = () => {
     {
       id: 3,
       img: localImage.Biceps_p,
-      txt1: '3',
+      txt1: getCustttomeTimeCal[0]?getCustttomeTimeCal[0]?.exerciseCount:'0',
       txt2: 'Actions',
     },
   ];

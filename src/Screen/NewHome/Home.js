@@ -1248,9 +1248,7 @@ const Home = ({navigation}) => {
 let time=getCustttomeTimeCal.filter((item1)=>{item1.workout_id==item.workout_id
 return item1})
               for (const day in item?.days) {
-                // if (item?.days[day]?.total_rest == 0) {
-                //   restDays.push(parseInt(day.split('day_')[1]));
-                // }
+              
                 totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
                 totalCal = totalCal + parseInt(item?.days[day]?.total_calories);
               }
@@ -1289,9 +1287,9 @@ return item1})
                         marginVertical: 10,
                       }}>
                       <View style={{top: 15}}>
-                       {/* {console.log("FFF%%%%%%%%%%%",)} */}
-                        {/* <ProgressBar
-                          progress={time[0].totalRestTime}
+                    
+                       <ProgressBar
+                           progress={time.length>0&&time[0].totalRestTime}
                           image={localImage.Play}
                           text={
                             totalTime > 60
@@ -1302,10 +1300,10 @@ return item1})
                       </View>
                       <View style={{marginHorizontal: 10, top: 15}}>
                         <ProgressBar
-                          progress={time[0].totalCalories}
+                         progress={time.length>0&&time[0].totalCalories}
                           image={localImage.Step1}
                           text={totalCal + 'Kcal'}
-                        /> */}
+                        />
                       </View>
                     </View>
                   </View>
