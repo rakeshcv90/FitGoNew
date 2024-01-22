@@ -109,6 +109,7 @@ const GradientText = ({item}) => {
   );
 };
 const ProgressBar = ({progress, image, text}) => {
+
   return (
     <View
       style={[
@@ -122,7 +123,7 @@ const ProgressBar = ({progress, image, text}) => {
         style={[
           styles.progressIndicator,
           {
-            width: `${progress}%`,
+            width: `${progress!=false?progress:10}%`,
 
             position: 'absolute',
           },
@@ -258,7 +259,6 @@ const Home = ({navigation}) => {
                 if (callbackError) {
                   console.log('Error while getting the data');
                 }
-                console.log("resulttttsss======>",results)
                 setSteps(results.value);
                 setDistance(((results.value / 20) * 0.01).toFixed(2));
                 setCalories(((results.value / 20) * 1).toFixed(1));
@@ -993,7 +993,7 @@ const Home = ({navigation}) => {
             resizeMode="cover"></Image> */}
           {/* <Text style={styles.monetText}>500</Text> */}
         </View>
-
+{console.log("User Profile Data",getUserDataDetails)}
         {Object.keys(getUserDataDetails).length > 0 ? (
           <TouchableOpacity
             style={styles.profileView1}
@@ -1287,9 +1287,10 @@ return item1})
                         marginVertical: 10,
                       }}>
                       <View style={{top: 15}}>
-                    
+                   
                        <ProgressBar
                            progress={time.length>0&&time[0].totalRestTime}
+                         //  progress={55}
                           image={localImage.Play}
                           text={
                             totalTime > 60
@@ -1300,7 +1301,8 @@ return item1})
                       </View>
                       <View style={{marginHorizontal: 10, top: 15}}>
                         <ProgressBar
-                         progress={time.length>0&&time[0].totalCalories}
+                       progress={time.length>0&&time[0].totalCalories}
+                       //  progress={33}
                           image={localImage.Step1}
                           text={totalCal + 'Kcal'}
                         />
@@ -1506,7 +1508,7 @@ return item1})
             borderRadius: 10,
           }}>
 
-          {weeklyGraph.length != 0 && monthlyGraph.length != 0 ? (
+          {/* {weeklyGraph.length != 0 && monthlyGraph.length != 0 ? (
             <Graph
               resultData={value == 'Weekly' ? weeklyGraph : monthlyGraph}
               zeroData={value == 'Weekly' ? zeroData : zeroDataM}
@@ -1522,7 +1524,7 @@ return item1})
               }}>
               {emptyComponent()}
             </View>
-          )}
+          )} */}
           {/* <LineChart
             data={{
               labels: ['Sun', 'Mon', 'Tue', 'Thur', 'Fri', 'Sat'],

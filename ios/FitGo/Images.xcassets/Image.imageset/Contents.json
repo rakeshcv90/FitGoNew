@@ -2,18 +2,26 @@
   "images" : [
     {
       "filename" : "sp.png",
-      "idiom" : "universal",
+      "idiom" : "iphone",
       "scale" : "1x"
     },
     {
-      "filename" : "sp 1.png",
-      "idiom" : "universal",
+      "filename" : "sp 2.png",
+      "idiom" : "iphone",
       "scale" : "2x"
     },
     {
-      "filename" : "sp 2.png",
-      "idiom" : "universal",
+      "filename" : "sp 1.png",
+      "idiom" : "iphone",
       "scale" : "3x"
+    },
+    {
+      "idiom" : "ipad",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "ipad",
+      "scale" : "2x"
     }
   ],
   "info" : {
