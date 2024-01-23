@@ -24,7 +24,7 @@ import {BlurView} from '@react-native-community/blur';
 import AppleHealthKit from 'react-native-health';
 import {setBmi} from '../../Component/ThemeRedux/Actions';
 import {Calendar} from 'react-native-calendars';
-import {useFocusEffect} from '@react-navigation/native';
+import AnimatedLottieView from 'lottie-react-native';
 import {
   VictoryBar,
   VictoryChart,
@@ -62,7 +62,7 @@ const NewProgressScreen = ({navigation}) => {
   const [getBmi, setBmi] = useState(0);
   const [array1, setArray1] = useState([]);
   const [Calories, setCalories] = useState(0);
-  const [Wtime,setWtime]=useState(0)
+  const [Wtime, setWtime] = useState(0);
   let arrayForData = [];
   let arrayForData1 = [];
   useEffect(() => {
@@ -108,17 +108,19 @@ const NewProgressScreen = ({navigation}) => {
       console.log('Calories Api Error', error);
     }
   };
-  useEffect(()=>{
-      WeeklyData(1);
-      WeeklyData(2);
-    },[])
-  
+  useEffect(() => {
+    WeeklyData(1);
+    WeeklyData(2);
+  }, []);
+  console.log('userData===>', getUserDataDetails);
   useEffect(() => {
     const Calories1 = getCustttomeTimeCal.map(value => value.totalCalories);
     const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
-    const time1=getCustttomeTimeCal?.map(value => parseInt(value.totalRestTime))
-    const Time2=time1?.reduce((acc,ind)=>Math.ceil((acc+ind)/60),0)
-    setWtime(Time2)
+    const time1 = getCustttomeTimeCal?.map(value =>
+      parseInt(value.totalRestTime),
+    );
+    const Time2 = time1?.reduce((acc, ind) => Math.ceil((acc + ind) / 60), 0);
+    setWtime(Time2);
     // console.log('>>>>>>',Time2)
     if (Platform.OS == 'ios') {
       let options = {
@@ -138,7 +140,12 @@ const NewProgressScreen = ({navigation}) => {
         }
       });
     } else if (Platform.OS == 'android') {
-      console.log('android======>');
+      setCalories(
+        parseInt(Calories2) + getHealthData[1]
+          ? parseInt(getHealthData[1].Calories)
+          : 0,
+      );
+      // console.log('android======>');
     }
   }, []);
   const handleGraph1 = data => {
@@ -169,7 +176,6 @@ const NewProgressScreen = ({navigation}) => {
           currentWeight - getHomeGraphData?.monthly_data[i]?.total_burn_weight;
         currentWeight = NewWeight;
         arrayForData.push(parseFloat(NewWeight).toFixed(3));
-        // console.log('array Monthly', arrayForData);
       }
       setArray(arrayForData);
     } else if (Key == 2) {
@@ -215,76 +221,6 @@ const NewProgressScreen = ({navigation}) => {
     }
   };
   const textData = [{value: getBmi}];
-  // useEffect(() => {
-  //   const currentDate = moment();
-  //   const daysInMonth = currentDate.daysInMonth();
-  //   const firstDayOfMonth = moment(currentDate).startOf('month');
-
-  //   const dateArray = Array.from({length: daysInMonth}, (_, index) => {
-  //     const date = moment(firstDayOfMonth).add(index, 'days');
-  //     return {
-  //       month: date.format('MMM'),
-  //       year: date.format('YYYY'),
-  //       date: date.format('DD'),
-  //       day: date.format('dd'),
-  //       isCurrent: date.isSame(moment(), 'day'), // Check if the date is the current date
-  //     };
-  //   });
-
-  //   setDates(dateArray);
-  // }, []);
-  // const RenderCalender = ({minIndex, maxIndex}) => {
-  //   return (
-  //     <View
-  //       style={{
-  //         flexDirection: 'row',
-  //         marginHorizontal: 16,
-  //         justifyContent:
-  //           dates.slice(minIndex, maxIndex).length < 7
-  //             ? 'flex-start'
-  //             : 'space-between',
-  //         marginVertical: 6,
-  //       }}>
-  //       {dates?.slice(minIndex, maxIndex).map((value, index) => (
-  //         <View
-  //           key={index}
-  //           style={{
-  //             backgroundColor: value.isCurrent
-  //               ? AppColor.RED
-  //               : AppColor.BACKGROUNG,
-  //             paddingVertical: value.isCurrent ? 1 : 2,
-  //             paddingHorizontal: value.isCurrent ? 0 : 12,
-  //             borderRadius: value.isCurrent ? 40 / 2 : 8,
-  //             width: value.isCurrent ? 40 : undefined,
-  //             height: value.isCurrent ? 40 : undefined,
-  //             justifyContent: 'center',
-  //             alignItems: 'center',
-  //             marginRight: dates.slice(minIndex, maxIndex).length < 7 ? 6 : 0,
-  //           }}>
-  //           <Text
-  //             style={{
-  //               color: value.isCurrent ? AppColor.WHITE : AppColor.Gray5,
-  //               fontFamily: 'Poppins-SemiBold',
-  //               fontSize: 14,
-  //               alignSelf: 'center',
-  //             }}>
-  //             {value.date}
-  //           </Text>
-  //           <Text
-  //             key={index}
-  //             style={{
-  //               color: value.isCurrent ? AppColor.WHITE : AppColor.Gray5,
-  //               fontFamily: 'Poppins-SemiBold',
-  //               fontSize: 10,
-  //               alignSelf: 'center',
-  //             }}>
-  //             {value.month}
-  //           </Text>
-  //         </View>
-  //       ))}
-  //     </View>
-  //   );
-  // };
   const Card_Data = [
     {
       id: 1,
@@ -301,7 +237,9 @@ const NewProgressScreen = ({navigation}) => {
     {
       id: 3,
       img: localImage.Biceps_p,
-      txt1:getCustttomeTimeCal[0]?getCustttomeTimeCal[0]?.exerciseCount:'0',
+      txt1: getCustttomeTimeCal[0]
+        ? getCustttomeTimeCal[0]?.exerciseCount
+        : '0',
       txt2: 'Actions',
     },
   ];
@@ -418,9 +356,9 @@ const NewProgressScreen = ({navigation}) => {
   ];
   const updatedEmojiData = emojiData.map((item, index) => ({
     day: item.day,
-    value: array1[index] ? array1[index] : Math.random(),
+    value: array1[index] ? array1[index] : null,
   }));
-  // console.log('array=====>',array1);
+  // console.log('array=====>', array1);
   const Emojis = [
     {
       id: 1,
@@ -657,6 +595,27 @@ const NewProgressScreen = ({navigation}) => {
       dayTextColor: AppColor.BLACK,
     };
   }, []);
+  const EmptyComponent = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+        }}>
+        <AnimatedLottieView
+          source={require('../../Icon/Images/NewImage/NoData.json')}
+          speed={2}
+          autoPlay
+          loop
+          resizeMode="contain"
+          style={{
+            width: DeviceWidth * 0.3,
+            height: DeviceHeigth * 0.15,
+            alignSelf: 'center',
+          }}
+        />
+      </View>
+    );
+  };
   return (
     <SafeAreaView style={styles.Container}>
       <ScrollView showsHorizontalScrollIndicator={false}>
@@ -748,52 +707,60 @@ const NewProgressScreen = ({navigation}) => {
           ))}
         </View>
         <LineText Txt1={'Weight'} Txt2={'Weekly'} />
-        <View style={[styles.card, {}]}>
-          <LineChart
-            style={{paddingRight: 30}}
-            data={data}
-            width={DeviceWidth * 0.85}
-            height={DeviceHeigth * 0.25}
-            chartConfig={chartConfig}
-            withInnerLines={false}
-            withOuterLines={true}
-            withDots={true}
-            bezier
-            segments={4}
-            renderDotContent={renderCustomPoint}
-            onDataPointClick={data =>
-              console.log('PointData=====>', data.value)
-            }
-            withShadow={false}
-            yAxisInterval={10}
-            fromZero={true}
-          />
-        </View>
-        <LineText Txt1={'Workout Duration'} Txt2={'Weekly'} Duration />
-        <View style={styles.card}>
-          <RenderEmojis />
-          <VictoryChart
-            theme={VictoryTheme.material}
-            horizontal={false}
-            domainPadding={20}
-            width={DeviceWidth * 0.95}>
-            <VictoryAxis
-              tickValues={emojiData.map((dataPoint, index) => index + 1)}
-              tickFormat={emojiData.map(dataPoint => dataPoint.day)}
+        {getUserDataDetails.weight ? (
+          <View style={[styles.card, {}]}>
+            <LineChart
+              style={{paddingRight: 30}}
+              data={data}
+              width={DeviceWidth * 0.85}
+              height={DeviceHeigth * 0.25}
+              chartConfig={chartConfig}
+              withInnerLines={false}
+              withOuterLines={true}
+              withDots={true}
+              bezier
+              segments={4}
+              renderDotContent={renderCustomPoint}
+              onDataPointClick={data =>
+                console.log('PointData=====>', data.value)
+              }
+              withShadow={false}
+              yAxisInterval={10}
+              fromZero={true}
             />
-            <VictoryAxis dependentAxis tickFormat={x => ''} />
-            <VictoryBar
-              data={updatedEmojiData}
-              x="day"
-              y="value"
-              style={{
-                data: {
-                  fill: AppColor.RED, // Reference to the linear gradient
-                },
-              }}
-            />
-          </VictoryChart>
-        </View>
+          </View>
+        ) : (
+          <EmptyComponent />
+        )}
+        <LineText Txt1={'Meditation Duration'} Txt2={'Weekly'} Duration />
+        {array1.length != 0 ? (
+          <View style={styles.card}>
+            <RenderEmojis />
+            <VictoryChart
+              theme={VictoryTheme.material}
+              horizontal={false}
+              domainPadding={20}
+              width={DeviceWidth * 0.95}>
+              <VictoryAxis
+                tickValues={emojiData.map((dataPoint, index) => index + 1)}
+                tickFormat={emojiData.map(dataPoint => dataPoint.day)}
+              />
+              <VictoryAxis dependentAxis tickFormat={x => ''} />
+              <VictoryBar
+                data={updatedEmojiData}
+                x="day"
+                y="value"
+                style={{
+                  data: {
+                    fill: AppColor.RED, // Reference to the linear gradient
+                  },
+                }}
+              />
+            </VictoryChart>
+          </View>
+        ) : (
+          <EmptyComponent />
+        )}
 
         <LineText Txt1={'Monthly Achievement'} />
         <View style={[styles.card, {flexDirection: 'column'}]}>
@@ -819,11 +786,6 @@ const NewProgressScreen = ({navigation}) => {
               </Text>
             ))}
           </View>
-          {/* <RenderCalender minIndex={0} maxIndex={7} />
-          <RenderCalender minIndex={7} maxIndex={14} />
-          <RenderCalender minIndex={14} maxIndex={21} />
-          <RenderCalender minIndex={21} maxIndex={28} />
-          <RenderCalender minIndex={28} /> */}
           <Calendar
             onDayPress={day => {
               console.log(day);

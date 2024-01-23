@@ -545,7 +545,6 @@ const Home = ({navigation}) => {
   async function startStepCounter() {
     startStepCounterUpdate(new Date(), data => {
       setSteps(data.steps);
-
       setDistance(((data.steps / 20) * 0.01).toFixed(2));
       setCalories(Math.floor(data.steps / 20));
       throttledDispatch(data.steps);
@@ -1562,6 +1561,7 @@ const Home = ({navigation}) => {
             alignSelf: 'center',
             borderRadius: 10,
           }}>
+
           {weeklyGraph.length != 0 || monthlyGraph.length != 0 ? (
             <View style={[styles.card, {}]}>
               <LineChart
@@ -1584,6 +1584,7 @@ const Home = ({navigation}) => {
                 fromZero={true}
               />
             </View>
+
           ) : (
             <View
               style={{

@@ -29,6 +29,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Switch} from 'react-native-switch';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 import {
   setLogout,
   setSoundOnOff,
@@ -45,11 +46,13 @@ import {setProfileImg_Data} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 
 
-import DeleteAccount from '../../Component/DeleteAccount';
+
+
+
 import {stack} from 'd3';
 import {ColorShader} from '@shopify/react-native-skia';
 import {navigationRef} from '../../../App';
-
+import {BlurView} from '@react-native-community/blur';
 const Profile = () => {
   const {getUserDataDetails, ProfilePhoto, getSoundOffOn} = useSelector(
     state => state,
@@ -62,6 +65,116 @@ const Profile = () => {
   const navigation = useNavigation();
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const [modalVisible, setModalVisible] = useState(false);
+  const DeleteAccount = () => {
+    const {
+      getUserDataDetails,
+    } = useSelector(state => state);
+    const Delete=async()=>{
+      try {
+        const res = await axios({
+          url: `${NewAppapi.Delete_Account}/${getUserDataDetails?.id}`,
+          method: 'get'
+        });
+        if(res.data){
+          // console.log("Delete Account",res.data)
+          showMessage({
+            message: 'Your account deleted successfully',
+            statusBarHeight: getStatusBarHeight(),
+            floating: true,
+            type: 'info',
+            animationDuration: 750,
+            icon: {icon: 'none', position: 'left'},
+          });
+          LogOut(dispatch);
+        }
+      } catch (error) {
+        console.log("Delete Account Api Error",error)
+        showMessage({
+          message: 'Something went wrong',
+          statusBarHeight: getStatusBarHeight(),
+          floating: true,
+          type: 'danger',
+          animationDuration: 750,
+          icon: {icon: 'none', position: 'left'},
+        });
+        setModalVisible(false)
+      }
+    }
+    return (
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={()=>{setModalVisible(false)}}>
+        <BlurView
+          style={styles.modalContainer}
+          blurType="light"
+          blurAmount={1}
+          reducedTransparencyFallbackColor="white"
+        />
+        <View
+          style={[styles.modalContent, {backgroundColor: AppColor.BACKGROUNG}]}>
+          <View
+            style={{
+              width: DeviceWidth * 0.85,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text
+              style={{
+                fontFamily: 'Poppins',
+                fontWeight: '500',
+                fontSize: 16,
+                color: AppColor.BoldText,
+              }}>
+              Do you want to Delete your Account ?
+            </Text>
+          </View>
+          <View
+            style={{
+              justifyContent: 'flex-end',
+              flexDirection: 'row',
+              width: DeviceWidth * 0.85,
+              alignItems: 'center',
+              marginTop: 30,
+            }}>
+            <TouchableOpacity style={{marginRight: 20}} onPress={()=>setModalVisible(false)}>
+              <Text
+                style={{
+                  color: AppColor.BoldText,
+                  fontFamily: 'Poppins-SemiBold',
+                  fontSize: 14,
+                }}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: AppColor.RED,
+                borderRadius: 20,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }} onPress={()=>{setModalVisible(false)
+                Delete()
+                }}>
+              <Text
+                style={{
+                  padding: 5,
+                  textAlign: 'center',
+                  color: AppColor.WHITE,
+                  fontSize: 12,
+                  fontFamily: 'poppins-SemiBold',
+                }} 
+                >
+                Confirm
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
   const Profile_Data = [
     {
       id: 1,
@@ -163,17 +276,17 @@ const Profile = () => {
       ),
       text1: 'Rate Us',
     },
-    // {
-    //   id: 10,
-    //   icon1: (
-    //     <Image
-    //       source={localImage.DeleteAcc}
-    //       style={[styles.IconView, {height: 29, width: 22}]}
-    //       resizeMode="contain"
-    //     />
-    //   ),
-    //   text1: 'Delete Account',
-    // },
+    {
+      id: 10,
+      icon1: (
+        <Image
+          source={localImage.DeleteAcc}
+          style={[styles.IconView, {height: 29, width: 22}]}
+          resizeMode="contain"
+        />
+      ),
+      text1: 'Delete Account',
+    },
   ];
   const FirstView = Profile_Data.slice(0, 6);
   const SecondView = Profile_Data.slice(6);
@@ -706,8 +819,10 @@ const Profile = () => {
                     Linking.openURL(
                       'https://apps.apple.com/us/app/fitme-health-and-fitness-app/id6470018217',
                     );
-                  } else {
-                  }
+                  } 
+                }
+                else if(value.text1=='Delete Account'){
+                  setModalVisible(true)
                 }
               }}>
               {value.icon1}
@@ -717,7 +832,7 @@ const Profile = () => {
             </TouchableOpacity>
           ))}
         </View>
-        {/* <DeleteAccount/> */}
+      {modalVisible? <DeleteAccount />:null}
       </ScrollView>
       {UpdateScreenVisibility ? <UpdateProfileModal /> : null}
     
@@ -897,5 +1012,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 2,
   },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // Semi-transparent background
+  },
+  modalContent: {
+    padding: 20,
+    borderRadius: 8,
+    width: DeviceWidth * 0.95,
+    position: 'absolute',
+    top: DeviceHeigth / 2.5,
+    marginHorizontal: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOpacity: 0.2,
+        shadowOffset: {height: 5, width: 0},
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
 });
+
 export default Profile;
