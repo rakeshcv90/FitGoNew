@@ -93,6 +93,7 @@ const Profile = () => {
           animationDuration: 750,
           icon: {icon: 'none', position: 'left'},
         });
+        setModalVisible(false)
       }
     }
     return (

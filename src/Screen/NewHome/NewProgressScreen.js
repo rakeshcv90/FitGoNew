@@ -112,7 +112,7 @@ const NewProgressScreen = ({navigation}) => {
     WeeklyData(1);
     WeeklyData(2);
   }, []);
- console.log('userData===>',getUserDataDetails)
+  console.log('userData===>', getUserDataDetails);
   useEffect(() => {
     const Calories1 = getCustttomeTimeCal.map(value => value.totalCalories);
     const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
@@ -140,8 +140,12 @@ const NewProgressScreen = ({navigation}) => {
         }
       });
     } else if (Platform.OS == 'android') {
-      setCalories(parseInt(Calories2))
-      console.log('android======>');
+      setCalories(
+        parseInt(Calories2) + getHealthData[1]
+          ? parseInt(getHealthData[1].Calories)
+          : 0,
+      );
+      // console.log('android======>');
     }
   }, []);
   const handleGraph1 = data => {
@@ -606,7 +610,7 @@ const NewProgressScreen = ({navigation}) => {
           style={{
             width: DeviceWidth * 0.3,
             height: DeviceHeigth * 0.15,
-            alignSelf:'center'
+            alignSelf: 'center',
           }}
         />
       </View>
@@ -703,7 +707,7 @@ const NewProgressScreen = ({navigation}) => {
           ))}
         </View>
         <LineText Txt1={'Weight'} Txt2={'Weekly'} />
-        {getUserDataDetails.weight? (
+        {getUserDataDetails.weight ? (
           <View style={[styles.card, {}]}>
             <LineChart
               style={{paddingRight: 30}}
@@ -728,8 +732,8 @@ const NewProgressScreen = ({navigation}) => {
         ) : (
           <EmptyComponent />
         )}
-        <LineText Txt1={'Workout Duration'} Txt2={'Weekly'} Duration />
-        {array1.length!=0 ? (
+        <LineText Txt1={'Meditation Duration'} Txt2={'Weekly'} Duration />
+        {array1.length != 0 ? (
           <View style={styles.card}>
             <RenderEmojis />
             <VictoryChart

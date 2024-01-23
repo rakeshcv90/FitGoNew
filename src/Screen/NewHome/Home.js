@@ -549,7 +549,6 @@ const Home = ({navigation}) => {
   async function startStepCounter() {
     startStepCounterUpdate(new Date(), data => {
       setSteps(data.steps);
-
       setDistance(((data.steps / 20) * 0.01).toFixed(2));
       setCalories(Math.floor(data.steps / 20));
       throttledDispatch(data.steps);

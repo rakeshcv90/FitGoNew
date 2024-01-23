@@ -9,7 +9,7 @@ import {
   Platform,
   TouchableOpacity,
 } from 'react-native';
-import React, {useMemo, useState,useEffect} from 'react';
+import React, {useMemo, useState, useEffect} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {AppColor} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
@@ -28,7 +28,9 @@ const NewMonthlyAchievement = () => {
   const [steps, setSteps] = useState(0);
   const [Distance, setDistance] = useState(0);
   const [calories, setCalories] = useState(0);
-  const {getUserDataDetails,getCustttomeTimeCal} = useSelector(state => state);
+  const {getUserDataDetails, getCustttomeTimeCal, getHealthData} = useSelector(
+    state => state,
+  );
   const [ApiData, setApiData] = useState([]);
   const [WorkoutCount, setWorkoutCount] = useState(0);
   const [WokoutCalories, setWorkoutCalories] = useState(0);
@@ -36,15 +38,17 @@ const NewMonthlyAchievement = () => {
   const [WokroutTime_s, setWorkoutTime_s] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [calories1, setCalories1] = useState(0);
-  const [Wtime,setWtime]=useState(0)
- 
+  const [Wtime, setWtime] = useState(0);
+
   useEffect(() => {
-    console.log("heloo===>",getCustttomeTimeCal[0])
+    // console.log("heloo===>",getCustttomeTimeCal[0])
     const Calories1 = getCustttomeTimeCal.map(value => value.totalCalories);
     const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
-    const time1=getCustttomeTimeCal?.map(value => parseInt(value.totalRestTime))
-    const Time2=time1?.reduce((acc,ind)=>Math.ceil((acc+ind)/60),0)
-    setWtime(Time2)
+    const time1 = getCustttomeTimeCal?.map(value =>
+      parseInt(value.totalRestTime),
+    );
+    const Time2 = time1?.reduce((acc, ind) => Math.ceil((acc + ind) / 60), 0);
+    setWtime(Time2);
     // console.log('>>>>>>',Time2)
     if (Platform.OS == 'ios') {
       let options = {
@@ -64,7 +68,11 @@ const NewMonthlyAchievement = () => {
         }
       });
     } else if (Platform.OS == 'android') {
-      console.log('android======>');
+      console.log('android======>', getHealthData);
+      // setCalories( getHealthData[1]?getHealthData[1].Calories:0)
+      setCalories1(
+        Calories2 + parseInt(getHealthData[1] ? getHealthData[1].Calories : 0),
+      );
     }
   }, []);
   const theme = useMemo(() => {
@@ -82,27 +90,6 @@ const NewMonthlyAchievement = () => {
       dayTextColor: AppColor.BLACK,
     };
   }, []);
-  const HandleStepsAndCalories = Date1 => {
-    if (Platform.OS == 'ios') {
-      let options = {
-        date: new Date(Date1).toISOString(), // optional; default now
-        includeManuallyAdded: true, // optional: default true
-      };
-      AppleHealthKit.getStepCount(options, (callbackError, results) => {
-        if (callbackError) {
-          console.error('Error while getting the data:', callbackError);
-          // Handle the error as needed
-        } else {
-          console.log('iOS ', results);
-          setSteps(results?.value);
-          setDistance(((results?.value / 20) * 0.01).toFixed(2));
-          setCalories(((results?.value / 20) * 1).toFixed(0));
-        }
-      });
-    } else if (Platform.OS == 'android') {
-      console.log('android======>');
-    }
-  };
   const DateWiseData = async Date1 => {
     const payload = new FormData();
     payload.append('user_id', getUserDataDetails?.id);
@@ -121,16 +108,47 @@ const NewMonthlyAchievement = () => {
           parseInt(value.exercise_calories),
         );
         //  cont Time=res.data.data.map((value)=>parseInt(value.))
-        setWorkoutCalories(Calories?.reduce((acc, num) => acc + num, 0));
+        setWorkoutCalories(Calories?.reduce((acc, num) => acc + num, 0)); // adding steps calories here
         setIsLoaded(true);
-      }else{
-        isLoaded(true)
+        console.log('stepssss==-----', res?.data?.steps[0]);
+        if (Platform.OS == 'android') {
+          setSteps(res?.data?.steps[0]?.steps ? res?.data?.steps[0]?.steps : 0);
+          setCalories(
+            res?.data?.steps[0]?.calories ? res?.data?.steps[0]?.calories : 0,
+          );
+          setDistance(
+            res?.data?.steps[0]?.distance ? res?.data?.steps[0]?.distance : 0,
+          );
+        }
+      } else {
+        isLoaded(true);
       }
     } catch (error) {
       console.log('DatwWiseDataError', error);
       setIsLoaded(true);
     }
   };
+  const HandleStepsAndCalories = Date1 => {
+    if (Platform.OS == 'ios') {
+      let options = {
+        date: new Date(Date1).toISOString(), // optional; default now
+        includeManuallyAdded: true, // optional: default true
+      };
+      AppleHealthKit.getStepCount(options, (callbackError, results) => {
+        if (callbackError) {
+          console.error('Error while getting the data:', callbackError);
+          // Handle the error as needed
+        } else {
+          console.log('iOS ', results);
+          setSteps(results?.value);
+          setDistance(((results?.value / 20) * 0.01).toFixed(2));
+          setCalories(((results?.value / 20) * 1).toFixed(0));
+        }
+      });
+    } else if (Platform.OS == 'android') {
+    }
+  };
+
   const EmptyComponent = () => {
     return (
       <View
@@ -206,7 +224,9 @@ const NewMonthlyAchievement = () => {
     {
       id: 3,
       img: localImage.Biceps_p,
-      txt1: getCustttomeTimeCal[0]?getCustttomeTimeCal[0]?.exerciseCount:'0',
+      txt1: getCustttomeTimeCal[0]
+        ? getCustttomeTimeCal[0]?.exerciseCount
+        : '0',
       txt2: 'Actions',
     },
   ];
@@ -262,7 +282,7 @@ const NewMonthlyAchievement = () => {
               styles.calender,
               {
                 width: DeviceWidth * 0.85,
-                backgroundColor:AppColor.BACKGROUNG
+                backgroundColor: AppColor.BACKGROUNG,
               },
             ]}
             theme={theme}
@@ -304,7 +324,7 @@ const NewMonthlyAchievement = () => {
         {ApiData.length == 0 ? (
           <EmptyComponent />
         ) : (
-          <View style={[styles.card, {flexDirection: 'column',}]}>
+          <View style={[styles.card, {flexDirection: 'column'}]}>
             {isLoaded ? null : <ActivityLoader />}
             <FlatList
               data={ApiData}
@@ -391,7 +411,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 20,
-    backgroundColor:AppColor.BACKGROUNG,
+    backgroundColor: AppColor.BACKGROUNG,
     width: DeviceWidth * 0.95,
     borderRadius: 20,
     marginVertical: 10,

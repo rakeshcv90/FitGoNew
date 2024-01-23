@@ -45,9 +45,10 @@ const Exercise = ({navigation, route}: any) => {
   const {allWorkoutData, getUserDataDetails, getSoundOffOn} = useSelector(
     (state: any) => state,
   );
-  const [separateTimer, setSeparateTimer] = useState(15);
+  const [separateTimer, setSeparateTimer] = useState(timer);
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const restTimerRef = useRef(null);
+  const seprateTimerRef=useRef(null)
   useEffect(() => {
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
@@ -71,26 +72,26 @@ const Exercise = ({navigation, route}: any) => {
     initTts();
   }, []);
   // console.log("currentDatatatata",allExercise.length,exerciseNumber)
-  useEffect(() => {
-    const TTStimer = async () => {
-      if (
-        restStart &&
-        allExercise.length - 1 != number &&
-        getSoundOffOn == true
-      ) {
-        if (separateTimer > 0) {
-          const interval = setTimeout(() => {
-            setSeparateTimer(separateTimer - 1);
-            Tts.speak(`${separateTimer}`);
-          }, 1000);
-          return () => clearInterval(interval);
-        }
-      } else {
-        setSeparateTimer(15);
-      }
-    };
-    TTStimer();
-  }, [separateTimer, restStart]);
+  // useEffect(() => {
+  //   const TTStimer = async () => {
+  //     if (
+  //       restStart &&
+  //       allExercise.length - 1 != number &&
+  //       getSoundOffOn == true
+  //     ) {
+  //       if (separateTimer > 0&&timer==separateTimer) {
+  //         seprateTimerRef.current= setTimeout(() => {
+  //           setSeparateTimer(separateTimer - 1);
+  //           Tts.speak(`${separateTimer}`);
+  //         }, 1000);
+  //         return () => clearInterval(seprateTimerRef.current);
+  //       }
+  //     } else {
+  //       setSeparateTimer(timer);
+  //     }
+  //   };
+  //   TTStimer();
+  // }, [separateTimer, restStart]);
   const dispatch = useDispatch();
   useEffect(() => {
     if (!back) {
@@ -99,6 +100,7 @@ const Exercise = ({navigation, route}: any) => {
             if (timer === 0) {
               if (number == allExercise?.length - 1) return;
               setRestStart(false);
+              Tts.stop();
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
@@ -117,6 +119,7 @@ const Exercise = ({navigation, route}: any) => {
             } else {
               setTimer(timer - 1);
             }
+            getSoundOffOn&&  Tts.speak(`${timer-1}`);
           }, 1000))
         : setTimeout(() => {
             if (pause)
@@ -478,7 +481,12 @@ const Exercise = ({navigation, route}: any) => {
                 marginTop: 20,
               }}>
               <TouchableOpacity
-                onPress={() => setTimer(prevTimer => prevTimer + 30)}
+                onPress={() => {
+                  // Tts.stop();
+                  setTimer(prevTimer => prevTimer + 30)
+                  setSeparateTimer(prevTimer=>prevTimer+30)
+                  // Tts.speak(`${separateTimer}`);
+                }}
                 style={{
                   borderRadius: 20,
                   justifyContent: 'center',
@@ -515,7 +523,7 @@ const Exercise = ({navigation, route}: any) => {
                     ]);
                     postCurrentExerciseAPI(index + 1);
                     setNumber(number + 1);
-                    setTimer(5);
+                    setTimer(15);
                     setPlayW(prevTimer=>0);
                     Tts.stop();
                   }
