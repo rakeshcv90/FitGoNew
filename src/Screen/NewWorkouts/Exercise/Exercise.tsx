@@ -42,11 +42,12 @@ const Exercise = ({navigation, route}: any) => {
   const [exerciseDoneIDs, setExerciseDoneIDs] = useState<Array<any>>([]);
   const [skipCount, setSkipCount] = useState(0);
   const [currentData, setCurrentData] = useState(currentExercise);
-  const {allWorkoutData, getUserDataDetails,getSoundOffOn} = useSelector(
+  const {allWorkoutData, getUserDataDetails, getSoundOffOn} = useSelector(
     (state: any) => state,
   );
   const [separateTimer, setSeparateTimer] = useState(15);
   const [ttsInitialized, setTtsInitialized] = useState(false);
+  const restTimerRef = useRef(null);
   useEffect(() => {
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
@@ -72,7 +73,11 @@ const Exercise = ({navigation, route}: any) => {
   // console.log("currentDatatatata",allExercise.length,exerciseNumber)
   useEffect(() => {
     const TTStimer = async () => {
-      if (restStart && allExercise.length-1!=number&& getSoundOffOn==true) {
+      if (
+        restStart &&
+        allExercise.length - 1 != number &&
+        getSoundOffOn == true
+      ) {
         if (separateTimer > 0) {
           const interval = setTimeout(() => {
             setSeparateTimer(separateTimer - 1);
@@ -90,7 +95,7 @@ const Exercise = ({navigation, route}: any) => {
   useEffect(() => {
     if (!back) {
       restStart
-        ? setTimeout(() => {
+        ? (restTimerRef.current = setTimeout(() => {
             if (timer === 0) {
               if (number == allExercise?.length - 1) return;
               setRestStart(false);
@@ -112,7 +117,7 @@ const Exercise = ({navigation, route}: any) => {
             } else {
               setTimer(timer - 1);
             }
-          }, 1000)
+          }, 1000))
         : setTimeout(() => {
             if (pause)
               setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
@@ -132,6 +137,9 @@ const Exercise = ({navigation, route}: any) => {
     } else {
       console.log('MESSSSS', back, restStart);
     }
+    return () => {
+      clearInterval(restTimerRef.current);
+    };
   }, [playW, pause, currentData, timer, back]);
   useEffect(() => {
     if (exerciseNumber != -1 && number == 0) {
@@ -278,7 +286,7 @@ const Exercise = ({navigation, route}: any) => {
             style={{
               justifyContent: 'center',
               alignItems: 'center',
-              paddingLeft: DeviceWidth/2,
+              paddingLeft: DeviceWidth / 2,
             }}>
             <GradientText
               text={'Hold on!'}
@@ -302,7 +310,7 @@ const Exercise = ({navigation, route}: any) => {
               fontFamily: 'Poppins',
               lineHeight: 30,
               marginTop: 20,
-              color:AppColor.BLACK
+              color: AppColor.BLACK,
             }}>
             {`You have finished `}
             <Text style={{color: AppColor.RED}}>
@@ -470,7 +478,7 @@ const Exercise = ({navigation, route}: any) => {
                 marginTop: 20,
               }}>
               <TouchableOpacity
-                onPress={() => setTimer(timer + 30)}
+                onPress={() => setTimer(prevTimer => prevTimer + 30)}
                 style={{
                   borderRadius: 20,
                   justifyContent: 'center',
@@ -496,7 +504,7 @@ const Exercise = ({navigation, route}: any) => {
                   // navigation.navigate('SaveDayExercise', {data, day});
                   if (number == allExercise?.length - 1) return;
                   else {
-                    setRestStart(false);
+                    setRestStart(prev=>false);
                     const index = allExercise?.findIndex(
                       (item: any) =>
                         item?.exercise_id == currentData?.exercise_id,
@@ -508,8 +516,8 @@ const Exercise = ({navigation, route}: any) => {
                     postCurrentExerciseAPI(index + 1);
                     setNumber(number + 1);
                     setTimer(5);
-                    setPlayW(0);
-                    Tts.stop()
+                    setPlayW(prevTimer=>0);
+                    Tts.stop();
                   }
                 }}
                 style={{
@@ -519,8 +527,7 @@ const Exercise = ({navigation, route}: any) => {
                   backgroundColor:
                     number == allExercise?.length - 1 ? '#d9d9d9' : '#Fff',
                   paddingHorizontal: 20,
-                }}
-                >
+                }}>
                 <Text
                   style={{
                     fontSize: 16,
@@ -581,27 +588,42 @@ const Exercise = ({navigation, route}: any) => {
         </View>
       ) : (
         <>
-          <TouchableOpacity
-            onPress={() => {
-              setBack(true);
-            }}
+          <View
             style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
               marginTop: DeviceHeigth * 0.04,
-
-              // backgroundColor: 'black',
-              width: 40,
             }}>
-            <Icons
-              name={'chevron-left'}
-              size={30}
-              color={
-                number == allExercise?.length
-                  ? AppColor.WHITE
-                  : AppColor.INPUTTEXTCOLOR
-              }
-            />
-          </TouchableOpacity>
-          <View style={{height: DeviceHeigth * 0.5}}>
+            <TouchableOpacity
+              onPress={() => {
+                setBack(true);
+              }}
+              style={{
+                // backgroundColor: 'black',
+                width: 40,
+              }}>
+              <Icons
+                name={'chevron-left'}
+                size={30}
+                color={
+                  number == allExercise?.length
+                    ? AppColor.WHITE
+                    : AppColor.INPUTTEXTCOLOR
+                }
+              />
+            </TouchableOpacity>
+            <View style={{alignSelf: 'flex-end'}}>
+              <FAB icon="format-list-bulleted" />
+              <FAB icon="info-outline" />
+              {/* <FAB icon="music" /> */}
+            </View>
+          </View>
+          <View
+            style={{
+              height: DeviceHeigth * 0.5,
+              marginTop: -DeviceHeigth * 0.04,
+            }}>
             <Text>{trackerData[number]?.id}</Text>
             {/* {defaultPre >= 1 && (
               <View
@@ -652,14 +674,19 @@ const Exercise = ({navigation, route}: any) => {
                 console.log(pause);
                 setPause(true);
               }}
-              style={StyleSheet.absoluteFill}
+              repeat={true}
+              resizeMode="contain"
+              style={{
+                width: DeviceWidth,
+                height: DeviceHeigth * 0.5,
+                alignSelf: 'center',}}
             />
 
-            <View style={{alignSelf: 'flex-end'}}>
+            {/* <View style={{alignSelf: 'flex-end'}}>
               <FAB icon="format-list-bulleted" />
               <FAB icon="info-outline" />
-              {/* <FAB icon="music" /> */}
-            </View>
+               <FAB icon="music" /> 
+            </View> */}
           </View>
           <Text style={styles.head}>Get Ready</Text>
           <View
@@ -703,7 +730,8 @@ const Exercise = ({navigation, route}: any) => {
             next={() => {
               setPause(!pause);
               // setDefaultPre(0);
-              setPlayW(0);
+              setPlayW(prevTimer=>0);
+              setPause(false)
               setTimeout(() => {
                 if (number == allExercise?.length - 1) return;
                 const index = allExercise?.findIndex(
@@ -717,6 +745,8 @@ const Exercise = ({navigation, route}: any) => {
             }}
             back={() => {
               if (number == 0) return;
+              setPlayW(prevTimer=>0);
+              setPause(false)
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
