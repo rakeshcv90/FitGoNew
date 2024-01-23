@@ -1,4 +1,4 @@
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {View, Text, TouchableOpacity, Image, Platform} from 'react-native';
 import React from 'react';
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {StyleSheet} from 'react-native';
@@ -6,7 +6,7 @@ import {AppColor} from './Color';
 import LinearGradient from 'react-native-linear-gradient';
 import {localImage} from './Image';
 
-const Button2 = ({buttonText, onFBPress, onGooglePress}) => {
+const Button2 = ({buttonText, onFBPress, onGooglePress,onApplePress}) => {
   return (
     <View
       style={{
@@ -14,16 +14,32 @@ const Button2 = ({buttonText, onFBPress, onGooglePress}) => {
         justifyContent: 'space-between',
         alignItems: 'center',
       }}>
-      <TouchableOpacity
-        style={[styles.buttonStyle, {marginLeft: DeviceWidth * 0.07}]}
-        activeOpacity={0.5}
-        onPress={onFBPress}>
-        <Image
-          source={localImage.FACEBOOK}
-          style={{width: DeviceWidth * 0.4, height: DeviceHeigth * 0.035}}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
+      {Platform.OS == 'android' ? (
+        <>
+          <TouchableOpacity
+            style={[styles.buttonStyle, {marginLeft: DeviceWidth * 0.07}]}
+            activeOpacity={0.5}
+            onPress={onFBPress}>
+            <Image
+              source={localImage.FACEBOOK}
+              style={{width: DeviceWidth * 0.4, height: DeviceHeigth * 0.035}}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </>
+      ) : (
+        <TouchableOpacity
+          style={[styles.buttonStyle, {marginLeft: DeviceWidth * 0.07}]}
+          activeOpacity={0.5}
+          onPress={onApplePress}>
+          <Image
+            source={localImage.AppleLogo}
+            style={{width: DeviceWidth * 0.4, height: DeviceHeigth * 0.035}}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      )}
+
       <TouchableOpacity
         style={[styles.buttonStyle, {marginRight: DeviceWidth * 0.07}]}
         activeOpacity={0.5}

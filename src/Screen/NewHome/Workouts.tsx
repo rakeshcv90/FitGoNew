@@ -139,7 +139,12 @@ const Workouts = ({navigation}: any) => {
           </Text>
           <GradientButton
             w={DeviceWidth * 0.3}
-            onPress={() => navigation?.navigate('AllWorkouts')}
+            onPress={() =>
+              navigation?.navigate('AllWorkouts', {
+                data: allWorkoutData,
+                type: '',
+              })
+            }
             h={35}
             mV={20}
             text="Start Training"

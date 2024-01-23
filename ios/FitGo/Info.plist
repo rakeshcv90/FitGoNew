@@ -122,13 +122,13 @@
 		<string>Verdana.ttf</string>
 		<string>verdanab.ttf</string>
 	</array>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>audio</string>
-		<string>fetch</string>
-		<string>processing</string>
-		<string>remote-notification</string>
-	</array>
+<!--	<key>UIBackgroundModes</key>-->
+<!--	<array>-->
+<!--		<string>audio</string>-->
+<!--		<string>fetch</string>-->
+<!--		<string>processing</string>-->
+<!--		<string>remote-notification</string>-->
+<!--	</array>-->
 	<key>UILaunchScreen</key>
 	<string>LaunchScreen</string>
 	<key>UILaunchStoryboardName</key>
