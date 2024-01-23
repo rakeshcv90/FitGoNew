@@ -72,7 +72,7 @@ const Exercise = ({navigation, route}: any) => {
   // console.log("currentDatatatata",allExercise.length,exerciseNumber)
   useEffect(() => {
     const TTStimer = async () => {
-      if (restStart && allExercise.length-1!=exerciseNumber && getSoundOffOn==true) {
+      if (restStart && allExercise.length-1!=number&& getSoundOffOn==true) {
         if (separateTimer > 0) {
           const interval = setTimeout(() => {
             setSeparateTimer(separateTimer - 1);
@@ -213,11 +213,11 @@ const Exercise = ({navigation, route}: any) => {
         data: payload,
       });
       if (res.data) {
-        console.log(
-          res.data,
-          'Post________________---------------------',
-          payload,
-        );
+        // console.log(
+        //   res.data,
+        //   'Post________________---------------------',
+        //   payload,
+        // );
         setCurrentData(allExercise[index]);
         setRestStart(true);
         setPlayW(0);
@@ -509,6 +509,7 @@ const Exercise = ({navigation, route}: any) => {
                     setNumber(number + 1);
                     setTimer(5);
                     setPlayW(0);
+                    Tts.stop()
                   }
                 }}
                 style={{
@@ -518,7 +519,8 @@ const Exercise = ({navigation, route}: any) => {
                   backgroundColor:
                     number == allExercise?.length - 1 ? '#d9d9d9' : '#Fff',
                   paddingHorizontal: 20,
-                }}>
+                }}
+                >
                 <Text
                   style={{
                     fontSize: 16,

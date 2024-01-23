@@ -1592,7 +1592,16 @@ const Home = ({navigation}) => {
                yAxisInterval={10}
                fromZero={true}
              />
-           </View>
+           </View>):(
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: DeviceHeigth * 0.2,
+              }}>
+              {emptyComponent()}
+            </View>
+          )} 
 
 
           {/* {weeklyGraph.length != 0 && monthlyGraph.length != 0 ? (
