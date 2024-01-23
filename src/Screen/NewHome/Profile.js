@@ -44,6 +44,11 @@ import {updatePhoto} from '../../Component/ThemeRedux/Actions';
 import {LogOut} from '../../Component/LogOut';
 import {setProfileImg_Data} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
+
+
+
+
+
 import {stack} from 'd3';
 import {ColorShader} from '@shopify/react-native-skia';
 import {navigationRef} from '../../../App';

@@ -43,10 +43,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-
+import {appleAuth} from '@invertase/react-native-apple-authentication';
 import {TextInput} from 'react-native-paper';
 import {navigationRef} from '../../App';
-
 import VersionNumber from 'react-native-version-number';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
@@ -237,7 +236,82 @@ const Login = ({navigation}) => {
       console.log('Facebook Signup Error', error);
     }
   };
+  const onApplePress = async () => {
+    await appleAuth
+      .performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+      })
+      .then(
+        res => {
+        
+          socialAppleLogiIn(res);
+        },
+        error => {
+          console.log("Apple Login Error",error);
+        },
+      );
+  };
+const socialAppleLogiIn=async(res)=>{
+  
+  setForLoading(true);
+  try {
+    const data = await axios(`${NewApi}${NewAppapi.login}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      data: {
+        name: res.fullName.givenName + res.fullName.familyName,
+        email: res.email,
+        signuptype: 'social',
+        socialid: res.user,
+        socialtoken: res.authorizationCode,
+        socialtype: 'Apple',
+        version: appVersion,
+        devicetoken: getFcmToken,
+      },
+    });
+  
+    if (data.data.profile_status == 1) {
+      showMessage({
+        message: data.data.msg,
+        type: 'success',
+        animationDuration: 500,
 
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+      setForLoading(false);
+      getProfileData(data.data.id, data.data.profile_status);
+      getCustomWorkout(data.data.id);
+      Meal_List(data.data.login_token);
+      PurchaseDetails(data.data.id, data.data.login_token);
+    } else if (
+      data.data.msg ==
+      'User does not exist with provided Facebook social credentials'
+    ) {
+      showMessage({
+        message: data.data.msg,
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+      setForLoading(false);
+    } else {
+      setForLoading(false);
+      // setModalVisible(true);
+      dispatch(setCustomWorkoutData([]));
+      getProfileData(data.data.id, data.data.profile_status);
+      Meal_List(data.data.login_token);
+    }
+  } catch (error) {
+    setForLoading(false);
+    console.log('Apple login Error Error', error);
+  }
+
+}
   const loginFunction = async () => {
     setForLoading(true);
     try {
@@ -757,25 +831,25 @@ const Login = ({navigation}) => {
             style={styles.forgotView}>
             <Text style={styles.forgotText}>Forgot Password?</Text>
           </TouchableOpacity>
-          <View style={{marginTop: DeviceHeigth * 0.15}}>
+          <View style={{marginTop: DeviceHeigth * 0.20}}>
             <Button buttonText={'Login'} onPresh={loginFunction} />
           </View>
 
-          <View
+          {/* <View
             style={{
               marginTop: DeviceHeigth * 0.03,
               alignSelf: 'center',
-              // backgroundColor:'red',
+          
               marginLeft: -5,
             }}>
             <Text
               style={[styles.forgotText, {fontSize: 12, fontWeight: '400'}]}>
               Or Continue With
             </Text>
-          </View>
+          </View> */}
         </KeyboardAvoidingView>
         <View style={{marginTop: DeviceHeigth * 0.02, paddingBottom: 10}}>
-          <Button2 onGooglePress={GoogleSignup} onFBPress={FacebookLogin} />
+          {/* <Button2 /> */}
         </View>
       </ScrollView>
       <CompleateProfileModal />

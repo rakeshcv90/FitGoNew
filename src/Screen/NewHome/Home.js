@@ -65,9 +65,7 @@ import {color} from 'd3';
 import {Form} from 'formik';
 import moment from 'moment';
 import Graph from '../Yourself/Graph';
-import {
-  LineChart,
-} from 'react-native-chart-kit';
+import {LineChart} from 'react-native-chart-kit';
 // const zeroData = Array(7)
 //   .fill()
 //   .map((_, index) => {
@@ -111,7 +109,6 @@ const GradientText = ({item}) => {
   );
 };
 const ProgressBar = ({progress, image, text}) => {
-
   return (
     <View
       style={[
@@ -125,7 +122,7 @@ const ProgressBar = ({progress, image, text}) => {
         style={[
           styles.progressIndicator,
           {
-            width: `${progress!=false?progress:10}%`,
+            width: `${progress != false ? progress : 10}%`,
 
             position: 'absolute',
           },
@@ -306,7 +303,7 @@ const Home = ({navigation}) => {
       console.log('UCustomeCorkout details', error);
     }
   };
-  const getGraphData = async (Key) => {
+  const getGraphData = async Key => {
     try {
       const payload = new FormData();
       // payload.append('user_id', 166);
@@ -339,24 +336,23 @@ const Home = ({navigation}) => {
         //     weight: parseInt(res.data?.monthly_data[index]?.total_calories),
         //   });
         // });
-        if(Key==1){
-          zeroData=[]
+        if (Key == 1) {
+          zeroData = [];
           for (i = 0; i < res?.data?.weekly_data?.length; i++) {
             const data1 = res.data.weekly_data[i].total_calories;
             zeroData.push(parseFloat(data1));
           }
           setWeeklyGraph(zeroData);
           console.log('Weeekly====>', zeroData);
-        }
-          else if(Key==2){
-            zeroDataM=[]
-            for (i = 0; i < res?.data?.monthly_data?.length; i++) {
-              const data1 = res.data.monthly_data[i].total_calories;
-              zeroDataM.push(parseFloat(data1));
-            }
-            setMonthlyGraph(zeroDataM);
-            console.log(' monthly Data====>', zeroDataM);
+        } else if (Key == 2) {
+          zeroDataM = [];
+          for (i = 0; i < res?.data?.monthly_data?.length; i++) {
+            const data1 = res.data.monthly_data[i].total_calories;
+            zeroDataM.push(parseFloat(data1));
           }
+          setMonthlyGraph(zeroDataM);
+          console.log(' monthly Data====>', zeroDataM);
+        }
         // setWeeklyGraph(test);
         // setMonthlyGraph(test2);
       } else {
@@ -984,7 +980,7 @@ const Home = ({navigation}) => {
     labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     datasets: [
       {
-        data: value=="Weekly"?[...weeklyGraph]:[...monthlyGraph],
+        data: value == 'Weekly' ? [...weeklyGraph] : [...monthlyGraph],
         color: () => AppColor.RED, // optional
       },
     ],
@@ -1000,7 +996,8 @@ const Home = ({navigation}) => {
     barPercentage: 0,
     useShadowColorFromDataset: false, // optional
   };
-  const specificDataIndex=value=='Weekly'?weeklyGraph?.length-1:monthlyGraph?.length
+  const specificDataIndex =
+    value == 'Weekly' ? weeklyGraph?.length - 1 : monthlyGraph?.length;
   const renderCustomPoint = ({x, y, index, value}) => {
     if (index === specificDataIndex) {
       return (
@@ -1044,7 +1041,7 @@ const Home = ({navigation}) => {
             resizeMode="cover"></Image> */}
           {/* <Text style={styles.monetText}>500</Text> */}
         </View>
-{console.log("User Profile Data",getUserDataDetails)}
+        {console.log('User Profile Data', getUserDataDetails)}
         {Object.keys(getUserDataDetails).length > 0 ? (
           <TouchableOpacity
             style={styles.profileView1}
@@ -1339,14 +1336,9 @@ const Home = ({navigation}) => {
                         marginVertical: 10,
                       }}>
                       <View style={{top: 15}}>
-
-                 
-
-                   
-                       <ProgressBar
-
-                           progress={time.length>0&&time[0].totalRestTime}
-                         //  progress={55}
+                        <ProgressBar
+                          progress={time.length > 0 && time[0].totalRestTime}
+                          //  progress={55}
                           image={localImage.Play}
                           text={
                             totalTime > 60
@@ -1357,8 +1349,8 @@ const Home = ({navigation}) => {
                       </View>
                       <View style={{marginHorizontal: 10, top: 15}}>
                         <ProgressBar
-                       progress={time.length>0&&time[0].totalCalories}
-                       //  progress={33}
+                          progress={time.length > 0 && time[0].totalCalories}
+                          //  progress={33}
                           image={localImage.Step1}
                           text={totalCal + 'Kcal'}
                         />
@@ -1550,11 +1542,11 @@ const Home = ({navigation}) => {
             value={value}
             onChange={item => {
               setValue(item.label);
-              console.log('item===>',item.value)
-              if(item.value==1){
-                getGraphData(1)
-              }else{
-                getGraphData(2)
+              console.log('item===>', item.value);
+              if (item.value == 1) {
+                getGraphData(1);
+              } else {
+                getGraphData(2);
               }
             }}
             renderItem={renderItem}
@@ -1565,51 +1557,33 @@ const Home = ({navigation}) => {
             top: DeviceHeigth * 0.11,
             width: '95%',
             // height: 200,
-            marginBottom: DeviceHeigth * 0.08,
+            marginBottom: DeviceHeigth * 0.1,
             alignSelf: 'center',
             borderRadius: 10,
           }}>
 
-          {weeklyGraph.length != 0 || monthlyGraph.length!=0 ?(
-             <View style={[styles.card, {}]}>
-             <LineChart
-               style={{paddingRight: 40}}
-               data={data}
-               width={DeviceWidth * 0.85}
-               height={DeviceHeigth * 0.25}
-               chartConfig={chartConfig}
-               withInnerLines={false}
-               withOuterLines={true}
-               withDots={true}
-               bezier
-               segments={4}
-               renderDotContent={renderCustomPoint}
-               onDataPointClick={data =>
-                 console.log('PointData=====>', data.value)
-               }
-               withShadow={false}
-               yAxisInterval={10}
-               fromZero={true}
-             />
-           </View>):(
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: DeviceHeigth * 0.2,
-              }}>
-              {emptyComponent()}
+          {weeklyGraph.length != 0 || monthlyGraph.length != 0 ? (
+            <View style={[styles.card, {}]}>
+              <LineChart
+                style={{paddingRight: 40}}
+                data={data}
+                width={DeviceWidth * 0.85}
+                height={DeviceHeigth * 0.25}
+                chartConfig={chartConfig}
+                withInnerLines={false}
+                withOuterLines={true}
+                withDots={true}
+                bezier
+                segments={4}
+                renderDotContent={renderCustomPoint}
+                onDataPointClick={data =>
+                  console.log('PointData=====>', data.value)
+                }
+                withShadow={false}
+                yAxisInterval={10}
+                fromZero={true}
+              />
             </View>
-          )} 
-
-
-          {/* {weeklyGraph.length != 0 && monthlyGraph.length != 0 ? (
-            <Graph
-              resultData={value == 'Weekly' ? weeklyGraph : monthlyGraph}
-              zeroData={value == 'Weekly' ? zeroData : zeroDataM}
-              home={false}
-            />
-
 
           ) : (
             <View
@@ -1620,44 +1594,7 @@ const Home = ({navigation}) => {
               }}>
               {emptyComponent()}
             </View>
-          )} */}
-          {/* <LineChart
-            data={{
-              labels: ['Sun', 'Mon', 'Tue', 'Thur', 'Fri', 'Sat'],
-              datasets: [
-                {
-                  data: [100, 0, 0, 0, 0, 0],
-                },
-              ],
-            }}
-            width={DeviceWidth * 0.95}
-            height={300}
-            yAxisInterval={1}
-            chartConfig={{
-              backgroundColor: 'white',
-              backgroundGradientFrom: 'white',
-              backgroundGradientTo: 'white',
-              decimalPlaces: 1,
-              color: () => {
-                '#efefef';
-              },
-              labelColor: () => {
-                '#efefef';
-              },
-              style: {
-                borderRadius: 20,
-              },
-              propsForDots: {
-                r: '3',
-                strokeWidth: '5',
-                stroke: 'red',
-              },
-            }}
-            bezier
-            style={{
-              borderRadius: 10,
-            }}
-          /> */}
+          )}
         </View>
       </ScrollView>
       {modalVisible ? <UpdateGoalModal /> : null}

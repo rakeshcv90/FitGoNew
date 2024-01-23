@@ -44,6 +44,7 @@ import {TextInput} from 'react-native-paper';
 import {navigationRef} from '../../App';
 import DeviceInfo from 'react-native-device-info';
 import VersionNumber from 'react-native-version-number';
+import {appleAuth} from '@invertase/react-native-apple-authentication';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 const Signup = ({navigation}) => {
@@ -141,8 +142,76 @@ const Signup = ({navigation}) => {
       },
     );
   };
+  const onApplePress = async () => {
+    await appleAuth
+      .performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+      })
+      .then(
+        res => {
+         
+          appleSignUp(res);
+        },
+        error => {
+          console.log('Apple Login Error',error);
+        },
+      );
+  };
+  const appleSignUp = async res => {
+    setForLoading(true);
+    try {
+      const data = await axios(`${NewApi}${NewAppapi.signup}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          name: res.fullName.givenName + res.fullName.familyName,
+          email: res.email,
+          signuptype: 'social',
+          socialid: res.user,
+          socialtoken: res.authorizationCode,
+          socialtype: 'Apple',
+          version: appVersion,
+          devicetoken: getFcmToken,
+        },
+      });
+
+      if (
+        data.data.msg == 'User already exists' &&
+        data.data.profile_compl_status == 0
+      ) {
+        setForLoading(false);
+        console.log('Compleate Profile');
+        dispatch(setUserId(data.data?.id));
+        navigationRef.navigate('Yourself');
+      } else if (
+        data.data.msg == 'User registered via social login' &&
+        data.data.profile_compl_status == 0
+      ) {
+        setForLoading(false);
+        console.log('Compleate Profile1');
+        dispatch(setUserId(data.data?.id));
+        navigationRef.navigate('Yourself');
+      } else if (
+        data.data.msg == 'User already exists' &&
+        data.data.profile_compl_status == 1
+      ) {
+        setForLoading(false);
+        navigationRef.navigate('BottomTab');
+      } else {
+        setForLoading(false);
+        // console.log('user not found');
+        dispatch(setUserId(data.data?.id));
+        navigationRef.navigate('Yourself');
+      }
+    } catch (error) {
+      setForLoading(false);
+      console.log('Apple Signup Error', error?.response);
+    }
+  };
   const handleFormSubmit = async (value, action) => {
-   
     //setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
@@ -163,7 +232,7 @@ const Signup = ({navigation}) => {
           devicetoken: getFcmToken,
         },
       });
-  
+
       if (data.data.status == 0) {
         setForLoading(false);
         showMessage({
@@ -194,7 +263,7 @@ const Signup = ({navigation}) => {
   };
   const socialLogiIn = async (value, token) => {
     // setForLoading(true);
- 
+
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
         method: 'POST',
@@ -208,12 +277,12 @@ const Signup = ({navigation}) => {
           socialid: value.id,
           socialtoken: token,
           socialtype: 'google',
-       //  deviceid: deviceId,
+          //  deviceid: deviceId,
           version: appVersion,
           devicetoken: getFcmToken,
         },
       });
-    console.log("DFDFDFDFDFDFRDF",data.data)
+      console.log('DFDFDFDFDFDFRDF', data.data);
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
@@ -261,12 +330,12 @@ const Signup = ({navigation}) => {
           socialid: value.userID,
           socialtoken: '',
           socialtype: 'facebook',
-         // deviceid: deviceId,
+          // deviceid: deviceId,
           version: appVersion,
           devicetoken: getFcmToken,
         },
       });
-  
+
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
@@ -291,9 +360,9 @@ const Signup = ({navigation}) => {
         navigationRef.navigate('BottomTab');
       } else {
         setForLoading(false);
-             // console.log('user not found');
-             dispatch(setUserId(data.data?.id));
-             navigationRef.navigate('Yourself');
+        // console.log('user not found');
+        dispatch(setUserId(data.data?.id));
+        navigationRef.navigate('Yourself');
       }
     } catch (error) {
       setForLoading(false);
@@ -399,7 +468,7 @@ const Signup = ({navigation}) => {
               type: 'success',
               icon: {icon: 'auto', position: 'left'},
             });
-           
+
             getProfileData(OtpMsg.data?.id);
             dispatch(setUserId(OtpMsg.data?.id));
             setVerifyVisible(false);
@@ -442,7 +511,7 @@ const Signup = ({navigation}) => {
         if (data.data.profile) {
           setForLoading(false);
           dispatch(setUserProfileData(data.data.profile));
-         navigationRef.navigate('Yourself');
+          navigationRef.navigate('Yourself');
         } else {
           setForLoading(false);
           dispatch(setUserProfileData([]));
@@ -984,13 +1053,17 @@ const Signup = ({navigation}) => {
             alignSelf: 'center',
             marginRight: -DeviceWidth * 0.01,
           }}>
-          <Text style={[styles.forgotText, {fontSize: 12, fontWeight: '400'}]}>
+          {/* <Text style={[styles.forgotText, {fontSize: 12, fontWeight: '400'}]}>
             Or Continue With
-          </Text>
+          </Text> */}
         </View>
 
         <View style={{marginTop: DeviceHeigth * 0.02, paddingBottom: 10}}>
-          <Button2 onGooglePress={GoogleSignup} onFBPress={FacebookSignup} />
+          {/* <Button2
+            onGooglePress={GoogleSignup}
+            onApplePress={onApplePress}
+            onFBPress={FacebookSignup}
+          /> */}
         </View>
       </ScrollView>
       {/* <ModalView /> */}

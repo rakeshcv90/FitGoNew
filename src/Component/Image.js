@@ -125,4 +125,5 @@ export const localImage = {
   face0:require('../Icon/Images/NewImage/angry_p.png'),
   PurchaseTick:require('../Icon/Images/NewImage/PurchaseTick.png'),
   Clock1:require('../Icon/Images/NewImage/Clock1.png'),
+  AppleLogo:require('../Icon/Images/NewImage/apple.png'),
 };
