@@ -28,6 +28,7 @@ import RNRestart from 'react-native-restart';
 import { requestPermissionforNotification,RemoteMessage} from './src/Component/Helper/PushNotification';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import TrackPlayer from 'react-native-track-player';
+import crashlytics from '@react-native-firebase/crashlytics';
 import {
   initConnection,
   endConnection,
@@ -35,6 +36,18 @@ import {
 } from 'react-native-iap';
 
 const App = () => {
+  useEffect(() => {
+    // record crashes
+
+    try {
+      crashlytics().setCrashlyticsCollectionEnabled(true);
+      crashlytics().setAttributes({
+        platform:Platform.OS
+      })
+    } catch (error) {
+      crashlytics().recordError(error)
+    }
+  }, []);
   const handleBackPress = () => {
     // Do nothing to stop the hardware back press
     return true;
@@ -55,6 +68,7 @@ const App = () => {
    requestPermissionforNotification(dispatch)
    RemoteMessage()
   }, []);
+  
   const [isLogged, setIsLogged] = useState();
   const [update, setUpdate] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);

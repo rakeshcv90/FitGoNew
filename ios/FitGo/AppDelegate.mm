@@ -2,7 +2,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "RCTAppleHealthKit.h"
-
+#import <Firebase.h>
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
