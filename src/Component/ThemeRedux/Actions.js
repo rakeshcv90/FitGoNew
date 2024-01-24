@@ -173,3 +173,11 @@ export const setProfileImg_Data=data=>{
     payload:data
   }
 }
+export const setStepCounterOnOff=data=>{
+  return{
+    type:types.IS_STEP_COUNTER_ON,
+    payload:data
+  }
+  
+
+}

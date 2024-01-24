@@ -24,6 +24,7 @@ import {
   setHealthData,
   setHomeGraphData,
   setWorkoutTimeCal,
+  setStepCounterOnOff,
 } from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
@@ -175,6 +176,7 @@ const Home = ({navigation}) => {
     ProfilePhoto,
     getUserID,
     getCustttomeTimeCal,
+    getStepCounterOnoff,
   } = useSelector(state => state);
   const [stepGoalProfile, setStepGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
@@ -185,7 +187,6 @@ const Home = ({navigation}) => {
   const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
     getPedomterData[2] ? getPedomterData[2].RCalories : 25,
   );
-
   useEffect(() => {
     setTimeout(() => {
       ActivityPermission();
@@ -213,16 +214,19 @@ const Home = ({navigation}) => {
         );
         if (
           permissionRequestResult === RESULTS.GRANTED &&
-          result.supported == true
+          result.supported == true &&
+          getStepCounterOnoff == 0
         ) {
           startStepCounter();
+          Dispatch(setStepCounterOnOff(1));
+          console.log('started========>');
         } else {
           // Handle the case where the permission request is denied
           await request(PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION);
         }
       } else {
         console.log('ACTIVITY_RECOGNITION permission already granted');
-        startStepCounter();
+        // startStepCounter();
         // Permission was already granted previously
       }
     } else if (Platform.OS == 'ios') {
@@ -343,7 +347,7 @@ const Home = ({navigation}) => {
             zeroData.push(parseFloat(data1));
           }
           setWeeklyGraph(zeroData);
-          console.log('Weeekly====>', zeroData);
+          // console.log('Weeekly====>', zeroData);
         } else if (Key == 2) {
           zeroDataM = [];
           for (i = 0; i < res?.data?.monthly_data?.length; i++) {
@@ -351,7 +355,7 @@ const Home = ({navigation}) => {
             zeroDataM.push(parseFloat(data1));
           }
           setMonthlyGraph(zeroDataM);
-          console.log(' monthly Data====>', zeroDataM);
+          // console.log(' monthly Data====>', zeroDataM);
         }
         // setWeeklyGraph(test);
         // setMonthlyGraph(test2);
@@ -402,8 +406,8 @@ const Home = ({navigation}) => {
         data: {
           user_id: getUserDataDetails?.id,
           steps: getHealthData[0] ? getHealthData[0].Steps : '0',
-          distance: getHealthData[1] ? getHealthData[1].Calories : '0',
-          calories: getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
+          calories: getHealthData[1] ? getHealthData[1].Calories : '0',
+          distance: getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
         },
       });
     } catch (error) {
@@ -453,20 +457,17 @@ const Home = ({navigation}) => {
           indeterminate: false,
         },
         parameters: {
-          delay: 1000,
+          delay: 30000,
         },
       });
     }, 30000); // 30 seconds delay
-
     // function for checking if it is midnight or not
     const isSpecificTime = (hour, minute) => {
       const now = moment.utc(); // Get current time in UTC
-
       // Calculate specific time in UTC by setting hours and minutes
       const specificTimeUTC = now
         .clone()
         .set({hour, minute, second: 0, millisecond: 0});
-
       const istTime = moment.utc().add(5, 'hours').add(30, 'minutes');
       // Compare the times directly to check if they represent the same time in IST
       return istTime.format() == specificTimeUTC.format();
@@ -1041,7 +1042,7 @@ const Home = ({navigation}) => {
             resizeMode="cover"></Image> */}
           {/* <Text style={styles.monetText}>500</Text> */}
         </View>
-        {console.log('User Profile Data', getUserDataDetails)}
+        {/* {console.log('User Profile Data', getUserDataDetails)} */}
         {Object.keys(getUserDataDetails).length > 0 ? (
           <TouchableOpacity
             style={styles.profileView1}
@@ -1542,7 +1543,7 @@ const Home = ({navigation}) => {
             value={value}
             onChange={item => {
               setValue(item.label);
-              console.log('item===>', item.value);
+              // console.log('item===>', item.value);
               if (item.value == 1) {
                 getGraphData(1);
               } else {
@@ -1561,7 +1562,6 @@ const Home = ({navigation}) => {
             alignSelf: 'center',
             borderRadius: 10,
           }}>
-
           {weeklyGraph.length != 0 || monthlyGraph.length != 0 ? (
             <View style={[styles.card, {}]}>
               <LineChart
@@ -1584,7 +1584,6 @@ const Home = ({navigation}) => {
                 fromZero={true}
               />
             </View>
-
           ) : (
             <View
               style={{
