@@ -79,8 +79,8 @@ android {
         applicationId "fitme.health.fitness.homeworkouts.equipment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 6
-        versionName "1.6"
+        versionCode 7
+        versionName "1.7"
         missingDimensionStrategy "store", "play"
     }
      signingConfigs {

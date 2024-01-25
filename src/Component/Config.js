@@ -32,17 +32,16 @@ export const Appapi = {
   getUserData: 'get_user_img.php',
 };
 export const NewAppapi = {
-  login: 'user_login',
-  signup: 'user_registration',
-  forgetPassword: 'sendemail_link',
-  OTPVerification: 'user_verify',
-  UserProfile: 'userprofile',
-  Get_COMPLETE_PROFILE: NewApi + 'goals_levels_focusarea_data',
-  Post_COMPLETE_PROFILE: NewApi + 'user_update_details',
-  Custom_WORKOUT_DATA: NewApi + 'usercustomworkout',
-  Free_WORKOUT_DATA: NewApi + 'userfreecustomworkout',
+  login: 'user_login', //Done App Version
+  signup: 'user_registration',//Done App Version
+  forgetPassword: 'sendemail_link',//Done App Version
+  OTPVerification: 'user_verify',//Done App Version
+  UserProfile: 'userprofile',//Done App Version
+  Get_COMPLETE_PROFILE: NewApi + 'goals_levels_focusarea_data',//Done App Version
+  Post_COMPLETE_PROFILE: NewApi + 'user_update_details',//Done App Version
+  Custom_WORKOUT_DATA: NewApi + 'usercustomworkout',//Done App Version
+  Free_WORKOUT_DATA: NewApi + 'userfreecustomworkout',//Done App Version
   Free_Excercise_Data: NewApi + 'userfreecustomexercise',
-  //Whole_data: NewApi + 'user_update_details',
   ALL_WORKOUTS: NewApi + 'allworkout',
   POPULAR_WORKOUTS: NewApi + 'popularWorkout',
   Meal_Categorie: NewApi + 'get_categorie',
@@ -66,9 +65,9 @@ export const NewAppapi = {
   HOME_GRAPH_DATA: NewApi + 'history',
   Upload_Profile_picture:NewApi+'update_profile_image',
   monthly_history:NewApi+'monthly_history',
-
   DateWiseData:NewApi+'selectDate_exercise',
   Delete_Account:NewApi+'deleteAccount',
-  Custome_Workout_Cal_Time:NewApi+'exercise_total_calo'
+  Custome_Workout_Cal_Time:NewApi+'exercise_total_calo',
+  loginApple:NewApi+'user_login_test',
 
 };

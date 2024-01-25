@@ -27,7 +27,7 @@ import axios from 'axios';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
-import VersionNumber from 'react-native-version-number';
+import VersionNumber, {appVersion} from 'react-native-version-number';
 
 import {
   Setmealdata,
@@ -35,6 +35,7 @@ import {
   setCustomWorkoutData,
   setUserProfileData,
 } from '../../Component/ThemeRedux/Actions';
+import {showMessage} from 'react-native-flash-message';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
@@ -140,6 +141,7 @@ const LoadData = ({navigation}) => {
       );
       payload.append('equipment', mergedObject?.equipment);
       payload.append('workoutarea', mergedObject?.workoutArea?.join(','));
+      payload.append('version', VersionNumber.appVersion);
       if (mindsetConsent == true) {
         payload.append('workoutroutine', mindSetData[0].routine);
         payload.append('sleepduration', mindSetData[1].SleepDuration);
@@ -159,10 +161,20 @@ const LoadData = ({navigation}) => {
         data: payload,
       });
 
-      getUserID != 0 && getProfileData(getUserID);
-      getUserID != 0
-        ? getCustomWorkout(getUserID)
-        : customFreeWorkoutDataApi(deviceID);
+      if (data?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: data?.data?.msg,
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        getUserID != 0 && getProfileData(getUserID);
+        getUserID != 0
+          ? getCustomWorkout(getUserID)
+          : customFreeWorkoutDataApi(deviceID);
+      }
     } catch (error) {
       console.log('Whole Data Error', error);
     }
@@ -177,6 +189,7 @@ const LoadData = ({navigation}) => {
         },
         data: {
           id: user_id,
+          version: VersionNumber.appVersion,
         },
       });
       console.log('Custom Workout123', data.data.workout);
@@ -186,6 +199,16 @@ const LoadData = ({navigation}) => {
         setActiveNext(true);
         // currentWorkoutDataApi(data.data?.workout[0]);
         setLoadData(100);
+      } else if (
+        data?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         dispatch(setCustomWorkoutData([]));
         setActiveNext(true);
@@ -309,12 +332,22 @@ const LoadData = ({navigation}) => {
         },
         data: {
           id: user_id,
+          version: VersionNumber.appVersion,
         },
       });
-      console.log('User Profile Data',data.data);
-      if (data.data.profile) {
+
+      if (data?.data?.profile) {
         dispatch(setUserProfileData(data.data.profile));
-        
+      } else if (
+        data?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: data?.data?.msg,
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         dispatch(setUserProfileData([]));
       }
@@ -435,7 +468,7 @@ const LoadData = ({navigation}) => {
 
       <View style={styles.buttons}>
         <View></View>
-     
+
         {activeNext && (
           <TouchableOpacity
             onPress={() => {

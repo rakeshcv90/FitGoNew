@@ -96,7 +96,7 @@ const ProductsList = ({route}) => {
     const filteredItems = productList.filter((item) =>
       item.product_title.toLowerCase().includes(test.toLowerCase())
     );
-  
+
    setFilteredCategories(filteredItems);
   };
   return (
