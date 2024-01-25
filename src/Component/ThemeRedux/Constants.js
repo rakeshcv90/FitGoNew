@@ -28,6 +28,6 @@ export default {
   BMI:'BMI',
   HOME_GRAPH_DATA:'HOME_GRAPH_DATA',
   Profile_imgData:'Profile_imgData',
-  Custome_Time_Cal:'Custome_Time_Cal'
-
+  Custome_Time_Cal:'Custome_Time_Cal',
+  IS_STEP_COUNTER_ON:'IS_STEP_COUNTER_ON'
 };
