@@ -29,9 +29,10 @@ const Store = ({navigation}) => {
   const {getUserDataDetails, getStoreData} = useSelector(state => state);
   const [searchText, setsearchText] = useState('');
   const [forLoading, setForLoading] = useState(false);
-  const [filteredCategories, setFilteredCategories] = useState([]);
-
   const [category, setcategory] = useState([]);
+  const [filteredCategories, setFilteredCategories] = useState(getStoreData);
+
+
 
   useFocusEffect(
     React.useCallback(() => {
@@ -45,6 +46,7 @@ const Store = ({navigation}) => {
     );
 
     setFilteredCategories(filteredItems);
+    //filteredItems.clear()
   };
   const data = [
     require('../../Icon/Images/product_1631791758.jpg'),
@@ -55,34 +57,30 @@ const Store = ({navigation}) => {
     require('../../Icon/Images/recipe_1519697004.jpg'),
     require('../../Icon/Images/product_1631791758.jpg'),
   ];
-
+console.log("ggggg",NewAppapi.Get_Product_Catogery)
   const getCaterogy = async () => {
     setForLoading(true);
-    try {
-      const favDiet = await axios.post(
+    // try {
+      const favDiet = await axios.get(
         `${NewAppapi.Get_Product_Catogery}?token=${getUserDataDetails.login_token}`,
       );
 
       if (favDiet.data.status != 'Invalid token') {
-        setForLoading(false);
-        setcategory(favDiet.data.data);
-        setFilteredCategories(favDiet.data.data);
-      } else {
-        showMessage({
-          message: favDiet.data.status + ' Login Again',
-          floating: true,
-          duration: 1000,
-          type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
-        });
         setcategory([]);
         setForLoading(false);
+       
+      } else {
+        setcategory(favDiet.data.data);
+        // setFilteredCategories(favDiet.data.data);
+    
+        setForLoading(false);
       }
-    } catch (error) {
-      setcategory([]);
-      console.log('Product Category Error', error);
-      setForLoading(false);
-    }
+   // } 
+    // catch (error) {
+    //   setcategory([]);
+    //   console.log('Product Category Error', error);
+    //   setForLoading(false);
+    // }
   };
   const emptyComponent = () => {
     return (
@@ -211,7 +209,7 @@ const Store = ({navigation}) => {
         </Text>
 
         <FlatList
-          data={category}
+          data={filteredCategories}
           numColumns={3}
           showsVerticalScrollIndicator={false}
           keyExtractor={item => item.id}

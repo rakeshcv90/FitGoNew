@@ -37,6 +37,7 @@ import {
   Setmealdata,
   setCustomWorkoutData,
   setPurchaseHistory,
+  setUserId,
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
@@ -47,6 +48,7 @@ import {appleAuth} from '@invertase/react-native-apple-authentication';
 import {TextInput} from 'react-native-paper';
 import {navigationRef} from '../../App';
 import VersionNumber from 'react-native-version-number';
+import {Platform} from 'react-native';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -59,8 +61,8 @@ const Login = ({navigation}) => {
   const dispatch = useDispatch();
   const [showLogin, setShowLogin] = useState(1);
   const [showPassword, setShowPassword] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
   const [forLoading, setForLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [IsVerifyVisible, setVerifyVisible] = useState(false);
@@ -139,6 +141,17 @@ const Login = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         setForLoading(false);
+      } else if (
+        data.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        setForLoading(false);
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         // showMessage({
         //   message: data.data.msg,
@@ -224,6 +237,17 @@ const Login = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         setForLoading(false);
+      } else if (
+        data.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        setForLoading(false);
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         setForLoading(false);
         // setModalVisible(true);
@@ -244,75 +268,15 @@ const Login = ({navigation}) => {
       })
       .then(
         res => {
-        
+          //console.log("Apple Data",res)
           socialAppleLogiIn(res);
         },
         error => {
-          console.log("Apple Login Error",error);
+          console.log('Apple Login Error', error);
         },
       );
   };
-const socialAppleLogiIn=async(res)=>{
-  
-  setForLoading(true);
-  try {
-    const data = await axios(`${NewApi}${NewAppapi.login}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      data: {
-        name: res.fullName.givenName + res.fullName.familyName,
-        email: res.email,
-        signuptype: 'social',
-        socialid: res.user,
-        socialtoken: res.authorizationCode,
-        socialtype: 'Apple',
-        version: appVersion,
-        devicetoken: getFcmToken,
-      },
-    });
-  
-    if (data.data.profile_status == 1) {
-      showMessage({
-        message: data.data.msg,
-        type: 'success',
-        animationDuration: 500,
-
-        floating: true,
-        icon: {icon: 'auto', position: 'left'},
-      });
-      setForLoading(false);
-      getProfileData(data.data.id, data.data.profile_status);
-      getCustomWorkout(data.data.id);
-      Meal_List(data.data.login_token);
-      PurchaseDetails(data.data.id, data.data.login_token);
-    } else if (
-      data.data.msg ==
-      'User does not exist with provided Facebook social credentials'
-    ) {
-      showMessage({
-        message: data.data.msg,
-        type: 'danger',
-        animationDuration: 500,
-        floating: true,
-        icon: {icon: 'auto', position: 'left'},
-      });
-      setForLoading(false);
-    } else {
-      setForLoading(false);
-      // setModalVisible(true);
-      dispatch(setCustomWorkoutData([]));
-      getProfileData(data.data.id, data.data.profile_status);
-      Meal_List(data.data.login_token);
-    }
-  } catch (error) {
-    setForLoading(false);
-    console.log('Apple login Error Error', error);
-  }
-
-}
-  const loginFunction = async () => {
+  const socialAppleLogiIn = async res => {
     setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.login}`, {
@@ -321,57 +285,162 @@ const socialAppleLogiIn=async(res)=>{
           'Content-Type': 'multipart/form-data',
         },
         data: {
-          email: email,
-          password: password,
-          version: appVersion,
+          name: res.fullName.givenName + res.fullName.familyName,
+          email: res.email,
+          signuptype: 'social',
+          socialid: res.user,
+          socialtoken: res.authorizationCode,
+          socialtype: 'Apple',
+          version: VersionNumber.appVersion,
           devicetoken: getFcmToken,
         },
       });
-      if (
-        data.data.msg == 'Login successful' &&
-        data.data.profile_status == 1
-      ) {
+      console.log('Apple Data Login', data.data);
+      setForLoading(false);
+      if (data.data?.profile_status == 1) {
         showMessage({
           message: data.data.msg,
-          floating: true,
-          duration: 500,
           type: 'success',
+          animationDuration: 500,
+
+          floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-        setEmail('');
-        setPassword('');
+        setForLoading(false);
+        dispatch(setUserId(data.data?.id));
         getProfileData(data.data.id, data.data.profile_status);
         getCustomWorkout(data.data.id);
         Meal_List(data.data.login_token);
         PurchaseDetails(data.data.id, data.data.login_token);
       } else if (
-        data.data.msg == 'Login successful' &&
-        data.data.profile_status == 0
+        data.data?.msg ==
+        'User does not exist with provided Apple social credentials'
       ) {
         setForLoading(false);
-        setEmail('');
-        setPassword('');
+        dispatch(setUserId(data.data?.id));
         getProfileData(data.data.id, data.data.profile_status);
         Meal_List(data.data.login_token);
-        dispatch(setCustomWorkoutData([]));
-        PurchaseDetails(data.data.id, data.data.login_token);
+      } else if (
+        data.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        setForLoading(false);
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
+        setForLoading(false);
+
+        getProfileData(data.data.id, data.data.profile_status);
+        Meal_List(data.data.login_token);
+      }
+    } catch (error) {
+      setForLoading(false);
+      console.log('Apple login Error Error', error);
+    }
+  };
+  const loginFunction = async () => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (email == null) {
+      showMessage({
+        message: 'Please Enter Email id',
+        floating: true,
+        duration: 500,
+        type: 'danger',
+        icon: {icon: 'auto', position: 'left'},
+      });
+    } else if (reg.test(email) === false) {
+      showMessage({
+        message: 'Please Enter Valid Emaid Id',
+        floating: true,
+        duration: 500,
+        type: 'danger',
+        icon: {icon: 'auto', position: 'left'},
+      });
+    } else if (password == null) {
+      showMessage({
+        message: 'Please Enter Password',
+        floating: true,
+        duration: 500,
+        type: 'danger',
+        icon: {icon: 'auto', position: 'left'},
+      });
+    } else {
+      setForLoading(true);
+      try {
+        const data = await axios(`${NewApi}${NewAppapi.login}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          data: {
+            email: email,
+            password: password,
+            version: appVersion,
+            devicetoken: getFcmToken,
+          },
+        });
+
+        if (
+          data?.data?.msg == 'Login successful' &&
+          data?.data.profile_status == 1
+        ) {
+          showMessage({
+            message: data.data.msg,
+            floating: true,
+            duration: 500,
+            type: 'success',
+            icon: {icon: 'auto', position: 'left'},
+          });
+          setEmail('');
+          setPassword('');
+          getProfileData(data.data.id, data.data.profile_status);
+          getCustomWorkout(data.data.id);
+          Meal_List(data.data.login_token);
+          PurchaseDetails(data.data.id, data.data.login_token);
+        } else if (
+          data.data.msg == 'Login successful' &&
+          data.data.profile_status == 0
+        ) {
+          setForLoading(false);
+          setEmail('');
+          setPassword('');
+          getProfileData(data.data.id, data.data.profile_status);
+          Meal_List(data.data.login_token);
+          dispatch(setCustomWorkoutData([]));
+          PurchaseDetails(data.data.id, data.data.login_token);
+        } else if (
+          data?.data?.msg == 'Please update the app to the latest version.'
+        ) {
+          setForLoading(false);
+          showMessage({
+            message: data.data.msg,
+            type: 'danger',
+            animationDuration: 500,
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
+        } else {
+          setForLoading(false);
+          setEmail('');
+          setPassword('');
+          showMessage({
+            message: data.data.msg,
+            floating: true,
+            duration: 500,
+            type: 'danger',
+            icon: {icon: 'auto', position: 'left'},
+          });
+        }
+      } catch (error) {
+        console.log('Form  Login Error', error);
         setForLoading(false);
         setEmail('');
         setPassword('');
-        showMessage({
-          message: data.data.msg,
-          floating: true,
-          duration: 500,
-          type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
-        });
       }
-    } catch (error) {
-      console.log('Form  Login Error', error);
-      setForLoading(false);
-      setEmail('');
-      setPassword('');
     }
   };
   const getProfileData = async (user_id, status) => {
@@ -383,15 +452,27 @@ const socialAppleLogiIn=async(res)=>{
         },
         data: {
           id: user_id,
+          version: appVersion,
         },
       });
 
-      if (data.data.profile) {
+      setForLoading(false);
+      if (data?.data?.profile) {
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));
         status == 1
           ? navigation.navigate('BottomTab')
           : navigationRef.navigate('Yourself');
+      } else if (
+        data?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: data?.data?.msg,
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         setForLoading(false);
         dispatch(setUserProfileData([]));
@@ -490,13 +571,23 @@ const socialAppleLogiIn=async(res)=>{
         },
         data: {
           id: user_id,
+          version: appVersion,
         },
       });
 
-      // console.log('Custom Workout', data.data);
       if (data.data.workout) {
         setForLoading(false);
         dispatch(setCustomWorkoutData(data?.data));
+      } else if (
+        data?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         setForLoading(false);
         dispatch(setCustomWorkoutData([]));
@@ -566,14 +657,29 @@ const socialAppleLogiIn=async(res)=>{
           },
           data: {
             email: value.email,
+            version: appVersion,
           },
         });
         setForLoading(false);
-        if (data.data[0].msg == 'Mail sent') {
+        console.log('Forgot Password cdsds', data.data);
+        if (data?.data[0]?.msg == 'Mail sent') {
           setForLoading(false);
           showMessage({
             message: 'Reset Password link sent!',
             type: 'success',
+            animationDuration: 500,
+
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
+          setVerifyVisible(false);
+        } else if (
+          data.data.msg == 'Please update the app to the latest version.'
+        ) {
+          setForLoading(false);
+          showMessage({
+            message: data.data.msg,
+            type: 'danger',
             animationDuration: 500,
 
             floating: true,
@@ -831,25 +937,30 @@ const socialAppleLogiIn=async(res)=>{
             style={styles.forgotView}>
             <Text style={styles.forgotText}>Forgot Password?</Text>
           </TouchableOpacity>
-          <View style={{marginTop: DeviceHeigth * 0.20}}>
+          <View style={{marginTop: DeviceHeigth * 0.2}}>
             <Button buttonText={'Login'} onPresh={loginFunction} />
           </View>
 
-          {/* <View
+          <View
             style={{
               marginTop: DeviceHeigth * 0.03,
               alignSelf: 'center',
-          
+
               marginLeft: -5,
             }}>
             <Text
               style={[styles.forgotText, {fontSize: 12, fontWeight: '400'}]}>
               Or Continue With
             </Text>
-          </View> */}
+          </View>
         </KeyboardAvoidingView>
         <View style={{marginTop: DeviceHeigth * 0.02, paddingBottom: 10}}>
-          {/* <Button2 /> */}
+          {Platform.OS == 'android' && (
+            <Button2 onGooglePress={GoogleSignup} onFBPress={FacebookLogin} />
+          )}
+          {Platform.OS == 'ios' && (
+            <Button2 onGooglePress={GoogleSignup} onApplePress={onApplePress} />
+          )}
         </View>
       </ScrollView>
       <CompleateProfileModal />

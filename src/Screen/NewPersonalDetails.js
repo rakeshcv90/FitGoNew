@@ -47,7 +47,7 @@ const NewPersonalDetails = ({route, navigation}) => {
   const [isEditible, setEditable] = useState(false);
   const {getUserDataDetails, completeProfileData} = useSelector(state => state);
   const [isFocus, setIsFocus] = useState(false);
-
+console.log("GZFSDGSDGDFGDFG",completeProfileData.goal)
   useEffect(() => {
     ProfileDataAPI();
   }, []);
@@ -58,6 +58,7 @@ const NewPersonalDetails = ({route, navigation}) => {
   const maleGole = [
     {label: 'Weight Loss', value: 3},
     {label: 'Build Muscle', value: 6},
+    {label: 'Strength', value:13},
   ];
   const fmaleGole = [
     {label: 'Weight Loss', value: 1},
