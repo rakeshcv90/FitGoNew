@@ -33,7 +33,7 @@ const systemMessage = {
 const AITrainer = ({navigation}) => {
   const dispatch = useDispatch();
   const {getAIMessageHistory} = useSelector(state => state);
-  const [searchText, setSearchText] = useState();
+  const [searchText, setSearchText] = useState('');
   const flatListRef = useRef(null);
   const [senderMessage, setsenderMessage] = useState([
     {
@@ -50,7 +50,7 @@ const AITrainer = ({navigation}) => {
     if (searchText.trim().length <= 0) {
       showMessage({
         message: 'Please Enter Message',
-        type: 'error',
+        type: 'danger',
         animationDuration: 500,
 
         floating: true,
@@ -58,10 +58,10 @@ const AITrainer = ({navigation}) => {
       });
       return false;
     } else if (searchText.trim().length < 3) {
-      msgProvider.toast('Please enter Proper Message', 'center');
+   
       showMessage({
         message: 'Please enter Proper Message',
-        type: 'error',
+        type: 'danger',
         animationDuration: 500,
         floating: true,
         icon: {icon: 'auto', position: 'left'},

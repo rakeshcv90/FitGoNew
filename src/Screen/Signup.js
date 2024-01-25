@@ -150,11 +150,10 @@ const Signup = ({navigation}) => {
       })
       .then(
         res => {
-         
           appleSignUp(res);
         },
         error => {
-          console.log('Apple Login Error',error);
+          console.log('Apple Login Error', error);
         },
       );
   };
@@ -200,6 +199,17 @@ const Signup = ({navigation}) => {
       ) {
         setForLoading(false);
         navigationRef.navigate('BottomTab');
+      } else if (
+        data.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        setForLoading(false);
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         setForLoading(false);
         // console.log('user not found');
@@ -212,7 +222,7 @@ const Signup = ({navigation}) => {
     }
   };
   const handleFormSubmit = async (value, action) => {
-    //setForLoading(true);
+    setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
         method: 'POST',
@@ -233,6 +243,7 @@ const Signup = ({navigation}) => {
         },
       });
 
+      setForLoading(false);
       if (data.data.status == 0) {
         setForLoading(false);
         showMessage({
@@ -244,7 +255,18 @@ const Signup = ({navigation}) => {
         });
         setVerifyVisible(true);
         setEmailSent(data.data.email);
-        //action.resetForm();
+        action.resetForm();
+      } else if (
+        data.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        setForLoading(false);
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         setForLoading(false);
         showMessage({
@@ -262,8 +284,7 @@ const Signup = ({navigation}) => {
     }
   };
   const socialLogiIn = async (value, token) => {
-    // setForLoading(true);
-
+    setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
         method: 'POST',
@@ -282,7 +303,7 @@ const Signup = ({navigation}) => {
           devicetoken: getFcmToken,
         },
       });
-      console.log('DFDFDFDFDFDFRDF', data.data);
+
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
@@ -304,6 +325,17 @@ const Signup = ({navigation}) => {
         setForLoading(false);
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('BottomTab');
+      } else if (
+        data.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        setForLoading(false);
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         setForLoading(false);
         // console.log('user not found');
@@ -358,6 +390,17 @@ const Signup = ({navigation}) => {
       ) {
         setForLoading(false);
         navigationRef.navigate('BottomTab');
+      } else if (
+        data.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        setForLoading(false);
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         setForLoading(false);
         // console.log('user not found');
@@ -505,6 +548,7 @@ const Signup = ({navigation}) => {
           },
           data: {
             id: user_id,
+            version: appVersion,
           },
         });
 
@@ -512,6 +556,16 @@ const Signup = ({navigation}) => {
           setForLoading(false);
           dispatch(setUserProfileData(data.data.profile));
           navigationRef.navigate('Yourself');
+        } else if (
+          data?.data?.msg == 'Please update the app to the latest version.'
+        ) {
+          showMessage({
+            message: data?.data?.msg,
+            floating: true,
+            duration: 500,
+            type: 'danger',
+            icon: {icon: 'auto', position: 'left'},
+          });
         } else {
           setForLoading(false);
           dispatch(setUserProfileData([]));
@@ -1053,17 +1107,17 @@ const Signup = ({navigation}) => {
             alignSelf: 'center',
             marginRight: -DeviceWidth * 0.01,
           }}>
-          {/* <Text style={[styles.forgotText, {fontSize: 12, fontWeight: '400'}]}>
+          <Text style={[styles.forgotText, {fontSize: 12, fontWeight: '400'}]}>
             Or Continue With
-          </Text> */}
+          </Text>
         </View>
 
         <View style={{marginTop: DeviceHeigth * 0.02, paddingBottom: 10}}>
-          {/* <Button2
+          <Button2
             onGooglePress={GoogleSignup}
             onApplePress={onApplePress}
             onFBPress={FacebookSignup}
-          /> */}
+          />
         </View>
       </ScrollView>
       {/* <ModalView /> */}

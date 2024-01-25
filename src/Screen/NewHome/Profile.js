@@ -29,7 +29,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Switch} from 'react-native-switch';
 import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
+import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {
   setLogout,
   setSoundOnOff,
@@ -45,18 +45,15 @@ import {LogOut} from '../../Component/LogOut';
 import {setProfileImg_Data} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 
-
-
-
-
 import {stack} from 'd3';
 import {ColorShader} from '@shopify/react-native-skia';
 import {navigationRef} from '../../../App';
 import {BlurView} from '@react-native-community/blur';
+import Reminder from '../../Component/Reminder';
+import ActivityLoader from '../../Component/ActivityLoader';
 const Profile = () => {
-  const {getUserDataDetails, ProfilePhoto, getSoundOffOn} = useSelector(
-    state => state,
-  );
+  const {getUserDataDetails, ProfilePhoto, getSoundOffOn, allWorkoutData} =
+    useSelector(state => state);
   const dispatch = useDispatch();
   const [UpdateScreenVisibility, setUpadteScreenVisibilty] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
@@ -64,20 +61,29 @@ const Profile = () => {
   const [PhotoUploaded, setPhotoUploaded] = useState(true);
   const navigation = useNavigation();
   const [isEnabled, setIsEnabled] = useState(false);
+  const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
+  const [visible, setVisible] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+  const toggleSwitch3 = () => {
+    !isAlarmEnabled && setVisible(true);
+    setAlarmIsEnabled(previousState => !previousState);
+  };
   const [modalVisible, setModalVisible] = useState(false);
   const DeleteAccount = () => {
-    const {
-      getUserDataDetails,
-    } = useSelector(state => state);
-    const Delete=async()=>{
+    const [forLoading, setForLoading] = useState(false);
+    const {getUserDataDetails} = useSelector(state => state);
+    const Delete = async () => {
+      setForLoading(true);
       try {
         const res = await axios({
           url: `${NewAppapi.Delete_Account}/${getUserDataDetails?.id}`,
-          method: 'get'
+          method: 'get',
         });
-        if(res.data){
+        if (res.data) {
           // console.log("Delete Account",res.data)
+          setForLoading(false);
+          setModalVisible(false);
           showMessage({
             message: 'Your account deleted successfully',
             statusBarHeight: getStatusBarHeight(),
@@ -89,7 +95,9 @@ const Profile = () => {
           LogOut(dispatch);
         }
       } catch (error) {
-        console.log("Delete Account Api Error",error)
+        console.log('Delete Account Api Error', error);
+        setForLoading(false);
+        setModalVisible(false);
         showMessage({
           message: 'Something went wrong',
           statusBarHeight: getStatusBarHeight(),
@@ -98,21 +106,24 @@ const Profile = () => {
           animationDuration: 750,
           icon: {icon: 'none', position: 'left'},
         });
-        setModalVisible(false)
+        setModalVisible(false);
       }
-    }
+    };
     return (
       <Modal
         animationType="fade"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={()=>{setModalVisible(false)}}>
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}>
         <BlurView
           style={styles.modalContainer}
           blurType="light"
           blurAmount={1}
           reducedTransparencyFallbackColor="white"
         />
+        {forLoading ? <ActivityLoader /> : ''}
         <View
           style={[styles.modalContent, {backgroundColor: AppColor.BACKGROUNG}]}>
           <View
@@ -124,8 +135,8 @@ const Profile = () => {
             <Text
               style={{
                 fontFamily: 'Poppins',
-                fontWeight: '500',
-                fontSize: 16,
+                fontWeight: '700',
+                fontSize: 17,
                 color: AppColor.BoldText,
               }}>
               Do you want to Delete your Account ?
@@ -139,12 +150,15 @@ const Profile = () => {
               alignItems: 'center',
               marginTop: 30,
             }}>
-            <TouchableOpacity style={{marginRight: 20}} onPress={()=>setModalVisible(false)}>
+            <TouchableOpacity
+              style={{marginRight: 20}}
+              onPress={() => setModalVisible(false)}>
               <Text
                 style={{
                   color: AppColor.BoldText,
-                  fontFamily: 'Poppins-SemiBold',
+                  fontFamily: 'Poppins',
                   fontSize: 14,
+                  fontWeight: '500',
                 }}>
                 Cancel
               </Text>
@@ -155,18 +169,21 @@ const Profile = () => {
                 borderRadius: 20,
                 justifyContent: 'center',
                 alignItems: 'center',
-              }} onPress={()=>{setModalVisible(false)
-                Delete()
-                }}>
+                paddingLeft: 5,
+                paddingRight: 5,
+              }}
+              onPress={() => {
+                Delete();
+              }}>
               <Text
                 style={{
                   padding: 5,
                   textAlign: 'center',
                   color: AppColor.WHITE,
                   fontSize: 12,
-                  fontFamily: 'poppins-SemiBold',
-                }} 
-                >
+                  fontWeight: '500',
+                  fontFamily: 'Poppins',
+                }}>
                 Confirm
               </Text>
             </TouchableOpacity>
@@ -306,13 +323,24 @@ const Profile = () => {
           },
           data: {
             id: user_id,
+            version: VersionNumber.appVersion
           },
         });
 
-        if (data.data.profile) {
+        if (data?.data?.profile) {
           dispatch(setUserProfileData(data.data.profile));
-          console.log('Profile Data====---->', data.data);
-        } else {
+         
+        } else if (
+          data?.data?.msg == 'Please update the app to the latest version.'
+        ) {
+          showMessage({
+            message: data?.data?.msg,
+            floating: true,
+            duration: 500,
+            type: 'danger',
+            icon: {icon: 'auto', position: 'left'},
+          });
+        }else {
           dispatch(setUserProfileData([]));
         }
       } catch (error) {
@@ -455,7 +483,30 @@ const Profile = () => {
               styles.modalContainer,
               {backgroundColor: 'transparent', flex: 1},
             ]}>
-            <View style={[styles.modalContent, {backgroundColor: '#fff'}]}>
+            <View
+              style={{
+                height: DeviceHeigth * 0.4,
+                width: '100%',
+                backgroundColor: 'white',
+                position: 'absolute',
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+                alignItems: 'center',
+                borderWidth: 1,
+                borderColor: 'lightgray',
+                bottom: 0,
+                ...Platform.select({
+                  ios: {
+                    shadowColor: '#000000',
+                    shadowOffset: {width: 0, height: 2},
+                    shadowOpacity: 0.3,
+                    shadowRadius: 4,
+                  },
+                  android: {
+                    elevation: 4,
+                  },
+                }),
+              }}>
               <View
                 style={[
                   styles.closeButton,
@@ -474,6 +525,7 @@ const Profile = () => {
                 </TouchableOpacity>
               </View>
               <Image
+                defaultSource={localImage.avt}
                 source={{
                   uri:
                     userAvatar != null
@@ -639,6 +691,7 @@ const Profile = () => {
           </View>
           <View style={styles.profileView}>
             <Image
+            defaultSource={localImage.avt}
               source={
                 getUserDataDetails.image_path == null
                   ? localImage.avt
@@ -704,7 +757,9 @@ const Profile = () => {
         ]}>
         {FirstView.map((value, index) => (
           <TouchableOpacity
-            activeOpacity={value.id == 4 || value.id == 5 ? 1 : 0.5}
+            disabled={
+              value.id == 4 || value.id == 5 || value.id == 6 ? true : false
+            }
             key={index}
             style={styles.SingleButton}
             navigation
@@ -714,6 +769,12 @@ const Profile = () => {
                 navigation.navigate('NewPersonalDetails');
               } else if (value.text1 == 'Contact Us') {
                 openMailApp();
+              } else if (value.text1 == 'My Favorites') {
+                navigation?.navigate('AllWorkouts', {
+                  data: allWorkoutData,
+                  type: '',
+                  fav: true,
+                });
               } else {
                 showMessage({
                   message: 'Work In Progress',
@@ -728,7 +789,7 @@ const Profile = () => {
             {value.icon1}
             <View style={styles.View1}>
               <Text style={styles.nameText}>{value.text1}</Text>
-              {value.id == 4 || value.id == 5 ? (
+              {value.id == 4 ? (
                 <Switch
                   value={isEnabled}
                   onValueChange={() => toggleSwitch()}
@@ -792,6 +853,29 @@ const Profile = () => {
                     outerCircleStyle={{color: AppColor.RED}}
                   />
                 </View>
+              ) : value.id == 5 ? (
+                <View>
+                  <Switch
+                    onValueChange={toggleSwitch3}
+                    value={isAlarmEnabled}
+                    disabled={false}
+                    circleSize={19}
+                    barHeight={21}
+                    circleBorderWidth={0.1}
+                    renderActiveText={false}
+                    renderInActiveText={false}
+                    switchLeftPx={2}
+                    switchRightPx={2}
+                    switchWidthMultiplier={2.2}
+                    switchBorderRadius={30}
+                    backgroundActive={'#FFE3E3'}
+                    backgroundInactive={AppColor.GRAY2}
+                    circleActiveColor={AppColor.RED}
+                    circleInActiveColor={AppColor.WHITE}
+                    changeValueImmediately={true}
+                    outerCircleStyle={{color: AppColor.RED}}
+                  />
+                </View>
               ) : (
                 <Icons
                   name="chevron-right"
@@ -819,10 +903,13 @@ const Profile = () => {
                     Linking.openURL(
                       'https://apps.apple.com/us/app/fitme-health-and-fitness-app/id6470018217',
                     );
-                  } 
-                }
-                else if(value.text1=='Delete Account'){
-                  setModalVisible(true)
+                  } else {
+                    Linking.openURL(
+                      'https://play.google.com/store/apps/details?id=fitme.health.fitness.homeworkouts.equipment&hl=en-IN&pli=1',
+                    );
+                  }
+                } else if (value.text1 == 'Delete Account') {
+                  setModalVisible(true);
                 }
               }}>
               {value.icon1}
@@ -832,10 +919,14 @@ const Profile = () => {
             </TouchableOpacity>
           ))}
         </View>
-      {modalVisible? <DeleteAccount />:null}
+        {modalVisible ? <DeleteAccount /> : null}
+        <Reminder
+          visible={visible}
+          setVisible={setVisible}
+          setAlarmIsEnabled={setAlarmIsEnabled}
+        />
       </ScrollView>
       {UpdateScreenVisibility ? <UpdateProfileModal /> : null}
-    
     </SafeAreaView>
   );
 };
@@ -978,30 +1069,52 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   modalContent: {
-    height: DeviceHeigth / 2.5,
-    width: '95%',
+    height: DeviceHeigth * 0.4,
+    width: '100%',
     backgroundColor: 'white',
-
-    borderRadius: 20,
+    position: 'absolute',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'lightgray',
-
+    bottom: 0,
     ...Platform.select({
       ios: {
         shadowColor: '#000000',
-        shadowOffset: {width: 2, height: 2},
+        shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.3,
         shadowRadius: 4,
       },
       android: {
-        elevation: 20,
-        shadowColor: '#000000',
-        shadowOffset: {width: 2, height: 2},
-        shadowOpacity: 0.7,
-        shadowRadius: 10,
+        elevation: 4,
       },
     }),
+    // height: DeviceHeigth / 2.5,
+    // width: '95%',
+    // backgroundColor: 'white',
+    // position: 'absolute',
+    // borderRadius: 20,
+    // alignItems: 'center',
+    // borderWidth: 1,
+    // bottom: 0,
+    // borderColor: 'lightgray',
+
+    // ...Platform.select({
+    //   ios: {
+    //     shadowColor: '#000000',
+    //     shadowOffset: {width: 2, height: 2},
+    //     shadowOpacity: 0.3,
+    //     shadowRadius: 4,
+    //   },
+    //   android: {
+    //     elevation: 20,
+    //     shadowColor: '#000000',
+    //     shadowOffset: {width: 2, height: 2},
+    //     shadowOpacity: 0.7,
+    //     shadowRadius: 10,
+    //   },
+    // }),
   },
   Icon: {
     width: 120,

@@ -143,6 +143,7 @@ const Workouts = ({navigation}: any) => {
               navigation?.navigate('AllWorkouts', {
                 data: allWorkoutData,
                 type: '',
+                fav: false,
               })
             }
             h={35}
@@ -161,10 +162,10 @@ const Workouts = ({navigation}: any) => {
         <Image
           source={localImage.GymImage}
           style={{
-            height: DeviceHeigth * 0.45,
+            height: DeviceHeigth * 0.2,
             width: DeviceWidth * 0.37,
-            left: 10,
-            top: -10,
+            left: DeviceWidth * 0.03,
+            top: -DeviceHeigth * 0.005,
           }}
           resizeMode="contain"></Image>
       </View>
@@ -193,7 +194,7 @@ const Workouts = ({navigation}: any) => {
           data={allWorkoutData}
           trackerData={trackerData}
           viewAllPress={() =>
-            navigation?.navigate('AllWorkouts', {data: allWorkoutData, type: ''})
+            navigation?.navigate('AllWorkouts', {data: allWorkoutData, type: '',fav: false,})
           }
           horizontal
           viewAllButton
@@ -221,6 +222,7 @@ const Workouts = ({navigation}: any) => {
             navigation?.navigate('AllWorkouts', {
               data: allWorkoutData,
               type: '',
+              fav: false,
             })
           }
           horizontal={false}

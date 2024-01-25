@@ -12,6 +12,7 @@ import {
   Platform,
   AppState,
   Modal,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
@@ -67,18 +68,7 @@ import {Form} from 'formik';
 import moment from 'moment';
 import Graph from '../Yourself/Graph';
 import {LineChart} from 'react-native-chart-kit';
-// const zeroData = Array(7)
-//   .fill()
-//   .map((_, index) => {
-//     const currentDate = moment().subtract(index + 1, 'days');
-//     return {weight: 0, date: currentDate.date()};
-//   });
-// const zeroDataM = Array(21)
-//   .fill()
-//   .map((_, index) => {
-//     const currentDate = moment().subtract(index + 1, 'days');
-//     return {weight: 0, date: currentDate.date()};
-//   });
+
 let zeroData = [];
 let zeroDataM = [];
 const GradientText = ({item}) => {
@@ -153,16 +143,16 @@ const ProgressBar = ({progress, image, text}) => {
   );
 };
 const Home = ({navigation}) => {
+  const counter = useRef(0);
   const [progress, setProgress] = useState(10);
   const [forLoading, setForLoading] = useState(false);
   const [value, setValue] = useState('Weekly');
   const [likeData, setLikeData] = useState([]);
   const [currentindex, setCurrentIndex] = useState(1);
   const [weeklyGraph, setWeeklyGraph] = useState([]);
-
   const [monthlyGraph, setMonthlyGraph] = useState([]);
-
   const progressAnimation = useRef(new Animated.Value(0)).current;
+  const [isLoading, setIsLoading] = useState(true);
   const Dispatch = useDispatch();
   const {
     getHealthData,
@@ -185,7 +175,7 @@ const Home = ({navigation}) => {
     getPedomterData[1] ? getPedomterData[1].RDistance : 2.5,
   );
   const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
-    getPedomterData[2] ? getPedomterData[2].RCalories : 25,
+    getPedomterData[2] ? getPedomterData[2].RCalories : 250,
   );
   useEffect(() => {
     setTimeout(() => {
@@ -225,6 +215,7 @@ const Home = ({navigation}) => {
           await request(PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION);
         }
       } else {
+
         console.log('ACTIVITY_RECOGNITION permission already granted');
         if(getStepCounterOnoff==0){
           startStepCounter();
@@ -233,6 +224,7 @@ const Home = ({navigation}) => {
         // startStepCounter();
         // Dispatch(setStepCounterOnOff(1));
         // startStepCounter();
+
         // Permission was already granted previously
       }
     } else if (Platform.OS == 'ios') {
@@ -353,7 +345,7 @@ const Home = ({navigation}) => {
             zeroData.push(parseFloat(data1));
           }
           setWeeklyGraph(zeroData);
-          // console.log('Weeekly====>', zeroData);
+
         } else if (Key == 2) {
           zeroDataM = [];
           for (i = 0; i < res?.data?.monthly_data?.length; i++) {
@@ -1048,19 +1040,27 @@ const Home = ({navigation}) => {
             resizeMode="cover"></Image> */}
           {/* <Text style={styles.monetText}>500</Text> */}
         </View>
-        {/* {console.log('User Profile Data', getUserDataDetails)} */}
+
         {Object.keys(getUserDataDetails).length > 0 ? (
           <TouchableOpacity
             style={styles.profileView1}
             onPress={() => {
               navigation.navigate('Profile');
             }}>
+            {isLoading && (
+              <ActivityIndicator
+                style={styles.loader}
+                size="large"
+                color="#0000ff"
+              />
+            )}
             <Image
               source={
                 getUserDataDetails.image_path == null
                   ? localImage.avt
                   : {uri: getUserDataDetails.image_path}
               }
+              onLoad={() => setIsLoading(false)}
               style={styles.img}
               resizeMode="cover"></Image>
           </TouchableOpacity>
@@ -1277,6 +1277,7 @@ const Home = ({navigation}) => {
                 navigation?.navigate('AllWorkouts', {
                   data: customWorkoutData?.workout,
                   type: 'custom',
+                  fav: false,
                 });
               }}>
               <Icons name="chevron-right" size={25} color={'#000'} />
@@ -1330,7 +1331,10 @@ const Home = ({navigation}) => {
                         {
                           alignSelf: 'center',
                           zIndex: 1,
-                          left: -25,
+                          left:
+                            DeviceWidth >= 768
+                              ? -DeviceWidth * 0.12
+                              : -DeviceWidth * 0.05,
                           color: AppColor.BoldText,
                           width: DeviceHeigth * 0.2,
                         },
@@ -1371,8 +1375,9 @@ const Home = ({navigation}) => {
                       height: DeviceHeigth * 0.16,
                       width: DeviceWidth * 0.35,
 
-                      bottom: -50,
-                      left: -30,
+                      bottom: -DeviceHeigth * 0.06,
+
+                      left: DeviceWidth * 0.005,
                       marginTop: -DeviceHeigth * 0.11,
                     }}
                     resizeMode="contain"></Image>
@@ -1564,7 +1569,7 @@ const Home = ({navigation}) => {
             top: DeviceHeigth * 0.11,
             width: '95%',
             // height: 200,
-            marginBottom: DeviceHeigth * 0.1,
+            marginBottom: DeviceHeigth * 0.13,
             alignSelf: 'center',
             borderRadius: 10,
           }}>
@@ -1869,7 +1874,7 @@ var styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 20,
     backgroundColor: AppColor.WHITE,
-    width: DeviceWidth * 0.95,
+    width: DeviceWidth * 0.9,
     borderRadius: 20,
     alignSelf: 'center',
     ...Platform.select({
@@ -1883,6 +1888,9 @@ var styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  loader: {
+    position: 'absolute',
   },
 });
 export default Home;

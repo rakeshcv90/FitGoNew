@@ -36,11 +36,13 @@ const SplaceScreen = ({navigation}) => {
 
   useEffect(() => {
     DeviceInfo.syncUniqueId().then(uniqueId => {
+      getCaterogy(uniqueId);
       setDeviceId(uniqueId);
+      Meal_List(uniqueId);
     });
     // getPlanData();
-    Meal_List();
-    getCaterogy();
+   
+   
   }, []);
   // const getPlanData = () => {
   //   Platform.OS === 'ios'
@@ -84,7 +86,7 @@ const SplaceScreen = ({navigation}) => {
       }
     }, 4000);
   }, []);
-  const Meal_List = async () => {
+  const Meal_List = async (deviceData) => {
     try {
       const data = await axios(`${NewAppapi.Meal_Categorie}`, {
         method: 'POST',
@@ -92,7 +94,7 @@ const SplaceScreen = ({navigation}) => {
           'Content-Type': 'multipart/form-data',
         },
         data: {
-          deviceid: deviceId,
+          deviceid: deviceData,
           version: VersionNumber.appVersion,
         },
       });
@@ -107,19 +109,23 @@ const SplaceScreen = ({navigation}) => {
       console.log('Meal List Error', error);
     }
   };
-  const getCaterogy = async () => {
+  const getCaterogy = async (deviceid) => {
     try {
-      const favDiet = await axios.post(
-        `${NewAppapi.Get_Product_Catogery}?deviceid=${deviceId}`,
+      const favDiet = await axios.get(
+        `${NewAppapi.Get_Product_Catogery}?deviceid=${deviceid}`,
       );
+
       if (favDiet.data.status != 'Invalid token') {
-        dispatch(setStoreData(favDiet.data.data));
+        dispatch(setStoreData([]));
+
       } else {
-        dispatch([]);
+      
+        dispatch(setStoreData(favDiet.data.data));
       }
     } catch (error) {
       dispatch(setStoreData([]));
-      console.log('Product Category Error', error);
+      console.log('Product Category Error111', error);
+
     }
   };
   return (

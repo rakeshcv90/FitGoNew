@@ -142,10 +142,8 @@ const NewProgressScreen = ({navigation}) => {
       });
     } else if (Platform.OS == 'android') {
       setCalories(
-        parseInt(Calories2) + getHealthData[1]
-          ? parseInt(getHealthData[1].Calories)
-          : 0,
-      );
+        parseInt(getHealthData[1]?getHealthData[1]?.Calories:0)+parseInt(Calories2)
+    );
       // console.log('android======>');
     }
   }, []);
