@@ -224,10 +224,14 @@ const Home = ({navigation}) => {
           // Handle the case where the permission request is denied
           await request(PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION);
         }
-      } else if(getStepCounterOnoff == 0){
+      } else {
         console.log('ACTIVITY_RECOGNITION permission already granted');
-        startStepCounter();
-        Dispatch(setStepCounterOnOff(1));
+        if(getStepCounterOnoff==0){
+          startStepCounter();
+          Dispatch(setStepCounterOnOff(1));
+        }
+        // startStepCounter();
+        // Dispatch(setStepCounterOnOff(1));
         // startStepCounter();
         // Permission was already granted previously
       }

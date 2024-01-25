@@ -25,6 +25,7 @@ import AppleHealthKit from 'react-native-health';
 import {setBmi} from '../../Component/ThemeRedux/Actions';
 import {Calendar} from 'react-native-calendars';
 import AnimatedLottieView from 'lottie-react-native';
+import crashlytics from '@react-native-firebase/crashlytics';
 import {
   VictoryBar,
   VictoryChart,

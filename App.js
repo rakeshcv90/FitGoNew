@@ -25,10 +25,14 @@ import NetInfo from '@react-native-community/netinfo';
 import {useDispatch, useSelector} from 'react-redux';
 import {DeviceHeigth, DeviceWidth} from './src/Component/Config';
 import RNRestart from 'react-native-restart';
-import { requestPermissionforNotification,RemoteMessage} from './src/Component/Helper/PushNotification';
+import {
+  requestPermissionforNotification,
+  RemoteMessage,
+} from './src/Component/Helper/PushNotification';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import TrackPlayer from 'react-native-track-player';
 import crashlytics from '@react-native-firebase/crashlytics';
+import analytics from '@react-native-firebase/analytics';
 import {
   initConnection,
   endConnection,
@@ -36,17 +40,23 @@ import {
 } from 'react-native-iap';
 
 const App = () => {
+  const [isLogged, setIsLogged] = useState();
+  const [update, setUpdate] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isConnected, setConnected] = useState(true);
+  const {defaultTheme} = useSelector(state => state);
+  const {isLogin} = useSelector(state => state);
   useEffect(() => {
-    // record crashes
-
     try {
+      analytics().setAnalyticsCollectionEnabled(true);
       crashlytics().setCrashlyticsCollectionEnabled(true);
       crashlytics().setAttributes({
-        platform:Platform.OS
-      })
+        platform: Platform.OS,
+      });
     } catch (error) {
-      crashlytics().recordError(error)
+      crashlytics().recordError(error);
     }
+    alalyicsData();
   }, []);
   const handleBackPress = () => {
     // Do nothing to stop the hardware back press
@@ -63,19 +73,16 @@ const App = () => {
     };
   }, []);
   const StatusBar_Bar_Height = Platform.OS === 'ios' ? getStatusBarHeight() : 0;
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   useEffect(() => {
-   requestPermissionforNotification(dispatch)
-   RemoteMessage()
+    requestPermissionforNotification(dispatch);
+    RemoteMessage();
   }, []);
-  
-  const [isLogged, setIsLogged] = useState();
-  const [update, setUpdate] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isConnected, setConnected] = useState(true);
-  const {defaultTheme} = useSelector(state => state);
-  const {isLogin} = useSelector(state => state);
- 
+  const alalyicsData = () => {
+      analytics().logEvent('Platform', {
+        data: Platform.OS,
+      });
+  };
   useEffect(() => {
     const subscription = NetInfo.addEventListener(state => {
       if (state.isConnected) {
@@ -89,10 +96,8 @@ const App = () => {
     };
   }, []);
   useEffect(() => {
-
     async function initializePlayer() {
       await TrackPlayer.setupPlayer();
- 
     }
 
     initializePlayer();
@@ -176,17 +181,24 @@ const App = () => {
   // } else {
   //   return <Loader />;
   // }
-      return (
-      <>
-        <NavigationContainer
-         ref={navigationRef}
-          >
-          <LoginStack />
-          {/* <Router /> */}
-        </NavigationContainer>
-        <FlashMessage position="top" statusBarHeight={StatusBar_Bar_Height+30} />
-      </>
-    );
+  return (
+    <>
+      <NavigationContainer
+        ref={navigationRef}
+        onStateChange={state => {
+          analytics().logScreenView({
+            'screen_name':state.routes[state.index].name, //logging screen name to firebase Analytics
+          });
+        }}>
+        <LoginStack />
+        {/* <Router /> */}
+      </NavigationContainer>
+      <FlashMessage
+        position="top"
+        statusBarHeight={StatusBar_Bar_Height + 30}
+      />
+    </>
+  );
 };
 const styles = StyleSheet.create({
   View: {
