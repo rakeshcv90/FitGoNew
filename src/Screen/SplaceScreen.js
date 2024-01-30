@@ -79,8 +79,14 @@ const SplaceScreen = ({navigation}) => {
     setTimeout(() => {
       if (showIntro) {
         //  navigation.replace('LogSignUp');
-        if (getUserDataDetails?.id) navigation.replace('BottomTab');
-        else navigation.replace('LogSignUp');
+        if (
+          getUserDataDetails?.id &&
+          getUserDataDetails?.profile_compl_status == 1
+        ) {
+          navigation.replace('BottomTab');
+        } else {
+          navigation.replace('LogSignUp');
+        }
       } else {
         navigation.replace('IntroductionScreen1');
       }

@@ -182,7 +182,6 @@ const Login = ({navigation}) => {
           ) {
             if (currentProfile) {
               socialFacebookLogiIn(currentProfile);
-             
             }
           });
         }
@@ -268,7 +267,6 @@ const Login = ({navigation}) => {
       })
       .then(
         res => {
-      
           socialAppleLogiIn(res);
         },
         error => {
@@ -277,7 +275,6 @@ const Login = ({navigation}) => {
       );
   };
   const socialAppleLogiIn = async res => {
-
     setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.login}`, {
@@ -296,8 +293,7 @@ const Login = ({navigation}) => {
           devicetoken: getFcmToken,
         },
       });
-   
-   
+
       if (data.data?.profile_status == 1) {
         showMessage({
           message: data.data.msg,
@@ -461,9 +457,20 @@ const Login = ({navigation}) => {
       if (data?.data?.profile) {
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));
-        status == 1
-          ? navigation.navigate('BottomTab')
-          : navigationRef.navigate('Yourself');
+        // status == 1
+        //   ? navigation.navigate('BottomTab')
+        //   : navigationRef.navigate('Yourself');
+        if (status == 1) navigation.navigate('BottomTab');
+        else {
+          showMessage({
+            message: 'Please complete your Profile Details',
+            type: 'success',
+            animationDuration: 500,
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
+          navigationRef.navigate('Yourself');
+        }
       } else if (
         data?.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -477,15 +484,37 @@ const Login = ({navigation}) => {
       } else {
         setForLoading(false);
         dispatch(setUserProfileData([]));
-        status == 1
-          ? navigation.navigate('BottomTab')
-          : navigationRef.navigate('Yourself');
+        // status == 1
+        //   ? navigation.navigate('BottomTab')
+        //   : navigationRef.navigate('Yourself');
+        if (status == 1) navigation.navigate('BottomTab');
+        else {
+          showMessage({
+            message: 'Please complete your Profile Details',
+            type: 'success',
+            animationDuration: 500,
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
+          navigationRef.navigate('Yourself');
+        }
       }
     } catch (error) {
       console.log('User Profile Error', error);
-      status == 1
-        ? navigation.navigate('BottomTab')
-        : navigationRef.navigate('Yourself');
+      if (status == 1) navigation.navigate('BottomTab');
+        else {
+          showMessage({
+            message: 'Please complete your Profile Details',
+            type: 'success',
+            animationDuration: 500,
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
+          navigationRef.navigate('Yourself');
+        }
+      // status == 1
+      //   ? navigation.navigate('BottomTab')
+      //   : navigationRef.navigate('Yourself');
       setForLoading(false);
     }
   };
@@ -646,7 +675,7 @@ const Login = ({navigation}) => {
           token: login_token,
         },
       });
-   
+
       if (res.data.data.length > 0) {
         dispatch(setPurchaseHistory(res.data.data));
       } else {
@@ -673,7 +702,7 @@ const Login = ({navigation}) => {
           },
         });
         setForLoading(false);
-   
+
         if (data?.data[0]?.msg == 'Mail sent') {
           setForLoading(false);
           showMessage({
