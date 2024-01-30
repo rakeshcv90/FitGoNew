@@ -150,7 +150,7 @@ const ProfileScreen = () => {
       await AsyncStorage.removeItem('Data');
       navigation.navigate('Login');
     } catch (error) {
-      console.log(Error1);
+      console.log(error);
     }
   };
   const DeleteAccount = async () => {
@@ -234,7 +234,7 @@ const ProfileScreen = () => {
         setImageUrl(response.data[0].image);
         dispatch(updatePhoto(response.data[0].image));
         setPhotoUploaded(true);
-        // console.log(response.data);
+     
       }
     } catch (error) {
       console.log('UpdatePhotoError', error);
@@ -246,7 +246,7 @@ const ProfileScreen = () => {
     
     const UploadImage = async () => {
       const [userAvatar, setUserAvatar] = useState(null);
-      // console.log("upload img")
+  
       const data = JSON.parse(await AsyncStorage.getItem('Data'));
       try {
         let payload = new FormData();
@@ -276,7 +276,7 @@ const ProfileScreen = () => {
             setPhotoUploaded(false);
           }
         }
-        // console.log('ProfileData', ProfileData.data);
+     
       } catch (error) {
         setImguploaded(true);
         if (IsimgUploaded == true) {
@@ -288,7 +288,7 @@ const ProfileScreen = () => {
     };
     const askPermissionForCamera = async permission => {
       const result = await request(permission);
-      //  console.log("camera result",result)
+   
       if (result == 'granted') {
         try {
           const resultCamera = await launchCamera({

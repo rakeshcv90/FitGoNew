@@ -26,6 +26,8 @@ import ProgreesButton from '../../../Component/ProgressButton';
 import Tts from 'react-native-tts';
 import {string} from 'yup';
 import {showMessage} from 'react-native-flash-message';
+import VersionNumber from 'react-native-version-number';
+
 const Exercise = ({navigation, route}: any) => {
   const {allExercise, currentExercise, data, day, exerciseNumber, trackerData} =
     route.params;
@@ -48,7 +50,7 @@ const Exercise = ({navigation, route}: any) => {
   const [separateTimer, setSeparateTimer] = useState(timer);
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const restTimerRef = useRef(null);
-  const seprateTimerRef=useRef(null)
+  const seprateTimerRef = useRef(null);
   useEffect(() => {
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
@@ -119,7 +121,7 @@ const Exercise = ({navigation, route}: any) => {
             } else {
               setTimer(timer - 1);
             }
-            getSoundOffOn&&  Tts.speak(`${timer-1}`);
+            getSoundOffOn && Tts.speak(`${timer - 1}`);
           }, 1000))
         : setTimeout(() => {
             if (pause)
@@ -211,24 +213,27 @@ const Exercise = ({navigation, route}: any) => {
   };
 
   const postCurrentExerciseAPI = async (index: number) => {
-    console.log(trackerData, 'trackerData');
     const payload = new FormData();
     payload.append('id', trackerData[index]?.id);
     payload.append('day', day);
     payload.append('workout_id', data?.workout_id);
     payload.append('user_id', getUserDataDetails?.id);
+    payload.append('version',VersionNumber.appVersion);
     try {
       const res = await axios({
         url: NewAppapi.POST_EXERCISE,
         method: 'post',
         data: payload,
       });
-      if (res.data) {
-        // console.log(
-        //   res.data,
-        //   'Post________________---------------------',
-        //   payload,
-        // );
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (res.data) {
         setCurrentData(allExercise[index]);
         setRestStart(true);
         setPlayW(0);
@@ -483,8 +488,8 @@ const Exercise = ({navigation, route}: any) => {
               <TouchableOpacity
                 onPress={() => {
                   // Tts.stop();
-                  setTimer(prevTimer => prevTimer + 30)
-                  setSeparateTimer(prevTimer=>prevTimer+30)
+                  setTimer(prevTimer => prevTimer + 30);
+                  setSeparateTimer(prevTimer => prevTimer + 30);
                   // Tts.speak(`${separateTimer}`);
                 }}
                 style={{
@@ -512,7 +517,7 @@ const Exercise = ({navigation, route}: any) => {
                   // navigation.navigate('SaveDayExercise', {data, day});
                   if (number == allExercise?.length - 1) return;
                   else {
-                    setRestStart(prev=>false);
+                    setRestStart(prev => false);
                     const index = allExercise?.findIndex(
                       (item: any) =>
                         item?.exercise_id == currentData?.exercise_id,
@@ -524,7 +529,7 @@ const Exercise = ({navigation, route}: any) => {
                     postCurrentExerciseAPI(index + 1);
                     setNumber(number + 1);
                     setTimer(15);
-                    setPlayW(prevTimer=>0);
+                    setPlayW(prevTimer => 0);
                     Tts.stop();
                   }
                 }}
@@ -687,7 +692,8 @@ const Exercise = ({navigation, route}: any) => {
               style={{
                 width: DeviceWidth,
                 height: DeviceHeigth * 0.5,
-                alignSelf: 'center',}}
+                alignSelf: 'center',
+              }}
             />
 
             {/* <View style={{alignSelf: 'flex-end'}}>
@@ -738,8 +744,8 @@ const Exercise = ({navigation, route}: any) => {
             next={() => {
               setPause(!pause);
               // setDefaultPre(0);
-              setPlayW(prevTimer=>0);
-              setPause(false)
+              setPlayW(prevTimer => 0);
+              setPause(false);
               setTimeout(() => {
                 if (number == allExercise?.length - 1) return;
                 const index = allExercise?.findIndex(
@@ -753,8 +759,8 @@ const Exercise = ({navigation, route}: any) => {
             }}
             back={() => {
               if (number == 0) return;
-              setPlayW(prevTimer=>0);
-              setPause(false)
+              setPlayW(prevTimer => 0);
+              setPause(false);
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );

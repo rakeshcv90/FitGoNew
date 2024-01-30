@@ -10,7 +10,7 @@ const Completed = () => {
   const route = useRoute();
   const Data = route.params;
   const { defaultTheme } = useSelector(state => state)
-  console.log(Data)
+
   return (
     <View style={{ flex: 1, backgroundColor: defaultTheme ? "#000" : "#fff" }}>
         {Platform.OS=='android'?<><StatusBar barStyle={defaultTheme?'light-content':'dark-content'} backgroundColor={'#C8170D'}/></>:<><CustomStatusBar/></>}

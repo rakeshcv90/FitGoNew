@@ -22,6 +22,8 @@ import axios from 'axios';
 import AnimatedLottieView from 'lottie-react-native';
 import Calories from '../../Component/Calories';
 import ActivityLoader from '../../Component/ActivityLoader';
+import VersionNumber, {appVersion} from 'react-native-version-number';
+import {showMessage} from 'react-native-flash-message';
 const NewMonthlyAchievement = () => {
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [selected, setSelected] = useState(false);
@@ -94,6 +96,7 @@ const NewMonthlyAchievement = () => {
     const payload = new FormData();
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('date', Date1);
+    payload.append('version', VersionNumber.appVersion);
     try {
       const res = await axios({
         url: NewAppapi.DateWiseData,
@@ -101,8 +104,17 @@ const NewMonthlyAchievement = () => {
         headers: {'Content-Type': 'multipart/form-data'},
         data: payload,
       });
-      if (res) {
-        // console.log('DateWiseData===>', res.data);
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+     
+      }
+     else if (res) {
         setApiData(res.data.data);
         const Calories = res.data.data.map(value =>
           parseInt(value.exercise_calories),
@@ -110,7 +122,7 @@ const NewMonthlyAchievement = () => {
         //  cont Time=res.data.data.map((value)=>parseInt(value.))
         setWorkoutCalories(Calories?.reduce((acc, num) => acc + num, 0)); // adding steps calories here
         setIsLoaded(true);
-        console.log('stepssss==-----', res?.data?.steps[0]);
+       
         if (Platform.OS == 'android') {
           setSteps(res?.data?.steps[0]?.steps ? res?.data?.steps[0]?.steps : 0);
           setCalories(
@@ -139,7 +151,7 @@ const NewMonthlyAchievement = () => {
           console.error('Error while getting the data:', callbackError);
           // Handle the error as needed
         } else {
-          console.log('iOS ', results);
+    
           setSteps(results?.value);
           setDistance(((results?.value / 20) * 0.01).toFixed(2));
           setCalories(((results?.value / 20) * 1).toFixed(0));

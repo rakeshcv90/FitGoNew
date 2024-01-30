@@ -76,7 +76,7 @@ const OtpVerification = ({navigation, route}) => {
 
         if (OtpMsg.data.msg == 'Email verified successfully') {
           setForLoading(false);
-          console.log('iiiiii', OtpMsg.data);
+      
           showMessage({
             message: 'Email verified successfully!',
             floating: true,
@@ -96,7 +96,7 @@ const OtpVerification = ({navigation, route}) => {
           //navigation.navigate('Login');
         } else {
           setForLoading(false);
-          console.log('bbbbbbbb', OtpMsg.data);
+        
           showMessage({
             message: OtpMsg.data.msg,
             floating: true,

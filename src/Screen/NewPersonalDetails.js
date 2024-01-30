@@ -47,7 +47,7 @@ const NewPersonalDetails = ({route, navigation}) => {
   const [isEditible, setEditable] = useState(false);
   const {getUserDataDetails, completeProfileData} = useSelector(state => state);
   const [isFocus, setIsFocus] = useState(false);
-console.log("GZFSDGSDGDFGDFG",completeProfileData.goal)
+
   useEffect(() => {
     ProfileDataAPI();
   }, []);
@@ -58,7 +58,7 @@ console.log("GZFSDGSDGDFGDFG",completeProfileData.goal)
   const maleGole = [
     {label: 'Weight Loss', value: 3},
     {label: 'Build Muscle', value: 6},
-    {label: 'Strength', value:13},
+    {label: 'Strength', value: 13},
   ];
   const fmaleGole = [
     {label: 'Weight Loss', value: 1},
@@ -151,7 +151,6 @@ console.log("GZFSDGSDGDFGDFG",completeProfileData.goal)
     return null;
   };
   const handleFormSubmit = async (values, action) => {
-   
     setForLoading(true);
     try {
       const data = await axios(`${NewAppapi.UpdateUserProfile}`, {
@@ -177,8 +176,8 @@ console.log("GZFSDGSDGDFGDFG",completeProfileData.goal)
           gender: values.gender,
         },
       });
-   
-      if (data.data.msg == 'User Updated Successfully') {
+    
+      if (data?.data?.msg == 'User Updated Successfully') {
         showMessage({
           message: data.data.msg,
           floating: true,
@@ -190,6 +189,18 @@ console.log("GZFSDGSDGDFGDFG",completeProfileData.goal)
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));
         dispatch(setCustomWorkoutData(data?.data.allworkouts));
+      } else if (
+        data?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: data?.data?.msg,
+          floating: true,
+          type: 'danger',
+          animationDuration: 750,
+          icon: {icon: 'none', position: 'left'},
+        });
+
+        setForLoading(false);
       } else {
         showMessage({
           message: data.data.msg,
@@ -212,7 +223,6 @@ console.log("GZFSDGSDGDFGDFG",completeProfileData.goal)
       //   });
     }
   };
-
 
   return (
     <View style={styles.Container}>
@@ -445,7 +455,6 @@ console.log("GZFSDGSDGDFGDFG",completeProfileData.goal)
                       onFocus={() => setIsFocus(true)}
                       onBlur={() => setIsFocus(false)}
                       onChange={item => {
-                     
                         setFieldValue('focuseAres', item);
                       }}
                       selectedStyle={styles.selectedStyle}

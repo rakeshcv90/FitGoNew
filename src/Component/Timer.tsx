@@ -42,7 +42,7 @@ const Timer: FC<Props> = ({...Props}) => {
         return newValues;
       });
     }
-    console.log(selectedValues);
+   
   };
   const generateNumberRange = (start: any, end: any) => {
     const range = [];

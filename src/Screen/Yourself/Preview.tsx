@@ -67,7 +67,7 @@ const Preview = ({route, navigation}: any) => {
     day: daysOfWeek[currentDate.day()],
     isCurrent: true,
   };
-  console.log('Dates======>', datesArray);
+
   const {currentExercise} = route.params;
   const {getLaterButtonData, currentWorkoutData} = useSelector(
     (state: any) => state,
@@ -325,7 +325,7 @@ const Preview = ({route, navigation}: any) => {
         <GradientText text={'Work Routine'} />
         {/* <Calendar
           onDayPress={day => {
-            console.log(day.dateString);
+      
           }}
           markedDates={{
             [moment().format('YYYY-MM-DD')]: {

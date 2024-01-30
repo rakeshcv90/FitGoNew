@@ -57,7 +57,7 @@ const Store = ({navigation}) => {
     require('../../Icon/Images/recipe_1519697004.jpg'),
     require('../../Icon/Images/product_1631791758.jpg'),
   ];
-console.log("ggggg",NewAppapi.Get_Product_Catogery)
+
   const getCaterogy = async () => {
     setForLoading(true);
     // try {
