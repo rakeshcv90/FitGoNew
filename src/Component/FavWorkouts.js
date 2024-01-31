@@ -51,9 +51,9 @@ const FavWorkouts = () => {
           setUpdate(update + 1);
           setIsLoaded(true);
           setEmpty(false);
-          // console.log(favWorkout.data)
+     
         } else {
-          console.log('data not found');
+     
           setEmpty(true);
           setIsLoaded(true);
         }

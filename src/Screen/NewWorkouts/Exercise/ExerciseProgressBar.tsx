@@ -46,7 +46,7 @@ const ExerciseProgressBar = ({INDEX, ExerciseData, time, w, color}: any) => {
                 index == INDEX
                   ? w
                   : (DeviceWidth * 0.9) / ExerciseData.length,
-              backgroundColor: index == INDEX ? color : '#D9D9D9',
+              backgroundColor: index<= INDEX ? color : '#D9D9D9',
             }}></Animated.View>
         </View>
       ))}

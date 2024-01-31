@@ -1,6 +1,7 @@
 package fitme.health.fitness.homeworkouts.equipment;
 
 import android.app.Application;
+import com.microsoft.codepush.react.CodePush;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
@@ -9,7 +10,7 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
-import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
+// import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
 
 public class MainApplication extends Application implements ReactApplication {
   
@@ -18,6 +19,10 @@ public class MainApplication extends Application implements ReactApplication {
         @Override
         public boolean getUseDeveloperSupport() {
           return BuildConfig.DEBUG;
+        }
+         @Override
+        protected String getJSBundleFile() {
+            return CodePush.getJSBundleFile();
         }
        
         @Override

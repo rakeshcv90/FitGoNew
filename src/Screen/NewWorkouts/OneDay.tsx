@@ -22,6 +22,8 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import {setCount} from '../../Component/ThemeRedux/Actions';
 import {localImage} from '../../Component/Image';
 import WorkoutDescription from '../NewWorkouts/WorkoutsDescription';
+import VersionNumber from 'react-native-version-number';
+import {showMessage} from 'react-native-flash-message';
 
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount} = route.params;
@@ -73,14 +75,25 @@ const OneDay = ({navigation, route}: any) => {
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('workout_id', data?.workout_id);
     payload.append('user_day', day);
+    payload.append('version', VersionNumber.appVersion);
+
     try {
       const res = await axios({
         url: NewAppapi.TRACK_CURRENT_DAY_EXERCISE,
         method: 'Post',
         data: payload,
       });
-      if (res.data?.user_details) {
-        console.log(res.data, 'Post');
+   
+
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (res.data?.user_details) {
         setTrackerData(res.data?.user_details);
       } else {
         setTrackerData([]);
@@ -152,7 +165,7 @@ const OneDay = ({navigation, route}: any) => {
           {
             backgroundColor: AppColor.WHITE,
             height: DeviceHeigth * 0.1,
-            marginVertical: 5
+            marginVertical: 5,
           },
         ]}>
         <View
@@ -163,28 +176,28 @@ const OneDay = ({navigation, route}: any) => {
           }}>
           <View
             style={{
-              height: 70,
-              width: 70,
+              height: 80,
+              width: 80,
               backgroundColor: AppColor.WHITE,
               justifyContent: 'center',
               alignItems: 'center',
               marginLeft: DeviceWidth * 0.07,
               borderRadius: 10,
               ...Platform.select({
-                ios:{
-                shadowColor:AppColor.BLACK,
-                shadowOffset:{width:1,height:1},
-                shadowOpacity:0.3,
-                shadowRadius:2
+                ios: {
+                  shadowColor: AppColor.BLACK,
+                  shadowOffset: {width: 1, height: 1},
+                  shadowOpacity: 0.3,
+                  shadowRadius: 2,
                 },
-                android:{
-                  elevation:5
-                }
-              })
+                android: {
+                  elevation: 5,
+                },
+              }),
             }}>
             <Image
               source={{uri: item?.exercise_image}}
-              style={{height: 80, width: 70}}
+              style={{height: 75, width: 75,alignSelf:'center'}}
               resizeMode="contain"
             />
           </View>
@@ -195,7 +208,7 @@ const OneDay = ({navigation, route}: any) => {
                 height: 40,
                 width: 40,
                 marginLeft: -DeviceWidth * 0.1,
-                marginTop: -DeviceWidth * 0.1,
+                marginTop: -DeviceWidth * 0.09,
               }}
               resizeMode="contain"
             />
@@ -230,92 +243,92 @@ const OneDay = ({navigation, route}: any) => {
       style={{
         flex: 1,
         backgroundColor: AppColor.WHITE,
-        padding:10,
+        padding: 10,
       }}>
-         <TouchableOpacity
-            onPress={() => {
-              setOpen(false);
-              navigation.goBack();
-            }}
-            style={{
-            marginTop:DeviceHeigth*0.03
-            }}>
-            <Icons
-              name={'chevron-left'}
-              size={30}
-              color={AppColor.INPUTTEXTCOLOR}
-            />
-          </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          setOpen(false);
+          navigation.goBack();
+        }}
+        style={{
+          marginTop: DeviceHeigth * 0.03,
+        }}>
+        <Icons
+          name={'chevron-left'}
+          size={30}
+          color={AppColor.INPUTTEXTCOLOR}
+        />
+      </TouchableOpacity>
       <Image
         source={{uri: data?.workout_image_link}}
         style={{
-          height: DeviceWidth *0.5,
+          height: DeviceWidth * 0.5,
           width: DeviceWidth,
-          alignSelf:'center'
+          alignSelf: 'center',
         }}
-        resizeMode='contain'
+        resizeMode="contain"
       />
-        {/* <View style={{height: DeviceHeigth * 0.4, marginLeft: 5}}>
+      {/* <View style={{height: DeviceHeigth * 0.4, marginLeft: 5}}>
          
         </View> */}
-        <View style={styles.container}>
-          <Text
-            style={{
-              fontWeight: '700',
-              fontSize: 30,
-              lineHeight: 40,
-              fontFamily: 'Poppins-SemiBold',
-              color:AppColor.BLACK
-            }}>
-            Day {day}
-          </Text>
-          <Text
-            style={{
-              fontWeight: '400',
-              fontSize: 14,
-              lineHeight: 30,
-              fontFamily: 'Poppins',
-              color: AppColor.BoldText,
-              marginVertical: 5,
-            }}>
-            <Icons
-              name={'clock-outline'}
-              size={15}
-              color={AppColor.INPUTTEXTCOLOR}
-            />
-            {dayData?.total_rest > 60
-              ? ` ${(dayData?.total_rest / 60).toFixed(0)} min `
-              : ` ${dayData?.total_rest} sec `}
-            <Icons name={'fire'} size={15} color={AppColor.INPUTTEXTCOLOR} />
-            {` ${dayData?.total_calories} Kcal`}
-          </Text>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            style={{marginBottom: 50}}>
-            {exerciseData.map((item, index) => (
-              <Box selected={-1} index={index + 1} item={item} key={index} />
-            ))}
-          </ScrollView>
-          <GradientButton
-            // disabled={trackerData.length != 0}
-            text={`Start Day ${day}`}
-            h={80}
-            alignSelf
-            bR={40}
-            mB={40}
-            onPress={() => {
-              postCurrentDayAPI();
-              // setOpen(false);
-              // navigation.navigate('Exercise', {
-              //   allExercise: exerciseData,
-              //   currentExercise: exerciseData[0],
-              //   data: data,
-              //   day: day,
-              //   exerciseNumber: trainingCount != -1 ? trainingCount - 1 : 0,
-              // });
-            }}
+      <View style={styles.container}>
+        <Text
+          style={{
+            fontWeight: '700',
+            fontSize: 30,
+            lineHeight: 40,
+            fontFamily: 'Poppins-SemiBold',
+            color: AppColor.BLACK,
+          }}>
+          Day {day}
+        </Text>
+        <Text
+          style={{
+            fontWeight: '400',
+            fontSize: 14,
+            lineHeight: 30,
+            fontFamily: 'Poppins',
+            color: AppColor.BoldText,
+            marginVertical: 5,
+          }}>
+          <Icons
+            name={'clock-outline'}
+            size={15}
+            color={AppColor.INPUTTEXTCOLOR}
           />
-        </View>
+          {dayData?.total_rest > 60
+            ? ` ${(dayData?.total_rest / 60).toFixed(0)} min `
+            : ` ${dayData?.total_rest} sec `}
+          <Icons name={'fire'} size={15} color={AppColor.INPUTTEXTCOLOR} />
+          {` ${dayData?.total_calories} Kcal`}
+        </Text>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{marginBottom: 50}}>
+          {exerciseData.map((item, index) => (
+            <Box selected={-1} index={index + 1} item={item} key={index} />
+          ))}
+        </ScrollView>
+        <GradientButton
+          // disabled={trackerData.length != 0}
+          text={`Start Day ${day}`}
+          h={80}
+          alignSelf
+          bR={40}
+          mB={40}
+          onPress={() => {
+            postCurrentDayAPI();
+            // setOpen(false);
+            // navigation.navigate('Exercise', {
+            //   allExercise: exerciseData,
+            //   currentExercise: exerciseData[0],
+            //   data: data,
+            //   day: day,
+            //   exerciseNumber: trainingCount != -1 ? trainingCount - 1 : 0,
+            // });
+          }}
+        />
+      </View>
       {loader && <ActivityLoader visible={loader} />}
       <WorkoutDescription
         data={currentExercise}

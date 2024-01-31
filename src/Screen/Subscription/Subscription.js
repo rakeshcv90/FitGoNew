@@ -83,7 +83,7 @@ const Subscription = ({navigation}) => {
         sku,
         ...(offerToken && {subscriptionOffers: [{sku, offerToken}]}),
       });
-      console.log('Purchase Data', purchase);
+  
       // fetchPurchaseHistory(purchase[0].dataAndroid);
     } catch (error) {
       console.log('Failed to purchase ios product', error);

@@ -43,6 +43,8 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>CodePushDeploymentKey</key>
+	<string>m5Lx0xad7uqrqZ05foy7cf8JyFXDjS7pfUcyv</string>
 	<key>FacebookAppID</key>
 	<string>1530298334174272</string>
 	<key>FacebookClientToken</key>
@@ -122,21 +124,16 @@
 		<string>Verdana.ttf</string>
 		<string>verdanab.ttf</string>
 	</array>
-<!--	<key>UIBackgroundModes</key>-->
-<!--	<array>-->
-<!--		<string>audio</string>-->
-<!--		<string>fetch</string>-->
-<!--		<string>processing</string>-->
-<!--		<string>remote-notification</string>-->
-<!--	</array>-->
 	<key>UILaunchScreen</key>
-	<string>LaunchScreen</string>
+	<string>Launch Screen</string>
 	<key>UILaunchStoryboardName</key>
-	<string>Launch Screen.storyboard</string>
+	<string>BootSplash.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIRequiresFullScreen</key>
+	<true/>
 	<key>UIStatusBarStyle</key>
 	<string></string>
 	<key>UISupportedInterfaceOrientations</key>

@@ -71,7 +71,7 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
       timestamp: date.getTime(), // fire at 11:10am (10 minutes before meeting)
       repeatFrequency: RepeatFrequency.DAILY,
     };
-    console.log(date, selectedHours, selectedMinutes, type);
+   
 
     // Create a trigger notification
     await notifee.createTriggerNotification(
