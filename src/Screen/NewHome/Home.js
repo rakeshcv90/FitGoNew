@@ -50,12 +50,12 @@ import {
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {BlurView} from '@react-native-community/blur';
-import {
-  isStepCountingSupported,
-  parseStepData,
-  startStepCounterUpdate,
-  stopStepCounterUpdate,
-} from '@dongminyu/react-native-step-counter';
+// import {
+//   isStepCountingSupported,
+//   parseStepData,
+//   startStepCounterUpdate,
+//   stopStepCounterUpdate,
+// } from '@dongminyu/react-native-step-counter';
 import {navigationRef} from '../../../App';
 import {useSelector, useDispatch} from 'react-redux';
 // import ActivityLoader from '../../Component/ActivityLoader';

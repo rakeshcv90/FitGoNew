@@ -1,5 +1,5 @@
 package fitme.health.fitness.homeworkouts.equipment;
-
+import com.reactnative.googlefit.GoogleFitPackage;
 import android.app.Application;
 import com.microsoft.codepush.react.CodePush;
 import com.facebook.react.PackageList;
@@ -10,7 +10,6 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
-// import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
 
 public class MainApplication extends Application implements ReactApplication {
   
@@ -34,7 +33,7 @@ public class MainApplication extends Application implements ReactApplication {
  
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
-          
+          new GoogleFitPackage(BuildConfig.APPLICATION_ID);
           return packages;
         }
         
