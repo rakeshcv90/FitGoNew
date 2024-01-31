@@ -1,5 +1,4 @@
 package fitme.health.fitness.homeworkouts.equipment;
-
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;

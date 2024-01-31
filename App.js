@@ -50,9 +50,6 @@ const App = () => {
     try {
       analytics().setAnalyticsCollectionEnabled(true);
       crashlytics().setCrashlyticsCollectionEnabled(true);
-      crashlytics().setAttributes({
-        platform: Platform.OS,
-      });
     } catch (error) {
       crashlytics().recordError(error);
     }
@@ -188,6 +185,10 @@ const App = () => {
         onStateChange={state => {
           analytics().logScreenView({
             'screen_name':state.routes[state.index].name, //logging screen name to firebase Analytics
+          });
+          crashlytics().setAttributes({
+            'platform': Platform.OS,
+            'CrashedScreenName':state.routes[state.index].name
           });
         }}>
         <LoginStack />
