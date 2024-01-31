@@ -34,7 +34,7 @@ import {
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import TrackPlayer from 'react-native-track-player';
 import crashlytics from '@react-native-firebase/crashlytics';
-//import analytics from '@react-native-firebase/analytics';
+import analytics from '@react-native-firebase/analytics';
 import codePush from 'react-native-code-push';
 import CircularProgress from 'react-native-circular-progress-indicator';
 import {
@@ -64,12 +64,12 @@ const App = () => {
   useEffect(() => {
     LogBox.ignoreLogs(['Sending...']);
     try {
-     // analytics().setAnalyticsCollectionEnabled(true);
+     analytics().setAnalyticsCollectionEnabled(true);
       crashlytics().setCrashlyticsCollectionEnabled(true);
     } catch (error) {
       crashlytics().recordError(error);
     }
-   // alalyicsData();
+   alalyicsData();
   }, []);
   const handleBackPress = () => {
     // Do nothing to stop the hardware back press
@@ -88,11 +88,11 @@ const App = () => {
   const StatusBar_Bar_Height = Platform.OS === 'ios' ? getStatusBarHeight() : 0;
   const dispatch = useDispatch();
 
-  // const alalyicsData = () => {
-  //   analytics().logEvent('Platform', {
-  //     data: Platform.OS,
-  //   });
-  // };
+  const alalyicsData = () => {
+    analytics().logEvent('Platform', {
+      data: Platform.OS,
+    });
+  };
   useEffect(() => {
     const subscription = NetInfo.addEventListener(state => {
       if (state.isConnected) {
