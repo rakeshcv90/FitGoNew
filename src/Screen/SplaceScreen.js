@@ -22,6 +22,7 @@ import VersionNumber, { appVersion } from 'react-native-version-number';
 import DeviceInfo from 'react-native-device-info';
 import axios from 'axios';
 import {showMessage} from 'react-native-flash-message';
+import { RemoteMessage, requestPermissionforNotification } from '../Component/Helper/PushNotification';
 
 const products = Platform.select({
   ios: ['a_monthly', 'b_quaterly', 'c_annual'],
@@ -35,7 +36,10 @@ const SplaceScreen = ({navigation}) => {
   const {showIntro, getUserDataDetails, getUserID} = useSelector(
     state => state,
   );
-
+  useEffect(() => {
+    requestPermissionforNotification(dispatch);
+    RemoteMessage();
+  }, []);
   useEffect(() => {
     DeviceInfo.syncUniqueId().then(uniqueId => {
       getCaterogy(uniqueId);

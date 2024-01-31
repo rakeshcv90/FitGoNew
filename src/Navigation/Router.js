@@ -11,8 +11,8 @@ import Focus from '../Screen/Yourself/Focus';
 import Level from '../Screen/Yourself/Level';
 import Height from '../Screen/Yourself/Height';
 import Weight from '../Screen/Yourself/Weight';                
-import OtpVerification from '../Screen/OtpVerification';
-import WorkoutCategories from '../Screen/New Workouts/WorkoutCategories';
+
+
 import IntroductionScreen1 from '../Screen/Introduction/IntroductionScreen1';
 import IntroductionScreen2 from '../Screen/Introduction/IntroductionScreen2';
 import IntroductionScreen3 from '../Screen/Introduction/IntroductionScreen3';
@@ -21,7 +21,7 @@ import MeditationRoutine from '../Screen/MeditationScreens/MeditationRoutine';
 import LogSignUp from '../Screen/LogSignUp';
 import NewEditProfile from '../Component/NewEditProfile';
 import NewPersonalDetails from '../Screen/NewPersonalDetails';
-import NewStepCounter from '../Screen/NewStepCounter';
+
 import SleepDuration from '../Screen/MeditationScreens/SleepDuration';
 import MentalState from '../Screen/MeditationScreens/MentalState';
 import Alcohalinfo from '../Screen/MeditationScreens/Alcohalinfo';
@@ -90,10 +90,10 @@ export const LoginStack = () => {
       <Stack.Screen name="WorkoutArea" component={WorkoutArea} />
       <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
-      <Stack.Screen name="OtpVerification" component={OtpVerification} />
+
       <Stack.Screen name="Edit_Profile" component={NewEditProfile} />
       <Stack.Screen name="NewPersonalDetails" component={NewPersonalDetails} />
-      <Stack.Screen name="StepCounter" component={NewStepCounter} />
+
       <Stack.Screen name="Scale" component={Scale} />
       <Stack.Screen name="Gender" component={Gender} />
       <Stack.Screen name="Equipment" component={Equipment} />

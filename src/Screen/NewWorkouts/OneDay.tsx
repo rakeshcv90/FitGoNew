@@ -176,8 +176,8 @@ const OneDay = ({navigation, route}: any) => {
           }}>
           <View
             style={{
-              height: 70,
-              width: 70,
+              height: 80,
+              width: 80,
               backgroundColor: AppColor.WHITE,
               justifyContent: 'center',
               alignItems: 'center',
@@ -197,7 +197,7 @@ const OneDay = ({navigation, route}: any) => {
             }}>
             <Image
               source={{uri: item?.exercise_image}}
-              style={{height: 80, width: 70}}
+              style={{height: 75, width: 75,alignSelf:'center'}}
               resizeMode="contain"
             />
           </View>
@@ -208,7 +208,7 @@ const OneDay = ({navigation, route}: any) => {
                 height: 40,
                 width: 40,
                 marginLeft: -DeviceWidth * 0.1,
-                marginTop: -DeviceWidth * 0.1,
+                marginTop: -DeviceWidth * 0.09,
               }}
               resizeMode="contain"
             />

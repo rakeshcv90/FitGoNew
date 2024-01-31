@@ -49,6 +49,8 @@ import {TextInput} from 'react-native-paper';
 import {navigationRef} from '../../App';
 import VersionNumber from 'react-native-version-number';
 import {Platform} from 'react-native';
+import { RemoteMessage, requestPermissionforNotification } from '../Component/Helper/PushNotification';
+import { Alert } from 'react-native';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -68,7 +70,10 @@ const Login = ({navigation}) => {
   const [IsVerifyVisible, setVerifyVisible] = useState(false);
   const [appVersion, setAppVersion] = useState(0);
   const {getFcmToken} = useSelector(state => state);
-
+  useEffect(() => {
+    requestPermissionforNotification(dispatch);
+    RemoteMessage();
+  }, []);
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:

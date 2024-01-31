@@ -638,7 +638,7 @@ const Profile = () => {
               justifyContent: 'space-between',
               flexDirection: 'row',
               margin: 15,
-              marginVertical:Platform.OS=='ios'?DeviceHeigth*0.07:0,
+              marginVertical: Platform.OS == 'ios' ? DeviceHeigth * 0.05 :  DeviceHeigth * 0.02,
               alignItems: 'center',
             }}>
             <TouchableOpacity
@@ -647,7 +647,6 @@ const Profile = () => {
               }}
               style={{
                 width: DeviceWidth * 0.23,
-                paddingVertical: 1,
               }}>
               <Icons name="chevron-left" size={30} color={AppColor.WHITE} />
             </TouchableOpacity>
@@ -690,7 +689,11 @@ const Profile = () => {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={[styles.profileView,{  marginTop:Platform.OS=='ios'?-DeviceHeigth*0.06:0,}]}>
+          <View
+            style={[
+              styles.profileView,
+              {marginTop: Platform.OS == 'ios' ? -DeviceHeigth * 0.035 : 0},
+            ]}>
             {isLoading && (
               <ActivityIndicator
                 style={styles.loader}
@@ -721,7 +724,7 @@ const Profile = () => {
           </View>
           <View
             style={{
-              marginTop: DeviceHeigth * 0.05,
+              marginTop: DeviceHeigth * 0.04,
               alignItems: 'center',
             }}>
             <Text
@@ -756,13 +759,13 @@ const Profile = () => {
   return (
     <View style={styles.Container}>
       <StatusBar barStyle={'light-content'} backgroundColor={'#000'} />
-    
+
       <ProfileView />
       <View
         style={[
           styles.UserDetailsView,
           {
-            top: -profileViewHeight * 0.1,
+            top: -profileViewHeight * 0.07,
           },
         ]}>
         {FirstView.map((value, index) => (
