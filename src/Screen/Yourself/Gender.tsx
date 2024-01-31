@@ -25,7 +25,7 @@ const Gender = ({route, navigation}: any) => {
     // Set the selected gender
 
     const easing = Easing.linear(1);
-    console.log(gender, 'Gender');
+
 
     // Animate the translation of the unselected image
     if (gender == '') {
@@ -68,7 +68,7 @@ const Gender = ({route, navigation}: any) => {
     }
   };
   const toNextScreen = (item: any) => {
-    console.log(item, 'ITEM');
+
     if (item == 'Male') {
       setTimeout(() => {
         navigation.navigate('Goal', {

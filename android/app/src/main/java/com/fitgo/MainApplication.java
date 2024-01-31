@@ -1,6 +1,7 @@
 package fitme.health.fitness.homeworkouts.equipment;
 import com.reactnative.googlefit.GoogleFitPackage;
 import android.app.Application;
+import com.microsoft.codepush.react.CodePush;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
@@ -9,6 +10,7 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
+
 public class MainApplication extends Application implements ReactApplication {
   
   private final ReactNativeHost mReactNativeHost =
@@ -16,6 +18,10 @@ public class MainApplication extends Application implements ReactApplication {
         @Override
         public boolean getUseDeveloperSupport() {
           return BuildConfig.DEBUG;
+        }
+         @Override
+        protected String getJSBundleFile() {
+            return CodePush.getJSBundleFile();
         }
        
         @Override

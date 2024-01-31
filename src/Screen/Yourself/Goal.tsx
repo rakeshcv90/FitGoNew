@@ -50,7 +50,7 @@ const Goal = ({navigation, route}: any) => {
         goal: item?.goal_id,
       },
     ];
-    console.log(currentData)
+
     dispatch(setLaterButtonData(currentData));
     navigation.navigate('Level', {nextScreen: screen + 1, gender: gender});
   };
@@ -58,7 +58,7 @@ const Goal = ({navigation, route}: any) => {
   const handleImagePress = (gender: string) => {
     // Set the selected gender
     const easing = Easing.linear(1);
-    console.log(gender, DeviceWidth / 2, -DeviceWidth * 0.4);
+
 
     // Animate the translation of the unselected image
     Animated.parallel([

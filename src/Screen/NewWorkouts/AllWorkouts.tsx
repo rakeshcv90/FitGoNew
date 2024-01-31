@@ -498,7 +498,7 @@ import moment from 'moment';
 import {localImage} from '../../Component/Image';
 import {showMessage} from 'react-native-flash-message';
 import LinearGradient from 'react-native-linear-gradient';
-
+import VersionNumber, {appVersion} from 'react-native-version-number';
 const AllWorkouts = ({navigation, route}: any) => {
   const {data, type, fav} = route.params;
   const {allWorkoutData, getUserDataDetails} = useSelector(
@@ -536,6 +536,7 @@ const AllWorkouts = ({navigation, route}: any) => {
       setRefresh(true);
       const payload = new FormData();
       payload.append('id', getUserDataDetails?.id);
+      payload.append('version',VersionNumber.appVersion);
       const res = await axios({
         url: NewAppapi.ALL_WORKOUTS,
         method: 'POST',
@@ -544,10 +545,28 @@ const AllWorkouts = ({navigation, route}: any) => {
         },
         data: payload,
       });
-      if (res.data) {
+      // if (res.data) {
+      //   setRefresh(false);
+      //   console.log(res.data?.length, 'AllWorkouts', total_Workouts_Time);
+      //   dispatch(setAllWorkoutData(res.data));
+      // }
+
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
         setRefresh(false);
-        console.log(res.data?.length, 'AllWorkouts', total_Workouts_Time);
+      } else if (res?.data) {
+        setRefresh(false);
+
         dispatch(setAllWorkoutData(res.data));
+      } else {
+        setRefresh(false);
+        dispatch(setAllWorkoutData([]));
       }
     } catch (error) {
       setRefresh(false);
@@ -559,12 +578,24 @@ const AllWorkouts = ({navigation, route}: any) => {
     try {
       setRefresh(true);
       const res = await axios(
-        NewAppapi.POPULAR_WORKOUTS + '/' + getUserDataDetails?.login_token,
+        NewAppapi.POPULAR_WORKOUTS + '/' + VersionNumber.appVersion,
       );
-      if (res.data) {
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setRefresh(false);
+      } else if (res.data) {
         setRefresh(false);
         console.log(res.data?.length, 'Popular');
         setPopularData(res.data);
+      } else {
+        setPopularData([]);
+        setRefresh(false);
       }
     } catch (error) {
       setRefresh(false);
@@ -578,17 +609,37 @@ const AllWorkouts = ({navigation, route}: any) => {
       const payload = new FormData();
       payload.append('token', getUserDataDetails?.login_token);
       payload.append('id', getUserDataDetails?.id);
+      payload.append('version', VersionNumber.appVersion);
       setRefresh(true);
       const res = await axios({
         url: NewAppapi.TRACK_WORKOUTS,
         method: 'post',
         data: payload,
       });
-      if (res.data) {
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
         setRefresh(false);
-        console.log(res.data?.workout_ids?.length, 'Popular');
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (res?.data?.msg == 'No Completed Workouts Found') {
+        setRefresh(false);
+        setTrackerData([]);
+      } else if (res?.data) {
+        setRefresh(false);
         setTrackerData(res.data?.workout_ids);
+      } else {
+        setRefresh(false);
+        setTrackerData([]);
       }
+      // if (res.data) {
+      //   setRefresh(false);
+      //   console.log(res.data?.workout_ids?.length, 'Popular');
+      //   setTrackerData(res.data?.workout_ids);
+      // }
     } catch (error) {
       setRefresh(false);
       console.error(error, 'popularError');

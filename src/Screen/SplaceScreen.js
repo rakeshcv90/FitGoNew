@@ -18,9 +18,11 @@ import {
   setInappPurchase,
   setStoreData,
 } from '../Component/ThemeRedux/Actions';
-import VersionNumber from 'react-native-version-number';
+import VersionNumber, { appVersion } from 'react-native-version-number';
 import DeviceInfo from 'react-native-device-info';
 import axios from 'axios';
+import {showMessage} from 'react-native-flash-message';
+import { RemoteMessage, requestPermissionforNotification } from '../Component/Helper/PushNotification';
 
 const products = Platform.select({
   ios: ['a_monthly', 'b_quaterly', 'c_annual'],
@@ -31,9 +33,13 @@ const SplaceScreen = ({navigation}) => {
   const [deviceId, setDeviceId] = useState(0);
   const dispatch = useDispatch();
 
-  const {showIntro, getUserDataDetails,getUserID} = useSelector(state => state);
-
-
+  const {showIntro, getUserDataDetails, getUserID} = useSelector(
+    state => state,
+  );
+  useEffect(() => {
+    requestPermissionforNotification(dispatch);
+    RemoteMessage();
+  }, []);
   useEffect(() => {
     DeviceInfo.syncUniqueId().then(uniqueId => {
       getCaterogy(uniqueId);
@@ -41,8 +47,6 @@ const SplaceScreen = ({navigation}) => {
       Meal_List(uniqueId);
     });
     // getPlanData();
-   
-   
   }, []);
   // const getPlanData = () => {
   //   Platform.OS === 'ios'
@@ -79,14 +83,20 @@ const SplaceScreen = ({navigation}) => {
     setTimeout(() => {
       if (showIntro) {
         //  navigation.replace('LogSignUp');
-        if (getUserDataDetails?.id) navigation.replace('BottomTab');
-        else navigation.replace('LogSignUp');
+        if (
+          getUserDataDetails?.id &&
+          getUserDataDetails?.profile_compl_status == 1
+        ) {
+          navigation.replace('BottomTab');
+        } else {
+          navigation.replace('LogSignUp');
+        }
       } else {
         navigation.replace('IntroductionScreen1');
       }
     }, 4000);
   }, []);
-  const Meal_List = async (deviceData) => {
+  const Meal_List = async deviceData => {
     try {
       const data = await axios(`${NewAppapi.Meal_Categorie}`, {
         method: 'POST',
@@ -94,12 +104,19 @@ const SplaceScreen = ({navigation}) => {
           'Content-Type': 'multipart/form-data',
         },
         data: {
-          deviceid: deviceData,
+          
           version: VersionNumber.appVersion,
         },
       });
-
-      if (data.data.diets.length > 0) {
+      if (data?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: data?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (data.data.diets.length > 0) {
         dispatch(Setmealdata(data.data.diets));
       } else {
         dispatch(Setmealdata([]));
@@ -109,7 +126,7 @@ const SplaceScreen = ({navigation}) => {
       console.log('Meal List Error', error);
     }
   };
-  const getCaterogy = async (deviceid) => {
+  const getCaterogy = async deviceid => {
     try {
       const favDiet = await axios.get(
         `${NewAppapi.Get_Product_Catogery}?deviceid=${deviceid}`,
@@ -117,15 +134,12 @@ const SplaceScreen = ({navigation}) => {
 
       if (favDiet.data.status != 'Invalid token') {
         dispatch(setStoreData([]));
-
       } else {
-      
         dispatch(setStoreData(favDiet.data.data));
       }
     } catch (error) {
       dispatch(setStoreData([]));
       console.log('Product Category Error111', error);
-
     }
   };
   return (

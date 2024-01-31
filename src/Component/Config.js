@@ -41,31 +41,31 @@ export const NewAppapi = {
   Post_COMPLETE_PROFILE: NewApi + 'user_update_details',//Done App Version
   Custom_WORKOUT_DATA: NewApi + 'usercustomworkout',//Done App Version
   Free_WORKOUT_DATA: NewApi + 'userfreecustomworkout',//Done App Version
-  Free_Excercise_Data: NewApi + 'userfreecustomexercise',
-  ALL_WORKOUTS: NewApi + 'allworkout',
-  POPULAR_WORKOUTS: NewApi + 'popularWorkout',
-  Meal_Categorie: NewApi + 'get_categorie',
-  DietDetails: NewApi + 'getdiet',
+  Free_Excercise_Data: NewApi + 'userfreecustomexercise',//Done App Version
+  ALL_WORKOUTS: NewApi + 'allworkout',//Done App Version
+  POPULAR_WORKOUTS: NewApi + 'popularWorkout',//Done App Version
+  Meal_Categorie: NewApi + 'get_categorie',//Done App Version
+  DietDetails: NewApi + 'getdiet',//Done App Version
   Get_DAYS: NewApi + 'days',
-  POST_EXERCISE: NewApi + 'user_status',
+  POST_EXERCISE: NewApi + 'user_status',//Done App Version
   CURRENT_DAY_EXERCISE: NewApi + 'user_exercise_status',
-  TRACK_CURRENT_DAY_EXERCISE: NewApi + 'user_details',
-  TRACK_WORKOUTS: NewApi + 'workout_status',
+  TRACK_CURRENT_DAY_EXERCISE: NewApi + 'user_details',//Done App Version
+  TRACK_WORKOUTS: NewApi + 'workout_status',//Done App Version
   GET_LIKE_WORKOUTS: NewApi + 'getfavoritewokrout',
   POST_LIKE_WORKOUT: NewApi + 'addfavorite',
   CURRENT_DAY_EXERCISE_DETAILS: NewApi + 'user_exercise_details',
   Get_Product_Catogery: NewApi + 'categorydata',
   Get_Product_List: NewApi + 'productdata',
-  Get_Mindset_Excise: NewApi + 'mindsetdata',
-  PedometerAPI: NewApi + 'steps_details',
+  Get_Mindset_Excise: NewApi + 'mindsetdata',//Done App Version
+  PedometerAPI: NewApi + 'steps_details',//Done App Version
   Transctions: NewApi + 'transactions',
   TransctionsDetails: NewApi + 'transactionsdetails',
   total_Calories:NewApi+'exercisecalo',
-  UpdateUserProfile: NewApi + 'update_details',
-  HOME_GRAPH_DATA: NewApi + 'history',
+  UpdateUserProfile: NewApi + 'update_details',//Done App Version
+  HOME_GRAPH_DATA: NewApi + 'history',//Done App Version
   Upload_Profile_picture:NewApi+'update_profile_image',
   monthly_history:NewApi+'monthly_history',
-  DateWiseData:NewApi+'selectDate_exercise',
+  DateWiseData:NewApi+'selectDate_exercise',//Done App Version
   Delete_Account:NewApi+'deleteAccount',
   Custome_Workout_Cal_Time:NewApi+'exercise_total_calo',
   loginApple:NewApi+'user_login_test',

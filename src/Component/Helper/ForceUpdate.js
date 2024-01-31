@@ -7,7 +7,7 @@ export const CheckVersion=async()=>{
   
           })
           const CurrentVersion=VersionCheck.getCurrentVersion();
-          // console.log(latestVersion,CurrentVersion)
+        
           if(latestVersion>CurrentVersion){
             Alert.alert("Update Required","A new version of the app is available , Please update to continue using the app...",[
               {

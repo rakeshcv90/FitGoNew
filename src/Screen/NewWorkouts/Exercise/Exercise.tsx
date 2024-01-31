@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -26,6 +27,8 @@ import ProgreesButton from '../../../Component/ProgressButton';
 import Tts from 'react-native-tts';
 import {string} from 'yup';
 import {showMessage} from 'react-native-flash-message';
+import VersionNumber from 'react-native-version-number';
+
 const Exercise = ({navigation, route}: any) => {
   const {allExercise, currentExercise, data, day, exerciseNumber, trackerData} =
     route.params;
@@ -42,13 +45,14 @@ const Exercise = ({navigation, route}: any) => {
   const [exerciseDoneIDs, setExerciseDoneIDs] = useState<Array<any>>([]);
   const [skipCount, setSkipCount] = useState(0);
   const [currentData, setCurrentData] = useState(currentExercise);
+  const [isLoading, setIsLoading] = useState(true);
   const {allWorkoutData, getUserDataDetails, getSoundOffOn} = useSelector(
     (state: any) => state,
   );
   const [separateTimer, setSeparateTimer] = useState(timer);
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const restTimerRef = useRef(null);
-  const seprateTimerRef=useRef(null)
+  const seprateTimerRef = useRef(null);
   useEffect(() => {
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
@@ -100,6 +104,7 @@ const Exercise = ({navigation, route}: any) => {
             if (timer === 0) {
               if (number == allExercise?.length - 1) return;
               setRestStart(false);
+              setIsLoading(true)
               Tts.stop();
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
@@ -119,7 +124,7 @@ const Exercise = ({navigation, route}: any) => {
             } else {
               setTimer(timer - 1);
             }
-            getSoundOffOn&&  Tts.speak(`${timer-1}`);
+            getSoundOffOn && Tts.speak(`${timer - 1}`);
           }, 1000))
         : setTimeout(() => {
             if (pause)
@@ -163,11 +168,6 @@ const Exercise = ({navigation, route}: any) => {
     return unsubscribe;
   }, [navigation]);
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     !pause && setDefaultPre(defaultPre + 1);
-  //   }, 1000);
-  // }, [defaultPre, pause]);
   const FAB = ({icon}: any) => {
     return (
       <TouchableOpacity
@@ -211,64 +211,35 @@ const Exercise = ({navigation, route}: any) => {
   };
 
   const postCurrentExerciseAPI = async (index: number) => {
-    console.log(trackerData, 'trackerData');
     const payload = new FormData();
     payload.append('id', trackerData[index]?.id);
     payload.append('day', day);
     payload.append('workout_id', data?.workout_id);
     payload.append('user_id', getUserDataDetails?.id);
+    payload.append('version', VersionNumber.appVersion);
     try {
       const res = await axios({
         url: NewAppapi.POST_EXERCISE,
         method: 'post',
         data: payload,
       });
-      if (res.data) {
-        // console.log(
-        //   res.data,
-        //   'Post________________---------------------',
-        //   payload,
-        // );
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (res.data) {
         setCurrentData(allExercise[index]);
         setRestStart(true);
         setPlayW(0);
-        // setRestStart(false)
       }
     } catch (error) {
       console.error(error, 'PostDaysAPIERror');
     }
   };
-  // const postCurrentDayAPI = async (index: number) => {
-  //   // if (isAPICalling) {
-  //   //   return; // If API call is already in progress, do not proceed
-  //   // }
-  //   console.log(index, 'isAPICalling');
-  //   // setAPICalling(true);
-  //   const payload = new FormData();
-  //   payload.append('user_exercise_id', trackerData[index]?.id);
-  //   payload.append('user_id', getUserDataDetails?.id);
-  //   payload.append('workout_id', data?.workout_id);
-  //   payload.append('user_day', day);
-  //   allExercise?.length - 1 == index &&
-  //     payload.append('final_status', 'all_completed');
-  //   console.log(payload);
-  //   try {
-  //     const res = await axios({
-  //       url: NewAppapi.CURRENT_DAY_EXERCISE,
-  //       method: 'Post',
-  //       data: payload,
-  //     });
-  //     if (res.data) {
-  //       console.log(res.data, 'Post');
-  //       setCurrentData(allExercise[index]);
-  //       setRestStart(true);
-  //       setPlayW(0);
-  //       // setRestStart(false)
-  //     }
-  //   } catch (error) {
-  //     console.error(error, 'PostDaysAPIERror');
-  //   }
-  // };
 
   const PauseModal = ({back}: any) => {
     return (
@@ -373,68 +344,7 @@ const Exercise = ({navigation, route}: any) => {
       </Modal>
     );
   };
-  // const StartModal = ({pause, defaultPre}: any) => {
-  //   const [pre, setPre] = useState(1);
-  //   useEffect(() => {
-  //     setTimeout(() => {
-  //       !pause && setPre(pre + 1);
-  //     }, 1000);
-  //   }, [pre, pause]);
-  //   return (
-  //     <Modal visible={pause && defaultPre < 1} transparent>
-  //       <View
-  //         style={{
-  //           flex: 1,
-  //           height: DeviceHeigth,
-  //           width: DeviceWidth,
-  //           backgroundColor: '#000000B2',
-  //           alignItems: 'center',
-  //           justifyContent: 'center',
-  //         }}>
-  //         <View
-  //           style={{
-  //             alignSelf: 'center',
-  //             alignItems: 'center',
-  //             justifyContent: 'center',
-  //             height: DeviceHeigth * 0.8,
-  //             width: DeviceWidth,
-  //           }}>
-  //           <TouchableOpacity
-  //             onPress={() => {
-  //               navigation.goBack()
-  //             }}
-  //             style={{
-  //               top: DeviceHeigth * 0.04,
-  //               left: 20,
-  //               // backgroundColor: 'black',
-  //               width: 40,
-  //               position: 'absolute',
-  //             }}>
-  //             <Icons name={'chevron-left'} size={30} color={AppColor.WHITE} />
-  //           </TouchableOpacity>
-  //           <Text
-  //             style={{
-  //               fontSize: 40,
-  //               fontFamily: 'Poppins',
-  //               fontWeight: 'bold',
-  //               lineHeight: 60,
-  //               color: AppColor.WHITE,
-  //             }}>
-  //             {currentData?.exercise_title}
-  //           </Text>
-  //           <Text
-  //             style={{
-  //               fontSize: 100,
-  //               fontFamily: 'Poppins',
-  //               fontWeight: 'bold',
-  //               lineHeight: 120,
-  //               color: AppColor.WHITE,
-  //             }}>{`${pre}`}</Text>
-  //         </View>
-  //       </View>
-  //     </Modal>
-  //   );
-  // };
+
   return (
     <SafeAreaView
       style={{
@@ -483,8 +393,8 @@ const Exercise = ({navigation, route}: any) => {
               <TouchableOpacity
                 onPress={() => {
                   // Tts.stop();
-                  setTimer(prevTimer => prevTimer + 30)
-                  setSeparateTimer(prevTimer=>prevTimer+30)
+                  setTimer(prevTimer => prevTimer + 30);
+                  setSeparateTimer(prevTimer => prevTimer + 30);
                   // Tts.speak(`${separateTimer}`);
                 }}
                 style={{
@@ -509,10 +419,10 @@ const Exercise = ({navigation, route}: any) => {
               <TouchableOpacity
                 disabled={number == allExercise?.length - 1}
                 onPress={() => {
-                  // navigation.navigate('SaveDayExercise', {data, day});
+                  
                   if (number == allExercise?.length - 1) return;
                   else {
-                    setRestStart(prev=>false);
+                    setRestStart(prev => false);
                     const index = allExercise?.findIndex(
                       (item: any) =>
                         item?.exercise_id == currentData?.exercise_id,
@@ -521,12 +431,13 @@ const Exercise = ({navigation, route}: any) => {
                       ...exerciseDoneIDs,
                       currentData?.exercise_id,
                     ]);
-                    postCurrentExerciseAPI(index + 1);
+                   // postCurrentExerciseAPI(index + 1);
                     setNumber(number + 1);
                     setTimer(15);
-                    setPlayW(prevTimer=>0);
+                    setPlayW(prevTimer => 0);
                     Tts.stop();
                   }
+                  setIsLoading(true)
                 }}
                 style={{
                   borderRadius: 20,
@@ -608,7 +519,6 @@ const Exercise = ({navigation, route}: any) => {
                 setBack(true);
               }}
               style={{
-                // backgroundColor: 'black',
                 width: 40,
               }}>
               <Icons
@@ -632,51 +542,30 @@ const Exercise = ({navigation, route}: any) => {
               height: DeviceHeigth * 0.5,
               marginTop: -DeviceHeigth * 0.04,
             }}>
-            <Text>{trackerData[number]?.id}</Text>
-            {/* {defaultPre >= 1 && (
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  top: DeviceHeigth * 0.2,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 100,
-                    fontFamily: 'Poppins',
-                    fontWeight: 'bold',
-                    lineHeight: 120,
-                    color: AppColor.BLACK,
-                  }}>{`${defaultPre}`}</Text>
-              </View>
-            )} */}
+            {/* <Text>{trackerData[number]?.id}</Text> */}
+
+            {isLoading && (
+              <ActivityIndicator
+                style={[styles.loader,{ transform: [{ scaleX: 2 }, { scaleY: 2}] }]}
+                // size={Platform.OS=='android'?DeviceHeigth*0.1:DeviceHeigth*0.1}
+                size="large"
+                color="red"
+              />
+          )}
             <Video
               source={{
-                // uri: 'https://customer-50ey2gp6ldpfu37q.cloudflarestream.com/477addc9f11b43b3ba5a2e6f27f5200d/downloads/default.mp4',
                 uri: currentData?.exercise_video,
               }}
               onReadyForDisplay={() => {
                 setPause(true);
-                // setDefaultPre(0);
               }}
               onLoad={() => {
-                console.log('second');
+                setIsLoading(false)
                 setPause(true);
-                // setDefaultPre(0);
               }}
+          
               onVideoLoad={() => console.log('third')}
               onVideoLoadStart={() => console.log('forth')}
-              // onBuffer={() => {
-              //   console.log('third');
-              //   setPause(false);
-              // }}
-              // onFrameChange={() => {
-              //   setTimeout(() => {
-              //     console.log(pause)
-              //     if (pause) setPlayW(playW + 1);
-              //     if (playW == 100) setPause(false);
-              //   }, 1000);
-              // }}
               paused={!pause}
               onPlaybackResume={() => {
                 console.log(pause);
@@ -687,14 +576,9 @@ const Exercise = ({navigation, route}: any) => {
               style={{
                 width: DeviceWidth,
                 height: DeviceHeigth * 0.5,
-                alignSelf: 'center',}}
+                alignSelf: 'center',
+              }}
             />
-
-            {/* <View style={{alignSelf: 'flex-end'}}>
-              <FAB icon="format-list-bulleted" />
-              <FAB icon="info-outline" />
-               <FAB icon="music" /> 
-            </View> */}
           </View>
           <Text style={styles.head}>Get Ready</Text>
           <View
@@ -719,27 +603,15 @@ const Exercise = ({navigation, route}: any) => {
           <Play
             play={!pause}
             fill={`${100 - playW}%`}
-            // fill={`${playW}%`}
             h={80}
             playy={() => {
-              // if (defaultPre >= 1) {
-              //   showMessage({
-              //     message: 'Video is not loaded yet.',
-              //     type: 'success',
-              //     animationDuration: 500,
-
-              //     floating: true,
-              //     icon: {icon: 'auto', position: 'left'},
-              //   });
-              //   return;
-              // }
               setPause(!pause);
             }}
             next={() => {
               setPause(!pause);
               // setDefaultPre(0);
-              setPlayW(prevTimer=>0);
-              setPause(false)
+              setPlayW(prevTimer => 0);
+              setPause(false);
               setTimeout(() => {
                 if (number == allExercise?.length - 1) return;
                 const index = allExercise?.findIndex(
@@ -753,8 +625,8 @@ const Exercise = ({navigation, route}: any) => {
             }}
             back={() => {
               if (number == 0) return;
-              setPlayW(prevTimer=>0);
-              setPause(false)
+              setPlayW(prevTimer => 0);
+              setPause(false);
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
@@ -773,7 +645,7 @@ const Exercise = ({navigation, route}: any) => {
         </>
       )}
       <PauseModal back={back} />
-      {/* <StartModal pause={pause} defaultPre={defaultPre} /> */}
+
       <WorkoutsDescription open={open} setOpen={setOpen} data={currentData} />
     </SafeAreaView>
   );
@@ -830,5 +702,15 @@ const styles = StyleSheet.create({
         // shadowRadius: 10,
       },
     }),
+  },
+  loader: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignSelf:'center',
+
+   marginVertical:DeviceHeigth*0.2,
+
+   
+
   },
 });

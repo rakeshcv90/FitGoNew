@@ -65,7 +65,7 @@ const Equipment = ({route, navigation}: any) => {
   const handleImagePress = (gender: string) => {
     // Set the selected gender
     const easing = Easing.linear(1);
-    console.log(gender, selected, DeviceWidth / 2, -DeviceWidth * 0.4);
+
     if (gender === '') {
       Animated.parallel([
         Animated.timing(translateE, {

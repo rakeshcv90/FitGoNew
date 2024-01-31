@@ -45,6 +45,7 @@ import {navigationRef} from '../../App';
 import DeviceInfo from 'react-native-device-info';
 import VersionNumber from 'react-native-version-number';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
+import { RemoteMessage, requestPermissionforNotification } from '../Component/Helper/PushNotification';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 const Signup = ({navigation}) => {
@@ -59,6 +60,11 @@ const Signup = ({navigation}) => {
   const dispatch = useDispatch();
 
   const {getFcmToken} = useSelector(state => state);
+
+  useEffect(() => {
+    requestPermissionforNotification(dispatch);
+    RemoteMessage();
+  }, []);
   const PasswordRegex =
     // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%&*()-_+='":;,.?/~`[{}<>€£¥÷×])[A-Za-z\d!@#$%&*()-_+='":;,.?/~`[{}<>€£¥÷×]{8,}$/;

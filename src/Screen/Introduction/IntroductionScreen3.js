@@ -16,7 +16,12 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import IntroProgressBar from './NewIntroductionProgressBar';
 import {useDispatch, useSelector} from 'react-redux';
 import {setShowIntro} from '../../Component/ThemeRedux/Actions';
+import { RemoteMessage, requestPermissionforNotification } from '../../Component/Helper/PushNotification';
 const IntroductionScreen3 = ({navigation}) => {
+  useEffect(() => {
+    requestPermissionforNotification(dispatch);
+    RemoteMessage();
+  }, []);
   const TranslateY = useRef(new Animated.Value(0)).current;
   const HideTextAnimation = () => {
     TranslateY.setValue(0);

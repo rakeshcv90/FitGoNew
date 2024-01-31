@@ -24,7 +24,7 @@ const DrawerItems = props => {
   defaultTheme?(DeviceWidth * 25) / 100:(-DeviceWidth * 2.5) / 100)
   const Dispatch = useDispatch();
   const [isEnabled, setIsEnabled] = useState(defaultTheme);
- console.log("Profile",ProfilePhoto)
+
   const removeData = async () => {
     try {
       await AsyncStorage.removeItem('Data');
