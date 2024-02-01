@@ -3,124 +3,168 @@ import {
   Text,
   StyleSheet,
   Image,
-  BackHandler,
+  Animated,
   StatusBar,
   ImageBackground,
 } from 'react-native';
 import React, {useEffect, useState, useRef} from 'react';
-import {DeviceHeigth, DeviceWidth} from '../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../Component/Config';
 import {localImage} from '../Component/Image';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import {Animated} from 'react-native';
-const SplaceScreen = ({navigation}) => {
-  //fade In
+import * as RNIap from 'react-native-iap';
+import {
+  Setmealdata,
+  setInappPurchase,
+  setStoreData,
+} from '../Component/ThemeRedux/Actions';
+import VersionNumber, { appVersion } from 'react-native-version-number';
+import DeviceInfo from 'react-native-device-info';
+import axios from 'axios';
+import {showMessage} from 'react-native-flash-message';
+import { RemoteMessage, requestPermissionforNotification } from '../Component/Helper/PushNotification';
 
+const products = Platform.select({
+  ios: ['a_monthly', 'b_quaterly', 'c_annual'],
+  android: ['a_monthly', 'b_quaterly', 'c_annual', 'base-plan'],
+});
+
+const SplaceScreen = ({navigation}) => {
+  const [deviceId, setDeviceId] = useState(0);
+  const dispatch = useDispatch();
+
+  const {showIntro, getUserDataDetails, getUserID} = useSelector(
+    state => state,
+  );
   useEffect(() => {
-    fadeInFirstText();
-    setTimeout(() => {
-      fadeInSecondText();
-    }, 1000);
-    setTimeout(() => {
-      navigation.navigate('IntroductionScreen');
-    }, 3000);
+    requestPermissionforNotification(dispatch);
+    RemoteMessage();
   }, []);
-  // const UserAuth = async () => {
-  //   try {
-  //     const userData = await AsyncStorage.getItem('Data')
-  //     const data = (JSON.parse(userData))
-  //     if (!!data) {
-  //       navigation.navigate('DrawerNavigation')
-  //     } else {
-  //       navigation.navigate('Login')
-  //     }
-  //   } catch (error) {
-  //     console.log("error", error)
-  //     navigation.navigate('Login')
-  //   }
-  // }
-  const fadeAnim1 = useRef(new Animated.Value(0)).current; //first text ref
-  const fadeAnim2 = useRef(new Animated.Value(0)).current; //second text ref
-  const fadeInFirstText = () => {
-    // Will change fadeAnim value to 1 in 5 seconds
-    Animated.timing(fadeAnim1, {
-      toValue: 1,
-      duration: 700,
-      useNativeDriver: true,
-    }).start();
+  useEffect(() => {
+    DeviceInfo.syncUniqueId().then(uniqueId => {
+      getCaterogy(uniqueId);
+      setDeviceId(uniqueId);
+      Meal_List(uniqueId);
+    });
+    // getPlanData();
+  }, []);
+  // const getPlanData = () => {
+  //   Platform.OS === 'ios'
+  //     ? RNIap.initConnection()
+  //         .catch(() => {
+  //           console.log('error connecting to store');
+  //         })
+  //         .then(() => {
+  //           RNIap.getProducts({skus: products})
+  //             .catch(() => {
+  //               console.log('error finding purchase');
+  //             })
+  //             .then(res => {
+  //               console.log('IOS Subscription', res);
+  //               dispatch(setInappPurchase(res));
+  //             });
+  //         })
+  //     : RNIap.initConnection()
+  //         .catch(() => {
+  //           console.log('error connecting to store');
+  //         })
+  //         .then(() => {
+  //           RNIap.getSubscriptions({skus: products})
+  //             .catch(() => {
+  //               console.log('error finding purchase');
+  //             })
+  //             .then(res => {
+  //               console.log('Android Subscription', res);
+  //               dispatch(setInappPurchase(res));
+  //             });
+  //         });
+  // };
+  useEffect(() => {
+    setTimeout(() => {
+      if (showIntro) {
+        //  navigation.replace('LogSignUp');
+        if (
+          getUserDataDetails?.id &&
+          getUserDataDetails?.profile_compl_status == 1
+        ) {
+          navigation.replace('BottomTab');
+        } else {
+          navigation.replace('LogSignUp');
+        }
+      } else {
+        navigation.replace('IntroductionScreen1');
+      }
+    }, 4000);
+  }, []);
+  const Meal_List = async deviceData => {
+    try {
+      const data = await axios(`${NewAppapi.Meal_Categorie}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          
+          version: VersionNumber.appVersion,
+        },
+      });
+      if (data?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: data?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (data.data.diets.length > 0) {
+        dispatch(Setmealdata(data.data.diets));
+      } else {
+        dispatch(Setmealdata([]));
+      }
+    } catch (error) {
+      dispatch(Setmealdata([]));
+      console.log('Meal List Error', error);
+    }
   };
-  const fadeInSecondText = () => {
-    // Will change fadeAnim value to 1 in 5 seconds
-    Animated.timing(fadeAnim2, {
-      toValue: 1,
-      duration: 700,
-      useNativeDriver: true,
-    }).start();
+  const getCaterogy = async deviceid => {
+    try {
+      const favDiet = await axios.get(
+        `${NewAppapi.Get_Product_Catogery}?deviceid=${deviceid}`,
+      );
+
+      if (favDiet.data.status != 'Invalid token') {
+        dispatch(setStoreData([]));
+      } else {
+        dispatch(setStoreData(favDiet.data.data));
+      }
+    } catch (error) {
+      dispatch(setStoreData([]));
+      console.log('Product Category Error111', error);
+    }
   };
   return (
-    <View style={styels.container}>
-      <StatusBar
-        translucent
-        barStyle={'default'}
-        backgroundColor={'transparent'}
+    <LinearGradient
+      style={styels.container}
+      start={{x: 0, y: 0}}
+      end={{x: 0.5, y: 0.5}}
+      colors={['#D01818', '#941000']}>
+      <StatusBar backgroundColor={'transparent'} translucent />
+      <Image
+        source={localImage.SplashText}
+        style={styels.Textlogo}
+        resizeMode="contain"
       />
-      <ImageBackground source={localImage.splash} style={styels.logo}>
-        <View style={styels.LinearG}>
-          <View style={styels.AnimatedView}>
-            <Animated.Text
-              style={[
-                styels.fadingText,
-                {fontWeight: '500', opacity: fadeAnim1},
-              ]}>
-              Weight Loss
-            </Animated.Text>
-            <Animated.Text
-              style={[
-                styels.fadingText,
-                {fontWeight: '600', opacity: fadeAnim2, fontFamily: 'arial'},
-              ]}>
-              Home Workouts
-            </Animated.Text>
-          </View>
-        </View>
-      </ImageBackground>
-    </View>
+    </LinearGradient>
   );
 };
 const styels = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-  },
-  logo: {
-    width: DeviceWidth,
-    height: DeviceHeigth,
-    resizeMode: 'stretch',
-  },
-  LinearG: {
-    height: DeviceHeigth,
-    width: DeviceWidth,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    flex: 1,
-  },
-  fadingContainer: {
-    padding: 20,
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    flex: 1,
-  },
-  fadingText: {
-    fontSize: 38,
-    color: '#fff',
-  },
-  AnimatedView: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: (DeviceHeigth * 25) / 100,
+  },
+  Textlogo: {
+    width: DeviceWidth * 0.4,
   },
 });
 export default SplaceScreen;

@@ -1,6 +1,7 @@
 package fitme.health.fitness.homeworkouts.equipment;
-
+import com.reactnative.googlefit.GoogleFitPackage;
 import android.app.Application;
+import com.microsoft.codepush.react.CodePush;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
@@ -9,25 +10,33 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
 import java.util.List;
-public class MainApplication extends Application implements ReactApplication {
 
+public class MainApplication extends Application implements ReactApplication {
+  
   private final ReactNativeHost mReactNativeHost =
       new DefaultReactNativeHost(this) {
         @Override
         public boolean getUseDeveloperSupport() {
           return BuildConfig.DEBUG;
         }
-
+         @Override
+        protected String getJSBundleFile() {
+            return CodePush.getJSBundleFile();
+        }
+       
         @Override
         protected List<ReactPackage> getPackages() {
+          
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
+          
  
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
+          new GoogleFitPackage(BuildConfig.APPLICATION_ID);
           return packages;
         }
-
+        
         @Override
         protected String getJSMainModuleName() {
           return "index";
@@ -57,6 +66,6 @@ public class MainApplication extends Application implements ReactApplication {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
       DefaultNewArchitectureEntryPoint.load();
     }
-    ReactNativeFlipper.initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+    fitme.health.fitness.homeworkouts.equipment.ReactNativeFlipper.initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
 }

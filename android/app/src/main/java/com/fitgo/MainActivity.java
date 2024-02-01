@@ -1,11 +1,9 @@
 package fitme.health.fitness.homeworkouts.equipment;
-
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
 import android.os.Bundle;
-import com.zoontek.rnbootsplash.RNBootSplash;
 public class MainActivity extends ReactActivity {
 
   /**
@@ -21,11 +19,6 @@ public class MainActivity extends ReactActivity {
    * DefaultReactActivityDelegate} which allows you to easily enable Fabric and Concurrent React
    * (aka React 18) with two boolean flags.
    */
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    RNBootSplash.init(this, R.style.BootTheme); 
-    super.onCreate(savedInstanceState);
-  }
   @Override
   protected ReactActivityDelegate createReactActivityDelegate() {
     return new DefaultReactActivityDelegate(

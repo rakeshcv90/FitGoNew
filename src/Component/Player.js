@@ -347,7 +347,7 @@ const PlayerModal = ({setState, State}) => {
               marginBottom: 100,
               marginHorizontal: 25,
             }}>
-            {/* {console.log(currentPage==0,defaultTheme)} */}
+          
             <TouchableOpacity
               onPress={() => {
                 goToPreviousPage();

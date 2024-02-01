@@ -2,6 +2,7 @@ export const AppColor={
     RED:'#941000',
     FBBUTTON:'#4267B2',
     WHITE:'#ffffff',
+    BLACK:'#000000',
     INPUTLABLECOLOR:'#3A4750',
     INPUTTEXTCOLOR:'#303841',
     GOOGLEBUTTON:'#F5F5F5',
@@ -11,6 +12,19 @@ export const AppColor={
     SOCIALBUTTON:'#f4e7e5',
     BACKGROUNG:'#F8F9F9',
     BORDERCOLOR:"#E3E3E3",
-    CHECKBOXCOLOR:'#ADA4A5'
-    
+    CHECKBOXCOLOR:'#ADA4A5',
+    LIGHTPINK:"#FFEEEA",
+    LIGHTNING_PINK:"#E58175",
+    PINK:'#FFB09B',
+    PURPLELIGHT:'#EFF0FF',
+    LIGHTYELLOW:'#FFF6E0',
+    BORDERCOLOR2: '#4285F4',
+    DARKGRAY:'#707070',
+    ProfileTextColor:"#7B6F72",
+    GRAY:'#F0F0F0',
+    GRAY1:'#DDDADA',
+    GRAY2:'#D9D9D9',
+    BoldText:'#505050',
+    RED1:'#D5191A',
+    Gray5:"#999999"
   }

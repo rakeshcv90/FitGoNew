@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">FitMe</string>
+    <string name="facebook_app_id">1530298334174272</string>
+    <string name="fb_login_protocol_scheme">fb1530298334174272</string>
+    <string name="facebook_client_token">4f99beb018894652232218e499038690 </string>
+     <string moduleConfig="true" name="CodePushDeploymentKey">kGKqh3ZaxkVczBWaLMSR2wsMTDuhqK1UyyOfa</string>
+
 </resources>

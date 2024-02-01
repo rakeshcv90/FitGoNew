@@ -5,14 +5,16 @@ import notifee, {
 } from '@notifee/react-native';
 import {request, PERMISSIONS} from 'react-native-permissions';
 import {Alert, Platform, AppState, PermissionsAndroid} from 'react-native';
-export const requestPermissionforNotification = async () => {
+import { setFcmToken } from '../ThemeRedux/Actions';
+export const requestPermissionforNotification = async (dispatch) => {
   if (Platform.OS == 'android') {
     PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
     );
     await messaging().registerDeviceForRemoteMessages();
     token = await messaging().getToken();
-    console.log('Android token is', token);
+    dispatch(setFcmToken(token))
+
   } else {
     const authStatus = await messaging().requestPermission();
     const enabled =
@@ -22,6 +24,8 @@ export const requestPermissionforNotification = async () => {
     if (enabled) {
       token = await messaging().getToken();
       console.log('Ios token is', token);
+      dispatch(setFcmToken(token))
+    
     }
   }
 };
@@ -36,6 +40,7 @@ export const RemoteMessage = () => {
   }
   messaging().setBackgroundMessageHandler(async remoteMessage => {
     DisplayNotification(remoteMessage);
+  
   });
   notifee.setNotificationCategories([
     {
@@ -48,6 +53,7 @@ export const RemoteMessage = () => {
         {
           id: 'Stop',
           title: 'Stop',
+          destructive: true,
         },
       ],
     },
@@ -55,9 +61,11 @@ export const RemoteMessage = () => {
 
   messaging().getInitialNotification(async remoteMessage => {
     DisplayNotification(remoteMessage);
+   
   });
 };
 const DisplayNotification = async Notification => {
+ 
   try {
     await notifee.displayNotification({
       title: Notification.notification.title,
