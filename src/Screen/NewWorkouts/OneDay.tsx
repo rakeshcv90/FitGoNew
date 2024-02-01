@@ -165,9 +165,10 @@ const OneDay = ({navigation, route}: any) => {
           {
             backgroundColor: AppColor.WHITE,
             height: DeviceHeigth * 0.1,
-            marginVertical: 5,
+            marginVertical:Platform.OS=="android"?DeviceHeigth*0.005:DeviceHeigth>667?0:DeviceHeigth*0.019,
           },
         ]}>
+          {console.log("SJSNSKN",DeviceHeigth)}
         <View
           style={{
             flexDirection: 'row',

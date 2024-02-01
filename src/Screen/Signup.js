@@ -45,7 +45,10 @@ import {navigationRef} from '../../App';
 import DeviceInfo from 'react-native-device-info';
 import VersionNumber from 'react-native-version-number';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
-import { RemoteMessage, requestPermissionforNotification } from '../Component/Helper/PushNotification';
+import {
+  RemoteMessage,
+  requestPermissionforNotification,
+} from '../Component/Helper/PushNotification';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 const Signup = ({navigation}) => {
@@ -204,7 +207,13 @@ const Signup = ({navigation}) => {
         data.data.profile_compl_status == 1
       ) {
         setForLoading(false);
-        navigationRef.navigate('BottomTab');
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 1000,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else if (
         data.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -250,12 +259,12 @@ const Signup = ({navigation}) => {
       });
 
       setForLoading(false);
-      if (data.data.status == 0) {
+      if (data?.data?.status == 0) {
         setForLoading(false);
         showMessage({
           message: data.data.msg,
           floating: true,
-          duration: 500,
+          duration: 5000,
           type: 'success',
           icon: {icon: 'auto', position: 'left'},
         });
@@ -263,7 +272,7 @@ const Signup = ({navigation}) => {
         setEmailSent(data.data.email);
         action.resetForm();
       } else if (
-        data.data?.msg == 'Please update the app to the latest version.'
+        data?.data?.msg == 'Please update the app to the latest version.'
       ) {
         setForLoading(false);
         showMessage({
@@ -317,6 +326,7 @@ const Signup = ({navigation}) => {
         setForLoading(false);
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
+        await GoogleSignin.signOut();
       } else if (
         data.data.msg == 'User registered via social login' &&
         data.data.profile_compl_status == 0
@@ -324,13 +334,21 @@ const Signup = ({navigation}) => {
         setForLoading(false);
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
+        await GoogleSignin.signOut();
       } else if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 1
       ) {
         setForLoading(false);
         dispatch(setUserId(data.data?.id));
-        navigationRef.navigate('BottomTab');
+        showMessage({
+          message: data.data.msg,
+          floating: true,
+          animationDuration: 1000,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
+        await GoogleSignin.signOut();
       } else if (
         data.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -342,15 +360,18 @@ const Signup = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
+        await GoogleSignin.signOut();
       } else {
         setForLoading(false);
         // console.log('user not found');
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
+        await GoogleSignin.signOut();
       }
     } catch (error) {
       setForLoading(false);
       console.log('google Signup Error', error?.response);
+      await GoogleSignin.signOut();
     }
   };
   const socialFacebookLogiIn = async value => {
@@ -395,7 +416,14 @@ const Signup = ({navigation}) => {
         data.data.profile_compl_status == 1
       ) {
         setForLoading(false);
-        navigationRef.navigate('BottomTab');
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 1000,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        // navigationRef.navigate('BottomTab');
       } else if (
         data.data?.msg == 'Please update the app to the latest version.'
       ) {

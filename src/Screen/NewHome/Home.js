@@ -182,13 +182,14 @@ const Home = ({navigation}) => {
       ActivityPermission();
     }, 3000);
   }, []);
-  useEffect(() => {
-    getGraphData(1);
-  }, []);
+  // useEffect(() => {
+
+  // }, []);
 
   useFocusEffect(
     React.useCallback(() => {
       getCustomeWorkoutTimeDetails();
+      getGraphData(1);
     }, []),
   );
   const ActivityPermission = async () => {
@@ -304,10 +305,9 @@ const Home = ({navigation}) => {
     }
   };
   const getGraphData = async Key => {
+    
     try {
-      const payload = new FormData();
-      // payload.append('user_id', 166);
-      // payload.append('user_id', getUserDataDetails?.id);
+ 
       setForLoading(true);
       const res = await axios({
         url: NewAppapi.HOME_GRAPH_DATA,
@@ -317,7 +317,7 @@ const Home = ({navigation}) => {
           version:VersionNumber.appVersion,
         },
       });
-  
+      console.log("GHDGDGDGDGGDGD",res?.data)
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -346,18 +346,22 @@ const Home = ({navigation}) => {
         //     weight: parseInt(res.data?.monthly_data[index]?.total_calories),
         //   });
         // });
+   
         if (Key == 1) {
           zeroData = [];
           for (i = 0; i < res?.data?.weekly_data?.length; i++) {
             const data1 = res.data.weekly_data[i].total_calories;
             zeroData.push(parseFloat(data1));
+         
           }
           setWeeklyGraph(zeroData);
+
         } else if (Key == 2) {
           zeroDataM = [];
           for (i = 0; i < res?.data?.monthly_data?.length; i++) {
             const data1 = res.data.monthly_data[i].total_calories;
             zeroDataM.push(parseFloat(data1));
+         
           }
           setMonthlyGraph(zeroDataM);
           // console.log(' monthly Data====>', zeroDataM);

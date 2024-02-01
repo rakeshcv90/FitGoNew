@@ -23,6 +23,8 @@ export type Props = TouchableWithoutFeedbackProps & {
   bR?: number;
   alignSelf?: boolean;
   flex?: number;
+  position?:string;
+  bottm?:number
 };
 
 const GradientButton: FC<Props> = ({...props}) => {
@@ -36,6 +38,10 @@ const GradientButton: FC<Props> = ({...props}) => {
         alignItems: 'center',
         alignSelf: !props.alignSelf ? 'flex-start' : 'center',
         marginBottom: props.mB,
+
+        position: props.position,
+
+        bottom: props.bottm
       }}>
       <LinearGradient
         start={{x: 1, y: 0}}
