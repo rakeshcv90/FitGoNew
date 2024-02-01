@@ -82,6 +82,9 @@ const OneDay = ({navigation, route}: any) => {
         url: NewAppapi.TRACK_CURRENT_DAY_EXERCISE,
         method: 'Post',
         data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
    
 
