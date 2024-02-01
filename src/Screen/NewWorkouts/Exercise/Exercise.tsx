@@ -222,6 +222,9 @@ const Exercise = ({navigation, route}: any) => {
         url: NewAppapi.POST_EXERCISE,
         method: 'post',
         data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
@@ -434,6 +437,7 @@ const Exercise = ({navigation, route}: any) => {
                    // postCurrentExerciseAPI(index + 1);
                     setNumber(number + 1);
                     setTimer(15);
+                    setSkipCount(skipCount+1)
                     setPlayW(prevTimer => 0);
                     Tts.stop();
                   }

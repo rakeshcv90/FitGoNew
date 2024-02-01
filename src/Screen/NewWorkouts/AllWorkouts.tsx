@@ -615,6 +615,9 @@ const AllWorkouts = ({navigation, route}: any) => {
         url: NewAppapi.TRACK_WORKOUTS,
         method: 'post',
         data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         setRefresh(false);
@@ -657,6 +660,9 @@ const AllWorkouts = ({navigation, route}: any) => {
         url: NewAppapi.GET_LIKE_WORKOUTS,
         method: 'post',
         data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
       if (res.data) {
         setRefresh(false);
@@ -680,6 +686,9 @@ const AllWorkouts = ({navigation, route}: any) => {
         url: NewAppapi.POST_LIKE_WORKOUT,
         method: 'post',
         data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
       if (res.data) {
         setRefresh(false);
