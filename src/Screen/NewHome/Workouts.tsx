@@ -21,7 +21,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {setAllWorkoutData} from '../../Component/ThemeRedux/Actions';
 import NewHeader from '../../Component/Headers/NewHeader';
-
+import VersionNumber, {appVersion} from 'react-native-version-number';
+import {showMessage} from 'react-native-flash-message';
 const Workouts = ({navigation}: any) => {
   const {allWorkoutData, getUserDataDetails} = useSelector(
     (state: any) => state,
@@ -41,6 +42,7 @@ const Workouts = ({navigation}: any) => {
       setRefresh(true);
       const payload = new FormData();
       payload.append('id', getUserDataDetails?.id);
+      payload.append('version', VersionNumber.appVersion);
       const res = await axios({
         url: NewAppapi.ALL_WORKOUTS,
         method: 'POST',
@@ -49,10 +51,22 @@ const Workouts = ({navigation}: any) => {
         },
         data: payload,
       });
-      if (res.data) {
+
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
         setRefresh(false);
-        console.log(res.data?.length, 'AllWorkouts');
+      } else if (res?.data) {
+        setRefresh(false);
         dispatch(setAllWorkoutData(res.data));
+      } else {
+        setRefresh(false);
+        dispatch(setAllWorkoutData([]));
       }
     } catch (error) {
       setRefresh(false);
@@ -64,14 +78,33 @@ const Workouts = ({navigation}: any) => {
     try {
       setRefresh(true);
       const res = await axios(
-        NewAppapi.POPULAR_WORKOUTS + '/' + getUserDataDetails?.login_token,
+        NewAppapi.POPULAR_WORKOUTS + '/' + VersionNumber.appVersion,
       );
-      if (res.data?.status != 'Invalid token') {
+
+      setRefresh(false);
+      // if (res.data?.status != 'Invalid token') {
+      //   setRefresh(false);
+      //   // console.log(res.data, 'Popular');
+      //   setPopularData(res.data);
+      // } else {
+      //   // console.log(res.data, 'Popular Status');
+      //   setPopularData([]);
+      // }
+
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
         setRefresh(false);
-        console.log(res.data, 'Popular');
+      } else if (res?.data) {
+        setRefresh(false);
         setPopularData(res.data);
       } else {
-        console.log(res.data, 'Popular Status');
+        setRefresh(false);
         setPopularData([]);
       }
     } catch (error) {
@@ -86,16 +119,35 @@ const Workouts = ({navigation}: any) => {
       const payload = new FormData();
       payload.append('token', getUserDataDetails?.login_token);
       payload.append('id', getUserDataDetails?.id);
+      payload.append('version',VersionNumber.appVersion);
       setRefresh(true);
       const res = await axios({
         url: NewAppapi.TRACK_WORKOUTS,
         method: 'post',
         data: payload,
       });
-      if (res.data) {
+      console.log('Workout Status', res.data);
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
         setRefresh(false);
-        console.log(res.data?.workout_ids?.length, 'Popular');
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (
+        res?.data?.msg == 'No Completed Workouts Found'
+      ) {
+        setRefresh(false);
+        setTrackerData([]);
+      }
+     else if (res?.data) {
+        setRefresh(false);
         setTrackerData(res.data?.workout_ids);
+      }else{
+        setRefresh(false);
+        setTrackerData([]);
       }
     } catch (error) {
       setRefresh(false);
@@ -194,7 +246,11 @@ const Workouts = ({navigation}: any) => {
           data={allWorkoutData}
           trackerData={trackerData}
           viewAllPress={() =>
-            navigation?.navigate('AllWorkouts', {data: allWorkoutData, type: '',fav: false,})
+            navigation?.navigate('AllWorkouts', {
+              data: allWorkoutData,
+              type: '',
+              fav: false,
+            })
           }
           horizontal
           viewAllButton
@@ -211,7 +267,10 @@ const Workouts = ({navigation}: any) => {
             headText="Popular Workouts"
             viewAllButton
             viewAllPress={() =>
-              navigation?.navigate('AllWorkouts', {data: popularData, type: 'popular'})
+              navigation?.navigate('AllWorkouts', {
+                data: popularData,
+                type: 'popular',
+              })
             }
           />
         )}

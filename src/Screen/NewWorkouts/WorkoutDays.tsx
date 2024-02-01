@@ -68,16 +68,16 @@ const WorkoutDays = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log(res.data, 'API DATA');
+
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
         const result = analyzeExerciseData(res.data?.user_details);
-        console.log('GET API TRACKE', result);
+
         if (result.two.length == 0) {
           let day = parseInt(result.one[result.one.length - 1]);
           for (const item of Object.entries(data?.days)) {
             const index = parseInt(item[0].split('day_')[1]);
-            console.log(item[0], 'items', index, day + 1);
+
             if (item[1]?.total_rest == 0 && index == day + 1) {
               setSelected(index);
               setDay(index + 1);
@@ -91,7 +91,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           const temp2 = res.data?.user_details?.filter(
             (item: any) => item?.user_day == result.one[0],
           );
-          console.log(temp2);
+
           setOpen(true);
           // setSelected(parseInt(result.one[result.one.length - 1]));
         } else {
@@ -103,7 +103,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           const temp2 = res.data?.user_details?.filter(
             (item: any) => item?.user_day == result.two[0],
           );
-          console.log('GET TRACKERw', temp, result.one, result.two, temp2);
+
           setTrackerData(temp2);
           setTotalCount(temp2?.length);
           setTrainingCount(temp2?.length - temp?.length);
@@ -115,7 +115,7 @@ const WorkoutDays = ({navigation, route}: any) => {
         setSelected(0);
         // console.log('first', res.data);
       }
-      console.log(selected, 'SELEC', day);
+
       allWorkoutApi();
     } catch (error) {
       console.error(error, 'DAPIERror');
@@ -288,13 +288,13 @@ const WorkoutDays = ({navigation, route}: any) => {
           styles.box,
           {
             backgroundColor: AppColor.WHITE,
-              // index == 1 || index == 5
-              //   ? '#F3F4F7'
-              //   : index == 2 || index == 6
-              //   ? '#EAEBFF'
-              //   : index == 3 || index == 7
-              //   ? '#FFE8E1'
-              //   : '#CEF2F9',
+            // index == 1 || index == 5
+            //   ? '#F3F4F7'
+            //   : index == 2 || index == 6
+            //   ? '#EAEBFF'
+            //   : index == 3 || index == 7
+            //   ? '#FFE8E1'
+            //   : '#CEF2F9',
             height:
               selected && trainingCount != -1
                 ? DeviceHeigth * 0.2
@@ -538,7 +538,7 @@ const styles = StyleSheet.create({
   },
   box: {
     //   flex: 1,
-    alignSelf:'center',
+    alignSelf: 'center',
     width: DeviceWidth * 0.8,
     justifyContent: 'center',
     alignItems: 'center',

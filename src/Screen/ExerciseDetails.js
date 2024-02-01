@@ -39,7 +39,7 @@ const ExerciseDetails = () => {
   const navigation = useNavigation()
   const data = route.params;
   const Data = data.elements.item
-  // console.log("parameter",Data.id)
+
   const handleback = () => {
     setShowModal(false)
   }

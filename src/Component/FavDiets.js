@@ -45,7 +45,7 @@ const FavDiets = () => {
             },
           },
         );
-        console.log(favDiet.data);
+      
         if (favDiet.data) {
           setFavDiets(favDiet.data);
           setUpdate(update + 1);

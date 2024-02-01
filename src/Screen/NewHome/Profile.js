@@ -63,6 +63,7 @@ const Profile = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   const toggleSwitch3 = () => {
@@ -323,13 +324,12 @@ const Profile = () => {
           },
           data: {
             id: user_id,
-            version: VersionNumber.appVersion
+            version: VersionNumber.appVersion,
           },
         });
 
         if (data?.data?.profile) {
           dispatch(setUserProfileData(data.data.profile));
-         
         } else if (
           data?.data?.msg == 'Please update the app to the latest version.'
         ) {
@@ -340,7 +340,7 @@ const Profile = () => {
             type: 'danger',
             icon: {icon: 'auto', position: 'left'},
           });
-        }else {
+        } else {
           dispatch(setUserProfileData([]));
         }
       } catch (error) {
@@ -638,6 +638,7 @@ const Profile = () => {
               justifyContent: 'space-between',
               flexDirection: 'row',
               margin: 15,
+              marginVertical: Platform.OS == 'ios' ? DeviceHeigth * 0.05 :  DeviceHeigth * 0.02,
               alignItems: 'center',
             }}>
             <TouchableOpacity
@@ -646,7 +647,6 @@ const Profile = () => {
               }}
               style={{
                 width: DeviceWidth * 0.23,
-                paddingVertical: 1,
               }}>
               <Icons name="chevron-left" size={30} color={AppColor.WHITE} />
             </TouchableOpacity>
@@ -689,14 +689,25 @@ const Profile = () => {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.profileView}>
+          <View
+            style={[
+              styles.profileView,
+              {marginTop: Platform.OS == 'ios' ? -DeviceHeigth * 0.035 : 0},
+            ]}>
+            {isLoading && (
+              <ActivityIndicator
+                style={styles.loader}
+                size="large"
+                color="#0000ff"
+              />
+            )}
             <Image
-            defaultSource={localImage.avt}
               source={
                 getUserDataDetails.image_path == null
                   ? localImage.avt
                   : {uri: getUserDataDetails.image_path}
               }
+              onLoad={() => setIsLoading(false)}
               style={styles.img}
               resizeMode="cover"></Image>
             <TouchableOpacity
@@ -713,7 +724,7 @@ const Profile = () => {
           </View>
           <View
             style={{
-              marginTop: DeviceHeigth * 0.05,
+              marginTop: DeviceHeigth * 0.04,
               alignItems: 'center',
             }}>
             <Text
@@ -746,13 +757,15 @@ const Profile = () => {
     );
   };
   return (
-    <SafeAreaView style={styles.Container}>
+    <View style={styles.Container}>
+      <StatusBar barStyle={'light-content'} backgroundColor={'#000'} />
+
       <ProfileView />
       <View
         style={[
           styles.UserDetailsView,
           {
-            top: -profileViewHeight * 0.1,
+            top: -profileViewHeight * 0.07,
           },
         ]}>
         {FirstView.map((value, index) => (
@@ -927,7 +940,7 @@ const Profile = () => {
         />
       </ScrollView>
       {UpdateScreenVisibility ? <UpdateProfileModal /> : null}
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -1148,6 +1161,14 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  loader: {
+    position: 'absolute',
+    justifyContent: 'center',
+    backgroundColor: AppColor.GRAY,
+    height: 120,
+    width: 120,
+    borderRadius: 160 / 2,
   },
 });
 

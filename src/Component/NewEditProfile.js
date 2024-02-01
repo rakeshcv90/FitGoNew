@@ -66,7 +66,7 @@ const [Name,setName]=useState("")
     const askPermissionForLibrary = async permission => {
       //Library permission
       const resultLib = await request(permission);
-      console.log('result', resultLib);
+ 
       if (resultLib == 'granted') {
         try {
           const resultLibrary = await launchImageLibrary({

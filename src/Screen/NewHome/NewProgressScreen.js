@@ -8,6 +8,7 @@ import {
   ScrollView,
   Modal,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useMemo, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -64,6 +65,7 @@ const NewProgressScreen = ({navigation}) => {
   const [array1, setArray1] = useState([]);
   const [Calories, setCalories] = useState(0);
   const [Wtime, setWtime] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   let arrayForData = [];
   let arrayForData1 = [];
   useEffect(() => {
@@ -113,7 +115,7 @@ const NewProgressScreen = ({navigation}) => {
     WeeklyData(1);
     WeeklyData(2);
   }, []);
-  console.log('userData===>', getUserDataDetails);
+ 
   useEffect(() => {
     const Calories1 = getCustttomeTimeCal.map(value => value.totalCalories);
     const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
@@ -122,7 +124,7 @@ const NewProgressScreen = ({navigation}) => {
     );
     const Time2 = time1?.reduce((acc, ind) => Math.ceil((acc + ind) / 60), 0);
     setWtime(Time2);
-    // console.log('>>>>>>',Time2)
+
     if (Platform.OS == 'ios') {
       let options = {
         date: new Date().toISOString(), // optional; default now
@@ -131,9 +133,7 @@ const NewProgressScreen = ({navigation}) => {
       AppleHealthKit.getStepCount(options, (callbackError, results) => {
         if (callbackError) {
           console.error('Error while getting the data:', callbackError);
-          // Handle the error as needed
         } else {
-          // console.log('iOS ', results);
           setCalories(
             parseInt(((results?.value / 20) * 1).toFixed(0)) +
               parseInt(Calories2),
@@ -142,8 +142,9 @@ const NewProgressScreen = ({navigation}) => {
       });
     } else if (Platform.OS == 'android') {
       setCalories(
-        parseInt(getHealthData[1]?getHealthData[1]?.Calories:0)+parseInt(Calories2)
-    );
+        parseInt(getHealthData[1] ? getHealthData[1]?.Calories : 0) +
+          parseInt(Calories2),
+      );
       // console.log('android======>');
     }
   }, []);
@@ -651,15 +652,27 @@ const NewProgressScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <View style={styles.profileView}>
-          <Image
-            source={
-              getUserDataDetails.image_path == null
-                ? localImage.avt
-                : {uri: getUserDataDetails.image_path}
-            }
-            style={styles.img}
-            resizeMode="cover"
-          />
+          {Object.keys(getUserDataDetails).length > 0 && (
+            <>
+              {isLoading && (
+                <ActivityIndicator
+                  style={styles.loader}
+                  size="large"
+                  color="#0000ff"
+                />
+              )}
+              <Image
+                source={
+                  getUserDataDetails.image_path == null
+                    ? localImage.avt
+                    : {uri: getUserDataDetails.image_path}
+                }
+                style={styles.img}
+                onLoad={() => setIsLoading(false)}
+                resizeMode="cover"
+              />
+            </>
+          ) }
         </View>
         <Text
           style={{
@@ -1111,6 +1124,16 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  loader: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    backgroundColor: AppColor.GRAY,
+   // top: DeviceHeigth * 0.02,
+    height: 150,
+    width: 150,
+    borderRadius: 150 / 2,
   },
 });
 export default NewProgressScreen;

@@ -192,7 +192,7 @@ const LoadData = ({navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-      console.log('Custom Workout123', data.data.workout);
+  
 
       if (data.data.workout) {
         dispatch(setCustomWorkoutData(data?.data));
@@ -226,6 +226,8 @@ const LoadData = ({navigation}) => {
     try {
       const payload = new FormData();
       payload.append('deviceid', deviceID);
+      payload.append('version', VersionNumber.appVersion);
+
       const res = await axios({
         url: NewAppapi.Free_WORKOUT_DATA,
         method: 'POST',
@@ -234,12 +236,20 @@ const LoadData = ({navigation}) => {
         },
         data: payload,
       });
-      console.log('CustomFreeWorkout11', res.data);
+
       if (res.data?.workout) {
         setLoadData(100);
         setActiveNext(true);
         dispatch(setCustomWorkoutData(res.data));
         // currentWorkoutDataApi(res.data?.workout[0]);
+      } else if (res?.data?.msg=='Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         dispatch(setCustomWorkoutData([]));
         setActiveNext(true);
@@ -301,7 +311,7 @@ const LoadData = ({navigation}) => {
   //   }
   // };
 
-  const Meal_List = async login_token => {
+  const Meal_List = async () => {
     try {
       const data = await axios(`${NewAppapi.Meal_Categorie}`, {
         method: 'POST',
@@ -313,7 +323,21 @@ const LoadData = ({navigation}) => {
         },
       });
 
-      if (data.data.diets.length > 0) {
+      // if (data.data.diets.length > 0) {
+      //   dispatch(Setmealdata(data.data.diets));
+      // } else {
+      //   dispatch(Setmealdata([]));
+      // }
+
+      if (data?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: data?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (data.data.diets.length > 0) {
         dispatch(Setmealdata(data.data.diets));
       } else {
         dispatch(Setmealdata([]));

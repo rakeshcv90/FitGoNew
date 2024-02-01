@@ -49,6 +49,8 @@ import {TextInput} from 'react-native-paper';
 import {navigationRef} from '../../App';
 import VersionNumber from 'react-native-version-number';
 import {Platform} from 'react-native';
+import { RemoteMessage, requestPermissionforNotification } from '../Component/Helper/PushNotification';
+import { Alert } from 'react-native';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -68,7 +70,10 @@ const Login = ({navigation}) => {
   const [IsVerifyVisible, setVerifyVisible] = useState(false);
   const [appVersion, setAppVersion] = useState(0);
   const {getFcmToken} = useSelector(state => state);
-
+  useEffect(() => {
+    requestPermissionforNotification(dispatch);
+    RemoteMessage();
+  }, []);
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
@@ -182,7 +187,6 @@ const Login = ({navigation}) => {
           ) {
             if (currentProfile) {
               socialFacebookLogiIn(currentProfile);
-              console.log('dsfdsfdsfdsfsdfds', currentProfile);
             }
           });
         }
@@ -268,7 +272,6 @@ const Login = ({navigation}) => {
       })
       .then(
         res => {
-          //console.log("Apple Data",res)
           socialAppleLogiIn(res);
         },
         error => {
@@ -295,8 +298,7 @@ const Login = ({navigation}) => {
           devicetoken: getFcmToken,
         },
       });
-      console.log('Apple Data Login', data.data);
-      setForLoading(false);
+
       if (data.data?.profile_status == 1) {
         showMessage({
           message: data.data.msg,
@@ -460,9 +462,20 @@ const Login = ({navigation}) => {
       if (data?.data?.profile) {
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));
-        status == 1
-          ? navigation.navigate('BottomTab')
-          : navigationRef.navigate('Yourself');
+        // status == 1
+        //   ? navigation.navigate('BottomTab')
+        //   : navigationRef.navigate('Yourself');
+        if (status == 1) navigation.navigate('BottomTab');
+        else {
+          showMessage({
+            message: 'Please complete your Profile Details',
+            type: 'success',
+            animationDuration: 500,
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
+          navigationRef.navigate('Yourself');
+        }
       } else if (
         data?.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -476,15 +489,37 @@ const Login = ({navigation}) => {
       } else {
         setForLoading(false);
         dispatch(setUserProfileData([]));
-        status == 1
-          ? navigation.navigate('BottomTab')
-          : navigationRef.navigate('Yourself');
+        // status == 1
+        //   ? navigation.navigate('BottomTab')
+        //   : navigationRef.navigate('Yourself');
+        if (status == 1) navigation.navigate('BottomTab');
+        else {
+          showMessage({
+            message: 'Please complete your Profile Details',
+            type: 'success',
+            animationDuration: 500,
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
+          navigationRef.navigate('Yourself');
+        }
       }
     } catch (error) {
       console.log('User Profile Error', error);
-      status == 1
-        ? navigation.navigate('BottomTab')
-        : navigationRef.navigate('Yourself');
+      if (status == 1) navigation.navigate('BottomTab');
+        else {
+          showMessage({
+            message: 'Please complete your Profile Details',
+            type: 'success',
+            animationDuration: 500,
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
+          navigationRef.navigate('Yourself');
+        }
+      // status == 1
+      //   ? navigation.navigate('BottomTab')
+      //   : navigationRef.navigate('Yourself');
       setForLoading(false);
     }
   };
@@ -598,7 +633,7 @@ const Login = ({navigation}) => {
       setForLoading(false);
     }
   };
-  const Meal_List = async login_token => {
+  const Meal_List = async () => {
     try {
       const data = await axios(`${NewAppapi.Meal_Categorie}`, {
         method: 'POST',
@@ -606,16 +641,27 @@ const Login = ({navigation}) => {
           'Content-Type': 'multipart/form-data',
         },
         data: {
-          token: login_token,
           version: VersionNumber.appVersion,
         },
       });
-
-      if (data.data.diets.length > 0) {
+      if (data?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: data?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (data.data.diets.length > 0) {
         dispatch(Setmealdata(data.data.diets));
       } else {
         dispatch(Setmealdata([]));
       }
+      // if (data.data.diets.length > 0) {
+      //   dispatch(Setmealdata(data.data.diets));
+      // } else {
+      //   dispatch(Setmealdata([]));
+      // }
     } catch (error) {
       dispatch(Setmealdata([]));
       console.log('Meal List Error', error);
@@ -634,7 +680,7 @@ const Login = ({navigation}) => {
           token: login_token,
         },
       });
-      console.log('Purchase Data', res.data.data);
+
       if (res.data.data.length > 0) {
         dispatch(setPurchaseHistory(res.data.data));
       } else {
@@ -661,7 +707,7 @@ const Login = ({navigation}) => {
           },
         });
         setForLoading(false);
-        console.log('Forgot Password cdsds', data.data);
+
         if (data?.data[0]?.msg == 'Mail sent') {
           setForLoading(false);
           showMessage({

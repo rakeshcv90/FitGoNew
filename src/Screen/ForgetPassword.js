@@ -219,7 +219,7 @@ const ForgetPassword = ({navigation}) => {
         });
         setForLoading(false);
       }
-      console.log('datatat', data.data.msg);
+  
     } catch (error) {
       console.log('FOrgot Password Error', error);
       setForLoading(false);

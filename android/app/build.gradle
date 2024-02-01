@@ -1,6 +1,8 @@
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
 apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
+//apply from: file("../../node_modules/react-native-code-push/android/codepush.gradle")
+
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 /**
@@ -71,7 +73,7 @@ def enableProguardInReleaseBuilds = false
 def jscFlavor = 'org.webkit:android-jsc:+'
 
 android {
-    ndkVersion rootProject.ext.ndkVersion
+          ndkVersion rootProject.ext.ndkVersion
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -93,9 +95,9 @@ android {
          }
      }
     buildTypes {
-
+        
         // debug {
-        //     signingConfig signingConfigs.debug
+            //     signingConfig signingConfigs.debug
         // }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -116,11 +118,15 @@ dependencies {
     // Add the dependencies for the Crashlytics NDK and Analytics libraries
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-crashlytics-ndk")
-    implementation("com.google.firebase:firebase-analytics")
+    // implementation("com.google.firebase:firebase-analytics")
     // The version of react-native is set by the React Native Gradle Plugin
+    implementation project(':react-native-google-fit')
+    implementation("com.google.android.gms:play-services-fitness:21.1.0")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("com.facebook.react:react-android")
     implementation project(':react-native-iap')
     implementation project(':react-native-keep-awake')
+    implementation project(':react-native-code-push')
     implementation 'com.facebook.android:facebook-android-sdk:latest.release'
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
@@ -136,3 +142,4 @@ dependencies {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"

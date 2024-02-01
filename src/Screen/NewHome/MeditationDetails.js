@@ -5,6 +5,7 @@ import {StatusBar} from 'react-native';
 import {StyleSheet} from 'react-native';
 import {AppColor} from '../../Component/Color';
 import Icons from 'react-native-vector-icons/FontAwesome5';
+import VersionNumber, {appVersion} from 'react-native-version-number';
 
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {useSelector} from 'react-redux';
@@ -39,9 +40,8 @@ const MeditationDetails = ({navigation, route}) => {
     }, []),
   );
   const getCaterogy = async (id, level) => {
-    console.log("Mindset Data",id, level)
     setForLoading(true);
- 
+
     try {
       const data = await axios(`${NewAppapi.Get_Mindset_Excise}`, {
         method: 'POST',
@@ -51,17 +51,25 @@ const MeditationDetails = ({navigation, route}) => {
         data: {
           workout_mindset_id: id,
           health_level: level,
+          version: VersionNumber.appVersion,
         },
       });
-      setForLoading(false);
 
-      if (data.data.status == 'data found') {
+      if (data?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: data?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setForLoading(false);
+      } else if (data?.data?.status == 'data found') {
         setForLoading(false);
         setmindsetExercise(data.data.data);
       } else {
         setForLoading(false);
         setmindsetExercise([]);
-
       }
     } catch (error) {
       setForLoading(false);
@@ -72,7 +80,6 @@ const MeditationDetails = ({navigation, route}) => {
   const ListItem = ({title, color}) => (
     <TouchableOpacity
       onPress={() => {
-      
         getCaterogy(title.id, title.workout_mindset_level);
       }}>
       <LinearGradient
@@ -120,8 +127,8 @@ const MeditationDetails = ({navigation, route}) => {
           resizeMode="contain"
           style={{
             width: DeviceWidth * 0.3,
-            height: DeviceHeigth * 0.15,alignSelf:'center'
-
+            height: DeviceHeigth * 0.15,
+            alignSelf: 'center',
           }}
         />
       </View>
@@ -176,9 +183,8 @@ const MeditationDetails = ({navigation, route}) => {
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id}
-             ListEmptyComponent={emptyComponent}
+            ListEmptyComponent={emptyComponent}
             renderItem={({item, index}) => {
-           
               return (
                 <ListItem title={item} color={colors[index % colors.length]} />
               );
@@ -220,7 +226,6 @@ const MeditationDetails = ({navigation, route}) => {
             showsVerticalScrollIndicator={false}
             keyExtractor={item => item.id}
             ListEmptyComponent={emptyComponent}
-
             renderItem={({item, index}) => {
               return (
                 <>
@@ -329,7 +334,7 @@ const MeditationDetails = ({navigation, route}) => {
                             height: 130,
                             width: DeviceWidth * 0.3,
                             position: 'absolute',
-                            top:-20
+                            top: -20,
                           }}
                         />
                         <Image

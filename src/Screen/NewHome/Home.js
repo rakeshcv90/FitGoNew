@@ -50,12 +50,12 @@ import {
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {BlurView} from '@react-native-community/blur';
-import {
-  isStepCountingSupported,
-  parseStepData,
-  startStepCounterUpdate,
-  stopStepCounterUpdate,
-} from '@dongminyu/react-native-step-counter';
+// import {
+//   isStepCountingSupported,
+//   parseStepData,
+//   startStepCounterUpdate,
+//   stopStepCounterUpdate,
+// } from '@dongminyu/react-native-step-counter';
 import {navigationRef} from '../../../App';
 import {useSelector, useDispatch} from 'react-redux';
 // import ActivityLoader from '../../Component/ActivityLoader';
@@ -215,9 +215,7 @@ const Home = ({navigation}) => {
           await request(PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION);
         }
       } else {
-
-        console.log('ACTIVITY_RECOGNITION permission already granted');
-        if(getStepCounterOnoff==0){
+        if (getStepCounterOnoff == 0) {
           startStepCounter();
           Dispatch(setStepCounterOnOff(1));
         }
@@ -316,9 +314,19 @@ const Home = ({navigation}) => {
         method: 'post',
         data: {
           user_id: getUserDataDetails?.id,
+          version:VersionNumber.appVersion,
         },
       });
-      if (res.data?.message != 'No data found') {
+  
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (res.data?.message != 'No data found') {
         setForLoading(false);
         // console.log(res.data, 'Graph Data ');
         Dispatch(setHomeGraphData(res.data));
@@ -345,7 +353,6 @@ const Home = ({navigation}) => {
             zeroData.push(parseFloat(data1));
           }
           setWeeklyGraph(zeroData);
-
         } else if (Key == 2) {
           zeroDataM = [];
           for (i = 0; i < res?.data?.monthly_data?.length; i++) {
@@ -406,8 +413,19 @@ const Home = ({navigation}) => {
           steps: getHealthData[0] ? getHealthData[0].Steps : '0',
           calories: getHealthData[1] ? getHealthData[1].Calories : '0',
           distance: getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
+          version: VersionNumber.appVersion,
         },
       });
+
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      }
     } catch (error) {
       console.log('PedometerAPi Error', error.response);
     }
@@ -1050,7 +1068,7 @@ const Home = ({navigation}) => {
             {isLoading && (
               <ActivityIndicator
                 style={styles.loader}
-                size="large"
+                size="small"
                 color="#0000ff"
               />
             )}
@@ -1061,7 +1079,7 @@ const Home = ({navigation}) => {
                   : {uri: getUserDataDetails.image_path}
               }
               onLoad={() => setIsLoading(false)}
-              style={styles.img}
+              style={[styles.img]}
               resizeMode="cover"></Image>
           </TouchableOpacity>
         ) : (
@@ -1627,11 +1645,14 @@ var styles = StyleSheet.create({
   profileView1: {
     height: 50,
     width: 50,
+    alignItems: 'center',
+
     borderRadius: 100 / 2,
   },
   img: {
     height: 50,
     width: 50,
+
     borderRadius: 100 / 2,
   },
   rewardView: {
@@ -1891,6 +1912,13 @@ var styles = StyleSheet.create({
   },
   loader: {
     position: 'absolute',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    backgroundColor: AppColor.GRAY,
+
+    height: 50,
+    width: 50,
+    borderRadius: 100 / 2,
   },
 });
 export default Home;
