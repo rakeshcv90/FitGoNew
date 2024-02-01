@@ -104,7 +104,7 @@ const Exercise = ({navigation, route}: any) => {
             if (timer === 0) {
               if (number == allExercise?.length - 1) return;
               setRestStart(false);
-              setIsLoading(true)
+              setIsLoading(true);
               Tts.stop();
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
@@ -122,7 +122,7 @@ const Exercise = ({navigation, route}: any) => {
               setTimer(timer - 1);
               setPlayW(0);
             } else {
-              setTimer(timer - 1);
+               setTimer(timer - 1);
             }
             getSoundOffOn && Tts.speak(`${timer - 1}`);
           }, 1000))
@@ -190,7 +190,7 @@ const Exercise = ({navigation, route}: any) => {
           height: restStart ? 50 : 30,
           backgroundColor: restStart ? 'transparent' : '#D9D9D9B2',
           marginVertical: 5,
-          marginTop: restStart ? 25 : 5,
+          marginTop: restStart ? Platform.OS=='ios'?25:10 : 5,
           alignSelf: restStart ? 'flex-end' : 'auto',
         }}>
         {icon == 'info-outline' ? (
@@ -203,6 +203,7 @@ const Exercise = ({navigation, route}: any) => {
           <Icons
             name={icon}
             size={restStart ? 40 : 20}
+            
             color={restStart ? AppColor.WHITE : AppColor.INPUTTEXTCOLOR}
           />
         )}
@@ -360,7 +361,7 @@ const Exercise = ({navigation, route}: any) => {
         color={restStart ? AppColor.WHITE : AppColor.RED}
       />
       {restStart ? (
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, top: -20}}>
           <FAB icon="format-list-bulleted" />
           <View style={{alignSelf: 'center', alignItems: 'center'}}>
             <Text
@@ -399,10 +400,13 @@ const Exercise = ({navigation, route}: any) => {
                 }}
                 style={{
                   borderRadius: 20,
+                  width:DeviceWidth*0.3,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  backgroundColor: '#FCFCFC61',
-                  paddingHorizontal: 20,
+                  // backgroundColor: '#FCFCFC61',
+                  backgroundColor:
+                    number == allExercise?.length - 1 ? '#d9d9d9' : '#Fff',
+                 // paddingHorizontal: 20,
                   marginRight: 10,
                 }}>
                 <Text
@@ -410,16 +414,15 @@ const Exercise = ({navigation, route}: any) => {
                     fontSize: 16,
                     fontFamily: 'Poppins',
                     lineHeight: 30,
-                    color: AppColor.WHITE,
-                    fontWeight: '700',
+                    color: AppColor.BLACK,
+                    fontWeight: '600',
                   }}>
                   +30s
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 disabled={number == allExercise?.length - 1}
                 onPress={() => {
-                  
                   if (number == allExercise?.length - 1) return;
                   else {
                     setRestStart(prev => false);
@@ -431,13 +434,13 @@ const Exercise = ({navigation, route}: any) => {
                       ...exerciseDoneIDs,
                       currentData?.exercise_id,
                     ]);
-                   // postCurrentExerciseAPI(index + 1);
+                    // postCurrentExerciseAPI(index + 1);
                     setNumber(number + 1);
                     setTimer(15);
                     setPlayW(prevTimer => 0);
                     Tts.stop();
                   }
-                  setIsLoading(true)
+                  setIsLoading(true);
                 }}
                 style={{
                   borderRadius: 20,
@@ -458,7 +461,7 @@ const Exercise = ({navigation, route}: any) => {
                   }}>
                   Skip
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             <View
               style={{
@@ -466,6 +469,10 @@ const Exercise = ({navigation, route}: any) => {
                 alignSelf: 'flex-start',
                 width: DeviceWidth,
                 marginLeft: 20,
+                top:
+                  Platform.OS == 'ios'
+                    ? DeviceHeigth * 0.0
+                    : -DeviceHeigth * 0.06,
               }}>
               <Text
                 style={{
@@ -512,7 +519,10 @@ const Exercise = ({navigation, route}: any) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'flex-start',
-              marginTop: DeviceHeigth * 0.04,
+              marginTop:
+                Platform.OS == 'ios'
+                  ? DeviceHeigth * 0.02
+                  : -DeviceHeigth * 0.03,
             }}>
             <TouchableOpacity
               onPress={() => {
@@ -534,24 +544,24 @@ const Exercise = ({navigation, route}: any) => {
             <View style={{alignSelf: 'flex-end'}}>
               <FAB icon="format-list-bulleted" />
               <FAB icon="info-outline" />
-              {/* <FAB icon="music" /> */}
             </View>
           </View>
           <View
             style={{
               height: DeviceHeigth * 0.5,
-              marginTop: -DeviceHeigth * 0.04,
+              marginTop: -DeviceHeigth * 0.06,
+              // backgroundColor:'red'
             }}>
             {/* <Text>{trackerData[number]?.id}</Text> */}
 
             {isLoading && (
               <ActivityIndicator
-                style={[styles.loader,{ transform: [{ scaleX: 2 }, { scaleY: 2}] }]}
+                style={[styles.loader, {transform: [{scaleX: 2}, {scaleY: 2}]}]}
                 // size={Platform.OS=='android'?DeviceHeigth*0.1:DeviceHeigth*0.1}
                 size="large"
                 color="red"
               />
-          )}
+            )}
             <Video
               source={{
                 uri: currentData?.exercise_video,
@@ -560,10 +570,9 @@ const Exercise = ({navigation, route}: any) => {
                 setPause(true);
               }}
               onLoad={() => {
-                setIsLoading(false)
+                setIsLoading(false);
                 setPause(true);
               }}
-          
               onVideoLoad={() => console.log('third')}
               onVideoLoadStart={() => console.log('forth')}
               paused={!pause}
@@ -572,11 +581,12 @@ const Exercise = ({navigation, route}: any) => {
                 setPause(true);
               }}
               repeat={true}
-              resizeMode="contain"
+              resizeMode="stretch"
               style={{
                 width: DeviceWidth,
-                height: DeviceHeigth * 0.5,
+                height: DeviceHeigth * 0.4,
                 alignSelf: 'center',
+                top: 60,
               }}
             />
           </View>
@@ -604,6 +614,7 @@ const Exercise = ({navigation, route}: any) => {
             play={!pause}
             fill={`${100 - playW}%`}
             h={80}
+            mB={DeviceHeigth * 0.02}
             playy={() => {
               setPause(!pause);
             }}
@@ -706,11 +717,8 @@ const styles = StyleSheet.create({
   loader: {
     position: 'absolute',
     justifyContent: 'center',
-    alignSelf:'center',
+    alignSelf: 'center',
 
-   marginVertical:DeviceHeigth*0.2,
-
-   
-
+    marginVertical: DeviceHeigth * 0.2,
   },
 });

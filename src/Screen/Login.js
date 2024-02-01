@@ -134,6 +134,7 @@ const Login = ({navigation}) => {
         getCustomWorkout(data.data.id);
         Meal_List(data.data.login_token);
         PurchaseDetails(data.data.id, data.data.login_token);
+        await GoogleSignin.signOut();
       } else if (
         data.data.msg ==
         'User does not exist with provided Google social credentials'
@@ -141,11 +142,12 @@ const Login = ({navigation}) => {
         showMessage({
           message: data.data.msg,
           type: 'danger',
-          animationDuration: 500,
+          animationDuration: 5000,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
         setForLoading(false);
+        await GoogleSignin.signOut();
       } else if (
         data.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -157,6 +159,7 @@ const Login = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
+        await GoogleSignin.signOut();
       } else {
         // showMessage({
         //   message: data.data.msg,
@@ -170,10 +173,12 @@ const Login = ({navigation}) => {
         // setModalVisible(true);
         getProfileData(data.data.id, data.data.profile_status);
         Meal_List(data.data.login_token);
+        await GoogleSignin.signOut();
       }
     } catch (error) {
       setForLoading(false);
       console.log('google Signup Error', error);
+      await GoogleSignin.signOut();
     }
   };
   const FacebookLogin = () => {
