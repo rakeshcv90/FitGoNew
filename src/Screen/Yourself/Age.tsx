@@ -179,6 +179,8 @@ const Age = ({route, navigation}: any) => {
           onFocus={setFocused}
           cursorColor={AppColor.RED}
           placeholder="18"
+          autoFocus
+          placeholderTextColor={AppColor.GRAY2}
           style={{
             fontSize: 56,
             fontWeight: '600',

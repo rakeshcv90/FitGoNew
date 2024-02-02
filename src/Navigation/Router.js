@@ -1,7 +1,6 @@
 import {View, Text} from 'react-native';
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
-import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
 import Yourself from '../Screen/Yourself/index';
 import Scale from '../Screen/Yourself/Scale';
@@ -87,12 +86,9 @@ export const LoginStack = () => {
       <Stack.Screen name="Injury" component={Injury} />
       <Stack.Screen name="FocusArea" component={FocusArea} />
       <Stack.Screen name="WorkoutArea" component={WorkoutArea} />
-      <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
-
       <Stack.Screen name="Edit_Profile" component={NewEditProfile} />
       <Stack.Screen name="NewPersonalDetails" component={NewPersonalDetails} />
-
       <Stack.Screen name="Scale" component={Scale} />
       <Stack.Screen name="Gender" component={Gender} />
       <Stack.Screen name="Equipment" component={Equipment} />

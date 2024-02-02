@@ -28,6 +28,7 @@ export type Props = TouchableWithoutFeedbackProps & {
   playy?: any;
   back?: any;
   next?: any;
+  BM?: number;
   colors?: Array<any>;
 };
 
@@ -40,8 +41,12 @@ const Play: FC<Props> = ({...props}) => {
         width: props.w ? props.w : DeviceWidth * 0.9,
         justifyContent: 'center',
         alignItems: 'center',
-        alignSelf: !props.alignSelf ? 'flex-start' : 'center',
+        //alignSelf: !props.alignSelf ? 'flex-start' : 'center',
         marginBottom: props.mB,
+        bottom:0,
+        position:'absolute',
+        alignSelf:'center',
+        
       }}>
       <LinearGradient
         start={{x: 1, y: 0}}

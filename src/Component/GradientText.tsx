@@ -12,11 +12,16 @@ const GradientText = ({
   height,
   marginTop,
   colors,
+  alignSelf,
 }: any) => {
   const gradientColors = colors ? colors : ['#D5191A', '#941000'];
 
   return (
-    <View style={{marginTop: marginTop ? marginTop : 10}}>
+    <View
+      style={{
+        marginTop: marginTop ? marginTop : 10,
+        alignSelf: alignSelf ? 'auto' : 'center',
+      }}>
       <Svg
         height={height ? height : '40'}
         width={width ? width : text?.length * 10}>

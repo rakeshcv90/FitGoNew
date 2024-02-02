@@ -35,7 +35,8 @@ for (let i = 4; i <= 13; i++) {
     if (j === 0) {
       myArray.push(parseFloat(i.toFixed(1)));
     } else {
-      myArray.push(parseFloat(`${i}.${j.toFixed(2)}`));
+      // myArray.push(parseFloat(`${i}.${j.toFixed(2)}`));
+      myArray.push(parseFloat(`${i}.${(j / 100).toFixed(2).slice(2)}`));
     }
   }
 }
@@ -172,11 +173,13 @@ const Height = ({route, navigation}: any) => {
                     fontWeight: '600',
                   }}>
                   {/* {parseInt(((height[currentActiveIndex] % 1) * 120).toFixed(0)) != 12 && */}
-                  {Math.floor(
+                  {/* {Math.floor(
                     parseInt(
                       ((height[currentActiveIndex] % 1) * 12).toFixed(1),
                     ),
-                  )}
+                  )} */}
+                  {parseInt((height[currentActiveIndex] * 100).toFixed(0)) %
+                    Math.floor(parseInt(height[currentActiveIndex]) * 100)}
                   <Text
                     style={{
                       color: AppColor.RED,
@@ -195,7 +198,11 @@ const Height = ({route, navigation}: any) => {
                 fontSize: 36,
                 fontWeight: '600',
               }}>
-              {(height[currentActiveIndex] * 10).toFixed(0)}
+                {((parseInt(height[currentActiveIndex]) * 30.48) +
+                ((parseInt((height[currentActiveIndex] * 100).toFixed(0)) %
+                  Math.floor(parseInt(height[currentActiveIndex]) * 100)) *
+                  2.54)).toFixed(2)}
+              {/* {(height[currentActiveIndex] * 10).toFixed(0)} */}
               <Text
                 style={{
                   color: AppColor.RED,

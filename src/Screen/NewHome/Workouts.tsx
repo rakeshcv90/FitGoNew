@@ -125,8 +125,11 @@ const Workouts = ({navigation}: any) => {
         url: NewAppapi.TRACK_WORKOUTS,
         method: 'post',
         data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
-      console.log('Workout Status', res.data);
+    
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         setRefresh(false);
         showMessage({
