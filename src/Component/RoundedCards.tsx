@@ -13,6 +13,7 @@ import {DeviceHeigth, DeviceWidth} from './Config';
 import {localImage} from './Image';
 import {navigationRef} from '../../App';
 import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
+import {ActivityIndicator} from 'react-native';
 
 export type Props = {
   viewAllButton?: boolean;
@@ -27,14 +28,15 @@ export type Props = {
 const RoundedCards: FC<Props> = ({...props}) => {
   const [open, setOpen] = useState(false);
   const [desc, setDesc] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   return (
     <>
       <View
         style={[
           styles.container,
-          {
-            marginBottom: props.type == 'core' ? DeviceHeigth * 0.05 : 0,
-          },
+          // {
+          //   marginPadd: props.type == 'core' ? DeviceHeigth * 0.09 : 0,
+          // },
         ]}>
         <View style={styles.row}>
           <Text style={styles.category}>
@@ -53,8 +55,12 @@ const RoundedCards: FC<Props> = ({...props}) => {
         </View>
         <View
           style={{
+            paddingBottom: DeviceHeigth * 0.02,
+            alignItems: 'center',
+            alignSelf: 'center',
+            justifyContent: 'center',
             height: props.horizontal ? DeviceWidth / 3 : DeviceHeigth / 2,
-            width: 'auto',
+            width: '100%',
           }}>
           <FlatList
             data={props.data}
@@ -84,27 +90,43 @@ const RoundedCards: FC<Props> = ({...props}) => {
                     {
                       width: props?.horizontal
                         ? DeviceWidth / 4
-                        : DeviceWidth * 0.92,
+                        : DeviceWidth * 0.9,
                       flexDirection: props?.horizontal ? 'column' : 'row',
                       justifyContent: props?.horizontal
                         ? 'center'
                         : 'space-between',
                       marginLeft: props.horizontal ? (index == 0 ? 5 : 10) : 3,
-                      // marginBottom:index===data.lenght-1?
+                      alignSelf: 'center',
+                      marginBottom: 10,
                     },
                   ]}>
-                  {
-                    <Image
-                      source={{uri: item?.workout_image_link}}
-                      style={{
+                  {isLoading && (
+                    <ActivityIndicator
+                      style={[styles.loader,{
                         height: DeviceWidth / 6,
                         width: props.horizontal
                           ? DeviceWidth / 6
                           : DeviceWidth / 3,
-                      }}
-                      resizeMode="contain"
+                        left:props.horizontal ? 15
+                        : -DeviceWidth*0.05,
+                   
+                      }]}
+                      size="small"
+                      color="#0000ff"
                     />
-                  }
+                )} 
+                  <Image
+                    source={{uri: item?.workout_image_link}}
+                    onLoad={() => setIsLoading(false)}
+                    style={{
+                      height: DeviceWidth / 6,
+                      width: props.horizontal
+                        ? DeviceWidth / 6
+                        : DeviceWidth / 3,
+                    }}
+                    resizeMode="contain"
+                  />
+
                   {props?.trackerData?.includes(item?.workout_id) && (
                     <Image
                       source={localImage.Complete}
@@ -164,10 +186,10 @@ const RoundedCards: FC<Props> = ({...props}) => {
                           style={{
                             width: 20,
                             height: 20,
-                           
+
                             marginRight: DeviceWidth,
                           }}
-                        /> 
+                        />
                       </TouchableOpacity>
                     </View>
                   )}
@@ -186,7 +208,7 @@ export default RoundedCards;
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
     backgroundColor: AppColor.WHITE,
   },
   row: {
@@ -203,6 +225,7 @@ const styles = StyleSheet.create({
   },
   box: {
     backgroundColor: AppColor.WHITE,
+
     height: DeviceWidth / 4,
     alignItems: 'center',
     borderRadius: 10,
@@ -223,5 +246,13 @@ const styles = StyleSheet.create({
         // shadowRadius: 10,
       },
     }),
+  },
+  loader: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignSelf: 'center',
+
+
+  
   },
 });

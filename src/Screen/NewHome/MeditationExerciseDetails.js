@@ -26,7 +26,7 @@ import TrackPlayer, {
 import SeekBar from '../../Component/SeekBar';
 
 const MeditationExerciseDetails = ({navigation, route}) => {
- console.log("HHHHHH$$$$$4",route.params.item.exercise_mindset_audio)
+ 
   const playbackState = usePlaybackState();
 
   const {position, buffered, duration} = useProgress();

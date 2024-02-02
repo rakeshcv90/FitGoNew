@@ -140,7 +140,7 @@ const Login = ({navigation}) => {
         'User does not exist with provided Google social credentials'
       ) {
         showMessage({
-          message: data.data.msg,
+          message: 'You are not registered,You need to Signup first',
           type: 'danger',
           animationDuration: 5000,
           floating: true,
@@ -239,7 +239,7 @@ const Login = ({navigation}) => {
         'User does not exist with provided Facebook social credentials'
       ) {
         showMessage({
-          message: data.data.msg,
+          message: 'You are not registered,You need to Signup first',
           type: 'danger',
           animationDuration: 500,
           floating: true,
