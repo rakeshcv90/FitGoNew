@@ -32,7 +32,7 @@ export type DataPoint = {
   weight: number;
 };
 
-const LineChart = ({resultData, zeroData, home}: any) => {
+const LineChart = ({resultData, zeroData, home, currentW, targetW}: any) => {
   const transition = useValue(1);
   const state = useValue({
     current: 0,
@@ -223,14 +223,19 @@ const LineChart = ({resultData, zeroData, home}: any) => {
                     color={AppColor.BLACK}
                   />
                   <SkiaText
-                    x={xValue1-5}
+                    x={xValue1 - 5}
                     y={350}
                     text={moment(dataPoint?.date).format('MMM')}
                     color={AppColor.BLACK}
                   />
-                  {(resultData[resultData.length - 1].weight ==
-                    dataPoint?.weight ||
-                    resultData[0].weight == dataPoint?.weight) && (
+                  <SkiaText
+                    x={xValue1}
+                    y={365}
+                    text={moment(dataPoint?.date).format('YY')}
+                    color={AppColor.BLACK}
+                  />
+                  {resultData[resultData.length - 1].weight ==
+                    dataPoint?.weight && (
                     <SkiaText
                       x={
                         resultData[resultData.length - 1].weight ==
@@ -239,7 +244,16 @@ const LineChart = ({resultData, zeroData, home}: any) => {
                           : xValue - 10
                       }
                       y={yValue + 40}
-                      text={dataPoint?.weight}
+                      text={`${targetW} kg`}
+                      color={AppColor.RED}
+                    />
+                  )}
+                  {resultData[0].weight == dataPoint?.weight && (
+                    <SkiaText
+                      x={ xValue - 10
+                      }
+                      y={yValue + 40}
+                      text={`${currentW} kg`}
                       color={AppColor.RED}
                     />
                   )}

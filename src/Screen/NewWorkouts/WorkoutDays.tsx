@@ -263,6 +263,7 @@ const WorkoutDays = ({navigation, route}: any) => {
   const Box = ({selected, item, index}: any) => {
     return (
       <TouchableOpacity
+      disabled={item?.total_rest == 0}
         activeOpacity={1}
         onPress={() => {
           index - 1 == 0
@@ -444,8 +445,8 @@ const WorkoutDays = ({navigation, route}: any) => {
         text={'Today'}
         fontWeight={'500'}
         fontSize={22}
-        width={150}
-        x={1}
+        width={DeviceWidth}
+        x={20}
         marginTop={-10}
       />
       <Text style={[styles.category, {marginTop: 10}]}>
