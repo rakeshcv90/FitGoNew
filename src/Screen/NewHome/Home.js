@@ -1368,7 +1368,7 @@ const Home = ({navigation}) => {
             },
           ]}>
           <FlatList
-            data={customWorkoutData?.workout}
+            data={customWorkoutData?.workout.slice(0, 3)}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id}
