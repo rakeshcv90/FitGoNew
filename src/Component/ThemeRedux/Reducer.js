@@ -31,7 +31,7 @@ const intialState = {
   getHomeGraphData: [],
   getProfile_imgData: [],
   getCustttomeTimeCal: [],
-  getStepCounterOnoff:0
+  getStepCounterOnoff:false
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {

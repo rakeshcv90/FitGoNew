@@ -219,6 +219,7 @@ const Exercise = ({navigation, route}: any) => {
     payload.append('workout_id', data?.workout_id);
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
+    console.log("payload------>",payload)
     try {
       const res = await axios({
         url: NewAppapi.POST_EXERCISE,

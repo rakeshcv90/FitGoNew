@@ -13,7 +13,9 @@ import {
   AppState,
   Modal,
   ActivityIndicator,
+  Alert,
   RefreshControl,
+
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
@@ -33,7 +35,6 @@ import {
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
 import BackgroundService from 'react-native-background-actions';
-import AskHealthPermissionAndroid from '../../Component/AndroidHealthPermission';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Dropdown} from 'react-native-element-dropdown';
 import AnimatedLottieView from 'lottie-react-native';
@@ -41,7 +42,7 @@ import {Slider} from '@miblanchard/react-native-slider';
 import axios from 'axios';
 import {setPedomterData} from '../../Component/ThemeRedux/Actions';
 import {useFocusEffect} from '@react-navigation/native';
-import {throttle, debounce} from 'lodash';
+import GoogleFit, {Scopes} from 'react-native-google-fit';
 import {
   Stop,
   Circle,
@@ -53,25 +54,13 @@ import {
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {BlurView} from '@react-native-community/blur';
-// import {
-//   isStepCountingSupported,
-//   parseStepData,
-//   startStepCounterUpdate,
-//   stopStepCounterUpdate,
-// } from '@dongminyu/react-native-step-counter';
 import {navigationRef} from '../../../App';
 import {useSelector, useDispatch} from 'react-redux';
-// import ActivityLoader from '../../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
-import {getStatusBarHeight} from 'react-native-status-bar-height';
-import RoundedCards from '../../Component/RoundedCards';
-import {BackdropBlur, Canvas, Fill} from '@shopify/react-native-skia';
-import {color} from 'd3';
-import {Form} from 'formik';
-import moment from 'moment';
 import Graph from '../Yourself/Graph';
 import {LineChart} from 'react-native-chart-kit';
-
+import {max} from 'd3';
+import moment from 'moment';
 let zeroData = [];
 let zeroDataM = [];
 const GradientText = ({item}) => {
@@ -181,6 +170,12 @@ const Home = ({navigation}) => {
   const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
     getPedomterData[2] ? getPedomterData[2].RCalories : 250,
   );
+  const [steps, setSteps] = useState(0);
+  const stepsRef = useRef(steps);
+  const [Calories, setCalories] = useState(0);
+  const caloriesRef = useRef(Calories);
+  const [distance, setDistance] = useState(0);
+  const distanceRef = useRef(distance);
   useEffect(() => {
     setTimeout(() => {
       ActivityPermission();
@@ -193,40 +188,228 @@ const Home = ({navigation}) => {
       getGraphData(1);
     }, []),
   );
-  const ActivityPermission = async () => {
-    if (Platform.OS == 'android') {
-      const result = await isStepCountingSupported();
+  // pedometer data sending to api
+  const PedoMeterData = async () => {
+    try {
+      const res = await axios({
+        url: NewAppapi.PedometerAPI,
+        method: 'post',
+        data: {
+          user_id: getUserDataDetails?.id,
+          steps: stepsRef.current,
+          calories: caloriesRef.current,
+          distance: distanceRef.current,
+          version: VersionNumber.appVersion,
+        },
+      });
+      console.log(res.data);
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      }
+    } catch (error) {
+      console.log('PedometerAPi Error', error.response);
+    }
+  };
+  const sleep = time =>
+    new Promise(resolve => setTimeout(() => resolve(), time));
+  const veryIntensiveTask = async taskDataArguments => {
+    const {delay} = taskDataArguments;
+    const isSpecificTime = (hour, minute) => {
+      const now = moment.utc(); // Get current time in UTC
+      const specificTimeUTC = now
+        .clone()
+        .set({hour, minute, second: 0, millisecond: 0});
+      const istTime = moment.utc().add(5, 'hours').add(30, 'minutes');
+      // Compare only the hours and minutes
+      return (
+        istTime.hours() === specificTimeUTC.hours() &&
+        istTime.minutes() === specificTimeUTC.minutes()
+      );
+    };
+    // Example usage with a specific time (midnight in IST)
+    const specificHour = 23;
+    const specificMinute = 29;
+    await new Promise(async resolve => {
+      for (let i = 0; BackgroundService.isRunning(); i++) {
+        if (isSpecificTime(specificHour, specificMinute)) {
+         PedoMeterData()
+        } else {
+         //do nothing
+         console.log("---------->",specificHour,specificMinute)
+        }
+        try {
+          const dailySteps = await GoogleFit.getDailySteps();
+          dailySteps.reduce(
+            (total, acc) =>
+              (totalSteps = total + acc.steps[0] ? acc.steps[0].value : 0),
+            0,
+          );
+        } catch (error) {
+          console.error('Error fetching total steps', error);
+        }
+        BackgroundService.updateNotification({
+          taskDesc: `${totalSteps}`,
+          color: AppColor.RED,
+          progressBar: {
+            max: stepGoalProfile,
+            value: stepsRef.current,
+            indeterminate: false,
+            color: AppColor.RED,
+          },
+          parameters: {
+            delay: 60000,
+          },
+        });
 
-      const permissionStatus = await check(
+        await sleep(delay);
+      }
+    });
+  };
+  const options1 = {
+    taskName: 'StepUpdateBackgroundTask',
+    taskTitle: `Steps`,
+    taskDesc: `${stepsRef.current}`,
+    taskIcon: {
+      name: 'ic_launcher',
+      type: 'mipmap',
+    },
+    progressBar: {
+      max: stepGoalProfile,
+      value: stepsRef.current,
+      indeterminate: false,
+    },
+    color: AppColor.RED,
+    linkingURI: 'yourapp://backgroundTask',
+    parameters: {
+      delay: 60000,
+    },
+  };
+  const startStepUpdateBackgroundTask = async () => {
+    try {
+      await BackgroundService.start(veryIntensiveTask, options1);
+      console.log('Step update background service has been started.');
+    } catch (e) {
+      console.error('Error starting step update background service:', e);
+    }
+  };
+
+  const fetchData = async () => {
+    if (!getStepCounterOnoff) {
+      Alert.alert(
+        'FitMe wants to track your health data !',
+        '',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'Allow',
+            onPress: () => {
+              handleAlert();
+            },
+          },
+        ],
+        {
+          cancelable: true,
+        },
+      );
+      const handleAlert = () => {
+        GoogleFit.authorize(options)
+          .then(authResult => {
+            if (authResult.success) {
+              checkPermissions();
+            } else {
+              console.log('Authentication denied ' + authResult.message);
+            }
+          })
+          .catch(error => {
+            console.error('Authentication error', error);
+          });
+      };
+    } else {
+      GoogleFit.authorize(options)
+        .then(authResult => {
+          if (authResult.success) {
+            checkPermissions();
+          } else {
+            console.log('Authentication denied ' + authResult.message);
+          }
+        })
+        .catch(error => {
+          console.error('Authentication error', error);
+        });
+    }
+  };
+  const options = {
+    scopes: [Scopes.FITNESS_ACTIVITY_READ, Scopes.FITNESS_ACTIVITY_WRITE],
+  };
+  const checkPermissions = async () => {
+    const fitnessPermissionResult = await check(
+      PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
+    );
+    if (fitnessPermissionResult != RESULTS.GRANTED) {
+      const permissionRequestResult = await request(
         PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
       );
-      if (permissionStatus === RESULTS.DENIED && result.supported == true) {
-        const permissionRequestResult = await request(
-          PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
-        );
-        if (
-          permissionRequestResult === RESULTS.GRANTED &&
-          result.supported == true &&
-          getStepCounterOnoff == 0
-        ) {
-          startStepCounter();
-          Dispatch(setStepCounterOnOff(1));
-          console.log('started========>');
+      if (permissionRequestResult === RESULTS.GRANTED) {
+        if (getStepCounterOnoff == true) {
+          fetchTotalSteps();
+          startRecording();
         } else {
-          // Handle the case where the permission request is denied
-          await request(PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION);
+          fetchTotalSteps();
+          startStepUpdateBackgroundTask();
+          Dispatch(setStepCounterOnOff(true));
         }
       } else {
-        if (getStepCounterOnoff == 0) {
-          startStepCounter();
-          Dispatch(setStepCounterOnOff(1));
-        }
-        // startStepCounter();
-        // Dispatch(setStepCounterOnOff(1));
-        // startStepCounter();
-
-        // Permission was already granted previously
+        console.log('Permission Denied');
       }
+    } else {
+      if (getStepCounterOnoff == true) {
+        fetchTotalSteps();
+        startRecording();
+      } else {
+        fetchTotalSteps();
+        startStepUpdateBackgroundTask();
+        Dispatch(setStepCounterOnOff(true));
+      }
+    }
+  };
+  const startRecording = () => {
+    GoogleFit.startRecording(() => {
+      GoogleFit.observeSteps(()=> {
+        fetchTotalSteps();
+      });
+    });
+  };
+  const fetchTotalSteps = async () => {
+    try {
+      const dailySteps = await GoogleFit.getDailySteps();
+      // console.log('dailysteps',dailySteps)
+      dailySteps.reduce(
+        (total, acc) =>
+          (totalSteps = total + acc.steps[0] ? acc.steps[0].value : 0),
+        0,
+      );
+      stepsRef.current = totalSteps;
+      setSteps(totalSteps);
+      distanceRef.current = ((totalSteps / 20) * 0.01).toFixed(2);
+      setDistance(((totalSteps / 20) * 0.01).toFixed(2));
+      caloriesRef.current = ((totalSteps / 20) * 1).toFixed(1);
+      setCalories(((totalSteps / 20) * 1).toFixed(1));
+    } catch (error) {
+      console.error('Error fetching total steps', error);
+    }
+  };
+  const ActivityPermission = async () => {
+    if (Platform.OS == 'android') {
+      fetchData();
     } else if (Platform.OS == 'ios') {
       AppleHealthKit.isAvailable((err, available) => {
         const permissions = {
@@ -241,6 +424,24 @@ const Home = ({navigation}) => {
             if (error) {
               console.log('[ERROR] Cannot grant permissions!', error);
             } else {
+              new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
+                // adding a listner here to record whenever new Steps will be sent from healthkit
+                'healthKit:StepCount:new',
+                async () => {
+                  // console.log('--> observer triggered');
+                  AppleHealthKit.getStepCount(
+                    options,
+                    (callbackError, results) => {
+                      if (callbackError) {
+                        console.log('Error while getting the data');
+                      }
+                      setSteps(results.value);
+                      setDistance(((results.value / 20) * 0.01).toFixed(2));
+                      setCalories(((results.value / 20) * 1).toFixed(1));
+                    },
+                  );
+                },
+              );
               const options = {
                 startDate: new Date(
                   new Date().getFullYear(),
@@ -256,7 +457,6 @@ const Home = ({navigation}) => {
                 if (callbackError) {
                   console.log('Error while getting the data');
                 }
-
                 setSteps(results.value);
                 setDistance(((results.value / 20) * 0.01).toFixed(2));
                 setCalories(((results.value / 20) * 1).toFixed(1));
@@ -306,7 +506,7 @@ const Home = ({navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-     
+
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -319,14 +519,14 @@ const Home = ({navigation}) => {
         setForLoading(false);
 
         Dispatch(setHomeGraphData(res.data));
-        const test = [],
-          test2 = [];
+
 
         if (Key == 1) {
           zeroData = [];
           for (i = 0; i < res?.data?.weekly_data?.length; i++) {
             const data1 = res.data.weekly_data[i].total_calories;
             zeroData.push(parseFloat(data1));
+            // console.log('zeroMonthData------>',zeroData)
           }
           setWeeklyGraph(zeroData);
         } else if (Key == 2) {
@@ -349,194 +549,6 @@ const Home = ({navigation}) => {
     }
   };
 
-  new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
-    'healthKit:StepCount:new',
-    async () => {
-      AppleHealthKit.getStepCount(options, (callbackError, results) => {
-        if (callbackError) {
-          console.log('Error while getting the data');
-        }
-        setSteps(results.value);
-        setDistance(((results.value / 20) * 0.01).toFixed(2));
-        setCalories(((results.value / 20) * 1).toFixed(1));
-      });
-    },
-  );
-  const [steps, setSteps] = useState(
-    getHealthData[0] ? getHealthData[0].Steps : '0',
-  );
-  const [Calories, setCalories] = useState(
-    getHealthData[1] ? getHealthData[1].Calories : '0',
-  );
-  const [distance, setDistance] = useState(
-    getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
-  );
-  // pedometers
-  const PedoMeterData = async () => {
-    try {
-      const res = await axios({
-        url: NewAppapi.PedometerAPI,
-        method: 'post',
-        data: {
-          user_id: getUserDataDetails?.id,
-          steps: getHealthData[0] ? getHealthData[0].Steps : '0',
-          calories: getHealthData[1] ? getHealthData[1].Calories : '0',
-          distance: getHealthData[2] ? getHealthData[2].DistanceCovered : '0',
-          version: VersionNumber.appVersion,
-        },
-      });
-
-      if (res?.data?.msg == 'Please update the app to the latest version.') {
-        showMessage({
-          message: res?.data?.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-      }
-    } catch (error) {
-      console.log('PedometerAPi Error', error.response);
-    }
-  };
-  const throttledDispatch = throttle(
-    steps => {
-      Dispatch(
-        setHealthData([
-          {Steps: steps},
-          {Calories: Math.floor(steps / 20)},
-          {DistanceCovered: ((steps / 20) * 0.01).toFixed(2)},
-        ]),
-      );
-    },
-    30000,
-    {trailing: false},
-  );
-  const sleep = time =>
-    new Promise(resolve => setTimeout(() => resolve(), time)); // background
-
-  const veryIntensiveTask = async taskDataArguments => {
-    const {delay} = taskDataArguments;
-
-    const throttledUpdateStepsAndNotification = throttle(async data => {
-      setSteps(data.steps);
-
-      setDistance(((data.steps / 20) * 0.01).toFixed(2));
-      setCalories(Math.floor(data.steps / 20));
-
-      throttledDispatch(data.steps);
-
-      await BackgroundService.updateNotification({
-        taskIcon: {
-          name: 'ic_launcher',
-          type: 'mipmap',
-        },
-        color: AppColor.RED,
-        taskName: 'Pedometer',
-        taskTitle: 'Steps ' + data.steps,
-        taskDesc: 'Steps ',
-        progressBar: {
-          max: stepGoalProfile,
-          value: data.steps,
-          indeterminate: false,
-        },
-        parameters: {
-          delay: 30000,
-        },
-      });
-    }, 30000);
-
-    const isSpecificTime = (hour, minute) => {
-      const now = moment.utc(); // Get current time in UTC
-      // Calculate specific time in UTC by setting hours and minutes
-      const specificTimeUTC = now
-        .clone()
-        .set({hour, minute, second: 0, millisecond: 0});
-      const istTime = moment.utc().add(5, 'hours').add(30, 'minutes');
-      // Compare the times directly to check if they represent the same time in IST
-      return istTime.format() == specificTimeUTC.format();
-    };
-    const debouncedResetSteps = () => {
-      // Your logic to reset steps and related state
-      setSteps(0);
-      setDistance(0);
-      setCalories(0);
-      Dispatch(
-        setHealthData([
-          {Steps: '0'},
-          {Calories: '0'},
-          {DistanceCovered: '0.00'},
-        ]),
-      );
-
-      // Update the notification after resetting steps
-      BackgroundService.updateNotification({
-        // Your notification update logic after steps reset
-        taskIcon: {
-          name: 'ic_launcher',
-          type: 'mipmap',
-        },
-        color: AppColor.RED,
-        taskName: 'Pedometer',
-        taskTitle: 'Steps ' + steps,
-        taskDesc: 'Steps ',
-        progressBar: {
-          max: stepGoalProfile,
-          value: steps,
-          indeterminate: false,
-        },
-        parameters: {
-          delay: 30000,
-        },
-      });
-    }; // 30 seconds d
-    for (let i = 0; BackgroundService.isRunning(); i++) {
-      startStepCounterUpdate(new Date(), async data => {
-        // Call the throttled function
-        await throttledUpdateStepsAndNotification(data);
-
-        // Call the debounced function
-      });
-
-      // reset the steps at midnight
-      if (isSpecificTime(0, 0)) {
-        PedoMeterData();
-        debouncedResetSteps();
-      }
-
-      // Use sleep with a delay of 30 seconds
-      await sleep(delay);
-    }
-  };
-  const options = {
-    color: AppColor.RED,
-    taskName: 'Pedometer',
-    taskTitle: 'Steps ' + steps,
-    taskDesc: '',
-    progressBar: {
-      max: stepGoalProfile,
-      value: steps,
-      indeterminate: false,
-    },
-    taskIcon: {
-      name: 'ic_launcher',
-      type: 'mipmap',
-    },
-    linkingURI: '@string/fb_login_protocol_scheme', // See Deep Linking for more info
-    parameters: {
-      delay: 1000,
-    },
-  };
-  async function startStepCounter() {
-    startStepCounterUpdate(new Date(), data => {
-      setSteps(data.steps);
-      setDistance(((data.steps / 20) * 0.01).toFixed(2));
-      setCalories(Math.floor(data.steps / 20));
-      throttledDispatch(data.steps);
-    });
-    await BackgroundService.start(veryIntensiveTask, options);
-    await BackgroundService.updateNotification(options);
-  }
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleLongPress = () => {
@@ -1189,7 +1201,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#5FB67B'}]}>
-                  {steps}
+                  {stepsRef.current}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     {`/${stepGoalProfile} steps`}
                   </Text>
@@ -1208,7 +1220,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#FCBB1D'}]}>
-                  {distance}
+                  {distanceRef.current}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     {`/ ${DistanceGoalProfile} km `}
                   </Text>
@@ -1232,7 +1244,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#D01818'}]}>
-                  {Calories}
+                  {caloriesRef.current}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     {`/${CalriesGoalProfile} KCal`}
                   </Text>
@@ -1623,7 +1635,6 @@ const Home = ({navigation}) => {
             selectedTextStyle={styles.selectedTextStyle}
             data={data2}
             maxHeight={300}
-            X
             labelField="label"
             valueField="value"
             placeholder={value}
@@ -1884,12 +1895,15 @@ var styles = StyleSheet.create({
   textItem: {
     flex: 1,
     fontSize: 16,
+    color:AppColor.BLACK
   },
   placeholderStyle: {
     fontSize: 16,
+    color:AppColor.BLACK
   },
   selectedTextStyle: {
     fontSize: 16,
+    color:AppColor.BLACK
   },
   modalContainer: {
     flex: 1,
