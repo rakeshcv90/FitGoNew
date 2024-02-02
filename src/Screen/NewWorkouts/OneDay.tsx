@@ -86,7 +86,6 @@ const OneDay = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-   
 
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
@@ -120,7 +119,7 @@ const OneDay = ({navigation, route}: any) => {
     trainingCount = trackerData.findIndex(
       item => item?.exercise_status == 'undone',
     );
-    console.log(trainingCount);
+
     for (const exercise of exerciseData) {
       datas.push({
         user_id: getUserDataDetails?.id,
@@ -136,18 +135,36 @@ const OneDay = ({navigation, route}: any) => {
         data: {user_details: datas},
       });
       if (res.data) {
-        console.log(res.data, 'Post', trackerData);
-        // getExerciseTrackAPI();
-        setOpen(false);
-        navigation.navigate('Exercise', {
-          allExercise: exerciseData,
-          currentExercise:
-            trainingCount != -1 ? exerciseData[trainingCount] : exerciseData[0],
-          data: data,
-          day: day,
-          exerciseNumber: trainingCount != -1 ? trainingCount : 0,
-          trackerData: trackerData,
-        });
+        console.log('Tfracking Data1234560000000', res?.data);
+        if (
+          res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
+        ) {
+          setOpen(false);
+          navigation.navigate('Exercise', {
+            allExercise: exerciseData,
+            currentExercise:
+              trainingCount != -1
+                ? exerciseData[trainingCount]
+                : exerciseData[0],
+            data: data,
+            day: day,
+            exerciseNumber: trainingCount != -1 ? trainingCount : 0,
+            trackerData: res?.data?.inserted_data,
+          });
+        } else {
+          setOpen(false);
+          navigation.navigate('Exercise', {
+            allExercise: exerciseData,
+            currentExercise:
+              trainingCount != -1
+                ? exerciseData[trainingCount]
+                : exerciseData[0],
+            data: data,
+            day: day,
+            exerciseNumber: trainingCount != -1 ? trainingCount : 0,
+            trackerData: trackerData,
+          });
+        }
       }
     } catch (error) {
       console.error(error, 'PostDaysAPIERror');
@@ -168,10 +185,14 @@ const OneDay = ({navigation, route}: any) => {
           {
             backgroundColor: AppColor.WHITE,
             height: DeviceHeigth * 0.1,
-            marginVertical:Platform.OS=="android"?DeviceHeigth*0.005:DeviceHeigth>667?0:DeviceHeigth*0.019,
+            marginVertical:
+              Platform.OS == 'android'
+                ? DeviceHeigth * 0.005
+                : DeviceHeigth > 667
+                ? 0
+                : DeviceHeigth * 0.019,
           },
         ]}>
-          {console.log("SJSNSKN",DeviceHeigth)}
         <View
           style={{
             flexDirection: 'row',
@@ -201,7 +222,7 @@ const OneDay = ({navigation, route}: any) => {
             }}>
             <Image
               source={{uri: item?.exercise_image}}
-              style={{height: 75, width: 75,alignSelf:'center'}}
+              style={{height: 75, width: 75, alignSelf: 'center'}}
               resizeMode="contain"
             />
           </View>

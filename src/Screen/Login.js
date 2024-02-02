@@ -133,7 +133,7 @@ const Login = ({navigation}) => {
         getProfileData(data.data.id, data.data.profile_status);
         getCustomWorkout(data.data.id);
         Meal_List(data.data.login_token);
-        PurchaseDetails(data.data.id, data.data.login_token);
+        //PurchaseDetails(data.data.id, data.data.login_token);
         await GoogleSignin.signOut();
       } else if (
         data.data.msg ==
@@ -233,7 +233,7 @@ const Login = ({navigation}) => {
         getProfileData(data.data.id, data.data.profile_status);
         getCustomWorkout(data.data.id);
         Meal_List(data.data.login_token);
-        PurchaseDetails(data.data.id, data.data.login_token);
+        //PurchaseDetails(data.data.id, data.data.login_token);
       } else if (
         data.data.msg ==
         'User does not exist with provided Facebook social credentials'
@@ -318,7 +318,7 @@ const Login = ({navigation}) => {
         getProfileData(data.data.id, data.data.profile_status);
         getCustomWorkout(data.data.id);
         Meal_List(data.data.login_token);
-        PurchaseDetails(data.data.id, data.data.login_token);
+        //PurchaseDetails(data.data.id, data.data.login_token);
       } else if (
         data.data?.msg ==
         'User does not exist with provided Apple social credentials'
@@ -407,7 +407,7 @@ const Login = ({navigation}) => {
           getProfileData(data.data.id, data.data.profile_status);
           getCustomWorkout(data.data.id);
           Meal_List(data.data.login_token);
-          PurchaseDetails(data.data.id, data.data.login_token);
+          //PurchaseDetails(data.data.id, data.data.login_token);
         } else if (
           data.data.msg == 'Login successful' &&
           data.data.profile_status == 0
@@ -418,7 +418,7 @@ const Login = ({navigation}) => {
           getProfileData(data.data.id, data.data.profile_status);
           Meal_List(data.data.login_token);
           dispatch(setCustomWorkoutData([]));
-          PurchaseDetails(data.data.id, data.data.login_token);
+          //PurchaseDetails(data.data.id, data.data.login_token);
         } else if (
           data?.data?.msg == 'Please update the app to the latest version.'
         ) {
@@ -673,29 +673,29 @@ const Login = ({navigation}) => {
     }
   };
 
-  const PurchaseDetails = async (id, login_token) => {
-    try {
-      const res = await axios(`${NewAppapi.TransctionsDetails}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          id: id,
-          token: login_token,
-        },
-      });
+  // const PurchaseDetails = async (id, login_token) => {
+  //   try {
+  //     const res = await axios(`${NewAppapi.TransctionsDetails}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         id: id,
+  //         token: login_token,
+  //       },
+  //     });
 
-      if (res.data.data.length > 0) {
-        dispatch(setPurchaseHistory(res.data.data));
-      } else {
-        dispatch(setPurchaseHistory([]));
-      }
-    } catch (error) {
-      dispatch(setPurchaseHistory([]));
-      console.log('Purchase List Error', error);
-    }
-  };
+  //     if (res.data.data.length > 0) {
+  //       dispatch(setPurchaseHistory(res.data.data));
+  //     } else {
+  //       dispatch(setPurchaseHistory([]));
+  //     }
+  //   } catch (error) {
+  //     dispatch(setPurchaseHistory([]));
+  //     console.log('Purchase List Error', error);
+  //   }
+  // };
   const ModalView = () => {
     const [forLoading, setForLoading] = useState(false);
     const handleForgotPassword = async value => {
