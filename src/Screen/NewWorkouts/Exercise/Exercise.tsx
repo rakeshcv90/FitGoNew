@@ -270,12 +270,13 @@ const Exercise = ({navigation, route}: any) => {
               text={'Hold on!'}
               fontWeight={'700'}
               fontSize={32}
-              width={300}
-              x={6}
+              width={DeviceWidth}
+              // x={6}
+              alignSelf
             />
             <GradientText
-              // x={DeviceWidth * 0.32}
-              width={400}
+              alignSelf
+              width={DeviceWidth}
               text={`Don't give up!`}
               fontWeight={'700'}
               fontSize={32}
