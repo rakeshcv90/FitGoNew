@@ -53,6 +53,7 @@ const Exercise = ({navigation, route}: any) => {
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const restTimerRef = useRef(null);
   const seprateTimerRef = useRef(null);
+ 
   useEffect(() => {
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
@@ -109,7 +110,7 @@ const Exercise = ({navigation, route}: any) => {
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
-              console.log(allExercise[index + 1], 'allExercise[index + 1]');
+           
               setCurrentData(allExercise[index + 1]);
               // setPre(15);
               setNumber(number + 1);
@@ -130,20 +131,20 @@ const Exercise = ({navigation, route}: any) => {
             if (pause)
               setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
             if (playW >= 100 && number == allExercise?.length - 1) {
-              console.log(number + 1, allExercise?.length);
+          
               setPause(false);
               postCurrentExerciseAPI(number);
               if (skipCount == 0)
                 navigation.navigate('SaveDayExercise', {data, day});
               else navigation.goBack();
             } else if (playW >= 100 && number < allExercise?.length - 1) {
-              console.log(number + 1, allExercise?.length);
+            
               setPause(false);
               setRestStart(true);
             }
           }, 1000);
     } else {
-      console.log('MESSSSS', back, restStart);
+  
     }
     return () => {
       clearInterval(restTimerRef.current);
@@ -160,7 +161,7 @@ const Exercise = ({navigation, route}: any) => {
       // Check if goBack has been called
       if (!e.data.action) {
         setPause(false);
-        console.log('navigation.goBack was called');
+
         setBack(true);
       }
     });
@@ -227,6 +228,7 @@ const Exercise = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
+      console.log("GDSGDGDGDGD",payload,res?.data)
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -581,7 +583,7 @@ const Exercise = ({navigation, route}: any) => {
               onVideoLoadStart={() => console.log('forth')}
               paused={!pause}
               onPlaybackResume={() => {
-                console.log(pause);
+                
                 setPause(true);
               }}
               repeat={true}

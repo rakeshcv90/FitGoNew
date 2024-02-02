@@ -13,6 +13,7 @@ import {
   AppState,
   Modal,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
@@ -26,6 +27,8 @@ import {
   setHomeGraphData,
   setWorkoutTimeCal,
   setStepCounterOnOff,
+  setCustomWorkoutData,
+  Setmealdata,
 } from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
@@ -153,6 +156,7 @@ const Home = ({navigation}) => {
   const [monthlyGraph, setMonthlyGraph] = useState([]);
   const progressAnimation = useRef(new Animated.Value(0)).current;
   const [isLoading, setIsLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false);
   const Dispatch = useDispatch();
   const {
     getHealthData,
@@ -182,9 +186,6 @@ const Home = ({navigation}) => {
       ActivityPermission();
     }, 3000);
   }, []);
-  // useEffect(() => {
-
-  // }, []);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -272,17 +273,7 @@ const Home = ({navigation}) => {
       });
     }
   };
-  // service
 
-  // useEffect(() => {
-  //   new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
-  //     //NOT IMPLEMENTED YET
-  //     'healthKit:StepCount:new',
-  //     async () => {
-  //       console.log('--> observer triggered');
-  //     },
-  //   );
-  // });
   const getCustomeWorkoutTimeDetails = async () => {
     try {
       const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
@@ -305,19 +296,17 @@ const Home = ({navigation}) => {
     }
   };
   const getGraphData = async Key => {
-    
     try {
- 
       setForLoading(true);
       const res = await axios({
         url: NewAppapi.HOME_GRAPH_DATA,
         method: 'post',
         data: {
           user_id: getUserDataDetails?.id,
-          version:VersionNumber.appVersion,
+          version: VersionNumber.appVersion,
         },
       });
-      console.log("GHDGDGDGDGGDGD",res?.data)
+      console.log("DGDGDGDGDGDGD",res.data)
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -328,50 +317,29 @@ const Home = ({navigation}) => {
         });
       } else if (res.data?.message != 'No data found') {
         setForLoading(false);
-        // console.log(res.data, 'Graph Data ');
+
         Dispatch(setHomeGraphData(res.data));
         const test = [],
           test2 = [];
-        // zeroData?.map((_, index) => {
-        //   test.push({
-        //     id: res.data?.weekly_data[index]?.id,
-        //     date: res.data?.weekly_data[index]?.created_at,
-        //     weight: parseInt(res.data?.weekly_data[index]?.total_calories),
-        //   });
-        // });
-        // zeroDataM?.map((_, index) => {
-        //   test2.push({
-        //     id: res.data?.monthly_data[index]?.id,
-        //     date: res.data?.monthly_data[index]?.created_at,
-        //     weight: parseInt(res.data?.monthly_data[index]?.total_calories),
-        //   });
-        // });
-   
+
         if (Key == 1) {
           zeroData = [];
           for (i = 0; i < res?.data?.weekly_data?.length; i++) {
             const data1 = res.data.weekly_data[i].total_calories;
             zeroData.push(parseFloat(data1));
-         
           }
           setWeeklyGraph(zeroData);
-
         } else if (Key == 2) {
           zeroDataM = [];
           for (i = 0; i < res?.data?.monthly_data?.length; i++) {
             const data1 = res.data.monthly_data[i].total_calories;
             zeroDataM.push(parseFloat(data1));
-         
           }
           setMonthlyGraph(zeroDataM);
-          // console.log(' monthly Data====>', zeroDataM);
         }
-        // setWeeklyGraph(test);
-        // setMonthlyGraph(test2);
       } else {
         setForLoading(false);
 
-        // console.log(res.data, 'Graph Data message ');
         Dispatch(setHomeGraphData([]));
       }
     } catch (error) {
@@ -381,12 +349,9 @@ const Home = ({navigation}) => {
     }
   };
 
-  /// backgrounf listner
   new NativeEventEmitter(NativeModules.AppleHealthKit).addListener(
-    //NOT IMPLEMENTED YET
     'healthKit:StepCount:new',
     async () => {
-      // console.log('--> observer triggered');
       AppleHealthKit.getStepCount(options, (callbackError, results) => {
         if (callbackError) {
           console.log('Error while getting the data');
@@ -458,10 +423,9 @@ const Home = ({navigation}) => {
 
       setDistance(((data.steps / 20) * 0.01).toFixed(2));
       setCalories(Math.floor(data.steps / 20));
-      // Add your dispatch logic here
+
       throttledDispatch(data.steps);
 
-      // Update the notification with the current steps
       await BackgroundService.updateNotification({
         taskIcon: {
           name: 'ic_launcher',
@@ -480,8 +444,8 @@ const Home = ({navigation}) => {
           delay: 30000,
         },
       });
-    }, 30000); // 30 seconds delay
-    // function for checking if it is midnight or not
+    }, 30000);
+
     const isSpecificTime = (hour, minute) => {
       const now = moment.utc(); // Get current time in UTC
       // Calculate specific time in UTC by setting hours and minutes
@@ -1045,6 +1009,85 @@ const Home = ({navigation}) => {
     }
     return null; // Render nothing for other data points
   };
+
+  const getCustomWorkout = async user_id => {
+    setRefresh(true);
+    try {
+      const data = await axios(NewAppapi.Custom_WORKOUT_DATA, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          id: user_id,
+          version: VersionNumber.appVersion,
+        },
+      });
+
+      if (data.data.workout) {
+        setRefresh(false);
+        Dispatch(setCustomWorkoutData(data?.data));
+      } else if (
+        data?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setRefresh(false);
+      } else {
+        setRefresh(false);
+        Dispatch(setCustomWorkoutData([]));
+      }
+    } catch (error) {
+      console.log('Custom Workout Error', error);
+      Dispatch(setCustomWorkoutData([]));
+      setRefresh(false);
+    }
+  };
+  const Meal_List = async () => {
+    setRefresh(true);
+    try {
+      const data = await axios(`${NewAppapi.Meal_Categorie}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          version: VersionNumber.appVersion,
+        },
+      });
+
+      if (data?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: data?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setRefresh(false);
+      } else if (data.data.diets.length > 0) {
+        Dispatch(Setmealdata(data.data.diets));
+        setRefresh(false);
+      } else {
+        Dispatch(Setmealdata([]));
+        setRefresh(false);
+      }
+      // if (data.data.diets.length > 0) {
+      //   dispatch(Setmealdata(data.data.diets));
+      // } else {
+      //   dispatch(Setmealdata([]));
+      // }
+    } catch (error) {
+      Dispatch(Setmealdata([]));
+      console.log('Meal List Error', error);
+      setRefresh(false);
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -1113,7 +1156,18 @@ const Home = ({navigation}) => {
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+        refreshControl={
+          <RefreshControl
+            refreshing={refresh}
+            onRefresh={() => {
+              getCustomWorkout(getUserDataDetails.id);
+              Meal_List();
+              getGraphData(1);
+            }}
+            colors={[AppColor.RED, AppColor.WHITE]}
+          />
+        }>
         <TouchableOpacity
           style={styles.CardBox}
           onLongPress={handleLongPress}

@@ -129,7 +129,7 @@ const Workouts = ({navigation}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('Workout Status', res.data);
+    
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         setRefresh(false);
         showMessage({
