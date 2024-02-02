@@ -3,7 +3,7 @@ import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import ForgetPassword from '../Screen/ForgetPassword';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/Index';
+import Yourself from '../Screen/Yourself/index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -11,8 +11,6 @@ import Focus from '../Screen/Yourself/Focus';
 import Level from '../Screen/Yourself/Level';
 import Height from '../Screen/Yourself/Height';
 import Weight from '../Screen/Yourself/Weight';                
-
-
 import IntroductionScreen1 from '../Screen/Introduction/IntroductionScreen1';
 import IntroductionScreen2 from '../Screen/Introduction/IntroductionScreen2';
 import IntroductionScreen3 from '../Screen/Introduction/IntroductionScreen3';
@@ -57,6 +55,7 @@ import Subscription from '../Screen/Subscription/Subscription';
 import Report from '../Screen/NewHome/Report';
 import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
+
 
 const Stack = createStackNavigator();
 

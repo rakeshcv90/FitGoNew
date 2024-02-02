@@ -27,6 +27,7 @@ import {setBmi} from '../../Component/ThemeRedux/Actions';
 import {Calendar} from 'react-native-calendars';
 import AnimatedLottieView from 'lottie-react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
+import GoogleFit, {Scopes} from 'react-native-google-fit';
 import {
   VictoryBar,
   VictoryChart,
@@ -53,6 +54,7 @@ const NewProgressScreen = ({navigation}) => {
     getHomeGraphData,
     getCustttomeTimeCal,
     getHealthData,
+    getStepCounterOnoff,
   } = useSelector(state => state);
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [selected, setSelected] = useState(false);
@@ -70,52 +72,19 @@ const NewProgressScreen = ({navigation}) => {
   let arrayForData1 = [];
   useEffect(() => {
     setBmi(
-      (
-        getUserDataDetails?.weight /
-        (getUserDataDetails?.height * 0.3048) ** 2
-      ).toFixed(2),
+      getUserDataDetails?.weight
+        ? (
+            getUserDataDetails?.weight /
+            (getUserDataDetails?.height * 0.3048) ** 2
+          ).toFixed(2)
+        : 0,
     );
-    // userData();
-    // dispatch(setBmi(getBmi))
   }, []);
-  const userData = async () => {
-    try {
-      const res = await axios({
-        url: NewAppapi.total_Calories,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          user_id: 111,
-        },
-      });
-      if (res) {
-        // for (i = 1; i < 7; i++) {
-        //   const dayWiseWeight = res.data.data.filter(
-        //     value => value.user_day == i,
-        //   );
-        //   if (dayWiseWeight.length < 1) {
-        //     // do nothing
-        //   } else {
-        //     const weight = dayWiseWeight.map(obj => parseInt(obj.calories));
-        //     const currentWeight =
-        //       getUserDataDetails?.weight -
-        //       (weight.reduce((acc, res) => acc + res, 0) * 0.3) / 500;
-        //     arrayForData.push(currentWeight);
-        //   }
-        // }
-        // setArray(arrayForData);
-      }
-    } catch (error) {
-      console.log('Calories Api Error', error);
-    }
-  };
   useEffect(() => {
     WeeklyData(1);
     WeeklyData(2);
   }, []);
- 
+
   useEffect(() => {
     const Calories1 = getCustttomeTimeCal.map(value => value.totalCalories);
     const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
@@ -141,11 +110,31 @@ const NewProgressScreen = ({navigation}) => {
         }
       });
     } else if (Platform.OS == 'android') {
-      setCalories(
-        parseInt(getHealthData[1] ? getHealthData[1]?.Calories : 0) +
-          parseInt(Calories2),
-      );
-      // console.log('android======>');
+      if (getStepCounterOnoff) {
+        const getDailyData = async () => {
+          try {
+            const dailySteps = await GoogleFit.getDailySteps();
+            const totalSteps = dailySteps.reduce(
+              (total, acc) => (total + acc.steps[0] ? acc.steps[0].value : 0),
+              0,
+            );
+            setCalories(
+              parseInt(totalSteps ? ((totalSteps / 20) * 1).toFixed(0) : 0) +
+                parseInt(Calories2),
+            );
+            console.log(
+              Calories,
+              Calories2,
+              parseInt(totalSteps ? ((totalSteps / 20) * 1).toFixed(0) : 0),
+            );
+          } catch (error) {
+            console.error('Error fetching total steps', error);
+          }
+        };
+        getDailyData();
+      } else {
+        setCalories(parseInt(Calories2));
+      }
     }
   }, []);
   const handleGraph1 = data => {
@@ -672,7 +661,7 @@ const NewProgressScreen = ({navigation}) => {
                 resizeMode="cover"
               />
             </>
-          ) }
+          )}
         </View>
         <Text
           style={{
@@ -1130,7 +1119,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     backgroundColor: AppColor.GRAY,
-   // top: DeviceHeigth * 0.02,
+    // top: DeviceHeigth * 0.02,
     height: 150,
     width: 150,
     borderRadius: 150 / 2,

@@ -24,13 +24,15 @@ import Calories from '../../Component/Calories';
 import ActivityLoader from '../../Component/ActivityLoader';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
+import GoogleFit, {Scopes} from 'react-native-google-fit';
+import Loader from '../../Component/Loader';
 const NewMonthlyAchievement = () => {
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [selected, setSelected] = useState(false);
   const [steps, setSteps] = useState(0);
   const [Distance, setDistance] = useState(0);
   const [calories, setCalories] = useState(0);
-  const {getUserDataDetails, getCustttomeTimeCal, getHealthData} = useSelector(
+  const {getUserDataDetails, getCustttomeTimeCal,getStepCounterOnoff} = useSelector(
     state => state,
   );
   const [ApiData, setApiData] = useState([]);
@@ -38,10 +40,9 @@ const NewMonthlyAchievement = () => {
   const [WokoutCalories, setWorkoutCalories] = useState(0);
   const [WokroutTime_m, setWorkoutTime_m] = useState(0);
   const [WokroutTime_s, setWorkoutTime_s] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [calories1, setCalories1] = useState(0);
   const [Wtime, setWtime] = useState(0);
-
+  const [isLoaded,setIsLoaded]=useState(false)
   useEffect(() => {
     // console.log("heloo===>",getCustttomeTimeCal[0])
     const Calories1 = getCustttomeTimeCal.map(value => value.totalCalories);
@@ -70,11 +71,31 @@ const NewMonthlyAchievement = () => {
         }
       });
     } else if (Platform.OS == 'android') {
-      console.log('android======>', getHealthData);
-      // setCalories( getHealthData[1]?getHealthData[1].Calories:0)
-      setCalories1(
-        Calories2 + parseInt(getHealthData[1] ? getHealthData[1].Calories : 0),
-      );
+      if (getStepCounterOnoff) {
+        const getDailyData = async () => {
+          try {
+            const dailySteps = await GoogleFit.getDailySteps();
+            const totalSteps = dailySteps.reduce(
+              (total, acc) => (total + acc.steps[0] ? acc.steps[0].value : 0),
+              0,
+            );
+            setCalories1(
+              parseInt(totalSteps ? ((totalSteps / 20) * 1).toFixed(0) : 0) +
+                parseInt(Calories2),
+            );
+            console.log(
+              Calories,
+              Calories2,
+              parseInt(totalSteps ? ((totalSteps / 20) * 1).toFixed(0) : 0),
+            );
+          } catch (error) {
+            console.error('Error fetching total steps', error);
+          }
+        };
+        getDailyData();
+      } else {
+        setCalories1(parseInt(Calories2));
+      }
     }
   }, []);
   const theme = useMemo(() => {
@@ -112,9 +133,10 @@ const NewMonthlyAchievement = () => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-     
+      setIsLoaded(true)
       }
      else if (res) {
+      setIsLoaded(true)
         setApiData(res.data.data);
         const Calories = res.data.data.map(value =>
           parseInt(value.exercise_calories),
@@ -132,8 +154,6 @@ const NewMonthlyAchievement = () => {
             res?.data?.steps[0]?.distance ? res?.data?.steps[0]?.distance : 0,
           );
         }
-      } else {
-        isLoaded(true);
       }
     } catch (error) {
       console.log('DatwWiseDataError', error);
@@ -158,6 +178,7 @@ const NewMonthlyAchievement = () => {
         }
       });
     } else if (Platform.OS == 'android') {
+
     }
   };
 
@@ -276,6 +297,7 @@ const NewMonthlyAchievement = () => {
               setSelected(true);
               HandleStepsAndCalories(day.dateString);
               DateWiseData(day.dateString);
+              setIsLoaded(false)
             }}
             allowSelectionOutOfRange={false}
             markingType="period"
@@ -334,8 +356,9 @@ const NewMonthlyAchievement = () => {
         </View>
 
         {ApiData.length == 0 ? (
-          <EmptyComponent />
+          isLoaded? <EmptyComponent />:<Loader/>
         ) : (
+          isLoaded?
           <View style={[styles.card, {flexDirection: 'column'}]}>
             {isLoaded ? null : <ActivityLoader />}
             <FlatList
@@ -408,7 +431,7 @@ const NewMonthlyAchievement = () => {
                 </View>
               ))}
             </View>
-          </View>
+          </View>:<Loader/>
         )}
       </ScrollView>
     </SafeAreaView>
