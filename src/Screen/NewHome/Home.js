@@ -215,10 +215,6 @@ const Home = ({navigation}) => {
   };
   const sleep = time =>
     new Promise(resolve => setTimeout(() => resolve(), time));
-  // You can do anything in your task such as network requests, timers and so on,
-  // as long as it doesn't touch UI. Once your task completes (i.e. the promise is resolved),
-  // React Native will go into "paused" mode (unless there are other tasks running,
-  // or there is a foreground app).
   const veryIntensiveTask = async taskDataArguments => {
     const {delay} = taskDataArguments;
     const isSpecificTime = (hour, minute) => {
@@ -239,10 +235,10 @@ const Home = ({navigation}) => {
     await new Promise(async resolve => {
       for (let i = 0; BackgroundService.isRunning(); i++) {
         if (isSpecificTime(specificHour, specificMinute)) {
-          // Perform your API request or other actions here
          PedoMeterData()
         } else {
          //do nothing
+         console.log("---------->",specificHour,specificMinute)
         }
         try {
           const dailySteps = await GoogleFit.getDailySteps();
@@ -264,7 +260,7 @@ const Home = ({navigation}) => {
             color: AppColor.RED,
           },
           parameters: {
-            delay: 100000,
+            delay: 60000,
           },
         });
 
@@ -288,7 +284,7 @@ const Home = ({navigation}) => {
     color: AppColor.RED,
     linkingURI: 'yourapp://backgroundTask',
     parameters: {
-      delay: 100000,
+      delay: 60000,
     },
   };
   const startStepUpdateBackgroundTask = async () => {
@@ -340,7 +336,6 @@ const Home = ({navigation}) => {
           if (authResult.success) {
             checkPermissions();
           } else {
-            r;
             console.log('Authentication denied ' + authResult.message);
           }
         })
@@ -385,7 +380,7 @@ const Home = ({navigation}) => {
   };
   const startRecording = () => {
     GoogleFit.startRecording(() => {
-      GoogleFit.observeSteps(callback => {
+      GoogleFit.observeSteps(()=> {
         fetchTotalSteps();
       });
     });
@@ -1812,12 +1807,15 @@ var styles = StyleSheet.create({
   textItem: {
     flex: 1,
     fontSize: 16,
+    color:AppColor.BLACK
   },
   placeholderStyle: {
     fontSize: 16,
+    color:AppColor.BLACK
   },
   selectedTextStyle: {
     fontSize: 16,
+    color:AppColor.BLACK
   },
   modalContainer: {
     flex: 1,

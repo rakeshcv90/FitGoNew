@@ -1081,14 +1081,15 @@ const styles = StyleSheet.create({
   textItem: {
     flex: 1,
     fontSize: 16,
-    color: AppColor.BLACK,
+    color:AppColor.BLACK
   },
   placeholderStyle: {
     fontSize: 16,
+    color:AppColor.BLACK
   },
   selectedTextStyle: {
     fontSize: 16,
-    color: AppColor.BLACK,
+    color:AppColor.BLACK
   },
   modalContainer: {
     flex: 1,

@@ -32,9 +32,8 @@ const NewMonthlyAchievement = () => {
   const [steps, setSteps] = useState(0);
   const [Distance, setDistance] = useState(0);
   const [calories, setCalories] = useState(0);
-  const {getUserDataDetails, getCustttomeTimeCal,getStepCounterOnoff} = useSelector(
-    state => state,
-  );
+  const {getUserDataDetails, getCustttomeTimeCal, getStepCounterOnoff} =
+    useSelector(state => state);
   const [ApiData, setApiData] = useState([]);
   const [WorkoutCount, setWorkoutCount] = useState(0);
   const [WokoutCalories, setWorkoutCalories] = useState(0);
@@ -42,9 +41,8 @@ const NewMonthlyAchievement = () => {
   const [WokroutTime_s, setWorkoutTime_s] = useState(0);
   const [calories1, setCalories1] = useState(0);
   const [Wtime, setWtime] = useState(0);
-  const [isLoaded,setIsLoaded]=useState(false)
+  const [isLoaded, setIsLoaded] = useState(false);
   useEffect(() => {
-    // console.log("heloo===>",getCustttomeTimeCal[0])
     const Calories1 = getCustttomeTimeCal.map(value => value.totalCalories);
     const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
     const time1 = getCustttomeTimeCal?.map(value =>
@@ -52,7 +50,6 @@ const NewMonthlyAchievement = () => {
     );
     const Time2 = time1?.reduce((acc, ind) => Math.ceil((acc + ind) / 60), 0);
     setWtime(Time2);
-    // console.log('>>>>>>',Time2)
     if (Platform.OS == 'ios') {
       let options = {
         date: new Date().toISOString(), // optional; default now
@@ -63,7 +60,6 @@ const NewMonthlyAchievement = () => {
           console.error('Error while getting the data:', callbackError);
           // Handle the error as needed
         } else {
-          // console.log('iOS ', results);
           setCalories1(
             parseInt(((results?.value / 20) * 1).toFixed(0)) +
               parseInt(Calories2),
@@ -82,11 +78,6 @@ const NewMonthlyAchievement = () => {
             setCalories1(
               parseInt(totalSteps ? ((totalSteps / 20) * 1).toFixed(0) : 0) +
                 parseInt(Calories2),
-            );
-            console.log(
-              Calories,
-              Calories2,
-              parseInt(totalSteps ? ((totalSteps / 20) * 1).toFixed(0) : 0),
             );
           } catch (error) {
             console.error('Error fetching total steps', error);
@@ -113,6 +104,9 @@ const NewMonthlyAchievement = () => {
       dayTextColor: AppColor.BLACK,
     };
   }, []);
+  useEffect(()=>{
+  DateWiseData(moment.utc().format("YYYY-MM-DD"))  // to get the datewise data
+  },[])
   const DateWiseData = async Date1 => {
     const payload = new FormData();
     payload.append('user_id', getUserDataDetails?.id);
@@ -133,10 +127,9 @@ const NewMonthlyAchievement = () => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      setIsLoaded(true)
-      }
-     else if (res) {
-      setIsLoaded(true)
+        setIsLoaded(true);
+      } else if (res) {
+        setIsLoaded(true);
         setApiData(res.data.data);
         const Calories = res.data.data.map(value =>
           parseInt(value.exercise_calories),
@@ -144,7 +137,7 @@ const NewMonthlyAchievement = () => {
         //  cont Time=res.data.data.map((value)=>parseInt(value.))
         setWorkoutCalories(Calories?.reduce((acc, num) => acc + num, 0)); // adding steps calories here
         setIsLoaded(true);
-       
+
         if (Platform.OS == 'android') {
           setSteps(res?.data?.steps[0]?.steps ? res?.data?.steps[0]?.steps : 0);
           setCalories(
@@ -171,14 +164,12 @@ const NewMonthlyAchievement = () => {
           console.error('Error while getting the data:', callbackError);
           // Handle the error as needed
         } else {
-    
           setSteps(results?.value);
           setDistance(((results?.value / 20) * 0.01).toFixed(2));
           setCalories(((results?.value / 20) * 1).toFixed(0));
         }
       });
     } else if (Platform.OS == 'android') {
-
     }
   };
 
@@ -297,7 +288,7 @@ const NewMonthlyAchievement = () => {
               setSelected(true);
               HandleStepsAndCalories(day.dateString);
               DateWiseData(day.dateString);
-              setIsLoaded(false)
+              setIsLoaded(false);
             }}
             allowSelectionOutOfRange={false}
             markingType="period"
@@ -356,9 +347,12 @@ const NewMonthlyAchievement = () => {
         </View>
 
         {ApiData.length == 0 ? (
-          isLoaded? <EmptyComponent />:<Loader/>
-        ) : (
-          isLoaded?
+          isLoaded ? (
+            <EmptyComponent />
+          ) : (
+            <Loader />
+          )
+        ) : isLoaded ? (
           <View style={[styles.card, {flexDirection: 'column'}]}>
             {isLoaded ? null : <ActivityLoader />}
             <FlatList
@@ -431,7 +425,9 @@ const NewMonthlyAchievement = () => {
                 </View>
               ))}
             </View>
-          </View>:<Loader/>
+          </View>
+        ) : (
+          <Loader />
         )}
       </ScrollView>
     </SafeAreaView>
