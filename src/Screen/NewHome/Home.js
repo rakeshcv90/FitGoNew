@@ -306,7 +306,7 @@ const Home = ({navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-      console.log("DGDGDGDGDGDGD",res.data)
+     
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,

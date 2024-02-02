@@ -43,7 +43,7 @@ const GradientText = ({item, fontWeight, fontSize, width}: any) => {
 };
 const PredictionScreen = ({navigation, route}: any) => {
   const Av_Cal_Per_KG = 4000; // normally 7500
-  const Av_Cal_Per_2_Workout = 500; // Assuming
+  const Av_Cal_Per_2_Workout = 200; // Assuming
 
   const {getLaterButtonData} = useSelector((state: any) => state);
   const [finalDate, setFinalDate] = useState('');
@@ -69,12 +69,14 @@ const PredictionScreen = ({navigation, route}: any) => {
 
   const CalculateWeight = (currentWeight: number, TargetWeight: number) => {
     let TotalW = 0;
+    let t= 0;
+    console.log("Weightb",mergedObject)
     if (currentWeight > TargetWeight) {
       TotalW = currentWeight - TargetWeight;
     } else {
-      const t = TargetWeight - currentWeight;
+       t = TargetWeight - currentWeight;
       TotalW = t + currentWeight;
-      console.log('WEIGHT TOTAL', TotalW, t);
+  
     }
     // const TotalW = currentWeight - TargetWeight;
     // if (TotalW <= 0) {
@@ -87,14 +89,27 @@ const PredictionScreen = ({navigation, route}: any) => {
     let constantWeightArray = [];
     let weightHistoryArray = [];
     let currentDate = moment();
-    const No_Of_Points = Result_Number_Of_Days / 15 > 7 ? 30 : 15;
+    //  const No_Of_Points = Result_Number_Of_Days / 15 > 7 ? 30 : 15;
+     let No_Of_Points = 0
+     if(Result_Number_Of_Days<=30){
+      No_Of_Points=5;
+     }else if(Result_Number_Of_Days>30&&Result_Number_Of_Days<=90){
+      No_Of_Points=15;
+     }else if(Result_Number_Of_Days>90&&Result_Number_Of_Days<=180){
+      No_Of_Points=20;
+     }else if(Result_Number_Of_Days>180&&Result_Number_Of_Days<=365){
+      No_Of_Points=60;
+     }else{
+      No_Of_Points=120;
+     }
     for (let i = Result_Number_Of_Days; i > 0; i -= No_Of_Points) {
       const weight15 =
         ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
       const decWeight =
-        currentWeight > TargetWeight ? currentWeight - weight15 : weight15;
+        currentWeight > TargetWeight ? currentWeight - weight15 : currentWeight+weight15;
       console.log(weight15, decWeight);
       const formattedDate = currentDate.format('YYYY-MM-DD');
+      
       weightHistoryArray.push({
         weight: decWeight.toFixed(2),
         // i % 2 === 0
@@ -108,6 +123,10 @@ const PredictionScreen = ({navigation, route}: any) => {
       constantWeightArray.push({weight: 0, date: formattedDate});
 
       currentDate = currentDate.add(No_Of_Points, 'days');
+
+      // if(currentWeight+weight15 >= TargetWeight){
+      //   break;
+      // }
     }
     console.log(weightHistoryArray, currentWeight, TargetWeight);
     setZeroData(constantWeightArray);
