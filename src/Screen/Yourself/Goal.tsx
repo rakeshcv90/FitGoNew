@@ -48,6 +48,7 @@ const Goal = ({navigation, route}: any) => {
       },
       {
         goal: item?.goal_id,
+        goal_name:item?.goal_title,
       },
     ];
 
