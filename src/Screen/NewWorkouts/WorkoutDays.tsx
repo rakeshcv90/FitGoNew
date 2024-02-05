@@ -260,7 +260,7 @@ const WorkoutDays = ({navigation, route}: any) => {
     );
   };
 
-  const Box = ({selected, item, index}: any) => {
+  const Box = ({selected, item, index,active}: any) => {
     return (
       <TouchableOpacity
       disabled={item?.total_rest == 0}
@@ -273,7 +273,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                 day: index,
                 trainingCount: trainingCount,
               })
-            : selected
+            : active
             ? navigation.navigate('OneDay', {
                 data: data,
                 dayData: item,
@@ -498,6 +498,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                       )}
                       <Box
                         selected={selected != 0 && index == selected}
+                        active={selected != 0 && index <= selected}
                         index={index + 1}
                         item={item}
                       />
