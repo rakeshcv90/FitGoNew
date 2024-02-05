@@ -135,7 +135,7 @@ const OneDay = ({navigation, route}: any) => {
         data: {user_details: datas},
       });
       if (res.data) {
-        console.log('Tfracking Data1234560000000', res?.data);
+       
         if (
           res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
         ) {
@@ -183,7 +183,7 @@ const OneDay = ({navigation, route}: any) => {
         style={[
           styles.box,
           {
-            backgroundColor: AppColor.WHITE,
+           // backgroundColor:'red',
             height: DeviceHeigth * 0.1,
             marginVertical:
               Platform.OS == 'android'
@@ -196,7 +196,7 @@ const OneDay = ({navigation, route}: any) => {
         <View
           style={{
             flexDirection: 'row',
-            justifyContent: 'center',
+           justifyContent: 'center',
             alignItems: 'center',
           }}>
           <View
@@ -418,7 +418,7 @@ const styles = StyleSheet.create({
     padding: 0,
     paddingRight: 20,
     borderRadius: 15,
-    marginLeft: -10,
-    // marginVertical: 5,
+   marginLeft:-DeviceHeigth*0.030,
+  marginVertical: 5,
   },
 });

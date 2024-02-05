@@ -47,6 +47,7 @@ import {dispatch, index, local} from 'd3';
 import moment from 'moment';
 import Button from '../../Component/Button';
 import {showMessage} from 'react-native-flash-message';
+import { Linking } from 'react-native';
 const NewProgressScreen = ({navigation}) => {
   const {
     getUserDataDetails,
@@ -605,11 +606,20 @@ const NewProgressScreen = ({navigation}) => {
       </View>
     );
   };
+
+  const openMailApp = () => {
+    Linking.openURL(
+      'mailto:thefitnessandworkout@gmail.com?subject=Feedback&body=Hello%20there!',
+    );
+  };
   return (
     <SafeAreaView style={styles.Container}>
       <ScrollView showsHorizontalScrollIndicator={false}>
         <View style={styles.box1}>
-          <TouchableOpacity style={styles.Feedback_B} activeOpacity={0.5}>
+          <TouchableOpacity style={styles.Feedback_B} activeOpacity={0.5}
+          onPress={()=>{
+            openMailApp();
+          }}>
             <Image
               source={localImage.Feedback}
               style={{width: 15, height: 15}}
