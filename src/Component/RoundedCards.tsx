@@ -14,6 +14,10 @@ import {localImage} from './Image';
 import {navigationRef} from '../../App';
 import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
 import {ActivityIndicator} from 'react-native';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 export type Props = {
   viewAllButton?: boolean;
@@ -29,6 +33,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
   const [open, setOpen] = useState(false);
   const [desc, setDesc] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const avatarRef = React.createRef();
   return (
     <>
       <View
@@ -100,7 +105,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
                       marginBottom: 10,
                     },
                   ]}>
-                  {isLoading && (
+                  {/* {isLoading && (
                     <ActivityIndicator
                       style={[styles.loader,{
                         height: DeviceWidth / 6,
@@ -114,7 +119,22 @@ const RoundedCards: FC<Props> = ({...props}) => {
                       size="small"
                       color="#0000ff"
                     />
-                )} 
+                )}  */}
+                  {isLoading && ( 
+                  <ShimmerPlaceholder
+                    style={{
+                      height: DeviceWidth / 6,
+                      width: props.horizontal
+                        ? DeviceWidth / 6
+                        : DeviceWidth / 3,
+                      // position: 'absolute',
+                      // justifyContent: 'center',
+                      // alignSelf: 'center',
+                    }}
+                    ref={avatarRef}
+                    autoRun
+                  />
+                )}
                   <Image
                     source={{uri: item?.workout_image_link}}
                     onLoad={() => setIsLoading(false)}
@@ -140,12 +160,24 @@ const RoundedCards: FC<Props> = ({...props}) => {
                     />
                   )}
                   {props.horizontal ? (
-                    <Text
-                      style={[styles.category, {fontSize: 14, width: '80%'}]}
-                      ellipsizeMode="tail"
-                      numberOfLines={1}>
-                      {item?.workout_title}
-                    </Text>
+                    <>
+                      {isLoading && (
+                        <ShimmerPlaceholder
+                          style={{
+                            width: '80%',
+                            top: 5,
+                          }}
+                          ref={avatarRef}
+                          autoRun
+                        />
+                      )}
+                      <Text
+                        style={[styles.category, {fontSize: 14, width: '80%'}]}
+                        ellipsizeMode="tail"
+                        numberOfLines={1}>
+                        {item?.workout_title}
+                      </Text>
+                    </>
                   ) : (
                     <View
                       style={[
@@ -161,14 +193,33 @@ const RoundedCards: FC<Props> = ({...props}) => {
                         style={{
                           width: '70%',
                         }}>
+                        {isLoading && (
+                          <ShimmerPlaceholder
+                            style={{
+                              width: '80%',
+                              top: 5,
+                            }}
+                            ref={avatarRef}
+                            autoRun
+                          />
+                        )}
                         <Text
                           style={[styles.category]}
                           numberOfLines={2}
                           ellipsizeMode="tail">
                           {item?.workout_title}
                         </Text>
+                        {isLoading && (
+                          <ShimmerPlaceholder
+                            style={{
+                              width: '80%',
+                              top: 5,
+                            }}
+                            ref={avatarRef}
+                            autoRun
+                          />
+                        )}
                         <Text style={[styles.category, {fontSize: 14}]}>
-                          {/* {!isNaN(totalTime) ? totalTime : 0} */}
                           {!isNaN(totalTime)
                             ? totalTime > 60
                               ? `${(totalTime / 60).toFixed(0)} min`
@@ -251,8 +302,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     justifyContent: 'center',
     alignSelf: 'center',
-
-
-  
   },
 });

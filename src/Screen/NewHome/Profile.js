@@ -51,6 +51,10 @@ import {navigationRef} from '../../../App';
 import {BlurView} from '@react-native-community/blur';
 import Reminder from '../../Component/Reminder';
 import ActivityLoader from '../../Component/ActivityLoader';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
+
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
 const Profile = () => {
   const {getUserDataDetails, ProfilePhoto, getSoundOffOn, allWorkoutData} =
     useSelector(state => state);
@@ -64,6 +68,7 @@ const Profile = () => {
   const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const avatarRef = React.createRef()
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   const toggleSwitch3 = () => {
@@ -370,7 +375,7 @@ const Profile = () => {
         });
         // console.log(ProfileData.data[0]);
         if (ProfileData.data) {
-          console.log('APi Profile Data===>', ProfileData.data);
+        
           getProfileData(getUserDataDetails?.id);
           setImguploaded(true);
           if (IsimgUploaded == true) {
@@ -395,7 +400,9 @@ const Profile = () => {
         try {
           const resultCamera = await launchCamera({
             mediaType: 'photo',
-            quality: 0.5,
+            quality:1,
+            maxWidth:500,
+            maxHeight:400
           });
           setUserAvatar(resultCamera.assets[0]);
           if (resultCamera) {
@@ -434,6 +441,8 @@ const Profile = () => {
           const resultLibrary = await launchImageLibrary({
             mediaType: 'photo',
             quality: 0.5,
+            maxWidth:300,
+            maxHeight:200
           });
           setUserAvatar(resultLibrary.assets[0]);
 
@@ -695,11 +704,11 @@ const Profile = () => {
               {marginTop: Platform.OS == 'ios' ? -DeviceHeigth * 0.035 : 0},
             ]}>
             {isLoading && (
-              <ActivityIndicator
-                style={styles.loader}
-                size="large"
-                color="#0000ff"
-              />
+               <ShimmerPlaceholder
+               style={styles.loader}
+               ref={avatarRef}
+               autoRun
+             />
             )}
             <Image
               source={
@@ -777,7 +786,7 @@ const Profile = () => {
             style={styles.SingleButton}
             navigation
             onPress={() => {
-              console.log('JHDHD', value.text1);
+             
               if (value.text1 == 'Personal Details') {
                 navigation.navigate('NewPersonalDetails');
               } else if (value.text1 == 'Contact Us') {
@@ -1165,7 +1174,6 @@ const styles = StyleSheet.create({
   loader: {
     position: 'absolute',
     justifyContent: 'center',
-    backgroundColor: AppColor.GRAY,
     height: 120,
     width: 120,
     borderRadius: 160 / 2,

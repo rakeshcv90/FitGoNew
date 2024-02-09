@@ -498,7 +498,9 @@ import moment from 'moment';
 import {localImage} from '../../Component/Image';
 import {showMessage} from 'react-native-flash-message';
 import LinearGradient from 'react-native-linear-gradient';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import VersionNumber, {appVersion} from 'react-native-version-number';
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const AllWorkouts = ({navigation, route}: any) => {
   const {data, type, fav} = route.params;
   const {allWorkoutData, getUserDataDetails} = useSelector(
@@ -536,7 +538,7 @@ const AllWorkouts = ({navigation, route}: any) => {
       setRefresh(true);
       const payload = new FormData();
       payload.append('id', getUserDataDetails?.id);
-      payload.append('version',VersionNumber.appVersion);
+      payload.append('version', VersionNumber.appVersion);
       const res = await axios({
         url: NewAppapi.ALL_WORKOUTS,
         method: 'POST',

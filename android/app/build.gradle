@@ -82,8 +82,8 @@ android {
         applicationId "fitme.health.fitness.homeworkouts.equipment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 8
-        versionName "1.8"
+        versionCode 9
+        versionName "1.9"
         missingDimensionStrategy "store", "play"
     }
      signingConfigs {
@@ -112,14 +112,10 @@ android {
 }
 
 dependencies {
-     // Import the BoM for the Firebase platform
+   
     implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
-
-    // Add the dependencies for the Crashlytics NDK and Analytics libraries
-    // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-crashlytics-ndk")
     // implementation("com.google.firebase:firebase-analytics")
-    // The version of react-native is set by the React Native Gradle Plugin
     implementation project(':react-native-google-fit')
     implementation("com.google.android.gms:play-services-fitness:21.1.0")
     implementation("com.google.android.gms:play-services-auth:20.7.0")

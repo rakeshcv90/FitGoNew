@@ -15,7 +15,6 @@ import {
   ActivityIndicator,
   Alert,
   RefreshControl,
-
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
@@ -61,8 +60,12 @@ import Graph from '../Yourself/Graph';
 import {LineChart} from 'react-native-chart-kit';
 import {max} from 'd3';
 import moment from 'moment';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 let zeroData = [];
 let zeroDataM = [];
+
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
 
@@ -145,7 +148,9 @@ const Home = ({navigation}) => {
   const [monthlyGraph, setMonthlyGraph] = useState([]);
   const progressAnimation = useRef(new Animated.Value(0)).current;
   const [isLoading, setIsLoading] = useState(true);
+  const [imageLoad, setImageLoad] = useState(true);
   const [refresh, setRefresh] = useState(false);
+  const avatarRef = React.createRef();
   const Dispatch = useDispatch();
   const {
     getHealthData,
@@ -238,10 +243,10 @@ const Home = ({navigation}) => {
     await new Promise(async resolve => {
       for (let i = 0; BackgroundService.isRunning(); i++) {
         if (isSpecificTime(specificHour, specificMinute)) {
-         PedoMeterData()
+          PedoMeterData();
         } else {
-         //do nothing
-         console.log("---------->",specificHour,specificMinute)
+          //do nothing
+          console.log('---------->', specificHour, specificMinute);
         }
         try {
           const dailySteps = await GoogleFit.getDailySteps();
@@ -383,7 +388,7 @@ const Home = ({navigation}) => {
   };
   const startRecording = () => {
     GoogleFit.startRecording(() => {
-      GoogleFit.observeSteps(()=> {
+      GoogleFit.observeSteps(() => {
         fetchTotalSteps();
       });
     });
@@ -519,7 +524,6 @@ const Home = ({navigation}) => {
         setForLoading(false);
 
         Dispatch(setHomeGraphData(res.data));
-
 
         if (Key == 1) {
           zeroData = [];
@@ -1125,17 +1129,23 @@ const Home = ({navigation}) => {
               navigation.navigate('Profile');
             }}>
             {isLoading && (
-              <ActivityIndicator
+              // <ActivityIndicator
+              //   style={styles.loader}
+              //   size="small"
+              //   color="#0000ff"
+              // />
+              <ShimmerPlaceholder
                 style={styles.loader}
-                size="small"
-                color="#0000ff"
+                ref={avatarRef}
+                autoRun
               />
             )}
+
             <Image
               source={
-                getUserDataDetails.image_path == null
+                getUserDataDetails?.image_path == null
                   ? localImage.avt
-                  : {uri: getUserDataDetails.image_path}
+                  : {uri: getUserDataDetails?.image_path}
               }
               onLoad={() => setIsLoading(false)}
               style={[styles.img]}
@@ -1201,7 +1211,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#5FB67B'}]}>
-                  {stepsRef.current}
+                  {Platform.OS == 'ios' ? steps : stepsRef.current}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     {`/${stepGoalProfile} steps`}
                   </Text>
@@ -1220,7 +1230,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#FCBB1D'}]}>
-                  {distanceRef.current}
+                  {Platform.OS == 'ios' ? distance : distanceRef.current}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     {`/ ${DistanceGoalProfile} km `}
                   </Text>
@@ -1244,7 +1254,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#D01818'}]}>
-                  {caloriesRef.current}
+                  {Platform.OS == 'ios' ? Calories : caloriesRef.current}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     {`/${CalriesGoalProfile} KCal`}
                   </Text>
@@ -1380,7 +1390,7 @@ const Home = ({navigation}) => {
             },
           ]}>
           <FlatList
-            data={customWorkoutData?.workout.slice(0, 3)}
+            data={customWorkoutData?.workout?.slice(0, 3)}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id}
@@ -1558,7 +1568,7 @@ const Home = ({navigation}) => {
             },
           ]}>
           <FlatList
-            data={mealData.slice(0, 4)}
+            data={mealData?.slice(0, 4)}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id}
@@ -1571,8 +1581,22 @@ const Home = ({navigation}) => {
                     onPress={() => {
                       navigation.navigate('MealDetails', {item: item});
                     }}>
+                    {imageLoad && (
+                      <ShimmerPlaceholder
+                        style={{
+                          height: 90,
+                          width: 90,
+                          borderRadius: 180 / 2,
+                          alignSelf: 'center',
+                          top: -5,
+                        }}
+                        ref={avatarRef}
+                        autoRun
+                      />
+                    )}
                     <Image
                       source={{uri: item.diet_image_link}}
+                      onLoad={() => setImageLoad(false)}
                       style={[
                         styles.img,
                         {
@@ -1584,6 +1608,15 @@ const Home = ({navigation}) => {
                         },
                       ]}
                       resizeMode="cover"></Image>
+                    {imageLoad && (
+                      <ShimmerPlaceholder
+                        style={{
+                          width: 100,
+                        }}
+                        ref={avatarRef}
+                        autoRun
+                      />
+                    )}
                     <Text
                       numberOfLines={1}
                       style={[
@@ -1594,7 +1627,7 @@ const Home = ({navigation}) => {
                           lineHeight: 18,
                           fontFamily: 'Poppins',
                           textAlign: 'center',
-                          width: 50,
+                          width: 100,
                           color: colors[index % colors.length].color3,
                         },
                       ]}>
@@ -1712,17 +1745,17 @@ var styles = StyleSheet.create({
     top: DeviceHeigth * 0.02,
   },
   profileView1: {
-    height: 50,
-    width: 50,
+    height: 60,
+    width: 60,
     alignItems: 'center',
 
     borderRadius: 100 / 2,
   },
   img: {
-    height: 50,
-    width: 50,
+    height: 60,
+    width: 60,
 
-    borderRadius: 100 / 2,
+    borderRadius: 120 / 2,
   },
   rewardView: {
     height: 40,
@@ -1895,15 +1928,15 @@ var styles = StyleSheet.create({
   textItem: {
     flex: 1,
     fontSize: 16,
-    color:AppColor.BLACK
+    color: AppColor.BLACK,
   },
   placeholderStyle: {
     fontSize: 16,
-    color:AppColor.BLACK
+    color: AppColor.BLACK,
   },
   selectedTextStyle: {
     fontSize: 16,
-    color:AppColor.BLACK
+    color: AppColor.BLACK,
   },
   modalContainer: {
     flex: 1,
