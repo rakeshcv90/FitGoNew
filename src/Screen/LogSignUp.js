@@ -96,10 +96,10 @@ const LogSignUp = () => {
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <TouchableOpacity
-      onPress={()=>{
-       // navigationRef.navigate('Yourself');
+      // onPress={()=>{
+      //  navigationRef.navigate('Yourself');
    
-      }}
+      // }}
         style={{
           width: DeviceWidth * 0.13,
           height: DeviceHeigth* 0.03,

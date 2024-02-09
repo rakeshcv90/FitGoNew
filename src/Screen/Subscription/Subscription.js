@@ -6,8 +6,10 @@ import {
   ScrollView,
   FlatList,
   Alert,
+  Animated,
+  Easing,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {AppColor} from '../../Component/Color';
 
 import {StatusBar} from 'react-native';
@@ -25,47 +27,75 @@ import {useDispatch, useSelector} from 'react-redux';
 import * as RNIap from 'react-native-iap';
 import axios from 'axios';
 import {setPurchaseHistory} from '../../Component/ThemeRedux/Actions';
+import {useFocusEffect} from '@react-navigation/native';
 
 const Subscription = ({navigation}) => {
   const dispatch = useDispatch();
   const {getInAppPurchase, getUserDataDetails, getPurchaseHistory} =
     useSelector(state => state);
-
   const [selectedItems, setSelectedItems] = useState([]);
-
+  const translateE = useRef(new Animated.Value(0)).current;
+  const translateW = useRef(new Animated.Value(0)).current;
+  const scaleSelected = useRef(new Animated.Value(1)).current;
+  const [ImageSelected, setImageSelected] = useState(-1);
   const data = [
+    require('../../Icon/Images/NewImage/Sub1.gif'),
 
-    require('../../Icon/Images/product_1631792207.jpg'),
-
-    require('../../Icon/Images/product_1631811803.jpg'),
-    require('../../Icon/Images/product_1631468947.jpg'),
-
-
+    require('../../Icon/Images/NewImage/Sub2.gif'),
+    require('../../Icon/Images/NewImage/Sub3.gif'),
   ];
-  useEffect(async() => {
+
+  // useEffect(async() => {
+  //   const purchaseUpdateSubscription = RNIap.purchaseUpdatedListener(
+  //     async purchase => {
+
+  //       const purchases = await RNIap.getAvailablePurchases();
+  //       console.log('Payment cancelled by user1111',purchases[purchases.length - 1]);
+  //       // if (purchase.purchaseState === 'cancelled') {
+  //       //   Alert('Payment cancelled by user');
+  //       //   console.log('Payment cancelled by user');
+  //       // }
+  //     },
+  //   );
+  //   const purchaseErrorSubscription = RNIap.purchaseErrorListener(error =>
+  //     console.error('Purchase error', error.message),
+  //   );
+
+  //   // purchaseUpdateSubscription.remove();
+  //   // purchaseUpdateSubscription.add();
+
+  //   return () => {
+  //     purchaseErrorSubscription.remove();
+  //     purchaseUpdateSubscription.remove();
+  //   };
+  // }, []);
+
+  useEffect(() => {
     const purchaseUpdateSubscription = RNIap.purchaseUpdatedListener(
       async purchase => {
-     
-        const purchases = await RNIap.getAvailablePurchases();
-        console.log('Payment cancelled by user1111',purchases[purchases.length - 1]);
-        // if (purchase.purchaseState === 'cancelled') {
-        //   Alert('Payment cancelled by user');
-        //   console.log('Payment cancelled by user');
-        // }
+        const receipt = purchase.transactionReceipt;
+        if (receipt) {
+          try {
+            await finishTransaction({purchase, isConsumable: false});
+          } catch (error) {
+            console.error(
+              'An error occurred while completing transaction',
+              error,
+            );
+          }
+          // notifySuccessfulPurchase();
+        }
       },
     );
     const purchaseErrorSubscription = RNIap.purchaseErrorListener(error =>
       console.error('Purchase error', error.message),
     );
-
-    // purchaseUpdateSubscription.remove();
-    // purchaseUpdateSubscription.add();
-
     return () => {
-      purchaseErrorSubscription.remove();
       purchaseUpdateSubscription.remove();
+      purchaseErrorSubscription.remove();
     };
   }, []);
+
   const purchaseItems = async items => {
     try {
       const purchase = await RNIap.requestSubscription({
@@ -78,15 +108,16 @@ const Subscription = ({navigation}) => {
     }
   };
   const purchaseItems1 = async (sku, offerToken) => {
+    console.log('Failed to purchase Android product', sku, offerToken);
     try {
       const purchase = await RNIap.requestSubscription({
         sku,
         ...(offerToken && {subscriptionOffers: [{sku, offerToken}]}),
       });
-  
-      // fetchPurchaseHistory(purchase[0].dataAndroid);
+
+      fetchPurchaseHistory(purchase[0].dataAndroid);
     } catch (error) {
-      console.log('Failed to purchase ios product', error);
+      console.log('Failed to purchase Android product', error);
     }
   };
   const fetchPurchaseHistory = async data => {
@@ -263,204 +294,130 @@ const Subscription = ({navigation}) => {
       console.log('Purchase List Error', error);
     }
   };
+
+  const scaleSelectedInterpolate = scaleSelected.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 1.12], // Adjust the starting and ending scale factors as needed
+  });
+
   return (
     <View style={styles.container}>
       <NewHeader
-        header={'Fitness Coach'}
+        header={'Subscription'}
         backButton={true}
+        //color={AppColor.GRAY}
         onPress={() => {
           navigation.goBack();
         }}
       />
-      <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
+
+      <StatusBar barStyle={'dark-content'} backgroundColor={AppColor.GRAY} />
       <View
         style={{
-          width: '95%',
-          height: 150,
-          borderRadius: 10,
-          alignSelf: 'center',
-          alignItems: 'center',
-          top: -20,
+          // width: '95%',
+          flex: 0.3,
+
+          // alignSelf: 'center',
+          // alignItems: 'center',
+          top: -30,
+          // backgroundColor: AppColor.GRAY,
         }}>
         <SliderBox
           ImageComponent={FastImage}
           images={data}
-          sliderBoxHeight={150}
-          onCurrentImagePressed={index =>
-            console.warn(`image ${index} pressed`)
-          }
-          dotColor="#FFEE58"
-          inactiveDotColor="#90A4AE"
-          paginationBoxVerticalPadding={20}
+          sliderBoxHeight={250}
           autoplay
           circleLoop
           resizeMethod={'resize'}
           resizeMode={'cover'}
-          paginationBoxStyle={{
-            position: 'absolute',
-            bottom: 0,
-            padding: 0,
-            alignItems: 'center',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            paddingVertical: 10,
-          }}
-          dotStyle={{
-            width: 10,
-            height: 10,
-            borderRadius: 5,
-            marginHorizontal: 0,
-            padding: 0,
-            margin: 0,
-            backgroundColor: 'rgba(128, 128, 128, 0.92)',
-          }}
-          ImageComponentStyle={{borderRadius: 15, width: '95%'}}
+          dotStyle={{display: 'none'}}
+          ImageComponentStyle={{width: '100%'}}
           imageLoadingColor="#2196F3"
         />
       </View>
-      <ScrollView showsVerticalScrollIndicator={false} style={{marginTop: 0}}>
-        <LinearGradient
-          start={{x: 0, y: 1}}
-          end={{x: 1, y: 0}}
-          colors={['#E3FDF5', '#FFE6FAB5']}
-          style={{
-            width: '95%',
-            top: -20,
-            borderRadius: 10,
-            marginVertical: DeviceHeigth * 0.02,
-            padding: 5,
-            alignSelf: 'center',
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image
-              source={localImage.Tick2}
-              style={{
-                height: 40,
-                width: 40,
-              }}
-              resizeMode="contain"></Image>
-            <Text
-              style={{
-                textAlign: 'center',
-                marginLeft: 10,
-                fontWeight: '500',
-                fontSize: 18,
-                lineHeight: 24,
-                fontFamily: 'Poppins',
-                color: '#ED4530',
-              }}>
-              100+
-              <Text
-                style={{
-                  textAlign: 'center',
-                  marginLeft: 10,
-                  fontWeight: '500',
-                  fontSize: 18,
-                  lineHeight: 24,
-                  fontFamily: 'Poppins',
-                  color: '#1E1E1E',
-                }}>
-                {''} Workout Plans
-              </Text>
-            </Text>
-          </View>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image
-              source={localImage.Tick2}
-              style={{
-                height: 40,
-                width: 40,
-              }}
-              resizeMode="contain"></Image>
-
-            <Text
-              style={{
-                textAlign: 'center',
-                marginLeft: 10,
-                fontWeight: '500',
-                fontSize: 18,
-                lineHeight: 24,
-                fontFamily: 'Poppins',
-                color: '#1E1E1E',
-              }}>
-              {''} No Advertisement
-            </Text>
-          </View>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image
-              source={localImage.Tick2}
-              style={{
-                height: 40,
-                width: 40,
-              }}
-              resizeMode="contain"></Image>
-
-            <Text
-              style={{
-                textAlign: 'center',
-                marginLeft: 10,
-                fontWeight: '500',
-                fontSize: 18,
-                lineHeight: 24,
-                fontFamily: 'Poppins',
-                color: '#1E1E1E',
-              }}>
-              {''} No Advertisement
-            </Text>
-          </View>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image
-              source={localImage.Tick2}
-              style={{
-                height: 40,
-                width: 40,
-              }}
-              resizeMode="contain"></Image>
-
-            <Text
-              style={{
-                textAlign: 'center',
-                marginLeft: 10,
-                fontWeight: '500',
-                fontSize: 18,
-                lineHeight: 24,
-                fontFamily: 'Poppins',
-                color: '#1E1E1E',
-              }}>
-              {''} Access to backup feature
-            </Text>
-          </View>
-        </LinearGradient>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignSelf: 'center',
-            width: '95%',
-            paddingLeft: 5,
-            paddingRight: 5,
-            top: -20,
-            justifyContent: 'space-between',
-          }}>
+      <View
+        style={{
+          width: '100%',
+          flex: 0.7,
+          backgroundColor: '#fff',
+          marginTop: -DeviceHeigth * 0.03,
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30,
+          shadowColor: 'rgba(0, 0, 0, 1)',
+          ...Platform.select({
+            ios: {
+              shadowColor: AppColor.DARKGRAY,
+              shadowOffset: {width: 0, height: 2},
+              shadowOpacity: 0.3,
+              shadowRadius: 10,
+            },
+            android: {
+              elevation: 3,
+              shadowColor: AppColor.DARKGRAY,
+            },
+          }),
+        }}>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text
             style={{
-              textAlign: 'center',
-              fontWeight: '500',
-              fontSize: 12,
-              lineHeight: 18,
               fontFamily: 'Poppins',
-              color: '#1E1E1E',
+              fontWeight: '700',
+              fontSize: 32,
+              textAlign: 'center',
+              top: 10,
+              color: '#505050',
             }}>
-            Subscription Plans
+            Get Your Plan!
           </Text>
-          <TouchableOpacity
-            onPress={() => {
-              showMessage({
-                message: 'Work in Progress',
-                floating: true,
-                duration: 500,
-                type: 'info',
-                icon: {icon: 'auto', position: 'left'},
-              });
+          <View
+            style={{
+              flexDirection: 'row',
+              alignSelf: 'center',
+              alignItems: 'center',
+              marginVertical: 15,
+            }}>
+            <Image
+              source={localImage.checked}
+              style={{width: 18, height: 18}}
+              resizeMode="contain"
+            />
+            <Text
+              style={{
+                fontFamily: 'Poppins',
+                fontWeight: '500',
+                fontSize: 12,
+                textAlign: 'center',
+                marginHorizontal: 10,
+                color: '#505050',
+              }}>
+              For Beginner
+            </Text>
+            <Image
+              source={localImage.checked}
+              style={{width: 18, height: 18}}
+              resizeMode="contain"
+            />
+            <Text
+              style={{
+                fontFamily: 'Poppins',
+                fontWeight: '500',
+                fontSize: 12,
+                textAlign: 'center',
+                marginHorizontal: 10,
+                color: '#505050',
+              }}>
+              For Men Ages: 25-35
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignSelf: 'center',
+              width: '95%',
+              paddingLeft: 5,
+              paddingRight: 5,
+              top: 5,
+              justifyContent: 'space-between',
             }}>
             <Text
               style={{
@@ -470,92 +427,271 @@ const Subscription = ({navigation}) => {
                 lineHeight: 18,
                 fontFamily: 'Poppins',
                 color: '#1E1E1E',
-                textDecorationLine: 'underline',
               }}>
-              Restore purchase
+              Subscription Plans
             </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{marginBottom: DeviceHeigth * 0.1}}>
-          <FlatList
-            data={getInAppPurchase}
-            scrollEnabled={false}
-            extraData={({item, index}) => index.toString()}
-            renderItem={({item, index}) => {
-              // const isSelected = selectedItems.includes(item.productId);
-              return (
-                <>
-                  <TouchableOpacity
-                    style={[
-                      styles.button,
-                      {
-                        borderColor:
-                          selectedItems.productId == item.productId
-                            ? 'red'
-                            : 'white',
-                      },
-                    ]}
-                    activeOpacity={0.5}
-                    onPress={() => {
-                      setSelectedItems(item);
-                    }}>
-                    <Text
-                      style={{
-                        fontWeight: '600',
-                        fontSize: 15,
-                        lineHeight: 20,
-                        color: '#272727',
+            <TouchableOpacity
+              onPress={() => {
+                showMessage({
+                  message: 'Work in Progress',
+                  floating: true,
+                  duration: 500,
+                  type: 'info',
+                  icon: {icon: 'auto', position: 'left'},
+                });
+              }}>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontWeight: '500',
+                  fontSize: 12,
+                  lineHeight: 18,
+                  fontFamily: 'Poppins',
+                  color: '#1E1E1E',
+                  textDecorationLine: 'underline',
+                }}>
+                Restore purchase
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              alignSelf: 'center',
+              width: '93%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              // backgroundColor: 'red',
+              alignItems: 'center',
+              paddingTop: 25,
+              paddingLeft: 5,
+              paddingRight: 5,
+              paddingBottom: 20,
+              //backgroundColor:'red'
+            }}>
+            <FlatList
+              // data={getInAppPurchase}
+              data={[1, 2, 3]}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              // extraData={({item, index}) => index.toString()}
+              renderItem={({item, index}) => {
+                // const isSelected = selectedItems.includes(item.productId);
+
+                return (
+                  <>
+                    {/* <View style={styles.button2}>
+                     
+                    </View> */}
+                    <TouchableOpacity
+                      style={{}}
+                      activeOpacity={1}
+                      onPress={() => {
+                        // setImageSelected((prevOpenCategories) => {
+                        //   if (prevOpenCategories.includes(index)) {
+                        //     return prevOpenCategories.filter(
+                        //       (category) => category !== index,
+                        //     );
+                        //   }
+                        //   return [...prevOpenCategories, index];
+                        // });
+
+                        // let data= ImageSelected.push(index)
+                        // Animated.timing(scaleSelected, {
+                        //   toValue: 0, // Adjust the scaling factor as needed
+                        //   duration: 500,
+                        //   useNativeDriver: true,
+                        //   easing: Easing.elastic(1),
+                        // }).start()
+                        setImageSelected(index);
                       }}>
-                      {Platform.OS == 'ios' ? item.title : item.name}
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
+                      <View
+                        style={{
+                          backgroundColor: 'black',
+                          marginHorizontal: 10,
+                          width: DeviceWidth * 0.25,
+                          borderTopRightRadius: 5,
+                          borderTopLeftRadius: 5,
+                          paddingBottom:10,
+                          ...Platform.select({
+                            ios: {
+                              shadowOffset: {width: 0, height: 20},
+                              shadowOpacity: 0.1,
+                              shadowRadius: 4,
+                            },
+                            android: {
+                              elevation: 5,
+                            },
+                          }),
+                        }}>
+                        <Text
+                          style={{
+                            top: 5,
+                            fontFamily: 'Poppins',
+                            fontWeight: '700',
+                            fontSize: 12,
+                            textAlign: 'center',
+                            color: '#fff',
+                            
+                          }}>{`Active Plan`}</Text>
+                      </View>
+                      <Animated.View
+                        style={[
+                          styles.button,
+                          {
+                            marginTop:index == ImageSelected?10:0,
+                            transform: [
+                              {
+                                scale:
+                                  index == ImageSelected
+                                    ? scaleSelectedInterpolate
+                                    : 1,
+                              },
+                            ],
+                          },
+                        ]}>
+                        <View>
+                          <Text
+                            style={{
+                              fontFamily: 'Poppins',
+                              fontWeight: '600',
+                              fontSize: 30,
+                              textAlign: 'center',
+                              color: '#505050',
+                            }}>
+                            1
+                          </Text>
+                          <Text
+                            style={{
+                              fontFamily: 'Poppins',
+                              fontWeight: '600',
+                              fontSize: 15,
+                              textAlign: 'center',
+                              color: '#505050',
+                              lineHeight: 20,
+                            }}>
+                            Months
+                          </Text>
+                          <Text
+                            style={{
+                              fontFamily: 'Poppins',
+                              fontWeight: '600',
+                              fontSize: 15,
+                              textAlign: 'center',
+                              color: '#505050',
+                              lineHeight: 20,
+                            }}>
+                            1799.00
+                          </Text>
+                        </View>
+                        <View
+                          style={{
+                            width: '100%',
+                            height: 2,
+                            backgroundColor: '#DEDBDC',
+                            marginVertical: 5,
+                          }}
+                        />
+                        <View>
+                          <Text
+                            style={{
+                              fontFamily: 'Poppins',
+                              fontWeight: '600',
+                              fontSize: 15,
+                              textAlign: 'center',
+                              color: '#505050',
+                              lineHeight: 20,
+                              marginTop: 10,
+                            }}>
+                            Months
+                          </Text>
+                          <Text
+                            style={{
+                              fontFamily: 'Poppins',
+                              fontWeight: '600',
+                              fontSize: 15,
+                              textAlign: 'center',
+                              color: '#505050',
+                              lineHeight: 20,
+                            }}>
+                            1799.00
+                          </Text>
+                        </View>
+                      </Animated.View>
+                    </TouchableOpacity>
+
+                    {/* <TouchableOpacity
+                      style={[
+                        styles.button,
+                        {
+                          borderColor:
+                            selectedItems.productId == item.productId
+                              ? 'red'
+                              : 'white',
+                        },
+                      ]}
+                      activeOpacity={0.5}
+                      onPress={() => {
+                        setSelectedItems(item);
                       }}>
                       <Text
                         style={{
-                          fontWeight: '500',
-                          fontSize: 20,
-                          lineHeight: 24,
-                          top: 5,
-                          color: '#D5191A',
+                          fontWeight: '600',
+                          fontSize: 15,
+                          lineHeight: 20,
+                          color: '#272727',
                         }}>
-                        ₹{' '}
-                        {Platform.OS == 'ios'
-                          ? item.price
-                          : item.subscriptionOfferDetails[0].pricingPhases
-                              .pricingPhaseList[0].formattedPrice}
+                        {Platform.OS == 'ios' ? item.title : item.name}
+                      </Text>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                        }}>
                         <Text
                           style={{
                             fontWeight: '500',
-                            fontSize: 18,
+                            fontSize: 20,
                             lineHeight: 24,
-                            color: '#000000',
+                            top: 5,
+                            color: '#D5191A',
                           }}>
-                          {' '}
-                          / {Platform.OS == 'ios' ? item.title : item.name}
+                          ₹{' '}
+                          {Platform.OS == 'ios'
+                            ? item.price
+                            : item.subscriptionOfferDetails[0].pricingPhases
+                                .pricingPhaseList[0].formattedPrice}
+                          <Text
+                            style={{
+                              fontWeight: '500',
+                              fontSize: 18,
+                              lineHeight: 24,
+                              color: '#000000',
+                            }}>
+                            {' '}
+                            / {Platform.OS == 'ios' ? item.title : item.name}
+                          </Text>
                         </Text>
-                      </Text>
 
-                      <Image
-                        source={getName(item)}
-                        resizeMode="contain"
-                        style={{
-                          height: 25,
-                          width: 25,
-                          marginRight: 20,
-                        }}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                </>
-              );
-            }}
-          />
-        </View>
-      </ScrollView>
+                        <Image
+                          source={getName(item)}
+                          resizeMode="contain"
+                          style={{
+                            height: 25,
+                            width: 25,
+                            marginRight: 20,
+                          }}
+                        />
+                      </View>
+                    </TouchableOpacity> */}
+                  </>
+                );
+              }}
+            />
+          </View>
+        </ScrollView>
+      </View>
+
       <View style={{bottom: 18, alignSelf: 'center', position: 'absolute'}}>
         <Button
           buttonText={'Proceed'}
@@ -570,23 +706,46 @@ const Subscription = ({navigation}) => {
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: AppColor.WHITE,
+    backgroundColor: '#fff',
   },
   button: {
-    width: DeviceWidth * 0.9,
-    height: DeviceHeigth * 0.1,
-    marginVertical: DeviceHeigth * 0.005,
-    borderRadius: 16,
+    width: DeviceWidth * 0.25,
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginHorizontal: 10,
+    borderRadius: 5,
     alignSelf: 'center',
-    backgroundColor: AppColor.WHITE,
-    paddingLeft: 30,
-    paddingTop: DeviceHeigth*0.015,
-    borderWidth: 1,
-
+    alignItems: 'center',
+    backgroundColor: '#F3F3F3',
+    paddingTop: DeviceHeigth * 0.005,
+    borderWidth: 0.5,
+    marginTop:0,
+    marginBottom: 15,
+    borderColor: '#DEDBDC',
+    shadowColor: 'rgba(0, 0, 0, 1)',
     ...Platform.select({
       ios: {
         shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.3,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 1,
+      },
+    }),
+  },
+  button2: {
+    width: DeviceWidth * 0.41,
+    height: DeviceHeigth * 0.27,
+    marginHorizontal: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    backgroundColor: 'green',
+    shadowColor: 'rgba(0, 0, 0, 1)',
+    ...Platform.select({
+      ios: {
+        shadowOffset: {width: 0, height: 20},
+        shadowOpacity: 0.1,
         shadowRadius: 4,
       },
       android: {

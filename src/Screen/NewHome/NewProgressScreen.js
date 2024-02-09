@@ -48,6 +48,10 @@ import moment from 'moment';
 import Button from '../../Component/Button';
 import {showMessage} from 'react-native-flash-message';
 import { Linking } from 'react-native';
+import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
+
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
 const NewProgressScreen = ({navigation}) => {
   const {
     getUserDataDetails,
@@ -69,6 +73,7 @@ const NewProgressScreen = ({navigation}) => {
   const [Calories, setCalories] = useState(0);
   const [Wtime, setWtime] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const avatarRef = React.createRef()
   let arrayForData = [];
   let arrayForData1 = [];
   useEffect(() => {
@@ -654,11 +659,16 @@ const NewProgressScreen = ({navigation}) => {
           {Object.keys(getUserDataDetails).length > 0 && (
             <>
               {isLoading && (
-                <ActivityIndicator
-                  style={styles.loader}
-                  size="large"
-                  color="#0000ff"
-                />
+                // <ActivityIndicator
+                //   style={styles.loader}
+                //   size="large"
+                //   color="#0000ff"
+                // />
+                <ShimmerPlaceholder
+                style={styles.loader}
+                ref={avatarRef}
+                autoRun
+              />
               )}
               <Image
                 source={

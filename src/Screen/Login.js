@@ -117,6 +117,7 @@ const Login = ({navigation}) => {
           socialtype: 'google',
           version: appVersion,
           devicetoken: getFcmToken,
+          platform:Platform.OS
         },
       });
 
@@ -142,7 +143,7 @@ const Login = ({navigation}) => {
         showMessage({
           message: 'You are not registered,You need to Signup first',
           type: 'danger',
-          animationDuration: 5000,
+          animationDuration: 1000,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
@@ -218,6 +219,7 @@ const Login = ({navigation}) => {
           socialtype: 'facebook',
           version: appVersion,
           devicetoken: getFcmToken,
+          platform:Platform.OS
         },
       });
       if (data.data.profile_status == 1) {
@@ -301,6 +303,7 @@ const Login = ({navigation}) => {
           socialtype: 'Apple',
           version: VersionNumber.appVersion,
           devicetoken: getFcmToken,
+          platform:Platform.OS
         },
       });
 
@@ -350,6 +353,7 @@ const Login = ({navigation}) => {
     }
   };
   const loginFunction = async () => {
+    console.log("App Version ",VersionNumber.appVersion,'+',appVersion)
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (email == null) {
       showMessage({
@@ -386,8 +390,9 @@ const Login = ({navigation}) => {
           data: {
             email: email,
             password: password,
-            version: appVersion,
+            version:appVersion,
             devicetoken: getFcmToken,
+            platform:Platform.OS
           },
         });
 
