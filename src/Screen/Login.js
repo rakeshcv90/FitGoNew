@@ -475,7 +475,7 @@ const Login = ({navigation}) => {
         // status == 1
         //   ? navigation.navigate('BottomTab')
         //   : navigationRef.navigate('Yourself');
-        if (status == 1) navigation.navigate('BottomTab');
+        if (status == 1) navigation.replace('BottomTab');
         else {
           showMessage({
             message: 'Please complete your Profile Details',
@@ -502,7 +502,7 @@ const Login = ({navigation}) => {
         // status == 1
         //   ? navigation.navigate('BottomTab')
         //   : navigationRef.navigate('Yourself');
-        if (status == 1) navigation.navigate('BottomTab');
+        if (status == 1) navigation.replace('BottomTab');
         else {
           showMessage({
             message: 'Please complete your Profile Details',
@@ -516,7 +516,7 @@ const Login = ({navigation}) => {
       }
     } catch (error) {
       console.log('User Profile Error', error);
-      if (status == 1) navigation.navigate('BottomTab');
+      if (status == 1) navigation.replace('BottomTab');
         else {
           showMessage({
             message: 'Please complete your Profile Details',

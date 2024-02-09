@@ -114,36 +114,34 @@ const Goal = ({navigation, route}: any) => {
                 <TouchableOpacity
                   key={index}
                   activeOpacity={0.8}
-                  onPress={() => toNextScreen(item)}>
-                  <View
-                    style={[
-                      styles.box2,
-                      {
-                        padding: 10,
-                        borderWidth: 0,
-                        borderColor: AppColor.WHITE,
-                      },
-                    ]}>
-                    <Image
-                      source={{uri: item.goal_image}}
-                      resizeMode="contain"
-                      style={{
-                        height: 30,
-                        width: 30,
-                        marginRight: 10,
-                      }}
-                    />
-                    <Text
-                      style={{
-                        color: '#505050',
-                        fontSize: 18,
-                        fontWeight: '600',
-                        fontFamily: 'Poppins',
-                        lineHeight: 27,
-                      }}>
-                      {item.goal_title}
-                    </Text>
-                  </View>
+                  onPress={() => toNextScreen(item)}
+                  style={[
+                    styles.box2,
+                    {
+                      padding: 10,
+                      borderWidth: 0,
+                      borderColor: AppColor.WHITE,
+                    },
+                  ]}>
+                  <Image
+                    source={{uri: item.goal_image}}
+                    resizeMode="contain"
+                    style={{
+                      height: 30,
+                      width: 30,
+                      marginRight: 10,
+                    }}
+                  />
+                  <Text
+                    style={{
+                      color: '#505050',
+                      fontSize: 18,
+                      fontWeight: '600',
+                      fontFamily: 'Poppins',
+                      lineHeight: 27,
+                    }}>
+                    {item.goal_title}
+                  </Text>
                 </TouchableOpacity>
               );
             })}

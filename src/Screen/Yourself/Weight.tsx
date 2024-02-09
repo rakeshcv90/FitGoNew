@@ -30,9 +30,9 @@ const ITEM_HEIGHT = 25;
 const halfItemCount = Math.floor(BOX_HEIGHT / 7 / ITEM_HEIGHT);
 const height = [
   // ...Array(halfItemCount + 5).fill(''), // Empty items for the top half
-  ...Array(300)
+  ...Array(2500)
     .fill(0)
-    .map((item: any, index, arr) => index),
+    .map((item: any, index, arr) => index/10),
   // ...Array(halfItemCount + 4).fill(''), // Empty items for the bottom half
 ];
 const positions = height.map(
@@ -201,7 +201,7 @@ const Weight = ({route, navigation}: any) => {
               height: DeviceHeigth * 0.4,
             }}>
             {/* <View style={{height: DeviceHeigth * 0.01}} /> */}
-            {currentActiveIndex > 7 ? (
+            {height[currentActiveIndex] < 251 ? (
               toggle == 'kg' ? (
                 <Text
                   style={{
@@ -244,7 +244,7 @@ const Weight = ({route, navigation}: any) => {
                   fontSize: 36,
                   fontWeight: '600',
                 }}>
-                0 kg
+                --
               </Text>
             )}
             {/* </View> */}
@@ -415,6 +415,7 @@ const Weight = ({route, navigation}: any) => {
                 activeIndex={currentActiveIndex}
                 data={height}
                 posData={positions}
+                activeItem={currentActiveIndex}
               />
             </View>
             <View style={{height: DeviceHeigth * 0.2}} />
