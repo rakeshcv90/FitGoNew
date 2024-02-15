@@ -51,6 +51,7 @@ import {navigationRef} from '../../../App';
 import {BlurView} from '@react-native-community/blur';
 import Reminder from '../../Component/Reminder';
 import ActivityLoader from '../../Component/ActivityLoader';
+import analytics from '@react-native-firebase/analytics';
 const Profile = () => {
   const {getUserDataDetails, ProfilePhoto, getSoundOffOn, allWorkoutData} =
     useSelector(state => state);
@@ -665,6 +666,7 @@ const Profile = () => {
               }}>
               <TouchableOpacity
                 onPress={() => {
+                  analytics().logEvent("CV_FITME_SIGNED_OUT")
                   LogOut(dispatch);
                   // navigation.navigate('SplaceScreen');
                 }}
@@ -713,7 +715,10 @@ const Profile = () => {
             <TouchableOpacity
               style={styles.ButtonPen}
               activeOpacity={0.6}
-              onPress={() => setUpadteScreenVisibilty(true)}>
+              onPress={() => {
+                setUpadteScreenVisibilty(true)
+                analytics().logEvent("CV_FITME_CLICKED_ON_EDIT_PROFILE")
+                }}>
               <Image
                 source={localImage.Pen}
                 style={styles.pen}
@@ -777,7 +782,8 @@ const Profile = () => {
             style={styles.SingleButton}
             navigation
             onPress={() => {
-              console.log('JHDHD', value.text1);
+              analytics().logEvent(`CV_FITME_CLICKED_ON_${value?.text1?.replace(" ","_")}`)
+              // console.log('JHDHD', value.text1);
               if (value.text1 == 'Personal Details') {
                 navigation.navigate('NewPersonalDetails');
               } else if (value.text1 == 'Contact Us') {
@@ -908,6 +914,7 @@ const Profile = () => {
               style={[styles.SingleButton, {}]}
               navigation
               onPress={() => {
+                analytics().logEvent(`CV_FITME_CLICKED_ON_${value?.text1?.replace(" ","_")}`)
                 // navigation.navigate('Personal Details');
                 if (value.text1 == 'Privacy Policy') {
                   navigation.navigate('TermaAndCondition');

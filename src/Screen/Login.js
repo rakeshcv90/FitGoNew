@@ -50,6 +50,7 @@ import {navigationRef} from '../../App';
 import VersionNumber from 'react-native-version-number';
 import {Platform} from 'react-native';
 import { RemoteMessage, requestPermissionforNotification } from '../Component/Helper/PushNotification';
+import analytics from '@react-native-firebase/analytics';
 import { Alert } from 'react-native';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
@@ -84,6 +85,7 @@ const Login = ({navigation}) => {
     setAppVersion(VersionNumber.appVersion);
   });
   const GoogleSignup = async () => {
+    analytics().logEvent('CV_FITME_GOOGLE_LOGIN')
     try {
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.hasPlayServices();
@@ -182,6 +184,7 @@ const Login = ({navigation}) => {
     }
   };
   const FacebookLogin = () => {
+    analytics().logEvent('CV_FITME_FACEBOOK_LOGIN')
     LoginManager.logInWithPermissions(['public_profile', 'email']).then(
       function (result) {
         if (result.isCancelled) {
@@ -270,6 +273,7 @@ const Login = ({navigation}) => {
     }
   };
   const onApplePress = async () => {
+    analytics().logEvent('CV_FITME_APPLE_LOGIN')
     await appleAuth
       .performRequest({
         requestedOperation: appleAuth.Operation.LOGIN,
@@ -350,6 +354,7 @@ const Login = ({navigation}) => {
     }
   };
   const loginFunction = async () => {
+    analytics().logEvent('CV_FITME_LOGIN')
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (email == null) {
       showMessage({

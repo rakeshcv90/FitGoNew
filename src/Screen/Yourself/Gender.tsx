@@ -8,7 +8,7 @@ import ProgressBar from './ProgressBar';
 import Bulb from './Bulb';
 import {useDispatch, useSelector} from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import analytics from '@react-native-firebase/analytics';
 const Gender = ({route, navigation}: any) => {
   const {data, nextScreen} = route.params;
 
@@ -23,7 +23,7 @@ const Gender = ({route, navigation}: any) => {
 
   const handleImagePress = (gender: string) => {
     // Set the selected gender
-
+     analytics().logEvent(`CV_FITME_GENDER_${gender}` )
     const easing = Easing.linear(1);
 
 

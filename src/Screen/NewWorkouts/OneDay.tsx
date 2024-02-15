@@ -24,7 +24,7 @@ import {localImage} from '../../Component/Image';
 import WorkoutDescription from '../NewWorkouts/WorkoutsDescription';
 import VersionNumber from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
-
+import analytics from '@react-native-firebase/analytics';
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount} = route.params;
   const [exerciseData, setExerciseData] = useState([]);
@@ -342,6 +342,7 @@ const OneDay = ({navigation, route}: any) => {
           bR={40}
           mB={40}
           onPress={() => {
+           analytics().logEvent(`CV_FITME_STARTED_DAY_${day}_EXERCISES`)
             postCurrentDayAPI();
             // setOpen(false);
             // navigation.navigate('Exercise', {
