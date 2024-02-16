@@ -31,7 +31,8 @@ const intialState = {
   getHomeGraphData: [],
   getProfile_imgData: [],
   getCustttomeTimeCal: [],
-  getStepCounterOnoff:false
+  getStepCounterOnoff: false,
+  getSubscriptionModal: false,
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -149,11 +150,16 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         getProfile_imgData: action.payload,
       };
-      case types.IS_STEP_COUNTER_ON:
-        return{
-          ...state,
-          getStepCounterOnoff:action.payload
-        }
+    case types.IS_STEP_COUNTER_ON:
+      return {
+        ...state,
+        getStepCounterOnoff: action.payload,
+      };
+    case types.SUBSCRIPTION_MODAL:
+      return {
+        ...state,
+        getSubscriptionModal: action.payload,
+      };
     default:
       return state;
   }

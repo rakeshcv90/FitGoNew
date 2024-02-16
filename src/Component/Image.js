@@ -107,4 +107,8 @@ export const localImage = {
   AppleLogo: require('../Icon/Images/NewImage/apple.png'),
   avt: require('../Icon/Images/NewImage/Avatar.png'),
   checked: require('../Icon/Images/NewImage/Check.png'),
+  info: require('../Icon/Images/NewImage/info.png'),
+  PaymentSucc: require('../Icon/Images/NewImage/PaymentSucc.png'),
+  PaymentFaikd: require('../Icon/Images/NewImage/PaymentFaikd.png'),
+  PadoDaolog: require('../Icon/Images/NewImage/PadoDailog.png'),
 };
