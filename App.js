@@ -44,7 +44,9 @@ import {
 } from 'react-native-iap';
 import {AppColor} from './src/Component/Color';
 import { LogBox } from 'react-native';
+import { LogOut } from './src/Component/LogOut';
 
+// also use before use code Push (appcenter login)
 // codepush release of ios , appcenter codepush release-react -a thefitnessandworkout-gmail.com/FitmeIos -d Production
 // codepush release of android  appcenter codepush release-react -a thefitnessandworkout-gmail.com/FitmeAndroid -d Production
 let codePushOptions = {checkFrequency: codePush.CheckFrequency.MANUAL};
@@ -147,6 +149,7 @@ const App = () => {
         break;
       case codePush.SyncStatus.INSTALLING_UPDATE:
         console.log('Installing update');
+        LogOut(dispatch);
         setProgress(false);
         break;
       case codePush.SyncStatus.UP_TO_DATE:
@@ -157,7 +160,8 @@ const App = () => {
         setProgress(false);
         break;
       case codePush.SyncStatus.UPDATE_INSTALLED:
-        console.log('Update installed and will be applied on restart.');
+        LogOut(dispatch);
+       // console.log('Update installed and will be applied on restart.');
         setProgress(false);
         break;
       case codePush.SyncStatus.UNKNOWN_ERROR:
@@ -191,7 +195,8 @@ const App = () => {
                 fontSize: 17,
                 fontFamily: 'Poppins',
                 fontWeight: '600',
-              }}>
+              }}
+              >
               Downloading......
             </Text>
 

@@ -57,6 +57,8 @@ const Weight = ({route, navigation}: any) => {
   const [currentActiveIndex, setCurrentActiveIndex] = useState(-1);
   const translateTarget = useRef(new Animated.Value(DeviceHeigth * 2)).current;
   const translateCurrent = useRef(new Animated.Value(0)).current;
+  const mergedObject = Object.assign({}, ...getLaterButtonData);
+  const [BackHight, setBackHight] = useState(0);
   useEffect(() => {
     setScreen(nextScreen);
   }, []);
@@ -68,6 +70,7 @@ const Weight = ({route, navigation}: any) => {
         setScreen(screen - 1);
       } else {
         setSelected(weight);
+        
         setTargetSelected(true);
         setScreen(screen + 1);
       }
@@ -95,7 +98,15 @@ const Weight = ({route, navigation}: any) => {
       targetWeight: weight,
       type: toggle,
     };
-    if (weight != selected) {
+    if (mergedObject.goal_name == 'Weight Loss' && selected <= weight) {
+      showMessage({
+        message: 'Target weight can not be greater than Current Weight',
+        floating: true,
+        duration: 2000,
+        type: 'danger',
+        icon: {icon: 'auto', position: 'left'},
+      });
+    } else if (weight != selected) {
       {
         console.log('Current Weight Screen Data', [
           ...getLaterButtonData,
@@ -198,7 +209,7 @@ const Weight = ({route, navigation}: any) => {
                     fontSize: 36,
                     fontWeight: '600',
                   }}>
-                  {height[currentActiveIndex]}
+                  {BackHight==0?height[currentActiveIndex]:selected}
                   <Text
                     style={{
                       color: AppColor.RED,
@@ -410,10 +421,7 @@ const Weight = ({route, navigation}: any) => {
           </View>
         </ImageBackground>
         <View>
-          <View
-            style={[
-              styles.buttons
-            ]}>
+          <View style={[styles.buttons]}>
             <TouchableOpacity
               style={{
                 backgroundColor: '#F7F8F8',
@@ -427,7 +435,8 @@ const Weight = ({route, navigation}: any) => {
               }}
               onPress={() =>
                 //   selected != '' ? handleImagePress('') :
-                targetSelected ? handleAnimation(0) : navigation.goBack()
+              {  setBackHight(1)
+                targetSelected ? handleAnimation(0) : navigation.goBack()}
               }>
               <Icons name="chevron-left" size={25} color={'#000'} />
             </TouchableOpacity>

@@ -43,9 +43,9 @@ const Gender = ({route, navigation}: any) => {
           delay: 0, // Delay the return to center animation for a smoother effect
         }),
       ]).start();
-      setTimeout(() => {
-        navigation.navigate('LogSignUp')
-      }, 1000);
+      // setTimeout(() => {
+      //   navigation.navigate('LogSignUp')
+      // }, 500);
     } else {
       Animated.parallel([
         Animated.timing(translateX, {
@@ -166,7 +166,7 @@ const Gender = ({route, navigation}: any) => {
         </TouchableOpacity>
       </View>
 
-      {/* <TouchableOpacity
+      <TouchableOpacity
         style={{
           alignSelf: 'flex-start',
           marginLeft: DeviceWidth * 0.04,
@@ -185,7 +185,7 @@ const Gender = ({route, navigation}: any) => {
           handleImagePress('');
         }}>
         <Icons name="chevron-left" size={25} color={'#000'} />
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </View>
   );
 };

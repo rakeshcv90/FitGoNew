@@ -181,3 +181,11 @@ export const setStepCounterOnOff=data=>{
   
 
 }
+export const setSubscriptiomModal=data=>{
+  return{
+    type:types.SUBSCRIPTION_MODAL,
+    payload:data
+  }
+  
+
+}

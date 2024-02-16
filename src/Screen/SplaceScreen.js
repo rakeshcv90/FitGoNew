@@ -25,8 +25,8 @@ import {showMessage} from 'react-native-flash-message';
 import { RemoteMessage, requestPermissionforNotification } from '../Component/Helper/PushNotification';
 
 const products = Platform.select({
-  ios: ['a_monthly', 'b_quaterly', 'c_annual'],
-  android: ['a_monthly', 'b_quaterly', 'c_annual', 'base-plan'],
+  ios: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
+  android: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
 });
 
 const SplaceScreen = ({navigation}) => {
@@ -46,39 +46,39 @@ const SplaceScreen = ({navigation}) => {
       setDeviceId(uniqueId);
       Meal_List(uniqueId);
     });
-    // getPlanData();
+    getPlanData();
   }, []);
-  // const getPlanData = () => {
-  //   Platform.OS === 'ios'
-  //     ? RNIap.initConnection()
-  //         .catch(() => {
-  //           console.log('error connecting to store');
-  //         })
-  //         .then(() => {
-  //           RNIap.getProducts({skus: products})
-  //             .catch(() => {
-  //               console.log('error finding purchase');
-  //             })
-  //             .then(res => {
-  //               console.log('IOS Subscription', res);
-  //               dispatch(setInappPurchase(res));
-  //             });
-  //         })
-  //     : RNIap.initConnection()
-  //         .catch(() => {
-  //           console.log('error connecting to store');
-  //         })
-  //         .then(() => {
-  //           RNIap.getSubscriptions({skus: products})
-  //             .catch(() => {
-  //               console.log('error finding purchase');
-  //             })
-  //             .then(res => {
-  //               console.log('Android Subscription', res);
-  //               dispatch(setInappPurchase(res));
-  //             });
-  //         });
-  // };
+  const getPlanData = () => {
+    Platform.OS === 'ios'
+      ? RNIap.initConnection()
+          .catch(() => {
+            console.log('error connecting to store');
+          })
+          .then(() => {
+            RNIap.getProducts({skus: products})
+              .catch(() => {
+                console.log('error finding purchase');
+              })
+              .then(res => {
+                console.log('IOS Subscription', res);
+                dispatch(setInappPurchase(res));
+              });
+          })
+      : RNIap.initConnection()
+          .catch(() => {
+            console.log('error connecting to store');
+          })
+          .then(() => {
+            RNIap.getSubscriptions({skus: products})
+              .catch(() => {
+                console.log('error finding purchase');
+              })
+              .then(res => {
+                console.log('Android Subscription', res);
+                dispatch(setInappPurchase(res));
+              });
+          });
+  };
   useEffect(() => {
     setTimeout(() => {
       if (showIntro) {

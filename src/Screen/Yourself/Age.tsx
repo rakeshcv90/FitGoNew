@@ -117,6 +117,16 @@ const Age = ({route, navigation}: any) => {
       });
       return;
     }
+    else if (parseInt(selected)<15) {
+      showMessage({
+        message: 'You are below 15 !!!',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+      return;
+    }
     const currentData = {
       age: selected,
     };
@@ -178,7 +188,7 @@ const Age = ({route, navigation}: any) => {
           }}
           onFocus={setFocused}
           cursorColor={AppColor.RED}
-          placeholder="18"
+          placeholder="15"
           autoFocus
           placeholderTextColor={AppColor.GRAY2}
           style={{

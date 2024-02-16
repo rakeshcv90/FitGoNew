@@ -537,6 +537,8 @@ PODS:
     - React-Core
   - react-native-image-picker (7.0.2):
     - React-Core
+  - react-native-in-app-review (4.3.3):
+    - React-Core
   - react-native-keep-awake (4.0.0):
     - React
   - react-native-netinfo (9.4.1):
@@ -817,6 +819,7 @@ DEPENDENCIES:
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-in-app-review (from `../node_modules/react-native-in-app-review`)
   - react-native-keep-awake (from `../node_modules/react-native-keep-awake`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
@@ -971,6 +974,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fbsdk-next"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-in-app-review:
+    :path: "../node_modules/react-native-in-app-review"
   react-native-keep-awake:
     :path: "../node_modules/react-native-keep-awake"
   react-native-netinfo:
@@ -1140,6 +1145,7 @@ SPEC CHECKSUMS:
   react-native-blur: cfdad7b3c01d725ab62a8a729f42ea463998afa2
   react-native-fbsdk-next: 75ea1d4b48e047796f3264535a1cab502686a3e2
   react-native-image-picker: 2e2e82aba9b6a91a7c78f7d9afde341a2659c7b8
+  react-native-in-app-review: db8bb167a5f238e7ceca5c242d6b36ce8c4404a4
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
   react-native-netinfo: fefd4e98d75cbdd6e85fc530f7111a8afdf2b0c5
   react-native-pager-view: d211379f61895b6349bd7e571b44a26d005c2975
@@ -1200,6 +1206,6 @@ SPEC CHECKSUMS:
   TextToSpeech: b3aa777ff5585705f179c0a2436bfd0926d1716e
   Yoga: 3efc43e0d48686ce2e8c60f99d4e6bd349aff981
 
-PODFILE CHECKSUM: 8279a2e6a61a1dba92ab1191726fe9ac716e10bf
+PODFILE CHECKSUM: f0a57e0c52826e84c2d1859d7289a31f3a6bda4a
 
 COCOAPODS: 1.13.0
