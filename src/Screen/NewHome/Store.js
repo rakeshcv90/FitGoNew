@@ -24,7 +24,7 @@ import {localImage} from '../../Component/Image';
 import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
 import {showMessage} from 'react-native-flash-message';
-
+import analytics from '@react-native-firebase/analytics';
 const Store = ({navigation}) => {
   const {getUserDataDetails, getStoreData} = useSelector(state => state);
   const [searchText, setsearchText] = useState('');
@@ -219,6 +219,7 @@ const Store = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.listItem2}
                   onPress={() => {
+                    analytics().logEvent(`CV_FITME_CLICKED_ON_${item?.type_title.replace(" ","_")}`)
                     navigation.navigate('ProductsList', {item: item});
                   }}>
                   <Image

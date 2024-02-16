@@ -21,7 +21,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {showMessage} from 'react-native-flash-message';
 import {useDispatch, useSelector} from 'react-redux';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
-
+import analytics from '@react-native-firebase/analytics';
 const Injury = ({route, navigation}) => {
   const dispatch = useDispatch();
   const {nextScreen} = route.params;
@@ -43,6 +43,7 @@ const Injury = ({route, navigation}) => {
       console.log('Injury Screen Data', [...getLaterButtonData, currentData]);
     }
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
+    analytics().logEvent(`CV_FITME_INJURY_${imageView}`)
     navigation.navigate('Height', {nextScreen: screen + 1});
   };
 

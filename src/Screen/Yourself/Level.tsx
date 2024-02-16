@@ -23,7 +23,7 @@ import Svg, {
   Text as SvgText,
 } from 'react-native-svg';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
-
+import analytics from '@react-native-firebase/analytics';
 const GradientText = ({item}: any) => {
   const gradientColors = ['#D5191A', '#941000'];
 
@@ -72,6 +72,7 @@ const Level = ({route, navigation}: any) => {
       level: selected,
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
+    analytics().logEvent(`CV_FITME_FITNESS_LEVEL_${selected}`)
     navigation.navigate('Injury', {nextScreen: screen + 1});
   };
   return (
