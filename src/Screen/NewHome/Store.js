@@ -275,9 +275,9 @@ const Store = ({navigation}) => {
                     <TouchableOpacity
                       style={styles.listItem2}
                       onPress={() => 
-                         analytics().logEvent(`CV_FITME_CLICKED_ON_${item?.type_title.replace(" ","_")}`)
-                        navigation.navigate('ProductsList', {item: item});
-                      }}>
+                        { analytics().logEvent(`CV_FITME_CLICKED_ON_${item?.type_title.replace(" ","_")}`)
+                        navigation.navigate('ProductsList', {item: item})}
+                      }>
                       <Image
                         source={
                           item.type_image_link == null
