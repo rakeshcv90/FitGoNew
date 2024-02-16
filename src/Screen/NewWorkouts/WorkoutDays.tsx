@@ -24,7 +24,7 @@ import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
 import {useFocusEffect} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
-
+import analytics from '@react-native-firebase/analytics';
 const WorkoutDays = ({navigation, route}: any) => {
   const {data} = route.params;
   const [selected, setSelected] = useState(0);
@@ -266,6 +266,7 @@ const WorkoutDays = ({navigation, route}: any) => {
       disabled={item?.total_rest == 0}
         activeOpacity={1}
         onPress={() => {
+          analytics().logEvent(`CV_FITME_CLICKED_ON_DAY_${index}_EXERCISES`)
           index - 1 == 0
             ? navigation.navigate('OneDay', {
                 data: data,

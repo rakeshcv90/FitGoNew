@@ -50,6 +50,7 @@ import {navigationRef} from '../../App';
 import VersionNumber from 'react-native-version-number';
 import {Platform} from 'react-native';
 import { RemoteMessage, requestPermissionforNotification } from '../Component/Helper/PushNotification';
+import analytics from '@react-native-firebase/analytics';
 import { Alert } from 'react-native';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
@@ -84,6 +85,7 @@ const Login = ({navigation}) => {
     setAppVersion(VersionNumber.appVersion);
   });
   const GoogleSignup = async () => {
+    analytics().logEvent('CV_FITME_GOOGLE_LOGIN')
     try {
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.hasPlayServices();
@@ -134,7 +136,7 @@ const Login = ({navigation}) => {
         getProfileData(data.data.id, data.data.profile_status);
         getCustomWorkout(data.data.id);
         Meal_List(data.data.login_token);
-        //PurchaseDetails(data.data.id, data.data.login_token);
+        PurchaseDetails(data.data.id, data.data.login_token);
         await GoogleSignin.signOut();
       } else if (
         data.data.msg ==
@@ -183,6 +185,7 @@ const Login = ({navigation}) => {
     }
   };
   const FacebookLogin = () => {
+    analytics().logEvent('CV_FITME_FACEBOOK_LOGIN')
     LoginManager.logInWithPermissions(['public_profile', 'email']).then(
       function (result) {
         if (result.isCancelled) {
@@ -235,7 +238,7 @@ const Login = ({navigation}) => {
         getProfileData(data.data.id, data.data.profile_status);
         getCustomWorkout(data.data.id);
         Meal_List(data.data.login_token);
-        //PurchaseDetails(data.data.id, data.data.login_token);
+        PurchaseDetails(data.data.id, data.data.login_token);
       } else if (
         data.data.msg ==
         'User does not exist with provided Facebook social credentials'
@@ -272,6 +275,7 @@ const Login = ({navigation}) => {
     }
   };
   const onApplePress = async () => {
+    analytics().logEvent('CV_FITME_APPLE_LOGIN')
     await appleAuth
       .performRequest({
         requestedOperation: appleAuth.Operation.LOGIN,
@@ -321,7 +325,7 @@ const Login = ({navigation}) => {
         getProfileData(data.data.id, data.data.profile_status);
         getCustomWorkout(data.data.id);
         Meal_List(data.data.login_token);
-        //PurchaseDetails(data.data.id, data.data.login_token);
+        PurchaseDetails(data.data.id, data.data.login_token);
       } else if (
         data.data?.msg ==
         'User does not exist with provided Apple social credentials'
@@ -353,7 +357,9 @@ const Login = ({navigation}) => {
     }
   };
   const loginFunction = async () => {
-    console.log("App Version ",VersionNumber.appVersion,'+',appVersion)
+
+    analytics().logEvent('CV_FITME_LOGIN')
+
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (email == null) {
       showMessage({
@@ -412,7 +418,7 @@ const Login = ({navigation}) => {
           getProfileData(data.data.id, data.data.profile_status);
           getCustomWorkout(data.data.id);
           Meal_List(data.data.login_token);
-          //PurchaseDetails(data.data.id, data.data.login_token);
+          PurchaseDetails(data.data.id, data.data.login_token);
         } else if (
           data.data.msg == 'Login successful' &&
           data.data.profile_status == 0
@@ -423,7 +429,7 @@ const Login = ({navigation}) => {
           getProfileData(data.data.id, data.data.profile_status);
           Meal_List(data.data.login_token);
           dispatch(setCustomWorkoutData([]));
-          //PurchaseDetails(data.data.id, data.data.login_token);
+          PurchaseDetails(data.data.id, data.data.login_token);
         } else if (
           data?.data?.msg == 'Please update the app to the latest version.'
         ) {
@@ -678,29 +684,29 @@ const Login = ({navigation}) => {
     }
   };
 
-  // const PurchaseDetails = async (id, login_token) => {
-  //   try {
-  //     const res = await axios(`${NewAppapi.TransctionsDetails}`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       data: {
-  //         id: id,
-  //         token: login_token,
-  //       },
-  //     });
+  const PurchaseDetails = async (id, login_token) => {
+    try {
+      const res = await axios(`${NewAppapi.TransctionsDetails}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          id: id,
+          token: login_token,
+        },
+      });
 
-  //     if (res.data.data.length > 0) {
-  //       dispatch(setPurchaseHistory(res.data.data));
-  //     } else {
-  //       dispatch(setPurchaseHistory([]));
-  //     }
-  //   } catch (error) {
-  //     dispatch(setPurchaseHistory([]));
-  //     console.log('Purchase List Error', error);
-  //   }
-  // };
+      if (res.data.data.length > 0) {
+        dispatch(setPurchaseHistory(res.data.data));
+      } else {
+        dispatch(setPurchaseHistory([]));
+      }
+    } catch (error) {
+      dispatch(setPurchaseHistory([]));
+      console.log('Purchase List Error', error);
+    }
+  };
   const ModalView = () => {
     const [forLoading, setForLoading] = useState(false);
     const handleForgotPassword = async value => {
@@ -773,7 +779,8 @@ const Login = ({navigation}) => {
           visible={IsVerifyVisible}
           onRequestClose={() => {
             setVerifyVisible(!IsVerifyVisible);
-          }}>
+          }}
+          >
           <View
             style={[
               styles.modalContainer,

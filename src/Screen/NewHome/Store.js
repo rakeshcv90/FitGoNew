@@ -24,6 +24,10 @@ import {localImage} from '../../Component/Image';
 import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
 
+import {showMessage} from 'react-native-flash-message';
+import analytics from '@react-native-firebase/analytics';
+
+
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -209,6 +213,7 @@ const Store = ({navigation}) => {
           Our Products
         </Text>
 
+
         <View
           style={{
             alignSelf: 'center',
@@ -269,9 +274,10 @@ const Store = ({navigation}) => {
                   <>
                     <TouchableOpacity
                       style={styles.listItem2}
-                      onPress={() => {
-                        navigation.navigate('ProductsList', {item: item});
-                      }}>
+                      onPress={() => 
+                        { analytics().logEvent(`CV_FITME_CLICKED_ON_${item?.type_title.replace(" ","_")}`)
+                        navigation.navigate('ProductsList', {item: item})}
+                      }>
                       <Image
                         source={
                           item.type_image_link == null
@@ -304,6 +310,7 @@ const Store = ({navigation}) => {
             /> 
           )}
         </View>
+
       </View>
     </View>
   );

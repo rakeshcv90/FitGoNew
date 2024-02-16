@@ -6,7 +6,7 @@ import {localImage} from '../../../Component/Image';
 import GradientText from '../../../Component/GradientText';
 import {DeviceHeigth, DeviceWidth} from '../../../Component/Config';
 import GradientButton from '../../../Component/GradientButton';
-
+import analytics from '@react-native-firebase/analytics';
 const SaveDayExercise = ({navigation, route}: any) => {
   const {data, day} = route?.params;
   let fire, clock, action;
@@ -110,7 +110,9 @@ const SaveDayExercise = ({navigation, route}: any) => {
         </View>
       </View>
       <GradientButton
-        onPress={() => navigation.navigate('DayRewards',{data, day})}
+        onPress={() => {
+          analytics().logEvent(`CV_FITME_COMPLETED_DAY_${day}_EXERCISES`)
+          navigation.navigate('DayRewards',{data, day})}}
         text="Save and Continue"
         bR={10}
         h={70}

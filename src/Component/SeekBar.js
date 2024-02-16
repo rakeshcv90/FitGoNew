@@ -28,9 +28,7 @@ const SeekBar = ({
         maximumTrackTintColor="#FFFFFF"
         onSlidingComplete={onSlidingComplete}
         onValueChange={onValueChange}
- 
       />
-
       <View
         style={{
           width:

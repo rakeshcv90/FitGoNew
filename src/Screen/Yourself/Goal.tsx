@@ -16,7 +16,7 @@ import Bulb from './Bulb';
 import ProgressBar from './ProgressBar';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import analytics from '@react-native-firebase/analytics';
 const Goal = ({navigation, route}: any) => {
   const {data, nextScreen, gender} = route.params;
   const goalsAnimation = useRef(new Animated.Value(0)).current;
@@ -114,34 +114,39 @@ const Goal = ({navigation, route}: any) => {
                 <TouchableOpacity
                   key={index}
                   activeOpacity={0.8}
-                  onPress={() => toNextScreen(item)}
-                  style={[
-                    styles.box2,
-                    {
-                      padding: 10,
-                      borderWidth: 0,
-                      borderColor: AppColor.WHITE,
-                    },
-                  ]}>
-                  <Image
-                    source={{uri: item.goal_image}}
-                    resizeMode="contain"
-                    style={{
-                      height: 30,
-                      width: 30,
-                      marginRight: 10,
-                    }}
-                  />
-                  <Text
-                    style={{
-                      color: '#505050',
-                      fontSize: 18,
-                      fontWeight: '600',
-                      fontFamily: 'Poppins',
-                      lineHeight: 27,
-                    }}>
-                    {item.goal_title}
-                  </Text>
+                  onPress={() => {toNextScreen(item)
+                    analytics().logEvent(`CV_FITME_GOAL_${item?.goal_title?.replace(' ','_')}`)
+                  }
+                  }>
+                  <View
+                    style={[
+                      styles.box2,
+                      {
+                        padding: 10,
+                        borderWidth: 0,
+                        borderColor: AppColor.WHITE,
+                      },
+                    ]}>
+                    <Image
+                      source={{uri: item.goal_image}}
+                      resizeMode="contain"
+                      style={{
+                        height: 30,
+                        width: 30,
+                        marginRight: 10,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        color: '#505050',
+                        fontSize: 18,
+                        fontWeight: '600',
+                        fontFamily: 'Poppins',
+                        lineHeight: 27,
+                      }}>
+                      {item.goal_title}
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               );
             })}

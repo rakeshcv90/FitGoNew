@@ -49,6 +49,7 @@ import {
   RemoteMessage,
   requestPermissionforNotification,
 } from '../Component/Helper/PushNotification';
+import analytics from '@react-native-firebase/analytics';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 const Signup = ({navigation}) => {
@@ -115,6 +116,7 @@ const Signup = ({navigation}) => {
   });
 
   const GoogleSignup = async () => {
+    analytics().logEvent('CV_FITME_GOOGLE_SIGNUP')
     try {
       await GoogleSignin.hasPlayServices();
       const {accessToken, idToken, user} = await GoogleSignin.signIn();
@@ -132,6 +134,7 @@ const Signup = ({navigation}) => {
     }
   };
   const FacebookSignup = () => {
+    analytics().logEvent('CV_FITME_FACEBOOK_SIGNUP')
     LoginManager.logInWithPermissions(['public_profile', 'email']).then(
       function (result) {
         if (result.isCancelled) {
@@ -152,6 +155,7 @@ const Signup = ({navigation}) => {
     );
   };
   const onApplePress = async () => {
+    analytics().logEvent('CV_FITME_APPLE_SIGNUP')
     await appleAuth
       .performRequest({
         requestedOperation: appleAuth.Operation.LOGIN,
@@ -238,6 +242,7 @@ const Signup = ({navigation}) => {
     }
   };
   const handleFormSubmit = async (value, action) => {
+    analytics().logEvent('CV_FITME_REGISTER')
     setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
@@ -301,6 +306,7 @@ const Signup = ({navigation}) => {
     }
   };
   const socialLogiIn = async (value, token) => {
+    analytics().logEvent('CV_FITME_GOOGLE_SIGNUP')
     setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
@@ -378,6 +384,7 @@ const Signup = ({navigation}) => {
     }
   };
   const socialFacebookLogiIn = async value => {
+    analytics().logEvent('CV_FITME_FACEBOOK_SIGNUP')
     setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
