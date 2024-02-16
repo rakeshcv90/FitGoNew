@@ -16,14 +16,18 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
 import {useSelector} from 'react-redux';
-
-
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
 import HTMLRender from 'react-native-render-html';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const MealDetails = ({route, navigation}) => {
   const {getUserDataDetails} = useSelector(state => state);
   const [forLoading, setForLoading] = useState(false);
   const [appVersion, setAppVersion] = useState(0);
+  const [imageLoad, setImageLoad] = useState(true);
+  const avatarRef = React.createRef();
 
   //   const getMealDetails = async () => {
   //     setForLoading(true);
@@ -67,11 +71,18 @@ const MealDetails = ({route, navigation}) => {
         translucent={true}
         backgroundColor={'transparent'}
       />
+      {imageLoad && (
+        <ShimmerPlaceholder
+          style={{width: '100%', height: DeviceHeigth * 0.4}}
+          ref={avatarRef}
+          autoRun
+        />
+      )}
       <ImageBackground
         translucent={true}
         style={{width: '100%', height: DeviceHeigth * 0.4}}
-  
-        resizeMode='cover'
+        resizeMode="cover"
+        onLoad={() => setImageLoad(false)}
         source={
           route.params.item.diet_image_link == null
             ? localImage.Noimage
@@ -147,7 +158,7 @@ const MealDetails = ({route, navigation}) => {
                 fontWeight: '500',
                 color: AppColor.INPUTLABLECOLOR,
                 marginHorizontal: 2,
-                opacity:0.7
+                opacity: 0.7,
               }}>
               {route.params.item.diet_calories} kcal
             </Text>
@@ -181,7 +192,7 @@ const MealDetails = ({route, navigation}) => {
                 fontWeight: '500',
                 color: AppColor.INPUTLABLECOLOR,
                 marginHorizontal: 5,
-                opacity:0.7
+                opacity: 0.7,
               }}>
               {route.params.item.diet_time}
             </Text>
@@ -331,7 +342,6 @@ const MealDetails = ({route, navigation}) => {
                 borderWidth: 1,
                 padding: 10,
                 borderColor: 'rgba(80, 80, 80, 0.6)',
-           
               }}>
               <Text
                 style={{
@@ -389,7 +399,7 @@ var styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 15,
     top: 5,
-    color:'#1E1E1E'
+    color: '#1E1E1E',
   },
   textStyle2: {
     fontFamily: 'Poppins',
@@ -397,7 +407,7 @@ var styles = StyleSheet.create({
     fontSize: 10,
     textAlign: 'center',
     lineHeight: 12,
-    color:'#1E1E1E'
+    color: '#1E1E1E',
   },
 });
 export default MealDetails;

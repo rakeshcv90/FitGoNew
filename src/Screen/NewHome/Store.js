@@ -23,17 +23,23 @@ import axios from 'axios';
 import {localImage} from '../../Component/Image';
 import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
+
 import {showMessage} from 'react-native-flash-message';
 import analytics from '@react-native-firebase/analytics';
+
+
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+
 const Store = ({navigation}) => {
   const {getUserDataDetails, getStoreData} = useSelector(state => state);
   const [searchText, setsearchText] = useState('');
   const [forLoading, setForLoading] = useState(false);
   const [category, setcategory] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState(getStoreData);
-
-
-
+  const avatarRef = React.createRef();
   useFocusEffect(
     React.useCallback(() => {
       getCaterogy();
@@ -47,6 +53,7 @@ const Store = ({navigation}) => {
 
     setFilteredCategories(filteredItems);
     //filteredItems.clear()
+    setForLoading(false);
   };
   const data = [
     require('../../Icon/Images/product_1631791758.jpg'),
@@ -54,13 +61,13 @@ const Store = ({navigation}) => {
     require('../../Icon/Images/product_1631791758.jpg'),
     require('../../Icon/Images/product_1631811803.jpg'),
     require('../../Icon/Images/product_1631468947.jpg'),
-  
+
     require('../../Icon/Images/product_1631791758.jpg'),
   ];
 
   const getCaterogy = async () => {
     setForLoading(true);
-    // try {
+    try {
       const favDiet = await axios.get(
         `${NewAppapi.Get_Product_Catogery}?token=${getUserDataDetails.login_token}`,
       );
@@ -68,19 +75,17 @@ const Store = ({navigation}) => {
       if (favDiet.data.status != 'Invalid token') {
         setcategory([]);
         setForLoading(false);
-       
       } else {
         setcategory(favDiet.data.data);
         // setFilteredCategories(favDiet.data.data);
-    
+
         setForLoading(false);
       }
-   // } 
-    // catch (error) {
-    //   setcategory([]);
-    //   console.log('Product Category Error', error);
-    //   setForLoading(false);
-    // }
+    } catch (error) {
+      setcategory([]);
+      console.log('Product Category Error', error);
+      setForLoading(false);
+    }
   };
   const emptyComponent = () => {
     return (
@@ -142,7 +147,7 @@ const Store = ({navigation}) => {
           style={styles.inputText}
         />
       </View>
-      {forLoading ? <ActivityLoader /> : ''}
+
       <View
         style={{
           width: '95%',
@@ -194,8 +199,8 @@ const Store = ({navigation}) => {
           borderRadius: 10,
           alignSelf: 'center',
           alignItems: 'center',
-          top: 20,
-           marginBottom: DeviceHeigth * 0.42,
+          top: 10,
+          marginBottom: DeviceHeigth * 0.42,
         }}>
         <Text
           style={{
@@ -208,50 +213,104 @@ const Store = ({navigation}) => {
           Our Products
         </Text>
 
-        <FlatList
-          data={filteredCategories}
-          numColumns={3}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={item => item.id}
-          renderItem={({item, index}) => {
-            return (
-              <>
-                <TouchableOpacity
-                  style={styles.listItem2}
-                  onPress={() => {
-                    analytics().logEvent(`CV_FITME_CLICKED_ON_${item?.type_title.replace(" ","_")}`)
-                    navigation.navigate('ProductsList', {item: item});
-                  }}>
-                  <Image
-                    source={
-                      item.type_image_link == null
-                        ? localImage.Noimage
-                        : {uri: item.type_image_link}
-                    }
-                    style={{
-                      height: 90,
-                      width: 90,
-                  
-                      alignSelf: 'center',
-                    }}
-                    resizeMode="contain"></Image>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      fontWeight: '500',
-                      lineHeight: 18,
-                      fontFamily: 'Poppins',
-                      textAlign: 'center',
-                      color: AppColor.BoldText,
-                    }}>
-                    {item.type_title}
-                  </Text>
-                </TouchableOpacity>
-              </>
-            );
-          }}
-          ListEmptyComponent={emptyComponent}
-        />
+
+        <View
+          style={{
+            alignSelf: 'center',
+
+            paddingBottom:
+              Platform.OS == 'android'
+                ? 40
+                : DeviceHeigth <= 667
+                ? DeviceHeigth * 0.15
+                : 15,
+          }}>
+          {forLoading ? (
+            <FlatList
+              data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
+              numColumns={3}
+              showsVerticalScrollIndicator={false}
+          
+              renderItem={({item, index}) => {
+                return (
+                
+                    <View s
+                    style={styles.listItem2}
+                    >
+                      <ShimmerPlaceholder
+                        ref={avatarRef}
+                        autoRun
+                        style={{
+                          height: 90,
+                          width: 90,
+                          borderRadius:180/2,
+                          alignSelf: 'center',
+                        }}
+                      />
+                      <ShimmerPlaceholder
+                        ref={avatarRef}
+                        autoRun
+                        style={{
+                          
+                          width: 80,
+                          top:10,
+                          alignSelf: 'center',
+                        }}
+                      />
+                    </View>
+               
+                );
+              }}
+             
+            />
+       ) : (
+           <FlatList
+              data={filteredCategories}
+              numColumns={3}
+              showsVerticalScrollIndicator={false}
+           
+              renderItem={({item, index}) => {
+                return (
+                  <>
+                    <TouchableOpacity
+                      style={styles.listItem2}
+                      onPress={() => 
+                         analytics().logEvent(`CV_FITME_CLICKED_ON_${item?.type_title.replace(" ","_")}`)
+                        navigation.navigate('ProductsList', {item: item});
+                      }}>
+                      <Image
+                        source={
+                          item.type_image_link == null
+                            ? localImage.Noimage
+                            : {uri: item.type_image_link}
+                        }
+                        style={{
+                          height: 90,
+                          width: 90,
+
+                          alignSelf: 'center',
+                        }}
+                        resizeMode="contain"></Image>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontWeight: '500',
+                          lineHeight: 18,
+                          fontFamily: 'Poppins',
+                          textAlign: 'center',
+                          color: AppColor.BoldText,
+                        }}>
+                        {item.type_title}
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                );
+              }}
+              ListEmptyComponent={emptyComponent}
+            /> 
+          )}
+        </View>
+
       </View>
     </View>
   );
@@ -281,7 +340,7 @@ var styles = StyleSheet.create({
     borderRadius: 10,
     paddingRight: 10,
     paddingTop: 10,
-    paddingBottom: 10,
+    paddingBottom: 20,
     justifyContent: 'center',
     alignItems: 'center',
     paddingLeft: 10,

@@ -15,7 +15,6 @@ import {
   ActivityIndicator,
   Alert,
   RefreshControl,
-
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
@@ -61,9 +60,17 @@ import Graph from '../Yourself/Graph';
 import {LineChart} from 'react-native-chart-kit';
 import {max} from 'd3';
 import moment from 'moment';
+
 import analytics from '@react-native-firebase/analytics';
+
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import {ImageBackground} from 'react-native';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+
 let zeroData = [];
 let zeroDataM = [];
+
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
 
@@ -146,7 +153,10 @@ const Home = ({navigation}) => {
   const [monthlyGraph, setMonthlyGraph] = useState([]);
   const progressAnimation = useRef(new Animated.Value(0)).current;
   const [isLoading, setIsLoading] = useState(true);
+  const [imageLoad, setImageLoad] = useState(true);
   const [refresh, setRefresh] = useState(false);
+  const avatarRef = React.createRef();
+  const [PaddoModalShow, setPaddoModalShow] = useState(false);
   const Dispatch = useDispatch();
   const {
     getHealthData,
@@ -239,10 +249,9 @@ const Home = ({navigation}) => {
     await new Promise(async resolve => {
       for (let i = 0; BackgroundService.isRunning(); i++) {
         if (isSpecificTime(specificHour, specificMinute)) {
-         PedoMeterData()
+          PedoMeterData();
         } else {
-         //do nothing
-         console.log("---------->",specificHour,specificMinute)
+          //do nothing
         }
         try {
           const dailySteps = await GoogleFit.getDailySteps();
@@ -302,6 +311,7 @@ const Home = ({navigation}) => {
 
   const fetchData = async () => {
     if (!getStepCounterOnoff) {
+      // setPaddoModalShow(true);
       Alert.alert(
         'FitMe wants to track your health data !',
         '',
@@ -321,19 +331,6 @@ const Home = ({navigation}) => {
           cancelable: true,
         },
       );
-      const handleAlert = () => {
-        GoogleFit.authorize(options)
-          .then(authResult => {
-            if (authResult.success) {
-              checkPermissions();
-            } else {
-              console.log('Authentication denied ' + authResult.message);
-            }
-          })
-          .catch(error => {
-            console.error('Authentication error', error);
-          });
-      };
     } else {
       GoogleFit.authorize(options)
         .then(authResult => {
@@ -350,6 +347,22 @@ const Home = ({navigation}) => {
   };
   const options = {
     scopes: [Scopes.FITNESS_ACTIVITY_READ, Scopes.FITNESS_ACTIVITY_WRITE],
+  };
+  const handleAlert =async () => {
+    setPaddoModalShow(false);
+   await GoogleFit.authorize(options)
+      .then(authResult => {
+        if (authResult.success) {
+          checkPermissions1();
+          console.log('Authentication access ' + authResult.message);
+
+        } else {
+          console.log('Authentication denied ' + authResult.message);
+        }
+      })
+      .catch(error => {
+        console.error('Authentication error', error);
+      });
   };
   const checkPermissions = async () => {
     const fitnessPermissionResult = await check(
@@ -384,7 +397,7 @@ const Home = ({navigation}) => {
   };
   const startRecording = () => {
     GoogleFit.startRecording(() => {
-      GoogleFit.observeSteps(()=> {
+      GoogleFit.observeSteps(() => {
         fetchTotalSteps();
       });
     });
@@ -520,7 +533,6 @@ const Home = ({navigation}) => {
         setForLoading(false);
 
         Dispatch(setHomeGraphData(res.data));
-
 
         if (Key == 1) {
           zeroData = [];
@@ -1102,6 +1114,132 @@ const Home = ({navigation}) => {
       setRefresh(false);
     }
   };
+
+  const PaddoMeterPermissionModal = () => {
+  
+    const options = {
+      scopes: [Scopes.FITNESS_ACTIVITY_READ, Scopes.FITNESS_ACTIVITY_WRITE],
+    };
+    const handleAlert =async () => {
+      setPaddoModalShow(false);
+     await GoogleFit.authorize(options)
+        .then(authResult => {
+          if (authResult.success) {
+            checkPermissions1();
+            console.log('Authentication access ' + authResult.message);
+
+          } else {
+            console.log('Authentication denied ' + authResult.message);
+          }
+        })
+        .catch(error => {
+          console.error('Authentication error', error);
+        });
+    };
+    const checkPermissions1 = async () => {
+      const fitnessPermissionResult = await check(
+        PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
+      );
+      if (fitnessPermissionResult != RESULTS.GRANTED) {
+        const permissionRequestResult = await request(
+          PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
+        );
+        if (permissionRequestResult === RESULTS.GRANTED) {
+          if (getStepCounterOnoff == true) {
+            fetchTotalSteps();
+            startRecording();
+          } else {
+            fetchTotalSteps();
+            startStepUpdateBackgroundTask();
+            Dispatch(setStepCounterOnOff(true));
+          }
+        } else {
+          console.log('Permission Denied');
+        }
+      } else {
+        if (getStepCounterOnoff == true) {
+          fetchTotalSteps();
+          startRecording();
+        } else {
+          fetchTotalSteps();
+          startStepUpdateBackgroundTask();
+          Dispatch(setStepCounterOnOff(true));
+        }
+      }
+    };
+    return (
+      <Modal   transparent={true} visible={PaddoModalShow}>
+        <View style={styles.modalBackGround}>
+          <View style={styles.modalContainer}>
+            <ImageBackground
+              source={localImage.PadoDaolog}
+              resizeMode="contain"
+              style={{
+                width: '90%',
+                height: '90%',
+                borderRadius: 26,
+                alignItems: 'center',
+                left: DeviceWidth * 0.05,
+                alignSelf: 'center',
+              }}>
+              <View
+                style={{
+                  position: 'absolute',
+                  top: -DeviceHeigth * 0.06,
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                }}>
+                <AnimatedLottieView
+                 
+                  source={require('../../Icon/Images/NewImage/Paddo.json')}
+                  speed={2}
+                  autoPlay
+                  resizeMode="contain"
+                  loop
+                  style={{
+                    width: DeviceWidth * 0.35,
+                    height: DeviceHeigth * 0.35,
+                  }}
+                />
+              </View>
+              <TouchableOpacity
+                style={styles.buttonPaddo}
+                activeOpacity={0.5}
+                onPress={() => {
+               
+                  
+                  handleAlert();
+                }}>
+                <LinearGradient
+                  start={{x: 0, y: 1}}
+                  end={{x: 1, y: 0}}
+                  colors={['#D5191A', '#941000']}
+                  style={styles.buttonPaddo}>
+                  <Text style={styles.buttonText}>Allow</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonPaddo2}
+                activeOpacity={0.5}
+                onPress={() => {
+                  setPaddoModalShow(false);
+                }}>
+                <LinearGradient
+                  start={{x: 0, y: 1}}
+                  end={{x: 1, y: 0}}
+                  colors={['#F7F8F8', '#F7F8F8']}
+                  style={styles.buttonPaddo2}>
+                  <Text style={[styles.buttonText, {color: '#505050'}]}>
+                    Cancel
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </ImageBackground>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -1128,17 +1266,23 @@ const Home = ({navigation}) => {
               navigation.navigate('Profile');
             }}>
             {isLoading && (
-              <ActivityIndicator
+              // <ActivityIndicator
+              //   style={styles.loader}
+              //   size="small"
+              //   color="#0000ff"
+              // />
+              <ShimmerPlaceholder
                 style={styles.loader}
-                size="small"
-                color="#0000ff"
+                ref={avatarRef}
+                autoRun
               />
             )}
+
             <Image
               source={
-                getUserDataDetails.image_path == null
+                getUserDataDetails?.image_path == null
                   ? localImage.avt
-                  : {uri: getUserDataDetails.image_path}
+                  : {uri: getUserDataDetails?.image_path}
               }
               onLoad={() => setIsLoading(false)}
               style={[styles.img]}
@@ -1204,7 +1348,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#5FB67B'}]}>
-                  {stepsRef.current}
+                  {Platform.OS == 'ios' ? steps : stepsRef.current}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     {`/${stepGoalProfile} steps`}
                   </Text>
@@ -1223,7 +1367,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#FCBB1D'}]}>
-                  {distanceRef.current}
+                  {Platform.OS == 'ios' ? distance : distanceRef.current}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     {`/ ${DistanceGoalProfile} km `}
                   </Text>
@@ -1247,7 +1391,7 @@ const Home = ({navigation}) => {
                   ]}
                   resizeMode="contain"></Image>
                 <Text style={[styles.monetText, {color: '#D01818'}]}>
-                  {caloriesRef.current}
+                  {Platform.OS == 'ios' ? Calories : caloriesRef.current}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
                     {`/${CalriesGoalProfile} KCal`}
                   </Text>
@@ -1385,7 +1529,9 @@ const Home = ({navigation}) => {
             },
           ]}>
           <FlatList
-            data={customWorkoutData?.workout}
+
+            data={customWorkoutData?.workout?.slice(0, 3)}
+
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id}
@@ -1562,7 +1708,7 @@ const Home = ({navigation}) => {
             },
           ]}>
           <FlatList
-            data={mealData.slice(0, 4)}
+            data={mealData?.slice(0, 4)}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id}
@@ -1575,8 +1721,22 @@ const Home = ({navigation}) => {
                     onPress={() => {
                       navigation.navigate('MealDetails', {item: item});
                     }}>
+                    {imageLoad && (
+                      <ShimmerPlaceholder
+                        style={{
+                          height: 90,
+                          width: 90,
+                          borderRadius: 180 / 2,
+                          alignSelf: 'center',
+                          top: -5,
+                        }}
+                        ref={avatarRef}
+                        autoRun
+                      />
+                    )}
                     <Image
                       source={{uri: item.diet_image_link}}
+                      onLoad={() => setImageLoad(false)}
                       style={[
                         styles.img,
                         {
@@ -1588,6 +1748,15 @@ const Home = ({navigation}) => {
                         },
                       ]}
                       resizeMode="cover"></Image>
+                    {imageLoad && (
+                      <ShimmerPlaceholder
+                        style={{
+                          width: 100,
+                        }}
+                        ref={avatarRef}
+                        autoRun
+                      />
+                    )}
                     <Text
                       numberOfLines={1}
                       style={[
@@ -1598,7 +1767,7 @@ const Home = ({navigation}) => {
                           lineHeight: 18,
                           fontFamily: 'Poppins',
                           textAlign: 'center',
-                          width: 50,
+                          width: 100,
                           color: colors[index % colors.length].color3,
                         },
                       ]}>
@@ -1699,6 +1868,8 @@ const Home = ({navigation}) => {
         </View>
       </ScrollView>
       {modalVisible ? <UpdateGoalModal /> : null}
+      {/* <PaddoMeterPermissionModal PaddoModalShow={PaddoModalShow} setPaddoModalShow={setPaddoModalShow}/> */}
+      {PaddoModalShow ? <PaddoMeterPermissionModal /> : null}
     </SafeAreaView>
   );
 };
@@ -1716,17 +1887,17 @@ var styles = StyleSheet.create({
     top: DeviceHeigth * 0.02,
   },
   profileView1: {
-    height: 50,
-    width: 50,
+    height: 60,
+    width: 60,
     alignItems: 'center',
 
     borderRadius: 100 / 2,
   },
   img: {
-    height: 50,
-    width: 50,
+    height: 60,
+    width: 60,
 
-    borderRadius: 100 / 2,
+    borderRadius: 120 / 2,
   },
   rewardView: {
     height: 40,
@@ -1899,15 +2070,15 @@ var styles = StyleSheet.create({
   textItem: {
     flex: 1,
     fontSize: 16,
-    color:AppColor.BLACK
+    color: AppColor.BLACK,
   },
   placeholderStyle: {
     fontSize: 16,
-    color:AppColor.BLACK
+    color: AppColor.BLACK,
   },
   selectedTextStyle: {
     fontSize: 16,
-    color:AppColor.BLACK
+    color: AppColor.BLACK,
   },
   modalContainer: {
     flex: 1,
@@ -1995,6 +2166,74 @@ var styles = StyleSheet.create({
     height: 50,
     width: 50,
     borderRadius: 100 / 2,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontFamily: 'Poppins',
+    textAlign: 'center',
+    color: AppColor.WHITE,
+    fontWeight: '700',
+    backgroundColor: 'transparent',
+    lineHeight: 24,
+  },
+  buttonPaddo: {
+    width: 132,
+    height: 35,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    position: 'absolute',
+    bottom: DeviceHeigth * 0.08,
+    //shadowColor: 'rgba(0, 0, 0, 0)',
+    // ...Platform.select({
+    //   ios: {
+    //     shadowOffset: {width: 0, height: 2},
+    //     shadowOpacity: 0.3,
+    //     // shadowRadius: 4,
+    //   },
+    //   android: {
+    //     elevation: 1,
+    //     // shadowColor: 'rgba(0, 0, 0, 1)',
+    //   },
+    // }),
+  },
+  buttonPaddo2: {
+    width: 132,
+    height: 35,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    position: 'absolute',
+    bottom: DeviceHeigth * 0.05,
+
+    ...Platform.select({
+      ios: {
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.3,
+        // shadowRadius: 4,
+      },
+      android: {
+        elevation: 10,
+        //shadowColor: 'rgba(0, 0, 0, 0)',
+      },
+    }),
+  },
+  modalBackGround: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    width: '85%',
+    height: DeviceHeigth * 0.55,
+    borderRadius: 26,
+    alignItems: 'center',
+    alignSelf: 'center',
+
+    justifyContent: 'center',
   },
 });
 export default Home;

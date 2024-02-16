@@ -13,6 +13,7 @@ export const requestPermissionforNotification = async (dispatch) => {
     );
     await messaging().registerDeviceForRemoteMessages();
     token = await messaging().getToken();
+    console.log('Android token is', token);
     dispatch(setFcmToken(token))
 
   } else {
@@ -61,13 +62,15 @@ export const RemoteMessage = () => {
 
   messaging().getInitialNotification(async remoteMessage => {
     DisplayNotification(remoteMessage);
+    
    
   });
 };
 const DisplayNotification = async Notification => {
- 
+
   try {
     await notifee.displayNotification({
+
       title: Notification.notification.title,
       body: Notification.notification.body,
       android: {

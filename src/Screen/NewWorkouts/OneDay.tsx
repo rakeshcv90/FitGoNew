@@ -19,12 +19,63 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import GradientButton from '../../Component/GradientButton';
 import {useFocusEffect} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
-import {setCount} from '../../Component/ThemeRedux/Actions';
+import {
+  setCount,
+  setSubscriptiomModal,
+} from '../../Component/ThemeRedux/Actions';
 import {localImage} from '../../Component/Image';
 import WorkoutDescription from '../NewWorkouts/WorkoutsDescription';
 import VersionNumber from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
+
 import analytics from '@react-native-firebase/analytics';
+
+import moment from 'moment';
+import AnimatedLottieView from 'lottie-react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import {
+  Stop,
+  Circle,
+  Svg,
+  Line,
+  Text as SvgText,
+  LinearGradient as SvgGrad,
+} from 'react-native-svg';
+
+// const GradientText = ({item}: any) => {
+//   const gradientColors = ['#D01818', '#941000'];
+
+//   return (
+//     <View
+//       style={{
+//         marginTop: 20,
+//         marginLeft: DeviceWidth * 0.05,
+//         justifyContent: 'center',
+//         alignSelf: 'center',
+//         alignItems: 'center',
+
+//         height: 40,
+//         width: DeviceWidth * 0.55,
+//       }}>
+//       <Svg>
+//         <SvgGrad id="grad" x1="0" y1="0" x2="100%" y2="0">
+//           <Stop offset="0" stopColor={gradientColors[0]} />
+//           <Stop offset="1" stopColor={gradientColors[1]} />
+//         </SvgGrad>
+//         <SvgText
+//           fontFamily="Poppins"
+//           fontWeight={'700'}
+//           fontSize={20}
+//           fill="url(#grad)"
+//           x="0"
+//           y="30">
+//           {item}
+//         </SvgText>
+//       </Svg>
+//     </View>
+//   );
+// };
+
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount} = route.params;
   const [exerciseData, setExerciseData] = useState([]);
@@ -32,10 +83,14 @@ const OneDay = ({navigation, route}: any) => {
   const [trackerData, setTrackerData] = useState([]);
   const [open, setOpen] = useState(true);
   const [visible, setVisible] = useState(false);
+
   const [loader, setLoader] = useState(false);
-  const {allWorkoutData, getUserDataDetails} = useSelector(
-    (state: any) => state,
-  );
+  const {
+    allWorkoutData,
+    getUserDataDetails,
+    getPurchaseHistory,
+    getSubscriptionModal,
+  } = useSelector((state: any) => state);
   const dispatch = useDispatch();
 
   useFocusEffect(
@@ -135,7 +190,6 @@ const OneDay = ({navigation, route}: any) => {
         data: {user_details: datas},
       });
       if (res.data) {
-       
         if (
           res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
         ) {
@@ -183,7 +237,7 @@ const OneDay = ({navigation, route}: any) => {
         style={[
           styles.box,
           {
-           // backgroundColor:'red',
+            // backgroundColor:'red',
             height: DeviceHeigth * 0.1,
             marginVertical:
               Platform.OS == 'android'
@@ -196,7 +250,7 @@ const OneDay = ({navigation, route}: any) => {
         <View
           style={{
             flexDirection: 'row',
-           justifyContent: 'center',
+            justifyContent: 'center',
             alignItems: 'center',
           }}>
           <View
@@ -260,6 +314,145 @@ const OneDay = ({navigation, route}: any) => {
           </View>
         </View>
       </TouchableOpacity>
+    );
+  };
+  const PaddoMeterPermissionModal = () => {
+    return (
+      <Modal
+        transparent
+        visible={getSubscriptionModal}
+        onRequestClose={() => {
+          dispatch(setSubscriptiomModal(false));
+        }}>
+        <View style={styles.modalBackGround}>
+          <View
+            style={[
+              styles.modalContainer,
+              {
+                height:
+                  Platform.OS == 'android'
+                    ? DeviceHeigth * 0.45
+                    : DeviceHeigth >= 932
+                    ? DeviceHeigth * 0.45
+                    : DeviceHeigth * 0.55,
+              },
+            ]}>
+            <AnimatedLottieView
+              source={require('../../Icon/Images/NewImage/Subscription.json')}
+              speed={2}
+              autoPlay
+              resizeMode="contain"
+              loop
+              style={{
+                width: DeviceWidth * 0.35,
+                height: DeviceHeigth * 0.3,
+                top: -DeviceHeigth * 0.01,
+                //backgroundColor:'red'
+                //bottom: DeviceHeigth * 0.005,
+              }}
+            />
+            <View
+              style={{
+                height: 40,
+                // width: DeviceWidth * 0.8,
+                bottom: DeviceHeigth * 0.05,
+                //top:-DeviceHeigth * 0.1,
+                alignItems: 'center',
+                alignSelf: 'center',
+
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontFamily: 'Poppins',
+                  textAlign: 'center',
+                  color: '#D5191A',
+                  fontWeight: '700',
+                  backgroundColor: 'transparent',
+                  lineHeight: 30,
+                }}>
+                Premium Feature
+              </Text>
+              <View
+                style={{
+                  marginVertical: 10,
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    fontFamily: 'Poppins',
+                    textAlign: 'center',
+                    color: '#696969',
+                    fontWeight: '700',
+                    backgroundColor: 'transparent',
+                    lineHeight: 15,
+                  }}>
+                  This feature is locked
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    fontFamily: 'Poppins',
+                    textAlign: 'center',
+                    color: '#696969',
+                    fontWeight: '700',
+                    backgroundColor: 'transparent',
+                    lineHeight: 15,
+                    marginTop: 5,
+                  }}>
+                  {' '}
+                  please subscribe to access
+                </Text>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={[
+                styles.buttonPaddo,
+                {
+                  marginBottom: DeviceHeigth * 0.09,
+                },
+              ]}
+              activeOpacity={0.5}
+              onPress={() => {
+                navigation.navigate('Subscription');
+                dispatch(setSubscriptiomModal(false));
+              }}>
+              <LinearGradient
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 0}}
+                colors={['#D5191A', '#941000']}
+                style={styles.buttonPaddo}>
+                <Text style={styles.buttonText}>Subscribe</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.buttonPaddo2,
+                {
+                  bottom: DeviceHeigth * 0.07,
+                },
+              ]}
+              activeOpacity={0.5}
+              onPress={() => {
+                dispatch(setSubscriptiomModal(false));
+              }}>
+              <LinearGradient
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 0}}
+                colors={['#F7F8F8', '#F7F8F8']}
+                style={styles.buttonPaddo2}>
+                <Text style={[styles.buttonText, {color: '#505050'}]}>
+                  Skip
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     );
   };
 
@@ -342,8 +535,31 @@ const OneDay = ({navigation, route}: any) => {
           bR={40}
           mB={40}
           onPress={() => {
+
            analytics().logEvent(`CV_FITME_STARTED_DAY_${day}_EXERCISES`)
-            postCurrentDayAPI();
+         
+
+            // console.log("Test567",getPurchaseHistory[])
+            if (data.workout_price == 'free') {
+              postCurrentDayAPI();
+            } else if (
+              data?.workout_price == 'Premium' &&
+              getPurchaseHistory[0]?.plan_end_date >=
+                moment().format('YYYY-MM-DD')
+            ) {
+              postCurrentDayAPI();
+            } else if (
+              data?.workout_price == 'Premium' &&
+              getPurchaseHistory[0]?.plan_end_date <
+                moment().format('YYYY-MM-DD')
+            ) {
+              dispatch(setSubscriptiomModal(true));
+            } else {
+              dispatch(setSubscriptiomModal(true));
+            }
+
+            // postCurrentDayAPI();
+
             // setOpen(false);
             // navigation.navigate('Exercise', {
             //   allExercise: exerciseData,
@@ -361,6 +577,7 @@ const OneDay = ({navigation, route}: any) => {
         open={visible}
         setOpen={setVisible}
       />
+      <PaddoMeterPermissionModal />
     </View>
   );
 };
@@ -419,7 +636,70 @@ const styles = StyleSheet.create({
     padding: 0,
     paddingRight: 20,
     borderRadius: 15,
-   marginLeft:-DeviceHeigth*0.030,
-  marginVertical: 5,
+    marginLeft: -DeviceHeigth * 0.03,
+    marginVertical: 5,
+  },
+  modalBackGround: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    width: '80%',
+
+    backgroundColor: 'white',
+    borderRadius: 26,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonPaddo: {
+    width: 224,
+    height: 47,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    // shadowColor: 'rgba(0, 0, 0, 1)',
+    ...Platform.select({
+      ios: {
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.3,
+        // shadowRadius: 4,
+      },
+      android: {
+        elevation: 200,
+      },
+    }),
+  },
+  buttonPaddo2: {
+    width: 224,
+    height: 47,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+
+    //bottom: DeviceHeigth * 0.05,
+    shadowColor: 'rgba(0, 0, 0, 1)',
+    ...Platform.select({
+      ios: {
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.3,
+        // shadowRadius: 4,
+      },
+      android: {
+        elevation: 100,
+      },
+    }),
+  },
+  buttonText: {
+    fontSize: 16,
+    fontFamily: 'Poppins',
+    textAlign: 'center',
+    color: AppColor.WHITE,
+    fontWeight: '700',
+    backgroundColor: 'transparent',
+    lineHeight: 24,
   },
 });

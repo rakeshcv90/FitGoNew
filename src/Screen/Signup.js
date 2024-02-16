@@ -187,6 +187,7 @@ const Signup = ({navigation}) => {
           socialtype: 'Apple',
           version: appVersion,
           devicetoken: getFcmToken,
+          platform:Platform.OS
         },
       });
 
@@ -260,6 +261,7 @@ const Signup = ({navigation}) => {
           //deviceid: deviceId,
           version: appVersion,
           devicetoken: getFcmToken,
+          platform:Platform.OS
         },
       });
 
@@ -322,6 +324,7 @@ const Signup = ({navigation}) => {
           //  deviceid: deviceId,
           version: appVersion,
           devicetoken: getFcmToken,
+          platform:Platform.OS
         },
       });
 
@@ -399,6 +402,7 @@ const Signup = ({navigation}) => {
           // deviceid: deviceId,
           version: appVersion,
           devicetoken: getFcmToken,
+          platform:Platform.OS
         },
       });
 
