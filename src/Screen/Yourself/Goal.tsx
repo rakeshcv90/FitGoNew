@@ -16,7 +16,7 @@ import Bulb from './Bulb';
 import ProgressBar from './ProgressBar';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import analytics from '@react-native-firebase/analytics';
 const Goal = ({navigation, route}: any) => {
   const {data, nextScreen, gender} = route.params;
   const goalsAnimation = useRef(new Animated.Value(0)).current;
@@ -114,7 +114,10 @@ const Goal = ({navigation, route}: any) => {
                 <TouchableOpacity
                   key={index}
                   activeOpacity={0.8}
-                  onPress={() => toNextScreen(item)}>
+                  onPress={() => {toNextScreen(item)
+                    analytics().logEvent(`CV_FITME_GOAL_${item?.goal_title?.replace(' ','_')}`)
+                  }
+                  }>
                   <View
                     style={[
                       styles.box2,

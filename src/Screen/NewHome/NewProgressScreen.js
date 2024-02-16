@@ -48,10 +48,14 @@ import moment from 'moment';
 import Button from '../../Component/Button';
 import {showMessage} from 'react-native-flash-message';
 import { Linking } from 'react-native';
+
+import analytics from '@react-native-firebase/analytics';
+
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
 
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
+
 const NewProgressScreen = ({navigation}) => {
   const {
     getUserDataDetails,
@@ -623,6 +627,7 @@ const NewProgressScreen = ({navigation}) => {
         <View style={styles.box1}>
           <TouchableOpacity style={styles.Feedback_B} activeOpacity={0.5}
           onPress={()=>{
+            analytics().logEvent("CV_FITME_CLICKED_ON_FEEDBACK")
             openMailApp();
           }}>
             <Image

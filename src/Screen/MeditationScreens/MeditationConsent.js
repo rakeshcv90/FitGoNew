@@ -19,6 +19,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import ProgressBar from '../../Screen/Yourself/ProgressBar';
 import {useDispatch, useSelector} from 'react-redux';
 import {SetmindsetConsent} from '../../Component/ThemeRedux/Actions';
+import analytics from '@react-native-firebase/analytics';
 import { StatusBar } from 'react-native';
 const MeditationConsent = ({navigation}) => {
   useEffect(() => {
@@ -64,8 +65,10 @@ const MeditationConsent = ({navigation}) => {
   const SelectedButton = button => {
     setSelectedB(button);
     if (button == 1) {
+      analytics().logEvent("CV_FITME_Like_TO_DO_MEDITATION")
       Dispatch(SetmindsetConsent(true));
     } else {
+      analytics().logEvent("CV_FITME_DO_NOT_Like_TO_DO_MEDITATION")
       Dispatch(SetmindsetConsent(false));
     }
     setTimeout(() => {

@@ -7,7 +7,7 @@ import {AppColor} from '../../Component/Color';
 import AnimatedLottieView from 'lottie-react-native';
 import {DeviceHeigth} from '../../Component/Config';
 import Button from '../../Component/Button';
-
+import analytics from '@react-native-firebase/analytics';
 const Trainer = ({navigation}) => {
   return (
     <View style={styles.container}>
@@ -62,6 +62,7 @@ const Trainer = ({navigation}) => {
         <Button
           buttonText={'Start Now'}
           onPresh={() => {
+            analytics().logEvent("CV_FITME_TALKED_TO_FITNESS_COACH")
             navigation.navigate('AITrainer');
           }}
         />

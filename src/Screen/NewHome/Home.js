@@ -60,10 +60,14 @@ import Graph from '../Yourself/Graph';
 import {LineChart} from 'react-native-chart-kit';
 import {max} from 'd3';
 import moment from 'moment';
+
+import analytics from '@react-native-firebase/analytics';
+
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {ImageBackground} from 'react-native';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+
 let zeroData = [];
 let zeroDataM = [];
 
@@ -561,6 +565,7 @@ const Home = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleLongPress = () => {
+    analytics().logEvent('CV_FITME_CLICKED_ON_PEDOMETER')
     setModalVisible(true); // Show the modal when long-press is detected
   };
   const closeModal = () => {
@@ -1257,6 +1262,7 @@ const Home = ({navigation}) => {
           <TouchableOpacity
             style={styles.profileView1}
             onPress={() => {
+              analytics().logEvent("CV_FITME_CLICKED_ON_PROFILE")
               navigation.navigate('Profile');
             }}>
             {isLoading && (
@@ -1323,7 +1329,7 @@ const Home = ({navigation}) => {
         }>
         <TouchableOpacity
           style={styles.CardBox}
-          onLongPress={handleLongPress}
+          onPress={handleLongPress}
           activeOpacity={0.7}>
           <Text style={styles.healthText}>Health Overview</Text>
           <View style={styles.healthView}>
@@ -1452,6 +1458,7 @@ const Home = ({navigation}) => {
             {customWorkoutData?.minset_workout?.length > 0 && (
               <TouchableOpacity
                 onPress={() => {
+                  analytics().logEvent("CV_FITME_CLICKED_ON_MEDITATION")
                   navigation.navigate('MeditationDetails', {
                     item: customWorkoutData?.minset_workout[0],
                   });
@@ -1503,6 +1510,7 @@ const Home = ({navigation}) => {
           {customWorkoutData?.workout?.length > 0 && (
             <TouchableOpacity
               onPress={() => {
+                analytics().logEvent("CV_FITME_CLICKED_ON_WORKOUTS")
                 navigation?.navigate('AllWorkouts', {
                   data: customWorkoutData?.workout,
                   type: 'custom',
@@ -1521,7 +1529,9 @@ const Home = ({navigation}) => {
             },
           ]}>
           <FlatList
+
             data={customWorkoutData?.workout?.slice(0, 3)}
+
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id}
@@ -1603,9 +1613,7 @@ const Home = ({navigation}) => {
                     style={{
                       height: DeviceHeigth * 0.16,
                       width: DeviceWidth * 0.35,
-
                       bottom: -DeviceHeigth * 0.06,
-
                       left: DeviceWidth * 0.005,
                       marginTop: -DeviceHeigth * 0.11,
                     }}
@@ -1686,6 +1694,7 @@ const Home = ({navigation}) => {
           </Text>
           <TouchableOpacity
             onPress={() => {
+              analytics().logEvent("CV_FITME_CLICKED_ON_MEALS")
               navigation.navigate('Meals');
             }}>
             <Icons name="chevron-right" size={25} color={'#000'} />

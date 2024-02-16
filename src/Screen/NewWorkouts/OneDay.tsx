@@ -27,6 +27,9 @@ import {localImage} from '../../Component/Image';
 import WorkoutDescription from '../NewWorkouts/WorkoutsDescription';
 import VersionNumber from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
+
+import analytics from '@react-native-firebase/analytics';
+
 import moment from 'moment';
 import AnimatedLottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -72,6 +75,7 @@ import {
 //     </View>
 //   );
 // };
+
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount} = route.params;
   const [exerciseData, setExerciseData] = useState([]);
@@ -531,6 +535,10 @@ const OneDay = ({navigation, route}: any) => {
           bR={40}
           mB={40}
           onPress={() => {
+
+           analytics().logEvent(`CV_FITME_STARTED_DAY_${day}_EXERCISES`)
+         
+
             // console.log("Test567",getPurchaseHistory[])
             if (data.workout_price == 'free') {
               postCurrentDayAPI();
@@ -551,6 +559,7 @@ const OneDay = ({navigation, route}: any) => {
             }
 
             // postCurrentDayAPI();
+
             // setOpen(false);
             // navigation.navigate('Exercise', {
             //   allExercise: exerciseData,

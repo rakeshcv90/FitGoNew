@@ -23,6 +23,7 @@ import {setAllWorkoutData} from '../../Component/ThemeRedux/Actions';
 import NewHeader from '../../Component/Headers/NewHeader';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
+import analytics from '@react-native-firebase/analytics';
 const Workouts = ({navigation}: any) => {
   const {allWorkoutData, getUserDataDetails} = useSelector(
     (state: any) => state,
@@ -119,7 +120,7 @@ const Workouts = ({navigation}: any) => {
       const payload = new FormData();
       payload.append('token', getUserDataDetails?.login_token);
       payload.append('id', getUserDataDetails?.id);
-      payload.append('version',VersionNumber.appVersion);
+      payload.append('version', VersionNumber.appVersion);
       setRefresh(true);
       const res = await axios({
         url: NewAppapi.TRACK_WORKOUTS,
@@ -129,7 +130,7 @@ const Workouts = ({navigation}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-    
+
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         setRefresh(false);
         showMessage({
@@ -139,16 +140,13 @@ const Workouts = ({navigation}: any) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      } else if (
-        res?.data?.msg == 'No Completed Workouts Found'
-      ) {
+      } else if (res?.data?.msg == 'No Completed Workouts Found') {
         setRefresh(false);
         setTrackerData([]);
-      }
-     else if (res?.data) {
+      } else if (res?.data) {
         setRefresh(false);
         setTrackerData(res.data?.workout_ids);
-      }else{
+      } else {
         setRefresh(false);
         setTrackerData([]);
       }
@@ -248,13 +246,14 @@ const Workouts = ({navigation}: any) => {
         <RoundedCards
           data={allWorkoutData}
           trackerData={trackerData}
-          viewAllPress={() =>
+          viewAllPress={() => {
+            analytics().logEvent('CV_FITME_CLICKED_W_CATEGORIES');
             navigation?.navigate('AllWorkouts', {
               data: allWorkoutData,
               type: '',
               fav: false,
-            })
-          }
+            });
+          }}
           horizontal
           viewAllButton
           type="category"
@@ -269,24 +268,26 @@ const Workouts = ({navigation}: any) => {
             data={popularData}
             headText="Popular Workouts"
             viewAllButton
-            viewAllPress={() =>
+            viewAllPress={() => {
+              analytics().logEvent('CV_FITME_CLICKED_POPULAR_WORKOUTS');
               navigation?.navigate('AllWorkouts', {
                 data: popularData,
                 type: 'popular',
-              })
-            }
+              });
+            }}
           />
         )}
         <RoundedCards
           data={allWorkoutData}
           trackerData={trackerData}
-          viewAllPress={() =>
+          viewAllPress={() => {
+            analytics().logEvent('CV_FITME_CLICKED_CORE_WORKOUTS');
             navigation?.navigate('AllWorkouts', {
               data: allWorkoutData,
               type: '',
               fav: false,
-            })
-          }
+            });
+          }}
           horizontal={false}
           headText="Core Workouts"
           type="core"

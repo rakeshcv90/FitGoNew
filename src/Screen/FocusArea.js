@@ -17,7 +17,6 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import {setLaterButtonData} from '../Component/ThemeRedux/Actions';
 import Bulb from './Yourself/Bulb';
-
 const FocusArea = ({route, navigation}) => {
   const dispatch = useDispatch();
   const {nextScreen} = route.params;
