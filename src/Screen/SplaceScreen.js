@@ -37,10 +37,10 @@ import {BannerAdd, MyInterstitialAd} from '../Component/BannerAdd';
 //   keywords: ['fashion', 'clothing'],
 // });
 
-const products = Platform.select({
-  ios: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
-  android: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
-});
+// const products = Platform.select({
+//   ios: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
+//   android: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
+// });
 
 const SplaceScreen = ({navigation}) => {
   const [deviceId, setDeviceId] = useState(0);
@@ -59,39 +59,39 @@ const SplaceScreen = ({navigation}) => {
       setDeviceId(uniqueId);
       Meal_List(uniqueId);
     });
-    getPlanData();
+   // getPlanData();
   }, []);
-  const getPlanData = () => {
-    Platform.OS === 'ios'
-      ? RNIap.initConnection()
-          .catch(() => {
-            console.log('error connecting to store');
-          })
-          .then(() => {
-            RNIap.getProducts({skus: products})
-              .catch(() => {
-                console.log('error finding purchase');
-              })
-              .then(res => {
-                console.log('IOS Subscription', res);
-                dispatch(setInappPurchase(res));
-              });
-          })
-      : RNIap.initConnection()
-          .catch(() => {
-            console.log('error connecting to store');
-          })
-          .then(() => {
-            RNIap.getSubscriptions({skus: products})
-              .catch(() => {
-                console.log('error finding purchase');
-              })
-              .then(res => {
-                console.log('Android Subscription', res);
-                dispatch(setInappPurchase(res));
-              });
-          });
-  };
+  // const getPlanData = () => {
+  //   Platform.OS === 'ios'
+  //     ? RNIap.initConnection()
+  //         .catch(() => {
+  //           console.log('error connecting to store');
+  //         })
+  //         .then(() => {
+  //           RNIap.getProducts({skus: products})
+  //             .catch(() => {
+  //               console.log('error finding purchase');
+  //             })
+  //             .then(res => {
+  //               console.log('IOS Subscription', res);
+  //               dispatch(setInappPurchase(res));
+  //             });
+  //         })
+  //     : RNIap.initConnection()
+  //         .catch(() => {
+  //           console.log('error connecting to store');
+  //         })
+  //         .then(() => {
+  //           RNIap.getSubscriptions({skus: products})
+  //             .catch(() => {
+  //               console.log('error finding purchase');
+  //             })
+  //             .then(res => {
+  //               console.log('Android Subscription', res);
+  //               dispatch(setInappPurchase(res));
+  //             });
+  //         });
+  // };
 
   useEffect(() => {
     if (showIntro) {
@@ -163,24 +163,24 @@ const SplaceScreen = ({navigation}) => {
       console.log('Product Category Error111', error);
     }
   };
-  const loadScreen = () => {
-    if (showIntro) {
-      //  navigation.replace('LogSignUp');
-      if (
-        getUserDataDetails?.id &&
-        getUserDataDetails?.profile_compl_status == 1
-      ) {
-        navigation.replace('BottomTab');
-      } else {
-        navigation.replace('LogSignUp');
+  // const loadScreen = () => {
+  //   if (showIntro) {
+  //     //  navigation.replace('LogSignUp');
+  //     if (
+  //       getUserDataDetails?.id &&
+  //       getUserDataDetails?.profile_compl_status == 1
+  //     ) {
+  //       navigation.replace('BottomTab');
+  //     } else {
+  //       navigation.replace('LogSignUp');
 
-        // navigation.replace('LogSignUp');
-      }
-    } else {
-      navigation.replace('IntroductionScreen1');
-      //navigation.replace('IntroductionScreen1');
-    }
-  };
+  //       // navigation.replace('LogSignUp');
+  //     }
+  //   } else {
+  //     navigation.replace('IntroductionScreen1');
+  //     //navigation.replace('IntroductionScreen1');
+  //   }
+  // };
   return (
     <LinearGradient
       style={styels.container}
