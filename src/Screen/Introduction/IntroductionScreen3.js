@@ -20,7 +20,7 @@ import { RemoteMessage, requestPermissionforNotification } from '../../Component
 const IntroductionScreen3 = ({navigation}) => {
   useEffect(() => {
     requestPermissionforNotification(dispatch);
-    RemoteMessage();
+    // RemoteMessage();
   }, []);
   const TranslateY = useRef(new Animated.Value(0)).current;
   const HideTextAnimation = () => {

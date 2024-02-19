@@ -60,7 +60,7 @@ const App = () => {
   const [progress, setProgress] = useState(false);
   useEffect(() => {
     requestPermissionforNotification(dispatch);
-    RemoteMessage();
+    // RemoteMessage();
   }, []);
 
   useEffect(() => {
