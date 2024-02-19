@@ -74,8 +74,8 @@ const PredictionScreen = ({navigation, route}: any) => {
     if (currentWeight > TargetWeight) {
       TotalW = currentWeight - TargetWeight;
     } else {
-      t = TargetWeight - currentWeight;
-      TotalW = t + currentWeight;
+      TotalW = TargetWeight - currentWeight;
+      // TotalW = t + currentWeight;
     }
     // const TotalW = currentWeight - TargetWeight;
     // if (TotalW <= 0) {
@@ -89,7 +89,7 @@ const PredictionScreen = ({navigation, route}: any) => {
     let weightHistoryArray = [];
     let currentDate = moment();
     //  const No_Of_Points = Result_Number_Of_Days / 15 > 7 ? 30 : 15;
-    console.log(currentWeight)
+    // console.log(currentWeight)
     let No_Of_Points = 0;
     if (Result_Number_Of_Days <= 30) {
       No_Of_Points = 5;
@@ -105,14 +105,14 @@ const PredictionScreen = ({navigation, route}: any) => {
       No_Of_Points = 240
     }
     if(currentWeight>TargetWeight){
-    for (let i = Result_Number_Of_Days; i > currentWeight; i -= No_Of_Points) {
+    for (let i = Result_Number_Of_Days; i > 0; i -= No_Of_Points) {
       const weight15 =
         ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
       const decWeight =currentWeight - weight15
+      // console.log('weight15', weight15,decWeight);
         // currentWeight > TargetWeight
         //   ? currentWeight - weight15
         //   : currentWeight + weight15;
-      console.log(weight15, decWeight);
       const formattedDate = currentDate.format('YYYY-MM-DD');
 
       weightHistoryArray.push({
@@ -160,7 +160,7 @@ const PredictionScreen = ({navigation, route}: any) => {
       // }
     }
   }
-    console.log(weightHistoryArray, currentWeight, TargetWeight);
+    // console.log('weightHistoryArray', weightHistoryArray,currentWeight, Result_Number_Of_Days);
     setZeroData(constantWeightArray);
     setWeightHistory(weightHistoryArray);
 

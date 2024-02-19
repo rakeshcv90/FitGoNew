@@ -12,7 +12,8 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 
 const BOX_HEIGHT = DeviceHeigth * 0.7;
 const BOX_WEIGHT = DeviceWidth * 0.7;
-const ITEM_HEIGHT = 25;
+const ITEM_HEIGHT = 5;
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
 const Scale = ({
   setActiveIndex,
@@ -27,16 +28,16 @@ const Scale = ({
   const [vibrationTimeout, setVibrationTimeout] = useState(null);
 
   const getActiveItem = (y: number) => {
-    const halfBoxH = h ? BOX_WEIGHT : BOX_HEIGHT;
-    const Inner = (halfBoxH - ITEM_HEIGHT) * 0.7;
-    const center = y + halfBoxH - Inner;
-    for (let index = 0; index < posData.length; index++) {
-      const {start, end} = posData[index];
-      if (center + 25 >= start && center - 25 <= end) {
-      
-        setActiveIndex(index);
-      }
-    }
+    // const halfBoxH = h ? BOX_WEIGHT : BOX_HEIGHT;
+    // const Inner = (halfBoxH - ITEM_HEIGHT) * 0.7;
+    // const center = y + halfBoxH - Inner;
+    // for (let index = 0; index < posData.length; index++) {
+    //   const {start, end} = posData[index];
+    //   if (center + 25 >= start && center - 25 <= end) {
+
+    //     setActiveIndex(index);
+    //   }
+    // }
   };
   useEffect(() => {
     setTimeout(() => {
@@ -44,9 +45,16 @@ const Scale = ({
         offset: activeItem,
         animated: true,
       });
-      getActiveItem(activeItem);
+      // getActiveItem(activeItem);
     }, 1000);
   }, []);
+
+  // Optional configuration
+  const options = {
+    enableVibrateFallback: true,
+    ignoreAndroidSystemSettings: false,
+  };
+
   return (
     <View>
       {h ? (
@@ -69,12 +77,14 @@ const Scale = ({
               alignItems: 'center',
             }}
             onScroll={event => {
-              if (!vibrationTimeout) {
-                Vibration.vibrate(ONE_SECOND_IN_MS/10,false);
-                setVibrationTimeout(setTimeout(() => setVibrationTimeout(null), 1000));
-              }
-              const y = event.nativeEvent.contentOffset.x;
-              getActiveItem(y);
+              const startIndex = Math.floor(event.nativeEvent.contentOffset.x / ITEM_HEIGHT);
+              setActiveIndex(startIndex);
+              ReactNativeHapticFeedback.trigger("soft", options);
+              // const endIndex = Math.ceil((y + BOX_WEIGHT) / ITEM_HEIGHT);
+              // setVisibleItems(data.slice(startIndex, endIndex));
+              // console.log(startIndex, endIndex);
+              // const y = event.nativeEvent.contentOffset.x;
+              // getActiveItem(y);
             }}
             renderItem={({item, index}: any) => {
               return (
@@ -94,7 +104,7 @@ const Scale = ({
                           item == '' ? 'transparent' : AppColor.RED,
                         borderRadius: 10,
                         marginRight: 10,
-                        marginBottom: 30,
+                        marginBottom: 20,
                       }}
                     />
                   ) : index % 4 == 0 ? (
@@ -147,12 +157,9 @@ const Scale = ({
             windowSize={10}
             contentContainerStyle={{width: '50%'}}
             onScroll={event => {
-              if (!vibrationTimeout) {
-                Vibration.vibrate(ONE_SECOND_IN_MS/10, false);
-                setVibrationTimeout(setTimeout(() => setVibrationTimeout(null), 1000));
-              }
-              const y = event.nativeEvent.contentOffset.y;
-              getActiveItem(y);
+              const startIndex = Math.floor(event.nativeEvent.contentOffset.y / ITEM_HEIGHT);
+              setActiveIndex(startIndex);
+              ReactNativeHapticFeedback.trigger("soft", options);
             }}
             renderItem={({item, index}: any) => {
               return (

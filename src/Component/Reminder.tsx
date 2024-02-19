@@ -69,10 +69,8 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
     const trigger: TimestampTrigger = {
       type: TriggerType.TIMESTAMP,
       timestamp: date.getTime(), // fire at 11:10am (10 minutes before meeting)
-      repeatFrequency: RepeatFrequency.DAILY,
+      repeatFrequency: RepeatFrequency.WEEKLY,
     };
-   
-
     // Create a trigger notification
     await notifee.createTriggerNotification(
       {
@@ -80,7 +78,7 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
         body: `It's time to Exercise`,
         android: {
           channelId: 'temporary_channel',
-          importance: AndroidImportance.MIN,
+          importance: AndroidImportance.HIGH,
           pressAction: {
             id: 'default',
           },
@@ -175,7 +173,7 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
                 setHours(itemValue);
               }}>
               {hourData.map((hr: any) => (
-                <Picker.Item label={hr} value={hr} />
+                <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
               ))}
             </Picker>
             <Picker
@@ -185,7 +183,7 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
                 setMin(itemValue);
               }}>
               {minData.map((hr: any) => (
-                <Picker.Item label={hr} value={hr} />
+                <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
               ))}
             </Picker>
             <Picker
@@ -195,7 +193,7 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
                 setType(itemValue);
               }}>
               {typeData.map((hr: any) => (
-                <Picker.Item label={hr} value={hr} />
+                <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
               ))}
             </Picker>
           </View>

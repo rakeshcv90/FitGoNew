@@ -10,6 +10,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { persister,store } from './src/Component/ThemeRedux/Store';
 import  TrackPlayer from 'react-native-track-player'
 import crashlytics from '@react-native-firebase/crashlytics';
+import { useEffect } from 'react';
+import { RemoteMessage } from './src/Component/Helper/PushNotification';
 const AppRedux = () => {
 // Register a global error handler
 try {
@@ -45,6 +47,9 @@ if (__DEV__) {
   // In production, register the global error handler
   ErrorUtils.setGlobalHandler(globalErrorHandler);
 }
+useEffect(() => {
+  RemoteMessage()
+},[])
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persister}>

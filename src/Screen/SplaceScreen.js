@@ -51,7 +51,7 @@ const SplaceScreen = ({navigation}) => {
   );
   useEffect(() => {
     requestPermissionforNotification(dispatch);
-    RemoteMessage();
+    // RemoteMessage();
   }, []);
   useEffect(() => {
     DeviceInfo.syncUniqueId().then(uniqueId => {

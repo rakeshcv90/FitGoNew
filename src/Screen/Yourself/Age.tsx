@@ -76,7 +76,6 @@ const positions = data.map(
 );
 const Age = ({route, navigation}: any) => {
   const {nextScreen} = route.params;
-  console.log('center, index', nextScreen);
   const translateLevel = useRef(new Animated.Value(0)).current;
 
   const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
