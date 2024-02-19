@@ -3,6 +3,9 @@ import notifee, {
   AndroidImportance,
   AndroidStyle,
   AndroidVisibility,
+  EventType,
+  RepeatFrequency,
+  TriggerType,
 } from '@notifee/react-native';
 import {request, PERMISSIONS} from 'react-native-permissions';
 import {Alert, Platform, AppState, PermissionsAndroid} from 'react-native';
@@ -46,10 +49,78 @@ export const RemoteMessage = () => {
     console.log('Back', remoteMessage);
     DisplayNotification(remoteMessage);
   });
-  // notifee.onBackgroundEvent(async remoteMessage => {
-  //   console.log('Notification', remoteMessage);
-  //   DisplayNotification(remoteMessage.detail);
-  // });
+  notifee.onBackgroundEvent(async ({type, detail}) => {
+    const {notification, pressAction} = detail;
+    console.log('presss', Platform.OS, type, detail);
+    if (type === EventType.ACTION_PRESS && pressAction.id === 'Stop') {
+      // Remove the notification
+      await notifee.cancelNotification(notification.id);
+    } else if (
+      type === EventType.ACTION_PRESS &&
+      pressAction.id === 'Plus_Five'
+    ) {
+      // Remove the notification
+      // Get the current time
+      const currentTime = new Date();
+
+      // Add 5 minutes to the current time
+      currentTime.setMinutes(currentTime.getMinutes() + 1);
+      const trigger = {
+        type: TriggerType.TIMESTAMP,
+        timestamp: currentTime.getTime(), // fire at 11:10am (10 minutes before meeting)
+        repeatFrequency: RepeatFrequency.DAILY,
+      };
+      await notifee.createTriggerNotification(
+        {
+          title: 'Exercise Time',
+          body: `It's time to Exercise`,
+          android: {
+            channelId: 'Time',
+            importance: AndroidImportance.HIGH,
+            pressAction: {
+              id: 'Alarm',
+            },
+            actions: [
+              {
+                title: 'Add +5',
+                pressAction: {
+                  id: 'Plus_Five',
+                },
+              },
+              {
+                title: 'Stop',
+                pressAction: {
+                  id: 'Stop',
+                },
+              },
+              // Add more actions as needed
+            ],
+          },
+          ios: {
+            categoryId: 'Alarm',
+            foregroundPresentationOptions: {
+              badge: true,
+              banner: true,
+              sound: false,
+            },
+          },
+          id: 'Timer',
+        },
+        trigger,
+      );
+      console.log("NEW NOTI TIME", currentTime)
+    }
+  });
+  notifee.createChannel({
+    id: 'Time',
+    name: 'Time',
+    bypassDnd: true,
+    vibration: true,
+    visibility: AndroidVisibility.PUBLIC,
+    importance: AndroidImportance.HIGH,
+    description: 'CHANNEL FOR NOTIFICATION'
+  })
+
   notifee.setNotificationCategories([
     {
       id: 'Alarm',
@@ -90,10 +161,19 @@ const DisplayNotification = async Notification => {
         importance: AndroidImportance.HIGH,
         visibility: AndroidVisibility.PUBLIC,
         //largeIcon: Notification?.data?.image,
-        style:{type:AndroidStyle.BIGPICTURE,picture:Notification?.data?.image}
+        style: {
+          type: AndroidStyle.BIGPICTURE,
+          picture: Notification?.data?.image,
+        },
       },
       ios: {
         categoryId: 'default',
+        foregroundPresentationOptions: {
+          badge: true,
+          sound: true,
+          banner: true,
+          list: true,
+        },
         attachments: [
           {
             url: Notification.data.image,
