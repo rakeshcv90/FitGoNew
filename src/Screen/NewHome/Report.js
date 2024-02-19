@@ -54,7 +54,7 @@ const Report = ({navigation}) => {
       <NewHeader header={'Settings'} SearchButton={false} backButton={true} />
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <View style={styles.listItem2}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             navigation.navigate('Subscription');
           }}
@@ -71,7 +71,7 @@ const Report = ({navigation}) => {
             size={25}
             color={AppColor.INPUTTEXTCOLOR}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
    
       </View>
       <Text
