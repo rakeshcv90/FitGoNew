@@ -43,6 +43,7 @@
     "npm": "^10.2.4",
     "react": "18.2.0",
     "react-native": "0.72.4",
+    "react-native-animatable": "^1.4.0",
     "react-native-animated-nav-tab-bar": "^3.1.10",
     "react-native-background-actions": "^3.0.1",
     "react-native-calendars": "^1.1302.0",
@@ -57,7 +58,11 @@
     "react-native-flash-message": "^0.4.2",
     "react-native-gesture-handler": "^2.14.0",
     "react-native-google-fit": "^0.20.0",
+
     "react-native-haptic-feedback": "^2.2.0",
+
+    "react-native-google-mobile-ads": "^12.10.0",
+
     "react-native-health": "^1.18.0",
     "react-native-iap": "^12.12.1",
     "react-native-image-picker": "^7.0.2",
