@@ -80,6 +80,7 @@ const GradientText = ({item}) => {
         marginTop: 20,
         marginLeft: DeviceWidth * 0.03,
         justifyContent: 'center',
+        width: 50,
       }}>
       <Svg height="40" width={DeviceWidth * 0.9}>
         <SvgGrad id="grad" x1="0" y1="0" x2="100%" y2="0">
@@ -88,11 +89,13 @@ const GradientText = ({item}) => {
         </SvgGrad>
         <SvgText
           fontFamily="Poppins"
+          width={50}
           fontWeight={'600'}
           fontSize={17}
+          numberOfLines={1}
           fill="url(#grad)"
           x="0"
-          y="25">
+          y="20">
           {item}
         </SvgText>
       </Svg>
@@ -348,14 +351,13 @@ const Home = ({navigation}) => {
   const options = {
     scopes: [Scopes.FITNESS_ACTIVITY_READ, Scopes.FITNESS_ACTIVITY_WRITE],
   };
-  const handleAlert =async () => {
+  const handleAlert = async () => {
     setPaddoModalShow(false);
-   await GoogleFit.authorize(options)
+    await GoogleFit.authorize(options)
       .then(authResult => {
         if (authResult.success) {
           checkPermissions1();
           console.log('Authentication access ' + authResult.message);
-
         } else {
           console.log('Authentication denied ' + authResult.message);
         }
@@ -565,7 +567,7 @@ const Home = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleLongPress = () => {
-    analytics().logEvent('CV_FITME_CLICKED_ON_PEDOMETER')
+    analytics().logEvent('CV_FITME_CLICKED_ON_PEDOMETER');
     setModalVisible(true); // Show the modal when long-press is detected
   };
   const closeModal = () => {
@@ -1116,18 +1118,16 @@ const Home = ({navigation}) => {
   };
 
   const PaddoMeterPermissionModal = () => {
-  
     const options = {
       scopes: [Scopes.FITNESS_ACTIVITY_READ, Scopes.FITNESS_ACTIVITY_WRITE],
     };
-    const handleAlert =async () => {
+    const handleAlert = async () => {
       setPaddoModalShow(false);
-     await GoogleFit.authorize(options)
+      await GoogleFit.authorize(options)
         .then(authResult => {
           if (authResult.success) {
             checkPermissions1();
             console.log('Authentication access ' + authResult.message);
-
           } else {
             console.log('Authentication denied ' + authResult.message);
           }
@@ -1168,7 +1168,7 @@ const Home = ({navigation}) => {
       }
     };
     return (
-      <Modal   transparent={true} visible={PaddoModalShow}>
+      <Modal transparent={true} visible={PaddoModalShow}>
         <View style={styles.modalBackGround}>
           <View style={styles.modalContainer}>
             <ImageBackground
@@ -1190,7 +1190,6 @@ const Home = ({navigation}) => {
                   alignSelf: 'center',
                 }}>
                 <AnimatedLottieView
-                 
                   source={require('../../Icon/Images/NewImage/Paddo.json')}
                   speed={2}
                   autoPlay
@@ -1206,8 +1205,6 @@ const Home = ({navigation}) => {
                 style={styles.buttonPaddo}
                 activeOpacity={0.5}
                 onPress={() => {
-               
-                  
                   handleAlert();
                 }}>
                 <LinearGradient
@@ -1244,8 +1241,63 @@ const Home = ({navigation}) => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <View style={styles.profileView}>
-        <View style={styles.rewardView}>
-          {/* <Image
+        <View style={{}}>
+          <GradientText
+            item={
+              getTimeOfDayMessage() + ', ' + 
+              (Object.keys(getUserDataDetails).length > 0
+                ? getUserDataDetails.name.split(" ")[0]
+                : 'Guest')
+            }
+          />
+        </View>
+        <View>
+          {Object.keys(getUserDataDetails).length > 0 ? (
+            <TouchableOpacity
+              style={styles.profileView1}
+              onPress={() => {
+                analytics().logEvent('CV_FITME_CLICKED_ON_PROFILE');
+                navigation.navigate('Profile');
+              }}>
+              {isLoading && (
+                // <ActivityIndicator
+                //   style={styles.loader}
+                //   size="small"
+                //   color="#0000ff"
+                // />
+                <ShimmerPlaceholder
+                  style={styles.loader}
+                  ref={avatarRef}
+                  autoRun
+                />
+              )}
+
+              <Image
+                source={
+                  getUserDataDetails?.image_path == null
+                    ? localImage.avt
+                    : {uri: getUserDataDetails?.image_path}
+                }
+                onLoad={() => setIsLoading(false)}
+                style={[styles.img]}
+                resizeMode="cover"></Image>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.profileView1}
+              onPress={() => {
+                navigation.navigate('Report');
+              }}>
+              <Image
+                source={localImage.avt}
+                style={styles.img}
+                resizeMode="cover"></Image>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+      <View style={styles.rewardView}>
+        {/* <Image
             source={localImage.Money}
             style={[
               styles.img,
@@ -1255,61 +1307,9 @@ const Home = ({navigation}) => {
               },
             ]}
             resizeMode="cover"></Image> */}
-          {/* <Text style={styles.monetText}>500</Text> */}
-        </View>
-
-        {Object.keys(getUserDataDetails).length > 0 ? (
-          <TouchableOpacity
-            style={styles.profileView1}
-            onPress={() => {
-              analytics().logEvent("CV_FITME_CLICKED_ON_PROFILE")
-              navigation.navigate('Profile');
-            }}>
-            {isLoading && (
-              // <ActivityIndicator
-              //   style={styles.loader}
-              //   size="small"
-              //   color="#0000ff"
-              // />
-              <ShimmerPlaceholder
-                style={styles.loader}
-                ref={avatarRef}
-                autoRun
-              />
-            )}
-
-            <Image
-              source={
-                getUserDataDetails?.image_path == null
-                  ? localImage.avt
-                  : {uri: getUserDataDetails?.image_path}
-              }
-              onLoad={() => setIsLoading(false)}
-              style={[styles.img]}
-              resizeMode="cover"></Image>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={styles.profileView1}
-            onPress={() => {
-              navigation.navigate('Report');
-            }}>
-            <Image
-              source={localImage.avt}
-              style={styles.img}
-              resizeMode="cover"></Image>
-          </TouchableOpacity>
-        )}
+        {/* <Text style={styles.monetText}>500</Text> */}
       </View>
-      <GradientText
-        item={
-          getTimeOfDayMessage() +
-          ', ' +
-          (Object.keys(getUserDataDetails).length > 0
-            ? getUserDataDetails.name
-            : 'Guest')
-        }
-      />
+
       {/* {forLoading ? <ActivityLoader /> : ''} */}
       <ScrollView
         keyboardDismissMode="interactive"
@@ -1458,7 +1458,7 @@ const Home = ({navigation}) => {
             {customWorkoutData?.minset_workout?.length > 0 && (
               <TouchableOpacity
                 onPress={() => {
-                  analytics().logEvent("CV_FITME_CLICKED_ON_MEDITATION")
+                  analytics().logEvent('CV_FITME_CLICKED_ON_MEDITATION');
                   navigation.navigate('MeditationDetails', {
                     item: customWorkoutData?.minset_workout[0],
                   });
@@ -1510,7 +1510,7 @@ const Home = ({navigation}) => {
           {customWorkoutData?.workout?.length > 0 && (
             <TouchableOpacity
               onPress={() => {
-                analytics().logEvent("CV_FITME_CLICKED_ON_WORKOUTS")
+                analytics().logEvent('CV_FITME_CLICKED_ON_WORKOUTS');
                 navigation?.navigate('AllWorkouts', {
                   data: customWorkoutData?.workout,
                   type: 'custom',
@@ -1529,9 +1529,7 @@ const Home = ({navigation}) => {
             },
           ]}>
           <FlatList
-
             data={customWorkoutData?.workout?.slice(0, 3)}
-
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={item => item.id}
@@ -1694,7 +1692,7 @@ const Home = ({navigation}) => {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              analytics().logEvent("CV_FITME_CLICKED_ON_MEALS")
+              analytics().logEvent('CV_FITME_CLICKED_ON_MEALS');
               navigation.navigate('Meals');
             }}>
             <Icons name="chevron-right" size={25} color={'#000'} />
@@ -1880,17 +1878,20 @@ var styles = StyleSheet.create({
   },
   profileView: {
     flexDirection: 'row',
-    width: '95%',
+    width: '100%',
     justifyContent: 'space-between',
-    height: DeviceHeigth * 0.06,
+    //height: DeviceHeigth * 0.06,
+    paddingVertical:5,
     alignItems: 'center',
+    alignSelf: 'center',
     top: DeviceHeigth * 0.02,
+    // backgroundColor: 'red',
   },
   profileView1: {
     height: 60,
     width: 60,
-    alignItems: 'center',
-
+    alignItems: 'flex-end',
+    left: -DeviceWidth * 0.02,
     borderRadius: 100 / 2,
   },
   img: {

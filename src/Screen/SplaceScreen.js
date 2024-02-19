@@ -6,6 +6,7 @@ import {
   Animated,
   StatusBar,
   ImageBackground,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useState, useRef} from 'react';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../Component/Config';
@@ -18,11 +19,23 @@ import {
   setInappPurchase,
   setStoreData,
 } from '../Component/ThemeRedux/Actions';
-import VersionNumber, { appVersion } from 'react-native-version-number';
+import VersionNumber, {appVersion} from 'react-native-version-number';
 import DeviceInfo from 'react-native-device-info';
 import axios from 'axios';
 import {showMessage} from 'react-native-flash-message';
-import { RemoteMessage, requestPermissionforNotification } from '../Component/Helper/PushNotification';
+import {
+  RemoteMessage,
+  requestPermissionforNotification,
+} from '../Component/Helper/PushNotification';
+
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+import {bannerAdId} from '../Component/AdsId';
+import {BannerAdd, MyInterstitialAd} from '../Component/BannerAdd';
+
+// const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
+//   requestNonPersonalizedAdsOnly: true,
+//   keywords: ['fashion', 'clothing'],
+// });
 
 const products = Platform.select({
   ios: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
@@ -79,22 +92,31 @@ const SplaceScreen = ({navigation}) => {
               });
           });
   };
+
   useEffect(() => {
-    setTimeout(() => {
-      if (showIntro) {
-        //  navigation.replace('LogSignUp');
-        if (
-          getUserDataDetails?.id &&
-          getUserDataDetails?.profile_compl_status == 1
-        ) {
-          navigation.replace('BottomTab');
-        } else {
-          navigation.replace('LogSignUp');
-        }
+    if (showIntro) {
+      //  navigation.replace('LogSignUp');
+      if (
+        getUserDataDetails?.id &&
+        getUserDataDetails?.profile_compl_status == 1
+      ) {
+        navigation.replace('BottomTab');
       } else {
-        navigation.replace('IntroductionScreen1');
+        navigation.replace('LogSignUp');
+
+        // navigation.replace('LogSignUp');
       }
-    }, 4000);
+    } else {
+      navigation.replace('IntroductionScreen1');
+      //navigation.replace('IntroductionScreen1');
+    }
+    // MyInterstitialAd().load();
+    // setTimeout(
+    //   () => {
+    //     loadScreen();
+    //   },
+    //   Platform.OS == 'android' ? 1000 : 1000,
+    // );
   }, []);
   const Meal_List = async deviceData => {
     try {
@@ -104,7 +126,6 @@ const SplaceScreen = ({navigation}) => {
           'Content-Type': 'multipart/form-data',
         },
         data: {
-          
           version: VersionNumber.appVersion,
         },
       });
@@ -140,6 +161,24 @@ const SplaceScreen = ({navigation}) => {
     } catch (error) {
       dispatch(setStoreData([]));
       console.log('Product Category Error111', error);
+    }
+  };
+  const loadScreen = () => {
+    if (showIntro) {
+      //  navigation.replace('LogSignUp');
+      if (
+        getUserDataDetails?.id &&
+        getUserDataDetails?.profile_compl_status == 1
+      ) {
+        navigation.replace('BottomTab');
+      } else {
+        navigation.replace('LogSignUp');
+
+        // navigation.replace('LogSignUp');
+      }
+    } else {
+      navigation.replace('IntroductionScreen1');
+      //navigation.replace('IntroductionScreen1');
     }
   };
   return (
