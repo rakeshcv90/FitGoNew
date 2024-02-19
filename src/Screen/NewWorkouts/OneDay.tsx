@@ -41,6 +41,7 @@ import {
   Text as SvgText,
   LinearGradient as SvgGrad,
 } from 'react-native-svg';
+import ThreeDButton from '../../Component/ThreeButton';
 
 // const GradientText = ({item}: any) => {
 //   const gradientColors = ['#D01818', '#941000'];
@@ -455,7 +456,6 @@ const OneDay = ({navigation, route}: any) => {
       </Modal>
     );
   };
-
   return (
     <View
       style={{
@@ -570,6 +570,7 @@ const OneDay = ({navigation, route}: any) => {
             // });
           }}
         />
+      
       </View>
       {loader && <ActivityLoader visible={loader} />}
       <WorkoutDescription
