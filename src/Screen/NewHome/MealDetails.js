@@ -71,22 +71,22 @@ const MealDetails = ({route, navigation}) => {
         translucent={true}
         backgroundColor={'transparent'}
       />
-      {imageLoad && (
+      {/* {imageLoad && (
         <ShimmerPlaceholder
           style={{width: '100%', height: DeviceHeigth * 0.4}}
           ref={avatarRef}
           autoRun
         />
-      )}
+      )} */}
       <ImageBackground
         translucent={true}
         style={{width: '100%', height: DeviceHeigth * 0.4}}
         resizeMode="cover"
-        onLoad={() => setImageLoad(false)}
+      //  onLoad={() => setImageLoad(false)}
         source={
-          route.params.item.diet_image_link == null
+          route?.params?.item?.diet_image_link == null
             ? localImage.Noimage
-            : {uri: route.params.item.diet_image_link}
+            : {uri: route?.params?.item?.diet_image_link}
         }
       />
 

@@ -2,11 +2,12 @@
 //  NotificationService.m
 //  ImageNotification
 //
-//  Created by Sahil on 21/02/24.
+
 //
 
 #import "NotificationService.h"
 #import "FirebaseMessaging.h"
+
 @interface NotificationService ()
 
 @property (nonatomic, strong) void (^contentHandler)(UNNotificationContent *contentToDeliver);
@@ -19,11 +20,13 @@
 - (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
     self.contentHandler = contentHandler;
     self.bestAttemptContent = [request.content mutableCopy];
+
   [[FIRMessaging extensionHelper] populateNotificationContent:self.bestAttemptContent withContentHandler:contentHandler];
 //    // Modify the notification content here...
 //    self.bestAttemptContent.title = [NSString stringWithFormat:@"%@ [modified]", self.bestAttemptContent.title];
 //    
 //    self.contentHandler(self.bestAttemptContent);
+
 }
 
 - (void)serviceExtensionTimeWillExpire {

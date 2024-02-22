@@ -6,15 +6,16 @@ const ANDROID_APP_ID = 'fitme.health.fitness.homeworkouts.equipment';
 const APP_STORE_LINK = `itms-apps://apps.apple.com/app/id${IOS_APP_ID}?action=write-review`;
 const PLAY_STORE_LINK = `http://play.google.com/store/apps/details?id=${ANDROID_APP_ID}`;
 
-export const ReviewApp = () => {
+export const ReviewApp = (onPresh) => {
   // Linking.openURL(STORE_LINK)
 
 
   InAppReview.isAvailable();
   InAppReview.RequestInAppReview()
     .then(hasFlowFinishedSuccessfully => {
-      console.log('csxcdscfdsfdsf', hasFlowFinishedSuccessfully);
+      
       if (hasFlowFinishedSuccessfully) {
+        onPresh()
       }
     })
     .catch(error => {

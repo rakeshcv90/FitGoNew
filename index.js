@@ -210,6 +210,13 @@ const AppRedux = () => {
       // NativeModules.CrashlyticsCrash.crash();
     }
   };
+// <<<<<<< Rakesh
+// } else {
+//   // In production, register the global error handler
+//   ErrorUtils.setGlobalHandler(globalErrorHandler);
+// }
+
+// =======
 
   // Set up a global error handler
   if (__DEV__) {
@@ -224,6 +231,7 @@ const AppRedux = () => {
   }
   // useEffect(() => {
   // },[])
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persister}>

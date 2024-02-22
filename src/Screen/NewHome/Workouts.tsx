@@ -19,13 +19,16 @@ import GradientButton from '../../Component/GradientButton';
 import MediumRounded from '../../Component/MediumRounded';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
-import {setAllWorkoutData} from '../../Component/ThemeRedux/Actions';
+import {setAllWorkoutData, setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
 import NewHeader from '../../Component/Headers/NewHeader';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
 import analytics from '@react-native-firebase/analytics';
+import { useFocusEffect, useIsFocused,  } from '@react-navigation/native';
+import { MyInterstitialAd } from '../../Component/BannerAdd';
+import moment from 'moment';
 const Workouts = ({navigation}: any) => {
-  const {allWorkoutData, getUserDataDetails} = useSelector(
+  const {allWorkoutData, getUserDataDetails,getFitmeAdsCount,getPurchaseHistory} = useSelector(
     (state: any) => state,
   );
   const [popularData, setPopularData] = useState([]);
@@ -33,11 +36,62 @@ const Workouts = ({navigation}: any) => {
   const [refresh, setRefresh] = useState(false);
   const dispatch = useDispatch();
 
+  let data1=useIsFocused()
   useEffect(() => {
     allWorkoutData?.length == 0 && allWorkoutApi();
     popularData?.length == 0 && popularWorkoutApi();
     workoutStatusApi();
   }, []);
+
+
+  // useFocusEffect(
+  //   React.useCallback( () => {
+
+  //     if(data1){
+  //       if (getFitmeAdsCount < 3) {
+  //         console.log('Ad Count Incremented:', getFitmeAdsCount);
+  //         dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+  //       } else {
+  //       MyInterstitialAd(resetFitmeCount).load();
+         
+  //       }
+  //     }
+      
+  //   }, [data1]),
+  // );
+  useFocusEffect(
+    React.useCallback(() => {
+      if (data1) {
+        if (getPurchaseHistory.length > 0) {
+          if (
+            getPurchaseHistory[0]?.plan_end_date >=
+            moment().format('YYYY-MM-DD')
+          ) {
+            dispatch(setFitmeAdsCount(0));
+          } else {
+            if (getFitmeAdsCount < 3) {
+              console.log('Ad Count Incremented:', getFitmeAdsCount);
+              dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+            } else {
+              MyInterstitialAd(resetFitmeCount).load();
+            }
+          }
+        } else {
+          if (getFitmeAdsCount < 3) {
+            console.log('Ad Count Incremented:', getFitmeAdsCount);
+            dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+          } else {
+            MyInterstitialAd(resetFitmeCount).load();
+          }
+        }
+      }
+    }, [data1]),
+  );
+
+  const resetFitmeCount = () => {
+    console.log("Reset Count")
+    dispatch(setFitmeAdsCount(0));
+  };
   const allWorkoutApi = async () => {
     try {
       setRefresh(true);

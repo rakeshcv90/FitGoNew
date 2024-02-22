@@ -22,9 +22,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {localImage} from '../../Component/Image';
 import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import analytics from '@react-native-firebase/analytics';
+import { MyInterstitialAd } from '../../Component/BannerAdd';
 const WorkoutDays = ({navigation, route}: any) => {
   const {data} = route.params;
   const [selected, setSelected] = useState(0);
@@ -36,7 +37,7 @@ const WorkoutDays = ({navigation, route}: any) => {
   const [totalCount, setTotalCount] = useState(-1);
   const [trackerData, setTrackerData] = useState([]);
   const [exerciseData, setExerciseData] = useState([]);
-  // console.log(data?.days);
+  let data1=useIsFocused()
   const {allWorkoutData, getUserDataDetails, getCount} = useSelector(
     (state: any) => state,
   );
@@ -51,9 +52,16 @@ const WorkoutDays = ({navigation, route}: any) => {
   useFocusEffect(
     useCallback(() => {
       getCurrentDayAPI();
-      // allWorkoutApi();
+     
     }, []),
   );
+  // useEffect(()=>{
+  //   if(selected>0){
+  //     MyInterstitialAd(resetFitmeCount).load();
+  //   }else{
+  //     console.log("fffffffffffff")
+  //   }
+  // },[data1])
   const getCurrentDayAPI = async () => {
     try {
       setRefresh(true);
@@ -168,6 +176,7 @@ const WorkoutDays = ({navigation, route}: any) => {
   };
   const dispatch = useDispatch();
   const BlackCircle = ({indexes, select, index}: any) => {
+  
     return (
       <View
         style={{
@@ -199,6 +208,9 @@ const WorkoutDays = ({navigation, route}: any) => {
     );
   };
 
+// const resetFitmeCount=()=>{
+//   return null
+// }
   const Phase = ({index, percent, select}: any) => {
     const gradientColors = ['#D5191A', '#941000'];
     return (

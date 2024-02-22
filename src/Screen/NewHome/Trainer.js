@@ -1,5 +1,5 @@
 import {View, Text} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {StatusBar} from 'react-native';
 import {StyleSheet} from 'react-native';
@@ -8,7 +8,62 @@ import AnimatedLottieView from 'lottie-react-native';
 import {DeviceHeigth} from '../../Component/Config';
 import Button from '../../Component/Button';
 import analytics from '@react-native-firebase/analytics';
+import {useFocusEffect, useIsFocused, useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {MyInterstitialAd} from '../../Component/BannerAdd';
+import {setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
+import moment from 'moment';
 const Trainer = ({navigation}) => {
+  const navigation1 = useNavigation();
+  const dispatch = useDispatch();
+  const {getFitmeAdsCount,getPurchaseHistory} = useSelector(state => state);
+  let data1 = useIsFocused();
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     if (data1) {
+  //       if (getFitmeAdsCount < 3) {
+  //         console.log('Ad Count Incremented:', getFitmeAdsCount);
+  //         dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+  //       } else {
+  //         MyInterstitialAd(resetFitmeCount).load();
+        
+  //       }
+  //     }
+  //   }, [data1]),
+  // );
+  useFocusEffect(
+    React.useCallback(() => {
+      if (data1) {
+        if (getPurchaseHistory.length > 0) {
+          if (
+            getPurchaseHistory[0]?.plan_end_date >=
+            moment().format('YYYY-MM-DD')
+          ) {
+            dispatch(setFitmeAdsCount(0));
+          } else {
+            if (getFitmeAdsCount < 3) {
+              console.log('Ad Count Incremented:', getFitmeAdsCount);
+              dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+            } else {
+              MyInterstitialAd(resetFitmeCount).load();
+            }
+          }
+        } else {
+          if (getFitmeAdsCount < 3) {
+            console.log('Ad Count Incremented:', getFitmeAdsCount);
+            dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+          } else {
+            MyInterstitialAd(resetFitmeCount).load();
+          }
+        }
+      }
+    }, [data1]),
+  );
+  const resetFitmeCount = async () => {
+    console.log('Reset Count');
+    dispatch(setFitmeAdsCount(0));
+  };
+  console.log('Fitme Count', getFitmeAdsCount);
   return (
     <View style={styles.container}>
       <NewHeader header={'  Fitness Coach'} />
@@ -44,7 +99,7 @@ const Trainer = ({navigation}) => {
             fontSize: 12,
             lineHeight: 15,
             textAlign: 'center',
-            color:AppColor.LITELTEXTCOLOR
+            color: AppColor.LITELTEXTCOLOR,
           }}>
           Welcome to your personalized fitness journey! I'm here to be your
           trusty fitness companion, guiding you through workouts, providing
@@ -62,7 +117,7 @@ const Trainer = ({navigation}) => {
         <Button
           buttonText={'Start Now'}
           onPresh={() => {
-            analytics().logEvent("CV_FITME_TALKED_TO_FITNESS_COACH")
+            analytics().logEvent('CV_FITME_TALKED_TO_FITNESS_COACH');
             navigation.navigate('AITrainer');
           }}
         />

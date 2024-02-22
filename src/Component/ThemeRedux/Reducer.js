@@ -33,6 +33,8 @@ const intialState = {
   getCustttomeTimeCal: [],
   getStepCounterOnoff: false,
   getSubscriptionModal: false,
+  getFitmeAdsCount: 0,
+  getFitmeMealAdsCount: 0,
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -159,6 +161,16 @@ const ThemeReducer = (state = intialState, action) => {
       return {
         ...state,
         getSubscriptionModal: action.payload,
+      };
+    case types.FITME_ADD_COUNT:
+      return {
+        ...state,
+        getFitmeAdsCount: action.payload,
+      };
+    case types.FITME_ADD_COUNT_MEALS:
+      return {
+        ...state,
+        getFitmeMealAdsCount: action.payload,
       };
     default:
       return state;

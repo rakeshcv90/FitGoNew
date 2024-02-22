@@ -118,7 +118,7 @@ const Subscription = ({navigation}) => {
 
     try {
       const result = await axios(
-        'https://sandbox.itunes.apple.com/verifyReceipt',
+        'https://buy.itunes.apple.com/verifyReceipt',
         {
           method: 'POST',
           headers: {
@@ -239,14 +239,7 @@ const Subscription = ({navigation}) => {
     }
   };
   const fetchPurchaseHistory1 = async item => {
-    console.log(
-      ('1234567',
-      item.auto_renew_product_id == 'fitme_monthly'
-        ? 'Monthly'
-        : item.auto_renew_product_id == 'fitme_quarterly'
-        ? 'Quarterly'
-        : 'Yearly'),
-    );
+
     setForLoading(false);
     // const timestamp = data.transactionDate;
     // const date = new Date(timestamp);
@@ -441,6 +434,120 @@ const Subscription = ({navigation}) => {
       }
     }
   };
+  restorePucrchase = async () => {
+   
+    setForLoading(true)
+    try {
+      const purchases = await RNIap.getAvailablePurchases();
+      console.log("Testing Purchase History",purchases)
+   
+      if (purchases?.length == 0) {
+        setForLoading(false)
+        showMessage({
+          message: 'No Active Subscription Found !',
+          type: 'danger',
+          animationDuration: 500,
+
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        if (Platform.OS == 'android') {
+          setForLoading(false)
+          const activeSubs = purchases.filter(item => {
+           
+            if (item?.autoRenewingAndroid == true) {
+              setForLoading(false)
+              showMessage({
+                message: 'Subscription Restored!',
+                type: 'success',
+                animationDuration: 500,
+      
+                floating: true,
+                icon: {icon: 'auto', position: 'left'},
+              });
+             
+            } else {
+              setForLoading(false)
+              showMessage({
+                message: 'No Active Subscription Found!',
+                type: 'danger',
+                animationDuration: 500,
+      
+                floating: true,
+                icon: {icon: 'auto', position: 'left'},
+              });
+            }
+          });
+        } 
+        else {
+          const latestPurchase = purchases[purchases.length - 1];
+
+          const apiRequestBody = {
+            'receipt-data': latestPurchase.transactionReceipt,
+            password: '3a00ec90f8b745678daf489417956f40',
+          };
+          try {
+             const result = await axios(
+              'https://buy.itunes.apple.com/verifyReceipt',
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                data: apiRequestBody,
+              },
+            );
+            setForLoading(false)
+
+            if (result.data) {
+       
+
+              const renewalHistory = result.data.pending_renewal_info;
+
+              const activeSubs = renewalHistory.filter(item => {
+                if (item.auto_renew_status == '1') {
+               
+
+                  Alert.alert('Success', 'Subscription Restored');
+                 
+                } else {
+             
+                
+                 showMessage({
+                  message: 'No Active Subscription Found!',
+                  type: 'danger',
+                  animationDuration: 500,
+        
+                  floating: true,
+                  icon: {icon: 'auto', position: 'left'},
+                });
+                }
+              });
+            } else {
+            
+              Alert.alert('Success', 'No Active Subscription Found');
+            }
+          } catch (error) {
+            showMessage({
+              message: 'No Active Subscription Found!',
+              type: 'danger',
+              animationDuration: 500,
+    
+              floating: true,
+              icon: {icon: 'auto', position: 'left'},
+            });
+            setForLoading(false)
+            console.log(error);
+          }
+        }
+      }
+    } catch (err) {
+      Alert.alert('Error', 'Failed to Restore Subscription');
+      setForLoading(false)
+      console.error(err);
+    }
+  };
 
   const ModalPoup = ({visible, typeData}) => {
     const [showModal, setShowModal] = React.useState(visible);
@@ -615,8 +722,8 @@ const Subscription = ({navigation}) => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                // ReviewApp();
-                setPaddoModalShow(true);
+                
+                restorePucrchase()
               }}>
               <Text
                 style={{

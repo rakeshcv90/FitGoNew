@@ -6,8 +6,7 @@
        {paths: [process.argv[1]]},
     )", __dir__]).strip
  end
-#  use_frameworks! :linkage => :static
-# Ensure that module maps are generated for Firebase dependencies
+
 use_modular_headers!
  node_require('react-native/scripts/react_native_pods.rb')
  node_require('react-native-permissions/scripts/setup.rb')
@@ -95,6 +94,8 @@ target 'FitGo' do
   end
 end
 
+
 target 'ImageNotification' do
   pod 'Firebase/Messaging', '~> 10.18.0' # eg 6.31.0
 end
+
