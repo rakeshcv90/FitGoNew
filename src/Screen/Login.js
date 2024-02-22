@@ -73,7 +73,7 @@ const Login = ({navigation}) => {
   const {getFcmToken} = useSelector(state => state);
   useEffect(() => {
     requestPermissionforNotification(dispatch);
-    RemoteMessage();
+    // RemoteMessage();
   }, []);
   useEffect(() => {
     GoogleSignin.configure({

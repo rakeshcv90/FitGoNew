@@ -67,7 +67,7 @@ const Signup = ({navigation}) => {
 
   useEffect(() => {
     requestPermissionforNotification(dispatch);
-    RemoteMessage();
+    // RemoteMessage();
   }, []);
   const PasswordRegex =
     // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
