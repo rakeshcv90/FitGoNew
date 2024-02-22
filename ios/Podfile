@@ -6,6 +6,9 @@
        {paths: [process.argv[1]]},
     )", __dir__]).strip
  end
+#  use_frameworks! :linkage => :static
+# Ensure that module maps are generated for Firebase dependencies
+use_modular_headers!
  node_require('react-native/scripts/react_native_pods.rb')
  node_require('react-native-permissions/scripts/setup.rb')
 platform :ios, min_ios_version_supported
@@ -50,7 +53,7 @@ end
 
 target 'FitGo' do
   config = use_native_modules!
-  use_modular_headers!
+
   $RNFirebaseAsStaticFramework = true
     pod 'Firebase', :modular_headers => true
     pod 'FirebaseCoreInternal', :modular_headers => true
@@ -90,4 +93,8 @@ target 'FitGo' do
     )
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
+end
+
+target 'ImageNotification' do
+  pod 'Firebase/Messaging', '~> 10.18.0' # eg 6.31.0
 end
