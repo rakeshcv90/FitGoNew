@@ -30,6 +30,7 @@ import {
   setStepCounterOnOff,
   setCustomWorkoutData,
   Setmealdata,
+  setFitmeAdsCount,
 } from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
@@ -40,7 +41,11 @@ import AnimatedLottieView from 'lottie-react-native';
 import {Slider} from '@miblanchard/react-native-slider';
 import axios from 'axios';
 import {setPedomterData} from '../../Component/ThemeRedux/Actions';
-import {useFocusEffect} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 import GoogleFit, {Scopes} from 'react-native-google-fit';
 import {
   Stop,
@@ -65,6 +70,7 @@ import analytics from '@react-native-firebase/analytics';
 
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {ImageBackground} from 'react-native';
+import {MyInterstitialAd} from '../../Component/BannerAdd';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -161,6 +167,8 @@ const Home = ({navigation}) => {
   const avatarRef = React.createRef();
   const [PaddoModalShow, setPaddoModalShow] = useState(false);
   const Dispatch = useDispatch();
+  const navigation1 = useNavigation();
+
   const {
     getHealthData,
     getLaterButtonData,
@@ -174,6 +182,8 @@ const Home = ({navigation}) => {
     getUserID,
     getCustttomeTimeCal,
     getStepCounterOnoff,
+    getFitmeAdsCount,
+    getPurchaseHistory,
   } = useSelector(state => state);
   const [stepGoalProfile, setStepGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
@@ -190,6 +200,41 @@ const Home = ({navigation}) => {
   const caloriesRef = useRef(Calories);
   const [distance, setDistance] = useState(0);
   const distanceRef = useRef(distance);
+  let data1 = useIsFocused();
+  useFocusEffect(
+    React.useCallback(() => {
+      if (data1) {
+        if (getPurchaseHistory.length > 0) {
+          if (
+            getPurchaseHistory[0]?.plan_end_date >=
+            moment().format('YYYY-MM-DD')
+          ) {
+            Dispatch(setFitmeAdsCount(0));
+          } else {
+            if (getFitmeAdsCount < 3) {
+              console.log('Ad Count Incremented:', getFitmeAdsCount);
+              Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+            } else {
+              MyInterstitialAd(resetFitmeCount).load();
+            }
+          }
+        } else {
+          if (getFitmeAdsCount < 3) {
+            console.log('Ad Count Incremented:', getFitmeAdsCount);
+            Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+          } else {
+            MyInterstitialAd(resetFitmeCount).load();
+          }
+        }
+      }
+    }, [data1]),
+  );
+
+  const resetFitmeCount = async () => {
+    console.log('Reset Count');
+    Dispatch(setFitmeAdsCount(0));
+  };
+
   useEffect(() => {
     setTimeout(() => {
       ActivityPermission();
@@ -1244,9 +1289,10 @@ const Home = ({navigation}) => {
         <View style={{}}>
           <GradientText
             item={
-              getTimeOfDayMessage() + ', ' + 
+              getTimeOfDayMessage() +
+              ', ' +
               (Object.keys(getUserDataDetails).length > 0
-                ? getUserDataDetails.name.split(" ")[0]
+                ? getUserDataDetails.name.split(' ')[0]
                 : 'Guest')
             }
           />
@@ -1881,7 +1927,7 @@ var styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'space-between',
     //height: DeviceHeigth * 0.06,
-    paddingVertical:5,
+    paddingVertical: 5,
     alignItems: 'center',
     alignSelf: 'center',
     top: DeviceHeigth * 0.02,

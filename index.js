@@ -47,9 +47,7 @@ if (__DEV__) {
   // In production, register the global error handler
   ErrorUtils.setGlobalHandler(globalErrorHandler);
 }
-useEffect(() => {
-  RemoteMessage()
-},[])
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persister}>

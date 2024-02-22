@@ -23,7 +23,7 @@ import axios from 'axios';
 import {useSelector, useDispatch} from 'react-redux';
 import {BlurView} from '@react-native-community/blur';
 import AppleHealthKit from 'react-native-health';
-import {setBmi} from '../../Component/ThemeRedux/Actions';
+import {setBmi, setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
 import {Calendar} from 'react-native-calendars';
 import AnimatedLottieView from 'lottie-react-native';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -47,14 +47,19 @@ import {dispatch, index, local} from 'd3';
 import moment from 'moment';
 import Button from '../../Component/Button';
 import {showMessage} from 'react-native-flash-message';
-import { Linking } from 'react-native';
+import {Linking} from 'react-native';
 
 import analytics from '@react-native-firebase/analytics';
 
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
+import {MyInterstitialAd} from '../../Component/BannerAdd';
 
-
-const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const NewProgressScreen = ({navigation}) => {
   const {
@@ -64,6 +69,8 @@ const NewProgressScreen = ({navigation}) => {
     getCustttomeTimeCal,
     getHealthData,
     getStepCounterOnoff,
+    getFitmeAdsCount,
+    getPurchaseHistory,
   } = useSelector(state => state);
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [selected, setSelected] = useState(false);
@@ -77,7 +84,9 @@ const NewProgressScreen = ({navigation}) => {
   const [Calories, setCalories] = useState(0);
   const [Wtime, setWtime] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const avatarRef = React.createRef()
+  const avatarRef = React.createRef();
+  let data1 = useIsFocused();
+  const dispatch = useDispatch();
   let arrayForData = [];
   let arrayForData1 = [];
   useEffect(() => {
@@ -147,6 +156,53 @@ const NewProgressScreen = ({navigation}) => {
       }
     }
   }, []);
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     if (data1) {
+  //       if (getFitmeAdsCount < 3) {
+  //         console.log('Ad Count Incremented:', getFitmeAdsCount);
+  //         dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+  //       } else {
+  //         MyInterstitialAd(resetFitmeCount).load();
+
+  //       }
+  //     }
+  //   }, [data1]),
+  // );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (data1) {
+        if (getPurchaseHistory.length > 0) {
+          if (
+            getPurchaseHistory[0]?.plan_end_date >=
+            moment().format('YYYY-MM-DD')
+          ) {
+            dispatch(setFitmeAdsCount(0));
+          } else {
+            if (getFitmeAdsCount < 3) {
+              console.log('Ad Count Incremented:', getFitmeAdsCount);
+              dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+            } else {
+              MyInterstitialAd(resetFitmeCount).load();
+            }
+          }
+        } else {
+          if (getFitmeAdsCount < 3) {
+            console.log('Ad Count Incremented:', getFitmeAdsCount);
+            dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+          } else {
+            MyInterstitialAd(resetFitmeCount).load();
+          }
+        }
+      }
+    }, [data1]),
+  );
+  const resetFitmeCount = () => {
+    console.log('Reset Count');
+    dispatch(setFitmeAdsCount(0));
+  };
   const handleGraph1 = data => {
     console.log('data', data);
     if (data == 1) {
@@ -625,11 +681,13 @@ const NewProgressScreen = ({navigation}) => {
     <SafeAreaView style={styles.Container}>
       <ScrollView showsHorizontalScrollIndicator={false}>
         <View style={styles.box1}>
-          <TouchableOpacity style={styles.Feedback_B} activeOpacity={0.5}
-          onPress={()=>{
-            analytics().logEvent("CV_FITME_CLICKED_ON_FEEDBACK")
-            openMailApp();
-          }}>
+          <TouchableOpacity
+            style={styles.Feedback_B}
+            activeOpacity={0.5}
+            onPress={() => {
+              analytics().logEvent('CV_FITME_CLICKED_ON_FEEDBACK');
+              openMailApp();
+            }}>
             <Image
               source={localImage.Feedback}
               style={{width: 15, height: 15}}
@@ -670,10 +728,10 @@ const NewProgressScreen = ({navigation}) => {
                 //   color="#0000ff"
                 // />
                 <ShimmerPlaceholder
-                style={styles.loader}
-                ref={avatarRef}
-                autoRun
-              />
+                  style={styles.loader}
+                  ref={avatarRef}
+                  autoRun
+                />
               )}
               <Image
                 source={
@@ -1106,15 +1164,15 @@ const styles = StyleSheet.create({
   textItem: {
     flex: 1,
     fontSize: 16,
-    color:AppColor.BLACK
+    color: AppColor.BLACK,
   },
   placeholderStyle: {
     fontSize: 16,
-    color:AppColor.BLACK
+    color: AppColor.BLACK,
   },
   selectedTextStyle: {
     fontSize: 16,
-    color:AppColor.BLACK
+    color: AppColor.BLACK,
   },
   modalContainer: {
     flex: 1,

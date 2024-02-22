@@ -21,7 +21,7 @@ export const BannerAdd = ({bannerAdId}) => {
   );
 };
 
-export const MyInterstitialAd = () => {
+export const MyInterstitialAd = (resetFitmeCount) => {
   const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
     requestNonPersonalizedAdsOnly: true,
     keywords: ['fashion', 'clothing'],
@@ -29,6 +29,7 @@ export const MyInterstitialAd = () => {
   const unsubscribe = interstitialAd.addAdEventListener(
     AdEventType.LOADED,
     () => {
+      
       interstitialAd.show();
     },
   );
@@ -36,6 +37,7 @@ export const MyInterstitialAd = () => {
   const unsubscribe1 = interstitialAd.addAdEventListener(
     AdEventType.CLOSED,
     reward => {
+      resetFitmeCount()
       //interstitialAd.load(); // Optional: Load a new ad for the next use
     },
   );
@@ -48,7 +50,7 @@ export const MyInterstitialAd = () => {
   return interstitialAd;
 };
 
-export const MyRewardedAd = () => {
+export const MyRewardedAd = (setreward) => {
   const rewarded = RewardedAd.createForAdRequest(rewardedAdId, {
     requestNonPersonalizedAdsOnly: true,
     keywords: ['fashion', 'clothing'],
@@ -62,7 +64,8 @@ export const MyRewardedAd = () => {
   const unsubscribeEarned = rewarded.addAdEventListener(
     RewardedAdEventType.EARNED_REWARD,
     reward => {
-      console.log('rewarded is ', reward);
+      setreward(1);
+     
     },
   );
   const faild = rewarded.addAdEventListener(AdEventType.ERROR, dada => {

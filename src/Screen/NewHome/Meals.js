@@ -15,10 +15,12 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
-
+import {MyInterstitialAd} from '../../Component/BannerAdd';
+import {setFitmeMealAdsCount} from '../../Component/ThemeRedux/Actions';
+import moment from 'moment';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const Meals = ({navigation}) => {
@@ -27,7 +29,11 @@ const Meals = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [imageLoad, setImageLoad] = useState(true);
   const avatarRef = React.createRef();
-
+  const [itemData, setItemData] = useState();
+  const {getFitmeMealAdsCount, getPurchaseHistory} = useSelector(
+    state => state,
+  );
+  const dispatch = useDispatch();
   // useEffect(() => {
   //   if (mealData.length > 0) {
   //     generateRandomNumber();
@@ -68,6 +74,45 @@ const Meals = ({navigation}) => {
   useEffect(() => {
     generateRandomNumber();
   }, [generateRandomNumber]);
+
+  const checkMealAddCount = item => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >=
+        moment().format('YYYY-MM-DD')
+      ) {
+        dispatch(setFitmeMealAdsCount(0));
+        navigation.navigate('MealDetails', {item: item});
+      }else{
+        if (getFitmeMealAdsCount < 4) {
+          dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
+          navigation.navigate('MealDetails', {item: item});
+        } else {
+          MyInterstitialAd(resetFitmeCount).load();
+          setTimeout(() => {
+            navigation.navigate('MealDetails', {item: item});
+          }, 1200);
+        }
+      }
+    } else {
+      if (getFitmeMealAdsCount < 4) {
+        dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
+        navigation.navigate('MealDetails', {item: item});
+      } else {
+        MyInterstitialAd(resetFitmeCount).load();
+        setTimeout(() => {
+          navigation.navigate('MealDetails', {item: item});
+        }, 1200);
+      }
+    }
+  };
+
+  const resetFitmeCount = async () => {
+    console.log('Reset Count');
+    dispatch(setFitmeMealAdsCount(0));
+  };
+  console.log('DDDDDDDDDD', getFitmeMealAdsCount);
+
   return (
     <View style={styles.container}>
       <NewHeader header={'Meals'} SearchButton={false} backButton={true} />
@@ -229,7 +274,9 @@ const Meals = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.listItem2}
                   onPress={() => {
-                    navigation.navigate('MealDetails', {item: item});
+                    //
+                    setItemData(item);
+                    checkMealAddCount(item);
                   }}>
                   {imageLoad && (
                     <ShimmerPlaceholder

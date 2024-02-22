@@ -1,4 +1,4 @@
-import {Image} from 'react-native';
+import {Image, Platform} from 'react-native';
 import React from 'react';
 import {AnimatedTabBarNavigator} from 'react-native-animated-nav-tab-bar';
 
@@ -10,9 +10,42 @@ import Workouts from '../Screen/NewHome/Workouts';
 
 import Trainer from '../Screen/NewHome/Trainer';
 import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
+import {View, Text} from 'react-native';
+import {BannerAdd} from '../Component/BannerAdd';
+import {bannerAdId} from '../Component/AdsId';
+import {DeviceHeigth} from '../Component/Config';
+import {useSelector} from 'react-redux';
+import moment from 'moment';
 
 const Tabs = AnimatedTabBarNavigator();
 const BottomTab = () => {
+  const {showIntro, getUserDataDetails, getUserID, getPurchaseHistory} =
+    useSelector(state => state);
+  const getPurchaseStatusData = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return (
+          <View
+            style={{
+              marginTop: Platform.OS == 'ios' ? -DeviceHeigth * 0.035 : 0,
+            }}>
+            <BannerAdd bannerAdId={bannerAdId} />
+          </View>
+        );
+      }
+    } else {
+      return (
+        <View
+          style={{marginTop: Platform.OS == 'ios' ? -DeviceHeigth * 0.035 : 0}}>
+          <BannerAdd bannerAdId={bannerAdId} />
+        </View>
+      );
+    }
+  };
   return (
     <>
       <Tabs.Navigator
@@ -21,19 +54,23 @@ const BottomTab = () => {
           activeTintColor: '#D01818',
           inactiveTintColor: '#3D3D3D',
           activeBackgroundColor: '#EED9D6',
-    
-        labelStyle: {  fontFamily: 'Poppins',
-        fontWeight: '700',
-        lineHeight: 18,
-        fontSize: 12,
-        },
 
-        }}
- 
-        >
+          labelStyle: {
+            fontFamily: 'Poppins',
+            fontWeight: '700',
+            lineHeight: 18,
+            fontSize: 12,
+          },
+        }}>
         <Tabs.Screen
           name="Home"
           component={Home}
+          //   listeners={({ navigation }) => ({
+          //     tabPress: (e) => {
+
+          //    console.log("DHDHDHDHD")
+          //     }
+          //  })}
           options={{
             tabBarIcon: ({focused, color, size}) => (
               <Image
@@ -99,7 +136,7 @@ const BottomTab = () => {
             ),
           }}
         />
-         <Tabs.Screen
+        <Tabs.Screen
           name="Trainer"
           component={Trainer}
           options={{
@@ -116,8 +153,11 @@ const BottomTab = () => {
             ),
           }}
         />
-        
       </Tabs.Navigator>
+      {getPurchaseStatusData()}
+      {/* <View style={{marginTop:Platform.OS=='ios'?-DeviceHeigth*0.035:0}}>
+       <BannerAdd bannerAdId={bannerAdId}/>
+      </View> */}
     </>
   );
 };

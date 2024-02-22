@@ -15,10 +15,14 @@ import {AppColor} from '../../Component/Color';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {Platform} from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 import {SliderBox} from 'react-native-image-slider-box';
 import FastImage from 'react-native-fast-image';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {localImage} from '../../Component/Image';
 import ActivityLoader from '../../Component/ActivityLoader';
@@ -26,26 +30,80 @@ import AnimatedLottieView from 'lottie-react-native';
 
 import {showMessage} from 'react-native-flash-message';
 import analytics from '@react-native-firebase/analytics';
-
-
+import moment from 'moment';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
+import {setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
+import {MyInterstitialAd} from '../../Component/BannerAdd';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const Store = ({navigation}) => {
-  const {getUserDataDetails, getStoreData} = useSelector(state => state);
+  const {getUserDataDetails, getStoreData, getFitmeAdsCount,getPurchaseHistory} = useSelector(
+    state => state,
+  );
   const [searchText, setsearchText] = useState('');
   const [forLoading, setForLoading] = useState(false);
   const [category, setcategory] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState(getStoreData);
   const avatarRef = React.createRef();
+  const dispatch = useDispatch();
+
+  let data1 = useIsFocused();
   useFocusEffect(
     React.useCallback(() => {
       getCaterogy();
       setcategory(getStoreData);
     }, []),
   );
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     if (data1) {
+  //       if (getFitmeAdsCount < 3) {
+  //         console.log('Ad Count Incremented:', getFitmeAdsCount);
+  //         dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+  //       } else {
+  //         MyInterstitialAd(resetFitmeCount).load();
+      
+  //       }
+  //     }
+  //   }, [data1]),
+  // );
+  useFocusEffect(
+    React.useCallback(() => {
+      if (data1) {
+        if (getPurchaseHistory.length > 0) {
+          if (
+            getPurchaseHistory[0]?.plan_end_date >=
+            moment().format('YYYY-MM-DD')
+          ) {
+            dispatch(setFitmeAdsCount(0));
+          } else {
+            if (getFitmeAdsCount < 3) {
+              console.log('Ad Count Incremented:', getFitmeAdsCount);
+              dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+            } else {
+              MyInterstitialAd(resetFitmeCount).load();
+            }
+          }
+        } else {
+          if (getFitmeAdsCount < 3) {
+            console.log('Ad Count Incremented:', getFitmeAdsCount);
+            dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+          } else {
+            MyInterstitialAd(resetFitmeCount).load();
+          }
+        }
+      }
+    }, [data1]),
+  );
+
+  const resetFitmeCount = () => {
+    console.log('Reset Count');
+    dispatch(setFitmeAdsCount(0));
+  };
+  console.log('Fitme Count', getFitmeAdsCount);
   const updateFilteredCategories = test => {
     const filteredItems = category.filter(item =>
       item.type_title.toLowerCase().includes(test.toLowerCase()),
@@ -213,7 +271,6 @@ const Store = ({navigation}) => {
           Our Products
         </Text>
 
-
         <View
           style={{
             alignSelf: 'center',
@@ -230,54 +287,51 @@ const Store = ({navigation}) => {
               data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
               numColumns={3}
               showsVerticalScrollIndicator={false}
-          
               renderItem={({item, index}) => {
                 return (
-                
-                    <View s
-                    style={styles.listItem2}
-                    >
-                      <ShimmerPlaceholder
-                        ref={avatarRef}
-                        autoRun
-                        style={{
-                          height: 90,
-                          width: 90,
-                          borderRadius:180/2,
-                          alignSelf: 'center',
-                        }}
-                      />
-                      <ShimmerPlaceholder
-                        ref={avatarRef}
-                        autoRun
-                        style={{
-                          
-                          width: 80,
-                          top:10,
-                          alignSelf: 'center',
-                        }}
-                      />
-                    </View>
-               
+                  <View s style={styles.listItem2}>
+                    <ShimmerPlaceholder
+                      ref={avatarRef}
+                      autoRun
+                      style={{
+                        height: 90,
+                        width: 90,
+                        borderRadius: 180 / 2,
+                        alignSelf: 'center',
+                      }}
+                    />
+                    <ShimmerPlaceholder
+                      ref={avatarRef}
+                      autoRun
+                      style={{
+                        width: 80,
+                        top: 10,
+                        alignSelf: 'center',
+                      }}
+                    />
+                  </View>
                 );
               }}
-             
             />
-       ) : (
-           <FlatList
+          ) : (
+            <FlatList
               data={filteredCategories}
               numColumns={3}
               showsVerticalScrollIndicator={false}
-           
               renderItem={({item, index}) => {
                 return (
                   <>
                     <TouchableOpacity
                       style={styles.listItem2}
-                      onPress={() => 
-                        { analytics().logEvent(`CV_FITME_CLICKED_ON_${item?.type_title.replace(" ","_")}`)
-                        navigation.navigate('ProductsList', {item: item})}
-                      }>
+                      onPress={() => {
+                        analytics().logEvent(
+                          `CV_FITME_CLICKED_ON_${item?.type_title.replace(
+                            ' ',
+                            '_',
+                          )}`,
+                        );
+                        navigation.navigate('ProductsList', {item: item});
+                      }}>
                       <Image
                         source={
                           item.type_image_link == null
@@ -307,10 +361,9 @@ const Store = ({navigation}) => {
                 );
               }}
               ListEmptyComponent={emptyComponent}
-            /> 
+            />
           )}
         </View>
-
       </View>
     </View>
   );

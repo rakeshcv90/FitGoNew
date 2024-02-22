@@ -30,25 +30,25 @@ import {
 
 import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 import {bannerAdId} from '../Component/AdsId';
-import {BannerAdd, MyInterstitialAd} from '../Component/BannerAdd';
+import {MyInterstitialAd} from '../Component/BannerAdd';
+import moment from 'moment';
 
 // const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
 //   requestNonPersonalizedAdsOnly: true,
 //   keywords: ['fashion', 'clothing'],
 // });
 
-// const products = Platform.select({
-//   ios: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
-//   android: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
-// });
+const products = Platform.select({
+  ios: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
+  android: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
+});
 
 const SplaceScreen = ({navigation}) => {
   const [deviceId, setDeviceId] = useState(0);
   const dispatch = useDispatch();
 
-  const {showIntro, getUserDataDetails, getUserID} = useSelector(
-    state => state,
-  );
+  const {showIntro, getUserDataDetails, getUserID, getPurchaseHistory} =
+    useSelector(state => state);
   useEffect(() => {
     requestPermissionforNotification(dispatch);
     // RemoteMessage();
@@ -59,64 +59,72 @@ const SplaceScreen = ({navigation}) => {
       setDeviceId(uniqueId);
       Meal_List(uniqueId);
     });
-   // getPlanData();
+    getPlanData();
   }, []);
-  // const getPlanData = () => {
-  //   Platform.OS === 'ios'
-  //     ? RNIap.initConnection()
-  //         .catch(() => {
-  //           console.log('error connecting to store');
-  //         })
-  //         .then(() => {
-  //           RNIap.getProducts({skus: products})
-  //             .catch(() => {
-  //               console.log('error finding purchase');
-  //             })
-  //             .then(res => {
-  //               console.log('IOS Subscription', res);
-  //               dispatch(setInappPurchase(res));
-  //             });
-  //         })
-  //     : RNIap.initConnection()
-  //         .catch(() => {
-  //           console.log('error connecting to store');
-  //         })
-  //         .then(() => {
-  //           RNIap.getSubscriptions({skus: products})
-  //             .catch(() => {
-  //               console.log('error finding purchase');
-  //             })
-  //             .then(res => {
-  //               console.log('Android Subscription', res);
-  //               dispatch(setInappPurchase(res));
-  //             });
-  //         });
-  // };
+  const getPlanData = () => {
+    Platform.OS === 'ios'
+      ? RNIap.initConnection()
+          .catch(() => {
+            console.log('error connecting to store');
+          })
+          .then(() => {
+            RNIap.getProducts({skus: products})
+              .catch(() => {
+                console.log('error finding purchase');
+              })
+              .then(res => {
+                console.log('IOS Subscription', res);
+                dispatch(setInappPurchase(res));
+              });
+          })
+      : RNIap.initConnection()
+          .catch(() => {
+            console.log('error connecting to store');
+          })
+          .then(() => {
+            RNIap.getSubscriptions({skus: products})
+              .catch(() => {
+                console.log('error finding purchase');
+              })
+              .then(res => {
+                console.log('Android Subscription', res);
+                dispatch(setInappPurchase(res));
+              });
+          });
+  };
 
   useEffect(() => {
-    if (showIntro) {
-      //  navigation.replace('LogSignUp');
+   
+    // loadScreen();
+    if (getPurchaseHistory.length > 0) {
       if (
-        getUserDataDetails?.id &&
-        getUserDataDetails?.profile_compl_status == 1
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
       ) {
-        navigation.replace('BottomTab');
-      } else {
-        navigation.replace('LogSignUp');
+        setTimeout(
+          () => {
+            loadScreen();
 
-        // navigation.replace('LogSignUp');
+          },
+          Platform.OS == 'android' ? 1000 : 1000,
+        );
+      }else{
+        MyInterstitialAd(resetFitmeCount).load();
+        setTimeout(
+          () => {
+            loadScreen();
+          },
+          Platform.OS == 'android' ? 1000 : 1000,
+        );
       }
     } else {
-      navigation.replace('IntroductionScreen1');
-      //navigation.replace('IntroductionScreen1');
+      MyInterstitialAd(resetFitmeCount).load();
+      setTimeout(
+        () => {
+          loadScreen();
+        },
+        Platform.OS == 'android' ? 1000 : 1000,
+      );
     }
-    // MyInterstitialAd().load();
-    // setTimeout(
-    //   () => {
-    //     loadScreen();
-    //   },
-    //   Platform.OS == 'android' ? 1000 : 1000,
-    // );
   }, []);
   const Meal_List = async deviceData => {
     try {
@@ -163,24 +171,27 @@ const SplaceScreen = ({navigation}) => {
       console.log('Product Category Error111', error);
     }
   };
-  // const loadScreen = () => {
-  //   if (showIntro) {
-  //     //  navigation.replace('LogSignUp');
-  //     if (
-  //       getUserDataDetails?.id &&
-  //       getUserDataDetails?.profile_compl_status == 1
-  //     ) {
-  //       navigation.replace('BottomTab');
-  //     } else {
-  //       navigation.replace('LogSignUp');
+  const loadScreen = () => {
+    if (showIntro) {
+      //  navigation.replace('LogSignUp');
+      if (
+        getUserDataDetails?.id &&
+        getUserDataDetails?.profile_compl_status == 1
+      ) {
+        navigation.replace('BottomTab');
+      } else {
+        navigation.replace('LogSignUp');
 
-  //       // navigation.replace('LogSignUp');
-  //     }
-  //   } else {
-  //     navigation.replace('IntroductionScreen1');
-  //     //navigation.replace('IntroductionScreen1');
-  //   }
-  // };
+        // navigation.replace('LogSignUp');
+      }
+    } else {
+      navigation.replace('IntroductionScreen1');
+      //navigation.replace('IntroductionScreen1');
+    }
+  };
+  const resetFitmeCount = () => {
+    return null;
+  };
   return (
     <LinearGradient
       style={styels.container}
