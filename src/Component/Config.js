@@ -4,6 +4,7 @@ export const DeviceWidth = Dimensions.get('screen').width;
 export const Api = 'https://cvinfotech2@gofit.tentoptoday.com/json/';
 //export const NewApi = 'https://gofit.tentoptoday.com/adserver/public/api/';
 export const NewApi = 'https://fitme.esapplications.in/adserver/public/api/';
+
 export const Appapi = {
   login: 'user_login.php',
   signup: 'user_registration.php',

@@ -2,7 +2,7 @@
 //  NotificationService.m
 //  ImageNotification
 //
-//  Created by CVInfotech React Native on 21/02/24.
+
 //
 
 #import "NotificationService.h"
@@ -20,12 +20,13 @@
 - (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
     self.contentHandler = contentHandler;
     self.bestAttemptContent = [request.content mutableCopy];
-    
-    // Modify the notification content here...
+
+  [[FIRMessaging extensionHelper] populateNotificationContent:self.bestAttemptContent withContentHandler:contentHandler];
+//    // Modify the notification content here...
 //    self.bestAttemptContent.title = [NSString stringWithFormat:@"%@ [modified]", self.bestAttemptContent.title];
 //    
 //    self.contentHandler(self.bestAttemptContent);
-  [[FIRMessaging extensionHelper] populateNotificationContent:self.bestAttemptContent withContentHandler:contentHandler];
+
 }
 
 - (void)serviceExtensionTimeWillExpire {

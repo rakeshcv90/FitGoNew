@@ -36,131 +36,84 @@ export const requestPermissionforNotification = async dispatch => {
   }
 };
 
-export const RemoteMessage = () => {
-  // try {
-  // } catch (error) {
-  //   console.log('onm', error);
-  // }
-  messaging().onMessage(async remoteMessage => {
-    console.log('onM11', remoteMessage);
-    DisplayNotification(remoteMessage);
-  });
-  messaging().setBackgroundMessageHandler(async remoteMessage => {
-    console.log('Back', remoteMessage);
-    DisplayNotification(remoteMessage);
-  });
-  notifee.onBackgroundEvent(async ({type, detail}) => {
-    const {notification, pressAction} = detail;
-    console.log('presss', Platform.OS, type, detail);
-    if (type === EventType.ACTION_PRESS && pressAction.id === 'Stop') {
-      // Remove the notification
-      await notifee.cancelNotification(notification.id);
-    } else if (
-      type === EventType.ACTION_PRESS &&
-      pressAction.id === 'Plus_Five'
-    ) {
-      // Remove the notification
-      // Get the current time
-      const currentTime = new Date();
+// export const RemoteMessage = () => {
+//   // try {
+//   // } catch (error) {
+//   //   console.log('onm', error);
+//   // }
+//   messaging().onMessage(async remoteMessage => {
+//   //  DisplayNotification(remoteMessage);
+//   });
+//   // notifee.onForegroundEvent(async remoteMessage => {
+//   //   console.log('Fore', remoteMessage);
+//   //   DisplayNotification(remoteMessage);
+//   // });
+//   messaging().setBackgroundMessageHandler(DisplayNotification)
+//   // messaging().setBackgroundMessageHandler(async remoteMessage => {
+//   //   console.log("BACK MESSS", remoteMessage)
+//   //   DisplayNotification(remoteMessage);
+//   // })
+  
+//   notifee.createChannel({
+//     id: 'Time',
+//     name: 'Time',
+//     bypassDnd: true,
+//     vibration: true,
+//     visibility: AndroidVisibility.PUBLIC,
+//     importance: AndroidImportance.HIGH,
+//     description: 'CHANNEL FOR NOTIFICATION',
+//   });
+//   notifee.deleteChannel('Fitme')
+//   notifee.createChannel({
+//     id: 'Fitme',
+//     name: 'Fitme',
+//     bypassDnd: true,
+//     vibration: true,
+//     visibility: AndroidVisibility.PUBLIC,
+//     importance: AndroidImportance.HIGH,
+//     description: 'CHANNEL FOR NOTIFICATION',
+//     sound: 'default',
+//   });
 
-      // Add 5 minutes to the current time
-      currentTime.setMinutes(currentTime.getMinutes() + 1);
-      const trigger = {
-        type: TriggerType.TIMESTAMP,
-        timestamp: currentTime.getTime(), // fire at 11:10am (10 minutes before meeting)
-        repeatFrequency: RepeatFrequency.DAILY,
-      };
-      await notifee.createTriggerNotification(
-        {
-          title: 'Exercise Time',
-          body: `It's time to Exercise`,
-          android: {
-            channelId: 'Time',
-            importance: AndroidImportance.HIGH,
-            pressAction: {
-              id: 'Alarm',
-            },
-            actions: [
-              {
-                title: 'Add +5',
-                pressAction: {
-                  id: 'Plus_Five',
-                },
-              },
-              {
-                title: 'Stop',
-                pressAction: {
-                  id: 'Stop',
-                },
-              },
-              // Add more actions as needed
-            ],
-          },
-          ios: {
-            categoryId: 'Alarm',
-            foregroundPresentationOptions: {
-              badge: true,
-              banner: true,
-              sound: false,
-            },
-          },
-          id: 'Timer',
-        },
-        trigger,
-      );
-      console.log("NEW NOTI TIME", currentTime)
-    }
-  });
-  notifee.createChannel({
-    id: 'Time',
-    name: 'Time',
-    bypassDnd: true,
-    vibration: true,
-    visibility: AndroidVisibility.PUBLIC,
-    importance: AndroidImportance.HIGH,
-    description: 'CHANNEL FOR NOTIFICATION'
-  })
+//   notifee.setNotificationCategories([
+//     {
+//       id: 'Alarm',
+//       actions: [
+//         {
+//           id: 'Plus_Five',
+//           title: 'Add +5',
+//         },
+//         {
+//           id: 'Stop',
+//           title: 'Stop',
+//           destructive: true,
+//         },
+//       ],
+//     },
+//   ]);
 
-  notifee.setNotificationCategories([
-    {
-      id: 'Alarm',
-      actions: [
-        {
-          id: 'Plus_Five',
-          title: 'Add +5',
-        },
-        {
-          id: 'Stop',
-          title: 'Stop',
-          destructive: true,
-        },
-      ],
-    },
-  ]);
-
-  messaging().getInitialNotification(async remoteMessage => {
-    console.log('INi', remoteMessage);
-    DisplayNotification(remoteMessage);
-  });
-};
+//   messaging().getInitialNotification(async remoteMessage => {
+//     console.log("INI NOTI", remoteMessage)
+//   //  DisplayNotification(remoteMessage);
+//   });
+// };
 const removeHtmlTags = str => {
   if (!str || typeof str !== 'string') return '';
   return str.replace(/<[^>]+>/g, '');
 };
 
 // Cleaned title without HTML tags
-const DisplayNotification = async Notification => {
+export const DisplayNotification = async Notification => {
+  console.log('Notification',Notification)
   const cleanedTitle = removeHtmlTags(Notification?.data?.message);
-  console.log('onM111233344', cleanedTitle);
   try {
     await notifee.displayNotification({
       title: Notification?.data?.title || Notification.notification.title,
       body: cleanedTitle || Notification.notification.body,
+      // id:Notification.data?.notification_id,
       android: {
-        channelId: 'default',
-        importance: AndroidImportance.HIGH,
-        visibility: AndroidVisibility.PUBLIC,
-        //largeIcon: Notification?.data?.image,
+        channelId: 'Fitme',
+        largeIcon: 'ic_launcher',
         style: {
           type: AndroidStyle.BIGPICTURE,
           picture: Notification?.data?.image,
