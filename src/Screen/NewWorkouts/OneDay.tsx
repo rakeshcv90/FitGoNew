@@ -535,28 +535,27 @@ const OneDay = ({navigation, route}: any) => {
           bR={40}
           mB={40}
           onPress={() => {
+            analytics().logEvent(`CV_FITME_STARTED_DAY_${day}_EXERCISES`);
 
-           analytics().logEvent(`CV_FITME_STARTED_DAY_${day}_EXERCISES`)
-         
-           postCurrentDayAPI();
-            // console.log("Test567",getPurchaseHistory[])
-            // if (data.workout_price == 'free') {
-            //   postCurrentDayAPI();
-            // } else if (
-            //   data?.workout_price == 'Premium' &&
-            //   getPurchaseHistory[0]?.plan_end_date >=
-            //     moment().format('YYYY-MM-DD')
-            // ) {
-            //   postCurrentDayAPI();
-            // } else if (
-            //   data?.workout_price == 'Premium' &&
-            //   getPurchaseHistory[0]?.plan_end_date <
-            //     moment().format('YYYY-MM-DD')
-            // ) {
-            //   dispatch(setSubscriptiomModal(true));
-            // } else {
-            //   dispatch(setSubscriptiomModal(true));
-            // }
+            //postCurrentDayAPI();
+
+            if (data.workout_price == 'free') {
+              postCurrentDayAPI();
+            } else if (
+              data?.workout_price == 'Premium' &&
+              getPurchaseHistory[0]?.plan_end_date >=
+                moment().format('YYYY-MM-DD')
+            ) {
+              postCurrentDayAPI();
+            } else if (
+              data?.workout_price == 'Premium' &&
+              getPurchaseHistory[0]?.plan_end_date <
+                moment().format('YYYY-MM-DD')
+            ) {
+              dispatch(setSubscriptiomModal(true));
+            } else {
+              dispatch(setSubscriptiomModal(true));
+            }
 
             // postCurrentDayAPI();
 
@@ -570,7 +569,6 @@ const OneDay = ({navigation, route}: any) => {
             // });
           }}
         />
-      
       </View>
       {loader && <ActivityLoader visible={loader} />}
       <WorkoutDescription

@@ -42,7 +42,7 @@ const Exercise = ({navigation, route}: any) => {
   const [back, setBack] = useState(false);
   const [timer, setTimer] = useState(15);
   const [restStart, setRestStart] = useState(false);
-  const [exerciseDoneIDs, setExerciseDoneIDs] = useState<Array<any>>([]);
+  const [randomCount, setRandomCount] = useState(0);
   const [skipCount, setSkipCount] = useState(0);
   const [currentData, setCurrentData] = useState(currentExercise);
   const [isLoading, setIsLoading] = useState(true);
@@ -51,9 +51,9 @@ const Exercise = ({navigation, route}: any) => {
   );
   const [separateTimer, setSeparateTimer] = useState(timer);
   const [ttsInitialized, setTtsInitialized] = useState(false);
-  const restTimerRef = useRef(null);
-  const seprateTimerRef = useRef(null);
- 
+  const restTimerRef = useRef(0);
+  const playTimerRef = useRef<any>(null);
+
   useEffect(() => {
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
@@ -76,32 +76,14 @@ const Exercise = ({navigation, route}: any) => {
 
     initTts();
   }, []);
-  // console.log("currentDatatatata",allExercise.length,exerciseNumber)
-  // useEffect(() => {
-  //   const TTStimer = async () => {
-  //     if (
-  //       restStart &&
-  //       allExercise.length - 1 != number &&
-  //       getSoundOffOn == true
-  //     ) {
-  //       if (separateTimer > 0&&timer==separateTimer) {
-  //         seprateTimerRef.current= setTimeout(() => {
-  //           setSeparateTimer(separateTimer - 1);
-  //           Tts.speak(`${separateTimer}`);
-  //         }, 1000);
-  //         return () => clearInterval(seprateTimerRef.current);
-  //       }
-  //     } else {
-  //       setSeparateTimer(timer);
-  //     }
-  //   };
-  //   TTStimer();
-  // }, [separateTimer, restStart]);
+
   const dispatch = useDispatch();
   useEffect(() => {
+
     if (!back) {
       restStart
-        ? (restTimerRef.current = setTimeout(() => {
+        ? (restTimerRef.current =
+          setTimeout(() => {
             if (timer === 0) {
               if (number == allExercise?.length - 1) return;
               setRestStart(false);
@@ -110,10 +92,11 @@ const Exercise = ({navigation, route}: any) => {
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
-           
+
               setCurrentData(allExercise[index + 1]);
               // setPre(15);
               setNumber(number + 1);
+              setRandomCount(randomCount+1)
               setTimer(15);
             } else if (timer == 15) {
               const index = allExercise?.findIndex(
@@ -123,32 +106,37 @@ const Exercise = ({navigation, route}: any) => {
               setTimer(timer - 1);
               setPlayW(0);
             } else {
-               setTimer(timer - 1);
+              setTimer(timer - 1);
             }
             getSoundOffOn && Tts.speak(`${timer - 1}`);
           }, 1000))
-        : setTimeout(() => {
+        : (playTimerRef.current = setTimeout(() => {
+            if (playW >= 100 && randomCount == allExercise?.length) {
+              navigation.goBack()
+              clearTimeout(restTimerRef.current);
+              clearTimeout(playTimerRef.current);
+            }
             if (pause)
               setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
             if (playW >= 100 && number == allExercise?.length - 1) {
-          
               setPause(false);
               postCurrentExerciseAPI(number);
-              if (skipCount == 0)
+              if (skipCount == 0) {
                 navigation.navigate('SaveDayExercise', {data, day});
-              else navigation.goBack();
+                clearTimeout(restTimerRef.current);
+                clearTimeout(playTimerRef.current);
+              } else {
+                navigation.goBack();
+                clearTimeout(restTimerRef.current);
+                clearTimeout(playTimerRef.current);
+              }
             } else if (playW >= 100 && number < allExercise?.length - 1) {
-            
               setPause(false);
               setRestStart(true);
             }
-          }, 1000);
+          }, 1000));
     } else {
-  
     }
-    return () => {
-      clearInterval(restTimerRef.current);
-    };
   }, [playW, pause, currentData, timer, back]);
   useEffect(() => {
     if (exerciseNumber != -1 && number == 0) {
@@ -191,7 +179,7 @@ const Exercise = ({navigation, route}: any) => {
           height: restStart ? 50 : 30,
           backgroundColor: restStart ? 'transparent' : '#D9D9D9B2',
           marginVertical: 5,
-          marginTop: restStart ? Platform.OS=='ios'?25:10 : 5,
+          marginTop: restStart ? (Platform.OS == 'ios' ? 25 : 10) : 5,
           alignSelf: restStart ? 'flex-end' : 'auto',
         }}>
         {icon == 'info-outline' ? (
@@ -204,7 +192,6 @@ const Exercise = ({navigation, route}: any) => {
           <Icons
             name={icon}
             size={restStart ? 40 : 20}
-            
             color={restStart ? AppColor.WHITE : AppColor.INPUTTEXTCOLOR}
           />
         )}
@@ -219,7 +206,7 @@ const Exercise = ({navigation, route}: any) => {
     payload.append('workout_id', data?.workout_id);
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
-    console.log("payload------>",payload)
+    console.log('payload------>', payload);
     try {
       const res = await axios({
         url: NewAppapi.POST_EXERCISE,
@@ -229,7 +216,7 @@ const Exercise = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log("GDSGDGDGDGD",payload,res?.data)
+      console.log('GDSGDGDGDGD', payload, res?.data);
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -369,7 +356,7 @@ const Exercise = ({navigation, route}: any) => {
       />
       {restStart ? (
         <View style={{flex: 1, top: -20}}>
-          <FAB icon="format-list-bulleted" />
+          {/* <FAB icon="format-list-bulleted" /> */}
           <View style={{alignSelf: 'center', alignItems: 'center'}}>
             <Text
               style={{
@@ -407,13 +394,13 @@ const Exercise = ({navigation, route}: any) => {
                 }}
                 style={{
                   borderRadius: 20,
-                  width:DeviceWidth*0.3,
+                  width: DeviceWidth * 0.3,
                   justifyContent: 'center',
                   alignItems: 'center',
                   // backgroundColor: '#FCFCFC61',
                   backgroundColor:
                     number == allExercise?.length - 1 ? '#d9d9d9' : '#Fff',
-                 // paddingHorizontal: 20,
+                  // paddingHorizontal: 20,
                   marginRight: 10,
                 }}>
                 <Text
@@ -585,7 +572,6 @@ const Exercise = ({navigation, route}: any) => {
               onVideoLoadStart={() => console.log('forth')}
               paused={!pause}
               onPlaybackResume={() => {
-                
                 setPause(true);
               }}
               repeat={true}
@@ -631,6 +617,7 @@ const Exercise = ({navigation, route}: any) => {
               // setDefaultPre(0);
               setPlayW(prevTimer => 0);
               setPause(false);
+              clearInterval(playTimerRef.current);
               setTimeout(() => {
                 if (number == allExercise?.length - 1) return;
                 const index = allExercise?.findIndex(
@@ -646,6 +633,7 @@ const Exercise = ({navigation, route}: any) => {
               if (number == 0) return;
               setPlayW(prevTimer => 0);
               setPause(false);
+              clearInterval(playTimerRef.current);
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
@@ -660,6 +648,11 @@ const Exercise = ({navigation, route}: any) => {
             setVisible={setVisible}
             exerciseData={allExercise}
             setCurrentData={setCurrentData}
+            setPlayW={setPlayW}
+            setPause={setPause}
+            setRandomCount={setRandomCount}
+            playTimerRef={playTimerRef}
+            currentExercise={currentExercise}
           />
         </>
       )}

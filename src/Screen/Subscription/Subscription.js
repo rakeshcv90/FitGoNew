@@ -40,14 +40,13 @@ const Subscription = ({navigation}) => {
   const dispatch = useDispatch();
   const {getInAppPurchase, getUserDataDetails, getPurchaseHistory} =
     useSelector(state => state);
-  const [selectedItems, setSelectedItems] = useState(getInAppPurchase[1]);
-  const translateE = useRef(new Animated.Value(0)).current;
-  const translateW = useRef(new Animated.Value(0)).current;
-  const scaleSelected = useRef(new Animated.Value(1)).current;
-  const [ImageSelected, setImageSelected] = useState(1);
+  const [selectedItems, setSelectedItems] = useState(getInAppPurchase[2]);
+ 
+
+
   const [visible, setVisible] = React.useState(false);
   const [successful, setSuccessful] = useState(false);
-  const [PlanData, setPlan] = useState([]);
+
   const [forLoading, setForLoading] = useState(false);
 
   const data = [
@@ -85,28 +84,28 @@ const Subscription = ({navigation}) => {
       PurchaseDetails(getUserDataDetails.id, getUserDataDetails.login_token);
     }, []),
   );
-  useEffect(() => {
-    const purchaseUpdateSubscription = RNIap.purchaseUpdatedListener(
-      async purchase => {},
-    );
-    const purchaseErrorSubscription = RNIap.purchaseErrorListener(
-      error => {
-        if (error['responseCode'] === '2') {
-          Alert('Error', 'Payment cancelled by user');
-        } else {
-          Alert(
-            'Error',
-            'There has been an reeoe with  your purchase ,error code= ' + error,
-          );
-        }
-      },
-      // console.error('Purchase error', error.message),
-    );
-    return () => {
-      purchaseUpdateSubscription.remove();
-      purchaseErrorSubscription.remove();
-    };
-  }, []);
+  // useEffect(() => {
+  //   const purchaseUpdateSubscription = RNIap.purchaseUpdatedListener(
+  //     async purchase => {},
+  //   );
+  //   const purchaseErrorSubscription = RNIap.purchaseErrorListener(
+  //     error => {
+  //       if (error['responseCode'] === '2') {
+  //         Alert('Error', 'Payment cancelled by user');
+  //       } else {
+  //         Alert(
+  //           'Error',
+  //           'There has been an reeoe with  your purchase ,error code= ' + error,
+  //         );
+  //       }
+  //     },
+  //     // console.error('Purchase error', error.message),
+  //   );
+  //   return () => {
+  //     purchaseUpdateSubscription.remove();
+  //     purchaseErrorSubscription.remove();
+  //   };
+  // }, []);
   const validateIOS = async receipt => {
     // const purchases = await RNIap.getAvailablePurchases();
     // const latestPurchase = purchases[purchases.length - 1];
@@ -117,24 +116,21 @@ const Subscription = ({navigation}) => {
     };
 
     try {
-      const result = await axios(
-        'https://buy.itunes.apple.com/verifyReceipt',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          data: receiptBody,
+      const result = await axios('https://buy.itunes.apple.com/verifyReceipt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
-      console.log(
-        'After Validation Purchase',
-        result.data?.pending_renewal_info,
-      );
+        data: receiptBody,
+      });
+
       if (result.data) {
         const renewalHistory = result.data?.pending_renewal_info;
         if (renewalHistory[0]?.auto_renew_status == 1 && receipt?.length != 0) {
-          fetchPurchaseHistory1(renewalHistory[0]);
+          fetchPurchaseHistory1(
+            renewalHistory[0],
+            result?.data?.latest_receipt_info[0]?.original_purchase_date,
+          );
         } else {
           console.log('Payment Failed');
           setForLoading(false);
@@ -166,7 +162,6 @@ const Subscription = ({navigation}) => {
       });
 
       if (purchase) {
-        console.log('Current Purchase', purchase);
         // setPlan(purchase);
         validateIOS(purchase.transactionReceipt);
       } else {
@@ -198,6 +193,21 @@ const Subscription = ({navigation}) => {
   };
   const fetchPurchaseHistory = async data => {
     const jsonObject = JSON.parse(data);
+    const data111 = {
+      user_id: getUserDataDetails.id,
+      planname:
+        jsonObject.productId == 'fitme_monthly'
+          ? 'Monthly'
+          : jsonObject.productId == 'fitme_quarterly'
+          ? 'Quarterly'
+          : 'Yearly',
+      transaction_id: jsonObject.orderId,
+      planid: jsonObject.productId,
+      startdate: moment().format('YYYY-MM-DD'),
+      platform: Platform.OS,
+      planstatus: 'Active',
+    };
+
     try {
       const res = await axios(`${NewAppapi.Transctions}`, {
         method: 'POST',
@@ -214,8 +224,8 @@ const Subscription = ({navigation}) => {
               : 'Yearly',
           transaction_id: jsonObject.orderId,
           planid: jsonObject.productId,
-          // startdate: startDate,
-          // enddate: endDate,
+          startdate: moment().format('YYYY-MM-DD'),
+          platform: Platform.OS,
           planstatus: 'Active',
         },
       });
@@ -238,26 +248,10 @@ const Subscription = ({navigation}) => {
       console.log('Purchase Store Data Error', error);
     }
   };
-  const fetchPurchaseHistory1 = async item => {
-
-    setForLoading(false);
-    // const timestamp = data.transactionDate;
-    // const date = new Date(timestamp);
-    // const startDate = `${date.getDate()}-${
-    //   date.getMonth() + 1
-    // }-${date.getFullYear()} `;
-    // console.log('renewalHistory', item);
-    // date.setDate(
-    //   date.getDate() + data.productId == 'fitme_monthly'
-    //     ? 30
-    //     : data.productId == 'fitme_quarterly'
-    //     ? '90'
-    //     : 365,
-    // );
-    // const endDate = `${date.getDate()}-${
-    //   date.getMonth() + 1
-    // }-${date.getFullYear()} `;
-
+  const fetchPurchaseHistory1 = async (item, startDate) => {
+    let timestamp = startDate;
+    const [datePart] = timestamp.split(' ');
+    console.log('Start Date is', datePart);
     try {
       const res = await axios(`${NewAppapi.Transctions}`, {
         method: 'POST',
@@ -266,6 +260,7 @@ const Subscription = ({navigation}) => {
         },
         data: {
           user_id: getUserDataDetails.id,
+          startdate: datePart,
           planname:
             item.auto_renew_product_id == 'fitme_monthly'
               ? 'Monthly'
@@ -275,6 +270,7 @@ const Subscription = ({navigation}) => {
           transaction_id: item.original_transaction_id,
           planid: item.auto_renew_product_id,
           planstatus: 'Active',
+          platform: Platform.OS,
         },
       });
       if (res.data.status == 'transaction completed') {
@@ -306,8 +302,9 @@ const Subscription = ({navigation}) => {
           getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
           // getPurchaseHistory[0].plan_status == 'Active'
         ) {
-          return 'Active Plan';
+          // return 'Active Plan';
         } else {
+          // return 'Active Plan';
         }
       } else {
         if (
@@ -320,9 +317,11 @@ const Subscription = ({navigation}) => {
         }
       }
     } else {
+      // return 'Active Plan';
     }
   };
   const puchasePackage = item => {
+    
     if (item.length > 0 || item.length == undefined) {
       if (Platform.OS == 'ios') {
         purchaseItems(item);
@@ -356,7 +355,7 @@ const Subscription = ({navigation}) => {
         },
       });
 
-      console.log('Purchase ', res.data);
+    
       if (res?.data?.data?.length > 0) {
         dispatch(setPurchaseHistory(res.data.data));
       } else if (res?.data?.msg == 'Invalid Token') {
@@ -376,10 +375,7 @@ const Subscription = ({navigation}) => {
     }
   };
 
-  const scaleSelectedInterpolate = scaleSelected.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 1.12], // Adjust the starting and ending scale factors as needed
-  });
+
   const getMonthData = item => {
     if (Platform.OS == 'ios') {
       if (item.title == 'Monthly') {
@@ -401,48 +397,52 @@ const Subscription = ({navigation}) => {
   };
   const getPriceDetails = item => {
     if (Platform.OS == 'ios') {
-      if (item.title == 'Monthly') {
-        return (item.price / 4).toFixed(2) + '/' + 'Per Week';
+      if (item.title == 'Yearly') {
+        return (item.price / 12).toFixed(2) + '/' + 'Per Month';
       } else if (item.title == 'Quarterly') {
-        return (item.price / 13).toFixed(2) + '/' + 'Per Week';
+        return (item.price / 3).toFixed(2) + '/' + 'Per Month';
       } else {
-        return (item.price / 52).toFixed(2) + '/' + 'Per Week';
+        return null;
       }
       // item.price
     } else {
-      if (item.name == 'Monthly') {
-        let price = parseInt(
-          item.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList[0]
-            ?.priceAmountMicros,
-        );
+      let price = 0;
+      if (item.name == 'Yearly') {
+        if (
+          item.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList
+            .length == 1
+        ) {
+          price = parseInt(
+            item.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList[0]
+              ?.priceAmountMicros,
+          );
+        } else {
+          price = parseInt(
+            item.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList[1]
+              ?.priceAmountMicros,
+          );
+        }
 
-        return (price / 1000000 / 4).toFixed(2) + '/' + 'Per Week';
+        return (price / 1000000 / 12).toFixed(2) + '/' + 'Per  Month';
       } else if (item.name == 'Quarterly') {
         let price = parseInt(
           item.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList[0]
             ?.priceAmountMicros,
         );
 
-        return (price / 1000000 / 13).toFixed(2) + '/' + 'Per Week';
+        return (price / 1000000 / 3).toFixed(2) + '/' + 'Per Month';
       } else {
-        let price = parseInt(
-          item.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList[0]
-            ?.priceAmountMicros,
-        );
-
-        return (price / 1000000 / 52).toFixed(2) + '/' + 'Per Week';
+        return <View style={{width: 100}}></View>;
       }
     }
   };
   restorePucrchase = async () => {
-   
-    setForLoading(true)
+    setForLoading(true);
     try {
       const purchases = await RNIap.getAvailablePurchases();
-      console.log("Testing Purchase History",purchases)
-   
+
       if (purchases?.length == 0) {
-        setForLoading(false)
+        setForLoading(false);
         showMessage({
           message: 'No Active Subscription Found !',
           type: 'danger',
@@ -453,34 +453,31 @@ const Subscription = ({navigation}) => {
         });
       } else {
         if (Platform.OS == 'android') {
-          setForLoading(false)
+          setForLoading(false);
           const activeSubs = purchases.filter(item => {
-           
             if (item?.autoRenewingAndroid == true) {
-              setForLoading(false)
+              setForLoading(false);
               showMessage({
                 message: 'Subscription Restored!',
                 type: 'success',
                 animationDuration: 500,
-      
+
                 floating: true,
                 icon: {icon: 'auto', position: 'left'},
               });
-             
             } else {
-              setForLoading(false)
+              setForLoading(false);
               showMessage({
                 message: 'No Active Subscription Found!',
                 type: 'danger',
                 animationDuration: 500,
-      
+
                 floating: true,
                 icon: {icon: 'auto', position: 'left'},
               });
             }
           });
-        } 
-        else {
+        } else {
           const latestPurchase = purchases[purchases.length - 1];
 
           const apiRequestBody = {
@@ -488,7 +485,7 @@ const Subscription = ({navigation}) => {
             password: '3a00ec90f8b745678daf489417956f40',
           };
           try {
-             const result = await axios(
+            const result = await axios(
               'https://buy.itunes.apple.com/verifyReceipt',
               {
                 method: 'POST',
@@ -498,34 +495,33 @@ const Subscription = ({navigation}) => {
                 data: apiRequestBody,
               },
             );
-            setForLoading(false)
 
+            let timestamp =
+              result.data.latest_receipt_info[0].original_purchase_date;
+
+            const [datePart] = timestamp.split(' ');
+
+            console.log('Purchase history', result.data.latest_receipt_info[0]);
+            setForLoading(false);
             if (result.data) {
-       
-
               const renewalHistory = result.data.pending_renewal_info;
 
               const activeSubs = renewalHistory.filter(item => {
                 if (item.auto_renew_status == '1') {
-               
-
                   Alert.alert('Success', 'Subscription Restored');
-                 
+                  fetchPurchaseHistory1(renewalHistory[0], datePart);
                 } else {
-             
-                
-                 showMessage({
-                  message: 'No Active Subscription Found!',
-                  type: 'danger',
-                  animationDuration: 500,
-        
-                  floating: true,
-                  icon: {icon: 'auto', position: 'left'},
-                });
+                  showMessage({
+                    message: 'No Active Subscription Found!',
+                    type: 'danger',
+                    animationDuration: 500,
+
+                    floating: true,
+                    icon: {icon: 'auto', position: 'left'},
+                  });
                 }
               });
             } else {
-            
               Alert.alert('Success', 'No Active Subscription Found');
             }
           } catch (error) {
@@ -533,18 +529,18 @@ const Subscription = ({navigation}) => {
               message: 'No Active Subscription Found!',
               type: 'danger',
               animationDuration: 500,
-    
+
               floating: true,
               icon: {icon: 'auto', position: 'left'},
             });
-            setForLoading(false)
+            setForLoading(false);
             console.log(error);
           }
         }
       }
     } catch (err) {
       Alert.alert('Error', 'Failed to Restore Subscription');
-      setForLoading(false)
+      setForLoading(false);
       console.error(err);
     }
   };
@@ -595,7 +591,106 @@ const Subscription = ({navigation}) => {
       </Modal>
     );
   };
+  const getRecommended = item => {
+    if (
+      Platform.OS == 'android' &&
+      getPurchaseHistory.length <= 0 &&
+      item.name == 'Yearly'
+    ) {
+      return (
+        <LinearGradient
+          start={{x: 0, y: 1}}
+          end={{x: 1, y: 0}}
+          style={{
+            paddingHorizontal: 5,
+            paddingVertical: 3,
+            borderRadius: 5,
+          }}
+          colors={['#00DF76', '#00AB5E']}>
+          <Text
+            style={{
+              fontFamily: 'Poppins',
+              fontWeight: '600',
+              fontSize: 15,
+              marginHorizontal: 5,
+              textAlign: 'center',
+              color: '#FFFFFF',
+            }}>
+            Recommended
+          </Text>
+        </LinearGradient>
+      );
+    }
+  };
+  const getFreeTrial = item => {
+    if (
+      item.name == 'Yearly' &&
+      item.subscriptionOfferDetails[0].offerId != null
+    )
+      return (
+        <View
+          style={{
+            paddingHorizontal: 5,
+            paddingVertical: 3,
+            borderRadius: 5,
+            borderTopRightRadius: 5,
+            borderBottomLeftRadius: 5,
+            top: -DeviceHeigth * 0.02,
+            marginRight: 5,
+            backgroundColor: '#D5191A33',
+          }}>
+          <Text>3 Day Free Trial</Text>
+        </View>
+      );
+  };
+  const getMoneySign = item => {
+    if (Platform.OS == 'ios') {
+      return item.title != 'Monthly' && item.localizedPrice.slice(0, 1);
+    } else {
+      if (item.name == 'Yearly') {
+     
+        if (
+          item.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList
+            .length == 1
+        ) {
+          return item.subscriptionOfferDetails[0].pricingPhases.pricingPhaseList[0].formattedPrice.slice(
+            0,
+            1,
+          );
+        } else {
+          return item.subscriptionOfferDetails[0].pricingPhases.pricingPhaseList[1].formattedPrice.slice(
+            0,
+            1,
+          );
+        }
+      } else if (item.name == 'Quarterly') {
+        return item.subscriptionOfferDetails[0].pricingPhases.pricingPhaseList[0].formattedPrice.slice(
+          0,
+          1,
+        );
+      }
+    }
+  };
+  const getButtonName=()=>{
+    if(selectedItems.length<=0){
+      return 'Proceed'
+    }else{
+      if(selectedItems.name=='Quarterly'){
+        return 'Proceed'
+      }else if(selectedItems.name=='Monthly'){
+        return 'Proceed'
+      }else{
 
+        if( selectedItems.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList
+          .length == 1){
+            return 'Proceed'
+        }else{
+          return 'Start Free  Trial'
+        }
+      }
+     
+    }
+  }
   return (
     <View style={styles.container}>
       <NewHeader
@@ -671,6 +766,7 @@ const Subscription = ({navigation}) => {
               style={{width: 18, height: 18}}
               resizeMode="contain"
             />
+
             <Text
               style={{
                 fontFamily: 'Poppins',
@@ -680,7 +776,8 @@ const Subscription = ({navigation}) => {
                 marginHorizontal: 10,
                 color: '#505050',
               }}>
-              For Beginner
+              {}
+              {getUserDataDetails?.level_title}
             </Text>
             <Image
               source={localImage.checked}
@@ -696,7 +793,7 @@ const Subscription = ({navigation}) => {
                 marginHorizontal: 10,
                 color: '#505050',
               }}>
-              For Men Ages: 25-35
+              Your Ages: {getUserDataDetails?.age}
             </Text>
           </View>
           <View
@@ -722,211 +819,201 @@ const Subscription = ({navigation}) => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                
-                restorePucrchase()
+                restorePucrchase();
               }}>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  fontWeight: '500',
-                  fontSize: 12,
-                  lineHeight: 18,
-                  fontFamily: 'Poppins',
-                  color: '#1E1E1E',
-                  textDecorationLine: 'underline',
-                }}>
-                Restore purchase
-              </Text>
+              {Platform.OS == 'ios' && (
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontWeight: '500',
+                    fontSize: 12,
+                    lineHeight: 18,
+                    fontFamily: 'Poppins',
+                    color: '#1E1E1E',
+                    textDecorationLine: 'underline',
+                  }}>
+                  Restore purchase
+                </Text>
+              )}
             </TouchableOpacity>
           </View>
           <View
             style={{
-              alignSelf: 'center',
-              width: '100%',
-              justifyContent: 'center',
-
-              alignItems: 'center',
-              paddingTop: 25,
-              // paddingLeft: 5,
-              // paddingRight: 5,
-
               paddingBottom: 20,
             }}>
             <FlatList
               data={getInAppPurchase}
-              horizontal
               showsHorizontalScrollIndicator={false}
               renderItem={({item, index}) => {
                 return (
-                  <>
-                    <TouchableOpacity
-                      style={{}}
-                      activeOpacity={1}
-                      onPress={() => {
-                        setImageSelected(index);
-                        setSelectedItems(item);
+                  <TouchableOpacity
+                    style={[
+                      styles.button,
+                      {
+                        borderWidth: 1,
+                        borderColor:
+                          selectedItems.productId == item.productId
+                            ? 'red'
+                            : '#DEDBDC',
+                      },
+                    ]}
+                    activeOpacity={0.5}
+                    onPress={() => {
+                     
+                      setSelectedItems(item);
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
                       }}>
-                      <View
-                        style={{
-                          backgroundColor: getName(item) ? 'black' : '#fff',
-                          marginHorizontal: 6,
-                          width: DeviceWidth * 0.27,
-                          borderTopRightRadius: 5,
-                          borderTopLeftRadius: 5,
-                          paddingBottom: 10,
-                          ...Platform.select({
-                            ios: {
-                              shadowOffset: {width: 0, height: 20},
-                              shadowOpacity: 0.1,
-                              shadowRadius: 4,
-                            },
-                            android: {
-                              elevation: getName(item) ? 5 : 0,
-                            },
-                          }),
-                        }}>
-                        <Text
+                      <View>
+                        <View
                           style={{
-                            top: 5,
-                            fontFamily: 'Poppins',
-                            fontWeight: '700',
-                            fontSize: 12,
-                            textAlign: 'center',
-                            color: '#fff',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            marginHorizontal: 15,
                           }}>
-                          {getName(item)}
-                        </Text>
-                      </View>
-                      <Animated.View
-                        style={[
-                          styles.button,
-                          {
-                            marginTop: index == ImageSelected ? 10 : 0,
-                            borderColor:
-                              selectedItems.productId == item.productId
-                                ? 'red'
-                                : '#DEDBDC',
-
-                            transform: [
-                              {
-                                scale:
-                                  index == ImageSelected
-                                    ? scaleSelectedInterpolate
-                                    : 1,
-                              },
-                            ],
-                          },
-                        ]}>
-                        <View>
                           <Text
                             style={{
                               fontFamily: 'Poppins',
                               fontWeight: '700',
-                              fontSize: 30,
+                              fontSize: 15,
                               textAlign: 'center',
-                              color: '#505050',
+                              color: '#D5191A',
                             }}>
                             {getMonthData(item)}
                           </Text>
                           <Text
                             style={{
                               fontFamily: 'Poppins',
-                              fontWeight: '600',
-                              fontSize: 13,
+                              fontWeight: '700',
+                              fontSize: 15,
+                              marginHorizontal: 5,
                               textAlign: 'center',
-                              color: '#505050',
-                              lineHeight: 20,
+                              color: '#D5191A',
                             }}>
                             {Platform.OS == 'ios' ? item.title : item.name}
                           </Text>
-                          <Text
-                            style={{
-                              fontFamily: 'Poppins',
-                              fontWeight: '600',
-                              fontSize: 12,
-                              textAlign: 'center',
-                              color: '#505050',
-                              lineHeight: 20,
-                            }}>
-                            {Platform.OS == 'android'
-                              ? item.subscriptionOfferDetails[0].pricingPhases.pricingPhaseList[0].formattedPrice.slice(
-                                  0,
-                                  1,
-                                )
-                              : item.localizedPrice.slice(0, 1)}{' '}
-                            {getPriceDetails(item)}
-                          </Text>
+                          {getRecommended(item)}
                         </View>
+                        <View></View>
+                      </View>
+                      {Platform.OS == 'android' && getFreeTrial(item)}
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginTop: 10,
+                      }}>
+                      <View>
                         <View
                           style={{
-                            width: '100%',
-                            height: 2,
-                            backgroundColor: '#DEDBDC',
-                            marginVertical: 5,
-                          }}
-                        />
-                        <View>
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            marginHorizontal: 15,
+                          }}>
                           <Text
                             style={{
                               fontFamily: 'Poppins',
                               fontWeight: '600',
-                              fontSize: 13,
+                              fontSize: 17,
                               textAlign: 'center',
-                              color: '#505050',
-                              lineHeight: 20,
-                              marginTop: 10,
-                            }}>
-                            {Platform.OS == 'ios' ? item.title : item.name}
-                          </Text>
-                          <Text
-                            style={{
-                              fontFamily: 'Poppins',
-                              fontWeight: '600',
-                              fontSize: 12,
-                              textAlign: 'center',
-                              color: '#505050',
+                              color: '#000000',
                               lineHeight: 20,
                             }}>
-                            {Platform.OS == 'ios'
-                              ? item.localizedPrice
-                              : item.subscriptionOfferDetails[0].pricingPhases
-                                  .pricingPhaseList[0].formattedPrice}
+                            {getMoneySign(item)} {getPriceDetails(item)}
                           </Text>
                         </View>
-                      </Animated.View>
-                    </TouchableOpacity>
-                  </>
+                      </View>
+                      <View
+                        style={{
+                          //  alignSelf: 'flex-end',
+                          // alignItems: 'flex-end',
+                          flexDirection: 'row',
+                        }}>
+                        <Text
+                          style={{
+                            fontFamily: 'Poppins',
+                            fontWeight: '600',
+                            fontSize: 15,
+                            textAlign: 'center',
+                            color: '#D5191A',
+                            lineHeight: 20,
+                            marginHorizontal: 20,
+                          }}>
+                          {Platform.OS == 'ios' &&
+                            item.localizedPrice.slice(0, 1)}{' '}
+                          {Platform.OS == 'android'
+                            ? item.subscriptionOfferDetails[0].pricingPhases
+                                .pricingPhaseList.length == 1
+                              ? item.subscriptionOfferDetails[0].pricingPhases
+                                  .pricingPhaseList[0].formattedPrice
+                              : item.subscriptionOfferDetails[0].pricingPhases
+                                  .pricingPhaseList[1].formattedPrice
+                            : item.price}
+                        </Text>
+                        {getName(item) && (
+                          <Image
+                            source={localImage.checked}
+                            style={{width: 25, height: 25, marginRight: 10}}
+                            resizeMode="contain"
+                          />
+                        )}
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                 
                 );
               }}
             />
           </View>
           <View style={{bottom: 15, alignSelf: 'center'}}>
             <Button
-              buttonText={'Proceed'}
+              buttonText={Platform.OS=='ios'?'Proceed':getButtonName()}
               onPresh={() => {
+                console.log("Sefhfhvfgdfgfd",selectedItems)
                 puchasePackage(selectedItems);
               }}
             />
             <View
               style={{
-                bottom:
-                  Platform.OS == 'android'
-                    ? DeviceHeigth * 0.045
-                    : DeviceHeigth * 0.025,
                 alignSelf: 'center',
               }}>
-              <Bulb
-                header={
-                  'Payment is Non-Refundable. We recommend you to review the terms of use before proceeding with any online transaction'
-                }
-              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: DeviceWidth * 0.9,
+                  backgroundColor: '#f5f5f5',
+                  padding: 15,
+                  borderRadius: 30,
+                  marginTop: 15,
+                }}>
+                <Image source={localImage.BULB} style={{marginLeft: 10}} />
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontWeight: '400',
+                    fontFamily: 'Poppins',
+                    lineHeight: 16,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    color: '#505050',
+               
+                  }}>
+                  'Payment is Non-Refundable. We recommend you to review the
+                  terms of use before proceeding with any online transaction'
+                </Text>
+              </View>
+         
             </View>
             <View
               style={{
-                bottom:
-                  Platform.OS == 'android'
-                    ? DeviceHeigth * 0.03
-                    : DeviceHeigth * 0.01,
+         
+                marginTop: 15,
                 alignSelf: 'center',
                 width: '85%',
                 paddingBottom: 30,
@@ -964,27 +1051,24 @@ var styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   button: {
-    width: DeviceWidth * 0.27,
-    paddingTop: 10,
-    paddingBottom: 10,
-    marginHorizontal: 2,
-    borderRadius: 5,
+    width: DeviceWidth * 0.95,
+    paddingVertical: 20,
+    marginVertical: DeviceHeigth * 0.015,
+    borderRadius: 10,
     alignSelf: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F3F3F3',
-    paddingTop: DeviceHeigth * 0.005,
-    borderWidth: 2,
-    marginBottom: 15,
-    borderColor: '#DEDBDC',
-    // shadowColor: 'rgba(0, 0, 0, 1)',
+    backgroundColor: AppColor.WHITE,
+    borderWidth: 1,
+    // alignItems: 'center',
+
     ...Platform.select({
       ios: {
+        shadowColor: '#000000',
         shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.3,
-        // shadowRadius: 4,
+        shadowRadius: 4,
       },
       android: {
-        elevation: 1,
+        elevation: 5,
       },
     }),
   },

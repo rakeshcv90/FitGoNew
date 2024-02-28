@@ -31,7 +31,14 @@ const BottomTab = () => {
         return (
           <View
             style={{
-              marginTop: Platform.OS == 'ios' ? -DeviceHeigth * 0.035 : 0,
+              marginTop:
+                Platform.OS == 'ios'
+                  ? DeviceHeigth == 667
+                    ? -DeviceHeigth * 0.01
+                    : DeviceHeigth >= 1024
+                    ? 0
+                    : -DeviceHeigth * 0.035
+                  : 0,
             }}>
             <BannerAdd bannerAdId={bannerAdId} />
           </View>
@@ -40,7 +47,17 @@ const BottomTab = () => {
     } else {
       return (
         <View
-          style={{marginTop: Platform.OS == 'ios' ? -DeviceHeigth * 0.035 : 0}}>
+          style={{
+            marginTop:
+              Platform.OS == 'ios'
+                ? DeviceHeigth == 667
+                  ? -DeviceHeigth * 0.01
+                  : DeviceHeigth >= 1024
+                  ? 0
+                  : -DeviceHeigth * 0.035
+                : 0,
+          }}>
+          {console.log(DeviceHeigth)}
           <BannerAdd bannerAdId={bannerAdId} />
         </View>
       );
