@@ -16,7 +16,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import * as RNIap from 'react-native-iap';
 import {
   Setmealdata,
+  setFitmeAdsCount,
   setInappPurchase,
+  setPurchaseHistory,
   setStoreData,
 } from '../Component/ThemeRedux/Actions';
 import VersionNumber, {appVersion} from 'react-native-version-number';
@@ -40,7 +42,7 @@ import moment from 'moment';
 
 const products = Platform.select({
   ios: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
-  android: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
+  android: ['fitme_monthly', 'fitme_quarterly', 'fitme_year',],
 });
 
 const SplaceScreen = ({navigation}) => {
@@ -60,6 +62,7 @@ const SplaceScreen = ({navigation}) => {
       Meal_List(uniqueId);
     });
     getPlanData();
+    Object.keys(getUserDataDetails).length > 0 && PurchaseDetails();
   }, []);
   const getPlanData = () => {
     Platform.OS === 'ios'
@@ -94,8 +97,7 @@ const SplaceScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-   
-    // loadScreen();
+    dispatch(setFitmeAdsCount(0));
     if (getPurchaseHistory.length > 0) {
       if (
         getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
@@ -103,11 +105,10 @@ const SplaceScreen = ({navigation}) => {
         setTimeout(
           () => {
             loadScreen();
-
           },
           Platform.OS == 'android' ? 1000 : 1000,
         );
-      }else{
+      } else {
         MyInterstitialAd(resetFitmeCount).load();
         setTimeout(
           () => {
@@ -192,6 +193,29 @@ const SplaceScreen = ({navigation}) => {
   const resetFitmeCount = () => {
     return null;
   };
+  const PurchaseDetails = async () => {
+    try {
+      const res = await axios(`${NewAppapi.TransctionsDetails}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          id: getUserDataDetails.id,
+          token: getUserDataDetails.login_token,
+        },
+      });
+      if (res?.data?.data?.length > 0) {
+        dispatch(setPurchaseHistory(res.data.data));
+      } else {
+        dispatch(setPurchaseHistory([]));
+      }
+    } catch (error) {
+      dispatch(setPurchaseHistory([]));
+      console.log('Purchase List Error', error);
+    }
+  };
+
   return (
     <LinearGradient
       style={styels.container}

@@ -229,7 +229,7 @@ const Exercise = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log("GDSGDGDGDGD",payload,res?.data)
+
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -555,11 +555,12 @@ const Exercise = ({navigation, route}: any) => {
             </View>
           </View>
           <View
-            style={{
-              height: DeviceHeigth * 0.5,
-              marginTop: -DeviceHeigth * 0.06,
-              // backgroundColor:'red'
-            }}>
+            // style={{
+            //   //height: DeviceHeigth * 0.5,
+            //   // marginTop: -DeviceHeigth * 0.06,
+            //   backgroundColor:'red'
+            // }}
+            >
             {/* <Text>{trackerData[number]?.id}</Text> */}
 
             {isLoading && (
@@ -594,7 +595,7 @@ const Exercise = ({navigation, route}: any) => {
                 width: DeviceWidth,
                 height: DeviceHeigth * 0.4,
                 alignSelf: 'center',
-                top: 60,
+               
               }}
             />
           </View>
@@ -685,6 +686,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins',
     fontWeight: '700',
     lineHeight: 40,
+    marginVertical:10
   },
   name: {
     fontSize: 20,

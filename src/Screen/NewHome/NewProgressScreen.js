@@ -181,7 +181,7 @@ const NewProgressScreen = ({navigation}) => {
           ) {
             dispatch(setFitmeAdsCount(0));
           } else {
-            if (getFitmeAdsCount < 3) {
+            if (getFitmeAdsCount < 5) {
               console.log('Ad Count Incremented:', getFitmeAdsCount);
               dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
             } else {
@@ -189,7 +189,7 @@ const NewProgressScreen = ({navigation}) => {
             }
           }
         } else {
-          if (getFitmeAdsCount < 3) {
+          if (getFitmeAdsCount < 5) {
             console.log('Ad Count Incremented:', getFitmeAdsCount);
             dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {

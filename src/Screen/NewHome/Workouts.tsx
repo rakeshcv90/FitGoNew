@@ -69,7 +69,7 @@ const Workouts = ({navigation}: any) => {
           ) {
             dispatch(setFitmeAdsCount(0));
           } else {
-            if (getFitmeAdsCount < 3) {
+            if (getFitmeAdsCount < 5) {
               console.log('Ad Count Incremented:', getFitmeAdsCount);
               dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
             } else {
@@ -77,7 +77,7 @@ const Workouts = ({navigation}: any) => {
             }
           }
         } else {
-          if (getFitmeAdsCount < 3) {
+          if (getFitmeAdsCount < 5) {
             console.log('Ad Count Incremented:', getFitmeAdsCount);
             dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {

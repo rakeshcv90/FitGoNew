@@ -304,17 +304,7 @@ const Meals = ({navigation}) => {
                       alignSelf: 'center',
                     }}
                     resizeMode="cover"></Image>
-                  {imageLoad && (
-                    <ShimmerPlaceholder
-                      style={{
-                        width: 90,
-                        top: 3,
-                        alignSelf: 'center',
-                      }}
-                      ref={avatarRef}
-                      autoRun
-                    />
-                  )}
+             
                   <Text
                     style={[
                       styles.title,
