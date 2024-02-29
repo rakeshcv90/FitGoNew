@@ -212,7 +212,7 @@ const Home = ({navigation}) => {
             Dispatch(setFitmeAdsCount(0));
           } else {
             if (getFitmeAdsCount < 5) {
-              console.log('Ad Count Incremented:', getFitmeAdsCount);
+           
               Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
             } else {
               MyInterstitialAd(resetFitmeCount).load();
@@ -220,7 +220,7 @@ const Home = ({navigation}) => {
           }
         } else {
           if (getFitmeAdsCount < 5) {
-            console.log('Ad Count Incremented:', getFitmeAdsCount);
+        
             Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {
             MyInterstitialAd(resetFitmeCount).load();
@@ -231,7 +231,7 @@ const Home = ({navigation}) => {
   );
 
   const resetFitmeCount = async () => {
-    console.log('Reset Count');
+
     Dispatch(setFitmeAdsCount(0));
   };
 
@@ -261,7 +261,7 @@ const Home = ({navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-      console.log(res.data);
+  
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -351,7 +351,7 @@ const Home = ({navigation}) => {
   const startStepUpdateBackgroundTask = async () => {
     try {
       await BackgroundService.start(veryIntensiveTask, options1);
-      console.log('Step update background service has been started.');
+    
     } catch (e) {
       console.error('Error starting step update background service:', e);
     }
@@ -385,7 +385,7 @@ const Home = ({navigation}) => {
           if (authResult.success) {
             checkPermissions();
           } else {
-            console.log('Authentication denied ' + authResult.message);
+          
           }
         })
         .catch(error => {
@@ -402,9 +402,9 @@ const Home = ({navigation}) => {
       .then(authResult => {
         if (authResult.success) {
           checkPermissions1();
-          console.log('Authentication access ' + authResult.message);
+         
         } else {
-          console.log('Authentication denied ' + authResult.message);
+          
         }
       })
       .catch(error => {
@@ -429,7 +429,7 @@ const Home = ({navigation}) => {
           Dispatch(setStepCounterOnOff(true));
         }
       } else {
-        console.log('Permission Denied');
+       
       }
     } else {
       if (getStepCounterOnoff == true) {
@@ -452,7 +452,7 @@ const Home = ({navigation}) => {
   const fetchTotalSteps = async () => {
     try {
       const dailySteps = await GoogleFit.getDailySteps();
-      // console.log('dailysteps',dailySteps)
+   
       dailySteps.reduce(
         (total, acc) =>
           (totalSteps = total + acc.steps[0] ? acc.steps[0].value : 0),
@@ -489,7 +489,7 @@ const Home = ({navigation}) => {
                 // adding a listner here to record whenever new Steps will be sent from healthkit
                 'healthKit:StepCount:new',
                 async () => {
-                  // console.log('--> observer triggered');
+              
                   AppleHealthKit.getStepCount(
                     options,
                     (callbackError, results) => {
@@ -516,7 +516,7 @@ const Home = ({navigation}) => {
               };
               AppleHealthKit.getStepCount(options, (callbackError, results) => {
                 if (callbackError) {
-                  console.log('Error while getting the data');
+               
                 }
                 setSteps(results.value);
                 setDistance(((results.value / 20) * 0.01).toFixed(2));
@@ -586,7 +586,7 @@ const Home = ({navigation}) => {
           for (i = 0; i < res?.data?.weekly_data?.length; i++) {
             const data1 = res.data.weekly_data[i].total_calories;
             zeroData.push(parseFloat(data1));
-            // console.log('zeroMonthData------>',zeroData)
+   
           }
           setWeeklyGraph(zeroData);
         } else if (Key == 2) {
@@ -1172,9 +1172,9 @@ const Home = ({navigation}) => {
         .then(authResult => {
           if (authResult.success) {
             checkPermissions1();
-            console.log('Authentication access ' + authResult.message);
+         
           } else {
-            console.log('Authentication denied ' + authResult.message);
+         
           }
         })
         .catch(error => {
@@ -1199,7 +1199,7 @@ const Home = ({navigation}) => {
             Dispatch(setStepCounterOnOff(true));
           }
         } else {
-          console.log('Permission Denied');
+       
         }
       } else {
         if (getStepCounterOnoff == true) {
@@ -1858,7 +1858,7 @@ const Home = ({navigation}) => {
             value={value}
             onChange={item => {
               setValue(item.label);
-              // console.log('item===>', item.value);
+           
               if (item.value == 1) {
                 getGraphData(1);
               } else {
@@ -1891,9 +1891,7 @@ const Home = ({navigation}) => {
                 bezier
                 segments={4}
                 renderDotContent={renderCustomPoint}
-                onDataPointClick={data =>
-                  console.log('PointData=====>', data.value)
-                }
+                
                 withShadow={false}
                 yAxisInterval={10}
                 fromZero={true}

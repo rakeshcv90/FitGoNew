@@ -61,15 +61,7 @@ const Exercise = ({navigation, route}: any) => {
         await Tts.setDefaultLanguage('en-US');
         await Tts.setDucking(true);
         await Tts.setIgnoreSilentSwitch('ignore');
-        await Tts.addEventListener('tts-start', event =>
-          console.log('Start', event),
-        );
-        await Tts.addEventListener('tts-finish', event =>
-          console.log('Finish', event),
-        );
-        await Tts.addEventListener('tts-cancel', event =>
-          console.log('Cancel', event),
-        );
+        
         setTtsInitialized(true);
       }
     };
@@ -153,8 +145,21 @@ const Exercise = ({navigation, route}: any) => {
         setBack(true);
       }
     });
+    const unsubscribe1 = navigation.addListener(
+      'hardwareBackPress',
+      (e: any) => {
+        // Check if goBack has been called
+        if (!e.data.action) {
+          setPause(false);
+          setBack(true);
+        }
+      },
+    );
 
-    return unsubscribe;
+    return () => {
+      unsubscribe;
+      unsubscribe1;
+    };
   }, [navigation]);
 
   const FAB = ({icon}: any) => {
@@ -206,7 +211,7 @@ const Exercise = ({navigation, route}: any) => {
     payload.append('workout_id', data?.workout_id);
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
-    console.log('payload------>', payload);
+
     try {
       const res = await axios({
         url: NewAppapi.POST_EXERCISE,
@@ -216,7 +221,7 @@ const Exercise = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('GDSGDGDGDGD', payload, res?.data);
+  
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -568,8 +573,8 @@ const Exercise = ({navigation, route}: any) => {
                 setIsLoading(false);
                 setPause(true);
               }}
-              onVideoLoad={() => console.log('third')}
-              onVideoLoadStart={() => console.log('forth')}
+              // onVideoLoad={() =>() }
+              // onVideoLoadStart={() => }
               paused={!pause}
               onPlaybackResume={() => {
                 setPause(true);

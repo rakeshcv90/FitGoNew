@@ -131,9 +131,7 @@ const Equipment = ({route, navigation}: any) => {
       equipment:
         gender == 'Without\nEquipment' ? 'Without Equipment' : 'With Equipment',
     };
-    {
-      console.log('Equipment  Screen Data', currentData);
-    }
+   
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     analytics().logEvent(`CV_FITME_EQUIPMENT_${gender?.replace('\n','_')}`)
     setTimeout(() => {

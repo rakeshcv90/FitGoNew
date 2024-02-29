@@ -99,7 +99,7 @@ const Age = ({route, navigation}: any) => {
     for (let index = 0; index < positions.length; index++) {
       const {start, end} = positions[index];
       if (center + 25 >= start && center - 25 <= end) {
-        // console.log(center, index);
+      
         // setSelected(index);
       }
     }

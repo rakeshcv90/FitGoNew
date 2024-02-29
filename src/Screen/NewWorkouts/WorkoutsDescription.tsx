@@ -17,7 +17,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector, useDispatch} from 'react-redux';
 const WorkoutsDescription = ({data, open, setOpen}: any) => {
   const [ttsInitialized, setTtsInitialized] = useState(false);
-  console.log("Text Des",data?.exercise_instructions)
+
   const TextSpeech = `${data?.exercise_instructions}`;
   const [description, SetDescription] = useState('');
 
@@ -28,7 +28,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
   useEffect(() => {
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
-      // Tts.voices().then((voices)=>console.log("voicess====>",voices.map((values)=>values.id)))
+   
  
       if (!ttsStatus.isInitialized) {
         try {

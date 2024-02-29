@@ -29,35 +29,6 @@ const MealDetails = ({route, navigation}) => {
   const [imageLoad, setImageLoad] = useState(true);
   const avatarRef = React.createRef();
 
-  //   const getMealDetails = async () => {
-  //     setForLoading(true);
-  //     try {
-  //       const data = await axios(`${NewAppapi.DietDetails}`, {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'multipart/form-data',
-  //         },
-  //         data: {
-  //           login_token: getUserDataDetails.login_token,
-  //           diet_id: route.params.item.category_id,
-  //           user_id: getUserDataDetails.id,
-  //           version: VersionNumber.appVersion,
-  //         },
-  //       });
-
-  //       if (data.data.length > 0) {
-  //         setForLoading(false);
-  //         setDietDetails(data.data);
-  //       } else {
-  //         setForLoading(false);
-  //         setDietDetails([]);
-  //       }
-  //     } catch (error) {
-  //       setDietDetails([]);
-  //       setForLoading(false);
-  //       console.log('MealDetails List Error', error);
-  //     }
-  //   };
   const customStyles = {
     fontFamily: 'Poppins',
     fontSize: 10,
@@ -71,18 +42,12 @@ const MealDetails = ({route, navigation}) => {
         translucent={true}
         backgroundColor={'transparent'}
       />
-      {/* {imageLoad && (
-        <ShimmerPlaceholder
-          style={{width: '100%', height: DeviceHeigth * 0.4}}
-          ref={avatarRef}
-          autoRun
-        />
-      )} */}
+
       <ImageBackground
         translucent={true}
         style={{width: '100%', height: DeviceHeigth * 0.4}}
         resizeMode="cover"
-      //  onLoad={() => setImageLoad(false)}
+
         source={
           route?.params?.item?.diet_image_link == null
             ? localImage.Noimage

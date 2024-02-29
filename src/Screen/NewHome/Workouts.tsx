@@ -44,21 +44,6 @@ const Workouts = ({navigation}: any) => {
   }, []);
 
 
-  // useFocusEffect(
-  //   React.useCallback( () => {
-
-  //     if(data1){
-  //       if (getFitmeAdsCount < 3) {
-  //         console.log('Ad Count Incremented:', getFitmeAdsCount);
-  //         dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-  //       } else {
-  //       MyInterstitialAd(resetFitmeCount).load();
-         
-  //       }
-  //     }
-      
-  //   }, [data1]),
-  // );
   useFocusEffect(
     React.useCallback(() => {
       if (data1) {
@@ -70,7 +55,7 @@ const Workouts = ({navigation}: any) => {
             dispatch(setFitmeAdsCount(0));
           } else {
             if (getFitmeAdsCount < 5) {
-              console.log('Ad Count Incremented:', getFitmeAdsCount);
+         
               dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
             } else {
               MyInterstitialAd(resetFitmeCount).load();
@@ -78,7 +63,7 @@ const Workouts = ({navigation}: any) => {
           }
         } else {
           if (getFitmeAdsCount < 5) {
-            console.log('Ad Count Incremented:', getFitmeAdsCount);
+        
             dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {
             MyInterstitialAd(resetFitmeCount).load();
@@ -89,7 +74,7 @@ const Workouts = ({navigation}: any) => {
   );
 
   const resetFitmeCount = () => {
-    console.log("Reset Count")
+   
     dispatch(setFitmeAdsCount(0));
   };
   const allWorkoutApi = async () => {
@@ -137,14 +122,7 @@ const Workouts = ({navigation}: any) => {
       );
 
       setRefresh(false);
-      // if (res.data?.status != 'Invalid token') {
-      //   setRefresh(false);
-      //   // console.log(res.data, 'Popular');
-      //   setPopularData(res.data);
-      // } else {
-      //   // console.log(res.data, 'Popular Status');
-      //   setPopularData([]);
-      // }
+    
 
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({

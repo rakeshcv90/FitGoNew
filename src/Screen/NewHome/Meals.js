@@ -108,10 +108,10 @@ const Meals = ({navigation}) => {
   };
 
   const resetFitmeCount = async () => {
-    console.log('Reset Count');
+   
     dispatch(setFitmeMealAdsCount(0));
   };
-  console.log('DDDDDDDDDD', getFitmeMealAdsCount);
+
 
   return (
     <View style={styles.container}>

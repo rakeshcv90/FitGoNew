@@ -25,7 +25,7 @@ const Report = ({navigation}) => {
   const [visible, setVisible] = useState(false);
 
 
- console.log("sounds===>",getSoundOffOn)
+
   const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
 
   const toggleSwitch3 = () => {

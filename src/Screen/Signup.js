@@ -196,7 +196,7 @@ const Signup = ({navigation}) => {
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
-        console.log('Compleate Profile');
+     
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
       } else if (
@@ -204,7 +204,7 @@ const Signup = ({navigation}) => {
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
-        console.log('Compleate Profile1');
+   
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
       } else if (
@@ -232,7 +232,7 @@ const Signup = ({navigation}) => {
         });
       } else {
         setForLoading(false);
-        // console.log('user not found');
+
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
       }
@@ -372,7 +372,7 @@ const Signup = ({navigation}) => {
         await GoogleSignin.signOut();
       } else {
         setForLoading(false);
-        // console.log('user not found');
+  
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
         await GoogleSignin.signOut();
@@ -411,7 +411,7 @@ const Signup = ({navigation}) => {
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
-        console.log('Compleate Profile');
+     
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
       } else if (
@@ -419,7 +419,7 @@ const Signup = ({navigation}) => {
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
-        console.log('Compleate Profile1');
+  
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
       } else if (
@@ -448,7 +448,7 @@ const Signup = ({navigation}) => {
         });
       } else {
         setForLoading(false);
-        // console.log('user not found');
+    
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
       }

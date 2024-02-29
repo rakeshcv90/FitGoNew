@@ -39,9 +39,7 @@ const Injury = ({route, navigation}) => {
     const currentData = {
       injury: imageView,
     };
-    {
-      console.log('Injury Screen Data', [...getLaterButtonData, currentData]);
-    }
+   
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     analytics().logEvent(`CV_FITME_INJURY_${imageView}`)
     navigation.navigate('Height', {nextScreen: screen + 1});

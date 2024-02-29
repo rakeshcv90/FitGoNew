@@ -112,11 +112,11 @@ const OneDay = ({navigation, route}: any) => {
           data?.workout_id,
       });
       if (res.data) {
-        // console.log(res.data, 'DaysData', data);
+       
         setExerciseData(res.data);
         setOpen(true);
         setLoader(false);
-        // dispatch(setCount(res.data?.length));
+       
       }
     } catch (error) {
       console.error(error, 'DaysAPIERror');

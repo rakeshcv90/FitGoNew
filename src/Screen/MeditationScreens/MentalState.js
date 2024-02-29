@@ -87,7 +87,7 @@ const MentalState = ({navigation, route}) => {
             // navigation.navigate('AlcoholConsent');
             setItemIndex(index);
             setMentalState(item.txt);
-            console.log('value', item.txt);
+            
           }}>
           <Text style={styles.txts}>{item.txt}</Text>
           <Image source={item.img} style={styles.img} resizeMode="contain" />

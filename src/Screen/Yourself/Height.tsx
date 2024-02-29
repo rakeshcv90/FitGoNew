@@ -85,9 +85,7 @@ const Height = ({route, navigation}: any) => {
       };
       dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
       navigation.navigate('Weight', {nextScreen: screen + 1});
-      {
-        console.log('Hight Screen Data', [...getLaterButtonData, currentData]);
-      }
+     
     } else
       showMessage({
         message: `Height should be less than ${currentActiveIndex}cm`,

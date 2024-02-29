@@ -74,7 +74,7 @@ const NewProgressScreen = ({navigation}) => {
   } = useSelector(state => state);
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [selected, setSelected] = useState(false);
-  // console.log("datata==>",getCustttomeTimeCal,getHealthData)
+ 
   const [dates, setDates] = useState([]);
   const [value, setValue] = useState('Weekly');
   const [value1, setValue1] = useState('Weekly');
@@ -141,11 +141,7 @@ const NewProgressScreen = ({navigation}) => {
               parseInt(totalSteps ? ((totalSteps / 20) * 1).toFixed(0) : 0) +
                 parseInt(Calories2),
             );
-            console.log(
-              Calories,
-              Calories2,
-              parseInt(totalSteps ? ((totalSteps / 20) * 1).toFixed(0) : 0),
-            );
+        
           } catch (error) {
             console.error('Error fetching total steps', error);
           }
@@ -157,19 +153,7 @@ const NewProgressScreen = ({navigation}) => {
     }
   }, []);
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     if (data1) {
-  //       if (getFitmeAdsCount < 3) {
-  //         console.log('Ad Count Incremented:', getFitmeAdsCount);
-  //         dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-  //       } else {
-  //         MyInterstitialAd(resetFitmeCount).load();
 
-  //       }
-  //     }
-  //   }, [data1]),
-  // );
 
   useFocusEffect(
     React.useCallback(() => {
@@ -182,7 +166,7 @@ const NewProgressScreen = ({navigation}) => {
             dispatch(setFitmeAdsCount(0));
           } else {
             if (getFitmeAdsCount < 5) {
-              console.log('Ad Count Incremented:', getFitmeAdsCount);
+          
               dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
             } else {
               MyInterstitialAd(resetFitmeCount).load();
@@ -190,7 +174,7 @@ const NewProgressScreen = ({navigation}) => {
           }
         } else {
           if (getFitmeAdsCount < 5) {
-            console.log('Ad Count Incremented:', getFitmeAdsCount);
+       
             dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {
             MyInterstitialAd(resetFitmeCount).load();
@@ -200,27 +184,27 @@ const NewProgressScreen = ({navigation}) => {
     }, [data1]),
   );
   const resetFitmeCount = () => {
-    console.log('Reset Count');
+  
     dispatch(setFitmeAdsCount(0));
   };
   const handleGraph1 = data => {
-    console.log('data', data);
+  
     if (data == 1) {
       WeeklyData(1);
     } else if (data == 2) {
       MonthlyData(1);
     } else {
-      console.log('No matching');
+    
     }
   };
   const handleGraph2 = data => {
-    console.log('data', data);
+   
     if (data == 1) {
       WeeklyData(2);
     } else if (data == 2) {
       MonthlyData(2);
     } else {
-      console.log('No matching');
+     
     }
   };
   const MonthlyData = async Key => {
@@ -263,11 +247,11 @@ const NewProgressScreen = ({navigation}) => {
         }
         setArray(arrayForData);
       } else if (res && Key == 2) {
-        // console.log('ressss=====',res.data)
+       
         for (i = 0; i < getHomeGraphData?.weekly_data?.length; i++) {
           let Total_Duration = getHomeGraphData?.weekly_data[i]?.total_duration;
           arrayForData1.push(parseInt(Total_Duration));
-          // console.log('weeklyData',arrayForData1)
+        
         }
         setArray1(arrayForData1);
       }
@@ -413,7 +397,7 @@ const NewProgressScreen = ({navigation}) => {
     day: item.day,
     value: array1[index] ? array1[index] : null,
   }));
-  // console.log('array=====>', array1);
+
   const Emojis = [
     {
       id: 1,
@@ -529,7 +513,7 @@ const NewProgressScreen = ({navigation}) => {
       const BMI =
         (selected == '' ? getUserDataDetails?.weight : selected) /
         (getUserDataDetails?.height * 0.3048) ** 2;
-      // console.log('BMI>>>>>>>', BMI.toFixed(2));
+   
       setBmi(BMI.toFixed(2));
       setModalVisible(false);
     };
@@ -633,7 +617,7 @@ const NewProgressScreen = ({navigation}) => {
       </Modal>
     );
   };
-  // console.log('.........>>>>>', getUserDataDetails);
+
   const theme = useMemo(() => {
     return {
       backgroundColor: AppColor.WHITE,
@@ -805,9 +789,9 @@ const NewProgressScreen = ({navigation}) => {
               bezier
               segments={4}
               renderDotContent={renderCustomPoint}
-              onDataPointClick={data =>
-                console.log('PointData=====>', data.value)
-              }
+              // onDataPointClick={data =>
+              //   console.log('PointData=====>', data.value)
+              // }
               withShadow={false}
               yAxisInterval={10}
               fromZero={true}

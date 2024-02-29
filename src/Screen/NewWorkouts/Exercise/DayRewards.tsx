@@ -32,7 +32,7 @@ const DayRewards = ({navigation, route}: any) => {
       const payload = new FormData();
       payload.append('id', getUserDataDetails?.id);
       payload.append('workout_id', data?.workout_id);
-      //   console.log(data, 'das');
+   
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EXERCISE_DETAILS,
         method: 'post',
@@ -41,13 +41,12 @@ const DayRewards = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('GET API TRACKER', res.data);
+   
       if (res.data?.msg != 'No data found') {
-        // if(res.data?.user_details)
+        
         analyzeExerciseData(res.data?.user_details);
       } else {
-        // setSelected(0);
-        // console.log('first', res.data);
+       
       }
     } catch (error) {
       console.error(error, 'DAPIERror');

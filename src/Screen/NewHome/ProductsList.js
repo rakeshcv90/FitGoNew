@@ -161,9 +161,7 @@ const ProductsList = ({route}) => {
           ImageComponent={FastImage}
           images={data}
           sliderBoxHeight={150}
-          onCurrentImagePressed={index =>
-            console.warn(`image ${index} pressed`)
-          }
+        
           dotColor="#FFEE58"
           inactiveDotColor="#90A4AE"
           paginationBoxVerticalPadding={20}

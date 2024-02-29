@@ -18,19 +18,7 @@ const Trainer = ({navigation}) => {
   const dispatch = useDispatch();
   const {getFitmeAdsCount,getPurchaseHistory} = useSelector(state => state);
   let data1 = useIsFocused();
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     if (data1) {
-  //       if (getFitmeAdsCount < 3) {
-  //         console.log('Ad Count Incremented:', getFitmeAdsCount);
-  //         dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-  //       } else {
-  //         MyInterstitialAd(resetFitmeCount).load();
-        
-  //       }
-  //     }
-  //   }, [data1]),
-  // );
+
   useFocusEffect(
     React.useCallback(() => {
       if (data1) {
@@ -42,7 +30,7 @@ const Trainer = ({navigation}) => {
             dispatch(setFitmeAdsCount(0));
           } else {
             if (getFitmeAdsCount < 5) {
-              console.log('Ad Count Incremented:', getFitmeAdsCount);
+             
               dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
             } else {
               MyInterstitialAd(resetFitmeCount).load();
@@ -50,7 +38,7 @@ const Trainer = ({navigation}) => {
           }
         } else {
           if (getFitmeAdsCount < 5) {
-            console.log('Ad Count Incremented:', getFitmeAdsCount);
+      
             dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {
             MyInterstitialAd(resetFitmeCount).load();
@@ -60,10 +48,10 @@ const Trainer = ({navigation}) => {
     }, [data1]),
   );
   const resetFitmeCount = async () => {
-    console.log('Reset Count');
+
     dispatch(setFitmeAdsCount(0));
   };
-  console.log('Fitme Count', getFitmeAdsCount);
+
   return (
     <View style={styles.container}>
       <NewHeader header={'  Fitness Coach'} />

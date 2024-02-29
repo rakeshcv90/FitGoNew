@@ -108,7 +108,7 @@ const Goal = ({navigation, route}: any) => {
           {data &&
             data?.map((item: any, index: number) => {
               if (item?.goal_gender != gender) return;
-              // console.log(item);
+         
 
               return (
                 <TouchableOpacity

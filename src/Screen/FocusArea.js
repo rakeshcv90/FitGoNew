@@ -34,10 +34,7 @@ const FocusArea = ({route, navigation}) => {
    dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
    navigation.navigate('WorkoutArea', {nextScreen: screen + 1});
     {
-      console.log('Focuse Area Screen Data', [
-        ...getLaterButtonData,
-        currentData,
-      ]);
+  
     }
   };
 
