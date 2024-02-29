@@ -26,7 +26,7 @@ const TermaAndCondition = () => {
           'Content-Type': 'Multipart/form-data',
         },
       });
-      console.log("Aboiutsygsyuw", data.data)
+    
       setTerms(data.data)
       setIsLoaded(true);
     }

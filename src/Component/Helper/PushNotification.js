@@ -36,67 +36,7 @@ export const requestPermissionforNotification = async dispatch => {
   }
 };
 
-// export const RemoteMessage = () => {
-//   // try {
-//   // } catch (error) {
-//   //   console.log('onm', error);
-//   // }
-//   messaging().onMessage(async remoteMessage => {
-//   //  DisplayNotification(remoteMessage);
-//   });
-//   // notifee.onForegroundEvent(async remoteMessage => {
-//   //   console.log('Fore', remoteMessage);
-//   //   DisplayNotification(remoteMessage);
-//   // });
-//   messaging().setBackgroundMessageHandler(DisplayNotification)
-//   // messaging().setBackgroundMessageHandler(async remoteMessage => {
-//   //   console.log("BACK MESSS", remoteMessage)
-//   //   DisplayNotification(remoteMessage);
-//   // })
-  
-//   notifee.createChannel({
-//     id: 'Time',
-//     name: 'Time',
-//     bypassDnd: true,
-//     vibration: true,
-//     visibility: AndroidVisibility.PUBLIC,
-//     importance: AndroidImportance.HIGH,
-//     description: 'CHANNEL FOR NOTIFICATION',
-//   });
-//   notifee.deleteChannel('Fitme')
-//   notifee.createChannel({
-//     id: 'Fitme',
-//     name: 'Fitme',
-//     bypassDnd: true,
-//     vibration: true,
-//     visibility: AndroidVisibility.PUBLIC,
-//     importance: AndroidImportance.HIGH,
-//     description: 'CHANNEL FOR NOTIFICATION',
-//     sound: 'default',
-//   });
 
-//   notifee.setNotificationCategories([
-//     {
-//       id: 'Alarm',
-//       actions: [
-//         {
-//           id: 'Plus_Five',
-//           title: 'Add +5',
-//         },
-//         {
-//           id: 'Stop',
-//           title: 'Stop',
-//           destructive: true,
-//         },
-//       ],
-//     },
-//   ]);
-
-//   messaging().getInitialNotification(async remoteMessage => {
-//     console.log("INI NOTI", remoteMessage)
-//   //  DisplayNotification(remoteMessage);
-//   });
-// };
 const removeHtmlTags = str => {
   if (!str || typeof str !== 'string') return '';
   return str.replace(/<[^>]+>/g, '');
@@ -104,7 +44,7 @@ const removeHtmlTags = str => {
 
 // Cleaned title without HTML tags
 export const DisplayNotification = async Notification => {
-  console.log('Notification',Notification)
+
   const cleanedTitle = removeHtmlTags(Notification?.data?.message);
   try {
     await notifee.displayNotification({

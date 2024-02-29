@@ -32,16 +32,16 @@ notifee.createChannel({
 });
 messaging().setBackgroundMessageHandler(remoteMessage => {
   // DisplayNotification(remoteMessage);
-  console.log('BACK', remoteMessage);
+
 });
 notifee.onBackgroundEvent(async ({type, detail}) => {
   const {notification, pressAction} = detail;
-  console.log('presss', Platform.OS, detail);
+
   TriggerButtons(notification, pressAction);
 });
 notifee.onForegroundEvent(async ({type, detail}) => {
   const {notification, pressAction} = detail;
-  console.log('presss', Platform.OS, detail);
+
   TriggerButtons(notification, pressAction);
 });
 const TriggerButtons = async (notification, pressAction) => {
@@ -101,7 +101,7 @@ const TriggerButtons = async (notification, pressAction) => {
       },
       trigger,
     );
-    console.log('NEW NOTI TIME', currentTime);
+   
   }
 };
 
@@ -122,7 +122,7 @@ notifee.setNotificationCategories([
   },
 ]);
 messaging().getInitialNotification(async remoteMessage => {
-  console.log('INI NOTI', remoteMessage);
+
   // DisplayNotification(remoteMessage);
 });
 
@@ -142,7 +142,7 @@ notifee.createChannel({
   sound: 'default',
 });
 const DisplayNotification = async Notification => {
-  console.log('Notification', Notification);
+
   const cleanedTitle = removeHtmlTags(Notification?.data?.message);
   try {
     await notifee.displayNotification({
@@ -183,7 +183,7 @@ const DisplayNotification = async Notification => {
 const AppRedux = () => {
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('REMOTE', remoteMessage);
+
       DisplayNotification(remoteMessage);
     });
     return unsubscribe;
@@ -205,7 +205,7 @@ const AppRedux = () => {
 
     // If the error is fatal, you might want to crash the app manually or take appropriate action
     if (isFatal) {
-      console.error('Fatal Error in Crashlatics:', error);
+  
       // For example, you can use NativeModules to crash the app on Android
       // NativeModules.CrashlyticsCrash.crash();
     }
@@ -222,9 +222,7 @@ const AppRedux = () => {
   if (__DEV__) {
     // In development, log errors to the console
 
-    console.error = error => {
-      crashlytics().log(`Crashlatics Dev Console Error: ${error}`);
-    };
+ 
   } else {
     // In production, register the global error handler
     ErrorUtils.setGlobalHandler(globalErrorHandler);

@@ -51,7 +51,7 @@ const LineChart = ({resultData, zeroData, home, currentW, targetW}: any) => {
   // useEffect(() => {
   //   setTimeout(() => {
   //     const x = circles.fill(circles[circles.length-1], circles[circles.length-1] - 1, circles[circles.length-1]);
-  //     console.log(x);
+
   //     setCircle(x);
   //   }, 500);
   // }, []);
@@ -184,7 +184,7 @@ const LineChart = ({resultData, zeroData, home, currentW, targetW}: any) => {
             const yValue = scaleLinear()
               .domain([0, maxWeight])
               .range([300, 150])(dataPoint.weight);
-            //console.log('xValue', dataPoint?.weight, yValue);
+            
             // function isApproximatelyEqual(value, array, tolerance) {
             //   return array.some(item => Math.abs(value - item) <= tolerance);
             // }
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
 //   // useEffect(() => {
 //   //   setTimeout(() => {
 //   //     const x = circles.fill(circles[circles.length-1], circles[circles.length-1] - 1, circles[circles.length-1]);
-//   //     console.log(x);
+
 //   //     setCircle(x);
 //   //   }, 500);
 //   // }, []);
@@ -481,7 +481,7 @@ const styles = StyleSheet.create({
 //             const yValue = scaleLinear()
 //               .domain([0, maxWeight])
 //               .range([250, 100])(dataPoint.weight);
-//             //console.log('xValue', dataPoint?.weight, yValue);
+//         
 //             // function isApproximatelyEqual(value, array, tolerance) {
 //             //   return array.some(item => Math.abs(value - item) <= tolerance);
 //             // }

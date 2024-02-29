@@ -70,26 +70,21 @@ const PredictionScreen = ({navigation, route}: any) => {
   const CalculateWeight = (currentWeight: number, TargetWeight: number) => {
     let TotalW = 0;
     let t = 0;
-    console.log('Weightb', mergedObject);
+   
     if (currentWeight > TargetWeight) {
       TotalW = currentWeight - TargetWeight;
     } else {
       TotalW = TargetWeight - currentWeight;
-      // TotalW = t + currentWeight;
+      
     }
-    // const TotalW = currentWeight - TargetWeight;
-    // if (TotalW <= 0) {
-    //   // Avoid unnecessary calculations when the weights are not valid
-    //   return;
-    // }
+    
 
     const totalW_Cal = TotalW * Av_Cal_Per_KG;
     const Result_Number_Of_Days = totalW_Cal / Av_Cal_Per_2_Workout;
     let constantWeightArray = [];
     let weightHistoryArray = [];
     let currentDate = moment();
-    //  const No_Of_Points = Result_Number_Of_Days / 15 > 7 ? 30 : 15;
-    // console.log(currentWeight)
+ 
     let No_Of_Points = 0;
     if (Result_Number_Of_Days <= 30) {
       No_Of_Points = 5;
@@ -109,20 +104,12 @@ const PredictionScreen = ({navigation, route}: any) => {
       const weight15 =
         ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
       const decWeight =currentWeight - weight15
-      // console.log('weight15', weight15,decWeight);
-        // currentWeight > TargetWeight
-        //   ? currentWeight - weight15
-        //   : currentWeight + weight15;
+   
       const formattedDate = currentDate.format('YYYY-MM-DD');
 
       weightHistoryArray.push({
         weight: decWeight.toFixed(2),
-        // i % 2 === 0
-        //   ? decWeight.toFixed(2)
-        //   : (currentWeight - TargetWeight >= 10 || i > 2
-        //       ? decWeight - 10
-        //       : decWeight
-        //     ).toFixed(2),
+ 
         date: formattedDate,
       });
       constantWeightArray.push({weight: 0, date: formattedDate});
@@ -140,27 +127,17 @@ const PredictionScreen = ({navigation, route}: any) => {
 
       weightHistoryArray.push({
         weight: decWeight.toFixed(2),
-        // i % 2 === 0
-        //   ? decWeight.toFixed(2)
-        //   : (currentWeight - TargetWeight >= 10 || i > 2
-        //       ? decWeight - 10
-        //       : decWeight
-        //     ).toFixed(2),
+   
         date: formattedDate,
       });
       constantWeightArray.push({weight: 0, date: formattedDate});
 
       currentDate = currentDate.add(No_Of_Points, 'days');
 
-      // if (
-      //   currentWeight + weight15 >= TargetWeight &&
-      //   mergedObject?.goal_name != 'Weight Loss'
-      // ) {
-      //   break;
-      // }
+   
     }
   }
-    // console.log('weightHistoryArray', weightHistoryArray,currentWeight, Result_Number_Of_Days);
+
     setZeroData(constantWeightArray);
     setWeightHistory(weightHistoryArray);
 

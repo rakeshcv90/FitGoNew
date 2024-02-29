@@ -41,8 +41,6 @@ const Subscription = ({navigation}) => {
   const {getInAppPurchase, getUserDataDetails, getPurchaseHistory} =
     useSelector(state => state);
   const [selectedItems, setSelectedItems] = useState(getInAppPurchase[2]);
- 
-
 
   const [visible, setVisible] = React.useState(false);
   const [successful, setSuccessful] = useState(false);
@@ -63,12 +61,12 @@ const Subscription = ({navigation}) => {
 
   //       if (purchase.purchaseState === 'cancelled') {
   //         Alert('Payment cancelled by user');
-  //         console.log('Payment cancelled by user');
+  //
   //       }
   //     },
   //   );
   //   const purchaseErrorSubscription = RNIap.purchaseErrorListener(error =>
-  //     console.error('Purchase error', error.message),
+  //
   //   );
 
   //   // purchaseUpdateSubscription.remove();
@@ -99,7 +97,7 @@ const Subscription = ({navigation}) => {
   //         );
   //       }
   //     },
-  //     // console.error('Purchase error', error.message),
+  //
   //   );
   //   return () => {
   //     purchaseUpdateSubscription.remove();
@@ -116,16 +114,21 @@ const Subscription = ({navigation}) => {
     };
 
     try {
-      const result = await axios('https://buy.itunes.apple.com/verifyReceipt', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const result = await axios(
+        'https://buy.itunes.apple.com/verifyReceipt',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          data: receiptBody,
         },
-        data: receiptBody,
-      });
-
+      );
+  
       if (result.data) {
         const renewalHistory = result.data?.pending_renewal_info;
+        
+        setForLoading(false);
         if (renewalHistory[0]?.auto_renew_status == 1 && receipt?.length != 0) {
           fetchPurchaseHistory1(
             renewalHistory[0],
@@ -133,6 +136,7 @@ const Subscription = ({navigation}) => {
           );
         } else {
           console.log('Payment Failed');
+         
           setForLoading(false);
         }
       }
@@ -149,7 +153,7 @@ const Subscription = ({navigation}) => {
   //       accessToken: '456f3be6f242b51399d565d417b3ab81f9d13d08',
   //       isSub: true,
   //     });
-  //     console.log('Android Purchase Data is', response.data);
+
   //   } catch (error) {
   //     console.log('Receipt Error Android', error);
   //   }
@@ -160,7 +164,8 @@ const Subscription = ({navigation}) => {
       const purchase = await RNIap.requestSubscription({
         sku: items.productId,
       });
-
+      // setForLoading(false);
+      // console.log("dshdhdhdhdhd",purchase)
       if (purchase) {
         // setPlan(purchase);
         validateIOS(purchase.transactionReceipt);
@@ -183,7 +188,6 @@ const Subscription = ({navigation}) => {
       });
 
       fetchPurchaseHistory(purchase[0].dataAndroid);
-      // console.log('Android Purchase Data is', purchase[0]?.dataAndroid);
 
       // validateAndroid(purchase[0]?.dataAndroid);
     } catch (error) {
@@ -229,6 +233,7 @@ const Subscription = ({navigation}) => {
           planstatus: 'Active',
         },
       });
+
       if (res.data.status == 'transaction completed') {
         PurchaseDetails(getUserDataDetails.id, getUserDataDetails.login_token);
         setForLoading(false);
@@ -251,7 +256,7 @@ const Subscription = ({navigation}) => {
   const fetchPurchaseHistory1 = async (item, startDate) => {
     let timestamp = startDate;
     const [datePart] = timestamp.split(' ');
-    console.log('Start Date is', datePart);
+
     try {
       const res = await axios(`${NewAppapi.Transctions}`, {
         method: 'POST',
@@ -295,14 +300,14 @@ const Subscription = ({navigation}) => {
     }
   };
   const getName = item => {
+    console.log('DGDFDFDFDFFD', item.productId);
     if (getPurchaseHistory.length > 0) {
       if (Platform.OS == 'android') {
         if (
           item.productId == getPurchaseHistory[0].plan_id &&
           getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-          // getPurchaseHistory[0].plan_status == 'Active'
         ) {
-          // return 'Active Plan';
+          return 'Active Plan';
         } else {
           // return 'Active Plan';
         }
@@ -321,7 +326,6 @@ const Subscription = ({navigation}) => {
     }
   };
   const puchasePackage = item => {
-    
     if (item.length > 0 || item.length == undefined) {
       if (Platform.OS == 'ios') {
         purchaseItems(item);
@@ -354,10 +358,12 @@ const Subscription = ({navigation}) => {
           token: login_token,
         },
       });
-
-    
+      console.log('Dddd4454545454554', res.data.data);
       if (res?.data?.data?.length > 0) {
         dispatch(setPurchaseHistory(res.data.data));
+        setForLoading(false);
+        // setVisible(true);
+        // setSuccessful('successfulPurchase');
       } else if (res?.data?.msg == 'Invalid Token') {
         showMessage({
           message: 'Please Login Again!',
@@ -374,7 +380,6 @@ const Subscription = ({navigation}) => {
       console.log('Purchase List Error', error);
     }
   };
-
 
   const getMonthData = item => {
     if (Platform.OS == 'ios') {
@@ -501,7 +506,6 @@ const Subscription = ({navigation}) => {
 
             const [datePart] = timestamp.split(' ');
 
-            console.log('Purchase history', result.data.latest_receipt_info[0]);
             setForLoading(false);
             if (result.data) {
               const renewalHistory = result.data.pending_renewal_info;
@@ -648,7 +652,6 @@ const Subscription = ({navigation}) => {
       return item.title != 'Monthly' && item.localizedPrice.slice(0, 1);
     } else {
       if (item.name == 'Yearly') {
-     
         if (
           item.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList
             .length == 1
@@ -671,26 +674,26 @@ const Subscription = ({navigation}) => {
       }
     }
   };
-  const getButtonName=()=>{
-    if(selectedItems.length<=0){
-      return 'Proceed'
-    }else{
-      if(selectedItems.name=='Quarterly'){
-        return 'Proceed'
-      }else if(selectedItems.name=='Monthly'){
-        return 'Proceed'
-      }else{
-
-        if( selectedItems.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList
-          .length == 1){
-            return 'Proceed'
-        }else{
-          return 'Start Free  Trial'
+  const getButtonName = () => {
+    if (selectedItems.length <= 0) {
+      return 'Proceed';
+    } else {
+      if (selectedItems.name == 'Quarterly') {
+        return 'Proceed';
+      } else if (selectedItems.name == 'Monthly') {
+        return 'Proceed';
+      } else {
+        if (
+          selectedItems.subscriptionOfferDetails[0]?.pricingPhases
+            ?.pricingPhaseList.length == 1
+        ) {
+          return 'Proceed';
+        } else {
+          return 'Start Free  Trial';
         }
       }
-     
     }
-  }
+  };
   return (
     <View style={styles.container}>
       <NewHeader
@@ -817,11 +820,11 @@ const Subscription = ({navigation}) => {
               }}>
               Subscription Plans
             </Text>
-            <TouchableOpacity
-              onPress={() => {
-                restorePucrchase();
-              }}>
-              {Platform.OS == 'ios' && (
+            {Platform.OS == 'ios' && (
+              <TouchableOpacity
+                onPress={() => {
+                  restorePucrchase();
+                }}>
                 <Text
                   style={{
                     textAlign: 'center',
@@ -834,8 +837,37 @@ const Subscription = ({navigation}) => {
                   }}>
                   Restore purchase
                 </Text>
-              )}
-            </TouchableOpacity>
+              </TouchableOpacity>
+            )}
+            {Platform.OS == 'android' && (
+              <TouchableOpacity
+                onPress={() => {
+                  Linking.openURL(
+                    'https://play.google.com/store/account/subscriptions',
+                  )
+                    .then(supported => {
+                      if (!supported) {
+                        console.error("Can't handle url: " + url);
+                      } else {
+                        // URL opened
+                      }
+                    })
+                    .catch(err => console.error('An error occurred', err));
+                }}>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontWeight: '500',
+                    fontSize: 12,
+                    lineHeight: 18,
+                    fontFamily: 'Poppins',
+                    color: '#1E1E1E',
+                    textDecorationLine: 'underline',
+                  }}>
+                  Manage Subscription
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
           <View
             style={{
@@ -859,7 +891,6 @@ const Subscription = ({navigation}) => {
                     ]}
                     activeOpacity={0.5}
                     onPress={() => {
-                     
                       setSelectedItems(item);
                     }}>
                     <View
@@ -893,7 +924,17 @@ const Subscription = ({navigation}) => {
                               textAlign: 'center',
                               color: '#D5191A',
                             }}>
-                            {Platform.OS == 'ios' ? item.title : item.name}
+                            {Platform.OS == 'ios'
+                              ? item.title == 'Monthly'
+                                ? 'Month'
+                                : item.title == 'Quarterly'
+                                ? 'Months'
+                                : 'Months'
+                              : item.name == 'Monthly'
+                              ? 'Month'
+                              : item.name == 'Quarterly'
+                              ? 'Months'
+                              : 'Months'}
                           </Text>
                           {getRecommended(item)}
                         </View>
@@ -923,10 +964,61 @@ const Subscription = ({navigation}) => {
                               color: '#000000',
                               lineHeight: 20,
                             }}>
-                            {getMoneySign(item)} {getPriceDetails(item)}
+                            <Text
+                              style={{
+                                fontFamily: 'Poppins',
+                                fontWeight: '600',
+                                fontSize: 14,
+
+                                color: '#D5191A',
+                                lineHeight: 20,
+                              }}>
+                              {Platform.OS == 'android'
+                                ? item.name == 'Monthly' &&
+                                  'Billed' + ' ' + item.name
+                                : item.title == 'Monthly' &&
+                                  'Billed' + ' ' + item.title}
+                            </Text>
+
+                            {getMoneySign(item)}
+                            {getPriceDetails(item)}
+                          </Text>
+                        </View>
+                        <View
+                          style={{
+                            //alignItems: 'center',
+                            marginHorizontal: 15,
+                            marginVertical:
+                              Platform.OS == 'ios'
+                                ? item.title == 'Quarterly'
+                                  ? 5
+                                  : item.title == 'Yearly'
+                                  ? 5
+                                  : 0
+                                : item.name == 'Quarterly'
+                                ? 5
+                                : item.name == 'Yearly'
+                                ? 5
+                                : 0,
+                          }}>
+                          <Text
+                            style={{
+                              fontFamily: 'Poppins',
+                              fontWeight: '600',
+                              fontSize: 14,
+
+                              color: '#D5191A',
+                              lineHeight: 20,
+                            }}>
+                            {Platform.OS == 'android'
+                              ? item.name != 'Monthly' &&
+                                'Billed' + ' ' + item.name
+                              : item.title != 'Monthly' &&
+                                'Billed' + ' ' + item.title}
                           </Text>
                         </View>
                       </View>
+
                       <View
                         style={{
                           //  alignSelf: 'flex-end',
@@ -964,16 +1056,14 @@ const Subscription = ({navigation}) => {
                       </View>
                     </View>
                   </TouchableOpacity>
-                 
                 );
               }}
             />
           </View>
           <View style={{bottom: 15, alignSelf: 'center'}}>
             <Button
-              buttonText={Platform.OS=='ios'?'Proceed':getButtonName()}
+              buttonText={Platform.OS == 'ios' ? 'Proceed' : getButtonName()}
               onPresh={() => {
-                console.log("Sefhfhvfgdfgfd",selectedItems)
                 puchasePackage(selectedItems);
               }}
             />
@@ -1002,17 +1092,14 @@ const Subscription = ({navigation}) => {
                     paddingLeft: 10,
                     paddingRight: 10,
                     color: '#505050',
-               
                   }}>
                   'Payment is Non-Refundable. We recommend you to review the
                   terms of use before proceeding with any online transaction'
                 </Text>
               </View>
-         
             </View>
             <View
               style={{
-         
                 marginTop: 15,
                 alignSelf: 'center',
                 width: '85%',

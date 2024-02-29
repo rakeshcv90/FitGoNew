@@ -91,7 +91,7 @@ const Profile = () => {
           method: 'get',
         });
         if (res.data) {
-          // console.log("Delete Account",res.data)
+         
           setForLoading(false);
           setModalVisible(false);
           showMessage({
@@ -357,7 +357,7 @@ const Profile = () => {
       }
     };
     const UploadImage = async selectedImage => {
-      // console.log("upload img")
+     
       try {
         let payload = new FormData();
         payload.append('token', getUserDataDetails?.login_token);
@@ -368,7 +368,7 @@ const Profile = () => {
           type: selectedImage?.type,
           uri: selectedImage?.uri,
         });
-        // console.log('payload=====>',payload)
+      
         const ProfileData = await axios({
           url: NewAppapi.Upload_Profile_picture,
           method: 'POST',
@@ -377,7 +377,7 @@ const Profile = () => {
           },
           data: payload,
         });
-        // console.log(ProfileData.data[0]);
+     
         if (ProfileData.data) {
         
           getProfileData(getUserDataDetails?.id);
@@ -387,7 +387,7 @@ const Profile = () => {
             setPhotoUploaded(false);
           }
         }
-        // console.log('ProfileData', ProfileData.data);
+   
       } catch (error) {
         setImguploaded(true);
         if (IsimgUploaded == true) {
@@ -399,7 +399,7 @@ const Profile = () => {
     };
     const askPermissionForCamera = async permission => {
       const result = await request(permission);
-      //  console.log("camera result",result)
+
       if (result == 'granted') {
         try {
           const resultCamera = await launchCamera({
@@ -437,9 +437,9 @@ const Profile = () => {
       }
     };
     const askPermissionForLibrary = async permission => {
-      //Library permission
+  
       const resultLib = await request(permission);
-      // console.log("result",resultLib)
+  
       if (resultLib == 'granted') {
         try {
           const resultLibrary = await launchImageLibrary({
@@ -600,7 +600,7 @@ const Profile = () => {
                       onPress={() => {
                         setImguploaded(false);
                         UploadImage(userAvatar);
-                        console.log(userAvatar);
+                   
                       }}>
                       <Text style={[styles.cameraText]}>Upload Image</Text>
                     </TouchableOpacity>

@@ -108,10 +108,7 @@ const Weight = ({route, navigation}: any) => {
       });
     } else if (weight != selected) {
       {
-        console.log('Current Weight Screen Data', [
-          ...getLaterButtonData,
-          currentData,
-        ]);
+       
       }
       dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
       navigation.navigate('Age', {nextScreen: screen + 1});

@@ -283,7 +283,7 @@ const NewMonthlyAchievement = () => {
         <View style={styles.card}>
           <Calendar
             onDayPress={day => {
-              console.log(day);
+          
               setDate(day.dateString);
               setSelected(true);
               HandleStepsAndCalories(day.dateString);

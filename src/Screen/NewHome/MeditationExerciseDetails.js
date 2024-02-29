@@ -64,7 +64,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
       playbackState.state === State.Ready
     ) {
       await TrackPlayer.play();
-      console.log('sdfdscxcefw', playbackState, State.Ready);
+
     } else {
       await TrackPlayer.pause();
     }
@@ -76,7 +76,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
   const handleValueChange = value => {};
   return (
     <View style={styles.container}>
-      {console.log('DHDHD44444', DeviceHeigth)}
+
       <LinearGradient
         start={{x: 0, y: 1}}
         end={{x: 1, y: 0}}

@@ -61,7 +61,7 @@ const Store = ({navigation}) => {
   //   React.useCallback(() => {
   //     if (data1) {
   //       if (getFitmeAdsCount < 3) {
-  //         console.log('Ad Count Incremented:', getFitmeAdsCount);
+  //     
   //         dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
   //       } else {
   //         MyInterstitialAd(resetFitmeCount).load();
@@ -81,7 +81,7 @@ const Store = ({navigation}) => {
             dispatch(setFitmeAdsCount(0));
           } else {
             if (getFitmeAdsCount < 5) {
-              console.log('Ad Count Incremented:', getFitmeAdsCount);
+            
               dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
             } else {
               MyInterstitialAd(resetFitmeCount).load();
@@ -89,7 +89,7 @@ const Store = ({navigation}) => {
           }
         } else {
           if (getFitmeAdsCount < 5) {
-            console.log('Ad Count Incremented:', getFitmeAdsCount);
+        
             dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {
             MyInterstitialAd(resetFitmeCount).load();
@@ -100,10 +100,10 @@ const Store = ({navigation}) => {
   );
 
   const resetFitmeCount = () => {
-    console.log('Reset Count');
+   
     dispatch(setFitmeAdsCount(0));
   };
-  console.log('Fitme Count', getFitmeAdsCount);
+
   const updateFilteredCategories = test => {
     const filteredItems = category.filter(item =>
       item.type_title.toLowerCase().includes(test.toLowerCase()),
@@ -219,9 +219,9 @@ const Store = ({navigation}) => {
           ImageComponent={FastImage}
           images={data}
           sliderBoxHeight={150}
-          onCurrentImagePressed={index =>
-            console.warn(`image ${index} pressed`)
-          }
+          // onCurrentImagePressed={index =>
+          //   console.warn(`image ${index} pressed`)
+          // }
           dotColor="#FFEE58"
           inactiveDotColor="#90A4AE"
           paginationBoxVerticalPadding={20}

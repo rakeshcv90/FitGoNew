@@ -303,7 +303,7 @@ const LoadData = ({navigation}) => {
   //       // });
   //     }, 2000);
   //   } catch (error) {
-  //     console.error(error, 'customWorkoutDataApiError');
+
   //     dispatch(setCurrentWorkoutData([]));
   //     setTimeout(() => {
   //       setActiveNext(true);

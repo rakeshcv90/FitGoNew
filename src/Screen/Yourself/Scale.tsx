@@ -82,7 +82,7 @@ const Scale = ({
               ReactNativeHapticFeedback.trigger("soft", options);
               // const endIndex = Math.ceil((y + BOX_WEIGHT) / ITEM_HEIGHT);
               // setVisibleItems(data.slice(startIndex, endIndex));
-              // console.log(startIndex, endIndex);
+           
               // const y = event.nativeEvent.contentOffset.x;
               // getActiveItem(y);
             }}

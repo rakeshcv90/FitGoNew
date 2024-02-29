@@ -57,7 +57,7 @@ const BottomTab = () => {
                   : -DeviceHeigth * 0.035
                 : 0,
           }}>
-          {console.log(DeviceHeigth)}
+       
           <BannerAdd bannerAdId={bannerAdId} />
         </View>
       );
@@ -82,12 +82,6 @@ const BottomTab = () => {
         <Tabs.Screen
           name="Home"
           component={Home}
-          //   listeners={({ navigation }) => ({
-          //     tabPress: (e) => {
-
-          //    console.log("DHDHDHDHD")
-          //     }
-          //  })}
           options={{
             tabBarIcon: ({focused, color, size}) => (
               <Image

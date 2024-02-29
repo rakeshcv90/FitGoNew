@@ -55,13 +55,7 @@ const WorkoutDays = ({navigation, route}: any) => {
      
     }, []),
   );
-  // useEffect(()=>{
-  //   if(selected>0){
-  //     MyInterstitialAd(resetFitmeCount).load();
-  //   }else{
-  //     console.log("fffffffffffff")
-  //   }
-  // },[data1])
+
   const getCurrentDayAPI = async () => {
     try {
       setRefresh(true);
@@ -121,7 +115,7 @@ const WorkoutDays = ({navigation, route}: any) => {
         }
       } else {
         setSelected(0);
-        // console.log('first', res.data);
+     
       }
 
       allWorkoutApi();
@@ -163,7 +157,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           '&workout_id=' +
           data?.workout_id,
       });
-      console.log(res.data?.length, 'DaysData', day);
+   
       if (res.data?.msg != 'no data found.') {
         setExerciseData(res.data);
       } else setExerciseData([]);
@@ -382,7 +376,7 @@ const WorkoutDays = ({navigation, route}: any) => {
             }
             h={DeviceHeigth * 0.08}
             onPress={() => {
-              console.log(exerciseData, 'trackerData', trackerData);
+           
               navigation.navigate('Exercise', {
                 allExercise: exerciseData,
                 currentExercise:

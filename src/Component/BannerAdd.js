@@ -69,7 +69,7 @@ export const MyRewardedAd = (setreward) => {
     },
   );
   const faild = rewarded.addAdEventListener(AdEventType.ERROR, dada => {
-    console.log('rewarded is222222 ', dada);
+  
   });
 
   return rewarded;
