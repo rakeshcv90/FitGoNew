@@ -25,7 +25,7 @@ import axios from 'axios';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import analytics from '@react-native-firebase/analytics';
-import { MyInterstitialAd } from '../../Component/BannerAdd';
+import {MyInterstitialAd} from '../../Component/BannerAdd';
 const WorkoutDays = ({navigation, route}: any) => {
   const {data} = route.params;
   const [selected, setSelected] = useState(0);
@@ -37,7 +37,7 @@ const WorkoutDays = ({navigation, route}: any) => {
   const [totalCount, setTotalCount] = useState(-1);
   const [trackerData, setTrackerData] = useState([]);
   const [exerciseData, setExerciseData] = useState([]);
-  let data1=useIsFocused()
+  let data1 = useIsFocused();
   const {allWorkoutData, getUserDataDetails, getCount} = useSelector(
     (state: any) => state,
   );
@@ -51,8 +51,8 @@ const WorkoutDays = ({navigation, route}: any) => {
   }
   useFocusEffect(
     useCallback(() => {
+      postViewsAPI()
       getCurrentDayAPI();
-     
     }, []),
   );
 
@@ -115,7 +115,6 @@ const WorkoutDays = ({navigation, route}: any) => {
         }
       } else {
         setSelected(0);
-     
       }
 
       allWorkoutApi();
@@ -157,7 +156,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           '&workout_id=' +
           data?.workout_id,
       });
-   
+
       if (res.data?.msg != 'no data found.') {
         setExerciseData(res.data);
       } else setExerciseData([]);
@@ -168,9 +167,30 @@ const WorkoutDays = ({navigation, route}: any) => {
       setRefresh(false);
     }
   };
+  const postViewsAPI = async () => {
+    try {
+      const payload = new FormData();
+      payload.append('workout_id', data?.workout_id);
+      const res = await axios({
+        url: NewAppapi.POST_WORKOUT_VIEWS,
+        method: 'post',
+        data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (res.data?.msg=='Workout views ') {
+        console.log('first', res.data);
+      }
+      setRefresh(false);
+    } catch (error) {
+      console.error(error, 'VIEWSPIERror');
+      setRefresh(false);
+    }
+  };
   const dispatch = useDispatch();
   const BlackCircle = ({indexes, select, index}: any) => {
-  
     return (
       <View
         style={{
@@ -202,9 +222,9 @@ const WorkoutDays = ({navigation, route}: any) => {
     );
   };
 
-// const resetFitmeCount=()=>{
-//   return null
-// }
+  // const resetFitmeCount=()=>{
+  //   return null
+  // }
   const Phase = ({index, percent, select}: any) => {
     const gradientColors = ['#D5191A', '#941000'];
     return (
@@ -266,13 +286,13 @@ const WorkoutDays = ({navigation, route}: any) => {
     );
   };
 
-  const Box = ({selected, item, index,active}: any) => {
+  const Box = ({selected, item, index, active}: any) => {
     return (
       <TouchableOpacity
-      disabled={item?.total_rest == 0}
+        disabled={item?.total_rest == 0}
         activeOpacity={1}
         onPress={() => {
-          analytics().logEvent(`CV_FITME_CLICKED_ON_DAY_${index}_EXERCISES`)
+          analytics().logEvent(`CV_FITME_CLICKED_ON_DAY_${index}_EXERCISES`);
           index - 1 == 0
             ? navigation.navigate('OneDay', {
                 data: data,
@@ -376,7 +396,6 @@ const WorkoutDays = ({navigation, route}: any) => {
             }
             h={DeviceHeigth * 0.08}
             onPress={() => {
-           
               navigation.navigate('Exercise', {
                 allExercise: exerciseData,
                 currentExercise:
