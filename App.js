@@ -49,6 +49,7 @@ import { LogOut } from './src/Component/LogOut';
 // also use before use code Push (appcenter login)
 // codepush release of ios , appcenter codepush release-react -a thefitnessandworkout-gmail.com/FitmeIos -d Production
 // codepush release of android  appcenter codepush release-react -a thefitnessandworkout-gmail.com/FitmeAndroid -d Production
+// clear data from code push appcenter codepush deployment clear -a thefitnessandworkout-gmail.com/FitmeAndroid Production
 let codePushOptions = {checkFrequency: codePush.CheckFrequency.MANUAL};
 const App = () => {
   const [isLogged, setIsLogged] = useState();
