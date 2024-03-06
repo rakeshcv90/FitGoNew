@@ -8,11 +8,8 @@ import {
   Animated,
   ScrollView,
   TouchableOpacity,
-  Dimensions,
   Platform,
-  AppState,
   Modal,
-  ActivityIndicator,
   Alert,
   RefreshControl,
 } from 'react-native';
@@ -24,7 +21,6 @@ import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import VersionNumber from 'react-native-version-number';
 import {
-  setHealthData,
   setHomeGraphData,
   setWorkoutTimeCal,
   setStepCounterOnOff,
@@ -58,16 +54,11 @@ import {
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {BlurView} from '@react-native-community/blur';
-import {navigationRef} from '../../../App';
 import {useSelector, useDispatch} from 'react-redux';
 import {showMessage} from 'react-native-flash-message';
-import Graph from '../Yourself/Graph';
 import {LineChart} from 'react-native-chart-kit';
-import {max} from 'd3';
 import moment from 'moment';
-
 import analytics from '@react-native-firebase/analytics';
-
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {ImageBackground} from 'react-native';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
@@ -152,12 +143,8 @@ const ProgressBar = ({progress, image, text}) => {
   );
 };
 const Home = ({navigation}) => {
-  const counter = useRef(0);
-  const [progress, setProgress] = useState(10);
-  const [forLoading, setForLoading] = useState(false);
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const [value, setValue] = useState('Weekly');
-  const [likeData, setLikeData] = useState([]);
-  const [currentindex, setCurrentIndex] = useState(1);
   const [weeklyGraph, setWeeklyGraph] = useState([]);
   const [monthlyGraph, setMonthlyGraph] = useState([]);
   const progressAnimation = useRef(new Animated.Value(0)).current;
@@ -167,24 +154,17 @@ const Home = ({navigation}) => {
   const avatarRef = React.createRef();
   const [PaddoModalShow, setPaddoModalShow] = useState(false);
   const Dispatch = useDispatch();
-  const navigation1 = useNavigation();
 
-  const {
-    getHealthData,
-    getLaterButtonData,
-    completeProfileData,
-    getUserDataDetails,
-    mindsetConsent,
-    customWorkoutData,
-    mealData,
-    getPedomterData,
-    ProfilePhoto,
-    getUserID,
-    getCustttomeTimeCal,
-    getStepCounterOnoff,
-    getFitmeAdsCount,
-    getPurchaseHistory,
-  } = useSelector(state => state);
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  const customWorkoutData = useSelector(state => state.customWorkoutData);
+  const mealData = useSelector(state => state.mealData);
+  const getPedomterData = useSelector(state => state.getPedomterData);
+  const getUserID = useSelector(state => state.getUserID);
+  const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
+  const getStepCounterOnoff = useSelector(state => state.getStepCounterOnoff);
+  const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+
   const [stepGoalProfile, setStepGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
   );
@@ -201,6 +181,7 @@ const Home = ({navigation}) => {
   const [distance, setDistance] = useState(0);
   const distanceRef = useRef(distance);
   let data1 = useIsFocused();
+
   useFocusEffect(
     React.useCallback(() => {
       if (data1) {
@@ -212,41 +193,39 @@ const Home = ({navigation}) => {
             Dispatch(setFitmeAdsCount(0));
           } else {
             if (getFitmeAdsCount < 5) {
-           
               Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
             } else {
-              MyInterstitialAd(resetFitmeCount).load();
+              // MyInterstitialAd(resetFitmeCount).load();
+              showInterstitialAd();
+              Dispatch(setFitmeAdsCount(0));
             }
           }
         } else {
           if (getFitmeAdsCount < 5) {
-        
             Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {
-            MyInterstitialAd(resetFitmeCount).load();
+            showInterstitialAd();
+            Dispatch(setFitmeAdsCount(0));
+            //MyInterstitialAd(resetFitmeCount).load();
           }
         }
       }
     }, [data1]),
   );
 
-  const resetFitmeCount = async () => {
-
-    Dispatch(setFitmeAdsCount(0));
-  };
-
   useEffect(() => {
+    initInterstitial();
     setTimeout(() => {
       ActivityPermission();
     }, 3000);
   }, []);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      getCustomeWorkoutTimeDetails();
-      getGraphData(1);
-    }, []),
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     getCustomeWorkoutTimeDetails();
+  //     getGraphData(1);
+  //   }, []),
+  // );
   // pedometer data sending to api
   const PedoMeterData = async () => {
     try {
@@ -261,7 +240,7 @@ const Home = ({navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-  
+
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -351,7 +330,6 @@ const Home = ({navigation}) => {
   const startStepUpdateBackgroundTask = async () => {
     try {
       await BackgroundService.start(veryIntensiveTask, options1);
-    
     } catch (e) {
       console.error('Error starting step update background service:', e);
     }
@@ -385,7 +363,6 @@ const Home = ({navigation}) => {
           if (authResult.success) {
             checkPermissions();
           } else {
-          
           }
         })
         .catch(error => {
@@ -401,10 +378,8 @@ const Home = ({navigation}) => {
     await GoogleFit.authorize(options)
       .then(authResult => {
         if (authResult.success) {
-          checkPermissions1();
-         
+          checkPermissions();
         } else {
-          
         }
       })
       .catch(error => {
@@ -429,7 +404,6 @@ const Home = ({navigation}) => {
           Dispatch(setStepCounterOnOff(true));
         }
       } else {
-       
       }
     } else {
       if (getStepCounterOnoff == true) {
@@ -452,7 +426,7 @@ const Home = ({navigation}) => {
   const fetchTotalSteps = async () => {
     try {
       const dailySteps = await GoogleFit.getDailySteps();
-   
+
       dailySteps.reduce(
         (total, acc) =>
           (totalSteps = total + acc.steps[0] ? acc.steps[0].value : 0),
@@ -489,7 +463,6 @@ const Home = ({navigation}) => {
                 // adding a listner here to record whenever new Steps will be sent from healthkit
                 'healthKit:StepCount:new',
                 async () => {
-              
                   AppleHealthKit.getStepCount(
                     options,
                     (callbackError, results) => {
@@ -516,7 +489,6 @@ const Home = ({navigation}) => {
               };
               AppleHealthKit.getStepCount(options, (callbackError, results) => {
                 if (callbackError) {
-               
                 }
                 setSteps(results.value);
                 setDistance(((results.value / 20) * 0.01).toFixed(2));
@@ -558,7 +530,6 @@ const Home = ({navigation}) => {
   };
   const getGraphData = async Key => {
     try {
-      setForLoading(true);
       const res = await axios({
         url: NewAppapi.HOME_GRAPH_DATA,
         method: 'post',
@@ -577,8 +548,6 @@ const Home = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data?.message != 'No data found') {
-        setForLoading(false);
-
         Dispatch(setHomeGraphData(res.data));
 
         if (Key == 1) {
@@ -586,7 +555,6 @@ const Home = ({navigation}) => {
           for (i = 0; i < res?.data?.weekly_data?.length; i++) {
             const data1 = res.data.weekly_data[i].total_calories;
             zeroData.push(parseFloat(data1));
-   
           }
           setWeeklyGraph(zeroData);
         } else if (Key == 2) {
@@ -598,12 +566,9 @@ const Home = ({navigation}) => {
           setMonthlyGraph(zeroDataM);
         }
       } else {
-        setForLoading(false);
-
         Dispatch(setHomeGraphData([]));
       }
     } catch (error) {
-      setForLoading(false);
       console.error(error, 'GraphError');
       Dispatch(setHomeGraphData([]));
     }
@@ -1162,126 +1127,6 @@ const Home = ({navigation}) => {
     }
   };
 
-  const PaddoMeterPermissionModal = () => {
-    const options = {
-      scopes: [Scopes.FITNESS_ACTIVITY_READ, Scopes.FITNESS_ACTIVITY_WRITE],
-    };
-    const handleAlert = async () => {
-      setPaddoModalShow(false);
-      await GoogleFit.authorize(options)
-        .then(authResult => {
-          if (authResult.success) {
-            checkPermissions1();
-         
-          } else {
-         
-          }
-        })
-        .catch(error => {
-          console.error('Authentication error', error);
-        });
-    };
-    const checkPermissions1 = async () => {
-      const fitnessPermissionResult = await check(
-        PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
-      );
-      if (fitnessPermissionResult != RESULTS.GRANTED) {
-        const permissionRequestResult = await request(
-          PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
-        );
-        if (permissionRequestResult === RESULTS.GRANTED) {
-          if (getStepCounterOnoff == true) {
-            fetchTotalSteps();
-            startRecording();
-          } else {
-            fetchTotalSteps();
-            startStepUpdateBackgroundTask();
-            Dispatch(setStepCounterOnOff(true));
-          }
-        } else {
-       
-        }
-      } else {
-        if (getStepCounterOnoff == true) {
-          fetchTotalSteps();
-          startRecording();
-        } else {
-          fetchTotalSteps();
-          startStepUpdateBackgroundTask();
-          Dispatch(setStepCounterOnOff(true));
-        }
-      }
-    };
-    return (
-      <Modal transparent={true} visible={PaddoModalShow}>
-        <View style={styles.modalBackGround}>
-          <View style={styles.modalContainer}>
-            <ImageBackground
-              source={localImage.PadoDaolog}
-              resizeMode="contain"
-              style={{
-                width: '90%',
-                height: '90%',
-                borderRadius: 26,
-                alignItems: 'center',
-                left: DeviceWidth * 0.05,
-                alignSelf: 'center',
-              }}>
-              <View
-                style={{
-                  position: 'absolute',
-                  top: -DeviceHeigth * 0.06,
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                }}>
-                <AnimatedLottieView
-                  source={require('../../Icon/Images/NewImage/Paddo.json')}
-                  speed={2}
-                  autoPlay
-                  resizeMode="contain"
-                  loop
-                  style={{
-                    width: DeviceWidth * 0.35,
-                    height: DeviceHeigth * 0.35,
-                  }}
-                />
-              </View>
-              <TouchableOpacity
-                style={styles.buttonPaddo}
-                activeOpacity={0.5}
-                onPress={() => {
-                  handleAlert();
-                }}>
-                <LinearGradient
-                  start={{x: 0, y: 1}}
-                  end={{x: 1, y: 0}}
-                  colors={['#D5191A', '#941000']}
-                  style={styles.buttonPaddo}>
-                  <Text style={styles.buttonText}>Allow</Text>
-                </LinearGradient>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonPaddo2}
-                activeOpacity={0.5}
-                onPress={() => {
-                  setPaddoModalShow(false);
-                }}>
-                <LinearGradient
-                  start={{x: 0, y: 1}}
-                  end={{x: 1, y: 0}}
-                  colors={['#F7F8F8', '#F7F8F8']}
-                  style={styles.buttonPaddo2}>
-                  <Text style={[styles.buttonText, {color: '#505050'}]}>
-                    Cancel
-                  </Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            </ImageBackground>
-          </View>
-        </View>
-      </Modal>
-    );
-  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -1858,7 +1703,7 @@ const Home = ({navigation}) => {
             value={value}
             onChange={item => {
               setValue(item.label);
-           
+
               if (item.value == 1) {
                 getGraphData(1);
               } else {
@@ -1891,7 +1736,6 @@ const Home = ({navigation}) => {
                 bezier
                 segments={4}
                 renderDotContent={renderCustomPoint}
-                
                 withShadow={false}
                 yAxisInterval={10}
                 fromZero={true}

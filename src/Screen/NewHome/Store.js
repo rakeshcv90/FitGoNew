@@ -39,16 +39,22 @@ import {MyInterstitialAd} from '../../Component/BannerAdd';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const Store = ({navigation}) => {
-  const {getUserDataDetails, getStoreData, getFitmeAdsCount,getPurchaseHistory} = useSelector(
-    state => state,
-  );
+
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  const getStoreData = useSelector(state => state.getStoreData);
+  const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [searchText, setsearchText] = useState('');
   const [forLoading, setForLoading] = useState(false);
   const [category, setcategory] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState(getStoreData);
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const avatarRef = React.createRef();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    initInterstitial();
+  }, []);
   let data1 = useIsFocused();
   useFocusEffect(
     React.useCallback(() => {
@@ -57,19 +63,6 @@ const Store = ({navigation}) => {
     }, []),
   );
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     if (data1) {
-  //       if (getFitmeAdsCount < 3) {
-  //     
-  //         dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-  //       } else {
-  //         MyInterstitialAd(resetFitmeCount).load();
-      
-  //       }
-  //     }
-  //   }, [data1]),
-  // );
   useFocusEffect(
     React.useCallback(() => {
       if (data1) {
@@ -81,28 +74,23 @@ const Store = ({navigation}) => {
             dispatch(setFitmeAdsCount(0));
           } else {
             if (getFitmeAdsCount < 5) {
-            
               dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
             } else {
-              MyInterstitialAd(resetFitmeCount).load();
+              showInterstitialAd();
+              dispatch(setFitmeAdsCount(0));
             }
           }
         } else {
           if (getFitmeAdsCount < 5) {
-        
             dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {
-            MyInterstitialAd(resetFitmeCount).load();
+            showInterstitialAd();
+            dispatch(setFitmeAdsCount(0));
           }
         }
       }
     }, [data1]),
   );
-
-  const resetFitmeCount = () => {
-   
-    dispatch(setFitmeAdsCount(0));
-  };
 
   const updateFilteredCategories = test => {
     const filteredItems = category.filter(item =>

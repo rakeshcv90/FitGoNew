@@ -1,15 +1,6 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Animated,
-  StatusBar,
-  ImageBackground,
-  Platform,
-} from 'react-native';
-import React, {useEffect, useState, useRef} from 'react';
-import {DeviceHeigth, DeviceWidth, NewAppapi} from '../Component/Config';
+import {StyleSheet, Image, StatusBar, Platform} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {DeviceWidth, NewAppapi} from '../Component/Config';
 import {localImage} from '../Component/Image';
 import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
@@ -21,49 +12,61 @@ import {
   setPurchaseHistory,
   setStoreData,
 } from '../Component/ThemeRedux/Actions';
-import VersionNumber, {appVersion} from 'react-native-version-number';
+import VersionNumber from 'react-native-version-number';
 import DeviceInfo from 'react-native-device-info';
 import axios from 'axios';
 import {showMessage} from 'react-native-flash-message';
-import {
-  RemoteMessage,
-  requestPermissionforNotification,
-} from '../Component/Helper/PushNotification';
+import {requestPermissionforNotification} from '../Component/Helper/PushNotification';
 
-import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
-import {bannerAdId} from '../Component/AdsId';
 import {MyInterstitialAd} from '../Component/BannerAdd';
 import moment from 'moment';
 
-// const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
-//   requestNonPersonalizedAdsOnly: true,
-//   keywords: ['fashion', 'clothing'],
-// });
-
 const products = Platform.select({
   ios: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
-  android: ['fitme_monthly', 'fitme_quarterly', 'fitme_year',],
+  android: ['fitme_monthly', 'fitme_quarterly', 'fitme_year'],
 });
 
 const SplaceScreen = ({navigation}) => {
-  const [deviceId, setDeviceId] = useState(0);
   const dispatch = useDispatch();
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
 
-  const {showIntro, getUserDataDetails, getUserID, getPurchaseHistory} =
-    useSelector(state => state);
+  const showIntro = useSelector(state => state.showIntro);
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  const getUserID = useSelector(state => state.getUserID);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+
   useEffect(() => {
+    initInterstitial();
     requestPermissionforNotification(dispatch);
-    // RemoteMessage();
-  }, []);
-  useEffect(() => {
     DeviceInfo.syncUniqueId().then(uniqueId => {
       getCaterogy(uniqueId);
-      setDeviceId(uniqueId);
+
       Meal_List(uniqueId);
     });
     getPlanData();
     Object.keys(getUserDataDetails).length > 0 && PurchaseDetails();
+    dispatch(setFitmeAdsCount(0));
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        setTimeout(() => {
+          loadScreen();
+        }, 4000);
+      } else {
+        setTimeout(() => {
+          showInterstitialAd();
+          loadScreen();
+        }, 4000);
+      }
+    } else {
+      setTimeout(() => {
+        showInterstitialAd();
+        loadScreen();
+      }, 4000);
+    }
   }, []);
+
   const getPlanData = () => {
     Platform.OS === 'ios'
       ? RNIap.initConnection()
@@ -96,37 +99,6 @@ const SplaceScreen = ({navigation}) => {
           });
   };
 
-  useEffect(() => {
-    dispatch(setFitmeAdsCount(0));
-    if (getPurchaseHistory.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        setTimeout(
-          () => {
-            loadScreen();
-          },
-          Platform.OS == 'android' ? 1000 : 1000,
-        );
-      } else {
-        MyInterstitialAd(resetFitmeCount).load();
-        setTimeout(
-          () => {
-            loadScreen();
-          },
-          Platform.OS == 'android' ? 1000 : 1000,
-        );
-      }
-    } else {
-      MyInterstitialAd(resetFitmeCount).load();
-      setTimeout(
-        () => {
-          loadScreen();
-        },
-        Platform.OS == 'android' ? 1000 : 1000,
-      );
-    }
-  }, []);
   const Meal_List = async deviceData => {
     try {
       const data = await axios(`${NewAppapi.Meal_Categorie}`, {
@@ -190,9 +162,7 @@ const SplaceScreen = ({navigation}) => {
       //navigation.replace('IntroductionScreen1');
     }
   };
-  const resetFitmeCount = () => {
-    return null;
-  };
+
   const PurchaseDetails = async () => {
     try {
       const res = await axios(`${NewAppapi.TransctionsDetails}`, {

@@ -19,30 +19,36 @@ import GradientButton from '../../Component/GradientButton';
 import MediumRounded from '../../Component/MediumRounded';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
-import {setAllWorkoutData, setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
+import {
+  setAllWorkoutData,
+  setFitmeAdsCount,
+} from '../../Component/ThemeRedux/Actions';
 import NewHeader from '../../Component/Headers/NewHeader';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
 import analytics from '@react-native-firebase/analytics';
-import { useFocusEffect, useIsFocused,  } from '@react-navigation/native';
-import { MyInterstitialAd } from '../../Component/BannerAdd';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {MyInterstitialAd} from '../../Component/BannerAdd';
 import moment from 'moment';
 const Workouts = ({navigation}: any) => {
-  const {allWorkoutData, getUserDataDetails,getFitmeAdsCount,getPurchaseHistory} = useSelector(
-    (state: any) => state,
-  );
+  const {
+    allWorkoutData,
+    getUserDataDetails,
+    getFitmeAdsCount,
+    getPurchaseHistory,
+  } = useSelector((state: any) => state);
   const [popularData, setPopularData] = useState([]);
   const [trackerData, setTrackerData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const dispatch = useDispatch();
-
-  let data1=useIsFocused()
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  let data1 = useIsFocused();
   useEffect(() => {
     allWorkoutData?.length == 0 && allWorkoutApi();
     popularData?.length == 0 && popularWorkoutApi();
     workoutStatusApi();
+    initInterstitial();
   }, []);
-
 
   useFocusEffect(
     React.useCallback(() => {
@@ -55,18 +61,20 @@ const Workouts = ({navigation}: any) => {
             dispatch(setFitmeAdsCount(0));
           } else {
             if (getFitmeAdsCount < 5) {
-         
               dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
             } else {
-              MyInterstitialAd(resetFitmeCount).load();
+              // MyInterstitialAd(resetFitmeCount).load();
+              showInterstitialAd();
+              dispatch(setFitmeAdsCount(0));
             }
           }
         } else {
           if (getFitmeAdsCount < 5) {
-        
             dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {
-            MyInterstitialAd(resetFitmeCount).load();
+            // MyInterstitialAd(resetFitmeCount).load();
+            showInterstitialAd();
+            dispatch(setFitmeAdsCount(0));
           }
         }
       }
@@ -74,7 +82,6 @@ const Workouts = ({navigation}: any) => {
   );
 
   const resetFitmeCount = () => {
-   
     dispatch(setFitmeAdsCount(0));
   };
   const allWorkoutApi = async () => {
@@ -91,7 +98,7 @@ const Workouts = ({navigation}: any) => {
         },
         data: payload,
       });
-
+ 
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -122,7 +129,6 @@ const Workouts = ({navigation}: any) => {
       );
 
       setRefresh(false);
-    
 
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({

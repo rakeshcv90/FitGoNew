@@ -8,17 +8,24 @@ import AnimatedLottieView from 'lottie-react-native';
 import {DeviceHeigth} from '../../Component/Config';
 import Button from '../../Component/Button';
 import analytics from '@react-native-firebase/analytics';
-import {useFocusEffect, useIsFocused, useNavigation} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import {setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
 import moment from 'moment';
 const Trainer = ({navigation}) => {
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const navigation1 = useNavigation();
   const dispatch = useDispatch();
-  const {getFitmeAdsCount,getPurchaseHistory} = useSelector(state => state);
+  const {getFitmeAdsCount, getPurchaseHistory} = useSelector(state => state);
   let data1 = useIsFocused();
-
+  useEffect(() => {
+    initInterstitial();
+  }, []);
   useFocusEffect(
     React.useCallback(() => {
       if (data1) {
@@ -30,27 +37,23 @@ const Trainer = ({navigation}) => {
             dispatch(setFitmeAdsCount(0));
           } else {
             if (getFitmeAdsCount < 5) {
-             
               dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
             } else {
-              MyInterstitialAd(resetFitmeCount).load();
+              showInterstitialAd();
+              //dispatch(setFitmeAdsCount(0));
             }
           }
         } else {
           if (getFitmeAdsCount < 5) {
-      
             dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {
-            MyInterstitialAd(resetFitmeCount).load();
+            showInterstitialAd();
+            //dispatch(setFitmeAdsCount(0));
           }
         }
       }
     }, [data1]),
   );
-  const resetFitmeCount = async () => {
-
-    dispatch(setFitmeAdsCount(0));
-  };
 
   return (
     <View style={styles.container}>
