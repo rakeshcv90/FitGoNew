@@ -21,40 +21,46 @@ const Trainer = ({navigation}) => {
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const navigation1 = useNavigation();
   const dispatch = useDispatch();
-  const {getFitmeAdsCount, getPurchaseHistory} = useSelector(state => state);
+  const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      initInterstitial();
+    });
+
+  
+    return unsubscribe;
+  }, [navigation]);
+  
   let data1 = useIsFocused();
   useEffect(() => {
     initInterstitial();
-  }, []);
-  useFocusEffect(
-    React.useCallback(() => {
-      if (data1) {
-        if (getPurchaseHistory.length > 0) {
-          if (
-            getPurchaseHistory[0]?.plan_end_date >=
-            moment().format('YYYY-MM-DD')
-          ) {
-            dispatch(setFitmeAdsCount(0));
-          } else {
-            if (getFitmeAdsCount < 5) {
-              dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-            } else {
-              showInterstitialAd();
-              //dispatch(setFitmeAdsCount(0));
-            }
-          }
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >=
+        moment().format('YYYY-MM-DD')
+      ) {
+        dispatch(setFitmeAdsCount(0));
+      } else {
+        if (getFitmeAdsCount < 5) {
+          dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
         } else {
-          if (getFitmeAdsCount < 5) {
-            dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-          } else {
-            showInterstitialAd();
-            //dispatch(setFitmeAdsCount(0));
-          }
+          showInterstitialAd();
+          dispatch(setFitmeAdsCount(0));
         }
       }
-    }, [data1]),
-  );
-
+    } else {
+      if (getFitmeAdsCount < 5) {
+        dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+      } else {
+        showInterstitialAd();
+        dispatch(setFitmeAdsCount(0));
+      }
+    }
+  }, []);
+  
   return (
     <View style={styles.container}>
       <NewHeader header={'  Fitness Coach'} />

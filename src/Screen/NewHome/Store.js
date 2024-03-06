@@ -39,7 +39,6 @@ import {MyInterstitialAd} from '../../Component/BannerAdd';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const Store = ({navigation}) => {
-
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getStoreData = useSelector(state => state.getStoreData);
   const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
@@ -51,35 +50,18 @@ const Store = ({navigation}) => {
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const avatarRef = React.createRef();
   const dispatch = useDispatch();
+  let isFocused = useIsFocused();
 
   useEffect(() => {
-    initInterstitial();
-  }, []);
-  let data1 = useIsFocused();
-  useFocusEffect(
-    React.useCallback(() => {
-      getCaterogy();
+    if (isFocused) {
+      initInterstitial();
+      //getCaterogy();
       setcategory(getStoreData);
-    }, []),
-  );
-
-  useFocusEffect(
-    React.useCallback(() => {
-      if (data1) {
-        if (getPurchaseHistory.length > 0) {
-          if (
-            getPurchaseHistory[0]?.plan_end_date >=
-            moment().format('YYYY-MM-DD')
-          ) {
-            dispatch(setFitmeAdsCount(0));
-          } else {
-            if (getFitmeAdsCount < 5) {
-              dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-            } else {
-              showInterstitialAd();
-              dispatch(setFitmeAdsCount(0));
-            }
-          }
+      if (getPurchaseHistory.length > 0) {
+        if (
+          getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        ) {
+          dispatch(setFitmeAdsCount(0));
         } else {
           if (getFitmeAdsCount < 5) {
             dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
@@ -88,9 +70,16 @@ const Store = ({navigation}) => {
             dispatch(setFitmeAdsCount(0));
           }
         }
+      } else {
+        if (getFitmeAdsCount < 5) {
+          dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+        } else {
+          showInterstitialAd();
+          dispatch(setFitmeAdsCount(0));
+        }
       }
-    }, [data1]),
-  );
+    }
+  }, [isFocused]);
 
   const updateFilteredCategories = test => {
     const filteredItems = category.filter(item =>

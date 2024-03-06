@@ -296,7 +296,6 @@ const AllWorkouts = ({navigation, route}: any) => {
   };
 
   const Box = ({selected, item, index}: any) => {
-  
     let totalTime = 0;
     for (const day in item?.days) {
       totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
@@ -319,7 +318,26 @@ const AllWorkouts = ({navigation, route}: any) => {
               height: DeviceHeigth * 0.2,
             },
           ]}>
-          <Text>{item?.workout_price}</Text>
+          {/* <Text>{item?.workout_price}</Text> */}
+          <Image
+            source={
+              item.workout_price == 'Premium'
+                ? require('../../Icon/Images/NewImage/premium.png')
+                : require('../../Icon/Images/NewImage/free.png')
+            }
+            resizeMode="contain"
+            style={{
+              width: 100,
+              height: 50,
+              top:
+                Platform.OS == 'android'
+                  ? -DeviceHeigth * 0.029
+                  : -DeviceHeigth * 0.029,
+              left:
+                Platform.OS == 'android'
+                  ? -DeviceWidth * 0.04
+                  : -DeviceWidth * 0.035,
+            }}></Image>
           <Image
             source={{uri: item?.workout_image_link}}
             style={{
@@ -338,13 +356,13 @@ const AllWorkouts = ({navigation, route}: any) => {
                 <Image
                   source={localImage.Heart}
                   resizeMode="contain"
-                  style={{height: 25, width: 25, right: 10}}
+                  style={{height: 25, width: 25, right: 20}}
                 />
               ) : (
                 <Image
                   source={localImage.dw7}
                   resizeMode="contain"
-                  style={{height: 25, width: 25, right: 10}}
+                  style={{height: 25, width: 25, right: 20}}
                 />
               )}
             </TouchableOpacity>
@@ -455,48 +473,50 @@ const AllWorkouts = ({navigation, route}: any) => {
         // style={styles.container}
         nestedScrollEnabled>
         {data &&
-          data.sort((a:any, b:any) => a.workout_price < b.workout_price)?.map((item: any, index: number) => {
-            if (fav && likeData?.includes(item?.workout_id))
-              return (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                  <BlackCircle
-                    index={index}
-                    select={index == selected}
-                    item={item}
-                  />
-                  <Box
-                    selected={selected != 0 && index == selected}
-                    index={index + 1}
-                    item={item}
-                  />
-                </View>
-              );
-            else
-              return (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                  <BlackCircle
-                    index={index}
-                    select={index == selected}
-                    item={item}
-                  />
-                  <Box
-                    selected={selected != 0 && index == selected}
-                    index={index + 1}
-                    item={item}
-                  />
-                </View>
-              );
-          })}
+          data
+            .sort((a: any, b: any) => a.workout_price < b.workout_price)
+            ?.map((item: any, index: number) => {
+              if (fav && likeData?.includes(item?.workout_id))
+                return (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}>
+                    <BlackCircle
+                      index={index}
+                      select={index == selected}
+                      item={item}
+                    />
+                    <Box
+                      selected={selected != 0 && index == selected}
+                      index={index + 1}
+                      item={item}
+                    />
+                  </View>
+                );
+              else
+                return (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}>
+                    <BlackCircle
+                      index={index}
+                      select={index == selected}
+                      item={item}
+                    />
+                    <Box
+                      selected={selected != 0 && index == selected}
+                      index={index + 1}
+                      item={item}
+                    />
+                  </View>
+                );
+            })}
       </ScrollView>
       <Time />
     </View>

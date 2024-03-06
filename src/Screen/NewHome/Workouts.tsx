@@ -31,59 +31,57 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import moment from 'moment';
 const Workouts = ({navigation}: any) => {
-  const {
-    allWorkoutData,
-    getUserDataDetails,
-    getFitmeAdsCount,
-    getPurchaseHistory,
-  } = useSelector((state: any) => state);
+  // const {
+  //   allWorkoutData,
+  //   getUserDataDetails,
+  //   getFitmeAdsCount,
+  //   getPurchaseHistory,
+  // } = useSelector((state: any) => state);
+  const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
+  const getUserDataDetails = useSelector(
+    (state: any) => state.getUserDataDetails,
+  );
+  const getFitmeAdsCount = useSelector((state: any) => state.getFitmeAdsCount);
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
+  );
+
   const [popularData, setPopularData] = useState([]);
   const [trackerData, setTrackerData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const dispatch = useDispatch();
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
-  let data1 = useIsFocused();
+  const isFocused = useIsFocused();
   useEffect(() => {
-    allWorkoutData?.length == 0 && allWorkoutApi();
-    popularData?.length == 0 && popularWorkoutApi();
-    workoutStatusApi();
-    initInterstitial();
-  }, []);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      if (data1) {
-        if (getPurchaseHistory.length > 0) {
-          if (
-            getPurchaseHistory[0]?.plan_end_date >=
-            moment().format('YYYY-MM-DD')
-          ) {
-            dispatch(setFitmeAdsCount(0));
-          } else {
-            if (getFitmeAdsCount < 5) {
-              dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-            } else {
-              // MyInterstitialAd(resetFitmeCount).load();
-              showInterstitialAd();
-              dispatch(setFitmeAdsCount(0));
-            }
-          }
+    if (isFocused) {
+      allWorkoutData?.length == 0 && allWorkoutApi();
+      popularData?.length == 0 && popularWorkoutApi();
+      workoutStatusApi();
+      initInterstitial();
+      if (getPurchaseHistory.length > 0) {
+        if (
+          getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        ) {
+          dispatch(setFitmeAdsCount(0));
         } else {
           if (getFitmeAdsCount < 5) {
             dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {
-            // MyInterstitialAd(resetFitmeCount).load();
             showInterstitialAd();
             dispatch(setFitmeAdsCount(0));
           }
         }
+      } else {
+        if (getFitmeAdsCount < 5) {
+          dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+        } else {
+          showInterstitialAd();
+          dispatch(setFitmeAdsCount(0));
+        }
       }
-    }, [data1]),
-  );
+    }
+  }, []);
 
-  const resetFitmeCount = () => {
-    dispatch(setFitmeAdsCount(0));
-  };
   const allWorkoutApi = async () => {
     try {
       setRefresh(true);
@@ -98,7 +96,7 @@ const Workouts = ({navigation}: any) => {
         },
         data: payload,
       });
- 
+
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
