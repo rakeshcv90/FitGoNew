@@ -18,9 +18,10 @@ import {useSelector} from 'react-redux';
 import moment from 'moment';
 
 const Tabs = AnimatedTabBarNavigator();
+
 const BottomTab = () => {
-  const {showIntro, getUserDataDetails, getUserID, getPurchaseHistory} =
-    useSelector(state => state);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+  console.log("dfdsfdsfdsfsdfds",getPurchaseHistory)
   const getPurchaseStatusData = () => {
     if (getPurchaseHistory.length > 0) {
       if (
@@ -57,7 +58,6 @@ const BottomTab = () => {
                   : -DeviceHeigth * 0.035
                 : 0,
           }}>
-       
           <BannerAdd bannerAdId={bannerAdId} />
         </View>
       );

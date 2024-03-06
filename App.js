@@ -43,35 +43,37 @@ import {
   flushFailedPurchasesCachedAsPendingAndroid,
 } from 'react-native-iap';
 import {AppColor} from './src/Component/Color';
-import { LogBox } from 'react-native';
-import { LogOut } from './src/Component/LogOut';
+import {LogBox} from 'react-native';
+import {LogOut} from './src/Component/LogOut';
+import {MyInterstitialAd} from './src/Component/BannerAdd';
 
 // also use before use code Push (appcenter login)
 // codepush release of ios , appcenter codepush release-react -a thefitnessandworkout-gmail.com/FitmeIos -d Production
 // codepush release of android  appcenter codepush release-react -a thefitnessandworkout-gmail.com/FitmeAndroid -d Production
+// clear data from code push appcenter codepush deployment clear -a thefitnessandworkout-gmail.com/FitmeAndroid Production
 let codePushOptions = {checkFrequency: codePush.CheckFrequency.MANUAL};
+
 const App = () => {
-  const [isLogged, setIsLogged] = useState();
-  const [update, setUpdate] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isConnected, setConnected] = useState(true);
-  const {defaultTheme} = useSelector(state => state);
-  const {isLogin} = useSelector(state => state);
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+
+  //const [isConnected, setConnected] = useState(true);
+
   const [progress, setProgress] = useState(false);
   useEffect(() => {
     requestPermissionforNotification(dispatch);
     // RemoteMessage();
+    initInterstitial();
   }, []);
 
   useEffect(() => {
     LogBox.ignoreLogs(['Sending...']);
     try {
-     analytics().setAnalyticsCollectionEnabled(true);
+      analytics().setAnalyticsCollectionEnabled(true);
       crashlytics().setCrashlyticsCollectionEnabled(true);
     } catch (error) {
       crashlytics().recordError(error);
     }
-   alalyicsData();
+    alalyicsData();
   }, []);
   const handleBackPress = () => {
     // Do nothing to stop the hardware back press
@@ -95,18 +97,18 @@ const App = () => {
       data: Platform.OS,
     });
   };
-  useEffect(() => {
-    const subscription = NetInfo.addEventListener(state => {
-      if (state.isConnected) {
-        setConnected(true);
-      } else {
-        setConnected(false);
-      }
-    });
-    return () => {
-      subscription();
-    };
-  }, []);
+  // useEffect(() => {
+  //   const subscription = NetInfo.addEventListener(state => {
+  //     if (state.isConnected) {
+  //       setConnected(true);
+  //     } else {
+  //       setConnected(false);
+  //     }
+  //   });
+  //   return () => {
+  //     subscription();
+  //   };
+  // }, []);
   useEffect(() => {
     async function initializePlayer() {
       await TrackPlayer.setupPlayer();
@@ -118,7 +120,8 @@ const App = () => {
   useEffect(() => {
     var updateDialogOptions = {
       updateTitle: 'Optional Update',
-      optionalUpdateMessage: 'An update is available. Would you like to install it now?',
+      optionalUpdateMessage:
+        'An update is available. Would you like to install it now?',
       optionalIgnoreButtonLabel: 'Later',
       optionalInstallButtonLabel: 'Update',
       mandatoryUpdateMessage:
@@ -139,29 +142,23 @@ const App = () => {
   const codePushStatusDidChange = syncStatus => {
     switch (syncStatus) {
       case codePush.SyncStatus.CHECKING_FOR_UPDATE:
-    
         break;
       case codePush.SyncStatus.DOWNLOADING_PACKAGE:
-       
         break;
       case codePush.SyncStatus.AWAITING_USER_ACTION:
-       
         break;
       case codePush.SyncStatus.INSTALLING_UPDATE:
-       
         LogOut(dispatch);
         setProgress(false);
         break;
       case codePush.SyncStatus.UP_TO_DATE:
-      
         break;
       case codePush.SyncStatus.UPDATE_IGNORED:
-       
         setProgress(false);
         break;
       case codePush.SyncStatus.UPDATE_INSTALLED:
         LogOut(dispatch);
-       
+
         setProgress(false);
         break;
       case codePush.SyncStatus.UNKNOWN_ERROR:
@@ -195,8 +192,7 @@ const App = () => {
                 fontSize: 17,
                 fontFamily: 'Poppins',
                 fontWeight: '600',
-              }}
-              >
+              }}>
               Downloading......
             </Text>
 
@@ -326,17 +322,15 @@ const App = () => {
     <>
       <NavigationContainer
         ref={navigationRef}
-
         onStateChange={state => {
           analytics().logScreenView({
-            'screen_name':state.routes[state.index].name, //logging screen name to firebase Analytics
+            screen_name: state.routes[state.index].name, //logging screen name to firebase Analytics
           });
           crashlytics().setAttributes({
-            'platform': Platform.OS,
-            'CrashedScreenName':state.routes[state.index].name
+            platform: Platform.OS,
+            CrashedScreenName: state.routes[state.index].name,
           });
         }}>
-
         <LoginStack />
       </NavigationContainer>
       <FlashMessage
