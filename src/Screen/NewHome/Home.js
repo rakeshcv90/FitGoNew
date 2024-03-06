@@ -180,52 +180,42 @@ const Home = ({navigation}) => {
   const caloriesRef = useRef(Calories);
   const [distance, setDistance] = useState(0);
   const distanceRef = useRef(distance);
-  let data1 = useIsFocused();
+  let isFocused = useIsFocused();
 
-  useFocusEffect(
-    React.useCallback(() => {
-      if (data1) {
-        if (getPurchaseHistory.length > 0) {
-          if (
-            getPurchaseHistory[0]?.plan_end_date >=
-            moment().format('YYYY-MM-DD')
-          ) {
-            Dispatch(setFitmeAdsCount(0));
-          } else {
-            if (getFitmeAdsCount < 5) {
-              Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-            } else {
-              // MyInterstitialAd(resetFitmeCount).load();
-              showInterstitialAd();
-              Dispatch(setFitmeAdsCount(0));
-            }
-          }
+  useEffect(() => {
+    if (isFocused) {
+      initInterstitial();
+      getCustomeWorkoutTimeDetails();
+      getGraphData(1);
+      setTimeout(() => {
+        ActivityPermission();
+      }, 3000);
+      if (getPurchaseHistory.length > 0) {
+        if (
+          getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        ) {
+          Dispatch(setFitmeAdsCount(0));
         } else {
           if (getFitmeAdsCount < 5) {
             Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {
+      
             showInterstitialAd();
             Dispatch(setFitmeAdsCount(0));
-            //MyInterstitialAd(resetFitmeCount).load();
           }
         }
+      } else {
+        if (getFitmeAdsCount < 5) {
+          Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+        } else {
+          showInterstitialAd();
+          Dispatch(setFitmeAdsCount(0));
+          
+        }
       }
-    }, [data1]),
-  );
+    }
+  }, [isFocused]);
 
-  useEffect(() => {
-    initInterstitial();
-    setTimeout(() => {
-      ActivityPermission();
-    }, 3000);
-  }, []);
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     getCustomeWorkoutTimeDetails();
-  //     getGraphData(1);
-  //   }, []),
-  // );
   // pedometer data sending to api
   const PedoMeterData = async () => {
     try {
@@ -278,7 +268,7 @@ const Home = ({navigation}) => {
         if (isSpecificTime(specificHour, specificMinute)) {
           PedoMeterData();
         } else {
-          //do nothing
+          
         }
         try {
           const dailySteps = await GoogleFit.getDailySteps();

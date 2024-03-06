@@ -52,18 +52,18 @@ const SplaceScreen = ({navigation}) => {
       ) {
         setTimeout(() => {
           loadScreen();
-        }, 4000);
+        }, Platform.OS=='android'?4000:1000);
       } else {
         setTimeout(() => {
           showInterstitialAd();
           loadScreen();
-        }, 4000);
+        }, Platform.OS=='android'?4000:1000);
       }
     } else {
       setTimeout(() => {
         showInterstitialAd();
         loadScreen();
-      }, 4000);
+      },Platform.OS=='android'?4000:1000);
     }
   }, []);
 
@@ -79,7 +79,7 @@ const SplaceScreen = ({navigation}) => {
                 console.log('error finding purchase');
               })
               .then(res => {
-                console.log('IOS Subscription', res);
+                
                 dispatch(setInappPurchase(res));
               });
           })
@@ -93,7 +93,7 @@ const SplaceScreen = ({navigation}) => {
                 console.log('error finding purchase');
               })
               .then(res => {
-                console.log('Android Subscription', res);
+               
                 dispatch(setInappPurchase(res));
               });
           });
