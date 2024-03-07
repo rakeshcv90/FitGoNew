@@ -31,8 +31,7 @@ notifee.createChannel({
   description: 'CHANNEL FOR NOTIFICATION',
 });
 messaging().setBackgroundMessageHandler(remoteMessage => {
-  // DisplayNotification(remoteMessage);
-
+  console.log('BACKGROUND NOTIFUCATION', remoteMessage);
 });
 notifee.onBackgroundEvent(async ({type, detail}) => {
   const {notification, pressAction} = detail;
@@ -101,7 +100,6 @@ const TriggerButtons = async (notification, pressAction) => {
       },
       trigger,
     );
-   
   }
 };
 
@@ -121,10 +119,6 @@ notifee.setNotificationCategories([
     ],
   },
 ]);
-messaging().getInitialNotification(async remoteMessage => {
-
-  // DisplayNotification(remoteMessage);
-});
 
 const removeHtmlTags = str => {
   if (!str || typeof str !== 'string') return '';
@@ -142,48 +136,75 @@ notifee.createChannel({
   sound: 'default',
 });
 const DisplayNotification = async Notification => {
-
+  console.log("NOTIFICATION", Notification)
   const cleanedTitle = removeHtmlTags(Notification?.data?.message);
   try {
-    await notifee.displayNotification({
-      title: Notification?.data?.title || Notification.notification?.title,
-      body: cleanedTitle || Notification.notification?.body,
-      // id: Notification.data?.notification_id,
-      android: {
-        channelId: 'Fitme',
-        largeIcon: 'ic_launcher',
-        style: {
-          type: AndroidStyle.BIGPICTURE,
-          picture:
-            Notification?.data?.image ||
-            Notification?.notification?.android?.imageUrl,
-          //  picture: 'https://i.pinimg.com/originals/7e/68/be/7e68be846a1afbf94fb2ac299843aa2a.jpg',
-        },
-      },
-      ios: {
-        categoryId: 'default',
-        foregroundPresentationOptions: {
-          badge: true,
-          sound: true,
-          banner: true,
-          list: true,
-        },
-        attachments: [
-          {
-            url: Notification.data?.fcm_options?.image,
-            // url:'https://i.pinimg.com/originals/7e/68/be/7e68be846a1afbf94fb2ac299843aa2a.jpg',
+    if (
+      Notification?.data?.image ||
+      Notification?.notification?.android?.imageUrl ||
+      Notification.data?.fcm_options?.image
+    )
+      await notifee.displayNotification({
+        title: Notification?.data?.title || Notification.notification?.title,
+        body: cleanedTitle || Notification.notification?.body,
+        // id: Notification.data?.notification_id,
+        android: {
+          channelId: 'Fitme',
+          largeIcon: 'ic_launcher',
+          style: {
+            type: AndroidStyle.BIGPICTURE,
+            picture:
+              Notification?.data?.image ||
+              Notification?.notification?.android?.imageUrl,
+            //  picture: 'https://i.pinimg.com/originals/7e/68/be/7e68be846a1afbf94fb2ac299843aa2a.jpg',
           },
-        ],
-      },
-    });
+        },
+        ios: {
+          categoryId: 'default',
+          foregroundPresentationOptions: {
+            badge: true,
+            sound: true,
+            banner: true,
+            list: true,
+          },
+          attachments: [
+            {
+              url: Notification.data?.fcm_options?.image,
+              // url:'https://i.pinimg.com/originals/7e/68/be/7e68be846a1afbf94fb2ac299843aa2a.jpg',
+            },
+          ],
+        },
+      });
+    else
+      await notifee.displayNotification({
+        title: Notification?.data?.title || Notification.notification?.title,
+        body: cleanedTitle || Notification.notification?.body,
+        // id: Notification.data?.notification_id,
+        android: {
+          channelId: 'Fitme',
+          largeIcon: 'ic_launcher',
+        },
+        ios: {
+          categoryId: 'default',
+          foregroundPresentationOptions: {
+            badge: true,
+            sound: true,
+            banner: true,
+            list: true,
+          },
+        },
+      });
   } catch (error) {
     console.log('notifee Error', error);
   }
 };
+messaging().getInitialNotification(async remoteMessage => {
+  // DisplayNotification(remoteMessage);
+  console.log('Kill NOTIFUCATION', remoteMessage);
+});
 const AppRedux = () => {
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-
       DisplayNotification(remoteMessage);
     });
     return unsubscribe;
@@ -205,24 +226,21 @@ const AppRedux = () => {
 
     // If the error is fatal, you might want to crash the app manually or take appropriate action
     if (isFatal) {
-  
       // For example, you can use NativeModules to crash the app on Android
       // NativeModules.CrashlyticsCrash.crash();
     }
   };
-// <<<<<<< Rakesh
-// } else {
-//   // In production, register the global error handler
-//   ErrorUtils.setGlobalHandler(globalErrorHandler);
-// }
+  // <<<<<<< Rakesh
+  // } else {
+  //   // In production, register the global error handler
+  //   ErrorUtils.setGlobalHandler(globalErrorHandler);
+  // }
 
-// =======
+  // =======
 
   // Set up a global error handler
   if (__DEV__) {
     // In development, log errors to the console
-
- 
   } else {
     // In production, register the global error handler
     ErrorUtils.setGlobalHandler(globalErrorHandler);
