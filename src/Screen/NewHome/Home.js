@@ -199,7 +199,6 @@ const Home = ({navigation}) => {
           if (getFitmeAdsCount < 5) {
             Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {
-      
             showInterstitialAd();
             Dispatch(setFitmeAdsCount(0));
           }
@@ -210,7 +209,6 @@ const Home = ({navigation}) => {
         } else {
           showInterstitialAd();
           Dispatch(setFitmeAdsCount(0));
-          
         }
       }
     }
@@ -268,7 +266,6 @@ const Home = ({navigation}) => {
         if (isSpecificTime(specificHour, specificMinute)) {
           PedoMeterData();
         } else {
-          
         }
         try {
           const dailySteps = await GoogleFit.getDailySteps();
@@ -1363,6 +1360,10 @@ const Home = ({navigation}) => {
                   />
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           </View>
         </>
@@ -1527,6 +1528,10 @@ const Home = ({navigation}) => {
                 </TouchableOpacity>
               );
             }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
           />
 
           <View
@@ -1656,6 +1661,10 @@ const Home = ({navigation}) => {
                 </>
               );
             }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
           />
         </View>
         <View

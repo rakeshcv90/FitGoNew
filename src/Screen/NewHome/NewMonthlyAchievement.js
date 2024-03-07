@@ -104,9 +104,9 @@ const NewMonthlyAchievement = () => {
       dayTextColor: AppColor.BLACK,
     };
   }, []);
-  useEffect(()=>{
-  DateWiseData(moment.utc().format("YYYY-MM-DD"))  // to get the datewise data
-  },[])
+  useEffect(() => {
+    DateWiseData(moment.utc().format('YYYY-MM-DD')); // to get the datewise data
+  }, []);
   const DateWiseData = async Date1 => {
     const payload = new FormData();
     payload.append('user_id', getUserDataDetails?.id);
@@ -283,7 +283,6 @@ const NewMonthlyAchievement = () => {
         <View style={styles.card}>
           <Calendar
             onDayPress={day => {
-          
               setDate(day.dateString);
               setSelected(true);
               HandleStepsAndCalories(day.dateString);
@@ -395,6 +394,10 @@ const NewMonthlyAchievement = () => {
                   </View>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
             <View
               style={{

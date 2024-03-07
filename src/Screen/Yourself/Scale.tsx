@@ -138,6 +138,10 @@ const Scale = ({
                 </View>
               );
             }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
           />
         </View>
       ) : (
@@ -209,6 +213,10 @@ const Scale = ({
                 </View>
               );
             }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
           />
         </View>
       )}

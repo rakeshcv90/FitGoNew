@@ -33,9 +33,9 @@ const MeditationDetails = ({navigation, route}) => {
     {color1: '#FAE3FF', color2: '#C97FCD', color3: '#7C3D80'},
     {color1: '#FFEBE2', color2: '#DCAF9E', color3: '#1E1E1E'},
   ];
- 
-  useEffect(()=>{
-    if(isFocused){
+
+  useEffect(() => {
+    if (isFocused) {
       if (route?.params?.item) {
         getCaterogy(
           route?.params?.item.id,
@@ -43,8 +43,7 @@ const MeditationDetails = ({navigation, route}) => {
         );
       }
     }
-    
-  },[isFocused])
+  }, [isFocused]);
   const getCaterogy = async (id, level) => {
     setForLoading(true);
 
@@ -194,6 +193,10 @@ const MeditationDetails = ({navigation, route}) => {
                 <ListItem title={item} color={colors[index % colors.length]} />
               );
             }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
           />
         </View>
         <View
@@ -312,6 +315,10 @@ const MeditationDetails = ({navigation, route}) => {
                   </>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           ) : (
             <FlatList
@@ -450,6 +457,10 @@ const MeditationDetails = ({navigation, route}) => {
                   </>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           )}
         </View>
