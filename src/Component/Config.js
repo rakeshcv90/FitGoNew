@@ -54,8 +54,8 @@ export const NewAppapi = {
   CURRENT_DAY_EXERCISE: NewApi + 'user_exercise_status',
   TRACK_CURRENT_DAY_EXERCISE: NewApi + 'user_details',//Done App Version
   TRACK_WORKOUTS: NewApi + 'workout_status',//Done App Version
-  GET_LIKE_WORKOUTS: NewApi + 'getfavoritewokrout',
-  POST_LIKE_WORKOUT: NewApi + 'addfavorite',
+  GET_FAV_WORKOUTS: NewApi + 'getfavoritewokrout',
+  POST_FAV_WORKOUT: NewApi + 'addfavorite',
   CURRENT_DAY_EXERCISE_DETAILS: NewApi + 'user_exercise_details',
   Get_Product_Catogery: NewApi + 'categorydata',
   Get_Product_List: NewApi + 'productdata',
@@ -72,5 +72,7 @@ export const NewAppapi = {
   Delete_Account:NewApi+'deleteAccount',
   Custome_Workout_Cal_Time:NewApi+'exercise_total_calo',
   loginApple:NewApi+'user_login_test',
-
+  GET_LIKE_WORKOUTS: NewApi + 'total_like_view',
+  POST_LIKE_WORKOUT: NewApi + 'like_dislike',
+  POST_WORKOUT_VIEWS: NewApi + 'workout_view_count',
 };
