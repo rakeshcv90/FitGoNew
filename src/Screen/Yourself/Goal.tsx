@@ -11,7 +11,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Image} from 'react-native';
 import {AppColor} from '../../Component/Color';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import Bulb from './Bulb';
 import ProgressBar from './ProgressBar';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
@@ -25,9 +25,7 @@ const Goal = ({navigation, route}: any) => {
   const [selected, setSelected] = useState('');
   const [screen, setScreen] = useState(nextScreen);
 
-  const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
-    (state: any) => state,
-  );
+
   useEffect(() => {
     setScreen(nextScreen);
     goalsAnimation.setValue(gender == 'Male' ? -DeviceWidth : DeviceWidth);

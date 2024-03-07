@@ -69,8 +69,11 @@ const Preview = ({route, navigation}: any) => {
   };
 
   const {currentExercise} = route.params;
-  const {getLaterButtonData, currentWorkoutData} = useSelector(
-    (state: any) => state,
+  const  currentWorkoutData = useSelector(
+    (state: any) => state.currentWorkoutData,
+  );
+  const getLaterButtonData = useSelector(
+    (state: any) => state.getLaterButtonData,
   );
   useEffect(() => {
     const i = getLaterButtonData.findIndex(

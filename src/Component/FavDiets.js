@@ -25,7 +25,8 @@ import { localImage } from './Image';
 const FavDiets = () => {
  
   const [Favdiet, setFavDiets] = useState([]);
-  const {defaultTheme} = useSelector(state => state);
+  // const {defaultTheme} = useSelector(state => state);
+  const defaultTheme = useSelector(state => state.defaultTheme);
   const [isLoaded, setIsLoaded] = useState(false);
   const navigation = useNavigation();
   const [update, setUpdate] = useState(0);

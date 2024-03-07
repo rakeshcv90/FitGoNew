@@ -6,7 +6,7 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor} from '../../Component/Color';
 import ProgressBar from './ProgressBar';
 import Bulb from './Bulb';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import analytics from '@react-native-firebase/analytics';
 const Gender = ({route, navigation}: any) => {

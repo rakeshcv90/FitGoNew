@@ -19,10 +19,13 @@ import {useDispatch, useSelector} from 'react-redux';
 
 const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
   const dispatch = useDispatch();
-  const {defaultTheme, completeProfileData, getUserID} = useSelector(
-    state => state,
-  );
-
+  // const {defaultTheme, completeProfileData, getUserID} = useSelector(
+  //   state => state,
+  // );
+  const defaultTheme = useSelector(state => state.defaultTheme);
+  const completeProfileData = useSelector(state => state.completeProfileData);
+  const getUserID = useSelector(state => state.getUserID);
+  
   const [imageView, setImageVIew] = useState([]);
   const [bodyPart, setBordyPart] = useState(
     completeProfileData?.focusarea.filter(

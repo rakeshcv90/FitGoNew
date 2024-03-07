@@ -75,7 +75,7 @@ const MediumRounded: FC<Props> = ({...props}) => {
                       marginLeft: index == 0 ? 5 : 10,
                     },
                   ]}>
-                    {console.log(DeviceHeigth)}
+                  
                   <Image
                     source={
                       item.workout_price == 'Premium'
@@ -89,7 +89,7 @@ const MediumRounded: FC<Props> = ({...props}) => {
                       top:
                         Platform.OS == 'android'
                           ? DeviceHeigth * 0.01
-                          : DeviceHeigth>=932? DeviceHeigth * 0.01:DeviceHeigth * 0.014 ,
+                          : DeviceHeigth>=932? DeviceHeigth * 0.002:DeviceHeigth * 0.005 ,
                       left:
                         Platform.OS == 'android'
                           ? -DeviceWidth * 0.18

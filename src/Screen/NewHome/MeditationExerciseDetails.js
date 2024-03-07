@@ -24,8 +24,10 @@ import TrackPlayer, {
   State,
 } from 'react-native-track-player';
 import SeekBar from '../../Component/SeekBar';
+import {useIsFocused} from '@react-navigation/native';
 
 const MeditationExerciseDetails = ({navigation, route}) => {
+  let isFocused = useIsFocused();
   const playbackState = usePlaybackState();
 
   const {position, buffered, duration} = useProgress();
@@ -39,8 +41,10 @@ const MeditationExerciseDetails = ({navigation, route}) => {
     },
   ];
   useEffect(() => {
-    setupPlayer();
-  }, []);
+    if (isFocused) {
+      setupPlayer();
+    }
+  }, [isFocused]);
   const setupPlayer = async () => {
     try {
       await TrackPlayer.updateOptions({
@@ -64,7 +68,6 @@ const MeditationExerciseDetails = ({navigation, route}) => {
       playbackState.state === State.Ready
     ) {
       await TrackPlayer.play();
-
     } else {
       await TrackPlayer.pause();
     }
@@ -76,7 +79,6 @@ const MeditationExerciseDetails = ({navigation, route}) => {
   const handleValueChange = value => {};
   return (
     <View style={styles.container}>
-
       <LinearGradient
         start={{x: 0, y: 1}}
         end={{x: 1, y: 0}}

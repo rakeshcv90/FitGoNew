@@ -23,7 +23,7 @@ export type Props = ViewProps & {
 };
 
 const Timer: FC<Props> = ({...Props}) => {
-  const {defaultTheme} = useSelector((state: any) => state);
+  const defaultTheme = useSelector((state:any) => state.defaultTheme);
   const [gestureY] = useState(new Animated.Value(0));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedValues, setSelectedValues] = useState<Array<number | null>>(
