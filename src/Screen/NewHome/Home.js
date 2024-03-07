@@ -38,7 +38,7 @@ import {Slider} from '@miblanchard/react-native-slider';
 import axios from 'axios';
 import {setPedomterData} from '../../Component/ThemeRedux/Actions';
 import {
-  useFocusEffect,
+
   useIsFocused,
   useNavigation,
 } from '@react-navigation/native';
@@ -340,9 +340,7 @@ const Home = ({navigation}) => {
             },
           },
         ],
-        {
-          cancelable: true,
-        },
+       
       );
     } else {
       GoogleFit.authorize(options)
@@ -1346,11 +1344,12 @@ const Home = ({navigation}) => {
             )}
           </View>
           <View style={styles.meditionBox}>
+   
             <FlatList
               data={customWorkoutData?.minset_workout}
               horizontal
               showsHorizontalScrollIndicator={false}
-              keyExtractor={item => item.id}
+              //keyExtractor={item => console.log("DSFDFDSFds",item)}
               ListEmptyComponent={emptyComponent}
               renderItem={({item, index}) => {
                 return (
@@ -1414,7 +1413,7 @@ const Home = ({navigation}) => {
             data={customWorkoutData?.workout?.slice(0, 3)}
             horizontal
             showsHorizontalScrollIndicator={false}
-            keyExtractor={item => item.id}
+            //keyExtractor={item => item.id}
             ListEmptyComponent={emptyComponent}
             pagingEnabled
             renderItem={({item, index}) => {
@@ -1595,7 +1594,7 @@ const Home = ({navigation}) => {
             data={mealData?.slice(0, 4)}
             horizontal
             showsHorizontalScrollIndicator={false}
-            keyExtractor={item => item.id}
+            //keyExtractor={item => item.id}
             pagingEnabled
             renderItem={({item, index}) => {
               return (
