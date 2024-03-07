@@ -16,7 +16,7 @@ import Icons from 'react-native-vector-icons/FontAwesome5';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {Platform} from 'react-native';
 import {
-  useFocusEffect,
+ 
   useIsFocused,
   useNavigation,
 } from '@react-navigation/native';

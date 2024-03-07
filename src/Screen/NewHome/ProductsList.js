@@ -7,7 +7,7 @@ import {
   Image,
   Linking,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {StatusBar} from 'react-native';
 import {AppColor} from '../../Component/Color';
@@ -16,7 +16,7 @@ import {SliderBox} from 'react-native-image-slider-box';
 import FastImage from 'react-native-fast-image';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import {FlatList} from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import axios from 'axios';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {localImage} from '../../Component/Image';
@@ -32,13 +32,14 @@ const ProductsList = ({route}) => {
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [forLoading, setForLoading] = useState(true);
   const avatarRef = React.createRef();
-  useFocusEffect(
-    React.useCallback(() => {
+  let isFocuse = useIsFocused();
+  useEffect(() => {
+    if (isFocuse) {
       if (route.params.item) {
         getCaterogy(route.params.item.type_id);
       }
-    }, []),
-  );
+    }
+  }, [isFocuse]);
   const data = [
     require('../../Icon/Images/product_1631791758.jpg'),
     require('../../Icon/Images/product_1631792207.jpg'),

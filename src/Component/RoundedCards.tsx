@@ -262,7 +262,6 @@ const RoundedCards: FC<Props> = ({...props}) => {
             updateCellsBatchingPeriod={100}
             removeClippedSubviews={true}
           />
-          
         </View>
       </View>
       <WorkoutDescription open={open} setOpen={setOpen} data={desc} />

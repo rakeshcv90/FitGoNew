@@ -63,7 +63,7 @@ const Signup = ({navigation}) => {
   const [appVersion, setAppVersion] = useState(0);
   const dispatch = useDispatch();
 
-  const {getFcmToken} = useSelector(state => state);
+  const getFcmToken = useSelector(state => state.getFcmToken);
 
   useEffect(() => {
     requestPermissionforNotification(dispatch);
