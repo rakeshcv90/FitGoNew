@@ -542,9 +542,22 @@ const AllWorkouts = ({navigation, route}: any) => {
               )}
             </View>
             <TouchableOpacity
-              onPress={() => postLikeAPI(item?.workout_id)}
-              style={{left: -20}}>
-              {item?.user_like?.includes(item?.workout_id) ? (
+style={{left:20}}
+              onPress={() => {
+                const current = likeData.findIndex(
+                  it => it == item?.workout_id,
+                );
+                if (current == -1) {
+                  likeData.push(item?.workout_id);
+                  postLikeAPI(item?.workout_id);
+                } else {
+                  const remove = likeData.filter(it => it != item?.workout_id);
+                  setLikeData(remove);
+                  postLikeAPI(item?.workout_id);
+                }
+              }}>
+              {likeData?.includes(item?.workout_id) ? (
+
                 <AnimatedLottieView
                   source={require('../../Icon/Images/NewImage/Heart.json')}
                   autoPlay
@@ -570,7 +583,9 @@ const AllWorkouts = ({navigation, route}: any) => {
               style={{
                 color: AppColor.BLACK,
                 marginRight: 10,
-                left: -25,
+
+                left: 0,
+
                 // left: item?.user_like?.includes(item?.workout_id) ? -2 : 5,
               }}>
               {/* {item?.total_workout_like} */}
@@ -582,9 +597,11 @@ const AllWorkouts = ({navigation, route}: any) => {
               source={require('../../Icon/Images/NewImage/Eye.json')}
               speed={0.5}
               autoPlay
-              style={{width: 30, height: 30, left: -25}}
+              style={{width: 30, height: 30, left: 0}}
             />
-            <Text style={{color: AppColor.BLACK, left: -20}}>
+
+            <Text style={{color: AppColor.BLACK, left: -10}}>
+
               {item?.total_workout_views}
             </Text>
           </View>
