@@ -161,7 +161,6 @@ const ProductsList = ({route}) => {
           ImageComponent={FastImage}
           images={data}
           sliderBoxHeight={150}
-        
           dotColor="#FFEE58"
           inactiveDotColor="#90A4AE"
           paginationBoxVerticalPadding={20}
@@ -255,6 +254,10 @@ const ProductsList = ({route}) => {
                   </>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           ) : (
             <FlatList
@@ -300,6 +303,10 @@ const ProductsList = ({route}) => {
                   </>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
               ListEmptyComponent={emptyComponent}
             />
           )}

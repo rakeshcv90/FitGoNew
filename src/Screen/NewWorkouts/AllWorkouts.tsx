@@ -671,6 +671,10 @@ const AllWorkouts = ({navigation, route}: any) => {
                 </View>
               );
           }}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={100}
+          removeClippedSubviews={true}
         />
       </ScrollView>
       <Time />

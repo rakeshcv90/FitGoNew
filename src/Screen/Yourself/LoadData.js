@@ -472,6 +472,10 @@ const LoadData = ({navigation}) => {
               </Animated.View>
             );
           }}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={100}
+          removeClippedSubviews={true}
           keyExtractor={(item, index) => index.toString()}
           horizontal
         />
@@ -487,6 +491,10 @@ const LoadData = ({navigation}) => {
           renderItem={renderItem1}
           keyExtractor={(item, index) => index.toString()}
           horizontal
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={100}
+          removeClippedSubviews={true}
         />
       </View>
 

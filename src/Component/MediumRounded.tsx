@@ -142,6 +142,10 @@ const MediumRounded: FC<Props> = ({...props}) => {
               </View>
             );
           }}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={100}
+          removeClippedSubviews={true}
         />
       </View>
     </View>

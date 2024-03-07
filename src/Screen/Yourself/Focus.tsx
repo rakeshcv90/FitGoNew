@@ -89,6 +89,10 @@ const Focus = ({data, selectedImage, setSelectedImage, data2}: any) => {
             </TouchableOpacity>
           );
         }}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        updateCellsBatchingPeriod={100}
+        removeClippedSubviews={true}
       />
     </View>
   );

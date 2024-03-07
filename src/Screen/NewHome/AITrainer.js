@@ -471,6 +471,10 @@ const AITrainer = ({navigation}) => {
                 </>
               );
             }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
           />
         </ScrollView>
 
