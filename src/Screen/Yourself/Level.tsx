@@ -140,6 +140,10 @@ const Level = ({route, navigation}: any) => {
                 );
               }
             }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
           />
         </View>
         <View style={{height: DeviceHeigth * 0.1}}>

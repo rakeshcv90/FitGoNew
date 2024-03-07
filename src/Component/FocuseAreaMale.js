@@ -25,7 +25,7 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
   const defaultTheme = useSelector(state => state.defaultTheme);
   const completeProfileData = useSelector(state => state.completeProfileData);
   const getUserID = useSelector(state => state.getUserID);
-  
+
   const [imageView, setImageVIew] = useState([]);
   const [bodyPart, setBordyPart] = useState(
     completeProfileData?.focusarea.filter(
@@ -49,7 +49,6 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
     ),
   );
 
-
   const setImageFocusArea = (itemId, item) => {
     const index = selectedItems.indexOf(itemId);
     const newSelectedItems = [...selectedItems];
@@ -70,7 +69,6 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
     setImageVIew(newImageVIew);
   };
 
-
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -87,7 +85,6 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
               scrollEnabled={false}
               extraData={({item, index}) => index.toString()}
               renderItem={({item, index}) => {
-              
                 const isSelected = selectedItems.includes(item.bodypart_id);
                 return (
                   <TouchableOpacity
@@ -115,6 +112,10 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
                   </TouchableOpacity>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           </View>
         </View>
@@ -174,7 +175,6 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
                 )}
               </View>
               <View>
-             
                 {imageView.find(num => num === 'Shoulders') && (
                   <View
                     style={{
@@ -485,6 +485,10 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
                   </TouchableOpacity>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           </View>
         </View>

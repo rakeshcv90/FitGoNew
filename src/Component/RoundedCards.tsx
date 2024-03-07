@@ -257,7 +257,12 @@ const RoundedCards: FC<Props> = ({...props}) => {
                 </TouchableOpacity>
               );
             }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
           />
+          
         </View>
       </View>
       <WorkoutDescription open={open} setOpen={setOpen} data={desc} />

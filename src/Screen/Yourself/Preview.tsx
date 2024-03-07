@@ -417,6 +417,10 @@ const Preview = ({route, navigation}: any) => {
                       horizontal
                       showsHorizontalScrollIndicator={false}
                       scrollEnabled={item[1].length > 3}
+                      initialNumToRender={10}
+                      maxToRenderPerBatch={10}
+                      updateCellsBatchingPeriod={100}
+                      removeClippedSubviews={true}
                     />
                   )}
                 </>

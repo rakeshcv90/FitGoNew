@@ -24,8 +24,8 @@ const FocuseAreaFmale = ({selectedItems, setSelectedItems}) => {
   //   state => state,
   // );
   const defaultTheme = useSelector(state => state.defaultTheme);
-const completeProfileData = useSelector(state => state.completeProfileData);
-const getLaterButtonData = useSelector(state => state.getLaterButtonData);
+  const completeProfileData = useSelector(state => state.completeProfileData);
+  const getLaterButtonData = useSelector(state => state.getLaterButtonData);
   const [bodyPart, setBordyPart] = useState(
     completeProfileData?.focusarea.filter(
       part =>
@@ -67,7 +67,6 @@ const getLaterButtonData = useSelector(state => state.getLaterButtonData);
     setSelectedItems(newSelectedItems);
     setImageVIew(newImageVIew);
   };
-
 
   return (
     <SafeAreaView style={styles.Container}>
@@ -111,6 +110,10 @@ const getLaterButtonData = useSelector(state => state.getLaterButtonData);
                   </TouchableOpacity>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           </View>
         </View>
@@ -398,7 +401,7 @@ const getLaterButtonData = useSelector(state => state.getLaterButtonData);
               scrollEnabled={false}
               extraData={({item, index}) => index.toString()}
               renderItem={({item, index}) => {
-                 const isSelected = selectedItems.includes(item.bodypart_id);
+                const isSelected = selectedItems.includes(item.bodypart_id);
                 return (
                   <TouchableOpacity
                     activeOpacity={0.7}
@@ -424,6 +427,10 @@ const getLaterButtonData = useSelector(state => state.getLaterButtonData);
                   </TouchableOpacity>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           </View>
         </View>

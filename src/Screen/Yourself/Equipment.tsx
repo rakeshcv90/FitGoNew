@@ -294,6 +294,10 @@ const Equipment = ({route, navigation}: any) => {
               </TouchableOpacity>
             );
           }}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={100}
+          removeClippedSubviews={true}
         />
       </View>
       <View style={styles.buttons}>

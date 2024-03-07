@@ -38,12 +38,9 @@ import {ReviewApp} from '../../Component/ReviewApp';
 
 const Subscription = ({navigation}) => {
   const dispatch = useDispatch();
-  const getInAppPurchase =
-    useSelector(state => state.getInAppPurchase);
-    const getUserDataDetails =
-    useSelector(state => state.getUserDataDetails);
-    const  getPurchaseHistory =
-    useSelector(state => state.getPurchaseHistory);
+  const getInAppPurchase = useSelector(state => state.getInAppPurchase);
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [selectedItems, setSelectedItems] = useState(getInAppPurchase[2]);
 
   const [visible, setVisible] = React.useState(false);
@@ -118,20 +115,17 @@ const Subscription = ({navigation}) => {
     };
 
     try {
-      const result = await axios(
-        'https://buy.itunes.apple.com/verifyReceipt',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          data: receiptBody,
+      const result = await axios('https://buy.itunes.apple.com/verifyReceipt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
-  
+        data: receiptBody,
+      });
+
       if (result.data) {
         const renewalHistory = result.data?.pending_renewal_info;
-        
+
         setForLoading(false);
         if (renewalHistory[0]?.auto_renew_status == 1 && receipt?.length != 0) {
           fetchPurchaseHistory1(
@@ -140,7 +134,7 @@ const Subscription = ({navigation}) => {
           );
         } else {
           console.log('Payment Failed');
-         
+
           setForLoading(false);
         }
       }
@@ -1062,6 +1056,10 @@ const Subscription = ({navigation}) => {
                   </TouchableOpacity>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           </View>
           <View style={{bottom: 15, alignSelf: 'center'}}>

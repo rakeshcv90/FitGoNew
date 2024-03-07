@@ -55,7 +55,7 @@ const Store = ({navigation}) => {
   useEffect(() => {
     if (isFocused) {
       initInterstitial();
-      //getCaterogy();
+      getCaterogy();
       setcategory(getStoreData);
       if (getPurchaseHistory.length > 0) {
         if (
@@ -289,6 +289,10 @@ const Store = ({navigation}) => {
                   </View>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           ) : (
             <FlatList
@@ -338,6 +342,10 @@ const Store = ({navigation}) => {
                 );
               }}
               ListEmptyComponent={emptyComponent}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           )}
         </View>

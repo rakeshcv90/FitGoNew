@@ -25,16 +25,10 @@ import analytics from '@react-native-firebase/analytics';
 const Injury = ({route, navigation}) => {
   const dispatch = useDispatch();
   const {nextScreen} = route.params;
-  const getLaterButtonData = useSelector(
-    state => state.getLaterButtonData,
-  );
+  const getLaterButtonData = useSelector(state => state.getLaterButtonData);
 
-  const  completeProfileData = useSelector(
-    state => state.completeProfileData,
-  );
-  const  getUserID = useSelector(
-    state => state.getUserID,
-  );
+  const completeProfileData = useSelector(state => state.completeProfileData);
+  const getUserID = useSelector(state => state.getUserID);
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageView, setImageVIew] = useState([]);
   const [screen, setScreen] = useState(nextScreen);
@@ -46,12 +40,11 @@ const Injury = ({route, navigation}) => {
     const currentData = {
       injury: imageView,
     };
-   
+
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-    analytics().logEvent(`CV_FITME_INJURY_${imageView}`)
+    analytics().logEvent(`CV_FITME_INJURY_${imageView}`);
     navigation.navigate('Height', {nextScreen: screen + 1});
   };
-
 
   const [bodyPart, setBordyPart] = useState(
     completeProfileData?.injury.filter(
@@ -111,7 +104,7 @@ const Injury = ({route, navigation}) => {
     const newSelectedItems = [...selectedItems];
     const newImageVIew = [...imageView];
     if (index === -1) {
-      if (imageView.length <1) {
+      if (imageView.length < 1) {
         newSelectedItems.push(itemId);
         newImageVIew.push(item);
       } else {
@@ -181,7 +174,6 @@ const Injury = ({route, navigation}) => {
               scrollEnabled={false}
               extraData={({item, index}) => index.toString()}
               renderItem={({item, index}) => {
-             
                 const isSelected = selectedItems.includes(item.injury_id);
                 return (
                   <View
@@ -231,6 +223,10 @@ const Injury = ({route, navigation}) => {
                   </View>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           </View>
         </View>
@@ -244,7 +240,7 @@ const Injury = ({route, navigation}) => {
               top:
                 DeviceHeigth <= '667'
                   ? DeviceHeigth * 0.02
-                  : DeviceHeigth * 0.00,
+                  : DeviceHeigth * 0.0,
               left:
                 getLaterButtonData[0].gender == 'M'
                   ? -DeviceWidth * 0.2
@@ -295,7 +291,7 @@ const Injury = ({route, navigation}) => {
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
-                      marginVertical: -DeviceHeigth * 0.00,
+                      marginVertical: -DeviceHeigth * 0.0,
                     }}>
                     <Animated.View
                       style={[
@@ -338,6 +334,10 @@ const Injury = ({route, navigation}) => {
                   </View>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           </View>
         </View>
