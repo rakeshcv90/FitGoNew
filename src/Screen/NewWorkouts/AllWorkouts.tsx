@@ -550,7 +550,7 @@ const Box = useMemo(() =>({selected, item, index}: any) => {
               )}
             </View>
             <TouchableOpacity
-
+style={{left:20}}
               onPress={() => {
                 const current = likeData.findIndex(
                   it => it == item?.workout_id,
@@ -592,7 +592,7 @@ const Box = useMemo(() =>({selected, item, index}: any) => {
                 color: AppColor.BLACK,
                 marginRight: 10,
 
-                left: -25,
+                left: 0,
 
                 // left: item?.user_like?.includes(item?.workout_id) ? -2 : 5,
               }}>
@@ -605,10 +605,10 @@ const Box = useMemo(() =>({selected, item, index}: any) => {
               source={require('../../Icon/Images/NewImage/Eye.json')}
               speed={0.5}
               autoPlay
-              style={{width: 30, height: 30, left: -25}}
+              style={{width: 30, height: 30, left: 0}}
             />
 
-            <Text style={{color: AppColor.BLACK, left: -20}}>
+            <Text style={{color: AppColor.BLACK, left: -10}}>
 
               {item?.total_workout_views}
             </Text>
