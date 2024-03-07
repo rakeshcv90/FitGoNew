@@ -70,7 +70,7 @@ const Login = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [IsVerifyVisible, setVerifyVisible] = useState(false);
   const [appVersion, setAppVersion] = useState(0);
-  const {getFcmToken} = useSelector(state => state);
+  const getFcmToken = useSelector(state => state.getFcmToken);
   useEffect(() => {
     requestPermissionforNotification(dispatch);
     // RemoteMessage();

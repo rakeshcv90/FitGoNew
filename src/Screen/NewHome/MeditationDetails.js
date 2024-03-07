@@ -1,5 +1,5 @@
 import {View, Text, Image, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {StatusBar} from 'react-native';
 import {StyleSheet} from 'react-native';
@@ -13,7 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {FlatList} from 'react-native';
 import {localImage} from '../../Component/Image';
 import {showMessage} from 'react-native-flash-message';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
 import axios from 'axios';
@@ -22,7 +22,8 @@ import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const MeditationDetails = ({navigation, route}) => {
-  const {customWorkoutData} = useSelector(state => state);
+  let isFocused = useIsFocused();
+  const customWorkoutData = useSelector(state => state.customWorkoutData);
   const [forLoading, setForLoading] = useState(true);
   const [mindsetExercise, setmindsetExercise] = useState([]);
   const avatarRef = React.createRef();
@@ -32,16 +33,18 @@ const MeditationDetails = ({navigation, route}) => {
     {color1: '#FAE3FF', color2: '#C97FCD', color3: '#7C3D80'},
     {color1: '#FFEBE2', color2: '#DCAF9E', color3: '#1E1E1E'},
   ];
-  useFocusEffect(
-    React.useCallback(() => {
+ 
+  useEffect(()=>{
+    if(isFocused){
       if (route?.params?.item) {
         getCaterogy(
           route?.params?.item.id,
           route?.params?.item.workout_mindset_level,
         );
       }
-    }, []),
-  );
+    }
+    
+  },[isFocused])
   const getCaterogy = async (id, level) => {
     setForLoading(true);
 

@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+
   Platform,
   StyleSheet,
   Text,
@@ -102,39 +103,41 @@ const RoundedCards: FC<Props> = ({...props}) => {
                         : 'space-between',
                       marginLeft: props.horizontal ? (index == 0 ? 5 : 10) : 3,
                       alignSelf: 'center',
-                      marginBottom: 10,
+                      marginBottom: 5,
                     },
                   ]}>
-                  {/* {isLoading && (
-                    <ActivityIndicator
-                      style={[styles.loader,{
+                
+                  {props?.horizontal && (
+                    item.workout_price=='Premium'&&
+                    <Image
+                      source={require('../Icon/Images/NewImage/rect.png')}
+                      style={{
+                        width: 30,
+                        height: 30,
+                        top:Platform.OS == 'android'?DeviceHeigth*0.012:DeviceHeigth*0.010,
+                        left:
+                          Platform.OS == 'android'
+                            ? -DeviceWidth * 0.095
+                            : -DeviceWidth * 0.095,
+                      }}></Image>
+                  )}
+
+                  {isLoading && (
+                    <ShimmerPlaceholder
+                      style={{
                         height: DeviceWidth / 6,
                         width: props.horizontal
                           ? DeviceWidth / 6
                           : DeviceWidth / 3,
-                        left:props.horizontal ? 15
-                        : -DeviceWidth*0.05,
-                   
-                      }]}
-                      size="small"
-                      color="#0000ff"
+                        // position: 'absolute',
+                        // justifyContent: 'center',
+                        // alignSelf: 'center',
+                      }}
+                      ref={avatarRef}
+                      autoRun
                     />
-                )}  */}
-                  {isLoading && ( 
-                  <ShimmerPlaceholder
-                    style={{
-                      height: DeviceWidth / 6,
-                      width: props.horizontal
-                        ? DeviceWidth / 6
-                        : DeviceWidth / 3,
-                      // position: 'absolute',
-                      // justifyContent: 'center',
-                      // alignSelf: 'center',
-                    }}
-                    ref={avatarRef}
-                    autoRun
-                  />
-                )}
+                  )}
+                 
                   <Image
                     source={{uri: item?.workout_image_link}}
                     onLoad={() => setIsLoading(false)}
@@ -142,11 +145,11 @@ const RoundedCards: FC<Props> = ({...props}) => {
                       height: DeviceWidth / 6,
                       width: props.horizontal
                         ? DeviceWidth / 6
-                        : DeviceWidth / 3,
+                        : DeviceWidth / 3, 
                     }}
                     resizeMode="contain"
                   />
-
+                
                   {props?.trackerData?.includes(item?.workout_id) && (
                     <Image
                       source={localImage.Complete}
@@ -172,7 +175,14 @@ const RoundedCards: FC<Props> = ({...props}) => {
                         />
                       )}
                       <Text
-                        style={[styles.category, {fontSize: 14, width: '80%'}]}
+                        style={[
+                          styles.category,
+                          {
+                            fontSize: 14,
+                            width: '80%',
+                            top: props.horizontal && -15,
+                          },
+                        ]}
                         ellipsizeMode="tail"
                         numberOfLines={1}>
                         {item?.workout_title}
@@ -277,7 +287,7 @@ const styles = StyleSheet.create({
   box: {
     backgroundColor: AppColor.WHITE,
 
-    height: DeviceWidth / 4,
+    height: DeviceWidth * 0.25,
     alignItems: 'center',
     borderRadius: 10,
     marginRight: 8,

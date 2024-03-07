@@ -78,8 +78,8 @@ const Age = ({route, navigation}: any) => {
   const {nextScreen} = route.params;
   const translateLevel = useRef(new Animated.Value(0)).current;
 
-  const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
-    (state: any) => state,
+  const getLaterButtonData = useSelector(
+    (state: any) => state.getLaterButtonData,
   );
   const dispatch = useDispatch();
 

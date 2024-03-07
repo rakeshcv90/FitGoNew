@@ -30,7 +30,7 @@ import Age from '../Screen/Yourself/Age';
 import Goal from '../Screen/Yourself/Goal';
 import LoadData from '../Screen/Yourself/LoadData';
 import PredictionScreen from '../Screen/MeditationScreens/PredictionScreen';
-import {CardStyleInterpolators, createStackNavigator} from '@react-navigation/stack';
+// import {CardStyleInterpolators, createStackNavigator} from '@react-navigation/stack';
 
 import AlcohalConsent from '../Screen/MeditationScreens/AlcohalConsent';
 import Profile from '../Screen/NewHome/Profile';
@@ -54,15 +54,16 @@ import Subscription from '../Screen/Subscription/Subscription';
 import Report from '../Screen/NewHome/Report';
 import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 const screenOptions = {
   headerShown: false,
-  gestureDirection: 'horizontal',
-  gesturesEnabled: true,
-  cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+  // gestureDirection: 'horizontal',
+  // gesturesEnabled: true,
+  // cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
 
 };
 export const LoginStack = () => {

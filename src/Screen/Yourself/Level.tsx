@@ -52,8 +52,11 @@ const Level = ({route, navigation}: any) => {
   const {nextScreen, gender} = route.params;
   const translateLevel = useRef(new Animated.Value(0)).current;
 
-  const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
-    (state: any) => state,
+  const completeProfileData = useSelector(
+    (state: any) => state.completeProfileData,
+  );
+  const getLaterButtonData = useSelector(
+    (state: any) => state.getLaterButtonData,
   );
   const dispatch = useDispatch();
   const [selected, setSelected] = useState(-1);

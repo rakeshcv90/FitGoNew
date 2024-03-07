@@ -37,9 +37,11 @@ const WorkoutDays = ({navigation, route}: any) => {
   const [totalCount, setTotalCount] = useState(-1);
   const [trackerData, setTrackerData] = useState([]);
   const [exerciseData, setExerciseData] = useState([]);
-  let data1 = useIsFocused();
-  const {allWorkoutData, getUserDataDetails, getCount} = useSelector(
-    (state: any) => state,
+
+  let data1=useIsFocused()
+  const  getUserDataDetails  = useSelector(
+    (state: any) => state.getUserDataDetails,
+
   );
   let totalTime = 0,
     restDays = [];

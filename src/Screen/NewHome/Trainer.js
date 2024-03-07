@@ -8,50 +8,59 @@ import AnimatedLottieView from 'lottie-react-native';
 import {DeviceHeigth} from '../../Component/Config';
 import Button from '../../Component/Button';
 import analytics from '@react-native-firebase/analytics';
-import {useFocusEffect, useIsFocused, useNavigation} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import {setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
 import moment from 'moment';
 const Trainer = ({navigation}) => {
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const navigation1 = useNavigation();
   const dispatch = useDispatch();
-  const {getFitmeAdsCount,getPurchaseHistory} = useSelector(state => state);
-  let data1 = useIsFocused();
+  const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      if (data1) {
-        if (getPurchaseHistory.length > 0) {
-          if (
-            getPurchaseHistory[0]?.plan_end_date >=
-            moment().format('YYYY-MM-DD')
-          ) {
-            dispatch(setFitmeAdsCount(0));
-          } else {
-            if (getFitmeAdsCount < 5) {
-             
-              dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-            } else {
-              MyInterstitialAd(resetFitmeCount).load();
-            }
-          }
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      initInterstitial();
+    });
+
+  
+    return unsubscribe;
+  }, [navigation]);
+  
+  let data1 = useIsFocused();
+  useEffect(() => {
+    initInterstitial();
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >=
+        moment().format('YYYY-MM-DD')
+      ) {
+        dispatch(setFitmeAdsCount(0));
+      } else {
+        if (getFitmeAdsCount < 5) {
+          dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
         } else {
-          if (getFitmeAdsCount < 5) {
-      
-            dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-          } else {
-            MyInterstitialAd(resetFitmeCount).load();
-          }
+          showInterstitialAd();
+          dispatch(setFitmeAdsCount(0));
         }
       }
-    }, [data1]),
-  );
-  const resetFitmeCount = async () => {
-
-    dispatch(setFitmeAdsCount(0));
-  };
-
+    } else {
+      if (getFitmeAdsCount < 5) {
+        dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+      } else {
+        showInterstitialAd();
+        dispatch(setFitmeAdsCount(0));
+      }
+    }
+  }, []);
+  
   return (
     <View style={styles.container}>
       <NewHeader header={'  Fitness Coach'} />

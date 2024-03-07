@@ -22,8 +22,8 @@ export const Logo = () => {
   const drawerWidth = (DeviceWidth * 65) / 100;
   const drawerHeight = DeviceHeigth;
   const [mydata, setMyData] = useState();
-  const {defaultTheme} = useSelector(state => state);
-  const {ProfilePhoto}=useSelector(state=>state)
+  const defaultTheme = useSelector(state => state.defaultTheme);
+  const ProfilePhoto=useSelector(state=>state.ProfilePhoto)
   useEffect(() => {
     getMydata();
   },);

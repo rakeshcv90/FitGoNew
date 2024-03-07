@@ -32,8 +32,12 @@ import AnimatedLottieView from 'lottie-react-native';
 import {useFocusEffect} from '@react-navigation/native';
 const AllWorkouts = ({navigation, route}: any) => {
   const {data, type, fav} = route.params;
-  const {allWorkoutData, getUserDataDetails} = useSelector(
-    (state: any) => state,
+  // const {allWorkoutData, getUserDataDetails} = useSelector(
+  //   (state: any) => state,
+  // );
+  const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
+  const getUserDataDetails = useSelector(
+    (state: any) => state.getUserDataDetails,
   );
   const [popularData, setPopularData] = useState([]);
   const [trackerData, setTrackerData] = useState([]);
@@ -195,7 +199,9 @@ const AllWorkouts = ({navigation, route}: any) => {
       if (res.data) {
         setRefresh(false);
 
+
         setFavData(...res.data);
+
       }
     } catch (error) {
       setRefresh(false);
@@ -428,15 +434,35 @@ const AllWorkouts = ({navigation, route}: any) => {
               height: DeviceHeigth * 0.2,
             },
           ]}>
+          {/* <Text>{item?.workout_price}</Text> */}
+          <Image
+            source={
+              item.workout_price == 'Premium'
+                ? require('../../Icon/Images/NewImage/premium.png')
+                : require('../../Icon/Images/NewImage/free.png')
+            }
+            resizeMode="contain"
+            style={{
+              width: 100,
+              height: 50,
+              top:
+                Platform.OS == 'android'
+                  ? -DeviceHeigth * 0.029
+                  : -DeviceHeigth * 0.029,
+              left:
+                Platform.OS == 'android'
+                  ? -DeviceWidth * 0.04
+                  : -DeviceWidth * 0.035,
+            }}></Image>
           <Image
             source={{uri: item?.workout_image_link}}
             style={{
               height: DeviceHeigth * 0.18,
-              width: DeviceWidth * 0.7,
+              width: DeviceWidth * 0.45,
               bottom: 0,
               // position: 'absolute',
-              left: 10,
-              // right: 30,
+              //left: 10,
+              right: 50,
             }}
             resizeMode="contain"
           />
@@ -446,13 +472,13 @@ const AllWorkouts = ({navigation, route}: any) => {
                 <Image
                   source={localImage.Heart}
                   resizeMode="contain"
-                  style={{height: 25, width: 25, right: 10}}
+                  style={{height: 25, width: 25, right: 25}}
                 />
               ) : (
                 <Image
                   source={localImage.dw7}
                   resizeMode="contain"
-                  style={{height: 25, width: 25, right: 10}}
+                  style={{height: 25, width: 25, right: 25}}
                 />
               )}
             </TouchableOpacity>
@@ -600,7 +626,8 @@ const AllWorkouts = ({navigation, route}: any) => {
         }
         // style={styles.container}
         nestedScrollEnabled>
-        {/* {data && */}
+
+   
         <FlatList
           data={likeData}
           showsVerticalScrollIndicator={false}
@@ -648,6 +675,7 @@ const AllWorkouts = ({navigation, route}: any) => {
               );
           }}
         />
+
       </ScrollView>
       <Time />
     </View>

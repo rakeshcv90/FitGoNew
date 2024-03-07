@@ -17,7 +17,7 @@ import {useSelector} from 'react-redux';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {WebView} from 'react-native-webview';
 const PlayerModal = ({setState, State}) => {
-  const {defaultTheme} = useSelector(state => state);
+  const defaultTheme = useSelector(state => state.defaultTheme);
   const [showModal, setShowModal] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
