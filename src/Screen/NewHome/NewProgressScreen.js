@@ -70,7 +70,7 @@ const NewProgressScreen = ({navigation}) => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [selected, setSelected] = useState(false);
-
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const [dates, setDates] = useState([]);
   const [value, setValue] = useState('Weekly');
   const [value1, setValue1] = useState('Weekly');
@@ -148,35 +148,35 @@ const NewProgressScreen = ({navigation}) => {
     }
   }, []);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      if (data1) {
-        if (getPurchaseHistory.length > 0) {
-          if (
-            getPurchaseHistory[0]?.plan_end_date >=
-            moment().format('YYYY-MM-DD')
-          ) {
-            dispatch(setFitmeAdsCount(0));
-          } else {
-            if (getFitmeAdsCount < 5) {
-              dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-            } else {
-              MyInterstitialAd(resetFitmeCount).load();
-            }
-          }
+useEffect(()=>{
+  initInterstitial()
+  if (data1) {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >=
+        moment().format('YYYY-MM-DD')
+      ) {
+        dispatch(setFitmeAdsCount(0));
+      } else {
+        if (getFitmeAdsCount < 5) {
+          dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
         } else {
-          if (getFitmeAdsCount < 5) {
-            dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-          } else {
-            MyInterstitialAd(resetFitmeCount).load();
-          }
+          showInterstitialAd();
+          dispatch(setFitmeAdsCount(0));
         }
       }
-    }, [data1]),
-  );
-  const resetFitmeCount = () => {
-    dispatch(setFitmeAdsCount(0));
-  };
+    } else {
+      if (getFitmeAdsCount < 5) {
+        dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+      } else {
+        showInterstitialAd();
+        dispatch(setFitmeAdsCount(0));
+      }
+    }
+  }
+
+},[data1])
+      
   const handleGraph1 = data => {
     if (data == 1) {
       WeeklyData(1);

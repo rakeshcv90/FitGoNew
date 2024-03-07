@@ -44,19 +44,7 @@ const Equipment = ({route, navigation}: any) => {
     return unsubscribe;
   }, [navigation]);
 
-  //   return unsubscribe;
-  // }, [navigation]);
-  // useFocusEffect({
-  //   useCallBack(() => {
-  //   },[])
-  // });
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     setScreen(nextScreen);
-  //     handleImagePress('');
-  //     setbackbuttonVisibility(true);
-  //   }, []),
-  // );
+
   const scaleSelectedInterpolate = scaleSelected.interpolate({
     inputRange: [0, 1],
     outputRange: [1, 1.1], // Adjust the starting and ending scale factors as needed

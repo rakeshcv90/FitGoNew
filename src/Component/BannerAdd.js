@@ -74,10 +74,11 @@ export const MyInterstitialAd = resetFitmeCount => {
   };
 
   const showInterstitialAd = async () => {
-    console.log("Add loade ddscdsdsvdv")
+   
     if (adStatus.current?._loaded) {
       adStatus.current.show();
-     
+   
+      console.log("Add loade ddscdsdsvdv")
     } else {
      
     }

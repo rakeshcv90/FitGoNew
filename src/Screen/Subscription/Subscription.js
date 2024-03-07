@@ -30,7 +30,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import * as RNIap from 'react-native-iap';
 import axios from 'axios';
 import {setPurchaseHistory} from '../../Component/ThemeRedux/Actions';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import Bulb from '../Yourself/Bulb';
 import moment from 'moment';
 import ActivityLoader from '../../Component/ActivityLoader';
@@ -42,7 +42,7 @@ const Subscription = ({navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [selectedItems, setSelectedItems] = useState(getInAppPurchase[2]);
-
+  let isFocuse = useIsFocused();
   const [visible, setVisible] = React.useState(false);
   const [successful, setSuccessful] = useState(false);
 
@@ -78,11 +78,12 @@ const Subscription = ({navigation}) => {
   //     purchaseUpdateSubscription.remove();
   //   };
   // }, []);
-  useFocusEffect(
-    React.useCallback(() => {
+
+  useEffect(()=>{
+    if(isFocuse){
       PurchaseDetails(getUserDataDetails.id, getUserDataDetails.login_token);
-    }, []),
-  );
+    }
+  },[isFocuse])
   // useEffect(() => {
   //   const purchaseUpdateSubscription = RNIap.purchaseUpdatedListener(
   //     async purchase => {},

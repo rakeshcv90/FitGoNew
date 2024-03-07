@@ -214,17 +214,17 @@ const Profile = () => {
       ),
       text1: 'Personal Details',
     },
-    // {
-    //   id: 2,
-    //   icon1: (
-    //     <Image
-    //       source={localImage.Documents}
-    //       style={[styles.IconView, {height: 23, width: 23}]}
-    //       resizeMode="contain"
-    //     />
-    //   ),
-    //   text1: 'My plans',
-    // },
+    {
+      id: 2,
+      icon1: (
+        <Image
+          source={require('../../Icon/Images/NewImage/subscription.png')}
+          style={[styles.IconView, {height: 23, width: 23}]}
+          resizeMode="contain"
+        />
+      ),
+      text1: 'Subscription',
+    },
     {
       id: 3,
       icon1: (
@@ -808,7 +808,10 @@ const Profile = () => {
                   type: '',
                   fav: true,
                 });
-              } else {
+              } else if(value.text1 == 'Subscription'){
+                navigation.navigate('Subscription');
+              }
+                else {
                 showMessage({
                   message: 'Work In Progress',
                   type: 'info',

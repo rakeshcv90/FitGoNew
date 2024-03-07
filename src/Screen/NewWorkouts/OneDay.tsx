@@ -17,7 +17,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import GradientButton from '../../Component/GradientButton';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {
   setCount,
@@ -43,40 +43,6 @@ import {
 } from 'react-native-svg';
 import ThreeDButton from '../../Component/ThreeButton';
 
-// const GradientText = ({item}: any) => {
-//   const gradientColors = ['#D01818', '#941000'];
-
-//   return (
-//     <View
-//       style={{
-//         marginTop: 20,
-//         marginLeft: DeviceWidth * 0.05,
-//         justifyContent: 'center',
-//         alignSelf: 'center',
-//         alignItems: 'center',
-
-//         height: 40,
-//         width: DeviceWidth * 0.55,
-//       }}>
-//       <Svg>
-//         <SvgGrad id="grad" x1="0" y1="0" x2="100%" y2="0">
-//           <Stop offset="0" stopColor={gradientColors[0]} />
-//           <Stop offset="1" stopColor={gradientColors[1]} />
-//         </SvgGrad>
-//         <SvgText
-//           fontFamily="Poppins"
-//           fontWeight={'700'}
-//           fontSize={20}
-//           fill="url(#grad)"
-//           x="0"
-//           y="30">
-//           {item}
-//         </SvgText>
-//       </Svg>
-//     </View>
-//   );
-// };
-
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount} = route.params;
   const [exerciseData, setExerciseData] = useState([]);
@@ -86,12 +52,7 @@ const OneDay = ({navigation, route}: any) => {
   const [visible, setVisible] = useState(false);
 
   const [loader, setLoader] = useState(false);
-  // const {
-  //   allWorkoutData,
-  //   getUserDataDetails,
-  //   getPurchaseHistory,
-  //   getSubscriptionModal,
-  // } = useSelector((state: any) => state);
+
   const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
@@ -103,13 +64,14 @@ const OneDay = ({navigation, route}: any) => {
     (state: any) => state.getSubscriptionModal,
   );
   const dispatch = useDispatch();
+  let isFocuse = useIsFocused();
 
-  useFocusEffect(
-    useCallback(() => {
+  useEffect(() => {
+    if (isFocuse) {
       allWorkoutApi();
       getExerciseTrackAPI();
-    }, []),
-  );
+    }
+  }, []);
   const allWorkoutApi = async () => {
     setLoader(true);
     try {

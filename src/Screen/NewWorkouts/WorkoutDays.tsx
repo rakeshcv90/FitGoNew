@@ -37,11 +37,11 @@ const WorkoutDays = ({navigation, route}: any) => {
   const [totalCount, setTotalCount] = useState(-1);
   const [trackerData, setTrackerData] = useState([]);
   const [exerciseData, setExerciseData] = useState([]);
+  let isFocuse = useIsFocused();
+  const dispatch = useDispatch();
 
-  let data1=useIsFocused()
-  const  getUserDataDetails  = useSelector(
+  const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
-
   );
   let totalTime = 0,
     restDays = [];
@@ -51,13 +51,12 @@ const WorkoutDays = ({navigation, route}: any) => {
     }
     totalTime = totalTime + parseInt(data?.days[day]?.total_rest);
   }
-  useFocusEffect(
-    useCallback(() => {
-      postViewsAPI()
+  useEffect(() => {
+    if(isFocuse){
+      postViewsAPI();
       getCurrentDayAPI();
-    }, []),
-  );
-
+    }
+  }, [isFocuse]);
   const getCurrentDayAPI = async () => {
     try {
       setRefresh(true);
@@ -182,7 +181,7 @@ const WorkoutDays = ({navigation, route}: any) => {
         },
       });
 
-      if (res.data?.msg=='Workout views ') {
+      if (res.data?.msg == 'Workout views ') {
         console.log('first', res.data);
       }
       setRefresh(false);
@@ -191,7 +190,7 @@ const WorkoutDays = ({navigation, route}: any) => {
       setRefresh(false);
     }
   };
-  const dispatch = useDispatch();
+
   const BlackCircle = ({indexes, select, index}: any) => {
     return (
       <View

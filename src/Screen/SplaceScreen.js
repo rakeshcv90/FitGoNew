@@ -50,20 +50,18 @@ const SplaceScreen = ({navigation}) => {
       if (
         getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
       ) {
-        setTimeout(() => {
-          loadScreen();
-        }, Platform.OS=='android'?4000:1000);
+        loadScreen();
       } else {
         setTimeout(() => {
-          showInterstitialAd();
+          showInterstitialAd(navigation);
           loadScreen();
-        }, Platform.OS=='android'?4000:1000);
+        }, Platform.OS=='android'?4000:2000);
       }
     } else {
       setTimeout(() => {
-        showInterstitialAd();
+        showInterstitialAd(navigation);
         loadScreen();
-      },Platform.OS=='android'?4000:1000);
+      },Platform.OS=='android'?4000:2000);
     }
   }, []);
 
