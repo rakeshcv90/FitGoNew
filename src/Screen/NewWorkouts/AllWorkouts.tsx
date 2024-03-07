@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Animated,
   Easing,
   FlatList,
@@ -11,7 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColor} from '../../Component/Color';
 import NewHeader from '../../Component/Headers/NewHeader';
@@ -44,9 +45,9 @@ const AllWorkouts = ({navigation, route}: any) => {
   const [refresh, setRefresh] = useState(false);
   const [selected, setSelected] = useState(0);
   const [phase, setPhase] = useState(1);
-  const [open, setOpen] = useState(true);
+  const [loader, setLoader] = useState(false);
   const [day, setDay] = useState(1);
-  const [trainingCount, setTrainingCount] = useState(-1);
+  const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [likeData, setLikeData] = useState<Array<[]>>([]);
   const [favData, setFavData] = useState<Array<any>>([]);
@@ -55,30 +56,31 @@ const AllWorkouts = ({navigation, route}: any) => {
   let total_Workouts_Time = 0;
 
   useEffect(() => {
-    // allWorkoutApi();
+    allWorkoutData?.length == 0 && allWorkoutApi();
     popularData?.length == 0 && popularWorkoutApi();
     workoutStatusApi();
     getFavStatusAPI();
-    data?.map((item: any) => {
-      let totalTime = 0;
-      for (const day in item?.days) {
-        totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
-      }
-      total_Workouts_Time = total_Workouts_Time + totalTime;
-    });
-    setTotalCount(total_Workouts_Time);
+    // data?.map((item: any) => {
+    //   let totalTime = 0;
+    //   for (const day in item?.days) {
+    //     totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
+    //   }
+    //   total_Workouts_Time = total_Workouts_Time + totalTime;
+    // });
+    // setTotalCount(total_Workouts_Time);
   }, []);
-  useFocusEffect(
-    useCallback(() => {
-      getAllLikeStatusAPI();
-    }, []),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     getAllLikeStatusAPI();
+  //   }, []),
+  // );
   const allWorkoutApi = async () => {
     try {
-      setRefresh(true);
+      setLoader(true);
       const payload = new FormData();
       payload.append('id', getUserDataDetails?.id);
       payload.append('version', VersionNumber.appVersion);
+      payload.append('page', page);
       const res = await axios({
         url: NewAppapi.ALL_WORKOUTS,
         method: 'POST',
@@ -87,7 +89,7 @@ const AllWorkouts = ({navigation, route}: any) => {
         },
         data: payload,
       });
-
+      console.log('ALL WORKOUT API', page);
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -97,19 +99,43 @@ const AllWorkouts = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
         setRefresh(false);
+        setLoader(false);
       } else if (res?.data) {
         setRefresh(false);
-
-        dispatch(setAllWorkoutData(res.data));
+        setLoader(false);
+        if (page > 1) {
+          dispatch(setAllWorkoutData([...allWorkoutData, ...res.data]));
+          [...allWorkoutData, ...res.data]?.map((item: any) => {
+            let totalTime = 0;
+            for (const day in item?.days) {
+              totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
+            }
+            total_Workouts_Time = total_Workouts_Time + totalTime;
+          });
+        } else {
+          dispatch(setAllWorkoutData(res.data));
+          res.data?.map((item: any) => {
+            let totalTime = 0;
+            for (const day in item?.days) {
+              totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
+            }
+            total_Workouts_Time = total_Workouts_Time + totalTime;
+          });
+        }
+        setTotalCount(total_Workouts_Time);
+        setPage(page + 1);
       } else {
         setRefresh(false);
+        setLoader(false);
         dispatch(setAllWorkoutData([]));
       }
     } catch (error) {
       setRefresh(false);
+      setLoader(false);
       console.error(error, 'customWorkoutDataApiError');
       dispatch(setAllWorkoutData([]));
     }
+    getAllLikeStatusAPI();
   };
   const popularWorkoutApi = async () => {
     try {
@@ -199,9 +225,7 @@ const AllWorkouts = ({navigation, route}: any) => {
       if (res.data) {
         setRefresh(false);
 
-
         setFavData(...res.data);
-
       }
     } catch (error) {
       setRefresh(false);
@@ -228,25 +252,7 @@ const AllWorkouts = ({navigation, route}: any) => {
         const like = res.data?.user_like[0]?.workout_id
           ?.split(',')
           ?.map(str => parseInt(str));
-        const WorkoutData = data.map(workout => {
-          // Find the corresponding like data for the workout
-          const likeInfo = res.data?.total?.find(
-            like => like.workout_id === workout.workout_id,
-          );
-
-          // If like data is found, merge it into the workout object
-          if (likeInfo) {
-            return {
-              ...workout, // Existing workout details
-              ...likeInfo, // Add like data
-              user_like: like,
-            };
-          }
-
-          // If no like data is found, return the workout as is
-          return workout;
-        });
-        setLikeData(WorkoutData);
+        setLikeData(like);
       }
     } catch (error) {
       // setRefresh(false);
@@ -296,7 +302,8 @@ const AllWorkouts = ({navigation, route}: any) => {
       if (res.data) {
         // setRefresh(false);
         console.log(res.data, 'POST LIKE');
-        getAllLikeStatusAPI();
+        // getAllLikeStatusAPI();
+        allWorkoutApi();
       }
     } catch (error) {
       // setRefresh(false);
@@ -411,7 +418,7 @@ const AllWorkouts = ({navigation, route}: any) => {
       </LinearGradient>
     );
   };
-  const Box = ({selected, item, index}: any) => {
+  const Box = useMemo(() =>({selected, item, index}: any) => {
     let totalTime = 0;
     for (const day in item?.days) {
       totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
@@ -434,7 +441,6 @@ const AllWorkouts = ({navigation, route}: any) => {
               height: DeviceHeigth * 0.2,
             },
           ]}>
-          {/* <Text>{item?.workout_price}</Text> */}
           <Image
             source={
               item.workout_price == 'Premium'
@@ -508,7 +514,7 @@ const AllWorkouts = ({navigation, route}: any) => {
               alignItems: 'center',
               width: DeviceWidth * 0.775,
             }}>
-            <View style={{width: DeviceWidth * 0.5}}>
+            <View style={{width: DeviceWidth * 0.3}}>
               {trackerData?.includes(item?.workout_id) ? (
                 <Text style={[styles.small, {color: '#008C28'}]}>
                   Completed
@@ -521,8 +527,21 @@ const AllWorkouts = ({navigation, route}: any) => {
                 <Text style={[styles.small, {color: '#D5191A'}]}>Upcoming</Text>
               )}
             </View>
-            <TouchableOpacity onPress={() => postLikeAPI(item?.workout_id)}>
-              {item?.user_like?.includes(item?.workout_id) ? (
+            <TouchableOpacity
+              onPress={() => {
+                const current = likeData.findIndex(
+                  it => it == item?.workout_id,
+                );
+                if (current == -1) {
+                  likeData.push(item?.workout_id);
+                  postLikeAPI(item?.workout_id);
+                } else {
+                  const remove = likeData.filter(it => it != item?.workout_id);
+                  setLikeData(remove);
+                  postLikeAPI(item?.workout_id);
+                }
+              }}>
+              {likeData?.includes(item?.workout_id) ? (
                 <AnimatedLottieView
                   source={require('../../Icon/Images/NewImage/Heart.json')}
                   autoPlay
@@ -548,7 +567,7 @@ const AllWorkouts = ({navigation, route}: any) => {
               style={{
                 color: AppColor.BLACK,
                 marginRight: 10,
-                left: item?.user_like?.includes(item?.workout_id) ? -2 : 5,
+                // left: item?.user_like?.includes(item?.workout_id) ? -2 : 5,
               }}>
               {item?.total_workout_like}
             </Text>
@@ -559,14 +578,14 @@ const AllWorkouts = ({navigation, route}: any) => {
               autoPlay
               style={{width: 30, height: 30}}
             />
-            <Text style={{color: AppColor.BLACK, marginLeft: 10}}>
+            <Text style={{color: AppColor.BLACK, marginLeft: 0}}>
               {item?.total_workout_views}
             </Text>
           </View>
         </View>
       </View>
     );
-  };
+  },[selected, likeData]);
   return (
     <View style={styles.container}>
       <NewHeader
@@ -612,75 +631,85 @@ const AllWorkouts = ({navigation, route}: any) => {
           {' ' + 'In Progress'}
         </Text>
       </View>
-      <ScrollView
+      <FlatList
+        data={allWorkoutData}
         showsVerticalScrollIndicator={false}
+        keyExtractor={(item: any, index: number) => index?.toString()}
+        onEndReached={allWorkoutApi}
+        overScrollMode="auto"
+        scrollToOverflowEnabled
+        // onEndReachedThreshold={0.3}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        updateCellsBatchingPeriod={100}
+        removeClippedSubviews={true}
+        ListFooterComponent={
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator
+              color={AppColor.RED}
+              size={'large'}
+              animating={loader}
+            />
+          </View>
+        }
         refreshControl={
           <RefreshControl
             refreshing={refresh}
             onRefresh={() => {
+              setRefresh(true);
               allWorkoutApi();
               popularWorkoutApi();
             }}
-            colors={[AppColor.RED, AppColor.WHITE]}
+            colors={[AppColor.RED, AppColor.RED]}
           />
         }
-        // style={styles.container}
-        nestedScrollEnabled>
-
-   
-        <FlatList
-          data={likeData}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item: any) => item?.workout_id?.toString()}
-          renderItem={({item, index}: any) => {
-            if (fav && favData?.includes(item?.workout_id))
-              return (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                  <BlackCircle
-                    index={index}
-                    select={index == selected}
-                    item={item}
-                  />
-                  <Box
-                    selected={selected != 0 && index == selected}
-                    index={index + 1}
-                    item={item}
-                  />
-                </View>
-              );
-            else
-              return (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                  <BlackCircle
-                    index={index}
-                    select={index == selected}
-                    item={item}
-                  />
-                  <Box
-                    selected={selected != 0 && index == selected}
-                    index={index + 1}
-                    item={item}
-                  />
-                </View>
-              );
-          }}
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-          updateCellsBatchingPeriod={100}
-          removeClippedSubviews={true}
-        />
-
-      </ScrollView>
+        renderItem={({item, index}: any) => {
+          if (fav && favData?.includes(item?.workout_id))
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <BlackCircle
+                  index={index}
+                  select={index == selected}
+                  item={item}
+                />
+                <Box
+                  selected={selected != 0 && index == selected}
+                  index={index + 1}
+                  item={item}
+                />
+              </View>
+            );
+          else
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <BlackCircle
+                  index={index}
+                  select={index == selected}
+                  item={item}
+                />
+                <Box
+                  selected={selected != 0 && index == selected}
+                  index={index + 1}
+                  item={item}
+                />
+              </View>
+            );
+        }}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        updateCellsBatchingPeriod={100}
+        removeClippedSubviews={true}
+      />
       <Time />
     </View>
   );
