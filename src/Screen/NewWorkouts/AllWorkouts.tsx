@@ -29,12 +29,10 @@ import VersionNumber, {appVersion} from 'react-native-version-number';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 import Svg, {Path, Defs, LinearGradient, Stop} from 'react-native-svg';
 import AnimatedLottieView from 'lottie-react-native';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 const AllWorkouts = ({navigation, route}: any) => {
   const {data, type, fav} = route.params;
-  // const {allWorkoutData, getUserDataDetails} = useSelector(
-  //   (state: any) => state,
-  // );
+
   const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
@@ -53,26 +51,26 @@ const AllWorkouts = ({navigation, route}: any) => {
   const [datas, setData] = useState<Array<any>>([]);
   const dispatch = useDispatch();
   let total_Workouts_Time = 0;
-
+  let isFocuse = useIsFocused();
   useEffect(() => {
-    // allWorkoutApi();
-    popularData?.length == 0 && popularWorkoutApi();
-    workoutStatusApi();
-    getFavStatusAPI();
-    data?.map((item: any) => {
-      let totalTime = 0;
-      for (const day in item?.days) {
-        totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
-      }
-      total_Workouts_Time = total_Workouts_Time + totalTime;
-    });
-    setTotalCount(total_Workouts_Time);
-  }, []);
-  useFocusEffect(
-    useCallback(() => {
+    if (isFocuse) {
+      // allWorkoutApi();
+
       getAllLikeStatusAPI();
-    }, []),
-  );
+      popularData?.length == 0 && popularWorkoutApi();
+      workoutStatusApi();
+      getFavStatusAPI();
+      data?.map((item: any) => {
+        let totalTime = 0;
+        for (const day in item?.days) {
+          totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
+        }
+        total_Workouts_Time = total_Workouts_Time + totalTime;
+      });
+      setTotalCount(total_Workouts_Time);
+    }
+  }, [isFocuse]);
+
   const allWorkoutApi = async () => {
     try {
       setRefresh(true);
@@ -196,12 +194,12 @@ const AllWorkouts = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      if (res.data) {
+      if (res?.data?.msg != 'error') {
         setRefresh(false);
 
-
         setFavData(...res.data);
-
+      } else {
+        setFavData([]);
       }
     } catch (error) {
       setRefresh(false);
@@ -411,6 +409,20 @@ const AllWorkouts = ({navigation, route}: any) => {
       </LinearGradient>
     );
   };
+  const convertLike = (number: any) => {
+    if (number < 1000) {
+      return number.toString();
+    } else if (number < 10000) {
+      return (number / 1000).toFixed(0) + 'K';
+    } else if (number < 1000000) {
+      return (number / 1000).toFixed(0) + 'K';
+    } else if (number < 1000000000) {
+      return (number / 1000000).toFixed(0) + 'M';
+    } else {
+      return (number / 1000000000).toFixed(0) + 'B';
+    }
+  };
+
   const Box = ({selected, item, index}: any) => {
     let totalTime = 0;
     for (const day in item?.days) {
@@ -521,7 +533,9 @@ const AllWorkouts = ({navigation, route}: any) => {
                 <Text style={[styles.small, {color: '#D5191A'}]}>Upcoming</Text>
               )}
             </View>
-            <TouchableOpacity onPress={() => postLikeAPI(item?.workout_id)}>
+            <TouchableOpacity
+              onPress={() => postLikeAPI(item?.workout_id)}
+              style={{left: -20}}>
               {item?.user_like?.includes(item?.workout_id) ? (
                 <AnimatedLottieView
                   source={require('../../Icon/Images/NewImage/Heart.json')}
@@ -548,18 +562,21 @@ const AllWorkouts = ({navigation, route}: any) => {
               style={{
                 color: AppColor.BLACK,
                 marginRight: 10,
-                left: item?.user_like?.includes(item?.workout_id) ? -2 : 5,
+                left: -25,
+                // left: item?.user_like?.includes(item?.workout_id) ? -2 : 5,
               }}>
-              {item?.total_workout_like}
+              {/* {item?.total_workout_like} */}
+
+              {convertLike(item?.total_workout_like)}
             </Text>
 
             <AnimatedLottieView
               source={require('../../Icon/Images/NewImage/Eye.json')}
               speed={0.5}
               autoPlay
-              style={{width: 30, height: 30}}
+              style={{width: 30, height: 30, left: -25}}
             />
-            <Text style={{color: AppColor.BLACK, marginLeft: 10}}>
+            <Text style={{color: AppColor.BLACK, left: -20}}>
               {item?.total_workout_views}
             </Text>
           </View>
@@ -626,8 +643,6 @@ const AllWorkouts = ({navigation, route}: any) => {
         }
         // style={styles.container}
         nestedScrollEnabled>
-
-   
         <FlatList
           data={likeData}
           showsVerticalScrollIndicator={false}
@@ -679,7 +694,6 @@ const AllWorkouts = ({navigation, route}: any) => {
           updateCellsBatchingPeriod={100}
           removeClippedSubviews={true}
         />
-
       </ScrollView>
       <Time />
     </View>
