@@ -40,7 +40,7 @@ import {showMessage} from 'react-native-flash-message';
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const LoadData = ({navigation}) => {
-  const {getFcmToken} = useSelector(state => state);
+  const getFcmToken = useSelector(state => state.getFcmToken);
   const [loadData, setLoadData] = useState(0);
   const buttonName = [
     {

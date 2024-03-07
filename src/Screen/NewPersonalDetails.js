@@ -45,7 +45,7 @@ const NewPersonalDetails = ({route, navigation}) => {
   const dispatch = useDispatch();
   const [forLoading, setForLoading] = useState(false);
   const [isEditible, setEditable] = useState(false);
-  const {getUserDataDetails, completeProfileData} = useSelector(state => state);
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const [isFocus, setIsFocus] = useState(false);
 
   useEffect(() => {

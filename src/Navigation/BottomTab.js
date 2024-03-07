@@ -21,7 +21,7 @@ const Tabs = AnimatedTabBarNavigator();
 
 const BottomTab = () => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
-  console.log("dfdsfdsfdsfsdfds",getPurchaseHistory)
+
   const getPurchaseStatusData = () => {
     if (getPurchaseHistory.length > 0) {
       if (

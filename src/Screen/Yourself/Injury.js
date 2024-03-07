@@ -25,8 +25,15 @@ import analytics from '@react-native-firebase/analytics';
 const Injury = ({route, navigation}) => {
   const dispatch = useDispatch();
   const {nextScreen} = route.params;
-  const {getLaterButtonData, completeProfileData, getUserID} = useSelector(
-    state => state,
+  const getLaterButtonData = useSelector(
+    state => state.getLaterButtonData,
+  );
+
+  const  completeProfileData = useSelector(
+    state => state.completeProfileData,
+  );
+  const  getUserID = useSelector(
+    state => state.getUserID,
   );
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageView, setImageVIew] = useState([]);

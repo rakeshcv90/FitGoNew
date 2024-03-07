@@ -24,7 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const navigationRef = createNavigationContainerRef();
 import Loader from './src/Component/Loader';
 import NetInfo from '@react-native-community/netinfo';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {DeviceHeigth, DeviceWidth} from './src/Component/Config';
 import RNRestart from 'react-native-restart';
 import {

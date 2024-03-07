@@ -20,7 +20,8 @@ import Bulb from './Yourself/Bulb';
 const FocusArea = ({route, navigation}) => {
   const dispatch = useDispatch();
   const {nextScreen} = route.params;
-  const {getLaterButtonData} = useSelector(state => state);
+  // const {getLaterButtonData} = useSelector(state => state);
+  const getLaterButtonData = useSelector(state => state.getLaterButtonData);
   const [screen, setScreen] = useState(nextScreen);
   const [selectedItems, setSelectedItems] = useState([]);
 

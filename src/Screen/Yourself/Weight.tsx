@@ -46,8 +46,14 @@ const positions = height.map(
 const Weight = ({route, navigation}: any) => {
   const {nextScreen} = route.params;
 
-  const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
-    (state: any) => state,
+  const defaultTheme  = useSelector(
+    (state: any) => state.defaultTheme
+  );
+  const completeProfileData = useSelector(
+    (state: any) => state.completeProfileData,
+  );
+  const  getLaterButtonData = useSelector(
+    (state: any) => state.getLaterButtonData,
   );
   const dispatch = useDispatch();
   const [selected, setSelected] = useState(-1);

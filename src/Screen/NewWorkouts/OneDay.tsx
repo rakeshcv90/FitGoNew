@@ -86,12 +86,22 @@ const OneDay = ({navigation, route}: any) => {
   const [visible, setVisible] = useState(false);
 
   const [loader, setLoader] = useState(false);
-  const {
-    allWorkoutData,
-    getUserDataDetails,
-    getPurchaseHistory,
-    getSubscriptionModal,
-  } = useSelector((state: any) => state);
+  // const {
+  //   allWorkoutData,
+  //   getUserDataDetails,
+  //   getPurchaseHistory,
+  //   getSubscriptionModal,
+  // } = useSelector((state: any) => state);
+  const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
+  const getUserDataDetails = useSelector(
+    (state: any) => state.getUserDataDetails,
+  );
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
+  );
+  const getSubscriptionModal = useSelector(
+    (state: any) => state.getSubscriptionModal,
+  );
   const dispatch = useDispatch();
 
   useFocusEffect(
@@ -112,11 +122,9 @@ const OneDay = ({navigation, route}: any) => {
           data?.workout_id,
       });
       if (res.data) {
-       
         setExerciseData(res.data);
         setOpen(true);
         setLoader(false);
-       
       }
     } catch (error) {
       console.error(error, 'DaysAPIERror');

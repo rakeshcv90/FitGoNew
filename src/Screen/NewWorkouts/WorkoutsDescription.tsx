@@ -21,18 +21,19 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
   const TextSpeech = `${data?.exercise_instructions}`;
   const [description, SetDescription] = useState('');
 
-  const {
-    getSoundOffOn
-  } = useSelector(state => state);
+  const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
   const cleanText = TextSpeech.replace(/<\/?[^>]+(>|$)/g, '');
   useEffect(() => {
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
-   
- 
+
       if (!ttsStatus.isInitialized) {
         try {
-         await Tts.setDefaultVoice(Platform.OS=='android'?'en-GB-default':'com.apple.voice.compact.en-IN.Rishi');
+          // await Tts.setDefaultVoice(
+          //   Platform.OS == 'android'
+          //     ? 'en-GB-default'
+          //     : 'com.apple.voice.compact.en-IN.Rishi',
+          // );
           await Tts.setDefaultLanguage('en-IN');
           await Tts.setDucking(true);
           await Tts.setIgnoreSilentSwitch('ignore');
@@ -48,8 +49,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
     initTts();
   }, []);
   useEffect(() => {
-  
-    if (open && getSoundOffOn==true) {
+    if (open && getSoundOffOn == true) {
       Tts.speak(cleanText);
     } else {
       Tts.stop();
@@ -91,10 +91,10 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
         <TouchableOpacity
           onPress={() => setOpen(false)}
           style={{
-            width:25,
-            height:25,
+            width: 25,
+            height: 25,
             alignSelf: 'flex-end',
-            left:-10,
+            left: -10,
             marginTop: DeviceHeigth * 0.045,
           }}>
           <Icon name="close" color={AppColor.DARKGRAY} size={25} />
@@ -161,9 +161,9 @@ const styles = StyleSheet.create({
     top: -4, // Adjust this value to fine-tune the shadow position
     left: 0,
     right: 0,
-    opacity:0.6,
+    opacity: 0.6,
     height: 20, // Height of the shadow
-    backgroundColor:AppColor.GRAY,
+    backgroundColor: AppColor.GRAY,
     // Adjust opacity as needed
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
