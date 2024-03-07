@@ -28,10 +28,13 @@ const WorkoutArea = ({route, navigation}) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageView, setImageVIew] = useState([]);
   const dispatch = useDispatch();
-  const {getLaterButtonData, completeProfileData, getUserID} = useSelector(
-    state => state,
-  );
-
+  // const {getLaterButtonData, completeProfileData, getUserID} = useSelector(
+  //   state => state,
+  // );
+  const getLaterButtonData = useSelector(state => state.getLaterButtonData);
+  const completeProfileData = useSelector(state => state.completeProfileData);
+  const getUserID = useSelector(state => state.getUserID);
+  
   useEffect(() => {
     setScreen(nextScreen);
   }, []);

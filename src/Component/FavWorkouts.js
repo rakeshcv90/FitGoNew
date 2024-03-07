@@ -25,7 +25,8 @@ import {showMessage} from 'react-native-flash-message';
 import { localImage } from './Image';
 const FavWorkouts = () => {
   const [FavWorkout, setFavWorkout] = useState([]);
-  const {defaultTheme} = useSelector(state => state);
+  // const {defaultTheme} = useSelector(state => state);
+  const defaultTheme = useSelector(state => state.defaultTheme);
   const [isLoaded, setIsLoaded] = useState(false);
   const [update, setUpdate] = useState(0);
   const [isEmpty, setEmpty] = useState(false);

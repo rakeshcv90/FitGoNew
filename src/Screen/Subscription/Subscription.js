@@ -38,8 +38,12 @@ import {ReviewApp} from '../../Component/ReviewApp';
 
 const Subscription = ({navigation}) => {
   const dispatch = useDispatch();
-  const {getInAppPurchase, getUserDataDetails, getPurchaseHistory} =
-    useSelector(state => state);
+  const getInAppPurchase =
+    useSelector(state => state.getInAppPurchase);
+    const getUserDataDetails =
+    useSelector(state => state.getUserDataDetails);
+    const  getPurchaseHistory =
+    useSelector(state => state.getPurchaseHistory);
   const [selectedItems, setSelectedItems] = useState(getInAppPurchase[2]);
 
   const [visible, setVisible] = React.useState(false);

@@ -20,8 +20,8 @@ import {StatusBar} from 'react-native';
 
 const DayRewards = ({navigation, route}: any) => {
   const {data, day} = route?.params;
-  const {allWorkoutData, getUserDataDetails, getCount} = useSelector(
-    (state: any) => state,
+  const getUserDataDetails = useSelector(
+    (state: any) => state.getUserDataDetails,
   );
   const [days, setDays] = useState<Array<any>>([]);
   useEffect(() => {

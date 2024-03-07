@@ -49,9 +49,7 @@ const height = Array(100)
   .map((item: any, index, arr) => arr[index] + index / 10);
 
 const Index = ({navigation, route}: any) => {
-  const {defaultTheme, completeProfileData, getUserID} = useSelector(
-    (state: any) => state,
-  );
+ 
 
   const dispatch = useDispatch();
   const [screen, setScreen] = useState(1);

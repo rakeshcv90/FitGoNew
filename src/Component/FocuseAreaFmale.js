@@ -20,9 +20,12 @@ import {useSelector} from 'react-redux';
 const FocuseAreaFmale = ({selectedItems, setSelectedItems}) => {
   const [imageView, setImageVIew] = useState([]);
   // const [imageView, setImageVIew] = useState([]);
-  const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
-    state => state,
-  );
+  // const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
+  //   state => state,
+  // );
+  const defaultTheme = useSelector(state => state.defaultTheme);
+const completeProfileData = useSelector(state => state.completeProfileData);
+const getLaterButtonData = useSelector(state => state.getLaterButtonData);
   const [bodyPart, setBordyPart] = useState(
     completeProfileData?.focusarea.filter(
       part =>

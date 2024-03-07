@@ -46,8 +46,14 @@ const Exercise = ({navigation, route}: any) => {
   const [skipCount, setSkipCount] = useState(0);
   const [currentData, setCurrentData] = useState(currentExercise);
   const [isLoading, setIsLoading] = useState(true);
-  const {allWorkoutData, getUserDataDetails, getSoundOffOn} = useSelector(
-    (state: any) => state,
+  const allWorkoutData = useSelector(
+    (state: any) => state.allWorkoutData,
+  );
+  const getUserDataDetails = useSelector(
+    (state: any) => state.getUserDataDetails,
+  );
+  const getSoundOffOn = useSelector(
+    (state: any) => state.getSoundOffOn,
   );
   const [separateTimer, setSeparateTimer] = useState(timer);
   const [ttsInitialized, setTtsInitialized] = useState(false);
