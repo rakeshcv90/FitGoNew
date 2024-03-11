@@ -75,7 +75,6 @@ const MediumRounded: FC<Props> = ({...props}) => {
                       marginLeft: index == 0 ? 5 : 10,
                     },
                   ]}>
-                  
                   <Image
                     source={
                       item.workout_price == 'Premium'
@@ -89,17 +88,25 @@ const MediumRounded: FC<Props> = ({...props}) => {
                       top:
                         Platform.OS == 'android'
                           ? DeviceHeigth * 0.01
-                          : DeviceHeigth>=932? DeviceHeigth * 0.002:DeviceHeigth * 0.005 ,
+                          : DeviceHeigth >= 1024
+                          ? -DeviceHeigth * 0.007
+                          : DeviceHeigth >= 932
+                          ? DeviceHeigth * 0.005
+                          : DeviceHeigth * 0.005,
                       left:
                         Platform.OS == 'android'
                           ? -DeviceWidth * 0.18
-                          :DeviceHeigth>=932? -DeviceWidth * 0.195:-DeviceWidth * 0.18,
+                          : DeviceWidth >= 768
+                          ? -DeviceWidth * 0.24
+                          : DeviceHeigth >= 932
+                          ? -DeviceWidth * 0.195
+                          : -DeviceWidth * 0.18,
                     }}></Image>
 
                   <Image
                     source={{uri: item?.workout_image_link}}
                     style={{
-                      height: DeviceWidth * 0.30,
+                      height: DeviceWidth * 0.3,
                       width: DeviceWidth * 0.55,
                       top: -15,
                     }}

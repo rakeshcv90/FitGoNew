@@ -18,7 +18,7 @@
 		186A6F332B1DA2D00005DC45 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 186A6F312B1DA2D00005DC45 /* GoogleService-Info.plist */; };
 		2A216FF72B593B6A0064CD70 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A216FF62B593B6A0064CD70 /* Launch Screen.storyboard */; };
 		2A216FF82B593B6A0064CD70 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A216FF62B593B6A0064CD70 /* Launch Screen.storyboard */; };
-		2A2243F22B4E4D6800588914 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2243F12B4E4D6800588914 /* StoreKit.framework */; };
+		2A7862412B9B39F500CA8F52 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A7862402B9B39F500CA8F52 /* StoreKit.framework */; };
 		2AAC3EDF2B4530CD007908D0 /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC3EDE2B4530CD007908D0 /* dummy.swift */; };
 		2F00073507654D75841C795C /* Poppins-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 95622B5E21EA4AC18278A99D /* Poppins-MediumItalic.ttf */; };
 		32D21DDA69B0415C9E7E217A /* Poppins-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E5764529188460884B6D464 /* Poppins-ExtraLight.ttf */; };
@@ -83,7 +83,7 @@
 		246C12EBF2EE4BB8B8C585D0 /* Poppins-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Thin.ttf"; path = "../assets/fonts/Poppins-Thin.ttf"; sourceTree = "<group>"; };
 		26F15DDA5171AC45FEC4A677 /* libPods-FitGo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FitGo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A216FF62B593B6A0064CD70 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
-		2A2243F12B4E4D6800588914 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		2A7862402B9B39F500CA8F52 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		2AAC3EDD2B4530CD007908D0 /* FitGo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FitGo-Bridging-Header.h"; sourceTree = "<group>"; };
 		2AAC3EDE2B4530CD007908D0 /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
 		308645BBC7D648C0963D3D24 /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -127,8 +127,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A2243F22B4E4D6800588914 /* StoreKit.framework in Frameworks */,
 				504F5A4D7BE3FB680E785403 /* libPods-FitGo.a in Frameworks */,
+				2A7862412B9B39F500CA8F52 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,7 +174,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2A2243F12B4E4D6800588914 /* StoreKit.framework */,
+				2A7862402B9B39F500CA8F52 /* StoreKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				26F15DDA5171AC45FEC4A677 /* libPods-FitGo.a */,
 				EF3CDA6DA54B1363E283F783 /* libPods-FitGo-FitGoTests.a */,
@@ -671,7 +671,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 277GPQ33HC;
+				DEVELOPMENT_TEAM = C7X2Y62YD7;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = FitGo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FitMe;
@@ -711,7 +711,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 277GPQ33HC;
+				DEVELOPMENT_TEAM = C7X2Y62YD7;
 				INFOPLIST_FILE = FitGo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = FitMe;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";

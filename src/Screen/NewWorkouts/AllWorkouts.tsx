@@ -54,7 +54,6 @@ const AllWorkouts = ({navigation, route}: any) => {
   let total_Workouts_Time = 0;
   let isFocuse = useIsFocused();
   useEffect(() => {
-
     allWorkoutData?.length == 0 && allWorkoutApi();
     popularData?.length == 0 && popularWorkoutApi();
     workoutStatusApi();
@@ -226,10 +225,8 @@ const AllWorkouts = ({navigation, route}: any) => {
         setRefresh(false);
 
         setFavData(...res.data);
-
       } else {
         setFavData([]);
-
       }
     } catch (error) {
       setRefresh(false);
@@ -423,8 +420,6 @@ const AllWorkouts = ({navigation, route}: any) => {
     );
   };
 
-  
-
   const convertLike = (number: any) => {
     if (number < 1000) {
       return number.toString();
@@ -439,184 +434,189 @@ const AllWorkouts = ({navigation, route}: any) => {
     }
   };
 
-
-const Box = useMemo(() =>({selected, item, index}: any) => {
-    let totalTime = 0;
-    for (const day in item?.days) {
-      totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
-    }
-    const getBackgroundColor = (index: number) => {
-      const colors = ['#CEF2F9', '#F3F4F7', '#EAEBFF', '#FFE8E1'];
-      return colors[index % colors.length];
-    };
-    return (
-      <View style={{marginBottom: DeviceHeigth * 0.01}}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => {
-            navigation?.navigate('WorkoutDays', {data: item});
-          }}
-          style={[
-            styles.box,
-            {
-              backgroundColor: getBackgroundColor(index),
-              height: DeviceHeigth * 0.2,
-            },
-          ]}>
-          <Image
-            source={
-              item.workout_price == 'Premium'
-                ? require('../../Icon/Images/NewImage/premium.png')
-                : require('../../Icon/Images/NewImage/free.png')
-            }
-            resizeMode="contain"
-            style={{
-              width: 100,
-              height: 50,
-              top:
-                Platform.OS == 'android'
-                  ? -DeviceHeigth * 0.029
-                  : -DeviceHeigth * 0.029,
-              left:
-                Platform.OS == 'android'
-                  ? -DeviceWidth * 0.04
-                  : -DeviceWidth * 0.035,
-            }}></Image>
-          <Image
-            source={{uri: item?.workout_image_link}}
-            style={{
-              height: DeviceHeigth * 0.18,
-              width: DeviceWidth * 0.45,
-              bottom: 0,
-              // position: 'absolute',
-              //left: 10,
-              right: 50,
-            }}
-            resizeMode="contain"
-          />
-          {type != 'custom' && !fav && (
-            <TouchableOpacity onPress={() => postFavAPI(item?.workout_id)}>
-              {favData.includes(item?.workout_id) ? (
-                <Image
-                  source={localImage.Heart}
-                  resizeMode="contain"
-                  style={{height: 25, width: 25, right: 25}}
-                />
-              ) : (
-                <Image
-                  source={localImage.dw7}
-                  resizeMode="contain"
-                  style={{height: 25, width: 25, right: 25}}
-                />
-              )}
-            </TouchableOpacity>
-          )}
-        </TouchableOpacity>
-
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: DeviceWidth * 0.775,
-            }}>
-            <Text style={[styles.category]}>{item?.workout_title}</Text>
-            <Text style={styles.small}>
-              Approx.{' '}
-              {totalTime > 60
-                ? `${(totalTime / 60).toFixed(0)} min`
-                : `${totalTime} sec`}
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: DeviceWidth * 0.775,
-            }}>
-            <View style={{width: DeviceWidth * 0.3}}>
-              {trackerData?.includes(item?.workout_id) ? (
-                <Text style={[styles.small, {color: '#008C28'}]}>
-                  Completed
-                </Text>
-              ) : index + 1 ? (
-                <Text style={[styles.small, {color: '#E0855C'}]}>
-                  In Progress
-                </Text>
-              ) : (
-                <Text style={[styles.small, {color: '#D5191A'}]}>Upcoming</Text>
-              )}
-            </View>
+  const Box = useMemo(
+    () =>
+      ({selected, item, index}: any) => {
+        let totalTime = 0;
+        for (const day in item?.days) {
+          totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
+        }
+        const getBackgroundColor = (index: number) => {
+          const colors = ['#CEF2F9', '#F3F4F7', '#EAEBFF', '#FFE8E1'];
+          return colors[index % colors.length];
+        };
+        return (
+          <View style={{marginBottom: DeviceHeigth * 0.01}}>
             <TouchableOpacity
-
+              activeOpacity={1}
               onPress={() => {
-                const current = likeData.findIndex(
-                  it => it == item?.workout_id,
-                );
-                if (current == -1) {
-                  likeData.push(item?.workout_id);
-                  postLikeAPI(item?.workout_id);
-                } else {
-                  const remove = likeData.filter(it => it != item?.workout_id);
-                  setLikeData(remove);
-                  postLikeAPI(item?.workout_id);
+                navigation?.navigate('WorkoutDays', {data: item});
+              }}
+              style={[
+                styles.box,
+                {
+                  backgroundColor: getBackgroundColor(index),
+                  height: DeviceHeigth * 0.2,
+                },
+              ]}>
+              <Image
+                source={
+                  item.workout_price == 'Premium'
+                    ? require('../../Icon/Images/NewImage/premium.png')
+                    : require('../../Icon/Images/NewImage/free.png')
                 }
-              }}>
-              {likeData?.includes(item?.workout_id) ? (
-
-                <AnimatedLottieView
-                  source={require('../../Icon/Images/NewImage/Heart.json')}
-                  autoPlay
-                  speed={0.5}
-                  style={{
-                    width: 40,
-                    height: 40,
-                  }}
-                />
-              ) : (
-                <AnimatedLottieView
-                  source={require('../../Icon/Images/NewImage/Heartless.json')}
-                  autoPlay
-                  speed={0.5}
-                  style={{
-                    width: 40,
-                    height: 40,
-                  }}
-                />
+                resizeMode="contain"
+                style={{
+                  width: 100,
+                  height: 50,
+                  top:
+                    Platform.OS == 'android'
+                      ? -DeviceHeigth * 0.029
+                      : -DeviceHeigth * 0.029,
+                  left:
+                    Platform.OS == 'android'
+                      ? -DeviceWidth * 0.04
+                      : -DeviceWidth * 0.035,
+                }}></Image>
+              <Image
+                source={{uri: item?.workout_image_link}}
+                style={{
+                  height: DeviceHeigth * 0.18,
+                  width: DeviceWidth * 0.45,
+                  bottom: 0,
+                  // position: 'absolute',
+                  //left: 10,
+                  right: 50,
+                }}
+                resizeMode="contain"
+              />
+              {type != 'custom' && !fav && (
+                <TouchableOpacity onPress={() => postFavAPI(item?.workout_id)}>
+                  {favData.includes(item?.workout_id) ? (
+                    <Image
+                      source={localImage.Heart}
+                      resizeMode="contain"
+                      style={{height: 25, width: 25, right: 25}}
+                    />
+                  ) : (
+                    <Image
+                      source={localImage.dw7}
+                      resizeMode="contain"
+                      style={{height: 25, width: 25, right: 25}}
+                    />
+                  )}
+                </TouchableOpacity>
               )}
             </TouchableOpacity>
-            <Text
-              style={{
-                color: AppColor.BLACK,
-                marginRight: 10,
 
-                left: -25,
+            <View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: DeviceWidth * 0.775,
+                }}>
+                <Text style={[styles.category]}>{item?.workout_title}</Text>
+                <Text style={styles.small}>
+                  Approx.{' '}
+                  {totalTime > 60
+                    ? `${(totalTime / 60).toFixed(0)} min`
+                    : `${totalTime} sec`}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: DeviceWidth * 0.775,
+                }}>
+                <View style={{width: DeviceWidth * 0.3}}>
+                  {trackerData?.includes(item?.workout_id) ? (
+                    <Text style={[styles.small, {color: '#008C28'}]}>
+                      Completed
+                    </Text>
+                  ) : index + 1 ? (
+                    <Text style={[styles.small, {color: '#E0855C'}]}>
+                      In Progress
+                    </Text>
+                  ) : (
+                    <Text style={[styles.small, {color: '#D5191A'}]}>
+                      Upcoming
+                    </Text>
+                  )}
+                </View>
+                <TouchableOpacity
+                  style={{left: 20}}
+                  onPress={() => {
+                    const current = likeData.findIndex(
+                      it => it == item?.workout_id,
+                    );
+                    if (current == -1) {
+                      likeData.push(item?.workout_id);
+                      postLikeAPI(item?.workout_id);
+                    } else {
+                      const remove = likeData.filter(
+                        it => it != item?.workout_id,
+                      );
+                      setLikeData(remove);
+                      postLikeAPI(item?.workout_id);
+                    }
+                  }}>
+                  {likeData?.includes(item?.workout_id) ? (
+                    <AnimatedLottieView
+                      source={require('../../Icon/Images/NewImage/Heart.json')}
+                      autoPlay
+                      speed={0.5}
+                      style={{
+                        width: 40,
+                        height: 40,
+                      }}
+                    />
+                  ) : (
+                    <AnimatedLottieView
+                      source={require('../../Icon/Images/NewImage/Heartless.json')}
+                      autoPlay
+                      speed={0.5}
+                      style={{
+                        width: 40,
+                        height: 40,
+                      }}
+                    />
+                  )}
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    color: AppColor.BLACK,
+                    marginRight: 10,
 
-                // left: item?.user_like?.includes(item?.workout_id) ? -2 : 5,
-              }}>
-              {/* {item?.total_workout_like} */}
+                    left: 0,
 
-              {convertLike(item?.total_workout_like)}
-            </Text>
+                    // left: item?.user_like?.includes(item?.workout_id) ? -2 : 5,
+                  }}>
+                  {/* {item?.total_workout_like} */}
 
-            <AnimatedLottieView
-              source={require('../../Icon/Images/NewImage/Eye.json')}
-              speed={0.5}
-              autoPlay
-              style={{width: 30, height: 30, left: -25}}
-            />
+                  {convertLike(item?.total_workout_like)}
+                </Text>
 
-            <Text style={{color: AppColor.BLACK, left: -20}}>
+                <AnimatedLottieView
+                  source={require('../../Icon/Images/NewImage/Eye.json')}
+                  speed={0.5}
+                  autoPlay
+                  style={{width: 30, height: 30, left: 0}}
+                />
 
-              {item?.total_workout_views}
-            </Text>
+                <Text style={{color: AppColor.BLACK, left: -10}}>
+                  {item?.total_workout_views}
+                </Text>
+              </View>
+            </View>
           </View>
-        </View>
-      </View>
-    );
-  },[selected, likeData]);
+        );
+      },
+    [selected, likeData],
+  );
   return (
     <View style={styles.container}>
       <NewHeader
@@ -694,7 +694,6 @@ const Box = useMemo(() =>({selected, item, index}: any) => {
             colors={[AppColor.RED, AppColor.RED]}
           />
         }
-
         renderItem={({item, index}: any) => {
           if (fav && favData?.includes(item?.workout_id))
             return (

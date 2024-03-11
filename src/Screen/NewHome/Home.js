@@ -37,11 +37,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import {Slider} from '@miblanchard/react-native-slider';
 import axios from 'axios';
 import {setPedomterData} from '../../Component/ThemeRedux/Actions';
-import {
-
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import GoogleFit, {Scopes} from 'react-native-google-fit';
 import {
   Stop,
@@ -181,7 +177,7 @@ const Home = ({navigation}) => {
   const [distance, setDistance] = useState(0);
   const distanceRef = useRef(distance);
   let isFocused = useIsFocused();
-
+console.log("SDFdsfdsfdsfsdfds",getFitmeAdsCount)
   useEffect(() => {
     if (isFocused) {
       initInterstitial();
@@ -196,7 +192,7 @@ const Home = ({navigation}) => {
         ) {
           Dispatch(setFitmeAdsCount(0));
         } else {
-          if (getFitmeAdsCount < 5) {
+          if (getFitmeAdsCount < 2) {
             Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {
             showInterstitialAd();
@@ -204,7 +200,7 @@ const Home = ({navigation}) => {
           }
         }
       } else {
-        if (getFitmeAdsCount < 5) {
+        if (getFitmeAdsCount < 2) {
           Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
         } else {
           showInterstitialAd();
@@ -325,23 +321,18 @@ const Home = ({navigation}) => {
   const fetchData = async () => {
     if (!getStepCounterOnoff) {
       // setPaddoModalShow(true);
-      Alert.alert(
-        'FitMe wants to track your health data !',
-        '',
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
+      Alert.alert('FitMe wants to track your health data !', '', [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Allow',
+          onPress: () => {
+            handleAlert();
           },
-          {
-            text: 'Allow',
-            onPress: () => {
-              handleAlert();
-            },
-          },
-        ],
-       
-      );
+        },
+      ]);
     } else {
       GoogleFit.authorize(options)
         .then(authResult => {
@@ -906,7 +897,7 @@ const Home = ({navigation}) => {
     {color1: '#DFEEFE'},
   ];
 
-  const ListItem = ({title, color}) => (
+  const ListItem = React.memo(({title, color}) => (
     <TouchableOpacity
       onPress={() => {
         navigation.navigate('MeditationDetails', {item: title});
@@ -942,7 +933,7 @@ const Home = ({navigation}) => {
           resizeMode="cover"></Image>
       </LinearGradient>
     </TouchableOpacity>
-  );
+  ));
   const getTimeOfDayMessage = () => {
     const currentHour = new Date().getHours();
 
@@ -1111,6 +1102,62 @@ const Home = ({navigation}) => {
       setRefresh(false);
     }
   };
+  const MyListItem = React.memo(({item, index}) => {
+    return (
+      <>
+        <TouchableOpacity
+          style={styles.listItem2}
+          onPress={() => {
+            navigation.navigate('MealDetails', {item: item});
+          }}>
+          {imageLoad && (
+            <ShimmerPlaceholder
+              style={{
+                height: 90,
+                width: 90,
+                borderRadius: 180 / 2,
+                alignSelf: 'center',
+                top: -5,
+              }}
+              ref={avatarRef}
+              autoRun
+            />
+          )}
+          <Image
+            source={{uri: item.diet_image_link}}
+            onLoad={() => setImageLoad(false)}
+            style={[
+              styles.img,
+              {
+                height: 90,
+                width: 90,
+                borderRadius: 180 / 2,
+                alignSelf: 'center',
+                top: -5,
+              },
+            ]}
+            resizeMode="cover"></Image>
+
+          <Text
+            numberOfLines={1}
+            style={[
+              styles.title,
+              {
+                fontSize: 13,
+                fontWeight: '500',
+                lineHeight: 18,
+                fontFamily: 'Poppins',
+                textAlign: 'center',
+                width: 100,
+                color: colors[index % colors.length].color3,
+              },
+            ]}>
+            {item.diet_title}
+          </Text>
+        </TouchableOpacity>
+      </>
+    );
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -1344,12 +1391,11 @@ const Home = ({navigation}) => {
             )}
           </View>
           <View style={styles.meditionBox}>
-   
             <FlatList
               data={customWorkoutData?.minset_workout}
               horizontal
               showsHorizontalScrollIndicator={false}
-              //keyExtractor={item => console.log("DSFDFDSFds",item)}
+              keyExtractor={(item, index) => index.toString()}
               ListEmptyComponent={emptyComponent}
               renderItem={({item, index}) => {
                 return (
@@ -1359,6 +1405,7 @@ const Home = ({navigation}) => {
                   />
                 );
               }}
+              // renderItem={(item, index) => <MyListItem1 item={item} index={index}/>}
               initialNumToRender={10}
               maxToRenderPerBatch={10}
               updateCellsBatchingPeriod={100}
@@ -1413,7 +1460,7 @@ const Home = ({navigation}) => {
             data={customWorkoutData?.workout?.slice(0, 3)}
             horizontal
             showsHorizontalScrollIndicator={false}
-            //keyExtractor={item => item.id}
+            keyExtractor={(item, index) => index.toString()}
             ListEmptyComponent={emptyComponent}
             pagingEnabled
             renderItem={({item, index}) => {
@@ -1594,72 +1641,75 @@ const Home = ({navigation}) => {
             data={mealData?.slice(0, 4)}
             horizontal
             showsHorizontalScrollIndicator={false}
-            //keyExtractor={item => item.id}
+            keyExtractor={(item, index) => index.toString()}
             pagingEnabled
-            renderItem={({item, index}) => {
-              return (
-                <>
-                  <TouchableOpacity
-                    style={styles.listItem2}
-                    onPress={() => {
-                      navigation.navigate('MealDetails', {item: item});
-                    }}>
-                    {imageLoad && (
-                      <ShimmerPlaceholder
-                        style={{
-                          height: 90,
-                          width: 90,
-                          borderRadius: 180 / 2,
-                          alignSelf: 'center',
-                          top: -5,
-                        }}
-                        ref={avatarRef}
-                        autoRun
-                      />
-                    )}
-                    <Image
-                      source={{uri: item.diet_image_link}}
-                      onLoad={() => setImageLoad(false)}
-                      style={[
-                        styles.img,
-                        {
-                          height: 90,
-                          width: 90,
-                          borderRadius: 180 / 2,
-                          alignSelf: 'center',
-                          top: -5,
-                        },
-                      ]}
-                      resizeMode="cover"></Image>
-                    {imageLoad && (
-                      <ShimmerPlaceholder
-                        style={{
-                          width: 100,
-                        }}
-                        ref={avatarRef}
-                        autoRun
-                      />
-                    )}
-                    <Text
-                      numberOfLines={1}
-                      style={[
-                        styles.title,
-                        {
-                          fontSize: 13,
-                          fontWeight: '500',
-                          lineHeight: 18,
-                          fontFamily: 'Poppins',
-                          textAlign: 'center',
-                          width: 100,
-                          color: colors[index % colors.length].color3,
-                        },
-                      ]}>
-                      {item.diet_title}
-                    </Text>
-                  </TouchableOpacity>
-                </>
-              );
-            }}
+            // renderItem={({item, index}) => {
+            //   return (
+            //     <>
+            //       <TouchableOpacity
+            //         style={styles.listItem2}
+            //         onPress={() => {
+            //           navigation.navigate('MealDetails', {item: item});
+            //         }}>
+            //         {imageLoad && (
+            //           <ShimmerPlaceholder
+            //             style={{
+            //               height: 90,
+            //               width: 90,
+            //               borderRadius: 180 / 2,
+            //               alignSelf: 'center',
+            //               top: -5,
+            //             }}
+            //             ref={avatarRef}
+            //             autoRun
+            //           />
+            //         )}
+            //         <Image
+            //           source={{uri: item.diet_image_link}}
+            //           onLoad={() => setImageLoad(false)}
+            //           style={[
+            //             styles.img,
+            //             {
+            //               height: 90,
+            //               width: 90,
+            //               borderRadius: 180 / 2,
+            //               alignSelf: 'center',
+            //               top: -5,
+            //             },
+            //           ]}
+            //           resizeMode="cover"></Image>
+            //         {imageLoad && (
+            //           <ShimmerPlaceholder
+            //             style={{
+            //               width: 100,
+            //             }}
+            //             ref={avatarRef}
+            //             autoRun
+            //           />
+            //         )}
+            //         <Text
+            //           numberOfLines={1}
+            //           style={[
+            //             styles.title,
+            //             {
+            //               fontSize: 13,
+            //               fontWeight: '500',
+            //               lineHeight: 18,
+            //               fontFamily: 'Poppins',
+            //               textAlign: 'center',
+            //               width: 100,
+            //               color: colors[index % colors.length].color3,
+            //             },
+            //           ]}>
+            //           {item.diet_title}
+            //         </Text>
+            //       </TouchableOpacity>
+            //     </>
+            //   );
+            // }}
+            renderItem={({item, index}) => (
+              <MyListItem item={item} index={index} />
+            )}
             initialNumToRender={10}
             maxToRenderPerBatch={10}
             updateCellsBatchingPeriod={100}

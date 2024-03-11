@@ -53,13 +53,13 @@ const SplaceScreen = ({navigation}) => {
         loadScreen();
       } else {
         setTimeout(() => {
-          showInterstitialAd(navigation);
+          showInterstitialAd();
           loadScreen();
         }, Platform.OS=='android'?4000:2000);
       }
     } else {
       setTimeout(() => {
-        showInterstitialAd(navigation);
+        showInterstitialAd();
         loadScreen();
       },Platform.OS=='android'?4000:2000);
     }

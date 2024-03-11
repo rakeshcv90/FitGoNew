@@ -25,34 +25,20 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const Meals = ({navigation}) => {
   const [selectedMeal, setSelectedMeal] = useState(null);
-  const {mealData} = useSelector(state => state);
+  const mealData = useSelector(state => state.mealData);
   const [isLoading, setIsLoading] = useState(true);
   const [imageLoad, setImageLoad] = useState(true);
   const avatarRef = React.createRef();
   const [itemData, setItemData] = useState();
-  const {getFitmeMealAdsCount, getPurchaseHistory} = useSelector(
-    state => state,
+  const getFitmeMealAdsCount= useSelector(
+    state => state.getFitmeMealAdsCount,
   );
+  const getPurchaseHistory = useSelector(
+    state => state.getPurchaseHistory,
+  );
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   if (mealData.length > 0) {
-  //     generateRandomNumber();
-  //   }
-  // },[]);
 
-  // generateRandomNumber = () => {
-  //   const min = 1;
-  //   const max = mealData.length;
-  //   const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-
-  //   const filteredMeals = mealData.filter(
-  //     (item, index) => index + 1 === randomNumber,
-  //   );
-
-  //   if (filteredMeals.length > 0) {
-  //     setSelectedMeal(filteredMeals[0]);
-  //   }
-  // };
 
   const generateRandomNumber = useMemo(() => {
     return () => {
@@ -74,44 +60,47 @@ const Meals = ({navigation}) => {
   useEffect(() => {
     generateRandomNumber();
   }, [generateRandomNumber]);
-
+  useEffect(() => {
+    initInterstitial()
+  },[]);
   const checkMealAddCount = item => {
     if (getPurchaseHistory.length > 0) {
       if (
-        getPurchaseHistory[0]?.plan_end_date >=
-        moment().format('YYYY-MM-DD')
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
       ) {
         dispatch(setFitmeMealAdsCount(0));
         navigation.navigate('MealDetails', {item: item});
-      }else{
-        if (getFitmeMealAdsCount < 4) {
+      } else {
+        if (getFitmeMealAdsCount < 3) {
           dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
           navigation.navigate('MealDetails', {item: item});
         } else {
-          MyInterstitialAd(resetFitmeCount).load();
-          setTimeout(() => {
-            navigation.navigate('MealDetails', {item: item});
-          }, 1200);
+          showInterstitialAd()
+          navigation.navigate('MealDetails', {item: item});
+          dispatch(setFitmeMealAdsCount(0));
+          // setTimeout(() => {
+         
+          // }, 1200);
         }
       }
     } else {
-      if (getFitmeMealAdsCount < 4) {
+      if (getFitmeMealAdsCount < 3) {
         dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
         navigation.navigate('MealDetails', {item: item});
       } else {
-        MyInterstitialAd(resetFitmeCount).load();
-        setTimeout(() => {
-          navigation.navigate('MealDetails', {item: item});
-        }, 1200);
+        showInterstitialAd()
+        navigation.navigate('MealDetails', {item: item});
+        dispatch(setFitmeMealAdsCount(0));
+        // setTimeout(() => {
+         
+        // }, 1200);
       }
     }
   };
 
   const resetFitmeCount = async () => {
-   
     dispatch(setFitmeMealAdsCount(0));
   };
-
 
   return (
     <View style={styles.container}>
@@ -267,7 +256,7 @@ const Meals = ({navigation}) => {
           data={mealData}
           numColumns={3}
           showsVerticalScrollIndicator={false}
-          keyExtractor={item => item.id}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => {
             return (
               <>
@@ -304,7 +293,7 @@ const Meals = ({navigation}) => {
                       alignSelf: 'center',
                     }}
                     resizeMode="cover"></Image>
-             
+
                   <Text
                     style={[
                       styles.title,

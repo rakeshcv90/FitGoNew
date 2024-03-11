@@ -186,7 +186,7 @@ const MeditationDetails = ({navigation, route}) => {
             data={customWorkoutData?.minset_workout}
             horizontal
             showsHorizontalScrollIndicator={false}
-            keyExtractor={item => item.id}
+            keyExtractor={(item, index) => index.toString()}
             ListEmptyComponent={emptyComponent}
             renderItem={({item, index}) => {
               return (
@@ -233,7 +233,7 @@ const MeditationDetails = ({navigation, route}) => {
             <FlatList
               data={[1, 2, 3, 4]}
               showsVerticalScrollIndicator={false}
-              keyExtractor={item => item.id}
+              keyExtractor={(item, index) => index.toString()}
               renderItem={({item, index}) => {
                 return (
                   <>
@@ -324,7 +324,7 @@ const MeditationDetails = ({navigation, route}) => {
             <FlatList
               data={mindsetExercise}
               showsVerticalScrollIndicator={false}
-              keyExtractor={item => item.id}
+              keyExtractor={(item, index) => index.toString()}
               ListEmptyComponent={emptyComponent}
               renderItem={({item, index}) => {
                 return (

@@ -30,7 +30,7 @@ const Trainer = ({navigation}) => {
         ) {
           dispatch(setFitmeAdsCount(0));
         } else {
-          if (getFitmeAdsCount < 5) {
+          if (getFitmeAdsCount < 2) {
             dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {
             showInterstitialAd();
@@ -38,7 +38,7 @@ const Trainer = ({navigation}) => {
           }
         }
       } else {
-        if (getFitmeAdsCount < 5) {
+        if (getFitmeAdsCount < 2) {
           dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
         } else {
           showInterstitialAd();
