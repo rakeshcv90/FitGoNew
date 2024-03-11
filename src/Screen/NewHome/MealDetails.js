@@ -20,14 +20,8 @@ import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import HTMLRender from 'react-native-render-html';
 
-const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const MealDetails = ({route, navigation}) => {
-  const {getUserDataDetails} = useSelector(state => state);
-  const [forLoading, setForLoading] = useState(false);
-  const [appVersion, setAppVersion] = useState(0);
-  const [imageLoad, setImageLoad] = useState(true);
-  const avatarRef = React.createRef();
 
   const customStyles = {
     fontFamily: 'Poppins',

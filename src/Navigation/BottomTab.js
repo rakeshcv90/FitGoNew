@@ -1,7 +1,8 @@
 import {Image, Platform} from 'react-native';
 import React from 'react';
 import {AnimatedTabBarNavigator} from 'react-native-animated-nav-tab-bar';
-
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { BottomTabBarHeightContext } from '@react-navigation/bottom-tabs';
 import Home from '../Screen/NewHome/Home';
 
 import Store from '../Screen/NewHome/Store';
@@ -16,8 +17,9 @@ import {bannerAdId} from '../Component/AdsId';
 import {DeviceHeigth} from '../Component/Config';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 
-const Tabs = AnimatedTabBarNavigator();
+const Tabs = createBottomTabNavigator();
 
 const BottomTab = () => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
@@ -65,20 +67,22 @@ const BottomTab = () => {
   };
   return (
     <>
+      
       <Tabs.Navigator
         initialRouteName="Home"
-        tabBarOptions={{
+        screenOptions={{
           activeTintColor: '#D01818',
           inactiveTintColor: '#3D3D3D',
-          activeBackgroundColor: '#EED9D6',
-
+          // activeBackgroundColor: '#EED9D6',
+          tabBarStyle: { position: 'absolute',height:70},
           labelStyle: {
             fontFamily: 'Poppins',
             fontWeight: '700',
-            lineHeight: 18,
+            lineHeight: 70,
             fontSize: 12,
           },
         }}>
+      
         <Tabs.Screen
           name="Home"
           component={Home}
@@ -94,6 +98,7 @@ const BottomTab = () => {
                 }}
               />
             ),
+         
           }}
         />
         <Tabs.Screen
@@ -166,9 +171,7 @@ const BottomTab = () => {
         />
       </Tabs.Navigator>
       {getPurchaseStatusData()}
-      {/* <View style={{marginTop:Platform.OS=='ios'?-DeviceHeigth*0.035:0}}>
-       <BannerAdd bannerAdId={bannerAdId}/>
-      </View> */}
+   
     </>
   );
 };

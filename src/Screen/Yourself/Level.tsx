@@ -114,9 +114,10 @@ const Level = ({route, navigation}: any) => {
           }}>
           <FlatList
             ref={flatListRef}
-            keyExtractor={index => index.toString()}
+            keyExtractor={(item, index) => index.toString()}
             data={completeProfileData?.level}
             horizontal
+               
             scrollEnabled={false}
             showsHorizontalScrollIndicator={false}
             renderItem={({item, index}: any) => {

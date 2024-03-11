@@ -157,6 +157,7 @@ const Search = () => {
                 maxToRenderPerBatch={10}
                 updateCellsBatchingPeriod={100}
                 removeClippedSubviews={true}
+                keyExtractor={(item, index) => index.toString()}
               />
             </>
           ) : (

@@ -85,20 +85,35 @@ const NewProgressScreen = ({navigation}) => {
   const dispatch = useDispatch();
   let arrayForData = [];
   let arrayForData1 = [];
+  // useEffect(() => {
+  //   setBmi(
+  //     getUserDataDetails?.weight
+  //       ? (
+  //           getUserDataDetails?.weight /
+  //           (getUserDataDetails?.height * 0.3048) ** 2
+  //         ).toFixed(2)
+  //       : 0,
+  //   );
+  // }, []);
+  const bmi = useMemo(() => {
+    return getUserDataDetails?.weight
+      ? (
+          getUserDataDetails?.weight /
+          (getUserDataDetails?.height * 0.3048) ** 2
+        ).toFixed(2)
+      : 0;
+  }, [getUserDataDetails]);
+  
+  // Update state with useEffect
   useEffect(() => {
-    setBmi(
-      getUserDataDetails?.weight
-        ? (
-            getUserDataDetails?.weight /
-            (getUserDataDetails?.height * 0.3048) ** 2
-          ).toFixed(2)
-        : 0,
-    );
-  }, []);
-  useEffect(() => {
-    WeeklyData(1);
-    WeeklyData(2);
-  }, []);
+    setBmi(bmi);
+  }, [bmi]);
+
+
+  // useEffect(() => {
+  //   WeeklyData(1);
+  //   WeeklyData(2);
+  // }, []);
 
   useEffect(() => {
     const Calories1 = getCustttomeTimeCal.map(value => value.totalCalories);
@@ -158,7 +173,7 @@ useEffect(()=>{
       ) {
         dispatch(setFitmeAdsCount(0));
       } else {
-        if (getFitmeAdsCount < 5) {
+        if (getFitmeAdsCount < 2) {
           dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
         } else {
           showInterstitialAd();
@@ -166,7 +181,7 @@ useEffect(()=>{
         }
       }
     } else {
-      if (getFitmeAdsCount < 5) {
+      if (getFitmeAdsCount < 2) {
         dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
       } else {
         showInterstitialAd();

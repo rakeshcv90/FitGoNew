@@ -126,6 +126,7 @@ const FavWorkouts = () => {
                       ) : null}
                     </TouchableOpacity>
                   )}
+                  keyExtractor={(item, index) => index.toString()}
                   initialNumToRender={10}
                   maxToRenderPerBatch={10}
                   updateCellsBatchingPeriod={100}
