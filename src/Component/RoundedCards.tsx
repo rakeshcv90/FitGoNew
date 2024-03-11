@@ -1,7 +1,6 @@
 import {
   FlatList,
   Image,
-
   Platform,
   StyleSheet,
   Text,
@@ -106,18 +105,24 @@ const RoundedCards: FC<Props> = ({...props}) => {
                       marginBottom: 5,
                     },
                   ]}>
-                
-                  {props?.horizontal && (
-                    item.workout_price=='Premium'&&
+                  {console.log('ddfdsf', DeviceHeigth)}
+                  {props?.horizontal && item.workout_price == 'Premium' && (
                     <Image
                       source={require('../Icon/Images/NewImage/rect.png')}
                       style={{
                         width: 30,
                         height: 30,
-                        top:Platform.OS == 'android'?DeviceHeigth*0.012:DeviceHeigth*0.010,
+                        top:
+                          Platform.OS == 'android'
+                            ? DeviceHeigth * 0.012
+                            : DeviceHeigth >= 1024
+                            ? -DeviceHeigth * 0.005
+                            : DeviceHeigth * 0.01,
                         left:
                           Platform.OS == 'android'
                             ? -DeviceWidth * 0.095
+                            : DeviceWidth >= 768
+                            ? -DeviceWidth * 0.11
                             : -DeviceWidth * 0.095,
                       }}></Image>
                   )}
@@ -137,7 +142,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
                       autoRun
                     />
                   )}
-                 
+
                   <Image
                     source={{uri: item?.workout_image_link}}
                     onLoad={() => setIsLoading(false)}
@@ -145,11 +150,11 @@ const RoundedCards: FC<Props> = ({...props}) => {
                       height: DeviceWidth / 6,
                       width: props.horizontal
                         ? DeviceWidth / 6
-                        : DeviceWidth / 3, 
+                        : DeviceWidth / 3,
                     }}
                     resizeMode="contain"
                   />
-                
+
                   {props?.trackerData?.includes(item?.workout_id) && (
                     <Image
                       source={localImage.Complete}

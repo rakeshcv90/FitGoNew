@@ -1061,6 +1061,7 @@ const Subscription = ({navigation}) => {
               maxToRenderPerBatch={10}
               updateCellsBatchingPeriod={100}
               removeClippedSubviews={true}
+              keyExtractor={(item, index) => index.toString()}
             />
           </View>
           <View style={{bottom: 15, alignSelf: 'center'}}>

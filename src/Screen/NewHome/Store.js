@@ -15,11 +15,7 @@ import {AppColor} from '../../Component/Color';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {Platform} from 'react-native';
-import {
- 
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {SliderBox} from 'react-native-image-slider-box';
 import FastImage from 'react-native-fast-image';
 import {useDispatch, useSelector} from 'react-redux';
@@ -55,7 +51,7 @@ const Store = ({navigation}) => {
   useEffect(() => {
     if (isFocused) {
       initInterstitial();
-      getCaterogy();
+      // getCaterogy();
       setcategory(getStoreData);
       if (getPurchaseHistory.length > 0) {
         if (
@@ -63,7 +59,7 @@ const Store = ({navigation}) => {
         ) {
           dispatch(setFitmeAdsCount(0));
         } else {
-          if (getFitmeAdsCount < 5) {
+          if (getFitmeAdsCount < 2) {
             dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {
             showInterstitialAd();
@@ -71,7 +67,7 @@ const Store = ({navigation}) => {
           }
         }
       } else {
-        if (getFitmeAdsCount < 5) {
+        if (getFitmeAdsCount < 2) {
           dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
         } else {
           showInterstitialAd();
@@ -263,6 +259,7 @@ const Store = ({navigation}) => {
             <FlatList
               data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
               numColumns={3}
+              keyExtractor={(item, index) => index.toString()}
               showsVerticalScrollIndicator={false}
               renderItem={({item, index}) => {
                 return (
@@ -290,9 +287,11 @@ const Store = ({navigation}) => {
                 );
               }}
               initialNumToRender={10}
-              maxToRenderPerBatch={10}
+              maxToRenderPerBatch={5}
               updateCellsBatchingPeriod={100}
               removeClippedSubviews={true}
+              // Adjust based on your data size and performance
+              windowSize={10}
             />
           ) : (
             <FlatList
@@ -346,6 +345,7 @@ const Store = ({navigation}) => {
               maxToRenderPerBatch={10}
               updateCellsBatchingPeriod={100}
               removeClippedSubviews={true}
+              keyExtractor={(item, index) => index.toString()}
             />
           )}
         </View>

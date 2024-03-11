@@ -453,6 +453,7 @@ const LoadData = ({navigation}) => {
         <AnimatedFlatList
           data={buttonName}
           showsHorizontalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => {
             const translateX = translationX.interpolate({
               inputRange: [0, 1],

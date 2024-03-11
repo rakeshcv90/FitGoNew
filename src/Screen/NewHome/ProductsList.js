@@ -259,6 +259,7 @@ const ProductsList = ({route}) => {
               maxToRenderPerBatch={10}
               updateCellsBatchingPeriod={100}
               removeClippedSubviews={true}
+              keyExtractor={(item, index) => index.toString()}
             />
           ) : (
             <FlatList
@@ -309,6 +310,7 @@ const ProductsList = ({route}) => {
               updateCellsBatchingPeriod={100}
               removeClippedSubviews={true}
               ListEmptyComponent={emptyComponent}
+              keyExtractor={(item, index) => index.toString()}
             />
           )}
         </View>

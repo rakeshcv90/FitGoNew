@@ -64,7 +64,7 @@ const Workouts = ({navigation}: any) => {
         ) {
           dispatch(setFitmeAdsCount(0));
         } else {
-          if (getFitmeAdsCount < 5) {
+          if (getFitmeAdsCount < 2) {
             dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
           } else {
             showInterstitialAd();
@@ -72,7 +72,7 @@ const Workouts = ({navigation}: any) => {
           }
         }
       } else {
-        if (getFitmeAdsCount < 5) {
+        if (getFitmeAdsCount < 2) {
           dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
         } else {
           showInterstitialAd();
@@ -80,7 +80,7 @@ const Workouts = ({navigation}: any) => {
         }
       }
     }
-  }, []);
+  }, [isFocused]);
 
   const allWorkoutApi = async () => {
     try {
