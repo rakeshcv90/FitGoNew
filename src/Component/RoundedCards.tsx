@@ -105,7 +105,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
                       marginBottom: 5,
                     },
                   ]}>
-                  {console.log('ddfdsf', DeviceHeigth)}
+                
                   {props?.horizontal && item.workout_price == 'Premium' && (
                     <Image
                       source={require('../Icon/Images/NewImage/rect.png')}

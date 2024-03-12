@@ -182,7 +182,7 @@ const WorkoutDays = ({navigation, route}: any) => {
       });
 
       if (res.data?.msg == 'Workout views ') {
-        console.log('first', res.data);
+     
       }
       setRefresh(false);
     } catch (error) {

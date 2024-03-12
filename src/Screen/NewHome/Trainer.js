@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+import {View, Text, Platform} from 'react-native';
 import React, {useEffect} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {StatusBar} from 'react-native';
@@ -93,7 +93,10 @@ const Trainer = ({navigation}) => {
       <View
         style={{
           marginTop: DeviceHeigth * 0.15,
-          bottom: 10,
+          bottom:
+            Platform.OS == 'android'
+              ? DeviceHeigth * 0.09
+              : DeviceHeigth * 0.095,
           position: 'absolute',
           alignItems: 'center',
           alignSelf: 'center',

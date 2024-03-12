@@ -7,11 +7,12 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColor} from '../../Component/Color';
-import {Image} from 'react-native';
+
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
@@ -33,6 +34,7 @@ import analytics from '@react-native-firebase/analytics';
 import moment from 'moment';
 import AnimatedLottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
+
 import {
   Stop,
   Circle,
@@ -42,6 +44,8 @@ import {
   LinearGradient as SvgGrad,
 } from 'react-native-svg';
 import ThreeDButton from '../../Component/ThreeButton';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MyRewardedAd } from '../../Component/BannerAdd';
 
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount} = route.params;
@@ -50,6 +54,7 @@ const OneDay = ({navigation, route}: any) => {
   const [trackerData, setTrackerData] = useState([]);
   const [open, setOpen] = useState(true);
   const [visible, setVisible] = useState(false);
+  const [reward, setreward] = useState(0);
 
   const [loader, setLoader] = useState(false);
 
@@ -70,6 +75,7 @@ const OneDay = ({navigation, route}: any) => {
     if (isFocuse) {
       allWorkoutApi();
       getExerciseTrackAPI();
+      setreward(0)
     }
   }, []);
   const allWorkoutApi = async () => {
@@ -287,6 +293,11 @@ const OneDay = ({navigation, route}: any) => {
       </TouchableOpacity>
     );
   };
+ if(reward == 1){
+             
+    postCurrentDayAPI();
+    setreward(0);
+  }
   const PaddoMeterPermissionModal = () => {
     return (
       <Modal
@@ -300,37 +311,46 @@ const OneDay = ({navigation, route}: any) => {
             style={[
               styles.modalContainer,
               {
-                height:
-                  Platform.OS == 'android'
-                    ? DeviceHeigth * 0.45
-                    : DeviceHeigth >= 932
-                    ? DeviceHeigth * 0.45
-                    : DeviceHeigth * 0.55,
+                // height:
+                //   Platform.OS == 'android'
+                //     ? DeviceHeigth * 0.6
+                //     : DeviceHeigth >= 932
+                //     ? DeviceHeigth * 0.45
+                //     : DeviceHeigth * 0.55,
               },
             ]}>
+            <Icon
+              name="close"
+              color={AppColor.DARKGRAY}
+              size={30}
+              onPress={() => {
+                dispatch(setSubscriptiomModal(false));
+              }}
+              style={{
+                justifyContent: 'flex-end',
+                alignSelf: 'flex-end',
+                padding: 10,
+              }}
+            />
             <AnimatedLottieView
               source={require('../../Icon/Images/NewImage/Subscription.json')}
               speed={2}
               autoPlay
-              resizeMode="contain"
+              resizeMode="cover"
               loop
               style={{
-                width: DeviceWidth * 0.35,
-                height: DeviceHeigth * 0.3,
-                top: -DeviceHeigth * 0.01,
-                //backgroundColor:'red'
-                //bottom: DeviceHeigth * 0.005,
+                width: DeviceWidth * 0.3,
+                height: DeviceHeigth * 0.2,
+                top: -DeviceHeigth * 0.06,
+           
               }}
             />
             <View
               style={{
                 height: 40,
-                // width: DeviceWidth * 0.8,
-                bottom: DeviceHeigth * 0.05,
-                //top:-DeviceHeigth * 0.1,
                 alignItems: 'center',
                 alignSelf: 'center',
-
+                top: -DeviceHeigth * 0.05,
                 justifyContent: 'center',
               }}>
               <Text
@@ -383,9 +403,7 @@ const OneDay = ({navigation, route}: any) => {
             <TouchableOpacity
               style={[
                 styles.buttonPaddo,
-                {
-                  marginBottom: DeviceHeigth * 0.09,
-                },
+                
               ]}
               activeOpacity={0.5}
               onPress={() => {
@@ -396,28 +414,54 @@ const OneDay = ({navigation, route}: any) => {
                 start={{x: 0, y: 1}}
                 end={{x: 1, y: 0}}
                 colors={['#D5191A', '#941000']}
-                style={styles.buttonPaddo}>
+                style={[
+                  styles.buttonPaddo,
+                  {
+                    justifyContent: 'space-evenly',
+                  },
+                ]}>
+                <Image
+                  source={require('../../Icon/Images/NewImage/vip.png')}
+                  style={{width: 25, height: 25}}
+                  tintColor={AppColor.WHITE}
+                />
                 <Text style={styles.buttonText}>Subscribe</Text>
               </LinearGradient>
             </TouchableOpacity>
+            <View style={{marginVertical:10}}>
+            <Text style={[styles.buttonText, {color: '#505050'}]}>
+             OR
+            </Text>
+            </View>
             <TouchableOpacity
               style={[
                 styles.buttonPaddo2,
                 {
-                  bottom: DeviceHeigth * 0.07,
+              
+                  justifyContent: 'space-evenly',
                 },
               ]}
               activeOpacity={0.5}
               onPress={() => {
+                MyRewardedAd(setreward).load();
                 dispatch(setSubscriptiomModal(false));
               }}>
               <LinearGradient
                 start={{x: 0, y: 1}}
                 end={{x: 1, y: 0}}
-                colors={['#F7F8F8', '#F7F8F8']}
-                style={styles.buttonPaddo2}>
+                colors={['#D9D9D9', '#D9D9D9']}
+                style={[
+                  styles.buttonPaddo2,
+                  {
+                    justifyContent: 'space-evenly',
+                  },
+                ]}>
+                <Image
+                  source={require('../../Icon/Images/NewImage/ads.png')}
+                  style={{width: 25, height: 25}}
+                />
                 <Text style={[styles.buttonText, {color: '#505050'}]}>
-                  Skip
+                  Whatch Ads to unlock Workouts
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
@@ -498,7 +542,7 @@ const OneDay = ({navigation, route}: any) => {
           ))}
         </ScrollView>
         <GradientButton
-          // disabled={trackerData.length != 0}
+
           text={`Start Day ${day}`}
           h={80}
           alignSelf
@@ -506,24 +550,26 @@ const OneDay = ({navigation, route}: any) => {
           mB={40}
           onPress={() => {
             analytics().logEvent(`CV_FITME_STARTED_DAY_${day}_EXERCISES`);
-
-            //postCurrentDayAPI();
-
+        
             if (data.workout_price == 'free') {
               postCurrentDayAPI();
+         
             } else if (
               data?.workout_price == 'Premium' &&
               getPurchaseHistory[0]?.plan_end_date >=
                 moment().format('YYYY-MM-DD')
             ) {
               postCurrentDayAPI();
+       
             } else if (
               data?.workout_price == 'Premium' &&
               getPurchaseHistory[0]?.plan_end_date <
                 moment().format('YYYY-MM-DD')
             ) {
               dispatch(setSubscriptiomModal(true));
-            } else {
+            }
+         
+             else {
               dispatch(setSubscriptiomModal(true));
             }
 
@@ -615,17 +661,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContainer: {
-    width: '80%',
-
+    width: '90%',
+    paddingBottom: 30,
     backgroundColor: 'white',
     borderRadius: 26,
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonPaddo: {
-    width: 224,
-    height: 47,
-    borderRadius: 30,
+    height: 45,
+    borderRadius: 10,
+    width: DeviceWidth * 0.4,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
@@ -642,9 +689,11 @@ const styles = StyleSheet.create({
     }),
   },
   buttonPaddo2: {
-    width: 224,
-    height: 47,
-    borderRadius: 30,
+    flexDirection: 'row',
+    height: 45,
+    width: DeviceWidth * 0.8,
+
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
@@ -669,6 +718,5 @@ const styles = StyleSheet.create({
     color: AppColor.WHITE,
     fontWeight: '700',
     backgroundColor: 'transparent',
-    lineHeight: 24,
   },
 });
