@@ -50,35 +50,34 @@ const Workouts = ({navigation}: any) => {
   const [trackerData, setTrackerData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const dispatch = useDispatch();
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
       allWorkoutData?.length == 0 && allWorkoutApi();
       popularData?.length == 0 && popularWorkoutApi();
       workoutStatusApi();
-      initInterstitial();
-      if (getPurchaseHistory.length > 0) {
-        if (
-          getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-        ) {
-          dispatch(setFitmeAdsCount(0));
-        } else {
-          if (getFitmeAdsCount < 2) {
-            dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-          } else {
-            showInterstitialAd();
-            dispatch(setFitmeAdsCount(0));
-          }
-        }
-      } else {
-        if (getFitmeAdsCount < 2) {
-          dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-        } else {
-          showInterstitialAd();
-          dispatch(setFitmeAdsCount(0));
-        }
-      }
+      // initInterstitial();
+      // if (getPurchaseHistory.length > 0) {
+      //   if (
+      //     getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      //   ) {
+      //     dispatch(setFitmeAdsCount(0));
+      //   } else {
+      //     if (getFitmeAdsCount < 2) {
+      //       dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+      //     } else {
+      //       showInterstitialAd();
+      //       dispatch(setFitmeAdsCount(0));
+      //     }
+      //   }
+      // } else {
+      //   if (getFitmeAdsCount < 2) {
+      //     dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+      //   } else {
+      //     showInterstitialAd();
+      //     dispatch(setFitmeAdsCount(0));
+      //   }
+      // }
     }
   }, [isFocused]);
 

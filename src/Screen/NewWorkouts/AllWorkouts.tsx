@@ -31,6 +31,8 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 import Svg, {Path, Defs, LinearGradient, Stop} from 'react-native-svg';
 import AnimatedLottieView from 'lottie-react-native';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {StarColor} from '../../Icon/Images/NewImage/StarColor';
+import {Star} from '../../Icon/Images/NewImage/Star';
 const AllWorkouts = ({navigation, route}: any) => {
   const {data, type, fav} = route.params;
 
@@ -493,17 +495,9 @@ const AllWorkouts = ({navigation, route}: any) => {
               {type != 'custom' && !fav && (
                 <TouchableOpacity onPress={() => postFavAPI(item?.workout_id)}>
                   {favData.includes(item?.workout_id) ? (
-                    <Image
-                      source={localImage.Heart}
-                      resizeMode="contain"
-                      style={{height: 25, width: 25, right: 25}}
-                    />
+                    <StarColor />
                   ) : (
-                    <Image
-                      source={localImage.dw7}
-                      resizeMode="contain"
-                      style={{height: 25, width: 25, right: 25}}
-                    />
+                    <Star />
                   )}
                 </TouchableOpacity>
               )}
