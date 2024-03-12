@@ -305,7 +305,8 @@ const AITrainer = ({navigation}) => {
             Platform.OS == 'android'
               ? DeviceHeigth * 0.09
               : DeviceHeigth * 0.09,
-        }}>
+        }}
+        >
         <ScrollView
           style={{flexGrow: 1}}
           ref={flatListRef}

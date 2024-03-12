@@ -176,6 +176,7 @@ const Home = ({navigation}) => {
   const [distance, setDistance] = useState(0);
   const distanceRef = useRef(distance);
   let isFocused = useIsFocused();
+
   useEffect(() => {
     if (isFocused) {
       // initInterstitial();

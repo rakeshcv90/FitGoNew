@@ -59,22 +59,22 @@ export const MyInterstitialAd = () => {
     });
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
       adStatus.current = interstitialAd;
-      console.log('ad loaded');
+
     });
     interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
       interstitialAd.load();
     });
     interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {
-      console.log('ad clicked');
+
     });
     interstitialAd.addAdEventListener(AdEventType.ERROR, error => {
-      console.log('load error', error.message);
+
     });
     interstitialAd.load();
   };
 
   const showInterstitialAd = async () => {
-    console.log('Test Ads', adStatus.current);
+   
     if (adStatus.current?._loaded) {
       adStatus.current.show();
       console.log('Add loade ddscdsdsvdv');
