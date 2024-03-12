@@ -12,6 +12,7 @@ import TrackPlayer from 'react-native-track-player';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {useEffect} from 'react';
 import messaging from '@react-native-firebase/messaging';
+import {LogBox} from 'react-native';
 import notifee, {
   AndroidImportance,
   AndroidStyle,
@@ -203,6 +204,8 @@ messaging().getInitialNotification(async remoteMessage => {
   console.log('Kill NOTIFUCATION', remoteMessage);
 });
 const AppRedux = () => {
+  LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
+  LogBox.ignoreAllLogs();
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       DisplayNotification(remoteMessage);

@@ -39,7 +39,7 @@ const BottomTab = () => {
                   ? DeviceHeigth == 667
                     ? -DeviceHeigth * 0.01
                     : DeviceHeigth >= 1024
-                    ? 0
+                    ? -20
                     : -DeviceHeigth * 0.035
                   : 0,
             }}>
@@ -54,10 +54,10 @@ const BottomTab = () => {
             marginTop:
               Platform.OS == 'ios'
                 ? DeviceHeigth == 667
-                  ? -DeviceHeigth * 0.01
+                  ? -DeviceHeigth * 0.02
                   : DeviceHeigth >= 1024
-                  ? 0
-                  : -DeviceHeigth * 0.035
+                  ? -20
+                  : -DeviceHeigth * 0.02
                 : 0,
           }}>
           <BannerAdd bannerAdId={bannerAdId} />
@@ -67,14 +67,14 @@ const BottomTab = () => {
   };
   return (
     <>
-      
       <Tabs.Navigator
         initialRouteName="Home"
         screenOptions={{
           activeTintColor: '#D01818',
           inactiveTintColor: '#3D3D3D',
+          headerShown: false,
           // activeBackgroundColor: '#EED9D6',
-          tabBarStyle: { position: 'absolute',height:70},
+          tabBarStyle: { position: 'absolute',height:Platform.OS=='android'?DeviceHeigth*0.08:DeviceHeigth*0.09,},
           labelStyle: {
             fontFamily: 'Poppins',
             fontWeight: '700',

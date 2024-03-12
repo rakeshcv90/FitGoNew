@@ -32,7 +32,7 @@ import {
   RemoteMessage,
 } from './src/Component/Helper/PushNotification';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
-import TrackPlayer, { State } from 'react-native-track-player';
+import TrackPlayer, {State} from 'react-native-track-player';
 import crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
 import codePush from 'react-native-code-push';
@@ -54,19 +54,18 @@ import {MyInterstitialAd} from './src/Component/BannerAdd';
 let codePushOptions = {checkFrequency: codePush.CheckFrequency.MANUAL};
 
 const App = () => {
-
-
   //const [isConnected, setConnected] = useState(true);
 
   const [progress, setProgress] = useState(false);
   useEffect(() => {
     requestPermissionforNotification(dispatch);
     // RemoteMessage();
-
   }, []);
 
   useEffect(() => {
     LogBox.ignoreLogs(['Sending...']);
+    LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
+    LogBox.ignoreAllLogs(); //Ignore all log notificationsottom
     try {
       analytics().setAnalyticsCollectionEnabled(true);
       crashlytics().setCrashlyticsCollectionEnabled(true);
@@ -111,7 +110,7 @@ const App = () => {
   // }, []);
   // useEffect(() => {
   //   async function initializePlayer() {
-      
+
   //     await TrackPlayer.setupPlayer();
   //   }
 
