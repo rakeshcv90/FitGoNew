@@ -30,7 +30,7 @@ notifee.createChannel({
   importance: AndroidImportance.HIGH,
   description: 'CHANNEL FOR NOTIFICATION',
 });
-messaging().setBackgroundMessageHandler(remoteMessage => {
+messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('BACKGROUND NOTIFUCATION', remoteMessage);
 });
 notifee.onBackgroundEvent(async ({type, detail}) => {

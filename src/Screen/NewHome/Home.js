@@ -139,7 +139,6 @@ const ProgressBar = ({progress, image, text}) => {
   );
 };
 const Home = ({navigation}) => {
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const [value, setValue] = useState('Weekly');
   const [weeklyGraph, setWeeklyGraph] = useState([]);
   const [monthlyGraph, setMonthlyGraph] = useState([]);
@@ -177,36 +176,15 @@ const Home = ({navigation}) => {
   const [distance, setDistance] = useState(0);
   const distanceRef = useRef(distance);
   let isFocused = useIsFocused();
-console.log("SDFdsfdsfdsfsdfds",getFitmeAdsCount)
   useEffect(() => {
     if (isFocused) {
-      initInterstitial();
+      // initInterstitial();
       getCustomeWorkoutTimeDetails();
       getGraphData(1);
       setTimeout(() => {
         ActivityPermission();
       }, 3000);
-      if (getPurchaseHistory.length > 0) {
-        if (
-          getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-        ) {
-          Dispatch(setFitmeAdsCount(0));
-        } else {
-          if (getFitmeAdsCount < 2) {
-            Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-          } else {
-            showInterstitialAd();
-            Dispatch(setFitmeAdsCount(0));
-          }
-        }
-      } else {
-        if (getFitmeAdsCount < 2) {
-          Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-        } else {
-          showInterstitialAd();
-          Dispatch(setFitmeAdsCount(0));
-        }
-      }
+      
     }
   }, [isFocused]);
 
