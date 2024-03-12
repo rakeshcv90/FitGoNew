@@ -170,7 +170,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                   styles.tabButton,
                   {
                     marginVertical: 10,
-                    paddingHorizontal: 10,
+                    paddingHorizontal: 5,
                   },
                 ]}>
                 {route.name == 'Home' ? (
@@ -250,8 +250,8 @@ const BottomTab = () => {
                   ? DeviceHeigth == 667
                     ? -DeviceHeigth * 0.01
                     : DeviceHeigth >= 1024
-                    ? -20
-                    : -DeviceHeigth * 0.035
+                    ? 0
+                    : DeviceHeigth * 0.0
                   : 0,
             }}>
             <BannerAdd bannerAdId={bannerAdId} />
@@ -265,10 +265,10 @@ const BottomTab = () => {
             marginTop:
               Platform.OS == 'ios'
                 ? DeviceHeigth == 667
-                  ? -DeviceHeigth * 0.02
+                  ? -DeviceHeigth * 0.01
                   : DeviceHeigth >= 1024
-                  ? -20
-                  : -DeviceHeigth * 0.02
+                  ? 0
+                  : DeviceHeigth * 0.0
                 : 0,
           }}>
           <BannerAdd bannerAdId={bannerAdId} />
@@ -286,7 +286,15 @@ const BottomTab = () => {
           inactiveTintColor: '#3D3D3D',
           headerShown: false,
           // activeBackgroundColor: '#EED9D6',
-          tabBarStyle: { position: 'absolute',height:Platform.OS=='android'?DeviceHeigth*0.08:DeviceHeigth*0.09,},
+
+          tabBarStyle: {
+            position: 'absolute',
+            height:
+              Platform.OS == 'android'
+                ? DeviceHeigth * 0.08
+                : DeviceHeigth * 0.09,
+          },
+
           labelStyle: {
             fontFamily: 'Poppins',
             fontWeight: '700',
@@ -328,13 +336,22 @@ const BottomTab = () => {
 const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: 'row',
-    height: 50,
+    height:
+      Platform.OS == 'android'
+        ? DeviceHeigth * 0.07
+        : DeviceHeigth == 667
+        ? DeviceHeigth * 0.09
+        : DeviceHeigth >= 1024
+        ? DeviceHeigth * 0.06
+        : DeviceHeigth * 0.09,
     backgroundColor: AppColor.WHITE,
   },
   tabButton: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
 });
 
