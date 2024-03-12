@@ -30,7 +30,6 @@ import moment from 'moment';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import {setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
-import {MyInterstitialAd} from '../../Component/BannerAdd';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -43,39 +42,8 @@ const Store = ({navigation}) => {
   const [forLoading, setForLoading] = useState(false);
   const [category, setcategory] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState(getStoreData);
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const avatarRef = React.createRef();
   const dispatch = useDispatch();
-  let isFocused = useIsFocused();
-
-  useEffect(() => {
-    if (isFocused) {
-      initInterstitial();
-      // getCaterogy();
-      setcategory(getStoreData);
-      if (getPurchaseHistory.length > 0) {
-        if (
-          getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-        ) {
-          dispatch(setFitmeAdsCount(0));
-        } else {
-          if (getFitmeAdsCount < 2) {
-            dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-          } else {
-            showInterstitialAd();
-            dispatch(setFitmeAdsCount(0));
-          }
-        }
-      } else {
-        if (getFitmeAdsCount < 2) {
-          dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-        } else {
-          showInterstitialAd();
-          dispatch(setFitmeAdsCount(0));
-        }
-      }
-    }
-  }, [isFocused]);
 
   const updateFilteredCategories = test => {
     const filteredItems = category.filter(item =>
