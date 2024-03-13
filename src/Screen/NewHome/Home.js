@@ -179,7 +179,7 @@ const Home = ({navigation}) => {
 
   useEffect(() => {
     if (isFocused) {
-      // initInterstitial();
+    
       getCustomeWorkoutTimeDetails();
       getGraphData(1);
       setTimeout(() => {
