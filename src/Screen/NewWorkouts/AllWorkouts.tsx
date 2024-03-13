@@ -461,6 +461,7 @@ const AllWorkouts = ({navigation, route}: any) => {
                   height: DeviceHeigth * 0.2,
                 },
               ]}>
+            
               <Image
                 source={
                   item.workout_price == 'Premium'
@@ -478,7 +479,7 @@ const AllWorkouts = ({navigation, route}: any) => {
                   left:
                     Platform.OS == 'android'
                       ? -DeviceWidth * 0.04
-                      : -DeviceWidth * 0.035,
+                      : DeviceWidth>=768?-DeviceWidth * 0.010:-DeviceWidth * 0.035,
                 }}></Image>
               <Image
                 source={{uri: item?.workout_image_link}}
