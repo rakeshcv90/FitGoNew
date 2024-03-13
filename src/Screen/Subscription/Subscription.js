@@ -106,6 +106,51 @@ const Subscription = ({navigation}) => {
   //     purchaseErrorSubscription.remove();
   //   };
   // }, []);
+  useEffect(() => {
+    purchaseUpdateSubscription1 = RNIap.purchaseUpdatedListener(
+        async purchase => {
+           
+            const receipt = purchase.transactionReceipt;
+            if (receipt) {
+                await RNIap.finishTransaction({ purchase });
+            }
+        },
+    );
+    purchaseErrorSubscription1 = RNIap.purchaseErrorListener(error => {
+   
+        if (Platform.OS == 'android') {
+            showMessage({
+                message: error.message,
+                titleStyle: { textAlign: 'center' },
+                type: 'danger'
+            })
+        } else {
+            if (error.responseCode === '2') {
+                showMessage({
+                    message: 'You have cancelled the transaction. Please try again.',
+                    titleStyle: { textAlign: 'center' },
+                    type: 'danger'
+                })
+            } else {
+                showMessage({
+                    message: error.message,
+                    titleStyle: { textAlign: 'center' },
+                    type: 'danger'
+                })
+            }
+        }
+    });
+    return () => {
+        if (purchaseUpdateSubscription1) {
+            purchaseUpdateSubscription1.remove();
+            purchaseUpdateSubscription1 = null;
+        }
+        if (purchaseErrorSubscription1) {
+            purchaseErrorSubscription1.remove();
+            purchaseErrorSubscription1 = null;
+        }
+    };
+}, []);
   const validateIOS = async receipt => {
     // const purchases = await RNIap.getAvailablePurchases();
     // const latestPurchase = purchases[purchases.length - 1];
@@ -127,7 +172,7 @@ const Subscription = ({navigation}) => {
       if (result.data) {
         const renewalHistory = result.data?.pending_renewal_info;
 
-        setForLoading(false);
+        // setForLoading(false);
         if (renewalHistory[0]?.auto_renew_status == 1 && receipt?.length != 0) {
           fetchPurchaseHistory1(
             renewalHistory[0],
