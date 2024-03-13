@@ -90,7 +90,6 @@ const AllWorkouts = ({navigation, route}: any) => {
         },
         data: payload,
       });
-      console.log('ALL WORKOUT API', page);
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -124,7 +123,7 @@ const AllWorkouts = ({navigation, route}: any) => {
           });
         }
         setTotalCount(total_Workouts_Time);
-        setPage(page + 1);
+        // setPage(page + 1);
       } else {
         setRefresh(false);
         setLoader(false);
@@ -423,6 +422,9 @@ const AllWorkouts = ({navigation, route}: any) => {
   };
 
   const convertLike = (number: any) => {
+    if (number == undefined || number == null) {
+      return '';
+    }
     if (number < 1000) {
       return number.toString();
     } else if (number < 10000) {
@@ -479,7 +481,13 @@ const AllWorkouts = ({navigation, route}: any) => {
                   left:
                     Platform.OS == 'android'
                       ? -DeviceWidth * 0.04
-                      : DeviceWidth>=768?-DeviceWidth * 0.010:-DeviceWidth * 0.035,
+
+                      : DeviceWidth >= 768
+                      ? -DeviceWidth * 0.018
+                      : -DeviceWidth * 0.035,
+
+//                       : DeviceWidth>=768?-DeviceWidth * 0.010:-DeviceWidth * 0.035,
+
                 }}></Image>
               <Image
                 source={{uri: item?.workout_image_link}}
@@ -527,7 +535,13 @@ const AllWorkouts = ({navigation, route}: any) => {
                   alignItems: 'center',
                   width: DeviceWidth * 0.775,
                 }}>
-                <View style={{width: DeviceWidth * 0.3}}>
+                <View
+                  style={{
+                    width:
+                      DeviceWidth >= 768
+                        ? DeviceWidth * 0.5
+                        : DeviceWidth * 0.3,
+                  }}>
                   {trackerData?.includes(item?.workout_id) ? (
                     <Text style={[styles.small, {color: '#008C28'}]}>
                       Completed
@@ -590,8 +604,6 @@ const AllWorkouts = ({navigation, route}: any) => {
 
                     // left: item?.user_like?.includes(item?.workout_id) ? -2 : 5,
                   }}>
-                  {/* {item?.total_workout_like} */}
-
                   {convertLike(item?.total_workout_like)}
                 </Text>
 
@@ -603,7 +615,7 @@ const AllWorkouts = ({navigation, route}: any) => {
                 />
 
                 <Text style={{color: AppColor.BLACK, left: -10}}>
-                  {item?.total_workout_views}
+                  {convertLike(item?.total_workout_views)}
                 </Text>
               </View>
             </View>
@@ -659,9 +671,13 @@ const AllWorkouts = ({navigation, route}: any) => {
       </View>
       <FlatList
         data={allWorkoutData}
+        extraData={likeData}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item: any, index: number) => index?.toString()}
-        onEndReached={allWorkoutApi}
+        onEndReached={() => {
+          setPage(page + 1);
+          allWorkoutApi();
+        }}
         overScrollMode="auto"
         scrollToOverflowEnabled
         // onEndReachedThreshold={0.3}

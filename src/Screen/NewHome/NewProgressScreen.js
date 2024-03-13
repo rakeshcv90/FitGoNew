@@ -44,7 +44,6 @@ import analytics from '@react-native-firebase/analytics';
 
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
-import {MyInterstitialAd} from '../../Component/BannerAdd';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -70,7 +69,6 @@ const NewProgressScreen = ({navigation}) => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [selected, setSelected] = useState(false);
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const [dates, setDates] = useState([]);
   const [value, setValue] = useState('Weekly');
   const [value1, setValue1] = useState('Weekly');
@@ -81,7 +79,6 @@ const NewProgressScreen = ({navigation}) => {
   const [Wtime, setWtime] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const avatarRef = React.createRef();
-  let data1 = useIsFocused();
   const dispatch = useDispatch();
   let arrayForData = [];
   let arrayForData1 = [];
@@ -163,34 +160,6 @@ const NewProgressScreen = ({navigation}) => {
     }
   }, []);
 
-useEffect(()=>{
-  initInterstitial()
-  if (data1) {
-    if (getPurchaseHistory.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >=
-        moment().format('YYYY-MM-DD')
-      ) {
-        dispatch(setFitmeAdsCount(0));
-      } else {
-        if (getFitmeAdsCount < 2) {
-          dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-        } else {
-          showInterstitialAd();
-          dispatch(setFitmeAdsCount(0));
-        }
-      }
-    } else {
-      if (getFitmeAdsCount < 2) {
-        dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-      } else {
-        showInterstitialAd();
-        dispatch(setFitmeAdsCount(0));
-      }
-    }
-  }
-
-},[data1])
       
   const handleGraph1 = data => {
     if (data == 1) {
