@@ -1,4 +1,4 @@
-import {StyleSheet, Image, StatusBar, Platform} from 'react-native';
+import {StyleSheet, Image, StatusBar, Platform, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {DeviceWidth, NewAppapi} from '../Component/Config';
 import {localImage} from '../Component/Image';
@@ -17,8 +17,7 @@ import DeviceInfo from 'react-native-device-info';
 import axios from 'axios';
 import {showMessage} from 'react-native-flash-message';
 import {requestPermissionforNotification} from '../Component/Helper/PushNotification';
-
-import {MyInterstitialAd} from '../Component/BannerAdd';
+import {NewInterstitialAd} from '../Component/BannerAdd';
 import moment from 'moment';
 
 const products = Platform.select({
@@ -28,7 +27,8 @@ const products = Platform.select({
 
 const SplaceScreen = ({navigation}) => {
   const dispatch = useDispatch();
-  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const [closed, setClosed] = useState(false);
+  const {initInterstitial, showInterstitialAd} = NewInterstitialAd(setClosed);
 
   const showIntro = useSelector(state => state.showIntro);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
@@ -52,19 +52,32 @@ const SplaceScreen = ({navigation}) => {
       ) {
         loadScreen();
       } else {
-        setTimeout(() => {
-          showInterstitialAd();
-          loadScreen();
-        }, Platform.OS=='android'?4000:2000);
+        setTimeout(
+          () => {
+            showInterstitialAd();
+            console.log('isLoaded', closed);
+          },
+          Platform.OS == 'android' ? 4000 : 2000,
+        );
       }
     } else {
-      setTimeout(() => {
-        showInterstitialAd();
-        loadScreen();
-      },Platform.OS=='android'?4000:2000);
+      setTimeout(
+        () => {
+          showInterstitialAd();
+          console.log('isLoaded', closed);
+        },
+        Platform.OS == 'android' ? 4000 : 2000,
+      );
     }
   }, []);
-
+  useEffect(() => {
+    if (closed) {
+      initInterstitial();
+      setTimeout(() => {
+        loadScreen();
+      }, 2000);
+    }
+  }, [closed]);
   const getPlanData = () => {
     Platform.OS === 'ios'
       ? RNIap.initConnection()
@@ -77,7 +90,6 @@ const SplaceScreen = ({navigation}) => {
                 console.log('error finding purchase');
               })
               .then(res => {
-                
                 dispatch(setInappPurchase(res));
               });
           })
@@ -91,7 +103,6 @@ const SplaceScreen = ({navigation}) => {
                 console.log('error finding purchase');
               })
               .then(res => {
-               
                 dispatch(setInappPurchase(res));
               });
           });
@@ -185,18 +196,26 @@ const SplaceScreen = ({navigation}) => {
   };
 
   return (
-    <LinearGradient
-      style={styels.container}
-      start={{x: 0, y: 0}}
-      end={{x: 0.5, y: 0.5}}
-      colors={['#D01818', '#941000']}>
-      <StatusBar backgroundColor={'transparent'} translucent />
-      <Image
-        source={localImage.SplashText}
-        style={styels.Textlogo}
-        resizeMode="contain"
-      />
-    </LinearGradient>
+    <>
+      {closed ? (
+        <View style={{flex: 1, backgroundColor: 'black'}}>
+          <StatusBar backgroundColor={'transparent'} translucent />
+        </View>
+      ) : (
+        <LinearGradient
+          style={styels.container}
+          start={{x: 0, y: 0}}
+          end={{x: 0.5, y: 0.5}}
+          colors={['#D01818', '#941000']}>
+          <StatusBar backgroundColor={'transparent'} translucent />
+          <Image
+            source={localImage.SplashText}
+            style={styels.Textlogo}
+            resizeMode="contain"
+          />
+        </LinearGradient>
+      )}
+    </>
   );
 };
 const styels = StyleSheet.create({
