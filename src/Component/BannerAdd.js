@@ -50,6 +50,45 @@ export const BannerAdd = ({bannerAdId}) => {
 //   );
 //   return interstitialAd;
 // };
+export const NewInterstitialAd = (setClosed) => { // Created specially for Splash Screen by Sahil
+  const adStatus = useRef(true);
+  const initInterstitial = async () => {
+    const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
+      requestNonPersonalizedAdsOnly: true,
+      keywords: ['fashion', 'clothing'],
+    });
+    interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
+      adStatus.current = interstitialAd;
+
+    });
+    interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
+      interstitialAd.load();
+    });
+    interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {
+
+    });
+    interstitialAd.addAdEventListener(AdEventType.ERROR, error => {
+      setClosed(true)
+    });
+    interstitialAd.addAdEventListener(AdEventType.OPENED, () => {
+      setClosed(true)
+    });
+    interstitialAd.load();
+  };
+
+  const showInterstitialAd = async () => {
+   
+    if (adStatus.current?._loaded) {
+      adStatus.current.show();
+      console.log('Add loade ddscdsdsvdv');
+    } else {
+      console.log("ADD NOT SHOWN",adStatus)
+      setClosed(true)
+    }
+  };
+
+  return {initInterstitial, showInterstitialAd};
+};
 export const MyInterstitialAd = () => {
   const adStatus = useRef(true);
   const initInterstitial = async () => {
