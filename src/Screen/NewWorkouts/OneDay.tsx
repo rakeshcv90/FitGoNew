@@ -45,7 +45,7 @@ import {
 } from 'react-native-svg';
 import ThreeDButton from '../../Component/ThreeButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { MyRewardedAd } from '../../Component/BannerAdd';
+import {MyRewardedAd} from '../../Component/BannerAdd';
 
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount} = route.params;
@@ -75,7 +75,7 @@ const OneDay = ({navigation, route}: any) => {
     if (isFocuse) {
       allWorkoutApi();
       getExerciseTrackAPI();
-      setreward(0)
+      setreward(0);
     }
   }, []);
   const allWorkoutApi = async () => {
@@ -205,39 +205,20 @@ const OneDay = ({navigation, route}: any) => {
   const Box = ({selected, item, index}: any) => {
     return (
       <TouchableOpacity
-        activeOpacity={1}
+        style={styles.box}
+        activeOpacity={0.9}
         onPress={() => {
           setOpen(false);
           setCurrentExercise(item);
           setVisible(true);
-        }}
-        style={[
-          styles.box,
-          {
-            // backgroundColor:'red',
-            height: DeviceHeigth * 0.1,
-            marginVertical:
-              Platform.OS == 'android'
-                ? DeviceHeigth * 0.005
-                : DeviceHeigth > 667
-                ? 0
-                : DeviceHeigth * 0.019,
-          },
-        ]}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+        }}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <View
             style={{
               height: 80,
               width: 80,
               backgroundColor: AppColor.WHITE,
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginLeft: DeviceWidth * 0.07,
+
               borderRadius: 10,
               ...Platform.select({
                 ios: {
@@ -256,26 +237,33 @@ const OneDay = ({navigation, route}: any) => {
               style={{height: 75, width: 75, alignSelf: 'center'}}
               resizeMode="contain"
             />
+            {trackerData[index - 1]?.exercise_status == 'completed' && (
+              <Image
+                source={localImage.Complete}
+                style={{
+                  height: 30,
+                  width: 30,
+                  marginLeft:
+                    Platform.OS == 'android'
+                      ? DeviceHeigth * 0.05
+                      : DeviceHeigth > 667
+                      ? DeviceHeigth * 0.05
+                      : DeviceHeigth * 0.016,
+                  marginTop:
+                    Platform.OS == 'android'
+                      ? -DeviceHeigth * 0.035
+                      : DeviceHeigth > 667
+                      ? -DeviceHeigth * 0.03
+                      : -DeviceHeigth * 0.015,
+                }}
+                resizeMode="contain"
+              />
+            )}
           </View>
-          {trackerData[index - 1]?.exercise_status == 'completed' && (
-            <Image
-              source={localImage.Complete}
-              style={{
-                height: 40,
-                width: 40,
-                marginLeft: -DeviceWidth * 0.1,
-                marginTop: -DeviceWidth * 0.09,
-              }}
-              resizeMode="contain"
-            />
-          )}
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
               alignItems: 'center',
-              marginHorizontal: 10,
-              width: '65%',
+              marginHorizontal: 20,
             }}>
             <View>
               <Text style={[styles.small, {fontSize: 14}]}>
@@ -283,18 +271,107 @@ const OneDay = ({navigation, route}: any) => {
               </Text>
               <Text style={styles.small}>{item?.exercise_rest}</Text>
             </View>
-            <Icons
-              name={'chevron-right'}
-              size={25}
-              color={AppColor.INPUTTEXTCOLOR}
-            />
           </View>
         </View>
+
+        <View style={{}}>
+          <Icons
+            name={'chevron-right'}
+            size={25}
+            color={AppColor.INPUTTEXTCOLOR}
+          />
+        </View>
       </TouchableOpacity>
+      // <TouchableOpacity
+      //   activeOpacity={1}
+      //   onPress={() => {
+      //     setOpen(false);
+      //     setCurrentExercise(item);
+      //     setVisible(true);
+      //   }}
+      //   style={[
+      //     styles.box,
+      //     {
+      //       // backgroundColor:'red',
+      //       height: DeviceHeigth * 0.1,
+      //       marginVertical:
+      //         Platform.OS == 'android'
+      //           ? DeviceHeigth * 0.005
+      //           : DeviceHeigth > 667
+      //           ? 5
+      //           : DeviceHeigth * 0.019,
+      //     },
+      //   ]}>
+      //   <View
+      //     style={{
+      //       flexDirection: 'row',
+      //       justifyContent: 'center',
+      //       alignItems: 'center',
+      //     }}>
+      //     <View
+      //       style={{
+      //         height: 80,
+      //         width: 80,
+      //         backgroundColor: AppColor.WHITE,
+      //         justifyContent: 'center',
+      //         alignItems: 'center',
+      //         marginLeft: DeviceWidth * 0.07,
+      //         borderRadius: 10,
+      //         ...Platform.select({
+      //           ios: {
+      //             shadowColor: AppColor.BLACK,
+      //             shadowOffset: {width: 1, height: 1},
+      //             shadowOpacity: 0.3,
+      //             shadowRadius: 2,
+      //           },
+      //           android: {
+      //             elevation: 5,
+      //           },
+      //         }),
+      //       }}>
+      //       <Image
+      //         source={{uri: item?.exercise_image}}
+      //         style={{height: 75, width: 75, alignSelf: 'center'}}
+      //         resizeMode="contain"
+      //       />
+      //     </View>
+      //     {trackerData[index - 1]?.exercise_status == 'completed' && (
+      //       <Image
+      //         source={localImage.Complete}
+      //         style={{
+      //           height: 40,
+      //           width: 40,
+      //           marginLeft: -DeviceWidth * 0.1,
+      //           marginTop: -DeviceWidth * 0.09,
+      //         }}
+      //         resizeMode="contain"
+      //       />
+      //     )}
+      //     <View
+      //       style={{
+      //         flexDirection: 'row',
+      //         justifyContent: 'space-evenly',
+      //         alignItems: 'center',
+      //         marginHorizontal: 10,
+      //         width: '65%',
+      //       }}>
+      //       <View>
+      //         <Text style={[styles.small, {fontSize: 14}]}>
+      //           {item?.exercise_title}
+      //         </Text>
+      //         <Text style={styles.small}>{item?.exercise_rest}</Text>
+      //       </View>
+      //       <Icons
+      //         name={'chevron-right'}
+      //         size={25}
+      //         color={AppColor.INPUTTEXTCOLOR}
+      //       />
+      //     </View>
+      //   </View>
+      // </TouchableOpacity>
     );
   };
- if(reward == 1){
-             
+  if (reward == 1) {
     postCurrentDayAPI();
     setreward(0);
   }
@@ -342,7 +419,6 @@ const OneDay = ({navigation, route}: any) => {
                 width: DeviceWidth * 0.3,
                 height: DeviceHeigth * 0.2,
                 top: -DeviceHeigth * 0.06,
-           
               }}
             />
             <View
@@ -401,10 +477,7 @@ const OneDay = ({navigation, route}: any) => {
             </View>
 
             <TouchableOpacity
-              style={[
-                styles.buttonPaddo,
-                
-              ]}
+              style={[styles.buttonPaddo]}
               activeOpacity={0.5}
               onPress={() => {
                 navigation.navigate('Subscription');
@@ -425,19 +498,16 @@ const OneDay = ({navigation, route}: any) => {
                   style={{width: 25, height: 25}}
                   tintColor={AppColor.WHITE}
                 />
-                <Text style={styles.buttonText}>Subscribe</Text>
+                <Text style={[styles.buttonText, {left: 10}]}>Subscribe</Text>
               </LinearGradient>
             </TouchableOpacity>
-            <View style={{marginVertical:10}}>
-            <Text style={[styles.buttonText, {color: '#505050'}]}>
-             OR
-            </Text>
+            <View style={{marginVertical: 10}}>
+              <Text style={[styles.buttonText, {color: '#505050'}]}>OR</Text>
             </View>
             <TouchableOpacity
               style={[
                 styles.buttonPaddo2,
                 {
-              
                   justifyContent: 'space-evenly',
                 },
               ]}
@@ -460,8 +530,8 @@ const OneDay = ({navigation, route}: any) => {
                   source={require('../../Icon/Images/NewImage/ads.png')}
                   style={{width: 25, height: 25}}
                 />
-                <Text style={[styles.buttonText, {color: '#505050'}]}>
-                  Whatch Ads to unlock Workouts
+                <Text style={[styles.buttonText, {color: '#505050', left: 10}]}>
+                  Watch Ads to unlock Workouts
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
@@ -542,7 +612,6 @@ const OneDay = ({navigation, route}: any) => {
           ))}
         </ScrollView>
         <GradientButton
-
           text={`Start Day ${day}`}
           h={80}
           alignSelf
@@ -550,26 +619,22 @@ const OneDay = ({navigation, route}: any) => {
           mB={40}
           onPress={() => {
             analytics().logEvent(`CV_FITME_STARTED_DAY_${day}_EXERCISES`);
-        
+
             if (data.workout_price == 'free') {
               postCurrentDayAPI();
-         
             } else if (
               data?.workout_price == 'Premium' &&
               getPurchaseHistory[0]?.plan_end_date >=
                 moment().format('YYYY-MM-DD')
             ) {
               postCurrentDayAPI();
-       
             } else if (
               data?.workout_price == 'Premium' &&
               getPurchaseHistory[0]?.plan_end_date <
                 moment().format('YYYY-MM-DD')
             ) {
               dispatch(setSubscriptiomModal(true));
-            }
-         
-             else {
+            } else {
               dispatch(setSubscriptiomModal(true));
             }
 
@@ -643,16 +708,14 @@ const styles = StyleSheet.create({
     lineHeight: 30,
   },
   box: {
-    // flex: 1,
-    width: DeviceWidth,
-    justifyContent: 'center',
+    width: '100%',
+    padding: 10,
+    justifyContent: 'space-between',
+    alignSelf: 'center',
     alignItems: 'center',
-    alignSelf: 'flex-start',
-    padding: 0,
-    paddingRight: 20,
-    borderRadius: 15,
-    marginLeft: -DeviceHeigth * 0.03,
-    marginVertical: 5,
+    marginVertical: 0,
+
+    flexDirection: 'row',
   },
   modalBackGround: {
     flex: 1,
@@ -671,7 +734,9 @@ const styles = StyleSheet.create({
   buttonPaddo: {
     height: 45,
     borderRadius: 10,
-    width: DeviceWidth * 0.4,
+    //width: DeviceWidth * 0.4,
+    paddingLeft: 20,
+    paddingRight: 20,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -691,8 +756,8 @@ const styles = StyleSheet.create({
   buttonPaddo2: {
     flexDirection: 'row',
     height: 45,
-    width: DeviceWidth * 0.8,
-
+    paddingLeft: 20,
+    paddingRight: 20,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',

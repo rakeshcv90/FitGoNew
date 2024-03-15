@@ -162,13 +162,13 @@ const PredictionScreen = ({navigation, route}: any) => {
             marginBottom: -30,
           }}>
           <Text style={[styles.t, {color: AppColor.RED}]}>
-            {currentWeight > TargetWeight
-              ? currentWeight - TargetWeight
-              : TargetWeight - currentWeight}
+          {currentWeight > TargetWeight
+              ? (currentWeight - TargetWeight).toFixed(0)
+              : (TargetWeight - currentWeight).toFixed(0)}
           </Text>
           <Text style={styles.t}>Kg by</Text>
           <Text style={[styles.t, {color: AppColor.RED}]}>
-            {finalDate ? moment(finalDate).format('DD MMMM YYYY') : ''}
+            {finalDate ? moment(finalDate).format('DD MMM YYYY') : ''}
           </Text>
         </View>
       </View>
