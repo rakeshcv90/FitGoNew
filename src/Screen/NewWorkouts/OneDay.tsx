@@ -237,7 +237,7 @@ const OneDay = ({navigation, route}: any) => {
               style={{height: 75, width: 75, alignSelf: 'center'}}
               resizeMode="contain"
             />
-            {trackerData[index - 1]?.exercise_status == 'completed' && (
+        {trackerData[index - 1]?.exercise_status == 'completed' && (
               <Image
                 source={localImage.Complete}
                 style={{
@@ -248,13 +248,13 @@ const OneDay = ({navigation, route}: any) => {
                       ? DeviceHeigth * 0.05
                       : DeviceHeigth > 667
                       ? DeviceHeigth * 0.05
-                      : DeviceHeigth * 0.016,
+                      : DeviceHeigth * 0.06,
                   marginTop:
                     Platform.OS == 'android'
                       ? -DeviceHeigth * 0.035
                       : DeviceHeigth > 667
                       ? -DeviceHeigth * 0.03
-                      : -DeviceHeigth * 0.015,
+                      : -DeviceHeigth * 0.035,
                 }}
                 resizeMode="contain"
               />
