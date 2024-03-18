@@ -79,11 +79,11 @@ const Subscription = ({navigation}) => {
   //   };
   // }, []);
 
-  useEffect(()=>{
-    if(isFocuse){
+  useEffect(() => {
+    if (isFocuse) {
       PurchaseDetails(getUserDataDetails.id, getUserDataDetails.login_token);
     }
-  },[isFocuse])
+  }, [isFocuse]);
   // useEffect(() => {
   //   const purchaseUpdateSubscription = RNIap.purchaseUpdatedListener(
   //     async purchase => {},
@@ -108,49 +108,47 @@ const Subscription = ({navigation}) => {
   // }, []);
   useEffect(() => {
     purchaseUpdateSubscription1 = RNIap.purchaseUpdatedListener(
-        async purchase => {
-           
-            const receipt = purchase.transactionReceipt;
-            if (receipt) {
-                await RNIap.finishTransaction({ purchase });
-            }
-        },
+      async purchase => {
+        const receipt = purchase.transactionReceipt;
+        if (receipt) {
+          await RNIap.finishTransaction({purchase});
+        }
+      },
     );
     purchaseErrorSubscription1 = RNIap.purchaseErrorListener(error => {
-   
-        if (Platform.OS == 'android') {
-            showMessage({
-                message: error.message,
-                titleStyle: { textAlign: 'center' },
-                type: 'danger'
-            })
+      if (Platform.OS == 'android') {
+        showMessage({
+          message: error.message,
+          titleStyle: {textAlign: 'center'},
+          type: 'danger',
+        });
+      } else {
+        if (error.responseCode === '2') {
+          showMessage({
+            message: 'You have cancelled the transaction. Please try again.',
+            titleStyle: {textAlign: 'center'},
+            type: 'danger',
+          });
         } else {
-            if (error.responseCode === '2') {
-                showMessage({
-                    message: 'You have cancelled the transaction. Please try again.',
-                    titleStyle: { textAlign: 'center' },
-                    type: 'danger'
-                })
-            } else {
-                showMessage({
-                    message: error.message,
-                    titleStyle: { textAlign: 'center' },
-                    type: 'danger'
-                })
-            }
+          showMessage({
+            message: error.message,
+            titleStyle: {textAlign: 'center'},
+            type: 'danger',
+          });
         }
+      }
     });
     return () => {
-        if (purchaseUpdateSubscription1) {
-            purchaseUpdateSubscription1.remove();
-            purchaseUpdateSubscription1 = null;
-        }
-        if (purchaseErrorSubscription1) {
-            purchaseErrorSubscription1.remove();
-            purchaseErrorSubscription1 = null;
-        }
+      if (purchaseUpdateSubscription1) {
+        purchaseUpdateSubscription1.remove();
+        purchaseUpdateSubscription1 = null;
+      }
+      if (purchaseErrorSubscription1) {
+        purchaseErrorSubscription1.remove();
+        purchaseErrorSubscription1 = null;
+      }
     };
-}, []);
+  }, []);
   const validateIOS = async receipt => {
     // const purchases = await RNIap.getAvailablePurchases();
     // const latestPurchase = purchases[purchases.length - 1];
@@ -402,7 +400,7 @@ const Subscription = ({navigation}) => {
           token: login_token,
         },
       });
-      console.log('Dddd4454545454554', res.data.data);
+
       if (res?.data?.data?.length > 0) {
         dispatch(setPurchaseHistory(res.data.data));
         setForLoading(false);
@@ -687,7 +685,7 @@ const Subscription = ({navigation}) => {
             marginRight: 5,
             backgroundColor: '#D5191A33',
           }}>
-          <Text>3 Day Free Trial</Text>
+          <Text>3 Days Free Trial</Text>
         </View>
       );
   };
@@ -1142,8 +1140,9 @@ const Subscription = ({navigation}) => {
                     paddingRight: 10,
                     color: '#505050',
                   }}>
-                  'Payment is Non-Refundable. We recommend you to review the
-                  terms of use before proceeding with any online transaction'
+                  {Platform.OS == 'android'
+                    ? `You can cancel your subscription anytime from Google Play Store. On Cancellation Payment is Non-Refundable, but you still access the features of subscription period. We recommend you to review the terms of use before proceeding with any online transaction.`
+                    : `Payment is Non-Refundable. We recommend you to review the terms of use before proceeding with any online transaction`}
                 </Text>
               </View>
             </View>
