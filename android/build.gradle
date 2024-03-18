@@ -14,11 +14,21 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven {url 'https://developer.huawei.com/repo/'}
     }
     dependencies {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath 'com.google.gms:google-services:4.4.0'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
+        classpath 'com.huawei.agconnect:agcp:1.6.0.300'
     }
+}
+
+allprojects {      
+       repositories {       
+           google()        
+           mavenCentral()       
+           maven {url 'https://developer.huawei.com/repo/'}     
+       }    
 }
