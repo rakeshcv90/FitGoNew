@@ -1,11 +1,11 @@
 import {
   Image,
+  Modal,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
@@ -25,7 +25,9 @@ import axios from 'axios';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import analytics from '@react-native-firebase/analytics';
-import {MyInterstitialAd} from '../../Component/BannerAdd';
+import {MyInterstitialAd, MyRewardedAd} from '../../Component/BannerAdd';
+import {setSubscriptiomModal} from '../../Component/ThemeRedux/Actions';
+import AnimatedLottieView from 'lottie-react-native';
 const WorkoutDays = ({navigation, route}: any) => {
   const {data} = route.params;
   const [selected, setSelected] = useState(0);
@@ -39,9 +41,15 @@ const WorkoutDays = ({navigation, route}: any) => {
   const [exerciseData, setExerciseData] = useState([]);
   let isFocuse = useIsFocused();
   const dispatch = useDispatch();
-
+  const [reward, setreward] = useState(0);
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
+  );
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
+  );
+  const getSubscriptionModal = useSelector(
+    (state: any) => state.getSubscriptionModal,
   );
   let totalTime = 0,
     restDays = [];
@@ -52,9 +60,10 @@ const WorkoutDays = ({navigation, route}: any) => {
     totalTime = totalTime + parseInt(data?.days[day]?.total_rest);
   }
   useEffect(() => {
-    if(isFocuse){
+    if (isFocuse) {
       postViewsAPI();
       getCurrentDayAPI();
+      setreward(0);
     }
   }, [isFocuse]);
   const getCurrentDayAPI = async () => {
@@ -182,7 +191,6 @@ const WorkoutDays = ({navigation, route}: any) => {
       });
 
       if (res.data?.msg == 'Workout views ') {
-     
       }
       setRefresh(false);
     } catch (error) {
@@ -190,7 +198,185 @@ const WorkoutDays = ({navigation, route}: any) => {
       setRefresh(false);
     }
   };
+  if (reward == 1) {
+    setreward(0);
+    navigation.navigate('Exercise', {
+      allExercise: exerciseData,
+      currentExercise:
+        trainingCount == -1
+          ? exerciseData[0]
+          : exerciseData[trainingCount],
+      data: data,
+      day: day,
+      exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
+      trackerData: trackerData,
+    });
+  }
+  const PaddoMeterPermissionModal = () => {
+    return (
+      <Modal
+        transparent
+        visible={getSubscriptionModal}
+        onRequestClose={() => {
+          dispatch(setSubscriptiomModal(false));
+        }}>
+        <View style={styles.modalBackGround}>
+          <View
+            style={[
+              styles.modalContainer,
+              {
+                // height:
+                //   Platform.OS == 'android'
+                //     ? DeviceHeigth * 0.6
+                //     : DeviceHeigth >= 932
+                //     ? DeviceHeigth * 0.45
+                //     : DeviceHeigth * 0.55,
+              },
+            ]}>
+            <Icons
+              name="close"
+              color={AppColor.DARKGRAY}
+              size={30}
+              onPress={() => {
+                dispatch(setSubscriptiomModal(false));
+              }}
+              style={{
+                justifyContent: 'flex-end',
+                alignSelf: 'flex-end',
+                padding: 10,
+              }}
+            />
+            <AnimatedLottieView
+              source={require('../../Icon/Images/NewImage/Subscription.json')}
+              speed={2}
+              autoPlay
+              resizeMode="cover"
+              loop
+              style={{
+                width: DeviceWidth * 0.3,
+                height: DeviceHeigth * 0.2,
+                top: -DeviceHeigth * 0.06,
+              }}
+            />
+            <View
+              style={{
+                height: 40,
+                alignItems: 'center',
+                alignSelf: 'center',
+                top: -DeviceHeigth * 0.05,
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontFamily: 'Poppins',
+                  textAlign: 'center',
+                  color: '#D5191A',
+                  fontWeight: '700',
+                  backgroundColor: 'transparent',
+                  lineHeight: 30,
+                }}>
+                Premium Feature
+              </Text>
+              <View
+                style={{
+                  marginVertical: 10,
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    fontFamily: 'Poppins',
+                    textAlign: 'center',
+                    color: '#696969',
+                    fontWeight: '700',
+                    backgroundColor: 'transparent',
+                    lineHeight: 15,
+                  }}>
+                  This feature is locked
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    fontFamily: 'Poppins',
+                    textAlign: 'center',
+                    color: '#696969',
+                    fontWeight: '700',
+                    backgroundColor: 'transparent',
+                    lineHeight: 15,
+                    marginTop: 5,
+                  }}>
+                  {' '}
+                  please subscribe to access
+                </Text>
+              </View>
+            </View>
 
+            <TouchableOpacity
+              style={[styles.buttonPaddo]}
+              activeOpacity={0.5}
+              onPress={() => {
+                navigation.navigate('Subscription');
+                dispatch(setSubscriptiomModal(false));
+              }}>
+              <LinearGradient
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 0}}
+                colors={['#D5191A', '#941000']}
+                style={[
+                  styles.buttonPaddo,
+                  {
+                    justifyContent: 'space-evenly',
+                  },
+                ]}>
+                <Image
+                  source={require('../../Icon/Images/NewImage/vip.png')}
+                  style={{width: 25, height: 25}}
+                  tintColor={AppColor.WHITE}
+                />
+                <Text style={[styles.buttonText, {left: 10}]}>Subscribe</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+            <View style={{marginVertical: 10}}>
+              <Text style={[styles.buttonText, {color: '#505050'}]}>OR</Text>
+            </View>
+            <TouchableOpacity
+              style={[
+                styles.buttonPaddo2,
+                {
+                  justifyContent: 'space-evenly',
+                },
+              ]}
+              activeOpacity={0.5}
+              onPress={() => {
+                MyRewardedAd(setreward).load();
+                dispatch(setSubscriptiomModal(false));
+              }}>
+              <LinearGradient
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 0}}
+                colors={['#D9D9D9', '#D9D9D9']}
+                style={[
+                  styles.buttonPaddo2,
+                  {
+                    justifyContent: 'space-evenly',
+                  },
+                ]}>
+                <Image
+                  source={require('../../Icon/Images/NewImage/ads.png')}
+                  style={{width: 25, height: 25}}
+                />
+                <Text style={[styles.buttonText, {color: '#505050', left: 10}]}>
+                  Watch Ads to unlock Workouts
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
   const BlackCircle = ({indexes, select, index}: any) => {
     return (
       <View
@@ -397,17 +583,45 @@ const WorkoutDays = ({navigation, route}: any) => {
             }
             h={DeviceHeigth * 0.08}
             onPress={() => {
-              navigation.navigate('Exercise', {
-                allExercise: exerciseData,
-                currentExercise:
-                  trainingCount == -1
-                    ? exerciseData[0]
-                    : exerciseData[trainingCount],
-                data: data,
-                day: day,
-                exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
-                trackerData: trackerData,
-              });
+              analytics().logEvent(`CV_FITME_START_TRAINING_${day}_EXERCISES`);
+
+              if (data.workout_price == 'free') {
+                navigation.navigate('Exercise', {
+                  allExercise: exerciseData,
+                  currentExercise:
+                    trainingCount == -1
+                      ? exerciseData[0]
+                      : exerciseData[trainingCount],
+                  data: data,
+                  day: day,
+                  exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
+                  trackerData: trackerData,
+                });
+              } else if (
+                data?.workout_price == 'Premium' &&
+                getPurchaseHistory[0]?.plan_end_date >=
+                  moment().format('YYYY-MM-DD')
+              ) {
+                navigation.navigate('Exercise', {
+                  allExercise: exerciseData,
+                  currentExercise:
+                    trainingCount == -1
+                      ? exerciseData[0]
+                      : exerciseData[trainingCount],
+                  data: data,
+                  day: day,
+                  exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
+                  trackerData: trackerData,
+                });
+              } else if (
+                data?.workout_price == 'Premium' &&
+                getPurchaseHistory[0]?.plan_end_date <
+                  moment().format('YYYY-MM-DD')
+              ) {
+                dispatch(setSubscriptiomModal(true));
+              } else {
+                dispatch(setSubscriptiomModal(true));
+              }
             }}
           />
         )}
@@ -539,6 +753,7 @@ const WorkoutDays = ({navigation, route}: any) => {
         </>
       )}
       <ActivityLoader visible={refresh} />
+      <PaddoMeterPermissionModal />
     </View>
   );
 };
@@ -589,5 +804,72 @@ const styles = StyleSheet.create({
         // shadowRadius: 10,
       },
     }),
+  },
+  modalBackGround: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    width: '90%',
+    paddingBottom: 30,
+    backgroundColor: 'white',
+    borderRadius: 26,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonPaddo: {
+    height: 45,
+    borderRadius: 10,
+    //width: DeviceWidth * 0.4,
+    paddingLeft: 20,
+    paddingRight: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    // shadowColor: 'rgba(0, 0, 0, 1)',
+    ...Platform.select({
+      ios: {
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.3,
+        // shadowRadius: 4,
+      },
+      android: {
+        elevation: 200,
+      },
+    }),
+  },
+  buttonPaddo2: {
+    flexDirection: 'row',
+    height: 45,
+    paddingLeft: 20,
+    paddingRight: 20,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+
+    //bottom: DeviceHeigth * 0.05,
+    shadowColor: 'rgba(0, 0, 0, 1)',
+    ...Platform.select({
+      ios: {
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.3,
+        // shadowRadius: 4,
+      },
+      android: {
+        elevation: 100,
+      },
+    }),
+  },
+  buttonText: {
+    fontSize: 16,
+    fontFamily: 'Poppins',
+    textAlign: 'center',
+    color: AppColor.WHITE,
+    fontWeight: '700',
+    backgroundColor: 'transparent',
   },
 });
