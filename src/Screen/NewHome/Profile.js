@@ -54,10 +54,9 @@ import ActivityLoader from '../../Component/ActivityLoader';
 
 import analytics from '@react-native-firebase/analytics';
 
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder'
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 
-
-const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const Profile = () => {
   const {getUserDataDetails, ProfilePhoto, getSoundOffOn, allWorkoutData} =
@@ -72,7 +71,7 @@ const Profile = () => {
   const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const avatarRef = React.createRef()
+  const avatarRef = React.createRef();
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   const toggleSwitch3 = () => {
@@ -91,7 +90,6 @@ const Profile = () => {
           method: 'get',
         });
         if (res.data) {
-         
           setForLoading(false);
           setModalVisible(false);
           showMessage({
@@ -293,6 +291,17 @@ const Profile = () => {
       text1: 'Privacy Policy',
     },
     {
+      id: 10,
+      icon1: (
+        <Image
+          source={localImage.Policy}
+          style={[styles.IconView, {height: 21, width: 22}]}
+          resizeMode="center"
+        />
+      ),
+      text1: 'Terms Condition',
+    },
+    {
       id: 9,
       icon1: (
         <Image
@@ -357,7 +366,6 @@ const Profile = () => {
       }
     };
     const UploadImage = async selectedImage => {
-     
       try {
         let payload = new FormData();
         payload.append('token', getUserDataDetails?.login_token);
@@ -368,7 +376,7 @@ const Profile = () => {
           type: selectedImage?.type,
           uri: selectedImage?.uri,
         });
-      
+
         const ProfileData = await axios({
           url: NewAppapi.Upload_Profile_picture,
           method: 'POST',
@@ -377,9 +385,8 @@ const Profile = () => {
           },
           data: payload,
         });
-     
+
         if (ProfileData.data) {
-        
           getProfileData(getUserDataDetails?.id);
           setImguploaded(true);
           if (IsimgUploaded == true) {
@@ -387,7 +394,6 @@ const Profile = () => {
             setPhotoUploaded(false);
           }
         }
-   
       } catch (error) {
         setImguploaded(true);
         if (IsimgUploaded == true) {
@@ -404,9 +410,9 @@ const Profile = () => {
         try {
           const resultCamera = await launchCamera({
             mediaType: 'photo',
-            quality:1,
-            maxWidth:500,
-            maxHeight:400
+            quality: 1,
+            maxWidth: 500,
+            maxHeight: 400,
           });
           setUserAvatar(resultCamera.assets[0]);
           if (resultCamera) {
@@ -437,16 +443,15 @@ const Profile = () => {
       }
     };
     const askPermissionForLibrary = async permission => {
-  
       const resultLib = await request(permission);
-  
+
       if (resultLib == 'granted') {
         try {
           const resultLibrary = await launchImageLibrary({
             mediaType: 'photo',
             quality: 0.5,
-            maxWidth:300,
-            maxHeight:200
+            maxWidth: 300,
+            maxHeight: 200,
           });
           setUserAvatar(resultLibrary.assets[0]);
 
@@ -600,7 +605,6 @@ const Profile = () => {
                       onPress={() => {
                         setImguploaded(false);
                         UploadImage(userAvatar);
-                   
                       }}>
                       <Text style={[styles.cameraText]}>Upload Image</Text>
                     </TouchableOpacity>
@@ -651,7 +655,10 @@ const Profile = () => {
               justifyContent: 'space-between',
               flexDirection: 'row',
               margin: 15,
-              marginVertical: Platform.OS == 'ios' ? DeviceHeigth * 0.05 :  DeviceHeigth * 0.02,
+              marginVertical:
+                Platform.OS == 'ios'
+                  ? DeviceHeigth * 0.05
+                  : DeviceHeigth * 0.02,
               alignItems: 'center',
             }}>
             <TouchableOpacity
@@ -678,7 +685,7 @@ const Profile = () => {
               }}>
               <TouchableOpacity
                 onPress={() => {
-                  analytics().logEvent("CV_FITME_SIGNED_OUT")
+                  analytics().logEvent('CV_FITME_SIGNED_OUT');
                   LogOut(dispatch);
                   // navigation.navigate('SplaceScreen');
                 }}
@@ -709,11 +716,11 @@ const Profile = () => {
               {marginTop: Platform.OS == 'ios' ? -DeviceHeigth * 0.035 : 0},
             ]}>
             {isLoading && (
-               <ShimmerPlaceholder
-               style={styles.loader}
-               ref={avatarRef}
-               autoRun
-             />
+              <ShimmerPlaceholder
+                style={styles.loader}
+                ref={avatarRef}
+                autoRun
+              />
             )}
             <Image
               source={
@@ -728,9 +735,9 @@ const Profile = () => {
               style={styles.ButtonPen}
               activeOpacity={0.6}
               onPress={() => {
-                setUpadteScreenVisibilty(true)
-                analytics().logEvent("CV_FITME_CLICKED_ON_EDIT_PROFILE")
-                }}>
+                setUpadteScreenVisibilty(true);
+                analytics().logEvent('CV_FITME_CLICKED_ON_EDIT_PROFILE');
+              }}>
               <Image
                 source={localImage.Pen}
                 style={styles.pen}
@@ -794,24 +801,22 @@ const Profile = () => {
             style={styles.SingleButton}
             navigation
             onPress={() => {
+              analytics().logEvent(
+                `CV_FITME_CLICKED_ON_${value?.text1?.replace(' ', '_')}`,
+              );
 
-              analytics().logEvent(`CV_FITME_CLICKED_ON_${value?.text1?.replace(" ","_")}`)
-     
-
+              console.log('ZXcsdcfdsfsdfsd', value.text1);
               if (value.text1 == 'Personal Details') {
                 navigation.navigate('NewPersonalDetails');
-              } else if (value.text1 == 'Contact Us') {
-                openMailApp();
               } else if (value.text1 == 'My Favorites') {
                 navigation?.navigate('AllWorkouts', {
                   data: allWorkoutData,
                   type: '',
                   fav: true,
                 });
-              } else if(value.text1 == 'Subscription'){
+              } else if (value.text1 == 'Subscription') {
                 navigation.navigate('Subscription');
-              }
-                else {
+              } else {
                 showMessage({
                   message: 'Work In Progress',
                   type: 'info',
@@ -931,10 +936,18 @@ const Profile = () => {
               style={[styles.SingleButton, {}]}
               navigation
               onPress={() => {
-                analytics().logEvent(`CV_FITME_CLICKED_ON_${value?.text1?.replace(" ","_")}`)
+                analytics().logEvent(
+                  `CV_FITME_CLICKED_ON_${value?.text1?.replace(' ', '_')}`,
+                );
                 // navigation.navigate('Personal Details');
                 if (value.text1 == 'Privacy Policy') {
-                  navigation.navigate('TermaAndCondition');
+                  navigation.navigate('TermaAndCondition',{title:'Privacy & Policy'});
+                } else if (value.text1 == 'Terms Condition') {
+                  navigation.navigate('TermaAndCondition',{title:'Terms & Condition'});
+                } 
+                
+                else if (value.text1 == 'Contact Us') {
+                  openMailApp();
                 } else if (value.text1 == 'Rate Us') {
                   if (Platform.OS == 'ios') {
                     Linking.openURL(

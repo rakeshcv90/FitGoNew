@@ -75,7 +75,7 @@ const SplaceScreen = ({navigation}) => {
       initInterstitial();
       setTimeout(() => {
         loadScreen();
-      }, 2000);
+      }, 2500);
     }
   }, [closed]);
   const getPlanData = () => {

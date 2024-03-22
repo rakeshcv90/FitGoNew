@@ -1130,7 +1130,7 @@ const Signup = ({navigation}) => {
                       By continuing you accept our{' '}
                       <Text
                         onPress={() => {
-                          navigationRef.navigate('TermaAndCondition');
+                          navigationRef.navigate('TermaAndCondition',{title:'Privacy & Policy'});
                         }}
                         style={styles.policyText1}>
                         Privacy Policy
@@ -1139,7 +1139,7 @@ const Signup = ({navigation}) => {
                       <Text
                         style={styles.policyText1}
                         onPress={() => {
-                          navigationRef.navigate('TermaAndCondition');
+                          navigationRef.navigate('TermaAndCondition',{title:'Terms & Condition'});
                         }}>
                         {' '}
                         Terms of use
