@@ -19,33 +19,34 @@ import {useNavigation} from '@react-navigation/native';
 import Loader from '../Component/Loader';
 import HeaderWithoutSearch from '../Component/HeaderWithoutSearch';
 import CustomStatusBar from '../Component/CustomStatusBar';
-const TermaAndCondition = () => {
+import {WebView} from 'react-native-webview';
+const TermaAndCondition = ({route}) => {
   const {width} = useWindowDimensions();
   const [isLoaded, setIsLoaded] = useState(false);
   const {defaultTheme} = useSelector(state => state);
   const [Terms, setTerms] = useState([]);
-  useEffect(() => {
-    getData();
-  }, []);
-  const getData = async () => {
-    try {
-      const data = await axios(
-        `https://fitme.cvinfotech.in/json/data_strings.php`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'Multipart/form-data',
-          },
-        },
-      );
+  // useEffect(() => {
+  //   getData();
+  // }, []);
+  // const getData = async () => {
+  //   try {
+  //     const data = await axios(
+  //       `https://fitme.cvinfotech.in/json/data_strings.php`,
+  //       {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'Multipart/form-data',
+  //         },
+  //       },
+  //     );
 
-      setTerms(data.data);
-      setIsLoaded(true);
-    } catch (error) {
-      console.log('eroror', error);
-    }
-  };
-  if (isLoaded) {
+  //     setTerms(data.data);
+  //     setIsLoaded(true);
+  //   } catch (error) {
+  //     console.log('eroror', error);
+  //   }
+  // };
+
     return (
       <View
         style={[
@@ -66,8 +67,18 @@ const TermaAndCondition = () => {
             </>
           )}
         </View>
-        <HeaderWithoutSearch Header={'Terms & Privacy'} />
-        <View style={{flex: 1, marginHorizontal: 8}}>
+        <HeaderWithoutSearch Header={route.params.title} />
+
+        <WebView
+          source={{
+            uri:
+              route.params.title === 'Privacy & Policy'
+                ? 'https://thefitnessandworkout.com/privacy-policy/'
+                : 'https://thefitnessandworkout.com/terms-condition/',
+          }}
+          style={{flex: 1}}
+        />
+        {/* <View style={{flex: 1, marginHorizontal: 8}}>
           <FlatList
             data={Terms}
             showsVerticalScrollIndicator={false}
@@ -113,12 +124,10 @@ const TermaAndCondition = () => {
             removeClippedSubviews={true}
             keyExtractor={(item, index) => index.toString()}
           />
-        </View>
+        </View> */}
       </View>
     );
-  } else {
-    return <Loader />;
-  }
+
 };
 const styles = StyleSheet.create({
   container: {
