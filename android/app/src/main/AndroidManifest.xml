@@ -40,7 +40,9 @@
         <meta-data
             android:name="com.facebook.sdk.ClientToken"
             android:value="@string/facebook_client_token" />
-
+ <meta-data
+    android:name="com.google.firebase.messaging.default_notification_channel_id"
+    android:value="@string/default_notification_channel_id" tools:replace="android:value" />
         <provider
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider1530298334174272"

@@ -12,7 +12,7 @@ import {
   import {AppColor} from '../Color';
   import {useNavigation} from '@react-navigation/native';
   import {getStatusBarHeight} from 'react-native-status-bar-height';
-  const NewHeader = ({header, backButton, SearchButton,onPress}) => {
+  const NewHeader = ({header, backButton, SearchButton,onPress,color}) => {
     const navigation = useNavigation();
   
     return (
@@ -26,6 +26,7 @@ import {
                 : (DeviceHeigth * 10) / 100,
             left: 1,
             paddingTop: Platform.OS == 'android' ? DeviceHeigth * 0.03 : 0.01,
+            backgroundColor:color?color:'#fff'
           },
         ]}>
         {!backButton ? (

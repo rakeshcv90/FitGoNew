@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity, FlatList, useWi
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import HTMLRender from "react-native-render-html";
-import { DeviceWidth, DeviceHeigth } from '../Component/Config';
+import { DeviceWidth, DeviceHeigth, NewApi } from '../Component/Config';
 import { Api, Appapi } from '../Component/Config';
 import { localImage } from '../Component/Image';
 import axios from 'axios';
@@ -20,13 +20,13 @@ const TermaAndCondition = () => {
   }, []);
   const getData = async () => {
     try {
-      const data = await axios(`${Api}/${Appapi.Strings}`, {
+      const data = await axios(`https://fitme.cvinfotech.in/json/data_strings.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'Multipart/form-data',
         },
       });
-      console.log("Aboiutsygsyuw", data.data)
+    
       setTerms(data.data)
       setIsLoaded(true);
     }

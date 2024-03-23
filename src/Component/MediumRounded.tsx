@@ -11,7 +11,7 @@ import React, {FC} from 'react';
 import {AppColor} from './Color';
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {localImage} from './Image';
-import { navigationRef } from '../../App';
+import {navigationRef} from '../../App';
 
 export type Props = {
   viewAllButton?: boolean;
@@ -29,7 +29,7 @@ const MediumRounded: FC<Props> = ({...props}) => {
         </Text>
         {props.viewAllButton && (
           <Text
-          onPress={props.viewAllPress}
+            onPress={props.viewAllPress}
             style={[
               styles.category,
               {fontSize: 12, color: 'rgba(80, 80, 80, 0.6) '},
@@ -75,11 +75,33 @@ const MediumRounded: FC<Props> = ({...props}) => {
                       marginLeft: index == 0 ? 5 : 10,
                     },
                   ]}>
+                    {console.log(DeviceHeigth)}
+                  <Image
+                    source={
+                      item.workout_price == 'Premium'
+                        ? require('../Icon/Images/NewImage/premium.png')
+                        : require('../Icon/Images/NewImage/free.png')
+                    }
+                    resizeMode="contain"
+                    style={{
+                      width: 100,
+                      height: 50,
+                      top:
+                        Platform.OS == 'android'
+                          ? DeviceHeigth * 0.01
+                          : DeviceHeigth>=932? DeviceHeigth * 0.01:DeviceHeigth * 0.014 ,
+                      left:
+                        Platform.OS == 'android'
+                          ? -DeviceWidth * 0.18
+                          :DeviceHeigth>=932? -DeviceWidth * 0.195:-DeviceWidth * 0.18,
+                    }}></Image>
+
                   <Image
                     source={{uri: item?.workout_image_link}}
                     style={{
-                      height: DeviceWidth * 0.35,
+                      height: DeviceWidth * 0.30,
                       width: DeviceWidth * 0.55,
+                      top: -15,
                     }}
                     resizeMode="contain"
                   />

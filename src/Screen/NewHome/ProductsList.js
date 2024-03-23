@@ -21,12 +21,17 @@ import axios from 'axios';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {localImage} from '../../Component/Image';
 import AnimatedLottieView from 'lottie-react-native';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const ProductsList = ({route}) => {
   const [searchText, setsearchText] = useState();
   const [productList, setproductList] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState([]);
-  const [forLoading, setForLoading] = useState(false);
+  const [forLoading, setForLoading] = useState(true);
+  const avatarRef = React.createRef();
   useFocusEffect(
     React.useCallback(() => {
       if (route.params.item) {
@@ -40,12 +45,11 @@ const ProductsList = ({route}) => {
     require('../../Icon/Images/product_1631791758.jpg'),
     require('../../Icon/Images/product_1631811803.jpg'),
     require('../../Icon/Images/product_1631468947.jpg'),
-    require('../../Icon/Images/recipe_1519697004.jpg'),
+
     require('../../Icon/Images/product_1631791758.jpg'),
   ];
 
   const getCaterogy = async type => {
-    setForLoading(true);
     try {
       const data = await axios(`${NewAppapi.Get_Product_List}`, {
         method: 'POST',
@@ -60,10 +64,10 @@ const ProductsList = ({route}) => {
       if (data.data.status == 'data found') {
         setForLoading(false);
         setproductList(data.data.data);
-        setFilteredCategories(data.data.data)
+        setFilteredCategories(data.data.data);
       } else {
         setproductList([]);
-     
+        setForLoading(false);
       }
     } catch (error) {
       setForLoading(false);
@@ -91,13 +95,12 @@ const ProductsList = ({route}) => {
       </View>
     );
   };
-  const updateFilteredCategories = (test) => {
-    
-    const filteredItems = productList.filter((item) =>
-      item.product_title.toLowerCase().includes(test.toLowerCase())
+  const updateFilteredCategories = test => {
+    const filteredItems = productList.filter(item =>
+      item.product_title.toLowerCase().includes(test.toLowerCase()),
     );
 
-   setFilteredCategories(filteredItems);
+    setFilteredCategories(filteredItems);
   };
   return (
     <View style={styles.container}>
@@ -139,12 +142,12 @@ const ProductsList = ({route}) => {
           value={searchText}
           onChangeText={text => {
             setsearchText(text);
-            updateFilteredCategories(text)
+            updateFilteredCategories(text);
           }}
           style={styles.inputText}
         />
       </View>
-      {forLoading ? <ActivityLoader /> : ''}
+
       <View
         style={{
           width: '95%',
@@ -158,9 +161,7 @@ const ProductsList = ({route}) => {
           ImageComponent={FastImage}
           images={data}
           sliderBoxHeight={150}
-          onCurrentImagePressed={index =>
-            console.warn(`image ${index} pressed`)
-          }
+        
           dotColor="#FFEE58"
           inactiveDotColor="#90A4AE"
           paginationBoxVerticalPadding={20}
@@ -208,53 +209,101 @@ const ProductsList = ({route}) => {
           }}>
           Our Products
         </Text>
-        <FlatList
-          data={filteredCategories}
-          numColumns={3}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={item => item.id}
-          renderItem={({item, index}) => {
-            return (
-              <>
-                <TouchableOpacity
-                  style={styles.listItem2}
-                  onPress={()=>{
-                    Linking.openURL(item.product_link)
-                  }}
-                  >
-         
-                  <Image
-                    source={
-                      item.product_image_link == null
-                        ? localImage.Noimage
-                        : {uri: item.product_image_link}
-                    }
-                    style={{
-                      height: 90,
-                      width: 90,
-                      // borderRadius: 180 / 2,
-                      alignSelf: 'center',
-                    }}
-                    resizeMode="contain"></Image>
-                  <View style={{width: 90}}>
-                  <Text
-                  numberOfLines={1}
-                    style={{
-                      fontSize: 12,
-                      fontWeight: '500',
-                      lineHeight: 18,
-                      fontFamily: 'Poppins',
-                      textAlign: 'center',
-                      color: AppColor.BoldText,
-                    }}>
-                    {item.product_title}
-                  </Text></View>
-                </TouchableOpacity>
-              </>
-            );
-          }}
-          ListEmptyComponent={emptyComponent}
-        />
+        <View
+          style={{
+            alignSelf: 'center',
+
+            paddingBottom:
+              Platform.OS == 'android'
+                ? 40
+                : DeviceHeigth <= 667
+                ? DeviceHeigth * 0.15
+                : 15,
+          }}>
+          {forLoading ? (
+            <FlatList
+              data={[1, 2, 3, 4, 5, 6]}
+              numColumns={3}
+              showsVerticalScrollIndicator={false}
+              renderItem={({item, index}) => {
+                return (
+                  <>
+                    <TouchableOpacity style={styles.listItem2}>
+                      <ShimmerPlaceholder
+                        ref={avatarRef}
+                        autoRun
+                        style={{
+                          height: 90,
+                          width: 90,
+                          borderRadius: 180 / 2,
+                          alignSelf: 'center',
+                        }}
+                      />
+
+                      <View style={{width: 90, paddingBottom: 10}}>
+                        <ShimmerPlaceholder
+                          ref={avatarRef}
+                          autoRun
+                          style={{
+                            width: 80,
+                            top: 10,
+                            alignSelf: 'center',
+                          }}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  </>
+                );
+              }}
+            />
+          ) : (
+            <FlatList
+              data={filteredCategories}
+              numColumns={3}
+              showsVerticalScrollIndicator={false}
+              renderItem={({item, index}) => {
+                return (
+                  <>
+                    <TouchableOpacity
+                      style={styles.listItem2}
+                      onPress={() => {
+                        Linking.openURL(item.product_link);
+                      }}>
+                      <Image
+                        source={
+                          item.product_image_link == null
+                            ? localImage.Noimage
+                            : {uri: item.product_image_link}
+                        }
+                        style={{
+                          height: 90,
+                          width: 90,
+                          // borderRadius: 180 / 2,
+                          alignSelf: 'center',
+                        }}
+                        resizeMode="contain"></Image>
+                      <View style={{width: 90}}>
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            fontSize: 12,
+                            fontWeight: '500',
+                            lineHeight: 18,
+                            fontFamily: 'Poppins',
+                            textAlign: 'center',
+                            color: AppColor.BoldText,
+                          }}>
+                          {item.product_title}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </>
+                );
+              }}
+              ListEmptyComponent={emptyComponent}
+            />
+          )}
+        </View>
       </View>
     </View>
   );

@@ -22,9 +22,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {localImage} from '../../Component/Image';
 import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
-
+import analytics from '@react-native-firebase/analytics';
+import { MyInterstitialAd } from '../../Component/BannerAdd';
 const WorkoutDays = ({navigation, route}: any) => {
   const {data} = route.params;
   const [selected, setSelected] = useState(0);
@@ -36,7 +37,7 @@ const WorkoutDays = ({navigation, route}: any) => {
   const [totalCount, setTotalCount] = useState(-1);
   const [trackerData, setTrackerData] = useState([]);
   const [exerciseData, setExerciseData] = useState([]);
-  // console.log(data?.days);
+  let data1=useIsFocused()
   const {allWorkoutData, getUserDataDetails, getCount} = useSelector(
     (state: any) => state,
   );
@@ -51,9 +52,10 @@ const WorkoutDays = ({navigation, route}: any) => {
   useFocusEffect(
     useCallback(() => {
       getCurrentDayAPI();
-      // allWorkoutApi();
+     
     }, []),
   );
+
   const getCurrentDayAPI = async () => {
     try {
       setRefresh(true);
@@ -113,7 +115,7 @@ const WorkoutDays = ({navigation, route}: any) => {
         }
       } else {
         setSelected(0);
-        // console.log('first', res.data);
+     
       }
 
       allWorkoutApi();
@@ -155,7 +157,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           '&workout_id=' +
           data?.workout_id,
       });
-      console.log(res.data?.length, 'DaysData', day);
+   
       if (res.data?.msg != 'no data found.') {
         setExerciseData(res.data);
       } else setExerciseData([]);
@@ -168,6 +170,7 @@ const WorkoutDays = ({navigation, route}: any) => {
   };
   const dispatch = useDispatch();
   const BlackCircle = ({indexes, select, index}: any) => {
+  
     return (
       <View
         style={{
@@ -199,6 +202,9 @@ const WorkoutDays = ({navigation, route}: any) => {
     );
   };
 
+// const resetFitmeCount=()=>{
+//   return null
+// }
   const Phase = ({index, percent, select}: any) => {
     const gradientColors = ['#D5191A', '#941000'];
     return (
@@ -260,11 +266,13 @@ const WorkoutDays = ({navigation, route}: any) => {
     );
   };
 
-  const Box = ({selected, item, index}: any) => {
+  const Box = ({selected, item, index,active}: any) => {
     return (
       <TouchableOpacity
+      disabled={item?.total_rest == 0}
         activeOpacity={1}
         onPress={() => {
+          analytics().logEvent(`CV_FITME_CLICKED_ON_DAY_${index}_EXERCISES`)
           index - 1 == 0
             ? navigation.navigate('OneDay', {
                 data: data,
@@ -272,7 +280,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                 day: index,
                 trainingCount: trainingCount,
               })
-            : selected
+            : active
             ? navigation.navigate('OneDay', {
                 data: data,
                 dayData: item,
@@ -368,7 +376,7 @@ const WorkoutDays = ({navigation, route}: any) => {
             }
             h={DeviceHeigth * 0.08}
             onPress={() => {
-              console.log(exerciseData, 'trackerData', trackerData);
+           
               navigation.navigate('Exercise', {
                 allExercise: exerciseData,
                 currentExercise:
@@ -444,8 +452,8 @@ const WorkoutDays = ({navigation, route}: any) => {
         text={'Today'}
         fontWeight={'500'}
         fontSize={22}
-        width={150}
-        x={1}
+        width={DeviceWidth}
+        x={20}
         marginTop={-10}
       />
       <Text style={[styles.category, {marginTop: 10}]}>
@@ -497,6 +505,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                       )}
                       <Box
                         selected={selected != 0 && index == selected}
+                        active={selected != 0 && index <= selected}
                         index={index + 1}
                         item={item}
                       />

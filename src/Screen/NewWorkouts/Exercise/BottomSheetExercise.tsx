@@ -11,12 +11,18 @@ import BottomSheet from 'react-native-easy-bottomsheet';
 import {AppColor} from '../../../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { showMessage } from 'react-native-flash-message';
 
 const BottomSheetExercise = ({
   isVisible,
   setVisible,
   exerciseData,
   setCurrentData,
+  setPlayW,
+  setPause,
+  setRandomCount,
+  playTimerRef,
+  currentExercise,
 }: any) => {
   const Box = ({selected, item, index}: any) => {
     return (
@@ -24,8 +30,24 @@ const BottomSheetExercise = ({
         key={index}
         activeOpacity={1}
         onPress={() => {
-          setVisible(false);
-          setCurrentData(item);
+          // setVisible(false);
+          // setCurrentData(item);
+          if (currentExercise?.exercise_title == item?.exercise_title) {
+            showMessage({
+              message: 'Current Exercise',
+              type: 'info',
+              animationDuration: 500,
+              floating: true,
+              icon: {icon: 'auto', position: 'left'},
+            });
+          } else {
+            setVisible(false);
+            setCurrentData(item);
+            setPlayW(0);
+            setPause(false);
+            setRandomCount(index);
+            clearInterval(playTimerRef.current);
+          }
         }}
         style={[
           styles.box,

@@ -20,7 +20,7 @@ import {setMindset_Data} from '../../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 const AlcohalConsent = ({navigation, route}) => {
   const{mindSetData}=useSelector(state=>state)
-  console.log("mindsetData",mindSetData)
+
   const Dispatch = useDispatch();
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {

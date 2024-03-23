@@ -49,6 +49,7 @@ import {
   RemoteMessage,
   requestPermissionforNotification,
 } from '../Component/Helper/PushNotification';
+import analytics from '@react-native-firebase/analytics';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 const Signup = ({navigation}) => {
@@ -66,7 +67,7 @@ const Signup = ({navigation}) => {
 
   useEffect(() => {
     requestPermissionforNotification(dispatch);
-    RemoteMessage();
+    // RemoteMessage();
   }, []);
   const PasswordRegex =
     // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -115,6 +116,7 @@ const Signup = ({navigation}) => {
   });
 
   const GoogleSignup = async () => {
+    analytics().logEvent('CV_FITME_GOOGLE_SIGNUP');
     try {
       await GoogleSignin.hasPlayServices();
       const {accessToken, idToken, user} = await GoogleSignin.signIn();
@@ -132,6 +134,7 @@ const Signup = ({navigation}) => {
     }
   };
   const FacebookSignup = () => {
+    analytics().logEvent('CV_FITME_FACEBOOK_SIGNUP');
     LoginManager.logInWithPermissions(['public_profile', 'email']).then(
       function (result) {
         if (result.isCancelled) {
@@ -141,6 +144,7 @@ const Signup = ({navigation}) => {
             currentProfile,
           ) {
             if (currentProfile) {
+              //  console.log("Face Book Data ",currentProfile)
               socialFacebookLogiIn(currentProfile);
             }
           });
@@ -152,6 +156,7 @@ const Signup = ({navigation}) => {
     );
   };
   const onApplePress = async () => {
+    analytics().logEvent('CV_FITME_APPLE_SIGNUP');
     await appleAuth
       .performRequest({
         requestedOperation: appleAuth.Operation.LOGIN,
@@ -183,6 +188,7 @@ const Signup = ({navigation}) => {
           socialtype: 'Apple',
           version: appVersion,
           devicetoken: getFcmToken,
+          platform: Platform.OS,
         },
       });
 
@@ -191,7 +197,7 @@ const Signup = ({navigation}) => {
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
-        console.log('Compleate Profile');
+
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
       } else if (
@@ -199,7 +205,7 @@ const Signup = ({navigation}) => {
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
-        console.log('Compleate Profile1');
+
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
       } else if (
@@ -227,7 +233,7 @@ const Signup = ({navigation}) => {
         });
       } else {
         setForLoading(false);
-        // console.log('user not found');
+
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
       }
@@ -237,6 +243,7 @@ const Signup = ({navigation}) => {
     }
   };
   const handleFormSubmit = async (value, action) => {
+    analytics().logEvent('CV_FITME_REGISTER');
     setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
@@ -255,6 +262,7 @@ const Signup = ({navigation}) => {
           //deviceid: deviceId,
           version: appVersion,
           devicetoken: getFcmToken,
+          platform: Platform.OS,
         },
       });
 
@@ -299,6 +307,7 @@ const Signup = ({navigation}) => {
     }
   };
   const socialLogiIn = async (value, token) => {
+    analytics().logEvent('CV_FITME_GOOGLE_SIGNUP');
     setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
@@ -316,6 +325,7 @@ const Signup = ({navigation}) => {
           //  deviceid: deviceId,
           version: appVersion,
           devicetoken: getFcmToken,
+          platform: Platform.OS,
         },
       });
 
@@ -363,7 +373,7 @@ const Signup = ({navigation}) => {
         await GoogleSignin.signOut();
       } else {
         setForLoading(false);
-        // console.log('user not found');
+
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
         await GoogleSignin.signOut();
@@ -375,14 +385,9 @@ const Signup = ({navigation}) => {
     }
   };
   const socialFacebookLogiIn = async value => {
-    setForLoading(true);
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.signup}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
+    analytics().logEvent('CV_FITME_FACEBOOK_SIGNUP');
+   // setForLoading(true);
+       const   data= {
           name: value.name,
           email: value.email,
           signuptype: 'social',
@@ -392,15 +397,36 @@ const Signup = ({navigation}) => {
           // deviceid: deviceId,
           version: appVersion,
           devicetoken: getFcmToken,
+          platform: Platform.OS,
+        }
+
+    try {
+      const data = await axios(`${NewApi}${NewAppapi.signup}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          name: value.name,
+          email: value.email==undefined?'NULL':value.email,
+          signuptype: 'social',
+          socialid: value.userID,
+          socialtoken: "",
+          socialtype: 'facebook',
+          // deviceid: deviceId,
+          version: appVersion,
+          devicetoken: getFcmToken,
+          platform: Platform.OS,
         },
       });
-
+      setForLoading(false);
+  
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
-        console.log('Compleate Profile');
+
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
       } else if (
@@ -408,7 +434,7 @@ const Signup = ({navigation}) => {
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
-        console.log('Compleate Profile1');
+
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
       } else if (
@@ -437,7 +463,7 @@ const Signup = ({navigation}) => {
         });
       } else {
         setForLoading(false);
-        // console.log('user not found');
+
         dispatch(setUserId(data.data?.id));
         navigationRef.navigate('Yourself');
       }

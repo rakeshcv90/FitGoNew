@@ -22,6 +22,9 @@ import AnimatedLottieView from 'lottie-react-native';
 import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
 import {SetAIMessageHistory} from '../../Component/ThemeRedux/Actions';
+import {Alert} from 'react-native';
+import {MyRewardedAd} from '../../Component/BannerAdd';
+import moment from 'moment';
 
 // const apiKey = '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';
 // const apiKey = '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';
@@ -32,9 +35,10 @@ const systemMessage = {
 };
 const AITrainer = ({navigation}) => {
   const dispatch = useDispatch();
-  const {getAIMessageHistory} = useSelector(state => state);
+  const {getAIMessageHistory, getPurchaseHistory} = useSelector(state => state);
   const [searchText, setSearchText] = useState('');
   const flatListRef = useRef(null);
+  const [reward, setreward] = useState(0);
   const [senderMessage, setsenderMessage] = useState([
     {
       message: 'Hey there! I m your friendly chat bot here to assist you.',
@@ -66,9 +70,72 @@ const AITrainer = ({navigation}) => {
         icon: {icon: 'auto', position: 'left'},
       });
       return false;
-    } else {
-      handleSend(searchText);
-      setSearchText('');
+    }
+    // else if (reward == 1) {
+    //   handleSend(searchText);
+    //   setSearchText('');
+    // }
+    else {
+      if (getPurchaseHistory.length > 0) {
+        if (
+          getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        ) {
+          handleSend(searchText);
+          setSearchText('');
+        } else {
+          if (reward == 1) {
+            handleSend(searchText);
+            setSearchText('');
+          } else {
+            Alert.alert(
+              'Questions Limit Reached!',
+              'Do you want to Continue Asking Questions? Watch Ads or Upgrade your Subscription',
+              [
+                {
+                  text: 'No',
+                  onPress: () => console.log('Cancel Pressed'),
+                  style: 'Yes',
+                },
+                {
+                  text: 'Yes',
+                  onPress: () => {
+                    MyRewardedAd(setreward).load();
+                  },
+                },
+              ],
+              {
+                cancelable: false,
+              },
+            );
+          }
+        }
+      } else {
+        if (reward == 1) {
+          handleSend(searchText);
+          setSearchText('');
+        } else {
+          Alert.alert(
+            'Questions Limit Reached!',
+            'Do you want to Continue Asking Questions? Watch Ads or Upgrade your Subscription',
+            [
+              {
+                text: 'No',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'Yes',
+              },
+              {
+                text: 'Yes',
+                onPress: () => {
+                  MyRewardedAd(setreward).load();
+                },
+              },
+            ],
+            {
+              cancelable: false,
+            },
+          );
+        }
+      }
     }
   };
   const handleSend = async data => {
@@ -153,6 +220,7 @@ const AITrainer = ({navigation}) => {
         ]),
       );
       setSearchText('');
+      setreward(0);
     } catch (error) {
       console.error(error);
     }

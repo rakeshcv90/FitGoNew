@@ -43,7 +43,7 @@ const GradientText = ({item, fontWeight, fontSize, width}: any) => {
 };
 const PredictionScreen = ({navigation, route}: any) => {
   const Av_Cal_Per_KG = 4000; // normally 7500
-  const Av_Cal_Per_2_Workout = 200; // Assuming
+  const Av_Cal_Per_2_Workout = 250; // Assuming
 
   const {getLaterButtonData} = useSelector((state: any) => state);
   const [finalDate, setFinalDate] = useState('');
@@ -69,66 +69,75 @@ const PredictionScreen = ({navigation, route}: any) => {
 
   const CalculateWeight = (currentWeight: number, TargetWeight: number) => {
     let TotalW = 0;
-    let t= 0;
-    console.log("Weightb",mergedObject)
+    let t = 0;
+   
     if (currentWeight > TargetWeight) {
       TotalW = currentWeight - TargetWeight;
     } else {
-       t = TargetWeight - currentWeight;
-      TotalW = t + currentWeight;
-  
+      TotalW = TargetWeight - currentWeight;
+      
     }
-    // const TotalW = currentWeight - TargetWeight;
-    // if (TotalW <= 0) {
-    //   // Avoid unnecessary calculations when the weights are not valid
-    //   return;
-    // }
+    
 
     const totalW_Cal = TotalW * Av_Cal_Per_KG;
     const Result_Number_Of_Days = totalW_Cal / Av_Cal_Per_2_Workout;
     let constantWeightArray = [];
     let weightHistoryArray = [];
     let currentDate = moment();
-    //  const No_Of_Points = Result_Number_Of_Days / 15 > 7 ? 30 : 15;
-     let No_Of_Points = 0
-     if(Result_Number_Of_Days<=30){
-      No_Of_Points=5;
-     }else if(Result_Number_Of_Days>30&&Result_Number_Of_Days<=90){
-      No_Of_Points=15;
-     }else if(Result_Number_Of_Days>90&&Result_Number_Of_Days<=180){
-      No_Of_Points=20;
-     }else if(Result_Number_Of_Days>180&&Result_Number_Of_Days<=365){
-      No_Of_Points=60;
-     }else{
-      No_Of_Points=120;
-     }
+ 
+    let No_Of_Points = 0;
+    if (Result_Number_Of_Days <= 30) {
+      No_Of_Points = 5;
+    } else if (Result_Number_Of_Days > 30 && Result_Number_Of_Days <= 90) {
+      No_Of_Points = 15;
+    } else if (Result_Number_Of_Days > 90 && Result_Number_Of_Days <= 180) {
+      No_Of_Points = 30;
+    } else if (Result_Number_Of_Days > 180 && Result_Number_Of_Days <= 365) {
+      No_Of_Points = 60;
+    } else if (Result_Number_Of_Days > 365 && Result_Number_Of_Days <= 750){
+      No_Of_Points = 120;
+    }else{
+      No_Of_Points = 240
+    }
+    if(currentWeight>TargetWeight){
     for (let i = Result_Number_Of_Days; i > 0; i -= No_Of_Points) {
       const weight15 =
         ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
-      const decWeight =
-        currentWeight > TargetWeight ? currentWeight - weight15 : currentWeight+weight15;
-      console.log(weight15, decWeight);
+      const decWeight =currentWeight - weight15
+   
       const formattedDate = currentDate.format('YYYY-MM-DD');
-      
+
       weightHistoryArray.push({
         weight: decWeight.toFixed(2),
-        // i % 2 === 0
-        //   ? decWeight.toFixed(2)
-        //   : (currentWeight - TargetWeight >= 10 || i > 2
-        //       ? decWeight - 10
-        //       : decWeight
-        //     ).toFixed(2),
+ 
+        date: formattedDate,
+      });
+      constantWeightArray.push({weight: 0, date: formattedDate});
+
+      currentDate = currentDate.add(No_Of_Points, 'days');
+    }
+  }
+  else{
+    for (let i = Result_Number_Of_Days; i >0; i -= No_Of_Points) {
+      const weight15 =
+        ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
+      const decWeight =currentWeight + weight15;
+      console.log(weight15, decWeight);
+      const formattedDate = currentDate.format('YYYY-MM-DD');
+
+      weightHistoryArray.push({
+        weight: decWeight.toFixed(2),
+   
         date: formattedDate,
       });
       constantWeightArray.push({weight: 0, date: formattedDate});
 
       currentDate = currentDate.add(No_Of_Points, 'days');
 
-      // if(currentWeight+weight15 >= TargetWeight){
-      //   break;
-      // }
+   
     }
-    console.log(weightHistoryArray, currentWeight, TargetWeight);
+  }
+
     setZeroData(constantWeightArray);
     setWeightHistory(weightHistoryArray);
 
@@ -158,7 +167,7 @@ const PredictionScreen = ({navigation, route}: any) => {
               : TargetWeight - currentWeight}
           </Text>
           <Text style={styles.t}>Kg by</Text>
-          <Text style={[styles.t, {color: AppColor.RED,}]}>
+          <Text style={[styles.t, {color: AppColor.RED}]}>
             {finalDate ? moment(finalDate).format('DD MMMM YYYY') : ''}
           </Text>
         </View>
@@ -167,7 +176,7 @@ const PredictionScreen = ({navigation, route}: any) => {
         style={{
           justifyContent: 'center',
           alignItems: 'center',
-          marginTop: DeviceHeigth * 0.02,
+          marginTop: DeviceHeigth * 0.01,
         }}>
         <Bulb
           header={
@@ -175,7 +184,13 @@ const PredictionScreen = ({navigation, route}: any) => {
           }
         />
         {weightHistory.length != 0 && zeroData.length != 0 && (
-          <Graph resultData={weightHistory} zeroData={zeroData} home={true} />
+          <Graph
+            resultData={weightHistory}
+            zeroData={zeroData}
+            home={true}
+            currentW={currentWeight}
+            targetW={TargetWeight}
+          />
         )}
       </View>
       {/* <Image
@@ -192,7 +207,7 @@ const PredictionScreen = ({navigation, route}: any) => {
       /> */}
       <View
         style={{
-          bottom: DeviceHeigth * 0.1,
+          bottom: DeviceHeigth * 0.05,
           position: 'absolute',
           alignItems: 'center',
           width: DeviceWidth,
@@ -277,7 +292,7 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     color: AppColor.BLACK,
     marginTop: 5,
-    marginRight:7
+    marginRight: 7,
   },
   nextButton: {
     backgroundColor: 'red',

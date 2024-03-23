@@ -17,12 +17,15 @@ import {useFocusEffect} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
 import axios from 'axios';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const MeditationDetails = ({navigation, route}) => {
   const {customWorkoutData} = useSelector(state => state);
-  const [forLoading, setForLoading] = useState(false);
+  const [forLoading, setForLoading] = useState(true);
   const [mindsetExercise, setmindsetExercise] = useState([]);
-
+  const avatarRef = React.createRef();
   const colors = [
     {color1: '#E2EFFF', color2: '#9CC2F5', color3: '#425B7B'},
     {color1: '#BFF0F5', color2: '#8DD9EA', color3: '#1F6979'},
@@ -140,19 +143,18 @@ const MeditationDetails = ({navigation, route}) => {
         header={
           route?.params?.item.workout_mindset_title
             ? route?.params?.item.workout_mindset_title
-            : 'TEst'
+            : 'Test'
         }
         SearchButton={false}
         backButton={true}
       />
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      {forLoading ? <ActivityLoader /> : ''}
+
       <>
         <View
           style={{
             width: '95%',
             alignSelf: 'center',
-            // backgroundColor:'red',
             top: -DeviceHeigth * 0.02,
             paddingLeft: 20,
           }}>
@@ -221,140 +223,232 @@ const MeditationDetails = ({navigation, route}) => {
           </Text>
         </View>
         <View style={styles.meditionBox}>
-          <FlatList
-            data={mindsetExercise}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={item => item.id}
-            ListEmptyComponent={emptyComponent}
-            renderItem={({item, index}) => {
-              return (
-                <>
-                  <LinearGradient
-                    start={{x: 0, y: 1}}
-                    end={{x: 1, y: 0}}
-                    colors={[
-                      colors[index % colors.length].color1,
-                      colors[index % colors.length].color2,
-                    ]}
-                    style={styles.listItem1}>
-                    <View
-                      style={[
-                        styles.listItem1,
-                        {
-                          marginHorizontal: 0,
-                          flexDirection: 'row',
-                          marginHorizontal: 0,
-
-                          justifyContent: 'space-between',
-                        },
-                      ]}>
+          {forLoading ? (
+            <FlatList
+              data={[1, 2, 3, 4]}
+              showsVerticalScrollIndicator={false}
+              keyExtractor={item => item.id}
+              renderItem={({item, index}) => {
+                return (
+                  <>
+                    <View style={styles.listItem1}>
                       <View
-                        style={{
-                          width: '65%',
-                          height: 150,
-                          paddingLeft: 5,
-                        }}>
-                        <View
-                          style={{
-                            marginVertical: -DeviceHeigth * 0.002,
-                          }}>
-                          <Text
-                            style={{
-                              color: AppColor.LITELTEXTCOLOR,
-                              fontFamily: 'Poppins',
-                              fontWeight: '700',
-                              lineHeight: 21,
-                              fontSize: 14,
-                            }}>
-                            {item.exercise_mindset_title}
-                          </Text>
-                          <Text
-                            numberOfLines={3}
-                            style={{
-                              color: '#505050',
-                              fontFamily: 'Poppins',
-                              fontWeight: '500',
-                              lineHeight: 15,
-                              top: 5,
-                              fontSize: 10,
-                            }}>
-                            {item.exercise_mindset_description}
-                          </Text>
-                        </View>
-                        <View
-                          style={{
+                        style={[
+                          styles.listItem1,
+                          {
+                            marginHorizontal: 0,
                             flexDirection: 'row',
-                            alignItems: 'center',
-                            marginVertical: DeviceHeigth * 0.005,
-                            left: -12,
-                          }}>
-                          <TouchableOpacity
-                            onPress={() => {
-                              navigation.navigate('MeditationExerciseDetails', {
-                                item: item,
-                              });
-                            }}>
-                            <Image
-                              source={localImage.Play2}
-                              style={[
-                                styles.img,
-                                {
-                                  height: 60,
-                                  width: 60,
-                                },
-                              ]}
-                              resizeMode="cover"></Image>
-                          </TouchableOpacity>
-                          <Text
-                            style={{
-                              color: AppColor.LITELTEXTCOLOR,
-                              fontFamily: 'Poppins',
-                              fontWeight: '700',
-                              lineHeight: 21,
-                              fontSize: 14,
-                            }}>
-                            25 Min
-                          </Text>
-                        </View>
-                      </View>
-                      <View
-                        style={{
-                          width: '30%',
-                          height: 150,
+                            marginHorizontal: 0,
 
-                          left: -20,
-                          marginVertical: -DeviceHeigth * 0.01,
-                        }}>
-                        <AnimatedLottieView
-                          source={require('../../Icon/Images/NewImage/MusicAnimation.json')}
-                          speed={2}
-                          autoPlay
-                          loop
+                            justifyContent: 'space-between',
+                          },
+                        ]}>
+                        <View
                           style={{
-                            height: 130,
-                            width: DeviceWidth * 0.3,
-                            position: 'absolute',
-                            top: -20,
-                          }}
-                        />
-                        <Image
-                          source={
-                            item.exercise_mindset_image_link != null
-                              ? {uri: item.exercise_mindset_image_link}
-                              : localImage.Noimage
-                          }
+                            width: '65%',
+                            height: 150,
+                            paddingLeft: 5,
+                          }}>
+                          <View
+                            style={{
+                              marginVertical: -DeviceHeigth * 0.002,
+                            }}>
+                            <ShimmerPlaceholder ref={avatarRef} autoRun />
+                            <ShimmerPlaceholder
+                              style={{marginVertical: 10}}
+                              ref={avatarRef}
+                              autoRun
+                            />
+                          </View>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              marginVertical: DeviceHeigth * 0.005,
+                              left: -2,
+                            }}>
+                            <View>
+                              <ShimmerPlaceholder
+                                ref={avatarRef}
+                                autoRun
+                                style={[
+                                  styles.img,
+                                  {
+                                    height: 60,
+                                    width: 60,
+                                  },
+                                ]}
+                              />
+                            </View>
+                            <ShimmerPlaceholder
+                              style={{marginHorizontal: 10, width: 75}}
+                              ref={avatarRef}
+                              autoRun
+                            />
+                          </View>
+                        </View>
+                        <View
                           style={{
-                            height: 130,
-                            width: DeviceWidth * 0.3,
-                          }}
-                          resizeMode="cover"></Image>
+                            width: '30%',
+                            height: 150,
+
+                            left: -20,
+                            marginVertical: -DeviceHeigth * 0.01,
+                          }}>
+                          <ShimmerPlaceholder
+                            ref={avatarRef}
+                            autoRun
+                            style={{
+                              height: 130,
+                              width: DeviceWidth * 0.3,
+                            }}
+                          />
+                        </View>
                       </View>
                     </View>
-                  </LinearGradient>
-                </>
-              );
-            }}
-          />
+                  </>
+                );
+              }}
+            />
+          ) : (
+            <FlatList
+              data={mindsetExercise}
+              showsVerticalScrollIndicator={false}
+              keyExtractor={item => item.id}
+              ListEmptyComponent={emptyComponent}
+              renderItem={({item, index}) => {
+                return (
+                  <>
+                    <LinearGradient
+                      start={{x: 0, y: 1}}
+                      end={{x: 1, y: 0}}
+                      colors={[
+                        colors[index % colors.length].color1,
+                        colors[index % colors.length].color2,
+                      ]}
+                      style={styles.listItem1}>
+                      <View
+                        style={[
+                          styles.listItem1,
+                          {
+                            marginHorizontal: 0,
+                            flexDirection: 'row',
+                            marginHorizontal: 0,
+
+                            justifyContent: 'space-between',
+                          },
+                        ]}>
+                        <View
+                          style={{
+                            width: '65%',
+                            height: 150,
+                            paddingLeft: 5,
+                          }}>
+                          <View
+                            style={{
+                              marginVertical: -DeviceHeigth * 0.002,
+                            }}>
+                            <Text
+                              style={{
+                                color: AppColor.LITELTEXTCOLOR,
+                                fontFamily: 'Poppins',
+                                fontWeight: '700',
+                                lineHeight: 21,
+                                fontSize: 14,
+                              }}>
+                              {item.exercise_mindset_title}
+                            </Text>
+                            <Text
+                              numberOfLines={3}
+                              style={{
+                                color: '#505050',
+                                fontFamily: 'Poppins',
+                                fontWeight: '500',
+                                lineHeight: 15,
+                                top: 5,
+                                fontSize: 10,
+                              }}>
+                              {item.exercise_mindset_description}
+                            </Text>
+                          </View>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              marginVertical: DeviceHeigth * 0.005,
+                              left: -12,
+                            }}>
+                            <TouchableOpacity
+                              onPress={() => {
+                                navigation.navigate(
+                                  'MeditationExerciseDetails',
+                                  {
+                                    item: item,
+                                  },
+                                );
+                              }}>
+                              <Image
+                                source={localImage.Play2}
+                                style={[
+                                  styles.img,
+                                  {
+                                    height: 60,
+                                    width: 60,
+                                  },
+                                ]}
+                                resizeMode="cover"></Image>
+                            </TouchableOpacity>
+                            <Text
+                              style={{
+                                color: AppColor.LITELTEXTCOLOR,
+                                fontFamily: 'Poppins',
+                                fontWeight: '700',
+                                lineHeight: 21,
+                                fontSize: 14,
+                              }}>
+                              25 Min
+                            </Text>
+                          </View>
+                        </View>
+                        <View
+                          style={{
+                            width: '30%',
+                            height: 150,
+
+                            left: -20,
+                            marginVertical: -DeviceHeigth * 0.01,
+                          }}>
+                          <AnimatedLottieView
+                            source={require('../../Icon/Images/NewImage/MusicAnimation.json')}
+                            speed={2}
+                            autoPlay
+                            loop
+                            style={{
+                              height: 130,
+                              width: DeviceWidth * 0.3,
+                              position: 'absolute',
+                              top: -20,
+                            }}
+                          />
+                          <Image
+                            source={
+                              item.exercise_mindset_image_link != null
+                                ? {uri: item.exercise_mindset_image_link}
+                                : localImage.Noimage
+                            }
+                            style={{
+                              height: 130,
+                              width: DeviceWidth * 0.3,
+                            }}
+                            resizeMode="cover"></Image>
+                        </View>
+                      </View>
+                    </LinearGradient>
+                  </>
+                );
+              }}
+            />
+          )}
         </View>
       </>
     </View>

@@ -1,4 +1,8 @@
 {
   "name": "FitGo",
-  "displayName": "FitGo"
+  "displayName": "FitGo",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-7924921064490662~8184618877",
+    "ios_app_id": "ca-app-pub-7924921064490662~1619210523"
+  }
 }

@@ -143,41 +143,57 @@ export const setSoundOnOff = data => {
     payload: data,
   };
 };
-export const setFcmToken=data=>{
-  return{
-    type:types.FCM_TOKEN,
-    payload:data
-  }
-}
-export const setBmi=data=>{
-  return{
-    type:types.BMI,
-    payload:data
-  }
-}
-export const setHomeGraphData=data=>{
-  return{
-    type:types.HOME_GRAPH_DATA,
-    payload:data
-  }
-}
-export const setWorkoutTimeCal=data=>{
-  return{
-    type:types.Custome_Time_Cal,
-    payload:data
-  }
-}
-export const setProfileImg_Data=data=>{
-  return{
-    type:types.Profile_imgData,
-    payload:data
-  }
-}
-export const setStepCounterOnOff=data=>{
-  return{
-    type:types.IS_STEP_COUNTER_ON,
-    payload:data
-  }
-  
-
-}
+export const setFcmToken = data => {
+  return {
+    type: types.FCM_TOKEN,
+    payload: data,
+  };
+};
+export const setBmi = data => {
+  return {
+    type: types.BMI,
+    payload: data,
+  };
+};
+export const setHomeGraphData = data => {
+  return {
+    type: types.HOME_GRAPH_DATA,
+    payload: data,
+  };
+};
+export const setWorkoutTimeCal = data => {
+  return {
+    type: types.Custome_Time_Cal,
+    payload: data,
+  };
+};
+export const setProfileImg_Data = data => {
+  return {
+    type: types.Profile_imgData,
+    payload: data,
+  };
+};
+export const setStepCounterOnOff = data => {
+  return {
+    type: types.IS_STEP_COUNTER_ON,
+    payload: data,
+  };
+};
+export const setSubscriptiomModal = data => {
+  return {
+    type: types.SUBSCRIPTION_MODAL,
+    payload: data,
+  };
+};
+export const setFitmeAdsCount = data => {
+  return {
+    type: types.FITME_ADD_COUNT,
+    payload: data,
+  };
+};
+export const setFitmeMealAdsCount = data => {
+  return {
+    type: types.FITME_ADD_COUNT_MEALS,
+    payload: data,
+  };
+};

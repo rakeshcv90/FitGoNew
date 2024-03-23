@@ -56,7 +56,7 @@ const Search = () => {
       });
       setSearchedData(ShownData);
       setIsLoaded(true)
-      // console.log("uje",searchedData)
+   
       setText(text)
     }
   };

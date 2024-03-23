@@ -16,44 +16,19 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
 import {useSelector} from 'react-redux';
-
-
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
 import HTMLRender from 'react-native-render-html';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const MealDetails = ({route, navigation}) => {
   const {getUserDataDetails} = useSelector(state => state);
   const [forLoading, setForLoading] = useState(false);
   const [appVersion, setAppVersion] = useState(0);
+  const [imageLoad, setImageLoad] = useState(true);
+  const avatarRef = React.createRef();
 
-  //   const getMealDetails = async () => {
-  //     setForLoading(true);
-  //     try {
-  //       const data = await axios(`${NewAppapi.DietDetails}`, {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'multipart/form-data',
-  //         },
-  //         data: {
-  //           login_token: getUserDataDetails.login_token,
-  //           diet_id: route.params.item.category_id,
-  //           user_id: getUserDataDetails.id,
-  //           version: VersionNumber.appVersion,
-  //         },
-  //       });
-
-  //       if (data.data.length > 0) {
-  //         setForLoading(false);
-  //         setDietDetails(data.data);
-  //       } else {
-  //         setForLoading(false);
-  //         setDietDetails([]);
-  //       }
-  //     } catch (error) {
-  //       setDietDetails([]);
-  //       setForLoading(false);
-  //       console.log('MealDetails List Error', error);
-  //     }
-  //   };
   const customStyles = {
     fontFamily: 'Poppins',
     fontSize: 10,
@@ -67,15 +42,16 @@ const MealDetails = ({route, navigation}) => {
         translucent={true}
         backgroundColor={'transparent'}
       />
+
       <ImageBackground
         translucent={true}
         style={{width: '100%', height: DeviceHeigth * 0.4}}
-  
-        resizeMode='cover'
+        resizeMode="cover"
+
         source={
-          route.params.item.diet_image_link == null
+          route?.params?.item?.diet_image_link == null
             ? localImage.Noimage
-            : {uri: route.params.item.diet_image_link}
+            : {uri: route?.params?.item?.diet_image_link}
         }
       />
 
@@ -147,7 +123,7 @@ const MealDetails = ({route, navigation}) => {
                 fontWeight: '500',
                 color: AppColor.INPUTLABLECOLOR,
                 marginHorizontal: 2,
-                opacity:0.7
+                opacity: 0.7,
               }}>
               {route.params.item.diet_calories} kcal
             </Text>
@@ -181,7 +157,7 @@ const MealDetails = ({route, navigation}) => {
                 fontWeight: '500',
                 color: AppColor.INPUTLABLECOLOR,
                 marginHorizontal: 5,
-                opacity:0.7
+                opacity: 0.7,
               }}>
               {route.params.item.diet_time}
             </Text>
@@ -331,7 +307,6 @@ const MealDetails = ({route, navigation}) => {
                 borderWidth: 1,
                 padding: 10,
                 borderColor: 'rgba(80, 80, 80, 0.6)',
-           
               }}>
               <Text
                 style={{
@@ -389,7 +364,7 @@ var styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 15,
     top: 5,
-    color:'#1E1E1E'
+    color: '#1E1E1E',
   },
   textStyle2: {
     fontFamily: 'Poppins',
@@ -397,7 +372,7 @@ var styles = StyleSheet.create({
     fontSize: 10,
     textAlign: 'center',
     lineHeight: 12,
-    color:'#1E1E1E'
+    color: '#1E1E1E',
   },
 });
 export default MealDetails;
