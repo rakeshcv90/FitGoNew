@@ -106,7 +106,7 @@ const Exercise = ({navigation, route}: any) => {
             } else {
               setTimer(timer - 1);
             }
-            getSoundOffOn && Tts.speak(`${timer - 1}`);
+            // getSoundOffOn && Tts.speak(`${timer - 1}`);
           }, 1000))
         : (playTimerRef.current = setTimeout(() => {
             if (playW >= 100 && randomCount == allExercise?.length) {
@@ -399,6 +399,7 @@ const Exercise = ({navigation, route}: any) => {
               <TouchableOpacity
                 onPress={() => {
                   // Tts.stop();
+                  clearTimeout(restTimerRef.current);
                   setTimer(prevTimer => prevTimer + 30);
                   setSeparateTimer(prevTimer => prevTimer + 30);
                   // Tts.speak(`${separateTimer}`);
