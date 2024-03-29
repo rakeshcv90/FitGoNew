@@ -36,7 +36,7 @@ const Exercise = ({navigation, route}: any) => {
   const [visible, setVisible] = useState(false);
   const [playW, setPlayW] = useState(0);
   const [number, setNumber] = useState(0);
-  const [defaultPre, setDefaultPre] = useState(1);
+  const [currentVideo, setCurrentVideo] = useState('');
   const [pause, setPause] = useState(false);
   const [open, setOpen] = useState(false);
   const [back, setBack] = useState(false);
@@ -46,15 +46,11 @@ const Exercise = ({navigation, route}: any) => {
   const [skipCount, setSkipCount] = useState(0);
   const [currentData, setCurrentData] = useState(currentExercise);
   const [isLoading, setIsLoading] = useState(true);
-  const allWorkoutData = useSelector(
-    (state: any) => state.allWorkoutData,
-  );
+  const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
-  const getSoundOffOn = useSelector(
-    (state: any) => state.getSoundOffOn,
-  );
+  const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
   const [separateTimer, setSeparateTimer] = useState(timer);
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const restTimerRef = useRef(0);
@@ -67,7 +63,7 @@ const Exercise = ({navigation, route}: any) => {
         await Tts.setDefaultLanguage('en-US');
         await Tts.setDucking(true);
         await Tts.setIgnoreSilentSwitch('ignore');
-        
+
         setTtsInitialized(true);
       }
     };
@@ -77,11 +73,9 @@ const Exercise = ({navigation, route}: any) => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-
     if (!back) {
       restStart
-        ? (restTimerRef.current =
-          setTimeout(() => {
+        ? (restTimerRef.current = setTimeout(() => {
             if (timer === 0) {
               if (number == allExercise?.length - 1) return;
               setRestStart(false);
@@ -93,8 +87,10 @@ const Exercise = ({navigation, route}: any) => {
 
               setCurrentData(allExercise[index + 1]);
               // setPre(15);
+              // console.log('VIDEO LOCATIONS', getStoreVideoLoc);
+              handleExerciseChange(allExercise[index + 1]?.exercise_title);
               setNumber(number + 1);
-              setRandomCount(randomCount+1)
+              setRandomCount(randomCount + 1);
               setTimer(15);
             } else if (timer == 15) {
               const index = allExercise?.findIndex(
@@ -110,7 +106,7 @@ const Exercise = ({navigation, route}: any) => {
           }, 1000))
         : (playTimerRef.current = setTimeout(() => {
             if (playW >= 100 && randomCount == allExercise?.length) {
-              navigation.goBack()
+              navigation.goBack();
               clearTimeout(restTimerRef.current);
               clearTimeout(playTimerRef.current);
             }
@@ -140,6 +136,7 @@ const Exercise = ({navigation, route}: any) => {
     if (exerciseNumber != -1 && number == 0) {
       setNumber(exerciseNumber);
       setCurrentData(currentExercise);
+      handleExerciseChange(currentExercise?.exercise_title);
     }
   }, []);
   useEffect(() => {
@@ -168,6 +165,16 @@ const Exercise = ({navigation, route}: any) => {
     };
   }, [navigation]);
 
+  // Function to check if the currently opened exercise exists in the provided JSON object
+  const handleExerciseChange = (exerciseName: string) => {
+    if (getStoreVideoLoc.hasOwnProperty(exerciseName)) {
+      setCurrentVideo(getStoreVideoLoc[exerciseName]);
+      console.log('CURRENT', getStoreVideoLoc[exerciseName]);
+    } else {
+      setCurrentVideo('');
+      console.error(`Exercise "${exerciseName}" video not found.`);
+    }
+  };
   const FAB = ({icon}: any) => {
     return (
       <TouchableOpacity
@@ -561,40 +568,42 @@ const Exercise = ({navigation, route}: any) => {
             }}>
             {/* <Text>{trackerData[number]?.id}</Text> */}
 
-            {isLoading && (
+            {/* {isLoading && (
               <ActivityIndicator
                 style={[styles.loader, {transform: [{scaleX: 2}, {scaleY: 2}]}]}
                 // size={Platform.OS=='android'?DeviceHeigth*0.1:DeviceHeigth*0.1}
                 size="large"
                 color="red"
               />
-            )}
-            <Video
-              source={{
-                uri: currentData?.exercise_video,
-              }}
-              onReadyForDisplay={() => {
-                setPause(true);
-              }}
-              onLoad={() => {
-                setIsLoading(false);
-                setPause(true);
-              }}
-              // onVideoLoad={() =>() }
-              // onVideoLoadStart={() => }
-              paused={!pause}
-              onPlaybackResume={() => {
-                setPause(true);
-              }}
-              repeat={true}
-              resizeMode="stretch"
-              style={{
-                width: DeviceWidth,
-                height: DeviceHeigth * 0.4,
-                alignSelf: 'center',
-                top: 60,
-              }}
-            />
+            )} */}
+              <Video
+                source={{
+                  uri: currentVideo,
+                }}
+                onReadyForDisplay={() => {
+                  setPause(true);
+                  setIsLoading(false);
+                }}
+                onLoad={() => {
+                  setIsLoading(false);
+                  setPause(true);
+                }}
+                // onVideoLoad={() =>() }
+                // onVideoLoadStart={() => }
+                paused={!pause}
+                onPlaybackResume={() => {
+                  setPause(true);
+                }}
+                repeat={true}
+                resizeMode="contain"
+                style={{
+                  width: DeviceWidth,
+                  height: DeviceHeigth * 0.4,
+                  alignSelf: 'center',
+                  top: 60,
+                }}
+              />
+            
           </View>
           <Text style={styles.head}>Get Ready</Text>
           <View

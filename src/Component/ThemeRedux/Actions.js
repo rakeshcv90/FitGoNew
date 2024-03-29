@@ -197,3 +197,9 @@ export const setFitmeMealAdsCount = data => {
     payload: data,
   };
 };
+export const setVideoLocation = data => {
+  return {
+    type: types.STORE_VIDEO_LOC,
+    payload: data,
+  };
+};

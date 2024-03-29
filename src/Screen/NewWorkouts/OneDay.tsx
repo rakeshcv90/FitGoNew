@@ -23,6 +23,7 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import {
   setCount,
   setSubscriptiomModal,
+  setVideoLocation,
 } from '../../Component/ThemeRedux/Actions';
 import {localImage} from '../../Component/Image';
 import WorkoutDescription from '../NewWorkouts/WorkoutsDescription';
@@ -43,9 +44,9 @@ import {
   Text as SvgText,
   LinearGradient as SvgGrad,
 } from 'react-native-svg';
-import ThreeDButton from '../../Component/ThreeButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {MyRewardedAd} from '../../Component/BannerAdd';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount} = route.params;
@@ -79,7 +80,7 @@ const OneDay = ({navigation, route}: any) => {
     }
   }, []);
   const allWorkoutApi = async () => {
-    setLoader(true);
+    // setLoader(true);
     try {
       const res = await axios({
         url:
@@ -90,18 +91,55 @@ const OneDay = ({navigation, route}: any) => {
           data?.workout_id,
       });
       if (res.data) {
+        setLoader(false);
+        res.data?.map((item: any) => downloadVideos(item));
         setExerciseData(res.data);
         setOpen(true);
-        setLoader(false);
       }
     } catch (error) {
+      setLoader(false);
       console.error(error, 'DaysAPIERror');
       setExerciseData([]);
       setOpen(true);
-      setLoader(false);
     }
   };
-
+  const sanitizeFileName = (fileName: string) => {
+    fileName = fileName.replace(/\s+/g, '_');
+    return fileName;
+  };
+  let StoringData: Object = {};
+  const downloadVideos = async (data: any) => {
+    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(data?.exercise_title)}.mp4`;
+    try {
+      const videoExists = await RNFetchBlob.fs.exists(filePath);
+      if (videoExists) {
+        console.log('videoExists', videoExists);
+        StoringData[data?.exercise_title] = filePath;
+      } else {
+        await RNFetchBlob.config({
+          fileCache: true,
+          // IOSBackgroundTask: true, // Add this for iOS background downloads
+          path: filePath,
+          appendExt: '.mp4',
+        })
+          .fetch('GET', data?.exercise_video, {
+            'Content-Type': 'application/mp4',
+            // key: 'Config.REACT_APP_API_KEY',
+          })
+          .then(res => {
+            console.log('File downloaded successfully!', res.path());
+            StoringData[data?.exercise_title] = res.path();
+            // Linking.openURL(`file://${fileDest}`);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    } catch (error) {
+      console.log('ERRRR', error);
+    }
+    dispatch(setVideoLocation(StoringData));
+  };
   const getExerciseTrackAPI = async () => {
     const payload = new FormData();
     payload.append('user_id', getUserDataDetails?.id);
@@ -620,25 +658,25 @@ const OneDay = ({navigation, route}: any) => {
           onPress={() => {
             analytics().logEvent(`CV_FITME_STARTED_DAY_${day}_EXERCISES`);
 
-            if (data.workout_price == 'free') {
-              postCurrentDayAPI();
-            } else if (
-              data?.workout_price == 'Premium' &&
-              getPurchaseHistory[0]?.plan_end_date >=
-                moment().format('YYYY-MM-DD')
-            ) {
-              postCurrentDayAPI();
-            } else if (
-              data?.workout_price == 'Premium' &&
-              getPurchaseHistory[0]?.plan_end_date <
-                moment().format('YYYY-MM-DD')
-            ) {
-              dispatch(setSubscriptiomModal(true));
-            } else {
-              dispatch(setSubscriptiomModal(true));
-            }
+            // if (data.workout_price == 'free') {
+            //   postCurrentDayAPI();
+            // } else if (
+            //   data?.workout_price == 'Premium' &&
+            //   getPurchaseHistory[0]?.plan_end_date >=
+            //     moment().format('YYYY-MM-DD')
+            // ) {
+            //   postCurrentDayAPI();
+            // } else if (
+            //   data?.workout_price == 'Premium' &&
+            //   getPurchaseHistory[0]?.plan_end_date <
+            //     moment().format('YYYY-MM-DD')
+            // ) {
+            //   dispatch(setSubscriptiomModal(true));
+            // } else {
+            //   dispatch(setSubscriptiomModal(true));
+            // }
 
-            // postCurrentDayAPI();
+            postCurrentDayAPI();
 
             // setOpen(false);
             // navigation.navigate('Exercise', {

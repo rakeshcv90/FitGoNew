@@ -183,7 +183,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                       tintColor: '#3D3D3D',
                     }}
                   />
-                ) : route.name == 'Workouts' ? (
+                ) : route.name == 'Workout' ? (
                   <Image
                     source={require('../Icon/Images/NewImage/workout.png')}
                     resizeMode="contain"
