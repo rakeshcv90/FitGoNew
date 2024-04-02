@@ -21,6 +21,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import {setFitmeMealAdsCount} from '../../Component/ThemeRedux/Actions';
 import moment from 'moment';
+import axios from 'axios';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const Meals = ({navigation}) => {
@@ -30,15 +31,11 @@ const Meals = ({navigation}) => {
   const [imageLoad, setImageLoad] = useState(true);
   const avatarRef = React.createRef();
   const [itemData, setItemData] = useState();
-  const getFitmeMealAdsCount= useSelector(
-    state => state.getFitmeMealAdsCount,
-  );
-  const getPurchaseHistory = useSelector(
-    state => state.getPurchaseHistory,
-  );
+  const [data, setTSata] = useState();
+  const getFitmeMealAdsCount = useSelector(state => state.getFitmeMealAdsCount);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const dispatch = useDispatch();
-
 
   const generateRandomNumber = useMemo(() => {
     return () => {
@@ -61,8 +58,8 @@ const Meals = ({navigation}) => {
     generateRandomNumber();
   }, [generateRandomNumber]);
   useEffect(() => {
-    initInterstitial()
-  },[]);
+    initInterstitial();
+  }, []);
   const checkMealAddCount = item => {
     if (getPurchaseHistory.length > 0) {
       if (
@@ -75,11 +72,11 @@ const Meals = ({navigation}) => {
           dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
           navigation.navigate('MealDetails', {item: item});
         } else {
-          showInterstitialAd()
+          showInterstitialAd();
           navigation.navigate('MealDetails', {item: item});
           dispatch(setFitmeMealAdsCount(0));
           // setTimeout(() => {
-         
+
           // }, 1200);
         }
       }
@@ -88,16 +85,34 @@ const Meals = ({navigation}) => {
         dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
         navigation.navigate('MealDetails', {item: item});
       } else {
-        showInterstitialAd()
+        showInterstitialAd();
         navigation.navigate('MealDetails', {item: item});
         dispatch(setFitmeMealAdsCount(0));
         // setTimeout(() => {
-         
+
         // }, 1200);
       }
     }
   };
+  useEffect(() => {
+    TEAI();
+  }, []);
 
+  const TEAI = async () => {
+    try {
+      const res = await axios.post(
+        'https://fitme.cvinfotech.in/adserver/public/api/get_categorie?version=1.14',
+        {
+          data: '',
+        },
+      );
+      if (res.data) {
+        setTSata(res.data?.diets);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const resetFitmeCount = async () => {
     dispatch(setFitmeMealAdsCount(0));
   };
@@ -253,7 +268,7 @@ const Meals = ({navigation}) => {
           paddingBottom: Platform.OS == 'android' ? 30 : 0,
         }}>
         <FlatList
-          data={mealData}
+          data={data}
           numColumns={3}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item, index) => index.toString()}
@@ -283,7 +298,12 @@ const Meals = ({navigation}) => {
                     source={
                       item.diet_image_link == null
                         ? localImage.Noimage
-                        : {uri: item.diet_image_link}
+                        : {
+                            uri:
+                              index % 2 == 0
+                                ? item.diet_image_link
+                                : item.diet_image,
+                          }
                     }
                     onLoad={() => setImageLoad(false)}
                     style={{
@@ -306,7 +326,7 @@ const Meals = ({navigation}) => {
                         color: AppColor.BoldText,
                       },
                     ]}>
-                    {item.diet_title}
+                    {index % 2 == 0 ? 'Other one' : 'CV SERVER'}
                   </Text>
                 </TouchableOpacity>
               </>

@@ -203,3 +203,9 @@ export const setVideoLocation = data => {
     payload: data,
   };
 };
+export const setIsAlarmEnabled = data => {
+  return {
+    type: types.ALARM_ENABLED,
+    payload: data,
+  };
+};

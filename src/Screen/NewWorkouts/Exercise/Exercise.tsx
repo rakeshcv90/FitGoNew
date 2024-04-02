@@ -375,7 +375,7 @@ const Exercise = ({navigation, route}: any) => {
       {restStart ? (
         <View style={{flex: 1, top: -20}}>
           {/* <FAB icon="format-list-bulleted" /> */}
-          <View style={{alignSelf: 'center', alignItems: 'center'}}>
+          <View style={{alignSelf: 'center', alignItems: 'center', top: DeviceHeigth* 0.05}}>
             <Text
               style={{
                 fontSize: 28,
@@ -674,6 +674,7 @@ const Exercise = ({navigation, route}: any) => {
             setRandomCount={setRandomCount}
             playTimerRef={playTimerRef}
             currentExercise={currentExercise}
+            handleExerciseChange={handleExerciseChange}
           />
         </>
       )}

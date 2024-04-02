@@ -8,11 +8,12 @@ import {
   TouchableWithoutFeedbackProps,
   View,
 } from 'react-native';
-import React, {FC} from 'react';
+import React, {FC, useEffect, useRef} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {DeviceWidth} from '../../../Component/Config';
 import {AppColor} from '../../../Component/Color';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Animated} from 'react-native';
 
 export type Props = TouchableWithoutFeedbackProps & {
   w?: number;
@@ -30,11 +31,14 @@ export type Props = TouchableWithoutFeedbackProps & {
   next?: any;
   BM?: number;
   colors?: Array<any>;
+  oneDay?: boolean | false;
+  text?: string;
 };
 
 const Play: FC<Props> = ({...props}) => {
+  const PARENT = props.oneDay ? TouchableOpacity : View;
   return (
-    <View
+    <PARENT
       {...props}
       style={{
         flex: 1,
@@ -43,10 +47,9 @@ const Play: FC<Props> = ({...props}) => {
         alignItems: 'center',
         //alignSelf: !props.alignSelf ? 'flex-start' : 'center',
         marginBottom: props.mB,
-        bottom:0,
-        position:'absolute',
-        alignSelf:'center',
-        
+        bottom: 0,
+        position: 'absolute',
+        alignSelf: 'center',
       }}>
       <LinearGradient
         start={{x: 1, y: 0}}
@@ -61,34 +64,55 @@ const Play: FC<Props> = ({...props}) => {
             paddingVertical: props.pV,
             borderRadius: props.bR ? props.bR : 20 / 2,
           },
+          props.oneDay && {
+            justifyContent: 'center',
+          },
         ]}>
-        <>
-          <TouchableOpacity
-            style={{
-              zIndex: 1,
-            }}
-            onPress={props.back}>
-            <Icons name={'chevron-left'} size={40} color={AppColor.WHITE} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              zIndex: 1,
-            }}
-            onPress={props.playy}>
-            {props.play ? (
-              <Icons name={'play'} size={40} color={AppColor.WHITE} />
-            ) : (
-              <Icons name={'pause'} size={40} color={AppColor.WHITE} />
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              zIndex: 1,
-            }}
-            onPress={props.next}>
-            <Icons name={'chevron-right'} size={40} color={AppColor.WHITE} />
-          </TouchableOpacity>
-        </>
+        {props.oneDay ? (
+          <Text
+            style={
+              props.textStyle
+                ? props.textStyle
+                : {
+                    fontSize: 20,
+                    fontFamily: 'Poppins',
+                    lineHeight: 30,
+                    color: AppColor.WHITE,
+                    fontWeight: '700',
+                    zIndex: 1,
+                  }
+            }>
+            {props.text}
+          </Text>
+        ) : (
+          <>
+            <TouchableOpacity
+              style={{
+                zIndex: 1,
+              }}
+              onPress={props.back}>
+              <Icons name={'chevron-left'} size={40} color={AppColor.WHITE} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                zIndex: 1,
+              }}
+              onPress={props.playy}>
+              {props.play ? (
+                <Icons name={'play'} size={40} color={AppColor.WHITE} />
+              ) : (
+                <Icons name={'pause'} size={40} color={AppColor.WHITE} />
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                zIndex: 1,
+              }}
+              onPress={props.next}>
+              <Icons name={'chevron-right'} size={40} color={AppColor.WHITE} />
+            </TouchableOpacity>
+          </>
+        )}
         <View
           style={{
             backgroundColor: '#D9D9D9',
@@ -98,11 +122,11 @@ const Play: FC<Props> = ({...props}) => {
             // borderBottomRightRadius: props.bR ? props.bR : 50 / 2,
             right: 0,
             position: 'absolute',
-            // zIndex: -1,
+            zIndex: -1,
           }}
         />
       </LinearGradient>
-    </View>
+    </PARENT>
   );
 };
 

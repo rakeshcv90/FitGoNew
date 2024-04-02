@@ -27,6 +27,7 @@ import {
   setCustomWorkoutData,
   Setmealdata,
   setFitmeAdsCount,
+  setIsAlarmEnabled,
 } from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
@@ -58,7 +59,8 @@ import analytics from '@react-native-firebase/analytics';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {ImageBackground} from 'react-native';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
-
+import {AlarmNotification} from '../../Component/Reminder';
+import notifee from '@notifee/react-native';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 let zeroData = [];
@@ -157,7 +159,7 @@ const Home = ({navigation}) => {
   const getUserID = useSelector(state => state.getUserID);
   const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
   const getStepCounterOnoff = useSelector(state => state.getStepCounterOnoff);
-  const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
+  const isAlarmEnabled = useSelector(state => state.isAlarmEnabled);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
 
   const [stepGoalProfile, setStepGoalProfile] = useState(
@@ -176,19 +178,30 @@ const Home = ({navigation}) => {
   const [distance, setDistance] = useState(0);
   const distanceRef = useRef(distance);
   let isFocused = useIsFocused();
+  useEffect(() => {
+    if (!isAlarmEnabled) {
+      notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));
+      const currenTime = new Date();
+      currenTime.setHours(12);
+      currenTime.setMinutes(42);
+      AlarmNotification(currenTime);
+      Dispatch(setIsAlarmEnabled(true));
+    }
+  }, []);
 
   useEffect(() => {
     if (isFocused) {
-    
       getCustomeWorkoutTimeDetails();
       getGraphData(1);
+      setSteps(steps+20)
+      setCalories(Calories+1)
+      setDistance(distance+0.5)
+    PedoMeterData()
       setTimeout(() => {
         ActivityPermission();
       }, 3000);
-      
     }
   }, [isFocused]);
-
   // pedometer data sending to api
   const PedoMeterData = async () => {
     try {
@@ -197,13 +210,13 @@ const Home = ({navigation}) => {
         method: 'post',
         data: {
           user_id: getUserDataDetails?.id,
-          steps: stepsRef.current,
-          calories: caloriesRef.current,
-          distance: distanceRef.current,
+          steps: steps,
+          calories: Calories,
+          distance: distance,
           version: VersionNumber.appVersion,
         },
       });
-
+console.log("SEND DATA PEDO",steps,Calories)
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,

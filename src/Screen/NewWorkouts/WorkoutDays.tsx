@@ -203,9 +203,7 @@ const WorkoutDays = ({navigation, route}: any) => {
     navigation.navigate('Exercise', {
       allExercise: exerciseData,
       currentExercise:
-        trainingCount == -1
-          ? exerciseData[0]
-          : exerciseData[trainingCount],
+        trainingCount == -1 ? exerciseData[0] : exerciseData[trainingCount],
       data: data,
       day: day,
       exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
@@ -502,6 +500,7 @@ const WorkoutDays = ({navigation, route}: any) => {
         style={[
           styles.box,
           {
+            width: DeviceHeigth < 1280 ? DeviceWidth * 0.8 : DeviceWidth * 0.9,
             backgroundColor: AppColor.WHITE,
             // index == 1 || index == 5
             //   ? '#F3F4F7'
@@ -525,13 +524,21 @@ const WorkoutDays = ({navigation, route}: any) => {
           {item?.total_rest == 0 ? (
             <Image
               source={localImage.Rest}
-              style={{height: 60, width: 60, marginLeft: DeviceWidth * 0.12}}
+              style={{
+                height: DeviceWidth * 0.1,
+                width: DeviceWidth * 0.1,
+                marginLeft: DeviceWidth * 0.12,
+              }}
               resizeMode="contain"
             />
           ) : (
             <Image
               source={{uri: data?.workout_image_link}}
-              style={{height: 80, width: 60, marginLeft: DeviceWidth * 0.12}}
+              style={{
+                height: DeviceWidth * 0.15,
+                width: DeviceWidth * 0.15,
+                marginLeft: DeviceWidth * 0.12,
+              }}
               resizeMode="contain"
             />
           )}
@@ -566,6 +573,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                 name={'chevron-right'}
                 size={25}
                 color={AppColor.INPUTTEXTCOLOR}
+                style={{marginRight: DeviceWidth * 0.02}}
               />
             )}
           </View>
@@ -719,7 +727,10 @@ const WorkoutDays = ({navigation, route}: any) => {
                       justifyContent: 'space-between',
                     }}>
                     {index < 8 ? (
-                      <BlackCircle index={index} select={index == selected} />
+                      <BlackCircle
+                        index={index}
+                        select={selected != 0 && index == selected}
+                      />
                     ) : (
                       <View style={{width: 30}} />
                     )}
@@ -783,7 +794,6 @@ const styles = StyleSheet.create({
   box: {
     //   flex: 1,
     alignSelf: 'center',
-    width: DeviceWidth * 0.8,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,

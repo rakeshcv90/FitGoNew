@@ -196,7 +196,7 @@ const Workouts = ({navigation}: any) => {
     return (
       <View
         style={{
-          width: DeviceWidth * 0.92,
+          width: DeviceHeigth < 1280 ? DeviceWidth * 0.92 : DeviceWidth * 0.96,
           height: DeviceHeigth * 0.19,
           borderRadius: 20,
           padding: 15,

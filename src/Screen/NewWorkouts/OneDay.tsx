@@ -47,6 +47,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {MyRewardedAd} from '../../Component/BannerAdd';
 import RNFetchBlob from 'rn-fetch-blob';
+import Play from './Exercise/Play';
 
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount} = route.params;
@@ -54,12 +55,13 @@ const OneDay = ({navigation, route}: any) => {
   const [currentExercise, setCurrentExercise] = useState([]);
   const [trackerData, setTrackerData] = useState([]);
   const [open, setOpen] = useState(true);
+  const [downloaded, setDownloade] = useState(0);
   const [visible, setVisible] = useState(false);
   const [reward, setreward] = useState(0);
 
   const [loader, setLoader] = useState(false);
 
-  const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
+  const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -83,8 +85,8 @@ const OneDay = ({navigation, route}: any) => {
     // setLoader(true);
     try {
       const res = await axios({
-        url:
-          NewAppapi.Get_DAYS +
+        // url:'https://fitme.cvinfotech.in/adserver/public/api/days?day=1&workout_id=44'
+         url: NewAppapi.Get_DAYS +
           '?day=' +
           day +
           '&workout_id=' +
@@ -92,7 +94,6 @@ const OneDay = ({navigation, route}: any) => {
       });
       if (res.data) {
         setLoader(false);
-        res.data?.map((item: any) => downloadVideos(item));
         setExerciseData(res.data);
         setOpen(true);
       }
@@ -108,13 +109,16 @@ const OneDay = ({navigation, route}: any) => {
     return fileName;
   };
   let StoringData: Object = {};
-  const downloadVideos = async (data: any) => {
-    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(data?.exercise_title)}.mp4`;
+  const downloadVideos = async (data: any, index: number, len: number) => {
+    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
+      data?.exercise_title,
+    )}.mp4`;
     try {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
-        console.log('videoExists', videoExists);
         StoringData[data?.exercise_title] = filePath;
+        setDownloade(100 / (len - (index + 1)));
+        console.log('videoExists', videoExists, 100 / (len - (index + 1)),filePath);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -127,8 +131,13 @@ const OneDay = ({navigation, route}: any) => {
             // key: 'Config.REACT_APP_API_KEY',
           })
           .then(res => {
-            console.log('File downloaded successfully!', res.path());
             StoringData[data?.exercise_title] = res.path();
+            setDownloade(100 / (len - (index + 1)));
+            console.log(
+              'File downloaded successfully!',
+              res.path(),
+              100 / (len - (index + 1)),
+            );
             // Linking.openURL(`file://${fileDest}`);
           })
           .catch(err => {
@@ -198,6 +207,11 @@ const OneDay = ({navigation, route}: any) => {
         user_exercise_id: exercise?.exercise_id,
       });
     }
+    Promise.all(
+      exerciseData.map((item: any, index: number) =>
+        downloadVideos(item, index, exerciseData.length),
+      ),
+    ).finally(async() => {
     try {
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EXERCISE,
@@ -238,6 +252,7 @@ const OneDay = ({navigation, route}: any) => {
     } catch (error) {
       console.error(error, 'PostDaysAPIERror');
     }
+  });
   };
 
   const Box = ({selected, item, index}: any) => {
@@ -613,6 +628,7 @@ const OneDay = ({navigation, route}: any) => {
         </View> */}
       <View style={styles.container}>
         <Text
+        onPress={() => RNFetchBlob.fs.unlink(getStoreVideoLoc[2])}
           style={{
             fontWeight: '700',
             fontSize: 30,
@@ -649,12 +665,15 @@ const OneDay = ({navigation, route}: any) => {
             <Box selected={-1} index={index + 1} item={item} key={index} />
           ))}
         </ScrollView>
-        <GradientButton
+        <Play
+          play={false}
+          oneDay
           text={`Start Day ${day}`}
           h={80}
           alignSelf
           bR={40}
           mB={40}
+          fill={`${downloaded}%`}
           onPress={() => {
             analytics().logEvent(`CV_FITME_STARTED_DAY_${day}_EXERCISES`);
 
@@ -675,7 +694,6 @@ const OneDay = ({navigation, route}: any) => {
             // } else {
             //   dispatch(setSubscriptiomModal(true));
             // }
-
             postCurrentDayAPI();
 
             // setOpen(false);

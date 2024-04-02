@@ -32,7 +32,7 @@ const MediumRounded: FC<Props> = ({...props}) => {
             onPress={props.viewAllPress}
             style={[
               styles.category,
-              {fontSize: 12, color: 'rgba(80, 80, 80, 0.6) '},
+              {fontSize: 12, color: '#505050'},
             ]}>
             View All
           </Text>

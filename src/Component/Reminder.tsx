@@ -19,7 +19,52 @@ import {DeviceHeigth, DeviceWidth} from './Config';
 import {AppColor} from './Color';
 import {showMessage} from 'react-native-flash-message';
 
-const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
+export const AlarmNotification = async (time: any) => {
+  const trigger: TimestampTrigger = {
+    type: TriggerType.TIMESTAMP,
+    timestamp: time.getTime(), // fire at 11:10am (10 minutes before meeting)
+    repeatFrequency: RepeatFrequency.DAILY,
+  };
+  await notifee.createTriggerNotification(
+    {
+      title: 'Exercise Time',
+      body: `It's time to Exercise`,
+      android: {
+        channelId: 'Time',
+        importance: AndroidImportance.HIGH,
+        pressAction: {
+          id: 'default',
+        },
+        actions: [
+          {
+            title: 'Add +5',
+            pressAction: {
+              id: 'Plus_Five',
+            },
+          },
+          {
+            title: 'Stop',
+            pressAction: {
+              id: 'Stop',
+            },
+          },
+          // Add more actions as needed
+        ],
+      },
+      ios: {
+        categoryId: 'Alarm',
+        foregroundPresentationOptions: {
+          badge: true,
+          banner: true,
+          sound: false,
+        },
+      },
+      id: 'Timer',
+    },
+    trigger,
+  );
+};
+const Reminder = ({visible, setVisible, setAlarmIsEnabled, setNotificationTimer}: any) => {
   const typeData = ['AM', 'PM'];
   const hourData = Array(12)
     .fill(0)
@@ -48,75 +93,16 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
     if (type === 'AM' && selectedHours === 12) {
       selectedHours = 0;
     }
-
-    // Set the hours, minutes, and seconds of the date
-    // date.set({hours: selectedHours, minutes: selectedMinutes, seconds: 0});
-
-    // Now 'date' holds the updated date and time
-    // const tomorrow = moment()
-    //   .add(1, 'days')
-    //   .set({hours: 12, minutes: 24, seconds: 0});
-    // const trigger = {
-    //   type: TriggerType.TIMESTAMP,
-    //   timestamp: tomorrow.unix(), // fire in 3 hours
-    // };
+    
     const currentTime = new Date(Date.now());
     const selectedTime = new Date(Date.now());
     selectedTime.setHours(selectedHours);
     selectedTime.setMinutes(selectedMinutes);
-    // if (selectedTime < currentTime) {
-    //   // If the selected time is before the current time, schedule it for the next day
-    //   selectedTime.setDate(selectedTime.getDate() + 1); // Move to the next day
-    // }
-    // currentTime.setHours(selectedHours+5);
-    // currentTime.setMinutes(selectedMinutes+30);
-
-    // Create a time-based trigger
-    const trigger: TimestampTrigger = {
-      type: TriggerType.TIMESTAMP,
-      timestamp: selectedTime.getTime(), // fire at 11:10am (10 minutes before meeting)
-      repeatFrequency: RepeatFrequency.DAILY,
-    };
-    // Create a trigger notification
     try {
-      await notifee.createTriggerNotification(
-        {
-          title: 'Exercise Time',
-          body: `It's time to Exercise`,
-          android: {
-            channelId: 'Time',
-            importance: AndroidImportance.HIGH,
-            pressAction: {
-              id: 'Alarm',
-            },
-            actions: [
-              {
-                title: 'Add +5',
-                pressAction: {
-                  id: 'Plus_Five',
-                },
-              },
-              {
-                title: 'Stop',
-                pressAction: {
-                  id: 'Stop',
-                },
-              },
-              // Add more actions as needed
-            ],
-          },
-          ios: {
-            categoryId: 'Alarm',
-            foregroundPresentationOptions: {
-              badge: true,
-              banner: true,
-              sound: false,
-            },
-          },
-          id: 'Timer',
-        },
-        trigger,
-      );
+      setNotificationTimer(selectedTime)
+      AlarmNotification(selectedTime);
+      setAlarmIsEnabled(true);
+      setVisible(false);
     } catch (error) {
       showMessage({
         message: 'Time should be greater than Current Time',
@@ -127,8 +113,6 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
         icon: {icon: 'auto', position: 'left'},
       });
     }
-    setAlarmIsEnabled(true);
-    setVisible(false);
   }
   return (
     <Modal
@@ -223,7 +207,6 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
             <TouchableOpacity
               onPress={() => {
                 setVisible(false);
-                setAlarmIsEnabled(false);
               }}>
               <Text
                 style={{
