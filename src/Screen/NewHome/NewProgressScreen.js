@@ -948,8 +948,8 @@ const NewProgressScreen = ({navigation}) => {
                 style={{
                   color: AppColor.BLACK,
                   fontFamily: 'Poppins-SemiBold',
-                  width: 100,
                   textAlign: 'center',
+                  width:85,
                   marginLeft:
                     getBmi > 0 && getBmi <= 18
                       ? DeviceWidth * 0.1
@@ -986,7 +986,7 @@ const NewProgressScreen = ({navigation}) => {
                   fontSize: 18,
                   color: AppColor.WHITE,
                 }}>
-                {"Enter Today's weight"}
+                {"Enter Today's Weight"}
               </Text>
             </LinearGradient>
           </TouchableOpacity>
