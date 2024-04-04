@@ -464,7 +464,7 @@ const AllWorkouts = ({navigation, route}: any) => {
                 },
               ]}>
             
-              <Image
+<!--               <Image
                 source={
                   item.workout_price == 'Premium'
                     ? require('../../Icon/Images/NewImage/premium.png')
@@ -482,13 +482,7 @@ const AllWorkouts = ({navigation, route}: any) => {
                     Platform.OS == 'android'
                       ? -DeviceWidth * 0.04
 
-                      : DeviceWidth >= 768
-                      ? -DeviceWidth * 0.018
-                      : -DeviceWidth * 0.035,
-
-//                       : DeviceWidth>=768?-DeviceWidth * 0.010:-DeviceWidth * 0.035,
-
-                }}></Image>
+                }}></Image> -->
               <Image
                 source={{uri: item?.workout_image_link}}
                 style={{

@@ -100,7 +100,7 @@ const NewProgressScreen = ({navigation}) => {
         ).toFixed(2)
       : 0;
   }, [getUserDataDetails]);
-  
+
   // Update state with useEffect
   useEffect(() => {
     setBmi(bmi);
@@ -159,8 +159,6 @@ const NewProgressScreen = ({navigation}) => {
       }
     }
   }, []);
-
-      
   const handleGraph1 = data => {
     if (data == 1) {
       WeeklyData(1);
@@ -534,11 +532,10 @@ const NewProgressScreen = ({navigation}) => {
                 placeholderTextColor={focused ? AppColor.RED : AppColor.GRAY1}
                 maxLength={3}
                 style={{
-                  width: DeviceWidth * 0.15,
                   fontSize: 30,
                   fontFamily: 'Poppins-SemiBold',
                   color: AppColor.BLACK,
-
+                  width: focused ? null : 50,
                   borderColor: focused ? AppColor.RED : AppColor.DARKGRAY,
                   borderBottomWidth: 1,
                   alignSelf: 'center',
@@ -948,8 +945,8 @@ const NewProgressScreen = ({navigation}) => {
                 style={{
                   color: AppColor.BLACK,
                   fontFamily: 'Poppins-SemiBold',
-                  width: 100,
                   textAlign: 'center',
+                  width: 85,
                   marginLeft:
                     getBmi > 0 && getBmi <= 18
                       ? DeviceWidth * 0.1
@@ -986,7 +983,7 @@ const NewProgressScreen = ({navigation}) => {
                   fontSize: 18,
                   color: AppColor.WHITE,
                 }}>
-                {"Enter Today's weight"}
+                {"Enter Today's Weight"}
               </Text>
             </LinearGradient>
           </TouchableOpacity>
