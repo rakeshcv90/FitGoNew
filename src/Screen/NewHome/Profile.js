@@ -40,7 +40,6 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {request, PERMISSIONS, openSettings} from 'react-native-permissions';
 import VersionNumber from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
-import {updatePhoto} from '../../Component/ThemeRedux/Actions';
 import {LogOut} from '../../Component/LogOut';
 import axios from 'axios';
 import {BlurView} from '@react-native-community/blur';
@@ -660,35 +659,100 @@ const Profile = () => {
               justifyContent: 'space-between',
               flexDirection: 'row',
 
+              margin: 15,
+              // borderWidth: 1,
+
               marginVertical:
                 Platform.OS == 'ios'
-                  ? DeviceHeigth * 0.05
+                  ? DeviceHeigth * 0.04
                   : DeviceHeigth * 0.02,
-              alignItems: 'center',
+              alignItems: 'flex-start',
             }}>
             <TouchableOpacity
               onPress={() => {
                 navigation.goBack();
               }}>
-              <Icons name="chevron-left" size={30} color={AppColor.WHITE} />
+              <View
+                style={{
+                  width: 78,
+                }}>
+                <Icons name="chevron-left" size={30} color={AppColor.WHITE} />
+              </View>
             </TouchableOpacity>
-            <View style={{marginLeft: 60}}>
+
+
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                alignSelf: 'center',
+              }}>
               <Text
+
                 style={{
                   fontFamily: 'Poppins-SemiBold',
                   fontSize: 20,
                   color: AppColor.WHITE,
-                  // marginLeft: DeviceWidth * 0.1,
                 }}>
                 {'Profile'}
               </Text>
+              <View
+                style={[styles.profileView, {marginTop: DeviceHeigth * 0.035}]}>
+                {isLoading && (
+                  <ShimmerPlaceholder
+                    style={styles.loader}
+                    ref={avatarRef}
+                    autoRun
+                  />
+                )}
+                <Image
+                  source={
+                    getUserDataDetails.image_path == null
+                      ? localImage.avt
+                      : {uri: getUserDataDetails.image_path}
+                  }
+                  onLoad={() => setIsLoading(false)}
+                  style={styles.img}
+                  resizeMode="cover"></Image>
+                <TouchableOpacity
+                  style={styles.ButtonPen}
+                  activeOpacity={0.6}
+                  onPress={() => {
+                    setUpadteScreenVisibilty(true);
+                    analytics().logEvent('CV_FITME_CLICKED_ON_EDIT_PROFILE');
+                  }}>
+                  <Image
+                    source={localImage.Pen}
+                    style={styles.pen}
+                    resizeMode="cover"
+                    tintColor={AppColor.WHITE}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  marginTop: DeviceHeigth * 0.04,
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-SemiBold',
+                    color: AppColor.WHITE,
+                    fontSize: 20,
+                  }}>
+                  {getUserDataDetails.name}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Medium',
+                    color: AppColor.WHITE,
+                    fontSize: 12,
+                  }}>
+                  {getUserDataDetails.email}
+                </Text>
+              </View>
             </View>
-            {/* <TouchableOpacity
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <Icons name="chevron-left" size={30} color={AppColor.WHITE} />
-            </TouchableOpacity> */}
+
             <TouchableOpacity
               onPress={() => {
                 analytics().logEvent('CV_FITME_SIGNED_OUT');
@@ -697,8 +761,9 @@ const Profile = () => {
               }}
               activeOpacity={0.5}
               style={{
-                paddingLeft: 20,
-                paddingRight: 20,
+                // width: DeviceWidth * 0.2,
+                width: 78,
+
                 borderWidth: 1,
                 borderRadius: 20,
                 borderColor: AppColor.WHITE,
@@ -709,77 +774,12 @@ const Profile = () => {
                 style={{
                   fontFamily: 'Poppins-Medium',
                   fontSize: 12,
-
                   color: AppColor.WHITE,
+                  paddingVertical: 1.3,
                 }}>
                 {'Sign out'}
               </Text>
             </TouchableOpacity>
-          </View>
-          <View
-            style={[
-              styles.profileView,
-              {
-                marginTop:
-                  Platform.OS == 'ios'
-                    ? DeviceHeigth * 0.025
-                    : DeviceHeigth * 0.03,
-              },
-            ]}>
-            {isLoading && (
-              <ShimmerPlaceholder
-                style={styles.loader}
-                ref={avatarRef}
-                autoRun
-              />
-            )}
-            <Image
-              source={
-                getUserDataDetails.image_path == null
-                  ? localImage.avt
-                  : {uri: getUserDataDetails.image_path}
-              }
-              onLoad={() => setIsLoading(false)}
-              style={styles.img}
-              resizeMode="cover"></Image>
-            <TouchableOpacity
-              style={styles.ButtonPen}
-              activeOpacity={0.6}
-              onPress={() => {
-                setUpadteScreenVisibilty(true);
-                analytics().logEvent('CV_FITME_CLICKED_ON_EDIT_PROFILE');
-              }}>
-              <Image
-                source={localImage.Pen}
-                style={styles.pen}
-                resizeMode="cover"
-                tintColor={AppColor.WHITE}
-              />
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              marginTop: DeviceHeigth * 0.04,
-              alignItems: 'center',
-            }}>
-            <Text
-              style={{
-                fontFamily: 'Poppins-SemiBold',
-                color: AppColor.WHITE,
-                fontSize: 20,
-                paddingLeft: 15,
-              }}>
-              {getUserDataDetails.name}
-            </Text>
-            <Text
-              style={{
-                fontFamily: 'Poppins-Medium',
-                color: AppColor.WHITE,
-                fontSize: 12,
-                paddingLeft: 15,
-              }}>
-              {getUserDataDetails.email}
-            </Text>
           </View>
         </LinearGradient>
       </View>
@@ -1092,14 +1092,17 @@ const styles = StyleSheet.create({
   profileView: {
     height: 100,
     width: 100,
-    borderRadius: 160 / 2,
 
-    alignSelf: 'center',
+    borderRadius: 120 / 2,
+    // alignSelf: 'center',
+
   },
   img: {
     height: 120,
     width: 120,
-    borderRadius: 160 / 2,
+    borderRadius: 120 / 2,
+    borderWidth: 1,
+    alignSelf: 'center',
   },
   pen: {
     width: 35,
@@ -1217,7 +1220,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 120,
     width: 120,
-    borderRadius: 160 / 2,
+    borderRadius: 120 / 2,
   },
 });
 
