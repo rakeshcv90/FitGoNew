@@ -34,6 +34,7 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {StarColor} from '../../Icon/Images/NewImage/StarColor';
 import {Star} from '../../Icon/Images/NewImage/Star';
 import NativeAddTest from '../../Component/NativeAddTest';
+import NativeAddTest from '../../Component/NativeAddTest';
 const AllWorkouts = ({navigation, route}: any) => {
   const {data, type, fav} = route.params;
 
@@ -467,11 +468,7 @@ const AllWorkouts = ({navigation, route}: any) => {
                   height: DeviceHeigth * 0.2,
                 },
               ]}>
-
               {/* <Image
-
-            
-
                 source={
                   item.workout_price == 'Premium'
                     ? require('../../Icon/Images/NewImage/premium.png')
@@ -488,14 +485,12 @@ const AllWorkouts = ({navigation, route}: any) => {
                   left:
                     Platform.OS == 'android'
                       ? -DeviceWidth * 0.04
-
                       : DeviceWidth >= 768
                       ? -DeviceWidth * 0.018
                       : -DeviceWidth * 0.035,
 
                   //                       : DeviceWidth>=768?-DeviceWidth * 0.010:-DeviceWidth * 0.035,
                 }}></Image> */}
-
               <Image
                 source={{uri: item?.workout_image_link}}
                 style={{
