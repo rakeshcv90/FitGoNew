@@ -520,6 +520,9 @@ PODS:
   - React-jsinspector (0.72.4)
   - React-logger (0.72.4):
     - glog
+  - react-native-admob-native-ads (0.6.6):
+    - Google-Mobile-Ads-SDK
+    - React-Core
   - react-native-background-actions (3.0.1):
     - React-Core
   - react-native-blur (4.3.2):
@@ -805,6 +808,7 @@ DEPENDENCIES:
   - Firebase
   - FirebaseCoreInternal
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - Google-Mobile-Ads-SDK
   - GoogleUtilities
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
@@ -825,6 +829,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-admob-native-ads (from `../node_modules/react-native-admob-native-ads`)
   - react-native-background-actions (from `../node_modules/react-native-background-actions`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
@@ -979,6 +984,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-admob-native-ads:
+    :path: "../node_modules/react-native-admob-native-ads"
   react-native-background-actions:
     :path: "../node_modules/react-native-background-actions"
   react-native-blur:
@@ -1158,6 +1165,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: c7f826e40fa9cab5d37cab6130b1af237332b594
   React-jsinspector: aaed4cf551c4a1c98092436518c2d267b13a673f
   React-logger: da1ebe05ae06eb6db4b162202faeafac4b435e77
+  react-native-admob-native-ads: 97b6667c5d4d3e5a75baf264450dbb54ba53a181
   react-native-background-actions: ecffd3f0864140ef6cf21c29be6819a02b531a52
   react-native-blur: cfdad7b3c01d725ab62a8a729f42ea463998afa2
   react-native-fbsdk-next: 75ea1d4b48e047796f3264535a1cab502686a3e2
@@ -1224,6 +1232,6 @@ SPEC CHECKSUMS:
   TextToSpeech: b3aa777ff5585705f179c0a2436bfd0926d1716e
   Yoga: 3efc43e0d48686ce2e8c60f99d4e6bd349aff981
 
-PODFILE CHECKSUM: 32c19dfb0ab84c40b2412d02d0d74e19cced8b8a
+PODFILE CHECKSUM: 39c51e9d7597a54f771efe195b609bceeb25944b
 
 COCOAPODS: 1.13.0

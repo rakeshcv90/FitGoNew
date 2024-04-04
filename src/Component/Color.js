@@ -2,7 +2,7 @@ export const AppColor={
     RED:'#941000',
     FBBUTTON:'#4267B2',
     WHITE:'#ffffff',
-    BLACK:'#000000',
+    BLACK:'#000',
     INPUTLABLECOLOR:'#3A4750',
     INPUTTEXTCOLOR:'#303841',
     GOOGLEBUTTON:'#F5F5F5',

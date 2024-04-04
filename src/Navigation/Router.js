@@ -54,13 +54,18 @@ import Subscription from '../Screen/Subscription/Subscription';
 import Report from '../Screen/NewHome/Report';
 import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+// import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
+import Store from '../Screen/NewHome/Store';
 
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 const screenOptions = {
   headerShown: false,
+  animationEnabled:true ,
+
+  gestureEnabled:false
   // gestureDirection: 'horizontal',
   // gesturesEnabled: true,
   // cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
@@ -121,6 +126,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Meals" component={Meals} />
       <Stack.Screen name="MealDetails" component={MealDetails} />
       <Stack.Screen name="ProductsList" component={ProductsList} />
+      <Stack.Screen name="Store" component={Store} />
       <Stack.Screen name="MeditationDetails" component={MeditationDetails} />
       <Stack.Screen
         name="MeditationExerciseDetails"

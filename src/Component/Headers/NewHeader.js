@@ -22,10 +22,13 @@ const NewHeader = ({header, backButton, SearchButton}) => {
         {
           height:
             Platform.OS == 'ios'
-              ? (DeviceHeigth * 13) / 100  
+              ? (DeviceHeigth * 13) / 100
               : (DeviceHeigth * 10) / 100,
           left: 1,
-          paddingTop: Platform.OS == 'android' ? DeviceHeigth * 0.03 : 0.01,
+          paddingTop:
+            Platform.OS == 'android'
+              ? DeviceHeigth * 0.03
+              : DeviceHeigth * 0.01,
         },
       ]}>
       {!backButton ? (
@@ -48,10 +51,11 @@ const NewHeader = ({header, backButton, SearchButton}) => {
           style.headerstyle,
           {
             color: AppColor.INPUTTEXTCOLOR,
-            fontFamily: 'Verdana',
-      
-            width:DeviceWidth*0.8,
-            textAlign:'center'
+            fontFamily: 'Montserrat-SemiBold',
+            fontWeight: '700',
+
+            width: DeviceWidth * 0.8,
+            textAlign: 'center',
           },
         ]}>
         {header}

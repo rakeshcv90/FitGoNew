@@ -193,11 +193,12 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                 justifyContent: 'center',
                 left: -15,
               }}
-              onPress={async () => {
-                await TrackPlayer.skipToPrevious();
-                togglePlayback(playbackState);
-              }}>
-              <Image
+              // onPress={async () => {
+              //   await TrackPlayer.skipToPrevious();
+              //   togglePlayback(playbackState);
+              // }}
+              >
+              {/* <Image
                 source={localImage.Farwed}
                 style={{
                   height: 32,
@@ -205,7 +206,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                   alignSelf: 'center',
                   //tintColor: '#fff',
                 }}
-                resizeMode="contain"></Image>
+                resizeMode="contain"></Image> */}
             </TouchableOpacity>
 
             <LinearGradient
@@ -239,7 +240,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                   style={{
                     height: 25,
                     width: 25,
-                    left: playbackState.state === State.Paused && 2,
+                    //left: playbackState.state === State.Paused && 2,
                     alignSelf: 'center',
                     tintColor: '#fff',
                   }}
@@ -254,11 +255,12 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                 justifyContent: 'center',
                 left: 15,
               }}
-              onPress={async () => {
-                await TrackPlayer.skipToNext();
-                togglePlayback(playbackState);
-              }}>
-              <Image
+              // onPress={async () => {
+              //   await TrackPlayer.skipToNext();
+              //   togglePlayback(playbackState);
+              // }}
+              >
+              {/* <Image
                 source={localImage.Farwed}
                 style={{
                   height: 30,
@@ -266,7 +268,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                   transform: [{rotate: '180deg'}],
                   alignSelf: 'center',
                 }}
-                resizeMode="contain"></Image>
+                resizeMode="contain"></Image> */}
             </TouchableOpacity>
           </View>
         </View>
@@ -275,7 +277,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
           end={{x: 1, y: 0}}
           colors={['#2169C4', '#103360']}
           style={{
-            width: 350,
+            width:'95%',
             height: DeviceHeigth * 0.25,
             marginVertical: 15,
             borderRadius: 6,
@@ -286,10 +288,10 @@ const MeditationExerciseDetails = ({navigation, route}) => {
           <ScrollView showsVerticalScrollIndicator={false}>
             <Text
               style={{
-                fontFamily: 'Poppins',
-                fontWeight: '500',
-                lineHeight: 15,
-                fontSize: 12,
+                fontFamily: 'Montserrat-Regular',
+                fontWeight: '600',
+                lineHeight: 22,
+                fontSize: 15,
                 color: '#FFFFFF',
               }}>
               {route.params.item.exercise_mindset_description}

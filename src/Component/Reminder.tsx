@@ -13,11 +13,14 @@ import notifee, {
   RepeatFrequency,
   TimestampTrigger,
   TriggerType,
+  
 } from '@notifee/react-native';
-import moment from 'moment';
+
+
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {AppColor} from './Color';
 import {showMessage} from 'react-native-flash-message';
+import messaging from '@react-native-firebase/messaging';
 
 const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
   const typeData = ['AM', 'PM'];
@@ -32,52 +35,33 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
   const [min, setMin] = useState('');
   const [type, setType] = useState('AM');
 
+  // async function handleNotificationClick(notification:any) {
+  //   // Handle navigation or any other action here
+  //   console.log('Notification clicked:', notification);
+  // }
   async function onCreateTriggerNotification() {
-    // const date = moment().add(1, 'days');
-
-    // Assuming you have 'hours', 'minutes', and 'type' variables
     let selectedHours = parseInt(hours);
     let selectedMinutes = parseInt(min);
 
-    // If 'type' is 'PM' and the selected hours are less than 12, add 12 hours
     if (type === 'PM' && selectedHours < 12) {
       selectedHours += 12;
     }
 
-    // If 'type' is 'AM' and the selected hours is 12, set hours to 0 (midnight)
     if (type === 'AM' && selectedHours === 12) {
       selectedHours = 0;
     }
 
-    // Set the hours, minutes, and seconds of the date
-    // date.set({hours: selectedHours, minutes: selectedMinutes, seconds: 0});
-
-    // Now 'date' holds the updated date and time
-    // const tomorrow = moment()
-    //   .add(1, 'days')
-    //   .set({hours: 12, minutes: 24, seconds: 0});
-    // const trigger = {
-    //   type: TriggerType.TIMESTAMP,
-    //   timestamp: tomorrow.unix(), // fire in 3 hours
-    // };
     const currentTime = new Date(Date.now());
     const selectedTime = new Date(Date.now());
     selectedTime.setHours(selectedHours);
     selectedTime.setMinutes(selectedMinutes);
-    // if (selectedTime < currentTime) {
-    //   // If the selected time is before the current time, schedule it for the next day
-    //   selectedTime.setDate(selectedTime.getDate() + 1); // Move to the next day
-    // }
-    // currentTime.setHours(selectedHours+5);
-    // currentTime.setMinutes(selectedMinutes+30);
 
-    // Create a time-based trigger
     const trigger: TimestampTrigger = {
       type: TriggerType.TIMESTAMP,
-      timestamp: selectedTime.getTime(), // fire at 11:10am (10 minutes before meeting)
+      timestamp: selectedTime.getTime(),
       repeatFrequency: RepeatFrequency.DAILY,
     };
-    // Create a trigger notification
+
     try {
       await notifee.createTriggerNotification(
         {
@@ -87,7 +71,7 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
             channelId: 'Time',
             importance: AndroidImportance.HIGH,
             pressAction: {
-              id: 'Alarm',
+              id: 'default',
             },
             actions: [
               {
@@ -102,7 +86,6 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
                   id: 'Stop',
                 },
               },
-              // Add more actions as needed
             ],
           },
           ios: {
@@ -117,6 +100,17 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
         },
         trigger,
       );
+      // if (Platform.OS === 'android') {
+      //   // Register click handler
+      //   messaging().onNotificationOpenedApp(handleNotificationClick);
+      // } else {
+       
+      //   messaging().setBackgroundMessageHandler(async remoteMessage => {
+      //     console.log('Message handled in the background!', remoteMessage);
+         
+      //     handleNotificationClick(remoteMessage.notification);
+      //   });
+      // }
     } catch (error) {
       showMessage({
         message: 'Time should be greater than Current Time',

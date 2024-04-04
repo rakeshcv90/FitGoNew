@@ -7,13 +7,13 @@ import {
   Platform,
   ScrollView,
   StatusBar,
-  SafeAreaView,
   Alert,
   ActivityIndicator,
   Modal,
   Linking,
+  PermissionsAndroid,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {localImage} from '../../Component/Image';
 import {
   DeviceHeigth,
@@ -28,26 +28,21 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {Switch} from 'react-native-switch';
 import {useDispatch, useSelector} from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {
   setLogout,
   setSoundOnOff,
   setUserProfileData,
 } from '../../Component/ThemeRedux/Actions';
-import {CommonActions} from '@react-navigation/native';
+
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {request, PERMISSIONS, openSettings} from 'react-native-permissions';
 import VersionNumber from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
 import {updatePhoto} from '../../Component/ThemeRedux/Actions';
 import {LogOut} from '../../Component/LogOut';
-import {setProfileImg_Data} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
-
-import {stack} from 'd3';
-import {ColorShader} from '@shopify/react-native-skia';
-import {navigationRef} from '../../../App';
 import {BlurView} from '@react-native-community/blur';
 import Reminder from '../../Component/Reminder';
 import ActivityLoader from '../../Component/ActivityLoader';
@@ -295,8 +290,8 @@ const Profile = () => {
       icon1: (
         <Image
           source={localImage.Policy}
-          style={[styles.IconView, {height: 21, width: 22}]}
-          resizeMode="center"
+          style={[styles.IconView, {height: 22, width: 22}]}
+          resizeMode="contain"
         />
       ),
       text1: 'Terms Condition',
@@ -387,6 +382,14 @@ const Profile = () => {
         });
 
         if (ProfileData.data) {
+          showMessage({
+            message: ProfileData?.data[0]?.msg,
+            type: 'success',
+            animationDuration: 500,
+
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
           getProfileData(getUserDataDetails?.id);
           setImguploaded(true);
           if (IsimgUploaded == true) {
@@ -478,9 +481,8 @@ const Profile = () => {
           {cancelable: false},
         );
       } else {
-        console.log('error occured');
+        console.log('Galaey error occured');
       }
-      // });
     };
     return (
       <View
@@ -581,7 +583,10 @@ const Profile = () => {
                       askPermissionForLibrary(PERMISSIONS.IOS.PHOTO_LIBRARY);
                     } else {
                       askPermissionForLibrary(
-                        PERMISSIONS.ANDROID.READ_MEDIA_IMAGES,
+                        Platform.Version >= 33
+                          ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
+                          : PermissionsAndroid.PERMISSIONS
+                              .READ_EXTERNAL_STORAGE,
                       );
                     }
                   }}>
@@ -654,7 +659,7 @@ const Profile = () => {
             style={{
               justifyContent: 'space-between',
               flexDirection: 'row',
-              margin: 15,
+
               marginVertical:
                 Platform.OS == 'ios'
                   ? DeviceHeigth * 0.05
@@ -664,56 +669,62 @@ const Profile = () => {
             <TouchableOpacity
               onPress={() => {
                 navigation.goBack();
-              }}
-              style={{
-                width: DeviceWidth * 0.23,
               }}>
               <Icons name="chevron-left" size={30} color={AppColor.WHITE} />
             </TouchableOpacity>
-            <Text
-              style={{
-                fontFamily: 'Poppins-SemiBold',
-                fontSize: 20,
-                color: AppColor.WHITE,
+            <View style={{marginLeft: 60}}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins-SemiBold',
+                  fontSize: 20,
+                  color: AppColor.WHITE,
+                  // marginLeft: DeviceWidth * 0.1,
+                }}>
+                {'Profile'}
+              </Text>
+            </View>
+            {/* <TouchableOpacity
+              onPress={() => {
+                navigation.goBack();
               }}>
-              {'Profile'}
-            </Text>
-            <View
+              <Icons name="chevron-left" size={30} color={AppColor.WHITE} />
+            </TouchableOpacity> */}
+            <TouchableOpacity
+              onPress={() => {
+                analytics().logEvent('CV_FITME_SIGNED_OUT');
+                LogOut(dispatch);
+                // navigation.navigate('SplaceScreen');
+              }}
+              activeOpacity={0.5}
               style={{
+                paddingLeft: 20,
+                paddingRight: 20,
+                borderWidth: 1,
+                borderRadius: 20,
+                borderColor: AppColor.WHITE,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <TouchableOpacity
-                onPress={() => {
-                  analytics().logEvent('CV_FITME_SIGNED_OUT');
-                  LogOut(dispatch);
-                  // navigation.navigate('SplaceScreen');
-                }}
-                activeOpacity={0.5}
+              <Text
                 style={{
-                  width: DeviceWidth * 0.2,
-                  borderWidth: 1,
-                  borderRadius: 20,
-                  borderColor: AppColor.WHITE,
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: 12,
+
+                  color: AppColor.WHITE,
                 }}>
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 12,
-                    color: AppColor.WHITE,
-                    paddingVertical: 1.3,
-                  }}>
-                  {'Sign out'}
-                </Text>
-              </TouchableOpacity>
-            </View>
+                {'Sign out'}
+              </Text>
+            </TouchableOpacity>
           </View>
           <View
             style={[
               styles.profileView,
-              {marginTop: Platform.OS == 'ios' ? -DeviceHeigth * 0.035 : 0},
+              {
+                marginTop:
+                  Platform.OS == 'ios'
+                    ? DeviceHeigth * 0.025
+                    : DeviceHeigth * 0.03,
+              },
             ]}>
             {isLoading && (
               <ShimmerPlaceholder
@@ -805,7 +816,6 @@ const Profile = () => {
                 `CV_FITME_CLICKED_ON_${value?.text1?.replace(' ', '_')}`,
               );
 
-              console.log('ZXcsdcfdsfsdfsd', value.text1);
               if (value.text1 == 'Personal Details') {
                 navigation.navigate('NewPersonalDetails');
               } else if (value.text1 == 'My Favorites') {
@@ -941,12 +951,14 @@ const Profile = () => {
                 );
                 // navigation.navigate('Personal Details');
                 if (value.text1 == 'Privacy Policy') {
-                  navigation.navigate('TermaAndCondition',{title:'Privacy & Policy'});
+                  navigation.navigate('TermaAndCondition', {
+                    title: 'Privacy & Policy',
+                  });
                 } else if (value.text1 == 'Terms Condition') {
-                  navigation.navigate('TermaAndCondition',{title:'Terms & Condition'});
-                } 
-                
-                else if (value.text1 == 'Contact Us') {
+                  navigation.navigate('TermaAndCondition', {
+                    title: 'Terms & Condition',
+                  });
+                } else if (value.text1 == 'Contact Us') {
                   openMailApp();
                 } else if (value.text1 == 'Rate Us') {
                   if (Platform.OS == 'ios') {
@@ -1031,11 +1043,11 @@ const styles = StyleSheet.create({
     lineHeight: 21,
   },
   nameText: {
-    fontFamily: 'Poppins-Regular',
-    fontSize: 12,
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 13,
     lineHeight: 18,
     fontWeight: '400',
-    color: AppColor.ProfileTextColor,
+    color: AppColor.BLACK,
   },
   IconView: {
     // width: 22,
@@ -1081,6 +1093,7 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     borderRadius: 160 / 2,
+
     alignSelf: 'center',
   },
   img: {

@@ -272,7 +272,7 @@ const Exercise = ({navigation, route}: any) => {
               fontWeight={'700'}
               fontSize={32}
               width={DeviceWidth}
-              // x={6}
+               x={30}
               alignSelf
             />
             <GradientText
@@ -281,6 +281,7 @@ const Exercise = ({navigation, route}: any) => {
               text={`Don't give up!`}
               fontWeight={'700'}
               fontSize={32}
+              x={-2}
             />
           </View>
           <Text
@@ -595,7 +596,7 @@ const Exercise = ({navigation, route}: any) => {
               }}
             />
           </View>
-          <Text style={styles.head}>Get Ready</Text>
+          <Text style={[styles.head,{color:AppColor.BLACK}]}>Get Ready</Text>
           <View
             style={{
               flexDirection: 'row',

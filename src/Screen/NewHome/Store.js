@@ -15,7 +15,7 @@ import {AppColor} from '../../Component/Color';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {Platform} from 'react-native';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused, useNavigation} from '@react-navigation/native';
 import {SliderBox} from 'react-native-image-slider-box';
 import FastImage from 'react-native-fast-image';
 import {useDispatch, useSelector} from 'react-redux';
@@ -36,14 +36,20 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Store = ({navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getStoreData = useSelector(state => state.getStoreData);
-  const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
-  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+
+
   const [searchText, setsearchText] = useState('');
   const [forLoading, setForLoading] = useState(false);
   const [category, setcategory] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState(getStoreData);
   const avatarRef = React.createRef();
   const dispatch = useDispatch();
+  useFocusEffect(
+    React.useCallback(() => {
+      getCaterogy();
+      setcategory(getStoreData);
+    }, []),
+  );
 
   const updateFilteredCategories = test => {
     const filteredItems = category.filter(item =>
@@ -334,8 +340,8 @@ var styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 18,
     fontWeight: '600',
-    fontFamily: 'Poppins',
-    color: 'rgba(80, 80, 80, 0.6)',
+    fontFamily: 'Montserrat',
+    color:'#000',
   },
   lastItemMargin: {
     marginBottom: 0, // Set your desired margin for the last item

@@ -89,78 +89,68 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                 style={[
                   styles.tabButton,
                   {
-                    flexDirection: 'row',
-                    // backgroundColor: 'rgba(148, 16, 0, 0.16)',
-                    borderRadius: 50,
                     marginVertical: 10,
-                    paddingLeft: 25,
-                    paddingRight: 25,
+                    paddingHorizontal: 5,
                   },
                 ]}>
                 <View
-                  style={{
-                    padding: 5,
-                  }}>
+                  style={
+                    {
+                      //padding: 5,
+                    }
+                  }>
                   {route.name == 'Home' ? (
                     <Image
-                      source={require('../Icon/Images/NewImage/home.png')}
+                      source={require('../Icon/Images/NewImage/homered.png')}
                       resizeMode="contain"
                       style={{
-                        width: 15,
-                        height: 15,
-                        tintColor: 'red',
+                        width: 25,
+                        height: 25,
                       }}
                     />
-                  ) : route.name == 'Workouts' ? (
+                  ) : route.name == 'Workout' ? (
                     <Image
-                      source={require('../Icon/Images/NewImage/workout.png')}
+                      source={require('../Icon/Images/NewImage/workoutred.png')}
                       resizeMode="contain"
                       style={{
-                        width: 15,
-                        height: 15,
-                        tintColor: 'red',
+                        width: 30,
+                        height: 30,
                       }}
                     />
                   ) : route.name == 'Reports' ? (
                     <Image
-                      source={require('../Icon/Images/NewImage/dattaGraph.png')}
+                      source={require('../Icon/Images/NewImage/dattaGraphred.png')}
                       resizeMode="contain"
                       style={{
-                        width: 15,
-                        height: 15,
-                        tintColor: 'red',
-                      }}
-                    />
-                  ) : route.name == 'Store' ? (
-                    <Image
-                      source={require('../Icon/Images/NewImage/Store.png')}
-                      resizeMode="contain"
-                      style={{
-                        width: 15,
-                        height: 15,
-                        tintColor: 'red',
+                        width: 25,
+                        height: 25,
                       }}
                     />
                   ) : (
                     <Image
-                      source={require('../Icon/Images/NewImage/trainer.png')}
+                      source={require('../Icon/Images/NewImage/trainerred.png')}
                       resizeMode="contain"
                       style={{
-                        width: 15,
-                        height: 15,
-                        tintColor: 'red',
+                        width: 25,
+                        height: 25,
                       }}
                     />
                   )}
                 </View>
-                <GradientText
-                  fontSize={12}
-                  marginTop={0}
-                  height={20}
-                  y={10}
-                  x={-1}
-                  text={label}
-                />
+
+                <Text
+                  style={{
+                    color: AppColor.RED1,
+                    fontFamily: 'Montserrat-Medium',
+                    fontSize: 12,
+                    lineHeight: 14.63,
+                    fontWeight: '700',
+
+                    marginTop: 5,
+                    textAlign: 'center',
+                  }}>
+                  {label}
+                </Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
@@ -178,19 +168,17 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                     source={require('../Icon/Images/NewImage/home.png')}
                     resizeMode="contain"
                     style={{
-                      width: 15,
-                      height: 15,
-                      tintColor: '#3D3D3D',
+                      width: 25,
+                      height: 25,
                     }}
                   />
-                ) : route.name == 'Workouts' ? (
+                ) : route.name == 'Workout' ? (
                   <Image
                     source={require('../Icon/Images/NewImage/workout.png')}
                     resizeMode="contain"
                     style={{
-                      width: 15,
-                      height: 15,
-                      tintColor: '#000000',
+                      width: 30,
+                      height: 30,
                     }}
                   />
                 ) : route.name == 'Reports' ? (
@@ -198,19 +186,8 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                     source={require('../Icon/Images/NewImage/dattaGraph.png')}
                     resizeMode="contain"
                     style={{
-                      width: 15,
-                      height: 15,
-                      tintColor: '#3D3D3D',
-                    }}
-                  />
-                ) : route.name == 'Store' ? (
-                  <Image
-                    source={require('../Icon/Images/NewImage/Store.png')}
-                    resizeMode="contain"
-                    style={{
-                      width: 15,
-                      height: 15,
-                      tintColor: '#3D3D3D',
+                      width: 25,
+                      height: 25,
                     }}
                   />
                 ) : (
@@ -218,12 +195,24 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                     source={require('../Icon/Images/NewImage/trainer.png')}
                     resizeMode="contain"
                     style={{
-                      width: 15,
-                      height: 15,
-                      tintColor: '#3D3D3D',
+                      width: 25,
+                      height: 25,
                     }}
                   />
                 )}
+                <Text
+                  style={{
+                    color: '#202020',
+                    opacity: 0.4,
+                    fontSize: 12,
+                    lineHeight: 14.63,
+                    fontWeight: '500',
+                    fontFamily: 'Montserrat-Medium',
+                    marginTop: 5,
+                    textAlign: 'center',
+                  }}>
+                  {label}
+                </Text>
               </TouchableOpacity>
             )}
           </>
@@ -232,6 +221,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
     </View>
   );
 };
+
 const BottomTab = () => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
 
@@ -317,11 +307,7 @@ const BottomTab = () => {
           component={NewProgressScreen}
           options={{tabBarShowLabel: false}}
         />
-        <Tabs.Screen
-          name="Store"
-          component={Store}
-          options={{tabBarShowLabel: false}}
-        />
+
         <Tabs.Screen
           name="Trainer"
           component={Trainer}

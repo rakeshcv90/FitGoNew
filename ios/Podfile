@@ -58,6 +58,7 @@ target 'FitGo' do
     pod 'FirebaseCoreInternal', :modular_headers => true
     pod 'GoogleUtilities', :modular_headers => true
     pod 'RNIap', :path => '../node_modules/react-native-iap'
+    pod 'Google-Mobile-Ads-SDK'
     pod 'react-native-in-app-review', :path => '../node_modules/react-native-in-app-review'
   pod 'RNFBAnalytics', :path => '../node_modules/@react-native-firebase/analytics'
   # Flags change depending on the env values.

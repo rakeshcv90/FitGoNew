@@ -13,7 +13,13 @@ import {
   Alert,
   RefreshControl,
 } from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {
+  createRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {SafeAreaView} from 'react-native';
 import {AppColor} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
@@ -58,6 +64,7 @@ import analytics from '@react-native-firebase/analytics';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {ImageBackground} from 'react-native';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
+import NativeAddTest from '../../Component/NativeAddTest';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -81,7 +88,7 @@ const GradientText = ({item}) => {
           <Stop offset="1" stopColor={gradientColors[1]} />
         </SvgGrad>
         <SvgText
-          fontFamily="Poppins"
+          fontFamily="Montserrat"
           width={50}
           fontWeight={'600'}
           fontSize={17}
@@ -128,8 +135,8 @@ const ProgressBar = ({progress, image, text}) => {
       <Text
         style={{
           fontSize: 12,
-          fontWeight: '700',
-          fontFamily: 'Poppins',
+          fontWeight: '600',
+          fontFamily: 'Montserrat-SemiBold',
           lineHeight: 18,
           color: '#505050',
         }}>
@@ -159,6 +166,7 @@ const Home = ({navigation}) => {
   const getStepCounterOnoff = useSelector(state => state.getStepCounterOnoff);
   const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+  const getStoreData = useSelector(state => state.getStoreData);
 
   const [stepGoalProfile, setStepGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
@@ -179,13 +187,11 @@ const Home = ({navigation}) => {
 
   useEffect(() => {
     if (isFocused) {
-    
       getCustomeWorkoutTimeDetails();
       getGraphData(1);
       setTimeout(() => {
         ActivityPermission();
       }, 3000);
-      
     }
   }, [isFocused]);
 
@@ -445,9 +451,9 @@ const Home = ({navigation}) => {
               AppleHealthKit.getStepCount(options, (callbackError, results) => {
                 if (callbackError) {
                 }
-                setSteps(results.value);
-                setDistance(((results.value / 20) * 0.01).toFixed(2));
-                setCalories(((results.value / 20) * 1).toFixed(1));
+                setSteps(results?.value);
+                setDistance(((results?.value / 20) * 0.01).toFixed(2));
+                setCalories(((results?.value / 20) * 1).toFixed(1));
               });
             }
           });
@@ -545,6 +551,11 @@ const Home = ({navigation}) => {
     const [Step_Visible, setSteps_Visible] = useState(true);
     const [Distance_Visible, setDistance_Visible] = useState(false);
     const [Calories_Visible, setCalories_Visible] = useState(false);
+
+    const [showBlur, setShowBlur] = useState(true);
+    const [viewRef, setViewRef] = useState(null);
+    const [blurType, setBlurType] = useState('light');
+    const backgroundImageRef = createRef();
     const ToggleVisiblity = num => {
       if (num == 1) {
         setSteps_Visible(!Step_Visible);
@@ -632,211 +643,221 @@ const Home = ({navigation}) => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}>
-        <BlurView
-          style={styles.modalContainer}
-          blurType="light"
-          blurAmount={1}
-          reducedTransparencyFallbackColor="white"
-        />
         <View
-          style={[styles.modalContent, {backgroundColor: AppColor.BACKGROUNG}]}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image
-              source={localImage.Target}
-              style={{width: DeviceWidth * 0.07, height: DeviceHeigth * 0.03}}
-              resizeMode="contain"
-            />
-            <Text
-              style={[styles.title, {color: AppColor.BLACK, marginLeft: 10}]}>
-              Set Goals
-            </Text>
-          </View>
+          style={{
+            flex: 1,
+          }}>
+          <BlurView
+            style={{flex: 1}}
+            blurType="light"
+            blurAmount={1}
+            reducedTransparencyFallbackColor="white"
+          />
+          <View
+            style={[
+              styles.modalContent,
+              {backgroundColor: AppColor.BACKGROUNG},
+            ]}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                source={localImage.Target}
+                style={{width: DeviceWidth * 0.07, height: DeviceHeigth * 0.03}}
+                resizeMode="contain"
+              />
+              <Text
+                style={[styles.title, {color: AppColor.BLACK, marginLeft: 10}]}>
+                Set Goals
+              </Text>
+            </View>
 
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 15,
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                source={localImage.Step3}
-                style={{width: 30, height: 30}}
-                tintColor={'#5FB67B'}
-              />
-              <Text style={styles.txt5}>Steps</Text>
-            </View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text
-                style={[
-                  {
-                    color: AppColor.BoldText,
-                    marginLeft: 10,
-                    fontFamily: 'Poppins-SemiBold',
-                  },
-                ]}>
-                {Steps_Goal + ' Steps'}
-              </Text>
-              <TouchableOpacity
-                style={styles.dropButton}
-                onPress={() => ToggleVisiblity(1)}>
-                <Icons
-                  name={Step_Visible ? 'chevron-up' : 'chevron-down'}
-                  size={25}
-                  color={'#000'}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={{marginTop: 5}}>
-            {Step_Visible ? (
-              <Slider
-                value={Steps_Goal}
-                maximumValue={10000}
-                minimumValue={500}
-                step={1}
-                onValueChange={value => {
-                  setSteps_Goal(value);
-                  setCalories_Goal((value * 0.05).toFixed(2));
-                  setDistance_Goal((value * 0.0005).toFixed(2));
-                }}
-                minimumTrackTintColor="#5FB67B"
-                renderThumbComponent={ThumbImage1}
-                trackStyle={{height: 10, borderRadius: 20}}
-              />
-            ) : null}
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 15,
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                source={localImage.Step2}
-                style={{width: 30, height: 28}}
-                resizeMode="contain"
-              />
-              <Text style={styles.txt5}>Distance</Text>
-            </View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text
-                style={[
-                  {
-                    color: AppColor.BoldText,
-                    marginLeft: 10,
-                    fontFamily: 'Poppins-SemiBold',
-                  },
-                ]}>
-                {Distance_Goal + ' km'}
-              </Text>
-              <TouchableOpacity
-                style={styles.dropButton}
-                onPress={() => ToggleVisiblity(2)}>
-                <Icons
-                  name={Distance_Visible ? 'chevron-up' : 'chevron-down'}
-                  size={25}
-                  color={'#000'}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={{marginTop: 5}}>
-            {Distance_Visible ? (
-              <Slider
-                value={Distance_Goal}
-                maximumValue={5}
-                step={1}
-                onValueChange={value => {
-                  setDistance_Goal(value);
-                  setSteps_Goal((value * 2000).toFixed(0));
-                  setCalories_Goal((value * 100).toFixed(2));
-                }}
-                minimumValue={0.25}
-                minimumTrackTintColor="#FCBB1D"
-                renderThumbComponent={ThumbImage2}
-                trackStyle={{height: 10, borderRadius: 20}}
-              />
-            ) : null}
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginTop: 15,
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                source={localImage.Step1}
-                style={{width: 30, height: 25}}
-                resizeMode="contain"
-              />
-              <Text style={styles.txt5}>Calories</Text>
-            </View>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text
-                style={[
-                  {
-                    color: AppColor.BoldText,
-                    marginLeft: 10,
-                    fontFamily: 'Poppins-SemiBold',
-                  },
-                ]}>
-                {Calories_Goal + ' KCal'}
-              </Text>
-              <TouchableOpacity
-                style={styles.dropButton}
-                onPress={() => ToggleVisiblity(3)}>
-                <Icons
-                  name={Calories_Visible ? 'chevron-up' : 'chevron-down'}
-                  size={25}
-                  color={'#000'}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={{marginTop: 5}}>
-            {Calories_Visible ? (
-              <Slider
-                value={Calories_Goal}
-                maximumValue={500}
-                minimumValue={25}
-                step={1}
-                onValueChange={value => {
-                  setCalories_Goal(value);
-                  setDistance_Goal((value * 0.01).toFixed(2));
-                  setSteps_Goal(value * 20);
-                }}
-                minimumTrackTintColor={AppColor.RED}
-                renderThumbComponent={ThumbImage3}
-                trackStyle={{height: 10, borderRadius: 20}}
-              />
-            ) : null}
-          </View>
-          <TouchableOpacity
-            style={styles.Modal_Save_btton}
-            activeOpacity={0.5}
-            onPress={() => {
-              HandleSave();
-            }}>
-            <LinearGradient
-              colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
-              start={{x: 0, y: 1}}
-              end={{x: 1, y: 0}}
+            <View
               style={{
-                width: DeviceWidth * 0.3,
-                height: DeviceHeigth * 0.04,
-                borderRadius: 12,
-                justifyContent: 'center',
+                flexDirection: 'row',
+                marginTop: 15,
                 alignItems: 'center',
+                justifyContent: 'space-between',
               }}>
-              <Text style={[styles.title, {color: AppColor.WHITE}]}>Save</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Image
+                  source={localImage.Step3}
+                  style={{width: 30, height: 30}}
+                  tintColor={'#5FB67B'}
+                />
+                <Text style={styles.txt5}>Steps</Text>
+              </View>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text
+                  style={[
+                    {
+                      color: AppColor.BoldText,
+                      marginLeft: 10,
+                      fontFamily: 'Montserrat',
+                    },
+                  ]}>
+                  {Steps_Goal + ' Steps'}
+                </Text>
+                <TouchableOpacity
+                  style={styles.dropButton}
+                  onPress={() => ToggleVisiblity(1)}>
+                  <Icons
+                    name={Step_Visible ? 'chevron-up' : 'chevron-down'}
+                    size={25}
+                    color={'#000'}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={{marginTop: 5}}>
+              {Step_Visible ? (
+                <Slider
+                  value={Steps_Goal}
+                  maximumValue={10000}
+                  minimumValue={500}
+                  step={1}
+                  onValueChange={value => {
+                    setSteps_Goal(value);
+                    setCalories_Goal((value * 0.05).toFixed(2));
+                    setDistance_Goal((value * 0.0005).toFixed(2));
+                  }}
+                  minimumTrackTintColor="#5FB67B"
+                  renderThumbComponent={ThumbImage1}
+                  trackStyle={{height: 10, borderRadius: 20}}
+                />
+              ) : null}
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 15,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Image
+                  source={localImage.Step2}
+                  style={{width: 30, height: 28}}
+                  resizeMode="contain"
+                />
+                <Text style={styles.txt5}>Distance</Text>
+              </View>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text
+                  style={[
+                    {
+                      color: AppColor.BoldText,
+                      marginLeft: 10,
+                      fontFamily: 'Montserrat',
+                    },
+                  ]}>
+                  {Distance_Goal + ' km'}
+                </Text>
+                <TouchableOpacity
+                  style={styles.dropButton}
+                  onPress={() => ToggleVisiblity(2)}>
+                  <Icons
+                    name={Distance_Visible ? 'chevron-up' : 'chevron-down'}
+                    size={25}
+                    color={'#000'}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={{marginTop: 5}}>
+              {Distance_Visible ? (
+                <Slider
+                  value={Distance_Goal}
+                  maximumValue={5}
+                  step={1}
+                  onValueChange={value => {
+                    setDistance_Goal(value);
+                    setSteps_Goal((value * 2000).toFixed(0));
+                    setCalories_Goal((value * 100).toFixed(2));
+                  }}
+                  minimumValue={0.25}
+                  minimumTrackTintColor="#FCBB1D"
+                  renderThumbComponent={ThumbImage2}
+                  trackStyle={{height: 10, borderRadius: 20}}
+                />
+              ) : null}
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 15,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Image
+                  source={localImage.Step1}
+                  style={{width: 30, height: 25}}
+                  resizeMode="contain"
+                />
+                <Text style={styles.txt5}>Calories</Text>
+              </View>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text
+                  style={[
+                    {
+                      color: AppColor.BoldText,
+                      marginLeft: 10,
+                      fontFamily: 'Montserrat',
+                    },
+                  ]}>
+                  {Calories_Goal + ' KCal'}
+                </Text>
+                <TouchableOpacity
+                  style={styles.dropButton}
+                  onPress={() => ToggleVisiblity(3)}>
+                  <Icons
+                    name={Calories_Visible ? 'chevron-up' : 'chevron-down'}
+                    size={25}
+                    color={'#000'}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={{marginTop: 5}}>
+              {Calories_Visible ? (
+                <Slider
+                  value={Calories_Goal}
+                  maximumValue={500}
+                  minimumValue={25}
+                  step={1}
+                  onValueChange={value => {
+                    setCalories_Goal(value);
+                    setDistance_Goal((value * 0.01).toFixed(2));
+                    setSteps_Goal(value * 20);
+                  }}
+                  minimumTrackTintColor={AppColor.RED}
+                  renderThumbComponent={ThumbImage3}
+                  trackStyle={{height: 10, borderRadius: 20}}
+                />
+              ) : null}
+            </View>
+            <TouchableOpacity
+              style={styles.Modal_Save_btton}
+              activeOpacity={0.5}
+              onPress={() => {
+                HandleSave();
+              }}>
+              <LinearGradient
+                colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 0}}
+                style={{
+                  width: DeviceWidth * 0.3,
+                  height: DeviceHeigth * 0.04,
+                  borderRadius: 12,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text style={[styles.title, {color: AppColor.WHITE}]}>
+                  Save
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     );
@@ -887,12 +908,13 @@ const Home = ({navigation}) => {
         colors={[color.color1, color.color2]}
         style={styles.listItem}>
         <Text
-          style={[
-            styles.title,
-            {
-              color: color.color3,
-            },
-          ]}>
+          style={{
+            fontSize: 14,
+            fontWeight: '600',
+            lineHeight: 17,
+            fontFamily: 'Montserrat-SemiBold',
+            color: color.color3,
+          }}>
           {title.workout_mindset_title}
         </Text>
 
@@ -905,8 +927,8 @@ const Home = ({navigation}) => {
           style={[
             styles.img,
             {
-              height: 30,
-              width: 30,
+              height: 50,
+              width: 50,
             },
           ]}
           resizeMode="cover"></Image>
@@ -968,7 +990,8 @@ const Home = ({navigation}) => {
     backgroundGradientFromOpacity: 0,
     backgroundGradientTo: AppColor.RED,
     backgroundGradientToOpacity: 0,
-    color: () => AppColor.BoldText,
+
+    color: () => '#202020',
     decimalPlaces: 0,
     strokeWidth: 4, // optional, default 3
     barPercentage: 0,
@@ -1123,12 +1146,12 @@ const Home = ({navigation}) => {
               styles.title,
               {
                 fontSize: 13,
-                fontWeight: '500',
-                lineHeight: 18,
-                fontFamily: 'Poppins',
+                fontWeight: '600',
+                lineHeight: 12,
+                fontFamily: 'Montserrat-SemiBold',
                 textAlign: 'center',
                 width: 100,
-                color: colors[index % colors.length].color3,
+                color: '#505050',
               },
             ]}>
             {item.diet_title}
@@ -1137,10 +1160,113 @@ const Home = ({navigation}) => {
       </>
     );
   });
+  const MyStoreItem = React.memo(({item, index}) => {
+    return (
+      <>
+        <TouchableOpacity
+          style={styles.listItem2}
+          onPress={() => {
+            navigation.navigate('ProductsList', {item: item});
+          }}>
+          {imageLoad && (
+            <ShimmerPlaceholder
+              style={{
+                height: 90,
+                width: 90,
+                borderRadius: 180 / 2,
+                alignSelf: 'center',
+                top: -5,
+              }}
+              ref={avatarRef}
+              autoRun
+            />
+          )}
+          <Image
+            source={
+              item.type_image_link == null
+                ? localImage.Noimage
+                : {uri: item.type_image_link}
+            }
+            onLoad={() => setImageLoad(false)}
+            style={[
+              styles.img,
+              {
+                height: 90,
+                width: 90,
+                borderRadius: 180 / 2,
+                alignSelf: 'center',
+                top: -5,
+              },
+            ]}
+            resizeMode="cover"></Image>
 
+          <Text
+            numberOfLines={1}
+            style={[
+              styles.title,
+              {
+                fontSize: 13,
+                fontWeight: '600',
+                lineHeight: 12,
+                fontFamily: 'Montserrat-SemiBold',
+                textAlign: 'center',
+                width: 100,
+                color: '#505050',
+              },
+            ]}>
+            {item.type_title}
+          </Text>
+        </TouchableOpacity>
+      </>
+    );
+  });
+  const getNativeAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return (
+          <View
+            style={{
+              alignSelf: 'center',
+              alignItems: 'center',
+
+              top: DeviceHeigth * 0.08,
+            }}>
+            <NativeAddTest type="image" media={false} />
+          </View>
+        );
+      } else {
+        return (
+          <View
+            style={{
+              alignSelf: 'center',
+              alignItems: 'center',
+
+              top: DeviceHeigth * 0.08,
+            }}>
+            <NativeAddTest type="image" media={false} />
+          </View>
+        );
+      }
+    } else {
+      return (
+        <View
+          style={{
+            alignSelf: 'center',
+            alignItems: 'center',
+
+            top: DeviceHeigth * 0.08,
+          }}>
+          <NativeAddTest type="image" media={false} />
+        </View>
+      );
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
+
       <View style={styles.profileView}>
         <View style={{}}>
           <GradientText
@@ -1198,21 +1324,8 @@ const Home = ({navigation}) => {
           )}
         </View>
       </View>
-      <View style={styles.rewardView}>
-        {/* <Image
-            source={localImage.Money}
-            style={[
-              styles.img,
-              {
-                height: 30,
-                width: 30,
-              },
-            ]}
-            resizeMode="cover"></Image> */}
-        {/* <Text style={styles.monetText}>500</Text> */}
-      </View>
+      <View style={styles.rewardView}></View>
 
-      {/* {forLoading ? <ActivityLoader /> : ''} */}
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
@@ -1229,12 +1342,48 @@ const Home = ({navigation}) => {
             colors={[AppColor.RED, AppColor.WHITE]}
           />
         }>
-        <TouchableOpacity
-          style={styles.CardBox}
-          onPress={handleLongPress}
-          activeOpacity={0.7}>
-          <Text style={styles.healthText}>Health Overview</Text>
-          <View style={styles.healthView}>
+        <View style={{width: '95%', alignSelf: 'center'}}>
+          <Text
+            style={{
+              color: AppColor.BLACK,
+              fontFamily: 'Montserrat-SemiBold',
+              fontWeight: 'bold',
+              lineHeight: 19.5,
+              fontSize: 18,
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+            }}>
+            Health Overview
+          </Text>
+        </View>
+        <View style={styles.CardBox}>
+          <TouchableOpacity
+           onPress={handleLongPress}
+           activeOpacity={0.5}
+          
+            style={{
+              width: 30,
+              height: 30,
+       
+              margin: 10,
+              alignItems: 'center',
+              alignSelf: 'flex-end',
+              justifyContent: 'center',
+              zIndex:1
+            }}>
+            <Image
+              source={require('../../Icon/Images/NewImage/editpen.png')}
+              style={[
+                styles.img,
+                {
+                  height: 30,
+                  width: 30,
+                },
+              ]}
+              resizeMode="contain"></Image>
+          </TouchableOpacity>
+
+          <View style={[styles.healthView, {marginTop: -DeviceHeigth * 0.04,}]}>
             <View style={styles.stepView}>
               <Text style={styles.healthText1}>Steps</Text>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -1271,7 +1420,7 @@ const Home = ({navigation}) => {
                 <Text style={[styles.monetText, {color: '#FCBB1D'}]}>
                   {Platform.OS == 'ios' ? distance : distanceRef.current}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
-                    {`/ ${DistanceGoalProfile} km `}
+                    {`/${DistanceGoalProfile} km `}
                   </Text>
                 </Text>
               </View>
@@ -1295,7 +1444,7 @@ const Home = ({navigation}) => {
                 <Text style={[styles.monetText, {color: '#D01818'}]}>
                   {Platform.OS == 'ios' ? Calories : caloriesRef.current}
                   <Text style={[styles.monetText, {color: '#505050'}]}>
-                    {`/${CalriesGoalProfile} KCal`}
+                    {`/${CalriesGoalProfile} Kcal`}
                   </Text>
                 </Text>
               </View>
@@ -1333,7 +1482,7 @@ const Home = ({navigation}) => {
               </CircularProgressBase>
             </View>
           </View>
-        </TouchableOpacity>
+        </View>
 
         <>
           <View
@@ -1341,17 +1490,17 @@ const Home = ({navigation}) => {
               flexDirection: 'row',
               width: '95%',
               alignSelf: 'center',
-              top: DeviceHeigth * 0.03,
+              top: DeviceHeigth * 0.04,
               justifyContent: 'space-between',
             }}>
             <Text
               style={{
-                color: AppColor.BoldText,
-                fontFamily: 'Poppins',
-                fontWeight: '700',
-                lineHeight: 24,
-                fontSize: 16,
-
+                color: AppColor.BLACK,
+                fontFamily: 'Montserrat-SemiBold',
+                fontWeight: 'bold',
+                lineHeight: 19.5,
+                fontSize: 18,
+                alignItems: 'center',
                 justifyContent: 'flex-start',
               }}>
               Meditation
@@ -1365,7 +1514,17 @@ const Home = ({navigation}) => {
                     item: customWorkoutData?.minset_workout[0],
                   });
                 }}>
-                <Icons name="chevron-right" size={25} color={'#000'} />
+                <Text
+                  style={{
+                    color: AppColor.BoldText,
+                    fontFamily: 'Montserrat-SemiBold',
+                    fontWeight: '600',
+                    color: AppColor.RED1,
+                    fontSize: 12,
+                    lineHeight: 14,
+                  }}>
+                  View All
+                </Text>
               </TouchableOpacity>
             )}
           </View>
@@ -1400,16 +1559,17 @@ const Home = ({navigation}) => {
             alignSelf: 'center',
             top: DeviceHeigth * 0.03,
             justifyContent: 'space-between',
+            alignItems: 'center',
             top: DeviceHeigth * 0.07,
           }}>
           <Text
             style={{
-              color: AppColor.BoldText,
-              fontFamily: 'Poppins',
-              fontWeight: '700',
-              lineHeight: 24,
-              fontSize: 16,
-              // marginLeft:20,
+              color: AppColor.BLACK,
+              fontFamily: 'Montserrat-SemiBold',
+              fontWeight: 'bold',
+              lineHeight: 19.5,
+              fontSize: 18,
+              alignItems: 'center',
               justifyContent: 'flex-start',
             }}>
             Workouts
@@ -1424,7 +1584,17 @@ const Home = ({navigation}) => {
                   fav: false,
                 });
               }}>
-              <Icons name="chevron-right" size={25} color={'#000'} />
+              <Text
+                style={{
+                  color: AppColor.BoldText,
+                  fontFamily: 'Montserrat-SemiBold',
+                  fontWeight: '600',
+                  color: AppColor.RED1,
+                  fontSize: 12,
+                  lineHeight: 14,
+                }}>
+                View All
+              </Text>
             </TouchableOpacity>
           )}
         </View>
@@ -1432,7 +1602,7 @@ const Home = ({navigation}) => {
           style={[
             styles.meditionBox,
             {
-              top: DeviceHeigth * 0.08,
+              top: DeviceHeigth * 0.069,
             },
           ]}>
           <FlatList
@@ -1473,12 +1643,20 @@ const Home = ({navigation}) => {
                       style={[
                         styles.title,
                         {
+                          fontFamily: 'Montserrat-SemiBold',
+                          fontSize: 14,
+                          lineHeight: 17,
                           alignSelf: 'center',
                           zIndex: 1,
                           left:
-                            DeviceWidth >= 768
-                              ? -DeviceWidth * 0.12
+                            Platform.OS == 'ios'
+                              ? DeviceWidth >= 768
+                                ? -DeviceWidth * 0.12
+                                : -DeviceWidth * 0.05
+                              : DeviceWidth >= 768
+                              ? -DeviceWidth * 0.1
                               : -DeviceWidth * 0.05,
+
                           color: AppColor.BoldText,
                           width: DeviceHeigth * 0.2,
                         },
@@ -1497,7 +1675,7 @@ const Home = ({navigation}) => {
                           image={localImage.Play}
                           text={
                             totalTime > 60
-                              ? `${(totalTime / 60).toFixed(0)} min`
+                              ? `${(totalTime / 60).toFixed(0)} Min`
                               : `${totalTime} sec`
                           }
                         />
@@ -1507,12 +1685,12 @@ const Home = ({navigation}) => {
                           progress={time.length > 0 && time[0].totalCalories}
                           //  progress={33}
                           image={localImage.Step1}
-                          text={totalCal + 'Kcal'}
+                          text={totalCal + ' Kcal'}
                         />
                       </View>
                     </View>
                   </View>
-
+                  {}
                   <Image
                     source={localImage.GymImage}
                     style={{
@@ -1520,36 +1698,14 @@ const Home = ({navigation}) => {
                       width: DeviceWidth * 0.35,
                       bottom: -DeviceHeigth * 0.06,
                       left: DeviceWidth * 0.005,
-                      marginTop: -DeviceHeigth * 0.11,
+                      marginTop:
+                        Platform.OS == 'ios'
+                          ? -DeviceHeigth * 0.11
+                          : DeviceWidth >= 768
+                          ? -DeviceHeigth * 0.08
+                          : -DeviceHeigth * 0.11,
                     }}
                     resizeMode="contain"></Image>
-                  {/* <TouchableOpacity
-                    style={[
-                      styles.img,
-                      {
-                        height: 25,
-                        width: 25,
-                        // backgroundColor:'red',
-                        left: -45,
-                        borderRadius: 0,
-                        top: -DeviceHeigth * 0.04,
-                      },
-                    ]}
-                    onPress={() => postLike(item?.workout_id)}>
-                    {likeData.includes(item?.workout_id) ? (
-                      <Image
-                        source={localImage.Heart}
-                        resizeMode="contain"
-                        style={{height: 25, width: 25}}
-                      />
-                    ) : (
-                      <Image
-                        source={localImage.dw7}
-                        resizeMode="contain"
-                        style={{height: 25, width: 25}}
-                      />
-                    )}
-                  </TouchableOpacity> */}
                 </TouchableOpacity>
               );
             }}
@@ -1564,39 +1720,30 @@ const Home = ({navigation}) => {
               flexDirection: 'row',
               top: DeviceHeigth * 0.01,
               justifyContent: 'center',
-            }}>
-            {/* {customWorkoutData?.workout.map((value, index) => (
-              <View
-                key={index}
-                style={{
-                  marginHorizontal: 5,
-                  flexDirection: 'row',
-                  height: 5,
-                  width: 7,
-                  borderRadius: 20,
-                  backgroundColor: AppColor.GRAY2,
-                }}></View>
-            ))} */}
-          </View>
+            }}></View>
         </View>
+        {getNativeAdsDisplay()}
 
         <View
           style={{
             flexDirection: 'row',
             width: '95%',
             alignSelf: 'center',
-            top: DeviceHeigth * 0.03,
+            // backgroundColor:'red',
+            //top: DeviceHeigth * 0.03,
+            alignItems: 'center',
             justifyContent: 'space-between',
-            top: DeviceHeigth * 0.11,
+            top: DeviceHeigth * 0.1,
+            marginBottom: 10,
           }}>
           <Text
             style={{
-              color: AppColor.BoldText,
-              fontFamily: 'Poppins',
-              fontWeight: '700',
-              lineHeight: 24,
-              fontSize: 16,
-              // marginLeft:20,
+              color: AppColor.BLACK,
+              fontFamily: 'Montserrat-SemiBold',
+              fontWeight: 'bold',
+              lineHeight: 19.5,
+              fontSize: 18,
+              alignItems: 'center',
               justifyContent: 'flex-start',
             }}>
             Meals
@@ -1606,88 +1753,112 @@ const Home = ({navigation}) => {
               analytics().logEvent('CV_FITME_CLICKED_ON_MEALS');
               navigation.navigate('Meals');
             }}>
-            <Icons name="chevron-right" size={25} color={'#000'} />
+            <Text
+              style={{
+                color: AppColor.BoldText,
+                fontFamily: 'Montserrat-SemiBold',
+                fontWeight: '600',
+                color: AppColor.RED1,
+                fontSize: 12,
+                lineHeight: 14,
+              }}>
+              View All
+            </Text>
           </TouchableOpacity>
         </View>
         <View
           style={[
             styles.meditionBox,
             {
-              top: DeviceHeigth * 0.12,
+              top: DeviceHeigth * 0.1,
             },
           ]}>
           <FlatList
-            data={mealData?.slice(0, 4)}
+            data={
+              Platform.OS == 'android'
+                ? mealData?.slice(0, 4)
+                : DeviceHeigth >= 1024
+                ? mealData?.slice(0, 5)
+                : mealData?.slice(0, 4)
+            }
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
             pagingEnabled
-            // renderItem={({item, index}) => {
-            //   return (
-            //     <>
-            //       <TouchableOpacity
-            //         style={styles.listItem2}
-            //         onPress={() => {
-            //           navigation.navigate('MealDetails', {item: item});
-            //         }}>
-            //         {imageLoad && (
-            //           <ShimmerPlaceholder
-            //             style={{
-            //               height: 90,
-            //               width: 90,
-            //               borderRadius: 180 / 2,
-            //               alignSelf: 'center',
-            //               top: -5,
-            //             }}
-            //             ref={avatarRef}
-            //             autoRun
-            //           />
-            //         )}
-            //         <Image
-            //           source={{uri: item.diet_image_link}}
-            //           onLoad={() => setImageLoad(false)}
-            //           style={[
-            //             styles.img,
-            //             {
-            //               height: 90,
-            //               width: 90,
-            //               borderRadius: 180 / 2,
-            //               alignSelf: 'center',
-            //               top: -5,
-            //             },
-            //           ]}
-            //           resizeMode="cover"></Image>
-            //         {imageLoad && (
-            //           <ShimmerPlaceholder
-            //             style={{
-            //               width: 100,
-            //             }}
-            //             ref={avatarRef}
-            //             autoRun
-            //           />
-            //         )}
-            //         <Text
-            //           numberOfLines={1}
-            //           style={[
-            //             styles.title,
-            //             {
-            //               fontSize: 13,
-            //               fontWeight: '500',
-            //               lineHeight: 18,
-            //               fontFamily: 'Poppins',
-            //               textAlign: 'center',
-            //               width: 100,
-            //               color: colors[index % colors.length].color3,
-            //             },
-            //           ]}>
-            //           {item.diet_title}
-            //         </Text>
-            //       </TouchableOpacity>
-            //     </>
-            //   );
-            // }}
             renderItem={({item, index}) => (
               <MyListItem item={item} index={index} />
+            )}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
+          />
+        </View>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            width: '95%',
+            alignSelf: 'center',
+            // backgroundColor:'red',
+            //top: DeviceHeigth * 0.03,
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            top: DeviceHeigth * 0.09,
+            marginBottom: 10,
+          }}>
+          <Text
+            style={{
+              color: AppColor.BLACK,
+              fontFamily: 'Montserrat-SemiBold',
+              fontWeight: 'bold',
+              lineHeight: 19.5,
+              fontSize: 18,
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+            }}>
+            Store
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              analytics().logEvent('CV_FITME_CLICKED_ON_MEALS');
+              navigation.navigate('Store');
+            }}>
+            <Text
+              style={{
+                color: AppColor.BoldText,
+                fontFamily: 'Montserrat-SemiBold',
+                fontWeight: '600',
+                color: AppColor.RED1,
+                fontSize: 12,
+                lineHeight: 14,
+              }}>
+              View All
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={[
+            styles.meditionBox,
+            {
+              top: DeviceHeigth * 0.09,
+            },
+          ]}>
+          <FlatList
+            // data={getStoreData?.slice(0, )}
+            data={
+              Platform.OS == 'android'
+                ? getStoreData?.slice(0, 4)
+                : DeviceHeigth >= 1024
+                ? getStoreData?.slice(0, 5)
+                : getStoreData?.slice(0, 4)
+            }
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            pagingEnabled
+            renderItem={({item, index}) => (
+              <MyStoreItem item={item} index={index} />
             )}
             initialNumToRender={10}
             maxToRenderPerBatch={10}
@@ -1701,18 +1872,17 @@ const Home = ({navigation}) => {
             width: '95%',
             alignSelf: 'center',
             alignItems: 'center',
-            top: DeviceHeigth * 0.03,
             justifyContent: 'space-between',
-            top: DeviceHeigth * 0.1,
+            top: DeviceHeigth * 0.065,
           }}>
           <Text
             style={{
-              color: AppColor.BoldText,
-              fontFamily: 'Poppins',
-              fontWeight: '700',
-              lineHeight: 24,
-              fontSize: 16,
-              // marginLeft:20,
+              color: AppColor.BLACK,
+              fontFamily: 'Montserrat-SemiBold',
+              fontWeight: 'bold',
+              lineHeight: 19.5,
+              fontSize: 18,
+              alignItems: 'center',
               justifyContent: 'flex-start',
             }}>
             Activities
@@ -1742,7 +1912,7 @@ const Home = ({navigation}) => {
         </View>
         <View
           style={{
-            top: DeviceHeigth * 0.11,
+            top: DeviceHeigth * 0.065,
             width: '95%',
             // height: 200,
             marginBottom: DeviceHeigth * 0.13,
@@ -1781,8 +1951,8 @@ const Home = ({navigation}) => {
         </View>
       </ScrollView>
       {modalVisible ? <UpdateGoalModal /> : null}
-      {/* <PaddoMeterPermissionModal PaddoModalShow={PaddoModalShow} setPaddoModalShow={setPaddoModalShow}/> */}
-      {PaddoModalShow ? <PaddoMeterPermissionModal /> : null}
+      {/* 
+      {PaddoModalShow ? <PaddoMeterPermissionModal /> : null} */}
     </SafeAreaView>
   );
 };
@@ -1800,7 +1970,7 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     top: DeviceHeigth * 0.02,
-    // backgroundColor: 'red',
+
   },
   profileView1: {
     height: 60,
@@ -1827,10 +1997,10 @@ var styles = StyleSheet.create({
     paddingLeft: 5,
   },
   monetText: {
-    fontSize: 11,
-    fontWeight: '700',
-    lineHeight: 15,
-    fontFamily: 'Poppins',
+    fontSize: 10,
+    fontWeight: '500',
+    lineHeight: 12,
+    fontFamily: 'Montserrat-SemiBold',
     marginLeft: 10,
   },
   CardBox: {
@@ -1855,7 +2025,7 @@ var styles = StyleSheet.create({
     }),
   },
   healthText: {
-    fontFamily: 'Poppins',
+    fontFamily: 'Montserrat',
     fontWeight: '500',
     lineHeight: 18,
     fontSize: 14,
@@ -1864,6 +2034,8 @@ var styles = StyleSheet.create({
   },
   healthView: {
     flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   stepView: {
     width: '55%',
@@ -1876,15 +2048,15 @@ var styles = StyleSheet.create({
     paddingRight: DeviceWidth * 0.04,
   },
   healthText1: {
-    fontFamily: 'Poppins',
-    fontWeight: '500',
+    fontFamily: 'Montserrat-SemiBold',
+    fontWeight: '600',
     lineHeight: 15,
     fontSize: 12,
-    color: AppColor.BoldText,
+    color: AppColor.BLACK,
     marginVertical: DeviceHeigth * 0.01,
   },
   listItem: {
-    width: DeviceWidth * 0.4,
+    width: DeviceWidth * 0.41,
     height: 60,
     marginHorizontal: 10,
     borderRadius: 10,
@@ -1898,7 +2070,7 @@ var styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     lineHeight: 27,
-    fontFamily: 'Poppins',
+    fontFamily: 'Montserrat',
   },
   meditionBox: {
     width: '95%',
@@ -1914,7 +2086,7 @@ var styles = StyleSheet.create({
     top: DeviceHeigth * 0.03,
     justifyContent: 'center',
     color: AppColor.BoldText,
-    fontFamily: 'Poppins',
+    fontFamily: 'Montserrat',
     fontWeight: '700',
     lineHeight: 24,
     fontSize: 16,
@@ -2006,6 +2178,7 @@ var styles = StyleSheet.create({
     padding: 20,
     borderRadius: 8,
     width: DeviceWidth * 0.95,
+
     position: 'absolute',
     top: DeviceHeigth / 6,
     marginHorizontal: 10,
@@ -2023,7 +2196,7 @@ var styles = StyleSheet.create({
   txt5: {
     color: AppColor.BLACK,
     marginLeft: 10,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Montserrat',
     fontWeight: '500',
   },
   dropButton: {
@@ -2085,7 +2258,7 @@ var styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    fontFamily: 'Poppins',
+    fontFamily: 'Montserrat',
     textAlign: 'center',
     color: AppColor.WHITE,
     fontWeight: '700',

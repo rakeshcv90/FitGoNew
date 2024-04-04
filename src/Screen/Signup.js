@@ -62,6 +62,7 @@ const Signup = ({navigation}) => {
   const [deviceId, setDeviceId] = useState(0);
   const [appVersion, setAppVersion] = useState(0);
   const dispatch = useDispatch();
+  const [cancelLogin, setCancelLogin] = useState(false);
 
   const getFcmToken = useSelector(state => state.getFcmToken);
 
@@ -124,7 +125,8 @@ const Signup = ({navigation}) => {
       socialLogiIn(user, idToken);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        alert('Cancel');
+        // alert('Cancel');
+        setCancelLogin(true)
       } else if (error.code === statusCodes.IN_PROGRESS) {
         alert('Signin in progress');
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
@@ -138,7 +140,8 @@ const Signup = ({navigation}) => {
     LoginManager.logInWithPermissions(['public_profile', 'email']).then(
       function (result) {
         if (result.isCancelled) {
-          alert('Cancel');
+          // alert('Cancel');
+          setCancelLogin(true)
         } else {
           const currentProfile = Profile.getCurrentProfile().then(function (
             currentProfile,
@@ -885,6 +888,115 @@ const Signup = ({navigation}) => {
       </View>
     );
   };
+  const LoginCancelModal = () => {
+    return (
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={cancelLogin}
+        onRequestClose={() => {
+          setCancelLogin(!cancelLogin);
+        }}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: '#202020',
+            justifyContent: 'center',
+            alignItems: 'center',
+            opacity: 0.9,
+          }}>
+          <View
+            style={{
+              width: DeviceWidth * 0.7,
+              height: DeviceHeigth * 0.3,
+              backgroundColor: 'white',
+              borderRadius: 20,
+              paddingVertical: 20,
+              alignItems: 'center',
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 4,
+              elevation: 5,
+            }}>
+            <Image
+              source={require('../Icon/Images/NewImage/alert.png')}
+              style={{width: 50, height: 50}}
+            />
+            <Text
+              style={{
+                fontSize:20,
+                fontWeight: '700',
+                color: '#202020',
+                marginTop: 10,
+                fontFamily: 'Montserrat-Regular',
+              }}>
+              ALERT
+            </Text>
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: '600',
+                color: '#202020',
+                marginTop: 15,
+                fontFamily: 'Montserrat-SemiBold',
+
+              }}>
+              {`Login/Sign Up`}
+            </Text>
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: '600',
+                color: '#202020',
+                marginTop: 5,
+                fontFamily: 'Montserrat-SemiBold',
+              }}>
+              {`Incomplete`}
+            </Text>
+
+            <LinearGradient
+              start={{x: 0, y: 1}}
+              end={{x: 1, y: 0}}
+              // colors={['#941000', '#D01818']}
+              colors={['#D01818', '#941000']}
+              style={{
+                width: '100%',
+                height: 60,
+                bottom: 0,
+                position: 'absolute',
+                paddingLeft: 5,
+                borderBottomRightRadius: 20,
+                borderBottomLeftRadius: 20,
+                backgroundColor: 'red',
+                alignItems: 'center',
+                // justifyContent:'center',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  setCancelLogin(false);
+                }}>
+                <Text
+                  style={{
+                    fontSize: 22,
+                    fontWeight: '700',
+                    color: '#fff',
+                    marginTop: 10,
+                    fontFamily: 'Montserrat-Regular',
+                  }}>
+                  OK
+                </Text>
+              </TouchableOpacity>
+            </LinearGradient>
+          </View>
+        </View>
+      </Modal>
+     
+    );
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -1180,7 +1292,8 @@ const Signup = ({navigation}) => {
           />
         </View>
       </ScrollView>
-      {/* <ModalView /> */}
+     
+      <LoginCancelModal/>
     </SafeAreaView>
   );
 };

@@ -26,7 +26,7 @@ const intialState = {
   getStoreData: [],
   getPurchaseHistory: [],
   getScreenAwake: false,
-  getSoundOffOn: false,
+  getSoundOffOn: true,
   getBmi: '',
   getHomeGraphData: [],
   getProfile_imgData: [],

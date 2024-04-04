@@ -342,7 +342,7 @@ const Subscription = ({navigation}) => {
     }
   };
   const getName = item => {
-    console.log('DGDFDFDFDFFD', item.productId);
+
     if (getPurchaseHistory.length > 0) {
       if (Platform.OS == 'android') {
         if (
@@ -1157,7 +1157,7 @@ const Subscription = ({navigation}) => {
                 By continuing you accept our{' '}
                 <Text
                   onPress={() => {
-                    navigation.navigate('TermaAndCondition');
+                    navigation.navigate('TermaAndCondition',{title:'Privacy & Policy'});
                   }}
                   style={styles.policyText1}>
                   Privacy Policy
@@ -1166,7 +1166,7 @@ const Subscription = ({navigation}) => {
                 <Text
                   style={styles.policyText1}
                   onPress={() => {
-                    navigation.navigate('TermaAndCondition');
+                    navigation.navigate('TermaAndCondition',{title:'Terms & Condition'});
                   }}>
                   {' '}
                   Terms of use

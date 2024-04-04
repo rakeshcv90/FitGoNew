@@ -30,15 +30,10 @@ const Meals = ({navigation}) => {
   const [imageLoad, setImageLoad] = useState(true);
   const avatarRef = React.createRef();
   const [itemData, setItemData] = useState();
-  const getFitmeMealAdsCount= useSelector(
-    state => state.getFitmeMealAdsCount,
-  );
-  const getPurchaseHistory = useSelector(
-    state => state.getPurchaseHistory,
-  );
+  const getFitmeMealAdsCount = useSelector(state => state.getFitmeMealAdsCount);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const dispatch = useDispatch();
-
 
   const generateRandomNumber = useMemo(() => {
     return () => {
@@ -61,8 +56,8 @@ const Meals = ({navigation}) => {
     generateRandomNumber();
   }, [generateRandomNumber]);
   useEffect(() => {
-    initInterstitial()
-  },[]);
+    initInterstitial();
+  }, []);
   const checkMealAddCount = item => {
     if (getPurchaseHistory.length > 0) {
       if (
@@ -75,12 +70,9 @@ const Meals = ({navigation}) => {
           dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
           navigation.navigate('MealDetails', {item: item});
         } else {
-          showInterstitialAd()
+          showInterstitialAd();
           navigation.navigate('MealDetails', {item: item});
           dispatch(setFitmeMealAdsCount(0));
-          // setTimeout(() => {
-         
-          // }, 1200);
         }
       }
     } else {
@@ -88,18 +80,11 @@ const Meals = ({navigation}) => {
         dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
         navigation.navigate('MealDetails', {item: item});
       } else {
-        showInterstitialAd()
+        showInterstitialAd();
         navigation.navigate('MealDetails', {item: item});
         dispatch(setFitmeMealAdsCount(0));
-        // setTimeout(() => {
-         
-        // }, 1200);
       }
     }
-  };
-
-  const resetFitmeCount = async () => {
-    dispatch(setFitmeMealAdsCount(0));
   };
 
   return (
@@ -114,11 +99,11 @@ const Meals = ({navigation}) => {
         }}>
         <Text
           style={{
-            color: AppColor.BoldText,
-            fontFamily: 'Poppins',
+            color: AppColor.BLACK,
+            fontFamily: 'Montserrat-SemiBold',
             fontWeight: '700',
-            lineHeight: 24,
-            fontSize: 16,
+            lineHeight: 21,
+            fontSize: 14,
             marginLeft: 20,
             justifyContent: 'flex-start',
           }}>
@@ -135,15 +120,21 @@ const Meals = ({navigation}) => {
                 autoRun
               />
             )}
-            <Image
+            <TouchableOpacity
               style={{width: '100%', height: '100%', borderRadius: 15}}
-              resizeMode="cover"
-              onLoad={() => setIsLoading(false)}
-              source={
-                selectedMeal.diet_image_link == null
-                  ? localImage.Noimage
-                  : {uri: selectedMeal.diet_image_link}
-              }></Image>
+              onPress={() => {
+                navigation.navigate('MealDetails', {item: selectedMeal});
+              }}>
+              <Image
+                style={{width: '100%', height: '100%', borderRadius: 15}}
+                resizeMode="cover"
+                onLoad={() => setIsLoading(false)}
+                source={
+                  selectedMeal.diet_image_link == null
+                    ? localImage.Noimage
+                    : {uri: selectedMeal.diet_image_link}
+                }></Image>
+            </TouchableOpacity>
           </View>
           <View
             style={{
@@ -153,13 +144,12 @@ const Meals = ({navigation}) => {
             }}>
             <Text
               style={{
-                color: AppColor.BoldText,
-                fontFamily: 'Poppins',
+                color: AppColor.BLACK,
+                fontFamily: 'Montserrat-SemiBold',
                 fontWeight: '700',
-                lineHeight: 24,
-                fontSize: 16,
+                lineHeight: 21,
+                fontSize: 14,
                 marginLeft: 20,
-
                 justifyContent: 'flex-start',
               }}>
               {selectedMeal.diet_title}
@@ -230,15 +220,16 @@ const Meals = ({navigation}) => {
             }}>
             <Text
               style={{
-                color: AppColor.BoldText,
-                fontFamily: 'Poppins',
-                fontWeight: '700',
-                lineHeight: 24,
-                fontSize: 16,
+                color: AppColor.BLACK,
+                fontFamily: 'Montserrat-SemiBold',
+                fontWeight: 'bold',
+                lineHeight: 19.5,
+                fontSize: 18,
+                alignItems: 'center',
                 marginLeft: 20,
                 justifyContent: 'flex-start',
               }}>
-              Categories
+              Recipes
             </Text>
           </View>
         </>
@@ -299,11 +290,12 @@ const Meals = ({navigation}) => {
                       styles.title,
                       {
                         fontSize: 12,
-                        fontWeight: '500',
+                        fontWeight: '600',
                         lineHeight: 18,
-                        fontFamily: 'Poppins',
+                        fontFamily: 'Montserrat-SemiBold',
                         textAlign: 'center',
-                        color: AppColor.BoldText,
+                        color: '#505050',
+                        width: 100,
                       },
                     ]}>
                     {item.diet_title}

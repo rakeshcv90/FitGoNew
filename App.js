@@ -53,6 +53,12 @@ import {MyInterstitialAd} from './src/Component/BannerAdd';
 // clear data from code push appcenter codepush deployment clear -a thefitnessandworkout-gmail.com/FitmeAndroid Production
 let codePushOptions = {checkFrequency: codePush.CheckFrequency.MANUAL};
 
+
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs(); //Ignore all log notifications
+LogBox.ignoreLogs([
+  'Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`',
+]);
 const App = () => {
   //const [isConnected, setConnected] = useState(true);
 
@@ -63,9 +69,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    LogBox.ignoreLogs(['Sending...']);
-    LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
-    LogBox.ignoreAllLogs(); //Ignore all log notificationsottom
+
     try {
       analytics().setAnalyticsCollectionEnabled(true);
       crashlytics().setCrashlyticsCollectionEnabled(true);
@@ -108,14 +112,14 @@ const App = () => {
   //     subscription();
   //   };
   // }, []);
-  // useEffect(() => {
-  //   async function initializePlayer() {
+  useEffect(() => {
+    async function initializePlayer() {
 
-  //     await TrackPlayer.setupPlayer();
-  //   }
+      await TrackPlayer.setupPlayer();
+    }
 
-  //   initializePlayer();
-  // }, []);
+    initializePlayer();
+  }, []);
 
   useEffect(() => {
     var updateDialogOptions = {

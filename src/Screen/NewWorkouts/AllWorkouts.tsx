@@ -33,10 +33,14 @@ import AnimatedLottieView from 'lottie-react-native';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {StarColor} from '../../Icon/Images/NewImage/StarColor';
 import {Star} from '../../Icon/Images/NewImage/Star';
+import NativeAddTest from '../../Component/NativeAddTest';
 const AllWorkouts = ({navigation, route}: any) => {
   const {data, type, fav} = route.params;
 
   const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
+  );
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -463,8 +467,7 @@ const AllWorkouts = ({navigation, route}: any) => {
                   height: DeviceHeigth * 0.2,
                 },
               ]}>
-            
-              <Image
+              {/* <Image
                 source={
                   item.workout_price == 'Premium'
                     ? require('../../Icon/Images/NewImage/premium.png')
@@ -481,14 +484,12 @@ const AllWorkouts = ({navigation, route}: any) => {
                   left:
                     Platform.OS == 'android'
                       ? -DeviceWidth * 0.04
-
                       : DeviceWidth >= 768
                       ? -DeviceWidth * 0.018
                       : -DeviceWidth * 0.035,
 
-//                       : DeviceWidth>=768?-DeviceWidth * 0.010:-DeviceWidth * 0.035,
-
-                }}></Image>
+                  //                       : DeviceWidth>=768?-DeviceWidth * 0.010:-DeviceWidth * 0.035,
+                }}></Image> */}
               <Image
                 source={{uri: item?.workout_image_link}}
                 style={{
@@ -496,8 +497,8 @@ const AllWorkouts = ({navigation, route}: any) => {
                   width: DeviceWidth * 0.45,
                   bottom: 0,
                   // position: 'absolute',
-                  //left: 10,
-                  right: 50,
+                  left: 30,
+                  //right: 50,
                 }}
                 resizeMode="contain"
               />
@@ -624,6 +625,66 @@ const AllWorkouts = ({navigation, route}: any) => {
       },
     [selected, likeData],
   );
+
+  const getNativeAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return (
+          <View
+            style={{
+              alignSelf: 'center',
+              alignItems: 'center',
+              marginBottom: 20,
+            }}>
+            <NativeAddTest type="image" media={false} />
+          </View>
+        );
+      } else {
+        return (
+          <View
+            style={{
+              alignSelf: 'center',
+              alignItems: 'center',
+              marginBottom: 20,
+            }}>
+            <NativeAddTest type="image" media={false} />
+          </View>
+        );
+      }
+    } else {
+      return (
+        <View
+          style={{
+            alignSelf: 'center',
+            alignItems: 'center',
+            marginBottom: 20,
+          }}>
+          <NativeAddTest type="image" media={false} />
+        </View>
+      );
+    }
+  };
+  const getAdsDisplay = (index:number, item:any) => {
+    if (allWorkoutData.length > 1) {
+      if (index == 0) {
+        return getNativeAdsDisplay();
+      }
+      else if((index+1)%7==0){
+        return getNativeAdsDisplay();
+      }
+      else{
+     
+        // return null
+      }
+    }else{
+      console.log("SDfdsfds2222222")
+      // return null
+    }
+
+  
+  };
   return (
     <View style={styles.container}>
       <NewHeader
@@ -645,6 +706,7 @@ const AllWorkouts = ({navigation, route}: any) => {
         fontSize={22}
         width={150}
         x={1}
+        alignSelf={true}
         marginTop={-10}
       />
       <View
@@ -655,9 +717,9 @@ const AllWorkouts = ({navigation, route}: any) => {
           marginBottom: 10,
         }}>
         <Text style={[styles.category, {marginTop: 0}]}>
-          {moment().format('dddd DD MMMM')}
+          {/* {moment().format('dddd DD MMMM')} */}
         </Text>
-        <Text style={[styles.category, {color: '#E0855C'}]}>
+        <Text style={[styles.category, {color: AppColor.RED1,fontWeight:'500'}]}>
           {/* <View
             style={{
               width: 2,
@@ -719,6 +781,7 @@ const AllWorkouts = ({navigation, route}: any) => {
                   select={index == selected}
                   item={item}
                 />
+            
                 <Box
                   selected={selected != 0 && index == selected}
                   index={index + 1}
@@ -728,22 +791,27 @@ const AllWorkouts = ({navigation, route}: any) => {
             );
           else
             return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}>
-                <BlackCircle
-                  index={index}
-                  select={index == selected}
-                  item={item}
-                />
-                <Box
-                  selected={selected != 0 && index == selected}
-                  index={index + 1}
-                  item={item}
-                />
+              <View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}>
+                  <BlackCircle
+                    index={index}
+                    select={index == selected}
+                    item={item}
+                  />
+
+                  <Box
+                    selected={selected != 0 && index == selected}
+                    index={index + 1}
+                    item={item}
+                  />
+                </View>
+          
+                {getAdsDisplay(index,item)}
               </View>
             );
         }}

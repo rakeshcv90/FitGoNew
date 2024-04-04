@@ -31,10 +31,11 @@ const SeekBar = ({
       />
       <View
         style={{
-          width:
-            Platform.OS == 'android' ? DeviceWidth * 0.82 : DeviceWidth * 0.8,
-          height: DeviceHeigth * 0.02,
+          // width:
+          //   Platform.OS == 'android' ? DeviceWidth * 0.82 : DeviceWidth * 0.8,
+          // height: DeviceHeigth * 0.02,
           flexDirection: 'row',
+
           justifyContent: 'space-between',
 
           marginVertical: 5,

@@ -20,9 +20,7 @@ import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import HTMLRender from 'react-native-render-html';
 
-
 const MealDetails = ({route, navigation}) => {
-
   const customStyles = {
     fontFamily: 'Poppins',
     fontSize: 10,
@@ -41,7 +39,6 @@ const MealDetails = ({route, navigation}) => {
         translucent={true}
         style={{width: '100%', height: DeviceHeigth * 0.4}}
         resizeMode="cover"
-
         source={
           route?.params?.item?.diet_image_link == null
             ? localImage.Noimage
@@ -189,6 +186,7 @@ const MealDetails = ({route, navigation}) => {
             </View>
           </View>
         </View>
+        <View style={{width: '100%', height:DeviceHeigth*0.03,}} />
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{flexGrow: 1}}>
