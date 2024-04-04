@@ -52,6 +52,7 @@ import {Platform} from 'react-native';
 import { RemoteMessage, requestPermissionforNotification } from '../Component/Helper/PushNotification';
 import analytics from '@react-native-firebase/analytics';
 import { Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -478,6 +479,7 @@ const Login = ({navigation}) => {
       if (data?.data?.profile) {
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));
+        await AsyncStorage.setItem('userID',`${user_id}`)
         // status == 1
         //   ? navigation.navigate('BottomTab')
         //   : navigationRef.navigate('Yourself');

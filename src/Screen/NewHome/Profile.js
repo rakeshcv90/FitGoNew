@@ -833,7 +833,7 @@ const Profile = () => {
               } else if (value.text1 == 'My Favorites') {
                 navigation?.navigate('AllWorkouts', {
                   data: allWorkoutData,
-                  type: '',
+                  type: 'popular',
                   fav: true,
                 });
               } else if (value.text1 == 'Subscription') {
