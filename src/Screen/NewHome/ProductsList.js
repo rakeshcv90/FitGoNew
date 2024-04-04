@@ -332,7 +332,7 @@ var styles = StyleSheet.create({
     lineHeight: 18,
     fontWeight: '600',
     fontFamily: 'Poppins',
-    color: 'rgba(80, 80, 80, 0.6)',
+    color: AppColor.BLACK,
   },
   listItem2: {
     marginHorizontal: 5,

@@ -21,6 +21,7 @@ import notifee, {
   RepeatFrequency,
   TriggerType,
 } from '@notifee/react-native';
+import {AdManager, TestIds} from 'react-native-admob-native-ads';
 
 notifee.createChannel({
   id: 'Time',
@@ -35,32 +36,27 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('BACKGROUND NOTIFUCATION', remoteMessage);
 });
 notifee.onBackgroundEvent(async ({type, detail}) => {
-  const {notification, pressAction} = detail;
 
-  TriggerButtons(notification, pressAction);
+  TriggerButtons(detail, type);
 });
 notifee.onForegroundEvent(async ({type, detail}) => {
-  const {notification, pressAction} = detail;
-
-  TriggerButtons(notification, pressAction);
+  
+  TriggerButtons(detail, type);
 });
-const TriggerButtons = async (notification, pressAction) => {
+const TriggerButtons = async (detail, type) => {
+  const {notification, pressAction} = detail;
   if (type === EventType.ACTION_PRESS && pressAction.id === 'Stop') {
-    // Remove the notification
+
     await notifee.cancelNotification(notification.id);
   } else if (
     type === EventType.ACTION_PRESS &&
     pressAction.id === 'Plus_Five'
   ) {
-    // Remove the notification
-    // Get the current time
     const currentTime = new Date();
-
-    // Add 5 minutes to the current time
-    currentTime.setMinutes(currentTime.getMinutes() + 1);
+    currentTime.setMinutes(currentTime.getMinutes() + 5);
     const trigger = {
       type: TriggerType.TIMESTAMP,
-      timestamp: currentTime.getTime(), // fire at 11:10am (10 minutes before meeting)
+      timestamp: currentTime.getTime(), 
       repeatFrequency: RepeatFrequency.DAILY,
     };
     await notifee.createTriggerNotification(
@@ -71,7 +67,7 @@ const TriggerButtons = async (notification, pressAction) => {
           channelId: 'Time',
           importance: AndroidImportance.HIGH,
           pressAction: {
-            id: 'Alarm',
+            id: 'default',
           },
           actions: [
             {
@@ -259,6 +255,28 @@ const AppRedux = () => {
     </Provider>
   );
 };
+AdManager.setRequestConfiguration({
+  tagForChildDirectedTreatment: false,
+});
+AdManager.registerRepository({
+  name: 'imageAd',
+   adUnitId: TestIds.Video,
+  // adUnitId: adUnitIDs,
+  numOfAds: 3,
+  nonPersonalizedAdsOnly: false,
+  videoOptions: {
+    mute: false,
+  },
+  expirationPeriod: 3600000, // in milliseconds (optional)
+  mediationEnabled: false,
+}).then(result => {
+  console.log('registered: ', result);
+});
+
+
+AdManager.subscribe('imageAd', 'onAdPreloadClicked', () => {
+  console.log('click', 'imageAd');
+});
 
 TrackPlayer.registerPlaybackService(() => require('./src/service'));
 AppRegistry.registerComponent(appName, () => AppRedux);

@@ -17,8 +17,14 @@ import DeviceInfo from 'react-native-device-info';
 import axios from 'axios';
 import {showMessage} from 'react-native-flash-message';
 import {requestPermissionforNotification} from '../Component/Helper/PushNotification';
-import {NewInterstitialAd} from '../Component/BannerAdd';
+
 import moment from 'moment';
+import {
+  InterstitialAd,
+  AdEventType,
+  TestIds,
+} from 'react-native-google-mobile-ads';
+import {interstitialAdId} from '../Component/AdsId';
 
 const products = Platform.select({
   ios: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
@@ -27,16 +33,14 @@ const products = Platform.select({
 
 const SplaceScreen = ({navigation}) => {
   const dispatch = useDispatch();
-  const [closed, setClosed] = useState(false);
-  const {initInterstitial, showInterstitialAd} = NewInterstitialAd(setClosed);
 
   const showIntro = useSelector(state => state.showIntro);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getUserID = useSelector(state => state.getUserID);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    initInterstitial();
     requestPermissionforNotification(dispatch);
     DeviceInfo.syncUniqueId().then(uniqueId => {
       getCaterogy(uniqueId);
@@ -46,38 +50,60 @@ const SplaceScreen = ({navigation}) => {
     getPlanData();
     Object.keys(getUserDataDetails).length > 0 && PurchaseDetails();
     dispatch(setFitmeAdsCount(0));
+    initInterstitial();
+  }, []);
+
+  const initInterstitial = async () => {
+    const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
+      keywords: [
+        'action',
+        'puzzle',
+        'adventure',
+        'sports',
+        'racing',
+        'platformer',
+        'simulation',
+        'arcade',
+      ],
+    });
+    interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
+      setLoaded(interstitialAd);
+    });
+    interstitialAd.load();
+    interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {});
+    interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
+    interstitialAd.addAdEventListener(AdEventType.ERROR, () => {});
+  };
+  const loadScreen = () => {
+    if (showIntro) {
+      if (
+        getUserDataDetails?.id &&
+        getUserDataDetails?.profile_compl_status == 1
+      ) {
+        navigation.replace('BottomTab');
+      } else {
+        navigation.replace('LogSignUp');
+      }
+    } else {
+      navigation.replace('IntroductionScreen1');
+    }
+  };
+  if (loaded) {
+    setLoaded(false);
     if (getPurchaseHistory.length > 0) {
       if (
         getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
       ) {
         loadScreen();
       } else {
-        setTimeout(
-          () => {
-            showInterstitialAd();
-            console.log('isLoaded', closed);
-          },
-          Platform.OS == 'android' ? 4000 : 2000,
-        );
+        loaded.show();
+        loadScreen();
       }
     } else {
-      setTimeout(
-        () => {
-          showInterstitialAd();
-          console.log('isLoaded', closed);
-        },
-        Platform.OS == 'android' ? 4000 : 2000,
-      );
+      loaded.show();
+      loadScreen();
     }
-  }, []);
-  useEffect(() => {
-    if (closed) {
-      initInterstitial();
-      setTimeout(() => {
-        loadScreen();
-      }, 2500);
-    }
-  }, [closed]);
+  }
   const getPlanData = () => {
     Platform.OS === 'ios'
       ? RNIap.initConnection()
@@ -153,24 +179,6 @@ const SplaceScreen = ({navigation}) => {
       console.log('Product Category Error111', error);
     }
   };
-  const loadScreen = () => {
-    if (showIntro) {
-      //  navigation.replace('LogSignUp');
-      if (
-        getUserDataDetails?.id &&
-        getUserDataDetails?.profile_compl_status == 1
-      ) {
-        navigation.replace('BottomTab');
-      } else {
-        navigation.replace('LogSignUp');
-
-        // navigation.replace('LogSignUp');
-      }
-    } else {
-      navigation.replace('IntroductionScreen1');
-      //navigation.replace('IntroductionScreen1');
-    }
-  };
 
   const PurchaseDetails = async () => {
     try {
@@ -197,24 +205,24 @@ const SplaceScreen = ({navigation}) => {
 
   return (
     <>
-      {closed ? (
+      {/* {closed ? (
         <View style={{flex: 1, backgroundColor: 'black'}}>
           <StatusBar backgroundColor={'transparent'} translucent />
         </View>
-      ) : (
-        <LinearGradient
-          style={styels.container}
-          start={{x: 0, y: 0}}
-          end={{x: 0.5, y: 0.5}}
-          colors={['#D01818', '#941000']}>
-          <StatusBar backgroundColor={'transparent'} translucent />
-          <Image
-            source={localImage.SplashText}
-            style={styels.Textlogo}
-            resizeMode="contain"
-          />
-        </LinearGradient>
-      )}
+      ) : ( */}
+      <LinearGradient
+        style={styels.container}
+        start={{x: 0, y: 0}}
+        end={{x: 0.5, y: 0.5}}
+        colors={['#D01818', '#941000']}>
+        <StatusBar backgroundColor={'transparent'} translucent />
+        <Image
+          source={localImage.SplashText}
+          style={styels.Textlogo}
+          resizeMode="contain"
+        />
+      </LinearGradient>
+      {/* )} */}
     </>
   );
 };

@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     padding: 10,
+
   },
   shadow: {
     position: 'absolute',

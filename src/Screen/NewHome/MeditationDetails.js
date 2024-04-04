@@ -18,14 +18,18 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
 import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import moment from 'moment';
+import NativeAddTest from '../../Component/NativeAddTest';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const MeditationDetails = ({navigation, route}) => {
   let isFocused = useIsFocused();
   const customWorkoutData = useSelector(state => state.customWorkoutData);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [forLoading, setForLoading] = useState(true);
   const [mindsetExercise, setmindsetExercise] = useState([]);
+  const [title, setTitle] = useState(route?.params?.item.workout_mindset_title);
   const avatarRef = React.createRef();
   const colors = [
     {color1: '#E2EFFF', color2: '#9CC2F5', color3: '#425B7B'},
@@ -82,9 +86,11 @@ const MeditationDetails = ({navigation, route}) => {
       console.log('MindSet  List Error', error);
     }
   };
+
   const ListItem = ({title, color}) => (
     <TouchableOpacity
       onPress={() => {
+        setTitle(title?.workout_mindset_title);
         getCaterogy(title.id, title.workout_mindset_level);
       }}>
       <LinearGradient
@@ -139,17 +145,62 @@ const MeditationDetails = ({navigation, route}) => {
       </View>
     );
   };
+
+  const getNativeAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return (
+          <View
+            style={{
+              alignSelf: 'center',
+              alignItems: 'center',
+
+              //top: DeviceHeigth * 0.1,
+            }}>
+            <NativeAddTest type="image" media={false} />
+          </View>
+        );
+      } else {
+        return (
+          <View
+            style={{
+              alignSelf: 'center',
+              alignItems: 'center',
+
+              //  top: DeviceHeigth * 0.1,
+            }}>
+            <NativeAddTest type="image" media={false} />
+          </View>
+        );
+      }
+    } else {
+      return (
+        <View
+          style={{
+            alignSelf: 'center',
+            alignItems: 'center',
+
+            //top: DeviceHeigth * 0.1,
+          }}>
+          <NativeAddTest type="image" media={false} />
+        </View>
+      );
+    }
+  };
+  const getAdsDisplay = (index, item) => {
+    if (mindsetExercise.length > 1) {
+      if (index == 0) {
+        return getNativeAdsDisplay();
+      } else if ((index + 1) % 6 == 0) {
+        return getNativeAdsDisplay();
+      }
+    }
+  };
   return (
     <View style={styles.container}>
-      <NewHeader
-        header={
-          route?.params?.item.workout_mindset_title
-            ? route?.params?.item.workout_mindset_title
-            : 'Test'
-        }
-        SearchButton={false}
-        backButton={true}
-      />
+      <NewHeader header={title} SearchButton={false} backButton={true} />
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
 
       <>
@@ -162,21 +213,23 @@ const MeditationDetails = ({navigation, route}) => {
           }}>
           <Text
             style={{
-              color: AppColor.LITELTEXTCOLOR,
-              fontFamily: 'Poppins',
-              fontWeight: '700',
-              lineHeight: 21,
-              fontSize: 14,
+              color: AppColor.BLACK,
+              fontFamily: 'Montserrat-SemiBold',
+              fontWeight: 'bold',
+              lineHeight: 19.5,
+              fontSize: 18,
+              alignItems: 'center',
             }}>
             Categories
           </Text>
           <Text
             style={{
               color: '#191919',
-              fontFamily: 'Poppins',
+              fontFamily: 'Montserrat-Medium',
               fontWeight: '500',
               lineHeight: 15,
-              fontSize: 10,
+              fontSize: 12,
+              top: 2,
             }}>
             Looking for something specific?
           </Text>
@@ -209,26 +262,28 @@ const MeditationDetails = ({navigation, route}) => {
           }}>
           <Text
             style={{
-              color: AppColor.LITELTEXTCOLOR,
-              fontFamily: 'Poppins',
-              fontWeight: '700',
-              lineHeight: 21,
-              fontSize: 14,
+              color: AppColor.BLACK,
+              fontFamily: 'Montserrat-SemiBold',
+              fontWeight: 'bold',
+              lineHeight: 19.5,
+              fontSize: 18,
+              alignItems: 'center',
             }}>
             Explore
           </Text>
           <Text
             style={{
               color: '#191919',
-              fontFamily: 'Poppins',
+              fontFamily: 'Montserrat-Medium',
               fontWeight: '500',
               lineHeight: 15,
-              fontSize: 10,
+              fontSize: 12,
+              top: 2,
             }}>
             Start your session with daily favorites picked for you.
           </Text>
         </View>
-        <View style={styles.meditionBox}>
+        <View style={[styles.meditionBox, {flex: 1}]}>
           {forLoading ? (
             <FlatList
               data={[1, 2, 3, 4]}
@@ -326,6 +381,7 @@ const MeditationDetails = ({navigation, route}) => {
               showsVerticalScrollIndicator={false}
               keyExtractor={(item, index) => index.toString()}
               ListEmptyComponent={emptyComponent}
+              //  contentInset={{paddingBottom: DeviceHeigth * 0.1}}
               renderItem={({item, index}) => {
                 return (
                   <>
@@ -361,9 +417,9 @@ const MeditationDetails = ({navigation, route}) => {
                             <Text
                               style={{
                                 color: AppColor.LITELTEXTCOLOR,
-                                fontFamily: 'Poppins',
-                                fontWeight: '700',
-                                lineHeight: 21,
+                                fontFamily: 'Montserrat-SemiBold',
+                                fontWeight: '600',
+                                lineHeight: 15,
                                 fontSize: 14,
                               }}>
                               {item.exercise_mindset_title}
@@ -372,11 +428,11 @@ const MeditationDetails = ({navigation, route}) => {
                               numberOfLines={3}
                               style={{
                                 color: '#505050',
-                                fontFamily: 'Poppins',
+                                fontFamily: 'Montserrat-Medium',
                                 fontWeight: '500',
                                 lineHeight: 15,
                                 top: 5,
-                                fontSize: 10,
+                                fontSize: 12,
                               }}>
                               {item.exercise_mindset_description}
                             </Text>
@@ -450,10 +506,11 @@ const MeditationDetails = ({navigation, route}) => {
                               height: 130,
                               width: DeviceWidth * 0.3,
                             }}
-                            resizeMode="cover"></Image>
+                            resizeMode="contain"></Image>
                         </View>
                       </View>
                     </LinearGradient>
+                    {getAdsDisplay(index, item)}
                   </>
                 );
               }}
@@ -488,10 +545,11 @@ var styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 13,
-    fontWeight: '700',
-    lineHeight: 21,
-    fontFamily: 'Poppins',
+
+    fontSize: 14,
+    fontWeight: '600',
+    lineHeight: 17,
+    fontFamily:'Montserrat-SemiBold',
   },
   img: {
     height: 80,

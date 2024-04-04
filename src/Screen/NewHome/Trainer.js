@@ -21,36 +21,43 @@ const Trainer = ({navigation}) => {
       <NewHeader header={'  Fitness Coach'} />
 
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          alignSelf: 'center',
+        }}>
         <AnimatedLottieView
           source={require('../../Icon/Images/NewImage/ChatBoot.json')}
           speed={3}
           autoPlay
           loop
+          resizeMode='cover'
           style={{
-            width: 300,
-            height: 300,
+            width: 400,
+            height: 400,
             top: -70,
+    
           }}
         />
       </View>
       <View
         style={{
-          width: 300,
-          height: 80,
+          width: 350,
+         // height: 80,
           justifyContent: 'center',
           alignItems: 'center',
           alignSelf: 'center',
-
-          top: -40,
+          //padding: 20,
+          top: -150,
         }}>
         <Text
           style={{
-            fontFamily: 'Poppins',
-            fontWeight: '600',
-            fontSize: 12,
-            lineHeight: 15,
-            textAlign: 'center',
+            fontFamily: 'Montserrat-Regular',
+            fontWeight: '500',
+            fontSize: 15,
+            lineHeight: 20,
+            // textAlign: 'center',
             color: AppColor.LITELTEXTCOLOR,
           }}>
           Welcome to your personalized fitness journey! I'm here to be your
@@ -61,10 +68,10 @@ const Trainer = ({navigation}) => {
       <View
         style={{
           marginTop: DeviceHeigth * 0.15,
-          bottom:
-            Platform.OS == 'android'
-              ? DeviceHeigth * 0.09
-              : DeviceHeigth * 0.095,
+          bottom: 0,
+          // Platform.OS == 'android'
+          //   ? DeviceHeigth * 0.09
+          //   : DeviceHeigth * 0.095,
           position: 'absolute',
           alignItems: 'center',
           alignSelf: 'center',

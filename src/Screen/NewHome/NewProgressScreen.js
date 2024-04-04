@@ -106,7 +106,6 @@ const NewProgressScreen = ({navigation}) => {
     setBmi(bmi);
   }, [bmi]);
 
-
   // useEffect(() => {
   //   WeeklyData(1);
   //   WeeklyData(2);
@@ -159,6 +158,7 @@ const NewProgressScreen = ({navigation}) => {
       }
     }
   }, []);
+
   const handleGraph1 = data => {
     if (data == 1) {
       WeeklyData(1);
@@ -231,7 +231,7 @@ const NewProgressScreen = ({navigation}) => {
       id: 1,
       img: localImage.Fire1,
       txt1: `${Calories}`,
-      txt2: 'KCal',
+      txt2: 'Kcal',
     },
     {
       id: 2,
@@ -282,9 +282,12 @@ const NewProgressScreen = ({navigation}) => {
           <Text
             style={{
               textAlign: 'center',
-              color: AppColor.BoldText,
-              fontSize: 16,
-              fontFamily: 'Poppins-SemiBold',
+              color: AppColor.BLACK,
+
+              fontFamily: 'Montserrat-SemiBold',
+              fontWeight: 'bold',
+              lineHeight: 19.5,
+              fontSize: 18,
             }}>
             {Txt1}
           </Text>
@@ -594,8 +597,8 @@ const NewProgressScreen = ({navigation}) => {
       monthTextColor: AppColor.RED,
       indicatorColor: AppColor.RED,
       textMonthFontSize: 17,
-      textDayFontFamily: 'Poppins-SemiBold',
-      textMonthFontFamily: 'Poppins-SemiBold',
+      textDayFontFamily: 'Montserrat-SemiBold',
+      textMonthFontFamily: 'Montserrat-SemiBold',
       dayTextColor: AppColor.BLACK,
     };
   }, []);
@@ -732,7 +735,7 @@ const NewProgressScreen = ({navigation}) => {
                 style={{
                   textAlign: 'center',
                   fontFamily: 'Poppins-SemiBold',
-                  color: AppColor.DARKGRAY,
+                  color: AppColor.BLACK,
                 }}>
                 {value.txt2}
               </Text>
@@ -838,12 +841,6 @@ const NewProgressScreen = ({navigation}) => {
                 textColor: AppColor.WHITE,
               },
             }}
-            style={[
-              styles.calender,
-              {
-                width: DeviceWidth * 0.85,
-              },
-            ]}
             theme={theme}
           />
         </View>
@@ -858,13 +855,28 @@ const NewProgressScreen = ({navigation}) => {
           <View style={{flexDirection: 'row'}}>
             <Text
               style={{
-                fontFamily: 'Poppins-SemiBold',
-                color: AppColor.BoldText,
+                textAlign: 'center',
+                color: AppColor.BLACK,
+
+                fontFamily: 'Montserrat-SemiBold',
+                fontWeight: 'bold',
+                lineHeight: 19.5,
+                fontSize: 18,
               }}>
               {'BMI: '}
             </Text>
-            <Text style={{fontFamily: 'Poppins-SemiBold', color: '#00A930'}}>
-              {getBmi}
+            <Text
+              style={{
+                textAlign: 'center',
+          
+
+                fontFamily: 'Montserrat-SemiBold',
+                fontWeight: 'bold',
+                lineHeight: 19.5,
+                fontSize: 18,
+                color: '#00A930',
+              }}>
+               { getBmi}
             </Text>
           </View>
           <View />

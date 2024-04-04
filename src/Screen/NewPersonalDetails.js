@@ -141,9 +141,9 @@ const NewPersonalDetails = ({route, navigation}) => {
   };
 
   const renderLabel = item => {
-    if (isFocus) {
+    if (!isFocus) {
       return (
-        <Text style={[styles.label, isFocus && {color: '#707070'}]}>
+        <Text style={[styles.label, {color: 'black'}]}>
           {item}
         </Text>
       );
@@ -393,21 +393,21 @@ const NewPersonalDetails = ({route, navigation}) => {
                       value={values.targetWeight}
                       onBlur={handleBlur('targetWeight')}
                       onChangeText={handleChange('targetWeight')}
-                      right={
-                        <TextInput.Icon
-                          icon={() => (
-                            <TouchableOpacity onPress={() => {}}>
-                              <Image
-                                source={localImage.Down}
-                                tintColor={AppColor.BoldText}
-                                style={{width: 10, height: 10}}
-                                resizeMode="contain"
-                              />
-                            </TouchableOpacity>
-                          )}
-                          style={{marginTop: 14}}
-                        />
-                      }
+                      // right={
+                      //   <TextInput.Icon
+                      //     icon={() => (
+                      //       <TouchableOpacity onPress={() => {}}>
+                      //         <Image
+                      //           source={localImage.Down}
+                      //           tintColor={AppColor.BoldText}
+                      //           style={{width: 10, height: 10}}
+                      //           resizeMode="contain"
+                      //         />
+                      //       </TouchableOpacity>
+                      //     )}
+                      //     style={{marginTop: 14}}
+                      //   />
+                      // }
                       label="Target Weight"
                       placeholder="Target Weight"
                     />
@@ -523,7 +523,7 @@ const styles = StyleSheet.create({
     top: -5,
     zIndex: 999,
     paddingHorizontal: 15,
-    fontSize: 14,
+    fontSize: 12,
   },
   placeholderStyle: {
     fontSize: 16,

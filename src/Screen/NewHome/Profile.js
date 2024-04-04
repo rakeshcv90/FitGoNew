@@ -7,13 +7,13 @@ import {
   Platform,
   ScrollView,
   StatusBar,
-  SafeAreaView,
   Alert,
   ActivityIndicator,
   Modal,
   Linking,
+  PermissionsAndroid,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {localImage} from '../../Component/Image';
 import {
   DeviceHeigth,
@@ -28,13 +28,14 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {Switch} from 'react-native-switch';
 import {useDispatch, useSelector} from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {
   setLogout,
   setSoundOnOff,
   setUserProfileData,
 } from '../../Component/ThemeRedux/Actions';
+
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {request, PERMISSIONS, openSettings} from 'react-native-permissions';
 import VersionNumber from 'react-native-version-number';
@@ -288,8 +289,8 @@ const Profile = () => {
       icon1: (
         <Image
           source={localImage.Policy}
-          style={[styles.IconView, {height: 21, width: 22}]}
-          resizeMode="center"
+          style={[styles.IconView, {height: 22, width: 22}]}
+          resizeMode="contain"
         />
       ),
       text1: 'Terms Condition',
@@ -380,6 +381,14 @@ const Profile = () => {
         });
 
         if (ProfileData.data) {
+          showMessage({
+            message: ProfileData?.data[0]?.msg,
+            type: 'success',
+            animationDuration: 500,
+
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
           getProfileData(getUserDataDetails?.id);
           setImguploaded(true);
           if (IsimgUploaded == true) {
@@ -471,9 +480,8 @@ const Profile = () => {
           {cancelable: false},
         );
       } else {
-        console.log('error occured');
+        console.log('Galaey error occured');
       }
-      // });
     };
     return (
       <View
@@ -574,7 +582,10 @@ const Profile = () => {
                       askPermissionForLibrary(PERMISSIONS.IOS.PHOTO_LIBRARY);
                     } else {
                       askPermissionForLibrary(
-                        PERMISSIONS.ANDROID.READ_MEDIA_IMAGES,
+                        Platform.Version >= 33
+                          ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
+                          : PermissionsAndroid.PERMISSIONS
+                              .READ_EXTERNAL_STORAGE,
                       );
                     }
                   }}>
@@ -647,8 +658,10 @@ const Profile = () => {
             style={{
               justifyContent: 'space-between',
               flexDirection: 'row',
+
               margin: 15,
               // borderWidth: 1,
+
               marginVertical:
                 Platform.OS == 'ios'
                   ? DeviceHeigth * 0.04
@@ -667,6 +680,7 @@ const Profile = () => {
               </View>
             </TouchableOpacity>
 
+
             <View
               style={{
                 alignItems: 'center',
@@ -674,6 +688,7 @@ const Profile = () => {
                 alignSelf: 'center',
               }}>
               <Text
+
                 style={{
                   fontFamily: 'Poppins-SemiBold',
                   fontSize: 20,
@@ -737,6 +752,7 @@ const Profile = () => {
                 </Text>
               </View>
             </View>
+
             <TouchableOpacity
               onPress={() => {
                 analytics().logEvent('CV_FITME_SIGNED_OUT');
@@ -800,7 +816,6 @@ const Profile = () => {
                 `CV_FITME_CLICKED_ON_${value?.text1?.replace(' ', '_')}`,
               );
 
-              console.log('ZXcsdcfdsfsdfsd', value.text1);
               if (value.text1 == 'Personal Details') {
                 navigation.navigate('NewPersonalDetails');
               } else if (value.text1 == 'My Favorites') {
@@ -1028,11 +1043,11 @@ const styles = StyleSheet.create({
     lineHeight: 21,
   },
   nameText: {
-    fontFamily: 'Poppins-Regular',
-    fontSize: 12,
+    fontFamily: 'Montserrat-Medium',
+    fontSize: 13,
     lineHeight: 18,
     fontWeight: '400',
-    color: AppColor.ProfileTextColor,
+    color: AppColor.BLACK,
   },
   IconView: {
     // width: 22,
@@ -1077,8 +1092,10 @@ const styles = StyleSheet.create({
   profileView: {
     height: 100,
     width: 100,
+
     borderRadius: 120 / 2,
     // alignSelf: 'center',
+
   },
   img: {
     height: 120,

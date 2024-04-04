@@ -189,7 +189,7 @@ const Report = ({navigation}) => {
         <View
           style={{
             width: '100%',
-            height: 0.5,
+            height: 0.6,
             backgroundColor: '#ABABAB',
             marginVertical: 10,
           }}></View>

@@ -95,11 +95,12 @@ const BottomSheetExercise = ({
     <View>
       <BottomSheet
         bottomSheetTitle={'Next Exercises'}
-        bottomSheetIconColor="#0A2463"
+        bottomSheetIconColor="#000000"
         bottomSheetStyle={{
           backgroundColor: 'white',
           maxHeight: '65%',
           minHeight: '25%',
+          marginBottom:-DeviceHeigth*0.05
         }}
         bottomSheetTitleStyle={{
           color: '#1E1E1E',

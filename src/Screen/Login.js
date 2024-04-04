@@ -49,9 +49,14 @@ import {TextInput} from 'react-native-paper';
 import {navigationRef} from '../../App';
 import VersionNumber from 'react-native-version-number';
 import {Platform} from 'react-native';
-import { RemoteMessage, requestPermissionforNotification } from '../Component/Helper/PushNotification';
+import {BlurView} from '@react-native-community/blur';
+import {
+  RemoteMessage,
+  requestPermissionforNotification,
+} from '../Component/Helper/PushNotification';
 import analytics from '@react-native-firebase/analytics';
-import { Alert } from 'react-native';
+import {Alert} from 'react-native';
+import NativeAddTest from '../Component/NativeAddTest';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -70,6 +75,7 @@ const Login = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [IsVerifyVisible, setVerifyVisible] = useState(false);
   const [appVersion, setAppVersion] = useState(0);
+  const [cancelLogin, setCancelLogin] = useState(false);
   const getFcmToken = useSelector(state => state.getFcmToken);
   useEffect(() => {
     requestPermissionforNotification(dispatch);
@@ -85,7 +91,7 @@ const Login = ({navigation}) => {
     setAppVersion(VersionNumber.appVersion);
   });
   const GoogleSignup = async () => {
-    analytics().logEvent('CV_FITME_GOOGLE_LOGIN')
+    analytics().logEvent('CV_FITME_GOOGLE_LOGIN');
     try {
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.hasPlayServices();
@@ -93,7 +99,7 @@ const Login = ({navigation}) => {
       socialLogiIn(user, idToken);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        alert('Cancel');
+        setCancelLogin(true);
       } else if (error.code === statusCodes.IN_PROGRESS) {
         alert('Signin in progress');
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
@@ -119,7 +125,7 @@ const Login = ({navigation}) => {
           socialtype: 'google',
           version: appVersion,
           devicetoken: getFcmToken,
-          platform:Platform.OS
+          platform: Platform.OS,
         },
       });
 
@@ -185,11 +191,11 @@ const Login = ({navigation}) => {
     }
   };
   const FacebookLogin = () => {
-    analytics().logEvent('CV_FITME_FACEBOOK_LOGIN')
+    analytics().logEvent('CV_FITME_FACEBOOK_LOGIN');
     LoginManager.logInWithPermissions(['public_profile', 'email']).then(
       function (result) {
         if (result.isCancelled) {
-          alert('Login Cancelled ');
+          setCancelLogin(true)
         } else {
           const currentProfile = Profile.getCurrentProfile().then(function (
             currentProfile,
@@ -222,7 +228,7 @@ const Login = ({navigation}) => {
           socialtype: 'facebook',
           version: appVersion,
           devicetoken: getFcmToken,
-          platform:Platform.OS
+          platform: Platform.OS,
         },
       });
       if (data.data.profile_status == 1) {
@@ -275,7 +281,7 @@ const Login = ({navigation}) => {
     }
   };
   const onApplePress = async () => {
-    analytics().logEvent('CV_FITME_APPLE_LOGIN')
+    analytics().logEvent('CV_FITME_APPLE_LOGIN');
     await appleAuth
       .performRequest({
         requestedOperation: appleAuth.Operation.LOGIN,
@@ -307,7 +313,7 @@ const Login = ({navigation}) => {
           socialtype: 'Apple',
           version: VersionNumber.appVersion,
           devicetoken: getFcmToken,
-          platform:Platform.OS
+          platform: Platform.OS,
         },
       });
 
@@ -357,8 +363,7 @@ const Login = ({navigation}) => {
     }
   };
   const loginFunction = async () => {
-
-    analytics().logEvent('CV_FITME_LOGIN')
+    analytics().logEvent('CV_FITME_LOGIN');
 
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (email == null) {
@@ -396,9 +401,9 @@ const Login = ({navigation}) => {
           data: {
             email: email,
             password: password,
-            version:appVersion,
+            version: appVersion,
             devicetoken: getFcmToken,
-            platform:Platform.OS
+            platform: Platform.OS,
           },
         });
 
@@ -523,16 +528,16 @@ const Login = ({navigation}) => {
     } catch (error) {
       console.log('User Profile Error', error);
       if (status == 1) navigation.replace('BottomTab');
-        else {
-          showMessage({
-            message: 'Please complete your Profile Details',
-            type: 'success',
-            animationDuration: 500,
-            floating: true,
-            icon: {icon: 'auto', position: 'left'},
-          });
-          navigationRef.navigate('Yourself');
-        }
+      else {
+        showMessage({
+          message: 'Please complete your Profile Details',
+          type: 'success',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        navigationRef.navigate('Yourself');
+      }
       // status == 1
       //   ? navigation.navigate('BottomTab')
       //   : navigationRef.navigate('Yourself');
@@ -779,8 +784,7 @@ const Login = ({navigation}) => {
           visible={IsVerifyVisible}
           onRequestClose={() => {
             setVerifyVisible(!IsVerifyVisible);
-          }}
-          >
+          }}>
           <View
             style={[
               styles.modalContainer,
@@ -906,6 +910,144 @@ const Login = ({navigation}) => {
       </View>
     );
   };
+  const LoginCancelModal = () => {
+    return (
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={cancelLogin}
+        onRequestClose={() => {
+          setCancelLogin(!cancelLogin);
+        }}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: '#202020',
+            justifyContent: 'center',
+            alignItems: 'center',
+            opacity: 0.9,
+          }}>
+          <View
+            style={{
+              width: DeviceWidth * 0.7,
+              height: DeviceHeigth * 0.3,
+              backgroundColor: 'white',
+              borderRadius: 20,
+              paddingVertical: 20,
+              alignItems: 'center',
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 4,
+              elevation: 5,
+            }}>
+            <Image
+              source={require('../Icon/Images/NewImage/alert.png')}
+              style={{width: 50, height: 50}}
+            />
+            <Text
+              style={{
+                fontSize:20,
+                fontWeight: '700',
+                color: '#202020',
+                marginTop: 10,
+                fontFamily: 'Montserrat-Regular',
+              }}>
+              ALERT
+            </Text>
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: '600',
+                color: '#202020',
+                marginTop: 15,
+                fontFamily: 'Montserrat-SemiBold',
+
+              }}>
+              {`Login/Sign Up`}
+            </Text>
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: '600',
+                color: '#202020',
+                marginTop: 5,
+                fontFamily: 'Montserrat-SemiBold',
+              }}>
+              {`Incomplete`}
+            </Text>
+
+            <LinearGradient
+              start={{x: 0, y: 1}}
+              end={{x: 1, y: 0}}
+              // colors={['#941000', '#D01818']}
+              colors={['#D01818', '#941000']}
+              style={{
+                width: '100%',
+                height: 60,
+                bottom: 0,
+                position: 'absolute',
+                paddingLeft: 5,
+                borderBottomRightRadius: 20,
+                borderBottomLeftRadius: 20,
+                backgroundColor: 'red',
+                alignItems: 'center',
+                // justifyContent:'center',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  setCancelLogin(false);
+                }}>
+                <Text
+                  style={{
+                    fontSize: 22,
+                    fontWeight: '700',
+                    color: '#fff',
+                    marginTop: 10,
+                    fontFamily: 'Montserrat-Regular',
+                  }}>
+                  OK
+                </Text>
+              </TouchableOpacity>
+            </LinearGradient>
+          </View>
+        </View>
+      </Modal>
+      // <View
+      //   style={{
+      //     flex: 1,
+      //     justifyContent: 'center',
+      //     alignItems: 'center',
+      //     marginTop: 22,
+      //     backfaceVisibility: 'red',
+      //   }}>
+
+      //   <Modal
+      //      animationType="fade"
+      //   transparent={true}
+      //     visible={cancelLogin}
+      //     onRequestClose={() => {
+      //       setCancelLogin(!cancelLogin);
+      //     }}>
+
+      //     <View
+      //       style={{
+      //         flex: 1,
+      //         justifyContent: 'center',
+      //         alignItems: 'center',
+
+      //         backfaceVisibility: 'red',
+      //       }}>
+
+      //
+      //     </View>
+      //   </Modal>
+      // </View>
+    );
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -1000,6 +1142,7 @@ const Login = ({navigation}) => {
             style={styles.forgotView}>
             <Text style={styles.forgotText}>Forgot Password?</Text>
           </TouchableOpacity>
+
           <View style={{marginTop: DeviceHeigth * 0.2}}>
             <Button buttonText={'Login'} onPresh={loginFunction} />
           </View>
@@ -1027,6 +1170,7 @@ const Login = ({navigation}) => {
         </View>
       </ScrollView>
       <CompleateProfileModal />
+      <LoginCancelModal />
       <ModalView />
     </SafeAreaView>
   );

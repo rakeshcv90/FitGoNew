@@ -208,9 +208,9 @@ const Workouts = ({navigation}: any) => {
         }}>
         <View style={{marginLeft: -5}}>
           <Text
-            numberOfLines={1}
-            style={[styles.category, {width: DeviceWidth * 0.5}]}>
-            Full Body Toning Workout
+            // numberOfLines={1}
+            style={[styles.category, ]}>
+            {`Full Body Toning\nWorkout`}
           </Text>
           <Text
             style={[
@@ -235,12 +235,13 @@ const Workouts = ({navigation}: any) => {
               })
             }
             h={35}
-            mV={20}
+          //  mV={15}
             text="Start Training"
             textStyle={{
               fontSize: 12,
               fontFamily: 'Poppins',
               lineHeight: 18,
+              textAlign:'center',
               color: AppColor.WHITE,
               fontWeight: '600',
             }}

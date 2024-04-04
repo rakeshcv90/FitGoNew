@@ -305,10 +305,9 @@ const AITrainer = ({navigation}) => {
             Platform.OS == 'android'
               ? DeviceHeigth * 0.09
               : DeviceHeigth * 0.09,
-        }}
-        >
+        }}>
         <ScrollView
-          style={{flexGrow: 1}}
+          style={{flexGrow: 1, marginVertical: DeviceHeigth * 0.05}}
           ref={flatListRef}
           onContentSizeChange={() =>
             flatListRef.current.scrollToEnd({animated: true})
@@ -482,13 +481,13 @@ const AITrainer = ({navigation}) => {
         <View
           style={{
             width: '100%',
-            height: 80,
+            height: 75,
             alignSelf: 'center',
             backgroundColor: '#FCFCFC',
             borderTopLeftRadius: 16,
             borderTopRightRadius: 16,
             borderWidth: 1,
-
+            bottom: 0,
             flexDirection: 'row',
             alignItems: 'center',
             paddingLeft: 20,
@@ -508,9 +507,9 @@ const AITrainer = ({navigation}) => {
             }}>
             <Image
               style={{
-                width: 30,
-                height: 30,
-                marginHorizontal: -15,
+                width: 20,
+                height: 20,
+                marginHorizontal: -10,
               }}
               resizeMode="contain"
               source={localImage.Send}
@@ -535,7 +534,8 @@ var styles = StyleSheet.create({
     lineHeight: 18,
     fontWeight: '600',
     fontFamily: 'Poppins',
-    color: 'rgba(80, 80, 80, 0.6)',
+    // backgroundColor:'red',
+    color: AppColor.BLACK,
   },
   messageContainer3: {
     flexDirection: 'row',

@@ -44,7 +44,16 @@ const RoundedCards: FC<Props> = ({...props}) => {
           // },
         ]}>
         <View style={styles.row}>
-          <Text style={styles.category}>
+          <Text
+            style={[
+              styles.category,
+              {
+                fontWeight: 'bold',
+                color: AppColor.BLACK,
+                fontSize: 18,
+                fontFamily: 'Montserrat',
+              },
+            ]}>
             {props.headText ? props.headText : 'Category'}
           </Text>
           {props.viewAllButton && (
@@ -52,7 +61,13 @@ const RoundedCards: FC<Props> = ({...props}) => {
               onPress={props.viewAllPress}
               style={[
                 styles.category,
-                {fontSize: 12, color: 'rgba(80, 80, 80, 0.6) '},
+                {
+                  fontFamily: 'Montserrat-SemiBold',
+                  fontWeight: '600',
+                  color: AppColor.RED1,
+                  fontSize: 12,
+                  lineHeight: 14,
+                },
               ]}>
               View All
             </Text>
@@ -65,7 +80,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
             alignSelf: 'center',
             justifyContent: 'center',
             height: props.horizontal ? DeviceWidth / 3 : DeviceHeigth / 2,
-            width: '100%',
+            width: DeviceWidth,
           }}>
           <FlatList
             data={props.data}
@@ -105,8 +120,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
                       marginBottom: 5,
                     },
                   ]}>
-                
-                  {props?.horizontal && item.workout_price == 'Premium' && (
+                  {/* {props?.horizontal && item.workout_price == 'Premium' && (
                     <Image
                       source={require('../Icon/Images/NewImage/rect.png')}
                       style={{
@@ -114,10 +128,10 @@ const RoundedCards: FC<Props> = ({...props}) => {
                         height: 30,
                         top:
                           Platform.OS == 'android'
-                            ? DeviceHeigth * 0.012
+                            ? DeviceHeigth * 0.003
                             : DeviceHeigth >= 1024
                             ? -DeviceHeigth * 0.005
-                            : DeviceHeigth * 0.01,
+                            : DeviceHeigth * 0.003,
                         left:
                           Platform.OS == 'android'
                             ? -DeviceWidth * 0.095
@@ -125,7 +139,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
                             ? -DeviceWidth * 0.11
                             : -DeviceWidth * 0.095,
                       }}></Image>
-                  )}
+                  )} */}
 
                   {isLoading && (
                     <ShimmerPlaceholder
@@ -185,7 +199,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
                           {
                             fontSize: 14,
                             width: '80%',
-                            top: props.horizontal && -15,
+                            top: props.horizontal && -2,
                           },
                         ]}
                         ellipsizeMode="tail"
@@ -309,7 +323,7 @@ const styles = StyleSheet.create({
         // shadowRadius: 10,
       },
       android: {
-        elevation: 10,
+        elevation: 3,
         shadowColor: 'rgba(0, 0, 0, 0.6)',
         shadowOffset: {width: 5, height: 5},
         shadowOpacity: 0.9,
