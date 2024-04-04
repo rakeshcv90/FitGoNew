@@ -59,6 +59,7 @@ import analytics from '@react-native-firebase/analytics';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {ImageBackground} from 'react-native';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
+import CustomBarChart from '../../Component/NewBarGraph';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 let zeroData = [];
 let zeroDataM = [];
@@ -174,9 +175,7 @@ const Home = ({navigation}) => {
   const caloriesRef = useRef(Calories);
   const [distance, setDistance] = useState(0);
   const distanceRef = useRef(distance);
-  const [key, setKey] = useState(0);
   let isFocused = useIsFocused();
-  const AnimationRef = useRef(null);
   useEffect(() => {
     if (isFocused) {
       getCustomeWorkoutTimeDetails();
@@ -545,6 +544,8 @@ const Home = ({navigation}) => {
     handleChange,
     ToggleState,
     ImgSource,
+    MinimumValue,
+    MaximumValue
   }) => {
     const thumbStyle = {
       width: 35,
@@ -590,15 +591,7 @@ const Home = ({navigation}) => {
           }}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Image
-              source={
-                txt == 'Steps'
-                  ? localImage.Step3
-                  : txt == 'Distance'
-                  ? localImage.Step2
-                  : txt == 'Calories'
-                  ? localImage.Step1
-                  : localImage.Step1
-              }
+              source={ImgSource}
               style={{width: 30, height: 30}}
               tintColor={txt == 'Steps' ? '#5FB67B' : null}
               resizeMode="contain"
@@ -641,24 +634,8 @@ const Home = ({navigation}) => {
             Visiblity ? (
               <Slider
                 value={Value}
-                maximumValue={
-                  txt == 'Steps'
-                    ? 10000
-                    : txt == 'Distance'
-                    ? 5
-                    : txt == 'Calories'
-                    ? 500
-                    : 0
-                }
-                minimumValue={
-                  txt == 'Steps'
-                    ? 500
-                    : txt == 'Distance'
-                    ? 0.25
-                    : txt == 'Calories'
-                    ? 25.0
-                    : 0
-                }
+                maximumValue={MaximumValue}
+                minimumValue={MinimumValue}
                 step={1}
                 onValueChange={handleChange}
                 minimumTrackTintColor="#5FB67B"
@@ -735,6 +712,8 @@ const Home = ({navigation}) => {
             Value1={`${Steps_Goal} Steps`}
             ToggleState={setSteps_Visible}
             ImgSource={localImage.Step3}
+            MinimumValue={500}
+            MaximumValue={10000}
           />
           <SliderView
             txt={'Distance'}
@@ -748,6 +727,8 @@ const Home = ({navigation}) => {
             Value1={`${Distance_Goal} Km`}
             ToggleState={setDistance_Visible}
             ImgSource={localImage.Step2}
+            MinimumValue={0.25}
+            MaximumValue={5}
           />
           <SliderView
             txt={'Calories'}
@@ -761,6 +742,8 @@ const Home = ({navigation}) => {
             Value1={`${Calories_Goal} Kcal`}
             ToggleState={setCalories_Visible}
             ImgSource={localImage.Step1}
+            MinimumValue={25}
+            MaximumValue={500}
           />
           <TouchableOpacity
             style={styles.Modal_Save_btton}
@@ -1302,7 +1285,7 @@ const Home = ({navigation}) => {
                 justifyContent: 'flex-start',
               }}>
               Meditation
-            </Text>
+            </Text> 
 
             {customWorkoutData?.minset_workout?.length > 0 && (
               <TouchableOpacity
