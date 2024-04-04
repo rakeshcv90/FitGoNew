@@ -106,6 +106,7 @@ const NewProgressScreen = ({navigation}) => {
     setBmi(bmi);
   }, [bmi]);
 
+
   // useEffect(() => {
   //   WeeklyData(1);
   //   WeeklyData(2);
@@ -158,7 +159,6 @@ const NewProgressScreen = ({navigation}) => {
       }
     }
   }, []);
-
   const handleGraph1 = data => {
     if (data == 1) {
       WeeklyData(1);

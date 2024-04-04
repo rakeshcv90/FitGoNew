@@ -176,16 +176,22 @@ const Home = ({navigation}) => {
   const [distance, setDistance] = useState(0);
   const distanceRef = useRef(distance);
   let isFocused = useIsFocused();
+
+
   useEffect(() => {
     if (isFocused) {
+    
+
       getCustomeWorkoutTimeDetails();
       getGraphData(1);
       setTimeout(() => {
         ActivityPermission();
       }, 3000);
+
     }
   }, [isFocused]);
-  // re-render ring
+  
+
 
   // pedometer data sending to api
   const PedoMeterData = async () => {

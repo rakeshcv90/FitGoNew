@@ -648,12 +648,15 @@ const Profile = () => {
               justifyContent: 'space-between',
               flexDirection: 'row',
               margin: 15,
+
               // borderWidth: 1,
               marginVertical:
                 Platform.OS == 'ios'
                   ? DeviceHeigth * 0.04
                   : DeviceHeigth * 0.02,
               alignItems: 'flex-start',
+
+
             }}>
             <TouchableOpacity
               onPress={() => {
@@ -673,6 +676,7 @@ const Profile = () => {
                 justifyContent: 'center',
                 alignSelf: 'center',
               }}>
+
               <Text
                 style={{
                   fontFamily: 'Poppins-SemiBold',
@@ -715,6 +719,7 @@ const Profile = () => {
                 </TouchableOpacity>
               </View>
               <View
+
                 style={{
                   marginTop: DeviceHeigth * 0.04,
                   alignItems: 'center',
@@ -737,13 +742,36 @@ const Profile = () => {
                 </Text>
               </View>
             </View>
-            <TouchableOpacity
-              onPress={() => {
+
+          </View>
+          <View
+            style={[
+              styles.profileView,
+              {marginTop: Platform.OS == 'ios' ? -DeviceHeigth * 0.035 : 0},
+            ]}>
+            {isLoading && (
+              <ShimmerPlaceholder
+                style={styles.loader}
+                ref={avatarRef}
+                autoRun
+              />
+            )}
+            <Image
+              source={
+                getUserDataDetails.image_path == null
+                  ? localImage.avt
+                  : {uri: getUserDataDetails.image_path}
+              }
+              onLoad={() => setIsLoading(false)}
+              style={styles.img}
+              resizeMode="cover"></Image>
+
                 analytics().logEvent('CV_FITME_SIGNED_OUT');
                 LogOut(dispatch);
                 // navigation.navigate('SplaceScreen');
               }}
               activeOpacity={0.5}
+
               style={{
                 // width: DeviceWidth * 0.2,
                 width: 78,
@@ -936,14 +964,14 @@ const Profile = () => {
                 );
                 // navigation.navigate('Personal Details');
                 if (value.text1 == 'Privacy Policy') {
-                  navigation.navigate('TermaAndCondition', {
-                    title: 'Privacy & Policy',
-                  });
+
+                  navigation.navigate('TermaAndCondition',{title:'Privacy & Policy'});
                 } else if (value.text1 == 'Terms Condition') {
-                  navigation.navigate('TermaAndCondition', {
-                    title: 'Terms & Condition',
-                  });
-                } else if (value.text1 == 'Contact Us') {
+                  navigation.navigate('TermaAndCondition',{title:'Terms & Condition'});
+                } 
+                
+                else if (value.text1 == 'Contact Us') {
+
                   openMailApp();
                 } else if (value.text1 == 'Rate Us') {
                   if (Platform.OS == 'ios') {
