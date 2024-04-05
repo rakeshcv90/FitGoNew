@@ -33,8 +33,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import {StarColor} from '../../Icon/Images/NewImage/StarColor';
 import {Star} from '../../Icon/Images/NewImage/Star';
-import NativeAddTest from '../../Component/NativeAddTest';
-import NativeAddTest from '../../Component/NativeAddTest';
+import NativeAddTest from '../../Component/NativeAddTest'
 const AllWorkouts = ({navigation, route}: any) => {
   const {data, type, fav} = route.params;
 
