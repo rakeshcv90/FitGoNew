@@ -101,6 +101,7 @@ const NewProgressScreen = ({navigation}) => {
       : 0;
   }, [getUserDataDetails]);
 
+
   // Update state with useEffect
   useEffect(() => {
     setBmi(bmi);

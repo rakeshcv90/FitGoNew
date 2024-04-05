@@ -54,7 +54,6 @@ import {
   LinearGradient as SvgGrad,
 } from 'react-native-svg';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
-
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import {BlurView} from '@react-native-community/blur';
 import {useSelector, useDispatch} from 'react-redux';
@@ -65,11 +64,10 @@ import analytics from '@react-native-firebase/analytics';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {ImageBackground} from 'react-native';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
-
 import NativeAddTest from '../../Component/NativeAddTest';
 
-
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+
 let zeroData = [];
 let zeroDataM = [];
 
@@ -187,20 +185,15 @@ const Home = ({navigation}) => {
   const distanceRef = useRef(distance);
   let isFocused = useIsFocused();
 
-
   useEffect(() => {
     if (isFocused) {
-
       getCustomeWorkoutTimeDetails();
       getGraphData(1);
       setTimeout(() => {
         ActivityPermission();
       }, 3000);
-
     }
   }, [isFocused]);
-  
-
 
   // pedometer data sending to api
   const PedoMeterData = async () => {
@@ -551,28 +544,6 @@ const Home = ({navigation}) => {
   const closeModal = () => {
     setModalVisible(false); // Close the modal
   };
-
-  const UpdateGoalModal = () => {
-    const [Steps_Goal, setSteps_Goal] = useState(500);
-    const [Calories_Goal, setCalories_Goal] = useState(25);
-    const [Distance_Goal, setDistance_Goal] = useState(0.25);
-    const [Step_Visible, setSteps_Visible] = useState(true);
-    const [Distance_Visible, setDistance_Visible] = useState(false);
-    const [Calories_Visible, setCalories_Visible] = useState(false);
-
-    const [showBlur, setShowBlur] = useState(true);
-    const [viewRef, setViewRef] = useState(null);
-    const [blurType, setBlurType] = useState('light');
-    const backgroundImageRef = createRef();
-    const ToggleVisiblity = num => {
-      if (num == 1) {
-        setSteps_Visible(!Step_Visible);
-      } else if (num == 2) {
-        setDistance_Visible(!Distance_Visible);
-      } else {
-        setCalories_Visible(!Calories_Visible);
-      }
-
   const SliderView = ({
     Visiblity,
     txt,
@@ -601,7 +572,6 @@ const Home = ({navigation}) => {
           elevation: 5,
         },
       }),
-
     };
     const ToggleVisiblity = () => {
       ToggleState(prev => !prev);
@@ -719,146 +689,13 @@ const Home = ({navigation}) => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}>
+           <BlurView
+          style={styles.modalContainer}
+          blurType="light"
+          blurAmount={1}
+          reducedTransparencyFallbackColor="white"
+        />
         <View
-
-          style={{
-            flex: 1,
-          }}>
-          <BlurView
-            style={{flex: 1}}
-            blurType="light"
-            blurAmount={1}
-            reducedTransparencyFallbackColor="white"
-          />
-          <View
-            style={[
-              styles.modalContent,
-              {backgroundColor: AppColor.BACKGROUNG},
-            ]}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                source={localImage.Target}
-                style={{width: DeviceWidth * 0.07, height: DeviceHeigth * 0.03}}
-                resizeMode="contain"
-              />
-              <Text
-                style={[styles.title, {color: AppColor.BLACK, marginLeft: 10}]}>
-                Set Goals
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 15,
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Image
-                  source={localImage.Step3}
-                  style={{width: 30, height: 30}}
-                  tintColor={'#5FB67B'}
-                />
-                <Text style={styles.txt5}>Steps</Text>
-              </View>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text
-                  style={[
-                    {
-                      color: AppColor.BoldText,
-                      marginLeft: 10,
-                      fontFamily: 'Montserrat',
-                    },
-                  ]}>
-                  {Steps_Goal + ' Steps'}
-                </Text>
-                <TouchableOpacity
-                  style={styles.dropButton}
-                  onPress={() => ToggleVisiblity(1)}>
-                  <Icons
-                    name={Step_Visible ? 'chevron-up' : 'chevron-down'}
-                    size={25}
-                    color={'#000'}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={{marginTop: 5}}>
-              {Step_Visible ? (
-                <Slider
-                  value={Steps_Goal}
-                  maximumValue={10000}
-                  minimumValue={500}
-                  step={1}
-                  onValueChange={value => {
-                    setSteps_Goal(value);
-                    setCalories_Goal((value * 0.05).toFixed(2));
-                    setDistance_Goal((value * 0.0005).toFixed(2));
-                  }}
-                  minimumTrackTintColor="#5FB67B"
-                  renderThumbComponent={ThumbImage1}
-                  trackStyle={{height: 10, borderRadius: 20}}
-                />
-              ) : null}
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                marginTop: 15,
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Image
-                  source={localImage.Step2}
-                  style={{width: 30, height: 28}}
-                  resizeMode="contain"
-                />
-                <Text style={styles.txt5}>Distance</Text>
-              </View>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text
-                  style={[
-                    {
-                      color: AppColor.BoldText,
-                      marginLeft: 10,
-                      fontFamily: 'Montserrat',
-                    },
-                  ]}>
-                  {Distance_Goal + ' km'}
-                </Text>
-                <TouchableOpacity
-                  style={styles.dropButton}
-                  onPress={() => ToggleVisiblity(2)}>
-                  <Icons
-                    name={Distance_Visible ? 'chevron-up' : 'chevron-down'}
-                    size={25}
-                    color={'#000'}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={{marginTop: 5}}>
-              {Distance_Visible ? (
-                <Slider
-                  value={Distance_Goal}
-                  maximumValue={5}
-                  step={1}
-                  onValueChange={value => {
-                    setDistance_Goal(value);
-                    setSteps_Goal((value * 2000).toFixed(0));
-                    setCalories_Goal((value * 100).toFixed(2));
-                  }}
-                  minimumValue={0.25}
-                  minimumTrackTintColor="#FCBB1D"
-                  renderThumbComponent={ThumbImage2}
-                  trackStyle={{height: 10, borderRadius: 20}}
-                />
-              ) : null}
-            </View>
-            <View
-
           style={[styles.modalContent, {backgroundColor: AppColor.BACKGROUNG}]}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Image
@@ -928,88 +765,22 @@ const Home = ({navigation}) => {
               colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
               start={{x: 0, y: 1}}
               end={{x: 1, y: 0}}
-
               style={{
-                flexDirection: 'row',
-                marginTop: 15,
+                width: DeviceWidth * 0.3,
+                height: DeviceHeigth * 0.04,
+                borderRadius: 12,
+                justifyContent: 'center',
                 alignItems: 'center',
-                justifyContent: 'space-between',
               }}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Image
-                  source={localImage.Step1}
-                  style={{width: 30, height: 25}}
-                  resizeMode="contain"
-                />
-                <Text style={styles.txt5}>Calories</Text>
-              </View>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text
-                  style={[
-                    {
-                      color: AppColor.BoldText,
-                      marginLeft: 10,
-                      fontFamily: 'Montserrat',
-                    },
-                  ]}>
-                  {Calories_Goal + ' KCal'}
-                </Text>
-                <TouchableOpacity
-                  style={styles.dropButton}
-                  onPress={() => ToggleVisiblity(3)}>
-                  <Icons
-                    name={Calories_Visible ? 'chevron-up' : 'chevron-down'}
-                    size={25}
-                    color={'#000'}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={{marginTop: 5}}>
-              {Calories_Visible ? (
-                <Slider
-                  value={Calories_Goal}
-                  maximumValue={500}
-                  minimumValue={25}
-                  step={1}
-                  onValueChange={value => {
-                    setCalories_Goal(value);
-                    setDistance_Goal((value * 0.01).toFixed(2));
-                    setSteps_Goal(value * 20);
-                  }}
-                  minimumTrackTintColor={AppColor.RED}
-                  renderThumbComponent={ThumbImage3}
-                  trackStyle={{height: 10, borderRadius: 20}}
-                />
-              ) : null}
-            </View>
-            <TouchableOpacity
-              style={styles.Modal_Save_btton}
-              activeOpacity={0.5}
-              onPress={() => {
-                HandleSave();
-              }}>
-              <LinearGradient
-                colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
-                start={{x: 0, y: 1}}
-                end={{x: 1, y: 0}}
-                style={{
-                  width: DeviceWidth * 0.3,
-                  height: DeviceHeigth * 0.04,
-                  borderRadius: 12,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text style={[styles.title, {color: AppColor.WHITE}]}>
-                  Save
-                </Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
+              <Text style={[styles.title, {color: AppColor.WHITE}]}>Save</Text>
+            </LinearGradient>
+          </TouchableOpacity>
         </View>
       </Modal>
     );
   };
+
+
   const props = {
     activeStrokeWidth: 25,
     inActiveStrokeWidth: 25,
@@ -1599,20 +1370,19 @@ const Home = ({navigation}) => {
             </View>
             <View style={styles.stepImageView}>
               <CircularProgressBase
-                // ref={AnimationRef}
                 {...props}
                 value={Calories}
-                maxValue={CalriesGoalProfile}
+                maxValue={
+                  getPedomterData[3] ? getPedomterData[3].RCalories : 500
+                }
                 radius={32}
                 activeStrokeColor={'#941000'}
                 inActiveStrokeColor={'#941000'}>
                 <CircularProgressBase
-                  // ref={AnimationRef}
                   {...props}
                   value={distance}
                   maxValue={
-                    DistanceGoalProfile
-                    // 2.5
+                    getPedomterData[2] ? getPedomterData[2].RDistance : 2.5
                   }
                   radius={55}
                   activeStrokeColor={'#FCBB1D'}
@@ -1620,8 +1390,9 @@ const Home = ({navigation}) => {
                   <CircularProgressBase
                     {...props}
                     value={steps}
-                    // ref={AnimationRef}
-                    maxValue={stepGoalProfile}
+                    maxValue={
+                      getPedomterData[0] ? getPedomterData[0].RSteps : 5000
+                    }
                     radius={80}
                     activeStrokeColor={'#397E54'}
                     inActiveStrokeColor={'#397E54'}
@@ -1652,7 +1423,7 @@ const Home = ({navigation}) => {
                 justifyContent: 'flex-start',
               }}>
               Meditation
-            </Text> 
+            </Text>
 
             {customWorkoutData?.minset_workout?.length > 0 && (
               <TouchableOpacity

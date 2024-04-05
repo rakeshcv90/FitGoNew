@@ -653,7 +653,7 @@ const Profile = () => {
           start={{x: 0, y: 1}}
           end={{x: 1, y: 0}}
           colors={['#D5191A', '#941000']}
-          style={{height: DeviceHeigth * 0.4, width: DeviceWidth}}>
+          style={{height: DeviceHeigth * 0.38, width: DeviceWidth}}>
           <View
             style={{
               justifyContent: 'space-between',
@@ -680,7 +680,6 @@ const Profile = () => {
               </View>
             </TouchableOpacity>
 
-
             <View
               style={{
                 alignItems: 'center',
@@ -688,7 +687,6 @@ const Profile = () => {
                 alignSelf: 'center',
               }}>
               <Text
-
                 style={{
                   fontFamily: 'Poppins-SemiBold',
                   fontSize: 20,
@@ -1095,7 +1093,6 @@ const styles = StyleSheet.create({
 
     borderRadius: 120 / 2,
     // alignSelf: 'center',
-
   },
   img: {
     height: 120,
