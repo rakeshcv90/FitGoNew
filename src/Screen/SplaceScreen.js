@@ -25,6 +25,7 @@ import {
   TestIds,
 } from 'react-native-google-mobile-ads';
 import {interstitialAdId} from '../Component/AdsId';
+import { LogOut } from '../Component/LogOut';
 
 const products = Platform.select({
   ios: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
@@ -194,7 +195,18 @@ const SplaceScreen = ({navigation}) => {
       });
       if (res?.data?.data?.length > 0) {
         dispatch(setPurchaseHistory(res.data.data));
-      } else {
+      } 
+      // else if (res?.data?.msg == 'Invalid Token') {
+      //   showMessage({
+      //     message: 'Please Login Again!',
+      //     type: 'danger',
+      //     animationDuration: 500,
+      //     floating: true,
+      //     icon: {icon: 'auto', position: 'left'},
+      //   });
+      //   LogOut(dispatch);
+      // } 
+      else {
         dispatch(setPurchaseHistory([]));
       }
     } catch (error) {

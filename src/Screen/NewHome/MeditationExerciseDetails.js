@@ -25,6 +25,8 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import SeekBar from '../../Component/SeekBar';
 import {useIsFocused} from '@react-navigation/native';
+import {BannerAdd} from '../../Component/BannerAdd';
+import {bannerAdId} from '../../Component/AdsId';
 
 const MeditationExerciseDetails = ({navigation, route}) => {
   let isFocused = useIsFocused();
@@ -78,7 +80,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
 
   const handleValueChange = value => {};
   return (
-    <View style={styles.container}>
+    <>
       <LinearGradient
         start={{x: 0, y: 1}}
         end={{x: 1, y: 0}}
@@ -109,11 +111,11 @@ const MeditationExerciseDetails = ({navigation, route}) => {
           backgroundColor={'transparent'}
           translucent={true}
         />
+        <View></View>
         <View
           style={{
-            width: 300,
-            height: 300,
-            marginVertical: -10,
+            width: '100%',
+            height: '55%',
             alignSelf: 'center',
             alignItems: 'center',
             justifyContent: 'center',
@@ -128,30 +130,35 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                 width: 300,
                 height: 300,
                 position: 'absolute',
-                top: -DeviceHeigth * 0.09,
+                top:
+                  Platform.OS == 'ios'
+                    ? -DeviceHeigth * 0.1
+                    : -DeviceHeigth * 0.12,
               }}
             />
           )}
 
           <Image
             style={{
-              width: 250,
-              height: 250,
+              width: '100%',
+              height: '100%',
             }}
-            resizeMode="cover"
-            source={{
-              uri: route.params.item.exercise_mindset_image_link,
-            }}></Image>
+            resizeMode="contain"
+            source={
+              require('../../Icon/Images/NewImage/meditation.png')
+            }>
+
+            </Image>
 
           <Text
             style={{
-              fontFamily: 'Poppins',
-              fontWeight: '600',
+              fontFamily: 'Montserrat-SemiBold',
+              fontWeight: '700',
               lineHeight: 30,
               fontSize: 20,
               color: '#191919',
               textAlign: 'center',
-              marginVertical: 10,
+              top: Platform.OS == 'android' ? 0 : -10,
             }}>
             {route.params.item.exercise_mindset_title}
           </Text>
@@ -169,6 +176,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
             style={{
               width: 350,
               height: DeviceHeigth * 0.05,
+              marginVertical: DeviceHeigth * 0.04,
             }}>
             <SeekBar
               currentPosition={position}
@@ -197,7 +205,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
               //   await TrackPlayer.skipToPrevious();
               //   togglePlayback(playbackState);
               // }}
-              >
+            >
               {/* <Image
                 source={localImage.Farwed}
                 style={{
@@ -259,7 +267,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
               //   await TrackPlayer.skipToNext();
               //   togglePlayback(playbackState);
               // }}
-              >
+            >
               {/* <Image
                 source={localImage.Farwed}
                 style={{
@@ -272,34 +280,10 @@ const MeditationExerciseDetails = ({navigation, route}) => {
             </TouchableOpacity>
           </View>
         </View>
-        <LinearGradient
-          start={{x: 0, y: 1}}
-          end={{x: 1, y: 0}}
-          colors={['#2169C4', '#103360']}
-          style={{
-            width:'95%',
-            height: DeviceHeigth * 0.25,
-            marginVertical: 15,
-            borderRadius: 6,
-            alignSelf: 'center',
-            padding: 10,
-            justifyContent: 'center',
-          }}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <Text
-              style={{
-                fontFamily: 'Montserrat-Regular',
-                fontWeight: '600',
-                lineHeight: 22,
-                fontSize: 15,
-                color: '#FFFFFF',
-              }}>
-              {route.params.item.exercise_mindset_description}
-            </Text>
-          </ScrollView>
-        </LinearGradient>
       </LinearGradient>
-    </View>
+
+      <BannerAdd bannerAdId={bannerAdId} />
+    </>
   );
 };
 var styles = StyleSheet.create({

@@ -7,6 +7,7 @@ import {
   View,
   Image,
   ActivityIndicator,
+  Button,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -46,19 +47,41 @@ const Exercise = ({navigation, route}: any) => {
   const [skipCount, setSkipCount] = useState(0);
   const [currentData, setCurrentData] = useState(currentExercise);
   const [isLoading, setIsLoading] = useState(true);
-  const allWorkoutData = useSelector(
-    (state: any) => state.allWorkoutData,
-  );
+  const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
-  const getSoundOffOn = useSelector(
-    (state: any) => state.getSoundOffOn,
-  );
+  const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
   const [separateTimer, setSeparateTimer] = useState(timer);
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const restTimerRef = useRef(0);
   const playTimerRef = useRef<any>(null);
+  const [seconds, setSeconds] = useState(
+    parseInt(currentData?.exercise_rest.split(' ')[0]),
+  );
+  const [isRunning, setIsRunning] = useState(false);
+
+  useEffect(() => {
+    let intervalId: any;
+    if (isRunning) {
+      intervalId = setInterval(() => {
+        if (seconds > 0) {
+          setSeconds(prevSeconds => prevSeconds - 1);
+        }
+      }, 1000);
+    }
+
+    return () => clearInterval(intervalId);
+  }, [seconds, isRunning]);
+
+  const startStopTimer = () => {
+    setIsRunning(prevState => !prevState);
+  };
+
+  // Convert seconds into minutes and seconds
+
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
 
   useEffect(() => {
     const initTts = async () => {
@@ -67,7 +90,7 @@ const Exercise = ({navigation, route}: any) => {
         await Tts.setDefaultLanguage('en-US');
         await Tts.setDucking(true);
         await Tts.setIgnoreSilentSwitch('ignore');
-        
+
         setTtsInitialized(true);
       }
     };
@@ -77,11 +100,9 @@ const Exercise = ({navigation, route}: any) => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-
     if (!back) {
       restStart
-        ? (restTimerRef.current =
-          setTimeout(() => {
+        ? (restTimerRef.current = setTimeout(() => {
             if (timer === 0) {
               if (number == allExercise?.length - 1) return;
               setRestStart(false);
@@ -90,11 +111,13 @@ const Exercise = ({navigation, route}: any) => {
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
-
+              setSeconds(
+                parseInt(allExercise[index + 1]?.exercise_rest.split(' ')[0]),
+              );
               setCurrentData(allExercise[index + 1]);
               // setPre(15);
               setNumber(number + 1);
-              setRandomCount(randomCount+1)
+              setRandomCount(randomCount + 1);
               setTimer(15);
             } else if (timer == 15) {
               const index = allExercise?.findIndex(
@@ -110,12 +133,17 @@ const Exercise = ({navigation, route}: any) => {
           }, 1000))
         : (playTimerRef.current = setTimeout(() => {
             if (playW >= 100 && randomCount == allExercise?.length) {
-              navigation.goBack()
+              navigation.goBack();
               clearTimeout(restTimerRef.current);
               clearTimeout(playTimerRef.current);
             }
-            if (pause)
+            if (pause) {
               setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
+              if (seconds > 1) {
+                setSeconds(prevSeconds => prevSeconds - 1);
+              }
+            }
+
             if (playW >= 100 && number == allExercise?.length - 1) {
               setPause(false);
               postCurrentExerciseAPI(number);
@@ -227,7 +255,7 @@ const Exercise = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-  
+
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -272,7 +300,7 @@ const Exercise = ({navigation, route}: any) => {
               fontWeight={'700'}
               fontSize={32}
               width={DeviceWidth}
-               x={30}
+              x={30}
               alignSelf
             />
             <GradientText
@@ -557,7 +585,7 @@ const Exercise = ({navigation, route}: any) => {
             style={{
               height: DeviceHeigth * 0.5,
               marginTop: -DeviceHeigth * 0.06,
-              // backgroundColor:'red'
+              zIndex: -1,
             }}>
             {/* <Text>{trackerData[number]?.id}</Text> */}
 
@@ -596,7 +624,26 @@ const Exercise = ({navigation, route}: any) => {
               }}
             />
           </View>
-          <Text style={[styles.head,{color:AppColor.BLACK}]}>Get Ready</Text>
+
+          <View
+            style={{
+              marginVertical:
+                Platform.OS == 'ios'
+                  ? DeviceHeigth >= 1024
+                    ? DeviceHeigth * 0.07
+                    : DeviceHeigth * 0.03
+                  : DeviceHeigth * 0.01,
+              top:
+                Platform.OS == 'ios'
+                  ? DeviceHeigth >= 1024
+                    ? DeviceHeigth * 0.06
+                    : DeviceHeigth * 0.02
+                  : DeviceHeigth * 0.0,
+            }}>
+            <Text style={[styles.head, {color: AppColor.BLACK}]}>
+              {currentData?.exercise_title}
+            </Text>
+          </View>
           <View
             style={{
               flexDirection: 'row',
@@ -604,8 +651,15 @@ const Exercise = ({navigation, route}: any) => {
               alignItems: 'center',
               marginTop: 10,
             }}>
-            <Text style={[styles.name, {width: DeviceWidth * 0.7}]}>
-              {currentData?.exercise_title}
+            <Text
+              style={[
+                styles.name,
+                {width: DeviceWidth * 0.7, fontSize: 25, fontWeight: '700'},
+              ]}>
+              {minutes < 10 ? '0' + minutes : minutes}:
+              {remainingSeconds < 10
+                ? '0' + remainingSeconds
+                : remainingSeconds}
             </Text>
             <Text style={[styles.name, {color: '#505050'}]}>
               <Icons
@@ -616,6 +670,13 @@ const Exercise = ({navigation, route}: any) => {
               {` ${currentData?.exercise_rest}`}
             </Text>
           </View>
+
+          {/* <Button
+        title={isRunning ? 'Pause' : 'Start'}
+        onPress={startStopTimer}
+        color="#841584"
+      /> */}
+
           <Play
             play={!pause}
             fill={`${100 - playW}%`}
@@ -665,6 +726,7 @@ const Exercise = ({navigation, route}: any) => {
             setRandomCount={setRandomCount}
             playTimerRef={playTimerRef}
             currentExercise={currentExercise}
+            setSeconds={setSeconds}
           />
         </>
       )}
@@ -689,11 +751,11 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontFamily: 'Poppins',
     fontWeight: '700',
-    lineHeight: 40,
+    // lineHeight: 40,
   },
   name: {
     fontSize: 20,
-    fontFamily: 'Poppins',
+    fontFamily: 'Montserrat-Regular',
     fontWeight: '600',
     lineHeight: 30,
     color: '#1e1e1e',

@@ -658,7 +658,7 @@ const Profile = () => {
             style={{
               justifyContent: 'space-between',
               flexDirection: 'row',
-
+              top: Platform.OS == 'ios' ? 20 : 0,
               margin: 15,
               // borderWidth: 1,
 
@@ -786,7 +786,7 @@ const Profile = () => {
   const profileViewHeight = DeviceHeigth * 0.4;
   const openMailApp = () => {
     Linking.openURL(
-      'mailto:thefitnessandworkout@gmail.com?subject=Feedback&body=Hello%20there!',
+      'mailto:aessikarwar03@gmail.com?subject=Feedback&body=Hello%20there!',
     );
   };
   return (

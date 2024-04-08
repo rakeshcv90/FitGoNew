@@ -304,10 +304,10 @@ const AITrainer = ({navigation}) => {
           top:
             Platform.OS == 'android'
               ? DeviceHeigth * 0.09
-              : DeviceHeigth * 0.09,
+              : DeviceHeigth * 0.12,
         }}>
         <ScrollView
-          style={{flexGrow: 1, marginVertical: DeviceHeigth * 0.05}}
+          style={{flexGrow: 1, marginVertical: DeviceHeigth * 0.00}}
           ref={flatListRef}
           onContentSizeChange={() =>
             flatListRef.current.scrollToEnd({animated: true})

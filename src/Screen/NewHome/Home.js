@@ -88,10 +88,11 @@ const GradientText = ({item}) => {
           <Stop offset="1" stopColor={gradientColors[1]} />
         </SvgGrad>
         <SvgText
-          fontFamily="Montserrat"
+         // fontFamily="Montserrat-SemiBold"
+          lineHeight={20}
           width={50}
-          fontWeight={'600'}
-          fontSize={17}
+          fontWeight={'700'}
+          fontSize={20}
           numberOfLines={1}
           fill="url(#grad)"
           x="0"
@@ -553,7 +554,7 @@ const Home = ({navigation}) => {
     ToggleState,
     ImgSource,
     MinimumValue,
-    MaximumValue
+    MaximumValue,
   }) => {
     const thumbStyle = {
       width: 35,
@@ -682,14 +683,14 @@ const Home = ({navigation}) => {
         ]),
       );
       closeModal();
-    }
+    };
     return (
       <Modal
         animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}>
-           <BlurView
+        <BlurView
           style={styles.modalContainer}
           blurType="light"
           blurAmount={1}
@@ -697,16 +698,30 @@ const Home = ({navigation}) => {
         />
         <View
           style={[styles.modalContent, {backgroundColor: AppColor.BACKGROUNG}]}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image
-              source={localImage.Target}
-              style={{width: DeviceWidth * 0.07, height: DeviceHeigth * 0.03}}
-              resizeMode="contain"
-            />
-            <Text
-              style={[styles.title, {color: AppColor.BLACK, marginLeft: 10}]}>
-              Set Goals
-            </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                source={localImage.Target}
+                style={{width: DeviceWidth * 0.07, height: DeviceHeigth * 0.03}}
+                resizeMode="contain"
+              />
+              <Text
+                style={[styles.title, {color: AppColor.BLACK, marginLeft: 10}]}>
+                Set Goals
+              </Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                setModalVisible(false);
+              }}
+              style={styles.dropButton}>
+              <Icons name={'close'} size={15} color={'#000'} />
+            </TouchableOpacity>
           </View>
           <SliderView
             txt={'Steps'}
@@ -779,7 +794,6 @@ const Home = ({navigation}) => {
       </Modal>
     );
   };
-
 
   const props = {
     activeStrokeWidth: 25,
@@ -1066,7 +1080,8 @@ const Home = ({navigation}) => {
               {
                 fontSize: 13,
                 fontWeight: '600',
-                lineHeight: 12,
+                lineHeight: 20,
+           
                 fontFamily: 'Montserrat-SemiBold',
                 textAlign: 'center',
                 width: 100,
@@ -1126,7 +1141,7 @@ const Home = ({navigation}) => {
               {
                 fontSize: 13,
                 fontWeight: '600',
-                lineHeight: 12,
+                lineHeight: 20,
                 fontFamily: 'Montserrat-SemiBold',
                 textAlign: 'center',
                 width: 100,
@@ -1277,18 +1292,17 @@ const Home = ({navigation}) => {
         </View>
         <View style={styles.CardBox}>
           <TouchableOpacity
-           onPress={handleLongPress}
-           activeOpacity={0.5}
-          
+            onPress={handleLongPress}
+            activeOpacity={0.5}
             style={{
               width: 30,
               height: 30,
-       
+
               margin: 10,
               alignItems: 'center',
               alignSelf: 'flex-end',
               justifyContent: 'center',
-              zIndex:1
+              zIndex: 1,
             }}>
             <Image
               source={require('../../Icon/Images/NewImage/editpen.png')}
@@ -1302,7 +1316,7 @@ const Home = ({navigation}) => {
               resizeMode="contain"></Image>
           </TouchableOpacity>
 
-          <View style={[styles.healthView, {marginTop: -DeviceHeigth * 0.04,}]}>
+          <View style={[styles.healthView, {marginTop: -DeviceHeigth * 0.04}]}>
             <View style={styles.stepView}>
               <Text style={styles.healthText1}>Steps</Text>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -1889,7 +1903,6 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     top: DeviceHeigth * 0.02,
-
   },
   profileView1: {
     height: 60,
@@ -1923,7 +1936,7 @@ var styles = StyleSheet.create({
     marginLeft: 10,
   },
   CardBox: {
-    width: '95%',
+    width: '92%',
     alignSelf: 'center',
     backgroundColor: 'white',
     top: DeviceHeigth * 0.02,
@@ -2233,15 +2246,6 @@ var styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  modalContainer: {
-    width: '85%',
-    height: DeviceHeigth * 0.55,
-    borderRadius: 26,
-    alignItems: 'center',
-    alignSelf: 'center',
-
-    justifyContent: 'center',
   },
 });
 export default Home;

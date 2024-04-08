@@ -719,7 +719,7 @@ const AllWorkouts = ({navigation, route}: any) => {
         <Text style={[styles.category, {marginTop: 0}]}>
           {/* {moment().format('dddd DD MMMM')} */}
         </Text>
-        <Text style={[styles.category, {color: AppColor.RED1,fontWeight:'500'}]}>
+        <Text style={[styles.category, {color: AppColor.RED1,fontWeight:'700',lineHeight:40}]}>
           {/* <View
             style={{
               width: 2,
@@ -835,18 +835,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   category: {
-    fontFamily: 'Poppins',
+    fontFamily: 'Montserrat-SemiBold',
     fontSize: 18,
-    fontWeight: '600',
-    color: AppColor.BoldText,
-    lineHeight: 30,
+    fontWeight: '700',
+    color: AppColor.BLACK,
+    lineHeight: 40,
   },
   small: {
-    fontFamily: 'Poppins',
+    fontFamily: 'Montserrat-Regular',
     fontSize: 12,
-    fontWeight: '500',
-    color: AppColor.BoldText,
-    lineHeight: 30,
+    fontWeight: '700',
+    color: AppColor.BLACK,
+    lineHeight: 40,
   },
   box: {
     //   flex: 1,

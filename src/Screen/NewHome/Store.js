@@ -169,7 +169,7 @@ const Store = ({navigation}) => {
           // onCurrentImagePressed={index =>
           //   console.warn(`image ${index} pressed`)
           // }
-          dotColor="#FFEE58"
+          dotColor="red"
           inactiveDotColor="#90A4AE"
           paginationBoxVerticalPadding={20}
           autoplay
@@ -209,11 +209,13 @@ const Store = ({navigation}) => {
         }}>
         <Text
           style={{
-            fontSize: 15,
-            fontFamily: 'Poppins',
+            fontSize: 17,
+           
+            fontFamily: 'Montserrat-SemiBold',
             fontWeight: '700',
-            lineHeight: 21,
+            lineHeight: 30,
             marginBottom: 20,
+            color:AppColor.BLACK
           }}>
           Our Products
         </Text>

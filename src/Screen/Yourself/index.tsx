@@ -113,6 +113,7 @@ const Index = ({navigation, route}: any) => {
         url: NewAppapi.Get_COMPLETE_PROFILE,
         method: 'get',
       });
+    
       if (res.data) {
         dispatch(setCompleteProfileData(res.data));
         navigation.navigate('Gender', {

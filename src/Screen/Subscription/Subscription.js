@@ -35,6 +35,7 @@ import Bulb from '../Yourself/Bulb';
 import moment from 'moment';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {ReviewApp} from '../../Component/ReviewApp';
+import { LogOut } from '../../Component/LogOut';
 
 const Subscription = ({navigation}) => {
   const dispatch = useDispatch();
@@ -414,7 +415,9 @@ const Subscription = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      } else {
+      //  LogOut(dispatch);
+      } 
+      else {
         dispatch(setPurchaseHistory([]));
       }
     } catch (error) {
@@ -655,7 +658,7 @@ const Subscription = ({navigation}) => {
           colors={['#00DF76', '#00AB5E']}>
           <Text
             style={{
-              fontFamily: 'Poppins',
+              fontFamily: 'Montserrat-Medium',
               fontWeight: '600',
               fontSize: 15,
               marginHorizontal: 5,
@@ -731,7 +734,7 @@ const Subscription = ({navigation}) => {
         ) {
           return 'Proceed';
         } else {
-          return 'Start Free  Trial';
+          return 'Start Free Trial';
         }
       }
     }
@@ -858,7 +861,7 @@ const Subscription = ({navigation}) => {
                 fontSize: 12,
                 lineHeight: 18,
                 fontFamily: 'Poppins',
-                color: '#1E1E1E',
+                color: AppColor.BLACK,
               }}>
               Subscription Plans
             </Text>
@@ -874,7 +877,7 @@ const Subscription = ({navigation}) => {
                     fontSize: 12,
                     lineHeight: 18,
                     fontFamily: 'Poppins',
-                    color: '#1E1E1E',
+                    color: AppColor.BLACK,
                     textDecorationLine: 'underline',
                   }}>
                   Restore purchase
@@ -903,7 +906,7 @@ const Subscription = ({navigation}) => {
                     fontSize: 12,
                     lineHeight: 18,
                     fontFamily: 'Poppins',
-                    color: '#1E1E1E',
+                    color: AppColor.BLACK,
                     textDecorationLine: 'underline',
                   }}>
                   Manage Subscription
@@ -1134,11 +1137,11 @@ const Subscription = ({navigation}) => {
                   style={{
                     fontSize: 12,
                     fontWeight: '400',
-                    fontFamily: 'Poppins',
+                    fontFamily: 'Montserrat-Medium',
                     lineHeight: 16,
                     paddingLeft: 10,
                     paddingRight: 10,
-                    color: '#505050',
+                    color:AppColor.BLACK,
                   }}>
                   {Platform.OS == 'android'
                     ? `You can cancel your subscription anytime from Google Play Store. On Cancellation Payment is Non-Refundable, but you still access the features of subscription period. We recommend you to review the terms of use before proceeding with any online transaction.`

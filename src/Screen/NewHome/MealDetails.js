@@ -109,10 +109,10 @@ const MealDetails = ({route, navigation}) => {
 
             <Text
               style={{
-                fontFamily: 'Poppins',
+                fontFamily: 'Montserrat-SemiBold',
                 fontSize: 13,
                 fontWeight: '500',
-                color: AppColor.INPUTLABLECOLOR,
+                color: AppColor.BLACK,
                 marginHorizontal: 2,
                 opacity: 0.7,
               }}>
@@ -143,10 +143,10 @@ const MealDetails = ({route, navigation}) => {
 
             <Text
               style={{
-                fontFamily: 'Poppins',
+                fontFamily: 'Montserrat-SemiBold',
                 fontSize: 13,
                 fontWeight: '500',
-                color: AppColor.INPUTLABLECOLOR,
+                color: AppColor.BLACK,
                 marginHorizontal: 5,
                 opacity: 0.7,
               }}>
@@ -350,21 +350,21 @@ var styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
   },
   textStyle: {
-    fontFamily: 'Poppins',
+    fontFamily: 'Montserrat-SemiBold',
     fontWeight: '500',
     fontSize: 13,
     textAlign: 'center',
     lineHeight: 15,
     top: 5,
-    color: '#1E1E1E',
+    color: AppColor.BLACK,
   },
   textStyle2: {
-    fontFamily: 'Poppins',
+    fontFamily: 'Montserrat-SemiBold',
     fontWeight: '400',
-    fontSize: 10,
+    fontSize: 13,
     textAlign: 'center',
-    lineHeight: 12,
-    color: '#1E1E1E',
+    lineHeight: 20,
+    color: AppColor.BLACK,
   },
 });
 export default MealDetails;

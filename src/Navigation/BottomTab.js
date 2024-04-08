@@ -28,6 +28,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
   const Dispatch = useDispatch();
   const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+
   useEffect(() => {
     initInterstitial();
   }, []);

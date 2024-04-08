@@ -28,6 +28,7 @@ const SeekBar = ({
         maximumTrackTintColor="#FFFFFF"
         onSlidingComplete={onSlidingComplete}
         onValueChange={onValueChange}
+        trackStyle={styles.track}
       />
       <View
         style={{
@@ -48,20 +49,24 @@ const SeekBar = ({
 };
 var styles = StyleSheet.create({
   textView: {
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: 15,
+    fontWeight: '700',
     lineHeight: 15,
     textAlign: 'center',
-    fontFamily: 'Poppins',
+    fontFamily: 'Montserrat-SemiBold',
     color: '#191919',
   },
   textView1: {
-    fontSize: 13,
-    fontWeight: '600',
+    fontSize: 15,
+    fontWeight: '700',
     lineHeight: 15,
     textAlign: 'center',
-    fontFamily: 'Poppins',
+    fontFamily: 'Montserrat-SemiBold',
     color: '#191919',
+  },
+  track: {
+    height: 30, // Change the height to increase the thickness of the track
+   // borderRadius: 5, // Optional: You can add border-radius for rounded ends
   },
 });
 export default SeekBar;

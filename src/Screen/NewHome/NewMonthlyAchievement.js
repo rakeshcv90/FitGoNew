@@ -237,7 +237,7 @@ const NewMonthlyAchievement = () => {
       id: 1,
       img: localImage.Fire1,
       txt1: calories1,
-      txt2: 'KCal',
+      txt2: 'Kcal',
     },
     {
       id: 2,
@@ -320,9 +320,15 @@ const NewMonthlyAchievement = () => {
           }}>
           <Text
             style={{
-              color: AppColor.BoldText,
-              fontFamily: 'Poppins-SemiBold',
+           
               fontSize: 24,
+              color: AppColor.BLACK,
+              fontFamily: 'Montserrat-SemiBold',
+              fontWeight: 'bold',
+              lineHeight: 19.5,
+              fontSize: 18,
+              alignItems: 'center',
+             
             }}>
             {moment(getDate).format('MMM DD, YYYY')}
           </Text>
@@ -485,9 +491,10 @@ const styles = StyleSheet.create({
   txts: {
     color: AppColor.BLACK,
     textAlign: 'center',
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Montserrat-Regular',
     fontSize: 16,
     marginTop: 10,
+    
   },
 });
 export default NewMonthlyAchievement;

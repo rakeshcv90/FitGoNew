@@ -530,6 +530,7 @@ const styles = StyleSheet.create({
   },
   selectedTextStyle: {
     fontSize: 16,
+    color:AppColor.BLACK
   },
   iconStyle: {
     width: 20,
@@ -541,6 +542,8 @@ const styles = StyleSheet.create({
   },
   selectedStyle: {
     borderRadius: 12,
+    borderColor:AppColor.BLACK,
+    marginHorizontal:DeviceWidth*0.07
   },
 });
 export default NewPersonalDetails;
