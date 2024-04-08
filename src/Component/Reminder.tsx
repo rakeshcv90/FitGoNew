@@ -63,6 +63,7 @@ export const AlarmNotification = async (time: any) => {
     },
     trigger,
   );
+  console.log(trigger.timestamp)
 };
 const Reminder = ({visible, setVisible, setAlarmIsEnabled, setNotificationTimer}: any) => {
   const typeData = ['AM', 'PM'];
@@ -73,8 +74,8 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled, setNotificationTimer}
     .fill(0)
     .map((item: any, index, arr) => arr[index] + index);
 
-  const [hours, setHours] = useState('');
-  const [min, setMin] = useState('');
+  const [hours, setHours] = useState('1');
+  const [min, setMin] = useState('0');
   const [type, setType] = useState('AM');
 
   async function onCreateTriggerNotification() {
@@ -99,8 +100,8 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled, setNotificationTimer}
     selectedTime.setHours(selectedHours);
     selectedTime.setMinutes(selectedMinutes);
     try {
+      AlarmNotification(selectedTime)
       setNotificationTimer(selectedTime)
-      AlarmNotification(selectedTime);
       setAlarmIsEnabled(true);
       setVisible(false);
     } catch (error) {

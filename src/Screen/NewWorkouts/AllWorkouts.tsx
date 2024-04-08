@@ -280,6 +280,13 @@ const AllWorkouts = ({navigation, route}: any) => {
       if (res.data) {
         setRefresh(false);
         console.log(res.data, 'POST LIKE');
+        showMessage({
+          message: res?.data?.msg,
+          type: 'success',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
         getFavStatusAPI();
       }
     } catch (error) {

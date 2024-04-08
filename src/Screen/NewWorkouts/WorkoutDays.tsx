@@ -454,7 +454,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                 end={{x: 1, y: 0}}
                 style={{
                   height: 5,
-                  width: index == 1 && day > 4 ? '100%' : `${percent}%`,
+                  width: percent == 100 ? '100%' : `${percent}%`,
                 }}
               />
             </View>
@@ -740,7 +740,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                           index={index + 1}
                           percent={
                             index < selected && index == 0 && selected > 4
-                              ? '100%'
+                              ? 100
                               : selected < 4 && index == 0
                               ? (selected / 4) * 100
                               : (selected / 2 / 4) * 100
@@ -763,7 +763,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           <Time />
         </>
       )}
-      <ActivityLoader visible={refresh} />
+      {/* <ActivityLoader visible={refresh} /> */}
       <PaddoMeterPermissionModal />
     </View>
   );

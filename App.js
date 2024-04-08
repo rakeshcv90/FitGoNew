@@ -108,14 +108,14 @@ const App = () => {
   //     subscription();
   //   };
   // }, []);
-  // useEffect(() => {
-  //   async function initializePlayer() {
+  useEffect(() => {
+    async function initializePlayer() {
 
-  //     await TrackPlayer.setupPlayer();
-  //   }
+      await TrackPlayer.setupPlayer();
+    }
 
-  //   initializePlayer();
-  // }, []);
+    initializePlayer();
+  }, []);
 
   useEffect(() => {
     var updateDialogOptions = {

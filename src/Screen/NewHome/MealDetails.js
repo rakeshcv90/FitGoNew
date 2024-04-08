@@ -20,8 +20,8 @@ import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import HTMLRender from 'react-native-render-html';
 
-
 const MealDetails = ({route, navigation}) => {
+  const getStoreVideoLoc = useSelector(state => state.getStoreVideoLoc);
 
   const customStyles = {
     fontFamily: 'Poppins',
@@ -41,11 +41,10 @@ const MealDetails = ({route, navigation}) => {
         translucent={true}
         style={{width: '100%', height: DeviceHeigth * 0.4}}
         resizeMode="cover"
-
         source={
-          route?.params?.item?.diet_image_link == null
+          route?.params?.item?.diet_image == null
             ? localImage.Noimage
-            : {uri: route?.params?.item?.diet_image_link}
+            : {uri: route?.params?.item?.diet_image}
         }
       />
 

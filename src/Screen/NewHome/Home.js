@@ -183,7 +183,8 @@ const Home = ({navigation}) => {
     if (!isAlarmEnabled) {
       notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));
       const currenTime = new Date();
-      currenTime.setHours(8);
+      currenTime.setHours(14);
+      currenTime.setMinutes(15);
       AlarmNotification(currenTime);
       Dispatch(setIsAlarmEnabled(true));
     }

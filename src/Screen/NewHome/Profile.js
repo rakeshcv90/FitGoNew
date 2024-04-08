@@ -853,7 +853,7 @@ const Profile = () => {
             <View style={styles.View1}>
               <Text style={styles.nameText}>
                 {value.text1}
-                {value.id == 5 && notificationTimer && (
+                {value.id == 5 && notificationTimer != '' && (
                   <Text
                     style={{color: AppColor.RED}}
                     onPress={() => setVisible(true)}>

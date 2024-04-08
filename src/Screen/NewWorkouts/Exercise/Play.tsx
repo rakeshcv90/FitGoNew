@@ -122,7 +122,7 @@ const Play: FC<Props> = ({...props}) => {
             // borderBottomRightRadius: props.bR ? props.bR : 50 / 2,
             right: 0,
             position: 'absolute',
-            zIndex: -1,
+            // zIndex: -1,
           }}
         />
       </LinearGradient>

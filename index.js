@@ -22,6 +22,7 @@ import notifee, {
   TriggerType,
 } from '@notifee/react-native';
 import {AlarmNotification} from './src/Component/Reminder';
+import { StepcountNoticationStart } from './src/Component/TransferStepCounterData';
 
 notifee.createChannel({
   id: 'Time',
@@ -34,6 +35,7 @@ notifee.createChannel({
 });
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('BACKGROUND NOTIFUCATION', remoteMessage);
+  StepcountNoticationStart()
 });
 notifee.onBackgroundEvent(async ({type, detail}) => {
   TriggerButtons(detail, type);
@@ -44,6 +46,7 @@ notifee.onForegroundEvent(async ({type, detail}) => {
 const TriggerButtons = async (detail, type) => {
   const {notification, pressAction} = detail;
   console.log('TRI', type);
+  StepcountNoticationStart()
   if (type === EventType.ACTION_PRESS && pressAction.id === 'Stop') {
     // Remove the notification
     await notifee.cancelDisplayedNotification(notification.id);
@@ -157,10 +160,12 @@ const DisplayNotification = async Notification => {
   } catch (error) {
     console.log('notifee Error', error);
   }
+  StepcountNoticationStart()
 };
 messaging().getInitialNotification(async remoteMessage => {
   // DisplayNotification(remoteMessage);
   console.log('Kill NOTIFUCATION', remoteMessage);
+  StepcountNoticationStart()
 });
 const AppRedux = () => {
   LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message

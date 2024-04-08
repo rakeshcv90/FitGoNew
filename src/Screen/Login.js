@@ -39,6 +39,7 @@ import {
   setPurchaseHistory,
   setUserId,
   setUserProfileData,
+  setVideoLocation,
 } from '../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
@@ -49,10 +50,14 @@ import {TextInput} from 'react-native-paper';
 import {navigationRef} from '../../App';
 import VersionNumber from 'react-native-version-number';
 import {Platform} from 'react-native';
-import { RemoteMessage, requestPermissionforNotification } from '../Component/Helper/PushNotification';
+import {
+  RemoteMessage,
+  requestPermissionforNotification,
+} from '../Component/Helper/PushNotification';
 import analytics from '@react-native-firebase/analytics';
-import { Alert } from 'react-native';
+import {Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNFetchBlob from 'rn-fetch-blob';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -86,7 +91,7 @@ const Login = ({navigation}) => {
     setAppVersion(VersionNumber.appVersion);
   });
   const GoogleSignup = async () => {
-    analytics().logEvent('CV_FITME_GOOGLE_LOGIN')
+    analytics().logEvent('CV_FITME_GOOGLE_LOGIN');
     try {
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.hasPlayServices();
@@ -120,7 +125,7 @@ const Login = ({navigation}) => {
           socialtype: 'google',
           version: appVersion,
           devicetoken: getFcmToken,
-          platform:Platform.OS
+          platform: Platform.OS,
         },
       });
 
@@ -186,7 +191,7 @@ const Login = ({navigation}) => {
     }
   };
   const FacebookLogin = () => {
-    analytics().logEvent('CV_FITME_FACEBOOK_LOGIN')
+    analytics().logEvent('CV_FITME_FACEBOOK_LOGIN');
     LoginManager.logInWithPermissions(['public_profile', 'email']).then(
       function (result) {
         if (result.isCancelled) {
@@ -223,7 +228,7 @@ const Login = ({navigation}) => {
           socialtype: 'facebook',
           version: appVersion,
           devicetoken: getFcmToken,
-          platform:Platform.OS
+          platform: Platform.OS,
         },
       });
       if (data.data.profile_status == 1) {
@@ -276,7 +281,7 @@ const Login = ({navigation}) => {
     }
   };
   const onApplePress = async () => {
-    analytics().logEvent('CV_FITME_APPLE_LOGIN')
+    analytics().logEvent('CV_FITME_APPLE_LOGIN');
     await appleAuth
       .performRequest({
         requestedOperation: appleAuth.Operation.LOGIN,
@@ -308,7 +313,7 @@ const Login = ({navigation}) => {
           socialtype: 'Apple',
           version: VersionNumber.appVersion,
           devicetoken: getFcmToken,
-          platform:Platform.OS
+          platform: Platform.OS,
         },
       });
 
@@ -358,8 +363,7 @@ const Login = ({navigation}) => {
     }
   };
   const loginFunction = async () => {
-
-    analytics().logEvent('CV_FITME_LOGIN')
+    analytics().logEvent('CV_FITME_LOGIN');
 
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (email == null) {
@@ -397,9 +401,9 @@ const Login = ({navigation}) => {
           data: {
             email: email,
             password: password,
-            version:appVersion,
+            version: appVersion,
             devicetoken: getFcmToken,
-            platform:Platform.OS
+            platform: Platform.OS,
           },
         });
 
@@ -479,7 +483,7 @@ const Login = ({navigation}) => {
       if (data?.data?.profile) {
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));
-        await AsyncStorage.setItem('userID',`${user_id}`)
+        await AsyncStorage.setItem('userID', `${user_id}`);
         // status == 1
         //   ? navigation.navigate('BottomTab')
         //   : navigationRef.navigate('Yourself');
@@ -525,16 +529,16 @@ const Login = ({navigation}) => {
     } catch (error) {
       console.log('User Profile Error', error);
       if (status == 1) navigation.replace('BottomTab');
-        else {
-          showMessage({
-            message: 'Please complete your Profile Details',
-            type: 'success',
-            animationDuration: 500,
-            floating: true,
-            icon: {icon: 'auto', position: 'left'},
-          });
-          navigationRef.navigate('Yourself');
-        }
+      else {
+        showMessage({
+          message: 'Please complete your Profile Details',
+          type: 'success',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        navigationRef.navigate('Yourself');
+      }
       // status == 1
       //   ? navigation.navigate('BottomTab')
       //   : navigationRef.navigate('Yourself');
@@ -671,6 +675,7 @@ const Login = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (data.data.diets.length > 0) {
+        data.data?.diets?.map((item, index) => downloadVideos(item, index));
         dispatch(Setmealdata(data.data.diets));
       } else {
         dispatch(Setmealdata([]));
@@ -686,6 +691,42 @@ const Login = ({navigation}) => {
     }
   };
 
+  const sanitizeFileName = fileName => {
+    fileName = fileName.replace(/\s+/g, '_');
+    return fileName;
+  };
+  let StoringData = {};
+  const downloadVideos = async (data, index) => {
+    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
+      data?.diet_title,
+    )}.jpg`;
+    try {
+      const videoExists = await RNFetchBlob.fs.exists(filePath);
+      if (videoExists) {
+        StoringData[data?.diet_title] = filePath;
+        console.log('ImageExists', videoExists);
+      } else {
+        await RNFetchBlob.config({
+          fileCache: true,
+          path: filePath,
+          appendExt: '.jpg',
+        })
+          .fetch('GET', data?.diet_image, {
+            'Content-Type': 'application/jpg',
+          })
+          .then(res => {
+            StoringData[data?.diet_title] = res.path();
+            console.log('Image downloaded successfully!',index, res.path());
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    } catch (error) {
+      console.log('ERRRR', error);
+    }
+    dispatch(setVideoLocation(StoringData));
+  };
   const PurchaseDetails = async (id, login_token) => {
     try {
       const res = await axios(`${NewAppapi.TransctionsDetails}`, {
@@ -781,8 +822,7 @@ const Login = ({navigation}) => {
           visible={IsVerifyVisible}
           onRequestClose={() => {
             setVerifyVisible(!IsVerifyVisible);
-          }}
-          >
+          }}>
           <View
             style={[
               styles.modalContainer,

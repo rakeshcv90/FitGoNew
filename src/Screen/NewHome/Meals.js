@@ -115,7 +115,7 @@ const Meals = ({navigation}) => {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
         StoringData[data?.diet_title] = filePath;
-        console.log('ImageExists', videoExists);
+        console.log('ImageExists', videoExists,filePath);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -178,7 +178,8 @@ const Meals = ({navigation}) => {
               source={
                 selectedMeal.diet_image_link == null
                   ? localImage.Noimage
-                  : {uri: getStoreVideoLoc[selectedMeal?.diet_title]}
+                  : {uri: selectedMeal.diet_image}
+                  // : {uri: getStoreVideoLoc[selectedMeal?.diet_title]}
               }></Image>
           </View>
           <View
@@ -320,7 +321,7 @@ const Meals = ({navigation}) => {
                       item.diet_image == null
                         ? localImage.Noimage
                         : {
-                            uri: getStoreVideoLoc[item?.diet_title],
+                            uri: item.diet_image,
                           }
                     }
                     onLoad={() => setImageLoad(false)}

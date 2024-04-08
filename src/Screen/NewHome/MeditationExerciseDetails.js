@@ -25,19 +25,20 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import SeekBar from '../../Component/SeekBar';
 import {useIsFocused} from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 const MeditationExerciseDetails = ({navigation, route}) => {
   let isFocused = useIsFocused();
   const playbackState = usePlaybackState();
-
+  const getStoreVideoLoc = useSelector(state => state.getStoreVideoLoc);
   const {position, buffered, duration} = useProgress();
   const songs = [
     {
       title: 'song 1',
       artist: 'XYZ',
       artwork: localImage.Play3,
-      //   url: require('../../Icon/Images/NewImage/track1.mp3'),
-      url: route.params.item.exercise_mindset_audio,
+      url: getStoreVideoLoc[route.params.item.id],
+      // url: route.params.item.exercise_mindset_audio,
     },
   ];
   useEffect(() => {
