@@ -29,8 +29,9 @@ const MeditationDetails = ({navigation, route}) => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [forLoading, setForLoading] = useState(true);
   const [mindsetExercise, setmindsetExercise] = useState([]);
-  const [title, setTitle] = useState(route?.params?.item.workout_mindset_title);
+  const [headerTitle, setHeaderTitle] = useState(route?.params?.item);
   const avatarRef = React.createRef();
+
   const colors = [
     {color1: '#E2EFFF', color2: '#9CC2F5', color3: '#425B7B'},
     {color1: '#BFF0F5', color2: '#8DD9EA', color3: '#1F6979'},
@@ -90,18 +91,42 @@ const MeditationDetails = ({navigation, route}) => {
   const ListItem = ({title, color}) => (
     <TouchableOpacity
       onPress={() => {
-        setTitle(title?.workout_mindset_title);
+        setHeaderTitle(title);
         getCaterogy(title.id, title.workout_mindset_level);
       }}>
+     
       <LinearGradient
         start={{x: 0, y: 1}}
         end={{x: 1, y: 0}}
         colors={[color.color1, color.color2]}
-        style={styles.listItem}>
+        style={[
+          styles.listItem,
+          {
+            borderWidth: headerTitle?.id == title?.id ? 2 : 0,
+            borderColor: headerTitle?.id == title?.id && '#368EFF',
+          },
+        ]}>
+        {headerTitle?.id == title?.id && (
+          <Image
+            source={require('../../Icon/Images/NewImage/tick3.png')}
+            style={[
+              styles.img,
+              {
+                height: 20,
+                width: 20,
+                position: 'absolute',
+                top: 2,
+                alignSelf: 'flex-end',
+                right: 2,
+              },
+            ]}
+            resizeMode="contain"></Image>
+        )}
+
         <Image
           source={
             title.workout_mindset_image_link != null
-              ? {uri: title.workout_mindset_image_link}
+              ? require('../../Icon/Images/NewImage/meditation.png')
               : localImage.Noimage
           }
           style={[
@@ -200,7 +225,11 @@ const MeditationDetails = ({navigation, route}) => {
   };
   return (
     <View style={styles.container}>
-      <NewHeader header={title} SearchButton={false} backButton={true} />
+      <NewHeader
+        header={headerTitle?.workout_mindset_title}
+        SearchButton={false}
+        backButton={true}
+      />
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
 
       <>
@@ -545,11 +574,10 @@ var styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-
     fontSize: 14,
     fontWeight: '600',
     lineHeight: 17,
-    fontFamily:'Montserrat-SemiBold',
+    fontFamily: 'Montserrat-SemiBold',
   },
   img: {
     height: 80,

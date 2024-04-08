@@ -47,22 +47,22 @@ const Injury = ({route, navigation}) => {
   };
 
   const [bodyPart, setBordyPart] = useState(
-    completeProfileData?.injury.filter(
-      part => part.injury_title !== 'Back' && part.injury_title !== 'Knee',
+    completeProfileData?.injury?.filter(
+      part => part?.injury_title !== 'Back' && part?.injury_title !== 'Knee',
     ),
   );
 
   const [bodyPart2, setBordyPart2] = useState(
-    completeProfileData?.injury.filter(
+    completeProfileData?.injury?.filter(
       part =>
-        part.injury_title !== 'Shoulder' &&
-        part.injury_title !== 'Ankle' &&
-        part.injury_title !== 'Shoulders' &&
-        part.injury_title !== 'Elbow',
+        part?.injury_title !== 'Shoulder' &&
+        part?.injury_title !== 'Ankle' &&
+        part?.injury_title !== 'Shoulders' &&
+        part?.injury_title !== 'Elbow',
     ),
   );
   const translateXValues = useRef(
-    bodyPart.map(() => new Animated.Value(-DeviceWidth)),
+    bodyPart?.map(() => new Animated.Value(-DeviceWidth)),
   ).current;
   useEffect(() => {
     startAnimation();
@@ -242,17 +242,17 @@ const Injury = ({route, navigation}) => {
                   ? DeviceHeigth * 0.02
                   : DeviceHeigth * 0.0,
               left:
-                getLaterButtonData[0].gender == 'M'
+                getLaterButtonData[0]?.gender == 'M'
                   ? -DeviceWidth * 0.2
                   : -DeviceWidth * 0.15,
             }}>
             <Image
-              source={{uri: getLaterButtonData[0].image}}
+              source={{uri: getLaterButtonData[0]?.image}}
               style={[
                 styles.Image,
                 {
                   width:
-                    getLaterButtonData[0].gender == 'M'
+                    getLaterButtonData[0]?.gender == 'M'
                       ? DeviceWidth * 0.6
                       : DeviceWidth * 0.5,
                   height: DeviceHeigth * 0.6,
@@ -273,7 +273,7 @@ const Injury = ({route, navigation}) => {
               top: DeviceHeigth * 0.1,
               height: DeviceHeigth * 0.7,
               left:
-                getLaterButtonData[0].gender == 'F'
+                getLaterButtonData[0]?.gender == 'F'
                   ? -DeviceWidth * 0.25
                   : DeviceHeigth <= '667'
                   ? -DeviceWidth * 0.25

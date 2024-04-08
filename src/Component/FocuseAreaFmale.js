@@ -33,7 +33,10 @@ const FocuseAreaFmale = ({selectedItems, setSelectedItems}) => {
         part.bodypart_title !== 'Back' &&
         part.bodypart_title !== 'Legs' &&
         part.bodypart_title !== 'Triceps' &&
-        part.bodypart_title !== 'Abs',
+        part.bodypart_title !== 'Abs' &&
+        part.bodypart_title !== 'Forearms' &&
+        part.bodypart_title !== 'Cardio' &&
+        part.bodypart_title !== 'Calves',
     ),
   );
 
@@ -44,7 +47,10 @@ const FocuseAreaFmale = ({selectedItems, setSelectedItems}) => {
         part.bodypart_title !== 'Back' &&
         part.bodypart_title !== 'Shoulders' &&
         part.bodypart_title !== 'Chest' &&
-        part.bodypart_title !== 'Biceps',
+        part.bodypart_title !== 'Biceps' &&
+        part.bodypart_title !== 'Forearms' &&
+        part.bodypart_title !== 'Cardio' &&
+        part.bodypart_title !== 'Calves',
     ),
   );
 

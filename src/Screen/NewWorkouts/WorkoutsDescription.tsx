@@ -95,6 +95,9 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             height: 25,
             alignSelf: 'flex-end',
             left: -10,
+            alignItems:'center',
+            justifyContent:'center',
+       
             marginTop: DeviceHeigth * 0.045,
           }}>
           <Icon name="close" color={AppColor.DARKGRAY} size={25} />

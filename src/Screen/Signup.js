@@ -270,6 +270,7 @@ const Signup = ({navigation}) => {
       });
 
       setForLoading(false);
+      console.log("User Starttttttt",data.data)
       if (data?.data?.status == 0) {
         setForLoading(false);
         showMessage({
@@ -305,7 +306,7 @@ const Signup = ({navigation}) => {
         //action.resetForm();
       }
     } catch (error) {
-      console.log('Form Signup Error', error?.response?.data);
+      console.log('Form Signup Error', error);
       setForLoading(false);
     }
   };

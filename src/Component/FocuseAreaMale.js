@@ -25,27 +25,33 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
   const defaultTheme = useSelector(state => state.defaultTheme);
   const completeProfileData = useSelector(state => state.completeProfileData);
   const getUserID = useSelector(state => state.getUserID);
-
+  console.log('dsfdsfdsfsdfsdfdsf', completeProfileData?.focusarea);
   const [imageView, setImageVIew] = useState([]);
   const [bodyPart, setBordyPart] = useState(
-    completeProfileData?.focusarea.filter(
+    completeProfileData?.focusarea?.filter(
       part =>
         part.bodypart_title !== 'Quads' &&
         part.bodypart_title !== 'Back' &&
         part.bodypart_title !== 'Legs' &&
         part.bodypart_title !== 'Triceps' &&
-        part.bodypart_title !== 'Abs',
+        part.bodypart_title !== 'Abs' &&
+        part.bodypart_title !== 'Forearms' &&
+        part.bodypart_title !== 'Cardio' &&
+        part.bodypart_title !== 'Calves',
     ),
   );
 
   const [bodyPart2, setBordyPart2] = useState(
-    completeProfileData?.focusarea.filter(
+    completeProfileData?.focusarea?.filter(
       part =>
         part.bodypart_title !== 'Quads' &&
         part.bodypart_title !== 'Back' &&
         part.bodypart_title !== 'Shoulders' &&
         part.bodypart_title !== 'Chest' &&
-        part.bodypart_title !== 'Biceps',
+        part.bodypart_title !== 'Biceps' &&
+        part.bodypart_title !== 'Forearms' &&
+        part.bodypart_title !== 'Cardio' &&
+        part.bodypart_title !== 'Calves',
     ),
   );
 

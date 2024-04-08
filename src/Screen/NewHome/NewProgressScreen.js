@@ -101,7 +101,6 @@ const NewProgressScreen = ({navigation}) => {
       : 0;
   }, [getUserDataDetails]);
 
-
   // Update state with useEffect
   useEffect(() => {
     setBmi(bmi);
@@ -493,96 +492,108 @@ const NewProgressScreen = ({navigation}) => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}>
-        <BlurView
-          style={styles.modalContainer}
-          blurType="light"
-          blurAmount={1}
-          reducedTransparencyFallbackColor="white"
-        />
-        <View style={[styles.modalContent, {backgroundColor: AppColor.WHITE}]}>
-          <View>
-            <Text
-              style={{
-                color: AppColor.BoldText,
-                fontFamily: 'Poppins-SemiBold',
-                textAlign: 'center',
-                fontSize: 18,
-              }}>
-              {'Enter your current weight'}
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignSelf: 'center',
-                marginVertical: 8,
-              }}>
-              <TextInput
-                keyboardType="number-pad"
-                value={selected}
-                onChangeText={text => {
-                  if (text == '.') {
-                    showMessage({
-                      message: 'Wrong Input',
-                      type: 'danger',
-                      animationDuration: 500,
-                      floating: true,
-                      icon: {icon: 'auto', position: 'left'},
-                    });
-                  } else setSelected(text);
-                }}
-                onFocus={setFocused}
-                cursorColor={AppColor.RED}
-                placeholder={focused ? selected : getUserDataDetails?.weight}
-                placeholderTextColor={focused ? AppColor.RED : AppColor.GRAY1}
-                maxLength={3}
+        <TouchableOpacity
+          style={{ flex: 1}}
+          activeOpacity={1}
+          onPress={() => {
+            setModalVisible(false);
+          }}>
+          <BlurView
+            style={styles.modalContainer}
+            blurType="light"
+            blurAmount={1}
+            reducedTransparencyFallbackColor="white"
+          />
+          <View
+            style={[styles.modalContent, {backgroundColor: AppColor.WHITE}]}>
+            <View>
+              <Text
                 style={{
-                  fontSize: 30,
-                  fontFamily: 'Poppins-SemiBold',
                   color: AppColor.BLACK,
-                  width: focused ? null : 50,
-                  borderColor: focused ? AppColor.RED : AppColor.DARKGRAY,
-                  borderBottomWidth: 1,
-                  alignSelf: 'center',
-                  paddingLeft: 4,
-                }}
-              />
-              <Text
-                style={{
-                  fontFamily: 'Poppins-SemiBold',
-                  color: AppColor.BoldText,
-                  fontSize: 30,
+                  fontFamily: 'Montserrat-SemiBold',
                   textAlign: 'center',
-                }}>
-                {'Kg'}
-              </Text>
-            </View>
-          </View>
-          <TouchableOpacity
-            style={{
-              width: DeviceWidth * 0.4,
-              borderRadius: 8,
-              alignSelf: 'center',
-              marginTop: 20,
-            }}
-            onPress={() => {
-              HandleSubmitBMI();
-            }}>
-            <LinearGradient
-              colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
-              style={[styles.button_b, {padding: 5}]}
-              start={{x: 0, y: 1}}
-              end={{x: 1, y: 0}}>
-              <Text
-                style={{
-                  fontFamily: 'Poppins-SemiBold',
+                  lineHeight:30,
                   fontSize: 18,
-                  color: AppColor.WHITE,
+                  fontWeight:'700'
                 }}>
-                {'Submit'}
+                {'Enter your current weight'}
               </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignSelf: 'center',
+                  marginVertical: 8,
+                }}>
+                <TextInput
+                  keyboardType="number-pad"
+                  value={selected}
+                  onChangeText={text => {
+                    if (text == '.') {
+                      showMessage({
+                        message: 'Wrong Input',
+                        type: 'danger',
+                        animationDuration: 500,
+                        floating: true,
+                        icon: {icon: 'auto', position: 'left'},
+                      });
+                    } else setSelected(text);
+                  }}
+                  onFocus={setFocused}
+                  cursorColor={AppColor.RED}
+                  placeholder={focused ? selected : getUserDataDetails?.weight}
+                  placeholderTextColor={focused ? AppColor.RED : AppColor.Gray5}
+                  maxLength={3}
+                  style={{
+                    fontSize: 30,
+                    fontFamily: 'Poppins-SemiBold',
+                    color: AppColor.BLACK,
+                    width: focused&&selected!='' ? null : 50,
+                    borderColor: focused ? AppColor.RED : AppColor.DARKGRAY,
+                    borderBottomWidth: 1,
+                    alignSelf: 'center',
+                    paddingLeft: 4,
+                  }}
+                />
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-SemiBold',
+                    color: AppColor.BoldText,
+                    fontSize: 30,
+                    textAlign: 'center',
+                    marginLeft:5
+                  }}>
+                  {'Kg'}
+                </Text>
+              </View>
+            </View>
+            <TouchableOpacity
+              style={{
+                width: DeviceWidth * 0.4,
+                borderRadius: 8,
+                alignSelf: 'center',
+                marginTop: 20,
+              }}
+              onPress={() => {
+                HandleSubmitBMI();
+              }}>
+              <LinearGradient
+                colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
+                style={[styles.button_b, {padding: 5}]}
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 0}}>
+                <Text
+                  style={{
+                    fontFamily: 'Montserrat-SemiBold',
+                    fontSize: 18,
+                    fontWeight:'700',
+                    color: AppColor.WHITE,
+                  }}>
+                  {'Submit'}
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
       </Modal>
     );
   };
@@ -627,7 +638,7 @@ const NewProgressScreen = ({navigation}) => {
 
   const openMailApp = () => {
     Linking.openURL(
-      'mailto:thefitnessandworkout@gmail.com?subject=Feedback&body=Hello%20there!',
+      'mailto:aessikarwar03@gmail.com?subject=Feedback&body=Hello%20there!',
     );
   };
   return (
@@ -705,9 +716,10 @@ const NewProgressScreen = ({navigation}) => {
             alignSelf: 'center',
             textAlign: 'center',
             marginVertical: 20,
-            fontFamily: 'Poppins-Bold',
+            fontFamily: 'Montserrat-SemiBold',
             color: AppColor.BLACK,
             fontSize: 22,
+            fontWeight:'700'
           }}>
           {`Hi, ${
             getUserDataDetails?.name
@@ -727,7 +739,7 @@ const NewProgressScreen = ({navigation}) => {
                 style={{
                   textAlign: 'center',
                   marginVertical: 15,
-                  fontFamily: 'Poppins-SemiBold',
+                  fontFamily: 'Montserrat-Regular',
                   color: AppColor.RED,
                 }}>
                 {value.txt1}
@@ -735,7 +747,7 @@ const NewProgressScreen = ({navigation}) => {
               <Text
                 style={{
                   textAlign: 'center',
-                  fontFamily: 'Poppins-SemiBold',
+                  fontFamily: 'Montserrat-Regular',
                   color: AppColor.BLACK,
                 }}>
                 {value.txt2}
@@ -869,7 +881,6 @@ const NewProgressScreen = ({navigation}) => {
             <Text
               style={{
                 textAlign: 'center',
-          
 
                 fontFamily: 'Montserrat-SemiBold',
                 fontWeight: 'bold',
@@ -877,7 +888,7 @@ const NewProgressScreen = ({navigation}) => {
                 fontSize: 18,
                 color: '#00A930',
               }}>
-               { getBmi}
+              {getBmi}
             </Text>
           </View>
           <View />

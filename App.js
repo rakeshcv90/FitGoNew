@@ -194,8 +194,9 @@ const App = () => {
               style={{
                 textAlign: 'center',
                 fontSize: 17,
-                fontFamily: 'Poppins',
-                fontWeight: '600',
+                fontFamily: 'Montserrat-Regular',
+                fontWeight: '700',
+                color:AppColor.BLACK
               }}>
               Downloading......
             </Text>
@@ -221,7 +222,8 @@ const App = () => {
                     fontSize: 28,
                     fontWeight: '700',
                     lineHeight: 35,
-                    fontFamily: 'Poppins',
+                    fontFamily: 'Montserrat-Regular',
+           
                     color: 'rgb(0, 0, 0)',
                   }}
                 />
@@ -231,8 +233,9 @@ const App = () => {
                   marginTop: 16,
                   textAlign: 'center',
                   fontSize: 15,
-                  fontFamily: 'Poppins',
-                  fontWeight: '500',
+                  fontFamily: 'Montserrat-Regular',
+                  fontWeight: '700',
+                  color:AppColor.BLACK
                 }}>{`${(Number(progress?.receivedBytes) / 1048576).toFixed(
                 2,
               )}MB/${(Number(progress?.totalBytes) / 1048576).toFixed(

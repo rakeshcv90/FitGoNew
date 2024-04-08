@@ -100,10 +100,11 @@ const Meals = ({navigation}) => {
         <Text
           style={{
             color: AppColor.BLACK,
-            fontFamily: 'Montserrat-SemiBold',
-            fontWeight: '700',
-            lineHeight: 21,
-            fontSize: 14,
+                fontFamily: 'Montserrat-SemiBold',
+                fontWeight: 'bold',
+                lineHeight: 19.5,
+                fontSize: 18,
+                alignItems: 'center',
             marginLeft: 20,
             justifyContent: 'flex-start',
           }}>
@@ -177,10 +178,10 @@ const Meals = ({navigation}) => {
 
               <Text
                 style={{
-                  fontFamily: 'Poppins',
+                 // fontFamily: 'Montserrat-SemiBold',
                   fontSize: 13,
                   fontWeight: '500',
-                  color: AppColor.INPUTLABLECOLOR,
+                  color: AppColor.BLACK,
                   marginHorizontal: 5,
                 }}>
                 {selectedMeal.diet_calories} kcal
@@ -202,10 +203,10 @@ const Meals = ({navigation}) => {
 
               <Text
                 style={{
-                  fontFamily: 'Poppins',
+                 // fontFamily: 'Montserrat-SemiBold',
                   fontSize: 13,
                   fontWeight: '500',
-                  color: AppColor.INPUTLABLECOLOR,
+                  color: AppColor.BLACK,
                   marginHorizontal: 5,
                 }}>
                 {selectedMeal.diet_time}

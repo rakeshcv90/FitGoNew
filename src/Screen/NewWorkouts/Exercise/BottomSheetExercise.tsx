@@ -1,5 +1,6 @@
 import {
   Image,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -23,6 +24,7 @@ const BottomSheetExercise = ({
   setRandomCount,
   playTimerRef,
   currentExercise,
+  setSeconds
 }: any) => {
   const Box = ({selected, item, index}: any) => {
     return (
@@ -43,6 +45,7 @@ const BottomSheetExercise = ({
           } else {
             setVisible(false);
             setCurrentData(item);
+            setSeconds(parseInt(item?.exercise_rest.split(' ')[0]))
             setPlayW(0);
             setPause(false);
             setRandomCount(index);
@@ -100,7 +103,7 @@ const BottomSheetExercise = ({
           backgroundColor: 'white',
           maxHeight: '65%',
           minHeight: '25%',
-          marginBottom:-DeviceHeigth*0.05
+          marginBottom:Platform.OS=='ios'?-DeviceHeigth*0.05:0
         }}
         bottomSheetTitleStyle={{
           color: '#1E1E1E',

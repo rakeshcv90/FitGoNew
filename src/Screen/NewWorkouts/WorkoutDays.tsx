@@ -203,9 +203,7 @@ const WorkoutDays = ({navigation, route}: any) => {
     navigation.navigate('Exercise', {
       allExercise: exerciseData,
       currentExercise:
-        trainingCount == -1
-          ? exerciseData[0]
-          : exerciseData[trainingCount],
+        trainingCount == -1 ? exerciseData[0] : exerciseData[trainingCount],
       data: data,
       day: day,
       exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
@@ -584,44 +582,44 @@ const WorkoutDays = ({navigation, route}: any) => {
             h={DeviceHeigth * 0.08}
             onPress={() => {
               analytics().logEvent(`CV_FITME_START_TRAINING_${day}_EXERCISES`);
+              navigation.navigate('Exercise', {
+                allExercise: exerciseData,
+                currentExercise:
+                  trainingCount == -1
+                    ? exerciseData[0]
+                    : exerciseData[trainingCount],
+                data: data,
+                day: day,
+                exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
+                trackerData: trackerData,
+              });
+              // if (data.workout_price == 'free') {
 
-              if (data.workout_price == 'free') {
-                navigation.navigate('Exercise', {
-                  allExercise: exerciseData,
-                  currentExercise:
-                    trainingCount == -1
-                      ? exerciseData[0]
-                      : exerciseData[trainingCount],
-                  data: data,
-                  day: day,
-                  exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
-                  trackerData: trackerData,
-                });
-              } else if (
-                data?.workout_price == 'Premium' &&
-                getPurchaseHistory[0]?.plan_end_date >=
-                  moment().format('YYYY-MM-DD')
-              ) {
-                navigation.navigate('Exercise', {
-                  allExercise: exerciseData,
-                  currentExercise:
-                    trainingCount == -1
-                      ? exerciseData[0]
-                      : exerciseData[trainingCount],
-                  data: data,
-                  day: day,
-                  exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
-                  trackerData: trackerData,
-                });
-              } else if (
-                data?.workout_price == 'Premium' &&
-                getPurchaseHistory[0]?.plan_end_date <
-                  moment().format('YYYY-MM-DD')
-              ) {
-                dispatch(setSubscriptiomModal(true));
-              } else {
-                dispatch(setSubscriptiomModal(true));
-              }
+              // } else if (
+              //   data?.workout_price == 'Premium' &&
+              //   getPurchaseHistory[0]?.plan_end_date >=
+              //     moment().format('YYYY-MM-DD')
+              // ) {
+              //   navigation.navigate('Exercise', {
+              //     allExercise: exerciseData,
+              //     currentExercise:
+              //       trainingCount == -1
+              //         ? exerciseData[0]
+              //         : exerciseData[trainingCount],
+              //     data: data,
+              //     day: day,
+              //     exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
+              //     trackerData: trackerData,
+              //   });
+              // } else if (
+              //   data?.workout_price == 'Premium' &&
+              //   getPurchaseHistory[0]?.plan_end_date <
+              //     moment().format('YYYY-MM-DD')
+              // ) {
+              //   dispatch(setSubscriptiomModal(true));
+              // } else {
+              //   dispatch(setSubscriptiomModal(true));
+              // }
             }}
           />
         )}

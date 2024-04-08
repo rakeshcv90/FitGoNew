@@ -266,7 +266,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
                           style={{
                             width: 20,
                             height: 20,
-
+tintColor:'black',
                             marginRight: DeviceWidth,
                           }}
                         />

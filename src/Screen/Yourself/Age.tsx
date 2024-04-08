@@ -126,6 +126,16 @@ const Age = ({route, navigation}: any) => {
       });
       return;
     }
+    else if (parseInt(selected)>60) {
+      showMessage({
+        message: 'You are over age !!!',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+      return;
+    }
     const currentData = {
       age: selected,
     };
