@@ -15,21 +15,6 @@ import moment from 'moment';
 const Trainer = ({navigation}) => {
   const navigation1 = useNavigation();
   const dispatch = useDispatch();
-  const [seconds, setSeconds] = useState(60);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (seconds > 0) {
-        setSeconds(prevSeconds => prevSeconds - 1);
-      }
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, [seconds]);
-
-  // Convert seconds into minutes and seconds
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
   return (
     <View style={styles.container}>
       <NewHeader header={'  Fitness Coach'} />
@@ -54,10 +39,6 @@ const Trainer = ({navigation}) => {
     
           }}
         />
-         <Text style={styles.timer}>
-        {minutes < 10 ? '0' + minutes : minutes}:
-        {remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds}
-      </Text>
       </View>
       <View
         style={{
@@ -66,7 +47,7 @@ const Trainer = ({navigation}) => {
           justifyContent: 'center',
           alignItems: 'center',
           alignSelf: 'center',
-          //padding: 20,
+          paddingHorizontal: 10,
           top: -150,
         }}>
         <Text

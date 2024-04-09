@@ -13,7 +13,7 @@ import {
   Linking,
   PermissionsAndroid,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {localImage} from '../../Component/Image';
 import {
   DeviceHeigth,

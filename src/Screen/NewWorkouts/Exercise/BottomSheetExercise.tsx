@@ -24,7 +24,7 @@ const BottomSheetExercise = ({
   setRandomCount,
   playTimerRef,
   currentExercise,
-  setSeconds
+  setSeconds,
   handleExerciseChange
 }: any) => {
   const Box = ({selected, item, index}: any) => {
