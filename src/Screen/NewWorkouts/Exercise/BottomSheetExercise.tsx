@@ -25,6 +25,7 @@ const BottomSheetExercise = ({
   playTimerRef,
   currentExercise,
   setSeconds
+  handleExerciseChange
 }: any) => {
   const Box = ({selected, item, index}: any) => {
     return (
@@ -50,6 +51,7 @@ const BottomSheetExercise = ({
             setPause(false);
             setRandomCount(index);
             clearInterval(playTimerRef.current);
+            handleExerciseChange(item?.exercise_title)
           }
         }}
         style={[

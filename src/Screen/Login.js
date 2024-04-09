@@ -39,6 +39,7 @@ import {
   setPurchaseHistory,
   setUserId,
   setUserProfileData,
+  setVideoLocation,
 } from '../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
@@ -56,7 +57,8 @@ import {
 } from '../Component/Helper/PushNotification';
 import analytics from '@react-native-firebase/analytics';
 import {Alert} from 'react-native';
-import NativeAddTest from '../Component/NativeAddTest';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNFetchBlob from 'rn-fetch-blob';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -483,6 +485,7 @@ const Login = ({navigation}) => {
       if (data?.data?.profile) {
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));
+        await AsyncStorage.setItem('userID', `${user_id}`);
         // status == 1
         //   ? navigation.navigate('BottomTab')
         //   : navigationRef.navigate('Yourself');
@@ -674,6 +677,7 @@ const Login = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (data.data.diets.length > 0) {
+        data.data?.diets?.map((item, index) => downloadVideos(item, index));
         dispatch(Setmealdata(data.data.diets));
       } else {
         dispatch(Setmealdata([]));
@@ -689,6 +693,42 @@ const Login = ({navigation}) => {
     }
   };
 
+  const sanitizeFileName = fileName => {
+    fileName = fileName.replace(/\s+/g, '_');
+    return fileName;
+  };
+  let StoringData = {};
+  const downloadVideos = async (data, index) => {
+    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
+      data?.diet_title,
+    )}.jpg`;
+    try {
+      const videoExists = await RNFetchBlob.fs.exists(filePath);
+      if (videoExists) {
+        StoringData[data?.diet_title] = filePath;
+        console.log('ImageExists', videoExists);
+      } else {
+        await RNFetchBlob.config({
+          fileCache: true,
+          path: filePath,
+          appendExt: '.jpg',
+        })
+          .fetch('GET', data?.diet_image, {
+            'Content-Type': 'application/jpg',
+          })
+          .then(res => {
+            StoringData[data?.diet_title] = res.path();
+            console.log('Image downloaded successfully!',index, res.path());
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    } catch (error) {
+      console.log('ERRRR', error);
+    }
+    dispatch(setVideoLocation(StoringData));
+  };
   const PurchaseDetails = async (id, login_token) => {
     try {
       const res = await axios(`${NewAppapi.TransctionsDetails}`, {

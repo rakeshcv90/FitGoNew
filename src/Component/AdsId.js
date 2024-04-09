@@ -10,6 +10,8 @@ import {Platform} from 'react-native';
 //   Platform.OS == 'android'
 //     ?'ca-app-pub-7924921064490662/2464639909'
 //     :'ca-app-pub-7924921064490662/9065707273'
+//     ?'ca-app-pub-7924921064490662/2464639909'
+//     :'ca-app-pub-7924921064490662/9065707273'
 
 // export const rewardedAdId =
 //   Platform.OS == 'android'

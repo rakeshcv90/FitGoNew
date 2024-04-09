@@ -22,6 +22,8 @@ import notifee, {
   TriggerType,
 } from '@notifee/react-native';
 import {AdManager, TestIds} from 'react-native-admob-native-ads';
+import {AlarmNotification} from './src/Component/Reminder';
+import { StepcountNoticationStart } from './src/Component/TransferStepCounterData';
 
 notifee.createChannel({
   id: 'Time',
@@ -34,69 +36,32 @@ notifee.createChannel({
 });
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('BACKGROUND NOTIFUCATION', remoteMessage);
+  StepcountNoticationStart()
 });
 notifee.onBackgroundEvent(async ({type, detail}) => {
-
   TriggerButtons(detail, type);
 });
 notifee.onForegroundEvent(async ({type, detail}) => {
-  
   TriggerButtons(detail, type);
 });
 const TriggerButtons = async (detail, type) => {
   const {notification, pressAction} = detail;
+  console.log('TRI', type);
+  StepcountNoticationStart()
   if (type === EventType.ACTION_PRESS && pressAction.id === 'Stop') {
-
-    await notifee.cancelNotification(notification.id);
+    // Remove the notification
+    await notifee.cancelDisplayedNotification(notification.id);
   } else if (
     type === EventType.ACTION_PRESS &&
     pressAction.id === 'Plus_Five'
   ) {
     const currentTime = new Date();
-    currentTime.setMinutes(currentTime.getMinutes() + 5);
-    const trigger = {
-      type: TriggerType.TIMESTAMP,
-      timestamp: currentTime.getTime(), 
-      repeatFrequency: RepeatFrequency.DAILY,
-    };
-    await notifee.createTriggerNotification(
-      {
-        title: 'Exercise Time',
-        body: `It's time to Exercise`,
-        android: {
-          channelId: 'Time',
-          importance: AndroidImportance.HIGH,
-          pressAction: {
-            id: 'default',
-          },
-          actions: [
-            {
-              title: 'Add +5',
-              pressAction: {
-                id: 'Plus_Five',
-              },
-            },
-            {
-              title: 'Stop',
-              pressAction: {
-                id: 'Stop',
-              },
-            },
-            // Add more actions as needed
-          ],
-        },
-        ios: {
-          categoryId: 'Alarm',
-          foregroundPresentationOptions: {
-            badge: true,
-            banner: true,
-            sound: false,
-          },
-        },
-        id: 'Timer',
-      },
-      trigger,
-    );
+
+    // Add 5 minutes to the current time
+    currentTime.setMinutes(currentTime.getMinutes() + 1);
+    AlarmNotification(currentTime);
+  } else {
+    console.log('OPEN NOTIFICATION', pressAction);
   }
 };
 
@@ -133,7 +98,7 @@ notifee.createChannel({
   sound: 'default',
 });
 const DisplayNotification = async Notification => {
-  console.log("NOTIFICATION", Notification)
+  console.log('NOTIFICATION', Notification);
   const cleanedTitle = removeHtmlTags(Notification?.data?.message);
   try {
     if (
@@ -194,10 +159,12 @@ const DisplayNotification = async Notification => {
   } catch (error) {
     console.log('notifee Error', error);
   }
+  StepcountNoticationStart()
 };
 messaging().getInitialNotification(async remoteMessage => {
   // DisplayNotification(remoteMessage);
   console.log('Kill NOTIFUCATION', remoteMessage);
+  StepcountNoticationStart()
 });
 const AppRedux = () => {
   LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message

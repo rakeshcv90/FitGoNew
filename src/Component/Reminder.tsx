@@ -22,7 +22,53 @@ import {AppColor} from './Color';
 import {showMessage} from 'react-native-flash-message';
 import messaging from '@react-native-firebase/messaging';
 
-const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
+export const AlarmNotification = async (time: any) => {
+  const trigger: TimestampTrigger = {
+    type: TriggerType.TIMESTAMP,
+    timestamp: time.getTime(), // fire at 11:10am (10 minutes before meeting)
+    repeatFrequency: RepeatFrequency.DAILY,
+  };
+  await notifee.createTriggerNotification(
+    {
+      title: 'Exercise Time',
+      body: `It's time to Exercise`,
+      android: {
+        channelId: 'Time',
+        importance: AndroidImportance.HIGH,
+        pressAction: {
+          id: 'default',
+        },
+        actions: [
+          {
+            title: 'Add +5',
+            pressAction: {
+              id: 'Plus_Five',
+            },
+          },
+          {
+            title: 'Stop',
+            pressAction: {
+              id: 'Stop',
+            },
+          },
+          // Add more actions as needed
+        ],
+      },
+      ios: {
+        categoryId: 'Alarm',
+        foregroundPresentationOptions: {
+          badge: true,
+          banner: true,
+          sound: false,
+        },
+      },
+      id: 'Timer',
+    },
+    trigger,
+  );
+  console.log(trigger.timestamp)
+};
+const Reminder = ({visible, setVisible, setAlarmIsEnabled, setNotificationTimer}: any) => {
   const typeData = ['AM', 'PM'];
   const hourData = Array(12)
     .fill(0)
@@ -31,86 +77,36 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
     .fill(0)
     .map((item: any, index, arr) => arr[index] + index);
 
-  const [hours, setHours] = useState('');
-  const [min, setMin] = useState('');
+  const [hours, setHours] = useState('1');
+  const [min, setMin] = useState('0');
   const [type, setType] = useState('AM');
 
-  // async function handleNotificationClick(notification:any) {
-  //   // Handle navigation or any other action here
-  //   console.log('Notification clicked:', notification);
-  // }
   async function onCreateTriggerNotification() {
+    // const date = moment().add(1, 'days');
+
+    // Assuming you have 'hours', 'minutes', and 'type' variables
     let selectedHours = parseInt(hours);
     let selectedMinutes = parseInt(min);
 
+    // If 'type' is 'PM' and the selected hours are less than 12, add 12 hours
     if (type === 'PM' && selectedHours < 12) {
       selectedHours += 12;
     }
 
+    // If 'type' is 'AM' and the selected hours is 12, set hours to 0 (midnight)
     if (type === 'AM' && selectedHours === 12) {
       selectedHours = 0;
     }
-
+    
     const currentTime = new Date(Date.now());
     const selectedTime = new Date(Date.now());
     selectedTime.setHours(selectedHours);
     selectedTime.setMinutes(selectedMinutes);
-
-    const trigger: TimestampTrigger = {
-      type: TriggerType.TIMESTAMP,
-      timestamp: selectedTime.getTime(),
-      repeatFrequency: RepeatFrequency.DAILY,
-    };
-
     try {
-      await notifee.createTriggerNotification(
-        {
-          title: 'Exercise Time',
-          body: `It's time to Exercise`,
-          android: {
-            channelId: 'Time',
-            importance: AndroidImportance.HIGH,
-            pressAction: {
-              id: 'default',
-            },
-            actions: [
-              {
-                title: 'Add +5',
-                pressAction: {
-                  id: 'Plus_Five',
-                },
-              },
-              {
-                title: 'Stop',
-                pressAction: {
-                  id: 'Stop',
-                },
-              },
-            ],
-          },
-          ios: {
-            categoryId: 'Alarm',
-            foregroundPresentationOptions: {
-              badge: true,
-              banner: true,
-              sound: false,
-            },
-          },
-          id: 'Timer',
-        },
-        trigger,
-      );
-      // if (Platform.OS === 'android') {
-      //   // Register click handler
-      //   messaging().onNotificationOpenedApp(handleNotificationClick);
-      // } else {
-       
-      //   messaging().setBackgroundMessageHandler(async remoteMessage => {
-      //     console.log('Message handled in the background!', remoteMessage);
-         
-      //     handleNotificationClick(remoteMessage.notification);
-      //   });
-      // }
+      AlarmNotification(selectedTime)
+      setNotificationTimer(selectedTime)
+      setAlarmIsEnabled(true);
+      setVisible(false);
     } catch (error) {
       showMessage({
         message: 'Time should be greater than Current Time',
@@ -121,8 +117,6 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
         icon: {icon: 'auto', position: 'left'},
       });
     }
-    setAlarmIsEnabled(true);
-    setVisible(false);
   }
   return (
     <Modal
@@ -217,7 +211,6 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
             <TouchableOpacity
               onPress={() => {
                 setVisible(false);
-                setAlarmIsEnabled(false);
               }}>
               <Text
                 style={{

@@ -23,6 +23,7 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import {
   setCount,
   setSubscriptiomModal,
+  setVideoLocation,
 } from '../../Component/ThemeRedux/Actions';
 import {localImage} from '../../Component/Image';
 import WorkoutDescription from '../NewWorkouts/WorkoutsDescription';
@@ -43,9 +44,11 @@ import {
   Text as SvgText,
   LinearGradient as SvgGrad,
 } from 'react-native-svg';
-import ThreeDButton from '../../Component/ThreeButton';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {MyRewardedAd} from '../../Component/BannerAdd';
+import RNFetchBlob from 'rn-fetch-blob';
+import Play from './Exercise/Play';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount} = route.params;
@@ -53,12 +56,14 @@ const OneDay = ({navigation, route}: any) => {
   const [currentExercise, setCurrentExercise] = useState([]);
   const [trackerData, setTrackerData] = useState([]);
   const [open, setOpen] = useState(true);
+  const [downloaded, setDownloade] = useState(0);
   const [visible, setVisible] = useState(false);
   const [reward, setreward] = useState(0);
+  const avatarRef = React.createRef();
 
   const [loader, setLoader] = useState(false);
 
-  const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
+  const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -79,9 +84,10 @@ const OneDay = ({navigation, route}: any) => {
     }
   }, []);
   const allWorkoutApi = async () => {
-    setLoader(true);
+    // setLoader(true);
     try {
       const res = await axios({
+        // url:'https://fitme.cvinfotech.in/adserver/public/api/days?day=1&workout_id=44'
         url:
           NewAppapi.Get_DAYS +
           '?day=' +
@@ -90,18 +96,62 @@ const OneDay = ({navigation, route}: any) => {
           data?.workout_id,
       });
       if (res.data) {
+        setLoader(false);
         setExerciseData(res.data);
         setOpen(true);
-        setLoader(false);
       }
     } catch (error) {
+      setLoader(false);
       console.error(error, 'DaysAPIERror');
       setExerciseData([]);
       setOpen(true);
-      setLoader(false);
     }
   };
-
+  const sanitizeFileName = (fileName: string) => {
+    fileName = fileName.replace(/\s+/g, '_');
+    return fileName;
+  };
+  let StoringData: Object = {};
+  const downloadVideos = async (data: any, index: number, len: number) => {
+    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
+      data?.exercise_title,
+    )}.mp4`;
+    try {
+      const videoExists = await RNFetchBlob.fs.exists(filePath);
+      if (videoExists) {
+        StoringData[data?.exercise_title] = filePath;
+        setDownloade(100 / (len - index));
+        console.log('videoExists', videoExists, 100 / (len - index), filePath);
+      } else {
+        await RNFetchBlob.config({
+          fileCache: true,
+          // IOSBackgroundTask: true, // Add this for iOS background downloads
+          path: filePath,
+          appendExt: '.mp4',
+        })
+          .fetch('GET', data?.exercise_video, {
+            'Content-Type': 'application/mp4',
+            // key: 'Config.REACT_APP_API_KEY',
+          })
+          .then(res => {
+            StoringData[data?.exercise_title] = res.path();
+            setDownloade(100 / (len - index));
+            console.log(
+              'File downloaded successfully!',
+              res.path(),
+              100 / (len - index),
+            );
+            // Linking.openURL(`file://${fileDest}`);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    } catch (error) {
+      console.log('ERRRR', error);
+    }
+    dispatch(setVideoLocation(StoringData));
+  };
   const getExerciseTrackAPI = async () => {
     const payload = new FormData();
     payload.append('user_id', getUserDataDetails?.id);
@@ -160,49 +210,57 @@ const OneDay = ({navigation, route}: any) => {
         user_exercise_id: exercise?.exercise_id,
       });
     }
-    try {
-      const res = await axios({
-        url: NewAppapi.CURRENT_DAY_EXERCISE,
-        method: 'Post',
-        data: {user_details: datas},
-      });
-      if (res.data) {
-        if (
-          res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
-        ) {
-          setOpen(false);
-          navigation.navigate('Exercise', {
-            allExercise: exerciseData,
-            currentExercise:
-              trainingCount != -1
-                ? exerciseData[trainingCount]
-                : exerciseData[0],
-            data: data,
-            day: day,
-            exerciseNumber: trainingCount != -1 ? trainingCount : 0,
-            trackerData: res?.data?.inserted_data,
-          });
-        } else {
-          setOpen(false);
-          navigation.navigate('Exercise', {
-            allExercise: exerciseData,
-            currentExercise:
-              trainingCount != -1
-                ? exerciseData[trainingCount]
-                : exerciseData[0],
-            data: data,
-            day: day,
-            exerciseNumber: trainingCount != -1 ? trainingCount : 0,
-            trackerData: trackerData,
-          });
+    Promise.all(
+      exerciseData.map((item: any, index: number) =>
+        downloadVideos(item, index, exerciseData.length),
+      ),
+    ).finally(async () => {
+      try {
+        const res = await axios({
+          url: NewAppapi.CURRENT_DAY_EXERCISE,
+          method: 'Post',
+          data: {user_details: datas},
+        });
+        if (res.data) {
+          if (
+            res.data?.msg ==
+            'Exercise Status for All Users Inserted Successfully'
+          ) {
+            setOpen(false);
+            navigation.navigate('Exercise', {
+              allExercise: exerciseData,
+              currentExercise:
+                trainingCount != -1
+                  ? exerciseData[trainingCount]
+                  : exerciseData[0],
+              data: data,
+              day: day,
+              exerciseNumber: trainingCount != -1 ? trainingCount : 0,
+              trackerData: res?.data?.inserted_data,
+            });
+          } else {
+            setOpen(false);
+            navigation.navigate('Exercise', {
+              allExercise: exerciseData,
+              currentExercise:
+                trainingCount != -1
+                  ? exerciseData[trainingCount]
+                  : exerciseData[0],
+              data: data,
+              day: day,
+              exerciseNumber: trainingCount != -1 ? trainingCount : 0,
+              trackerData: trackerData,
+            });
+          }
         }
+      } catch (error) {
+        console.error(error, 'PostDaysAPIERror');
       }
-    } catch (error) {
-      console.error(error, 'PostDaysAPIERror');
-    }
+    });
   };
 
   const Box = ({selected, item, index}: any) => {
+    const [isLoading, setIsLoading] = useState(true);
     return (
       <TouchableOpacity
         style={styles.box}
@@ -232,8 +290,16 @@ const OneDay = ({navigation, route}: any) => {
                 },
               }),
             }}>
+            {isLoading && (
+              <ShimmerPlaceholder
+                style={{height: 60, width: 60, alignSelf: 'center'}}
+                autoRun
+                ref={avatarRef}
+              />
+            )}
             <Image
               source={{uri: item?.exercise_image}}
+              onLoad={() => setIsLoading(false)}
               style={{height: 75, width: 75, alignSelf: 'center'}}
               resizeMode="contain"
             />
@@ -611,18 +677,31 @@ const OneDay = ({navigation, route}: any) => {
             <Box selected={-1} index={index + 1} item={item} key={index} />
           ))}
         </ScrollView>
-        <GradientButton
-          text={`Start Day ${day}`}
+        <Play
+          play={false}
+          oneDay
+          text={
+            downloaded > 0 && downloaded != 100
+              ? `Downloading`
+              : `Start Day ${day}`
+          }
           h={80}
+          textStyle={{
+            color:
+              downloaded > 0 && downloaded != 100
+                ? AppColor.BLACK
+                : AppColor.WHITE,
+          }}
           alignSelf
           bR={40}
           mB={40}
+          fillBack='white'
+          fill={downloaded > 0 ? `${100 - downloaded}%` : '0%'}
           onPress={() => {
             analytics().logEvent(`CV_FITME_STARTED_DAY_${day}_EXERCISES`);
+            setDownloade(0);
             postCurrentDayAPI();
-
             // if (data.workout_price == 'free') {
-            //   postCurrentDayAPI();
             // } else if (
             //   data?.workout_price == 'Premium' &&
             //   getPurchaseHistory[0]?.plan_end_date >=

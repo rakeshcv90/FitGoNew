@@ -8,7 +8,7 @@ import Icons from 'react-native-vector-icons/FontAwesome5';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import {FlatList} from 'react-native';
 import {localImage} from '../../Component/Image';
@@ -20,6 +20,8 @@ import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import moment from 'moment';
 import NativeAddTest from '../../Component/NativeAddTest';
+import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -30,6 +32,7 @@ const MeditationDetails = ({navigation, route}) => {
   const [forLoading, setForLoading] = useState(true);
   const [mindsetExercise, setmindsetExercise] = useState([]);
   const [headerTitle, setHeaderTitle] = useState(route?.params?.item);
+  const [downloaded, setDownloade] = useState(0);
   const avatarRef = React.createRef();
 
   const colors = [
@@ -38,7 +41,7 @@ const MeditationDetails = ({navigation, route}) => {
     {color1: '#FAE3FF', color2: '#C97FCD', color3: '#7C3D80'},
     {color1: '#FFEBE2', color2: '#DCAF9E', color3: '#1E1E1E'},
   ];
-
+  const dispatch = useDispatch();
   useEffect(() => {
     if (isFocused) {
       if (route?.params?.item) {
@@ -77,6 +80,9 @@ const MeditationDetails = ({navigation, route}) => {
       } else if (data?.data?.status == 'data found') {
         setForLoading(false);
         setmindsetExercise(data.data.data);
+        data.data.data.map((item, index) =>
+          downloadVideos(item, index, data.data.data.length),
+        );
       } else {
         setForLoading(false);
         setmindsetExercise([]);
@@ -88,6 +94,49 @@ const MeditationDetails = ({navigation, route}) => {
     }
   };
 
+  let StoringData = {};
+  const downloadVideos = async (data, index, len) => {
+    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${data?.id}.mp3`;
+    try {
+      const videoExists = await RNFetchBlob.fs.exists(filePath);
+      if (videoExists) {
+        StoringData[data?.id] = filePath;
+        console.log(
+          'videoExists',
+          videoExists,
+          100 / (len - (index)),
+          filePath,
+        );
+      } else {
+        await RNFetchBlob.config({
+          fileCache: true,
+          // IOSBackgroundTask: true, // Add this for iOS background downloads
+          path: filePath,
+          appendExt: '.mp3',
+        })
+          .fetch('GET', data?.exercise_mindset_audio, {
+            'Content-Type': 'application/mp4',
+            // key: 'Config.REACT_APP_API_KEY',
+          })
+          .then(res => {
+            StoringData[data?.id] = res.path();
+            setDownloade(100 / (len - index));
+            console.log(
+              'File downloaded successfully!',
+              res.path(),
+              100 / (len - (index + 1)),
+            );
+            // Linking.openURL(`file://${fileDest}`);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    } catch (error) {
+      console.log('ERRRR', error);
+    }
+    dispatch(setVideoLocation(StoringData));
+  };
   const ListItem = ({title, color}) => (
     <TouchableOpacity
       onPress={() => {
@@ -474,6 +523,7 @@ const MeditationDetails = ({navigation, route}) => {
                               left: -12,
                             }}>
                             <TouchableOpacity
+                            disabled={downloaded > 0 && downloaded != 100}
                               onPress={() => {
                                 navigation.navigate(
                                   'MeditationExerciseDetails',
@@ -501,7 +551,9 @@ const MeditationDetails = ({navigation, route}) => {
                                 lineHeight: 21,
                                 fontSize: 14,
                               }}>
-                              25 Min
+                              {downloaded > 0 && downloaded != 100
+                                ? 'Downloading ...'
+                                : '25 Min'}
                             </Text>
                           </View>
                         </View>

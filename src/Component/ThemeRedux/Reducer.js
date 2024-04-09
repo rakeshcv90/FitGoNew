@@ -35,6 +35,8 @@ const intialState = {
   getSubscriptionModal: false,
   getFitmeAdsCount: 0,
   getFitmeMealAdsCount: 0,
+  getStoreVideoLoc: {},
+  isAlarmEnabled: false
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -171,6 +173,16 @@ const ThemeReducer = (state = intialState, action) => {
       return {
         ...state,
         getFitmeMealAdsCount: action.payload,
+      };
+    case types.STORE_VIDEO_LOC:
+      return {
+        ...state,
+        getStoreVideoLoc: action.payload,
+      };
+    case types.ALARM_ENABLED:
+      return {
+        ...state,
+        isAlarmEnabled: action.payload,
       };
     default:
       return state;

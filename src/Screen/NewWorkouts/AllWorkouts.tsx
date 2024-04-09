@@ -284,6 +284,13 @@ const AllWorkouts = ({navigation, route}: any) => {
       if (res.data) {
         setRefresh(false);
         console.log(res.data, 'POST LIKE');
+        showMessage({
+          message: res?.data?.msg,
+          type: 'success',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
         getFavStatusAPI();
       }
     } catch (error) {
@@ -362,14 +369,19 @@ const AllWorkouts = ({navigation, route}: any) => {
           justifyContent: 'center',
           marginTop: -DeviceHeigth * 0.05,
         }}>
-        {favData?.includes(item?.workout_id) ? (
+        {type == 'popular' ? (
           <Image
-            source={fav ? localImage.Heart : localImage.BlackCircle}
+            source={
+              favData?.includes(item?.workout_id)
+                ? localImage.Heart
+                : localImage.dw7
+            }
             style={{height: 30, width: 30}}
+            resizeMode="contain"
           />
         ) : (
           <Image
-            source={fav ? localImage.dw7 : localImage.GreyCircle}
+            source={localImage.GreyCircle}
             style={{height: 30, width: 30}}
           />
         )}
@@ -505,9 +517,25 @@ const AllWorkouts = ({navigation, route}: any) => {
               {type != 'custom' && !fav && (
                 <TouchableOpacity onPress={() => postFavAPI(item?.workout_id)}>
                   {favData.includes(item?.workout_id) ? (
-                    <StarColor />
+                    <Image
+                      source={require('../../Icon/Images/NewImage/StarColor.png')}
+                      style={{
+                        height: DeviceWidth * 0.04,
+                        width: DeviceWidth * 0.04,
+                        right: DeviceWidth * 0.02,
+                      }}
+                      resizeMode="contain"
+                    />
                   ) : (
-                    <Star />
+                    <Image
+                      source={require('../../Icon/Images/NewImage/Star.png')}
+                      style={{
+                        height: DeviceWidth * 0.04,
+                        width: DeviceWidth * 0.04,
+                        right: DeviceWidth * 0.02,
+                      }}
+                      resizeMode="contain"
+                    />
                   )}
                 </TouchableOpacity>
               )}

@@ -197,3 +197,15 @@ export const setFitmeMealAdsCount = data => {
     payload: data,
   };
 };
+export const setVideoLocation = data => {
+  return {
+    type: types.STORE_VIDEO_LOC,
+    payload: data,
+  };
+};
+export const setIsAlarmEnabled = data => {
+  return {
+    type: types.ALARM_ENABLED,
+    payload: data,
+  };
+};

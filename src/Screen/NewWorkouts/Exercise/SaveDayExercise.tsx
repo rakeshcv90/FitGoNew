@@ -4,10 +4,11 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColor} from '../../../Component/Color';
 import {localImage} from '../../../Component/Image';
 import GradientText from '../../../Component/GradientText';
-import {DeviceHeigth, DeviceWidth} from '../../../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../../Component/Config';
 import GradientButton from '../../../Component/GradientButton';
 import analytics from '@react-native-firebase/analytics';
-import { ReviewApp } from '../../../Component/ReviewApp';
+import {ReviewApp} from '../../../Component/ReviewApp';
+import axios from 'axios';
 const SaveDayExercise = ({navigation, route}: any) => {
   const {data, day} = route?.params;
   let fire, clock, action;
@@ -18,9 +19,28 @@ const SaveDayExercise = ({navigation, route}: any) => {
       clock = data?.days[d]?.total_rest;
     }
   }
-  const onPresh=()=>{
-    navigation.navigate('DayRewards',{data, day})
-  }
+
+  const TESTAPI = async () => {
+    try {
+      const data = await axios(`${NewAppapi.total_Calories}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          user_id: 111,
+        },
+      });
+      if (data.data) {
+        console.log('TEST API DATA', data.data);
+      }
+    } catch (error) {
+      console.log('UCustomeCorkout details', error);
+    }
+  };
+  const onPresh = () => {
+    navigation.navigate('DayRewards', {data, day});
+  };
   return (
     <SafeAreaView
       style={{
@@ -91,7 +111,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
               color: '#505050',
               fontWeight: '500',
             }}>
-            sec
+            Sec
           </Text>
         </View>
         <View style={styles.container}>
@@ -115,9 +135,9 @@ const SaveDayExercise = ({navigation, route}: any) => {
       </View>
       <GradientButton
         onPress={() => {
-          analytics().logEvent(`CV_FITME_COMPLETED_DAY_${day}_EXERCISES`)
+          analytics().logEvent(`CV_FITME_COMPLETED_DAY_${day}_EXERCISES`);
           ReviewApp(onPresh);
-          // 
+          // TESTAPI()
         }}
         text="Save and Continue"
         bR={10}

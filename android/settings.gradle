@@ -21,3 +21,5 @@ project(':react-native-in-app-review').projectDir = new File(rootProject.project
 include ':react-native-admob-native-ads'
 project(':react-native-admob-native-ads').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-admob-native-ads/android')
 
+include ':rn-fetch-blob'
+project(':rn-fetch-blob').projectDir = new File(rootProject.projectDir, '../node_modules/rn-fetch-blob/android')

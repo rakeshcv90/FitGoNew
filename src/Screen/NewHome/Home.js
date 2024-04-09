@@ -33,6 +33,7 @@ import {
   setCustomWorkoutData,
   Setmealdata,
   setFitmeAdsCount,
+  setIsAlarmEnabled,
 } from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
@@ -66,6 +67,9 @@ import {ImageBackground} from 'react-native';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import NativeAddTest from '../../Component/NativeAddTest';
 
+import {AlarmNotification} from '../../Component/Reminder';
+import notifee from '@notifee/react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 let zeroData = [];
@@ -165,7 +169,7 @@ const Home = ({navigation}) => {
   const getUserID = useSelector(state => state.getUserID);
   const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
   const getStepCounterOnoff = useSelector(state => state.getStepCounterOnoff);
-  const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
+  const isAlarmEnabled = useSelector(state => state.isAlarmEnabled);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const getStoreData = useSelector(state => state.getStoreData);
 
@@ -185,6 +189,16 @@ const Home = ({navigation}) => {
   const [distance, setDistance] = useState(0);
   const distanceRef = useRef(distance);
   let isFocused = useIsFocused();
+  useEffect(() => {
+    if (!isAlarmEnabled) {
+      notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));
+      const currenTime = new Date();
+      currenTime.setHours(14);
+      currenTime.setMinutes(15);
+      AlarmNotification(currenTime);
+      Dispatch(setIsAlarmEnabled(true));
+    }
+  }, []);
 
   useEffect(() => {
     if (isFocused) {
@@ -195,7 +209,6 @@ const Home = ({navigation}) => {
       }, 3000);
     }
   }, [isFocused]);
-
   // pedometer data sending to api
   const PedoMeterData = async () => {
     try {
@@ -210,7 +223,6 @@ const Home = ({navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -303,7 +315,6 @@ const Home = ({navigation}) => {
       console.error('Error starting step update background service:', e);
     }
   };
-
   const fetchData = async () => {
     if (!getStepCounterOnoff) {
       // setPaddoModalShow(true);
@@ -387,6 +398,7 @@ const Home = ({navigation}) => {
   };
   const fetchTotalSteps = async () => {
     try {
+      await AsyncStorage.setItem('hasPermissionForStepCounter', 'true');
       const dailySteps = await GoogleFit.getDailySteps();
 
       dailySteps.reduce(
@@ -418,6 +430,9 @@ const Home = ({navigation}) => {
           console.log('error initializing Healthkit: ', err);
         } else if (available == true) {
           AppleHealthKit.initHealthKit(permissions, error => {
+            Promise.resolve(
+              AsyncStorage.setItem('hasPermissionForStepCounter', 'true'),
+            );
             if (error) {
               console.log('[ERROR] Cannot grant permissions!', error);
             } else {
@@ -972,7 +987,6 @@ const Home = ({navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-
       if (data.data.workout) {
         setRefresh(false);
         Dispatch(setCustomWorkoutData(data?.data));

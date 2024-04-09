@@ -37,7 +37,7 @@ const Exercise = ({navigation, route}: any) => {
   const [visible, setVisible] = useState(false);
   const [playW, setPlayW] = useState(0);
   const [number, setNumber] = useState(0);
-  const [defaultPre, setDefaultPre] = useState(1);
+  const [currentVideo, setCurrentVideo] = useState('');
   const [pause, setPause] = useState(false);
   const [open, setOpen] = useState(false);
   const [back, setBack] = useState(false);
@@ -47,6 +47,7 @@ const Exercise = ({navigation, route}: any) => {
   const [skipCount, setSkipCount] = useState(0);
   const [currentData, setCurrentData] = useState(currentExercise);
   const [isLoading, setIsLoading] = useState(true);
+  const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
@@ -116,6 +117,8 @@ const Exercise = ({navigation, route}: any) => {
               );
               setCurrentData(allExercise[index + 1]);
               // setPre(15);
+              // console.log('VIDEO LOCATIONS', getStoreVideoLoc);
+              handleExerciseChange(allExercise[index + 1]?.exercise_title);
               setNumber(number + 1);
               setRandomCount(randomCount + 1);
               setTimer(15);
@@ -129,7 +132,7 @@ const Exercise = ({navigation, route}: any) => {
             } else {
               setTimer(timer - 1);
             }
-            getSoundOffOn && Tts.speak(`${timer - 1}`);
+            // getSoundOffOn && Tts.speak(`${timer - 1}`);
           }, 1000))
         : (playTimerRef.current = setTimeout(() => {
             if (playW >= 100 && randomCount == allExercise?.length) {
@@ -168,6 +171,7 @@ const Exercise = ({navigation, route}: any) => {
     if (exerciseNumber != -1 && number == 0) {
       setNumber(exerciseNumber);
       setCurrentData(currentExercise);
+      handleExerciseChange(currentExercise?.exercise_title);
     }
   }, []);
   useEffect(() => {
@@ -196,6 +200,16 @@ const Exercise = ({navigation, route}: any) => {
     };
   }, [navigation]);
 
+  // Function to check if the currently opened exercise exists in the provided JSON object
+  const handleExerciseChange = (exerciseName: string) => {
+    if (getStoreVideoLoc.hasOwnProperty(exerciseName)) {
+      setCurrentVideo(getStoreVideoLoc[exerciseName]);
+      console.log('CURRENT', getStoreVideoLoc[exerciseName]);
+    } else {
+      setCurrentVideo('');
+      console.error(`Exercise "${exerciseName}" video not found.`);
+    }
+  };
   const FAB = ({icon}: any) => {
     return (
       <TouchableOpacity
@@ -397,7 +411,12 @@ const Exercise = ({navigation, route}: any) => {
       {restStart ? (
         <View style={{flex: 1, top: -20}}>
           {/* <FAB icon="format-list-bulleted" /> */}
-          <View style={{alignSelf: 'center', alignItems: 'center'}}>
+          <View
+            style={{
+              alignSelf: 'center',
+              alignItems: 'center',
+              top: DeviceHeigth * 0.05,
+            }}>
             <Text
               style={{
                 fontSize: 28,
@@ -428,6 +447,7 @@ const Exercise = ({navigation, route}: any) => {
               <TouchableOpacity
                 onPress={() => {
                   // Tts.stop();
+                  clearTimeout(restTimerRef.current);
                   setTimer(prevTimer => prevTimer + 30);
                   setSeparateTimer(prevTimer => prevTimer + 30);
                   // Tts.speak(`${separateTimer}`);
@@ -589,20 +609,21 @@ const Exercise = ({navigation, route}: any) => {
             }}>
             {/* <Text>{trackerData[number]?.id}</Text> */}
 
-            {isLoading && (
+            {/* {isLoading && (
               <ActivityIndicator
                 style={[styles.loader, {transform: [{scaleX: 2}, {scaleY: 2}]}]}
                 // size={Platform.OS=='android'?DeviceHeigth*0.1:DeviceHeigth*0.1}
                 size="large"
                 color="red"
               />
-            )}
+            )} */}
             <Video
               source={{
-                uri: currentData?.exercise_video,
+                uri: currentVideo,
               }}
               onReadyForDisplay={() => {
                 setPause(true);
+                setIsLoading(false);
               }}
               onLoad={() => {
                 setIsLoading(false);
@@ -615,7 +636,7 @@ const Exercise = ({navigation, route}: any) => {
                 setPause(true);
               }}
               repeat={true}
-              resizeMode="stretch"
+              resizeMode="contain"
               style={{
                 width: DeviceWidth,
                 height: DeviceHeigth * 0.4,
@@ -700,6 +721,7 @@ const Exercise = ({navigation, route}: any) => {
                 setNumber(number + 1);
                 setSkipCount(skipCount + 1);
                 setCurrentData(allExercise[index + 1]);
+                handleExerciseChange(allExercise[index + 1]?.exercise_title);
               }, 1500);
             }}
             back={() => {
@@ -712,6 +734,7 @@ const Exercise = ({navigation, route}: any) => {
               );
               // postCurrentExerciseAPI(index - 1);
               setCurrentData(allExercise[index - 1]);
+              handleExerciseChange(allExercise[index - 1]?.exercise_title);
               setNumber(number - 1);
             }}
             colors={pause ? ['#941000', '#941000'] : ['#999999', '#D5191A']}
@@ -727,6 +750,7 @@ const Exercise = ({navigation, route}: any) => {
             playTimerRef={playTimerRef}
             currentExercise={currentExercise}
             setSeconds={setSeconds}
+            handleExerciseChange={handleExerciseChange}
           />
         </>
       )}

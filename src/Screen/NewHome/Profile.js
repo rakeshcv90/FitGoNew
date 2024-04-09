@@ -31,6 +31,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {
+  setIsAlarmEnabled,
   setLogout,
   setSoundOnOff,
   setUserProfileData,
@@ -49,28 +50,49 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import analytics from '@react-native-firebase/analytics';
 
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-
+import notifee from '@notifee/react-native';
+import moment from 'moment';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const Profile = () => {
-  const {getUserDataDetails, ProfilePhoto, getSoundOffOn, allWorkoutData} =
+  const {getUserDataDetails, isAlarmEnabled, getSoundOffOn, allWorkoutData} =
     useSelector(state => state);
   const dispatch = useDispatch();
   const [UpdateScreenVisibility, setUpadteScreenVisibilty] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [notificationTimer, setNotificationTimer] = useState('');
   const [PhotoUploaded, setPhotoUploaded] = useState(true);
   const navigation = useNavigation();
   const [isEnabled, setIsEnabled] = useState(false);
-  const [isAlarmEnabled, setAlarmIsEnabled] = useState(false);
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const avatarRef = React.createRef();
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
+  useEffect(() => {
+    notifee.getTriggerNotifications().then(res => {
+      if (res.length > 0) {
+        setNotificationTimer(res[0].trigger.timestamp);
+        dispatch(setIsAlarmEnabled(true));
+      } else {
+        setNotificationTimer('');
+        dispatch(setIsAlarmEnabled(false));
+      }
+      console.log(res, isAlarmEnabled);
+    });
+  }, []);
+
   const toggleSwitch3 = () => {
-    !isAlarmEnabled && setVisible(true);
-    setAlarmIsEnabled(previousState => !previousState);
+    if (isAlarmEnabled) {
+      dispatch(setIsAlarmEnabled(false));
+      setNotificationTimer('');
+    } else {
+      setVisible(true);
+    }
+    console.log(isAlarmEnabled);
+  };
+  const setAlarmIsEnabled = data => {
+    dispatch(setIsAlarmEnabled(data));
   };
   const [modalVisible, setModalVisible] = useState(false);
   const DeleteAccount = () => {
@@ -248,7 +270,7 @@ const Profile = () => {
           resizeMode="contain"
         />
       ),
-      text1: 'Workout Reminder',
+      text1: 'Reminder',
     },
     {
       id: 6,
@@ -819,7 +841,7 @@ const Profile = () => {
               } else if (value.text1 == 'My Favorites') {
                 navigation?.navigate('AllWorkouts', {
                   data: allWorkoutData,
-                  type: '',
+                  type: 'popular',
                   fav: true,
                 });
               } else if (value.text1 == 'Subscription') {
@@ -837,7 +859,17 @@ const Profile = () => {
             }}>
             {value.icon1}
             <View style={styles.View1}>
-              <Text style={styles.nameText}>{value.text1}</Text>
+              <Text style={styles.nameText}>
+                {value.text1}
+                {value.id == 5 && notificationTimer != '' && (
+                  <Text
+                    style={{color: AppColor.RED}}
+                    onPress={() => setVisible(true)}>
+                    {' '}
+                    {moment(notificationTimer).format('LT')}
+                  </Text>
+                )}
+              </Text>
               {value.id == 4 ? (
                 <Switch
                   value={isEnabled}
@@ -980,12 +1012,13 @@ const Profile = () => {
           ))}
         </View>
         {modalVisible ? <DeleteAccount /> : null}
-        <Reminder
-          visible={visible}
-          setVisible={setVisible}
-          setAlarmIsEnabled={setAlarmIsEnabled}
-        />
       </ScrollView>
+      <Reminder
+        visible={visible}
+        setVisible={setVisible}
+        setAlarmIsEnabled={setAlarmIsEnabled}
+        setNotificationTimer={setNotificationTimer}
+      />
       {UpdateScreenVisibility ? <UpdateProfileModal /> : null}
     </View>
   );

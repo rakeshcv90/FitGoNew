@@ -19,8 +19,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
-import {setFitmeMealAdsCount} from '../../Component/ThemeRedux/Actions';
+import {
+  setFitmeMealAdsCount,
+  setVideoLocation,
+} from '../../Component/ThemeRedux/Actions';
 import moment from 'moment';
+import axios from 'axios';
+import RNFetchBlob from 'rn-fetch-blob';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const Meals = ({navigation}) => {
@@ -32,6 +37,7 @@ const Meals = ({navigation}) => {
   const [itemData, setItemData] = useState();
   const getFitmeMealAdsCount = useSelector(state => state.getFitmeMealAdsCount);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+  const getStoreVideoLoc = useSelector(state => state.getStoreVideoLoc);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const dispatch = useDispatch();
 
@@ -57,6 +63,7 @@ const Meals = ({navigation}) => {
   }, [generateRandomNumber]);
   useEffect(() => {
     initInterstitial();
+      mealData?.map((item, index) => downloadVideos(item, index));
   }, []);
   const checkMealAddCount = item => {
     if (getPurchaseHistory.length > 0) {
@@ -86,7 +93,45 @@ const Meals = ({navigation}) => {
       }
     }
   };
-
+  const resetFitmeCount = async () => {
+    dispatch(setFitmeMealAdsCount(0));
+  };
+  const sanitizeFileName = fileName => {
+    fileName = fileName.replace(/\s+/g, '_');
+    return fileName;
+  };
+  let StoringData = {};
+  const downloadVideos = async (data, index) => {
+    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
+      data?.diet_title,
+    )}.jpg`;
+    try {
+      const videoExists = await RNFetchBlob.fs.exists(filePath);
+      if (videoExists) {
+        StoringData[data?.diet_title] = filePath;
+        console.log('ImageExists', videoExists,filePath);
+      } else {
+        await RNFetchBlob.config({
+          fileCache: true,
+          path: filePath,
+          appendExt: '.jpg',
+        })
+          .fetch('GET', data?.diet_image, {
+            'Content-Type': 'application/jpg',
+          })
+          .then(res => {
+            StoringData[data?.diet_title] = res.path();
+            console.log('Image downloaded successfully!', res.path());
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    } catch (error) {
+      console.log('ERRRR', error);
+    }
+    dispatch(setVideoLocation(StoringData));
+  };
   return (
     <View style={styles.container}>
       <NewHeader header={'Meals'} SearchButton={false} backButton={true} />
@@ -273,9 +318,11 @@ const Meals = ({navigation}) => {
                   )}
                   <Image
                     source={
-                      item.diet_image_link == null
+                      item.diet_image == null
                         ? localImage.Noimage
-                        : {uri: item.diet_image_link}
+                        : {
+                            uri: item.diet_image,
+                          }
                     }
                     onLoad={() => setImageLoad(false)}
                     style={{
@@ -299,7 +346,7 @@ const Meals = ({navigation}) => {
                         width: 100,
                       },
                     ]}>
-                    {item.diet_title}
+                    {item?.diet_title}
                   </Text>
                 </TouchableOpacity>
               </>

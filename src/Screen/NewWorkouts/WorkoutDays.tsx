@@ -26,8 +26,12 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import analytics from '@react-native-firebase/analytics';
 import {MyInterstitialAd, MyRewardedAd} from '../../Component/BannerAdd';
-import {setSubscriptiomModal} from '../../Component/ThemeRedux/Actions';
+import {
+  setSubscriptiomModal,
+  setVideoLocation,
+} from '../../Component/ThemeRedux/Actions';
 import AnimatedLottieView from 'lottie-react-native';
+import RNFetchBlob from 'rn-fetch-blob';
 const WorkoutDays = ({navigation, route}: any) => {
   const {data} = route.params;
   const [selected, setSelected] = useState(0);
@@ -39,6 +43,7 @@ const WorkoutDays = ({navigation, route}: any) => {
   const [totalCount, setTotalCount] = useState(-1);
   const [trackerData, setTrackerData] = useState([]);
   const [exerciseData, setExerciseData] = useState([]);
+  const [downloaded, setDownloade] = useState(0);
   let isFocuse = useIsFocused();
   const dispatch = useDispatch();
   const [reward, setreward] = useState(0);
@@ -197,6 +202,52 @@ const WorkoutDays = ({navigation, route}: any) => {
       console.error(error, 'VIEWSPIERror');
       setRefresh(false);
     }
+  };
+
+  const sanitizeFileName = (fileName: string) => {
+    fileName = fileName.replace(/\s+/g, '_');
+    return fileName;
+  };
+  let StoringData: Object = {};
+  const downloadVideos = async (data: any, index: number, len: number) => {
+    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
+      data?.exercise_title,
+    )}.mp4`;
+    try {
+      const videoExists = await RNFetchBlob.fs.exists(filePath);
+      if (videoExists) {
+        StoringData[data?.exercise_title] = filePath;
+        setDownloade(100 / (len - index));
+        console.log('videoExists', videoExists, 100 / (len - index), filePath);
+      } else {
+        await RNFetchBlob.config({
+          fileCache: true,
+          // IOSBackgroundTask: true, // Add this for iOS background downloads
+          path: filePath,
+          appendExt: '.mp4',
+        })
+          .fetch('GET', data?.exercise_video, {
+            'Content-Type': 'application/mp4',
+            // key: 'Config.REACT_APP_API_KEY',
+          })
+          .then(res => {
+            StoringData[data?.exercise_title] = res.path();
+            setDownloade(100 / (len - index));
+            console.log(
+              'File downloaded successfully!',
+              res.path(),
+              100 / (len - index),
+            );
+            // Linking.openURL(`file://${fileDest}`);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    } catch (error) {
+      console.log('ERRRR', error);
+    }
+    dispatch(setVideoLocation(StoringData));
   };
   if (reward == 1) {
     setreward(0);
@@ -454,7 +505,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                 end={{x: 1, y: 0}}
                 style={{
                   height: 5,
-                  width: index == 1 && day > 4 ? '100%' : `${percent}%`,
+                  width: percent == 100 ? '100%' : `${percent}%`,
                 }}
               />
             </View>
@@ -500,6 +551,7 @@ const WorkoutDays = ({navigation, route}: any) => {
         style={[
           styles.box,
           {
+            width: DeviceHeigth < 1280 ? DeviceWidth * 0.8 : DeviceWidth * 0.9,
             backgroundColor: AppColor.WHITE,
             // index == 1 || index == 5
             //   ? '#F3F4F7'
@@ -523,13 +575,21 @@ const WorkoutDays = ({navigation, route}: any) => {
           {item?.total_rest == 0 ? (
             <Image
               source={localImage.Rest}
-              style={{height: 60, width: 60, marginLeft: DeviceWidth * 0.12}}
+              style={{
+                height: DeviceWidth * 0.1,
+                width: DeviceWidth * 0.1,
+                marginLeft: DeviceWidth * 0.12,
+              }}
               resizeMode="contain"
             />
           ) : (
             <Image
               source={{uri: data?.workout_image_link}}
-              style={{height: 80, width: 60, marginLeft: DeviceWidth * 0.12}}
+              style={{
+                height: DeviceWidth * 0.15,
+                width: DeviceWidth * 0.15,
+                marginLeft: DeviceWidth * 0.12,
+              }}
               resizeMode="contain"
             />
           )}
@@ -564,37 +624,68 @@ const WorkoutDays = ({navigation, route}: any) => {
                 name={'chevron-right'}
                 size={25}
                 color={AppColor.INPUTTEXTCOLOR}
+                style={{marginRight: DeviceWidth * 0.02}}
               />
             )}
           </View>
         </View>
         {selected && trainingCount != -1 && (
           <ProgressButton
-            text="Start Training"
+          text={
+            downloaded > 0 && downloaded != 100
+              ? `Downloading`
+              : `Start Training`
+          }
             w={DeviceWidth * 0.75}
             bR={10}
             mB={10}
+            fillBack='white'
             fill={
-              totalCount == -1
+              downloaded > 0
+                ? `${100 - downloaded}%`
+                : totalCount == -1
                 ? '0%'
                 : `${100 - (trainingCount / totalCount) * 100}%`
             }
             h={DeviceHeigth * 0.08}
+            textStyle={{
+              color:
+                downloaded > 0 && downloaded != 100
+                  ? AppColor.BLACK
+                  : AppColor.WHITE,
+            }}
             onPress={() => {
               analytics().logEvent(`CV_FITME_START_TRAINING_${day}_EXERCISES`);
-              navigation.navigate('Exercise', {
-                allExercise: exerciseData,
-                currentExercise:
-                  trainingCount == -1
-                    ? exerciseData[0]
-                    : exerciseData[trainingCount],
-                data: data,
-                day: day,
-                exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
-                trackerData: trackerData,
+              Promise.all(
+                exerciseData.map((item: any, index: number) =>
+                  downloadVideos(item, index, exerciseData.length),
+                ),
+              ).finally(() => {
+                setDownloade(0)
+                navigation.navigate('Exercise', {
+                  allExercise: exerciseData,
+                  currentExercise:
+                    trainingCount == -1
+                      ? exerciseData[0]
+                      : exerciseData[trainingCount],
+                  data: data,
+                  day: day,
+                  exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
+                  trackerData: trackerData,
+                });
               });
               // if (data.workout_price == 'free') {
-
+              //   navigation.navigate('Exercise', {
+              //     allExercise: exerciseData,
+              //     currentExercise:
+              //       trainingCount == -1
+              //         ? exerciseData[0]
+              //         : exerciseData[trainingCount],
+              //     data: data,
+              //     day: day,
+              //     exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
+              //     trackerData: trackerData,
+              //   });
               // } else if (
               //   data?.workout_price == 'Premium' &&
               //   getPurchaseHistory[0]?.plan_end_date >=
@@ -717,7 +808,10 @@ const WorkoutDays = ({navigation, route}: any) => {
                       justifyContent: 'space-between',
                     }}>
                     {index < 8 ? (
-                      <BlackCircle index={index} select={index == selected} />
+                      <BlackCircle
+                        index={index}
+                        select={selected != 0 && index == selected}
+                      />
                     ) : (
                       <View style={{width: 30}} />
                     )}
@@ -727,7 +821,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                           index={index + 1}
                           percent={
                             index < selected && index == 0 && selected > 4
-                              ? '100%'
+                              ? 100
                               : selected < 4 && index == 0
                               ? (selected / 4) * 100
                               : (selected / 2 / 4) * 100
@@ -750,7 +844,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           <Time />
         </>
       )}
-      <ActivityLoader visible={refresh} />
+      {/* <ActivityLoader visible={refresh} /> */}
       <PaddoMeterPermissionModal />
     </View>
   );
@@ -781,7 +875,6 @@ const styles = StyleSheet.create({
   box: {
     //   flex: 1,
     alignSelf: 'center',
-    width: DeviceWidth * 0.8,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
