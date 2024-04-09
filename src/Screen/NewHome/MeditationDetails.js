@@ -96,7 +96,6 @@ const MeditationDetails = ({navigation, route}) => {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
         StoringData[data?.id] = filePath;
-        setDownloade(100 / (len - index));
         console.log(
           'videoExists',
           videoExists,

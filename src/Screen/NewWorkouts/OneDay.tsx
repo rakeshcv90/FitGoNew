@@ -695,7 +695,8 @@ const OneDay = ({navigation, route}: any) => {
           alignSelf
           bR={40}
           mB={40}
-          fill={downloaded > 0 ? `${100 - downloaded}%` : '%'}
+          fillBack='white'
+          fill={downloaded > 0 ? `${100 - downloaded}%` : '0%'}
           onPress={() => {
             analytics().logEvent(`CV_FITME_STARTED_DAY_${day}_EXERCISES`);
             setDownloade(0);

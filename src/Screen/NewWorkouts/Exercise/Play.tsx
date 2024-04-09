@@ -33,6 +33,7 @@ export type Props = TouchableWithoutFeedbackProps & {
   colors?: Array<any>;
   oneDay?: boolean | false;
   text?: string;
+  fillBack?: string | '#D9D9D9';
 };
 
 const Play: FC<Props> = ({...props}) => {
@@ -115,14 +116,14 @@ const Play: FC<Props> = ({...props}) => {
         )}
         <View
           style={{
-            backgroundColor: '#D9D9D9',
+            backgroundColor: props.fillBack ? props.fillBack : '#D9D9D9',
             height: props.h ? props.h : 50,
             width: props.fill,
             marginTop: -50,
             // borderBottomRightRadius: props.bR ? props.bR : 50 / 2,
             right: 0,
             position: 'absolute',
-            // zIndex: -1,
+            zIndex: props.fillBack ? -1 :0,
           }}
         />
       </LinearGradient>
