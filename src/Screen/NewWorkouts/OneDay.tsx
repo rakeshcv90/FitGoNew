@@ -227,6 +227,7 @@ const OneDay = ({navigation, route}: any) => {
             'Exercise Status for All Users Inserted Successfully'
           ) {
             setOpen(false);
+            setDownloade(0);
             navigation.navigate('Exercise', {
               allExercise: exerciseData,
               currentExercise:
@@ -240,6 +241,7 @@ const OneDay = ({navigation, route}: any) => {
             });
           } else {
             setOpen(false);
+            setDownloade(0);
             navigation.navigate('Exercise', {
               allExercise: exerciseData,
               currentExercise:
@@ -292,7 +294,7 @@ const OneDay = ({navigation, route}: any) => {
             }}>
             {isLoading && (
               <ShimmerPlaceholder
-                style={{height: 60, width: 60, alignSelf: 'center'}}
+                style={{height: 75, width: 75, alignSelf: 'center'}}
                 autoRun
                 ref={avatarRef}
               />
@@ -687,6 +689,11 @@ const OneDay = ({navigation, route}: any) => {
           }
           h={80}
           textStyle={{
+            fontSize: 20,
+            fontFamily: 'Montserrat-SemiBold',
+            lineHeight: 40,
+            fontWeight: '700',
+            zIndex: 1,
             color:
               downloaded > 0 && downloaded != 100
                 ? AppColor.BLACK
@@ -695,11 +702,10 @@ const OneDay = ({navigation, route}: any) => {
           alignSelf
           bR={40}
           mB={40}
-          fillBack='white'
+          fillBack="#d9d9d9"
           fill={downloaded > 0 ? `${100 - downloaded}%` : '0%'}
           onPress={() => {
             analytics().logEvent(`CV_FITME_STARTED_DAY_${day}_EXERCISES`);
-            setDownloade(0);
             postCurrentDayAPI();
             // if (data.workout_price == 'free') {
             // } else if (
