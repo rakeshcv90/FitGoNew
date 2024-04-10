@@ -467,57 +467,34 @@ const WorkoutDays = ({navigation, route}: any) => {
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: DeviceWidth * 0.8,
           alignSelf: 'flex-end',
+          alignItems: 'center',
         }}>
+        <View
+          style={{
+            height: 5,
+            width: DeviceWidth * 0.2,
+            borderRadius: 5,
+            overflow: 'hidden',
+            backgroundColor: '#d9d9d9',
+          }}>
+          <LinearGradient
+            colors={gradientColors}
+            start={{x: 0, y: 1}}
+            end={{x: 1, y: 0}}
+            style={{
+              height: 5,
+              width: percent == 100 ? '100%' : `${percent}%`,
+            }}
+          />
+        </View>
         <GradientText
-          text={index == 1 ? `Phase 1: Start Easily` : `Phase 2: Warm Ups`}
+          text={index == 1 && day > 4 ? '100%' : `${percent}%`}
           fontSize={14}
           marginTop={0}
           y={20}
-          width={
-            index == 1
-              ? `Phase 1: Start Easily`.length * 8
-              : `Phase 1: Warm Ups`.length * 10
-          }
-          colors={select ? gradientColors : ['#505050', '#505050']}
+          width={50}
         />
-        {select && open && (
-          <View
-            style={{
-              flexDirection: 'row',
-              alignSelf: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                height: 5,
-                width: DeviceWidth * 0.2,
-                borderRadius: 5,
-                overflow: 'hidden',
-                backgroundColor: '#d9d9d9',
-              }}>
-              <LinearGradient
-                colors={gradientColors}
-                start={{x: 0, y: 1}}
-                end={{x: 1, y: 0}}
-                style={{
-                  height: 5,
-                  width: percent == 100 ? '100%' : `${percent}%`,
-                }}
-              />
-            </View>
-            <GradientText
-              text={index == 1 && day > 4 ? '100%' : `${percent}%`}
-              fontSize={14}
-              marginTop={0}
-              y={20}
-              width={50}
-            />
-          </View>
-        )}
       </View>
     );
   };
@@ -551,7 +528,7 @@ const WorkoutDays = ({navigation, route}: any) => {
         style={[
           styles.box,
           {
-            width: DeviceHeigth < 1280 ? DeviceWidth * 0.8 : DeviceWidth * 0.9,
+            width: DeviceHeigth < 1280 ? DeviceWidth * 0.95 : DeviceWidth * 0.99,
             backgroundColor: AppColor.WHITE,
             // index == 1 || index == 5
             //   ? '#F3F4F7'
@@ -639,7 +616,6 @@ const WorkoutDays = ({navigation, route}: any) => {
             w={DeviceWidth * 0.75}
             bR={10}
             mB={10}
-        
             fill={
               totalCount == -1
                 ? '0%'
@@ -665,43 +641,6 @@ const WorkoutDays = ({navigation, route}: any) => {
                 exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
                 trackerData: trackerData,
               });
-              // if (data.workout_price == 'free') {
-              //   navigation.navigate('Exercise', {
-              //     allExercise: exerciseData,
-              //     currentExercise:
-              //       trainingCount == -1
-              //         ? exerciseData[0]
-              //         : exerciseData[trainingCount],
-              //     data: data,
-              //     day: day,
-              //     exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
-              //     trackerData: trackerData,
-              //   });
-              // } else if (
-              //   data?.workout_price == 'Premium' &&
-              //   getPurchaseHistory[0]?.plan_end_date >=
-              //     moment().format('YYYY-MM-DD')
-              // ) {
-              //   navigation.navigate('Exercise', {
-              //     allExercise: exerciseData,
-              //     currentExercise:
-              //       trainingCount == -1
-              //         ? exerciseData[0]
-              //         : exerciseData[trainingCount],
-              //     data: data,
-              //     day: day,
-              //     exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
-              //     trackerData: trackerData,
-              //   });
-              // } else if (
-              //   data?.workout_price == 'Premium' &&
-              //   getPurchaseHistory[0]?.plan_end_date <
-              //     moment().format('YYYY-MM-DD')
-              // ) {
-              //   dispatch(setSubscriptiomModal(true));
-              // } else {
-              //   dispatch(setSubscriptiomModal(true));
-              // }
             }}
           />
         )}
@@ -764,15 +703,34 @@ const WorkoutDays = ({navigation, route}: any) => {
       />
       <GradientText
         text={'Today'}
-        fontWeight={'500'}
+        fontWeight={'700'}
         fontSize={22}
         width={DeviceWidth}
-        x={20}
+        x={10}
         marginTop={-10}
       />
-      <Text style={[styles.category, {marginTop: 10}]}>
+      <Text style={[styles.category, {marginTop: 10,marginLeft: 10}]}>
         {moment().format('dddd DD MMMM')}
       </Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: DeviceWidth,
+          alignSelf: 'center',
+          marginRight: 20
+        }}>
+        <GradientText
+          text={'Week 1'}
+          fontWeight={'500'}
+          fontSize={15}
+          width={DeviceWidth*0.3}
+          x={20}
+          marginTop={-5}
+        />
+        <Phase index={0} percent={(selected / 2 / 4) * 100} select={selected} />
+      </View>
       {!refresh && (
         <>
           <ScrollView
@@ -781,60 +739,20 @@ const WorkoutDays = ({navigation, route}: any) => {
               // flexDirection: 'row',
               alignItems: 'center',
             }}>
-            <View style={{alignSelf: 'flex-start'}}>
+            <View>
               {Object.values(data?.days).map((item: any, index: number) => {
-                // if (item?.total_rest == 0) {
-                //   return (
-                //     <View>
-                //       {/* <Text>Rest</Text> */}
-                //       <Image source={localImage.Rest} style={{height: 50, width: 50,}} />
-                //     </View>
-                //   );
-                // }
                 return (
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}>
-                    {index < 8 ? (
-                      <BlackCircle
-                        index={index}
-                        // select={selected != 0 && index == selected}
-                        select={false}
-                      />
-                    ) : (
-                      <View style={{width: 30}} />
-                    )}
-                    <View>
-                      {(index == 0 || index == 4) && (
-                        <Phase
-                          index={index + 1}
-                          percent={
-                            index < selected && index == 0 && selected > 4
-                              ? 100
-                              : selected < 4 && index == 0
-                              ? (selected / 4) * 100
-                              : (selected / 2 / 4) * 100
-                          }
-                          select={index <= selected}
-                        />
-                      )}
-                      <Box
-                        // selected={selected != 0 && index == selected}
-                        selected={false}
-                        active={selected != 0 && index <= selected}
-                        index={index + 1}
-                        item={item}
-                      />
-                    </View>
-                  </View>
+                  <Box
+                    // selected={selected != 0 && index == selected}
+                    selected={false}
+                    active={selected != 0 && index <= selected}
+                    index={index + 1}
+                    item={item}
+                  />
                 );
               })}
             </View>
           </ScrollView>
-          <Time />
         </>
       )}
       {/* <ActivityLoader visible={refresh} /> */}
@@ -849,7 +767,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: AppColor.WHITE,
-    paddingHorizontal: 15,
+    paddingHorizontal: 5,
   },
   category: {
     fontFamily: 'Poppins',
@@ -881,11 +799,7 @@ const styles = StyleSheet.create({
         // shadowRadius: 10,
       },
       android: {
-        elevation: 10,
-        shadowColor: 'rgba(0, 0, 0, 0.6)',
-        shadowOffset: {width: 1, height: 1},
-        shadowOpacity: 0.1,
-        // shadowRadius: 10,
+        elevation: 4,
       },
     }),
   },

@@ -1,4 +1,7 @@
 import {
+  Image,
+  ImageSourcePropType,
+  ImageStyle,
   StyleProp,
   StyleSheet,
   Text,
@@ -24,7 +27,9 @@ export type Props = TouchableWithoutFeedbackProps & {
   alignSelf?: boolean;
   flex?: number;
   position?:string;
-  bottm?:number
+  bottm?:number;
+  Image?: StyleProp<ImageSourcePropType>;
+  ImageStyle?: StyleProp<ImageStyle>;
 };
 
 const GradientButton: FC<Props> = ({...props}) => {
@@ -57,6 +62,37 @@ const GradientButton: FC<Props> = ({...props}) => {
             borderRadius: props.bR ? props.bR : 50 / 2,
           },
         ]}>
+        {props.Image ? (
+          <View style={{flexDirection: 'row', alignItems: 'center',justifyContent: 'center',}}>
+            <Image
+              source={props.Image}
+              style={
+                props.ImageStyle
+                  ? props.ImageStyle
+                  : {
+                      height: DeviceWidth * 0.1,
+                      width: DeviceWidth * 0.1,
+                    }
+              }
+              resizeMode="contain"
+            />
+            <Text
+              style={
+                props.textStyle
+                  ? props.textStyle
+                  : {
+                      fontSize: 20,
+                      fontFamily: 'Poppins',
+                      lineHeight: 30,
+                      color: AppColor.WHITE,
+                      fontWeight: '700',
+                      zIndex: 1,
+                    }
+              }>
+              {props.text}
+            </Text>
+          </View>
+        ) : (
         <Text
           style={
             props.textStyle
@@ -71,6 +107,7 @@ const GradientButton: FC<Props> = ({...props}) => {
           }>
           {props.text}
         </Text>
+        )}
       </LinearGradient>
     </TouchableOpacity>
   );

@@ -20,6 +20,7 @@ import moment from 'moment';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {AppColor} from '../Component/Color';
 import {setFitmeAdsCount} from '../Component/ThemeRedux/Actions';
+import MyPlans from '../Screen/MyPlans/MyPlans';
 
 const Tabs = createBottomTabNavigator();
 
@@ -304,8 +305,8 @@ const BottomTab = () => {
           options={{tabBarShowLabel: false}}
         />
         <Tabs.Screen
-          name="Reports"
-          component={NewProgressScreen}
+          name="MyPlans"
+          component={MyPlans}
           options={{tabBarShowLabel: false}}
         />
 

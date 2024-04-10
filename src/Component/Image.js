@@ -112,4 +112,5 @@ export const localImage = {
   PaymentFaikd: require('../Icon/Images/NewImage/PaymentFaikd.png'),
   PadoDaolog: require('../Icon/Images/NewImage/PadoDailog.png'),
   Policy: require('../Icon/Images/NewImage/policy.png'),
+  StartWorkoutButton: require('../Icon/Images/NewImage/StartWorkoutButton.png'),
 };
