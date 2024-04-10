@@ -35,15 +35,15 @@ const BottomSheetExercise = ({
         onPress={() => {
           // setVisible(false);
           // setCurrentData(item);
-          if (currentExercise?.exercise_title == item?.exercise_title) {
-            showMessage({
-              message: 'Current Exercise',
-              type: 'info',
-              animationDuration: 500,
-              floating: true,
-              icon: {icon: 'auto', position: 'left'},
-            });
-          } else {
+          // if (currentExercise?.exercise_title == item?.exercise_title) {
+          //   showMessage({
+          //     message: 'Current Exercise',
+          //     type: 'info',
+          //     animationDuration: 500,
+          //     floating: true,
+          //     icon: {icon: 'auto', position: 'left'},
+          //   });
+          // } else {
             setVisible(false);
             setCurrentData(item);
             setSeconds(parseInt(item?.exercise_rest.split(' ')[0]))
@@ -52,7 +52,7 @@ const BottomSheetExercise = ({
             setRandomCount(index);
             clearInterval(playTimerRef.current);
             handleExerciseChange(item?.exercise_title)
-          }
+          // }
         }}
         style={[
           styles.box,

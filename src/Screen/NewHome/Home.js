@@ -92,7 +92,7 @@ const GradientText = ({item}) => {
           <Stop offset="1" stopColor={gradientColors[1]} />
         </SvgGrad>
         <SvgText
-         // fontFamily="Montserrat-SemiBold"
+          // fontFamily="Montserrat-SemiBold"
           lineHeight={20}
           width={50}
           fontWeight={'700'}
@@ -172,7 +172,6 @@ const Home = ({navigation}) => {
   const isAlarmEnabled = useSelector(state => state.isAlarmEnabled);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const getStoreData = useSelector(state => state.getStoreData);
-
   const [stepGoalProfile, setStepGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
   );
@@ -193,9 +192,16 @@ const Home = ({navigation}) => {
     if (!isAlarmEnabled) {
       notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));
       const currenTime = new Date();
-      currenTime.setHours(14);
-      currenTime.setMinutes(15);
-      AlarmNotification(currenTime);
+      currenTime.setHours(7);
+      currenTime.setMinutes(0);
+      //AlarmNotification(currenTime);
+      AlarmNotification(currenTime)
+        .then(res => console.log('ALARM SET', res))
+        .catch((errr) => {
+          console.log(errr)
+          currenTime.setDate(currenTime.getDate() + 1)
+          AlarmNotification(currenTime);
+        });
       Dispatch(setIsAlarmEnabled(true));
     }
   }, []);
@@ -411,7 +417,7 @@ const Home = ({navigation}) => {
       distanceRef.current = ((totalSteps / 20) * 0.01).toFixed(2);
       setDistance(((totalSteps / 20) * 0.01).toFixed(2));
       caloriesRef.current = ((totalSteps / 20) * 1).toFixed(1);
-      setCalories(((totalSteps / 20) * 1).toFixed(1));
+      setCalories(Math.round(((totalSteps / 20) * 1).toFixed(2)));
     } catch (error) {
       console.error('Error fetching total steps', error);
     }
@@ -1095,7 +1101,7 @@ const Home = ({navigation}) => {
                 fontSize: 13,
                 fontWeight: '600',
                 lineHeight: 20,
-           
+
                 fontFamily: 'Montserrat-SemiBold',
                 textAlign: 'center',
                 width: 100,
@@ -1116,7 +1122,7 @@ const Home = ({navigation}) => {
           onPress={() => {
             navigation.navigate('ProductsList', {item: item});
           }}>
-          {imageLoad && (
+          {/* {imageLoad && (
             <ShimmerPlaceholder
               style={{
                 height: 90,
@@ -1128,7 +1134,7 @@ const Home = ({navigation}) => {
               ref={avatarRef}
               autoRun
             />
-          )}
+          )} */}
           <Image
             source={
               item.type_image_link == null
@@ -1173,17 +1179,17 @@ const Home = ({navigation}) => {
       if (
         getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
       ) {
-        return (
-          <View
-            style={{
-              alignSelf: 'center',
-              alignItems: 'center',
+        return null;
+          // <View
+          //   style={{
+          //     alignSelf: 'center',
+          //     alignItems: 'center',
 
-              top: DeviceHeigth * 0.08,
-            }}>
-            <NativeAddTest type="image" media={false} />
-          </View>
-        );
+          //     top: DeviceHeigth * 0.08,
+          //   }}>
+          //   <NativeAddTest type="image" media={false} />
+          // </View>
+       
       } else {
         return (
           <View
@@ -1397,7 +1403,7 @@ const Home = ({navigation}) => {
               </View>
             </View>
             <View style={styles.stepImageView}>
-              <CircularProgressBase
+              {/* <CircularProgressBase
                 {...props}
                 value={Calories}
                 maxValue={
@@ -1411,6 +1417,36 @@ const Home = ({navigation}) => {
                   value={distance}
                   maxValue={
                     getPedomterData[2] ? getPedomterData[2].RDistance : 2.5
+                  }
+                  radius={55}
+                  activeStrokeColor={'#FCBB1D'}
+                  inActiveStrokeColor={'#FCBB1D'}>
+                  <CircularProgressBase
+                    {...props}
+                    value={steps}
+                    maxValue={
+                      getPedomterData[0] ? getPedomterData[0].RSteps : 5000
+                    }
+                    radius={80}
+                    activeStrokeColor={'#397E54'}
+                    inActiveStrokeColor={'#397E54'}
+                  />
+                </CircularProgressBase>
+              </CircularProgressBase> */}
+              <CircularProgressBase
+                {...props}
+                value={Calories}
+                maxValue={
+                  getPedomterData[2] ? getPedomterData[2].RCalories : 500
+                }
+                radius={32}
+                activeStrokeColor={'#941000'}
+                inActiveStrokeColor={'#941000'}>
+                <CircularProgressBase
+                  {...props}
+                  value={distance}
+                  maxValue={
+                    getPedomterData[1] ? getPedomterData[1].RDistance : 2.5
                   }
                   radius={55}
                   activeStrokeColor={'#FCBB1D'}

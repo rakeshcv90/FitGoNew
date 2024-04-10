@@ -43,7 +43,7 @@ const WorkoutArea = ({route, navigation}) => {
       workoutArea: imageView,
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-    navigation.navigate('PredictionScreen', {nextScreen: screen + 1});
+  navigation.navigate('PredictionScreen', {nextScreen: screen + 1});
     analytics().logEvent(`CV_FITME_WORKOUT_AREA_${imageView[0]?.replace(" ","_")}`)
    
   };

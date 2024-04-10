@@ -233,7 +233,7 @@ const PredictionScreen = ({navigation, route}: any) => {
         <TouchableOpacity
           onPress={() => {
             // toNextScreen()
-            navigation.navigate('MeditationConsent');
+            navigation.navigate('LoadData')
           }}>
           <LinearGradient
             start={{x: 0, y: 1}}

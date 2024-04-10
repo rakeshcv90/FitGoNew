@@ -22,6 +22,9 @@ export function Logger(tag = 'AD', type, value) {
 // Platform.OS === 'ios'
 // ? 'ca-app-pub-7672988132369278/4502578793'
 // : 'ca-app-pub-7672988132369278/4753860239';
+
+
+//For Testting
 export const adUnitIDs = {
   image:
     Platform.OS === 'ios'

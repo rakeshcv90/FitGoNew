@@ -50,6 +50,7 @@ const MeditationDetails = ({navigation, route}) => {
           route?.params?.item.workout_mindset_level,
         );
       }
+      setDownloade(0)
     }
   }, [isFocused]);
   const getCaterogy = async (id, level) => {
@@ -79,10 +80,12 @@ const MeditationDetails = ({navigation, route}) => {
         setForLoading(false);
       } else if (data?.data?.status == 'data found') {
         setForLoading(false);
-        setmindsetExercise(data.data.data);
-        data.data.data.map((item, index) =>
-          downloadVideos(item, index, data.data.data.length),
-        );
+        setmindsetExercise(data.data.data)
+        Promise.all(
+          data.data.data.map((item, index) =>
+            downloadVideos(item, index, data.data.data.length),
+          ),
+        ).finally(() => setmindsetExercise(data.data.data));
       } else {
         setForLoading(false);
         setmindsetExercise([]);
@@ -101,12 +104,8 @@ const MeditationDetails = ({navigation, route}) => {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
         StoringData[data?.id] = filePath;
-        console.log(
-          'videoExists',
-          videoExists,
-          100 / (len - (index)),
-          filePath,
-        );
+        setDownloade(100 / (len - index));
+        console.log("fjfjfjhfjfjf",)
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -121,11 +120,7 @@ const MeditationDetails = ({navigation, route}) => {
           .then(res => {
             StoringData[data?.id] = res.path();
             setDownloade(100 / (len - index));
-            console.log(
-              'File downloaded successfully!',
-              res.path(),
-              100 / (len - (index + 1)),
-            );
+          
             // Linking.openURL(`file://${fileDest}`);
           })
           .catch(err => {
@@ -225,17 +220,7 @@ const MeditationDetails = ({navigation, route}) => {
       if (
         getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
       ) {
-        return (
-          <View
-            style={{
-              alignSelf: 'center',
-              alignItems: 'center',
-
-              //top: DeviceHeigth * 0.1,
-            }}>
-            <NativeAddTest type="image" media={false} />
-          </View>
-        );
+        return null;
       } else {
         return (
           <View
