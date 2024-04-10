@@ -162,7 +162,6 @@ const App = () => {
         break;
       case codePush.SyncStatus.UPDATE_INSTALLED:
         LogOut(dispatch);
-
         setProgress(false);
         break;
       case codePush.SyncStatus.UNKNOWN_ERROR:

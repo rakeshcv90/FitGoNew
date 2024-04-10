@@ -631,48 +631,39 @@ const WorkoutDays = ({navigation, route}: any) => {
         </View>
         {selected && trainingCount != -1 && (
           <ProgressButton
-          text={
-            downloaded > 0 && downloaded != 100
-              ? `Downloading`
-              : `Start Training`
-          }
+            text={
+              downloaded > 0 && downloaded != 100
+                ? `Downloading`
+                : `Start Training`
+            }
             w={DeviceWidth * 0.75}
             bR={10}
             mB={10}
-            fillBack='white'
+        
             fill={
-              downloaded > 0
-                ? `${100 - downloaded}%`
-                : totalCount == -1
+              totalCount == -1
                 ? '0%'
                 : `${100 - (trainingCount / totalCount) * 100}%`
             }
             h={DeviceHeigth * 0.08}
-            textStyle={{
-              color:
-                downloaded > 0 && downloaded != 100
-                  ? AppColor.BLACK
-                  : AppColor.WHITE,
-            }}
+            // textStyle={{
+            //   color:
+            //     downloaded > 0 && downloaded != 100
+            //       ? AppColor.BLACK
+            //       : AppColor.WHITE,
+            // }}
             onPress={() => {
               analytics().logEvent(`CV_FITME_START_TRAINING_${day}_EXERCISES`);
-              Promise.all(
-                exerciseData.map((item: any, index: number) =>
-                  downloadVideos(item, index, exerciseData.length),
-                ),
-              ).finally(() => {
-                setDownloade(0)
-                navigation.navigate('Exercise', {
-                  allExercise: exerciseData,
-                  currentExercise:
-                    trainingCount == -1
-                      ? exerciseData[0]
-                      : exerciseData[trainingCount],
-                  data: data,
-                  day: day,
-                  exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
-                  trackerData: trackerData,
-                });
+              navigation.navigate('Exercise', {
+                allExercise: exerciseData,
+                currentExercise:
+                  trainingCount == -1
+                    ? exerciseData[0]
+                    : exerciseData[trainingCount],
+                data: data,
+                day: day,
+                exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
+                trackerData: trackerData,
               });
               // if (data.workout_price == 'free') {
               //   navigation.navigate('Exercise', {
@@ -810,7 +801,8 @@ const WorkoutDays = ({navigation, route}: any) => {
                     {index < 8 ? (
                       <BlackCircle
                         index={index}
-                        select={selected != 0 && index == selected}
+                        // select={selected != 0 && index == selected}
+                        select={false}
                       />
                     ) : (
                       <View style={{width: 30}} />
@@ -830,7 +822,8 @@ const WorkoutDays = ({navigation, route}: any) => {
                         />
                       )}
                       <Box
-                        selected={selected != 0 && index == selected}
+                        // selected={selected != 0 && index == selected}
+                        selected={false}
                         active={selected != 0 && index <= selected}
                         index={index + 1}
                         item={item}

@@ -659,16 +659,7 @@ const AllWorkouts = ({navigation, route}: any) => {
       if (
         getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
       ) {
-        return (
-          <View
-            style={{
-              alignSelf: 'center',
-              alignItems: 'center',
-              marginBottom: 20,
-            }}>
-            <NativeAddTest type="image" media={false} />
-          </View>
-        );
+        return null;
       } else {
         return (
           <View

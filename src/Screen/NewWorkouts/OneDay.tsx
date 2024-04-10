@@ -60,6 +60,7 @@ const OneDay = ({navigation, route}: any) => {
   const [visible, setVisible] = useState(false);
   const [reward, setreward] = useState(0);
   const avatarRef = React.createRef();
+  const [forLoading, setForLoading] = useState(true);
 
   const [loader, setLoader] = useState(false);
 
@@ -75,6 +76,7 @@ const OneDay = ({navigation, route}: any) => {
   );
   const dispatch = useDispatch();
   let isFocuse = useIsFocused();
+  let simerData = [1, 2, 3, 4, 5];
 
   useEffect(() => {
     if (isFocuse) {
@@ -85,6 +87,7 @@ const OneDay = ({navigation, route}: any) => {
   }, []);
   const allWorkoutApi = async () => {
     // setLoader(true);
+    setForLoading(true);
     try {
       const res = await axios({
         // url:'https://fitme.cvinfotech.in/adserver/public/api/days?day=1&workout_id=44'
@@ -98,12 +101,14 @@ const OneDay = ({navigation, route}: any) => {
       if (res.data) {
         setLoader(false);
         setExerciseData(res.data);
+        setForLoading(false);
         setOpen(true);
       }
     } catch (error) {
       setLoader(false);
       console.error(error, 'DaysAPIERror');
       setExerciseData([]);
+      setForLoading(false);
       setOpen(true);
     }
   };
@@ -120,8 +125,7 @@ const OneDay = ({navigation, route}: any) => {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
         StoringData[data?.exercise_title] = filePath;
-        setDownloade(100 / (len - index));
-        console.log('videoExists', videoExists, 100 / (len - index), filePath);
+        setDownloade(pre => pre + 1);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -135,13 +139,7 @@ const OneDay = ({navigation, route}: any) => {
           })
           .then(res => {
             StoringData[data?.exercise_title] = res.path();
-            setDownloade(100 / (len - index));
-            console.log(
-              'File downloaded successfully!',
-              res.path(),
-              100 / (len - index),
-            );
-            // Linking.openURL(`file://${fileDest}`);
+            setDownloade(pre => pre + 1);
           })
           .catch(err => {
             console.log(err);
@@ -292,16 +290,16 @@ const OneDay = ({navigation, route}: any) => {
                 },
               }),
             }}>
-            {isLoading && (
+            {/* {isLoading && (
               <ShimmerPlaceholder
                 style={{height: 75, width: 75, alignSelf: 'center'}}
                 autoRun
                 ref={avatarRef}
               />
-            )}
+            )} */}
             <Image
               source={{uri: item?.exercise_image}}
-              onLoad={() => setIsLoading(false)}
+              // onLoad={() => setIsLoading(false)}
               style={{height: 75, width: 75, alignSelf: 'center'}}
               resizeMode="contain"
             />
@@ -437,6 +435,60 @@ const OneDay = ({navigation, route}: any) => {
       //     </View>
       //   </View>
       // </TouchableOpacity>
+    );
+  };
+  const Box2 = () => {
+    return (
+      <View style={styles.box}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View
+            style={{
+              height: 80,
+              width: 80,
+              backgroundColor: AppColor.WHITE,
+
+              borderRadius: 20,
+            }}>
+            <ShimmerPlaceholder
+              style={{
+                height: 75,
+                width: 75,
+                alignSelf: 'center',
+                borderRadius: 20,
+              }}
+              autoRun
+              ref={avatarRef}
+            />
+          </View>
+          <View
+            style={{
+              alignItems: 'center',
+              marginHorizontal: 20,
+            }}>
+            <View>
+              <ShimmerPlaceholder
+                style={{height: 10, width: 100, alignSelf: 'center'}}
+                autoRun
+                ref={avatarRef}
+              />
+
+              <ShimmerPlaceholder
+                style={{height: 10, width: 100, alignSelf: 'center'}}
+                autoRun
+                ref={avatarRef}
+              />
+            </View>
+          </View>
+        </View>
+
+        <View style={{}}>
+          <ShimmerPlaceholder
+            style={{height: 20, width: 40, alignSelf: 'center', top: 10}}
+            autoRun
+            ref={avatarRef}
+          />
+        </View>
+      </View>
     );
   };
   if (reward == 1) {
@@ -673,11 +725,18 @@ const OneDay = ({navigation, route}: any) => {
           {` ${dayData?.total_calories} Kcal`}
         </Text>
         <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
-          style={{marginBottom: 50}}>
-          {exerciseData.map((item, index) => (
-            <Box selected={-1} index={index + 1} item={item} key={index} />
-          ))}
+          style={{marginBottom: 100, flex:1}}>
+            
+            { exerciseData.map((item, index) => (
+                <Box selected={-1} index={index + 1} item={item} key={index} />
+              ))}
+          {/* {forLoading
+            ? simerData.map((item, index) => <Box2 />)
+            : exerciseData.map((item, index) => (
+                <Box selected={-1} index={index + 1} item={item} key={index} />
+              ))} */}
         </ScrollView>
         <Play
           play={false}
@@ -694,16 +753,13 @@ const OneDay = ({navigation, route}: any) => {
             lineHeight: 40,
             fontWeight: '700',
             zIndex: 1,
-            color:
-              downloaded > 0 && downloaded != 100
-                ? AppColor.BLACK
-                : AppColor.WHITE,
+            color: AppColor.WHITE,
           }}
           alignSelf
           bR={40}
           mB={40}
-          fillBack="#d9d9d9"
-          fill={downloaded > 0 ? `${100 - downloaded}%` : '0%'}
+          fillBack="#EB1900"
+          fill={downloaded > 0 ? `${100 / downloaded}%` : '0%'}
           onPress={() => {
             analytics().logEvent(`CV_FITME_STARTED_DAY_${day}_EXERCISES`);
             postCurrentDayAPI();

@@ -722,6 +722,9 @@ const Exercise = ({navigation, route}: any) => {
                 setSkipCount(skipCount + 1);
                 setCurrentData(allExercise[index + 1]);
                 handleExerciseChange(allExercise[index + 1]?.exercise_title);
+                setSeconds(
+                  parseInt(allExercise[index + 1]?.exercise_rest.split(' ')[0]),
+                );
               }, 1500);
             }}
             back={() => {
@@ -736,6 +739,9 @@ const Exercise = ({navigation, route}: any) => {
               setCurrentData(allExercise[index - 1]);
               handleExerciseChange(allExercise[index - 1]?.exercise_title);
               setNumber(number - 1);
+              setSeconds(
+                parseInt(allExercise[index - 1]?.exercise_rest.split(' ')[0]),
+              );
             }}
             colors={pause ? ['#941000', '#941000'] : ['#999999', '#D5191A']}
           />

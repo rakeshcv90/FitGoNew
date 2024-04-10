@@ -16,7 +16,8 @@ import NativeAdView, {
   TaglineView,
 } from 'react-native-admob-native-ads';
 import {MediaView} from './MediaView';
-import {adUnitIDs} from './utils';
+import { adUnitIDs } from './AdsId';
+// import {adUnitIDs} from './utils';
 
 const NativeAddTest = ({media, type}) => {
   const [aspectRatio, setAspectRatio] = useState(1.5);
