@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import Header from '../../Component/Headers/NewHeader';
 import GradientText from '../../Component/GradientText';
 import moment from 'moment';
@@ -499,7 +499,7 @@ const WorkoutDays = ({navigation, route}: any) => {
     );
   };
 
-  const Box = ({selected, item, index, active}: any) => {
+  const Box = ({selected, item, index, active, percent}: any) => {
     return (
       <TouchableOpacity
         disabled={item?.total_rest == 0}
@@ -528,19 +528,11 @@ const WorkoutDays = ({navigation, route}: any) => {
         style={[
           styles.box,
           {
-            width: DeviceHeigth < 1280 ? DeviceWidth * 0.95 : DeviceWidth * 0.99,
-            backgroundColor: AppColor.WHITE,
-            // index == 1 || index == 5
-            //   ? '#F3F4F7'
-            //   : index == 2 || index == 6
-            //   ? '#EAEBFF'
-            //   : index == 3 || index == 7
-            //   ? '#FFE8E1'
-            //   : '#CEF2F9',
-            height:
-              selected && trainingCount != -1
-                ? DeviceHeigth * 0.2
-                : DeviceHeigth * 0.1,
+            width:
+              DeviceHeigth < 1280 ? DeviceWidth * 0.95 : DeviceWidth * 0.99,
+            backgroundColor: percent ? AppColor.RED1 : AppColor.WHITE,
+            height: DeviceHeigth * 0.1,
+            // overflow: 'hidden',
           },
         ]}>
         <View
@@ -556,6 +548,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                 height: DeviceWidth * 0.1,
                 width: DeviceWidth * 0.1,
                 marginLeft: DeviceWidth * 0.12,
+                opacity: percent ? 0.5 : 1,
               }}
               resizeMode="contain"
             />
@@ -566,6 +559,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                 height: DeviceWidth * 0.15,
                 width: DeviceWidth * 0.15,
                 marginLeft: DeviceWidth * 0.12,
+                opacity: percent ? 0.5 : 1,
               }}
               resizeMode="contain"
             />
@@ -582,16 +576,44 @@ const WorkoutDays = ({navigation, route}: any) => {
               <Text
                 style={[
                   styles.category,
-                  {fontSize: 20},
+                  {
+                    fontSize: 20,
+                    color: percent ? AppColor.WHITE : AppColor.BLACK,
+                  },
                 ]}>{`Day ${index}`}</Text>
               {item?.total_rest == 0 ? (
-                <Text style={styles.small}>Rest</Text>
+                <Text
+                  style={[
+                    styles.small,
+                    {color: percent ? AppColor.WHITE : '#941000'},
+                  ]}>
+                  Rest
+                </Text>
               ) : (
-                <Text style={styles.small}>
+                <Text
+                  style={[
+                    styles.small,
+                    {color: percent ? AppColor.WHITE : '#941000'},
+                  ]}>
                   {item?.total_rest > 60
                     ? `${(item?.total_rest / 60).toFixed(0)} min`
-                    : `${item?.total_rest} sec`}{' '}
-                  | {item?.total_calories} Kcal
+                    : `${item?.total_rest} sec`}{'   '}
+                  {
+                    <View
+                      style={{alignItems: 'center', justifyContent: 'center',marginBottom:5}}>
+                      <Text
+                        style={{
+                          color: percent?AppColor.WHITE:'#505050',
+                          lineHeight: 25,
+                          fontWeight: 'bold',
+                          fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                          fontSize: 20,
+                        }}>
+                        .
+                      </Text>
+                    </View>
+                  }{'   '}
+                  {item?.total_calories} Kcal
                   {/* {moment(139).format('S')} min | {item?.total_calories} Kcal */}
                 </Text>
               )}
@@ -709,7 +731,7 @@ const WorkoutDays = ({navigation, route}: any) => {
         x={10}
         marginTop={-10}
       />
-      <Text style={[styles.category, {marginTop: 10,marginLeft: 10}]}>
+      <Text style={[styles.category, {marginTop: 10, marginLeft: 10}]}>
         {moment().format('dddd DD MMMM')}
       </Text>
       <View
@@ -719,13 +741,13 @@ const WorkoutDays = ({navigation, route}: any) => {
           alignItems: 'center',
           width: DeviceWidth,
           alignSelf: 'center',
-          marginRight: 20
+          marginRight: 20,
         }}>
         <GradientText
           text={'Week 1'}
           fontWeight={'500'}
           fontSize={15}
-          width={DeviceWidth*0.3}
+          width={DeviceWidth * 0.3}
           x={20}
           marginTop={-5}
         />
@@ -748,6 +770,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                     active={selected != 0 && index <= selected}
                     index={index + 1}
                     item={item}
+                    percent={index == 0}
                   />
                 );
               })}
@@ -770,17 +793,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   category: {
-    fontFamily: 'Poppins',
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
     fontSize: 26,
     fontWeight: '600',
     color: AppColor.LITELTEXTCOLOR,
     lineHeight: 30,
   },
   small: {
-    fontFamily: 'Poppins',
+    fontFamily: Fonts.MONTSERRAT_REGULAR,
     fontSize: 12,
     fontWeight: '500',
-    color: AppColor.BoldText,
     lineHeight: 30,
   },
   box: {
@@ -864,7 +886,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    fontFamily: 'Poppins',
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
     textAlign: 'center',
     color: AppColor.WHITE,
     fontWeight: '700',

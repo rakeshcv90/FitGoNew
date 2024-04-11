@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  PanResponder,
   Platform,
   SafeAreaView,
   StyleSheet,
@@ -8,20 +9,24 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
 import NewHeader from '../../Component/Headers/NewHeader';
 import Play from '../NewWorkouts/Exercise/Play';
 import {localImage} from '../../Component/Image';
-import {DeviceWidth, NewAppapi} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import moment from 'moment';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import GradientText from '../../Component/GradientText';
+import VersionNumber from 'react-native-version-number';
 import LinearGradient from 'react-native-linear-gradient';
 import GradientButton from '../../Component/GradientButton';
 import axios from 'axios';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+  GestureHandlerRootView,
+  PanGestureHandler,
+} from 'react-native-gesture-handler';
+import Timer from '../../Component/Timer';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -30,123 +35,70 @@ const WeekArray = Array(7)
       (item = moment()
         .add(index, 'days')
         .subtract(moment().isoWeekday() - 1, 'days')
-        .format('ddd')),
+        .format('dddd')),
   );
-const TABS = createMaterialTopTabNavigator();
 
-const WeekTab = ({state, descriptors, navigation}: any) => {
+const WeekTab = ({day, dayIndex, selectedDay, setSelectedDay}: any) => {
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => setSelectedDay(dayIndex)}
       style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginHorizontal: DeviceWidth * 0.01,
-        marginTop: DeviceWidth * 0.02,
-        height: DeviceWidth * 0.12,
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        backgroundColor: day == moment().format('dddd') ? '#FFDEDE' : 'white',
+        borderColor: day == moment().format('dddd') ? '#D5191A' : 'white',
+        borderRadius: day == moment().format('dddd') ? 25 : 0,
+        padding: 5,
+        borderWidth: day == moment().format('dddd') ? 1.5 : 0,
+        width: 45,
+        height: 45,
+        marginLeft: DeviceWidth * 0.025,
       }}>
-      {state.routes.map((route: any, index: number) => {
-        const {options} = descriptors[route.key];
-        const label =
-          options.tabBarLabel !== undefined
-            ? options.tabBarLabel
-            : options.title !== undefined
-            ? options.title
-            : route.name;
-
-        const isFocused = state.index === index;
-
-        const onPress = () => {
-          const event = navigation.emit({
-            type: 'tabPress',
-            target: route.key,
-          });
-          if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name);
-          }
-        };
-        return (
-          <TouchableOpacity
-            onPress={onPress}
+      <Text
+        style={[
+          styles.labelStyle,
+          {
+            color: selectedDay == dayIndex ? AppColor.RED1 : AppColor.BoldText,
+            fontWeight: '600',
+            textTransform: 'capitalize'
+          },
+        ]}>
+        {day.substring(0,2)}
+      </Text>
+      <View>
+        {selectedDay == dayIndex ? (
+          <>
+            <View
+              style={{
+                width: DeviceWidth * 0.05,
+                height: 1,
+              }}
+            />
+            <LinearGradient
+              colors={['#D5191A', '#941000']}
+              start={{x: 0, y: 1}}
+              end={{x: 1, y: 0}}
+              style={{
+                width: DeviceWidth * 0.03,
+                height: 2,
+                backgroundColor: 'red',
+                alignSelf: 'center',
+              }}
+            />
+          </>
+        ) : (
+          <View
             style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor:
-                label == moment().format('ddd') ? '#FFDEDE' : 'white',
-              borderColor:
-                label == moment().format('ddd') ? '#D5191A' : 'white',
-              borderRadius: label == moment().format('ddd') ? 25 : 0,
-              paddingHorizontal: 5,
-              borderWidth: label == moment().format('ddd') ? 1.5 : 0,
-              width: 45,
-              height: 45,
-            }}>
-            {/* {isFocused ? (
-              <View
-                style={{
-                  flexDirection: 'row',
-                }}>
-                {label?.split('')?.map((item: string, index: number) => (
-                  <Text
-                    style={[
-                      styles.labelStyle,
-                      {
-                        color: index < 1 ? '#D5191A' : '#941000',
-                        // color: 'transparent',
-                        fontWeight: '600',
-                      },
-                    ]}>
-                    {item}
-                  </Text>
-                ))}
-              </View>
-            ) : ( */}
-            <Text
-              style={[
-                styles.labelStyle,
-                {
-                  color: isFocused ? AppColor.RED1 : AppColor.BoldText,
-                  fontWeight: '600',
-                },
-              ]}>
-              {label}
-            </Text>
-            {/* )} */}
-            <View>
-              {isFocused ? (
-                <>
-                  <View
-                    style={{
-                      width: DeviceWidth * 0.05,
-                      height: 1,
-                    }}
-                  />
-                  <LinearGradient
-                    colors={['#D5191A', '#941000']}
-                    start={{x: 0, y: 1}}
-                    end={{x: 1, y: 0}}
-                    style={{
-                      width: DeviceWidth * 0.03,
-                      height: 2,
-                      backgroundColor: 'red',
-                      alignSelf: 'center',
-                    }}
-                  />
-                </>
-              ) : (
-                <View
-                  style={{
-                    width: 3,
-                    height: 3,
-                    borderRadius: 5,
-                    backgroundColor: AppColor.BoldText,
-                  }}
-                />
-              )}
-            </View>
-          </TouchableOpacity>
-        );
-      })}
-    </View>
+              width: 3,
+              height: 3,
+              borderRadius: 5,
+              backgroundColor: AppColor.BoldText,
+            }}
+          />
+        )}
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -172,7 +124,7 @@ const Box = ({item, index}: any) => {
             />
           )} */}
         <Image
-          source={{uri: item?.exercise_image}}
+          source={{uri: item?.exercise_image_link}}
           onLoad={() => setIsLoading(false)}
           style={{
             height: 50,
@@ -234,24 +186,27 @@ const Box = ({item, index}: any) => {
 };
 const MyPlans = ({navigation}: any) => {
   const [exerciseData, setExerciseData] = useState([]);
+  const [selectedDay, setSelectedDay] = useState(0);
   useEffect(() => {
-    allWorkoutApi();
+    WeekArray.map((item) => 
+    allWorkoutApi(item))
   }, []);
 
-  const allWorkoutApi = async () => {
+  const allWorkoutApi = async (day: string) => {
     try {
       const res = await axios({
-        url: NewAppapi.Get_DAYS + '?day=' + 1 + '&workout_id=' + 4,
+        url:
+          NewAppapi.GET_PLANS_EXERCISE + '?version=' + VersionNumber.appVersion+'&day='+day,
       });
       if (res.data) {
-        setExerciseData(res.data);
+        setExerciseData(res.data?.exercise_data);
       }
     } catch (error) {
       console.error(error, 'DaysAPIERror');
       setExerciseData([]);
     }
   };
-  const WeekDay = () => {
+  const WeekDay = ({day, dayIndex, exerciseData}: any) => {
     return (
       <View style={{backgroundColor: AppColor.WHITE, flex: 1}}>
         <FlatList
@@ -261,6 +216,32 @@ const MyPlans = ({navigation}: any) => {
         />
       </View>
     );
+  };
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (event, gestureState) => {
+        // You can add more sophisticated gesture detection here
+      },
+      onPanResponderRelease: (event, gestureState) => {
+        // Determine swipe direction
+        const {dx} = gestureState;
+        if (dx > 50) {
+          // Swiped right
+          setSelectedDay(prevDay => (prevDay > 0 ? prevDay - 1 : 0));
+        } else if (dx < -50) {
+          // Swiped left
+          setSelectedDay(prevDay =>
+            prevDay < WeekArray.length - 1 ? prevDay + 1 : WeekArray.length - 1,
+          );
+        }
+      },
+    }),
+  ).current;
+
+  const handleStart = () => {
+    exerciseData.map;
   };
   return (
     <SafeAreaView
@@ -274,38 +255,74 @@ const MyPlans = ({navigation}: any) => {
         backButton={false}
       />
       <View style={{flex: 1, marginTop: -DeviceWidth * 0.1}}>
-        <Text style={[styles.semiBold, {marginLeft: 10}]}>
-          Get Fit{' '}
-          {
-            <View style={{alignItems: 'center', justifyContent: 'center'}}>
-              <Text
-                style={[
-                  styles.semiBold,
-                  {color: AppColor.NewGray, lineHeight: 25, fontWeight: 'bold'},
-                ]}>
-                .
-              </Text>
-            </View>
-          }{' '}
-          Week 1
-        </Text>
-        <TABS.Navigator tabBar={props => <WeekTab {...props} />}>
-          {WeekArray.map((item: string, index: number) => (
-            <TABS.Screen name={item} component={WeekDay} />
-          ))}
-        </TABS.Navigator>
-        <GradientButton
-          text="Start Workout"
-          alignSelf
-          flex={0.2}
-          Image={localImage.StartWorkoutButton}
-          ImageStyle={{
-            width: DeviceWidth * 0.05,
-            height: DeviceWidth * 0.05,
-            marginRight: DeviceWidth * 0.01,
-          }}
-          //   h={60}
-        />
+        <View
+          style={{
+            flexDirection: 'row',
+            width: DeviceWidth,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={[
+              styles.semiBold,
+              {marginLeft: 10, width: DeviceWidth * 0.7},
+            ]}>
+            Get Fit{' '}
+            {
+              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                <Text
+                  style={[
+                    styles.semiBold,
+                    {
+                      color: AppColor.NewGray,
+                      lineHeight: 25,
+                      fontWeight: 'bold',
+                    },
+                  ]}>
+                  .
+                </Text>
+              </View>
+            }{' '}
+            Week 1
+          </Text>
+          <GradientButton
+            text="Start"
+            onPress={handleStart}
+            w={DeviceWidth * 0.2}
+            Image={localImage.StartWorkoutButton}
+            ImageStyle={{
+              width: DeviceWidth * 0.03,
+              height: DeviceWidth * 0.03,
+              marginRight: DeviceWidth * 0.01,
+            }}
+            h={30}
+            textStyle={{
+              fontSize: 12,
+              fontFamily: Fonts.MONTSERRAT_REGULAR,
+              lineHeight: 20,
+              color: AppColor.WHITE,
+              fontWeight: '700',
+              zIndex: 1,
+            }}
+          />
+        </View>
+        <View {...panResponder.panHandlers} style={{flex: 1}}>
+          <View style={{flexDirection: 'row', width: DeviceWidth}}>
+            {WeekArray.map((item: any, index: number) => (
+              <WeekTab
+                day={item}
+                dayIndex={index}
+                selectedDay={selectedDay}
+                setSelectedDay={setSelectedDay}
+              />
+            ))}
+          </View>
+          <WeekDay
+            day={WeekArray[selectedDay]}
+            dayIndex={selectedDay}
+            exerciseData={exerciseData}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
