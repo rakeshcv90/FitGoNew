@@ -27,6 +27,13 @@ import {
   PanGestureHandler,
 } from 'react-native-gesture-handler';
 import Timer from '../../Component/Timer';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  setVideoLocation,
+  setWeeklyPlansData,
+} from '../../Component/ThemeRedux/Actions';
+import RNFetchBlob from 'rn-fetch-blob';
+import {showMessage} from 'react-native-flash-message';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -37,10 +44,11 @@ const WeekArray = Array(7)
         .subtract(moment().isoWeekday() - 1, 'days')
         .format('dddd')),
   );
-
+const All_Weeks_Data = {};
 const WeekTab = ({day, dayIndex, selectedDay, setSelectedDay}: any) => {
   return (
     <TouchableOpacity
+      key={dayIndex}
       onPress={() => setSelectedDay(dayIndex)}
       style={{
         alignItems: 'center',
@@ -51,7 +59,7 @@ const WeekTab = ({day, dayIndex, selectedDay, setSelectedDay}: any) => {
         borderRadius: day == moment().format('dddd') ? 25 : 0,
         padding: 5,
         borderWidth: day == moment().format('dddd') ? 1.5 : 0,
-        width: 45,
+        width: 47,
         height: 45,
         marginLeft: DeviceWidth * 0.025,
       }}>
@@ -61,13 +69,19 @@ const WeekTab = ({day, dayIndex, selectedDay, setSelectedDay}: any) => {
           {
             color: selectedDay == dayIndex ? AppColor.RED1 : AppColor.BoldText,
             fontWeight: '600',
-            textTransform: 'capitalize'
+            textTransform: 'capitalize',
           },
         ]}>
-        {day.substring(0,2)}
+        {day.substring(0, 3)}
       </Text>
       <View>
-        {selectedDay == dayIndex ? (
+        {dayIndex == 0 ? (
+          <Image
+            source={localImage.RedTick}
+            style={{width: 10, height: 10, marginBottom: -10}}
+            resizeMode="contain"
+          />
+        ) : selectedDay == dayIndex ? (
           <>
             <View
               style={{
@@ -105,107 +119,124 @@ const WeekTab = ({day, dayIndex, selectedDay, setSelectedDay}: any) => {
 const Box = ({item, index}: any) => {
   const [isLoading, setIsLoading] = useState(true);
   const avatarRef = React.createRef();
-
+index == 0&& console.log("ITEMMEME",item)
   return (
-    <TouchableOpacity style={styles.box} activeOpacity={0.9} onPress={() => {}}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        {/* <View
+    <View key={index} style={styles.box}>
+      {/* <View
           style={{
             height: 60,
             width: 60,
             // backgroundColor: AppColor.WHITE,
             // borderRadius: 10,
           }}> */}
-        {/* {isLoading && (
+      {/* {isLoading && (
             <ShimmerPlaceholder
               style={{height: 75, width: 75, alignSelf: 'center'}}
               autoRun
               ref={avatarRef}
             />
           )} */}
-        <Image
-          source={{uri: item?.exercise_image_link}}
-          onLoad={() => setIsLoading(false)}
-          style={{
-            height: 50,
-            width: 50,
-            alignSelf: 'center',
-          }}
-          resizeMode="contain"
-        />
-        <View
-          style={{
-            alignItems: 'center',
-            marginHorizontal: 20,
-          }}>
-          <View>
+      <Image
+        source={{uri: item?.exercise_image_link}}
+        onLoad={() => setIsLoading(false)}
+        style={{
+          height: 50,
+          width: 50,
+          alignSelf: 'center',
+        }}
+        resizeMode="contain"
+      />
+      <View
+        style={{
+          alignItems: 'center',
+          marginHorizontal: 20,
+        }}>
+        <View>
+          <Text
+            style={{
+              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+              fontSize: 14,
+              fontWeight: '500',
+              color: AppColor.LITELTEXTCOLOR,
+              lineHeight: 20,
+            }}>
+            {item?.exercise_title}
+          </Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
               style={{
-                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                fontSize: 14,
-                fontWeight: '500',
-                color: AppColor.LITELTEXTCOLOR,
-                lineHeight: 20,
+                fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                fontSize: 12,
+                fontWeight: '600',
+                color: AppColor.BoldText,
+                lineHeight: 30,
               }}>
-              {item?.exercise_title}
-            </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text
-                style={{
-                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                  fontSize: 12,
-                  fontWeight: '600',
-                  color: AppColor.BoldText,
-                  lineHeight: 30,
-                }}>
-                Set:
-                <Text style={styles.small}>
-                  {' '}
-                  {item?.exercise_rest}
-                  {'   '}
-                </Text>
-                Reps:
-                <Text style={styles.small}>
-                  {' '}
-                  {item?.exercise_rest}
-                  {'   '}
-                </Text>
-                Time:
-                <Text style={styles.small}>
-                  {' '}
-                  {item?.exercise_rest}
-                  {'   '}
-                </Text>
+              Set:
+              <Text style={styles.small}>
+                {' '}
+                {item?.exercise_sets}
+                {'   '}
               </Text>
-            </View>
+              Reps:
+              <Text style={styles.small}>
+                {' '}
+                {item?.exercise_reps}
+                {'   '}
+              </Text>
+              Time:
+              <Text style={styles.small}>
+                {' '}
+                {item?.exercise_rest}
+                {'   '}
+              </Text>
+            </Text>
           </View>
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 const MyPlans = ({navigation}: any) => {
-  const [exerciseData, setExerciseData] = useState([]);
-  const [selectedDay, setSelectedDay] = useState(0);
+  const [downloaded, setDownloade] = useState(0);
+  const [selectedDay, setSelectedDay] = useState((moment().day() + 6) % 7);
+  const getUserDataDetails = useSelector(
+    (state: any) => state.getUserDataDetails,
+  );
+  const getWeeklyPlansData = useSelector(
+    (state: any) => state.getWeeklyPlansData,
+  );
+  const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
+  const dispatch = useDispatch();
   useEffect(() => {
-    WeekArray.map((item) => 
-    allWorkoutApi(item))
+    Promise.all(WeekArray.map(item => allWorkoutApi(item))).finally(() =>
+      dispatch(setWeeklyPlansData(All_Weeks_Data)),
+    );
   }, []);
 
   const allWorkoutApi = async (day: string) => {
     try {
       const res = await axios({
         url:
-          NewAppapi.GET_PLANS_EXERCISE + '?version=' + VersionNumber.appVersion+'&day='+day,
+          NewAppapi.GET_PLANS_EXERCISE +
+          '?version=' +
+          VersionNumber.appVersion +
+          '&day=' +
+          day +
+          '&user_id=' +
+          getUserDataDetails.id,
       });
-      if (res.data) {
-        setExerciseData(res.data?.exercise_data);
+      if (res.data?.msg != 'No data found.') {
+        All_Weeks_Data[day] = res.data;
+        // setExerciseData();
+        // console.log('All_Weeks_Data', All_Weeks_Data);
+      } else {
+        All_Weeks_Data[day] = [];
       }
     } catch (error) {
       console.error(error, 'DaysAPIERror');
-      setExerciseData([]);
     }
   };
+
   const WeekDay = ({day, dayIndex, exerciseData}: any) => {
     return (
       <View style={{backgroundColor: AppColor.WHITE, flex: 1}}>
@@ -240,9 +271,138 @@ const MyPlans = ({navigation}: any) => {
     }),
   ).current;
 
-  const handleStart = () => {
-    exerciseData.map;
+  const sanitizeFileName = (fileName: string) => {
+    fileName = fileName.replace(/\s+/g, '_');
+    return fileName;
   };
+  let StoringData: Object = {};
+  const downloadVideos = async (data: any, index: number, len: number) => {
+    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
+      data?.exercise_title,
+    )}.mp4`;
+    try {
+      const videoExists = await RNFetchBlob.fs.exists(filePath);
+      if (videoExists) {
+        StoringData[data?.exercise_title] = filePath;
+        setDownloade(pre => pre + 1);
+      } else {
+        await RNFetchBlob.config({
+          fileCache: true,
+          // IOSBackgroundTask: true, // Add this for iOS background downloads
+          path: filePath,
+          appendExt: '.mp4',
+        })
+          .fetch('GET', data?.exercise_video, {
+            'Content-Type': 'application/mp4',
+            // key: 'Config.REACT_APP_API_KEY',
+          })
+          .then(res => {
+            StoringData[data?.exercise_title] = res.path();
+            setDownloade(pre => pre + 1);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    } catch (error) {
+      console.log('ERRRR', error);
+    }
+    dispatch(setVideoLocation(StoringData));
+  };
+  const handleStart = () => {
+    let datas = [];
+    getWeeklyPlansData[WeekArray[selectedDay]]?.map(
+      (item: any, index: number) => {
+        datas.push({
+          user_id: getUserDataDetails?.id,
+          workout_id: `-${selectedDay + 1}`,
+          user_day: WeekArray[selectedDay],
+          user_exercise_id: item?.exercise_id,
+        });
+        downloadVideos(
+          item,
+          index,
+          getWeeklyPlansData[WeekArray[selectedDay]]?.length,
+        ).finally(async () => {
+          try {
+            const res = await axios({
+              url: NewAppapi.CURRENT_DAY_EXERCISE,
+              method: 'Post',
+              data: {user_details: datas},
+            });
+            if (
+              res.data?.msg ==
+              'Exercise Status for All Users Inserted Successfully'
+            ) {
+              console.log('DATA ADDDDDDEDEDEDED', res.data);
+              navigation.navigate('Exercise', {
+                allExercise: getWeeklyPlansData[WeekArray[selectedDay]],
+                currentExercise:
+                  // trainingCount != -1
+                  //   ? exerciseData[trainingCount]
+                  item,
+                data: [],
+                day: selectedDay,
+                exerciseNumber: 0,
+                trackerData: res?.data?.inserted_data,
+              });
+            } else {
+              setDownloade(0);
+              console.log('DATA ELSESSS', res.data, datas);
+              const payload = new FormData();
+              payload.append('user_id', getUserDataDetails?.id);
+              payload.append('workout_id', `-${selectedDay + 1}`);
+              payload.append('user_day', WeekArray[selectedDay]);
+              payload.append('version', VersionNumber.appVersion);
+
+              try {
+                const res = await axios({
+                  url: NewAppapi.TRACK_CURRENT_DAY_EXERCISE,
+                  method: 'Post',
+                  data: payload,
+                  headers: {
+                    'Content-Type': 'multipart/form-data',
+                  },
+                });
+
+                if (
+                  res?.data?.msg ==
+                  'Please update the app to the latest version.'
+                ) {
+                  showMessage({
+                    message: res?.data?.msg,
+                    type: 'danger',
+                    animationDuration: 500,
+                    floating: true,
+                    icon: {icon: 'auto', position: 'left'},
+                  });
+                } else if (res.data?.user_details) {
+                  navigation.navigate('Exercise', {
+                    allExercise: getWeeklyPlansData[WeekArray[selectedDay]],
+                    currentExercise:
+                      // trainingCount != -1
+                      //   ? exerciseData[trainingCount]
+                      item,
+                    data: [],
+                    day: selectedDay,
+                    exerciseNumber: 0,
+                    trackerData: res?.data?.user_details,
+                  });
+                } else {
+                }
+              } catch (error) {
+                console.error(error, 'PostDaysAPIERror');
+              }
+              return;
+            }
+          } catch (error) {
+            console.error(error, 'PostDaysAPIERror');
+          }
+        });
+      },
+    );
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -320,7 +480,7 @@ const MyPlans = ({navigation}: any) => {
           <WeekDay
             day={WeekArray[selectedDay]}
             dayIndex={selectedDay}
-            exerciseData={exerciseData}
+            exerciseData={getWeeklyPlansData[WeekArray[selectedDay]]}
           />
         </View>
       </View>
@@ -359,7 +519,7 @@ const styles = StyleSheet.create({
     lineHeight: 30,
   },
   box: {
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     alignSelf: 'center',
     alignItems: 'center',
     flexDirection: 'row',

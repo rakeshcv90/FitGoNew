@@ -77,4 +77,5 @@ export const NewAppapi = {
   POST_WORKOUT_VIEWS: NewApi + 'workout_view_count',
   // GET_PLANS_EXERCISE: NewApi + 'get_exercise',
   GET_PLANS_EXERCISE: NewApi + 'get_weekday_exercise',
+  DELETE_TRACK_EXERCISE: NewApi + 'delete_exercise',
 };

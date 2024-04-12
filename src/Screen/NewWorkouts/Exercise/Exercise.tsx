@@ -29,7 +29,17 @@ import Tts from 'react-native-tts';
 import {string} from 'yup';
 import {showMessage} from 'react-native-flash-message';
 import VersionNumber from 'react-native-version-number';
+import moment from 'moment';
 
+const WeekArray = Array(7)
+  .fill(0)
+  .map(
+    (item, index) =>
+      (item = moment()
+        .add(index, 'days')
+        .subtract(moment().isoWeekday() - 1, 'days')
+        .format('dddd')),
+  );
 const Exercise = ({navigation, route}: any) => {
   const {allExercise, currentExercise, data, day, exerciseNumber, trackerData} =
     route.params;
@@ -151,7 +161,7 @@ const Exercise = ({navigation, route}: any) => {
               setPause(false);
               postCurrentExerciseAPI(number);
               if (skipCount == 0) {
-                navigation.navigate('SaveDayExercise', {data, day});
+                navigation.navigate('SaveDayExercise', {data, day, allExercise});
                 clearTimeout(restTimerRef.current);
                 clearTimeout(playTimerRef.current);
               } else {
@@ -251,12 +261,38 @@ const Exercise = ({navigation, route}: any) => {
       </TouchableOpacity>
     );
   };
+  const deleteTrackExercise = async () => {
+    const payload = new FormData();
+    payload.append('day', WeekArray[day]);
+    payload.append('workout_id', `-${day + 1}`);
+    payload.append('user_id', getUserDataDetails?.id);
+    payload.append('version', VersionNumber.appVersion);
 
+    try {
+      const res = await axios({
+        url:
+          NewAppapi.DELETE_TRACK_EXERCISE +
+          '?workout_id=' +
+          `-${day + 1}` +
+          '&user_id=' +
+          getUserDataDetails?.id +
+          '&current_date=' +
+          moment().format('YYYY-MM-DD'),
+      });
+      console.log('DATA DELETED', res.data);
+    } catch (error) {
+      console.log('DELE TRACK ERRR', error);
+    }
+    navigation.goBack();
+  };
   const postCurrentExerciseAPI = async (index: number) => {
     const payload = new FormData();
     payload.append('id', trackerData[index]?.id);
-    payload.append('day', day);
-    payload.append('workout_id', data?.workout_id);
+    payload.append('day', WeekArray[day]);
+    payload.append(
+      'workout_id',
+      data?.length > 0 ? data?.workout_id : `-${day + 1}`,
+    );
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
 
@@ -376,7 +412,9 @@ const Exercise = ({navigation, route}: any) => {
             />
             <TouchableOpacity
               style={{alignSelf: 'center', marginTop: 20}}
-              onPress={() => navigation.goBack()}>
+              onPress={() => {
+                data?.length > 0 ? navigation.goBack() : deleteTrackExercise();
+              }}>
               <Text
                 style={{
                   fontSize: 20,

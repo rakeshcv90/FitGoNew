@@ -115,4 +115,7 @@ export const localImage = {
   StartWorkoutButton: require('../Icon/Images/NewImage/StartWorkoutButton.png'),
   MyPlansWhite: require('../Icon/Images/NewImage/MyPlansWhite.png'),
   MyPlans: require('../Icon/Images/NewImage/MyPlans.png'),
+  RedTick: require('../Icon/Images/NewImage/RedTick.png'),
+  Location: require('../Icon/Images/NewImage/Location.png'),
+  ClockGrey: require('../Icon/Images/NewImage/ClockGrey.png'),
 };
