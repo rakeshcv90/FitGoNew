@@ -45,7 +45,13 @@ const WeekArray = Array(7)
         .format('dddd')),
   );
 const All_Weeks_Data = {};
-const WeekTab = ({day, dayIndex, selectedDay, setSelectedDay}: any) => {
+const WeekTab = ({
+  day,
+  dayIndex,
+  selectedDay,
+  setSelectedDay,
+  WeekStatus,
+}: any) => {
   return (
     <TouchableOpacity
       key={dayIndex}
@@ -61,7 +67,8 @@ const WeekTab = ({day, dayIndex, selectedDay, setSelectedDay}: any) => {
         borderWidth: day == moment().format('dddd') ? 1.5 : 0,
         width: 47,
         height: 45,
-        marginLeft: DeviceWidth * 0.025,
+        marginHorizontal:
+          DeviceHeigth >= 1024 ? DeviceWidth * 0.042 : DeviceWidth * 0.025,
       }}>
       <Text
         style={[
@@ -75,7 +82,7 @@ const WeekTab = ({day, dayIndex, selectedDay, setSelectedDay}: any) => {
         {day.substring(0, 3)}
       </Text>
       <View>
-        {dayIndex == 0 ? (
+        {WeekStatus?.includes(WeekArray[dayIndex]) ? (
           <Image
             source={localImage.RedTick}
             style={{width: 10, height: 10, marginBottom: -10}}
@@ -119,7 +126,6 @@ const WeekTab = ({day, dayIndex, selectedDay, setSelectedDay}: any) => {
 const Box = ({item, index}: any) => {
   const [isLoading, setIsLoading] = useState(true);
   const avatarRef = React.createRef();
-index == 0&& console.log("ITEMMEME",item)
   return (
     <View key={index} style={styles.box}>
       {/* <View
@@ -199,6 +205,7 @@ index == 0&& console.log("ITEMMEME",item)
 const MyPlans = ({navigation}: any) => {
   const [downloaded, setDownloade] = useState(0);
   const [selectedDay, setSelectedDay] = useState((moment().day() + 6) % 7);
+  const [WeekStatus, setWeekStatus] = useState([]);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -211,6 +218,7 @@ const MyPlans = ({navigation}: any) => {
     Promise.all(WeekArray.map(item => allWorkoutApi(item))).finally(() =>
       dispatch(setWeeklyPlansData(All_Weeks_Data)),
     );
+    WeeklyStatusAPI();
   }, []);
 
   const allWorkoutApi = async (day: string) => {
@@ -225,7 +233,7 @@ const MyPlans = ({navigation}: any) => {
           '&user_id=' +
           getUserDataDetails.id,
       });
-      if (res.data?.msg != 'No data found.') {
+      if (res.data?.msg != 'User not exist.') {
         All_Weeks_Data[day] = res.data;
         // setExerciseData();
         // console.log('All_Weeks_Data', All_Weeks_Data);
@@ -236,6 +244,24 @@ const MyPlans = ({navigation}: any) => {
       console.error(error, 'DaysAPIERror');
     }
   };
+  const WeeklyStatusAPI = async () => {
+    try {
+      const res = await axios({
+        url: NewAppapi.WEEKLY_STATUS + '?user_id=' + getUserDataDetails.id,
+      });
+      if (res.data?.msg != 'No data found.') {
+        const days = new Set(); // Use a Set to store unique days
+        res.data?.forEach((item: any) => {
+          days.add(item.user_day);
+        });
+        setWeekStatus([...days]);
+      } else {
+        setWeekStatus([]);
+      }
+    } catch (error) {
+      console.error(error, 'WEEKLYSTATUS ERRR');
+    }
+  };
 
   const WeekDay = ({day, dayIndex, exerciseData}: any) => {
     return (
@@ -244,6 +270,7 @@ const MyPlans = ({navigation}: any) => {
           data={exerciseData}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}: any) => <Box item={item} index={index} />}
+          showsVerticalScrollIndicator={false}
         />
       </View>
     );
@@ -348,7 +375,6 @@ const MyPlans = ({navigation}: any) => {
               });
             } else {
               setDownloade(0);
-              console.log('DATA ELSESSS', res.data, datas);
               const payload = new FormData();
               payload.append('user_id', getUserDataDetails?.id);
               payload.append('workout_id', `-${selectedDay + 1}`);
@@ -474,6 +500,7 @@ const MyPlans = ({navigation}: any) => {
                 dayIndex={index}
                 selectedDay={selectedDay}
                 setSelectedDay={setSelectedDay}
+                WeekStatus={WeekStatus}
               />
             ))}
           </View>
