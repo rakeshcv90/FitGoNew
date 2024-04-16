@@ -295,7 +295,6 @@ const Exercise = ({navigation, route}: any) => {
     );
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
-
     try {
       const res = await axios({
         url: NewAppapi.POST_EXERCISE,
@@ -315,6 +314,7 @@ const Exercise = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data) {
+        console.log(trackerData[index])
         setCurrentData(allExercise[index]);
         setRestStart(true);
         setPlayW(0);
@@ -738,7 +738,7 @@ const Exercise = ({navigation, route}: any) => {
 
           <Play
             play={!pause}
-            fill={`${100 - playW}%`}
+            fill={100 - playW}
             h={80}
             mB={DeviceHeigth * 0.02}
             playy={() => {

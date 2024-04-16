@@ -17,6 +17,17 @@ import AnimatedLottieView from 'lottie-react-native';
 import {localImage} from '../../../Component/Image';
 import GradientButton from '../../../Component/GradientButton';
 import {StatusBar} from 'react-native';
+import moment from 'moment';
+
+const WeekArray = Array(7)
+  .fill(0)
+  .map(
+    (item, index) =>
+      (item = moment()
+        .add(index, 'days')
+        .subtract(moment().isoWeekday() - 1, 'days')
+        .format('dddd')),
+  );
 
 const DayRewards = ({navigation, route}: any) => {
   const {data, day} = route?.params;
@@ -32,7 +43,7 @@ const DayRewards = ({navigation, route}: any) => {
       const payload = new FormData();
       payload.append('id', getUserDataDetails?.id);
       payload.append('workout_id', data?.workout_id);
-   
+
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EXERCISE_DETAILS,
         method: 'post',
@@ -41,12 +52,11 @@ const DayRewards = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-   
+
       if (res.data?.msg != 'No data found') {
-        
         analyzeExerciseData(res.data?.user_details);
       } else {
-       
+        WeeklyStatusAPI();
       }
     } catch (error) {
       console.error(error, 'DAPIERror');
@@ -63,6 +73,26 @@ const DayRewards = ({navigation, route}: any) => {
     });
     setDays(Array.from(daysCompletedAll));
   }
+
+  const WeeklyStatusAPI = async () => {
+    try {
+      const res = await axios({
+        url: NewAppapi.WEEKLY_STATUS + '?user_id=' + getUserDataDetails.id,
+      });
+      if (res.data?.msg != 'No data found.') {
+        const days = new Set(); // Use a Set to store unique days
+        res.data?.forEach((item: any) => {
+          days.add(item.user_day);
+        });
+        console.log("DAYS", days)
+        setDays([...days]);
+      } else {
+        setDays([]);
+      }
+    } catch (error) {
+      console.error(error, 'WEEKLYSTATUS ERRR');
+    }
+  };
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -130,7 +160,7 @@ const DayRewards = ({navigation, route}: any) => {
           {[1, 2, 3, 4, 5, 6, 7].map((item: any, index: number) => {
             return (
               <View style={{alignItems: 'center'}}>
-                {days.includes(item) ? (
+                {days.includes(item) || days.includes(WeekArray[item]) ? (
                   <Image
                     source={localImage.RedCircle}
                     style={{height: 40, width: 40}}
@@ -153,7 +183,7 @@ const DayRewards = ({navigation, route}: any) => {
                     color: '#505050',
                     fontWeight: '500',
                   }}>
-                  {item}
+                  {item || WeekArray[item].substring(0, 2)}
                 </Text>
               </View>
             );

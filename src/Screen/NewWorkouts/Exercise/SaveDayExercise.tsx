@@ -21,7 +21,11 @@ const SaveDayExercise = ({navigation, route}: any) => {
       }
     }
   } else {
-    
+    allExercise?.map((item: any) => {
+      action = allExercise?.length;
+      fire = item?.exercise_calories;
+      clock = item?.exercise_rest?.split(' ')[0];
+    });
   }
 
   const TESTAPI = async () => {

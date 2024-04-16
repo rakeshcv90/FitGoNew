@@ -3,13 +3,15 @@ import {
   Image,
   PanResponder,
   Platform,
+  RefreshControl,
   SafeAreaView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
 import NewHeader from '../../Component/Headers/NewHeader';
 import Play from '../NewWorkouts/Exercise/Play';
@@ -34,6 +36,7 @@ import {
 } from '../../Component/ThemeRedux/Actions';
 import RNFetchBlob from 'rn-fetch-blob';
 import {showMessage} from 'react-native-flash-message';
+import {useFocusEffect} from '@react-navigation/native';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -67,8 +70,6 @@ const WeekTab = ({
         borderWidth: day == moment().format('dddd') ? 1.5 : 0,
         width: 47,
         height: 45,
-        marginHorizontal:
-          DeviceHeigth >= 1024 ? DeviceWidth * 0.042 : DeviceWidth * 0.025,
       }}>
       <Text
         style={[
@@ -85,7 +86,7 @@ const WeekTab = ({
         {WeekStatus?.includes(WeekArray[dayIndex]) ? (
           <Image
             source={localImage.RedTick}
-            style={{width: 10, height: 10, marginBottom: -10}}
+            style={{width: 10, height: 10, marginBottom: -8}}
             resizeMode="contain"
           />
         ) : selectedDay == dayIndex ? (
@@ -183,12 +184,44 @@ const Box = ({item, index}: any) => {
                 {item?.exercise_sets}
                 {'   '}
               </Text>
+              {
+                <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                  <Text
+                    style={[
+                      styles.semiBold,
+                      {
+                        color: '#505050',
+                        lineHeight: 25,
+                        fontWeight: 'bold',
+                      },
+                    ]}>
+                    .
+                  </Text>
+                </View>
+              }
+              {'  '}
               Reps:
               <Text style={styles.small}>
                 {' '}
                 {item?.exercise_reps}
                 {'   '}
               </Text>
+              {
+                <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                  <Text
+                    style={[
+                      styles.semiBold,
+                      {
+                        color: '#505050',
+                        lineHeight: 25,
+                        fontWeight: 'bold',
+                      },
+                    ]}>
+                    .
+                  </Text>
+                </View>
+              }
+              {'  '}
               Time:
               <Text style={styles.small}>
                 {' '}
@@ -203,7 +236,8 @@ const Box = ({item, index}: any) => {
   );
 };
 const MyPlans = ({navigation}: any) => {
-  const [downloaded, setDownloade] = useState(0);
+  const [downloaded, setDownloade] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const [selectedDay, setSelectedDay] = useState((moment().day() + 6) % 7);
   const [WeekStatus, setWeekStatus] = useState([]);
   const getUserDataDetails = useSelector(
@@ -218,9 +252,12 @@ const MyPlans = ({navigation}: any) => {
     Promise.all(WeekArray.map(item => allWorkoutApi(item))).finally(() =>
       dispatch(setWeeklyPlansData(All_Weeks_Data)),
     );
-    WeeklyStatusAPI();
   }, []);
-
+  useFocusEffect(
+    useCallback(() => {
+      WeeklyStatusAPI();
+    }, []),
+  );
   const allWorkoutApi = async (day: string) => {
     try {
       const res = await axios({
@@ -245,6 +282,7 @@ const MyPlans = ({navigation}: any) => {
     }
   };
   const WeeklyStatusAPI = async () => {
+    setRefresh(true);
     try {
       const res = await axios({
         url: NewAppapi.WEEKLY_STATUS + '?user_id=' + getUserDataDetails.id,
@@ -258,45 +296,12 @@ const MyPlans = ({navigation}: any) => {
       } else {
         setWeekStatus([]);
       }
+      setRefresh(false);
     } catch (error) {
       console.error(error, 'WEEKLYSTATUS ERRR');
+      setRefresh(false);
     }
   };
-
-  const WeekDay = ({day, dayIndex, exerciseData}: any) => {
-    return (
-      <View style={{backgroundColor: AppColor.WHITE, flex: 1}}>
-        <FlatList
-          data={exerciseData}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item, index}: any) => <Box item={item} index={index} />}
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
-    );
-  };
-
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (event, gestureState) => {
-        // You can add more sophisticated gesture detection here
-      },
-      onPanResponderRelease: (event, gestureState) => {
-        // Determine swipe direction
-        const {dx} = gestureState;
-        if (dx > 50) {
-          // Swiped right
-          setSelectedDay(prevDay => (prevDay > 0 ? prevDay - 1 : 0));
-        } else if (dx < -50) {
-          // Swiped left
-          setSelectedDay(prevDay =>
-            prevDay < WeekArray.length - 1 ? prevDay + 1 : WeekArray.length - 1,
-          );
-        }
-      },
-    }),
-  ).current;
 
   const sanitizeFileName = (fileName: string) => {
     fileName = fileName.replace(/\s+/g, '_');
@@ -311,7 +316,7 @@ const MyPlans = ({navigation}: any) => {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
         StoringData[data?.exercise_title] = filePath;
-        setDownloade(pre => pre + 1);
+        setDownloade(true);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -325,7 +330,7 @@ const MyPlans = ({navigation}: any) => {
           })
           .then(res => {
             StoringData[data?.exercise_title] = res.path();
-            setDownloade(pre => pre + 1);
+            setDownloade(true);
           })
           .catch(err => {
             console.log(err);
@@ -374,7 +379,7 @@ const MyPlans = ({navigation}: any) => {
                 trackerData: res?.data?.inserted_data,
               });
             } else {
-              setDownloade(0);
+              setDownloade(false);
               const payload = new FormData();
               payload.append('user_id', getUserDataDetails?.id);
               payload.append('workout_id', `-${selectedDay + 1}`);
@@ -429,24 +434,56 @@ const MyPlans = ({navigation}: any) => {
     );
   };
 
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (event, gestureState) => {
+        // You can add more sophisticated gesture detection here
+      },
+      onPanResponderRelease: (event, gestureState) => {
+        // Determine swipe direction
+        const {dx, dy} = gestureState;
+        if (dx > 50) {
+          // Swiped right
+          setSelectedDay(prevDay => (prevDay > 0 ? prevDay - 1 : 0));
+        } else if (dx < -50) {
+          // Swiped left
+          setSelectedDay(prevDay =>
+            prevDay < WeekArray.length - 1 ? prevDay + 1 : WeekArray.length - 1,
+          );
+        } else if (dy > 50) {
+          allWorkoutApi(WeekArray[selectedDay]);
+          WeeklyStatusAPI();
+        }
+      },
+    }),
+  ).current;
+
   return (
     <SafeAreaView
       style={{
         flex: 1,
         backgroundColor: AppColor.WHITE,
       }}>
+      <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <NewHeader
         header={'Workout Plan'}
         SearchButton={false}
         backButton={false}
       />
-      <View style={{flex: 1, marginTop: -DeviceWidth * 0.1}}>
+      <View
+        style={{
+          flex: 1,
+          marginTop:
+            Platform.OS == 'ios' ? -DeviceWidth * 0.1 : -DeviceWidth * 0.05,
+        }}>
         <View
           style={{
             flexDirection: 'row',
             width: DeviceWidth,
             justifyContent: 'space-between',
             alignItems: 'center',
+            marginBottom: DeviceWidth * 0.05,
           }}>
           <Text
             style={[
@@ -474,14 +511,10 @@ const MyPlans = ({navigation}: any) => {
           <GradientButton
             text="Start"
             onPress={handleStart}
-            w={DeviceWidth * 0.2}
-            Image={localImage.StartWorkoutButton}
-            ImageStyle={{
-              width: DeviceWidth * 0.03,
-              height: DeviceWidth * 0.03,
-              marginRight: DeviceWidth * 0.01,
-            }}
-            h={30}
+            w={DeviceWidth * 0.15}
+            weeklyAnimation={downloaded}
+            h={35}
+            activeOpacity={1}
             textStyle={{
               fontSize: 12,
               fontFamily: Fonts.MONTSERRAT_REGULAR,
@@ -493,7 +526,14 @@ const MyPlans = ({navigation}: any) => {
           />
         </View>
         <View {...panResponder.panHandlers} style={{flex: 1}}>
-          <View style={{flexDirection: 'row', width: DeviceWidth}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              width: DeviceWidth * 0.95,
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              alignSelf: 'center',
+            }}>
             {WeekArray.map((item: any, index: number) => (
               <WeekTab
                 day={item}
@@ -504,11 +544,23 @@ const MyPlans = ({navigation}: any) => {
               />
             ))}
           </View>
-          <WeekDay
-            day={WeekArray[selectedDay]}
-            dayIndex={selectedDay}
-            exerciseData={getWeeklyPlansData[WeekArray[selectedDay]]}
-          />
+          <View style={{backgroundColor: AppColor.WHITE, flex: 1}}>
+            <FlatList
+              data={getWeeklyPlansData[WeekArray[selectedDay]]}
+              keyExtractor={(item, index) => index.toString()}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refresh}
+                  onRefresh={() => WeeklyStatusAPI()}
+                  colors={[AppColor.RED, AppColor.WHITE]}
+                />
+              }
+              renderItem={({item, index}: any) => (
+                <Box item={item} index={index} />
+              )}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
         </View>
       </View>
     </SafeAreaView>

@@ -3,6 +3,7 @@ import {
   Image,
   Linking,
   Platform,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -36,19 +37,19 @@ const GymListing = ({navigation}: any) => {
   const [locationP, setLocationP] = useState(false);
   const [loader, setLoader] = useState(false);
   const [coords, setCoords] = useState<Coordinates>({
-    latitude: 28.40400748886168,
-    longitude: 77.28769459761679,
+    latitude: -1,
+    longitude: -1,
   });
   const [gymsData, setGymsData] = useState([]);
   useFocusEffect(
     useCallback(() => {
       locationPermission();
-      GetGymsAPI(coords)
+      GetGymsAPI(coords);
     }, []),
   );
   const locationPermission = () => {
     Platform.OS == 'ios'
-      ? request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then(result => {
+      ? request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then(async result => {
           if (result === RESULTS.GRANTED) {
             console.log('Location permission granted IOS');
             setLocationP(true);
@@ -76,7 +77,7 @@ const GymListing = ({navigation}: any) => {
     Geolocation.getCurrentPosition(
       position => {
         const pos = position.coords;
-        console.log(pos);
+        console.log('pos', pos);
         setCoords({
           latitude: pos.latitude,
           longitude: pos.longitude,
@@ -84,9 +85,9 @@ const GymListing = ({navigation}: any) => {
         GetGymsAPI(pos);
       },
       error => {
-        console.log(error.code, error);
+        console.log('err Coord', error.code, error);
       },
-      {enableHighAccuracy: true, timeout: 2000, maximumAge: 10000},
+      {enableHighAccuracy: false, maximumAge: 0},
     );
   };
 
@@ -125,16 +126,22 @@ const GymListing = ({navigation}: any) => {
       setLoader(false);
     }
   };
-  const openGoogleMaps = async () => {
+  const openGoogleMaps = async (location: any) => {
     try {
-      await Linking.canOpenURL(
-        `google.navigation:q=${coords.latitude},${coords.longitude}`,
-      );
-      await Linking.openURL(
-        `google.navigation:q=${coords.latitude},${coords.longitude}`,
-      );
+      var scheme = Platform.OS === 'ios' ? 'http://maps.apple.com/?daddr=' : 'google.navigation:q=';
+      var url = scheme + `${location.latitude},${location.longitude}`;
+      // var url = scheme + `${location.latitude},${location.longitude}`+ "?q=" +location.center_name;
+      console.log(url)
+      await Linking.openURL(url);
     } catch (error) {
       console.log('OPEN APP ERRR', error);
+      showMessage({
+        message: `Can't open this location`,
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
     }
   };
   const renderItem = useMemo(
@@ -160,8 +167,8 @@ const GymListing = ({navigation}: any) => {
                   }}>
                   <Text style={styles.heading}>{item?.center_name}</Text>
                   <GradientText
-                    text={`${item?.distance.toFixed(4)} km`}
-                    // width={}
+                    text={`${item?.distance.toFixed(2)} km`}
+                    // width={item?.distance < 1 && 40}
                     height={20}
                     y={15}
                     alignSelf
@@ -211,7 +218,7 @@ const GymListing = ({navigation}: any) => {
                     </Text>
                   </View>
                   <TouchableOpacity
-                    onPress={openGoogleMaps}
+                    onPress={() => openGoogleMaps(item)}
                     style={{
                       backgroundColor: '#E5E5E5',
                       justifyContent: 'center',
@@ -255,20 +262,30 @@ const GymListing = ({navigation}: any) => {
   );
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
+      <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <NewHeader header={'Near by Gyms'} SearchButton={false} backButton />
       <View
         style={{
           flex: 1,
           marginHorizontal: 10,
         }}>
-        <FlatList
-          data={gymsData}
-          contentContainerStyle={{
-            justifyContent: 'center',
-          }}
-          renderItem={renderItem}
-          showsVerticalScrollIndicator={false}
-        />
+        {gymsData?.length > 0 ? (
+          <FlatList
+            data={gymsData}
+            contentContainerStyle={{
+              justifyContent: 'center',
+            }}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+          />
+        ) : (
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={styles.heading}>
+              Currently, No Gyms available in your location
+            </Text>
+          </View>
+        )}
       </View>
       <ActivityLoader visible={loader} />
     </SafeAreaView>
