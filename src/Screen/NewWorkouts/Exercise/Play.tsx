@@ -37,7 +37,7 @@ export type Props = TouchableWithoutFeedbackProps & {
 };
 
 const Play: FC<Props> = ({...props}) => {
-  const progressAnimation = useRef(new Animated.Value(props.fill)).current;
+  const progressAnimation = useRef(new Animated.Value(props.fill | 0)).current;
   const progressBarWidth = progressAnimation.interpolate({
     inputRange: [0, 100],
     outputRange: ['0%', '100%'],

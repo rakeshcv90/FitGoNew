@@ -168,6 +168,7 @@ const Box = ({item, index}: any) => {
               lineHeight: 20,
             }}>
             {item?.exercise_title}
+            {item?.exercise_id}
           </Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
@@ -341,16 +342,18 @@ const MyPlans = ({navigation}: any) => {
     }
     dispatch(setVideoLocation(StoringData));
   };
+  let datas = [];
   const handleStart = () => {
-    let datas = [];
+    for (const item of getWeeklyPlansData[WeekArray[selectedDay]]) {
+      datas.push({
+        user_id: getUserDataDetails?.id,
+        workout_id: `-${selectedDay + 1}`,
+        user_day: WeekArray[selectedDay],
+        user_exercise_id: item?.exercise_id,
+      });
+    }
     getWeeklyPlansData[WeekArray[selectedDay]]?.map(
       (item: any, index: number) => {
-        datas.push({
-          user_id: getUserDataDetails?.id,
-          workout_id: `-${selectedDay + 1}`,
-          user_day: WeekArray[selectedDay],
-          user_exercise_id: item?.exercise_id,
-        });
         downloadVideos(
           item,
           index,
@@ -366,7 +369,7 @@ const MyPlans = ({navigation}: any) => {
               res.data?.msg ==
               'Exercise Status for All Users Inserted Successfully'
             ) {
-              console.log('DATA ADDDDDDEDEDEDED', res.data);
+              console.log('DATA ADDDDDDEDEDEDED', res.data?.inserted_data);
               navigation.navigate('Exercise', {
                 allExercise: getWeeklyPlansData[WeekArray[selectedDay]],
                 currentExercise:
@@ -377,6 +380,7 @@ const MyPlans = ({navigation}: any) => {
                 day: selectedDay,
                 exerciseNumber: 0,
                 trackerData: res?.data?.inserted_data,
+                type: 'weekly',
               });
             } else {
               setDownloade(false);
@@ -408,6 +412,7 @@ const MyPlans = ({navigation}: any) => {
                     icon: {icon: 'auto', position: 'left'},
                   });
                 } else if (res.data?.user_details) {
+                  // console.log(res.data)
                   navigation.navigate('Exercise', {
                     allExercise: getWeeklyPlansData[WeekArray[selectedDay]],
                     currentExercise:
@@ -418,6 +423,7 @@ const MyPlans = ({navigation}: any) => {
                     day: selectedDay,
                     exerciseNumber: 0,
                     trackerData: res?.data?.user_details,
+                    type: 'weekly',
                   });
                 } else {
                 }

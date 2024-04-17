@@ -10,9 +10,9 @@ import analytics from '@react-native-firebase/analytics';
 import {ReviewApp} from '../../../Component/ReviewApp';
 import axios from 'axios';
 const SaveDayExercise = ({navigation, route}: any) => {
-  const {data, day, allExercise} = route?.params;
+  const {data, day, allExercise,type} = route?.params;
   let fire, clock, action;
-  if (data?.length > 0) {
+  if (type == 'day') {
     for (const d in data?.days) {
       if (d.split('day_')[1] == day) {
         action = data?.days[d]?.exercises.length;

@@ -41,8 +41,15 @@ const WeekArray = Array(7)
         .format('dddd')),
   );
 const Exercise = ({navigation, route}: any) => {
-  const {allExercise, currentExercise, data, day, exerciseNumber, trackerData} =
-    route.params;
+  const {
+    allExercise,
+    currentExercise,
+    data,
+    day,
+    exerciseNumber,
+    trackerData,
+    type,
+  } = route.params;
   const VideoRef = useRef();
   const [visible, setVisible] = useState(false);
   const [playW, setPlayW] = useState(0);
@@ -161,7 +168,12 @@ const Exercise = ({navigation, route}: any) => {
               setPause(false);
               postCurrentExerciseAPI(number);
               if (skipCount == 0) {
-                navigation.navigate('SaveDayExercise', {data, day, allExercise});
+                navigation.navigate('SaveDayExercise', {
+                  data,
+                  day,
+                  allExercise,
+                  type,
+                });
                 clearTimeout(restTimerRef.current);
                 clearTimeout(playTimerRef.current);
               } else {
@@ -288,11 +300,8 @@ const Exercise = ({navigation, route}: any) => {
   const postCurrentExerciseAPI = async (index: number) => {
     const payload = new FormData();
     payload.append('id', trackerData[index]?.id);
-    payload.append('day', WeekArray[day]);
-    payload.append(
-      'workout_id',
-      data?.length > 0 ? data?.workout_id : `-${day + 1}`,
-    );
+    payload.append('day', type == 'day' ? day : WeekArray[day]);
+    payload.append('workout_id', type == 'day' ? data?.workout_id : `-${day+1}`);
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
     try {
@@ -314,10 +323,10 @@ const Exercise = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data) {
-        console.log(trackerData[index])
+        console.log(res.data, trackerData[index], payload);
         setCurrentData(allExercise[index]);
         setRestStart(true);
-        setPlayW(0);
+        setPlayW(80);
       }
     } catch (error) {
       console.error(error, 'PostDaysAPIERror');
@@ -413,7 +422,7 @@ const Exercise = ({navigation, route}: any) => {
             <TouchableOpacity
               style={{alignSelf: 'center', marginTop: 20}}
               onPress={() => {
-                data?.length > 0 ? navigation.goBack() : deleteTrackExercise();
+                type == 'day' ? navigation.goBack() : deleteTrackExercise();
               }}>
               <Text
                 style={{

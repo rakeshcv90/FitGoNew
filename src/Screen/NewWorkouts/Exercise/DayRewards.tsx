@@ -28,13 +28,14 @@ const WeekArray = Array(7)
         .subtract(moment().isoWeekday() - 1, 'days')
         .format('dddd')),
   );
-
+const numberArray = [1, 2, 3, 4, 5, 6, 7];
 const DayRewards = ({navigation, route}: any) => {
   const {data, day} = route?.params;
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
   const [days, setDays] = useState<Array<any>>([]);
+  const [weekly, setWeekly] = useState(false);
   useEffect(() => {
     getCurrentDayAPI();
   }, []);
@@ -55,8 +56,10 @@ const DayRewards = ({navigation, route}: any) => {
 
       if (res.data?.msg != 'No data found') {
         analyzeExerciseData(res.data?.user_details);
+        setWeekly(false);
       } else {
         WeeklyStatusAPI();
+        setWeekly(true);
       }
     } catch (error) {
       console.error(error, 'DAPIERror');
@@ -84,7 +87,7 @@ const DayRewards = ({navigation, route}: any) => {
         res.data?.forEach((item: any) => {
           days.add(item.user_day);
         });
-        console.log("DAYS", days)
+        console.log('DAYS', days);
         setDays([...days]);
       } else {
         setDays([]);
@@ -157,37 +160,69 @@ const DayRewards = ({navigation, route}: any) => {
             width: DeviceWidth * 0.9,
             marginTop: 10,
           }}>
-          {[1, 2, 3, 4, 5, 6, 7].map((item: any, index: number) => {
-            return (
-              <View style={{alignItems: 'center'}}>
-                {days.includes(item) || days.includes(WeekArray[item]) ? (
-                  <Image
-                    source={localImage.RedCircle}
-                    style={{height: 40, width: 40}}
-                  />
-                ) : (
-                  <View
-                    style={{
-                      height: 40,
-                      width: 40,
-                      borderRadius: 50,
-                      backgroundColor: '#EDF1F4',
-                    }}
-                  />
-                )}
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontFamily: 'Poppins',
-                    lineHeight: 30,
-                    color: '#505050',
-                    fontWeight: '500',
-                  }}>
-                  {item || WeekArray[item].substring(0, 2)}
-                </Text>
-              </View>
-            );
-          })}
+          {weekly
+            ? WeekArray.map((item: any, index: number) => {
+                return (
+                  <View style={{alignItems: 'center'}}>
+                    {days.includes(item) ? (
+                      <Image
+                        source={localImage.RedCircle}
+                        style={{height: 40, width: 40}}
+                      />
+                    ) : (
+                      <View
+                        style={{
+                          height: 40,
+                          width: 40,
+                          borderRadius: 50,
+                          backgroundColor: '#EDF1F4',
+                        }}
+                      />
+                    )}
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontFamily: 'Poppins',
+                        lineHeight: 30,
+                        color: '#505050',
+                        fontWeight: '500',
+                      }}>
+                      {item?.substring(0,1)}
+                    </Text>
+                  </View>
+                );
+              })
+            : numberArray.map((item: any, index: number) => {
+                return (
+                  <View style={{alignItems: 'center'}}>
+                    {days.includes(item) ? (
+                      <Image
+                        source={localImage.RedCircle}
+                        style={{height: 40, width: 40}}
+                      />
+                    ) : (
+                      <View
+                        style={{
+                          height: 40,
+                          width: 40,
+                          borderRadius: 50,
+                          backgroundColor: '#EDF1F4',
+                        }}
+                      />
+                    )}
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontFamily: 'Poppins',
+                        lineHeight: 30,
+                        color: '#505050',
+                        fontWeight: '500',
+                      }}>
+                      {item}
+                    </Text>
+                  </View>
+                );
+              })}
         </View>
         <Text
           style={{
