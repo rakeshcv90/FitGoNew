@@ -36,7 +36,8 @@ const intialState = {
   getFitmeAdsCount: 0,
   getFitmeMealAdsCount: 0,
   getStoreVideoLoc: {},
-  isAlarmEnabled: false
+  isAlarmEnabled: false,
+  getAllExercise:[]
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -184,6 +185,16 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         isAlarmEnabled: action.payload,
       };
+      case types.ALARM_ENABLED:
+        return {
+          ...state,
+          isAlarmEnabled: action.payload,
+        };
+      case types.ALL_EXERCISE:
+        return{
+          ...state,
+          getAllExercise:action.payload
+        }
     default:
       return state;
   }

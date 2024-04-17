@@ -209,3 +209,9 @@ export const setIsAlarmEnabled = data => {
     payload: data,
   };
 };
+export const setAllExercise = data => {
+  return {
+    type: types.ALL_EXERCISE,
+    payload: data,
+  };
+};

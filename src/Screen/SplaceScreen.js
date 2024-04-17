@@ -7,6 +7,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import * as RNIap from 'react-native-iap';
 import {
   Setmealdata,
+  setAllExercise,
+  setCompleteProfileData,
+  setCustomWorkoutData,
   setFitmeAdsCount,
   setInappPurchase,
   setPurchaseHistory,
@@ -25,7 +28,7 @@ import {
   TestIds,
 } from 'react-native-google-mobile-ads';
 import {interstitialAdId} from '../Component/AdsId';
-import { LogOut } from '../Component/LogOut';
+import {LogOut} from '../Component/LogOut';
 
 const products = Platform.select({
   ios: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
@@ -49,9 +52,12 @@ const SplaceScreen = ({navigation}) => {
       Meal_List(uniqueId);
     });
     getPlanData();
-    Object.keys(getUserDataDetails).length > 0 && PurchaseDetails();
+    ProfileDataAPI();
+    Object.keys(getUserDataDetails).length > 0 && PurchaseDetails(),
+      getCustomWorkout();
     dispatch(setFitmeAdsCount(0));
     initInterstitial();
+    getAllExerciseData();
   }, []);
 
   const initInterstitial = async () => {
@@ -169,7 +175,6 @@ const SplaceScreen = ({navigation}) => {
       const favDiet = await axios.get(
         `${NewAppapi.Get_Product_Catogery}?deviceid=${deviceid}`,
       );
-
       if (favDiet.data.status != 'Invalid token') {
         dispatch(setStoreData([]));
       } else {
@@ -195,7 +200,7 @@ const SplaceScreen = ({navigation}) => {
       });
       if (res?.data?.data?.length > 0) {
         dispatch(setPurchaseHistory(res.data.data));
-      } 
+      }
       // else if (res?.data?.msg == 'Invalid Token') {
       //   showMessage({
       //     message: 'Please Login Again!',
@@ -205,7 +210,7 @@ const SplaceScreen = ({navigation}) => {
       //     icon: {icon: 'auto', position: 'left'},
       //   });
       //   LogOut(dispatch);
-      // } 
+      // }
       else {
         dispatch(setPurchaseHistory([]));
       }
@@ -214,7 +219,62 @@ const SplaceScreen = ({navigation}) => {
       console.log('Purchase List Error', error);
     }
   };
+  const ProfileDataAPI = async () => {
+    try {
+      const res = await axios({
+        url: NewAppapi.Get_COMPLETE_PROFILE,
+        method: 'get',
+      });
 
+      if (res?.data) {
+        dispatch(setCompleteProfileData(res.data));
+      } else {
+        dispatch(setCompleteProfileData([]));
+      }
+    } catch (error) {
+      dispatch(setCompleteProfileData([]));
+
+      console.log(error);
+    }
+  };
+  const getAllExerciseData = async () => {
+    try {
+      const exerciseData = await axios.get(
+        `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}`,
+      );
+
+      if (
+        exerciseData?.data?.msg == 'Please update the app to the latest version'
+      ) {
+        dispatch(setAllExercise([]));
+      } else if (exerciseData?.data?.length > 0) {
+        dispatch(setAllExercise(exerciseData?.data));
+      } else {
+        dispatch(setAllExercise([]));
+      }
+    } catch (error) {
+      dispatch(setAllExercise([]));
+      console.log('All-EXCERSIE-ERROR', error);
+    }
+  };
+  const getCustomWorkout = async () => {
+    try {
+      const data = await axios.get(
+        `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${getUserDataDetails.id}`,
+      );
+
+    
+      if (data?.data?.msg != 'data not found.') {
+        dispatch(setCustomWorkoutData(data?.data?.data));
+        console.log('ggggggg', data?.data);
+      } else {
+        dispatch(setCustomWorkoutData([]));
+      }
+    } catch (error) {
+      console.log('Custom Workout Error', error);
+      dispatch(setCustomWorkoutData([]));
+    }
+  };
   return (
     <>
       {/* {closed ? (

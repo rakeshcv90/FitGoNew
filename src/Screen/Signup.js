@@ -270,7 +270,7 @@ const Signup = ({navigation}) => {
       });
 
       setForLoading(false);
-      console.log("User Starttttttt",data.data)
+   
       if (data?.data?.status == 0) {
         setForLoading(false);
         showMessage({
