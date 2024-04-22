@@ -17,7 +17,10 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
-import {setAllWorkoutData} from '../../Component/ThemeRedux/Actions';
+import {
+  setAllWorkoutData,
+  setWorkoutTimeCal,
+} from '../../Component/ThemeRedux/Actions';
 import NewHeader from '../../Component/Headers/NewHeader';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
@@ -35,13 +38,14 @@ const Workouts = ({navigation}: any) => {
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
+  const getUserID = useSelector((state: any) => state.getUserID);
 
   useEffect(() => {
     if (isFocused) {
       allWorkoutApi();
       allWorkoutData?.length == 0 && allWorkoutApi();
-      getUserCustomeWorkout()
-    
+      // getUserCustomeWorkout()
+      getCustomeWorkoutTimeDetails()
     }
   }, [isFocused]);
   const [refresh, setRefresh] = useState(false);
@@ -49,19 +53,19 @@ const Workouts = ({navigation}: any) => {
     {
       id: 1,
       title: 'Get Fit',
-      subtitle:'weight loss data',
+      subtitle: 'weight loss data',
       img: require('../../Icon/Images/NewImage2/Img7.png'),
     },
     {
       id: 2,
       title: 'Lose Weight',
-      subtitle:'weight loss data',
+      subtitle: 'weight loss data',
       img: require('../../Icon/Images/NewImage2/Img6.png'),
     },
     {
       id: 3,
       title: 'HIIT',
-      subtitle:'Strength',
+      subtitle: 'Strength',
       img: require('../../Icon/Images/NewImage2/Img5.png'),
     },
   ];
@@ -69,25 +73,25 @@ const Workouts = ({navigation}: any) => {
     {
       id: 1,
       title: 'Immunity Booster',
-      subtitle:'Strength',
+      subtitle: 'Strength',
       img: require('../../Icon/Images/NewImage2/Img4.png'),
     },
     {
       id: 2,
       title: 'Build Muscle',
-      subtitle:'Build',
+      subtitle: 'Build',
       img: require('../../Icon/Images/NewImage2/Img3.png'),
     },
     {
       id: 3,
       title: 'Corporate Cardio',
-      subtitle:'Strength / Weight loss',
+      subtitle: 'Strength / Weight loss',
       img: require('../../Icon/Images/NewImage2/Img2.png'),
     },
     {
       id: 4,
       title: 'Beach Ready',
-      subtitle:'Build muscle/ weight loss / strength data',
+      subtitle: 'Build muscle/ weight loss / strength data',
       img: require('../../Icon/Images/NewImage2/Img1.png'),
     },
   ];
@@ -128,24 +132,37 @@ const Workouts = ({navigation}: any) => {
       dispatch(setAllWorkoutData([]));
     }
   };
-const getUserCustomeWorkout=async()=>{
-  
-}
 
+  const getCustomeWorkoutTimeDetails = async () => {
+    try {
+      const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          user_id: getUserID != 0 ? getUserID : getUserDataDetails.id,
+        },
+      });
 
-
+      if (data.data.results.length > 0) {
+        dispatch(setWorkoutTimeCal(data.data.results));
+      } else {
+        dispatch(setWorkoutTimeCal([]));
+      }
+    } catch (error) {
+      console.log('UCustomeCorkout details', error);
+    }
+  };
   const renderItem = useMemo(() => {
     return ({item}: any) => (
-     
       <>
         <View
           style={{
             marginHorizontal: 5,
           }}>
           <TouchableOpacity
-          onPress={()=>{
-
-          }}
+            onPress={() => {}}
             style={{
               //width: DeviceWidth * 0.6,
               //height: DeviceHeigth * 0.1,
@@ -192,7 +209,7 @@ const getUserCustomeWorkout=async()=>{
                 fontWeight: '500',
                 lineHeight: 25,
                 color: '#434343',
-                textAlign:'center',
+                textAlign: 'center',
               }}>
               {item.title}
             </Text>
@@ -211,7 +228,6 @@ const getUserCustomeWorkout=async()=>{
             width: DeviceWidth * 0.95,
             height: DeviceHeigth * 0.35,
 
-           
             marginVertical: DeviceHeigth * 0.015,
           }}>
           <ImageBackground
@@ -496,14 +512,13 @@ const getUserCustomeWorkout=async()=>{
                   alignItems: 'center',
                   justifyContent: 'space-between',
                 }}>
-                 
                 <View
                   style={{
                     marginHorizontal:
                       Platform.OS == 'android'
                         ? DeviceWidth * 0.03
                         : DeviceHeigth >= 1024
-                        ?DeviceWidth * 0.03
+                        ? DeviceWidth * 0.03
                         : DeviceWidth * 0.02,
                   }}>
                   <Text

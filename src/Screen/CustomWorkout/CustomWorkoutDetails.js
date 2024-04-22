@@ -173,7 +173,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               // exerciseNumber: 0,
               exerciseNumber: trainingCount != -1 ? trainingCount : 0,
               trackerData: res?.data?.inserted_data,
-              type: 'weekly',
+              type: 'custom',
             });
           } else {
             setDownloade(0);
@@ -188,7 +188,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               day: -10,
               exerciseNumber: trainingCount != -1 ? trainingCount : 0,
               trackerData: trackerData,
-              type: 'weekly',
+              type: 'custom',
             });
           }
         }

@@ -27,10 +27,8 @@ export const AppColor={
     BoldText:'#505050',
     RED1:'#D5191A',
     Gray5:"#999999",
-
     NewBlack: '#202020',
-    NewGray: '#857B7B'
-
+    NewGray: '#857B7B',
     HEADERTEXTCOLOR:'#333333'
 
   }

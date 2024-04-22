@@ -11,7 +11,7 @@ import {ReviewApp} from '../../../Component/ReviewApp';
 import axios from 'axios';
 
 const SaveDayExercise = ({navigation, route}: any) => {
-  const {data, day, allExercise,type} = route?.params;
+  const {data, day, allExercise, type} = route?.params;
   let fire, clock, action;
 
   if (type == 'day') {
@@ -49,7 +49,9 @@ const SaveDayExercise = ({navigation, route}: any) => {
     }
   };
   const onPresh = () => {
-    navigation.navigate('DayRewards', {data, day});
+    type == 'custom'
+      ? navigation.navigate('CustomWorkoutDetails', {item: data})
+      : navigation.navigate('DayRewards', {data, day});
   };
   return (
     <SafeAreaView

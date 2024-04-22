@@ -213,7 +213,9 @@ export const setIsAlarmEnabled = data => {
 export const setWeeklyPlansData = data => {
   return {
     type: types.WEEKLY_PLANS_DATA,
-
+    payload: data,
+  };
+};
 export const setAllExercise = data => {
   return {
     type: types.ALL_EXERCISE,

@@ -47,7 +47,7 @@ const DayRewards = ({navigation, route}: any) => {
 
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EXERCISE_DETAILS,
-        method: 'post', 
+        method: 'post',
         data: payload,
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -96,6 +96,7 @@ const DayRewards = ({navigation, route}: any) => {
       console.error(error, 'WEEKLYSTATUS ERRR');
     }
   };
+
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -187,7 +188,7 @@ const DayRewards = ({navigation, route}: any) => {
                         color: '#505050',
                         fontWeight: '500',
                       }}>
-                      {item?.substring(0,1)}
+                      {item?.substring(0, 1)}
                     </Text>
                   </View>
                 );
@@ -248,7 +249,11 @@ const DayRewards = ({navigation, route}: any) => {
           Good Luck
         </Text>
         <GradientButton
-          onPress={() => navigation.navigate('BottomTab')}
+          onPress={() =>
+            weekly
+              ? navigation.navigate('BottomTab')
+              : navigation.navigate('WorkoutDays', {data: data})
+          }
           text="Collect Rewards"
           bR={50}
           h={70}

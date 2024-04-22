@@ -28,6 +28,7 @@ import {
 import {localImage} from '../../Component/Image';
 import {FlatList} from 'react-native';
 import AnimatedLottieView from 'lottie-react-native';
+import { navigationRef } from '../../../App';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -229,7 +230,7 @@ const HomeNew = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           flexGrow: 1,
-          paddingBottom: DeviceHeigth * 0.3,
+          paddingBottom: DeviceHeigth * 0.25,
         }}
         style={styles.container}
         nestedScrollEnabled>
@@ -540,7 +541,7 @@ const HomeNew = () => {
           }}>
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => {}}
+            onPress={() => navigationRef.navigate('GymListing')}
             style={
               {
                 //  backgroundColor: AppColor.WHITE,
@@ -869,7 +870,7 @@ const HomeNew = () => {
                   style={{
                     width: DeviceHeigth >= 1024 ? 100 : 70,
                     height: DeviceHeigth >= 1024 ? 250 : 80,
-                    right: DeviceHeigth >= 1024 ? 0 : 0,
+                    right: DeviceHeigth >= 1024 ? 0 : 20,
                     top: DeviceHeigth >= 1024 ? -40 : 35,
                   }}
                 />
