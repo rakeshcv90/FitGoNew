@@ -1,5 +1,11 @@
-import {Image, Platform, StyleSheet, TouchableOpacity} from 'react-native';
-import React, {useEffect} from 'react';
+import {
+  Animated,
+  Image,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
 import {AnimatedTabBarNavigator} from 'react-native-animated-nav-tab-bar';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {BottomTabBarHeightContext} from '@react-navigation/bottom-tabs';
@@ -18,11 +24,118 @@ import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import {AppColor} from '../Component/Color';
+import {AppColor, Fonts} from '../Component/Color';
 import {setFitmeAdsCount} from '../Component/ThemeRedux/Actions';
-
+import MyPlans, {handleStart} from '../Screen/MyPlans/MyPlans';
+import GradientButton from '../Component/GradientButton';
+import {local} from 'd3';
+import {localImage} from '../Component/Image';
+import LinearGradient from 'react-native-linear-gradient';
 const Tabs = createBottomTabNavigator();
 
+export const MyPLans = ({focused, onPress}) => {
+  const [startAnimation, setStartAnimation] = useState(false);
+  const Play = new Animated.Value(1);
+
+  useEffect(() => {
+    if (startAnimation) {
+      Animated.timing(Play, {
+        toValue: 1.5,
+        useNativeDriver: false,
+        duration: 2000,
+      }).start(() => {
+        Play.setValue(1); // Reset the animation state
+        setStartAnimation(false); // Reset the startAnimation state to false
+      });
+      // onPress();
+      // return Play.setValue(1)
+    }
+  }, [startAnimation]);
+
+  return (
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={() => {
+        focused ? setStartAnimation(true) : onPress();
+      }}
+      style={{
+        ...Platform.select({
+          ios: {
+            shadowColor: focused ? '#D5191A' : '#909090',
+            shadowOffset: {width: 0, height: 4},
+            shadowOpacity: 0.4,
+            shadowRadius: 3,
+          },
+          android: {
+            elevation: 4,
+          },
+        }),
+        justifyContent: 'center',
+        alignItems: 'center',
+        bottom: focused ? 25 : 30,
+        // backgroundColor: 'blue',
+      }}>
+      {focused ? (
+        <Animated.Image
+          source={localImage.WeeklyPlay}
+          resizeMode={'contain'}
+          style={{
+            width: DeviceWidth * 0.28,
+            height: DeviceWidth * 0.28,
+            transform: [{scale: Play}],
+            marginTop: 10,
+            marginHorizontal: -15,
+          }}
+        />
+      ) : (
+        <LinearGradient
+          start={{x: 1, y: 0}}
+          end={{x: 0, y: 1}}
+          colors={['#941000', '#D5191A']}
+          style={[
+            styles.nextButton,
+            {
+              borderWidth: 1,
+              borderColor: '#D5191A',
+              overflow: 'hidden',
+              width: 70,
+              height: 70,
+              borderRadius: 70 / 2,
+            },
+          ]}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              source={localImage.MyPlansWhite}
+              style={{
+                height: 25,
+                width: 25,
+                marginBottom: 5,
+                tintColor: 'white',
+              }}
+              resizeMode="contain"
+            />
+            <Text
+              style={{
+                fontSize: 12,
+                lineHeight: 14.63,
+                fontWeight: '700',
+                fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                color: AppColor.WHITE,
+                zIndex: 1,
+                marginBottom: 5,
+              }}>
+              My Plan
+            </Text>
+          </View>
+        </LinearGradient>
+      )}
+    </TouchableOpacity>
+  );
+};
 const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const Dispatch = useDispatch();
@@ -60,7 +173,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                 Dispatch(setFitmeAdsCount(0));
               } else {
                 if (getFitmeAdsCount < 2) {
-                  Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+                  // Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
                   navigation.navigate(route.name);
                 } else {
                   showInterstitialAd();
@@ -70,7 +183,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
               }
             } else {
               if (getFitmeAdsCount < 2) {
-                Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+                // Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
                 navigation.navigate(route.name);
               } else {
                 showInterstitialAd();
@@ -84,75 +197,91 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
         return (
           <>
             {isFocused ? (
-              <TouchableOpacity
-                key={route.key}
-                onPress={onPress}
-                style={[
-                  styles.tabButton,
-                  {
-                    marginVertical: 10,
-                    paddingHorizontal: 5,
-                  },
-                ]}>
-                <View
-                  style={
+              label == 'MyPlans' ? (
+                <MyPLans focused={isFocused} onPress={() => handleStart()} />
+              ) : (
+                <TouchableOpacity
+                  key={route.key}
+                  onPress={onPress}
+                  style={[
+                    styles.tabButton,
                     {
-                      //padding: 5,
-                    }
-                  }>
-                  {route.name == 'Home' ? (
-                    <Image
-                      source={require('../Icon/Images/NewImage/homered.png')}
-                      resizeMode="contain"
-                      style={{
-                        width: 25,
-                        height: 25,
-                      }}
-                    />
-                  ) : route.name == 'Workout' ? (
-                    <Image
-                      source={require('../Icon/Images/NewImage/workoutred.png')}
-                      resizeMode="contain"
-                      style={{
-                        width: 30,
-                        height: 30,
-                      }}
-                    />
-                  ) : route.name == 'Reports' ? (
-                    <Image
-                      source={require('../Icon/Images/NewImage/dattaGraphred.png')}
-                      resizeMode="contain"
-                      style={{
-                        width: 25,
-                        height: 25,
-                      }}
-                    />
-                  ) : (
-                    <Image
-                      source={require('../Icon/Images/NewImage/trainerred.png')}
-                      resizeMode="contain"
-                      style={{
-                        width: 25,
-                        height: 25,
-                      }}
-                    />
-                  )}
-                </View>
+                      marginVertical: 10,
+                      marginBottom: 10,
+                      paddingHorizontal: 5,
+                    },
+                  ]}>
+                  <View
+                    style={
+                      {
+                        //padding: 5,
+                      }
+                    }>
+                    {route.name == 'Home' ? (
+                      <Image
+                        source={require('../Icon/Images/NewImage/homered.png')}
+                        resizeMode="contain"
+                        style={{
+                          width: 25,
+                          height: 25,
+                        }}
+                      />
+                    ) : route.name == 'Workout' ? (
+                      <Image
+                        source={require('../Icon/Images/NewImage/workoutred.png')}
+                        resizeMode="contain"
+                        style={{
+                          width: 30,
+                          height: 30,
+                        }}
+                      />
+                    ) : route.name == 'MyPlans' ? (
+                      <Image
+                        source={require('../Icon/Images/NewImage/dattaGraph.png')}
+                        resizeMode="contain"
+                        style={{
+                          width: 25,
+                          height: 25,
+                        }}
+                      />
+                    ) : route.name == 'Reports' ? (
+                      <Image
+                        source={require('../Icon/Images/NewImage/dattaGraphred.png')}
+                        resizeMode="contain"
+                        style={{
+                          width: 25,
+                          height: 25,
+                        }}
+                      />
+                    ) : (
+                      <Image
+                        source={require('../Icon/Images/NewImage/trainerred.png')}
+                        resizeMode="contain"
+                        style={{
+                          width: 25,
+                          height: 25,
+                        }}
+                      />
+                    )}
+                  </View>
 
-                <Text
-                  style={{
-                    color: AppColor.RED1,
-                    fontFamily: 'Montserrat-Medium',
-                    fontSize: 12,
-                    lineHeight: 14.63,
-                    fontWeight: '700',
+                  <Text
+                    style={{
+                      color: AppColor.RED1,
+                      fontFamily: 'Montserrat-Medium',
+                      fontSize: 12,
+                      lineHeight: 14.63,
+                      fontWeight: '700',
 
-                    marginTop: 5,
-                    textAlign: 'center',
-                  }}>
-                  {label}
-                </Text>
-              </TouchableOpacity>
+                      marginTop: 5,
+                      textAlign: 'center',
+                    }}>
+                    {label}
+                  </Text>
+                </TouchableOpacity>
+              )
+            ) : label == 'MyPlans' ? (
+              <MyPLans focused={false} onPress={onPress} />
             ) : (
               <TouchableOpacity
                 key={route.key}
@@ -270,7 +399,7 @@ const BottomTab = () => {
   return (
     <>
       <Tabs.Navigator
-        initialRouteName="Home"
+        initialRouteName="MyPlans"
         tabBar={props => <CustomTab {...props} />}
         screenOptions={{
           activeTintColor: '#D01818',
@@ -304,6 +433,11 @@ const BottomTab = () => {
           options={{tabBarShowLabel: false}}
         />
         <Tabs.Screen
+          name="MyPlans"
+          component={MyPlans}
+          options={{tabBarShowLabel: false}}
+        />
+        <Tabs.Screen
           name="Reports"
           component={NewProgressScreen}
           options={{tabBarShowLabel: false}}
@@ -331,13 +465,19 @@ const styles = StyleSheet.create({
         : DeviceHeigth >= 1024
         ? DeviceHeigth * 0.06
         : DeviceHeigth * 0.09,
-    backgroundColor: AppColor.WHITE,
+    backgroundColor: '#F5F5F5',
   },
   tabButton: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
+    alignSelf: 'center',
+  },
+  nextButton: {
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
     alignSelf: 'center',
   },
 });

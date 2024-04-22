@@ -223,15 +223,16 @@ const OneDay = ({navigation, route}: any) => {
           if (
             res.data?.msg ==
             'Exercise Status for All Users Inserted Successfully'
-          ) {
+            ) {
+            console.log(res.data)
             setOpen(false);
             setDownloade(0);
             navigation.navigate('Exercise', {
               allExercise: exerciseData,
               currentExercise:
-                trainingCount != -1
-                  ? exerciseData[trainingCount]
-                  : exerciseData[0],
+              trainingCount != -1
+              ? exerciseData[trainingCount]
+              : exerciseData[0],
               data: data,
               day: day,
               exerciseNumber: trainingCount != -1 ? trainingCount : 0,
@@ -240,6 +241,7 @@ const OneDay = ({navigation, route}: any) => {
 
             });
           } else {
+            console.log(trackerData)
             setOpen(false);
             setDownloade(0);
             navigation.navigate('Exercise', {
@@ -729,22 +731,22 @@ const OneDay = ({navigation, route}: any) => {
           {` ${dayData?.total_calories} Kcal`}
         </Text>
         <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
+          contentContainerStyle={{flexGrow: 1}}
           showsVerticalScrollIndicator={false}
-          style={{marginBottom: 100, flex:1}}>
-            
-            { exerciseData.map((item, index) => (
-                <Box selected={-1} index={index + 1} item={item} key={index} />
-              ))}
+          style={{marginBottom: 100, flex: 1}}>
+          {exerciseData.map((item, index) => (
+            <Box selected={-1} index={index + 1} item={item} key={index} />
+          ))}
           {/* {forLoading
             ? simerData.map((item, index) => <Box2 />)
             : exerciseData.map((item, index) => (
                 <Box selected={-1} index={index + 1} item={item} key={index} />
               ))} */}
         </ScrollView>
-        <Play
-          play={false}
-          oneDay
+        <GradientButton
+          // play={false}
+          // oneDay
+          flex={0.01}
           text={
             downloaded > 0 && downloaded != 100
               ? `Downloading`
@@ -761,39 +763,14 @@ const OneDay = ({navigation, route}: any) => {
           }}
           alignSelf
           bR={40}
-          mB={40}
-          fillBack="#EB1900"
-          fill={downloaded > 0 ? `${100 / downloaded}%` : '0%'}
+          // mB={80}
+          bottm={40}
+          weeklyAnimation={downloaded > 0 && downloaded != 100}
+          // fillBack="#EB1900"
+          // fill={downloaded > 0 ? `${100 / downloaded}%` : '0%'}
           onPress={() => {
             analytics().logEvent(`CV_FITME_STARTED_DAY_${day}_EXERCISES`);
             postCurrentDayAPI();
-            // if (data.workout_price == 'free') {
-            // } else if (
-            //   data?.workout_price == 'Premium' &&
-            //   getPurchaseHistory[0]?.plan_end_date >=
-            //     moment().format('YYYY-MM-DD')
-            // ) {
-            //   postCurrentDayAPI();
-            // } else if (
-            //   data?.workout_price == 'Premium' &&
-            //   getPurchaseHistory[0]?.plan_end_date <
-            //     moment().format('YYYY-MM-DD')
-            // ) {
-            //   dispatch(setSubscriptiomModal(true));
-            // } else {
-            //   dispatch(setSubscriptiomModal(true));
-            // }
-
-            // postCurrentDayAPI();
-
-            // setOpen(false);
-            // navigation.navigate('Exercise', {
-            //   allExercise: exerciseData,
-            //   currentExercise: exerciseData[0],
-            //   data: data,
-            //   day: day,
-            //   exerciseNumber: trainingCount != -1 ? trainingCount - 1 : 0,
-            // });
           }}
         />
       </View>

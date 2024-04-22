@@ -75,14 +75,16 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>FitGo needs Location access to show Gyms on the basis of Current User's location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>FitGo needs Location access to show Gyms on the basis of Current User's location</string>
 	<key>NSCameraUsageDescription</key>
 	<string> FitGo needs camera access for user's profile photo</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Read and understand health data.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Share workout data with other apps.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need access to your location when the app is in use to provide location-based services and enhance your user experience.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string> FitGo needs library access for user's profile photo</string>
 	<key>UIAppFonts</key>

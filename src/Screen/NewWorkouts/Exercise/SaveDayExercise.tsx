@@ -9,17 +9,10 @@ import GradientButton from '../../../Component/GradientButton';
 import analytics from '@react-native-firebase/analytics';
 import {ReviewApp} from '../../../Component/ReviewApp';
 import axios from 'axios';
-const SaveDayExercise = ({navigation, route,}: any) => {
-  const {data, day,type,allExercise} = route?.params;
-  
+
+const SaveDayExercise = ({navigation, route}: any) => {
+  const {data, day, allExercise,type} = route?.params;
   let fire, clock, action;
-  // for (const d in data?.days) {
-  //   if (d.split('day_')[1] == day) {
-  //     action = data?.days[d]?.exercises.length;
-  //     fire = data?.days[d]?.total_calories;
-  //     clock = data?.days[d]?.total_rest;
-  //   }
-  // }
 
   if (type == 'day') {
     for (const d in data?.days) {

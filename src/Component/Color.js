@@ -27,11 +27,20 @@ export const AppColor={
     BoldText:'#505050',
     RED1:'#D5191A',
     Gray5:"#999999",
+
+    NewBlack: '#202020',
+    NewGray: '#857B7B'
+
     HEADERTEXTCOLOR:'#333333'
+
   }
   export const Fonts = {
     MONTSERRAT_BOLD: 'Montserrat-Bold',
     MONTSERRAT_SEMIBOLD: 'Montserrat-SemiBold',
     MONTSERRAT_MEDIUM: 'Montserrat-Medium',
     MONTSERRAT_REGULAR: 'Montserrat-Regular',
+
 }
+
+
+

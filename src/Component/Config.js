@@ -75,9 +75,17 @@ export const NewAppapi = {
   GET_LIKE_WORKOUTS: NewApi + 'total_like_view',
   POST_LIKE_WORKOUT: NewApi + 'like_dislike',
   POST_WORKOUT_VIEWS: NewApi + 'workout_view_count',
+
+  WEEKLY_STATUS: NewApi + 'oneweek_exercise_data',
+  GET_PLANS_EXERCISE: NewApi + 'get_weekday_exercise',
+  DELETE_TRACK_EXERCISE: NewApi + 'delete_exercise',
+  GET_NEARBY_GYMS: NewApi + 'getnearbygyms',
+  DELETE_WEEKLY_DATA: NewApi + 'delete_completed_exercises',    // API to delete Weekly Completed Exercises
+
   ALL_EXERCISE_DATA: NewApi + 'get_exercise',
   USER_CUSTOM_WORKOUT: NewApi + 'user_custom_workout',
   GET_USER_CUSTOM_WORKOUT: NewApi + 'get_user_custom_workout',
   DELETE_CUSTOM_WORKOUT: NewApi + 'delete_custom_workout',
   EDIT_CUSTOM_WORKOUY: NewApi + 'edit_custom_workout',
+
 };

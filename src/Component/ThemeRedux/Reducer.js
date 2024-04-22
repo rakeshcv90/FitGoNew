@@ -37,7 +37,11 @@ const intialState = {
   getFitmeMealAdsCount: 0,
   getStoreVideoLoc: {},
   isAlarmEnabled: false,
-  getAllExercise:[]
+
+  getWeeklyPlansData: {},
+
+  getAllExercise:[],
+
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -185,6 +189,13 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         isAlarmEnabled: action.payload,
       };
+
+    case types.WEEKLY_PLANS_DATA:
+      return {
+        ...state,
+        getWeeklyPlansData: action.payload,
+      };
+
       case types.ALARM_ENABLED:
         return {
           ...state,
@@ -195,6 +206,7 @@ const ThemeReducer = (state = intialState, action) => {
           ...state,
           getAllExercise:action.payload
         }
+
     default:
       return state;
   }
