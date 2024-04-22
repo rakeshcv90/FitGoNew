@@ -25,7 +25,7 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
   const defaultTheme = useSelector(state => state.defaultTheme);
   const completeProfileData = useSelector(state => state.completeProfileData);
   const getUserID = useSelector(state => state.getUserID);
-  console.log('dsfdsfdsfsdfsdfdsf', completeProfileData?.focusarea);
+
   const [imageView, setImageVIew] = useState([]);
   const [bodyPart, setBordyPart] = useState(
     completeProfileData?.focusarea?.filter(
@@ -56,7 +56,9 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
   );
 
   const setImageFocusArea = (itemId, item) => {
+
     const index = selectedItems.indexOf(itemId);
+    console.log("Set Selected Area", index)
     const newSelectedItems = [...selectedItems];
     const newImageVIew = [...imageView];
     if (index === -1) {

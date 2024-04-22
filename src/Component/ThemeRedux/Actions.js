@@ -209,9 +209,15 @@ export const setIsAlarmEnabled = data => {
     payload: data,
   };
 };
+
 export const setWeeklyPlansData = data => {
   return {
     type: types.WEEKLY_PLANS_DATA,
+
+export const setAllExercise = data => {
+  return {
+    type: types.ALL_EXERCISE,
+
     payload: data,
   };
 };

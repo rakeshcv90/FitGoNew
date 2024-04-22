@@ -36,48 +36,56 @@ export const Appapi = {
 };
 export const NewAppapi = {
   login: 'user_login', //Done App Version
-  signup: 'user_registration',//Done App Version
-  forgetPassword: 'sendemail_link',//Done App Version
-  OTPVerification: 'user_verify',//Done App Version
-  UserProfile: 'userprofile',//Done App Version
-  Get_COMPLETE_PROFILE: NewApi + 'goals_levels_focusarea_data',//Done App Version
-  Post_COMPLETE_PROFILE: NewApi + 'user_update_details',//Done App Version
-  Custom_WORKOUT_DATA: NewApi + 'usercustomworkout',//Done App Version
-  Free_WORKOUT_DATA: NewApi + 'userfreecustomworkout',//Done App Version
-  Free_Excercise_Data: NewApi + 'userfreecustomexercise',//Done App Version
-  ALL_WORKOUTS: NewApi + 'allworkout',//Done App Version
-  POPULAR_WORKOUTS: NewApi + 'popularWorkout',//Done App Version
-  Meal_Categorie: NewApi + 'get_categorie',//Done App Version
-  DietDetails: NewApi + 'getdiet',//Done App Version
+  signup: 'user_registration', //Done App Version
+  forgetPassword: 'sendemail_link', //Done App Version
+  OTPVerification: 'user_verify', //Done App Version
+  UserProfile: 'userprofile', //Done App Version
+  Get_COMPLETE_PROFILE: NewApi + 'goals_levels_focusarea_data', //Done App Version
+  Post_COMPLETE_PROFILE: NewApi + 'user_update_details', //Done App Version
+  Custom_WORKOUT_DATA: NewApi + 'usercustomworkout', //Done App Version
+  Free_WORKOUT_DATA: NewApi + 'userfreecustomworkout', //Done App Version
+  Free_Excercise_Data: NewApi + 'userfreecustomexercise', //Done App Version
+  ALL_WORKOUTS: NewApi + 'allworkout', //Done App Version
+  POPULAR_WORKOUTS: NewApi + 'popularWorkout', //Done App Version
+  Meal_Categorie: NewApi + 'get_categorie', //Done App Version
+  DietDetails: NewApi + 'getdiet', //Done App Version
   Get_DAYS: NewApi + 'days',
-  POST_EXERCISE: NewApi + 'user_status',//Done App Version
+  POST_EXERCISE: NewApi + 'user_status', //Done App Version
   CURRENT_DAY_EXERCISE: NewApi + 'user_exercise_status',
-  TRACK_CURRENT_DAY_EXERCISE: NewApi + 'user_details',//Done App Version
-  TRACK_WORKOUTS: NewApi + 'workout_status',//Done App Version
+  TRACK_CURRENT_DAY_EXERCISE: NewApi + 'user_details', //Done App Version
+  TRACK_WORKOUTS: NewApi + 'workout_status', //Done App Version
   GET_FAV_WORKOUTS: NewApi + 'getfavoritewokrout',
   POST_FAV_WORKOUT: NewApi + 'addfavorite',
   CURRENT_DAY_EXERCISE_DETAILS: NewApi + 'user_exercise_details',
   Get_Product_Catogery: NewApi + 'categorydata',
   Get_Product_List: NewApi + 'productdata',
-  Get_Mindset_Excise: NewApi + 'mindsetdata',//Done App Version
-  PedometerAPI: NewApi + 'steps_details',//Done App Version
+  Get_Mindset_Excise: NewApi + 'mindsetdata', //Done App Version
+  PedometerAPI: NewApi + 'steps_details', //Done App Version
   Transctions: NewApi + 'transactions',
   TransctionsDetails: NewApi + 'transactionsdetails',
-  total_Calories:NewApi+'exercisecalo',
-  UpdateUserProfile: NewApi + 'update_details',//Done App Version
-  HOME_GRAPH_DATA: NewApi + 'history',//Done App Version
-  Upload_Profile_picture:NewApi+'update_profile_image',
-  monthly_history:NewApi+'monthly_history',
-  DateWiseData:NewApi+'selectDate_exercise',//Done App Version
-  Delete_Account:NewApi+'deleteAccount',
-  Custome_Workout_Cal_Time:NewApi+'exercise_total_calo',
-  loginApple:NewApi+'user_login_test',
+  total_Calories: NewApi + 'exercisecalo',
+  UpdateUserProfile: NewApi + 'update_details', //Done App Version
+  HOME_GRAPH_DATA: NewApi + 'history', //Done App Version
+  Upload_Profile_picture: NewApi + 'update_profile_image',
+  monthly_history: NewApi + 'monthly_history',
+  DateWiseData: NewApi + 'selectDate_exercise', //Done App Version
+  Delete_Account: NewApi + 'deleteAccount',
+  Custome_Workout_Cal_Time: NewApi + 'exercise_total_calo',
+  loginApple: NewApi + 'user_login_test',
   GET_LIKE_WORKOUTS: NewApi + 'total_like_view',
   POST_LIKE_WORKOUT: NewApi + 'like_dislike',
   POST_WORKOUT_VIEWS: NewApi + 'workout_view_count',
+
   WEEKLY_STATUS: NewApi + 'oneweek_exercise_data',
   GET_PLANS_EXERCISE: NewApi + 'get_weekday_exercise',
   DELETE_TRACK_EXERCISE: NewApi + 'delete_exercise',
   GET_NEARBY_GYMS: NewApi + 'getnearbygyms',
   DELETE_WEEKLY_DATA: NewApi + 'delete_completed_exercises',    // API to delete Weekly Completed Exercises
+
+  ALL_EXERCISE_DATA: NewApi + 'get_exercise',
+  USER_CUSTOM_WORKOUT: NewApi + 'user_custom_workout',
+  GET_USER_CUSTOM_WORKOUT: NewApi + 'get_user_custom_workout',
+  DELETE_CUSTOM_WORKOUT: NewApi + 'delete_custom_workout',
+  EDIT_CUSTOM_WORKOUY: NewApi + 'edit_custom_workout',
+
 };

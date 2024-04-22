@@ -197,7 +197,7 @@ const Login = ({navigation}) => {
     LoginManager.logInWithPermissions(['public_profile', 'email']).then(
       function (result) {
         if (result.isCancelled) {
-          setCancelLogin(true)
+          setCancelLogin(true);
         } else {
           const currentProfile = Profile.getCurrentProfile().then(function (
             currentProfile,
@@ -422,7 +422,7 @@ const Login = ({navigation}) => {
           });
           setEmail('');
           setPassword('');
-          getProfileData(data.data.id, data.data.profile_status);
+           getProfileData(data.data.id, data.data.profile_status);
           getCustomWorkout(data.data.id);
           Meal_List(data.data.login_token);
           PurchaseDetails(data.data.id, data.data.login_token);
@@ -623,30 +623,15 @@ const Login = ({navigation}) => {
 
   const getCustomWorkout = async user_id => {
     try {
-      const data = await axios(NewAppapi.Custom_WORKOUT_DATA, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          id: user_id,
-          version: appVersion,
-        },
-      });
 
-      if (data.data.workout) {
-        setForLoading(false);
-        dispatch(setCustomWorkoutData(data?.data));
-      } else if (
-        data?.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: data.data.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
+      const data = await axios.get(
+        `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${user_id}`,
+      );
+
+   
+      if (data?.data?.msg != 'data not found.') {
+        setForLoading(false); 
+        dispatch(setCustomWorkoutData(data?.data?.data));
       } else {
         setForLoading(false);
         dispatch(setCustomWorkoutData([]));
@@ -706,7 +691,6 @@ const Login = ({navigation}) => {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
         StoringData[data?.diet_title] = filePath;
-        console.log('ImageExists', videoExists);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -718,7 +702,7 @@ const Login = ({navigation}) => {
           })
           .then(res => {
             StoringData[data?.diet_title] = res.path();
-            console.log('Image downloaded successfully!',index, res.path());
+            console.log('Image downloaded successfully!', index, res.path());
           })
           .catch(err => {
             console.log(err);
@@ -990,7 +974,7 @@ const Login = ({navigation}) => {
             />
             <Text
               style={{
-                fontSize:20,
+                fontSize: 20,
                 fontWeight: '700',
                 color: '#202020',
                 marginTop: 10,
@@ -1005,7 +989,6 @@ const Login = ({navigation}) => {
                 color: '#202020',
                 marginTop: 15,
                 fontFamily: 'Montserrat-SemiBold',
-
               }}>
               {`Login/Sign Up`}
             </Text>

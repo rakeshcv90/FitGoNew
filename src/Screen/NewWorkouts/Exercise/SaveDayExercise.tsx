@@ -9,9 +9,11 @@ import GradientButton from '../../../Component/GradientButton';
 import analytics from '@react-native-firebase/analytics';
 import {ReviewApp} from '../../../Component/ReviewApp';
 import axios from 'axios';
+
 const SaveDayExercise = ({navigation, route}: any) => {
   const {data, day, allExercise,type} = route?.params;
   let fire, clock, action;
+
   if (type == 'day') {
     for (const d in data?.days) {
       if (d.split('day_')[1] == day) {
@@ -143,7 +145,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
       </View>
       <GradientButton
         onPress={() => {
-          analytics().logEvent(`CV_FITME_COMPLETED_DAY_${day}_EXERCISES`);
+          // analytics().logEvent(`CV_FITME_COMPLETED_DAY_${day}_EXERCISES`);
           ReviewApp(onPresh);
           // TESTAPI()
         }}

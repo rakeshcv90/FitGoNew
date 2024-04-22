@@ -41,6 +41,7 @@ const WeekArray = Array(7)
         .format('dddd')),
   );
 const Exercise = ({navigation, route}: any) => {
+
   const {
     allExercise,
     currentExercise,
@@ -50,6 +51,8 @@ const Exercise = ({navigation, route}: any) => {
     trackerData,
     type,
   } = route.params;
+
+
   const VideoRef = useRef();
   const [visible, setVisible] = useState(false);
   const [playW, setPlayW] = useState(0);
@@ -168,12 +171,14 @@ const Exercise = ({navigation, route}: any) => {
               setPause(false);
               postCurrentExerciseAPI(number);
               if (skipCount == 0) {
+
                 navigation.navigate('SaveDayExercise', {
                   data,
                   day,
                   allExercise,
                   type,
                 });
+
                 clearTimeout(restTimerRef.current);
                 clearTimeout(playTimerRef.current);
               } else {
@@ -300,8 +305,18 @@ const Exercise = ({navigation, route}: any) => {
   const postCurrentExerciseAPI = async (index: number) => {
     const payload = new FormData();
     payload.append('id', trackerData[index]?.id);
+
     payload.append('day', type == 'day' ? day : WeekArray[day]);
     payload.append('workout_id', type == 'day' ? data?.workout_id : `-${day+1}`);
+
+<!--     payload.append('day', day);
+    payload.append(
+      'workout_id',
+      data?.workout_id == undefined
+        ? data?.custom_workout_id
+        : data?.workout_id,
+    ); -->
+
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
     try {
@@ -313,7 +328,7 @@ const Exercise = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-
+      console.log('workout data',trackerData,"ttttttttttt",payload, 'fdeferger', res?.data);
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
