@@ -143,8 +143,9 @@ const Workouts = ({navigation}: any) => {
         url:
           NewAppapi.GET_CHALLENGES_DATA +
           '?version=' +
-          VersionNumber.appVersion,
+          VersionNumber.appVersion+'&user_id='+getUserDataDetails?.id,
       });
+      console.log(res.data,"CHALL")
       if (res.data?.msg != 'version  is required') {
         dispatch(setChallengesData(res.data));
       } else {

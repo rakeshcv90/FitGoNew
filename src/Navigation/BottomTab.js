@@ -32,6 +32,7 @@ import {local} from 'd3';
 import {localImage} from '../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import HomeNew from '../Screen/NewHome/HomeNew';
+import Profile from '../Screen/Profile';
 const Tabs = createBottomTabNavigator();
 
 export const MyPLans = ({focused, onPress}) => {
@@ -44,7 +45,7 @@ export const MyPLans = ({focused, onPress}) => {
   });
   useEffect(() => {
     if (startAnimation) {
-      onPress()
+      onPress();
       Animated.timing(progressAnimation, {
         toValue: 1,
         duration: 2500,
@@ -79,74 +80,44 @@ export const MyPLans = ({focused, onPress}) => {
         bottom: 30,
         // backgroundColor: 'blue',
       }}>
-      {focused ? (
-        <LinearGradient
-          start={{x: 1, y: 0}}
-          end={{x: 0, y: 1}}
-          colors={['#941000', '#D5191A']}
-          style={[
-            styles.nextButton,
-            {
-              // borderWidth: 1,
-              // borderColor: '#D5191A',
-              width: 70,
-              height: 70,
-              borderRadius: 70 / 2,
-              paddingLeft: 5,
-            },
-          ]}>
-          <Image
-            source={localImage.WeeklyPlay}
-            resizeMode={'contain'}
-            style={{
-              zIndex: 1,
-              width: 30,
-              height: 30,
-              // transform: [{scale: Play}],
-              // marginTop: 10,
-              // marginHorizontal: -15,
-            }}
-          />
-          <Animated.View
-            style={{
-              backgroundColor: '#D9D9D9',
-              width: 70,
-              height: progressBarWidth,
-              marginTop: -50,
-              right: 0,
-              position: 'absolute',
-              zIndex: startAnimation ? 0 : -1,
-            }}
-          />
-        </LinearGradient>
-      ) : (
-        <LinearGradient
-          start={{x: 1, y: 0}}
-          end={{x: 0, y: 1}}
-          colors={['#941000', '#D5191A']}
-          style={[
-            styles.nextButton,
-            {
-              borderWidth: 1,
-              borderColor: '#D5191A',
-              overflow: 'hidden',
-              width: 70,
-              height: 70,
-              borderRadius: 70 / 2,
-            },
-          ]}>
+      <View
+        style={[
+          styles.nextButton,
+          {
+            overflow: 'hidden',
+            width: 70,
+            height: 70,
+            borderRadius: 70 / 2,
+            shadowColor: '#121212B2',
+            backgroundColor: 'white',
+            ...Platform.select({
+              ios: {
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.1,
+                shadowRadius: 8,
+              },
+              android: {
+                elevation: 4,
+              },
+            }),
+          },
+        ]}>
+        {focused ? (
+          <View style={styles.triangleContainer}>
+            <View style={styles.triangle} />
+          </View>
+        ) : (
           <View
             style={{
               alignItems: 'center',
               justifyContent: 'center',
             }}>
             <Image
-              source={localImage.MyPlansWhite}
+              source={localImage.MyPlans}
               style={{
                 height: 25,
                 width: 25,
                 marginBottom: 5,
-                tintColor: 'white',
               }}
               resizeMode="contain"
             />
@@ -154,17 +125,17 @@ export const MyPLans = ({focused, onPress}) => {
               style={{
                 fontSize: 12,
                 lineHeight: 14.63,
-                fontWeight: '700',
+                fontWeight: '500',
                 fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                color: AppColor.WHITE,
+                color: '#121212B2',
                 zIndex: 1,
                 marginBottom: 5,
               }}>
               My Plan
             </Text>
           </View>
-        </LinearGradient>
-      )}
+        )}
+      </View>
     </TouchableOpacity>
   );
 };
@@ -249,62 +220,23 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                         //padding: 5,
                       }
                     }>
-                    {route.name == 'Home' ? (
-                      <Image
-                        source={require('../Icon/Images/NewImage/homered.png')}
-                        resizeMode="contain"
-                        style={{
-                          width: 25,
-                          height: 25,
-                        }}
-                      />
-                    ) : route.name == 'Workout' ? (
-                      <Image
-                        source={require('../Icon/Images/NewImage/workoutred.png')}
-                        resizeMode="contain"
-                        style={{
-                          width: 30,
-                          height: 30,
-                        }}
-                      />
-                    ) : route.name == 'MyPlans' ? (
-                      <Image
-                        source={require('../Icon/Images/NewImage/dattaGraph.png')}
-                        resizeMode="contain"
-                        style={{
-                          width: 25,
-                          height: 25,
-                        }}
-                      />
-                    ) : route.name == 'Reports' ? (
-                      <Image
-                        source={require('../Icon/Images/NewImage/dattaGraphred.png')}
-                        resizeMode="contain"
-                        style={{
-                          width: 25,
-                          height: 25,
-                        }}
-                      />
-                    ) : (
-                      <Image
-                        source={require('../Icon/Images/NewImage/trainerred.png')}
-                        resizeMode="contain"
-                        style={{
-                          width: 25,
-                          height: 25,
-                        }}
-                      />
-                    )}
+                    <Image
+                      source={localImage[route.name + 'Red']}
+                      resizeMode="contain"
+                      style={{
+                        width: 25,
+                        height: 25,
+                      }}
+                    />
                   </View>
 
                   <Text
                     style={{
-                      color: AppColor.RED1,
+                      color: AppColor.NewRed,
                       fontFamily: 'Montserrat-Medium',
                       fontSize: 12,
                       lineHeight: 14.63,
-                      fontWeight: '700',
-
+                      fontWeight: '600',
                       marginTop: 5,
                       textAlign: 'center',
                     }}>
@@ -325,47 +257,18 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                     paddingHorizontal: 5,
                   },
                 ]}>
-                {route.name == 'Home' ? (
-                  <Image
-                    source={require('../Icon/Images/NewImage/home.png')}
-                    resizeMode="contain"
-                    style={{
-                      width: 25,
-                      height: 25,
-                    }}
-                  />
-                ) : route.name == 'Workout' ? (
-                  <Image
-                    source={require('../Icon/Images/NewImage/workout.png')}
-                    resizeMode="contain"
-                    style={{
-                      width: 30,
-                      height: 30,
-                    }}
-                  />
-                ) : route.name == 'Reports' ? (
-                  <Image
-                    source={require('../Icon/Images/NewImage/dattaGraph.png')}
-                    resizeMode="contain"
-                    style={{
-                      width: 25,
-                      height: 25,
-                    }}
-                  />
-                ) : (
-                  <Image
-                    source={require('../Icon/Images/NewImage/trainer.png')}
-                    resizeMode="contain"
-                    style={{
-                      width: 25,
-                      height: 25,
-                    }}
-                  />
-                )}
+                <Image
+                  source={localImage[route.name]}
+                  resizeMode="contain"
+                  style={{
+                    width: 25,
+                    height: 25,
+                  }}
+                />
                 <Text
                   style={{
-                    color: '#202020',
-                    opacity: 0.4,
+                    color: '#121212B2',
+                    opacity: 0.7,
                     fontSize: 12,
                     lineHeight: 14.63,
                     fontWeight: '500',
@@ -476,8 +379,8 @@ const BottomTab = () => {
         />
 
         <Tabs.Screen
-          name="Trainer"
-          component={Trainer}
+          name="Profile"
+          component={Profile}
           options={{tabBarShowLabel: false}}
         />
       </Tabs.Navigator>
@@ -497,7 +400,21 @@ const styles = StyleSheet.create({
         : DeviceHeigth >= 1024
         ? DeviceHeigth * 0.06
         : DeviceHeigth * 0.09,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: 'white',
+    // zIndex: 1,
+    borderTopWidth: 0.5,
+    borderTopColor: 'rgba(0, 0, 0, 0.12)',
+    // shadowColor: '#121212B2',
+    // ...Platform.select({
+    //   ios: {
+    //     shadowOffset: {width: 1, height: 2},
+    //     shadowOpacity: 0.5,
+    //     shadowRadius: 8,
+    //   },
+    //   android: {
+    //     elevation: 10,
+    //   },
+    // }),
   },
   tabButton: {
     flex: 1,
@@ -511,6 +428,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
+  },
+  triangleContainer: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 20,
+    borderRightWidth: 20,
+    borderBottomWidth: 30,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'red', // Change this to the desired color of the triangle
+    transform: [{rotate: '90deg'}],
+  },
+  triangle: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 30,
+    borderRightWidth: 30,
+    borderBottomWidth: 40,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'white', // Should match background color
+    position: 'absolute',
+    top: -40,
+    left: 0,
   },
 });
 
