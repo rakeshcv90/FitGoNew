@@ -35,12 +35,13 @@ const Workouts = ({navigation}: any) => {
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
-console.log("All workout data",allWorkoutData)
+
   useEffect(() => {
     if (isFocused) {
       allWorkoutApi();
       allWorkoutData?.length == 0 && allWorkoutApi();
       getUserCustomeWorkout()
+    
     }
   }, [isFocused]);
   const [refresh, setRefresh] = useState(false);
@@ -130,116 +131,8 @@ console.log("All workout data",allWorkoutData)
 const getUserCustomeWorkout=async()=>{
   
 }
-  // const workoutStatusApi = async () => {
-  //   try {
-  //     const payload = new FormData();
-  //     payload.append('token', getUserDataDetails?.login_token);
-  //     payload.append('id', getUserDataDetails?.id);
-  //     payload.append('version', VersionNumber.appVersion);
-  //     setRefresh(true);
-  //     const res = await axios({
-  //       url: NewAppapi.TRACK_WORKOUTS,
-  //       method: 'post',
-  //       data: payload,
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     });
 
-  //     if (res?.data?.msg == 'Please update the app to the latest version.') {
-  //       setRefresh(false);
-  //       showMessage({
-  //         message: res?.data?.msg,
-  //         type: 'danger',
-  //         animationDuration: 500,
-  //         floating: true,
-  //         icon: {icon: 'auto', position: 'left'},
-  //       });
-  //     } else if (res?.data?.msg == 'No Completed Workouts Found') {
-  //       setRefresh(false);
-  //       setTrackerData([]);
-  //     } else if (res?.data) {
-  //       setRefresh(false);
-  //       setTrackerData(res.data?.workout_ids);
-  //     } else {
-  //       setRefresh(false);
-  //       setTrackerData([]);
-  //     }
-  //   } catch (error) {
-  //     setRefresh(false);
-  //     console.error(error, 'popularError');
-  //     setTrackerData([]);
-  //   }
-  // };
 
-  // const AdCard = () => {
-  //   return (
-  //     <View
-  //       style={{
-  //         width: DeviceHeigth < 1280 ? DeviceWidth * 0.92 : DeviceWidth * 0.96,
-  //         height: DeviceHeigth * 0.19,
-  //         borderRadius: 20,
-  //         padding: 15,
-  //         alignItems: 'center',
-  //         justifyContent: 'space-evenly',
-  //         flexDirection: 'row',
-  //         marginTop: 5,
-  //         backgroundColor: '#94100033',
-  //       }}>
-  //       <View style={{marginLeft: -5}}>
-  //         <Text
-  //           // numberOfLines={1}
-  //           style={[styles.category]}>
-  //           {`Full Body Toning\nWorkout`}
-  //         </Text>
-  //         <Text
-  //           style={[
-  //             styles.category,
-  //             {
-  //               width: DeviceWidth * 0.35,
-  //               fontWeight: '600',
-  //               fontSize: 12,
-  //               lineHeight: 15,
-  //               marginVertical: 10,
-  //             },
-  //           ]}>
-  //           Includes circuits to work every muscle
-  //         </Text>
-  //         <GradientButton
-  //           w={DeviceWidth * 0.3}
-  //           onPress={() =>
-  //             navigation?.navigate('AllWorkouts', {
-  //               data: allWorkoutData,
-  //               type: '',
-  //               fav: false,
-  //             })
-  //           }
-  //           h={35}
-  //           //  mV={15}
-  //           text="Start Training"
-  //           textStyle={{
-  //             fontSize: 12,
-  //             fontFamily: 'Poppins',
-  //             lineHeight: 18,
-  //             textAlign: 'center',
-  //             color: AppColor.WHITE,
-  //             fontWeight: '600',
-  //           }}
-  //         />
-  //       </View>
-
-  //       <Image
-  //         source={localImage.GymImage}
-  //         style={{
-  //           height: DeviceHeigth * 0.2,
-  //           width: DeviceWidth * 0.37,
-  //           left: DeviceWidth * 0.03,
-  //           top: -DeviceHeigth * 0.005,
-  //         }}
-  //         resizeMode="contain"></Image>
-  //     </View>
-  //   );
-  // };
 
   const renderItem = useMemo(() => {
     return ({item}: any) => (
@@ -282,8 +175,8 @@ const getUserCustomeWorkout=async()=>{
             <Image
               source={item.img}
               style={{
-                width: 50,
-                height: 50,
+                width: 30,
+                height: 30,
                 justifyContent: 'center',
                 alignSelf: 'center',
                 borderRadius: 16,
@@ -297,8 +190,9 @@ const getUserCustomeWorkout=async()=>{
                 fontSize: 15,
                 fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                 fontWeight: '500',
-                lineHeight: 15,
+                lineHeight: 25,
                 color: '#434343',
+                textAlign:'center',
               }}>
               {item.title}
             </Text>
@@ -315,16 +209,16 @@ const getUserCustomeWorkout=async()=>{
           activeOpacity={0.8}
           style={{
             width: DeviceWidth * 0.95,
-            height: DeviceHeigth * 0.45,
+            height: DeviceHeigth * 0.35,
 
-            //margin:10,
+           
             marginVertical: DeviceHeigth * 0.015,
           }}>
           <ImageBackground
             source={require('../../Icon/Images/product_1631791758.jpg')}
             style={{
               width: DeviceWidth * 0.95,
-              height: DeviceHeigth * 0.45,
+              height: DeviceHeigth * 0.35,
               borderRadius: 20,
               overflow: 'hidden',
             }}
@@ -366,7 +260,7 @@ const getUserCustomeWorkout=async()=>{
               </ImageBackground>
               <View
                 style={{
-                  marginTop: DeviceHeigth * 0.1,
+                  marginTop: DeviceHeigth * 0.05,
                   marginHorizontal: 10,
                   zIndex: 1,
                 }}>
@@ -602,13 +496,14 @@ const getUserCustomeWorkout=async()=>{
                   alignItems: 'center',
                   justifyContent: 'space-between',
                 }}>
+                 
                 <View
                   style={{
                     marginHorizontal:
                       Platform.OS == 'android'
                         ? DeviceWidth * 0.03
                         : DeviceHeigth >= 1024
-                        ? -DeviceWidth * 0.03
+                        ?DeviceWidth * 0.03
                         : DeviceWidth * 0.02,
                   }}>
                   <Text
@@ -723,7 +618,7 @@ const getUserCustomeWorkout=async()=>{
           <View
             style={[
               styles.meditionBox,
-              {marginVertical: DeviceHeigth * 0.01, alignItems: 'center'},
+              {marginVertical: DeviceHeigth * 0.0, alignItems: 'center'},
             ]}>
             <FlatList
               data={completeProfileData?.focusarea}

@@ -266,7 +266,7 @@ const SplaceScreen = ({navigation}) => {
     
       if (data?.data?.msg != 'data not found.') {
         dispatch(setCustomWorkoutData(data?.data?.data));
-        console.log('ggggggg', data?.data);
+  
       } else {
         dispatch(setCustomWorkoutData([]));
       }

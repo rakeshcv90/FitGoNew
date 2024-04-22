@@ -120,4 +120,6 @@ export const localImage = {
   Search: require('../Icon/Images/NewImage2/search.png'),
   Plus: require('../Icon/Images/NewImage2/plus.png'),
   Minus: require('../Icon/Images/NewImage2/Minus.png'),
+  Next: require('../Icon/Images/NewImage2/next.png'),
+  Gym: require('../Icon/Images/NewImage2/Gym.png'),
 };

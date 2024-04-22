@@ -8,6 +8,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import CircularProgress from 'react-native-circular-progress-indicator';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector, useDispatch} from 'react-redux';
+import {localImage} from '../../Component/Image';
 
 const FocuseWorkoutList = ({navigation, route}) => {
   const [progressExercise, setProgressExercise] = useState(false);
@@ -28,7 +29,9 @@ const FocuseWorkoutList = ({navigation, route}) => {
           <>
             <TouchableOpacity
               activeOpacity={0.8}
-              onPress={() => {}}
+              onPress={() => {
+                navigation.navigate('WorkoutDays', {data: item});
+              }}
               style={{
                 width: '95%',
                 borderRadius: 10,
@@ -170,58 +173,58 @@ const FocuseWorkoutList = ({navigation, route}) => {
                 </View>
               </View>
 
-              <View>
-                {getProgress(item)}
-                {/* {progressExercise ? (
-                  <CircularProgress
-                    value={10}
-                    radius={20}
-                    progressValueColor={'rgb(197, 23, 20)'}
-                    inActiveStrokeColor={'#A9A9A9'}
-                    activeStrokeColor={'rgb(219, 92, 0)'}
-                    maxValue={100}
-                    valueSuffix={'%'}
-                    //titleColor={'black'}
-                    titleStyle={{
-                      textAlign: 'center',
-                      fontSize: 15,
-                      fontWeight: '500',
-                      lineHeight: 15,
-                      fontFamily: 'Poppins',
-                      color: 'rgb(0, 0, 0)',
-                    }}
-                  />
-                ) : (
-                  <AnimatedLottieView
-                    source={require('../../Icon/Images/NewImage/compleate.json')}
-                    speed={0.5}
-                    autoPlay
-                    resizeMode="cover"
-                    style={{width: 70, height: 70, right: -10}}
-                  />
-                )} */}
-              </View>
+              <View>{getProgress(item, totalTime)}</View>
             </TouchableOpacity>
           </>
         );
       },
     [],
   );
-  const getProgress = useMemo(() => item => {
+
+  const getProgress = useMemo(() => (item, totalTime) => {
     let time = getCustttomeTimeCal.filter(item1 => {
-      // item1.workout_id == item.workout_id;
-      // return item1;
+      return item1.workout_id == item.workout_id;
     });
+
+    let remainingTime = time[0].totalRestTime;
+    let resulttime = ((remainingTime / totalTime) * 100).toFixed(0);
 
     return (
       <View>
-        <AnimatedLottieView
-          source={require('../../Icon/Images/NewImage/compleate.json')}
-          speed={0.5}
-          autoPlay
-          resizeMode="cover"
-          style={{width: 50, height: 60, right: -10}}
-        />
+        {resulttime == 100 ? (
+          <AnimatedLottieView
+            source={require('../../Icon/Images/NewImage/compleate.json')}
+            speed={0.5}
+            autoPlay
+            resizeMode="cover"
+            style={{width: 50, height: 60, right: -10}}
+          />
+        ) : resulttime == 0 ? (
+          <Image
+            source={localImage.Next}
+            resizeMode="contain"
+            style={{width: 40, height: 40, }}
+          />
+        ) : (
+          <CircularProgress
+            value={resulttime}
+            radius={20}
+            progressValueColor={'rgb(197, 23, 20)'}
+            inActiveStrokeColor={'#A9A9A9'}
+            activeStrokeColor={'rgb(219, 92, 0)'}
+            maxValue={100}
+            valueSuffix={'%'}
+            //titleColor={'black'}
+            titleStyle={{
+              textAlign: 'center',
+              fontSize: 15,
+              fontWeight: '500',
+              lineHeight: 15,
+              fontFamily: 'Poppins',
+              color: 'rgb(0, 0, 0)',
+            }}
+          />
+        )}
       </View>
     );
   });
@@ -233,8 +236,6 @@ const FocuseWorkoutList = ({navigation, route}) => {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-   
-
         <AnimatedLottieView
           source={require('../../Icon/Images/NewImage/NoData.json')}
           speed={2}

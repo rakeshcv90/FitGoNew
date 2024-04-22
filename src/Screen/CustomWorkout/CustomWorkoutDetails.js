@@ -8,7 +8,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {AppColor, Fonts} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
@@ -21,16 +21,182 @@ import AnimatedLottieView from 'lottie-react-native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import axios from 'axios';
 import VersionNumber from 'react-native-version-number';
-import {setCustomWorkoutData} from '../../Component/ThemeRedux/Actions';
+import {
+  setCustomWorkoutData,
+  setVideoLocation,
+} from '../../Component/ThemeRedux/Actions';
 import {showMessage} from 'react-native-flash-message';
+import {useIsFocused} from '@react-navigation/native';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const CustomWorkoutDetails = ({navigation, route}) => {
   const data = route?.params?.item;
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [forLoading, setForLoading] = useState(false);
+  const [trackerData, setTrackerData] = useState([]);
+  const [downloaded, setDownloade] = useState(0);
+
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const dispatch = useDispatch();
+  let isFocuse = useIsFocused();
+
+  useEffect(() => {
+    if (isFocuse) {
+      getExerciseTrackAPI();
+    }
+  }, [isFocuse]);
+
+  const sanitizeFileName = fileName => {
+    fileName = fileName.replace(/\s+/g, '_');
+    return fileName;
+  };
+  let StoringData = {};
+  const downloadVideos = async (data, index, len) => {
+    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
+      data?.exercise_title,
+    )}.mp4`;
+    try {
+      const videoExists = await RNFetchBlob.fs.exists(filePath);
+      if (videoExists) {
+        StoringData[data?.exercise_title] = filePath;
+        setDownloade(pre => pre + 1);
+        console.log('Downloaded Items is', filePath);
+      } else {
+        await RNFetchBlob.config({
+          fileCache: true,
+          // IOSBackgroundTask: true, // Add this for iOS background downloads
+          path: filePath,
+          appendExt: '.mp4',
+        })
+          .fetch('GET', data?.exercise_video, {
+            'Content-Type': 'application/mp4',
+            // key: 'Config.REACT_APP_API_KEY',
+          })
+          .then(res => {
+            StoringData[data?.exercise_title] = res.path();
+            setDownloade(pre => pre + 1);
+            console.log('Downloadeding Items is', res.path());
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    } catch (error) {
+      console.log('ERRRR', error);
+    }
+    dispatch(setVideoLocation(StoringData));
+  };
+  const getExerciseTrackAPI = async () => {
+    const payload = new FormData();
+    payload.append('user_id', getUserDataDetails?.id);
+    payload.append('workout_id', route?.params?.item?.custom_workout_id);
+    payload.append('user_day', -10);
+    payload.append('version', VersionNumber.appVersion);
+
+    try {
+      const res = await axios({
+        url: NewAppapi.TRACK_CURRENT_DAY_EXERCISE,
+        method: 'Post',
+        data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+   
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (res.data?.user_details) {
+        console.log('dsfsdfdsfsdfdsfdsfsdfsdfsdfdsf', res?.data);
+        setTrackerData(res.data?.user_details);
+      } else {
+     
+        setTrackerData([]);
+      }
+   
+    } catch (error) {
+
+      console.error(error, 'PostDaysAPIERror');
+      setTrackerData([]);
+    }
+  };
+
+  const postCurrentDayAPI = async () => {
+    let datas = [];
+    let trainingCount = -1;
+    trainingCount = trackerData.findIndex(
+      item => item?.exercise_status == 'undone',
+    );
+
+    for (const exercise of data?.exercise_data) {
+      datas.push({
+        user_id: getUserDataDetails?.id,
+        workout_id: data?.custom_workout_id,
+        user_day: -10,
+        user_exercise_id: exercise?.exercise_id,
+      });
+    }
+    Promise.all(
+      data?.exercise_data.map((item, index) =>
+        downloadVideos(item, index, data?.exercise_data.length),
+      ),
+    ).finally(async () => {
+      try {
+        const res = await axios({
+          url: NewAppapi.CURRENT_DAY_EXERCISE,
+          method: 'Post',
+          data: {user_details: datas},
+        });
+
+        if (res.data) {
+          if (
+            res.data?.msg ==
+            'Exercise Status for All Users Inserted Successfully'
+          ) {
+            setDownloade(0);
+            navigation.navigate('Exercise', {
+              allExercise: data?.exercise_data,
+              // currentExercise: data?.exercise_data[0],
+              currentExercise:
+                trainingCount != -1
+                  ? data?.exercise_data[trainingCount]
+                  : data?.exercise_data[0],
+              data: data,
+              day: -10,
+              // exerciseNumber: 0,
+              exerciseNumber: trainingCount != -1 ? trainingCount : 0,
+              trackerData: res?.data?.inserted_data,
+              type: 'weekly',
+            });
+          } else {
+            setDownloade(0);
+            navigation.navigate('Exercise', {
+              allExercise: data?.exercise_data,
+              // currentExercise: data?.exercise_data[0],
+              currentExercise:
+                trainingCount != -1
+                  ? data?.exercise_data[trainingCount]
+                  : data?.exercise_data[0],
+              data: data,
+              day: -10,
+              exerciseNumber: trainingCount != -1 ? trainingCount : 0,
+              trackerData: trackerData,
+              type: 'weekly',
+            });
+          }
+        }
+      } catch (error) {
+        console.error(error, 'PostDaysAPIERror');
+      }
+    });
+  };
 
   const renderItem = useMemo(
     () =>
@@ -38,6 +204,9 @@ const CustomWorkoutDetails = ({navigation, route}) => {
         return (
           <>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('WorkoutDetail', {item: item});
+              }}
               activeOpacity={0.8}
               style={{
                 width: '95%',
@@ -57,7 +226,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                 ...Platform.select({
                   ios: {
                     shadowColor: '#000000',
-                    shadowOffset: {width: 0, height: 2},
+                    shadowOffset: {width: 0, height: 1},
                     shadowOpacity: 0.1,
                     shadowRadius: 4,
                   },
@@ -147,12 +316,35 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                   </View>
                 </View>
               </View>
+              {getExerciseStatus(item?.exercise_id,trackerData)}
             </TouchableOpacity>
           </>
         );
       },
-    [],
+    [trackerData,],
   );
+
+  const getExerciseStatus = useMemo(() => (item_id,allData) => {
+
+    let status_data = allData?.filter(item1 => {
+      return item1?.user_exercise_id == item_id;
+    });
+  
+    return (
+      <View>
+        {status_data[0]?.exercise_status == 'completed' && (
+          <AnimatedLottieView
+            source={require('../../Icon/Images/NewImage/compleate.json')}
+            speed={0.5}
+            autoPlay
+            resizeMode="cover"
+            style={{width: 50, height: 60, right: -10}}
+          />
+        )}
+      </View>
+    );
+  });
+
   const emptyComponent = () => {
     return (
       <View
@@ -221,7 +413,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
       const data = await axios.get(
         `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${getUserDataDetails?.id}`,
       );
-     
+
       if (data?.data?.msg != 'data not found.') {
         setForLoading(false);
         dispatch(setCustomWorkoutData(data?.data?.data));
@@ -346,7 +538,9 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           <TouchableOpacity
             style={styles.buttonStyle}
             activeOpacity={0.5}
-            onPress={() => {}}>
+            onPress={() => {
+              postCurrentDayAPI();
+            }}>
             <LinearGradient
               start={{x: 0, y: 1}}
               end={{x: 1, y: 0}}
