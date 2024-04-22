@@ -37,7 +37,7 @@ const intialState = {
   getFitmeMealAdsCount: 0,
   getStoreVideoLoc: {},
   isAlarmEnabled: false,
-
+  getChallengesData:[],
   getWeeklyPlansData: {},
 
   getAllExercise:[],
@@ -194,6 +194,11 @@ const ThemeReducer = (state = intialState, action) => {
       return {
         ...state,
         getWeeklyPlansData: action.payload,
+      };
+    case types.CHALLENGES_DATA:
+      return {
+        ...state,
+        getChallengesData: action.payload,
       };
 
       case types.ALARM_ENABLED:

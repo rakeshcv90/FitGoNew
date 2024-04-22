@@ -216,6 +216,12 @@ export const setWeeklyPlansData = data => {
     payload: data,
   };
 };
+export const setChallengesData = data => {
+  return {
+    type: types.CHALLENGES_DATA,
+    payload: data,
+  };
+};
 export const setAllExercise = data => {
   return {
     type: types.ALL_EXERCISE,

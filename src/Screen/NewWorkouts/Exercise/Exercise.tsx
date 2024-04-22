@@ -122,7 +122,7 @@ const Exercise = ({navigation, route}: any) => {
     if (!back) {
       restStart
         ? (restTimerRef.current = setTimeout(() => {
-            if (timer === 9) {
+            if (timer === 0) {
               if (number == allExercise?.length - 1) return;
               setRestStart(false);
               setIsLoading(true);
@@ -332,14 +332,6 @@ const Exercise = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log(
-        'workout data',
-        trackerData,
-        'ttttttttttt',
-        payload,
-        'fdeferger',
-        res?.data,
-      );
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -352,7 +344,7 @@ const Exercise = ({navigation, route}: any) => {
         console.log(res.data, trackerData[index], payload);
         setCurrentData(allExercise[index]);
         setRestStart(true);
-        setPlayW(80);
+        setPlayW(0);
       }
     } catch (error) {
       console.error(error, 'PostDaysAPIERror');

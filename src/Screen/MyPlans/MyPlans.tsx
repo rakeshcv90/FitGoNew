@@ -172,7 +172,7 @@ const Box = ({item, index}: any) => {
               lineHeight: 20,
             }}>
             {item?.exercise_title}
-            {item?.exercise_id}
+            {/* {item?.exercise_id} */}
           </Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text

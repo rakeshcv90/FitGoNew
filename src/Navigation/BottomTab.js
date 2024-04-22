@@ -36,22 +36,25 @@ const Tabs = createBottomTabNavigator();
 
 export const MyPLans = ({focused, onPress}) => {
   const [startAnimation, setStartAnimation] = useState(false);
-  const Play = new Animated.Value(1);
-
+  const progressAnimation = new Animated.Value(0);
+  const progressBarWidth = progressAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['100%', '0%'],
+    extrapolate: 'extend',
+  });
   useEffect(() => {
     if (startAnimation) {
-      Animated.timing(Play, {
-        toValue: 1.5,
+      onPress()
+      Animated.timing(progressAnimation, {
+        toValue: 1,
+        duration: 2500,
         useNativeDriver: false,
-        duration: 2000,
       }).start(() => {
-        Play.setValue(1); // Reset the animation state
-        setStartAnimation(false); // Reset the startAnimation state to false
+        progressAnimation.setValue(0);
+        setStartAnimation(false);
       });
-      onPress();
-      // return Play.setValue(1)
     }
-  }, [startAnimation]);
+  }, [startAnimation, progressAnimation]);
 
   return (
     <TouchableOpacity
@@ -73,21 +76,49 @@ export const MyPLans = ({focused, onPress}) => {
         }),
         justifyContent: 'center',
         alignItems: 'center',
-        bottom: focused ? 25 : 30,
+        bottom: 30,
         // backgroundColor: 'blue',
       }}>
       {focused ? (
-        <Animated.Image
-          source={localImage.WeeklyPlay}
-          resizeMode={'contain'}
-          style={{
-            width: DeviceWidth * 0.28,
-            height: DeviceWidth * 0.28,
-            transform: [{scale: Play}],
-            marginTop: 10,
-            marginHorizontal: -15,
-          }}
-        />
+        <LinearGradient
+          start={{x: 1, y: 0}}
+          end={{x: 0, y: 1}}
+          colors={['#941000', '#D5191A']}
+          style={[
+            styles.nextButton,
+            {
+              // borderWidth: 1,
+              // borderColor: '#D5191A',
+              width: 70,
+              height: 70,
+              borderRadius: 70 / 2,
+              paddingLeft: 5,
+            },
+          ]}>
+          <Image
+            source={localImage.WeeklyPlay}
+            resizeMode={'contain'}
+            style={{
+              zIndex: 1,
+              width: 30,
+              height: 30,
+              // transform: [{scale: Play}],
+              // marginTop: 10,
+              // marginHorizontal: -15,
+            }}
+          />
+          <Animated.View
+            style={{
+              backgroundColor: '#D9D9D9',
+              width: 70,
+              height: progressBarWidth,
+              marginTop: -50,
+              right: 0,
+              position: 'absolute',
+              zIndex: startAnimation ? 0 : -1,
+            }}
+          />
+        </LinearGradient>
       ) : (
         <LinearGradient
           start={{x: 1, y: 0}}
@@ -199,7 +230,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
           <>
             {isFocused ? (
               label == 'MyPlans' ? (
-                <MyPLans focused={isFocused} onPress={() => handleStart()} />
+                <MyPLans focused={isFocused} onPress={handleStart} />
               ) : (
                 <TouchableOpacity
                   key={route.key}

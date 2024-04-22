@@ -19,6 +19,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {
   setAllWorkoutData,
+  setChallengesData,
   setWorkoutTimeCal,
 } from '../../Component/ThemeRedux/Actions';
 import NewHeader from '../../Component/Headers/NewHeader';
@@ -39,13 +40,16 @@ const Workouts = ({navigation}: any) => {
     (state: any) => state.getUserDataDetails,
   );
   const getUserID = useSelector((state: any) => state.getUserID);
+  const getChallengesData = useSelector(
+    (state: any) => state.getChallengesData,
+  );
 
   useEffect(() => {
     if (isFocused) {
       allWorkoutApi();
       allWorkoutData?.length == 0 && allWorkoutApi();
       // getUserCustomeWorkout()
-      getCustomeWorkoutTimeDetails()
+      getCustomeWorkoutTimeDetails();
     }
   }, [isFocused]);
   const [refresh, setRefresh] = useState(false);
@@ -133,6 +137,23 @@ const Workouts = ({navigation}: any) => {
     }
   };
 
+  const ChallengesDataAPI = async () => {
+    try {
+      const res = await axios({
+        url:
+          NewAppapi.GET_CHALLENGES_DATA +
+          '?version=' +
+          VersionNumber.appVersion,
+      });
+      if (res.data?.msg != 'version  is required') {
+        dispatch(setChallengesData(res.data));
+      } else {
+        dispatch(setChallengesData([]));
+      }
+    } catch (error) {
+      console.error(error, 'ChallengesDataAPI ERRR');
+    }
+  };
   const getCustomeWorkoutTimeDetails = async () => {
     try {
       const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
@@ -224,6 +245,7 @@ const Workouts = ({navigation}: any) => {
       <>
         <TouchableOpacity
           activeOpacity={0.8}
+          onPress={() => navigation.navigate('WorkoutDays', {data: item})}
           style={{
             width: DeviceWidth * 0.95,
             height: DeviceHeigth * 0.35,
@@ -271,7 +293,7 @@ const Workouts = ({navigation}: any) => {
                     top: 0,
                     textAlign: 'center',
                   }}>
-                  {`30\nDAYS`}
+                  {`${item?.days}\nDAYS`}
                 </Text>
               </ImageBackground>
               <View
@@ -287,7 +309,9 @@ const Workouts = ({navigation}: any) => {
                     fontWeight: '700',
                     fontSize: 32,
                     color: AppColor.WHITE,
-                  }}>{`30-Day\nCore Challenge`}</Text>
+                  }}>
+                  {item?.title}
+                </Text>
               </View>
               <View style={{marginHorizontal: 10, zIndex: 1}}>
                 <Text
@@ -354,7 +378,7 @@ const Workouts = ({navigation}: any) => {
             refreshing={refresh}
             onRefresh={() => {
               allWorkoutApi();
-
+              ChallengesDataAPI();
               // workoutStatusApi();
             }}
             colors={[AppColor.RED, AppColor.WHITE]}
@@ -636,7 +660,7 @@ const Workouts = ({navigation}: any) => {
               {marginVertical: DeviceHeigth * 0.0, alignItems: 'center'},
             ]}>
             <FlatList
-              data={completeProfileData?.focusarea}
+              data={getChallengesData}
               showsHorizontalScrollIndicator={false}
               keyExtractor={(item: any, index: number) => index.toString()}
               renderItem={renderItem1}
