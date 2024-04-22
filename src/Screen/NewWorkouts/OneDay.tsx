@@ -236,6 +236,8 @@ const OneDay = ({navigation, route}: any) => {
               day: day,
               exerciseNumber: trainingCount != -1 ? trainingCount : 0,
               trackerData: res?.data?.inserted_data,
+              type: 'day'
+
             });
           } else {
             setOpen(false);
@@ -250,6 +252,8 @@ const OneDay = ({navigation, route}: any) => {
               day: day,
               exerciseNumber: trainingCount != -1 ? trainingCount : 0,
               trackerData: trackerData,
+              type: 'day'
+
             });
           }
         }

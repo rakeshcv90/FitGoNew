@@ -57,6 +57,15 @@ import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createStackNavigator } from '@react-navigation/stack';
 import Store from '../Screen/NewHome/Store';
+import FocuseWorkoutList from '../Screen/FocusArea/FocuseWorkoutList';
+import CustomWorkout from '../Screen/CustomWorkout/CustomWorkout';
+import CustomWorkoutDetails from '../Screen/CustomWorkout/CustomWorkoutDetails';
+import CreateWorkout from '../Screen/CustomWorkout/CreateWorkout';
+import EditCustomWorkout from '../Screen/CustomWorkout/EditCustomWorkout';
+import WorkoutDayData from '../Screen/FocusArea/WorkoutDayData';
+
+import WorkoutDetail from '../Screen/CustomWorkout/WorkoutDetail';
+import HomeNew from '../Screen/NewHome/HomeNew';
 
 
 const Stack = createStackNavigator();
@@ -74,7 +83,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-         {/* <Stack.Screen name="Subscription" component={Subscription} /> */}
+    <Stack.Screen name="HomeNew" component={HomeNew} />
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
         name="IntroductionScreen1"
@@ -138,6 +147,13 @@ export const LoginStack = () => {
       <Stack.Screen name="AIMessageHistory" component={AIMessageHistory} />
       <Stack.Screen name="Subscription" component={Subscription} />
       <Stack.Screen name="NewProgressScreen" component={NewMonthlyAchievement}/>
+      <Stack.Screen name="FocuseWorkoutList" component={FocuseWorkoutList}/>
+      <Stack.Screen name="CustomWorkout" component={CustomWorkout}/>
+      <Stack.Screen name="CustomWorkoutDetails" component={CustomWorkoutDetails}/>
+      <Stack.Screen name="CreateWorkout" component={CreateWorkout}/>
+      <Stack.Screen name="EditCustomWorkout" component={EditCustomWorkout}/>
+      <Stack.Screen name="WorkoutDayData" component={WorkoutDayData}/>
+      <Stack.Screen name="WorkoutDetail" component={WorkoutDetail}/>
     </Stack.Navigator>
   );
 };
