@@ -9,10 +9,11 @@ import GoogleFit, {Scopes} from 'react-native-google-fit';
 import AppleHealthKit from 'react-native-health';
 import {NewAppapi} from './Config';
 import NetInfo from '@react-native-community/netinfo';
-import VersionNumber from 'react-native-version-number';
+import VersionNumber, {appVersion} from 'react-native-version-number';
 import {Platform} from 'react-native';
 import {check, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'moment';
 
 export const StepCounterUpdateNotification = async () => {
   const CurrentTime = new Date();
@@ -157,9 +158,7 @@ const PedometerNotificationAPI = async (
   distance: string,
   calories: string,
 ) => {
-  const user_id = await AsyncStorage.getItem(
-    'userID',
-  );
+  const user_id = await AsyncStorage.getItem('userID');
   try {
     const res = await axios({
       url: NewAppapi.PedometerAPI,
@@ -199,5 +198,41 @@ const TotalCalPostAPI = async (user_id: string) => {
     }
   } catch (error) {
     console.log('UCustomeCorkout details', error);
+  }
+};
+const WeekArray = Array(7)
+  .fill(0)
+  .map(
+    (item, index) =>
+      (item = moment()
+        .add(index, 'days')
+        .subtract(moment().isoWeekday() - 1, 'days')
+        .format('dddd')),
+  );
+export const DeleteWeeklyDataAPIStart = () => {
+  Promise.all(WeekArray.map((_, index) => DeleteWeeklyDataAPI(index)));
+};
+
+const DeleteWeeklyDataAPI = async (day: number) => {
+  const user_id = await AsyncStorage.getItem('userID');
+  // console.log(`-${day+1}`, WeekArray[day])
+  // if (day > 0) return;
+  try {
+    const res = await axios.get(
+      NewAppapi.DELETE_WEEKLY_DATA +
+        '?user_id=' +
+        user_id +
+        '&workout_id=' +
+        `-${day + 1}` +
+        '&day=' +
+        WeekArray[day] +
+        '&version=' +
+        VersionNumber.appVersion,
+    );
+    if (res.data) {
+      console.log('DeleteWeeklyDataAPI data', res.data);
+    }
+  } catch (error) {
+    console.log('DeleteWeeklyDataAPI Er ', error);
   }
 };

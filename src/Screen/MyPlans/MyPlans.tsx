@@ -37,6 +37,10 @@ import {
 import RNFetchBlob from 'rn-fetch-blob';
 import {showMessage} from 'react-native-flash-message';
 import {useFocusEffect} from '@react-navigation/native';
+import {MyPLans} from '../../Navigation/BottomTab';
+import {Path, Svg} from 'react-native-svg';
+
+export let handleStart = () => {};
 
 const WeekArray = Array(7)
   .fill(0)
@@ -191,6 +195,7 @@ const Box = ({item, index}: any) => {
                     style={[
                       styles.semiBold,
                       {
+                        fontSize: 25,
                         color: '#505050',
                         lineHeight: 25,
                         fontWeight: 'bold',
@@ -257,7 +262,7 @@ const MyPlans = ({navigation}: any) => {
   useFocusEffect(
     useCallback(() => {
       WeeklyStatusAPI();
-    }, []),
+    }, [selectedDay]),
   );
   const allWorkoutApi = async (day: string) => {
     try {
@@ -293,6 +298,7 @@ const MyPlans = ({navigation}: any) => {
         res.data?.forEach((item: any) => {
           days.add(item.user_day);
         });
+        console.log('DAYs', days);
         setWeekStatus([...days]);
       } else {
         setWeekStatus([]);
@@ -343,7 +349,21 @@ const MyPlans = ({navigation}: any) => {
     dispatch(setVideoLocation(StoringData));
   };
   let datas = [];
-  const handleStart = () => {
+  handleStart = () => {
+    Promise.all(
+      getWeeklyPlansData[WeekArray[selectedDay]]?.map(
+        (item: any, index: number) => {
+          return downloadVideos(
+            item,
+            index,
+            getWeeklyPlansData[WeekArray[selectedDay]]?.length,
+          );
+        },
+      ),
+    ).finally(beforeNextScreen);
+  };
+
+  const beforeNextScreen = async () => {
     for (const item of getWeeklyPlansData[WeekArray[selectedDay]]) {
       datas.push({
         user_id: getUserDataDetails?.id,
@@ -352,94 +372,81 @@ const MyPlans = ({navigation}: any) => {
         user_exercise_id: item?.exercise_id,
       });
     }
-    getWeeklyPlansData[WeekArray[selectedDay]]?.map(
-      (item: any, index: number) => {
-        downloadVideos(
-          item,
-          index,
-          getWeeklyPlansData[WeekArray[selectedDay]]?.length,
-        ).finally(async () => {
-          try {
-            const res = await axios({
-              url: NewAppapi.CURRENT_DAY_EXERCISE,
-              method: 'Post',
-              data: {user_details: datas},
-            });
-            if (
-              res.data?.msg ==
-              'Exercise Status for All Users Inserted Successfully'
-            ) {
-              console.log('DATA ADDDDDDEDEDEDED', res.data?.inserted_data);
-              navigation.navigate('Exercise', {
-                allExercise: getWeeklyPlansData[WeekArray[selectedDay]],
-                currentExercise:
-                  // trainingCount != -1
-                  //   ? exerciseData[trainingCount]
-                  item,
-                data: [],
-                day: selectedDay,
-                exerciseNumber: 0,
-                trackerData: res?.data?.inserted_data,
-                type: 'weekly',
-              });
-            } else {
-              setDownloade(false);
-              const payload = new FormData();
-              payload.append('user_id', getUserDataDetails?.id);
-              payload.append('workout_id', `-${selectedDay + 1}`);
-              payload.append('user_day', WeekArray[selectedDay]);
-              payload.append('version', VersionNumber.appVersion);
-
-              try {
-                const res = await axios({
-                  url: NewAppapi.TRACK_CURRENT_DAY_EXERCISE,
-                  method: 'Post',
-                  data: payload,
-                  headers: {
-                    'Content-Type': 'multipart/form-data',
-                  },
-                });
-
-                if (
-                  res?.data?.msg ==
-                  'Please update the app to the latest version.'
-                ) {
-                  showMessage({
-                    message: res?.data?.msg,
-                    type: 'danger',
-                    animationDuration: 500,
-                    floating: true,
-                    icon: {icon: 'auto', position: 'left'},
-                  });
-                } else if (res.data?.user_details) {
-                  // console.log(res.data)
-                  navigation.navigate('Exercise', {
-                    allExercise: getWeeklyPlansData[WeekArray[selectedDay]],
-                    currentExercise:
-                      // trainingCount != -1
-                      //   ? exerciseData[trainingCount]
-                      item,
-                    data: [],
-                    day: selectedDay,
-                    exerciseNumber: 0,
-                    trackerData: res?.data?.user_details,
-                    type: 'weekly',
-                  });
-                } else {
-                }
-              } catch (error) {
-                console.error(error, 'PostDaysAPIERror');
-              }
-              return;
-            }
-          } catch (error) {
-            console.error(error, 'PostDaysAPIERror');
-          }
+    try {
+      const res = await axios({
+        url: NewAppapi.CURRENT_DAY_EXERCISE,
+        method: 'Post',
+        data: {user_details: datas},
+      });
+      if (
+        res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
+      ) {
+        console.log('DATA ADDDDDDEDEDEDED', res.data?.inserted_data);
+        navigation.navigate('Exercise', {
+          allExercise: getWeeklyPlansData[WeekArray[selectedDay]],
+          currentExercise:
+            // trainingCount != -1
+            //   ? exerciseData[trainingCount]
+            getWeeklyPlansData[WeekArray[selectedDay]][0],
+          data: [],
+          day: selectedDay,
+          exerciseNumber: 0,
+          trackerData: res?.data?.inserted_data,
+          type: 'weekly',
         });
-      },
-    );
+      } else {
+        toNextScreen();
+      }
+    } catch (error) {
+      console.error(error, 'PostDaysAPIERror');
+    }
   };
+  const toNextScreen = async () => {
+    setDownloade(false);
+    const payload = new FormData();
+    payload.append('user_id', getUserDataDetails?.id);
+    payload.append('workout_id', `-${selectedDay + 1}`);
+    payload.append('user_day', WeekArray[selectedDay]);
+    payload.append('version', VersionNumber.appVersion);
 
+    try {
+      const res = await axios({
+        url: NewAppapi.TRACK_CURRENT_DAY_EXERCISE,
+        method: 'Post',
+        data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (res.data?.user_details) {
+        // console.log(res.data)
+        navigation.navigate('Exercise', {
+          allExercise: getWeeklyPlansData[WeekArray[selectedDay]],
+          currentExercise:
+            // trainingCount != -1
+            //   ? exerciseData[trainingCount]
+            getWeeklyPlansData[WeekArray[selectedDay]][0],
+          data: [],
+          day: selectedDay,
+          exerciseNumber: 0,
+          trackerData: res?.data?.user_details,
+          type: 'weekly',
+        });
+      } else {
+      }
+    } catch (error) {
+      console.error(error, 'PostDaysAPIERror');
+    }
+  };
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -520,6 +527,7 @@ const MyPlans = ({navigation}: any) => {
             w={DeviceWidth * 0.15}
             weeklyAnimation={downloaded}
             h={35}
+            mR={-DeviceWidth * 0.05}
             activeOpacity={1}
             textStyle={{
               fontSize: 12,
@@ -535,7 +543,7 @@ const MyPlans = ({navigation}: any) => {
           <View
             style={{
               flexDirection: 'row',
-              width: DeviceWidth * 0.95,
+              width: Platform.OS == 'ios' ? DeviceWidth : DeviceWidth * 0.95,
               justifyContent: 'space-between',
               alignItems: 'center',
               alignSelf: 'center',
@@ -609,7 +617,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     borderRadius: 10,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: '#D9D9D9',
     backgroundColor: '#FDFDFD',
     width: DeviceWidth * 0.95,
@@ -619,7 +627,7 @@ const styles = StyleSheet.create({
     ...Platform.select({
       ios: {
         shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 2},
+        shadowOffset: {width: 0, height: 1},
         shadowOpacity: 0.1,
         shadowRadius: 4,
       },

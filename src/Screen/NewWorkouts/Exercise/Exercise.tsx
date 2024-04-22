@@ -608,7 +608,7 @@ const Exercise = ({navigation, route}: any) => {
           </View>
           <View style={styles.container}>
             <Image
-              source={{uri: allExercise[number + 1]?.exercise_image}}
+              source={{uri: allExercise[number + 1]?.exercise_image_link}}
               style={StyleSheet.absoluteFillObject}
               resizeMode="contain"
             />

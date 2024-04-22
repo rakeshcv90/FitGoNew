@@ -33,6 +33,7 @@ export type Props = TouchableWithoutFeedbackProps & {
   ImageStyle?: StyleProp<ImageStyle>;
   weeklyAnimation?: boolean | false;
   activeOpacity?: number | 0.2;
+  mR?: number | 0
 };
 
 const GradientButton: FC<Props> = ({...props}) => {
@@ -63,7 +64,7 @@ const GradientButton: FC<Props> = ({...props}) => {
         alignItems: 'center',
         alignSelf: !props.alignSelf ? 'flex-start' : 'center',
         marginBottom: props.mB,
-
+        marginRight: props.mR,
         position: props.position,
 
         bottom: props.bottm,

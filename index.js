@@ -23,7 +23,10 @@ import notifee, {
 } from '@notifee/react-native';
 import {AdManager, TestIds} from 'react-native-admob-native-ads';
 import {AlarmNotification} from './src/Component/Reminder';
-import { StepcountNoticationStart } from './src/Component/TransferStepCounterData';
+import {
+  DeleteWeeklyDataAPIStart,
+  StepcountNoticationStart,
+} from './src/Component/TransferStepCounterData';
 
 notifee.createChannel({
   id: 'Time',
@@ -36,7 +39,11 @@ notifee.createChannel({
 });
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('BACKGROUND NOTIFUCATION', remoteMessage);
-  StepcountNoticationStart()
+  if (remoteMessage.data?.type == 'delete_notification') {
+    DeleteWeeklyDataAPIStart();
+  } else {
+    StepcountNoticationStart();
+  }
 });
 notifee.onBackgroundEvent(async ({type, detail}) => {
   TriggerButtons(detail, type);
@@ -47,7 +54,11 @@ notifee.onForegroundEvent(async ({type, detail}) => {
 const TriggerButtons = async (detail, type) => {
   const {notification, pressAction} = detail;
   console.log('TRI', type);
-  StepcountNoticationStart()
+  if (notification.data?.type == 'delete_notification') {
+    DeleteWeeklyDataAPIStart();
+  } else {
+    StepcountNoticationStart();
+  }
   if (type === EventType.ACTION_PRESS && pressAction.id === 'Stop') {
     // Remove the notification
     await notifee.cancelDisplayedNotification(notification.id);
@@ -58,7 +69,7 @@ const TriggerButtons = async (detail, type) => {
     const currentTime = new Date();
 
     // Add 5 minutes to the current time
-    currentTime.setMinutes(currentTime.getMinutes() + 1);
+    currentTime.setMinutes(currentTime.getMinutes() + 5);
     AlarmNotification(currentTime);
   } else {
     console.log('OPEN NOTIFICATION', pressAction);
@@ -98,7 +109,7 @@ notifee.createChannel({
   sound: 'default',
 });
 const DisplayNotification = async Notification => {
-  console.log('NOTIFICATION', Notification);
+  console.log('NOTIFICATION', Notification.data?.type);
   const cleanedTitle = removeHtmlTags(Notification?.data?.message);
   try {
     if (
@@ -159,12 +170,20 @@ const DisplayNotification = async Notification => {
   } catch (error) {
     console.log('notifee Error', error);
   }
-  StepcountNoticationStart()
+  if (Notification.data?.type == 'delete_notification') {
+    DeleteWeeklyDataAPIStart();
+  } else {
+    StepcountNoticationStart();
+  }
 };
 messaging().getInitialNotification(async remoteMessage => {
   // DisplayNotification(remoteMessage);
   console.log('Kill NOTIFUCATION', remoteMessage);
-  StepcountNoticationStart()
+  if (remoteMessage.data?.type == 'delete_notification') {
+    DeleteWeeklyDataAPIStart();
+  } else {
+    StepcountNoticationStart();
+  }
 });
 const AppRedux = () => {
   LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
@@ -227,7 +246,7 @@ AdManager.setRequestConfiguration({
 });
 AdManager.registerRepository({
   name: 'imageAd',
-   adUnitId: TestIds.Video,
+  adUnitId: TestIds.Video,
   // adUnitId: adUnitIDs,
   numOfAds: 3,
   nonPersonalizedAdsOnly: false,
@@ -239,7 +258,6 @@ AdManager.registerRepository({
 }).then(result => {
   console.log('registered: ', result);
 });
-
 
 AdManager.subscribe('imageAd', 'onAdPreloadClicked', () => {
   console.log('click', 'imageAd');

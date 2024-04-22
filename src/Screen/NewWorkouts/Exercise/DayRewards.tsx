@@ -47,7 +47,7 @@ const DayRewards = ({navigation, route}: any) => {
 
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EXERCISE_DETAILS,
-        method: 'post',
+        method: 'post', 
         data: payload,
         headers: {
           'Content-Type': 'multipart/form-data',

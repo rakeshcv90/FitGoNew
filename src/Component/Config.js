@@ -79,4 +79,5 @@ export const NewAppapi = {
   GET_PLANS_EXERCISE: NewApi + 'get_weekday_exercise',
   DELETE_TRACK_EXERCISE: NewApi + 'delete_exercise',
   GET_NEARBY_GYMS: NewApi + 'getnearbygyms',
+  DELETE_WEEKLY_DATA: NewApi + 'delete_completed_exercises',    // API to delete Weekly Completed Exercises
 };

@@ -118,4 +118,5 @@ export const localImage = {
   RedTick: require('../Icon/Images/NewImage/RedTick.png'),
   Location: require('../Icon/Images/NewImage/Location.png'),
   ClockGrey: require('../Icon/Images/NewImage/ClockGrey.png'),
+  WeeklyPlay: require('../Icon/Images/NewImage/WeeklyPlay.png'),
 };
