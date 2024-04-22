@@ -185,7 +185,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
     let time = getCustttomeTimeCal.filter(item1 => {
       return item1.workout_id == item.workout_id;
     });
-
+console.log('GET PROFRE',time,getCustttomeTimeCal)
     let remainingTime = time[0].totalRestTime;
     let resulttime = ((remainingTime / totalTime) * 100).toFixed(0);
 

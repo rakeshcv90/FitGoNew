@@ -31,6 +31,7 @@ import GradientButton from '../Component/GradientButton';
 import {local} from 'd3';
 import {localImage} from '../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
+import HomeNew from '../Screen/NewHome/HomeNew';
 const Tabs = createBottomTabNavigator();
 
 export const MyPLans = ({focused, onPress}) => {
@@ -47,7 +48,7 @@ export const MyPLans = ({focused, onPress}) => {
         Play.setValue(1); // Reset the animation state
         setStartAnimation(false); // Reset the startAnimation state to false
       });
-      // onPress();
+      onPress();
       // return Play.setValue(1)
     }
   }, [startAnimation]);
@@ -173,7 +174,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                 Dispatch(setFitmeAdsCount(0));
               } else {
                 if (getFitmeAdsCount < 2) {
-                  // Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+                  Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
                   navigation.navigate(route.name);
                 } else {
                   showInterstitialAd();
@@ -183,7 +184,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
               }
             } else {
               if (getFitmeAdsCount < 2) {
-                // Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+                Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
                 navigation.navigate(route.name);
               } else {
                 showInterstitialAd();
@@ -424,7 +425,7 @@ const BottomTab = () => {
         }}>
         <Tabs.Screen
           name="Home"
-          component={Home}
+          component={HomeNew}
           options={{tabBarShowLabel: false}}
         />
         <Tabs.Screen

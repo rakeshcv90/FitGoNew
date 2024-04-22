@@ -426,7 +426,41 @@ const WorkoutDays = ({navigation, route}: any) => {
       </Modal>
     );
   };
+  const BlackCircle = ({indexes, select, index}: any) => {
+    return (
+      <View
+        style={{
+          backgroundColor: 'white',
+          marginRight: 10,
+          marginLeft: 0,
+          width: 30,
+          overflow: 'hidden',
+          height:
+            select && trainingCount != -1
+              ? DeviceHeigth * 0.2
+              : DeviceHeigth * 0.1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginTop: index == 0 || index == 4 ? DeviceHeigth * 0.05 : 0,
+        }}>
+        {index < selected ? (
+          <Image
+            source={localImage.BlackCircle}
+            style={{height: 30, width: 30}}
+          />
+        ) : (
+          <Image
+            source={localImage.GreyCircle}
+            style={{height: 30, width: 30}}
+          />
+        )}
+      </View>
+    );
+  };
 
+  // const resetFitmeCount=()=>{
+  //   return null
+  // }
   const Phase = ({index, percent, select}: any) => {
     const gradientColors = ['#D5191A', '#941000'];
     return (
@@ -498,110 +532,30 @@ const WorkoutDays = ({navigation, route}: any) => {
                 message: `Please complete Day ${index - 1} Exercise First !!!`,
                 type: 'danger',
               });
-
-        }}
-        style={[
-          styles.box,
-          {
-            width:
-              DeviceHeigth < 1280 ? DeviceWidth * 0.95 : DeviceWidth * 0.99,
-            backgroundColor: percent ? AppColor.RED1 : AppColor.WHITE,
-            height: DeviceHeigth * 0.1,
-            // overflow: 'hidden',
-          },
-        ]}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          {item?.total_rest == 0 ? (
-            <Image
-              source={localImage.Rest}
-              style={{
-                height: DeviceWidth * 0.1,
-                width: DeviceWidth * 0.1,
-                marginLeft: DeviceWidth * 0.12,
-                opacity: percent ? 0.5 : 1,
-              }}
-              resizeMode="contain"
-            />
-          ) : (
-            <Image
-              source={{uri: data?.workout_image_link}}
-              style={{
-                height: DeviceWidth * 0.15,
-                width: DeviceWidth * 0.15,
-                marginLeft: DeviceWidth * 0.12,
-                opacity: percent ? 0.5 : 1,
-              }}
-              resizeMode="contain"
-            />
-          )}
-
         }}>
-        
+        <LinearGradient
+          start={{x: 1, y: 0}}
+          end={{x: 0, y: 1}}
+          colors={
+            percent && item?.total_rest != 0
+              ? ['#941000','#D5191A',]
+              : [AppColor.WHITE, AppColor.WHITE]
+          }
+          style={[
+            styles.box,
+            {
+              width:
+                DeviceHeigth < 1280 ? DeviceWidth * 0.95 : DeviceWidth * 0.99,
+              height: DeviceHeigth * 0.1,
+            
+            },
+          ]}>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-
-            <View>
-              <Text
-                style={[
-                  styles.category,
-                  {
-                    fontSize: 20,
-                    color: percent ? AppColor.WHITE : AppColor.BLACK,
-                  },
-                ]}>{`Day ${index}`}</Text>
-              {item?.total_rest == 0 ? (
-                <Text
-                  style={[
-                    styles.small,
-                    {color: percent ? AppColor.WHITE : '#941000'},
-                  ]}>
-                  Rest
-                </Text>
-              ) : (
-                <Text
-                  style={[
-                    styles.small,
-                    {color: percent ? AppColor.WHITE : '#941000'},
-                  ]}>
-                  {item?.total_rest > 60
-                    ? `${(item?.total_rest / 60).toFixed(0)} min`
-                    : `${item?.total_rest} sec`}{'   '}
-                  {
-                    <View
-                      style={{alignItems: 'center', justifyContent: 'center',marginBottom:5}}>
-                      <Text
-                        style={{
-                          color: percent?AppColor.WHITE:'#505050',
-                          lineHeight: 25,
-                          fontWeight: 'bold',
-                          fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                          fontSize: 20,
-                        }}>
-                        .
-                      </Text>
-                    </View>
-                  }{'   '}
-                  {item?.total_calories} Kcal
-                  {/* {moment(139).format('S')} min | {item?.total_calories} Kcal */}
-                </Text>
-              )}
-            </View>
-            {item?.total_rest != 0 && (
-              <Icons
-                name={'chevron-right'}
-                size={25}
-                color={AppColor.INPUTTEXTCOLOR}
-                style={{marginRight: DeviceWidth * 0.02}}
-
             {item?.total_rest == 0 ? (
               <Image
                 source={localImage.Rest}
@@ -623,7 +577,6 @@ const WorkoutDays = ({navigation, route}: any) => {
                   opacity: percent ? 0.5 : 1,
                 }}
                 resizeMode="contain"
-
               />
             )}
             <View
@@ -716,52 +669,52 @@ const WorkoutDays = ({navigation, route}: any) => {
               )}
             </View>
           </View>
-
-        </View>
-        {selected && trainingCount != -1 && (
-          <ProgressButton
-            text={
-              downloaded > 0 && downloaded != 100
-                ? `Downloading`
-                : `Start Training`
-            }
-            w={DeviceWidth * 0.75}
-            bR={10}
-            mB={10}
-            fill={
-              totalCount == -1
-                ? '0%'
-                : `${100 - (trainingCount / totalCount) * 100}%`
-            }
-            h={DeviceHeigth * 0.08}
-            // textStyle={{
-            //   color:
-            //     downloaded > 0 && downloaded != 100
-            //       ? AppColor.BLACK
-            //       : AppColor.WHITE,
-            // }}
-            onPress={() => {
-              analytics().logEvent(`CV_FITME_START_TRAINING_${day}_EXERCISES`);
-              navigation.navigate('Exercise', {
-                allExercise: exerciseData,
-                currentExercise:
-                  trainingCount == -1
-                    ? exerciseData[0]
-                    : exerciseData[trainingCount],
-                data: data,
-                day: day,
-                exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
-                trackerData: trackerData,
-              });
-            }}
-          />
-        )}
-
+          {selected && trainingCount != -1 && (
+            <ProgressButton
+              text={
+                downloaded > 0 && downloaded != 100
+                  ? `Downloading`
+                  : `Start Training`
+              }
+              w={DeviceWidth * 0.75}
+              bR={10}
+              mB={10}
+              fill={
+                totalCount == -1
+                  ? '0%'
+                  : `${100 - (trainingCount / totalCount) * 100}%`
+              }
+              h={DeviceHeigth * 0.08}
+              // textStyle={{
+              //   color:
+              //     downloaded > 0 && downloaded != 100
+              //       ? AppColor.BLACK
+              //       : AppColor.WHITE,
+              // }}
+              onPress={() => {
+                analytics().logEvent(
+                  `CV_FITME_START_TRAINING_${day}_EXERCISES`,
+                );
+                navigation.navigate('Exercise', {
+                  allExercise: exerciseData,
+                  currentExercise:
+                    trainingCount == -1
+                      ? exerciseData[0]
+                      : exerciseData[trainingCount],
+                  data: data,
+                  day: day,
+                  exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
+                  trackerData: trackerData,
+                });
+              }}
+            />
+          )}
+        </LinearGradient>
       </TouchableOpacity>
     );
   };
 
- 
+
   return (
     <View style={styles.container}>
       <Header
@@ -782,25 +735,6 @@ const WorkoutDays = ({navigation, route}: any) => {
       <Text style={[styles.category, {marginTop: 10, marginLeft: 10}]}>
         {moment().format('dddd DD MMMM')}
       </Text>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: DeviceWidth,
-          alignSelf: 'center',
-          marginRight: 20,
-        }}>
-        <GradientText
-          text={'Week 1'}
-          fontWeight={'500'}
-          fontSize={15}
-          width={DeviceWidth * 0.3}
-          x={20}
-          marginTop={-5}
-        />
-        <Phase index={0} percent={(selected / 2 / 4) * 100} select={selected} />
-      </View>
       {!refresh && (
         <>
           <ScrollView
@@ -811,27 +745,22 @@ const WorkoutDays = ({navigation, route}: any) => {
             }}>
             <View>
               {Object.values(data?.days).map((item: any, index: number) => {
-
-
                 return (
                   <Box
                     // selected={selected != 0 && index == selected}
-                    selected={false}
-
-                    active={selected != 0 && index <= selected}
-                    index={index + 1}
-                    item={item}
-                    percent={index == 0}
-
-<!--                     active={
+                    // selected={false}
+                    // active={selected != 0 && index <= selected}
+                    // index={index + 1}
+                    // item={item}
+                    // percent={index == 0}
+                    active={
                       selected != 0 &&
                       index <= selected &&
                       data?.days[index + 1]?.total_rest != 0
                     }
                     index={index + 1}
                     item={item}
-                    percent={selected != 0 && index <= selected} -->
-
+                    percent={selected != 0 && index < selected}
                   />
                 );
               })}
@@ -867,23 +796,19 @@ const styles = StyleSheet.create({
     lineHeight: 30,
   },
   box: {
-    //  width: '95%',
+    //   flex: 1,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#FDFDFD',
-    borderRadius: 10,
+    borderRadius: 15,
     marginVertical: 8,
-    borderWidth: 1,
-    borderColor: '#D9D9D9',
-    shadowColor: 'rgba(0, 0, 0, 1)',
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowColor: 'rgba(0, 0, 0, 0.6)',
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.5,
+        // shadowRadius: 10,
       },
       android: {
         elevation: 4,
