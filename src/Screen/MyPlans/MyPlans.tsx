@@ -40,6 +40,7 @@ import {showMessage} from 'react-native-flash-message';
 import {useFocusEffect} from '@react-navigation/native';
 import {MyPLans} from '../../Navigation/BottomTab';
 import {Path, Svg} from 'react-native-svg';
+import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
 
 export let handleStart = () => {};
 
@@ -131,9 +132,14 @@ const WeekTab = ({
 
 const Box = ({item, index}: any) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [visible, setVisible] = useState(false);
   const avatarRef = React.createRef();
   return (
-    <View key={index} style={styles.box}>
+    <TouchableOpacity
+      key={index}
+      onPress={() => setVisible(true)}
+      activeOpacity={1}
+      style={styles.box}>
       {/* <View
           style={{
             height: 60,
@@ -173,7 +179,7 @@ const Box = ({item, index}: any) => {
               lineHeight: 20,
             }}>
             {item?.exercise_title}
-            {item?.exercise_id}
+            {/* {item?.exercise_id} */}
           </Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
@@ -239,7 +245,8 @@ const Box = ({item, index}: any) => {
           </View>
         </View>
       </View>
-    </View>
+      <WorkoutsDescription data={item} open={visible} setOpen={setVisible} />
+    </TouchableOpacity>
   );
 };
 const MyPlans = ({navigation}: any) => {

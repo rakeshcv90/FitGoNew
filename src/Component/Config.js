@@ -80,12 +80,11 @@ export const NewAppapi = {
   GET_PLANS_EXERCISE: NewApi + 'get_weekday_exercise',
   DELETE_TRACK_EXERCISE: NewApi + 'delete_exercise',
   GET_NEARBY_GYMS: NewApi + 'getnearbygyms',
-  DELETE_WEEKLY_DATA: NewApi + 'delete_completed_exercises',    // API to delete Weekly Completed Exercises
-
+  DELETE_WEEKLY_DATA: NewApi + 'delete_completed_exercises', // API to delete Weekly Completed Exercises
+  GET_CHALLENGES_DATA: NewApi + 'get_challenges_exercises',
   ALL_EXERCISE_DATA: NewApi + 'get_exercise',
   USER_CUSTOM_WORKOUT: NewApi + 'user_custom_workout',
   GET_USER_CUSTOM_WORKOUT: NewApi + 'get_user_custom_workout',
   DELETE_CUSTOM_WORKOUT: NewApi + 'delete_custom_workout',
   EDIT_CUSTOM_WORKOUY: NewApi + 'edit_custom_workout',
-
 };

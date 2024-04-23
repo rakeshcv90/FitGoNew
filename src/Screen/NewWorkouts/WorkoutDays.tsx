@@ -747,12 +747,6 @@ const WorkoutDays = ({navigation, route}: any) => {
               {Object.values(data?.days).map((item: any, index: number) => {
                 return (
                   <Box
-                    // selected={selected != 0 && index == selected}
-                    // selected={false}
-                    // active={selected != 0 && index <= selected}
-                    // index={index + 1}
-                    // item={item}
-                    // percent={index == 0}
                     active={
                       selected != 0 &&
                       index <= selected &&

@@ -131,5 +131,13 @@ export const localImage = {
   Minus: require('../Icon/Images/NewImage2/Minus.png'),
   Next: require('../Icon/Images/NewImage2/next.png'),
   Gym: require('../Icon/Images/NewImage2/Gym.png'),
-
+  Home: require('../Icon/Images/NewImage2/Home.png'),
+  Profile: require('../Icon/Images/NewImage2/Profile.png'),
+  Workout: require('../Icon/Images/NewImage2/Workout.png'),
+  Reports: require('../Icon/Images/NewImage2/Reports.png'),
+  MyPlans: require('../Icon/Images/NewImage2/MyPlans.png'),
+  HomeRed: require('../Icon/Images/NewImage2/HomeRed.png'),
+  ProfileRed: require('../Icon/Images/NewImage2/ProfileRed.png'),
+  WorkoutRed: require('../Icon/Images/NewImage2/WorkoutRed.png'),
+  ReportsRed: require('../Icon/Images/NewImage2/ReportsRed.png'),
 };

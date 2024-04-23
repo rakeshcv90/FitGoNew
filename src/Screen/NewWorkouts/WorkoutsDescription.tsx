@@ -1,6 +1,7 @@
 import {
   Modal,
   Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -95,9 +96,9 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             height: 25,
             alignSelf: 'flex-end',
             left: -10,
-            alignItems:'center',
-            justifyContent:'center',
-       
+            alignItems: 'center',
+            justifyContent: 'center',
+
             marginTop: DeviceHeigth * 0.045,
           }}>
           <Icon name="close" color={AppColor.DARKGRAY} size={25} />
@@ -124,19 +125,21 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
               {data?.workout_title || data?.exercise_title}
             </Text>
             <Text />
-            {data?.workout_description ? (
-              <RenderHTML
-                source={{html: data?.workout_description}}
-                contentWidth={DeviceWidth}
-                tagsStyles={tag}
-              />
-            ) : (
-              <RenderHTML
-                source={{html: data?.exercise_instructions}}
-                contentWidth={DeviceWidth}
-                tagsStyles={tag}
-              />
-            )}
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {data?.workout_description ? (
+                <RenderHTML
+                  source={{html: data?.workout_description}}
+                  contentWidth={DeviceWidth}
+                  tagsStyles={tag}
+                />
+              ) : (
+                <RenderHTML
+                  source={{html: data?.exercise_instructions}}
+                  contentWidth={DeviceWidth}
+                  tagsStyles={tag}
+                />
+              )}
+            </ScrollView>
           </View>
           <View style={styles.shadow}></View>
         </View>
@@ -158,7 +161,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     padding: 10,
-
   },
   shadow: {
     position: 'absolute',
