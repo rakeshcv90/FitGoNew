@@ -112,6 +112,15 @@ export const localImage = {
   PaymentFaikd: require('../Icon/Images/NewImage/PaymentFaikd.png'),
   PadoDaolog: require('../Icon/Images/NewImage/PadoDailog.png'),
   Policy: require('../Icon/Images/NewImage/policy.png'),
+
+  StartWorkoutButton: require('../Icon/Images/NewImage/StartWorkoutButton.png'),
+  MyPlansWhite: require('../Icon/Images/NewImage/MyPlansWhite.png'),
+  MyPlans: require('../Icon/Images/NewImage/MyPlans.png'),
+  RedTick: require('../Icon/Images/NewImage/RedTick.png'),
+  Location: require('../Icon/Images/NewImage/Location.png'),
+  ClockGrey: require('../Icon/Images/NewImage/ClockGrey.png'),
+  WeeklyPlay: require('../Icon/Images/NewImage/WeeklyPlay.png'),
+
   NewWorkout: require('../Icon/Images/NewImage2/NewWorkout.png'),
   Plus: require('../Icon/Images/NewImage2/plus.png'),
   Createworkout: require('../Icon/Images/NewImage2/createworkout.png'),
@@ -127,4 +136,15 @@ export const localImage = {
   Begginer:require('../Icon/Images/NewImage2/electric_bolt.png'),
   AddIcon:require('../Icon/Images/NewImage2/G.png'),
   CreateW:require('../Icon/Images/NewImage2/create_new_folder.png')
+  Next: require('../Icon/Images/NewImage2/next.png'),
+  Gym: require('../Icon/Images/NewImage2/Gym.png'),
+  Home: require('../Icon/Images/NewImage2/Home.png'),
+  Profile: require('../Icon/Images/NewImage2/Profile.png'),
+  Workout: require('../Icon/Images/NewImage2/Workout.png'),
+  Reports: require('../Icon/Images/NewImage2/Reports.png'),
+  MyPlans: require('../Icon/Images/NewImage2/MyPlans.png'),
+  HomeRed: require('../Icon/Images/NewImage2/HomeRed.png'),
+  ProfileRed: require('../Icon/Images/NewImage2/ProfileRed.png'),
+  WorkoutRed: require('../Icon/Images/NewImage2/WorkoutRed.png'),
+  ReportsRed: require('../Icon/Images/NewImage2/ReportsRed.png'),
 };

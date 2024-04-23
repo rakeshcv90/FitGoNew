@@ -38,7 +38,9 @@ const intialState = {
   getStoreVideoLoc: {},
   isAlarmEnabled: false,
   getAllExercise:[],
-  getExperience:false
+  getExperience:false,
+  getChallengesData:[],
+  getWeeklyPlansData: {},
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -186,6 +188,18 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         isAlarmEnabled: action.payload,
       };
+
+    case types.WEEKLY_PLANS_DATA:
+      return {
+        ...state,
+        getWeeklyPlansData: action.payload,
+      };
+    case types.CHALLENGES_DATA:
+      return {
+        ...state,
+        getChallengesData: action.payload,
+      };
+
       case types.ALARM_ENABLED:
         return {
           ...state,
@@ -201,6 +215,7 @@ const ThemeReducer = (state = intialState, action) => {
             ...state,
             getExperience:action.payload
           }
+
     default:
       return state;
   }

@@ -1,4 +1,8 @@
 import {
+  Animated,
+  Image,
+  ImageSourcePropType,
+  ImageStyle,
   StyleProp,
   StyleSheet,
   Text,
@@ -7,7 +11,7 @@ import {
   TouchableWithoutFeedbackProps,
   View,
 } from 'react-native';
-import React, {FC} from 'react';
+import React, {FC, useEffect, useRef} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {AppColor} from './Color';
 import {DeviceWidth} from './Config';
@@ -23,14 +27,36 @@ export type Props = TouchableWithoutFeedbackProps & {
   bR?: number;
   alignSelf?: boolean;
   flex?: number;
-  position?:string;
-  bottm?:number
+  position?: string;
+  bottm?: number;
+  Image?: StyleProp<ImageSourcePropType>;
+  ImageStyle?: StyleProp<ImageStyle>;
+  weeklyAnimation?: boolean | false;
+  activeOpacity?: number | 0.2;
+  mR?: number | 0
 };
 
 const GradientButton: FC<Props> = ({...props}) => {
+  const progressAnimation = new Animated.Value(0);
+  const progressBarWidth = progressAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['100%', '0%'],
+    extrapolate: 'extend',
+  });
+  useEffect(() => {
+    if (props.weeklyAnimation) {
+      Animated.timing(progressAnimation, {
+        toValue: 1,
+        duration: 2000,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [props.weeklyAnimation, progressAnimation]);
+
   return (
     <TouchableOpacity
       {...props}
+      activeOpacity={props.activeOpacity}
       style={{
         flex: props.flex ? props.flex : 1,
         width: props.w ? props.w : DeviceWidth * 0.9,
@@ -38,10 +64,10 @@ const GradientButton: FC<Props> = ({...props}) => {
         alignItems: 'center',
         alignSelf: !props.alignSelf ? 'flex-start' : 'center',
         marginBottom: props.mB,
-
+        marginRight: props.mR,
         position: props.position,
 
-        bottom: props.bottm
+        bottom: props.bottm,
       }}>
       <LinearGradient
         start={{x: 1, y: 0}}
@@ -57,20 +83,71 @@ const GradientButton: FC<Props> = ({...props}) => {
             borderRadius: props.bR ? props.bR : 50 / 2,
           },
         ]}>
-        <Text
-          style={
-            props.textStyle
-              ? props.textStyle
-              : {
-                  fontSize: 20,
-                  fontFamily: 'Poppins',
-                  lineHeight: 30,
-                  color: AppColor.WHITE,
-                  fontWeight: '700',
-                }
-          }>
-          {props.text}
-        </Text>
+        {props.Image ? (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              source={props.Image}
+              style={
+                props.ImageStyle
+                  ? props.ImageStyle
+                  : {
+                      height: DeviceWidth * 0.1,
+                      width: DeviceWidth * 0.1,
+                    }
+              }
+              resizeMode="contain"
+            />
+            <Text
+              style={
+                props.textStyle
+                  ? props.textStyle
+                  : {
+                      fontSize: 20,
+                      fontFamily: 'Poppins',
+                      lineHeight: 30,
+                      color: AppColor.WHITE,
+                      fontWeight: '700',
+                      zIndex: 1,
+                    }
+              }>
+              {props.text}
+            </Text>
+          </View>
+        ) : (
+          <>
+            <Text
+              style={
+                props.textStyle
+                  ? props.textStyle
+                  : {
+                      fontSize: 20,
+                      fontFamily: 'Poppins',
+                      lineHeight: 30,
+                      color: AppColor.WHITE,
+                      fontWeight: '700',
+                      zIndex: 1,
+                    }
+              }>
+              {props.text}
+            </Text>
+          </>
+        )}
+        <Animated.View
+          style={{
+            backgroundColor: '#D9D9D9',
+            height: props.weeklyAnimation ? (props.h ? props.h : 50) : 0,
+            width: progressBarWidth,
+            marginTop: -50,
+            right: 0,
+            position: 'absolute',
+            zIndex: props.weeklyAnimation ? 0 : -1,
+          }}
+        />
       </LinearGradient>
     </TouchableOpacity>
   );

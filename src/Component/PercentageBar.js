@@ -20,27 +20,17 @@ const PercentageBar = ({
       <View style={{justifyContent: 'center'}}>
         <View
           style={{
-            width: '100%',
+            width: DeviceHeigth >= 1024 ? '95%' : '90%',
             height: getheight,
             marginVertical: 10,
             borderRadius: 50,
-            borderColor: getBackgroundColor,
-            borderWidth: 1,
+
+            backgroundColor: '#E7E7E7B2',
           }}
         />
-        {/* <View
-          style={{
-            width: getPercentage ? getPercentage : 0,
-            height: getheight,
-            marginVertical: 10,
-            borderRadius: 50,
-            backgroundColor:{['rgba(255, 95, 109, 1)', 'rgba(255, 195, 113, 1)']},
-            position: 'absolute',
-            bottom:20
-          }}
-        /> */}
+
         <LinearGradient
-          colors={['rgba(255, 95, 109, 1)', 'rgba(255, 195, 113, 1)']}
+          colors={['#D01818', '#941000']}
           style={{
             width: getPercentage ? getPercentage : 0,
             height: getheight,
@@ -53,10 +43,10 @@ const PercentageBar = ({
           style={{
             width: getPercentage ? getPercentage : 0,
             height: getheight,
-            bottom: 10,
+
             top:
               Platform.OS == 'ios'
-                ? -DeviceHeigth * 0.032
+                ? -DeviceHeigth * 0.033
                 : -DeviceHeigth * 0.035,
           }}>
           <Text style={{textAlign: 'right', color: 'white'}}>

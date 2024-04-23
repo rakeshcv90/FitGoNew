@@ -50,6 +50,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
   }, [isFocused]);
   const setupPlayer = async () => {
     try {
+      await TrackPlayer.add(songs);
       await TrackPlayer.updateOptions({
         capabilities: [
           Capability.Play,
@@ -60,7 +61,6 @@ const MeditationExerciseDetails = ({navigation, route}) => {
         ],
         compactCapabilities: [Capability.Play, Capability.Pause],
       });
-      await TrackPlayer.add(songs);
     } catch (error) {
       console.log('Music Player Error', error);
     }

@@ -37,6 +37,19 @@ export type Props = TouchableWithoutFeedbackProps & {
 };
 
 const Play: FC<Props> = ({...props}) => {
+  const progressAnimation = useRef(new Animated.Value(props.fill | 0)).current;
+  const progressBarWidth = progressAnimation.interpolate({
+    inputRange: [0, 100],
+    outputRange: ['0%', '100%'],
+    extrapolate: 'extend',
+  });
+  useEffect(() => {
+    Animated.timing(progressAnimation, {
+      toValue: props.fill,
+      duration: 2000,
+      useNativeDriver: false,
+    }).start();
+  }, [props.fill]);
   const PARENT = props.oneDay ? TouchableOpacity : View;
   return (
     <PARENT
@@ -114,16 +127,16 @@ const Play: FC<Props> = ({...props}) => {
             </TouchableOpacity>
           </>
         )}
-        <View
+        <Animated.View
           style={{
             backgroundColor: props.fillBack ? props.fillBack : '#D9D9D9',
             height: props.h ? props.h : 50,
-            width: props.fill,
+            width: progressBarWidth,
             marginTop: -50,
             // borderBottomRightRadius: props.bR ? props.bR : 50 / 2,
             right: 0,
             position: 'absolute',
-            zIndex: !props.oneDay && props.fillBack ? -1 :0,
+            zIndex: !props.oneDay && props.fillBack ? -1 : 0,
           }}
         />
       </LinearGradient>

@@ -8,6 +8,7 @@ import * as RNIap from 'react-native-iap';
 import {
   Setmealdata,
   setAllExercise,
+  setChallengesData,
   setCompleteProfileData,
   setCustomWorkoutData,
   setFitmeAdsCount,
@@ -58,8 +59,26 @@ const SplaceScreen = ({navigation}) => {
     dispatch(setFitmeAdsCount(0));
     initInterstitial();
     getAllExerciseData();
+    ChallengesDataAPI()
   }, []);
 
+  const ChallengesDataAPI = async () => {
+    try {
+      const res = await axios({
+        url:
+          NewAppapi.GET_CHALLENGES_DATA +
+          '?version=' +
+          VersionNumber.appVersion,
+      });
+      if(res.data?.msg != 'version  is required'){
+        dispatch(setChallengesData(res.data))
+      }else{
+        dispatch(setChallengesData([]))
+      }
+    } catch (error) {
+      console.error(error, 'ChallengesDataAPI ERRR');
+    }
+  };
   const initInterstitial = async () => {
     const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
       keywords: [
@@ -263,10 +282,8 @@ const SplaceScreen = ({navigation}) => {
         `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${getUserDataDetails.id}`,
       );
 
-    
       if (data?.data?.msg != 'data not found.') {
         dispatch(setCustomWorkoutData(data?.data?.data));
-        console.log('ggggggg', data?.data);
       } else {
         dispatch(setCustomWorkoutData([]));
       }

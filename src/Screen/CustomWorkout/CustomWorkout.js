@@ -1,4 +1,13 @@
-import {View, Text, StyleSheet, FlatList, Image, Modal, ActivityIndicator} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Image,
+  Modal,
+  ActivityIndicator,
+  Platform,
+} from 'react-native';
 import React, {useMemo, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {useSelector, useDispatch} from 'react-redux';
@@ -56,18 +65,17 @@ const CustomWorkout = ({navigation}) => {
                 }),
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              {isLoading && (
-                 <ActivityIndicator
-                  style={styles.loader}
-                   size="small"
-                 color="#0000ff"
-                />
-            
-              )}
+                {isLoading && (
+                  <ActivityIndicator
+                    style={styles.loader}
+                    size="small"
+                    color="#0000ff"
+                  />
+                )}
                 <Image
                   // source={{uri: item.workout_image_link}}
                   source={localImage.Noimage}
-                 onLoad={() => setIsLoading(false)}
+                  onLoad={() => setIsLoading(false)}
                   style={{
                     width: 80,
                     height: 80,
@@ -102,7 +110,8 @@ const CustomWorkout = ({navigation}) => {
 
                       fontFamily: Fonts.MONTSERRAT_MEDIUM,
                     }}>
-                    {item?.total_exercises}{' Exercises'}
+                    {item?.total_exercises}
+                    {' Exercises'}
                   </Text>
                 </View>
               </View>
@@ -119,6 +128,7 @@ const CustomWorkout = ({navigation}) => {
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
+    
         }}>
         <Image
           source={localImage.Createworkout}
@@ -137,8 +147,9 @@ const CustomWorkout = ({navigation}) => {
             borderRadius: 30,
             justifyContent: 'center',
             alignItems: 'center',
-
-            top: -50,
+            marginBottom: 100,
+            top:
+              Platform.OS == 'android' ? -40 : DeviceHeigth >= 1024 ? 30 : -40,
           }}>
           <TouchableOpacity
             style={{
@@ -154,7 +165,11 @@ const CustomWorkout = ({navigation}) => {
             onPress={() => {
               setIsCustomWorkout(!isCustomWorkout);
             }}>
-            <Image source={localImage.Plus} style={{width: 20, height: 20}} tintColor={AppColor.WHITE}/>
+            <Image
+              source={localImage.Plus}
+              style={{width: 20, height: 20}}
+              tintColor={AppColor.WHITE}
+            />
             <Text style={styles.button}>{'Add Custom'}</Text>
           </TouchableOpacity>
         </LinearGradient>
@@ -182,7 +197,7 @@ const CustomWorkout = ({navigation}) => {
       });
     } else {
       navigation.navigate('CreateWorkout', {workoutTitle: text});
-      setText('')
+      setText('');
       setIsCustomWorkout(false);
     }
   };
@@ -219,7 +234,11 @@ const CustomWorkout = ({navigation}) => {
               end={{x: 1, y: 0}}
               colors={['#D01818', '#941000']}
               style={styles.buttonStyle}>
-              <Image source={localImage.Plus} style={{width: 20, height: 20}}    tintColor={AppColor.WHITE} />
+              <Image
+                source={localImage.Plus}
+                style={{width: 20, height: 20}}
+                tintColor={AppColor.WHITE}
+              />
               <Text style={styles.button}>{'Add Custom'}</Text>
             </LinearGradient>
           </TouchableOpacity>
@@ -266,9 +285,8 @@ const CustomWorkout = ({navigation}) => {
               label="Workout Name"
               value={text}
               activeOutlineColor="#707070"
-            outlineStyle={{borderRadius: 15}}
-              style={{marginVertical: 10,
-                backgroundColor: '#F8F9F9',}}
+              outlineStyle={{borderRadius: 15}}
+              style={{marginVertical: 10, backgroundColor: '#F8F9F9'}}
               onChangeText={text => setText(text)}
             />
             <View
@@ -365,7 +383,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     justifyContent: 'center',
     alignSelf: 'center',
- 
 
     height: 50,
     width: 50,

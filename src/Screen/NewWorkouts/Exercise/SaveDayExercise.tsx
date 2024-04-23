@@ -9,15 +9,25 @@ import GradientButton from '../../../Component/GradientButton';
 import analytics from '@react-native-firebase/analytics';
 import {ReviewApp} from '../../../Component/ReviewApp';
 import axios from 'axios';
+
 const SaveDayExercise = ({navigation, route}: any) => {
-  const {data, day} = route?.params;
+  const {data, day, allExercise, type} = route?.params;
   let fire, clock, action;
-  for (const d in data?.days) {
-    if (d.split('day_')[1] == day) {
-      action = data?.days[d]?.exercises.length;
-      fire = data?.days[d]?.total_calories;
-      clock = data?.days[d]?.total_rest;
+
+  if (type == 'day') {
+    for (const d in data?.days) {
+      if (d.split('day_')[1] == day) {
+        action = data?.days[d]?.exercises.length;
+        fire = data?.days[d]?.total_calories;
+        clock = data?.days[d]?.total_rest;
+      }
     }
+  } else {
+    allExercise?.map((item: any) => {
+      action = allExercise?.length;
+      fire = item?.exercise_calories;
+      clock = item?.exercise_rest?.split(' ')[0];
+    });
   }
 
   const TESTAPI = async () => {
@@ -39,7 +49,9 @@ const SaveDayExercise = ({navigation, route}: any) => {
     }
   };
   const onPresh = () => {
-    navigation.navigate('DayRewards', {data, day});
+    type == 'custom'
+      ? navigation.navigate('CustomWorkoutDetails', {item: data})
+      : navigation.navigate('DayRewards', {data, day});
   };
   return (
     <SafeAreaView
@@ -135,7 +147,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
       </View>
       <GradientButton
         onPress={() => {
-          analytics().logEvent(`CV_FITME_COMPLETED_DAY_${day}_EXERCISES`);
+          // analytics().logEvent(`CV_FITME_COMPLETED_DAY_${day}_EXERCISES`);
           ReviewApp(onPresh);
           // TESTAPI()
         }}

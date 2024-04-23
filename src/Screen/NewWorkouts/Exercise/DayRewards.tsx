@@ -17,13 +17,25 @@ import AnimatedLottieView from 'lottie-react-native';
 import {localImage} from '../../../Component/Image';
 import GradientButton from '../../../Component/GradientButton';
 import {StatusBar} from 'react-native';
+import moment from 'moment';
 
+const WeekArray = Array(7)
+  .fill(0)
+  .map(
+    (item, index) =>
+      (item = moment()
+        .add(index, 'days')
+        .subtract(moment().isoWeekday() - 1, 'days')
+        .format('dddd')),
+  );
+const numberArray = [1, 2, 3, 4, 5, 6, 7];
 const DayRewards = ({navigation, route}: any) => {
   const {data, day} = route?.params;
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
   const [days, setDays] = useState<Array<any>>([]);
+  const [weekly, setWeekly] = useState(false);
   useEffect(() => {
     getCurrentDayAPI();
   }, []);
@@ -32,7 +44,7 @@ const DayRewards = ({navigation, route}: any) => {
       const payload = new FormData();
       payload.append('id', getUserDataDetails?.id);
       payload.append('workout_id', data?.workout_id);
-   
+
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EXERCISE_DETAILS,
         method: 'post',
@@ -41,12 +53,13 @@ const DayRewards = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-   
+
       if (res.data?.msg != 'No data found') {
-        
         analyzeExerciseData(res.data?.user_details);
+        setWeekly(false);
       } else {
-       
+        WeeklyStatusAPI();
+        setWeekly(true);
       }
     } catch (error) {
       console.error(error, 'DAPIERror');
@@ -63,6 +76,27 @@ const DayRewards = ({navigation, route}: any) => {
     });
     setDays(Array.from(daysCompletedAll));
   }
+
+  const WeeklyStatusAPI = async () => {
+    try {
+      const res = await axios({
+        url: NewAppapi.WEEKLY_STATUS + '?user_id=' + getUserDataDetails.id,
+      });
+      if (res.data?.msg != 'No data found.') {
+        const days = new Set(); // Use a Set to store unique days
+        res.data?.forEach((item: any) => {
+          days.add(item.user_day);
+        });
+        console.log('DAYS', days);
+        setDays([...days]);
+      } else {
+        setDays([]);
+      }
+    } catch (error) {
+      console.error(error, 'WEEKLYSTATUS ERRR');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -127,37 +161,69 @@ const DayRewards = ({navigation, route}: any) => {
             width: DeviceWidth * 0.9,
             marginTop: 10,
           }}>
-          {[1, 2, 3, 4, 5, 6, 7].map((item: any, index: number) => {
-            return (
-              <View style={{alignItems: 'center'}}>
-                {days.includes(item) ? (
-                  <Image
-                    source={localImage.RedCircle}
-                    style={{height: 40, width: 40}}
-                  />
-                ) : (
-                  <View
-                    style={{
-                      height: 40,
-                      width: 40,
-                      borderRadius: 50,
-                      backgroundColor: '#EDF1F4',
-                    }}
-                  />
-                )}
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontFamily: 'Poppins',
-                    lineHeight: 30,
-                    color: '#505050',
-                    fontWeight: '500',
-                  }}>
-                  {item}
-                </Text>
-              </View>
-            );
-          })}
+          {weekly
+            ? WeekArray.map((item: any, index: number) => {
+                return (
+                  <View style={{alignItems: 'center'}}>
+                    {days.includes(item) ? (
+                      <Image
+                        source={localImage.RedCircle}
+                        style={{height: 40, width: 40}}
+                      />
+                    ) : (
+                      <View
+                        style={{
+                          height: 40,
+                          width: 40,
+                          borderRadius: 50,
+                          backgroundColor: '#EDF1F4',
+                        }}
+                      />
+                    )}
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontFamily: 'Poppins',
+                        lineHeight: 30,
+                        color: '#505050',
+                        fontWeight: '500',
+                      }}>
+                      {item?.substring(0, 1)}
+                    </Text>
+                  </View>
+                );
+              })
+            : numberArray.map((item: any, index: number) => {
+                return (
+                  <View style={{alignItems: 'center'}}>
+                    {days.includes(item) ? (
+                      <Image
+                        source={localImage.RedCircle}
+                        style={{height: 40, width: 40}}
+                      />
+                    ) : (
+                      <View
+                        style={{
+                          height: 40,
+                          width: 40,
+                          borderRadius: 50,
+                          backgroundColor: '#EDF1F4',
+                        }}
+                      />
+                    )}
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontFamily: 'Poppins',
+                        lineHeight: 30,
+                        color: '#505050',
+                        fontWeight: '500',
+                      }}>
+                      {item}
+                    </Text>
+                  </View>
+                );
+              })}
         </View>
         <Text
           style={{
@@ -183,7 +249,11 @@ const DayRewards = ({navigation, route}: any) => {
           Good Luck
         </Text>
         <GradientButton
-          onPress={() => navigation.navigate('BottomTab')}
+          onPress={() =>
+            weekly
+              ? navigation.navigate('BottomTab')
+              : navigation.navigate('WorkoutDays', {data: data})
+          }
           text="Collect Rewards"
           bR={50}
           h={70}
