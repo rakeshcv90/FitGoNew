@@ -29,7 +29,8 @@ export const AppColor={
     Gray5:"#999999",
     NewBlack: '#202020',
     NewGray: '#857B7B',
-    HEADERTEXTCOLOR:'#333333'
+    HEADERTEXTCOLOR:'#333333',
+    SUBHEADING:'#434343',
 
   }
   export const Fonts = {

@@ -185,7 +185,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
     let time = getCustttomeTimeCal.filter(item1 => {
       return item1.workout_id == item.workout_id;
     });
-console.log('GET PROFRE',time,getCustttomeTimeCal)
+
     let remainingTime = time[0].totalRestTime;
     let resulttime = ((remainingTime / totalTime) * 100).toFixed(0);
 
@@ -203,7 +203,7 @@ console.log('GET PROFRE',time,getCustttomeTimeCal)
           <Image
             source={localImage.Next}
             resizeMode="contain"
-            style={{width: 40, height: 40, }}
+            style={{width: 40, height: 40}}
           />
         ) : (
           <CircularProgress
@@ -252,8 +252,13 @@ console.log('GET PROFRE',time,getCustttomeTimeCal)
   };
   return (
     <>
+     
       <NewHeader
-        header={route.params.item.bodypart_title}
+        header={
+          route?.params?.item?.bodypart_title == undefined
+            ? route?.params?.item?.title
+            : route?.params?.item?.bodypart_title
+        }
         SearchButton={false}
         backButton={true}
       />

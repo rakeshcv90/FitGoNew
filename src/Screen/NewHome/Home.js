@@ -1295,7 +1295,8 @@ const Home = ({navigation}) => {
             }}
             colors={[AppColor.RED, AppColor.WHITE]}
           />
-        }>
+        }
+        >
         <View style={{width: '95%', alignSelf: 'center'}}>
           <Text
             style={{

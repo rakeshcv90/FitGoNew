@@ -60,7 +60,7 @@ const AllWorkouts = ({navigation, route}: any) => {
   let total_Workouts_Time = 0;
   let isFocuse = useIsFocused();
   useEffect(() => {
-    allWorkoutData?.length == 0 && allWorkoutApi();
+    allWorkoutData?.workout_Data?.length == 0 && allWorkoutApi();
     popularData?.length == 0 && popularWorkoutApi();
     workoutStatusApi();
     getFavStatusAPI();
@@ -108,8 +108,8 @@ const AllWorkouts = ({navigation, route}: any) => {
         setRefresh(false);
         setLoader(false);
         if (page > 1) {
-          dispatch(setAllWorkoutData([...allWorkoutData, ...res.data]));
-          [...allWorkoutData, ...res.data]?.map((item: any) => {
+          dispatch(setAllWorkoutData([...allWorkoutData?.workout_Data, ...res.data?.workout_Data]));
+          [...allWorkoutData?.workout_Data, ...res.data]?.map((item: any) => {
             let totalTime = 0;
             for (const day in item?.days) {
               totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
@@ -118,7 +118,7 @@ const AllWorkouts = ({navigation, route}: any) => {
           });
         } else {
           dispatch(setAllWorkoutData(res.data));
-          res.data?.map((item: any) => {
+          res.data?.workout_Data.map((item: any) => {
             let totalTime = 0;
             for (const day in item?.days) {
               totalTime = totalTime + parseInt(item?.days[day]?.total_rest);
