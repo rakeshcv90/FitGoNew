@@ -49,6 +49,7 @@ const Exercise = ({navigation, route}: any) => {
     exerciseNumber,
     trackerData,
     type,
+    challenge,
   } = route.params;
 
   const VideoRef = useRef();
@@ -122,7 +123,7 @@ const Exercise = ({navigation, route}: any) => {
     if (!back) {
       restStart
         ? (restTimerRef.current = setTimeout(() => {
-            if (timer === 0) {
+            if (timer === 9) {
               if (number == allExercise?.length - 1) return;
               setRestStart(false);
               setIsLoading(true);
@@ -174,6 +175,7 @@ const Exercise = ({navigation, route}: any) => {
                   day,
                   allExercise,
                   type,
+                  challenge
                 });
 
                 clearTimeout(restTimerRef.current);
@@ -293,7 +295,6 @@ const Exercise = ({navigation, route}: any) => {
           '&current_date=' +
           moment().format('YYYY-MM-DD'),
       });
-  
     } catch (error) {
       console.log('DELE TRACK ERRR', error);
     }
@@ -325,7 +326,7 @@ const Exercise = ({navigation, route}: any) => {
     payload.append('version', VersionNumber.appVersion);
     try {
       const res = await axios({
-        url: NewAppapi.POST_EXERCISE,
+        url: challenge ? NewAppapi.POST_CHALLENGE : NewAppapi.POST_EXERCISE,
         method: 'post',
         data: payload,
         headers: {
@@ -344,10 +345,10 @@ const Exercise = ({navigation, route}: any) => {
         console.log(res.data, trackerData[index], payload);
         setCurrentData(allExercise[index]);
         setRestStart(true);
-        setPlayW(0);
+        setPlayW(90);
       }
     } catch (error) {
-      console.error(error, 'PostDaysAPIERror');
+      console.error(error?.response, 'PostDaysAPIERror');
     }
   };
 

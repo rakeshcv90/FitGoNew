@@ -51,7 +51,7 @@ import Play from './Exercise/Play';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 
 const OneDay = ({navigation, route}: any) => {
-  const {data, dayData, day, trainingCount} = route.params;
+  const {data, dayData, day, trainingCount, challenge} = route.params;
   const [exerciseData, setExerciseData] = useState([]);
   const [currentExercise, setCurrentExercise] = useState([]);
   const [trackerData, setTrackerData] = useState([]);
@@ -159,7 +159,9 @@ const OneDay = ({navigation, route}: any) => {
 
     try {
       const res = await axios({
-        url: NewAppapi.TRACK_CURRENT_DAY_EXERCISE,
+        url: challenge
+          ? NewAppapi.TRACK_CURRENT_DAY_CHALLENGE_EXERCISE
+          : NewAppapi.TRACK_CURRENT_DAY_EXERCISE,
         method: 'Post',
         data: payload,
         headers: {
@@ -189,11 +191,6 @@ const OneDay = ({navigation, route}: any) => {
   };
 
   const postCurrentDayAPI = async () => {
-    // const payload = new FormData();
-    // payload.append('user_exercise_id', current?.exercise_id);
-    // payload.append('user_id', getUserDataDetails?.id);
-    // payload.append('workout_id', data?.workout_id);
-    // payload.append('user_day', day);
     let datas = [];
     let trainingCount = -1;
     trainingCount = trackerData.findIndex(
@@ -215,7 +212,9 @@ const OneDay = ({navigation, route}: any) => {
     ).finally(async () => {
       try {
         const res = await axios({
-          url: NewAppapi.CURRENT_DAY_EXERCISE,
+          url: challenge
+            ? NewAppapi.CURRENT_DAY_CHALLENGE_EXERCISE
+            : NewAppapi.CURRENT_DAY_EXERCISE,
           method: 'Post',
           data: {user_details: datas},
         });
@@ -223,25 +222,25 @@ const OneDay = ({navigation, route}: any) => {
           if (
             res.data?.msg ==
             'Exercise Status for All Users Inserted Successfully'
-            ) {
-            console.log(res.data)
+          ) {
+            console.log(res.data);
             setOpen(false);
             setDownloade(0);
             navigation.navigate('Exercise', {
               allExercise: exerciseData,
               currentExercise:
-              trainingCount != -1
-              ? exerciseData[trainingCount]
-              : exerciseData[0],
+                trainingCount != -1
+                  ? exerciseData[trainingCount]
+                  : exerciseData[0],
               data: data,
               day: day,
               exerciseNumber: trainingCount != -1 ? trainingCount : 0,
               trackerData: res?.data?.inserted_data,
-              type: 'day'
-
+              type: 'day',
+              challenge
             });
           } else {
-            console.log(trackerData)
+            console.log(trackerData);
             setOpen(false);
             setDownloade(0);
             navigation.navigate('Exercise', {
@@ -254,8 +253,8 @@ const OneDay = ({navigation, route}: any) => {
               day: day,
               exerciseNumber: trainingCount != -1 ? trainingCount : 0,
               trackerData: trackerData,
-              type: 'day'
-
+              type: 'day',
+              challenge
             });
           }
         }
