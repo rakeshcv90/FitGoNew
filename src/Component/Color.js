@@ -30,7 +30,8 @@ export const AppColor={
     NewBlack: '#202020',
     NewGray: '#857B7B',
     HEADERTEXTCOLOR:'#333333',
-    NewRed: '#CE1817'
+    NewRed: '#CE1817',
+    SUBHEADING:'#434343',
 
   }
   export const Fonts = {

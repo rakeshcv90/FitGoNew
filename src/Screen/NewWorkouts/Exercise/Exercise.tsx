@@ -293,7 +293,7 @@ const Exercise = ({navigation, route}: any) => {
           '&current_date=' +
           moment().format('YYYY-MM-DD'),
       });
-      console.log('DATA DELETED', res.data);
+  
     } catch (error) {
       console.log('DELE TRACK ERRR', error);
     }

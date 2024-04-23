@@ -43,10 +43,10 @@ const PercentageBar = ({
           style={{
             width: getPercentage ? getPercentage : 0,
             height: getheight,
-            bottom: 10,
+
             top:
               Platform.OS == 'ios'
-                ? -DeviceHeigth * 0.032
+                ? -DeviceHeigth * 0.033
                 : -DeviceHeigth * 0.035,
           }}>
           <Text style={{textAlign: 'right', color: 'white'}}>

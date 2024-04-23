@@ -31,6 +31,7 @@ import {
 import Timer from '../../Component/Timer';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  setAllWorkoutData,
   setVideoLocation,
   setWeeklyPlansData,
 } from '../../Component/ThemeRedux/Actions';
@@ -269,8 +270,47 @@ const MyPlans = ({navigation}: any) => {
   useFocusEffect(
     useCallback(() => {
       WeeklyStatusAPI();
+      allWorkoutApi1();
     }, [selectedDay]),
   );
+
+  const allWorkoutApi1 = async () => {
+    try {
+      //  setRefresh(true);
+      const payload = new FormData();
+      payload.append('id', getUserDataDetails?.id);
+      payload.append('version', VersionNumber.appVersion);
+      const res = await axios({
+        url: NewAppapi.ALL_WORKOUTS,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: payload,
+      });
+      console.log("xcvcxvcxvdsvd",res?.data)
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setRefresh(false);
+      } else if (res?.data) {
+        setRefresh(false);
+        dispatch(setAllWorkoutData(res?.data));
+      } else {
+        setRefresh(false);
+        dispatch(setAllWorkoutData([]));
+      }
+    } catch (error) {
+      setRefresh(false);
+      console.error(error, 'customWorkoutDataApiError');
+      dispatch(setAllWorkoutData([]));
+    }
+  };
   const allWorkoutApi = async (day: string) => {
     try {
       const res = await axios({
