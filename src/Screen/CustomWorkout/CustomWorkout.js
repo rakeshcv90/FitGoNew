@@ -14,6 +14,7 @@ import {showMessage} from 'react-native-flash-message';
 
 const CustomWorkout = ({navigation}) => {
   const customWorkoutData = useSelector(state => state.customWorkoutData);
+  const getExperience=useSelector(state=>state.getExperience)
   const [isCustomWorkout, setIsCustomWorkout] = useState(false);
   const [text, setText] = React.useState('');
   const [isLoading, setIsLoading] = useState(true);

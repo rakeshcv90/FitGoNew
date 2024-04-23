@@ -10,11 +10,15 @@ import React from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AppColor} from '../Color';
-import {useNavigation} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
+import {useDispatch, useSelector} from 'react-redux';
+
+import { setExperience } from '../ThemeRedux/Actions';
 const NewHeader = ({header, backButton, SearchButton}) => {
   const navigation = useNavigation();
-
+const getExperience=useSelector(state=>state.getExperience)
+const dispatch=useDispatch()
   return (
     <SafeAreaView
       style={[
@@ -36,7 +40,18 @@ const NewHeader = ({header, backButton, SearchButton}) => {
       ) : (
         <TouchableOpacity
           onPress={() => {
-            navigation.goBack();
+          if(getExperience==true){
+            dispatch(setExperience(false))
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes:[{name:'BottomTab'}]
+              })
+            );
+            
+          }else{
+           navigation.goBack()
+          }
           }}>
           <Icons
             name={'chevron-left'}

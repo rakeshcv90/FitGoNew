@@ -23,6 +23,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Scale from './Scale';
 import Toggle from '../../Component/Toggle';
 import {showMessage} from 'react-native-flash-message';
+import CustomPicker from '../../Component/CustomPicker';
 
 const BOX_HEIGHT = DeviceHeigth * 0.7;
 const ITEM_HEIGHT = 25;
@@ -32,7 +33,7 @@ const height = [
   // ...Array(halfItemCount + 5).fill(''), // Empty items for the top half
   ...Array(2500)
     .fill(0)
-    .map((item: any, index, arr) => index/10),
+    .map((item: any, index, arr) => index / 10),
   // ...Array(halfItemCount + 4).fill(''), // Empty items for the bottom half
 ];
 const positions = height.map(
@@ -42,21 +43,23 @@ const positions = height.map(
       end: index * ITEM_HEIGHT + ITEM_HEIGHT,
     }),
 );
-
+const WeightArray: any = [];
+for (let i = 0; i <= 150; i++) {
+  WeightArray.push(i);
+}
 const Weight = ({route, navigation}: any) => {
   const {nextScreen} = route.params;
 
-  const defaultTheme  = useSelector(
-    (state: any) => state.defaultTheme
-  );
+  const defaultTheme = useSelector((state: any) => state.defaultTheme);
   const completeProfileData = useSelector(
     (state: any) => state.completeProfileData,
   );
-  const  getLaterButtonData = useSelector(
+  const getLaterButtonData = useSelector(
     (state: any) => state.getLaterButtonData,
   );
   const dispatch = useDispatch();
   const [selected, setSelected] = useState(-1);
+  const ref = useRef(selected);
   const [targetSelected, setTargetSelected] = useState(false);
   const [screen, setScreen] = useState(nextScreen);
   const [toggle, setToggle] = useState('kg');
@@ -64,11 +67,12 @@ const Weight = ({route, navigation}: any) => {
   const translateTarget = useRef(new Animated.Value(DeviceHeigth * 2)).current;
   const translateCurrent = useRef(new Animated.Value(0)).current;
   const mergedObject = Object.assign({}, ...getLaterButtonData);
+  const [targetWeight, setTargetWeight] = useState(0);
   const [BackHight, setBackHight] = useState(0);
+  const [getActiveIndex, setActiveIndex] = useState(0);
   useEffect(() => {
     setScreen(nextScreen);
   }, []);
-
   const handleAnimation = (weight: number) => {
     setTimeout(() => {
       if (targetSelected) {
@@ -76,7 +80,7 @@ const Weight = ({route, navigation}: any) => {
         setScreen(screen - 1);
       } else {
         setSelected(weight);
-        
+
         setTargetSelected(true);
         setScreen(screen + 1);
       }
@@ -97,10 +101,9 @@ const Weight = ({route, navigation}: any) => {
       }),
     ]).start();
   };
-
-  const toNextScreen = (weight: number) => {
+  const toNextScreen = (weight: any) => {
     const currentData = {
-      currentWeight: selected,
+      currentWeight: toggle == 'kg' ? selected : (selected * 2.2).toFixed(2),
       targetWeight: weight,
       type: toggle,
     };
@@ -114,10 +117,9 @@ const Weight = ({route, navigation}: any) => {
       });
     } else if (weight != selected) {
       {
-       
       }
       dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-      navigation.navigate('Age', {nextScreen: screen + 1});
+      navigation.navigate('WorkoutArea', {nextScreen: screen + 1});
     } else {
       showMessage({
         message: 'Current Weight can not be equal to Target weight',
@@ -137,22 +139,17 @@ const Weight = ({route, navigation}: any) => {
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: AppColor.WHITE,
+       
         // height: DeviceHeigth * 0.8,
       }}>
       <Animated.View
         style={{
-          // flexDirection: 'row',
-          // justifyContent: 'flex-start',
-          // alignItems: 'center',
-          //   alignSelf: 'flex-start',
-          // height: DeviceHeigth * 0.8,
           width: DeviceWidth,
           transform: [{translateY: translateCurrent}],
-          paddingTop: 20,
           justifyContent: 'center',
           alignItems: 'center',
           // backgroundColor: AppColor.RED,
-          height: DeviceHeigth * 0.58,
+          height: DeviceHeigth * 0.54,
         }}>
         <ProgressBar screen={screen} />
         <View
@@ -203,62 +200,15 @@ const Weight = ({route, navigation}: any) => {
               // backgroundColor: 'red',
               height: DeviceHeigth * 0.4,
             }}>
-            {/* <View style={{height: DeviceHeigth * 0.01}} /> */}
-            {height[currentActiveIndex] < 251 ? (
-              toggle == 'kg' ? (
-                <Text
-                  style={{
-                    color: AppColor.RED,
-                    fontSize: 36,
-                    fontWeight: '600',
-                  }}>
-                  {BackHight==0?height[currentActiveIndex]:selected}
-                  <Text
-                    style={{
-                      color: AppColor.RED,
-                      fontSize: 16,
-                      fontWeight: '400',
-                    }}>
-                    {' kg '}
-                  </Text>
-                </Text>
-              ) : (
-                <Text
-                  style={{
-                    color: AppColor.RED,
-                    fontSize: 36,
-                    fontWeight: '600',
-                  }}>
-                  {(height[currentActiveIndex] * 2.2).toFixed(2)}
-                  <Text
-                    style={{
-                      color: AppColor.RED,
-                      fontSize: 16,
-                      fontWeight: '400',
-                    }}>
-                    {' lbs '}
-                  </Text>
-                </Text>
-              )
-            ) : (
-              <Text
-                style={{
-                  color: AppColor.RED,
-                  fontSize: 36,
-                  fontWeight: '600',
-                }}>
-                --
-              </Text>
-            )}
-            {/* </View> */}
-            <View style={{position: 'absolute', top: 100}}>
-              <Scale
-                h={true}
-                setActiveIndex={setCurrentActiveIndex}
-                activeIndex={currentActiveIndex}
-                data={height}
-                posData={positions}
-                activeItem={900}
+            <View style={{marginTop: DeviceHeigth * 0.08}}>
+              <CustomPicker
+                items={WeightArray}
+                onIndexChange={index => {
+                  setSelected(WeightArray[index + 2]);
+                }}
+                itemHeight={60}
+                toggle={toggle}
+                ActiveIndex={currentActiveIndex}
               />
             </View>
             <View style={{height: DeviceHeigth * 0.2}} />
@@ -287,8 +237,7 @@ const Weight = ({route, navigation}: any) => {
             }>
             <Icons name="chevron-left" size={25} color={'#000'} />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => handleAnimation(height[currentActiveIndex])}>
+          <TouchableOpacity onPress={() => handleAnimation(selected)}>
             <LinearGradient
               start={{x: 0, y: 1}}
               end={{x: 1, y: 0}}
@@ -356,7 +305,7 @@ const Weight = ({route, navigation}: any) => {
             opacity: 0.3,
             marginLeft: -10,
           }}>
-          <View
+          {/* <View
             style={{
               justifyContent: 'center',
               alignItems: 'center',
@@ -411,7 +360,7 @@ const Weight = ({route, navigation}: any) => {
               </Text>
             )}
             {/* </View> */}
-            <View style={{position: 'absolute', top: 100}}>
+          {/* <View style={{position: 'absolute', top: 100}}>
               <Scale
                 h={true}
                 setActiveIndex={setCurrentActiveIndex}
@@ -422,10 +371,16 @@ const Weight = ({route, navigation}: any) => {
               />
             </View>
             <View style={{height: DeviceHeigth * 0.2}} />
-          </View>
+          </View>  */}
+          <CustomPicker
+            items={WeightArray}
+            onIndexChange={index => setTargetWeight(WeightArray[index + 2])}
+            itemHeight={60}
+            toggle={toggle}
+          />
         </ImageBackground>
         <View>
-          <View style={[styles.buttons]}>
+          <View style={[styles.buttons,{bottom: -DeviceHeigth * 0.12,}]}>
             <TouchableOpacity
               style={{
                 backgroundColor: '#F7F8F8',
@@ -439,13 +394,21 @@ const Weight = ({route, navigation}: any) => {
               }}
               onPress={() =>
                 //   selected != '' ? handleImagePress('') :
-              {  setBackHight(1)
-                targetSelected ? handleAnimation(0) : navigation.goBack()}
+                {
+                  setBackHight(1);
+                  targetSelected ? handleAnimation(0) : navigation.goBack();
+                }
               }>
               <Icons name="chevron-left" size={25} color={'#000'} />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => toNextScreen(height[currentActiveIndex])}>
+              onPress={() =>
+                toNextScreen(
+                  toggle == 'kg'
+                    ? targetWeight
+                    : (targetWeight * 2.2).toFixed(2),
+                )
+              }>
               <LinearGradient
                 start={{x: 0, y: 1}}
                 end={{x: 1, y: 0}}

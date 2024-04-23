@@ -37,7 +37,8 @@ const intialState = {
   getFitmeMealAdsCount: 0,
   getStoreVideoLoc: {},
   isAlarmEnabled: false,
-  getAllExercise:[]
+  getAllExercise:[],
+  getExperience:false
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -195,6 +196,11 @@ const ThemeReducer = (state = intialState, action) => {
           ...state,
           getAllExercise:action.payload
         }
+        case types.IS_EXPERIENCED:
+          return{
+            ...state,
+            getExperience:action.payload
+          }
     default:
       return state;
   }

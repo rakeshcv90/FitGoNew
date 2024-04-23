@@ -33,6 +33,7 @@ const CreateWorkout = ({navigation, route}) => {
   const dispatch = useDispatch();
   const customWorkoutData = useSelector(state => state.customWorkoutData);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+
   const getAllExercise = useSelector(state => state.getAllExercise);
   const [workoutList, setWorkoutList] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -40,6 +41,9 @@ const CreateWorkout = ({navigation, route}) => {
   const [value, setValue] = useState(0);
   const animation = useSharedValue(0);
   const completeProfileData = useSelector(state => state.completeProfileData);
+  const {
+    getUserID,
+  } = useSelector(state => state);
   const [bodyPart, setBodyPart] = useState(
     completeProfileData?.focusarea[0].bodypart_title,
   );
@@ -239,6 +243,8 @@ const CreateWorkout = ({navigation, route}) => {
       }
       payload.append('workout_name', route?.params?.workoutTitle);
       payload.append('user_id', getUserDataDetails?.id);
+      payload.append('id', getUserID != 0 ? getUserID : null);
+      console.log('Payload--->',payload)
       try {
         const res = await axios(`${NewAppapi.USER_CUSTOM_WORKOUT}`, {
           data: payload,

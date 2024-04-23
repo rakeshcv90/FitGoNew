@@ -121,7 +121,7 @@ const LoadData = ({navigation}) => {
   }, []);
   const WholeData = async deviceID => {
     const mergedObject = Object.assign({}, ...getLaterButtonData);
-
+    console.log('data1--->', mergedObject);
     try {
       const payload = new FormData();
       payload.append('deviceid', deviceID);
@@ -129,12 +129,11 @@ const LoadData = ({navigation}) => {
       payload.append('id', getUserID != 0 ? getUserID : null);
       payload.append('gender', mergedObject?.gender);
       payload.append('goal', mergedObject?.goal);
-      payload.append('age', mergedObject?.age);
-      payload.append('fitnesslevel', mergedObject?.level); // static values change  it accordingly
-      payload.append('focusarea', mergedObject?.focuseArea?.join(','));
+      payload.append('fitnesslevel', mergedObject?.experience); // static values change  it accordingly
       payload.append('weight', mergedObject?.currentWeight);
       payload.append('targetweight', mergedObject?.targetWeight);
-      payload.append('height', mergedObject?.height);
+      payload.append('experience', mergedObject?.experience);
+      payload.append('workout_plans', mergedObject?.workout_plans);
       payload.append(
         'injury',
         mergedObject?.injury != null ? mergedObject?.injury?.join(',') : null,
@@ -142,17 +141,6 @@ const LoadData = ({navigation}) => {
       payload.append('equipment', mergedObject?.equipment);
       payload.append('workoutarea', mergedObject?.workoutArea?.join(','));
       payload.append('version', VersionNumber.appVersion);
-      if (mindsetConsent == true) {
-        payload.append('workoutroutine', mindSetData[0].routine);
-        payload.append('sleepduration', mindSetData[1].SleepDuration);
-        payload.append('mindstate', mindSetData[2].mState);
-        payload.append('alcoholconstent', mindSetData[3].Alcohol_Consent);
-
-        if (mindSetData[4]) {
-          payload.append('alcoholquantity', mindSetData[4].Alcohol_Qauntity);
-        }
-      }
-
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {
@@ -192,7 +180,6 @@ const LoadData = ({navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-  
 
       if (data.data.workout) {
         dispatch(setCustomWorkoutData(data?.data));
@@ -242,7 +229,9 @@ const LoadData = ({navigation}) => {
         setActiveNext(true);
         dispatch(setCustomWorkoutData(res.data));
         // currentWorkoutDataApi(res.data?.workout[0]);
-      } else if (res?.data?.msg=='Please update the app to the latest version.') {
+      } else if (
+        res?.data?.msg == 'Please update the app to the latest version.'
+      ) {
         showMessage({
           message: res?.data?.msg,
           floating: true,
@@ -262,55 +251,6 @@ const LoadData = ({navigation}) => {
       setLoadData(100);
     }
   };
-
-  // const currentWorkoutDataApi = async workout => {
-  //   const mergedObject = Object.assign({}, ...getLaterButtonData);
-  //   try {
-  //     const payload = new FormData();
-  //     payload.append('workoutid', workout?.workout_id);
-  //     payload.append('workoutgender', workout?.workout_gender);
-  //     payload.append('workoutgoal', workout?.workout_goal);
-  //     payload.append('workoutlevel', workout?.workout_level);
-  //     payload.append('workoutarea', workout?.workout_area);
-  //     payload.append('workoutinjury', workout?.workout_injury);
-  //     payload.append('workoutage', mergedObject?.age); //User Age here
-  //     payload.append('workoutequipment', workout?.workout_equipment);
-  //     const res = await axios({
-  //       url: NewAppapi.Free_Excercise_Data,
-
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       data: payload,
-  //     });
-  //     if (res.data) {
-
-  //       dispatch(setCurrentWorkoutData(res.data));
-  //       setLoadData(100);
-  //     } else dispatch(setCurrentWorkoutData([]));
-
-  //     setLoadData(100);
-  //     setTimeout(() => {
-  //       setActiveNext(true);
-  //       // showMessage({
-  //       //   message: 'Your Custom Workout has beeen created Successfully!!',
-  //       //   type: 'success',
-  //       //   animationDuration: 500,
-  //       //   // statusBarHeight: StatusBar_Bar_Height+,
-  //       //   floating: true,
-  //       //   icon: {icon: 'auto', position: 'left'},
-  //       // });
-  //     }, 2000);
-  //   } catch (error) {
-
-  //     dispatch(setCurrentWorkoutData([]));
-  //     setTimeout(() => {
-  //       setActiveNext(true);
-  //     }, 2000);
-  //   }
-  // };
-
   const Meal_List = async () => {
     try {
       const data = await axios(`${NewAppapi.Meal_Categorie}`, {
@@ -322,13 +262,6 @@ const LoadData = ({navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-
-      // if (data.data.diets.length > 0) {
-      //   dispatch(Setmealdata(data.data.diets));
-      // } else {
-      //   dispatch(Setmealdata([]));
-      // }
-
       if (data?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: data?.data?.msg,

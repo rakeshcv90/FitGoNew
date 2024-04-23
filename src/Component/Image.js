@@ -120,4 +120,11 @@ export const localImage = {
   Search: require('../Icon/Images/NewImage2/search.png'),
   Plus: require('../Icon/Images/NewImage2/plus.png'),
   Minus: require('../Icon/Images/NewImage2/Minus.png'),
+  BuildMuscle:require('../Icon/Images/NewImage2/BuildMuscle.png'),
+  Strength:require('../Icon/Images/NewImage2/Strength.png'),
+  WeightLoss:require('../Icon/Images/NewImage2/WeightLoss.png'),
+  Experienced:require('../Icon/Images/NewImage2/award_star.png'),
+  Begginer:require('../Icon/Images/NewImage2/electric_bolt.png'),
+  AddIcon:require('../Icon/Images/NewImage2/G.png'),
+  CreateW:require('../Icon/Images/NewImage2/create_new_folder.png')
 };
