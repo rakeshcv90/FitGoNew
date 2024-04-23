@@ -11,7 +11,7 @@ import {ReviewApp} from '../../../Component/ReviewApp';
 import axios from 'axios';
 
 const SaveDayExercise = ({navigation, route}: any) => {
-  const {data, day, allExercise, type} = route?.params;
+  const {data, day, allExercise, type, challenge} = route?.params;
   let fire, clock, action;
 
   if (type == 'day') {

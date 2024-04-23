@@ -1,5 +1,5 @@
 import {View, Text, FlatList, Image, TouchableOpacity} from 'react-native';
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {StyleSheet} from 'react-native';
 import {AppColor, Fonts} from '../../Component/Color';
@@ -11,8 +11,11 @@ import {useSelector, useDispatch} from 'react-redux';
 import {localImage} from '../../Component/Image';
 
 const FocuseWorkoutList = ({navigation, route}) => {
-  const [progressExercise, setProgressExercise] = useState(false);
+  const [data, setData] = useState([]);
   const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
+  useEffect(() => {
+    setData(route?.params?.bodyexercise);
+  }, [route?.params]);
 
   const renderItem = useMemo(
     () =>
@@ -30,7 +33,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
-                navigation.navigate('WorkoutDays', {data: item});
+                navigation.navigate('WorkoutDays', {data: item, challenge: false});
               }}
               style={{
                 width: '95%',
@@ -252,7 +255,6 @@ const FocuseWorkoutList = ({navigation, route}) => {
   };
   return (
     <>
-     
       <NewHeader
         header={
           route?.params?.item?.bodypart_title == undefined
@@ -265,7 +267,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
       <View style={styles.container}>
         <View style={[styles.meditionBox, {top: -20}]}>
           <FlatList
-            data={route?.params?.bodyexercise}
+            data={data}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderItem}
             ListEmptyComponent={emptyComponent}

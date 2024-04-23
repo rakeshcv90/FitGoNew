@@ -288,7 +288,6 @@ const MyPlans = ({navigation}: any) => {
         },
         data: payload,
       });
-      console.log("xcvcxvcxvdsvd",res?.data)
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -537,7 +536,7 @@ const MyPlans = ({navigation}: any) => {
           marginTop:
             Platform.OS == 'ios' ? -DeviceWidth * 0.1 : -DeviceWidth * 0.05,
         }}>
-        <View
+        {/* <View
           style={{
             flexDirection: 'row',
             width: DeviceWidth,
@@ -585,7 +584,7 @@ const MyPlans = ({navigation}: any) => {
               zIndex: 1,
             }}
           />
-        </View>
+        </View> */}
         <View {...panResponder.panHandlers} style={{flex: 1}}>
           <View
             style={{

@@ -33,30 +33,32 @@ import {localImage} from '../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import HomeNew from '../Screen/NewHome/HomeNew';
 import Profile from '../Screen/NewHome/Profile';
+import {ClipPath, Defs, Path, Polygon, Rect, Svg} from 'react-native-svg';
 const Tabs = createBottomTabNavigator();
+
+const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
 export const MyPLans = ({focused, onPress}) => {
   const [startAnimation, setStartAnimation] = useState(false);
-  const progressAnimation = new Animated.Value(0);
-  const progressBarWidth = progressAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['100%', '0%'],
-    extrapolate: 'extend',
-  });
+  const progressAnimation = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     if (startAnimation) {
       onPress();
       Animated.timing(progressAnimation, {
         toValue: 1,
-        duration: 2500,
+        duration: 2000,
         useNativeDriver: false,
       }).start(() => {
         progressAnimation.setValue(0);
         setStartAnimation(false);
-      });
+      })
     }
-  }, [startAnimation, progressAnimation]);
+  }, [startAnimation]);
 
+  const animatedHeight = progressAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 60],
+  });
   return (
     <TouchableOpacity
       activeOpacity={1}
@@ -77,7 +79,8 @@ export const MyPLans = ({focused, onPress}) => {
         }),
         justifyContent: 'center',
         alignItems: 'center',
-        bottom: 30,
+        bottom:
+          Platform.OS == 'ios' ? DeviceHeigth * 0.045 : DeviceHeigth * 0.035,
         // backgroundColor: 'blue',
       }}>
       <View
@@ -88,11 +91,11 @@ export const MyPLans = ({focused, onPress}) => {
             width: 70,
             height: 70,
             borderRadius: 70 / 2,
-            shadowColor: '#121212B2',
+            shadowColor: 'red',
             backgroundColor: 'white',
             ...Platform.select({
               ios: {
-                shadowOffset: {width: 0, height: 2},
+                shadowOffset: {width: 0, height: 1},
                 shadowOpacity: 0.1,
                 shadowRadius: 8,
               },
@@ -103,9 +106,35 @@ export const MyPLans = ({focused, onPress}) => {
           },
         ]}>
         {focused ? (
-          <View style={styles.triangleContainer}>
-            <View style={styles.triangle} />
-          </View>
+          <Svg height="80" width="80" viewBox="0 0 60 60">
+            <Defs>
+              <ClipPath id="clip">
+                <Path d="M 20 18 L 45 30 L 20 45 Z" />
+              </ClipPath>
+            </Defs>
+            <Rect
+              x="0"
+              y="0"
+              width="60"
+              height="60"
+              fill="grey" // You can change the fill color here
+              clipPath="url(#clip)"
+              style={{
+                // transform: [{translateY: 60}, {scaleY: -1}], // Flip the rectangle to fill from bottom to top
+              }}
+            />
+            <AnimatedRect
+              x="0"
+              y="0" // Start from the bottom of the SVG
+              width="60"
+              height={animatedHeight}
+              fill="red" // End color, change it as needed
+              clipPath="url(#clip)"
+              // style={{
+              //   transform: [{ translateY: Animated.multiply(animatedHeight, -1) }],
+              // }}
+            />
+          </Svg>
         ) : (
           <View
             style={{

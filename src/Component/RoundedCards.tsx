@@ -102,7 +102,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
               return (
                 <TouchableOpacity
                   onPress={() =>
-                    navigationRef.current?.navigate('WorkoutDays', {data: item})
+                    navigationRef.current?.navigate('WorkoutDays', {data: item, challenge: false})
                   }
                   activeOpacity={0.8}
                   style={[

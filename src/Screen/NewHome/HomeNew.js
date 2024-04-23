@@ -33,7 +33,10 @@ import {FlatList} from 'react-native';
 import AnimatedLottieView from 'lottie-react-native';
 import {navigationRef} from '../../../App';
 import {showMessage} from 'react-native-flash-message';
-import {setAllWorkoutData} from '../../Component/ThemeRedux/Actions';
+import {
+  setAllWorkoutData,
+  setChallengesData,
+} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 
 const GradientText = ({item}) => {
@@ -75,7 +78,9 @@ const HomeNew = ({navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getStoreData = useSelector(state => state.getStoreData);
   const allWorkoutData = useSelector(state => state.allWorkoutData);
+  const getChallengesData = useSelector(state => state.getChallengesData);
   const [progressHight, setProgressHight] = useState('80%');
+  const [currentChallenge, setCurrentChallenge] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const isFocused = useIsFocused();
   const colors = [
@@ -87,10 +92,36 @@ const HomeNew = ({navigation}) => {
   useEffect(() => {
     if (isFocused) {
       allWorkoutApi();
-       allWorkoutData?.length == 0 && allWorkoutApi();
+      allWorkoutData?.length == 0 && allWorkoutApi();
+      const challenge =
+        getChallengesData?.length > 0
+          ? getChallengesData?.filter(item => item?.status == 'active')
+          : ChallengesDataAPI();
+      setCurrentChallenge(challenge);
     }
   }, [isFocused]);
 
+  const ChallengesDataAPI = async () => {
+    try {
+      const res = await axios({
+        url:
+          NewAppapi.GET_CHALLENGES_DATA +
+          '?version=' +
+          VersionNumber.appVersion +
+          '&user_id=' +
+          getUserDataDetails?.id,
+      });
+      if (res.data?.msg != 'version  is required') {
+        dispatch(setChallengesData(res.data));
+        const challenge = res.data?.filter(item => item?.status == 'active');
+        setCurrentChallenge(challenge);
+      } else {
+        dispatch(setChallengesData([]));
+      }
+    } catch (error) {
+      console.error(error, 'ChallengesDataAPI ERRR');
+    }
+  };
   const allWorkoutApi = async () => {
     try {
       //  setRefresh(true);
@@ -105,7 +136,6 @@ const HomeNew = ({navigation}) => {
         },
         data: payload,
       });
-      console.log('DADADADADADADADA', res?.data?.workout_Data);
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -145,7 +175,7 @@ const HomeNew = ({navigation}) => {
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={() => {
-        //navigation.navigate('MeditationDetails', {item: title});
+        navigation.navigate('MeditationDetails', {item: title});
       }}>
       <View
         style={{
@@ -153,7 +183,6 @@ const HomeNew = ({navigation}) => {
           alignItems: 'center',
           marginHorizontal: 20,
         }}>
-        {console.log('dvfdsf', title.workout_mindset_image_link)}
         <LinearGradient
           start={{x: 0, y: 2}}
           end={{x: 1, y: 0}}
@@ -285,7 +314,9 @@ const HomeNew = ({navigation}) => {
         refreshControl={
           <RefreshControl
             refreshing={refresh}
-            onRefresh={() => {}}
+            onRefresh={() => {
+              ChallengesDataAPI();
+            }}
             colors={[AppColor.RED, AppColor.WHITE]}
           />
         }
@@ -302,139 +333,147 @@ const HomeNew = ({navigation}) => {
             }
           />
         </View>
-        <View style={{width: '95%', alignSelf: 'center', marginVertical: 10}}>
-          <Text
-            style={{
-              color: AppColor.HEADERTEXTCOLOR,
-              fontFamily: 'Montserrat-SemiBold',
-              fontWeight: '600',
-              lineHeight: 21,
-              fontSize: 18,
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-            }}>
-            Daily Challenge
-          </Text>
+        {currentChallenge.length > 0 && (
+          <View style={{width: '95%', alignSelf: 'center', marginVertical: 10}}>
+            <Text
+              style={{
+                color: AppColor.HEADERTEXTCOLOR,
+                fontFamily: 'Montserrat-SemiBold',
+                fontWeight: '600',
+                lineHeight: 21,
+                fontSize: 18,
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+              }}>
+              Daily Challenge
+            </Text>
 
-          <View
-            style={{
-              width: '100%',
-              marginVertical: 15,
-              flexDirection: 'row',
-              borderRadius: 16,
-              borderWidth: 1,
-              alignSelf: 'center',
-              backgroundColor: AppColor.WHITE,
-              shadowColor: 'rgba(0, 0, 0, 1)',
-              ...Platform.select({
-                ios: {
-                  shadowColor: '#000000',
-                  shadowOffset: {width: 0, height: 1},
-                  shadowOpacity: 0.1,
-                  shadowRadius: 4,
-                },
-                android: {
-                  elevation: 4,
-                },
-              }),
-              borderColor: '#D9D9D9',
-            }}>
             <View
               style={{
+                width: '100%',
+                marginVertical: 15,
                 flexDirection: 'row',
-                width: '90%',
-                alignItems: 'center',
-                top: 0,
+                borderRadius: 16,
+                borderWidth: 1,
+                alignSelf: 'center',
+                backgroundColor: AppColor.WHITE,
+                shadowColor: 'rgba(0, 0, 0, 1)',
+                ...Platform.select({
+                  ios: {
+                    shadowColor: '#000000',
+                    shadowOffset: {width: 0, height: 1},
+                    shadowOpacity: 0.1,
+                    shadowRadius: 4,
+                  },
+                  android: {
+                    elevation: 4,
+                  },
+                }),
+                borderColor: '#D9D9D9',
               }}>
               <View
                 style={{
-                  width: 90,
-                  height: 100,
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  borderColor: '#D9D9D9',
+                  flexDirection: 'row',
+                  width: '90%',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  marginHorizontal: 11,
-                  marginVertical: 10,
+                  top: 0,
                 }}>
-                <Image
-                  source={require('../../Icon/Images/NewImage2/human.png')}
-                  style={{
-                    width: 70,
-                    height: 70,
-                  }}
-                  resizeMode="contain"
-                />
-              </View>
-              <View
-                style={{
-                  width: DeviceHeigth >= 1024 ? '97%' : '85%',
-                  alignSelf: 'center',
-                  top: 15,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontSize: 14,
-                    fontWeight: '600',
-                    lineHeight: 18,
-                    marginHorizontal: 10,
-                    color: AppColor.HEADERTEXTCOLOR,
-                  }}>
-                  Daily Pushup Challenge
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontSize: 14,
-                    fontWeight: '600',
-                    lineHeight: 20,
-                    marginHorizontal: 10,
-                    top: 5,
-                    color: AppColor.HEADERTEXTCOLOR,
-                  }}>
-                  You have to do 30 Push
-                </Text>
                 <View
                   style={{
-                    alignSelf: 'flex-end',
-                    top: 10,
-                    marginRight:
-                      DeviceHeigth >= 1024
-                        ? DeviceWidth * 0.03
-                        : DeviceWidth * 0.085,
+                    width: 90,
+                    height: 100,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: '#D9D9D9',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginHorizontal: 11,
+                    marginVertical: 10,
+                  }}>
+                  <Image
+                    source={require('../../Icon/Images/NewImage2/human.png')}
+                    style={{
+                      width: 70,
+                      height: 70,
+                    }}
+                    resizeMode="contain"
+                  />
+                </View>
+                <View
+                  style={{
+                    width: DeviceHeigth >= 1024 ? '97%' : '85%',
+                    alignSelf: 'center',
+                    top: 15,
                   }}>
                   <Text
                     style={{
                       fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                      fontSize: 12,
+                      fontSize: 14,
+                      fontWeight: '600',
+                      lineHeight: 18,
+                      marginHorizontal: 10,
+                      color: AppColor.HEADERTEXTCOLOR,
+                    }}>
+                    {currentChallenge[0]?.title}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      fontSize: 14,
                       fontWeight: '600',
                       lineHeight: 20,
-                      color: AppColor.SUBHEADING,
+                      marginHorizontal: 10,
+                      top: 5,
+                      color: AppColor.HEADERTEXTCOLOR,
                     }}>
-                    6/14 Days
+                    You have to do 30 Push
                   </Text>
-                </View>
+                  <View
+                    style={{
+                      alignSelf: 'flex-end',
+                      top: 10,
+                      marginRight:
+                        DeviceHeigth >= 1024
+                          ? DeviceWidth * 0.03
+                          : DeviceWidth * 0.085,
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                        fontSize: 12,
+                        fontWeight: '600',
+                        lineHeight: 20,
+                        color: AppColor.SUBHEADING,
+                      }}>
+                      {`6/${currentChallenge[0]?.total_days} Days`}
+                    </Text>
+                  </View>
 
-                <PercentageBar height={20} percentage={progressHight} />
+                  <PercentageBar height={20} percentage={progressHight} />
+                </View>
               </View>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('WorkoutDays', {
+                    data: currentChallenge[0],
+                    challenge: true,
+                  })
+                }
+                style={{width: '10%', alignItems: 'center', top: 20}}>
+                <Image
+                  source={require('../../Icon/Images/NewImage2/play.png')}
+                  style={{
+                    width: 50,
+                    height: 50,
+                    marginRight: 10,
+                    //alignContent: 'flex-end',
+                  }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={{width: '10%', alignItems: 'center', top: 20}}>
-              <Image
-                source={require('../../Icon/Images/NewImage2/play.png')}
-                style={{
-                  width: 50,
-                  height: 50,
-                  marginRight: 10,
-                  //alignContent: 'flex-end',
-                }}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
           </View>
-        </View>
+        )}
         <View style={{width: '95%', alignSelf: 'center', marginTop: 15}}>
           <Text
             style={{
@@ -767,7 +806,7 @@ const HomeNew = ({navigation}) => {
         </View>
         <View style={[styles.meditionBox, {top: -DeviceHeigth * 0.115}]}>
           <FlatList
-            data={allWorkoutData?.mindset_wrkout_data}
+            data={allWorkoutData?.mindset_workout_data}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
