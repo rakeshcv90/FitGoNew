@@ -7,15 +7,18 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  ImageBackground,
+  RefreshControl,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native';
 import {AppColor, Fonts} from '../../Component/Color';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {useSelector, useDispatch} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import PercentageBar from '../../Component/PercentageBar';
+import VersionNumber, {appVersion} from 'react-native-version-number';
+
+import {useIsFocused} from '@react-navigation/native';
 import {
   Stop,
   Circle,
@@ -28,7 +31,10 @@ import {
 import {localImage} from '../../Component/Image';
 import {FlatList} from 'react-native';
 import AnimatedLottieView from 'lottie-react-native';
-import { navigationRef } from '../../../App';
+import {navigationRef} from '../../../App';
+import {showMessage} from 'react-native-flash-message';
+import {setAllWorkoutData} from '../../Component/ThemeRedux/Actions';
+import axios from 'axios';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -64,22 +70,64 @@ const GradientText = ({item}) => {
     </View>
   );
 };
-const HomeNew = () => {
+const HomeNew = ({navigation}) => {
+  const dispatch = useDispatch();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getStoreData = useSelector(state => state.getStoreData);
+  const allWorkoutData = useSelector(state => state.allWorkoutData);
   const [progressHight, setProgressHight] = useState('80%');
+  const [refresh, setRefresh] = useState(false);
+  const isFocused = useIsFocused();
   const colors = [
-    {color1: '#E2EFFF', color2: '#9CC2F5', color3: '#425B7B'},
-    {color1: '#BFF0F5', color2: '#8DD9EA', color3: '#1F6979'},
-    {color1: '#FAE3FF', color2: '#C97FCD', color3: '#7C3D80'},
-    {color1: '#FFEBE2', color2: '#DCAF9E', color3: '#1E1E1E'},
+    {color1: '#E3287A', color2: '#EE7CBA'},
+    {color1: '#5A76F4', color2: '#61DFF6'},
+    {color1: '#33B6C0', color2: '#9FCCA6'},
+    {color1: '#08B9BF', color2: '#07F3E9'},
   ];
-  const colors1 = [
-    {color1: '#E7D9FB'},
-    {color1: '#D7FBFF'},
-    {color1: '#DFEEFE'},
-  ];
+  useEffect(() => {
+    if (isFocused) {
+      allWorkoutApi();
+       allWorkoutData?.length == 0 && allWorkoutApi();
+    }
+  }, [isFocused]);
 
+  const allWorkoutApi = async () => {
+    try {
+      //  setRefresh(true);
+      const payload = new FormData();
+      payload.append('id', getUserDataDetails?.id);
+      payload.append('version', VersionNumber.appVersion);
+      const res = await axios({
+        url: NewAppapi.ALL_WORKOUTS,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: payload,
+      });
+      console.log('DADADADADADADADA', res?.data?.workout_Data);
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setRefresh(false);
+      } else if (res?.data) {
+        setRefresh(false);
+        dispatch(setAllWorkoutData(res?.data));
+      } else {
+        setRefresh(false);
+        dispatch(setAllWorkoutData([]));
+      }
+    } catch (error) {
+      setRefresh(false);
+      console.error(error, 'customWorkoutDataApiError');
+      dispatch(setAllWorkoutData([]));
+    }
+  };
   const getTimeOfDayMessage = () => {
     const currentHour = new Date().getHours();
 
@@ -105,6 +153,7 @@ const HomeNew = () => {
           alignItems: 'center',
           marginHorizontal: 20,
         }}>
+        {console.log('dvfdsf', title.workout_mindset_image_link)}
         <LinearGradient
           start={{x: 0, y: 2}}
           end={{x: 1, y: 0}}
@@ -119,8 +168,8 @@ const HomeNew = () => {
             style={[
               styles.img,
               {
-                height: 70,
-                width: 70,
+                height: 60,
+                width: 60,
                 alignSelf: 'center',
               },
             ]}
@@ -131,12 +180,13 @@ const HomeNew = () => {
             style={{
               textAlign: 'center',
               fontSize: 13,
-              color: '#434343',
-              fontFamily: Fonts.MONTSERRAT_REGULAR,
+
+              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
               fontWeight: '500',
               lineHeight: 15,
+              color: AppColor.SUBHEADING,
             }}>
-            Relax
+            {title?.workout_mindset_title}
           </Text>
         </View>
       </View>
@@ -230,8 +280,15 @@ const HomeNew = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           flexGrow: 1,
-          paddingBottom: DeviceHeigth * 0.25,
+          paddingBottom: DeviceHeigth * 0.05,
         }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refresh}
+            onRefresh={() => {}}
+            colors={[AppColor.RED, AppColor.WHITE]}
+          />
+        }
         style={styles.container}
         nestedScrollEnabled>
         <View style={styles.profileView}>
@@ -248,7 +305,7 @@ const HomeNew = () => {
         <View style={{width: '95%', alignSelf: 'center', marginVertical: 10}}>
           <Text
             style={{
-              color: AppColor.BLACK,
+              color: AppColor.HEADERTEXTCOLOR,
               fontFamily: 'Montserrat-SemiBold',
               fontWeight: '600',
               lineHeight: 21,
@@ -258,15 +315,15 @@ const HomeNew = () => {
             }}>
             Daily Challenge
           </Text>
+
           <View
             style={{
               width: '100%',
-              padding: 10,
-              paddingVertical: 15,
-              marginVertical: 20,
+              marginVertical: 15,
               flexDirection: 'row',
               borderRadius: 16,
               borderWidth: 1,
+              alignSelf: 'center',
               backgroundColor: AppColor.WHITE,
               shadowColor: 'rgba(0, 0, 0, 1)',
               ...Platform.select({
@@ -282,7 +339,13 @@ const HomeNew = () => {
               }),
               borderColor: '#D9D9D9',
             }}>
-            <View style={{flexDirection: 'row', width: '90%'}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                width: '90%',
+                alignItems: 'center',
+                top: 0,
+              }}>
               <View
                 style={{
                   width: 90,
@@ -293,6 +356,7 @@ const HomeNew = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginHorizontal: 11,
+                  marginVertical: 10,
                 }}>
                 <Image
                   source={require('../../Icon/Images/NewImage2/human.png')}
@@ -303,7 +367,12 @@ const HomeNew = () => {
                   resizeMode="contain"
                 />
               </View>
-              <View style={{width: DeviceHeigth >= 1024 ? '97%' : '85%'}}>
+              <View
+                style={{
+                  width: DeviceHeigth >= 1024 ? '97%' : '85%',
+                  alignSelf: 'center',
+                  top: 15,
+                }}>
                 <Text
                   style={{
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
@@ -311,7 +380,7 @@ const HomeNew = () => {
                     fontWeight: '600',
                     lineHeight: 18,
                     marginHorizontal: 10,
-                    color: '#333333',
+                    color: AppColor.HEADERTEXTCOLOR,
                   }}>
                   Daily Pushup Challenge
                 </Text>
@@ -322,26 +391,37 @@ const HomeNew = () => {
                     fontWeight: '600',
                     lineHeight: 20,
                     marginHorizontal: 10,
-                    marginVertical: 6,
-                    color: '#333333',
+                    top: 5,
+                    color: AppColor.HEADERTEXTCOLOR,
                   }}>
                   You have to do 30 Push
                 </Text>
                 <View
                   style={{
                     alignSelf: 'flex-end',
+                    top: 10,
                     marginRight:
                       DeviceHeigth >= 1024
                         ? DeviceWidth * 0.03
-                        : DeviceWidth * 0.09,
+                        : DeviceWidth * 0.085,
                   }}>
-                  <Text>6/14 Days</Text>
+                  <Text
+                    style={{
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      fontSize: 12,
+                      fontWeight: '600',
+                      lineHeight: 20,
+                      color: AppColor.SUBHEADING,
+                    }}>
+                    6/14 Days
+                  </Text>
                 </View>
 
                 <PercentageBar height={20} percentage={progressHight} />
               </View>
             </View>
-            <TouchableOpacity style={{width: '10%', alignItems: 'center'}}>
+            <TouchableOpacity
+              style={{width: '10%', alignItems: 'center', top: 20}}>
               <Image
                 source={require('../../Icon/Images/NewImage2/play.png')}
                 style={{
@@ -355,10 +435,10 @@ const HomeNew = () => {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={{width: '95%', alignSelf: 'center'}}>
+        <View style={{width: '95%', alignSelf: 'center', marginTop: 15}}>
           <Text
             style={{
-              color: AppColor.BLACK,
+              color: AppColor.HEADERTEXTCOLOR,
               fontFamily: 'Montserrat-SemiBold',
               fontWeight: '600',
               lineHeight: 21,
@@ -369,7 +449,7 @@ const HomeNew = () => {
             Health Overview
           </Text>
         </View>
-        <View style={{width: '95%', alignSelf: 'center'}}>
+        <View style={{width: '95%', alignSelf: 'center', marginTop: -5}}>
           <View style={styles.CardBox}>
             <TouchableOpacity
               //    onPress={handleLongPress}
@@ -420,8 +500,8 @@ const HomeNew = () => {
                     style={[
                       styles.img,
                       {
-                        height: 30,
-                        width: 30,
+                        height: 25,
+                        width: 25,
                         tintColor: 'white',
                       },
                     ]}
@@ -429,9 +509,25 @@ const HomeNew = () => {
                 </View>
 
                 <View style={{marginVertical: 10}}>
-                  <Text style={[styles.monetText, {color: '#5FB67B'}]}>
+                  <Text
+                    style={[
+                      styles.monetText,
+                      {
+                        color: '#5FB67B',
+                        fontSize: 12,
+                        fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      },
+                    ]}>
                     2215/
-                    <Text style={[styles.monetText, {color: '#505050'}]}>
+                    <Text
+                      style={[
+                        styles.monetText,
+                        {
+                          color: '#505050',
+                          fontSize: 10,
+                          fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                        },
+                      ]}>
                       500
                     </Text>
                   </Text>
@@ -453,18 +549,34 @@ const HomeNew = () => {
                     style={[
                       styles.img,
                       {
-                        height: 30,
-                        width: 30,
+                        height: 25,
+                        width: 25,
                         tintColor: 'white',
                       },
                     ]}
                     resizeMode="contain"></Image>
                 </View>
                 <View style={{marginVertical: 10}}>
-                  <Text style={[styles.monetText, {color: '#5FB67B'}]}>
+                  <Text
+                    style={[
+                      styles.monetText,
+                      {
+                        color: '#FCBB1D',
+                        fontSize: 12,
+                        fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      },
+                    ]}>
                     2215/
-                    <Text style={[styles.monetText, {color: '#505050'}]}>
-                      500
+                    <Text
+                      style={[
+                        styles.monetText,
+                        {
+                          color: '#505050',
+                          fontSize: 10,
+                          fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                        },
+                      ]}>
+                      5.00 km
                     </Text>
                   </Text>
                 </View>
@@ -485,18 +597,34 @@ const HomeNew = () => {
                     style={[
                       styles.img,
                       {
-                        height: 30,
-                        width: 30,
+                        height: 25,
+                        width: 25,
                         tintColor: 'white',
                       },
                     ]}
                     resizeMode="contain"></Image>
                 </View>
                 <View style={{marginVertical: 10}}>
-                  <Text style={[styles.monetText, {color: '#5FB67B'}]}>
+                  <Text
+                    style={[
+                      styles.monetText,
+                      {
+                        color: '#D01818',
+                        fontSize: 12,
+                        fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      },
+                    ]}>
                     2215/
-                    <Text style={[styles.monetText, {color: '#505050'}]}>
-                      500
+                    <Text
+                      style={[
+                        styles.monetText,
+                        {
+                          color: '#505050',
+                          fontSize: 10,
+                          fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                        },
+                      ]}>
+                      500 Kcal
                     </Text>
                   </Text>
                 </View>
@@ -511,11 +639,11 @@ const HomeNew = () => {
           style={{
             width: '95%',
             alignSelf: 'center',
-            marginVertical: DeviceHeigth * 0.06,
+            top: DeviceHeigth * 0.07,
           }}>
           <Text
             style={{
-              color: AppColor.BLACK,
+              color: AppColor.HEADERTEXTCOLOR,
               fontFamily: 'Montserrat-SemiBold',
               fontWeight: '600',
               lineHeight: 21,
@@ -534,7 +662,8 @@ const HomeNew = () => {
             width: '95%',
             alignSelf: 'center',
             borderRadius: 20,
-            top: DeviceHeigth >= 1024 ? -30 : -20,
+            top: DeviceHeigth * 0.09,
+            // top: DeviceHeigth >= 1024 ? -30 : -20,
             paddingVertical: 15,
             opacity: 0.8,
             justifyContent: 'center',
@@ -598,12 +727,12 @@ const HomeNew = () => {
             flexDirection: 'row',
             width: '95%',
             alignSelf: 'center',
-            top: DeviceHeigth * 0.01,
+            marginVertical: DeviceHeigth * 0.135,
             justifyContent: 'space-between',
           }}>
           <Text
             style={{
-              color: AppColor.BLACK,
+              color: AppColor.HEADERTEXTCOLOR,
               fontFamily: 'Montserrat-SemiBold',
               fontWeight: '600',
               lineHeight: 21,
@@ -636,9 +765,9 @@ const HomeNew = () => {
           </TouchableOpacity>
           {/* )} */}
         </View>
-        <View style={styles.meditionBox}>
+        <View style={[styles.meditionBox, {top: -DeviceHeigth * 0.115}]}>
           <FlatList
-            data={[1, 2, 3, 4, 5]}
+            data={allWorkoutData?.mindset_wrkout_data}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
@@ -660,11 +789,11 @@ const HomeNew = () => {
             style={{
               width: '95%',
               alignSelf: 'center',
-              top: DeviceHeigth * 0.07,
+              top: -DeviceHeigth * 0.085,
             }}>
             <Text
               style={{
-                color: AppColor.BLACK,
+                color: AppColor.HEADERTEXTCOLOR,
                 fontFamily: 'Montserrat-SemiBold',
                 fontWeight: '600',
                 lineHeight: 21,
@@ -682,7 +811,7 @@ const HomeNew = () => {
             style={{
               width: '95%',
               borderRadius: 20,
-              top: DeviceHeigth * 0.1,
+              top: -DeviceHeigth * 0.06,
               paddingVertical: 15,
               alignSelf: 'center',
               justifyContent: 'center',
@@ -753,11 +882,11 @@ const HomeNew = () => {
             //top: DeviceHeigth * 0.03,
             alignItems: 'center',
             justifyContent: 'space-between',
-            top: DeviceHeigth * 0.14,
+            top: -DeviceHeigth * 0.015,
           }}>
           <Text
             style={{
-              color: AppColor.BLACK,
+              color: AppColor.HEADERTEXTCOLOR,
               fontFamily: 'Montserrat-SemiBold',
               fontWeight: '600',
               lineHeight: 21,
@@ -773,7 +902,7 @@ const HomeNew = () => {
             width: '95%',
             alignSelf: 'center',
             backgroundColor: 'white',
-            top: DeviceHeigth * 0.16,
+            top: -DeviceHeigth * 0.004,
             alignItems: 'center',
           }}>
           <FlatList
@@ -807,11 +936,11 @@ const HomeNew = () => {
             //top: DeviceHeigth * 0.03,
             alignItems: 'center',
             justifyContent: 'space-between',
-            top: DeviceHeigth * 0.17,
+            top: DeviceHeigth * 0.01,
           }}>
           <Text
             style={{
-              color: AppColor.BLACK,
+              color: AppColor.HEADERTEXTCOLOR,
               fontFamily: 'Montserrat-SemiBold',
               fontWeight: '600',
               lineHeight: 21,
@@ -819,14 +948,14 @@ const HomeNew = () => {
               alignItems: 'center',
               justifyContent: 'flex-start',
             }}>
-            Discover More...
+            Discover More
           </Text>
         </View>
         <View
           style={{
             width: '95%',
             //padding: 10,
-            top: DeviceHeigth * 0.21,
+            top: DeviceHeigth * 0.03,
             alignSelf: 'center',
             flexDirection: 'row',
 
@@ -843,6 +972,10 @@ const HomeNew = () => {
               borderRadius: 16,
             }}>
             <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => {
+                navigation.navigate('Meals');
+              }}
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View style={{zIndex: 1}}>
                 <Text
@@ -851,17 +984,20 @@ const HomeNew = () => {
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     fontWeight: '700',
                     lineHeight: 25,
-                    fontSize:15
+                    fontSize: 15,
                   }}>
                   Diet
                 </Text>
-                <Text style={{
+                <Text
+                  style={{
                     color: 'white',
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     fontWeight: '500',
                     lineHeight: 15,
-                    fontSize:12
-                  }}>{'A balanced diet is \na healthy life'}</Text>
+                    fontSize: 12,
+                  }}>
+                  {'A balanced diet is \na healthy life'}
+                </Text>
               </View>
               <View style={{}}>
                 <Image
@@ -888,21 +1024,29 @@ const HomeNew = () => {
               borderRadius: 16,
             }}>
             <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => {
+                navigation.navigate('Store');
+              }}
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View>
-                <Text style={{
+                <Text
+                  style={{
                     color: 'white',
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     fontWeight: '700',
                     lineHeight: 25,
-                    fontSize:15
-                  }}>Store</Text>
-                <Text style={{
+                    fontSize: 15,
+                  }}>
+                  Store
+                </Text>
+                <Text
+                  style={{
                     color: 'white',
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     fontWeight: '500',
                     lineHeight: 15,
-                    fontSize:12
+                    fontSize: 12,
                   }}>
                   {'Quality over quantity for\noptimal health benefits'}
                 </Text>
@@ -948,6 +1092,7 @@ var styles = StyleSheet.create({
     lineHeight: 20,
     fontFamily: Fonts.MONTSERRAT_BOLD,
     marginLeft: 10,
+    color: AppColor.SUBHEADING,
   },
   CardBox: {
     width: '100%',
@@ -978,14 +1123,14 @@ var styles = StyleSheet.create({
     width: '95%',
     alignSelf: 'center',
     backgroundColor: 'white',
-    top: DeviceHeigth * 0.05,
+
     alignItems: 'center',
   },
   listItem: {
-    width: 100,
-    height: 100,
+    width: 70,
+    height: 70,
 
-    borderRadius: 200 / 2,
+    borderRadius: 70 / 2,
 
     alignSelf: 'center',
     alignItems: 'center',

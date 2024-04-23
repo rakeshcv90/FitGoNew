@@ -63,7 +63,7 @@ const Meals = ({navigation}) => {
   }, [generateRandomNumber]);
   useEffect(() => {
     initInterstitial();
-      mealData?.map((item, index) => downloadVideos(item, index));
+    mealData?.map((item, index) => downloadVideos(item, index));
   }, []);
   const checkMealAddCount = item => {
     if (getPurchaseHistory.length > 0) {
@@ -109,7 +109,7 @@ const Meals = ({navigation}) => {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
         StoringData[data?.diet_title] = filePath;
-        console.log('ImageExists', videoExists,filePath);
+        console.log('ImageExists', videoExists, filePath);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -145,11 +145,11 @@ const Meals = ({navigation}) => {
         <Text
           style={{
             color: AppColor.BLACK,
-                fontFamily: 'Montserrat-SemiBold',
-                fontWeight: 'bold',
-                lineHeight: 19.5,
-                fontSize: 18,
-                alignItems: 'center',
+            fontFamily: 'Montserrat-SemiBold',
+            fontWeight: 'bold',
+            lineHeight: 19.5,
+            fontSize: 18,
+            alignItems: 'center',
             marginLeft: 20,
             justifyContent: 'flex-start',
           }}>
@@ -159,13 +159,13 @@ const Meals = ({navigation}) => {
       {selectedMeal && (
         <>
           <View style={styles.meditionBox}>
-            {isLoading && (
+            {/* {isLoading && (
               <ShimmerPlaceholder
                 style={{width: '100%', height: '100%', borderRadius: 15}}
                 ref={avatarRef}
                 autoRun
               />
-            )}
+            )} */}
             <TouchableOpacity
               style={{width: '100%', height: '100%', borderRadius: 15}}
               onPress={() => {
@@ -174,7 +174,7 @@ const Meals = ({navigation}) => {
               <Image
                 style={{width: '100%', height: '100%', borderRadius: 15}}
                 resizeMode="cover"
-                onLoad={() => setIsLoading(false)}
+                // onLoad={() => setIsLoading(false)}
                 source={
                   selectedMeal.diet_image_link == null
                     ? localImage.Noimage
@@ -223,7 +223,7 @@ const Meals = ({navigation}) => {
 
               <Text
                 style={{
-                 // fontFamily: 'Montserrat-SemiBold',
+                  // fontFamily: 'Montserrat-SemiBold',
                   fontSize: 13,
                   fontWeight: '500',
                   color: AppColor.BLACK,
@@ -248,7 +248,7 @@ const Meals = ({navigation}) => {
 
               <Text
                 style={{
-                 // fontFamily: 'Montserrat-SemiBold',
+                  // fontFamily: 'Montserrat-SemiBold',
                   fontSize: 13,
                   fontWeight: '500',
                   color: AppColor.BLACK,
@@ -304,18 +304,7 @@ const Meals = ({navigation}) => {
                     setItemData(item);
                     checkMealAddCount(item);
                   }}>
-                  {imageLoad && (
-                    <ShimmerPlaceholder
-                      style={{
-                        height: 70,
-                        width: 70,
-                        borderRadius: 140 / 2,
-                        alignSelf: 'center',
-                      }}
-                      ref={avatarRef}
-                      autoRun
-                    />
-                  )}
+        
                   <Image
                     source={
                       item.diet_image == null
@@ -324,7 +313,7 @@ const Meals = ({navigation}) => {
                             uri: item.diet_image,
                           }
                     }
-                    onLoad={() => setImageLoad(false)}
+         
                     style={{
                       height: 70,
                       width: 70,

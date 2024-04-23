@@ -840,7 +840,7 @@ const Profile = () => {
                 navigation.navigate('NewPersonalDetails');
               } else if (value.text1 == 'My Favorites') {
                 navigation?.navigate('AllWorkouts', {
-                  data: allWorkoutData,
+                  data: allWorkoutData?.workout_Data,
                   type: 'popular',
                   fav: true,
                 });
