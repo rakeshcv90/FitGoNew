@@ -36,7 +36,6 @@ const Workouts = ({navigation}: any) => {
     (state: any) => state.completeProfileData,
   );
   const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
-
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );

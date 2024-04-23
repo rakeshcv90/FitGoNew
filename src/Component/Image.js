@@ -135,7 +135,7 @@ export const localImage = {
   Experienced:require('../Icon/Images/NewImage2/award_star.png'),
   Begginer:require('../Icon/Images/NewImage2/electric_bolt.png'),
   AddIcon:require('../Icon/Images/NewImage2/G.png'),
-  CreateW:require('../Icon/Images/NewImage2/create_new_folder.png')
+  CreateW:require('../Icon/Images/NewImage2/create_new_folder.png'),
   Next: require('../Icon/Images/NewImage2/next.png'),
   Gym: require('../Icon/Images/NewImage2/Gym.png'),
   Home: require('../Icon/Images/NewImage2/Home.png'),
