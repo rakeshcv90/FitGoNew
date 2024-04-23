@@ -32,7 +32,7 @@ import {local} from 'd3';
 import {localImage} from '../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import HomeNew from '../Screen/NewHome/HomeNew';
-import Profile from '../Screen/Profile';
+import Profile from '../Screen/NewHome/Profile';
 const Tabs = createBottomTabNavigator();
 
 export const MyPLans = ({focused, onPress}) => {
