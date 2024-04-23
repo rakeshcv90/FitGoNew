@@ -32,7 +32,7 @@ const Injury = ({route, navigation}) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageView, setImageVIew] = useState([]);
   const [screen, setScreen] = useState(nextScreen);
-
+console.log(nextScreen)
   useEffect(() => {
     setScreen(nextScreen);
   }, []);
@@ -43,9 +43,8 @@ const Injury = ({route, navigation}) => {
 
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     analytics().logEvent(`CV_FITME_INJURY_${imageView}`);
-    navigation.navigate('Height', {nextScreen: screen + 1});
+    navigation.navigate('Weight', {nextScreen: screen + 1});
   };
-
   const [bodyPart, setBordyPart] = useState(
     completeProfileData?.injury?.filter(
       part => part?.injury_title !== 'Back' && part?.injury_title !== 'Knee',
@@ -138,10 +137,8 @@ const Injury = ({route, navigation}) => {
           justifyContent: 'center',
           alignItems: 'center',
           //position: 'absolute',
-          // marginTop:
-          //   Platform.OS == 'ios' ? DeviceHeigth * 0.05 : DeviceHeigth * 0.06,
         }}>
-        <ProgressBar screen={screen} />
+        <ProgressBar screen={screen} Type/>
       </View>
       <View
         style={{
@@ -383,7 +380,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     //alignItems: 'center',
-    width: DeviceWidth,
+
     backgroundColor: AppColor.WHITE,
   },
 

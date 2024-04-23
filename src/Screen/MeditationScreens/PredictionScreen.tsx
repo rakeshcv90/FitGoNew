@@ -8,7 +8,8 @@ import Bulb from '../Yourself/Bulb';
 import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector} from 'react-redux';
-import moment from 'moment';
+import moment from 'moment'
+import CustomBarChart from '../../Component/Graph'
 import {
   Stop,
   Svg,
@@ -51,7 +52,7 @@ const PredictionScreen = ({navigation, route}: any) => {
   const [zeroData, setZeroData] = useState<[]>([]);
   const [currentWeight, setCurrentWeight] = useState(-1);
   const [TargetWeight, setTargetWeight] = useState(-1);
-
+console.log('data-->',getLaterButtonData)
   const mergedObject = Object.assign({}, ...getLaterButtonData);
   useEffect(() => {
     const currentW =
@@ -144,7 +145,7 @@ const PredictionScreen = ({navigation, route}: any) => {
     weightHistoryArray[weightHistoryArray.length - 1]?.date &&
       setFinalDate(weightHistoryArray[weightHistoryArray.length - 1]?.date);
   };
-
+console.log("History-->",weightHistory,zeroData)
   return (
     <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -184,13 +185,15 @@ const PredictionScreen = ({navigation, route}: any) => {
           }
         />
         {weightHistory.length != 0 && zeroData.length != 0 && (
-          <Graph
-            resultData={weightHistory}
-            zeroData={zeroData}
-            home={true}
-            currentW={currentWeight}
-            targetW={TargetWeight}
-          />
+          // <View></View>
+          <CustomBarChart data={weightHistory} barWidth={15} barColor={"transparent"} barSpacing={DeviceWidth*0.08}/>
+          // <Graph
+          //   resultData={weightHistory}
+          //   zeroData={zeroData}
+          //   home={true}
+          //   currentW={currentWeight}
+          //   targetW={TargetWeight}
+          // />
         )}
       </View>
       {/* <Image

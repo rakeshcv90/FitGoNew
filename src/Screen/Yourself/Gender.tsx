@@ -25,8 +25,6 @@ const Gender = ({route, navigation}: any) => {
     // Set the selected gender
      analytics().logEvent(`CV_FITME_GENDER_${gender}` )
     const easing = Easing.linear(1);
-
-
     // Animate the translation of the unselected image
     if (gender == '') {
       Animated.parallel([
@@ -69,32 +67,30 @@ const Gender = ({route, navigation}: any) => {
   };
   const toNextScreen = (item: any) => {
 
-    if (item == 'Male') {
+    // if (item == 'Male') {
       setTimeout(() => {
-        navigation.navigate('Goal', {
+        navigation.navigate('Experience', {
           nextScreen: screen + 1,
           data: data,
           gender: item,
         });
       }, 1000);
-    } else
-      navigation.navigate('Goal', {
-        nextScreen: screen + 1,
-        data: data,
-        gender: item,
-      });
+    // } else
+    //   navigation.navigate('Experience', {
+    //     nextScreen: screen + 1,
+    //     data: data,
+    //     gender: item,
+    //   });
   };
 
   return (
     <View
       style={{
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: DeviceWidth,
         backgroundColor: AppColor.WHITE,
+        alignItems:'center'
       }}>
-      <ProgressBar screen={screen} />
+      <ProgressBar screen={screen}/>
       <Bulb
         screen={'Select your Gender'}
         header={
