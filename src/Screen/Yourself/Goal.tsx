@@ -17,25 +17,30 @@ import ProgressBar from './ProgressBar';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import analytics from '@react-native-firebase/analytics';
+import {localImage} from '../../Component/Image';
+import LinearGradient from 'react-native-linear-gradient';
+import {Card} from './Card';
 const Goal = ({navigation, route}: any) => {
-  const {data, nextScreen, gender} = route.params;
+  const {data, nextScreen, gender, experience, workout_plans} = route?.params;
   const goalsAnimation = useRef(new Animated.Value(0)).current;
-
+  const [selectedB, setSelectedB] = useState(0);
   const dispatch = useDispatch();
-  const [selected, setSelected] = useState('');
+  const [selected, setSelected] = useState();
   const [screen, setScreen] = useState(nextScreen);
-
 
   useEffect(() => {
     setScreen(nextScreen);
-    goalsAnimation.setValue(gender == 'Male' ? -DeviceWidth : DeviceWidth);
-    setTimeout(() => {
-      handleImagePress(gender);
-    }, 500);
   }, []);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      startAnimation();
+      // for unselecting the item when user hit the back button from next screen
+      setSelectedB(0);
+    });
 
-  const toNextScreen = (item: any) => {
-    setSelected(item);
+    return () => unsubscribe;
+  }, [navigation]);
+  const toNextScreen = () => {
     const currentData = [
       {
         gender: gender,
@@ -45,168 +50,117 @@ const Goal = ({navigation, route}: any) => {
             : 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/e71b96f8-e68c-462e-baaf-a371b6fbc100/public',
       },
       {
-        goal: item?.goal_id,
-        goal_name:item?.goal_title,
+        goal: selected?.id,
+        goal_name: selected?.txt,
+      },
+      {
+        experience: experience,
+      },
+      {
+        workout_plans: workout_plans,
       },
     ];
 
     dispatch(setLaterButtonData(currentData));
-    navigation.navigate('Level', {nextScreen: screen + 1, gender: gender});
+    navigation.navigate('Injury', {nextScreen: screen+1});
   };
 
-  const handleImagePress = (gender: string) => {
-    // Set the selected gender
-    const easing = Easing.linear(1);
-
-
-    // Animate the translation of the unselected image
-    Animated.parallel([
-      Animated.timing(goalsAnimation, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-        delay: gender == 'Male' ? 500 : 500, // Delay the return to center animation for a smoother effect
-      }),
-    ]).start();
-    setTimeout(() => {
-      // setSelected(gender);
-      //   toNextScreen(gender);
-    }, 1000);
+  const GoalData = [
+    {
+      id: 1,
+      img: localImage.WeightLoss,
+      txt: 'Loss weight',
+      txt1: 'Burn Calories & get the ideal body',
+    },
+    {
+      id: 2,
+      img: localImage.BuildMuscle,
+      txt: 'Build muscle',
+      txt1: 'Build mass & strength',
+    },
+    {
+      id: 3,
+      img: localImage.Strength,
+      txt: 'Strength',
+      txt1: 'Feel more healthy',
+    },
+  ];
+  //animation
+  const translateXValues = useRef(
+    GoalData?.map(() => new Animated.Value(-DeviceWidth)),
+  ).current;
+  const startAnimation = () => {
+    Animated.stagger(
+      300,
+      translateXValues.map(
+        (
+          item, // stagger is used map over an array with a delay eg. 500
+        ) =>
+          Animated.timing(item, {
+            toValue: 0,
+            duration: 800,
+            useNativeDriver: true,
+          }),
+      ),
+    ).start();
+  };
+  // selected Buttons
+  const SelectedButton = item => {
+    setSelected(item);
+    setSelectedB(item?.id);
   };
   return (
     <View
       style={{
         flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
-        width: DeviceWidth,
-        backgroundColor: AppColor.WHITE,
+        backgroundColor: AppColor.BACKGROUNG,
+   
       }}>
-      <ProgressBar screen={screen} />
-
-      <Bulb
-        screen={'Select your Goal'}
-        header={
-          'Knowing your gender can help us for you based on different metabolic rates.'
-        }
-      />
-
-      <Animated.View
-        style={{
-          flexDirection: gender == 'Female' ? 'row-reverse' : 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-          alignSelf: 'center',
-          height: DeviceHeigth * 0.6,
-          transform: [{translateX: goalsAnimation}],
-          width: DeviceWidth,
-          marginLeft: gender == 'Female' ? 50 : 30,
-        }}>
-        <View>
-          {data &&
-            data?.map((item: any, index: number) => {
-              if (item?.goal_gender != gender) return;
-         
-
-              return (
-                <TouchableOpacity
-                  key={index}
-                  activeOpacity={0.8}
-                  onPress={() => {toNextScreen(item)
-                    analytics().logEvent(`CV_FITME_GOAL_${item?.goal_title?.replace(' ','_')}`)
-                  }
-                  }>
-                  <View
-                    style={[
-                      styles.box2,
-                      {
-                        padding: 10,
-                        borderWidth: 0,
-                        borderColor: AppColor.WHITE,
-                      },
-                    ]}>
-                    <Image
-                      source={{uri: item.goal_image}}
-                      resizeMode="contain"
-                      style={{
-                        height: 30,
-                        width: 30,
-                        marginRight: 10,
-                      }}
-                    />
-                    <Text
-                      style={{
-                        color: '#505050',
-                        fontSize: 18,
-                        fontWeight: '600',
-                        fontFamily: 'Poppins',
-                        lineHeight: 27,
-                      }}>
-                      {item.goal_title}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-        </View>
-        <Image
-          source={{
-            uri:
-              gender == 'Male'
-                ? 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/fc1e357f-2310-4e50-8087-519663fe9400/public'
-                : 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/e71b96f8-e68c-462e-baaf-a371b6fbc100/public',
-          }}
-          style={{
-            height: gender == 'Male' ? DeviceHeigth * 0.6 : DeviceHeigth * 0.5,
-            width: DeviceWidth / 2,
-          }}
-          resizeMode="contain"
+      <ProgressBar screen={screen} Type/>
+      <Bulb screen={"What's your fitness goal?"} />
+      <View style={{justifyContent: 'center', marginTop: DeviceHeigth * 0.06}}>
+        <Card
+          ItemArray={GoalData}
+          Ih={30}
+          Iw={40}
+          selectedB={selectedB}
+          translateXValues={translateXValues}
+          SelectedButton={SelectedButton}
+          Goal
+          Styletxt1={styles.txt1}
+          Styletxt2={styles.txt2}
         />
-      </Animated.View>
-      {gender != '' ? (
+      </View>
+      <View style={styles.buttons}>
         <TouchableOpacity
-        style={{
-          alignSelf: 'flex-start',
-          marginLeft: DeviceWidth * 0.04,
-          backgroundColor: '#F7F8F8',
-          width: 45,
-          height: 45,
-          borderRadius: 15,
-          overflow: 'hidden',
-          justifyContent: 'center',
-          alignItems: 'center',
-
-          bottom: DeviceHeigth * 0.02,
-          position: 'absolute',
-        }}
-          onPress={() => {
-            navigation.navigate('Gender', {data: data, nextScreen: screen - 1});
-            //navigation.goBack()
+          onPress={() => navigation.goBack()}
+          style={{
+            backgroundColor: '#F7F8F8',
+            width: 45,
+            height: 45,
+            borderRadius: 15,
+            overflow: 'hidden',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}>
           <Icons name="chevron-left" size={25} color={'#000'} />
         </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-        style={{
-          alignSelf: 'flex-start',
-          marginLeft: DeviceWidth * 0.04,
-          backgroundColor: '#F7F8F8',
-          width: 45,
-          height: 45,
-          borderRadius: 15,
-          overflow: 'hidden',
-          justifyContent: 'center',
-          alignItems: 'center',
-
-          bottom: DeviceHeigth * 0.02,
-          position: 'absolute',
-        }}
-          onPress={() => {
-            null;
-          }}>
-          <Icons name="chevron-left" size={25} color={'#fff'} />
-        </TouchableOpacity>
-      )}
+        {selectedB != 0 ? (
+          <TouchableOpacity
+            onPress={() => {
+              toNextScreen();
+            }}>
+            <LinearGradient
+              start={{x: 0, y: 1}}
+              end={{x: 1, y: 0}}
+              colors={['#941000', '#D5191A']}
+              style={[styles.nextButton]}>
+              <Icons name="chevron-right" size={25} color={'#fff'} />
+            </LinearGradient>
+          </TouchableOpacity>
+        ) : null}
+      </View>
     </View>
   );
 };
@@ -268,5 +222,66 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  animatedButtons: {
+    width: DeviceWidth * 0.95,
+    padding: 14,
+    backgroundColor: AppColor.WHITE,
+    margin: 10,
+    borderRadius: 6,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  txt1: {
+    fontFamily: 'Montserrat-SemiBold',
+    color: AppColor.BLACK,
+    fontSize: 17,
+    marginBottom: 7,
+  },
+  txt2: {
+    fontFamily: 'Montserrat-Regular',
+    color: AppColor.BLACK,
+    fontSize: 14,
+  },
+  img: {
+    width: 45,
+    height: 38,
+    alignSelf: 'center',
+  },
+  nextButton1: {
+    width: DeviceWidth * 0.95,
+    height: 50,
+    backgroundColor: '#C21718',
+    position: 'absolute',
+    bottom: 20,
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  nextTxt: {
+    fontFamily: 'Montserrat-SemiBold',
+    color: AppColor.WHITE,
+    fontSize: 16,
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: DeviceWidth * 0.9,
+    alignItems: 'center',
+    alignSelf: 'center',
+
+    bottom: DeviceHeigth * 0.02,
+    position: 'absolute',
   },
 });

@@ -62,6 +62,9 @@ import CustomWorkout from '../Screen/CustomWorkout/CustomWorkout';
 import CustomWorkoutDetails from '../Screen/CustomWorkout/CustomWorkoutDetails';
 import CreateWorkout from '../Screen/CustomWorkout/CreateWorkout';
 import EditCustomWorkout from '../Screen/CustomWorkout/EditCustomWorkout';
+
+import Experience from '../Screen/Experience';
+import AskToCreateWorkout from '../Screen/AskToCreateWorkout';
 import WorkoutDayData from '../Screen/FocusArea/WorkoutDayData';
 
 import WorkoutDetail from '../Screen/CustomWorkout/WorkoutDetail';
@@ -102,6 +105,8 @@ export const LoginStack = () => {
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Injury" component={Injury} />
+      <Stack.Screen name="Experience" component={Experience}/>
+      <Stack.Screen name="AskToCreateWorkout" component={AskToCreateWorkout}/>
       <Stack.Screen name="FocusArea" component={FocusArea} />
       <Stack.Screen name="WorkoutArea" component={WorkoutArea} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />

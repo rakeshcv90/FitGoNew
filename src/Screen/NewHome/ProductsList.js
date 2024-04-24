@@ -46,7 +46,6 @@ const ProductsList = ({route}) => {
     require('../../Icon/Images/product_1631791758.jpg'),
     require('../../Icon/Images/product_1631811803.jpg'),
     require('../../Icon/Images/product_1631468947.jpg'),
-
     require('../../Icon/Images/product_1631791758.jpg'),
   ];
 

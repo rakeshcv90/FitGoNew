@@ -34,13 +34,13 @@ const WorkoutArea = ({route, navigation}) => {
   const getLaterButtonData = useSelector(state => state.getLaterButtonData);
   const completeProfileData = useSelector(state => state.completeProfileData);
   const getUserID = useSelector(state => state.getUserID);
-  
   useEffect(() => {
     setScreen(nextScreen);
   }, []);
   const toNextScreen = () => {
     const currentData = {
       workoutArea: imageView,
+      equipment:imageView=='At Gym'?'With Equipment':'Without Equipment'
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
   navigation.navigate('PredictionScreen', {nextScreen: screen + 1});
@@ -133,8 +133,6 @@ const WorkoutArea = ({route, navigation}) => {
           justifyContent: 'center',
           alignItems: 'center',
           //position: 'absolute',
-          marginTop:
-             DeviceHeigth * 0.07,
         }}>
         <ProgressBar screen={screen} />
       </View>
