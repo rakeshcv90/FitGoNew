@@ -239,28 +239,28 @@ const Profile = () => {
       ),
       text1: 'Subscription',
     },
-    {
-      id: 3,
-      icon1: (
-        <Image
-          source={localImage.Heart}
-          style={[styles.IconView, {height: 17, width: 21}]}
-          resizeMode="contain"
-        />
-      ),
-      text1: 'My Favorites',
-    },
-    {
-      id: 4,
-      icon1: (
-        <Image
-          source={localImage.Backupimg}
-          style={[styles.IconView, {height: 18, width: 22}]}
-          resizeMode="contain"
-        />
-      ),
-      text1: 'Backup',
-    },
+    // {
+    //   id: 3,
+    //   icon1: (
+    //     <Image
+    //       source={localImage.Heart}
+    //       style={[styles.IconView, {height: 17, width: 21}]}
+    //       resizeMode="contain"
+    //     />
+    //   ),
+    //   text1: 'My Favorites',
+    // },
+    // {
+    //   id: 4,
+    //   icon1: (
+    //     <Image
+    //       source={localImage.Backupimg}
+    //       style={[styles.IconView, {height: 18, width: 22}]}
+    //       resizeMode="contain"
+    //     />
+    //   ),
+    //   text1: 'Backup',
+    // },
     {
       id: 5,
       icon1: (
@@ -340,8 +340,8 @@ const Profile = () => {
       text1: 'Delete Account',
     },
   ];
-  const FirstView = Profile_Data.slice(0, 6);
-  const SecondView = Profile_Data.slice(6);
+  const FirstView = Profile_Data.slice(0, 4);
+  const SecondView = Profile_Data.slice(4);
 
   const UpdateProfileModal = () => {
     const [modalImageUploaded, setModalImageUploaded] = useState(false);
@@ -675,7 +675,7 @@ const Profile = () => {
           start={{x: 0, y: 1}}
           end={{x: 1, y: 0}}
           colors={['#D5191A', '#941000']}
-          style={{height: DeviceHeigth * 0.38, width: DeviceWidth}}>
+          style={{height: DeviceHeigth * 0.3, width: DeviceWidth}}>
           <View
             style={{
               justifyContent: 'space-between',
@@ -751,7 +751,7 @@ const Profile = () => {
               </View>
               <View
                 style={{
-                  marginTop: DeviceHeigth * 0.04,
+                  marginTop: DeviceHeigth * 0.01,
                   alignItems: 'center',
                 }}>
                 <Text
@@ -805,7 +805,7 @@ const Profile = () => {
       </View>
     );
   };
-  const profileViewHeight = DeviceHeigth * 0.4;
+  const profileViewHeight = DeviceHeigth * 0.2;
   const openMailApp = () => {
     Linking.openURL(
       'mailto:aessikarwar03@gmail.com?subject=Feedback&body=Hello%20there!',
@@ -816,160 +816,154 @@ const Profile = () => {
       <StatusBar barStyle={'light-content'} backgroundColor={'#000'} />
 
       <ProfileView />
-      <View
-        style={[
-          styles.UserDetailsView,
-          {
-            top: -profileViewHeight * 0.07,
-          },
-        ]}>
-        {FirstView.map((value, index) => (
-          <TouchableOpacity
-            disabled={
-              value.id == 4 || value.id == 5 || value.id == 6 ? true : false
-            }
-            key={index}
-            style={styles.SingleButton}
-            navigation
-            onPress={() => {
-              analytics().logEvent(
-                `CV_FITME_CLICKED_ON_${value?.text1?.replace(' ', '_')}`,
-              );
-
-              if (value.text1 == 'Personal Details') {
-                navigation.navigate('NewPersonalDetails');
-              } else if (value.text1 == 'My Favorites') {
-                navigation?.navigate('AllWorkouts', {
-                  data: allWorkoutData?.workout_Data,
-                  type: 'popular',
-                  fav: true,
-                });
-              } else if (value.text1 == 'Subscription') {
-                navigation.navigate('Subscription');
-              } else {
-                showMessage({
-                  message: 'Work In Progress',
-                  type: 'info',
-                  animationDuration: 500,
-
-                  floating: true,
-                  icon: {icon: 'auto', position: 'left'},
-                });
-              }
-            }}>
-            {value.icon1}
-            <View style={styles.View1}>
-              <Text style={styles.nameText}>
-                {value.text1}
-                {value.id == 5 && notificationTimer != '' && (
-                  <Text
-                    style={{color: AppColor.RED}}
-                    onPress={() => setVisible(true)}>
-                    {' '}
-                    {moment(notificationTimer).format('LT')}
-                  </Text>
-                )}
-              </Text>
-              {value.id == 4 ? (
-                <Switch
-                  value={isEnabled}
-                  onValueChange={() => toggleSwitch()}
-                  disabled={false}
-                  circleSize={19}
-                  barHeight={21}
-                  circleBorderWidth={0.1}
-                  renderActiveText={false}
-                  renderInActiveText={false}
-                  switchLeftPx={2}
-                  switchRightPx={2}
-                  switchWidthMultiplier={2.2}
-                  switchBorderRadius={30}
-                  backgroundActive={'#FFE3E3'}
-                  backgroundInactive={AppColor.GRAY2}
-                  circleActiveColor={AppColor.RED}
-                  circleInActiveColor={AppColor.WHITE}
-                  changeValueImmediately={true}
-                  outerCircleStyle={{color: AppColor.RED}}
-                />
-              ) : value.id == 6 ? (
-                <View>
-                  <Switch
-                    value={getSoundOffOn}
-                    onValueChange={text => {
-                      if (text == true) {
-                        showMessage({
-                          message: 'Sound Is Unmute',
-                          type: 'success',
-                          animationDuration: 500,
-                          floating: true,
-                          icon: {icon: 'auto', position: 'left'},
-                        });
-                      } else {
-                        showMessage({
-                          message: 'Sound Is Mute',
-                          animationDuration: 500,
-                          type: 'danger',
-                          floating: true,
-                          icon: {icon: 'auto', position: 'left'},
-                        });
-                      }
-
-                      dispatch(setSoundOnOff(text));
-                    }}
-                    disabled={false}
-                    circleSize={19}
-                    barHeight={21}
-                    circleBorderWidth={0.1}
-                    renderActiveText={false}
-                    renderInActiveText={false}
-                    switchLeftPx={2}
-                    switchRightPx={2}
-                    switchWidthMultiplier={2.2}
-                    switchBorderRadius={30}
-                    backgroundActive={'#FFE3E3'}
-                    backgroundInactive={AppColor.GRAY2}
-                    circleActiveColor={AppColor.RED}
-                    circleInActiveColor={AppColor.WHITE}
-                    changeValueImmediately={true}
-                    outerCircleStyle={{color: AppColor.RED}}
-                  />
-                </View>
-              ) : value.id == 5 ? (
-                <View>
-                  <Switch
-                    onValueChange={toggleSwitch3}
-                    value={isAlarmEnabled}
-                    disabled={false}
-                    circleSize={19}
-                    barHeight={21}
-                    circleBorderWidth={0.1}
-                    renderActiveText={false}
-                    renderInActiveText={false}
-                    switchLeftPx={2}
-                    switchRightPx={2}
-                    switchWidthMultiplier={2.2}
-                    switchBorderRadius={30}
-                    backgroundActive={'#FFE3E3'}
-                    backgroundInactive={AppColor.GRAY2}
-                    circleActiveColor={AppColor.RED}
-                    circleInActiveColor={AppColor.WHITE}
-                    changeValueImmediately={true}
-                    outerCircleStyle={{color: AppColor.RED}}
-                  />
-                </View>
-              ) : (
-                <Icons
-                  name="chevron-right"
-                  size={22}
-                  color={AppColor.DARKGRAY}
-                />
-              )}
-            </View>
-          </TouchableOpacity>
-        ))}
-      </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={[styles.UserDetailsView, {marginBottom: 10}]}>
+        <View style={[styles.UserDetailsView]}>
+          {FirstView.map((value, index) => (
+            <TouchableOpacity
+              disabled={
+                value.id == 4 || value.id == 5 || value.id == 6 ? true : false
+              }
+              key={index}
+              style={styles.SingleButton}
+              navigation
+              onPress={() => {
+                analytics().logEvent(
+                  `CV_FITME_CLICKED_ON_${value?.text1?.replace(' ', '_')}`,
+                );
+
+                if (value.text1 == 'Personal Details') {
+                  navigation.navigate('NewPersonalDetails');
+                } else if (value.text1 == 'My Favorites') {
+                  navigation?.navigate('AllWorkouts', {
+                    data: allWorkoutData?.workout_Data,
+                    type: 'popular',
+                    fav: true,
+                  });
+                } else if (value.text1 == 'Subscription') {
+                  navigation.navigate('Subscription');
+                } else {
+                  showMessage({
+                    message: 'Work In Progress',
+                    type: 'info',
+                    animationDuration: 500,
+
+                    floating: true,
+                    icon: {icon: 'auto', position: 'left'},
+                  });
+                }
+              }}>
+              {value.icon1}
+              <View style={styles.View1}>
+                <Text style={styles.nameText}>
+                  {value.text1}
+                  {value.id == 5 && notificationTimer != '' && (
+                    <Text
+                      style={{color: AppColor.RED}}
+                      onPress={() => setVisible(true)}>
+                      {' '}
+                      {moment(notificationTimer).format('LT')}
+                    </Text>
+                  )}
+                </Text>
+                {value.id == 4 ? (
+                  <Switch
+                    value={isEnabled}
+                    onValueChange={() => toggleSwitch()}
+                    disabled={false}
+                    circleSize={19}
+                    barHeight={21}
+                    circleBorderWidth={0.1}
+                    renderActiveText={false}
+                    renderInActiveText={false}
+                    switchLeftPx={2}
+                    switchRightPx={2}
+                    switchWidthMultiplier={2.2}
+                    switchBorderRadius={30}
+                    backgroundActive={'#FFE3E3'}
+                    backgroundInactive={AppColor.GRAY2}
+                    circleActiveColor={AppColor.RED}
+                    circleInActiveColor={AppColor.WHITE}
+                    changeValueImmediately={true}
+                    outerCircleStyle={{color: AppColor.RED}}
+                  />
+                ) : value.id == 6 ? (
+                  <View>
+                    <Switch
+                      value={getSoundOffOn}
+                      onValueChange={text => {
+                        if (text == true) {
+                          showMessage({
+                            message: 'Sound Is Unmute',
+                            type: 'success',
+                            animationDuration: 500,
+                            floating: true,
+                            icon: {icon: 'auto', position: 'left'},
+                          });
+                        } else {
+                          showMessage({
+                            message: 'Sound Is Mute',
+                            animationDuration: 500,
+                            type: 'danger',
+                            floating: true,
+                            icon: {icon: 'auto', position: 'left'},
+                          });
+                        }
+
+                        dispatch(setSoundOnOff(text));
+                      }}
+                      disabled={false}
+                      circleSize={19}
+                      barHeight={21}
+                      circleBorderWidth={0.1}
+                      renderActiveText={false}
+                      renderInActiveText={false}
+                      switchLeftPx={2}
+                      switchRightPx={2}
+                      switchWidthMultiplier={2.2}
+                      switchBorderRadius={30}
+                      backgroundActive={'#FFE3E3'}
+                      backgroundInactive={AppColor.GRAY2}
+                      circleActiveColor={AppColor.RED}
+                      circleInActiveColor={AppColor.WHITE}
+                      changeValueImmediately={true}
+                      outerCircleStyle={{color: AppColor.RED}}
+                    />
+                  </View>
+                ) : value.id == 5 ? (
+                  <View>
+                    <Switch
+                      onValueChange={toggleSwitch3}
+                      value={isAlarmEnabled}
+                      disabled={false}
+                      circleSize={19}
+                      barHeight={21}
+                      circleBorderWidth={0.1}
+                      renderActiveText={false}
+                      renderInActiveText={false}
+                      switchLeftPx={2}
+                      switchRightPx={2}
+                      switchWidthMultiplier={2.2}
+                      switchBorderRadius={30}
+                      backgroundActive={'#FFE3E3'}
+                      backgroundInactive={AppColor.GRAY2}
+                      circleActiveColor={AppColor.RED}
+                      circleInActiveColor={AppColor.WHITE}
+                      changeValueImmediately={true}
+                      outerCircleStyle={{color: AppColor.RED}}
+                    />
+                  </View>
+                ) : (
+                  <Icons
+                    name="chevron-right"
+                    size={22}
+                    color={AppColor.DARKGRAY}
+                  />
+                )}
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <View style={[styles.UserDetailsView, {marginBottom: DeviceHeigth*0.05}]}>
           {SecondView.map((value, index) => (
             <TouchableOpacity
               key={index}
@@ -1088,7 +1082,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
     borderRadius: 12,
     marginHorizontal: DeviceWidth * 0.04,
-    marginBottom: -DeviceHeigth * 0.01,
+    marginTop: DeviceHeigth * 0.025,
     paddingVertical: DeviceHeigth * 0.02,
     shadowColor: 'rgba(0, 0, 0, 1)',
     ...Platform.select({
@@ -1128,23 +1122,23 @@ const styles = StyleSheet.create({
     // alignSelf: 'center',
   },
   img: {
-    height: 120,
-    width: 120,
-    borderRadius: 120 / 2,
+    height: 100,
+    width: 100,
+    borderRadius: 100 / 2,
     borderWidth: 1,
     alignSelf: 'center',
   },
   pen: {
-    width: 35,
-    height: 35,
+    width: 25,
+    height: 25,
   },
   ButtonPen: {
-    width: 35,
-    height: 35,
-    borderRadius: 35 / 2,
+    width: 25,
+    height: 25,
+    borderRadius: 25 / 2,
     position: 'absolute',
-    bottom: -22,
-    right: -8,
+    bottom: -2,
+    right: -1,
     backgroundColor: AppColor.RED,
   },
   modalContainer: {
@@ -1248,9 +1242,9 @@ const styles = StyleSheet.create({
   loader: {
     position: 'absolute',
     justifyContent: 'center',
-    height: 120,
-    width: 120,
-    borderRadius: 120 / 2,
+    height: 100,
+    width: 100,
+    borderRadius: 100 / 2,
   },
 });
 

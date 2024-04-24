@@ -196,22 +196,17 @@ const Box = ({item, index}: any) => {
                 {item?.exercise_sets}
                 {'   '}
               </Text>
-              {
-                <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <Text
-                    style={[
-                      styles.semiBold,
-                      {
-                        fontSize: 25,
-                        color: '#505050',
-                        lineHeight: 25,
-                        fontWeight: 'bold',
-                      },
-                    ]}>
-                    .
-                  </Text>
-                </View>
-              }
+              <Text
+                style={{
+                  fontSize: 30,
+                  fontWeight: '600',
+                  color: '#202020',
+                  lineHeight: 20,
+                  marginHorizontal: 10,
+                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                }}>
+                .
+              </Text>
               {'  '}
               Reps:
               <Text style={styles.small}>
@@ -219,21 +214,17 @@ const Box = ({item, index}: any) => {
                 {item?.exercise_reps}
                 {'   '}
               </Text>
-              {
-                <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <Text
-                    style={[
-                      styles.semiBold,
-                      {
-                        color: '#505050',
-                        lineHeight: 25,
-                        fontWeight: 'bold',
-                      },
-                    ]}>
-                    .
-                  </Text>
-                </View>
-              }
+              <Text
+                style={{
+                  fontSize: 30,
+                  fontWeight: '600',
+                  color: '#202020',
+                  lineHeight: 20,
+                  marginHorizontal: 10,
+                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                }}>
+                .
+              </Text>
               {'  '}
               Time:
               <Text style={styles.small}>

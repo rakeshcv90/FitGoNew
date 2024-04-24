@@ -56,7 +56,7 @@ const OneDay = ({navigation, route}: any) => {
   const [currentExercise, setCurrentExercise] = useState([]);
   const [trackerData, setTrackerData] = useState([]);
   const [open, setOpen] = useState(true);
-  const [downloaded, setDownloade] = useState(0);
+  const [downloaded, setDownloade] = useState(false);
   const [visible, setVisible] = useState(false);
   const [reward, setreward] = useState(0);
   const avatarRef = React.createRef();
@@ -98,9 +98,16 @@ const OneDay = ({navigation, route}: any) => {
           '&workout_id=' +
           data?.workout_id,
       });
-      if (res.data) {
+      if (res.data?.msg != 'no data found.') {
         setLoader(false);
         setExerciseData(res.data);
+        setForLoading(false);
+        setOpen(true);
+      } else {
+        setLoader(false);
+        data?.days['day_' + day] &&
+          data?.days['day_' + day]?.exercises &&
+          setExerciseData(data?.days['day_' + day]?.exercises);
         setForLoading(false);
         setOpen(true);
       }
@@ -125,7 +132,7 @@ const OneDay = ({navigation, route}: any) => {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
         StoringData[data?.exercise_title] = filePath;
-        setDownloade(pre => pre + 1);
+        setDownloade(true);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -139,7 +146,7 @@ const OneDay = ({navigation, route}: any) => {
           })
           .then(res => {
             StoringData[data?.exercise_title] = res.path();
-            setDownloade(pre => pre + 1);
+            setDownloade(true);
           })
           .catch(err => {
             console.log(err);
@@ -225,7 +232,7 @@ const OneDay = ({navigation, route}: any) => {
           ) {
             console.log(res.data);
             setOpen(false);
-            setDownloade(0);
+            setDownloade(false);
             navigation.navigate('Exercise', {
               allExercise: exerciseData,
               currentExercise:
@@ -237,12 +244,12 @@ const OneDay = ({navigation, route}: any) => {
               exerciseNumber: trainingCount != -1 ? trainingCount : 0,
               trackerData: res?.data?.inserted_data,
               type: 'day',
-              challenge
+              challenge,
             });
           } else {
             console.log(trackerData);
             setOpen(false);
-            setDownloade(0);
+            setDownloade(false);
             navigation.navigate('Exercise', {
               allExercise: exerciseData,
               currentExercise:
@@ -254,7 +261,7 @@ const OneDay = ({navigation, route}: any) => {
               exerciseNumber: trainingCount != -1 ? trainingCount : 0,
               trackerData: trackerData,
               type: 'day',
-              challenge
+              challenge,
             });
           }
         }
@@ -746,11 +753,7 @@ const OneDay = ({navigation, route}: any) => {
           // play={false}
           // oneDay
           flex={0.01}
-          text={
-            downloaded > 0 && downloaded != 100
-              ? `Downloading`
-              : `Start Day ${day}`
-          }
+          text={downloaded ? `Downloading` : `Start Day ${day}`}
           h={80}
           textStyle={{
             fontSize: 20,
@@ -764,7 +767,7 @@ const OneDay = ({navigation, route}: any) => {
           bR={40}
           // mB={80}
           bottm={40}
-          weeklyAnimation={downloaded > 0 && downloaded != 100}
+          weeklyAnimation={downloaded}
           // fillBack="#EB1900"
           // fill={downloaded > 0 ? `${100 / downloaded}%` : '0%'}
           onPress={() => {

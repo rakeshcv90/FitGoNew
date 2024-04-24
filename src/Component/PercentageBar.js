@@ -11,7 +11,6 @@ const PercentageBar = ({
   backgroundColor,
   completedColor,
 }) => {
-  const [getPercentage, setPercentage] = useState(percentage);
   const [getheight, setHeight] = useState(height);
   const [getBackgroundColor, setBackgroundColor] = useState(backgroundColor);
   const [getCompletedColor, setCompletedColor] = useState(completedColor);
@@ -32,7 +31,7 @@ const PercentageBar = ({
         <LinearGradient
           colors={['#D01818', '#941000']}
           style={{
-            width: getPercentage ? getPercentage : 0,
+            width: percentage?.split('%')[0] > 10 ? percentage : '10%',
             height: getheight,
             marginVertical: 10,
             borderRadius: 50,
@@ -41,7 +40,7 @@ const PercentageBar = ({
           }}></LinearGradient>
         <View
           style={{
-            width: getPercentage ? getPercentage : 0,
+            width: percentage?.split('%')[0] > 10 ? percentage : '10%',
             height: getheight,
 
             top:
@@ -49,8 +48,8 @@ const PercentageBar = ({
                 ? -DeviceHeigth * 0.033
                 : -DeviceHeigth * 0.037,
           }}>
-          <Text style={{textAlign: 'right', color: 'white'}}>
-            {getPercentage}
+          <Text style={{textAlign: 'center', color: 'white'}}>
+            {percentage}
           </Text>
         </View>
       </View>

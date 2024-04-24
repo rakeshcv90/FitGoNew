@@ -67,7 +67,7 @@ const WorkoutDays = ({navigation, route}: any) => {
   useEffect(() => {
     if (isFocuse) {
       postViewsAPI();
-     !challenge&& getCurrentDayAPI();
+      getCurrentDayAPI();
       setreward(0);
     }
   }, [isFocuse]);
@@ -78,7 +78,9 @@ const WorkoutDays = ({navigation, route}: any) => {
       payload.append('id', getUserDataDetails?.id);
       payload.append('workout_id', data?.workout_id);
       const res = await axios({
-        url: NewAppapi.CURRENT_DAY_EXERCISE_DETAILS,
+        url: challenge
+          ? NewAppapi.CURRENT_CHALLENGE_DAY_EXERCISE_DETAILS
+          : NewAppapi.CURRENT_DAY_EXERCISE_DETAILS,
         method: 'post',
         data: payload,
         headers: {
@@ -89,7 +91,7 @@ const WorkoutDays = ({navigation, route}: any) => {
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
         const result = analyzeExerciseData(res.data?.user_details);
-
+        // console.log("dsfsdfsdfewtrd",result)
         if (result.two.length == 0) {
           let day = parseInt(result.one[result.one.length - 1]);
           for (const item of Object.entries(data?.days)) {
@@ -502,6 +504,7 @@ const WorkoutDays = ({navigation, route}: any) => {
   const Box = ({selected, item, index, active, percent}: any) => {
     return (
       <TouchableOpacity
+        key={index}
         disabled={item?.total_rest == 0}
         style={[
           styles.box,
@@ -520,7 +523,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                 dayData: item,
                 day: index,
                 trainingCount: trainingCount,
-                challenge
+                challenge,
               })
             : active
             ? navigation.navigate('OneDay', {
@@ -528,7 +531,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                 dayData: item,
                 day: index,
                 trainingCount: trainingCount,
-                challenge
+                challenge,
               })
             : showMessage({
                 message: `Please complete Day ${index - 1} Exercise First !!!`,
@@ -754,7 +757,11 @@ const WorkoutDays = ({navigation, route}: any) => {
                     }
                     index={index + 1}
                     item={item}
-                    percent={selected != 0 && index < selected}
+                    percent={
+                      challenge
+                        ? selected != 0 && index < selected - 1
+                        : selected != 0 && index < selected
+                    }
                   />
                 );
               })}
