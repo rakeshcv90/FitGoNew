@@ -51,6 +51,8 @@ const SaveDayExercise = ({navigation, route}: any) => {
   const onPresh = () => {
     type == 'custom'
       ? navigation.navigate('CustomWorkoutDetails', {item: data})
+      : challenge
+      ? navigation.navigate('WorkoutDays', {data, challenge})
       : navigation.navigate('DayRewards', {data, day});
   };
   return (
@@ -81,7 +83,10 @@ const SaveDayExercise = ({navigation, route}: any) => {
           width: DeviceWidth * 0.9,
           textAlign: 'center',
         }}>
-        You completed your {data?.workout_title} Exercise
+        You completed your{' '}
+        {data?.workout_title == undefined
+          ? data?.title
+          : data?.workout_title + ' Exercise'}
       </Text>
       <View
         style={{

@@ -123,7 +123,7 @@ const Exercise = ({navigation, route}: any) => {
     if (!back) {
       restStart
         ? (restTimerRef.current = setTimeout(() => {
-            if (timer === 9) {
+            if (timer === 0) {
               if (number == allExercise?.length - 1) return;
               setRestStart(false);
               setIsLoading(true);
@@ -345,7 +345,7 @@ const Exercise = ({navigation, route}: any) => {
         console.log(res.data, trackerData[index], payload);
         setCurrentData(allExercise[index]);
         setRestStart(true);
-        setPlayW(90);
+        setPlayW(0);
       }
     } catch (error) {
       console.error(error?.response, 'PostDaysAPIERror');

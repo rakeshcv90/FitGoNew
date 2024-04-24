@@ -60,6 +60,7 @@ export const NewAppapi = {
   GET_FAV_WORKOUTS: NewApi + 'getfavoritewokrout',
   POST_FAV_WORKOUT: NewApi + 'addfavorite',
   CURRENT_DAY_EXERCISE_DETAILS: NewApi + 'user_exercise_details',
+  CURRENT_CHALLENGE_DAY_EXERCISE_DETAILS: NewApi + 'user_challenge_exercise_details',
   Get_Product_Catogery: NewApi + 'categorydata',
   Get_Product_List: NewApi + 'productdata',
   Get_Mindset_Excise: NewApi + 'mindsetdata', //Done App Version

@@ -79,7 +79,8 @@ const HomeNew = ({navigation}) => {
   const getStoreData = useSelector(state => state.getStoreData);
   const allWorkoutData = useSelector(state => state.allWorkoutData);
   const getChallengesData = useSelector(state => state.getChallengesData);
-  const [progressHight, setProgressHight] = useState('80%');
+  const [progressHight, setProgressHight] = useState('0%');
+  const [day, setDay] = useState(0);
   const [currentChallenge, setCurrentChallenge] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const isFocused = useIsFocused();
@@ -93,13 +94,11 @@ const HomeNew = ({navigation}) => {
     if (isFocused) {
       allWorkoutApi();
       allWorkoutData?.length == 0 && allWorkoutApi();
-      const challenge =
-        getChallengesData?.length > 0
-          ? getChallengesData?.filter(item => item?.status == 'active')
-          : ChallengesDataAPI();
-      setCurrentChallenge(challenge);
     }
   }, [isFocused]);
+  useEffect(() => {
+    ChallengesDataAPI();
+  }, []);
 
   const ChallengesDataAPI = async () => {
     try {
@@ -114,7 +113,9 @@ const HomeNew = ({navigation}) => {
       if (res.data?.msg != 'version  is required') {
         dispatch(setChallengesData(res.data));
         const challenge = res.data?.filter(item => item?.status == 'active');
+        // console.log('challenge', challenge);
         setCurrentChallenge(challenge);
+        getCurrentDayAPI(challenge);
       } else {
         dispatch(setChallengesData([]));
       }
@@ -122,6 +123,101 @@ const HomeNew = ({navigation}) => {
       console.error(error, 'ChallengesDataAPI ERRR');
     }
   };
+  const getCurrentDayAPI = async challenge => {
+    const data = challenge[0];
+    try {
+      setRefresh(true);
+      const payload = new FormData();
+      payload.append('id', getUserDataDetails?.id);
+      payload.append('workout_id', data?.workout_id);
+      const res = await axios({
+        url: challenge
+          ? NewAppapi.CURRENT_CHALLENGE_DAY_EXERCISE_DETAILS
+          : NewAppapi.CURRENT_DAY_EXERCISE_DETAILS,
+        method: 'post',
+        data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (res.data?.msg != 'No data found') {
+        // if(res.data?.user_details)
+        const result = analyzeExerciseData(res.data?.user_details);
+        console.log('dsfsdfsdfewtrd', result);
+        if (result.two.length == 0) {
+          let day = parseInt(result.one[result.one.length - 1]);
+          for (const item of Object.entries(data?.days)) {
+            const index = parseInt(item[0].split('day_')[1]);
+
+            if (item[1]?.total_rest == 0 && index == day + 1) {
+              // setSelected(index);
+              setDay(index);
+              break;
+            } else {
+              // setSelected(day + 1);
+              setDay(day);
+              // break;
+            }
+          }
+          const temp2 = res.data?.user_details?.filter(
+            item => item?.user_day == result.one[0],
+          );
+
+          // setOpen(true);
+          // setSelected(parseInt(result.one[result.one.length - 1]));
+        } else {
+          const temp = res.data?.user_details?.filter(
+            item =>
+              item?.user_day == result.two[0] &&
+              item?.exercise_status == 'undone',
+          );
+          const temp2 = res.data?.user_details?.filter(
+            item => item?.user_day == result.two[0],
+          );
+
+          setTrackerData(temp2);
+          setTotalCount(temp2?.length);
+          setTrainingCount(temp2?.length - temp?.length);
+          // setSelected(result.two[0] - 1);
+          setDay(result.two[0]);
+          // setOpen(true);
+        }
+      } else {
+        // setSelected(0);
+      }
+      const percentage = (
+        (day / currentChallenge[0]?.total_days) *
+        100
+      ).toFixed(0);
+      setProgressHight(`${percentage}%`);
+    } catch (error) {
+      console.error(error, 'DAPIERror');
+      setRefresh(false);
+    }
+  };
+  function analyzeExerciseData(exerciseData) {
+    const daysCompletedAll = new Set();
+    const daysPartialCompletion = new Set();
+
+    exerciseData.forEach(entry => {
+      const userDay = entry['user_day'];
+      const exerciseStatus = entry['exercise_status'];
+      if (entry['final_status'] == 'allcompleted')
+        daysCompletedAll.add(parseInt(userDay));
+      else {
+        if (exerciseStatus === 'completed') {
+          daysCompletedAll.add(parseInt(userDay));
+        } else {
+          daysPartialCompletion.add(parseInt(userDay));
+        }
+      }
+    });
+    const one = Array.from(daysCompletedAll);
+    const two = Array.from(daysPartialCompletion);
+
+    return {one, two};
+  }
   const allWorkoutApi = async () => {
     try {
       //  setRefresh(true);
@@ -445,7 +541,7 @@ const HomeNew = ({navigation}) => {
                         lineHeight: 20,
                         color: AppColor.SUBHEADING,
                       }}>
-                      {`6/${currentChallenge[0]?.total_days} Days`}
+                      {`${day}/${currentChallenge[0]?.total_days} Days`}
                     </Text>
                   </View>
 

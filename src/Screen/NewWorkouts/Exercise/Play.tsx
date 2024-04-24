@@ -46,7 +46,7 @@ const Play: FC<Props> = ({...props}) => {
   useEffect(() => {
     Animated.timing(progressAnimation, {
       toValue: props.fill,
-      duration: 2000,
+      duration: 1000,
       useNativeDriver: false,
     }).start();
   }, [props.fill]);
