@@ -34,6 +34,7 @@ const MeditationDetails = ({navigation, route}) => {
   const [headerTitle, setHeaderTitle] = useState(route?.params?.item);
   const [downloaded, setDownloade] = useState(0);
   const avatarRef = React.createRef();
+  const allWorkoutData = useSelector(state => state.allWorkoutData);
 
   const colors = [
     {color1: '#E2EFFF', color2: '#9CC2F5', color3: '#425B7B'},
@@ -105,7 +106,7 @@ const MeditationDetails = ({navigation, route}) => {
       if (videoExists) {
         StoringData[data?.id] = filePath;
         setDownloade(100 / (len - index));
-        console.log("fjfjfjhfjfjf",)
+        
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -299,7 +300,7 @@ const MeditationDetails = ({navigation, route}) => {
         </View>
         <View style={styles.meditionBox}>
           <FlatList
-            data={customWorkoutData?.minset_workout}
+            data={allWorkoutData?.mindset_workout_data}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
