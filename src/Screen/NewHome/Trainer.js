@@ -12,12 +12,14 @@ import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
 import moment from 'moment';
-const Trainer = ({navigation}) => {
+import { Image } from 'react-native';
+const Trainer = ({navigation,route}) => {
+
   const navigation1 = useNavigation();
   const dispatch = useDispatch();
   return (
     <View style={styles.container}>
-      <NewHeader header={'  Fitness Coach'} />
+      <NewHeader header={'Fitness Coach'+" "+route?.params?.item?.title} />
 
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <View
@@ -26,7 +28,16 @@ const Trainer = ({navigation}) => {
           alignItems: 'center',
           alignSelf: 'center',
         }}>
-        <AnimatedLottieView
+        <Image source={route?.params?.item?.img}
+           resizeMode='cover'
+          style={{
+            width: 250,
+            height: 250,
+           
+    
+          }}
+        />
+        {/* <AnimatedLottieView
           source={require('../../Icon/Images/NewImage/ChatBoot.json')}
           speed={3}
           autoPlay
@@ -38,7 +49,7 @@ const Trainer = ({navigation}) => {
             top: -70,
     
           }}
-        />
+        /> */}
       </View>
       <View
         style={{
@@ -48,7 +59,7 @@ const Trainer = ({navigation}) => {
           alignItems: 'center',
           alignSelf: 'center',
           paddingHorizontal: 10,
-          top: -150,
+        //  top: -150,
         }}>
         <Text
           style={{
@@ -79,7 +90,7 @@ const Trainer = ({navigation}) => {
           buttonText={'Start Now'}
           onPresh={() => {
             analytics().logEvent('CV_FITME_TALKED_TO_FITNESS_COACH');
-            navigation.navigate('AITrainer');
+            navigation.navigate('AITrainer',{item:route?.params?.item});
           }}
         />
       </View>

@@ -288,6 +288,7 @@ const MyPlans = ({navigation}: any) => {
         },
         data: payload,
       });
+
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
