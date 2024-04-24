@@ -47,7 +47,7 @@ const PercentageBar = ({
             top:
               Platform.OS == 'ios'
                 ? -DeviceHeigth * 0.033
-                : -DeviceHeigth * 0.035,
+                : -DeviceHeigth * 0.037,
           }}>
           <Text style={{textAlign: 'right', color: 'white'}}>
             {getPercentage}

@@ -67,6 +67,7 @@ import WorkoutDayData from '../Screen/FocusArea/WorkoutDayData';
 import WorkoutDetail from '../Screen/CustomWorkout/WorkoutDetail';
 import HomeNew from '../Screen/NewHome/HomeNew';
 import GymListing from '../Screen/GymListing/GymListing';
+import Trainer from '../Screen/NewHome/Trainer';
 
 
 const Stack = createStackNavigator();
@@ -156,6 +157,7 @@ export const LoginStack = () => {
       <Stack.Screen name="WorkoutDayData" component={WorkoutDayData}/>
       <Stack.Screen name="WorkoutDetail" component={WorkoutDetail}/>
       <Stack.Screen name="GymListing" component={GymListing}/>
+      <Stack.Screen name="Trainer" component={Trainer}/>
     </Stack.Navigator>
   );
 };

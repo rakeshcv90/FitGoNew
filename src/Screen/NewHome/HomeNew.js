@@ -17,6 +17,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import PercentageBar from '../../Component/PercentageBar';
 import VersionNumber, {appVersion} from 'react-native-version-number';
+import analytics from '@react-native-firebase/analytics';
 
 import {useIsFocused} from '@react-navigation/native';
 import {
@@ -84,10 +85,37 @@ const HomeNew = ({navigation}) => {
     {color1: '#33B6C0', color2: '#9FCCA6'},
     {color1: '#08B9BF', color2: '#07F3E9'},
   ];
+  let fitnessInstructor = [
+    {
+      id: 1,
+      title: 'Mary',
+      img: require('../../Icon/Images/NewImage2/mary.png'),
+    },
+    {
+      id: 2,
+      title: 'Arnold',
+      img: require('../../Icon/Images/NewImage2/arnold.png'),
+    },
+    {
+      id: 3,
+      title: 'Rock',
+      img: require('../../Icon/Images/NewImage2/rocky.png'),
+    },
+    {
+      id: 4,
+      title: 'Chris',
+      img: require('../../Icon/Images/NewImage2/Chris.png'),
+    },
+    {
+      id: 5,
+      title: 'Clare',
+      img: require('../../Icon/Images/NewImage2/Clare.png'),
+    },
+  ];
   useEffect(() => {
     if (isFocused) {
       allWorkoutApi();
-       allWorkoutData?.length == 0 && allWorkoutApi();
+      allWorkoutData?.length == 0 && allWorkoutApi();
     }
   }, [isFocused]);
 
@@ -105,7 +133,7 @@ const HomeNew = ({navigation}) => {
         },
         data: payload,
       });
-      console.log('DADADADADADADADA', res?.data?.workout_Data);
+
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -145,7 +173,7 @@ const HomeNew = ({navigation}) => {
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={() => {
-        //navigation.navigate('MeditationDetails', {item: title});
+        navigation.navigate('MeditationDetails', {item: title});
       }}>
       <View
         style={{
@@ -153,7 +181,6 @@ const HomeNew = ({navigation}) => {
           alignItems: 'center',
           marginHorizontal: 20,
         }}>
-        {console.log('dvfdsf', title.workout_mindset_image_link)}
         <LinearGradient
           start={{x: 0, y: 2}}
           end={{x: 1, y: 0}}
@@ -218,7 +245,7 @@ const HomeNew = ({navigation}) => {
         <TouchableOpacity
           style={styles.listItem2}
           onPress={() => {
-            navigation.navigate('ProductsList', {item: item});
+            navigation.navigate('AITrainer', {item: item});
           }}>
           {/* {imageLoad && (
             <ShimmerPlaceholder
@@ -234,11 +261,7 @@ const HomeNew = ({navigation}) => {
             />
           )} */}
           <Image
-            source={
-              item.type_image_link == null
-                ? localImage.Noimage
-                : {uri: item.type_image_link}
-            }
+            source={item?.img}
             // onLoad={() => setImageLoad(false)}
             style={[
               styles.img,
@@ -266,7 +289,7 @@ const HomeNew = ({navigation}) => {
                 color: '#505050',
               },
             ]}>
-            {item.type_title}
+            {item?.title}
           </Text>
         </TouchableOpacity>
       </>
@@ -743,31 +766,31 @@ const HomeNew = ({navigation}) => {
             Meditation
           </Text>
 
-          {/* {customWorkoutData?.minset_workout?.length > 0 && ( */}
-          <TouchableOpacity
-            onPress={() => {
-              analytics().logEvent('CV_FITME_CLICKED_ON_MEDITATION');
-              // navigation.navigate('MeditationDetails', {
-              //   item: customWorkoutData?.minset_workout[0],
-              // });
-            }}>
-            <Text
-              style={{
-                color: AppColor.BoldText,
-                fontFamily: 'Montserrat-SemiBold',
-                fontWeight: '600',
-                color: AppColor.RED1,
-                fontSize: 12,
-                lineHeight: 14,
+          {allWorkoutData?.mindset_workout_data.length > 0 && (
+            <TouchableOpacity
+              onPress={() => {
+                analytics().logEvent('CV_FITME_CLICKED_ON_MEDITATION');
+                navigation.navigate('MeditationDetails', {
+                  item: allWorkoutData?.mindset_workout_data[0],
+                });
               }}>
-              View All
-            </Text>
-          </TouchableOpacity>
-          {/* )} */}
+              <Text
+                style={{
+                  color: AppColor.BoldText,
+                  fontFamily: 'Montserrat-SemiBold',
+                  fontWeight: '600',
+                  color: AppColor.RED1,
+                  fontSize: 12,
+                  lineHeight: 14,
+                }}>
+                View All
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
         <View style={[styles.meditionBox, {top: -DeviceHeigth * 0.115}]}>
           <FlatList
-            data={allWorkoutData?.mindset_wrkout_data}
+            data={allWorkoutData?.mindset_workout_data}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
@@ -777,7 +800,6 @@ const HomeNew = ({navigation}) => {
                 <ListItem title={item} color={colors[index % colors.length]} />
               );
             }}
-            // renderItem={(item, index) => <MyListItem1 item={item} index={index}/>}
             initialNumToRender={10}
             maxToRenderPerBatch={10}
             updateCellsBatchingPeriod={100}
@@ -906,14 +928,7 @@ const HomeNew = ({navigation}) => {
             alignItems: 'center',
           }}>
           <FlatList
-            // data={getStoreData?.slice(0, )}
-            data={
-              Platform.OS == 'android'
-                ? getStoreData?.slice(0, 4)
-                : DeviceHeigth >= 1024
-                ? getStoreData?.slice(0, 7)
-                : getStoreData?.slice(0, 4)
-            }
+            data={fitnessInstructor}
             horizontal
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
@@ -1155,7 +1170,7 @@ var styles = StyleSheet.create({
   listItem2: {
     marginHorizontal: 10,
     borderRadius: 10,
-    padding: 20,
+    padding: 15,
     marginTop: 10,
     justifyContent: 'center',
     alignItems: 'center',
