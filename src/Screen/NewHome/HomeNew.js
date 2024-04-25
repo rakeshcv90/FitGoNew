@@ -310,6 +310,7 @@ const HomeNew = ({navigation}) => {
 
     return {one, two};
   }
+  useEffect(() => {
     if (!isAlarmEnabled) {
       notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));
       const currenTime = new Date();
@@ -325,7 +326,7 @@ const HomeNew = ({navigation}) => {
         });
       dispatch(setIsAlarmEnabled(true));
     }
-  }, []);
+  }, [isAlarmEnabled]);
   useEffect(() => {
     if (isFocused) {
       getCustomeWorkoutTimeDetails();
@@ -457,7 +458,7 @@ const HomeNew = ({navigation}) => {
           startRecording();
         } else {
           fetchTotalSteps();
-         // startStepUpdateBackgroundTask();
+          // startStepUpdateBackgroundTask();
           dispatch(setStepCounterOnOff(true));
         }
       } else {
