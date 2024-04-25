@@ -32,7 +32,7 @@ import {
 } from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import ActivityLoader from '../../Component/ActivityLoader';
-import Carousel from 'react-native-snap-carousel';
+
 import AnimatedLottieView from 'lottie-react-native';
 import Button from '../../Component/Button';
 import ProgressBar from './ProgressBar';

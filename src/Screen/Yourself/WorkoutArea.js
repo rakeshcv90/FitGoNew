@@ -21,7 +21,7 @@ import {localImage} from '../../Component/Image';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 import { showMessage } from 'react-native-flash-message';
 import analytics from '@react-native-firebase/analytics';
-import { image } from 'd3';
+
 const WorkoutArea = ({route, navigation}) => {
   const {nextScreen} = route.params;
   const [screen, setScreen] = useState(nextScreen);

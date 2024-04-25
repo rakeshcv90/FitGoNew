@@ -13,7 +13,6 @@ import {AppColor, Fonts} from '../../Component/Color';
 import Header from '../../Component/Headers/NewHeader';
 import GradientText from '../../Component/GradientText';
 import moment from 'moment';
-import {Canvas, Circle, Group, Line, vec} from '@shopify/react-native-skia';
 import LinearGradient from 'react-native-linear-gradient';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import ProgressButton from '../../Component/ProgressButton';

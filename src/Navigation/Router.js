@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
@@ -13,26 +13,23 @@ import Weight from '../Screen/Yourself/Weight';
 import IntroductionScreen1 from '../Screen/Introduction/IntroductionScreen1';
 import IntroductionScreen2 from '../Screen/Introduction/IntroductionScreen2';
 import IntroductionScreen3 from '../Screen/Introduction/IntroductionScreen3';
-import MeditationConsent from '../Screen/MeditationScreens/MeditationConsent';
-import MeditationRoutine from '../Screen/MeditationScreens/MeditationRoutine';
+
+
 import LogSignUp from '../Screen/LogSignUp';
 import NewEditProfile from '../Component/NewEditProfile';
 import NewPersonalDetails from '../Screen/NewPersonalDetails';
 
-import SleepDuration from '../Screen/MeditationScreens/SleepDuration';
-import MentalState from '../Screen/MeditationScreens/MentalState';
-import Alcohalinfo from '../Screen/MeditationScreens/Alcohalinfo';
+
 import FocusArea from '../Screen/FocusArea';
 import Injury from '../Screen/Yourself/Injury';
-import Preview from '../Screen/Yourself/Preview';
+
 import WorkoutArea from '../Screen/Yourself/WorkoutArea';
 import Age from '../Screen/Yourself/Age';
 import Goal from '../Screen/Yourself/Goal';
 import LoadData from '../Screen/Yourself/LoadData';
-import PredictionScreen from '../Screen/MeditationScreens/PredictionScreen';
+
 // import {CardStyleInterpolators, createStackNavigator} from '@react-navigation/stack';
 
-import AlcohalConsent from '../Screen/MeditationScreens/AlcohalConsent';
 import Profile from '../Screen/NewHome/Profile';
 import BottomTab from './BottomTab';
 import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
@@ -68,7 +65,7 @@ import AskToCreateWorkout from '../Screen/AskToCreateWorkout';
 import WorkoutDayData from '../Screen/FocusArea/WorkoutDayData';
 
 import WorkoutDetail from '../Screen/CustomWorkout/WorkoutDetail';
-import HomeNew from '../Screen/NewHome/HomeNew';
+import PredictionScreen from '../Screen/Yourself/PredictionScreen'
 import GymListing from '../Screen/GymListing/GymListing';
 import Trainer from '../Screen/NewHome/Trainer';
 
@@ -121,15 +118,11 @@ export const LoginStack = () => {
       <Stack.Screen name="Weight" component={Weight} />
       <Stack.Screen name="Age" component={Age} />
       <Stack.Screen name="PredictionScreen" component={PredictionScreen} />
-      <Stack.Screen name="MeditationConsent" component={MeditationConsent} />
-      <Stack.Screen name="MeditationRoutine" component={MeditationRoutine} />
-      <Stack.Screen name="SleepDuration" component={SleepDuration} />
-      <Stack.Screen name="MentalState" component={MentalState} />
-      <Stack.Screen name="Alcohalinfo" component={Alcohalinfo} />
+
       <Stack.Screen name="LoadData" component={LoadData} />
-      <Stack.Screen name="Preview" component={Preview} />
+     
       <Stack.Screen name="Goal" component={Goal} />
-      <Stack.Screen name="AlcoholConsent" component={AlcohalConsent} />
+  
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="NewEditProfile" component={NewEditProfile} />
       <Stack.Screen name="WorkoutsDescription" component={WorkoutDescription} />

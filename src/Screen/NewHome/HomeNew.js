@@ -1170,7 +1170,7 @@ const HomeNew = ({navigation}) => {
                 </View>
                 <View
                   style={{
-                    width: DeviceHeigth >= 1024 ? '97%' : '85%',
+                    width: DeviceHeigth >= 1024 ? '97%' : '82%',
                     alignSelf: 'center',
                     top: 15,
                   }}>
@@ -1195,7 +1195,7 @@ const HomeNew = ({navigation}) => {
                       top: 5,
                       color: AppColor.HEADERTEXTCOLOR,
                     }}>
-                    You have to do 30 Push
+                   {currentChallenge[0]?.sub_title}
                   </Text>
                   <View
                     style={{

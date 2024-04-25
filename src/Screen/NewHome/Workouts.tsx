@@ -287,7 +287,7 @@ const Workouts = ({navigation}: any) => {
             marginVertical: DeviceHeigth * 0.015,
           }}>
           <ImageBackground
-            source={require('../../Icon/Images/product_1631791758.jpg')}
+         source={{uri: item?.workout_image_link}}
             style={{
               width: DeviceWidth * 0.95,
               height: DeviceHeigth * 0.35,
@@ -355,7 +355,7 @@ const Workouts = ({navigation}: any) => {
                     fontWeight: '600',
                     fontSize: 18,
                     color: AppColor.WHITE,
-                  }}>{`Daily 50 Crunches`}</Text>
+                  }}>{item?.sub_title}</Text>
               </View>
             </LinearGradient>
           </ImageBackground>
