@@ -8,16 +8,15 @@ import Bulb from '../Yourself/Bulb';
 import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector} from 'react-redux';
-import moment from 'moment'
-import CustomBarChart from '../../Component/Graph'
+import moment from 'moment';
+import CustomBarChart from '../../Component/Graph';
 import {
   Stop,
   Svg,
   Text as SvgText,
   LinearGradient as SvgGrad,
 } from 'react-native-svg';
-import Graph from '../Yourself/Graph';
-import {localImage} from '../../Component/Image';
+
 
 const GradientText = ({item, fontWeight, fontSize, width}: any) => {
   const gradientColors = ['#D5191A', '#941000'];
@@ -52,7 +51,7 @@ const PredictionScreen = ({navigation, route}: any) => {
   const [zeroData, setZeroData] = useState<[]>([]);
   const [currentWeight, setCurrentWeight] = useState(-1);
   const [TargetWeight, setTargetWeight] = useState(-1);
-console.log('data-->',getLaterButtonData)
+  console.log('data-->', getLaterButtonData);
   const mergedObject = Object.assign({}, ...getLaterButtonData);
   useEffect(() => {
     const currentW =
@@ -71,21 +70,19 @@ console.log('data-->',getLaterButtonData)
   const CalculateWeight = (currentWeight: number, TargetWeight: number) => {
     let TotalW = 0;
     let t = 0;
-   
+
     if (currentWeight > TargetWeight) {
       TotalW = currentWeight - TargetWeight;
     } else {
       TotalW = TargetWeight - currentWeight;
-      
     }
-    
 
     const totalW_Cal = TotalW * Av_Cal_Per_KG;
     const Result_Number_Of_Days = totalW_Cal / Av_Cal_Per_2_Workout;
     let constantWeightArray = [];
     let weightHistoryArray = [];
     let currentDate = moment();
- 
+
     let No_Of_Points = 0;
     if (Result_Number_Of_Days <= 30) {
       No_Of_Points = 5;
@@ -95,49 +92,46 @@ console.log('data-->',getLaterButtonData)
       No_Of_Points = 30;
     } else if (Result_Number_Of_Days > 180 && Result_Number_Of_Days <= 365) {
       No_Of_Points = 60;
-    } else if (Result_Number_Of_Days > 365 && Result_Number_Of_Days <= 750){
+    } else if (Result_Number_Of_Days > 365 && Result_Number_Of_Days <= 750) {
       No_Of_Points = 120;
-    }else{
-      No_Of_Points = 240
+    } else {
+      No_Of_Points = 240;
     }
-    if(currentWeight>TargetWeight){
-    for (let i = Result_Number_Of_Days; i > 0; i -= No_Of_Points) {
-      const weight15 =
-        ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
-      const decWeight =currentWeight - weight15
-   
-      const formattedDate = currentDate.format('YYYY-MM-DD');
+    if (currentWeight > TargetWeight) {
+      for (let i = Result_Number_Of_Days; i > 0; i -= No_Of_Points) {
+        const weight15 =
+          ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
+        const decWeight = currentWeight - weight15;
 
-      weightHistoryArray.push({
-        weight: decWeight.toFixed(2),
- 
-        date: formattedDate,
-      });
-      constantWeightArray.push({weight: 0, date: formattedDate});
+        const formattedDate = currentDate.format('YYYY-MM-DD');
 
-      currentDate = currentDate.add(No_Of_Points, 'days');
+        weightHistoryArray.push({
+          weight: decWeight.toFixed(2),
+
+          date: formattedDate,
+        });
+        constantWeightArray.push({weight: 0, date: formattedDate});
+
+        currentDate = currentDate.add(No_Of_Points, 'days');
+      }
+    } else {
+      for (let i = Result_Number_Of_Days; i > 0; i -= No_Of_Points) {
+        const weight15 =
+          ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
+        const decWeight = currentWeight + weight15;
+        console.log(weight15, decWeight);
+        const formattedDate = currentDate.format('YYYY-MM-DD');
+
+        weightHistoryArray.push({
+          weight: decWeight.toFixed(2),
+
+          date: formattedDate,
+        });
+        constantWeightArray.push({weight: 0, date: formattedDate});
+
+        currentDate = currentDate.add(No_Of_Points, 'days');
+      }
     }
-  }
-  else{
-    for (let i = Result_Number_Of_Days; i >0; i -= No_Of_Points) {
-      const weight15 =
-        ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
-      const decWeight =currentWeight + weight15;
-      console.log(weight15, decWeight);
-      const formattedDate = currentDate.format('YYYY-MM-DD');
-
-      weightHistoryArray.push({
-        weight: decWeight.toFixed(2),
-   
-        date: formattedDate,
-      });
-      constantWeightArray.push({weight: 0, date: formattedDate});
-
-      currentDate = currentDate.add(No_Of_Points, 'days');
-
-   
-    }
-  }
 
     setZeroData(constantWeightArray);
     setWeightHistory(weightHistoryArray);
@@ -145,7 +139,7 @@ console.log('data-->',getLaterButtonData)
     weightHistoryArray[weightHistoryArray.length - 1]?.date &&
       setFinalDate(weightHistoryArray[weightHistoryArray.length - 1]?.date);
   };
-console.log("History-->",weightHistory,zeroData)
+  console.log('History-->', weightHistory, zeroData);
   return (
     <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -163,7 +157,7 @@ console.log("History-->",weightHistory,zeroData)
             marginBottom: -30,
           }}>
           <Text style={[styles.t, {color: AppColor.RED}]}>
-          {currentWeight > TargetWeight
+            {currentWeight > TargetWeight
               ? (currentWeight - TargetWeight).toFixed(0)
               : (TargetWeight - currentWeight).toFixed(0)}
           </Text>
@@ -186,7 +180,12 @@ console.log("History-->",weightHistory,zeroData)
         />
         {weightHistory.length != 0 && zeroData.length != 0 && (
           // <View></View>
-          <CustomBarChart data={weightHistory} barWidth={15} barColor={"transparent"} barSpacing={DeviceWidth*0.08}/>
+          <CustomBarChart
+            data={weightHistory}
+            barWidth={15}
+            barColor={'transparent'}
+            barSpacing={DeviceWidth * 0.08}
+          />
           // <Graph
           //   resultData={weightHistory}
           //   zeroData={zeroData}
@@ -236,7 +235,7 @@ console.log("History-->",weightHistory,zeroData)
         <TouchableOpacity
           onPress={() => {
             // toNextScreen()
-            navigation.navigate('LoadData')
+            navigation.navigate('LoadData');
           }}>
           <LinearGradient
             start={{x: 0, y: 1}}

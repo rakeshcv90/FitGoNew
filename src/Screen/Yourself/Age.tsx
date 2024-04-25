@@ -27,7 +27,7 @@ import Svg, {
   Text as SvgText,
 } from 'react-native-svg';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
-import Carousel from 'react-native-snap-carousel';
+
 import {showMessage} from 'react-native-flash-message';
 
 const GradientText = ({item}: any) => {

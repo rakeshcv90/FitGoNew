@@ -41,7 +41,7 @@ import analytics from '@react-native-firebase/analytics';
 
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
-import {text} from 'd3';
+
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
