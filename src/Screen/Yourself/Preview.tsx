@@ -18,7 +18,7 @@ import {
 import {useSelector} from 'react-redux';
 import moment from 'moment';
 import {Calendar} from 'react-native-calendars';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Graph from './Graph';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -259,7 +259,7 @@ const Preview = ({route, navigation}: any) => {
             <Text
               style={{
                 color: value.isCurrent ? AppColor.WHITE : AppColor.Gray5,
-                fontFamily: 'Poppins-SemiBold',
+                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                 fontSize: 14,
                 alignSelf: 'center',
               }}>
@@ -269,7 +269,7 @@ const Preview = ({route, navigation}: any) => {
               key={index}
               style={{
                 color: value.isCurrent ? AppColor.WHITE : AppColor.Gray5,
-                fontFamily: 'Poppins-SemiBold',
+                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                 fontSize: 10,
                 alignSelf: 'center',
               }}>
@@ -296,7 +296,7 @@ const Preview = ({route, navigation}: any) => {
           </Text>
           <Text
             style={{
-              fontFamily: 'Poppins-SemiBold',
+              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
               fontSize: 22,
               fontWeight: '600',
               color: AppColor.BLACK,
@@ -313,7 +313,7 @@ const Preview = ({route, navigation}: any) => {
           /> */}
             <Text
               style={{
-                fontFamily: 'Poppins-Bold',
+                fontFamily: Fonts.MONTSERRAT_BOLD,
                 fontSize: 22,
                 color: AppColor.RED,
                 // marginTop: 10,
@@ -372,7 +372,7 @@ const Preview = ({route, navigation}: any) => {
                 key={index}
                 style={{
                   color: AppColor.Gray5,
-                  fontFamily: 'Poppins-SemiBold',
+                  fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                   fontSize: 16,
                   textAlign: 'center',
                   width: 30,

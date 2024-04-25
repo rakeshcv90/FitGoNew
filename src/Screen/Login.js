@@ -130,7 +130,7 @@ const Login = ({navigation}) => {
           platform: Platform.OS,
         },
       });
-
+console.log("ADsadasdasdsad",data.data)
       if (data.data.profile_status == 1) {
         showMessage({
           message: data.data.msg,
@@ -151,7 +151,7 @@ const Login = ({navigation}) => {
         'User does not exist with provided Google social credentials'
       ) {
         showMessage({
-          message: 'You are not registered,You need to Signup first',
+          message: 'You need to Signup first/Your Email Not Signup with Goole-login',
           type: 'danger',
           animationDuration: 1000,
           floating: true,

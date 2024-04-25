@@ -52,15 +52,47 @@ const AITrainer = ({navigation, route}) => {
       sender: 'ChatGpt',
     },
   ]);
-
+  const [ttsStatus, setTtsStatus] = useState('initiliazing');
+  const [speechRate, setSpeechRate] = useState(0.5);
+  const [speechPitch, setSpeechPitch] = useState(1);
   useEffect(() => {
-    if (isFocuse) {
-      Tts.speak(ttsSound);
+    Tts.addEventListener('tts-start', _event => setTtsStatus('started'));
+    Tts.addEventListener('tts-finish', _event => setTtsStatus('finished'));
+    Tts.addEventListener('tts-cancel', _event => setTtsStatus('cancelled'));
+    Tts.setDefaultRate(speechRate);
+    Tts.setDefaultPitch(speechPitch);
+    Tts.getInitStatus().then(initTts);
+    // return () => {
+    //   Tts.removeEventListener(
+    //     'tts-start',
+    //     (_event) => setTtsStatus('started')
+    //   );
+    //   Tts.removeEventListener(
+    //     'tts-finish',
+    //     (_event) => setTtsStatus('finished'),
+    //   );
+    //   Tts.removeEventListener(
+    //     'tts-cancel',
+    //     (_event) => setTtsStatus('cancelled'),
+    //   );
+    // };
+  }, []);
+  const initTts = async () => {
+    if (Platform.OS == 'android') {
+      await Tts.setDefaultLanguage(route?.params?.item?.language);
+      await Tts.setDefaultVoice(route?.params?.item?.languageId);
     } else {
-      Tts.stop();
+      await Tts.setDefaultVoice(route?.params?.item?.languageId);
     }
-  }, [ttsSound]);
 
+    readText();
+    setTtsStatus('initialized');
+  };
+
+  const readText = async () => {
+    Tts.stop();
+    Tts.speak(ttsSound);
+  };
   useEffect(() => {
     flatListRef.current.scrollToEnd({animated: true});
   }, [senderMessage]);

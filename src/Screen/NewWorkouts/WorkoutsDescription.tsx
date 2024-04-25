@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import {Image} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import RenderHTML from 'react-native-render-html';
@@ -119,7 +119,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             <Text
               style={{
                 fontSize: 24,
-                fontFamily: 'Poppins-SemiBold',
+                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                 color: AppColor.BLACK,
               }}>
               {data?.workout_title || data?.exercise_title}
