@@ -33,7 +33,7 @@ import {
 import AnimatedLottieView from 'lottie-react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 const WorkoutDays = ({navigation, route}: any) => {
-  const {data} = route.params;
+  const {data, challenge} = route.params;
   const [selected, setSelected] = useState(0);
   const [refresh, setRefresh] = useState(false);
   const [open, setOpen] = useState(true);
@@ -78,7 +78,9 @@ const WorkoutDays = ({navigation, route}: any) => {
       payload.append('id', getUserDataDetails?.id);
       payload.append('workout_id', data?.workout_id);
       const res = await axios({
-        url: NewAppapi.CURRENT_DAY_EXERCISE_DETAILS,
+        url: challenge
+          ? NewAppapi.CURRENT_CHALLENGE_DAY_EXERCISE_DETAILS
+          : NewAppapi.CURRENT_DAY_EXERCISE_DETAILS,
         method: 'post',
         data: payload,
         headers: {
@@ -89,7 +91,7 @@ const WorkoutDays = ({navigation, route}: any) => {
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
         const result = analyzeExerciseData(res.data?.user_details);
-
+        // console.log("dsfsdfsdfewtrd",result)
         if (result.two.length == 0) {
           let day = parseInt(result.one[result.one.length - 1]);
           for (const item of Object.entries(data?.days)) {
@@ -502,6 +504,7 @@ const WorkoutDays = ({navigation, route}: any) => {
   const Box = ({selected, item, index, active, percent}: any) => {
     return (
       <TouchableOpacity
+        key={index}
         disabled={item?.total_rest == 0}
         style={[
           styles.box,
@@ -520,6 +523,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                 dayData: item,
                 day: index,
                 trainingCount: trainingCount,
+                challenge,
               })
             : active
             ? navigation.navigate('OneDay', {
@@ -527,6 +531,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                 dayData: item,
                 day: index,
                 trainingCount: trainingCount,
+                challenge,
               })
             : showMessage({
                 message: `Please complete Day ${index - 1} Exercise First !!!`,
@@ -538,7 +543,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           end={{x: 0, y: 1}}
           colors={
             percent && item?.total_rest != 0
-              ? ['#941000','#D5191A',]
+              ? ['#941000', '#D5191A']
               : [AppColor.WHITE, AppColor.WHITE]
           }
           style={[
@@ -547,7 +552,6 @@ const WorkoutDays = ({navigation, route}: any) => {
               width:
                 DeviceHeigth < 1280 ? DeviceWidth * 0.95 : DeviceWidth * 0.99,
               height: DeviceHeigth * 0.1,
-            
             },
           ]}>
           <View
@@ -714,12 +718,11 @@ const WorkoutDays = ({navigation, route}: any) => {
     );
   };
 
-
   return (
     <View style={styles.container}>
       <Header
         header={
-          data?.workout_title == undefined ? 'Full Body' : data?.workout_title
+          data?.workout_title == undefined ? data?.title : data?.workout_title
         }
         backButton
         SearchButton={false}
@@ -754,7 +757,11 @@ const WorkoutDays = ({navigation, route}: any) => {
                     }
                     index={index + 1}
                     item={item}
-                    percent={selected != 0 && index < selected}
+                    percent={
+                      challenge
+                        ? selected != 0 && index < selected - 1
+                        : selected != 0 && index < selected
+                    }
                   />
                 );
               })}

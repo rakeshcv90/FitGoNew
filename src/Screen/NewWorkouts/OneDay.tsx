@@ -51,12 +51,12 @@ import Play from './Exercise/Play';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 
 const OneDay = ({navigation, route}: any) => {
-  const {data, dayData, day, trainingCount} = route.params;
+  const {data, dayData, day, trainingCount, challenge} = route.params;
   const [exerciseData, setExerciseData] = useState([]);
   const [currentExercise, setCurrentExercise] = useState([]);
   const [trackerData, setTrackerData] = useState([]);
   const [open, setOpen] = useState(true);
-  const [downloaded, setDownloade] = useState(0);
+  const [downloaded, setDownloade] = useState(false);
   const [visible, setVisible] = useState(false);
   const [reward, setreward] = useState(0);
   const avatarRef = React.createRef();
@@ -98,9 +98,16 @@ const OneDay = ({navigation, route}: any) => {
           '&workout_id=' +
           data?.workout_id,
       });
-      if (res.data) {
+      if (res.data?.msg != 'no data found.') {
         setLoader(false);
         setExerciseData(res.data);
+        setForLoading(false);
+        setOpen(true);
+      } else {
+        setLoader(false);
+        data?.days['day_' + day] &&
+          data?.days['day_' + day]?.exercises &&
+          setExerciseData(data?.days['day_' + day]?.exercises);
         setForLoading(false);
         setOpen(true);
       }
@@ -125,7 +132,7 @@ const OneDay = ({navigation, route}: any) => {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
         StoringData[data?.exercise_title] = filePath;
-        setDownloade(pre => pre + 1);
+        setDownloade(true);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -139,7 +146,7 @@ const OneDay = ({navigation, route}: any) => {
           })
           .then(res => {
             StoringData[data?.exercise_title] = res.path();
-            setDownloade(pre => pre + 1);
+            setDownloade(true);
           })
           .catch(err => {
             console.log(err);
@@ -159,7 +166,9 @@ const OneDay = ({navigation, route}: any) => {
 
     try {
       const res = await axios({
-        url: NewAppapi.TRACK_CURRENT_DAY_EXERCISE,
+        url: challenge
+          ? NewAppapi.TRACK_CURRENT_DAY_CHALLENGE_EXERCISE
+          : NewAppapi.TRACK_CURRENT_DAY_EXERCISE,
         method: 'Post',
         data: payload,
         headers: {
@@ -189,11 +198,6 @@ const OneDay = ({navigation, route}: any) => {
   };
 
   const postCurrentDayAPI = async () => {
-    // const payload = new FormData();
-    // payload.append('user_exercise_id', current?.exercise_id);
-    // payload.append('user_id', getUserDataDetails?.id);
-    // payload.append('workout_id', data?.workout_id);
-    // payload.append('user_day', day);
     let datas = [];
     let trainingCount = -1;
     trainingCount = trackerData.findIndex(
@@ -215,7 +219,9 @@ const OneDay = ({navigation, route}: any) => {
     ).finally(async () => {
       try {
         const res = await axios({
-          url: NewAppapi.CURRENT_DAY_EXERCISE,
+          url: challenge
+            ? NewAppapi.CURRENT_DAY_CHALLENGE_EXERCISE
+            : NewAppapi.CURRENT_DAY_EXERCISE,
           method: 'Post',
           data: {user_details: datas},
         });
@@ -223,27 +229,27 @@ const OneDay = ({navigation, route}: any) => {
           if (
             res.data?.msg ==
             'Exercise Status for All Users Inserted Successfully'
-            ) {
-            console.log(res.data)
+          ) {
+            console.log(res.data);
             setOpen(false);
-            setDownloade(0);
+            setDownloade(false);
             navigation.navigate('Exercise', {
               allExercise: exerciseData,
               currentExercise:
-              trainingCount != -1
-              ? exerciseData[trainingCount]
-              : exerciseData[0],
+                trainingCount != -1
+                  ? exerciseData[trainingCount]
+                  : exerciseData[0],
               data: data,
               day: day,
               exerciseNumber: trainingCount != -1 ? trainingCount : 0,
               trackerData: res?.data?.inserted_data,
-              type: 'day'
-
+              type: 'day',
+              challenge,
             });
           } else {
-            console.log(trackerData)
+            console.log(trackerData);
             setOpen(false);
-            setDownloade(0);
+            setDownloade(false);
             navigation.navigate('Exercise', {
               allExercise: exerciseData,
               currentExercise:
@@ -254,8 +260,8 @@ const OneDay = ({navigation, route}: any) => {
               day: day,
               exerciseNumber: trainingCount != -1 ? trainingCount : 0,
               trackerData: trackerData,
-              type: 'day'
-
+              type: 'day',
+              challenge,
             });
           }
         }
@@ -747,11 +753,7 @@ const OneDay = ({navigation, route}: any) => {
           // play={false}
           // oneDay
           flex={0.01}
-          text={
-            downloaded > 0 && downloaded != 100
-              ? `Downloading`
-              : `Start Day ${day}`
-          }
+          text={downloaded ? `Downloading` : `Start Day ${day}`}
           h={80}
           textStyle={{
             fontSize: 20,
@@ -765,7 +767,7 @@ const OneDay = ({navigation, route}: any) => {
           bR={40}
           // mB={80}
           bottm={40}
-          weeklyAnimation={downloaded > 0 && downloaded != 100}
+          weeklyAnimation={downloaded}
           // fillBack="#EB1900"
           // fill={downloaded > 0 ? `${100 / downloaded}%` : '0%'}
           onPress={() => {

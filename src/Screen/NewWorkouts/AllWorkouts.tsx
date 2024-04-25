@@ -470,7 +470,7 @@ const AllWorkouts = ({navigation, route}: any) => {
             <TouchableOpacity
               activeOpacity={1}
               onPress={() => {
-                navigation?.navigate('WorkoutDays', {data: item});
+                navigation?.navigate('WorkoutDays', {data: item, challenge: false});
               }}
               style={[
                 styles.box,

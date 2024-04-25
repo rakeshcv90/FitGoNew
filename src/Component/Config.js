@@ -51,12 +51,16 @@ export const NewAppapi = {
   DietDetails: NewApi + 'getdiet', //Done App Version
   Get_DAYS: NewApi + 'days',
   POST_EXERCISE: NewApi + 'user_status', //Done App Version
+  POST_CHALLENGE: NewApi + 'update_challenge_exercises_status', //Done App Version
   CURRENT_DAY_EXERCISE: NewApi + 'user_exercise_status',
+  CURRENT_DAY_CHALLENGE_EXERCISE: NewApi + 'save_challenge_exercises_status',
   TRACK_CURRENT_DAY_EXERCISE: NewApi + 'user_details', //Done App Version
+  TRACK_CURRENT_DAY_CHALLENGE_EXERCISE: NewApi + 'get_challenge_exercises_status', //Done App Version
   TRACK_WORKOUTS: NewApi + 'workout_status', //Done App Version
   GET_FAV_WORKOUTS: NewApi + 'getfavoritewokrout',
   POST_FAV_WORKOUT: NewApi + 'addfavorite',
   CURRENT_DAY_EXERCISE_DETAILS: NewApi + 'user_exercise_details',
+  CURRENT_CHALLENGE_DAY_EXERCISE_DETAILS: NewApi + 'user_challenge_exercise_details',
   Get_Product_Catogery: NewApi + 'categorydata',
   Get_Product_List: NewApi + 'productdata',
   Get_Mindset_Excise: NewApi + 'mindsetdata', //Done App Version

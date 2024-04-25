@@ -1611,7 +1611,7 @@ const Home = ({navigation}) => {
               return (
                 <TouchableOpacity
                   onPress={() =>
-                    navigation.navigate('WorkoutDays', {data: item})
+                    navigation.navigate('WorkoutDays', {data: item, challenge: false})
                   }
                   activeOpacity={0.8}
                   style={[

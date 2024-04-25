@@ -41,6 +41,7 @@ import {navigationRef} from '../../../App';
 import {showMessage} from 'react-native-flash-message';
 import {
   setAllWorkoutData,
+  setChallengesData,
   setIsAlarmEnabled,
   setStepCounterOnOff,
   setWorkoutTimeCal,
@@ -96,7 +97,10 @@ const HomeNew = ({navigation}) => {
   const getUserID = useSelector(state => state.getUserID);
   const getStoreData = useSelector(state => state.getStoreData);
   const allWorkoutData = useSelector(state => state.allWorkoutData);
-  const [progressHight, setProgressHight] = useState('80%');
+  const getChallengesData = useSelector(state => state.getChallengesData);
+  const [progressHight, setProgressHight] = useState('0%');
+  const [day, setDay] = useState(0);
+  const [currentChallenge, setCurrentChallenge] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const isFocused = useIsFocused();
   const [modalVisible, setModalVisible] = useState(false);
@@ -185,6 +189,127 @@ const HomeNew = ({navigation}) => {
     }
   }, [isFocused]);
   useEffect(() => {
+    ChallengesDataAPI();
+  }, []);
+
+  const ChallengesDataAPI = async () => {
+    try {
+      const res = await axios({
+        url:
+          NewAppapi.GET_CHALLENGES_DATA +
+          '?version=' +
+          VersionNumber.appVersion +
+          '&user_id=' +
+          getUserDataDetails?.id,
+      });
+      if (res.data?.msg != 'version  is required') {
+        dispatch(setChallengesData(res.data));
+        const challenge = res.data?.filter(item => item?.status == 'active');
+        // console.log('challenge', challenge);
+        setCurrentChallenge(challenge);
+        getCurrentDayAPI(challenge);
+      } else {
+        dispatch(setChallengesData([]));
+      }
+    } catch (error) {
+      console.error(error, 'ChallengesDataAPI ERRR');
+    }
+  };
+  const getCurrentDayAPI = async challenge => {
+    const data = challenge[0];
+    try {
+      setRefresh(true);
+      const payload = new FormData();
+      payload.append('id', getUserDataDetails?.id);
+      payload.append('workout_id', data?.workout_id);
+      const res = await axios({
+        url: challenge
+          ? NewAppapi.CURRENT_CHALLENGE_DAY_EXERCISE_DETAILS
+          : NewAppapi.CURRENT_DAY_EXERCISE_DETAILS,
+        method: 'post',
+        data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (res.data?.msg != 'No data found') {
+        // if(res.data?.user_details)
+        const result = analyzeExerciseData(res.data?.user_details);
+        console.log('dsfsdfsdfewtrd', result);
+        if (result.two.length == 0) {
+          let day = parseInt(result.one[result.one.length - 1]);
+          for (const item of Object.entries(data?.days)) {
+            const index = parseInt(item[0].split('day_')[1]);
+
+            if (item[1]?.total_rest == 0 && index == day + 1) {
+              // setSelected(index);
+              setDay(index);
+              break;
+            } else {
+              // setSelected(day + 1);
+              setDay(day);
+              // break;
+            }
+          }
+          const temp2 = res.data?.user_details?.filter(
+            item => item?.user_day == result.one[0],
+          );
+
+          // setOpen(true);
+          // setSelected(parseInt(result.one[result.one.length - 1]));
+        } else {
+          const temp = res.data?.user_details?.filter(
+            item =>
+              item?.user_day == result.two[0] &&
+              item?.exercise_status == 'undone',
+          );
+          const temp2 = res.data?.user_details?.filter(
+            item => item?.user_day == result.two[0],
+          );
+
+          setTrackerData(temp2);
+          setTotalCount(temp2?.length);
+          setTrainingCount(temp2?.length - temp?.length);
+          // setSelected(result.two[0] - 1);
+          setDay(result.two[0]);
+          // setOpen(true);
+        }
+      } else {
+        // setSelected(0);
+      }
+      const percentage = (
+        (day / currentChallenge[0]?.total_days) *
+        100
+      ).toFixed(0);
+      setProgressHight(`${percentage}%`);
+    } catch (error) {
+      console.error(error, 'DAPIERror');
+      setRefresh(false);
+    }
+  };
+  function analyzeExerciseData(exerciseData) {
+    const daysCompletedAll = new Set();
+    const daysPartialCompletion = new Set();
+
+    exerciseData.forEach(entry => {
+      const userDay = entry['user_day'];
+      const exerciseStatus = entry['exercise_status'];
+      if (entry['final_status'] == 'allcompleted')
+        daysCompletedAll.add(parseInt(userDay));
+      else {
+        if (exerciseStatus === 'completed') {
+          daysCompletedAll.add(parseInt(userDay));
+        } else {
+          daysPartialCompletion.add(parseInt(userDay));
+        }
+      }
+    });
+    const one = Array.from(daysCompletedAll);
+    const two = Array.from(daysPartialCompletion);
+
+    return {one, two};
+  }
     if (!isAlarmEnabled) {
       notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));
       const currenTime = new Date();
@@ -504,6 +629,7 @@ const HomeNew = ({navigation}) => {
       console.log('UCustomeCorkout details', error);
     }
   };
+
   const allWorkoutApi = async () => {
     try {
       //  setRefresh(true);
@@ -953,18 +1079,15 @@ const HomeNew = ({navigation}) => {
           flexGrow: 1,
           paddingBottom: DeviceHeigth * 0.05,
         }}
-        // refreshControl={
-        //   <RefreshControl
-        //     refreshing={refresh}
-       
-        //     onRefresh={() => {
-             
-        //       Meal_List();
-        //       getGraphData(1);
-        //     }}
-        //     colors={[AppColor.RED, AppColor.WHITE]}
-        //   />
-        // }
+        refreshControl={
+          <RefreshControl
+            refreshing={refresh}
+            onRefresh={() => {
+              ChallengesDataAPI();
+            }}
+            colors={[AppColor.RED, AppColor.WHITE]}
+          />
+        }
         style={styles.container}
         nestedScrollEnabled>
         <View style={styles.profileView}>
@@ -978,139 +1101,147 @@ const HomeNew = ({navigation}) => {
             }
           />
         </View>
-        <View style={{width: '95%', alignSelf: 'center', marginVertical: 10}}>
-          <Text
-            style={{
-              color: AppColor.HEADERTEXTCOLOR,
-              fontFamily: 'Montserrat-SemiBold',
-              fontWeight: '600',
-              lineHeight: 21,
-              fontSize: 18,
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-            }}>
-            Daily Challenge
-          </Text>
+        {currentChallenge.length > 0 && (
+          <View style={{width: '95%', alignSelf: 'center', marginVertical: 10}}>
+            <Text
+              style={{
+                color: AppColor.HEADERTEXTCOLOR,
+                fontFamily: 'Montserrat-SemiBold',
+                fontWeight: '600',
+                lineHeight: 21,
+                fontSize: 18,
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+              }}>
+              Daily Challenge
+            </Text>
 
-          <View
-            style={{
-              width: '100%',
-              marginVertical: 15,
-              flexDirection: 'row',
-              borderRadius: 16,
-              borderWidth: 1,
-              alignSelf: 'center',
-              backgroundColor: AppColor.WHITE,
-              shadowColor: 'rgba(0, 0, 0, 1)',
-              ...Platform.select({
-                ios: {
-                  shadowColor: '#000000',
-                  shadowOffset: {width: 0, height: 1},
-                  shadowOpacity: 0.1,
-                  shadowRadius: 4,
-                },
-                android: {
-                  elevation: 4,
-                },
-              }),
-              borderColor: '#D9D9D9',
-            }}>
             <View
               style={{
+                width: '100%',
+                marginVertical: 15,
                 flexDirection: 'row',
-                width: '90%',
-                alignItems: 'center',
-                top: 0,
+                borderRadius: 16,
+                borderWidth: 1,
+                alignSelf: 'center',
+                backgroundColor: AppColor.WHITE,
+                shadowColor: 'rgba(0, 0, 0, 1)',
+                ...Platform.select({
+                  ios: {
+                    shadowColor: '#000000',
+                    shadowOffset: {width: 0, height: 1},
+                    shadowOpacity: 0.1,
+                    shadowRadius: 4,
+                  },
+                  android: {
+                    elevation: 4,
+                  },
+                }),
+                borderColor: '#D9D9D9',
               }}>
               <View
                 style={{
-                  width: 90,
-                  height: 100,
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  borderColor: '#D9D9D9',
+                  flexDirection: 'row',
+                  width: '90%',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  marginHorizontal: 11,
-                  marginVertical: 10,
+                  top: 0,
                 }}>
-                <Image
-                  source={require('../../Icon/Images/NewImage2/human.png')}
-                  style={{
-                    width: 70,
-                    height: 70,
-                  }}
-                  resizeMode="contain"
-                />
-              </View>
-              <View
-                style={{
-                  width: DeviceHeigth >= 1024 ? '97%' : '85%',
-                  alignSelf: 'center',
-                  top: 15,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontSize: 14,
-                    fontWeight: '600',
-                    lineHeight: 18,
-                    marginHorizontal: 10,
-                    color: AppColor.HEADERTEXTCOLOR,
-                  }}>
-                  Daily Pushup Challenge
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontSize: 14,
-                    fontWeight: '600',
-                    lineHeight: 20,
-                    marginHorizontal: 10,
-                    top: 5,
-                    color: AppColor.HEADERTEXTCOLOR,
-                  }}>
-                  You have to do 30 Push
-                </Text>
                 <View
                   style={{
-                    alignSelf: 'flex-end',
-                    top: 10,
-                    marginRight:
-                      DeviceHeigth >= 1024
-                        ? DeviceWidth * 0.03
-                        : DeviceWidth * 0.085,
+                    width: 90,
+                    height: 100,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: '#D9D9D9',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginHorizontal: 11,
+                    marginVertical: 10,
+                  }}>
+                  <Image
+                    source={require('../../Icon/Images/NewImage2/human.png')}
+                    style={{
+                      width: 70,
+                      height: 70,
+                    }}
+                    resizeMode="contain"
+                  />
+                </View>
+                <View
+                  style={{
+                    width: DeviceHeigth >= 1024 ? '97%' : '85%',
+                    alignSelf: 'center',
+                    top: 15,
                   }}>
                   <Text
                     style={{
                       fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                      fontSize: 12,
+                      fontSize: 14,
+                      fontWeight: '600',
+                      lineHeight: 18,
+                      marginHorizontal: 10,
+                      color: AppColor.HEADERTEXTCOLOR,
+                    }}>
+                    {currentChallenge[0]?.title}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      fontSize: 14,
                       fontWeight: '600',
                       lineHeight: 20,
-                      color: AppColor.SUBHEADING,
+                      marginHorizontal: 10,
+                      top: 5,
+                      color: AppColor.HEADERTEXTCOLOR,
                     }}>
-                    6/14 Days
+                    You have to do 30 Push
                   </Text>
-                </View>
+                  <View
+                    style={{
+                      alignSelf: 'flex-end',
+                      top: 10,
+                      marginRight:
+                        DeviceHeigth >= 1024
+                          ? DeviceWidth * 0.03
+                          : DeviceWidth * 0.085,
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                        fontSize: 12,
+                        fontWeight: '600',
+                        lineHeight: 20,
+                        color: AppColor.SUBHEADING,
+                      }}>
+                      {`${day}/${currentChallenge[0]?.total_days} Days`}
+                    </Text>
+                  </View>
 
-                <PercentageBar height={20} percentage={progressHight} />
+                  <PercentageBar height={20} percentage={progressHight} />
+                </View>
               </View>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('WorkoutDays', {
+                    data: currentChallenge[0],
+                    challenge: true,
+                  })
+                }
+                style={{width: '10%', alignItems: 'center', top: 20}}>
+                <Image
+                  source={require('../../Icon/Images/NewImage2/play.png')}
+                  style={{
+                    width: 50,
+                    height: 50,
+                    marginRight: 10,
+                    //alignContent: 'flex-end',
+                  }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={{width: '10%', alignItems: 'center', top: 20}}>
-              <Image
-                source={require('../../Icon/Images/NewImage2/play.png')}
-                style={{
-                  width: 50,
-                  height: 50,
-                  marginRight: 10,
-                  //alignContent: 'flex-end',
-                }}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
           </View>
-        </View>
+        )}
         <View style={{width: '95%', alignSelf: 'center', marginTop: 15}}>
           <Text
             style={{

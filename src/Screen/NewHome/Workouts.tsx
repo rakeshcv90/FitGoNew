@@ -47,9 +47,8 @@ const Workouts = ({navigation}: any) => {
 
   useEffect(() => {
     if (isFocused) {
-
-     allWorkoutData?.workout_Data?.length == 0 && allWorkoutApi();
-
+      allWorkoutData?.workout_Data?.length == 0 && allWorkoutApi();
+      ChallengesDataAPI();
       getCustomeWorkoutTimeDetails();
     }
   }, [isFocused]);
@@ -58,13 +57,13 @@ const Workouts = ({navigation}: any) => {
     {
       id: 1,
       title: 'Get Fit',
-      subtitle: 'weight loss data',
+      subtitle: 'Weight Loss',
       img: require('../../Icon/Images/NewImage2/Img7.png'),
     },
     {
       id: 2,
       title: 'Lose Weight',
-      subtitle: 'weight loss data',
+      subtitle: 'Weight Loss',
       img: require('../../Icon/Images/NewImage2/Img6.png'),
     },
     {
@@ -84,19 +83,19 @@ const Workouts = ({navigation}: any) => {
     {
       id: 2,
       title: 'Build Muscle',
-      subtitle: 'Build',
+      subtitle: 'Build Muscle',
       img: require('../../Icon/Images/NewImage2/Img3.png'),
     },
     {
       id: 3,
       title: 'Corporate Cardio',
-      subtitle: 'Strength / Weight loss',
+      subtitle: 'Strength/Weight Loss',
       img: require('../../Icon/Images/NewImage2/Img2.png'),
     },
     {
       id: 4,
       title: 'Beach Ready',
-      subtitle: 'Build muscle/Weight Loss/ Strength',
+      subtitle: 'Build Muscle/Weight Loss/Strength',
       img: require('../../Icon/Images/NewImage2/Img1.png'),
     },
   ];
@@ -144,9 +143,10 @@ const Workouts = ({navigation}: any) => {
         url:
           NewAppapi.GET_CHALLENGES_DATA +
           '?version=' +
-          VersionNumber.appVersion+'&user_id='+getUserDataDetails?.id,
+          VersionNumber.appVersion +
+          '&user_id=' +
+          getUserDataDetails?.id,
       });
-      console.log(res.data,"CHALL")
       if (res.data?.msg != 'version  is required') {
         dispatch(setChallengesData(res.data));
       } else {
@@ -186,7 +186,7 @@ const Workouts = ({navigation}: any) => {
           }}>
           <TouchableOpacity
             onPress={() => {
-              getFiltyerCaterogy(item);
+              handleNavigation(item);
             }}
             style={{
               //width: DeviceWidth * 0.6,
@@ -243,45 +243,29 @@ const Workouts = ({navigation}: any) => {
       </>
     );
   }, []);
-  const getFiltyerCaterogy = (mydata: any) => {
-    let filterData: any = [];
-    if (mydata?.title == 'Get Fit') {
-      filterData = allWorkoutData?.workout_Data?.filter((item: any) => {
-        return item.goal_title == 'Weight Loss';
-      });
-    } else if (mydata?.title == 'Lose Weight') {
-      filterData = allWorkoutData?.workout_Data?.filter((item: any) => {
-        return item.goal_title == 'Weight Loss';
-      });
-    } else if (mydata?.title == 'HIIT') {
-      filterData = allWorkoutData?.workout_Data?.filter((item: any) => {
-        return item.goal_title == 'Strength';
-      });
-    } else if (mydata?.title == 'Immunity Booster') {
-      filterData = allWorkoutData?.workout_Data?.filter((item: any) => {
-        return item.goal_title == 'Strength';
-      });
-    } else if (mydata?.title == 'Build Muscle') {
-      filterData = allWorkoutData?.workout_Data?.filter((item: any) => {
-        return item.goal_title == 'Build Muscle';
-      });
+
+  const getFilterCaterogy = useMemo(
+    () => (mydata: any) => {
+      return allWorkoutData?.workout_Data?.filter(
+        (item: any) => item.goal_title == mydata,
+      );
+    },
+    [allWorkoutData?.workout_Data],
+  );
+
+  const handleNavigation = (mydata: any) => {
+    let bodyexercise: any = [];
+    if (mydata?.title == 'Beach Ready') {
+      bodyexercise = allWorkoutData?.workout_Data;
     } else if (mydata?.title == 'Corporate Cardio') {
-      filterData = allWorkoutData?.workout_Data?.filter((item: any) => {
-        return (
-          item.goal_title == 'Strength' || item.goal_title == 'Weight Loss'
-        );
-      });
-    } else if (mydata?.title == 'Beach Ready') {
-      filterData = allWorkoutData?.workout_Data?.filter((item: any) => {
-        return (
-          item.goal_title == 'Build Muscle' ||
-          item.goal_title == 'Weight Loss' ||
-          item.goal_title == 'Strength'
-        );
-      });
+      bodyexercise = allWorkoutData?.workout_Data?.filter(
+        (item: any) => item.goal_title != 'Build Muscle',
+      );
+    } else {
+      bodyexercise = getFilterCaterogy(mydata?.subtitle);
     }
     navigation.navigate('FocuseWorkoutList', {
-      bodyexercise: filterData,
+      bodyexercise,
       item: mydata,
     });
   };
@@ -289,11 +273,13 @@ const Workouts = ({navigation}: any) => {
     return ({item}: any) => (
       <>
         <TouchableOpacity
-          onPress={() => {
-            getFiltyerCaterogy(item);
-          }}
           activeOpacity={0.8}
-          onPress={() => navigation.navigate('WorkoutDays', {data: item})}
+          onPress={() => {
+            navigation.navigate('WorkoutDays', {
+              data: item,
+              challenge: true,
+            });
+          }}
           style={{
             width: DeviceWidth * 0.95,
             height: DeviceHeigth * 0.35,
@@ -341,7 +327,7 @@ const Workouts = ({navigation}: any) => {
                     top: 0,
                     textAlign: 'center',
                   }}>
-                  {`${item?.days}\nDAYS`}
+                  {`${Object.values(item?.days).length}\nDAYS`}
                 </Text>
               </ImageBackground>
               <View
@@ -406,7 +392,7 @@ const Workouts = ({navigation}: any) => {
     const bodyexercise = allWorkoutData?.workout_Data?.filter((item: any) => {
       return item.workout_bodypart == data.bodypart_id;
     });
-    
+
     navigation.navigate('FocuseWorkoutList', {
       bodyexercise: bodyexercise,
       item: data,
@@ -416,7 +402,6 @@ const Workouts = ({navigation}: any) => {
     <>
       <NewHeader header={'Workouts'} SearchButton={false} backButton={false} />
       <View style={styles.container}>
-        
         <FlatList
           data={[1, 2, 3, 4]}
           showsVerticalScrollIndicator={false}
@@ -425,7 +410,7 @@ const Workouts = ({navigation}: any) => {
               refreshing={refresh}
               onRefresh={() => {
                 allWorkoutApi();
-  
+                ChallengesDataAPI();
                 // workoutStatusApi();
               }}
               colors={[AppColor.RED, AppColor.WHITE]}
@@ -697,8 +682,8 @@ const Workouts = ({navigation}: any) => {
                     </View>
                   </>
                 )}
-                {index==3&&(
-                    <>
+                {index == 3 && (
+                  <>
                     <View
                       style={{
                         flexDirection: 'row',
@@ -723,12 +708,17 @@ const Workouts = ({navigation}: any) => {
                     <View
                       style={[
                         styles.meditionBox,
-                        {marginVertical: DeviceHeigth * 0.0, alignItems: 'center'},
+                        {
+                          marginVertical: DeviceHeigth * 0.0,
+                          alignItems: 'center',
+                        },
                       ]}>
                       <FlatList
-                        data={completeProfileData?.focusarea}
+                        data={getChallengesData}
                         showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item: any, index: number) => index.toString()}
+                        keyExtractor={(item: any, index: number) =>
+                          index.toString()
+                        }
                         renderItem={renderItem1}
                         ListEmptyComponent={emptyComponent}
                         initialNumToRender={10}
@@ -744,7 +734,6 @@ const Workouts = ({navigation}: any) => {
           }}
         />
       </View>
-      
     </>
   );
 };

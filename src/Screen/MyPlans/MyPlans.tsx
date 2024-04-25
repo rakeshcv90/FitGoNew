@@ -196,22 +196,17 @@ const Box = ({item, index}: any) => {
                 {item?.exercise_sets}
                 {'   '}
               </Text>
-              {
-                <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <Text
-                    style={[
-                      styles.semiBold,
-                      {
-                        fontSize: 25,
-                        color: '#505050',
-                        lineHeight: 25,
-                        fontWeight: 'bold',
-                      },
-                    ]}>
-                    .
-                  </Text>
-                </View>
-              }
+              <Text
+                style={{
+                  fontSize: 30,
+                  fontWeight: '600',
+                  color: '#202020',
+                  lineHeight: 20,
+                  marginHorizontal: 10,
+                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                }}>
+                .
+              </Text>
               {'  '}
               Reps:
               <Text style={styles.small}>
@@ -219,21 +214,17 @@ const Box = ({item, index}: any) => {
                 {item?.exercise_reps}
                 {'   '}
               </Text>
-              {
-                <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <Text
-                    style={[
-                      styles.semiBold,
-                      {
-                        color: '#505050',
-                        lineHeight: 25,
-                        fontWeight: 'bold',
-                      },
-                    ]}>
-                    .
-                  </Text>
-                </View>
-              }
+              <Text
+                style={{
+                  fontSize: 30,
+                  fontWeight: '600',
+                  color: '#202020',
+                  lineHeight: 20,
+                  marginHorizontal: 10,
+                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                }}>
+                .
+              </Text>
               {'  '}
               Time:
               <Text style={styles.small}>
@@ -288,7 +279,6 @@ const MyPlans = ({navigation}: any) => {
         },
         data: payload,
       });
-
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -537,7 +527,7 @@ const MyPlans = ({navigation}: any) => {
           marginTop:
             Platform.OS == 'ios' ? -DeviceWidth * 0.1 : -DeviceWidth * 0.05,
         }}>
-        <View
+        {/* <View
           style={{
             flexDirection: 'row',
             width: DeviceWidth,
@@ -585,7 +575,7 @@ const MyPlans = ({navigation}: any) => {
               zIndex: 1,
             }}
           />
-        </View>
+        </View> */}
         <View {...panResponder.panHandlers} style={{flex: 1}}>
           <View
             style={{
