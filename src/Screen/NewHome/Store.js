@@ -226,7 +226,7 @@ const Store = ({navigation}) => {
 
             paddingBottom:
               Platform.OS == 'android'
-                ? 40
+                ? 50
                 : DeviceHeigth <= 667
                 ? DeviceHeigth * 0.15
                 : 15,

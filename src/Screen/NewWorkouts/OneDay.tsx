@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {useDispatch, useSelector} from 'react-redux';
@@ -711,7 +711,7 @@ const OneDay = ({navigation, route}: any) => {
             fontWeight: '700',
             fontSize: 30,
             lineHeight: 40,
-            fontFamily: 'Poppins-SemiBold',
+            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
             color: AppColor.BLACK,
           }}>
           Day {day}

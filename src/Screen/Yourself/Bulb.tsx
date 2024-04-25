@@ -33,15 +33,16 @@ const Bulb = ({screen, header}: any) => {
       <Text
         style={{
           color: 'black',
-          fontSize: 20,
-          fontFamily: 'Poppins-SemiBold',
+          fontSize: 24,
+          fontFamily: 'Montserrat-Bold',
           fontWeight: 'bold',
           lineHeight: 30,
+          textAlign:'center'
         }}>
         {screen}
       </Text>
 
-      <View
+    { header? <View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -67,7 +68,7 @@ const Bulb = ({screen, header}: any) => {
           }}>
           {header}
         </Text>
-      </View>
+      </View>:null}
     </View>
   );
 };

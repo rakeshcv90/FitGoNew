@@ -8,6 +8,7 @@ import {
   ScrollView,
   Modal,
   TextInput,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useMemo, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -25,7 +26,6 @@ import AppleHealthKit from 'react-native-health';
 import {setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
 import {Calendar} from 'react-native-calendars';
 import AnimatedLottieView from 'lottie-react-native';
-
 import GoogleFit from 'react-native-google-fit';
 import {
   VictoryBar,
@@ -34,46 +34,33 @@ import {
   VictoryTheme,
 } from 'victory-native';
 import {LineChart} from 'react-native-chart-kit';
-
 import moment from 'moment';
-
 import {showMessage} from 'react-native-flash-message';
 import {Linking} from 'react-native';
-
 import analytics from '@react-native-firebase/analytics';
 
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import {text} from 'd3';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const NewProgressScreen = ({navigation}) => {
-  // const {
-  //   getUserDataDetails,
-  //   ProfilePhoto,
-  //   getHomeGraphData,
-  //   getCustttomeTimeCal,
-  //   getHealthData,
-  //   getStepCounterOnoff,
-  //   getFitmeAdsCount,
-  //   getPurchaseHistory,
-  // } = useSelector(state => state);
-
-  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
-  const ProfilePhoto = useSelector(state => state.ProfilePhoto);
-  const getHomeGraphData = useSelector(state => state.getHomeGraphData);
-  const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
-  const getHealthData = useSelector(state => state.getHealthData);
-  const getStepCounterOnoff = useSelector(state => state.getStepCounterOnoff);
-  const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
-  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+  const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
+  const ProfilePhoto = useSelector(state => state?.ProfilePhoto);
+  const getHomeGraphData = useSelector(state => state?.getHomeGraphData);
+  const getCustttomeTimeCal = useSelector(state => state?.getCustttomeTimeCal);
+  const getHealthData = useSelector(state => state?.getHealthData);
+  const getStepCounterOnoff = useSelector(state => state?.getStepCounterOnoff);
+  const getFitmeAdsCount = useSelector(state => state?.getFitmeAdsCount);
+  const getPurchaseHistory = useSelector(state => state?.getPurchaseHistory);
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [selected, setSelected] = useState(false);
   const [dates, setDates] = useState([]);
   const [value, setValue] = useState('Weekly');
   const [value1, setValue1] = useState('Weekly');
   const [array, setArray] = useState([]);
-  const [getBmi, setBmi] = useState(0);
+  const [getBmi, setBmi] = useState();
   const [array1, setArray1] = useState([]);
   const [Calories, setCalories] = useState(0);
   const [Wtime, setWtime] = useState(0);
@@ -82,40 +69,13 @@ const NewProgressScreen = ({navigation}) => {
   const dispatch = useDispatch();
   let arrayForData = [];
   let arrayForData1 = [];
-  // useEffect(() => {
-  //   setBmi(
-  //     getUserDataDetails?.weight
-  //       ? (
-  //           getUserDataDetails?.weight /
-  //           (getUserDataDetails?.height * 0.3048) ** 2
-  //         ).toFixed(2)
-  //       : 0,
-  //   );
-  // }, []);
-  const bmi = useMemo(() => {
-    return getUserDataDetails?.weight
-      ? (
-          getUserDataDetails?.weight /
-          (getUserDataDetails?.height * 0.3048) ** 2
-        ).toFixed(2)
-      : 0;
-  }, [getUserDataDetails]);
-
   // Update state with useEffect
-  useEffect(() => {
-    setBmi(bmi);
-  }, [bmi]);
-
-  // useEffect(() => {
-  //   WeeklyData(1);
-  //   WeeklyData(2);
-  // }, []);
 
   useEffect(() => {
-    const Calories1 = getCustttomeTimeCal.map(value => value.totalCalories);
+    const Calories1 = getCustttomeTimeCal?.map(value => value.totalCalories);
     const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
     const time1 = getCustttomeTimeCal?.map(value =>
-      parseInt(value.totalRestTime),
+      parseInt(value?.totalRestTime),
     );
     const Time2 = time1?.reduce((acc, ind) => Math.ceil((acc + ind) / 60), 0);
     setWtime(Time2);
@@ -139,13 +99,13 @@ const NewProgressScreen = ({navigation}) => {
       if (getStepCounterOnoff) {
         const getDailyData = async () => {
           try {
-            const dailySteps = await GoogleFit.getDailySteps();
-            const totalSteps = dailySteps.reduce(
-              (total, acc) => (total + acc.steps[0] ? acc.steps[0].value : 0),
+            const dailySteps = await GoogleFit?.getDailySteps();
+            const totalSteps = dailySteps?.reduce(
+              (total, acc) => (total + acc?.steps[0] ? acc?.steps[0].value : 0),
               0,
             );
             setCalories(
-              parseInt(totalSteps ? ((totalSteps / 20) * 1).toFixed(0) : 0) +
+              parseInt(totalSteps ? ((totalSteps / 20) * 1)?.toFixed(0) : 0) +
                 parseInt(Calories2),
             );
           } catch (error) {
@@ -478,13 +438,38 @@ const NewProgressScreen = ({navigation}) => {
   const BMImodal = () => {
     const [selected, setSelected] = useState('');
     const [focused, setFocused] = useState(false);
+    const [isNextClicked, setNextClicked] = useState(false);
+    const [height, setHeight] = useState('');
+    const [Dvalue, setDValue] = useState('ft');
+    const dropDownItems = [
+      {label: 'ft', value: '1'},
+      {label: 'cm', value: '2'},
+    ];
+    const renderDropItem = item => {
+      return (
+        <View style={styles.item}>
+          <Text style={styles.textItem}>{item.label}</Text>
+        </View>
+      );
+    };
     const HandleSubmitBMI = () => {
-      const BMI =
-        (selected == '' ? getUserDataDetails?.weight : selected) /
-        (getUserDataDetails?.height * 0.3048) ** 2;
-
-      setBmi(BMI.toFixed(2));
-      setModalVisible(false);
+      if (selected == '' || height == '') {
+        Alert.alert('Please enter valid height and weight', '', [
+          {
+            text: 'Ok',
+            onPress: () => {
+              setBmi()
+              setModalVisible(false)
+            },
+          },
+        ]);
+      } else {
+        const BMI =
+          (selected == '' ? getUserDataDetails?.weight : selected) /
+          (Dvalue == 'ft' ? height * 0.3048 : height / 100) ** 2;
+        setBmi(BMI.toFixed(2));
+        setModalVisible(false);
+      }
     };
     return (
       <Modal
@@ -493,10 +478,10 @@ const NewProgressScreen = ({navigation}) => {
         visible={modalVisible}
         onRequestClose={closeModal}>
         <TouchableOpacity
-          style={{ flex: 1}}
+          style={{flex: 1, backgroundColor: 'red'}}
           activeOpacity={1}
           onPress={() => {
-            setModalVisible(false);
+            // setModalVisible(false);
           }}>
           <BlurView
             style={styles.modalContainer}
@@ -512,11 +497,13 @@ const NewProgressScreen = ({navigation}) => {
                   color: AppColor.BLACK,
                   fontFamily: 'Montserrat-SemiBold',
                   textAlign: 'center',
-                  lineHeight:30,
+                  lineHeight: 30,
                   fontSize: 18,
-                  fontWeight:'700'
+                  fontWeight: '700',
                 }}>
-                {'Enter your current weight'}
+                {isNextClicked
+                  ? 'Select your current height'
+                  : 'Enter your current weight'}
               </Text>
               <View
                 style={{
@@ -526,7 +513,7 @@ const NewProgressScreen = ({navigation}) => {
                 }}>
                 <TextInput
                   keyboardType="number-pad"
-                  value={selected}
+                  value={isNextClicked ? height : selected}
                   onChangeText={text => {
                     if (text == '.') {
                       showMessage({
@@ -536,45 +523,96 @@ const NewProgressScreen = ({navigation}) => {
                         floating: true,
                         icon: {icon: 'auto', position: 'left'},
                       });
-                    } else setSelected(text);
+                    } else isNextClicked ? setHeight(text) : setSelected(text);
                   }}
                   onFocus={setFocused}
                   cursorColor={AppColor.RED}
-                  placeholder={focused ? selected : getUserDataDetails?.weight}
+                  placeholder={
+                    focused
+                      ? isNextClicked
+                        ? height
+                        : selected
+                      : getUserDataDetails?.weight == 'undefined'
+                      ? '0.0'
+                      : isNextClicked
+                      ? '0.0'
+                      : getUserDataDetails?.weight
+                  }
                   placeholderTextColor={focused ? AppColor.RED : AppColor.Gray5}
                   maxLength={3}
                   style={{
                     fontSize: 30,
                     fontFamily: 'Poppins-SemiBold',
                     color: AppColor.BLACK,
-                    width: focused&&selected!='' ? null : 50,
+                    width: focused
+                      ? isNextClicked
+                        ? height != ''
+                          ? null
+                          : 50
+                        : selected != ''
+                        ? null
+                        : 50
+                      : 50,
                     borderColor: focused ? AppColor.RED : AppColor.DARKGRAY,
                     borderBottomWidth: 1,
                     alignSelf: 'center',
                     paddingLeft: 4,
                   }}
                 />
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-SemiBold',
-                    color: AppColor.BoldText,
-                    fontSize: 30,
-                    textAlign: 'center',
-                    marginLeft:5
-                  }}>
-                  {'Kg'}
-                </Text>
+                {isNextClicked == false ? (
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins-SemiBold',
+                      color: AppColor.BoldText,
+                      fontSize: 30,
+                      textAlign: 'center',
+                      marginLeft: 5,
+                    }}>
+                    {'Kg'}
+                  </Text>
+                ) : (
+                  <Dropdown
+                    style={[
+                      styles.dropdown,
+                      {
+                        width: DeviceWidth * 0.2,
+                        alignSelf: 'flex-end',
+                        position: 'absolute',
+                        left: 60,
+                        bottom: 5,
+                      },
+                    ]}
+                    placeholderStyle={[
+                      styles.placeholderStyle,
+                      {fontWeight: '600', fontSize: 18},
+                    ]}
+                    selectedTextStyle={[
+                      styles.selectedTextStyle,
+                      {fontWeight: '600'},
+                    ]}
+                    data={dropDownItems}
+                    maxHeight={300}
+                    labelField="label"
+                    valueField="value"
+                    placeholder={Dvalue}
+                    value={Dvalue}
+                    onChange={item => {
+                      setDValue(item.label);
+                    }}
+                    renderItem={renderDropItem}
+                  />
+                )}
               </View>
             </View>
             <TouchableOpacity
               style={{
-                width: DeviceWidth * 0.4,
+                width: DeviceWidth * 0.35,
                 borderRadius: 8,
                 alignSelf: 'center',
                 marginTop: 20,
               }}
               onPress={() => {
-                HandleSubmitBMI();
+                isNextClicked ? HandleSubmitBMI() : setNextClicked(true);
               }}>
               <LinearGradient
                 colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
@@ -585,10 +623,10 @@ const NewProgressScreen = ({navigation}) => {
                   style={{
                     fontFamily: 'Montserrat-SemiBold',
                     fontSize: 18,
-                    fontWeight:'700',
+                    fontWeight: '700',
                     color: AppColor.WHITE,
                   }}>
-                  {'Submit'}
+                  {isNextClicked ? 'Submit' : 'Next'}
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
@@ -597,7 +635,6 @@ const NewProgressScreen = ({navigation}) => {
       </Modal>
     );
   };
-
   const theme = useMemo(() => {
     return {
       backgroundColor: AppColor.WHITE,
@@ -676,21 +713,16 @@ const NewProgressScreen = ({navigation}) => {
               navigation.navigate('Report');
             }}>
             <Image
-              source={localImage.Settings_v}
+              source={localImage?.Settings_v}
               style={{height: 20, width: 20}}
               resizeMode="contain"
             />
           </TouchableOpacity>
         </View>
         <View style={styles.profileView}>
-          {Object.keys(getUserDataDetails).length > 0 && (
+          {Object.keys(getUserDataDetails)?.length > 0 && (
             <>
               {isLoading && (
-                // <ActivityIndicator
-                //   style={styles.loader}
-                //   size="large"
-                //   color="#0000ff"
-                // />
                 <ShimmerPlaceholder
                   style={styles.loader}
                   ref={avatarRef}
@@ -719,7 +751,7 @@ const NewProgressScreen = ({navigation}) => {
             fontFamily: 'Montserrat-SemiBold',
             color: AppColor.BLACK,
             fontSize: 22,
-            fontWeight:'700'
+            fontWeight: '700',
           }}>
           {`Hi, ${
             getUserDataDetails?.name
@@ -755,32 +787,37 @@ const NewProgressScreen = ({navigation}) => {
             </View>
           ))}
         </View>
-        <LineText Txt1={'Weight'} Txt2={'Weekly'} />
-        {getUserDataDetails.weight ? (
-          <View style={[styles.card, {}]}>
-            <LineChart
-              style={{paddingRight: 30}}
-              data={data}
-              width={DeviceWidth * 0.85}
-              height={DeviceHeigth * 0.25}
-              chartConfig={chartConfig}
-              withInnerLines={false}
-              withOuterLines={true}
-              withDots={true}
-              bezier
-              segments={4}
-              renderDotContent={renderCustomPoint}
-              // onDataPointClick={data =>
-              //   console.log('PointData=====>', data.value)
-              // }
-              withShadow={false}
-              yAxisInterval={10}
-              fromZero={true}
-            />
-          </View>
-        ) : (
-          <EmptyComponent />
-        )}
+
+        {getUserDataDetails?.workout_plans != 'CustomCreated' ? (
+          <>
+            <LineText Txt1={'Weight'} Txt2={'Weekly'} />
+            {getUserDataDetails?.weight ? (
+              <View style={[styles.card, {}]}>
+                <LineChart
+                  style={{paddingRight: 30}}
+                  data={data}
+                  width={DeviceWidth * 0.85}
+                  height={DeviceHeigth * 0.25}
+                  chartConfig={chartConfig}
+                  withInnerLines={false}
+                  withOuterLines={true}
+                  withDots={true}
+                  bezier
+                  segments={4}
+                  renderDotContent={renderCustomPoint}
+                  // onDataPointClick={data =>
+                  //   console.log('PointData=====>', data.value)
+                  // }
+                  withShadow={false}
+                  yAxisInterval={10}
+                  fromZero={true}
+                />
+              </View>
+            ) : (
+              <EmptyComponent />
+            )}
+          </>
+        ) : null}
         <LineText Txt1={'Meditation Duration'} Txt2={'Weekly'} Duration />
         {array1.length != 0 ? (
           <View style={styles.card}>
@@ -810,7 +847,6 @@ const NewProgressScreen = ({navigation}) => {
         ) : (
           <EmptyComponent />
         )}
-
         <LineText Txt1={'Monthly Achievement'} />
         <View style={[styles.card, {flexDirection: 'column'}]}>
           <View
@@ -888,7 +924,7 @@ const NewProgressScreen = ({navigation}) => {
                 fontSize: 18,
                 color: '#00A930',
               }}>
-              {getBmi}
+              {getBmi ?? 'No data'}
             </Text>
           </View>
           <View />
@@ -904,7 +940,9 @@ const NewProgressScreen = ({navigation}) => {
                     ? DeviceWidth * 0.1
                     : getBmi > 18 && getBmi < 25
                     ? DeviceWidth * 0.35
-                    : DeviceWidth * 0.6,
+                    : getBmi
+                    ? DeviceWidth * 0.6
+                    : DeviceWidth * 0.35,
               }}>
               <View
                 style={{
@@ -919,7 +957,9 @@ const NewProgressScreen = ({navigation}) => {
                     ? 'Under Weight'
                     : getBmi > 18 && getBmi < 25
                     ? 'Normal'
-                    : 'Over Weight'}
+                    : isFinite(getBmi)
+                    ? 'Over Weight'
+                    : 'No Data'}
                 </Text>
               </View>
               <View style={styles.arrowheadContainer}>
@@ -978,12 +1018,19 @@ const NewProgressScreen = ({navigation}) => {
                       ? DeviceWidth * 0.35
                       : DeviceWidth * 0.6,
                 }}>
-                {value.value}
+                {value?.value}
               </Text>
             ))}
             <Text
-              style={{color: AppColor.BLACK, fontFamily: 'Poppins-SemiBold'}}>
-              {getBmi < 18
+              style={{
+                color: AppColor.BLACK,
+                fontFamily: 'Poppins-SemiBold',
+                right: isFinite(getBmi) ? null : 28,
+                textAlign: 'center',
+              }}>
+              {isNaN(getBmi)
+                ? 'No data'
+                : getBmi < 18
                 ? (getBmi * 2 + 10).toFixed(0)
                 : getBmi > 18 && getBmi < 25
                 ? (getBmi * 2).toFixed(0)
@@ -1093,7 +1140,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button_b: {
-    width: DeviceWidth * 0.6,
+    paddingHorizontal: 25,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
@@ -1118,14 +1165,25 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   dropdown: {
-    margin: 16,
     height: 30,
     width: DeviceWidth * 0.3,
     borderColor: 'red',
     borderRadius: 12,
     padding: 12,
-    borderWidth: 1,
     shadowColor: '#000',
+    backgroundColor: AppColor.WHITE,
+    borderWidth: 1,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 5, height: 5},
+        shadowOpacity: 0.3,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
   item: {
     padding: 15,

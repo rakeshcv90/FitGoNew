@@ -11,7 +11,7 @@ import {
 import React, {useEffect, useRef, useState} from 'react';
 import {Image} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import ProgressBar from './ProgressBar';
@@ -270,7 +270,7 @@ const Equipment = ({route, navigation}: any) => {
                       style={{
                         fontSize: 16,
                         fontWeight: '600',
-                        fontFamily: 'Poppins-SemiBold',
+                        fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                         lineHeight: 18,
                         color: '#404040',
                         textAlign: 'center',

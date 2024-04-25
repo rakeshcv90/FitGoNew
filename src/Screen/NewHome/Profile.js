@@ -21,7 +21,7 @@ import {
   NewApi,
   NewAppapi,
 } from '../../Component/Config';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -710,7 +710,7 @@ const Profile = () => {
               }}>
               <Text
                 style={{
-                  fontFamily: 'Poppins-SemiBold',
+                  fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                   fontSize: 20,
                   color: AppColor.WHITE,
                 }}>
@@ -756,7 +756,7 @@ const Profile = () => {
                 }}>
                 <Text
                   style={{
-                    fontFamily: 'Poppins-SemiBold',
+                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     color: AppColor.WHITE,
                     fontSize: 20,
                   }}>
@@ -831,21 +831,22 @@ const Profile = () => {
                   `CV_FITME_CLICKED_ON_${value?.text1?.replace(' ', '_')}`,
                 );
 
-                if (value.text1 == 'Personal Details') {
-                  navigation.navigate('NewPersonalDetails');
-                } else if (value.text1 == 'My Favorites') {
-                  navigation?.navigate('AllWorkouts', {
-                    data: allWorkoutData?.workout_Data,
-                    type: 'popular',
-                    fav: true,
-                  });
-                } else if (value.text1 == 'Subscription') {
-                  navigation.navigate('Subscription');
-                } else {
-                  showMessage({
-                    message: 'Work In Progress',
-                    type: 'info',
-                    animationDuration: 500,
+              if (value.text1 == 'Personal Details') {
+                navigation.navigate('NewPersonalDetails');
+              } else if (value.text1 == 'Subscription') {
+                navigation.navigate('Subscription');
+              } else if (value.text1 == 'Contact Us') {
+                openMailApp();
+              } else if (value.text1 == 'Privacy Policy') {
+                navigation.navigate('TermaAndCondition', {
+                  title: 'Privacy & Policy',
+                });
+              } else {
+                showMessage({
+                  message: 'Work In Progress',
+                  type: 'info',
+                  animationDuration: 500,
+
 
                     floating: true,
                     icon: {icon: 'auto', position: 'left'},
@@ -982,8 +983,6 @@ const Profile = () => {
                   navigation.navigate('TermaAndCondition', {
                     title: 'Terms & Condition',
                   });
-                } else if (value.text1 == 'Contact Us') {
-                  openMailApp();
                 } else if (value.text1 == 'Rate Us') {
                   if (Platform.OS == 'ios') {
                     Linking.openURL(
@@ -1061,7 +1060,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   NameText: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
     color: AppColor.INPUTTEXTCOLOR,
     fontWeight: '500',
     fontSize: 14,

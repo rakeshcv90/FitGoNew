@@ -229,3 +229,9 @@ export const setAllExercise = data => {
     payload: data,
   };
 };
+export const setExperience=data=>{
+  return{
+    type:types.IS_EXPERIENCED,
+    payload:data
+  }
+}

@@ -25,6 +25,8 @@ import {SetAIMessageHistory} from '../../Component/ThemeRedux/Actions';
 import {Alert} from 'react-native';
 import {MyRewardedAd} from '../../Component/BannerAdd';
 import moment from 'moment';
+import Tts from 'react-native-tts';
+import {useIsFocused} from '@react-navigation/native';
 
 // const apiKey = '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';
 // const apiKey = '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';
@@ -33,19 +35,64 @@ const systemMessage = {
   content: `You are a Gym Traineer and you give response to uswho are  only related Gym Traineer, how to do Workouts,
    what diet have to take`,
 };
-const AITrainer = ({navigation}) => {
+const AITrainer = ({navigation, route}) => {
   const dispatch = useDispatch();
-  const {getAIMessageHistory, getPurchaseHistory} = useSelector(state => state);
+  const [ttsSound, setTtsSound] = useState(
+    `Hey there! I m ${route?.params?.item?.title} your friendly chat bot here to assist you.`,
+  );
+  const {getAIMessageHistory, getPurchaseHistory, getUserDataDetails} =
+    useSelector(state => state);
+  let isFocuse = useIsFocused();
   const [searchText, setSearchText] = useState('');
   const flatListRef = useRef(null);
   const [reward, setreward] = useState(0);
   const [senderMessage, setsenderMessage] = useState([
     {
-      message: 'Hey there! I m your friendly chat bot here to assist you.',
+      message: `Hey there! I m ${route?.params?.item?.title} your friendly chat bot here to assist you.`,
       sender: 'ChatGpt',
     },
   ]);
+  const [ttsStatus, setTtsStatus] = useState('initiliazing');
+  const [speechRate, setSpeechRate] = useState(0.5);
+  const [speechPitch, setSpeechPitch] = useState(1);
+  useEffect(() => {
+    Tts.addEventListener('tts-start', _event => setTtsStatus('started'));
+    Tts.addEventListener('tts-finish', _event => setTtsStatus('finished'));
+    Tts.addEventListener('tts-cancel', _event => setTtsStatus('cancelled'));
+    Tts.setDefaultRate(speechRate);
+    Tts.setDefaultPitch(speechPitch);
+    Tts.getInitStatus().then(initTts);
+    // return () => {
+    //   Tts.removeEventListener(
+    //     'tts-start',
+    //     (_event) => setTtsStatus('started')
+    //   );
+    //   Tts.removeEventListener(
+    //     'tts-finish',
+    //     (_event) => setTtsStatus('finished'),
+    //   );
+    //   Tts.removeEventListener(
+    //     'tts-cancel',
+    //     (_event) => setTtsStatus('cancelled'),
+    //   );
+    // };
+  }, []);
+  const initTts = async () => {
+    if (Platform.OS == 'android') {
+      await Tts.setDefaultLanguage(route?.params?.item?.language);
+      await Tts.setDefaultVoice(route?.params?.item?.languageId);
+    } else {
+      await Tts.setDefaultVoice(route?.params?.item?.languageId);
+    }
 
+    readText();
+    setTtsStatus('initialized');
+  };
+
+  const readText = async () => {
+    Tts.stop();
+    Tts.speak(ttsSound);
+  };
   useEffect(() => {
     flatListRef.current.scrollToEnd({animated: true});
   }, [senderMessage]);
@@ -268,7 +315,10 @@ const AITrainer = ({navigation}) => {
   };
   return (
     <View style={styles.container}>
-      <NewHeader header={'  Fitness Coach'} backButton={true} />
+      <NewHeader
+        header={'Fitness Coach' + ' ' + route?.params?.item?.title}
+        backButton={true}
+      />
 
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <TouchableOpacity
@@ -307,7 +357,7 @@ const AITrainer = ({navigation}) => {
               : DeviceHeigth * 0.12,
         }}>
         <ScrollView
-          style={{flexGrow: 1, marginVertical: DeviceHeigth * 0.00}}
+          style={{flexGrow: 1, marginVertical: DeviceHeigth * 0.0}}
           ref={flatListRef}
           onContentSizeChange={() =>
             flatListRef.current.scrollToEnd({animated: true})
@@ -320,6 +370,9 @@ const AITrainer = ({navigation}) => {
             data={senderMessage}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item, index}) => {
+              if (item.sender == 'ChatGpt' && item?.message != 'test') {
+                setTtsSound(item.message);
+              }
               return (
                 <>
                   <View
@@ -356,7 +409,7 @@ const AITrainer = ({navigation}) => {
                                 marginHorizontal: 15,
                               }}
                               resizeMode="contain"
-                              source={localImage.Boot}
+                              source={route?.params?.item?.img}
                             />
                             <AnimatedLottieView
                               source={{
@@ -374,7 +427,7 @@ const AITrainer = ({navigation}) => {
                           <>
                             <Image
                               resizeMode="contain"
-                              source={localImage.Boot}
+                              source={route?.params?.item?.img}
                               style={{
                                 width: 35,
                                 height: 35,
@@ -419,6 +472,25 @@ const AITrainer = ({navigation}) => {
                                   }}>
                                   {item.message}
                                 </Text>
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    setTtsSound(item.message);
+                                  }}
+                                  style={{
+                                    justifyContent: 'center',
+                                    alignSelf: 'flex-end',
+                                  }}>
+                                  <AnimatedLottieView
+                                    source={require('../../Icon/Images/NewImage2/Sound.json')}
+                                    autoPlay
+                                    loop
+                                    style={{
+                                      width: 30,
+                                      height: 30,
+                                      marginBottom: -10,
+                                    }}
+                                  />
+                                </TouchableOpacity>
                               </View>
                             </View>
                           </>
@@ -456,10 +528,17 @@ const AITrainer = ({navigation}) => {
                           </View>
                           <Image
                             resizeMode="contain"
-                            source={localImage.User}
+                            // source={localImage.User}
+                            source={
+                              getUserDataDetails.image_path == null
+                                ? localImage.User
+                                : {uri: getUserDataDetails.image_path}
+                            }
                             style={{
                               width: 30,
                               height: 30,
+                              borderRadius: 30 / 2,
+                              marginHorizontal: 5,
                               justifyContent: 'flex-end',
                               alignSelf: 'flex-end',
                             }}
