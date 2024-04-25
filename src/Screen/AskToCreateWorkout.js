@@ -10,6 +10,8 @@ import {
   NewAppapi,
 } from '../Component/Config';
 import {
+  setChallengesData,
+  setCustomWorkoutData,
   setExperience,
   setLaterButtonData,
   setUserProfileData,
@@ -119,7 +121,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
         mergedObject?.workoutArea?.join(',') ?? null,
       );
       payload.append('version', VersionNumber?.appVersion);
-      console.log('payload-->', payload);
+
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {
@@ -127,6 +129,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
         },
         data: payload,
       });
+      console.log('Whole Data', data?.data);
       if (data?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: data?.data?.msg,
@@ -144,6 +147,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
   };
   // getuserDetail api
   const getProfileData = async user_id => {
+    console.log('Custom Dadadadada',user_id);
     const currrentdata = [
       {
         gender: gender,
@@ -165,16 +169,19 @@ const AskToCreateWorkout = ({route, navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
+  
       if (data?.data?.profile) {
         dispatch(setUserProfileData(data?.data?.profile));
         dispatch(setLaterButtonData(currrentdata));
         dispatch(setExperience(true));
-        navigation.navigate('CustomWorkout');
+        getCustomWorkout(getUserID);
+        ChallengesDataAPI()
         setLoader(false);
       } else if (
         data?.data?.msg == 'Please update the app to the latest version.'
       ) {
         setLoader(false);
+        ChallengesDataAPI()
         showMessage({
           message: data?.data?.msg,
           floating: true,
@@ -186,17 +193,58 @@ const AskToCreateWorkout = ({route, navigation}) => {
         dispatch(setUserProfileData([]));
         dispatch(setLaterButtonData(currrentdata));
         dispatch(setExperience(true));
-        navigation.navigate('CustomWorkout');
+        ChallengesDataAPI()
+        //navigation.navigate('CustomWorkout');
+        getCustomWorkout(getUserID);
         setLoader(false);
       }
     } catch (error) {
       console.log('User Profile Error', error);
       setLoader(false);
+      getCustomWorkout(getUserID);
+      ChallengesDataAPI()
+    }
+  };
+
+  const getCustomWorkout = async data => {
+    try {
+      const data = await axios.get(
+        `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${data}`,
+      );
+
+      if (data?.data?.msg != 'data not found.') {
+        dispatch(setCustomWorkoutData(data?.data?.data));
+        navigation.navigate('CustomWorkout');
+      } else {
+        dispatch(setCustomWorkoutData([]));
+          navigation.navigate('CustomWorkout');
+      }
+    } catch (error) {
+      console.log('Custom Workout Error', error);
+      dispatch(setCustomWorkoutData([]));
+      navigation.navigate('CustomWorkout');
+    }
+  };
+  const ChallengesDataAPI = async () => {
+    try {
+      const res = await axios({
+        url:
+          NewAppapi.GET_CHALLENGES_DATA +
+          '?version=' +
+          VersionNumber.appVersion,
+      });
+      if(res.data?.msg != 'version  is required'){
+        dispatch(setChallengesData(res.data))
+      }else{
+        dispatch(setChallengesData([]))
+      }
+    } catch (error) {
+      console.error(error, 'ChallengesDataAPI ERRR');
     }
   };
   return (
     <View style={styles.Container}>
-      <ProgressBar Type screen={screen} ExperienceScreen/>
+      <ProgressBar Type screen={screen} ExperienceScreen />
       <Bulb screen={'Please choose one'} />
       {Loader ? <ActivityLoader /> : null}
       <View style={{marginTop: DeviceHeigth * 0.06}}>

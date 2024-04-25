@@ -38,7 +38,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
               style={{
                 width: '95%',
                 borderRadius: 10,
-                backgroundColor: '#FDFDFD',
+                backgroundColor: AppColor.WHITE,
                 marginVertical: 8,
                 flexDirection: 'row',
                 alignSelf: 'center',
@@ -48,18 +48,31 @@ const FocuseWorkoutList = ({navigation, route}) => {
                 padding: 5,
                 borderColor: '#D9D9D9',
                 borderWidth: 1,
-                shadowColor: 'rgba(0, 0, 0, 1)',
-                ...Platform.select({
-                  ios: {
-                    shadowColor: '#000000',
-                    shadowOffset: {width: 0, height: 2},
-                    shadowOpacity: 0.1,
-                    shadowRadius: 4,
-                  },
-                  android: {
-                    elevation: 4,
-                  },
-                }),
+
+              shadowColor: 'rgba(0, 0, 0, 1)',
+              ...Platform.select({
+                ios: {
+                  //shadowColor: '#000000',
+                  shadowOffset: {width: 0, height: 2},
+                  shadowOpacity: 0.3,
+                  shadowRadius: 4,
+                },
+                android: {
+                  elevation: 3,
+                },
+              }),
+                // shadowColor: 'rgba(0, 0, 0, 1)',
+                // ...Platform.select({
+                //   ios: {
+                //     shadowColor: '#000000',
+                //     shadowOffset: {width: 0, height: 2},
+                //     shadowOpacity: 0.1,
+                //     shadowRadius: 4,
+                //   },
+                //   android: {
+                //     elevation: 4,
+                //   },
+                // }),
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
