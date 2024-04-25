@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {useIsFocused} from '@react-navigation/native';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import RenderHTML from 'react-native-render-html';
 import Tts from 'react-native-tts';
 import {useSelector, useDispatch} from 'react-redux';
@@ -103,13 +103,14 @@ const WorkoutDetail = ({navigation, route}) => {
             <Text
               style={{
                 fontSize: 24,
-                fontFamily: 'Poppins-SemiBold',
+                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                 color: AppColor.BLACK,
               }}>
               {data?.workout_title || data?.exercise_title}
             </Text>
             <Text />
-            <ScrollView>
+            <ScrollView
+            showsVerticalScrollIndicator={false}>
             {data?.workout_description ? (
               <RenderHTML
                 source={{html: data?.workout_description}}

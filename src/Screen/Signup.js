@@ -126,7 +126,7 @@ const Signup = ({navigation}) => {
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // alert('Cancel');
-        setCancelLogin(true)
+        setCancelLogin(true);
       } else if (error.code === statusCodes.IN_PROGRESS) {
         alert('Signin in progress');
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
@@ -141,7 +141,7 @@ const Signup = ({navigation}) => {
       function (result) {
         if (result.isCancelled) {
           // alert('Cancel');
-          setCancelLogin(true)
+          setCancelLogin(true);
         } else {
           const currentProfile = Profile.getCurrentProfile().then(function (
             currentProfile,
@@ -270,7 +270,7 @@ const Signup = ({navigation}) => {
       });
 
       setForLoading(false);
-   
+
       if (data?.data?.status == 0) {
         setForLoading(false);
         showMessage({
@@ -332,7 +332,7 @@ const Signup = ({navigation}) => {
           platform: Platform.OS,
         },
       });
-
+    
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
@@ -375,6 +375,19 @@ const Signup = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         await GoogleSignin.signOut();
+      } else if (
+        data.data?.msg == 'User already exists via other authentication'
+      ) {
+        setForLoading(false);
+
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        await GoogleSignin.signOut();
       } else {
         setForLoading(false);
 
@@ -390,19 +403,19 @@ const Signup = ({navigation}) => {
   };
   const socialFacebookLogiIn = async value => {
     analytics().logEvent('CV_FITME_FACEBOOK_SIGNUP');
-   // setForLoading(true);
-       const   data= {
-          name: value.name,
-          email: value.email,
-          signuptype: 'social',
-          socialid: value.userID,
-          socialtoken: '',
-          socialtype: 'facebook',
-          // deviceid: deviceId,
-          version: appVersion,
-          devicetoken: getFcmToken,
-          platform: Platform.OS,
-        }
+    // setForLoading(true);
+    const data = {
+      name: value.name,
+      email: value.email,
+      signuptype: 'social',
+      socialid: value.userID,
+      socialtoken: '',
+      socialtype: 'facebook',
+      // deviceid: deviceId,
+      version: appVersion,
+      devicetoken: getFcmToken,
+      platform: Platform.OS,
+    };
 
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
@@ -412,10 +425,10 @@ const Signup = ({navigation}) => {
         },
         data: {
           name: value.name,
-          email: value.email==undefined?'NULL':value.email,
+          email: value.email == undefined ? 'NULL' : value.email,
           signuptype: 'social',
           socialid: value.userID,
-          socialtoken: "",
+          socialtoken: '',
           socialtype: 'facebook',
           // deviceid: deviceId,
           version: appVersion,
@@ -424,7 +437,7 @@ const Signup = ({navigation}) => {
         },
       });
       setForLoading(false);
-  
+
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
@@ -465,7 +478,21 @@ const Signup = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      } else {
+      }else if (
+        data.data?.msg == 'User already exists via other authentication'
+      ) {
+        setForLoading(false);
+
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        await GoogleSignin.signOut();
+      }
+       else {
         setForLoading(false);
 
         dispatch(setUserId(data.data?.id));
@@ -929,7 +956,7 @@ const Signup = ({navigation}) => {
             />
             <Text
               style={{
-                fontSize:20,
+                fontSize: 20,
                 fontWeight: '700',
                 color: '#202020',
                 marginTop: 10,
@@ -944,7 +971,6 @@ const Signup = ({navigation}) => {
                 color: '#202020',
                 marginTop: 15,
                 fontFamily: 'Montserrat-SemiBold',
-
               }}>
               {`Login/Sign Up`}
             </Text>
@@ -995,7 +1021,6 @@ const Signup = ({navigation}) => {
           </View>
         </View>
       </Modal>
-     
     );
   };
   return (
@@ -1243,7 +1268,9 @@ const Signup = ({navigation}) => {
                       By continuing you accept our{' '}
                       <Text
                         onPress={() => {
-                          navigationRef.navigate('TermaAndCondition',{title:'Privacy & Policy'});
+                          navigationRef.navigate('TermaAndCondition', {
+                            title: 'Privacy & Policy',
+                          });
                         }}
                         style={styles.policyText1}>
                         Privacy Policy
@@ -1252,7 +1279,9 @@ const Signup = ({navigation}) => {
                       <Text
                         style={styles.policyText1}
                         onPress={() => {
-                          navigationRef.navigate('TermaAndCondition',{title:'Terms & Condition'});
+                          navigationRef.navigate('TermaAndCondition', {
+                            title: 'Terms & Condition',
+                          });
                         }}>
                         {' '}
                         Terms of use
@@ -1293,8 +1322,8 @@ const Signup = ({navigation}) => {
           />
         </View>
       </ScrollView>
-     
-      <LoginCancelModal/>
+
+      <LoginCancelModal />
     </SafeAreaView>
   );
 };

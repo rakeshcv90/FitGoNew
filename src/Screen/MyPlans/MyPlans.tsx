@@ -340,9 +340,9 @@ const MyPlans = ({navigation}: any) => {
       const res = await axios({
         url: NewAppapi.WEEKLY_STATUS + '?user_id=' + getUserDataDetails.id,
       });
-      if (res.data?.msg != 'No data found.') {
+      if (res?.data?.msg != 'No data found.') {
         const days = new Set(); // Use a Set to store unique days
-        res.data?.forEach((item: any) => {
+        res?.data?.forEach((item: any) => {
           days.add(item.user_day);
         });
         console.log('DAYs', days);
