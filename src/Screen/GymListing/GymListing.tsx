@@ -10,12 +10,6 @@ import {
   View,
 } from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {
-  PERMISSIONS,
-  request,
-  RESULTS,
-  requestMultiple,
-} from 'react-native-permissions';
 import {useFocusEffect} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColor, Fonts} from '../../Component/Color';
@@ -34,7 +28,6 @@ type Coordinates = {
 };
 
 const GymListing = ({navigation}: any) => {
-  const [locationP, setLocationP] = useState(false);
   const [loader, setLoader] = useState(false);
   const [coords, setCoords] = useState<Coordinates>({
     latitude: -1,
@@ -43,36 +36,9 @@ const GymListing = ({navigation}: any) => {
   const [gymsData, setGymsData] = useState([]);
   useFocusEffect(
     useCallback(() => {
-      locationPermission();
-      GetGymsAPI(coords);
+      getCurrentLocation();
     }, []),
   );
-  const locationPermission = () => {
-    Platform.OS == 'ios'
-      ? request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then(async result => {
-          if (result === RESULTS.GRANTED) {
-            console.log('Location permission granted IOS');
-            setLocationP(true);
-            getCurrentLocation();
-          } else {
-            setLocationP(false);
-            console.log('Location permission denied IOS', result);
-          }
-        })
-      : requestMultiple([
-          PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
-          PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-        ]).then(async (result: any) => {
-          if (result['android.permission.ACCESS_FINE_LOCATION'] == 'granted') {
-            console.log('Location permission granted Android');
-            setLocationP(true);
-            getCurrentLocation();
-          } else {
-            setLocationP(false);
-            console.log('Location permission denied Android');
-          }
-        });
-  };
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
       position => {
@@ -108,7 +74,7 @@ const GymListing = ({navigation}: any) => {
       });
 
       if (res?.data?.msg != 'No data found') {
-        setGymsData(res.data?.nearby_gyms);
+        setGymsData([]);
       } else {
         showMessage({
           message: res?.data?.msg,
@@ -128,10 +94,13 @@ const GymListing = ({navigation}: any) => {
   };
   const openGoogleMaps = async (location: any) => {
     try {
-      var scheme = Platform.OS === 'ios' ? 'http://maps.apple.com/?daddr=' : 'google.navigation:q=';
+      var scheme =
+        Platform.OS === 'ios'
+          ? 'http://maps.apple.com/?daddr='
+          : 'google.navigation:q=';
       var url = scheme + `${location.latitude},${location.longitude}`;
       // var url = scheme + `${location.latitude},${location.longitude}`+ "?q=" +location.center_name;
-      console.log(url)
+      console.log(url);
       await Linking.openURL(url);
     } catch (error) {
       console.log('OPEN APP ERRR', error);
@@ -269,25 +238,33 @@ const GymListing = ({navigation}: any) => {
           flex: 1,
           marginHorizontal: 10,
         }}>
-        {gymsData?.length > 0 ? (
+        {loader ? (
+          <ActivityLoader visible={loader} />
+        ) : (
           <FlatList
             data={gymsData}
             contentContainerStyle={{
               justifyContent: 'center',
             }}
             renderItem={renderItem}
+            ListEmptyComponent={
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={styles.heading}
+                  onPress={() => Linking.openSettings()}>
+                  Currently, No Gyms available in your location
+                </Text>
+              </View>
+            }
             showsVerticalScrollIndicator={false}
           />
-        ) : (
-          <View
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text style={styles.heading}>
-              Currently, No Gyms available in your location
-            </Text>
-          </View>
         )}
       </View>
-      <ActivityLoader visible={loader} />
     </SafeAreaView>
   );
 };

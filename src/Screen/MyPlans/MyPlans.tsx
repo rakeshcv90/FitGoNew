@@ -32,6 +32,7 @@ import Timer from '../../Component/Timer';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   setAllWorkoutData,
+  setCurrentSelectedDay,
   setVideoLocation,
   setWeeklyPlansData,
 } from '../../Component/ThemeRedux/Actions';
@@ -42,7 +43,7 @@ import {MyPLans} from '../../Navigation/BottomTab';
 import {Path, Svg} from 'react-native-svg';
 import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
 
-export let handleStart = () => {};
+export let handleStart = (currentSlectedDay: any) => {};
 
 const WeekArray = Array(7)
   .fill(0)
@@ -262,6 +263,7 @@ const MyPlans = ({navigation}: any) => {
     useCallback(() => {
       WeeklyStatusAPI();
       allWorkoutApi1();
+      dispatch(setCurrentSelectedDay(selectedDay))
     }, [selectedDay]),
   );
 
@@ -386,21 +388,21 @@ const MyPlans = ({navigation}: any) => {
     dispatch(setVideoLocation(StoringData));
   };
   let datas = [];
-  handleStart = () => {
+  handleStart = currentSelectedDay => {
     Promise.all(
-      getWeeklyPlansData[WeekArray[selectedDay]]?.map(
+      getWeeklyPlansData[WeekArray[currentSelectedDay]]?.map(
         (item: any, index: number) => {
           return downloadVideos(
             item,
             index,
-            getWeeklyPlansData[WeekArray[selectedDay]]?.length,
+            getWeeklyPlansData[WeekArray[currentSelectedDay]]?.length,
           );
         },
       ),
-    ).finally(beforeNextScreen);
+    ).finally(() => beforeNextScreen(currentSelectedDay));
   };
 
-  const beforeNextScreen = async () => {
+  const beforeNextScreen = async (selectedDay: any) => {
     for (const item of getWeeklyPlansData[WeekArray[selectedDay]]) {
       datas.push({
         user_id: getUserDataDetails?.id,
@@ -432,13 +434,13 @@ const MyPlans = ({navigation}: any) => {
           type: 'weekly',
         });
       } else {
-        toNextScreen();
+        toNextScreen(selectedDay);
       }
     } catch (error) {
       console.error(error, 'PostDaysAPIERror');
     }
   };
-  const toNextScreen = async () => {
+  const toNextScreen = async (selectedDay: any) => {
     setDownloade(false);
     const payload = new FormData();
     payload.append('user_id', getUserDataDetails?.id);
@@ -496,11 +498,13 @@ const MyPlans = ({navigation}: any) => {
         if (dx > 50) {
           // Swiped right
           setSelectedDay(prevDay => (prevDay > 0 ? prevDay - 1 : 0));
+          dispatch(setCurrentSelectedDay(selectedDay))
         } else if (dx < -50) {
           // Swiped left
           setSelectedDay(prevDay =>
             prevDay < WeekArray.length - 1 ? prevDay + 1 : WeekArray.length - 1,
-          );
+            );
+            dispatch(setCurrentSelectedDay(selectedDay))
         } else if (dy > 50) {
           allWorkoutApi(WeekArray[selectedDay]);
           WeeklyStatusAPI();
