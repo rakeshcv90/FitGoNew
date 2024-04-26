@@ -49,7 +49,7 @@ const PercentageBar = ({
                 : -DeviceHeigth * 0.037,
           }}>
           <Text style={{textAlign: 'center', color: 'white'}}>
-            {percentage}
+            {percentage?.split('%')[0] == 'NAN' ? percentage : '0%'}
           </Text>
         </View>
       </View>
