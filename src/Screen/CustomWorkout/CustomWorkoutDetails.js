@@ -114,7 +114,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data?.user_details) {
-        console.log('dsfsdfdsfsdfdsfdsfsdfsdfsdfdsf', res?.data);
+       
         setTrackerData(res.data?.user_details);
       } else {
      

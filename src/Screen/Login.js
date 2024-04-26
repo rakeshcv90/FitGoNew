@@ -130,7 +130,6 @@ const Login = ({navigation}) => {
           platform: Platform.OS,
         },
       });
-console.log("ADsadasdasdsad",data.data)
       if (data.data.profile_status == 1) {
         showMessage({
           message: data.data.msg,
@@ -151,7 +150,8 @@ console.log("ADsadasdasdsad",data.data)
         'User does not exist with provided Google social credentials'
       ) {
         showMessage({
-          message: 'You need to Signup first/Your Email Not Signup with Goole-login',
+          message:
+            'You need to Signup first/Your Email Not Signup with Goole-login',
           type: 'danger',
           animationDuration: 1000,
           floating: true,
@@ -422,7 +422,7 @@ console.log("ADsadasdasdsad",data.data)
           });
           setEmail('');
           setPassword('');
-           getProfileData(data.data.id, data.data.profile_status);
+          getProfileData(data.data.id, data.data.profile_status);
           getCustomWorkout(data.data.id);
           Meal_List(data.data.login_token);
           PurchaseDetails(data.data.id, data.data.login_token);
@@ -623,14 +623,12 @@ console.log("ADsadasdasdsad",data.data)
 
   const getCustomWorkout = async user_id => {
     try {
-
       const data = await axios.get(
         `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${user_id}`,
       );
 
-   
       if (data?.data?.msg != 'data not found.') {
-        setForLoading(false); 
+        setForLoading(false);
         dispatch(setCustomWorkoutData(data?.data?.data));
       } else {
         setForLoading(false);
