@@ -40,7 +40,7 @@ const intialState = {
   getExperience:false,
   getChallengesData:[],
   getWeeklyPlansData: {},
-  currentSelectedDay: 0
+  currentSelectedDay: 0,
   getProgressBarCounter:7
 };
 const ThemeReducer = (state = intialState, action) => {
