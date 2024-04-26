@@ -14,7 +14,6 @@ const intialState = {
   getHealthData: [],
   currentWorkoutData: [],
   allWorkoutData: [],
-  getUserDataDetails: [],
   mindsetConsent: false,
   showLogout: 0,
   mealData: [],
@@ -77,8 +76,8 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, currentWorkoutData: action.payload};
     case types.ALL_WORKOUTS_DATA:
       return {...state, allWorkoutData: action.payload};
-    case types.User_Profile_Data:
-      return {...state, getUserDataDetails: action.payload};
+    // case types.User_Profile_Data:
+    //   return {...state, getUserDataDetails: action.payload};
     case types.ALL_MEAL_DATA:
       return {...state, mealData: action.payload};
     case types.LogOut:

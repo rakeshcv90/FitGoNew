@@ -41,9 +41,7 @@ const CreateWorkout = ({navigation, route}) => {
   const [value, setValue] = useState(0);
   const animation = useSharedValue(0);
   const completeProfileData = useSelector(state => state.completeProfileData);
-  const {
-    getUserID,
-  } = useSelector(state => state);
+  const {getUserID} = useSelector(state => state);
   const [bodyPart, setBodyPart] = useState(
     completeProfileData?.focusarea[0].bodypart_title,
   );
@@ -58,8 +56,9 @@ const CreateWorkout = ({navigation, route}) => {
   });
   useEffect(() => {
     const datalist = getAllExercise?.filter(listdata => {
-      return listdata.exercise_equipment == bodyPart;
+      return listdata.exercise_bodypart == bodyPart;
     });
+  
     setWorkoutList(datalist);
     setFilteredCategories(datalist);
   }, [bodyPart]);
@@ -244,7 +243,7 @@ const CreateWorkout = ({navigation, route}) => {
       payload.append('workout_name', route?.params?.workoutTitle);
       payload.append('user_id', getUserDataDetails?.id);
       payload.append('id', getUserID != 0 ? getUserID : null);
-      console.log('Payload--->',payload)
+      console.log('Payload--->', payload);
       try {
         const res = await axios(`${NewAppapi.USER_CUSTOM_WORKOUT}`, {
           data: payload,

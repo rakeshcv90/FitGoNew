@@ -15,6 +15,8 @@ import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {useDispatch, useSelector} from 'react-redux';
 
 import { setExperience } from '../ThemeRedux/Actions';
+import { navigationRef } from '../../../App';
+
 const NewHeader = ({header, backButton, SearchButton}) => {
   const navigation = useNavigation();
 const getExperience=useSelector(state=>state.getExperience)
@@ -40,6 +42,7 @@ const dispatch=useDispatch()
       ) : (
         <TouchableOpacity
           onPress={() => {
+      
           if(getExperience==true){
             dispatch(setExperience(false))
             navigation.dispatch(
@@ -48,8 +51,9 @@ const dispatch=useDispatch()
                 routes:[{name:'BottomTab'}]
               })
             );
-            
-          }else{
+           // navigationRef.current.navigate('BottomTab',{screen:'Home'})
+          }
+          else{
            navigation.goBack()
           }
           }}>

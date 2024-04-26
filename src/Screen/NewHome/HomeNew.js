@@ -236,7 +236,7 @@ const HomeNew = ({navigation}) => {
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
         const result = analyzeExerciseData(res.data?.user_details);
-        console.log('dsfsdfsdfewtrd', result);
+      
         if (result.two.length == 0) {
           let day = parseInt(result.one[result.one.length - 1]);
           for (const item of Object.entries(data?.days)) {
@@ -636,6 +636,7 @@ const HomeNew = ({navigation}) => {
       //  setRefresh(true);
       const payload = new FormData();
       payload.append('id', getUserDataDetails?.id);
+   
       payload.append('version', VersionNumber.appVersion);
       const res = await axios({
         url: NewAppapi.ALL_WORKOUTS,
