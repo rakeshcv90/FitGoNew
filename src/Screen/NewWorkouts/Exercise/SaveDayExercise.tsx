@@ -9,11 +9,18 @@ import GradientButton from '../../../Component/GradientButton';
 import analytics from '@react-native-firebase/analytics';
 import {ReviewApp} from '../../../Component/ReviewApp';
 import axios from 'axios';
+import {setChallengesData} from '../../../Component/ThemeRedux/Actions';
+import {useDispatch, useSelector} from 'react-redux';
+import VersionNumber, {appVersion} from 'react-native-version-number';
 
 const SaveDayExercise = ({navigation, route}: any) => {
   const {data, day, allExercise, type, challenge} = route?.params;
   let fire, clock, action;
 
+  const dispatch = useDispatch();
+  const getUserDataDetails = useSelector(
+    (state: any) => state.getUserDataDetails,
+  );
   if (type == 'day') {
     for (const d in data?.days) {
       if (d.split('day_')[1] == day) {
@@ -48,11 +55,33 @@ const SaveDayExercise = ({navigation, route}: any) => {
       console.log('UCustomeCorkout details', error);
     }
   };
+
+  const ChallengesDataAPI = async () => {
+    try {
+      const res = await axios({
+        url:
+          NewAppapi.GET_CHALLENGES_DATA +
+          '?version=' +
+          VersionNumber.appVersion +
+          '&user_id=' +
+          getUserDataDetails?.id,
+      });
+      if (res.data?.msg != 'version  is required') {
+        dispatch(setChallengesData(res.data));
+      } else {
+        dispatch(setChallengesData([]));
+      }
+      navigation.navigate('WorkoutDays', {data, challenge});
+    } catch (error) {
+      console.error(error, 'ChallengesDataAPI ERRR');
+      navigation.navigate('WorkoutDays', {data, challenge});
+    }
+  };
   const onPresh = () => {
     type == 'custom'
       ? navigation.navigate('CustomWorkoutDetails', {item: data})
       : challenge
-      ? navigation.navigate('WorkoutDays', {data, challenge})
+      ? ChallengesDataAPI()
       : navigation.navigate('DayRewards', {data, day});
   };
   return (

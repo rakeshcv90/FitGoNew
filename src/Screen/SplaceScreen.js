@@ -58,7 +58,7 @@ const SplaceScreen = ({navigation}) => {
       getCustomWorkout();
     dispatch(setFitmeAdsCount(0));
     initInterstitial();
-    getAllExerciseData();
+    // getAllExerciseData();
     ChallengesDataAPI()
   }, []);
 
@@ -256,26 +256,26 @@ const SplaceScreen = ({navigation}) => {
       console.log(error);
     }
   };
-  const getAllExerciseData = async () => {
-    try {
-      const exerciseData = await axios.get(
-        `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}`,
-      );
+  // const getAllExerciseData = async () => {
+  //   try {
+  //     const exerciseData = await axios.get(
+  //       `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}`,
+  //     );
 
-      if (
-        exerciseData?.data?.msg == 'Please update the app to the latest version'
-      ) {
-        dispatch(setAllExercise([]));
-      } else if (exerciseData?.data?.length > 0) {
-        dispatch(setAllExercise(exerciseData?.data));
-      } else {
-        dispatch(setAllExercise([]));
-      }
-    } catch (error) {
-      dispatch(setAllExercise([]));
-      console.log('All-EXCERSIE-ERROR', error);
-    }
-  };
+  //     if (
+  //       exerciseData?.data?.msg == 'Please update the app to the latest version'
+  //     ) {
+  //       dispatch(setAllExercise([]));
+  //     } else if (exerciseData?.data?.length > 0) {
+  //       dispatch(setAllExercise(exerciseData?.data));
+  //     } else {
+  //       dispatch(setAllExercise([]));
+  //     }
+  //   } catch (error) {
+  //     dispatch(setAllExercise([]));
+  //     console.log('All-EXCERSIE-ERROR', error);
+  //   }
+  // };
   const getCustomWorkout = async () => {
     try {
       const data = await axios.get(

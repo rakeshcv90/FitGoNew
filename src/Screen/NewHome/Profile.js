@@ -834,8 +834,6 @@ const Profile = () => {
                 navigation.navigate('NewPersonalDetails');
               } else if (value.text1 == 'Subscription') {
                 navigation.navigate('Subscription');
-              } else if (value.text1 == 'Contact Us') {
-                openMailApp();
               } else if (value.text1 == 'Privacy Policy') {
                 navigation.navigate('TermaAndCondition', {
                   title: 'Privacy & Policy',
@@ -974,7 +972,10 @@ const Profile = () => {
                   `CV_FITME_CLICKED_ON_${value?.text1?.replace(' ', '_')}`,
                 );
                 // navigation.navigate('Personal Details');
-                if (value.text1 == 'Privacy Policy') {
+                 if (value.text1 == 'Contact Us') {
+                openMailApp();
+              } 
+                else if (value.text1 == 'Privacy Policy') {
                   navigation.navigate('TermaAndCondition', {
                     title: 'Privacy & Policy',
                   });

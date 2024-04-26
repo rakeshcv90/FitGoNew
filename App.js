@@ -20,10 +20,9 @@ import {
 } from '@react-navigation/native';
 import Router, {LoginStack} from './src/Navigation/Router';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-export const navigationRef = createNavigationContainerRef();
 import {useDispatch} from 'react-redux';
 import {DeviceHeigth, DeviceWidth} from './src/Component/Config';
+import RNRestart from 'react-native-restart';
 import {
   requestPermissionforNotification,
   RemoteMessage,
@@ -34,16 +33,12 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
 import codePush from 'react-native-code-push';
 import CircularProgress from 'react-native-circular-progress-indicator';
-import {
-  initConnection,
-  endConnection,
-  flushFailedPurchasesCachedAsPendingAndroid,
-} from 'react-native-iap';
+
 import {AppColor} from './src/Component/Color';
 import {LogBox} from 'react-native';
 import {LogOut} from './src/Component/LogOut';
 import {MyInterstitialAd} from './src/Component/BannerAdd';
-
+export const navigationRef = createNavigationContainerRef();
 // also use before use code Push (appcenter login)
 // codepush release of ios , appcenter codepush release-react -a thefitnessandworkout-gmail.com/FitmeIos -d Production
 // codepush release of android  appcenter codepush release-react -a thefitnessandworkout-gmail.com/FitmeAndroid -d Production
@@ -243,6 +238,84 @@ const App = () => {
       </Modal>
     );
   };
+  // useEffect(() => {
+  //   UserAuth();
+  // }, [update]);
+  // // Checking if User is Already Login or not
+  // const UserAuth = async () => {
+  //   try {
+  //     const userData = await AsyncStorage.getItem('Data');
+  //     const data = JSON.parse(userData);
+  //     if (data) {
+  //       setIsLogged(true);
+  //       setUpdate(update + 1);
+  //       setIsLoaded(true);
+  //     } else {
+  //       setIsLogged(false);
+  //       setUpdate(update + 1);
+  //       setIsLoaded(true);
+  //     }
+  //   } catch (error) {
+  //     setIsLogged(false);
+  //     // setUpdate(update + 1)
+  //     setIsLoaded(false);
+  //   }
+  // };
+  // if (isLoaded && isLogged && isConnected) {
+  //   return (
+  //     <>
+  //       <NavigationContainer
+  //         ref={navigationRef}
+  //         onReady={() => BootSplash.hide({duration: 5000})}>
+  //         <Router />
+  //       </NavigationContainer>
+  //       <FlashMessage position="top" />
+  //     </>
+  //   );
+  // } else if (isLoaded && !isLogged && isConnected) {
+  //   return (
+  //     <>
+  //       <NavigationContainer
+  //         ref={navigationRef}
+  //         onReady={() => BootSplash.hide({duration: 5000})}>
+  //         <LoginStack />
+  //       </NavigationContainer>
+  //       <FlashMessage position="top" />
+  //     </>
+  //   );
+  // }
+  // // Will Visible When Internet is Disconnected
+  // else if (isConnected == false && isLoaded) {
+  //   return (
+  //     <View
+  //       style={[
+  //         styles.View,
+  //         {backgroundColor: defaultTheme ? '#000' : '#fff'},
+  //       ]}>
+  //       <Text style={{color: 'red', fontSize: 20}}>No Internet Connection</Text>
+  //       <Text style={{color: defaultTheme ? '#fff' : '#000'}}>
+  //         {' '}
+  //         Make sure you have connected to the Internet
+  //       </Text>
+  //       <TouchableOpacity
+  //         style={[styles.button, {backgroundColor: 'red'}]}
+  //         onPress={() => RNRestart.restart()}>
+  //         <Text
+  //           style={{
+  //             color: '#fff',
+  //             fontSize: 16,
+  //             fontFamily: 'sans-serif',
+  //             fontWeight: 'bold',
+  //           }}>
+  //           {' '}
+  //           Try Again
+  //         </Text>
+  //       </TouchableOpacity>
+  //     </View>
+  //   );
+  // } else {
+  //   return <Loader />;
+  // }
   return (
     <>
       <NavigationContainer

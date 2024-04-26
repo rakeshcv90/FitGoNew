@@ -10,28 +10,42 @@ import {
   PermissionsAndroid,
   Alert,
 } from 'react-native';
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {useSelector, useDispatch} from 'react-redux';
 import {TouchableOpacity} from 'react-native';
 import {AppColor, Fonts} from '../../Component/Color';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import {BlurView} from '@react-native-community/blur';
 import {TextInput} from 'react-native-paper';
 import {showMessage} from 'react-native-flash-message';
 import {PERMISSIONS, request} from 'react-native-permissions';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {useIsFocused} from '@react-navigation/native';
+import VersionNumber from 'react-native-version-number';
+import {setAllExercise} from '../../Component/ThemeRedux/Actions';
+import axios from 'axios';
 
-const CustomWorkout = ({navigation}) => {
+const CustomWorkout = ({navigation, route}) => {
+  const dispatch = useDispatch();
+  const routeName = route?.params?.routeName;
   const customWorkoutData = useSelector(state => state.customWorkoutData);
   const getExperience = useSelector(state => state.getExperience);
   const [isCustomWorkout, setIsCustomWorkout] = useState(false);
   const [text, setText] = React.useState('');
   const [getWorkoutAvt, setWorkoutAvt] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const isFocused = useIsFocused();
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+
+  useEffect(() => {
+    if (isFocused) {
+      getAllExerciseData();
+    }
+  }, [isFocused]);
   const askPermissionForLibrary = async permission => {
     const resultLib = await request(permission);
 
@@ -258,6 +272,26 @@ const CustomWorkout = ({navigation}) => {
     }
   };
 
+  const getAllExerciseData = async () => {
+    try {
+      const exerciseData = await axios.get(
+        `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
+      );
+
+      if (
+        exerciseData?.data?.msg == 'Please update the app to the latest version'
+      ) {
+        dispatch(setAllExercise([]));
+      } else if (exerciseData?.data?.length > 0) {
+        dispatch(setAllExercise(exerciseData?.data));
+      } else {
+        dispatch(setAllExercise([]));
+      }
+    } catch (error) {
+      dispatch(setAllExercise([]));
+      console.log('All-EXCERSIE-ERROR', error);
+    }
+  };
   return (
     <>
       <NewHeader
@@ -265,6 +299,71 @@ const CustomWorkout = ({navigation}) => {
         SearchButton={false}
         backButton={true}
       />
+      {/* <View
+        style={{
+          width: DeviceWidth,
+          backgroundColor: '#fff',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+
+          height:
+            Platform.OS == 'ios'
+              ? (DeviceHeigth * 13) / 100
+              : (DeviceHeigth * 10) / 100,
+          left: 1,
+          paddingTop:
+            Platform.OS == 'android'
+              ? DeviceHeigth * 0.03
+              : DeviceHeigth * 0.01,
+        }}>
+        <TouchableOpacity
+          onPress={() => {
+            // if (getExperience == true) {
+            //   dispatch(setExperience(false));
+            //   navigation.dispatch(
+            //     CommonActions.reset({
+            //       index: 0,
+            //       routes: [{name: 'BottomTab'}],
+            //     }),
+            //   );
+            // } else {
+            //   navigation.goBack();
+            // }
+            if (routeName=='') {
+              dispatch(setExperience(false));
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{name: 'BottomTab'}],
+                }),
+              );
+            } else {
+              navigation.goBack();
+            }
+          }}>
+          <Icons
+            name={'chevron-left'}
+            size={25}
+            color={AppColor.INPUTTEXTCOLOR}
+          />
+        </TouchableOpacity>
+        <View style={{width: 20}}></View>
+        <Text
+          style={[
+            styles.headerstyle,
+            {
+              color: AppColor.INPUTTEXTCOLOR,
+              fontFamily: 'Montserrat-SemiBold',
+              fontWeight: '700',
+
+              width: DeviceWidth * 0.8,
+              textAlign: 'center',
+            },
+          ]}>
+          Custom Workout
+        </Text>
+        <View style={{width: 25}}></View>
+      </View> */}
       <View style={styles.container}>
         <View style={[styles.meditionBox, {top: -20}]}>
           <FlatList
@@ -487,6 +586,10 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  headerstyle: {
+    fontWeight: '600',
+    fontSize: 19,
   },
 });
 export default CustomWorkout;

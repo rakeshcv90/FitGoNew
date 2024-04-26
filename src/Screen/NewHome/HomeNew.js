@@ -10,6 +10,7 @@ import {
   RefreshControl,
   Modal,
   Alert,
+  Linking,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
@@ -56,6 +57,7 @@ import {AlarmNotification} from '../../Component/Reminder';
 import notifee from '@notifee/react-native';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
+import GradientButton from '../../Component/GradientButton';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -104,6 +106,7 @@ const HomeNew = ({navigation}) => {
   const [refresh, setRefresh] = useState(false);
   const isFocused = useIsFocused();
   const [modalVisible, setModalVisible] = useState(false);
+  const [locationP, setLocationP] = useState(false);
   const getPedomterData = useSelector(state => state.getPedomterData);
   const [stepGoalProfile, setStepGoalProfile] = useState(
     getPedomterData[0] ? getPedomterData[0].RSteps : 5000,
@@ -236,7 +239,7 @@ const HomeNew = ({navigation}) => {
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
         const result = analyzeExerciseData(res.data?.user_details);
-        console.log('dsfsdfsdfewtrd', result);
+      
         if (result.two.length == 0) {
           let day = parseInt(result.one[result.one.length - 1]);
           for (const item of Object.entries(data?.days)) {
@@ -444,6 +447,126 @@ const HomeNew = ({navigation}) => {
         console.error('Authentication error', error);
       });
   };
+
+  const locationPermission = () => {
+    Platform.OS == 'ios'
+      ? request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then(async result => {
+          if (result === RESULTS.GRANTED) {
+            console.log('Location permission granted IOS');
+            setLocationP(false);
+            navigationRef.navigate('GymListing');
+            // getCurrentLocation();
+          } else {
+            setLocationP(true);
+            console.log('Location permission denied IOS', result);
+          }
+        })
+      : requestMultiple([
+          PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
+          PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        ]).then(async result => {
+          if (result['android.permission.ACCESS_FINE_LOCATION'] == 'granted') {
+            console.log('Location permission granted Android');
+            setLocationP(false);
+            navigationRef.navigate('GymListing');
+            // getCurrentLocation();
+          } else {
+            setLocationP(true);
+            console.log('Location permission denied Android');
+          }
+        });
+  };
+  const PermissionModal = ({locationP, setLocationP}) => {
+    return (
+      <Modal
+        visible={locationP}
+        onRequestClose={() => setLocationP(false)}
+        transparent>
+        <BlurView
+          style={styles.modalContainer}
+          blurType="light"
+          blurAmount={1}
+          reducedTransparencyFallbackColor="white">
+          <View
+            style={{
+              height: DeviceWidth,
+              width: DeviceWidth * 0.8,
+              backgroundColor: AppColor.WHITE,
+              borderRadius: 10,
+              padding: 10,
+              alignItems: 'center',
+              shadowColor: 'rgba(0, 0, 0, 1)',
+              ...Platform.select({
+                ios: {
+                  shadowColor: '#000000',
+                  shadowOffset: {width: 0, height: 1},
+                  shadowOpacity: 0.1,
+                  shadowRadius: 4,
+                },
+                android: {
+                  elevation: 4,
+                },
+              }),
+            }}>
+            <Text
+              style={{
+                fontSize: 20,
+                color: AppColor.LITELTEXTCOLOR,
+                fontWeight: '700',
+                fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                lineHeight: 30,
+                marginTop: DeviceWidth * 0.05,
+              }}>
+              Enable Your Location
+            </Text>
+            <AnimatedLottieView
+              source={require('../../Icon/Images/NewImage2/Location.json')}
+              speed={2}
+              autoPlay
+              loop
+              resizeMode="contain"
+              style={{
+                width: DeviceWidth * 0.3,
+                height: DeviceHeigth * 0.15,
+              }}
+            />
+            <Text
+              style={{
+                fontSize: 16,
+                color: AppColor.HEADERTEXTCOLOR,
+                fontWeight: '600',
+                fontFamily: Fonts.MONTSERRAT_REGULAR,
+                lineHeight: 20,
+                textAlign: 'center',
+                marginHorizontal: DeviceWidth * 0.1,
+              }}>
+              Please allow us to access your location services
+            </Text>
+            <GradientButton
+              text="Enable Location Services"
+              onPress={() => {
+                Linking.openSettings().finally(() => {
+                  setLocationP(false);
+                  locationP();
+                });
+              }}
+              // flex={0.3}
+              w={DeviceWidth * 0.7}
+              mB={-DeviceWidth * 0.1}
+              alignSelf
+            />
+            <GradientButton
+              text="Do not allow"
+              flex={0}
+              w={DeviceWidth * 0.7}
+              alignSelf
+              onPress={() => setLocationP(false)}
+            />
+          </View>
+        </BlurView>
+      </Modal>
+    );
+  };
   const checkPermissions = async () => {
     const fitnessPermissionResult = await check(
       PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
@@ -636,6 +759,7 @@ const HomeNew = ({navigation}) => {
       //  setRefresh(true);
       const payload = new FormData();
       payload.append('id', getUserDataDetails?.id);
+   
       payload.append('version', VersionNumber.appVersion);
       const res = await axios({
         url: NewAppapi.ALL_WORKOUTS,
@@ -1170,7 +1294,7 @@ const HomeNew = ({navigation}) => {
                 </View>
                 <View
                   style={{
-                    width: DeviceHeigth >= 1024 ? '97%' : '85%',
+                    width: DeviceHeigth >= 1024 ? '97%' : '82%',
                     alignSelf: 'center',
                     top: 15,
                   }}>
@@ -1195,7 +1319,7 @@ const HomeNew = ({navigation}) => {
                       top: 5,
                       color: AppColor.HEADERTEXTCOLOR,
                     }}>
-                    You have to do 30 Push
+                    {currentChallenge[0]?.sub_title}
                   </Text>
                   <View
                     style={{
@@ -1499,7 +1623,7 @@ const HomeNew = ({navigation}) => {
           }}>
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => navigationRef.navigate('GymListing')}
+            onPress={locationPermission}
             style={
               {
                 //  backgroundColor: AppColor.WHITE,
@@ -1889,6 +2013,7 @@ const HomeNew = ({navigation}) => {
         </View>
       </ScrollView>
       {modalVisible ? <UpdateGoalModal /> : null}
+      <PermissionModal locationP={locationP} setLocationP={setLocationP} />
     </SafeAreaView>
   );
 };

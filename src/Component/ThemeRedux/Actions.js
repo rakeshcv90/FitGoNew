@@ -229,6 +229,13 @@ export const setAllExercise = data => {
     payload: data,
   };
 };
+export const setCurrentSelectedDay = data => {
+  return {
+    type: types.CURRENT_SELECTED_DAY,
+
+    payload: data,
+  };
+};
 export const setExperience=data=>{
   return{
     type:types.IS_EXPERIENCED,

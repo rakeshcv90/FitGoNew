@@ -14,7 +14,6 @@ const intialState = {
   getHealthData: [],
   currentWorkoutData: [],
   allWorkoutData: [],
-  getUserDataDetails: [],
   mindsetConsent: false,
   showLogout: 0,
   mealData: [],
@@ -41,6 +40,7 @@ const intialState = {
   getExperience:false,
   getChallengesData:[],
   getWeeklyPlansData: {},
+  currentSelectedDay: 0
   getProgressBarCounter:7
 };
 const ThemeReducer = (state = intialState, action) => {
@@ -78,8 +78,8 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, currentWorkoutData: action.payload};
     case types.ALL_WORKOUTS_DATA:
       return {...state, allWorkoutData: action.payload};
-    case types.User_Profile_Data:
-      return {...state, getUserDataDetails: action.payload};
+    // case types.User_Profile_Data:
+    //   return {...state, getUserDataDetails: action.payload};
     case types.ALL_MEAL_DATA:
       return {...state, mealData: action.payload};
     case types.LogOut:
@@ -210,6 +210,11 @@ const ThemeReducer = (state = intialState, action) => {
         return{
           ...state,
           getAllExercise:action.payload
+        }
+      case types.CURRENT_SELECTED_DAY:
+        return{
+          ...state,
+          currentSelectedDay:action.payload
         }
         case types.IS_EXPERIENCED:
           return{

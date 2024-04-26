@@ -289,7 +289,7 @@ const Workouts = ({navigation}: any) => {
             marginVertical: DeviceHeigth * 0.015,
           }}>
           <ImageBackground
-            source={require('../../Icon/Images/product_1631791758.jpg')}
+         source={{uri: item?.workout_image_link}}
             style={{
               width: DeviceWidth * 0.95,
               height: DeviceHeigth * 0.35,
@@ -357,7 +357,7 @@ const Workouts = ({navigation}: any) => {
                     fontWeight: '600',
                     fontSize: 18,
                     color: AppColor.WHITE,
-                  }}>{`Daily 50 Crunches`}</Text>
+                  }}>{item?.sub_title}</Text>
               </View>
             </LinearGradient>
           </ImageBackground>
@@ -557,14 +557,15 @@ const Workouts = ({navigation}: any) => {
                         width: '100%',
 
                         borderRadius: 20,
-                        marginVertical: 25,
+                        marginVertical: 15,
                         paddingVertical: 15,
                         justifyContent: 'center',
                       }}>
                       <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
-                          navigation.navigate('CustomWorkout');
+                        
+                          navigation.navigate('CustomWorkout',{routeName:'Beginner'});
                         }}
                         style={
                           {
@@ -645,7 +646,7 @@ const Workouts = ({navigation}: any) => {
                     <View
                       style={[
                         styles.meditionBox,
-                        {alignItems: 'center', marginVertical: 15},
+                        {alignItems: 'center', marginVertical: 5},
                       ]}>
                       <FlatList
                         data={catogery}
@@ -711,7 +712,7 @@ const Workouts = ({navigation}: any) => {
                       style={[
                         styles.meditionBox,
                         {
-                          marginVertical: DeviceHeigth * 0.0,
+                          marginVertical: -DeviceHeigth * 0.015,
                           alignItems: 'center',
                         },
                       ]}>

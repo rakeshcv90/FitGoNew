@@ -6,12 +6,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import {AnimatedTabBarNavigator} from 'react-native-animated-nav-tab-bar';
+
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {BottomTabBarHeightContext} from '@react-navigation/bottom-tabs';
-import Home from '../Screen/NewHome/Home';
-import GradientText from '../Component/GradientText';
-import Store from '../Screen/NewHome/Store';
 
 import Workouts from '../Screen/NewHome/Workouts';
 
@@ -28,7 +24,7 @@ import {AppColor, Fonts} from '../Component/Color';
 import {setFitmeAdsCount} from '../Component/ThemeRedux/Actions';
 import MyPlans, {handleStart} from '../Screen/MyPlans/MyPlans';
 import GradientButton from '../Component/GradientButton';
-import {local} from 'd3';
+
 import {localImage} from '../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import HomeNew from '../Screen/NewHome/HomeNew';
@@ -41,17 +37,18 @@ const AnimatedRect = Animated.createAnimatedComponent(Rect);
 export const MyPLans = ({focused, onPress}) => {
   const [startAnimation, setStartAnimation] = useState(false);
   const progressAnimation = useRef(new Animated.Value(0)).current;
+  const currentSelectedDay = useSelector(state => state.currentSelectedDay);
   useEffect(() => {
     if (startAnimation) {
-      onPress();
+      onPress(currentSelectedDay);
       Animated.timing(progressAnimation, {
         toValue: 1,
-        duration: 2000,
+        duration: 3000,
         useNativeDriver: false,
       }).start(() => {
         progressAnimation.setValue(0);
         setStartAnimation(false);
-      })
+      });
     }
   }, [startAnimation]);
 
@@ -119,9 +116,11 @@ export const MyPLans = ({focused, onPress}) => {
               height="60"
               fill="grey" // You can change the fill color here
               clipPath="url(#clip)"
-              style={{
-                // transform: [{translateY: 60}, {scaleY: -1}], // Flip the rectangle to fill from bottom to top
-              }}
+              style={
+                {
+                  // transform: [{translateY: 60}, {scaleY: -1}], // Flip the rectangle to fill from bottom to top
+                }
+              }
             />
             <AnimatedRect
               x="0"

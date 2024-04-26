@@ -15,6 +15,7 @@ import {
   setExperience,
   setLaterButtonData,
   setProgressBarCounter,
+  setProgressBarCounter,
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
@@ -148,7 +149,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
   };
   // getuserDetail api
   const getProfileData = async user_id => {
-    console.log('Custom Dadadadada', user_id);
+   
     const currrentdata = [
       {
         gender: gender,
@@ -215,7 +216,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
 
       if (data?.data?.msg != 'data not found.') {
         dispatch(setCustomWorkoutData(data?.data?.data));
-        navigation.navigate('CustomWorkout');
+        navigation.navigate('CustomWorkout', {routeName: 'Exprience'});
       } else {
         dispatch(setCustomWorkoutData([]));
         navigation.navigate('CustomWorkout');
@@ -223,7 +224,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
     } catch (error) {
       console.log('Custom Workout Error', error);
       dispatch(setCustomWorkoutData([]));
-      navigation.navigate('CustomWorkout');
+      navigation.navigate('CustomWorkout', {routeName: 'Exprience'});
     }
   };
   const ChallengesDataAPI = async () => {
@@ -232,7 +233,9 @@ const AskToCreateWorkout = ({route, navigation}) => {
         url:
           NewAppapi.GET_CHALLENGES_DATA +
           '?version=' +
-          VersionNumber.appVersion,
+          VersionNumber.appVersion +
+          '&user_id=' +
+          getUserID
       });
       if (res.data?.msg != 'version  is required') {
         dispatch(setChallengesData(res.data));

@@ -54,6 +54,7 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
+  
 	<array>
 		<string>fbapi</string>
 		<string>fb-messenger-api</string>

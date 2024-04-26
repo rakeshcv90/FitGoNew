@@ -40,9 +40,7 @@ const CreateWorkout = ({navigation, route}) => {
   const [value, setValue] = useState(0);
   const animation = useSharedValue(0);
   const completeProfileData = useSelector(state => state.completeProfileData);
-  const {
-    getUserID,
-  } = useSelector(state => state);
+  const {getUserID} = useSelector(state => state);
   const [bodyPart, setBodyPart] = useState(
     completeProfileData?.focusarea[0].bodypart_title,
   );
@@ -57,8 +55,9 @@ const CreateWorkout = ({navigation, route}) => {
   });
   useEffect(() => {
     const datalist = getAllExercise?.filter(listdata => {
-      return listdata.exercise_equipment == bodyPart;
+      return listdata.exercise_bodypart == bodyPart;
     });
+  
     setWorkoutList(datalist);
     setFilteredCategories(datalist);
   }, [bodyPart]);

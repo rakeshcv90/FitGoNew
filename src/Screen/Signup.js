@@ -202,14 +202,16 @@ const Signup = ({navigation}) => {
         setForLoading(false);
 
         dispatch(setUserId(data.data?.id));
-        navigationRef.navigate('Yourself');
+        getProfileData(data.data?.id);
+        // navigationRef.navigate('Yourself');
       } else if (
         data.data.msg == 'User registered via social login' &&
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
 
-        dispatch(setUserId(data.data?.id));
+        // dispatch(setUserId(data.data?.id));
+        getProfileData(data.data?.id);
         navigationRef.navigate('Yourself');
       } else if (
         data.data.msg == 'User already exists' &&
@@ -238,7 +240,8 @@ const Signup = ({navigation}) => {
         setForLoading(false);
 
         dispatch(setUserId(data.data?.id));
-        navigationRef.navigate('Yourself');
+        getProfileData(data.data?.id);
+        // navigationRef.navigate('Yourself');
       }
     } catch (error) {
       setForLoading(false);
@@ -332,28 +335,31 @@ const Signup = ({navigation}) => {
           platform: Platform.OS,
         },
       });
-    
+      console.log('Uder Registdecvzxcvxc');
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
+        getProfileData(data.data?.id);
         dispatch(setUserId(data.data?.id));
-        navigationRef.navigate('Yourself');
+        // navigationRef.navigate('Yourself');
         await GoogleSignin.signOut();
       } else if (
         data.data.msg == 'User registered via social login' &&
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
+        getProfileData(data.data?.id);
         dispatch(setUserId(data.data?.id));
-        navigationRef.navigate('Yourself');
+        // navigationRef.navigate('Yourself');
         await GoogleSignin.signOut();
       } else if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 1
       ) {
         setForLoading(false);
+
         dispatch(setUserId(data.data?.id));
         showMessage({
           message: data.data.msg,
@@ -392,7 +398,8 @@ const Signup = ({navigation}) => {
         setForLoading(false);
 
         dispatch(setUserId(data.data?.id));
-        navigationRef.navigate('Yourself');
+        getProfileData(data.data?.id);
+        // navigationRef.navigate('Yourself');
         await GoogleSignin.signOut();
       }
     } catch (error) {
@@ -443,9 +450,9 @@ const Signup = ({navigation}) => {
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
-
+        getProfileData(data.data?.id);
         dispatch(setUserId(data.data?.id));
-        navigationRef.navigate('Yourself');
+        // navigationRef.navigate('Yourself');
       } else if (
         data.data.msg == 'User registered via social login' &&
         data.data.profile_compl_status == 0
@@ -453,7 +460,8 @@ const Signup = ({navigation}) => {
         setForLoading(false);
 
         dispatch(setUserId(data.data?.id));
-        navigationRef.navigate('Yourself');
+        getProfileData(data.data?.id);
+        // navigationRef.navigate('Yourself');
       } else if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 1
@@ -478,7 +486,7 @@ const Signup = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      }else if (
+      } else if (
         data.data?.msg == 'User already exists via other authentication'
       ) {
         setForLoading(false);
@@ -491,12 +499,12 @@ const Signup = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         await GoogleSignin.signOut();
-      }
-       else {
+      } else {
         setForLoading(false);
 
         dispatch(setUserId(data.data?.id));
-        navigationRef.navigate('Yourself');
+        getProfileData(data.data?.id);
+        // navigationRef.navigate('Yourself');
       }
     } catch (error) {
       setForLoading(false);
@@ -627,44 +635,6 @@ const Signup = ({navigation}) => {
           setForLoading(false);
           console.log('OTPERROR', error);
         }
-      }
-    };
-
-    const getProfileData = async user_id => {
-      try {
-        const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          data: {
-            id: user_id,
-            version: appVersion,
-          },
-        });
-
-        if (data.data.profile) {
-          setForLoading(false);
-          dispatch(setUserProfileData(data.data.profile));
-          navigationRef.navigate('Yourself');
-        } else if (
-          data?.data?.msg == 'Please update the app to the latest version.'
-        ) {
-          showMessage({
-            message: data?.data?.msg,
-            floating: true,
-            duration: 500,
-            type: 'danger',
-            icon: {icon: 'auto', position: 'left'},
-          });
-        } else {
-          setForLoading(false);
-          dispatch(setUserProfileData([]));
-          navigationRef.navigate('Yourself');
-        }
-      } catch (error) {
-        console.log('User Profile Error', error);
-        setForLoading(false);
       }
     };
 
@@ -915,6 +885,43 @@ const Signup = ({navigation}) => {
         </Modal>
       </View>
     );
+  };
+  const getProfileData = async user_id => {
+    try {
+      const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          id: user_id,
+          version: appVersion,
+        },
+      });
+      console.log('sdfdsfsdfsdfsd', data.data.profile);
+      if (data.data.profile) {
+        setForLoading(false);
+        dispatch(setUserProfileData(data.data.profile));
+        navigationRef.navigate('Yourself');
+      } else if (
+        data?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: data?.data?.msg,
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        setForLoading(false);
+        dispatch(setUserProfileData([]));
+        navigationRef.navigate('Yourself');
+      }
+    } catch (error) {
+      console.log('User Profile Error', error);
+      setForLoading(false);
+    }
   };
   const LoginCancelModal = () => {
     return (
