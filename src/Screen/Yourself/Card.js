@@ -10,6 +10,7 @@ import React from 'react';
 import {AppColor} from '../../Component/Color';
 import {DeviceWidth} from '../../Component/Config';
 import {GameRequestDialog} from 'react-native-fbsdk-next';
+import { opacity } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 export const Card = ({
   ItemArray,
   Ih,
@@ -72,7 +73,9 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
       },
       android: {
-        elevation: 4,
+        elevation: 5,
+        shadowColor: 'darkgrey',
+        
       },
     }),
   },

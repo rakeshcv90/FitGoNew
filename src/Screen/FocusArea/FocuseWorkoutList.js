@@ -13,6 +13,7 @@ import {localImage} from '../../Component/Image';
 const FocuseWorkoutList = ({navigation, route}) => {
   const [data, setData] = useState([]);
   const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
+  console.log('userId-->', getCustttomeTimeCal.length);
   useEffect(() => {
     setData(route?.params?.bodyexercise);
   }, [route?.params]);
@@ -33,7 +34,10 @@ const FocuseWorkoutList = ({navigation, route}) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
-                navigation.navigate('WorkoutDays', {data: item, challenge: false});
+                navigation.navigate('WorkoutDays', {
+                  data: item,
+                  challenge: false,
+                });
               }}
               style={{
                 width: '95%',
@@ -49,18 +53,18 @@ const FocuseWorkoutList = ({navigation, route}) => {
                 borderColor: '#D9D9D9',
                 borderWidth: 1,
 
-              shadowColor: 'rgba(0, 0, 0, 1)',
-              ...Platform.select({
-                ios: {
-                  //shadowColor: '#000000',
-                  shadowOffset: {width: 0, height: 2},
-                  shadowOpacity: 0.3,
-                  shadowRadius: 4,
-                },
-                android: {
-                  elevation: 3,
-                },
-              }),
+                shadowColor: 'rgba(0, 0, 0, 1)',
+                ...Platform.select({
+                  ios: {
+                    //shadowColor: '#000000',
+                    shadowOffset: {width: 0, height: 2},
+                    shadowOpacity: 0.3,
+                    shadowRadius: 4,
+                  },
+                  android: {
+                    elevation: 3,
+                  },
+                }),
                 // shadowColor: 'rgba(0, 0, 0, 1)',
                 // ...Platform.select({
                 //   ios: {
@@ -198,12 +202,17 @@ const FocuseWorkoutList = ({navigation, route}) => {
   );
 
   const getProgress = useMemo(() => (item, totalTime) => {
-    let time = getCustttomeTimeCal.filter(item1 => {
-      return item1.workout_id == item.workout_id;
-    });
+    let resulttime = 0;
+    if (getCustttomeTimeCal?.length > 0) {
+      let time = getCustttomeTimeCal.filter(item1 => {
+        return item1.workout_id == item.workout_id;
+      });
 
-    let remainingTime = time[0].totalRestTime;
-    let resulttime = ((remainingTime / totalTime) * 100).toFixed(0);
+      let remainingTime = time[0].totalRestTime;
+      resulttime = ((remainingTime / totalTime) * 100).toFixed(0);
+    } else {
+      resulttime = 0;
+    }
 
     return (
       <View>

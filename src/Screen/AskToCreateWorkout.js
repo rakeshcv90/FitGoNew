@@ -15,6 +15,7 @@ import {
   setExperience,
   setLaterButtonData,
   setProgressBarCounter,
+  setProgressBarCounter,
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
@@ -218,7 +219,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
         navigation.navigate('CustomWorkout', {routeName: 'Exprience'});
       } else {
         dispatch(setCustomWorkoutData([]));
-        navigation.navigate('CustomWorkout', {routeName: 'Exprience'});
+        navigation.navigate('CustomWorkout');
       }
     } catch (error) {
       console.log('Custom Workout Error', error);

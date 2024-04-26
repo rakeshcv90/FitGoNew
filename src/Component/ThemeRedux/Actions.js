@@ -242,3 +242,9 @@ export const setExperience=data=>{
     payload:data
   }
 }
+export const setProgressBarCounter=data=>{
+  return{
+    type:types.PROGRESS_BAR_COUNTER,
+    payload:data
+  }
+}

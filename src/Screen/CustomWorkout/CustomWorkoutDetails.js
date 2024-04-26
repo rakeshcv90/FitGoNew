@@ -462,12 +462,13 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Image
               // source={{uri: data.workout_image_link}}
-              source={localImage.Noimage}
+              source={data?.image==''?localImage.Noimage:{uri:data?.image}}
               style={{
                 width: 80,
                 height: 80,
                 justifyContent: 'center',
                 alignSelf: 'center',
+                borderRadius:10,
                 // backgroundColor:'red',
                 marginHorizontal: -7,
               }}

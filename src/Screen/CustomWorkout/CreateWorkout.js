@@ -33,7 +33,6 @@ const CreateWorkout = ({navigation, route}) => {
   const dispatch = useDispatch();
   const customWorkoutData = useSelector(state => state.customWorkoutData);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
-
   const getAllExercise = useSelector(state => state.getAllExercise);
   const [workoutList, setWorkoutList] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -225,6 +224,7 @@ const CreateWorkout = ({navigation, route}) => {
     setSelectedItems(newSelectedItems);
   };
   const submitCustomExercise = async () => {
+    // console.log("user_Id",getUserID,getUserDataDetails?.id)
     if (selectedItems.length <= 0) {
       showMessage({
         message: 'Please Select Exercise ',
@@ -241,9 +241,14 @@ const CreateWorkout = ({navigation, route}) => {
         payload.append('exercises[]', selectedItems[i]);
       }
       payload.append('workout_name', route?.params?.workoutTitle);
-      payload.append('user_id', getUserDataDetails?.id);
-      payload.append('id', getUserID != 0 ? getUserID : null);
-      console.log('Payload--->', payload);
+      payload.append('user_id', getUserDataDetails?.id)??getUserID;
+      // payload.append('id', getUserID != 0 ? getUserID : null);
+      payload.append('image', {
+        name: route?.params?.workoutImg?.fileName,
+        type: route?.params?.workoutImg?.type,
+        uri: route?.params?.workoutImg?.uri,
+      });
+      console.log('Payload--->',payload)
       try {
         const res = await axios(`${NewAppapi.USER_CUSTOM_WORKOUT}`, {
           data: payload,

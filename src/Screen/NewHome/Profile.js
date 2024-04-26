@@ -28,7 +28,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {Switch} from 'react-native-switch';
 import {useDispatch, useSelector} from 'react-redux';
-
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {
   setIsAlarmEnabled,
