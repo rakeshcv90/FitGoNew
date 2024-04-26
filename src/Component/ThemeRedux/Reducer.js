@@ -41,6 +41,7 @@ const intialState = {
   getExperience:false,
   getChallengesData:[],
   getWeeklyPlansData: {},
+  currentSelectedDay: 0
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -209,6 +210,11 @@ const ThemeReducer = (state = intialState, action) => {
         return{
           ...state,
           getAllExercise:action.payload
+        }
+      case types.CURRENT_SELECTED_DAY:
+        return{
+          ...state,
+          currentSelectedDay:action.payload
         }
         case types.IS_EXPERIENCED:
           return{
