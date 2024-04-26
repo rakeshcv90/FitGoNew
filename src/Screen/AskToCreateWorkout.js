@@ -15,7 +15,7 @@ import {
   setExperience,
   setLaterButtonData,
   setProgressBarCounter,
-  setProgressBarCounter,
+
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';

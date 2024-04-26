@@ -21,7 +21,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import PercentageBar from '../../Component/PercentageBar';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import analytics from '@react-native-firebase/analytics';
-import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import {check, request, PERMISSIONS, RESULTS, requestMultiple} from 'react-native-permissions';
 import {useIsFocused} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BackgroundService from 'react-native-background-actions';
