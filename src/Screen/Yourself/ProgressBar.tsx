@@ -4,8 +4,11 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor} from '../../Component/Color';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
-
-const ProgressBar = ({screen,ExperienceScreen}: any) => {
+import {useDispatch, useSelector} from 'react-redux';
+const ProgressBar = ({screen, ExperienceScreen}: any) => {
+  const getProgressBarCounter = useSelector(
+    state => state.getProgressBarCounter,
+  );
   return (
     <SafeAreaView
       style={{
@@ -25,7 +28,7 @@ const ProgressBar = ({screen,ExperienceScreen}: any) => {
             fontWeight: '400',
           }}>
           <Text style={{color: AppColor.RED}}>{`Step  ${screen} `}</Text>
-          {`of 7`}
+          {`of ${getProgressBarCounter}`}
         </Text>
       </View>
       <View
@@ -42,7 +45,10 @@ const ProgressBar = ({screen,ExperienceScreen}: any) => {
           start={{x: 0, y: 1}}
           end={{x: 1, y: 0}}
           style={{
-            width: screen == 0 ? '12.5%' : `${14.25 * screen}%`,
+            width:
+              screen == 0
+                ? '12.5%'
+                : `${getProgressBarCounter == 7 ? 14.25 * screen: 12.5 * screen}%`,
             height: 5,
             borderRadius: 5,
           }}

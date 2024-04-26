@@ -11,7 +11,7 @@ import ProgressBar from './Yourself/ProgressBar';
 import Bulb from './Yourself/Bulb';
 import {AppColor} from '../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../Component/Config';
-import {setLaterButtonData} from '../Component/ThemeRedux/Actions';
+import {setLaterButtonData, setProgressBarCounter} from '../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import {localImage} from '../Component/Image';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -70,6 +70,9 @@ const Experience = ({route, navigation}) => {
     setSelectedB(item?.id);
   };
   const handleButtonPress = () => {
+   if(selected?.txt!='Beginner'){
+    dispatch(setProgressBarCounter(8))
+   }
     navigation.navigate(
       selected?.txt == 'Beginner' ? 'Goal' : 'AskToCreateWorkout',
       {

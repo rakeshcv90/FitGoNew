@@ -13,7 +13,6 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 const BOX_HEIGHT = DeviceHeigth * 0.7;
 const BOX_WEIGHT = DeviceWidth * 0.7;
 const ITEM_HEIGHT = 5;
-import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
 const Scale = ({
   setActiveIndex,
@@ -79,7 +78,7 @@ const Scale = ({
             onScroll={event => {
               const startIndex = Math.floor(event.nativeEvent.contentOffset.x / ITEM_HEIGHT);
               setActiveIndex(startIndex);
-              ReactNativeHapticFeedback.trigger("soft", options);
+         
               // const endIndex = Math.ceil((y + BOX_WEIGHT) / ITEM_HEIGHT);
               // setVisibleItems(data.slice(startIndex, endIndex));
            
@@ -163,7 +162,7 @@ const Scale = ({
             onScroll={event => {
               const startIndex = Math.floor(event.nativeEvent.contentOffset.y / ITEM_HEIGHT);
               setActiveIndex(startIndex);
-              ReactNativeHapticFeedback.trigger("soft", options);
+             
             }}
             renderItem={({item, index}: any) => {
               return (

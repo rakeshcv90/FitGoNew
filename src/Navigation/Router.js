@@ -2,7 +2,7 @@ import {View, Text} from 'react-native';
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/Index';
+import Yourself from '../Screen/Yourself/index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -18,7 +18,6 @@ import MeditationRoutine from '../Screen/MeditationScreens/MeditationRoutine';
 import LogSignUp from '../Screen/LogSignUp';
 import NewEditProfile from '../Component/NewEditProfile';
 import NewPersonalDetails from '../Screen/NewPersonalDetails';
-
 import SleepDuration from '../Screen/MeditationScreens/SleepDuration';
 import MentalState from '../Screen/MeditationScreens/MentalState';
 import Alcohalinfo from '../Screen/MeditationScreens/Alcohalinfo';

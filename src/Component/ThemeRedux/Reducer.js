@@ -41,6 +41,7 @@ const intialState = {
   getExperience:false,
   getChallengesData:[],
   getWeeklyPlansData: {},
+  getProgressBarCounter:7
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -215,6 +216,11 @@ const ThemeReducer = (state = intialState, action) => {
             ...state,
             getExperience:action.payload
           }
+        case types.PROGRESS_BAR_COUNTER:
+          return{
+            ...state,
+            getProgressBarCounter:action.payload
+          }  
 
     default:
       return state;

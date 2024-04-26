@@ -29,6 +29,7 @@ import {showMessage} from 'react-native-flash-message';
 import {useIsFocused} from '@react-navigation/native';
 
 import AnimatedLottieView from 'lottie-react-native';
+import { reset } from 'react-native-track-player/lib/trackPlayer';
 const Workouts = ({navigation}: any) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
@@ -157,6 +158,7 @@ const Workouts = ({navigation}: any) => {
     }
   };
   const getCustomeWorkoutTimeDetails = async () => {
+   
     try {
       const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
         method: 'POST',
@@ -167,7 +169,7 @@ const Workouts = ({navigation}: any) => {
           user_id: getUserID != 0 ? getUserID : getUserDataDetails.id,
         },
       });
-
+      console.log("user_ID-->",getUserID,getUserDataDetails?.id,data?.data)
       if (data.data.results.length > 0) {
         dispatch(setWorkoutTimeCal(data.data.results));
       } else {

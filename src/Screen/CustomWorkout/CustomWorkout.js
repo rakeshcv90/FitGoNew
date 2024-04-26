@@ -7,6 +7,8 @@ import {
   Modal,
   ActivityIndicator,
   Platform,
+  PermissionsAndroid,
+  Alert,
 } from 'react-native';
 import React, {useMemo, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
@@ -20,17 +22,59 @@ import {localImage} from '../../Component/Image';
 import {BlurView} from '@react-native-community/blur';
 import {TextInput} from 'react-native-paper';
 import {showMessage} from 'react-native-flash-message';
+import {PERMISSIONS, request} from 'react-native-permissions';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 const CustomWorkout = ({navigation}) => {
   const customWorkoutData = useSelector(state => state.customWorkoutData);
-  const getExperience=useSelector(state=>state.getExperience)
+  const getExperience = useSelector(state => state.getExperience);
   const [isCustomWorkout, setIsCustomWorkout] = useState(false);
   const [text, setText] = React.useState('');
+  const [getWorkoutAvt, setWorkoutAvt] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const askPermissionForLibrary = async permission => {
+    const resultLib = await request(permission);
 
+    if (resultLib == 'granted') {
+      try {
+        const resultLibrary = await launchImageLibrary({
+          mediaType: 'photo',
+          quality: 0.5,
+          maxWidth: 300,
+          maxHeight: 200,
+        });
+        setWorkoutAvt(resultLibrary.assets[0]);
+
+        if (resultLibrary) {
+          // setModalImageUploaded(true);
+        }
+      } catch (error) {
+        console.log('LibimageError', error);
+      }
+    } else if (Platform.OS == 'ios') {
+      Alert.alert(
+        'Permission Required',
+        'To use the photo library ,Please enable library access in settings',
+        [
+          {
+            text: 'cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'Open settings',
+            onPress: openSettings,
+          },
+        ],
+        {cancelable: false},
+      );
+    } else {
+      console.log('Gallery error occured');
+    }
+  };
   const renderItem = useMemo(
     () =>
       ({item}) => {
+        console.log("hello",item?.image)
         return (
           <>
             <TouchableOpacity
@@ -51,20 +95,19 @@ const CustomWorkout = ({navigation}) => {
                 padding: 5,
                 borderColor: '#D9D9D9',
                 borderWidth: 1,
-             
 
-              shadowColor: 'rgba(0, 0, 0, 1)',
-              ...Platform.select({
-                ios: {
-                  //shadowColor: '#000000',
-                  shadowOffset: {width: 0, height: 2},
-                  shadowOpacity: 0.3,
-                  shadowRadius: 4,
-                },
-                android: {
-                  elevation: 3,
-                },
-              }),
+                shadowColor: 'rgba(0, 0, 0, 1)',
+                ...Platform.select({
+                  ios: {
+                    //shadowColor: '#000000',
+                    shadowOffset: {width: 0, height: 2},
+                    shadowOpacity: 0.3,
+                    shadowRadius: 4,
+                  },
+                  android: {
+                    elevation: 3,
+                  },
+                }),
                 // ...Platform.select({
                 //   ios: {
                 //     shadowColor: '#000000',
@@ -76,8 +119,7 @@ const CustomWorkout = ({navigation}) => {
                 //     elevation: 4,
                 //   },
                 // }),
-              }}
-              >
+              }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 {isLoading && (
                   <ActivityIndicator
@@ -88,7 +130,7 @@ const CustomWorkout = ({navigation}) => {
                 )}
                 <Image
                   // source={{uri: item.workout_image_link}}
-                  source={localImage.Noimage}
+                  source={item?.image==''?localImage.Noimage:{uri:item?.image}}
                   onLoad={() => setIsLoading(false)}
                   style={{
                     width: 80,
@@ -96,6 +138,7 @@ const CustomWorkout = ({navigation}) => {
                     justifyContent: 'center',
                     alignSelf: 'center',
                     // backgroundColor:'red',
+                    borderRadius:10,
                     marginHorizontal: -7,
                   }}
                   resizeMode="contain"
@@ -142,7 +185,6 @@ const CustomWorkout = ({navigation}) => {
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
-    
         }}>
         <Image
           source={localImage.Createworkout}
@@ -210,7 +252,7 @@ const CustomWorkout = ({navigation}) => {
         icon: {icon: 'auto', position: 'left'},
       });
     } else {
-      navigation.navigate('CreateWorkout', {workoutTitle: text});
+      navigation.navigate('CreateWorkout', {workoutTitle: text,workoutImg:getWorkoutAvt});
       setText('');
       setIsCustomWorkout(false);
     }
@@ -283,7 +325,7 @@ const CustomWorkout = ({navigation}) => {
               paddingVertical: 20,
               borderRadius: 10,
             }}>
-            <Text
+            {/* <Text
               style={{
                 color: AppColor.HEADERTEXTCOLOR,
                 fontFamily: Fonts.MONTSERRAT_BOLD,
@@ -294,9 +336,33 @@ const CustomWorkout = ({navigation}) => {
                 justifyContent: 'flex-start',
               }}>
               Workout For Beginners
-            </Text>
+            </Text> */}
+            <TouchableOpacity
+              style={styles.imageView}
+              onPress={() => {
+                if (Platform.OS == 'ios') {
+                  askPermissionForLibrary(PERMISSIONS.IOS.PHOTO_LIBRARY);
+                } else {
+                  askPermissionForLibrary(
+                    Platform.Version >= 33
+                      ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
+                      : PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+                  );
+                }
+              }}>
+              <Image
+                source={
+                  getWorkoutAvt == null ? localImage?.Plus : getWorkoutAvt
+                }
+                resizeMode={getWorkoutAvt == null ? 'contain' : 'cover'}
+                style={{
+                  height: getWorkoutAvt == null ? 35 : 95,
+                  width: getWorkoutAvt == null ? 35 : 95,
+                }}
+              />
+            </TouchableOpacity>
             <TextInput
-              label="Workout Name"
+              label="Enter workout name"
               value={text}
               activeOutlineColor="#707070"
               outlineStyle={{borderRadius: 15}}
@@ -401,6 +467,26 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     borderRadius: 100 / 2,
+  },
+  imageView: {
+    backgroundColor: AppColor.GRAY1,
+    height: 95,
+    width: 95,
+    borderRadius: 10,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
 });
 export default CustomWorkout;

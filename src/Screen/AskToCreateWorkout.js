@@ -14,6 +14,7 @@ import {
   setCustomWorkoutData,
   setExperience,
   setLaterButtonData,
+  setProgressBarCounter,
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
@@ -147,7 +148,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
   };
   // getuserDetail api
   const getProfileData = async user_id => {
-    console.log('Custom Dadadadada',user_id);
+    console.log('Custom Dadadadada', user_id);
     const currrentdata = [
       {
         gender: gender,
@@ -169,19 +170,19 @@ const AskToCreateWorkout = ({route, navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-  
+
       if (data?.data?.profile) {
         dispatch(setUserProfileData(data?.data?.profile));
         dispatch(setLaterButtonData(currrentdata));
         dispatch(setExperience(true));
         getCustomWorkout(getUserID);
-        ChallengesDataAPI()
+        ChallengesDataAPI();
         setLoader(false);
       } else if (
         data?.data?.msg == 'Please update the app to the latest version.'
       ) {
         setLoader(false);
-        ChallengesDataAPI()
+        ChallengesDataAPI();
         showMessage({
           message: data?.data?.msg,
           floating: true,
@@ -193,7 +194,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
         dispatch(setUserProfileData([]));
         dispatch(setLaterButtonData(currrentdata));
         dispatch(setExperience(true));
-        ChallengesDataAPI()
+        ChallengesDataAPI();
         //navigation.navigate('CustomWorkout');
         getCustomWorkout(getUserID);
         setLoader(false);
@@ -202,7 +203,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
       console.log('User Profile Error', error);
       setLoader(false);
       getCustomWorkout(getUserID);
-      ChallengesDataAPI()
+      ChallengesDataAPI();
     }
   };
 
@@ -217,7 +218,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
         navigation.navigate('CustomWorkout');
       } else {
         dispatch(setCustomWorkoutData([]));
-          navigation.navigate('CustomWorkout');
+        navigation.navigate('CustomWorkout');
       }
     } catch (error) {
       console.log('Custom Workout Error', error);
@@ -233,10 +234,10 @@ const AskToCreateWorkout = ({route, navigation}) => {
           '?version=' +
           VersionNumber.appVersion,
       });
-      if(res.data?.msg != 'version  is required'){
-        dispatch(setChallengesData(res.data))
-      }else{
-        dispatch(setChallengesData([]))
+      if (res.data?.msg != 'version  is required') {
+        dispatch(setChallengesData(res.data));
+      } else {
+        dispatch(setChallengesData([]));
       }
     } catch (error) {
       console.error(error, 'ChallengesDataAPI ERRR');
@@ -260,7 +261,10 @@ const AskToCreateWorkout = ({route, navigation}) => {
       </View>
       <View style={styles.buttons}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            dispatch(setProgressBarCounter(7));
+            navigation.goBack();
+          }}
           style={{
             backgroundColor: '#F7F8F8',
             width: 45,
