@@ -43,7 +43,7 @@ export const MyPLans = ({focused, onPress}) => {
       onPress(currentSelectedDay);
       Animated.timing(progressAnimation, {
         toValue: 1,
-        duration: 2000,
+        duration: 3000,
         useNativeDriver: false,
       }).start(() => {
         progressAnimation.setValue(0);
