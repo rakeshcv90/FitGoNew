@@ -74,7 +74,7 @@ const GymListing = ({navigation}: any) => {
       });
 
       if (res?.data?.msg != 'No data found') {
-        setGymsData([]);
+        setGymsData(res.data?.nearby_gyms);
       } else {
         showMessage({
           message: res?.data?.msg,
@@ -253,11 +253,21 @@ const GymListing = ({navigation}: any) => {
                   flex: 1,
                   justifyContent: 'center',
                   alignItems: 'center',
+                  marginTop: DeviceHeigth * 0.15
                 }}>
+                <Image
+                  source={require('../../Icon/Images/NewImage2/NoLocation.png')}
+                  style={{
+                    width: DeviceWidth * 0.6,
+                    height: DeviceWidth * 0.6,
+                    marginBottom: 20
+                  }}
+                  resizeMode="contain"
+                />
                 <Text
                   style={styles.heading}
                   onPress={() => Linking.openSettings()}>
-                  Currently, No Gyms available in your location
+                  Currently, No Gyms available{'\n'} for your location
                 </Text>
               </View>
             }
@@ -296,9 +306,11 @@ const styles = StyleSheet.create({
   heading: {
     color: '#202020',
     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-    fontSize: 16,
-    lineHeight: 20,
+    fontSize: 20,
+    lineHeight: 25,
     fontWeight: '600',
+    textAlign: 'center',
+    textTransform: 'capitalize'
   },
   features: {
     color: '#505050',

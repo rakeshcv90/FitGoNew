@@ -21,7 +21,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import PercentageBar from '../../Component/PercentageBar';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import analytics from '@react-native-firebase/analytics';
-import {check, request, PERMISSIONS, RESULTS, requestMultiple} from 'react-native-permissions';
+import {
+  check,
+  request,
+  PERMISSIONS,
+  RESULTS,
+  requestMultiple,
+} from 'react-native-permissions';
 import {useIsFocused} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BackgroundService from 'react-native-background-actions';
@@ -239,7 +245,7 @@ const HomeNew = ({navigation}) => {
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
         const result = analyzeExerciseData(res.data?.user_details);
-      
+
         if (result.two.length == 0) {
           let day = parseInt(result.one[result.one.length - 1]);
           for (const item of Object.entries(data?.days)) {
@@ -482,11 +488,7 @@ const HomeNew = ({navigation}) => {
         visible={locationP}
         onRequestClose={() => setLocationP(false)}
         transparent>
-        <BlurView
-          style={styles.modalContainer}
-          blurType="light"
-          blurAmount={1}
-          reducedTransparencyFallbackColor="white">
+        <View style={styles.modalContainer}>
           <View
             style={{
               height: DeviceWidth,
@@ -556,14 +558,15 @@ const HomeNew = ({navigation}) => {
               alignSelf
             />
             <GradientButton
-              text="Do not allow"
+              text="Do Not Allow"
               flex={0}
               w={DeviceWidth * 0.7}
               alignSelf
               onPress={() => setLocationP(false)}
+              colors={['#ADA4A5', '#ADA4A5']}
             />
           </View>
-        </BlurView>
+        </View>
       </Modal>
     );
   };
@@ -759,7 +762,7 @@ const HomeNew = ({navigation}) => {
       //  setRefresh(true);
       const payload = new FormData();
       payload.append('id', getUserDataDetails?.id);
-   
+
       payload.append('version', VersionNumber.appVersion);
       const res = await axios({
         url: NewAppapi.ALL_WORKOUTS,
