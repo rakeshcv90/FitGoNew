@@ -30,6 +30,11 @@ import {string} from 'yup';
 import {showMessage} from 'react-native-flash-message';
 import VersionNumber from 'react-native-version-number';
 import moment from 'moment';
+import TrackPlayer, {
+  Capability,
+  State,
+  usePlaybackState,
+} from 'react-native-track-player';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -40,6 +45,15 @@ const WeekArray = Array(7)
         .subtract(moment().isoWeekday() - 1, 'days')
         .format('dddd')),
   );
+const songs = [
+  {
+    // title: 'song 1',
+    // artist: 'XYZ',
+    // artwork: localImage.Play3,
+    url: require('../../../Icon/Images/Exercise_Timer.wav'),
+    // url: route.params.item.exercise_mindset_audio,
+  },
+];
 const Exercise = ({navigation, route}: any) => {
   const {
     allExercise,
@@ -51,16 +65,21 @@ const Exercise = ({navigation, route}: any) => {
     type,
     challenge,
   } = route.params;
-
+  // console.log(Tts.voices().then(voices => console.log(voices)))
   const VideoRef = useRef();
   const [visible, setVisible] = useState(false);
   const [playW, setPlayW] = useState(0);
+  const [demoW, setDemoW] = useState(0);
+  const [demoS, setDemoS] = useState(0);
   const [number, setNumber] = useState(0);
   const [currentVideo, setCurrentVideo] = useState('');
   const [pause, setPause] = useState(false);
+  const [demo, setDemo] = useState(false);
+  const [demo1, setDemo1] = useState(false);
   const [open, setOpen] = useState(false);
   const [back, setBack] = useState(false);
-  const [timer, setTimer] = useState(15);
+  const [timer, setTimer] = useState(10);
+  const [timerS, setTimerS] = useState(10);
   const [restStart, setRestStart] = useState(false);
   const [randomCount, setRandomCount] = useState(0);
   const [skipCount, setSkipCount] = useState(0);
@@ -72,7 +91,7 @@ const Exercise = ({navigation, route}: any) => {
     (state: any) => state.getUserDataDetails,
   );
   const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
-  const [separateTimer, setSeparateTimer] = useState(timer);
+  const [separateTimer, setSeparateTimer] = useState(false);
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const restTimerRef = useRef(0);
   const playTimerRef = useRef<any>(null);
@@ -80,7 +99,19 @@ const Exercise = ({navigation, route}: any) => {
     parseInt(currentData?.exercise_rest.split(' ')[0]),
   );
   const [isRunning, setIsRunning] = useState(false);
+  const playbackState = usePlaybackState();
 
+  const setupPlayer = async () => {
+    try {
+      await TrackPlayer.add(songs);
+      await TrackPlayer.updateOptions({
+        capabilities: [Capability.Play, Capability.Pause],
+        compactCapabilities: [Capability.Play, Capability.Pause],
+      });
+    } catch (error) {
+      console.log('Music Player Error', error);
+    }
+  };
   useEffect(() => {
     let intervalId: any;
     if (isRunning) {
@@ -107,7 +138,7 @@ const Exercise = ({navigation, route}: any) => {
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
       if (!ttsStatus.isInitialized) {
-        await Tts.setDefaultLanguage('en-US');
+        await Tts.setDefaultLanguage('en-IN');
         await Tts.setDucking(true);
         await Tts.setIgnoreSilentSwitch('ignore');
 
@@ -117,11 +148,39 @@ const Exercise = ({navigation, route}: any) => {
 
     initTts();
   }, []);
+  const StartAudio = async (playbackState: any) => {
+    console.log('playbackState', playbackState);
+    await TrackPlayer.play();
+  };
+  const PauseAudio = async (playbackState: any) => {
+    console.log('playbackState', playbackState);
 
+    await TrackPlayer.reset();
+  };
   const dispatch = useDispatch();
   useEffect(() => {
     if (!back) {
-      restStart
+      separateTimer
+        ? setTimeout(() => {
+            if (timerS == 0) {
+              console.log('playbackState', playbackState);
+              setDemoS(0);
+              setDemo1(!demo1);
+              setTimerS(10);
+              setSeparateTimer(false);
+              PauseAudio(playbackState);
+            } else if (timerS == 4) {
+              // Tts.speak(`${timerS}`);
+              setTimerS(timerS - 1);
+              setDemoS(prev => prev + 10);
+              StartAudio(playbackState);
+            } else {
+              console.log(demoS);
+              setTimerS(timerS - 1);
+              setDemoS(prev => prev + 10);
+            }
+          }, 1000)
+        : restStart
         ? (restTimerRef.current = setTimeout(() => {
             if (timer === 0) {
               if (number == allExercise?.length - 1) return;
@@ -134,21 +193,32 @@ const Exercise = ({navigation, route}: any) => {
               setSeconds(
                 parseInt(allExercise[index + 1]?.exercise_rest.split(' ')[0]),
               );
-              setCurrentData(allExercise[index + 1]);
               // setPre(15);
               // console.log('VIDEO LOCATIONS', getStoreVideoLoc);
-              handleExerciseChange(allExercise[index + 1]?.exercise_title);
+              // if (number != 0) {
+              setCurrentData(allExercise[index + 1]);
               setNumber(number + 1);
+              handleExerciseChange(allExercise[index + 1]?.exercise_title);
               setRandomCount(randomCount + 1);
-              setTimer(15);
-            } else if (timer == 15) {
+
+              setTimer(10);
+              setDemoW(0);
+              setDemo(!demo);
+              PauseAudio(playbackState);
+            } else if (timer == 4) {
+              setTimer(timer - 1);
+              setDemoW(demoW + 100 / timer);
+              StartAudio(playbackState);
+            } else if (timer == 10) {
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
               postCurrentExerciseAPI(index);
+              setDemoW(demoW + 100 / timer);
               setTimer(timer - 1);
-              setPlayW(0);
-            } else {
+            } else if (demo) {
+              console.log(demoW);
+              setDemoW(demoW + 100 / timer);
               setTimer(timer - 1);
             }
             // getSoundOffOn && Tts.speak(`${timer - 1}`);
@@ -162,6 +232,9 @@ const Exercise = ({navigation, route}: any) => {
             if (pause) {
               setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
               if (seconds > 1) {
+                if (seconds <= 4) {
+                  Tts.speak(`${seconds - 1}`);
+                }
                 setSeconds(prevSeconds => prevSeconds - 1);
               }
             }
@@ -175,7 +248,7 @@ const Exercise = ({navigation, route}: any) => {
                   day,
                   allExercise,
                   type,
-                  challenge
+                  challenge,
                 });
 
                 clearTimeout(restTimerRef.current);
@@ -188,23 +261,38 @@ const Exercise = ({navigation, route}: any) => {
             } else if (playW >= 100 && number < allExercise?.length - 1) {
               setPause(false);
               setRestStart(true);
+              setDemoW(0);
+              setupPlayer();
             }
           }, 1000));
     } else {
     }
-  }, [playW, pause, currentData, timer, back]);
+  }, [
+    playW,
+    pause,
+    currentData,
+    timer,
+    back,
+    separateTimer,
+    timerS,
+    demo,
+    demo1,
+  ]);
   useEffect(() => {
     if (exerciseNumber != -1 && number == 0) {
       setNumber(exerciseNumber);
       setCurrentData(currentExercise);
       handleExerciseChange(currentExercise?.exercise_title);
-    }
+      setSeparateTimer(true);
+    } else setRestStart(true);
+    setupPlayer();
   }, []);
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
       // Check if goBack has been called
       if (!e.data.action) {
         setPause(false);
+        setDemo(false);
 
         setBack(true);
       }
@@ -215,6 +303,8 @@ const Exercise = ({navigation, route}: any) => {
         // Check if goBack has been called
         if (!e.data.action) {
           setPause(false);
+          setDemo(false);
+          setDemoS(false);
           setBack(true);
         }
       },
@@ -230,7 +320,7 @@ const Exercise = ({navigation, route}: any) => {
   const handleExerciseChange = (exerciseName: string) => {
     if (getStoreVideoLoc.hasOwnProperty(exerciseName)) {
       setCurrentVideo(getStoreVideoLoc[exerciseName]);
-      console.log('CURRENT', getStoreVideoLoc[exerciseName]);
+      // console.log('CURRENT', getStoreVideoLoc[exerciseName]);
     } else {
       setCurrentVideo('');
       console.error(`Exercise "${exerciseName}" video not found.`);
@@ -342,7 +432,7 @@ const Exercise = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data) {
-        console.log(res.data, trackerData[index], payload);
+        // console.log(res.data, trackerData[index], payload);
         setCurrentData(allExercise[index]);
         setRestStart(true);
         setPlayW(0);
@@ -459,187 +549,272 @@ const Exercise = ({navigation, route}: any) => {
       </Modal>
     );
   };
-
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: restStart ? AppColor.RED : AppColor.WHITE,
+        backgroundColor: AppColor.WHITE,
         paddingHorizontal: 20,
       }}>
-      <ExerciseProgressBar
-        ExerciseData={allExercise}
-        INDEX={number}
-        time={currentData?.exercise_rest == 1 ? 60 : 1}
-        w={restStart ? '100%' : `${playW}%`}
-        color={restStart ? AppColor.WHITE : AppColor.RED}
-      />
-      {restStart ? (
-        <View style={{flex: 1, top: -20}}>
-          {/* <FAB icon="format-list-bulleted" /> */}
+      {separateTimer ? (
+        <>
+          <View style={styles.temp} />
           <View
             style={{
-              alignSelf: 'center',
-              alignItems: 'center',
-              top: DeviceHeigth * 0.05,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              marginTop:
+                Platform.OS == 'ios'
+                  ? DeviceHeigth * 0.02
+                  : -DeviceHeigth * 0.03,
             }}>
-            <Text
-              style={{
-                fontSize: 28,
-                fontFamily: 'Poppins',
-                lineHeight: 30,
-                color: AppColor.WHITE,
-                fontWeight: '700',
-              }}>
-              Rest
-            </Text>
-            <Text
-              style={{
-                fontSize: 48,
-                fontFamily: 'Poppins',
-                lineHeight: 60,
-                color: AppColor.WHITE,
-                fontWeight: '700',
-              }}>
-              {'00:' + timer}
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginTop: 20,
-              }}>
-              <TouchableOpacity
-                onPress={() => {
-                  // Tts.stop();
-                  clearTimeout(restTimerRef.current);
-                  setTimer(prevTimer => prevTimer + 30);
-                  setSeparateTimer(prevTimer => prevTimer + 30);
-                  // Tts.speak(`${separateTimer}`);
-                }}
-                style={{
-                  borderRadius: 20,
-                  width: DeviceWidth * 0.3,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  // backgroundColor: '#FCFCFC61',
-                  backgroundColor:
-                    number == allExercise?.length - 1 ? '#d9d9d9' : '#Fff',
-                  // paddingHorizontal: 20,
-                  marginRight: 10,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontFamily: 'Poppins',
-                    lineHeight: 30,
-                    color: AppColor.BLACK,
-                    fontWeight: '600',
-                  }}>
-                  +30s
-                </Text>
-              </TouchableOpacity>
-              {/* <TouchableOpacity
-                disabled={number == allExercise?.length - 1}
-                onPress={() => {
-                  if (number == allExercise?.length - 1) return;
-                  else {
-                    setRestStart(prev => false);
-                    const index = allExercise?.findIndex(
-                      (item: any) =>
-                        item?.exercise_id == currentData?.exercise_id,
-                    );
-                    setExerciseDoneIDs([
-                      ...exerciseDoneIDs,
-                      currentData?.exercise_id,
-                    ]);
-                    // postCurrentExerciseAPI(index + 1);
-                    setNumber(number + 1);
-                    setTimer(15);
-                    setSkipCount(skipCount+1)
-                    setPlayW(prevTimer => 0);
-                    Tts.stop();
-                  }
-                  setIsLoading(true);
-                }}
-                style={{
-                  borderRadius: 20,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor:
-                    number == allExercise?.length - 1 ? '#d9d9d9' : '#Fff',
-                  paddingHorizontal: 20,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontFamily: 'Poppins',
-                    lineHeight: 30,
-                    color: AppColor.RED,
-                    fontWeight: '700',
-                    textTransform: 'uppercase',
-                  }}>
-                  Skip
-                </Text>
-              </TouchableOpacity> */}
-            </View>
-            <View
-              style={{
-                alignItems: 'flex-start',
-                alignSelf: 'flex-start',
-                width: DeviceWidth,
-                marginLeft: 20,
-                top:
-                  Platform.OS == 'ios'
-                    ? DeviceHeigth * 0.0
-                    : -DeviceHeigth * 0.06,
-              }}>
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: '500',
-                  fontFamily: 'Poppins',
-                  lineHeight: 30,
-                  marginTop: DeviceHeigth * 0.1,
-                  color: AppColor.WHITE,
-                }}>
-                {`Next `}
-                {number + 1 + '/' + allExercise?.length}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: '500',
-                  fontFamily: 'Poppins',
-                  lineHeight: 30,
-                  color: AppColor.WHITE,
-                }}>
-                {allExercise[number + 1]?.exercise_title + ' '}
-                <AntIcons
-                  name="questioncircleo"
-                  color={AppColor.WHITE}
-                  size={15}
-                  onPress={() => setOpen(true)}
-                />
-              </Text>
-            </View>
-          </View>
-          <View style={styles.container}>
-            <Image
-              source={{
-                uri:
-                  allExercise[number + 1]?.exercise_image_link == undefined
-                    ? allExercise[number + 1]?.exercise_image
-                    : allExercise[number + 1]?.exercise_image_link,
+            <TouchableOpacity
+              onPress={() => {
+                setBack(true);
               }}
-              style={StyleSheet.absoluteFillObject}
+              style={{
+                width: 40,
+              }}>
+              <Icons
+                name={'chevron-left'}
+                size={30}
+                color={
+                  number == allExercise?.length
+                    ? AppColor.WHITE
+                    : AppColor.INPUTTEXTCOLOR
+                }
+              />
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              height: DeviceHeigth * 0.5,
+              // marginTop: -DeviceHeigth * 0.06,
+              zIndex: -1,
+            }}>
+            <Video
+              source={{
+                uri: separateTimer
+                  ? getStoreVideoLoc[allExercise[0]?.exercise_title]
+                  : getStoreVideoLoc[allExercise[number + 1]?.exercise_title],
+              }}
+              onReadyForDisplay={() => {
+                setDemo1(true);
+                setIsLoading(false);
+              }}
+              onLoad={() => {
+                setIsLoading(false);
+                setDemo1(true);
+              }}
+              // onVideoLoad={() =>() }
+              // onVideoLoadStart={() => }
+              paused={!demo1}
+              onPlaybackResume={() => {
+                setDemo1(true);
+              }}
+              repeat={true}
               resizeMode="contain"
+              style={{
+                width: DeviceWidth,
+                height: DeviceHeigth * 0.4,
+                alignSelf: 'center',
+                top: 60,
+              }}
             />
           </View>
-        </View>
+
+          <View
+            style={{
+              marginVertical:
+                Platform.OS == 'ios'
+                  ? DeviceHeigth >= 1024
+                    ? DeviceHeigth * 0.07
+                    : DeviceHeigth * 0.03
+                  : DeviceHeigth * 0.01,
+              top:
+                Platform.OS == 'ios'
+                  ? DeviceHeigth >= 1024
+                    ? DeviceHeigth * 0.06
+                    : DeviceHeigth * 0.02
+                  : DeviceHeigth * 0.0,
+            }}>
+            <Text style={[styles.head, {color: AppColor.BLACK}]}>
+              GET READY
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginTop: 10,
+            }}>
+            <Text
+              style={[
+                styles.name,
+                {width: DeviceWidth * 0.7, fontSize: 25, fontWeight: '700'},
+              ]}>
+              {separateTimer
+                ? allExercise[0]?.exercise_title
+                : allExercise[number + 1]?.exercise_title}
+            </Text>
+            <Text style={[styles.name, {color: '#505050'}]}>
+              <Icons
+                name={'clock-outline'}
+                size={20}
+                color={AppColor.INPUTTEXTCOLOR}
+              />
+              {timerS == 10 ? ` ${timerS} sec` : ` 0${timerS} sec`}
+            </Text>
+          </View>
+          <Play
+            play={!demo1}
+            fill={100 - demoS}
+            h={80}
+            mB={DeviceHeigth * 0.02}
+            playy={() => {
+              setDemo1(demo1);
+            }}
+            next={() => {}}
+            back={() => {}}
+            colors={['blue', 'blue']}
+          />
+        </>
+      ) : restStart ? (
+        <>
+          <View style={styles.temp} />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              marginTop:
+                Platform.OS == 'ios'
+                  ? DeviceHeigth * 0.02
+                  : -DeviceHeigth * 0.03,
+            }}>
+            <TouchableOpacity
+              onPress={() => {
+                setBack(true);
+              }}
+              style={{
+                width: 40,
+              }}>
+              <Icons
+                name={'chevron-left'}
+                size={30}
+                color={
+                  number == allExercise?.length
+                    ? AppColor.WHITE
+                    : AppColor.INPUTTEXTCOLOR
+                }
+              />
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              height: DeviceHeigth * 0.5,
+              // marginTop: -DeviceHeigth * 0.06,
+              zIndex: -1,
+            }}>
+            <Video
+              source={{
+                uri: separateTimer
+                  ? getStoreVideoLoc[allExercise[0]?.exercise_title]
+                  : getStoreVideoLoc[allExercise[number + 1]?.exercise_title],
+              }}
+              onReadyForDisplay={() => {
+                setDemo(true);
+                setIsLoading(false);
+              }}
+              onLoad={() => {
+                setIsLoading(false);
+                setDemo(true);
+              }}
+              // onVideoLoad={() =>() }
+              // onVideoLoadStart={() => }
+              paused={!demo}
+              onPlaybackResume={() => {
+                setDemo(true);
+              }}
+              repeat={true}
+              resizeMode="contain"
+              style={{
+                width: DeviceWidth,
+                height: DeviceHeigth * 0.4,
+                alignSelf: 'center',
+                top: 60,
+              }}
+            />
+          </View>
+
+          <View
+            style={{
+              marginVertical:
+                Platform.OS == 'ios'
+                  ? DeviceHeigth >= 1024
+                    ? DeviceHeigth * 0.07
+                    : DeviceHeigth * 0.03
+                  : DeviceHeigth * 0.01,
+              top:
+                Platform.OS == 'ios'
+                  ? DeviceHeigth >= 1024
+                    ? DeviceHeigth * 0.06
+                    : DeviceHeigth * 0.02
+                  : DeviceHeigth * 0.0,
+            }}>
+            <Text style={[styles.head, {color: AppColor.BLACK}]}>
+              GET READY
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginTop: 10,
+            }}>
+            <Text
+              style={[
+                styles.name,
+                {width: DeviceWidth * 0.7, fontSize: 25, fontWeight: '700'},
+              ]}>
+              {separateTimer
+                ? allExercise[0]?.exercise_title
+                : allExercise[number + 1]?.exercise_title}
+            </Text>
+            <Text style={[styles.name, {color: '#505050'}]}>
+              <Icons
+                name={'clock-outline'}
+                size={20}
+                color={AppColor.INPUTTEXTCOLOR}
+              />
+              {timer == 10 ? ` ${timer} sec` : ` 0${timer} sec`}
+            </Text>
+          </View>
+          <Play
+            play={!demo}
+            fill={100 - demoW}
+            h={80}
+            mB={DeviceHeigth * 0.02}
+            playy={() => {
+              setDemo(demo);
+            }}
+            next={() => {}}
+            back={() => {}}
+            colors={['blue', 'blue']}
+          />
+        </>
       ) : (
         <>
+          <ExerciseProgressBar
+            ExerciseData={allExercise}
+            INDEX={number}
+            time={currentData?.exercise_rest == 1 ? 60 : 1}
+            w={restStart ? '100%' : `${playW}%`}
+            color={restStart ? AppColor.WHITE : AppColor.RED}
+          />
           <View
             style={{
               flexDirection: 'row',
@@ -762,13 +937,6 @@ const Exercise = ({navigation, route}: any) => {
               {` ${currentData?.exercise_rest}`}
             </Text>
           </View>
-
-          {/* <Button
-        title={isRunning ? 'Pause' : 'Start'}
-        onPress={startStopTimer}
-        color="#841584"
-      /> */}
-
           <Play
             play={!pause}
             fill={100 - playW}
@@ -816,21 +984,21 @@ const Exercise = ({navigation, route}: any) => {
             }}
             colors={pause ? ['#941000', '#941000'] : ['#999999', '#D5191A']}
           />
-          <BottomSheetExercise
-            isVisible={visible}
-            setVisible={setVisible}
-            exerciseData={allExercise}
-            setCurrentData={setCurrentData}
-            setPlayW={setPlayW}
-            setPause={setPause}
-            setRandomCount={setRandomCount}
-            playTimerRef={playTimerRef}
-            currentExercise={currentExercise}
-            setSeconds={setSeconds}
-            handleExerciseChange={handleExerciseChange}
-          />
         </>
       )}
+      <BottomSheetExercise
+        isVisible={visible}
+        setVisible={setVisible}
+        exerciseData={allExercise}
+        setCurrentData={setCurrentData}
+        setPlayW={setPlayW}
+        setPause={setPause}
+        setRandomCount={setRandomCount}
+        playTimerRef={playTimerRef}
+        currentExercise={currentExercise}
+        setSeconds={setSeconds}
+        handleExerciseChange={handleExerciseChange}
+      />
       <PauseModal back={back} />
 
       <WorkoutsDescription open={open} setOpen={setOpen} data={currentData} />
@@ -896,5 +1064,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
 
     marginVertical: DeviceHeigth * 0.2,
+  },
+  temp: {
+    width: DeviceWidth * 0.9,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    height: Platform.OS == 'ios' ? 0 : DeviceHeigth * 0.05,
+    alignSelf: 'center',
+    marginTop: DeviceHeigth * 0.02,
   },
 });

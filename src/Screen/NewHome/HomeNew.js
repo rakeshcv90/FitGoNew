@@ -488,11 +488,7 @@ const HomeNew = ({navigation}) => {
         visible={locationP}
         onRequestClose={() => setLocationP(false)}
         transparent>
-        <BlurView
-          style={styles.modalContainer}
-          blurType="light"
-          blurAmount={1}
-          reducedTransparencyFallbackColor="white">
+        <View style={styles.modalContainer}>
           <View
             style={{
               height: DeviceWidth,
@@ -562,14 +558,15 @@ const HomeNew = ({navigation}) => {
               alignSelf
             />
             <GradientButton
-              text="Do not allow"
+              text="Do Not Allow"
               flex={0}
               w={DeviceWidth * 0.7}
               alignSelf
               onPress={() => setLocationP(false)}
+              colors={['#ADA4A5', '#ADA4A5']}
             />
           </View>
-        </BlurView>
+        </View>
       </Modal>
     );
   };
