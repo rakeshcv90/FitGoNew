@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import React, {useMemo, useState, useEffect} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {Calendar} from 'react-native-calendars';
@@ -425,7 +425,8 @@ const NewMonthlyAchievement = () => {
                   <Text
                     style={{
                       textAlign: 'center',
-                      color: AppColor.BoldText,
+                      color: AppColor.HEADERTEXTCOLOR,
+                     
                       fontSize: 14,
                       fontWeight: '600',
                       marginLeft: 8,
@@ -472,7 +473,6 @@ const styles = StyleSheet.create({
   cards: {
     backgroundColor: AppColor.BACKGROUNG,
     width: (DeviceWidth * 0.9) / 3.2,
-    marginRight: 5,
     marginBottom: 20,
     ...Platform.select({
       ios: {

@@ -132,14 +132,9 @@ console.log(nextScreen)
     <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
 
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          //position: 'absolute',
-        }}>
+  
         <ProgressBar screen={screen} Type/>
-      </View>
+  
       <View
         style={{
           justifyContent: 'center',
@@ -147,9 +142,6 @@ console.log(nextScreen)
         }}>
         <Bulb
           screen={'Do you have Injury in any body part?'}
-          header={
-            'This info will help us guide you to your fitness goals safely and quickly'
-          }
         />
       </View>
       <View style={{flexDirection: 'row', height: DeviceHeigth * 0.6}}>
@@ -378,7 +370,7 @@ console.log(nextScreen)
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    justifyContent: 'center',
+    // justifyContent: 'center',
     //alignItems: 'center',
 
     backgroundColor: AppColor.WHITE,

@@ -69,6 +69,7 @@ const Goal = ({navigation, route}: any) => {
     {
       id: 1,
       img: localImage.WeightLoss,
+
       txt: 'Loss weight',
       txt1: 'Burn Calories & get the ideal body',
     },
@@ -122,8 +123,8 @@ const Goal = ({navigation, route}: any) => {
       <View style={{justifyContent: 'center', marginTop: DeviceHeigth * 0.06}}>
         <Card
           ItemArray={GoalData}
-          Ih={30}
-          Iw={40}
+          Ih={37}
+          Iw={37}
           selectedB={selectedB}
           translateXValues={translateXValues}
           SelectedButton={SelectedButton}
