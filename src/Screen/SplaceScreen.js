@@ -103,12 +103,13 @@ const SplaceScreen = ({navigation}) => {
   const loadScreen = () => {
     if (showIntro) {
       if (
-        getUserDataDetails?.id &&
+        getUserDataDetails?.id && 
         getUserDataDetails?.profile_compl_status == 1
       ) {
         navigation.replace('BottomTab');
       } else {
-        navigation.replace('LogSignUp');
+       // navigation.replace('LogSignUp');
+       navigation.replace('LetsStart');
       }
     } else {
       navigation.replace('IntroductionScreen1');

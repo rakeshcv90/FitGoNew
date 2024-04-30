@@ -290,15 +290,17 @@ const OneDay = ({navigation, route}: any) => {
               backgroundColor: AppColor.WHITE,
 
               borderRadius: 10,
+            
+              shadowColor: 'rgba(0, 0, 0, 1)',
               ...Platform.select({
                 ios: {
-                  shadowColor: AppColor.BLACK,
-                  shadowOffset: {width: 1, height: 1},
+                  //shadowColor: '#000000',
+                  shadowOffset: {width: 0, height: 2},
                   shadowOpacity: 0.3,
-                  shadowRadius: 2,
+                  shadowRadius: 4,
                 },
                 android: {
-                  elevation: 5,
+                  elevation: 3,
                 },
               }),
             }}>

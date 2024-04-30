@@ -66,7 +66,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
       gender: gender,
       data: data,
       experience: experience,
-      workout_plans: 'DefaultCreated',
+      workout_plans: 'AppCreated',
     });
   };
   const handleButtonPress = IDs => {

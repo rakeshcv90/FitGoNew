@@ -211,12 +211,12 @@ const WorkoutArea = ({route, navigation}) => {
                 activeOpacity={0.8}
                 onPress={() => {
                   setImageFocusArea(
-                    completeProfileData.workoutarea[3].workoutarea_title,
+                    completeProfileData?.workoutarea[3]?.workoutarea_title,
                   );
                 }}>
                 <Image
               source={{
-                uri: completeProfileData.workoutarea[3].workoutarea_image,
+                uri: completeProfileData?.workoutarea[3]?.workoutarea_image,
               }}
                   style={styles.Image23}
                   resizeMode="cover"
@@ -230,7 +230,7 @@ const WorkoutArea = ({route, navigation}) => {
                     marginVertical: 8,
                     lineHeight: 21,
                   }}>
-                  {completeProfileData.workoutarea[3].workoutarea_title}
+                  {completeProfileData?.workoutarea[3]?.workoutarea_title}
                 </Text>
               </TouchableOpacity>
             </Animated.View>

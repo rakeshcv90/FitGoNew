@@ -41,6 +41,7 @@ const dispatch=useDispatch()
         <View style={{width: 20}}></View>
       ) : (
         <TouchableOpacity
+        style={{left:0}}
           onPress={() => {
       
           if(getExperience==true){

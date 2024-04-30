@@ -91,4 +91,5 @@ export const NewAppapi = {
   GET_USER_CUSTOM_WORKOUT: NewApi + 'get_user_custom_workout',
   DELETE_CUSTOM_WORKOUT: NewApi + 'delete_custom_workout',
   EDIT_CUSTOM_WORKOUY: NewApi + 'edit_custom_workout',
+  LET_GO_USER:NewApi+'user_lets_go',
 };

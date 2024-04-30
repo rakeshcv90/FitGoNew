@@ -28,8 +28,12 @@ import {useIsFocused} from '@react-navigation/native';
 import VersionNumber from 'react-native-version-number';
 import {setAllExercise} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const CustomWorkout = ({navigation, route}) => {
+  const avatarRef = React.createRef();
   const dispatch = useDispatch();
   const routeName = route?.params?.routeName;
   const customWorkoutData = useSelector(state => state.customWorkoutData);
@@ -88,7 +92,7 @@ const CustomWorkout = ({navigation, route}) => {
   const renderItem = useMemo(
     () =>
       ({item}) => {
-        console.log("hello",item?.image)
+    
         return (
           <>
             <TouchableOpacity
@@ -97,23 +101,23 @@ const CustomWorkout = ({navigation, route}) => {
                 navigation.navigate('CustomWorkoutDetails', {item: item});
               }}
               style={{
-                width: '95%',
+                width: '97%',
                 borderRadius: 10,
-                backgroundColor: 'white',
+                backgroundColor: AppColor.WHITE,
                 marginVertical: 8,
                 flexDirection: 'row',
                 alignSelf: 'center',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                paddingHorizontal: 20,
+                paddingHorizontal: 12,
                 padding: 5,
-                borderColor: '#D9D9D9',
+                borderColor: '#fff',
                 borderWidth: 1,
 
                 shadowColor: 'rgba(0, 0, 0, 1)',
                 ...Platform.select({
                   ios: {
-                    //shadowColor: '#000000',
+                    shadowColor: '#fff',
                     shadowOffset: {width: 0, height: 2},
                     shadowOpacity: 0.3,
                     shadowRadius: 4,
@@ -122,17 +126,7 @@ const CustomWorkout = ({navigation, route}) => {
                     elevation: 3,
                   },
                 }),
-                // ...Platform.select({
-                //   ios: {
-                //     shadowColor: '#000000',
-                //     shadowOffset: {width: 0, height: 2},
-                //     shadowOpacity: 0.1,
-                //     shadowRadius: 4,
-                //   },
-                //   android: {
-                //     elevation: 4,
-                //   },
-                // }),
+           
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 {isLoading && (
@@ -161,8 +155,11 @@ const CustomWorkout = ({navigation, route}) => {
                   style={{
                     marginHorizontal: 25,
                     justifyContent: 'center',
+                    width:DeviceWidth*0.52,
+              
                   }}>
                   <Text
+                  numberOfLines={1}
                     style={{
                       fontSize: 17,
                       fontWeight: '600',
@@ -185,6 +182,11 @@ const CustomWorkout = ({navigation, route}) => {
                     {' Exercises'}
                   </Text>
                 </View>
+                <Image
+            source={localImage.Next}
+            resizeMode="contain"
+            style={{width: 30, height: 30}}
+          />
               </View>
             </TouchableOpacity>
           </>
@@ -268,6 +270,7 @@ const CustomWorkout = ({navigation, route}) => {
     } else {
       navigation.navigate('CreateWorkout', {workoutTitle: text,workoutImg:getWorkoutAvt});
       setText('');
+      setWorkoutAvt(null)
       setIsCustomWorkout(false);
     }
   };
@@ -277,7 +280,7 @@ const CustomWorkout = ({navigation, route}) => {
       const exerciseData = await axios.get(
         `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
       );
-
+   
       if (
         exerciseData?.data?.msg == 'Please update the app to the latest version'
       ) {
@@ -299,71 +302,7 @@ const CustomWorkout = ({navigation, route}) => {
         SearchButton={false}
         backButton={true}
       />
-      {/* <View
-        style={{
-          width: DeviceWidth,
-          backgroundColor: '#fff',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-
-          height:
-            Platform.OS == 'ios'
-              ? (DeviceHeigth * 13) / 100
-              : (DeviceHeigth * 10) / 100,
-          left: 1,
-          paddingTop:
-            Platform.OS == 'android'
-              ? DeviceHeigth * 0.03
-              : DeviceHeigth * 0.01,
-        }}>
-        <TouchableOpacity
-          onPress={() => {
-            // if (getExperience == true) {
-            //   dispatch(setExperience(false));
-            //   navigation.dispatch(
-            //     CommonActions.reset({
-            //       index: 0,
-            //       routes: [{name: 'BottomTab'}],
-            //     }),
-            //   );
-            // } else {
-            //   navigation.goBack();
-            // }
-            if (routeName=='') {
-              dispatch(setExperience(false));
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  routes: [{name: 'BottomTab'}],
-                }),
-              );
-            } else {
-              navigation.goBack();
-            }
-          }}>
-          <Icons
-            name={'chevron-left'}
-            size={25}
-            color={AppColor.INPUTTEXTCOLOR}
-          />
-        </TouchableOpacity>
-        <View style={{width: 20}}></View>
-        <Text
-          style={[
-            styles.headerstyle,
-            {
-              color: AppColor.INPUTTEXTCOLOR,
-              fontFamily: 'Montserrat-SemiBold',
-              fontWeight: '700',
-
-              width: DeviceWidth * 0.8,
-              textAlign: 'center',
-            },
-          ]}>
-          Custom Workout
-        </Text>
-        <View style={{width: 25}}></View>
-      </View> */}
+   
       <View style={styles.container}>
         <View style={[styles.meditionBox, {top: -20}]}>
           <FlatList
