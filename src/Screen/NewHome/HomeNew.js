@@ -21,7 +21,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import PercentageBar from '../../Component/PercentageBar';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import analytics from '@react-native-firebase/analytics';
-import {check, request, PERMISSIONS, RESULTS, requestMultiple} from 'react-native-permissions';
+import {
+  check,
+  request,
+  PERMISSIONS,
+  RESULTS,
+  requestMultiple,
+} from 'react-native-permissions';
 import {useIsFocused} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BackgroundService from 'react-native-background-actions';
@@ -239,7 +245,7 @@ const HomeNew = ({navigation}) => {
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
         const result = analyzeExerciseData(res.data?.user_details);
-      
+
         if (result.two.length == 0) {
           let day = parseInt(result.one[result.one.length - 1]);
           for (const item of Object.entries(data?.days)) {
@@ -323,7 +329,7 @@ const HomeNew = ({navigation}) => {
       AlarmNotification(currenTime)
         .then(res => console.log('ALARM SET', res))
         .catch(errr => {
-          console.log(errr);
+          console.log("Alarm error",errr);
           currenTime.setDate(currenTime.getDate() + 1);
           AlarmNotification(currenTime);
         });
@@ -568,6 +574,11 @@ const HomeNew = ({navigation}) => {
     );
   };
   const checkPermissions = async () => {
+    if(Platform.Version<30){
+      fetchTotalSteps()
+      startRecording()
+      dispatch(setStepCounterOnOff(true))
+    }
     const fitnessPermissionResult = await check(
       PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
     );
@@ -576,6 +587,8 @@ const HomeNew = ({navigation}) => {
         PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
       );
       if (permissionRequestResult === RESULTS.GRANTED) {
+
+
         if (getStepCounterOnoff == true) {
           fetchTotalSteps();
           startRecording();
@@ -759,7 +772,7 @@ const HomeNew = ({navigation}) => {
       //  setRefresh(true);
       const payload = new FormData();
       payload.append('id', getUserDataDetails?.id);
-   
+
       payload.append('version', VersionNumber.appVersion);
       const res = await axios({
         url: NewAppapi.ALL_WORKOUTS,
@@ -1367,13 +1380,13 @@ const HomeNew = ({navigation}) => {
             </View>
           </View>
         )}
-        <View style={{width: '95%', alignSelf: 'center', marginTop: 15}}>
+        <View style={{width: '95%', alignSelf: 'center'}}>
           <Text
             style={{
               color: AppColor.HEADERTEXTCOLOR,
-              fontFamily: 'Montserrat-SemiBold',
+              fontFamily: Fonts.MONTSERRAT_BOLD,
               fontWeight: '600',
-              lineHeight: 21,
+              lineHeight: 19,
               fontSize: 18,
               alignItems: 'center',
               justifyContent: 'flex-start',
@@ -1381,7 +1394,7 @@ const HomeNew = ({navigation}) => {
             Health Overview
           </Text>
         </View>
-        <View style={{width: '95%', alignSelf: 'center', marginTop: -5}}>
+        <View style={{width: '95%', alignSelf: 'center'}}>
           <View style={styles.CardBox}>
             <TouchableOpacity
               onPress={handleLongPress}
@@ -1597,7 +1610,7 @@ const HomeNew = ({navigation}) => {
           <Text
             style={{
               color: AppColor.HEADERTEXTCOLOR,
-              fontFamily: 'Montserrat-SemiBold',
+              fontFamily: Fonts.MONTSERRAT_BOLD,
               fontWeight: '600',
               lineHeight: 21,
               fontSize: 18,
@@ -1686,7 +1699,7 @@ const HomeNew = ({navigation}) => {
           <Text
             style={{
               color: AppColor.HEADERTEXTCOLOR,
-              fontFamily: 'Montserrat-SemiBold',
+              fontFamily: Fonts.MONTSERRAT_BOLD,
               fontWeight: '600',
               lineHeight: 21,
               fontSize: 18,
@@ -1746,7 +1759,7 @@ const HomeNew = ({navigation}) => {
             <Text
               style={{
                 color: AppColor.HEADERTEXTCOLOR,
-                fontFamily: 'Montserrat-SemiBold',
+                fontFamily: Fonts.MONTSERRAT_BOLD,
                 fontWeight: '600',
                 lineHeight: 21,
                 fontSize: 18,
@@ -1839,7 +1852,7 @@ const HomeNew = ({navigation}) => {
           <Text
             style={{
               color: AppColor.HEADERTEXTCOLOR,
-              fontFamily: 'Montserrat-SemiBold',
+              fontFamily: Fonts.MONTSERRAT_BOLD,
               fontWeight: '600',
               lineHeight: 21,
               fontSize: 18,
@@ -1886,7 +1899,7 @@ const HomeNew = ({navigation}) => {
           <Text
             style={{
               color: AppColor.HEADERTEXTCOLOR,
-              fontFamily: 'Montserrat-SemiBold',
+              fontFamily: Fonts.MONTSERRAT_BOLD,
               fontWeight: '600',
               lineHeight: 21,
               fontSize: 18,
@@ -2024,7 +2037,7 @@ var styles = StyleSheet.create({
   },
   profileView: {
     width: '95%',
-    marginVertical: 10,
+    marginVertical: 8,
   },
   monetText: {
     fontSize: 12,

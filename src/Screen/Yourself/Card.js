@@ -43,7 +43,7 @@ export const Card = ({
             <View>
               <Image
                 source={v.img}
-                style={{height: Ih, width: Iw}}
+                style={{height: Goal?v.id==2?30:Ih: Ih, width: Iw,}} // to add customize ih , checked extra condition
                 resizeMode="contain"
               />
             </View>

@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useMemo, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {Image} from 'react-native';
@@ -144,13 +144,12 @@ const Meals = ({navigation}) => {
         }}>
         <Text
           style={{
-            color: AppColor.BLACK,
-            fontFamily: 'Montserrat-SemiBold',
+            color: AppColor.HEADERTEXTCOLOR,
+            fontFamily: Fonts.MONTSERRAT_BOLD,
             fontWeight: 'bold',
             lineHeight: 19.5,
             fontSize: 18,
             alignItems: 'center',
-            marginLeft: 20,
             justifyContent: 'flex-start',
           }}>
           Top diet recipes
@@ -195,7 +194,6 @@ const Meals = ({navigation}) => {
                 fontWeight: '700',
                 lineHeight: 21,
                 fontSize: 14,
-                marginLeft: 20,
                 justifyContent: 'flex-start',
               }}>
               {selectedMeal.diet_title}
@@ -205,7 +203,7 @@ const Meals = ({navigation}) => {
             style={{
               flexDirection: 'row',
               top: DeviceHeigth * 0.03,
-              width: '86%',
+              width: '95%',
               alignSelf: 'center',
             }}>
             <View
@@ -266,13 +264,12 @@ const Meals = ({navigation}) => {
             }}>
             <Text
               style={{
-                color: AppColor.BLACK,
-                fontFamily: 'Montserrat-SemiBold',
+                color: AppColor.HEADERTEXTCOLOR,
+                fontFamily: Fonts.MONTSERRAT_BOLD,
                 fontWeight: 'bold',
                 lineHeight: 19.5,
                 fontSize: 18,
                 alignItems: 'center',
-                marginLeft: 20,
                 justifyContent: 'flex-start',
               }}>
               Recipes
@@ -286,7 +283,7 @@ const Meals = ({navigation}) => {
           top: DeviceHeigth * 0.085,
           alignSelf: 'center',
           height: DeviceHeigth * 0.4,
-
+          width:'95%',
           paddingBottom: Platform.OS == 'android' ? 30 : 0,
         }}>
         <FlatList
@@ -304,7 +301,6 @@ const Meals = ({navigation}) => {
                     setItemData(item);
                     checkMealAddCount(item);
                   }}>
-        
                   <Image
                     source={
                       item.diet_image == null
@@ -313,7 +309,6 @@ const Meals = ({navigation}) => {
                             uri: item.diet_image,
                           }
                     }
-         
                     style={{
                       height: 70,
                       width: 70,
@@ -356,16 +351,16 @@ var styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
   },
   meditionBox: {
-    width: '86%',
+    width: '95%',
     height: DeviceHeigth * 0.2,
     borderRadius: 15,
     alignSelf: 'center',
     alignItems: 'center',
   },
   listItem2: {
-    width: DeviceWidth * 0.25,
+    width: DeviceWidth * 0.26,
     // height: DeviceWidth * 0.25,
-    marginHorizontal: 10,
+    marginHorizontal: 12,
     top: 10,
     borderRadius: 10,
     paddingRight: 10,

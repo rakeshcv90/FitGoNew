@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {StatusBar} from 'react-native';
 import {StyleSheet} from 'react-native';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 
@@ -51,7 +51,7 @@ const MeditationDetails = ({navigation, route}) => {
           route?.params?.item.workout_mindset_level,
         );
       }
-      setDownloade(0)
+      setDownloade(0);
     }
   }, [isFocused]);
   const getCaterogy = async (id, level) => {
@@ -81,7 +81,7 @@ const MeditationDetails = ({navigation, route}) => {
         setForLoading(false);
       } else if (data?.data?.status == 'data found') {
         setForLoading(false);
-        setmindsetExercise(data.data.data)
+        setmindsetExercise(data.data.data);
         Promise.all(
           data.data.data.map((item, index) =>
             downloadVideos(item, index, data.data.data.length),
@@ -106,7 +106,6 @@ const MeditationDetails = ({navigation, route}) => {
       if (videoExists) {
         StoringData[data?.id] = filePath;
         setDownloade(100 / (len - index));
-        
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -121,7 +120,7 @@ const MeditationDetails = ({navigation, route}) => {
           .then(res => {
             StoringData[data?.id] = res.path();
             setDownloade(100 / (len - index));
-          
+
             // Linking.openURL(`file://${fileDest}`);
           })
           .catch(err => {
@@ -139,7 +138,6 @@ const MeditationDetails = ({navigation, route}) => {
         setHeaderTitle(title);
         getCaterogy(title.id, title.workout_mindset_level);
       }}>
-     
       <LinearGradient
         start={{x: 0, y: 1}}
         end={{x: 1, y: 0}}
@@ -273,12 +271,11 @@ const MeditationDetails = ({navigation, route}) => {
             width: '95%',
             alignSelf: 'center',
             top: -DeviceHeigth * 0.02,
-            paddingLeft: 20,
           }}>
           <Text
             style={{
-              color: AppColor.BLACK,
-              fontFamily: 'Montserrat-SemiBold',
+              color: AppColor.HEADERTEXTCOLOR,
+              fontFamily: Fonts.MONTSERRAT_BOLD,
               fontWeight: 'bold',
               lineHeight: 19.5,
               fontSize: 18,
@@ -322,12 +319,11 @@ const MeditationDetails = ({navigation, route}) => {
             alignSelf: 'center',
 
             marginVertical: DeviceHeigth * 0.03,
-            paddingLeft: 20,
           }}>
           <Text
             style={{
-              color: AppColor.BLACK,
-              fontFamily: 'Montserrat-SemiBold',
+              color: AppColor.HEADERTEXTCOLOR,
+              fontFamily: Fonts.MONTSERRAT_BOLD,
               fontWeight: 'bold',
               lineHeight: 19.5,
               fontSize: 18,
@@ -509,7 +505,7 @@ const MeditationDetails = ({navigation, route}) => {
                               left: -12,
                             }}>
                             <TouchableOpacity
-                            disabled={downloaded > 0 && downloaded != 100}
+                              disabled={downloaded > 0 && downloaded != 100}
                               onPress={() => {
                                 navigation.navigate(
                                   'MeditationExerciseDetails',
@@ -623,9 +619,8 @@ var styles = StyleSheet.create({
     borderRadius: 160 / 2,
   },
   listItem1: {
-    width: DeviceWidth * 0.9,
+    width: DeviceWidth * 0.95,
     height: 150,
-    marginHorizontal: 10,
     marginVertical: 10,
     borderRadius: 10,
     padding: 5,

@@ -145,7 +145,6 @@ const WorkoutArea = ({route, navigation}) => {
         }}>
         <Bulb
           screen={'What’s your comfort place to workout ?'}
-          header={'This will help us to create your personalized workout'}
         />
       </View>
       {/* <View
