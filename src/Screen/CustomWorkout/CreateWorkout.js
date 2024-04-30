@@ -27,6 +27,9 @@ import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
 import {setCustomWorkoutData} from '../../Component/ThemeRedux/Actions';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const CreateWorkout = ({navigation, route}) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -37,6 +40,7 @@ const CreateWorkout = ({navigation, route}) => {
   const [workoutList, setWorkoutList] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [forLoading, setForLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [value, setValue] = useState(0);
   const animation = useSharedValue(0);
   const completeProfileData = useSelector(state => state.completeProfileData);
@@ -44,6 +48,7 @@ const CreateWorkout = ({navigation, route}) => {
   const [bodyPart, setBodyPart] = useState(
     completeProfileData?.focusarea[0].bodypart_title,
   );
+  const avatarRef = React.createRef();
   const [filteredCategories, setFilteredCategories] = useState([]);
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -53,11 +58,12 @@ const CreateWorkout = ({navigation, route}) => {
           : withTiming(0, {duration: 500}),
     };
   });
+  console.log("fffffffff",getAllExercise)
   useEffect(() => {
     const datalist = getAllExercise?.filter(listdata => {
       return listdata.exercise_bodypart == bodyPart;
     });
-  
+
     setWorkoutList(datalist);
     setFilteredCategories(datalist);
   }, [bodyPart]);
@@ -81,36 +87,50 @@ const CreateWorkout = ({navigation, route}) => {
                 selectedExercise(item?.exercise_id);
               }}
               style={{
-                width: '95%',
+                width: '100%',
                 borderRadius: 10,
-                backgroundColor: '#FDFDFD',
+               // backgroundColor: '#FDFDFD',
                 marginVertical: 8,
                 flexDirection: 'row',
                 alignSelf: 'center',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 paddingHorizontal: 20,
-                padding: 5,
+                //padding: 5,
                 // borderColor: '#D9D9D9',
                 borderColor: isSelected ? 'red' : AppColor.GRAY2,
                 borderWidth: 1,
                 justifyContent: 'space-between',
+                backgroundColor: AppColor.WHITE,
                 shadowColor: 'rgba(0, 0, 0, 1)',
                 ...Platform.select({
                   ios: {
-                    shadowColor: '#000000',
+                    //shadowColor: '#000000',
                     shadowOffset: {width: 0, height: 2},
-                    shadowOpacity: 0.1,
+                    shadowOpacity: 0.3,
                     shadowRadius: 4,
                   },
                   android: {
-                    elevation: 4,
+                    elevation: 3,
                   },
                 }),
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                {isLoading && (
+                  // <ActivityIndicator
+                  //   style={styles.loader}
+                  //   size="small"
+                  //   color="#0000ff"
+                  // />
+                  <ShimmerPlaceholder
+                    style={styles.loader}
+                    ref={avatarRef}
+                    autoRun
+                  />
+                )}
                 <Image
                   source={{uri: item.exercise_image_link}}
+                  onLoad={() => setIsLoading(false)}
                   style={{
                     width: 80,
                     height: 80,
@@ -241,14 +261,14 @@ const CreateWorkout = ({navigation, route}) => {
         payload.append('exercises[]', selectedItems[i]);
       }
       payload.append('workout_name', route?.params?.workoutTitle);
-      payload.append('user_id', getUserDataDetails?.id)??getUserID;
+      payload.append('user_id', getUserDataDetails?.id) ?? getUserID;
       // payload.append('id', getUserID != 0 ? getUserID : null);
       payload.append('image', {
         name: route?.params?.workoutImg?.fileName,
         type: route?.params?.workoutImg?.type,
         uri: route?.params?.workoutImg?.uri,
       });
-      console.log('Payload--->',payload)
+      console.log('Payload--->', payload);
       try {
         const res = await axios(`${NewAppapi.USER_CUSTOM_WORKOUT}`, {
           data: payload,
@@ -337,7 +357,7 @@ const CreateWorkout = ({navigation, route}) => {
             style={[
               {
                 top: -10,
-                width: DeviceWidth * 0.85,
+                width: DeviceWidth * 0.95,
                 height: 50,
                 zIndex: 1,
 
@@ -348,13 +368,14 @@ const CreateWorkout = ({navigation, route}) => {
                 borderRadius: 10,
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginRight: value == 1 ? 30 : 40,
+                marginRight: value == 1 ? 20 : 10,
               },
               animatedStyle,
             ]}>
             <TextInput
-              style={{width: '90%'}}
+              style={{width: '100%', color: 'black'}}
               placeholder={'Search here......'}
+              placeholderTextColor={'gray'}
               value={searchQuery}
               onChangeText={text => {
                 setSearchQuery(text);
@@ -362,7 +383,9 @@ const CreateWorkout = ({navigation, route}) => {
               }}
             />
             <TouchableOpacity
+              //style={{marginRight:10}}
               onPress={() => {
+                setSearchQuery('');
                 if (animation.value == 1) {
                   animation.value = 0;
                   setValue(0);
@@ -372,7 +395,7 @@ const CreateWorkout = ({navigation, route}) => {
                 }
               }}>
               <Image
-                style={{width: 20, height: 20}}
+                style={{width: 15, height: 15}}
                 source={value == 0 ? localImage.Search : localImage.Cross}
               />
             </TouchableOpacity>
@@ -524,6 +547,16 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     backgroundColor: 'transparent',
     //lineHeight: 25,
+  },
+  loader: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    backgroundColor: AppColor.GRAY,
+
+    height: 50,
+    width: 50,
+    borderRadius: 100 / 2,
   },
 });
 export default CreateWorkout;

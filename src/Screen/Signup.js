@@ -898,7 +898,7 @@ const Signup = ({navigation}) => {
           version: appVersion,
         },
       });
-      console.log('sdfdsfsdfsdfsd', data.data.profile);
+    
       if (data.data.profile) {
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));

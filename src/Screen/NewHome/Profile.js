@@ -77,7 +77,7 @@ const Profile = () => {
         setNotificationTimer('');
         dispatch(setIsAlarmEnabled(false));
       }
-      console.log(res, isAlarmEnabled);
+   
     });
   }, []);
 
@@ -88,7 +88,7 @@ const Profile = () => {
     } else {
       setVisible(true);
     }
-    console.log(isAlarmEnabled);
+
   };
   const setAlarmIsEnabled = data => {
     dispatch(setIsAlarmEnabled(data));
@@ -759,7 +759,7 @@ const Profile = () => {
                     color: AppColor.WHITE,
                     fontSize: 20,
                   }}>
-                  {getUserDataDetails.name}
+                  {getUserDataDetails?.name==null?'Guest':getUserDataDetails?.name}
                 </Text>
                 <Text
                   style={{
@@ -767,7 +767,7 @@ const Profile = () => {
                     color: AppColor.WHITE,
                     fontSize: 12,
                   }}>
-                  {getUserDataDetails.email}
+                  {getUserDataDetails?.email==null?'guest.gmail.com': getUserDataDetails?.email}
                 </Text>
               </View>
             </View>

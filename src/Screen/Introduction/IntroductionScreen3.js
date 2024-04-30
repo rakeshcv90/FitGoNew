@@ -46,7 +46,8 @@ const IntroductionScreen3 = ({navigation}) => {
       duration: 1500,
     }).start();
     setTimeout(() => {
-      navigation.replace('LogSignUp');
+      //navigation.replace('LogSignUp');
+      navigation.replace('LetsStart');
     }, 500);
   };
   const translateX = useRef(new Animated.Value(0)).current;
