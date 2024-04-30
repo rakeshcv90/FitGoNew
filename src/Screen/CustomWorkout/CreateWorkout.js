@@ -37,6 +37,7 @@ const CreateWorkout = ({navigation, route}) => {
   const customWorkoutData = useSelector(state => state.customWorkoutData);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getAllExercise = useSelector(state => state.getAllExercise);
+  const getStoreVideoLoc = useSelector(state => state.getStoreVideoLoc);
   const [workoutList, setWorkoutList] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [forLoading, setForLoading] = useState(false);
@@ -129,8 +130,10 @@ const CreateWorkout = ({navigation, route}) => {
                   />
                 )}
                 <Image
-                  source={{uri: item.exercise_image_link}}
-                  onLoad={() => setIsLoading(false)}
+                  // source={{uri: item.exercise_image_link}}
+                  source={{
+                    uri: 'file://' + getStoreVideoLoc[item?.exercise_title],
+                  }}
                   style={{
                     width: 80,
                     height: 80,

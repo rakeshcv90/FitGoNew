@@ -312,7 +312,8 @@ const OneDay = ({navigation, route}: any) => {
               />
             )} */}
             <Image
-              source={{uri: item?.exercise_image}}
+              source={{uri: 'file://' + getStoreVideoLoc[item?.exercise_title]}}
+              // source={{uri: item?.exercise_image}}
               // onLoad={() => setIsLoading(false)}
               style={{height: 75, width: 75, alignSelf: 'center'}}
               resizeMode="contain"
