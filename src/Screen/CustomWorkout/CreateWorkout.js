@@ -34,6 +34,7 @@ const CreateWorkout = ({navigation, route}) => {
   const customWorkoutData = useSelector(state => state.customWorkoutData);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getAllExercise = useSelector(state => state.getAllExercise);
+  const getStoreVideoLoc = useSelector(state => state.getStoreVideoLoc);
   const [workoutList, setWorkoutList] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [forLoading, setForLoading] = useState(false);
@@ -57,7 +58,7 @@ const CreateWorkout = ({navigation, route}) => {
     const datalist = getAllExercise?.filter(listdata => {
       return listdata.exercise_bodypart == bodyPart;
     });
-  
+
     setWorkoutList(datalist);
     setFilteredCategories(datalist);
   }, [bodyPart]);
@@ -110,7 +111,10 @@ const CreateWorkout = ({navigation, route}) => {
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
-                  source={{uri: item.exercise_image_link}}
+                  // source={{uri: item.exercise_image_link}}
+                  source={{
+                    uri: 'file://' + getStoreVideoLoc[item?.exercise_title],
+                  }}
                   style={{
                     width: 80,
                     height: 80,
@@ -241,14 +245,14 @@ const CreateWorkout = ({navigation, route}) => {
         payload.append('exercises[]', selectedItems[i]);
       }
       payload.append('workout_name', route?.params?.workoutTitle);
-      payload.append('user_id', getUserDataDetails?.id)??getUserID;
+      payload.append('user_id', getUserDataDetails?.id) ?? getUserID;
       // payload.append('id', getUserID != 0 ? getUserID : null);
       payload.append('image', {
         name: route?.params?.workoutImg?.fileName,
         type: route?.params?.workoutImg?.type,
         uri: route?.params?.workoutImg?.uri,
       });
-      console.log('Payload--->',payload)
+      console.log('Payload--->', payload);
       try {
         const res = await axios(`${NewAppapi.USER_CUSTOM_WORKOUT}`, {
           data: payload,
