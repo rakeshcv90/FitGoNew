@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useMemo, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
@@ -26,7 +26,7 @@ import AppleHealthKit from 'react-native-health';
 import {setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
 import {Calendar} from 'react-native-calendars';
 import AnimatedLottieView from 'lottie-react-native';
-import GoogleFit from 'react-native-google-fit';
+import GoogleFit, {Scopes} from 'react-native-google-fit';
 import {
   VictoryBar,
   VictoryChart,
@@ -41,7 +41,6 @@ import analytics from '@react-native-firebase/analytics';
 
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
-
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -65,6 +64,7 @@ const NewProgressScreen = ({navigation}) => {
   const [Calories, setCalories] = useState(0);
   const [Wtime, setWtime] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [Height, setheight] = useState();
   const avatarRef = React.createRef();
   const dispatch = useDispatch();
   let arrayForData = [];
@@ -79,7 +79,6 @@ const NewProgressScreen = ({navigation}) => {
     );
     const Time2 = time1?.reduce((acc, ind) => Math.ceil((acc + ind) / 60), 0);
     setWtime(Time2);
-
     if (Platform.OS == 'ios') {
       let options = {
         date: new Date().toISOString(), // optional; default now
@@ -97,21 +96,35 @@ const NewProgressScreen = ({navigation}) => {
       });
     } else if (Platform.OS == 'android') {
       if (getStepCounterOnoff) {
-        const getDailyData = async () => {
+        async function getDailyData() {
           try {
-            const dailySteps = await GoogleFit?.getDailySteps();
-            const totalSteps = dailySteps?.reduce(
-              (total, acc) => (total + acc?.steps[0] ? acc?.steps[0].value : 0),
-              0,
-            );
-            setCalories(
-              parseInt(totalSteps ? ((totalSteps / 20) * 1)?.toFixed(0) : 0) +
-                parseInt(Calories2),
-            );
+            const options = {
+              scopes: [
+                Scopes.FITNESS_ACTIVITY_READ,
+                Scopes.FITNESS_ACTIVITY_WRITE,
+              ],
+            };
+
+            const authResult = await GoogleFit?.authorize(options);
+            if (authResult.success) {
+              const dailySteps = await GoogleFit?.getDailySteps();
+              const totalSteps = dailySteps?.reduce(
+                (total, acc) => total + (acc?.steps[0]?.value || 0),
+                0,
+              );
+              const calories = parseInt(((totalSteps / 20) * 1).toFixed(0));
+              setCalories(calories + parseInt(Calories2)); // Assuming Calories2 is defined elsewhere
+            } else {
+              setCalories(parseInt(Calories2))
+              console.error('Authorization failed');
+              
+            }
           } catch (error) {
-            console.error('Error fetching total steps', error);
+            setCalories(parseInt(Calories2))
+            console.error('Error fetching daily steps:', error);
           }
-        };
+        }
+
         getDailyData();
       } else {
         setCalories(parseInt(Calories2));
@@ -242,9 +255,8 @@ const NewProgressScreen = ({navigation}) => {
           <Text
             style={{
               textAlign: 'center',
-              color: AppColor.BLACK,
-
-              fontFamily: 'Montserrat-SemiBold',
+              color: AppColor.HEADERTEXTCOLOR,
+              fontFamily: Fonts.MONTSERRAT_BOLD,
               fontWeight: 'bold',
               lineHeight: 19.5,
               fontSize: 18,
@@ -458,8 +470,8 @@ const NewProgressScreen = ({navigation}) => {
           {
             text: 'Ok',
             onPress: () => {
-              setBmi()
-              setModalVisible(false)
+              setBmi();
+              setModalVisible(false);
             },
           },
         ]);
@@ -469,6 +481,7 @@ const NewProgressScreen = ({navigation}) => {
           (Dvalue == 'ft' ? height * 0.3048 : height / 100) ** 2;
         setBmi(BMI.toFixed(2));
         setModalVisible(false);
+        setheight(height);
       }
     };
     return (
@@ -481,7 +494,7 @@ const NewProgressScreen = ({navigation}) => {
           style={{flex: 1, backgroundColor: 'red'}}
           activeOpacity={1}
           onPress={() => {
-            // setModalVisible(false);
+            setModalVisible(false);
           }}>
           <BlurView
             style={styles.modalContainer}
@@ -491,6 +504,16 @@ const NewProgressScreen = ({navigation}) => {
           />
           <View
             style={[styles.modalContent, {backgroundColor: AppColor.WHITE}]}>
+            <TouchableOpacity
+              style={{
+                alignSelf: 'flex-end',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: 2,
+              }}
+              onPress={closeModal}>
+              <Icons name={'close'} size={25} color={AppColor.BLACK} />
+            </TouchableOpacity>
             <View>
               <Text
                 style={{
@@ -905,9 +928,8 @@ const NewProgressScreen = ({navigation}) => {
             <Text
               style={{
                 textAlign: 'center',
-                color: AppColor.BLACK,
-
-                fontFamily: 'Montserrat-SemiBold',
+                color: AppColor.HEADERTEXTCOLOR,
+                fontFamily: Fonts.MONTSERRAT_BOLD,
                 fontWeight: 'bold',
                 lineHeight: 19.5,
                 fontSize: 18,
@@ -931,112 +953,116 @@ const NewProgressScreen = ({navigation}) => {
         </View>
         <View
           style={[styles.card, {flexDirection: 'column', marginBottom: 10}]}>
-          <View style={{width: DeviceWidth * 0.9, alignSelf: 'center'}}>
-            <View
-              style={{
-                width: 100,
-                marginLeft:
-                  getBmi > 0 && getBmi <= 18
-                    ? DeviceWidth * 0.1
-                    : getBmi > 18 && getBmi < 25
-                    ? DeviceWidth * 0.35
-                    : getBmi
-                    ? DeviceWidth * 0.6
-                    : DeviceWidth * 0.35,
-              }}>
+          {Height ? (
+            <>
+              <View style={{width: DeviceWidth * 0.9, alignSelf: 'center'}}>
+                <View
+                  style={{
+                    width: 100,
+                    marginLeft:
+                      getBmi > 0 && getBmi <= 18
+                        ? DeviceWidth * 0.1
+                        : getBmi > 18 && getBmi < 25
+                        ? DeviceWidth * 0.35
+                        : getBmi
+                        ? DeviceWidth * 0.6
+                        : DeviceWidth * 0.35,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: '#F25C19',
+                      borderRadius: 8,
+                      padding: 5,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text style={{fontWeight: '500', color: AppColor.WHITE}}>
+                      {getBmi <= 18
+                        ? 'Under Weight'
+                        : getBmi > 18 && getBmi < 25
+                        ? 'Normal'
+                        : isFinite(getBmi)
+                        ? 'Over Weight'
+                        : 'No Data'}
+                    </Text>
+                  </View>
+                  <View style={styles.arrowheadContainer}>
+                    <View style={styles.arrowhead} />
+                  </View>
+                </View>
+              </View>
+              <LinearGradient
+                colors={[
+                  '#BCFFF7',
+                  '#92FFBD',
+                  '#00BE4C',
+                  '#FFC371',
+                  '#FF7A1A',
+                  '#D5191A',
+                  '#941000',
+                ]}
+                style={{
+                  width: DeviceWidth * 0.9,
+                  height: 18,
+                  borderRadius: 8,
+                  alignSelf: 'center',
+                }}
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 0}}
+              />
               <View
                 style={{
-                  backgroundColor: '#F25C19',
-                  borderRadius: 8,
-                  padding: 5,
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  flexDirection: 'row',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  width: DeviceWidth * 0.88,
+                  marginTop: 5,
+                  alignSelf: 'center',
                 }}>
-                <Text style={{fontWeight: '500', color: AppColor.WHITE}}>
-                  {getBmi <= 18
-                    ? 'Under Weight'
+                <Text
+                  style={{
+                    color: AppColor.BLACK,
+                    position: 'absolute',
+                    fontFamily: 'Poppins-SemiBold',
+                  }}>
+                  {'0'}
+                </Text>
+                {textData.map((value, index) => (
+                  <Text
+                    key={index}
+                    style={{
+                      color: AppColor.BLACK,
+                      fontFamily: 'Poppins-SemiBold',
+                      textAlign: 'center',
+                      width: 85,
+                      marginLeft:
+                        getBmi > 0 && getBmi <= 18
+                          ? DeviceWidth * 0.1
+                          : getBmi > 18 && getBmi < 25
+                          ? DeviceWidth * 0.35
+                          : DeviceWidth * 0.6,
+                    }}>
+                    {value?.value}
+                  </Text>
+                ))}
+                <Text
+                  style={{
+                    color: AppColor.BLACK,
+                    fontFamily: 'Poppins-SemiBold',
+                    right: isFinite(getBmi) ? null : 28,
+                    textAlign: 'center',
+                  }}>
+                  {isNaN(getBmi)
+                    ? 'No data'
+                    : getBmi < 18
+                    ? (getBmi * 2 + 10).toFixed(0)
                     : getBmi > 18 && getBmi < 25
-                    ? 'Normal'
-                    : isFinite(getBmi)
-                    ? 'Over Weight'
-                    : 'No Data'}
+                    ? (getBmi * 2).toFixed(0)
+                    : (getBmi * 2 - 8).toFixed(0)}
                 </Text>
               </View>
-              <View style={styles.arrowheadContainer}>
-                <View style={styles.arrowhead} />
-              </View>
-            </View>
-          </View>
-          <LinearGradient
-            colors={[
-              '#BCFFF7',
-              '#92FFBD',
-              '#00BE4C',
-              '#FFC371',
-              '#FF7A1A',
-              '#D5191A',
-              '#941000',
-            ]}
-            style={{
-              width: DeviceWidth * 0.9,
-              height: 18,
-              borderRadius: 8,
-              alignSelf: 'center',
-            }}
-            start={{x: 0, y: 1}}
-            end={{x: 1, y: 0}}
-          />
-          <View
-            style={{
-              flexDirection: 'row',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              width: DeviceWidth * 0.88,
-              marginTop: 5,
-              alignSelf: 'center',
-            }}>
-            <Text
-              style={{
-                color: AppColor.BLACK,
-                position: 'absolute',
-                fontFamily: 'Poppins-SemiBold',
-              }}>
-              {'0'}
-            </Text>
-            {textData.map((value, index) => (
-              <Text
-                key={index}
-                style={{
-                  color: AppColor.BLACK,
-                  fontFamily: 'Poppins-SemiBold',
-                  textAlign: 'center',
-                  width: 85,
-                  marginLeft:
-                    getBmi > 0 && getBmi <= 18
-                      ? DeviceWidth * 0.1
-                      : getBmi > 18 && getBmi < 25
-                      ? DeviceWidth * 0.35
-                      : DeviceWidth * 0.6,
-                }}>
-                {value?.value}
-              </Text>
-            ))}
-            <Text
-              style={{
-                color: AppColor.BLACK,
-                fontFamily: 'Poppins-SemiBold',
-                right: isFinite(getBmi) ? null : 28,
-                textAlign: 'center',
-              }}>
-              {isNaN(getBmi)
-                ? 'No data'
-                : getBmi < 18
-                ? (getBmi * 2 + 10).toFixed(0)
-                : getBmi > 18 && getBmi < 25
-                ? (getBmi * 2).toFixed(0)
-                : (getBmi * 2 - 8).toFixed(0)}
-            </Text>
-          </View>
+            </>
+          ) : null}
           <TouchableOpacity
             style={[styles.button_b, {marginVertical: 20}]}
             activeOpacity={0.5}
@@ -1054,7 +1080,7 @@ const NewProgressScreen = ({navigation}) => {
                   fontSize: 18,
                   color: AppColor.WHITE,
                 }}>
-                {"Enter Today's Weight"}
+                {'Calculate BMI'}
               </Text>
             </LinearGradient>
           </TouchableOpacity>

@@ -510,7 +510,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           {
             width:
               DeviceHeigth < 1280 ? DeviceWidth * 0.95 : DeviceWidth * 0.99,
-            height: DeviceHeigth * 0.1,
+            height: DeviceHeigth * 0.125,
           },
         ]}
         activeOpacity={1}
@@ -550,7 +550,7 @@ const WorkoutDays = ({navigation, route}: any) => {
             {
               width:
                 DeviceHeigth < 1280 ? DeviceWidth * 0.95 : DeviceWidth * 0.99,
-              height: DeviceHeigth * 0.1,
+              height: DeviceHeigth * 0.125,
             },
           ]}>
           <View
@@ -574,8 +574,11 @@ const WorkoutDays = ({navigation, route}: any) => {
               <Image
                 source={{uri: data?.workout_image_link}}
                 style={{
-                  height: DeviceWidth * 0.15,
-                  width: DeviceWidth * 0.15,
+                  height: DeviceWidth * 0.225,
+                  width:
+                    DeviceHeigth < 1280
+                      ? DeviceWidth * 0.15
+                      : DeviceWidth * 0.2,
                   marginLeft: DeviceWidth * 0.12,
                   opacity: percent ? 0.5 : 1,
                 }}
@@ -588,14 +591,14 @@ const WorkoutDays = ({navigation, route}: any) => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 marginHorizontal: 10,
-                width: '80%',
+                width: '75%',
               }}>
               <View>
                 <Text
                   style={[
                     styles.category,
                     {
-                      fontSize: 20,
+                      fontSize: DeviceHeigth < 1280 ? 16 : 14,
                       color:
                         percent && item?.total_rest != 0
                           ? AppColor.WHITE
@@ -630,28 +633,20 @@ const WorkoutDays = ({navigation, route}: any) => {
                       ? `${(item?.total_rest / 60).toFixed(0)} min`
                       : `${item?.total_rest} sec`}
                     {'   '}
-                    {
-                      <View
-                        style={{
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          marginBottom: 5,
-                        }}>
-                        <Text
-                          style={{
-                            color:
-                              percent && item?.total_rest != 0
-                                ? AppColor.WHITE
-                                : '#505050',
-                            lineHeight: 25,
-                            fontWeight: 'bold',
-                            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                            fontSize: 20,
-                          }}>
-                          .
-                        </Text>
-                      </View>
-                    }
+                    <Text
+                      style={{
+                        fontSize: 30,
+                        fontWeight: '600',
+                        color:
+                          percent && item?.total_rest != 0
+                            ? AppColor.WHITE
+                            : '#505050',
+                        lineHeight: 20,
+                        marginHorizontal: 10,
+                        fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                      }}>
+                      .
+                    </Text>
                     {'   '}
                     {item?.total_calories} Kcal
                     {/* {moment(139).format('S')} min | {item?.total_calories} Kcal */}
@@ -731,10 +726,10 @@ const WorkoutDays = ({navigation, route}: any) => {
         fontWeight={'700'}
         fontSize={22}
         width={DeviceWidth}
-        x={10}
+        x={15}
         marginTop={-10}
       />
-      <Text style={[styles.category, {marginTop: 10, marginLeft: 10}]}>
+      <Text style={[styles.category, {marginVertical: 10, marginLeft: 10}]}>
         {moment().format('dddd DD MMMM')}
       </Text>
       {!refresh && (
@@ -768,7 +763,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           </ScrollView>
         </>
       )}
-      {/* <ActivityLoader visible={refresh} /> */}
+      <ActivityLoader visible={refresh} />
       <PaddoMeterPermissionModal />
     </View>
   );
@@ -801,7 +796,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    borderRadius: 15,
+    borderRadius: 10,
     marginVertical: 8,
     backgroundColor:AppColor.WHITE,
     shadowColor: 'rgba(0, 0, 0, 1)',

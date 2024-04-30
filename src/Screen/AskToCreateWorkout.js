@@ -51,12 +51,12 @@ const AskToCreateWorkout = ({route, navigation}) => {
   const askArray = [
     {
       id: 1,
-      txt: 'Create Custom Workouts',
+      txt: ' Create your workout',
       img: localImage.AddIcon,
     },
     {
       id: 2,
-      txt: 'Let us create Workouts for you',
+      txt: 'Let us create the workout',
       img: localImage.CreateW,
     },
   ];
@@ -249,7 +249,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
   return (
     <View style={styles.Container}>
       <ProgressBar Type screen={screen} ExperienceScreen />
-      <Bulb screen={'Please choose one'} />
+      <Bulb screen={'Select One Option'} />
       {Loader ? <ActivityLoader /> : null}
       <View style={{marginTop: DeviceHeigth * 0.06}}>
         <Card
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
   },
   txt: {
     paddingVertical: 14,
-    fontSize: 17,
+    fontSize: 19,
     color: AppColor.BLACK,
     fontFamily: 'Montserrat-SemiBold',
     fontWeight: '500',

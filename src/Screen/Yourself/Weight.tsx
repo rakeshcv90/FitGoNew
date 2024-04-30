@@ -44,7 +44,7 @@ const positions = height.map(
     }),
 );
 const WeightArray: any = [];
-for (let i = 0; i <= 150; i++) {
+for (let i = 40; i <= 150; i++) {
   WeightArray.push(i);
 }
 const Weight = ({route, navigation}: any) => {
@@ -58,7 +58,7 @@ const Weight = ({route, navigation}: any) => {
     (state: any) => state.getLaterButtonData,
   );
   const dispatch = useDispatch();
-  const [selected, setSelected] = useState(-1);
+  const [selected, setSelected] = useState(40);
   const ref = useRef(selected);
   const [targetSelected, setTargetSelected] = useState(false);
   const [screen, setScreen] = useState(nextScreen);
@@ -67,7 +67,7 @@ const Weight = ({route, navigation}: any) => {
   const translateTarget = useRef(new Animated.Value(DeviceHeigth * 2)).current;
   const translateCurrent = useRef(new Animated.Value(0)).current;
   const mergedObject = Object.assign({}, ...getLaterButtonData);
-  const [targetWeight, setTargetWeight] = useState(0);
+  const [targetWeight, setTargetWeight] = useState(40);
   const [BackHight, setBackHight] = useState(0);
   const [getActiveIndex, setActiveIndex] = useState(0);
   useEffect(() => {
@@ -150,6 +150,7 @@ const Weight = ({route, navigation}: any) => {
           alignItems: 'center',
           // backgroundColor: AppColor.RED,
           height: DeviceHeigth * 0.54,
+          top:-DeviceHeigth*0.05
         }}>
         <ProgressBar screen={screen} />
         <View
@@ -159,9 +160,7 @@ const Weight = ({route, navigation}: any) => {
           }}>
           <Bulb
             screen={'What’s your Current weight?'}
-            header={
-              'Knowing your weight can help us for you based on different metabolic rates.'
-            }
+    
           />
           <View style={{marginTop: 20}} />
           <Toggle
@@ -204,9 +203,9 @@ const Weight = ({route, navigation}: any) => {
               <CustomPicker
                 items={WeightArray}
                 onIndexChange={index => {
-                  setSelected(WeightArray[index + 2]);
+                  setSelected(WeightArray[index]);
                 }}
-                itemHeight={60}
+                itemHeight={80}
                 toggle={toggle}
                 ActiveIndex={currentActiveIndex}
               />
@@ -261,6 +260,7 @@ const Weight = ({route, navigation}: any) => {
           display: targetSelected ? 'flex' : 'none',
           justifyContent: 'center',
           alignItems: 'center',
+          top:-DeviceHeigth*0.05
         }}>
         <ProgressBar screen={screen} />
         <View
@@ -271,9 +271,6 @@ const Weight = ({route, navigation}: any) => {
           }}>
           <Bulb
             screen={'What’s your Target weight?'}
-            header={
-              'Knowing your weight can help us for you based on different metabolic rates.'
-            }
           />
           <View style={{marginTop: 20}} />
           <Toggle
@@ -374,13 +371,13 @@ const Weight = ({route, navigation}: any) => {
           </View>  */}
           <CustomPicker
             items={WeightArray}
-            onIndexChange={index => setTargetWeight(WeightArray[index + 2])}
+            onIndexChange={index => setTargetWeight(WeightArray[index])}
             itemHeight={60}
             toggle={toggle}
           />
         </ImageBackground>
         <View>
-          <View style={[styles.buttons,{bottom: -DeviceHeigth * 0.12,}]}>
+          <View style={[styles.buttons,{bottom: -DeviceHeigth * 0.2,}]}>
             <TouchableOpacity
               style={{
                 backgroundColor: '#F7F8F8',
@@ -476,7 +473,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     position: 'absolute',
-    bottom: -DeviceHeigth * 0.14,
+    bottom: -DeviceHeigth * 0.2,
   },
   nextButton: {
     backgroundColor: 'red',

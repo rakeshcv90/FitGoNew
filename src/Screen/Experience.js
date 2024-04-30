@@ -98,7 +98,7 @@ const Experience = ({route, navigation}) => {
   return (
     <View style={styles.Container}>
       <ProgressBar screen={screen} Type />
-      <Bulb screen={'What is your current Activity level?'} />
+      <Bulb screen={'Choose your fitness level'} />
       <View style={{marginTop: DeviceHeigth * 0.06}}>
         <Card
           ItemArray={ExperienceArray}
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   },
   txt: {
     paddingVertical: 14,
-    fontSize: 17,
+    fontSize: 19,
     color: AppColor.BLACK,
     fontFamily: 'Montserrat-SemiBold',
     fontWeight: '500',

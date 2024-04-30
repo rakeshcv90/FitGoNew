@@ -249,9 +249,11 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                   style={{
                     height: 25,
                     width: 25,
-                    //left: playbackState.state === State.Paused && 2,
+                    left: playbackState.state === State.Paused && 2,
                     alignSelf: 'center',
                     tintColor: '#fff',
+                    justifyContent:'center',
+                    alignItems:'center'
                   }}
                   resizeMode="contain"></Image>
               </TouchableOpacity>

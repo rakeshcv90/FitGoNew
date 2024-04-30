@@ -15,7 +15,7 @@ const ProgressBar = ({screen, ExperienceScreen}: any) => {
         alignSelf: 'flex-start',
         alignItems: 'center',
         width: DeviceWidth * 0.9,
-        marginBottom: DeviceHeigth * 0.05,
+        marginBottom: DeviceHeigth * 0.07,
         marginTop: DeviceHeigth * 0.02,
         // borderWidth: 1,
         justifyContent: 'center',
