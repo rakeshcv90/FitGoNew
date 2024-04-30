@@ -163,7 +163,6 @@ const Exercise = ({navigation, route}: any) => {
       separateTimer
         ? setTimeout(() => {
             if (timerS == 0) {
-              console.log('playbackState', playbackState);
               setDemoS(0);
               setDemo1(!demo1);
               setTimerS(10);
@@ -238,7 +237,7 @@ const Exercise = ({navigation, route}: any) => {
                 setSeconds(prevSeconds => prevSeconds - 1);
               }
             }
-
+            if (playW >= 65 && playW <= 68) Tts.speak('Lets Go');
             if (playW >= 100 && number == allExercise?.length - 1) {
               setPause(false);
               postCurrentExerciseAPI(number);

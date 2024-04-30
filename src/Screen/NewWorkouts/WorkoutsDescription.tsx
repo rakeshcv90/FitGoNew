@@ -23,6 +23,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
   const [description, SetDescription] = useState('');
 
   const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
+  const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const cleanText = TextSpeech.replace(/<\/?[^>]+(>|$)/g, '');
   useEffect(() => {
     const initTts = async () => {
@@ -104,7 +105,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
           <Icon name="close" color={AppColor.DARKGRAY} size={25} />
         </TouchableOpacity>
         <Image
-          source={{uri: data?.workout_image_link || data?.exercise_image}}
+          source={{uri:'file://' + getStoreVideoLoc[data?.exercise_title]|| data?.workout_image_link || data?.exercise_image}}
           style={{
             height: DeviceWidth / 1.5,
             width: DeviceWidth * 0.95,

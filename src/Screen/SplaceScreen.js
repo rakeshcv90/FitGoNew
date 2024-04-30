@@ -15,6 +15,7 @@ import {
   setInappPurchase,
   setPurchaseHistory,
   setStoreData,
+  setVideoLocation,
 } from '../Component/ThemeRedux/Actions';
 import VersionNumber from 'react-native-version-number';
 import DeviceInfo from 'react-native-device-info';
@@ -30,6 +31,7 @@ import {
 } from 'react-native-google-mobile-ads';
 import {interstitialAdId} from '../Component/AdsId';
 import {LogOut} from '../Component/LogOut';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const products = Platform.select({
   ios: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
@@ -58,8 +60,8 @@ const SplaceScreen = ({navigation}) => {
       getCustomWorkout();
     dispatch(setFitmeAdsCount(0));
     initInterstitial();
-    // getAllExerciseData();
-    ChallengesDataAPI()
+    getAllExerciseData();
+    ChallengesDataAPI();
   }, []);
 
   const ChallengesDataAPI = async () => {
@@ -70,10 +72,10 @@ const SplaceScreen = ({navigation}) => {
           '?version=' +
           VersionNumber.appVersion,
       });
-      if(res.data?.msg != 'version  is required'){
-        dispatch(setChallengesData(res.data))
-      }else{
-        dispatch(setChallengesData([]))
+      if (res.data?.msg != 'version  is required') {
+        dispatch(setChallengesData(res.data));
+      } else {
+        dispatch(setChallengesData([]));
       }
     } catch (error) {
       console.error(error, 'ChallengesDataAPI ERRR');
@@ -256,26 +258,69 @@ const SplaceScreen = ({navigation}) => {
       console.log(error);
     }
   };
-  // const getAllExerciseData = async () => {
-  //   try {
-  //     const exerciseData = await axios.get(
-  //       `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}`,
-  //     );
+  const getAllExerciseData = async () => {
+    try {
+      const exerciseData = await axios.get(
+        `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}`,
+      );
 
-  //     if (
-  //       exerciseData?.data?.msg == 'Please update the app to the latest version'
-  //     ) {
-  //       dispatch(setAllExercise([]));
-  //     } else if (exerciseData?.data?.length > 0) {
-  //       dispatch(setAllExercise(exerciseData?.data));
-  //     } else {
-  //       dispatch(setAllExercise([]));
-  //     }
-  //   } catch (error) {
-  //     dispatch(setAllExercise([]));
-  //     console.log('All-EXCERSIE-ERROR', error);
-  //   }
-  // };
+      if (
+        exerciseData?.data?.msg == 'Please update the app to the latest version'
+      ) {
+        dispatch(setAllExercise([]));
+      } else if (exerciseData?.data?.length > 0) {
+        // console.log(' getStoreVideoLoc',exerciseData.data?.length)
+        Promise.all(
+          exerciseData.data?.map((item, index) =>
+            downloadVideos(item, index, exerciseData.data?.length),
+          ),
+        );
+      } else {
+        dispatch(setAllExercise([]));
+      }
+    } catch (error) {
+      dispatch(setAllExercise([]));
+      console.log('All-EXCERSIE-ERROR', error);
+    }
+  };
+  const sanitizeFileName = fileName => {
+    fileName = fileName.replace(/\s+/g, '_');
+    return fileName;
+  };
+  let StoringData = {};
+  const downloadVideos = async (data, index, len) => {
+    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
+      data?.exercise_title,
+    )}.jpg`;
+    try {
+      const videoExists = await RNFetchBlob.fs.exists(filePath);
+      if (videoExists) {
+        StoringData[data?.exercise_title] = filePath;
+        // setDownloade(true);
+      } else {
+        await RNFetchBlob.config({
+          fileCache: true,
+          // IOSBackgroundTask: true, // Add this for iOS background downloads
+          path: filePath,
+          appendExt: '.jpg',
+        })
+          .fetch('GET', data?.exercise_image_link, {
+            'Content-Type': 'image/jpg',
+            // key: 'Config.REACT_APP_API_KEY',
+          })
+          .then(res => {
+            StoringData[data?.exercise_title] = res.path();
+            // setDownloade(true);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    } catch (error) {
+      console.log('ERRRR', error);
+    }
+    dispatch(setVideoLocation(StoringData));
+  };
   const getCustomWorkout = async () => {
     try {
       const data = await axios.get(
