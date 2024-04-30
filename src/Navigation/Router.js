@@ -69,6 +69,7 @@ import PredictionScreen from '../Screen/Yourself/PredictionScreen'
 import GymListing from '../Screen/GymListing/GymListing';
 import Trainer from '../Screen/NewHome/Trainer';
 import HomeNew from '../Screen/NewHome/HomeNew';
+import LetsStart from '../Screen/LetsStart';
 
 
 const Stack = createStackNavigator();
@@ -86,8 +87,9 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-  
+     
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+      
       <Stack.Screen
         name="IntroductionScreen1"
         component={IntroductionScreen1}
@@ -119,11 +121,8 @@ export const LoginStack = () => {
       <Stack.Screen name="Weight" component={Weight} />
       <Stack.Screen name="Age" component={Age} />
       <Stack.Screen name="PredictionScreen" component={PredictionScreen} />
-
       <Stack.Screen name="LoadData" component={LoadData} />
-     
       <Stack.Screen name="Goal" component={Goal} />
-  
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="NewEditProfile" component={NewEditProfile} />
       <Stack.Screen name="WorkoutsDescription" component={WorkoutDescription} />
@@ -158,6 +157,7 @@ export const LoginStack = () => {
       <Stack.Screen name="GymListing" component={GymListing}/>
       <Stack.Screen name="Trainer" component={Trainer}/>
       <Stack.Screen name="Home" component={HomeNew} />
+      <Stack.Screen name="LetsStart" component={LetsStart} />
     </Stack.Navigator>
   );
 };

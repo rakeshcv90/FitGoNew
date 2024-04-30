@@ -121,7 +121,7 @@ const LoadData = ({navigation}) => {
   }, []);
   const WholeData = async deviceID => {
     const mergedObject = Object.assign({}, ...getLaterButtonData);
-    console.log('data1--->', mergedObject);
+
     try {
       const payload = new FormData();
       payload.append('deviceid', deviceID);
@@ -292,7 +292,7 @@ const LoadData = ({navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-
+      console.log('Load Data Proile ', data?.data?.profile);
       if (data?.data?.profile) {
         dispatch(setUserProfileData(data.data.profile));
       } else if (

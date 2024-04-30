@@ -72,9 +72,8 @@ const Experience = ({route, navigation}) => {
   const handleButtonPress = () => {
    if(selected?.txt!='Beginner'){
     dispatch(setProgressBarCounter(8))
-   }
     navigation.navigate(
-      selected?.txt == 'Beginner' ? 'Goal' : 'AskToCreateWorkout',
+    'AskToCreateWorkout',
       {
         nextScreen: screen + 1,
         gender: gender,
@@ -82,6 +81,19 @@ const Experience = ({route, navigation}) => {
         experience: selected?.txt,
       },
     );
+   }else{
+    navigation.navigate(
+       'Goal' ,
+      {
+        nextScreen: screen + 1,
+        gender: gender,
+        data: data,
+        experience: selected?.txt,
+        workout_plans: 'AppCreated',
+      },
+    );
+   }
+    
   };
   return (
     <View style={styles.Container}>

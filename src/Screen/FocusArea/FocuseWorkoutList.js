@@ -3,21 +3,32 @@ import React, {useEffect, useMemo, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {StyleSheet} from 'react-native';
 import {AppColor, Fonts} from '../../Component/Color';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import AnimatedLottieView from 'lottie-react-native';
 import CircularProgress from 'react-native-circular-progress-indicator';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector, useDispatch} from 'react-redux';
 import {localImage} from '../../Component/Image';
+import {useIsFocused} from '@react-navigation/native';
+import {setWorkoutTimeCal} from '../../Component/ThemeRedux/Actions';
+import axios from 'axios';
 
 const FocuseWorkoutList = ({navigation, route}) => {
   const [data, setData] = useState([]);
+  const dispatch = useDispatch();
   const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
-  console.log('userId-->', getCustttomeTimeCal.length);
+
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+
+  const isFocused = useIsFocused();
   useEffect(() => {
     setData(route?.params?.bodyexercise);
   }, [route?.params]);
-
+  useEffect(() => {
+    if (isFocused) {
+      getCustomeWorkoutTimeDetails();
+    }
+  }, [isFocused]);
   const renderItem = useMemo(
     () =>
       ({item}) => {
@@ -40,7 +51,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
                 });
               }}
               style={{
-                width: '95%',
+                width: '97%',
                 borderRadius: 10,
                 backgroundColor: AppColor.WHITE,
                 marginVertical: 8,
@@ -50,9 +61,8 @@ const FocuseWorkoutList = ({navigation, route}) => {
                 justifyContent: 'space-between',
                 paddingHorizontal: 20,
                 padding: 5,
-                borderColor: '#D9D9D9',
+                borderColor: '#fff',
                 borderWidth: 1,
-
                 shadowColor: 'rgba(0, 0, 0, 1)',
                 ...Platform.select({
                   ios: {
@@ -65,18 +75,6 @@ const FocuseWorkoutList = ({navigation, route}) => {
                     elevation: 3,
                   },
                 }),
-                // shadowColor: 'rgba(0, 0, 0, 1)',
-                // ...Platform.select({
-                //   ios: {
-                //     shadowColor: '#000000',
-                //     shadowOffset: {width: 0, height: 2},
-                //     shadowOpacity: 0.1,
-                //     shadowRadius: 4,
-                //   },
-                //   android: {
-                //     elevation: 4,
-                //   },
-                // }),
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
@@ -92,16 +90,20 @@ const FocuseWorkoutList = ({navigation, route}) => {
                   resizeMode="contain"
                 />
                 <View style={{marginHorizontal: 25, top: 10}}>
-                  <Text
-                    style={{
-                      fontSize: 17,
-                      fontWeight: '600',
-                      color: '#202020',
-                      lineHeight: 25,
-                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    }}>
-                    {item?.workout_title}
-                  </Text>
+                  <View style={{width: DeviceWidth * 0.47}}>
+                    <Text
+                      numberOfLines={1}
+                      style={{
+                        fontSize: 17,
+                        fontWeight: '600',
+                        color: '#202020',
+                        lineHeight: 25,
+                        fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      }}>
+                      {item?.workout_title}
+                    </Text>
+                  </View>
+
                   <View
                     style={{
                       flexDirection: 'row',
@@ -142,33 +144,43 @@ const FocuseWorkoutList = ({navigation, route}) => {
                       flexDirection: 'row',
                       top: -8,
                       alignItems: 'center',
+
+                      justifyContent: 'flex-start',
                     }}>
-                    <AnimatedLottieView
-                      source={require('../../Icon/Images/NewImage/Eye.json')}
-                      speed={0.5}
-                      autoPlay
-                      onPress={() => {
-                        console.log('zXCzcxzcxz');
-                      }}
-                      style={{width: 22, height: 22}}
-                    />
-                    <Text
+                    <View
                       style={{
-                        fontSize: 13,
-                        fontWeight: '600',
-                        color: '#202020',
-                        lineHeight: 15,
-                        fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                        width: 55,
+                        flexDirection: 'row',
+                        alignItems: 'center',
                       }}>
-                      {' '}
-                      {item?.total_workout_views}
-                    </Text>
-                    <Text>{'      '}</Text>
+                      <AnimatedLottieView
+                        source={require('../../Icon/Images/NewImage/Eye.json')}
+                        speed={0.5}
+                        autoPlay
+                        onPress={() => {
+                          console.log('zXCzcxzcxz');
+                        }}
+                        style={{width: 22, height: 22}}
+                      />
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          fontWeight: '600',
+                          color: '#202020',
+                          lineHeight: 15,
+                          fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                        }}>
+                        {'  '}
+                        {convertLike(item?.total_workout_views)}
+                      </Text>
+                    </View>
+
                     <TouchableOpacity
                       style={{
                         flexDirection: 'row',
                         alignItems: 'center',
-                        left: -10,
+                        //left: -10,
+                        width: 55,
                       }}>
                       <AnimatedLottieView
                         source={require('../../Icon/Images/NewImage/Heart.json')}
@@ -185,8 +197,9 @@ const FocuseWorkoutList = ({navigation, route}) => {
                           lineHeight: 15,
                           fontFamily: Fonts.MONTSERRAT_MEDIUM,
                         }}>
-                        {' '}
-                        {item?.total_workout_like}
+                        {/* {' '} */}
+                        {/* {item?.total_workout_like} */}
+                        {convertLike(item?.total_workout_like)}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -200,7 +213,44 @@ const FocuseWorkoutList = ({navigation, route}) => {
       },
     [],
   );
+  const convertLike = number => {
+    if (number == undefined || number == null) {
+      return '';
+    }
+    if (number < 1000) {
+      return number.toString();
+    } else if (number < 10000) {
+      return (number / 1000).toFixed(0) + 'K';
+    } else if (number < 1000000) {
+      return (number / 1000).toFixed(0) + 'K';
+    } else if (number < 1000000000) {
+      return (number / 1000000).toFixed(0) + 'M';
+    } else {
+      return (number / 1000000000).toFixed(0) + 'B';
+    }
+  };
 
+  const getCustomeWorkoutTimeDetails = async () => {
+    try {
+      const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          user_id: getUserDataDetails?.id,
+        },
+      });
+      console.log('userId-->', data.data.results);
+      if (data.data.results.length > 0) {
+        dispatch(setWorkoutTimeCal(data.data.results));
+      } else {
+        dispatch(setWorkoutTimeCal([]));
+      }
+    } catch (error) {
+      console.log('UCustomeCorkout details', error);
+    }
+  };
   const getProgress = useMemo(() => (item, totalTime) => {
     let resulttime = 0;
     if (getCustttomeTimeCal?.length > 0) {
@@ -228,7 +278,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
           <Image
             source={localImage.Next}
             resizeMode="contain"
-            style={{width: 40, height: 40}}
+            style={{width: 32, height: 32}}
           />
         ) : (
           <CircularProgress

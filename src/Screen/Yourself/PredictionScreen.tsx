@@ -9,7 +9,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
-import CustomBarChart from '../../Component/Graph';
+import CustomBarChart from '../../Component/CustomBarChart';
 import {
   Stop,
   Svg,
@@ -51,7 +51,7 @@ const PredictionScreen = ({navigation, route}: any) => {
   const [zeroData, setZeroData] = useState<[]>([]);
   const [currentWeight, setCurrentWeight] = useState(-1);
   const [TargetWeight, setTargetWeight] = useState(-1);
-  console.log('data-->', getLaterButtonData);
+
   const mergedObject = Object.assign({}, ...getLaterButtonData);
   useEffect(() => {
     const currentW =
@@ -139,7 +139,7 @@ const PredictionScreen = ({navigation, route}: any) => {
     weightHistoryArray[weightHistoryArray.length - 1]?.date &&
       setFinalDate(weightHistoryArray[weightHistoryArray.length - 1]?.date);
   };
-  console.log('History-->', weightHistory, zeroData);
+ 
   return (
     <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />

@@ -17,9 +17,11 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
+
 import {
   setAllWorkoutData,
   setChallengesData,
+  setCustomWorkoutData,
   setWorkoutTimeCal,
 } from '../../Component/ThemeRedux/Actions';
 import NewHeader from '../../Component/Headers/NewHeader';
@@ -29,7 +31,7 @@ import {showMessage} from 'react-native-flash-message';
 import {useIsFocused} from '@react-navigation/native';
 
 import AnimatedLottieView from 'lottie-react-native';
-import { reset } from 'react-native-track-player/lib/trackPlayer';
+import {reset} from 'react-native-track-player/lib/trackPlayer';
 const Workouts = ({navigation}: any) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
@@ -41,16 +43,20 @@ const Workouts = ({navigation}: any) => {
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
+
   const getUserID = useSelector((state: any) => state.getUserID);
+ 
   const getChallengesData = useSelector(
     (state: any) => state.getChallengesData,
   );
 
   useEffect(() => {
     if (isFocused) {
-      allWorkoutData?.workout_Data?.length == 0 && allWorkoutApi();
+      // allWorkoutData?.workout_Data?.length == 0 && 
+      allWorkoutApi();
       ChallengesDataAPI();
       getCustomeWorkoutTimeDetails();
+      getCustomWorkout();
     }
   }, [isFocused]);
   const [refresh, setRefresh] = useState(false);
@@ -158,7 +164,6 @@ const Workouts = ({navigation}: any) => {
     }
   };
   const getCustomeWorkoutTimeDetails = async () => {
-   
     try {
       const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
         method: 'POST',
@@ -166,10 +171,10 @@ const Workouts = ({navigation}: any) => {
           'Content-Type': 'multipart/form-data',
         },
         data: {
-          user_id: getUserID != 0 ? getUserID : getUserDataDetails.id,
+          user_id: getUserDataDetails?.id
         },
       });
-      console.log("user_ID-->",getUserID,getUserDataDetails?.id,data?.data)
+
       if (data.data.results.length > 0) {
         dispatch(setWorkoutTimeCal(data.data.results));
       } else {
@@ -177,6 +182,30 @@ const Workouts = ({navigation}: any) => {
       }
     } catch (error) {
       console.log('UCustomeCorkout details', error);
+    }
+  };
+  const getCustomWorkout = async () => {
+    try {
+      const data = await axios.get(
+        `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${getUserDataDetails?.id}`,
+      );
+
+      if (data?.data?.msg != 'data not found.') {
+        dispatch(setCustomWorkoutData(data?.data?.data));
+      
+      } else {
+        dispatch(setCustomWorkoutData([]));
+      }
+    } catch (error) {
+      showMessage({
+        message: 'Something went wrong pleasr try again',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+      console.log('Custom Workout Error', error);
+      dispatch(setCustomWorkoutData([]));
     }
   };
   const renderItem = useMemo(() => {
@@ -289,7 +318,7 @@ const Workouts = ({navigation}: any) => {
             marginVertical: DeviceHeigth * 0.015,
           }}>
           <ImageBackground
-         source={{uri: item?.workout_image_link}}
+            source={{uri: item?.workout_image_link}}
             style={{
               width: DeviceWidth * 0.95,
               height: DeviceHeigth * 0.35,
@@ -357,7 +386,9 @@ const Workouts = ({navigation}: any) => {
                     fontWeight: '600',
                     fontSize: 18,
                     color: AppColor.WHITE,
-                  }}>{item?.sub_title}</Text>
+                  }}>
+                  {item?.sub_title}
+                </Text>
               </View>
             </LinearGradient>
           </ImageBackground>
@@ -414,6 +445,7 @@ const Workouts = ({navigation}: any) => {
                 allWorkoutApi();
                 ChallengesDataAPI();
                 // workoutStatusApi();
+                getCustomWorkout();
               }}
               colors={[AppColor.RED, AppColor.WHITE]}
             />
@@ -495,7 +527,8 @@ const Workouts = ({navigation}: any) => {
                                     }),
                                   }}>
                                   <Image
-                                    source={require('../../Icon/Images/NewImage2/human.png')}
+                                  //  source={require('../../Icon/Images/NewImage2/human.png')}
+                                  source={{uri:item?.bodypart_image}}
                                     style={{
                                       width: '100%',
                                       height: '100%',
@@ -505,6 +538,7 @@ const Workouts = ({navigation}: any) => {
                                     resizeMode="contain"
                                   />
                                 </View>
+                              
                                 <Text
                                   style={{
                                     color: 'black',
@@ -564,8 +598,9 @@ const Workouts = ({navigation}: any) => {
                       <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
-                        
-                          navigation.navigate('CustomWorkout',{routeName:'Beginner'});
+                          navigation.navigate('CustomWorkout', {
+                            routeName: 'Beginner',
+                          });
                         }}
                         style={
                           {

@@ -1231,12 +1231,13 @@ const HomeNew = ({navigation}) => {
               getTimeOfDayMessage() +
               ', ' +
               (Object.keys(getUserDataDetails).length > 0
-                ? getUserDataDetails.name.split(' ')[0]
+                ? getUserDataDetails.name==null?'Guest':getUserDataDetails.name.split(' ')[0]
                 : 'Guest')
             }
           />
+
         </View>
-        {currentChallenge.length > 0 && (
+        {currentChallenge?.length > 0 && (
           <View style={{width: '95%', alignSelf: 'center', marginVertical: 10}}>
             <Text
               style={{
@@ -1261,17 +1262,17 @@ const HomeNew = ({navigation}) => {
                 alignSelf: 'center',
                 backgroundColor: AppColor.WHITE,
                 shadowColor: 'rgba(0, 0, 0, 1)',
-                ...Platform.select({
-                  ios: {
-                    shadowColor: '#000000',
-                    shadowOffset: {width: 0, height: 1},
-                    shadowOpacity: 0.1,
-                    shadowRadius: 4,
-                  },
-                  android: {
-                    elevation: 4,
-                  },
-                }),
+              ...Platform.select({
+                ios: {
+                  //shadowColor: '#000000',
+                  shadowOffset: {width: 0, height: 2},
+                  shadowOpacity: 0.3,
+                  shadowRadius: 4,
+                },
+                android: {
+                  elevation: 3,
+                },
+              }),
                 borderColor: '#D9D9D9',
               }}>
               <View
@@ -2118,18 +2119,19 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: AppColor.WHITE,
     marginBottom: 30,
-    shadowColor: 'rgba(0, 0, 0, 1)',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
+
+                shadowColor: 'rgba(0, 0, 0, 1)',
+              ...Platform.select({
+                ios: {
+                  //shadowColor: '#000000',
+                  shadowOffset: {width: 0, height: 2},
+                  shadowOpacity: 0.3,
+                  shadowRadius: 4,
+                },
+                android: {
+                  elevation: 3,
+                },
+              }),
   },
   circle: {
     width: 80,
