@@ -32,27 +32,33 @@ import {useIsFocused} from '@react-navigation/native';
 
 import AnimatedLottieView from 'lottie-react-native';
 import {reset} from 'react-native-track-player/lib/trackPlayer';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
+  const [imageLoad, setImageLoad] = useState(true);
   const completeProfileData = useSelector(
     (state: any) => state.completeProfileData,
   );
   const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
 
+  const avatarRef = React.createRef();
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
 
   const getUserID = useSelector((state: any) => state.getUserID);
- 
+
   const getChallengesData = useSelector(
     (state: any) => state.getChallengesData,
   );
 
   useEffect(() => {
     if (isFocused) {
-      // allWorkoutData?.workout_Data?.length == 0 && 
+      // allWorkoutData?.workout_Data?.length == 0 &&
       allWorkoutApi();
       ChallengesDataAPI();
       getCustomeWorkoutTimeDetails();
@@ -171,7 +177,7 @@ const Workouts = ({navigation}: any) => {
           'Content-Type': 'multipart/form-data',
         },
         data: {
-          user_id: getUserDataDetails?.id
+          user_id: getUserDataDetails?.id,
         },
       });
 
@@ -192,7 +198,6 @@ const Workouts = ({navigation}: any) => {
 
       if (data?.data?.msg != 'data not found.') {
         dispatch(setCustomWorkoutData(data?.data?.data));
-      
       } else {
         dispatch(setCustomWorkoutData([]));
       }
@@ -526,9 +531,31 @@ const Workouts = ({navigation}: any) => {
                                       },
                                     }),
                                   }}>
+                                  {/* {imageLoad && (
+                                    <View
+                                      style={{
+                                       // position: 'absolute',
+                                        bottom: 5,
+                                        width: 70,
+                                        height: 70,
+                                      }}>
+                                      <ShimmerPlaceholder
+                                        style={{
+                                          width: '100%',
+                                          height: '100%',
+                                          borderRadius: 40,
+                                          justifyContent: 'center',
+                                          alignSelf: 'center',
+                                        }}
+                                        ref={avatarRef}
+                                        autoRun
+                                      />
+                                    </View>
+                                  )} */}
                                   <Image
-                                  //  source={require('../../Icon/Images/NewImage2/human.png')}
-                                  source={{uri:item?.bodypart_image}}
+                                    //  source={require('../../Icon/Images/NewImage2/human.png')}
+                                    source={{uri: item?.bodypart_image}}
+                                    onLoad={() => setImageLoad(false)}
                                     style={{
                                       width: '100%',
                                       height: '100%',
@@ -538,7 +565,7 @@ const Workouts = ({navigation}: any) => {
                                     resizeMode="contain"
                                   />
                                 </View>
-                              
+
                                 <Text
                                   style={{
                                     color: 'black',
@@ -681,7 +708,7 @@ const Workouts = ({navigation}: any) => {
                     <View
                       style={[
                         styles.meditionBox,
-                        {alignItems: 'center', marginVertical: 5},
+                        { marginVertical: 5},
                       ]}>
                       <FlatList
                         data={catogery}

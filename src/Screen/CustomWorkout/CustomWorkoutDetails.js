@@ -28,10 +28,13 @@ import {
 import {showMessage} from 'react-native-flash-message';
 import {useIsFocused} from '@react-navigation/native';
 import RNFetchBlob from 'rn-fetch-blob';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const CustomWorkoutDetails = ({navigation, route}) => {
   const data = route?.params?.item;
-
+  const avatarRef = React.createRef();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [forLoading, setForLoading] = useState(false);
@@ -238,10 +241,11 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 {isLoading && (
-                  <ActivityIndicator
+          
+                  <ShimmerPlaceholder
                     style={styles.loader}
-                    size="small"
-                    color="#0000ff"
+                    ref={avatarRef}
+                    autoRun
                   />
                 )}
 
@@ -518,7 +522,8 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               fontWeight: '700',
               lineHeight: 20,
               fontSize: 20,
-              top: 10,
+              top: 15,
+              marginVertical:15,
               alignItems: 'center',
             }}>
             Exercises
@@ -700,11 +705,13 @@ const styles = StyleSheet.create({
   loader: {
     position: 'absolute',
     justifyContent: 'center',
-    alignSelf: 'center',
 
-    height: 50,
-    width: 50,
-    borderRadius: 100 / 2,
+    backgroundColor: AppColor.GRAY,
+    zIndex: 1,
+    height: 80,
+    width: 90,
+    left: -10,
+    borderRadius: 10,
   },
 });
 export default CustomWorkoutDetails;

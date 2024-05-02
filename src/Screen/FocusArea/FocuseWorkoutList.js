@@ -12,23 +12,28 @@ import {localImage} from '../../Component/Image';
 import {useIsFocused} from '@react-navigation/native';
 import {setWorkoutTimeCal} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
+import LinearGradient from 'react-native-linear-gradient';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const FocuseWorkoutList = ({navigation, route}) => {
-  const [data, setData] = useState([]);
+  const [execrise, setexecrise] = useState([]);
+  const avatarRef = React.createRef();
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
-
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
-
   const isFocused = useIsFocused();
   useEffect(() => {
-    setData(route?.params?.bodyexercise);
+    setexecrise(route?.params?.bodyexercise);
   }, [route?.params]);
   useEffect(() => {
     if (isFocused) {
       getCustomeWorkoutTimeDetails();
     }
   }, [isFocused]);
+
   const renderItem = useMemo(
     () =>
       ({item}) => {
@@ -63,12 +68,12 @@ const FocuseWorkoutList = ({navigation, route}) => {
                 padding: 5,
                 borderColor: '#fff',
                 borderWidth: 1,
-                shadowColor: 'rgba(0, 0, 0, 1)',
+              //  shadowColor: 'rgba(0, 0, 0, 1)',
                 ...Platform.select({
                   ios: {
-                    //shadowColor: '#000000',
+                    shadowColor: '#000000',
                     shadowOffset: {width: 0, height: 2},
-                    shadowOpacity: 0.3,
+                    shadowOpacity: 0.2,
                     shadowRadius: 4,
                   },
                   android: {
@@ -77,8 +82,23 @@ const FocuseWorkoutList = ({navigation, route}) => {
                 }),
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                {isLoading && (
+                  // <ActivityIndicator
+                  //   style={styles.loader}
+                  //   size="small"
+                  //   color="#0000ff"
+                  // />
+                  <ShimmerPlaceholder
+                    style={styles.loader}
+                    ref={avatarRef}
+                    autoRun
+                  />
+                )}
                 <Image
                   source={{uri: item.workout_image_link}}
+                  onLoad={() => setIsLoading(false)}
+                 
+
                   style={{
                     width: 80,
                     height: 80,
@@ -211,7 +231,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
           </>
         );
       },
-    [],
+    [isLoading],
   );
   const convertLike = number => {
     if (number == undefined || number == null) {
@@ -339,7 +359,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
       <View style={styles.container}>
         <View style={[styles.meditionBox, {top: -20}]}>
           <FlatList
-            data={data}
+            data={execrise}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderItem}
             ListEmptyComponent={emptyComponent}
@@ -361,6 +381,17 @@ const styles = StyleSheet.create({
 
   meditionBox: {
     backgroundColor: 'white',
+  },
+  loader: {
+    position: 'absolute',
+    justifyContent: 'center',
+
+    backgroundColor: AppColor.GRAY,
+    zIndex: 1,
+    height: 80,
+    width: 90,
+    left: -8,
+    borderRadius: 10,
   },
 });
 export default FocuseWorkoutList;

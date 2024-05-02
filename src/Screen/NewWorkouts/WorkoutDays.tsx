@@ -31,6 +31,10 @@ import {
 } from '../../Component/ThemeRedux/Actions';
 import AnimatedLottieView from 'lottie-react-native';
 import RNFetchBlob from 'rn-fetch-blob';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+
 const WorkoutDays = ({navigation, route}: any) => {
   const {data, challenge} = route.params;
   const [selected, setSelected] = useState(0);
@@ -43,6 +47,9 @@ const WorkoutDays = ({navigation, route}: any) => {
   const [trackerData, setTrackerData] = useState([]);
   const [exerciseData, setExerciseData] = useState([]);
   const [downloaded, setDownloade] = useState(0);
+  const avatarRef = React.createRef();
+  const [isLoading, setIsLoading] = useState(true);
+
   let isFocuse = useIsFocused();
   const dispatch = useDispatch();
   const [reward, setreward] = useState(0);
@@ -565,25 +572,36 @@ const WorkoutDays = ({navigation, route}: any) => {
                 style={{
                   height: DeviceWidth * 0.1,
                   width: DeviceWidth * 0.1,
-                  marginLeft: DeviceWidth * 0.12,
+                 // marginLeft: DeviceWidth * 0.12,
                   opacity: percent ? 0.5 : 1,
                 }}
                 resizeMode="contain"
               />
             ) : (
-              <Image
-                source={{uri: data?.workout_image_link}}
-                style={{
-                  height: DeviceWidth * 0.225,
-                  width:
-                    DeviceHeigth < 1280
-                      ? DeviceWidth * 0.15
-                      : DeviceWidth * 0.2,
-                  marginLeft: DeviceWidth * 0.12,
-                  opacity: percent ? 0.5 : 1,
-                }}
-                resizeMode="contain"
-              />
+              <>
+                {isLoading && (
+              
+                <ShimmerPlaceholder
+                  style={styles.loader}
+                  ref={avatarRef}
+                  autoRun
+                />
+                )} 
+                <Image
+                  source={{uri: data?.workout_image_link}}
+                  onLoad={() => setIsLoading(false)}
+                  style={{
+                    height: DeviceWidth * 0.225,
+                    width:
+                      DeviceHeigth < 1280
+                        ? DeviceWidth * 0.15
+                        : DeviceWidth * 0.2,
+
+                    opacity: percent ? 0.5 : 1,
+                  }}
+                  resizeMode="contain"
+                />
+              </>
             )}
             <View
               style={{
@@ -662,7 +680,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                       ? AppColor.WHITE
                       : AppColor.BLACK
                   }
-                  style={{marginRight: DeviceWidth * 0.02}}
+                 
                 />
               )}
             </View>
@@ -798,7 +816,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     marginVertical: 8,
-    backgroundColor:AppColor.WHITE,
+    backgroundColor: AppColor.WHITE,
     shadowColor: 'rgba(0, 0, 0, 1)',
     ...Platform.select({
       ios: {
@@ -878,5 +896,17 @@ const styles = StyleSheet.create({
     color: AppColor.WHITE,
     fontWeight: '700',
     backgroundColor: 'transparent',
+  },
+  loader: {
+    position: 'absolute',
+    justifyContent: 'center',
+
+    backgroundColor: AppColor.GRAY,
+    zIndex: 1,
+    height: DeviceHeigth >= 1024 ? 120 : 80,
+    width: DeviceHeigth >= 1024 ? DeviceWidth * 0.18 : DeviceWidth * 0.18,
+
+    left: DeviceHeigth >= 1024 ? -20 : -10,
+    borderRadius: 10,
   },
 });
