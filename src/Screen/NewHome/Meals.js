@@ -18,7 +18,7 @@ import {localImage} from '../../Component/Image';
 import {useDispatch, useSelector} from 'react-redux';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
-import {MyInterstitialAd} from '../../Component/BannerAdd';
+import {BannerAdd, MyInterstitialAd} from '../../Component/BannerAdd';
 import {
   setFitmeMealAdsCount,
   setVideoLocation,
@@ -26,6 +26,7 @@ import {
 import moment from 'moment';
 import axios from 'axios';
 import RNFetchBlob from 'rn-fetch-blob';
+import {bannerAdId} from '../../Component/AdsId';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const Meals = ({navigation}) => {
@@ -154,137 +155,138 @@ const Meals = ({navigation}) => {
           }}>
           Top diet recipes
         </Text>
-      </View>
-      {selectedMeal && (
-        <>
-          <View style={styles.meditionBox}>
-            {/* {isLoading && (
+        {selectedMeal && (
+          <>
+            <View style={[styles.meditionBox, {marginVertical: 10}]}>
+              {/* {isLoading && (
               <ShimmerPlaceholder
                 style={{width: '100%', height: '100%', borderRadius: 15}}
                 ref={avatarRef}
                 autoRun
               />
             )} */}
-            <TouchableOpacity
-              style={{width: '100%', height: '100%', borderRadius: 15}}
-              onPress={() => {
-                navigation.navigate('MealDetails', {item: selectedMeal});
-              }}>
-              <Image
+              <TouchableOpacity
                 style={{width: '100%', height: '100%', borderRadius: 15}}
-                resizeMode="cover"
-                // onLoad={() => setIsLoading(false)}
-                source={
-                  selectedMeal.diet_image_link == null
-                    ? localImage.Noimage
-                    : {uri: selectedMeal.diet_image_link}
-                }></Image>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              width: '95%',
-              alignSelf: 'center',
-              top: DeviceHeigth * 0.02,
-            }}>
-            <Text
-              style={{
-                color: AppColor.BLACK,
-                fontFamily: 'Montserrat-SemiBold',
-                fontWeight: '700',
-                lineHeight: 21,
-                fontSize: 14,
-                justifyContent: 'flex-start',
-              }}>
-              {selectedMeal.diet_title}
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              top: DeviceHeigth * 0.03,
-              width: '95%',
-              alignSelf: 'center',
-            }}>
+                onPress={() => {
+                  navigation.navigate('MealDetails', {item: selectedMeal});
+                }}>
+                <Image
+                  style={{width: '100%', height: '100%', borderRadius: 15}}
+                  resizeMode="cover"
+                  // onLoad={() => setIsLoading(false)}
+                  source={
+                    selectedMeal.diet_image_link == null
+                      ? localImage.Noimage
+                      : {uri: selectedMeal.diet_image_link}
+                  }></Image>
+              </TouchableOpacity>
+            </View>
             <View
               style={{
-                flexDirection: 'row',
-
+                width: '95%',
                 alignSelf: 'center',
-                alignItems: 'center',
+                top: DeviceHeigth * 0.02,
               }}>
-              <Image
-                source={localImage.Step1}
-                style={{width: 20, height: 20}}
-                resizeMode="contain"
-              />
-
               <Text
                 style={{
-                  // fontFamily: 'Montserrat-SemiBold',
-                  fontSize: 13,
-                  fontWeight: '500',
                   color: AppColor.BLACK,
-                  marginHorizontal: 5,
+                  fontFamily: 'Montserrat-SemiBold',
+                  fontWeight: '700',
+                  lineHeight: 21,
+                  fontSize: 14,
+                  justifyContent: 'flex-start',
                 }}>
-                {selectedMeal.diet_calories} kcal
+                {selectedMeal.diet_title}
               </Text>
             </View>
             <View
               style={{
                 flexDirection: 'row',
-                marginHorizontal: DeviceWidth * 0.07,
+                top: DeviceHeigth * 0.03,
+                width: '95%',
                 alignSelf: 'center',
-                alignSelf: 'center',
-                alignItems: 'center',
               }}>
-              <Image
-                source={localImage.Watch}
-                style={{width: 17, height: 17}}
-                resizeMode="contain"
-              />
+              <View
+                style={{
+                  flexDirection: 'row',
 
+                  alignSelf: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={localImage.Step1}
+                  style={{width: 20, height: 20}}
+                  resizeMode="contain"
+                />
+
+                <Text
+                  style={{
+                    // fontFamily: 'Montserrat-SemiBold',
+                    fontSize: 13,
+                    fontWeight: '500',
+                    color: AppColor.BLACK,
+                    marginHorizontal: 5,
+                  }}>
+                  {selectedMeal.diet_calories} kcal
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginHorizontal: DeviceWidth * 0.07,
+                  alignSelf: 'center',
+                  alignSelf: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={localImage.Watch}
+                  style={{width: 17, height: 17}}
+                  resizeMode="contain"
+                />
+
+                <Text
+                  style={{
+                    // fontFamily: 'Montserrat-SemiBold',
+                    fontSize: 13,
+                    fontWeight: '500',
+                    color: AppColor.BLACK,
+                    marginHorizontal: 5,
+                  }}>
+                  {selectedMeal.diet_time}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                width: '95%',
+                alignSelf: 'center',
+                top: DeviceHeigth * 0.06,
+              }}>
               <Text
                 style={{
-                  // fontFamily: 'Montserrat-SemiBold',
-                  fontSize: 13,
-                  fontWeight: '500',
-                  color: AppColor.BLACK,
-                  marginHorizontal: 5,
+                  color: AppColor.HEADERTEXTCOLOR,
+                  fontFamily: Fonts.MONTSERRAT_BOLD,
+                  fontWeight: 'bold',
+                  lineHeight: 19.5,
+                  fontSize: 18,
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
                 }}>
-                {selectedMeal.diet_time}
+                Recipes
               </Text>
             </View>
-          </View>
-          <View
-            style={{
-              width: '95%',
-              alignSelf: 'center',
-              top: DeviceHeigth * 0.07,
-            }}>
-            <Text
-              style={{
-                color: AppColor.HEADERTEXTCOLOR,
-                fontFamily: Fonts.MONTSERRAT_BOLD,
-                fontWeight: 'bold',
-                lineHeight: 19.5,
-                fontSize: 18,
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-              }}>
-              Recipes
-            </Text>
-          </View>
-        </>
-      )}
+          </>
+        )}
+      </View>
 
       <View
         style={{
-          top: DeviceHeigth * 0.085,
+          top: DeviceHeigth * 0.05,
           alignSelf: 'center',
-          height: DeviceHeigth * 0.4,
-          width:'95%',
-          paddingBottom: Platform.OS == 'android' ? 30 : 0,
+          height: DeviceHeigth * 0.48,
+          width: '100%',
+          alignItems: 'center',
+          paddingBottom: Platform.OS == 'android' ? 50 : 50,
         }}>
         <FlatList
           data={mealData}
@@ -342,16 +344,18 @@ const Meals = ({navigation}) => {
           removeClippedSubviews={true}
         />
       </View>
+      <BannerAdd bannerAdId={bannerAdId} />
     </View>
   );
 };
 var styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
     backgroundColor: AppColor.WHITE,
   },
   meditionBox: {
-    width: '95%',
+    width: '98%',
     height: DeviceHeigth * 0.2,
     borderRadius: 15,
     alignSelf: 'center',

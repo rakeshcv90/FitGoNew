@@ -55,7 +55,7 @@ const LetsStart = ({navigation}) => {
         },
       });
 
-      console.log('fffffffff', data.data.msg, data?.data?.profile_compl_status);
+   
       if (
         data?.data?.msg == 'user registerd successfully' &&
         data?.data?.profile_compl_status == 0

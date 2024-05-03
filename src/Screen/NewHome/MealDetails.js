@@ -19,6 +19,8 @@ import {useSelector} from 'react-redux';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import HTMLRender from 'react-native-render-html';
+import { BannerAdd } from '../../Component/BannerAdd';
+import { bannerAdId } from '../../Component/AdsId';
 
 const MealDetails = ({route, navigation}) => {
   const getStoreVideoLoc = useSelector(state => state.getStoreVideoLoc);
@@ -73,7 +75,7 @@ const MealDetails = ({route, navigation}) => {
       <View
         style={{
           width: '100%',
-          height: '100%',
+          height: '52%',
           backgroundColor: '#fff',
           borderTopRightRadius: 20,
           borderTopLeftRadius: 20,
@@ -291,7 +293,7 @@ const MealDetails = ({route, navigation}) => {
           <View
             style={{
               marginVertical: DeviceHeigth * 0.032,
-              marginBottom: DeviceHeigth * 0.45,
+            //  marginBottom: DeviceHeigth * 0.45,
             }}>
             <View
               style={{
@@ -343,6 +345,7 @@ const MealDetails = ({route, navigation}) => {
           </View>
         </ScrollView>
       </View>
+      <BannerAdd bannerAdId={bannerAdId} />
     </View>
   );
 };

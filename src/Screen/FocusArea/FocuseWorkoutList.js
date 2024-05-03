@@ -14,6 +14,7 @@ import {setWorkoutTimeCal} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import VersionNumber, {appVersion} from 'react-native-version-number';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -30,7 +31,8 @@ const FocuseWorkoutList = ({navigation, route}) => {
   }, [route?.params]);
   useEffect(() => {
     if (isFocused) {
-      getCustomeWorkoutTimeDetails();
+      //  getCustomeWorkoutTimeDetails();
+      getWorkoutStatus();
     }
   }, [isFocused]);
 
@@ -68,7 +70,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
                 padding: 5,
                 borderColor: '#fff',
                 borderWidth: 1,
-              //  shadowColor: 'rgba(0, 0, 0, 1)',
+                //  shadowColor: 'rgba(0, 0, 0, 1)',
                 ...Platform.select({
                   ios: {
                     shadowColor: '#000000',
@@ -94,11 +96,10 @@ const FocuseWorkoutList = ({navigation, route}) => {
                     autoRun
                   />
                 )}
-                <Image
-                  source={{uri: item.workout_image_link}}
-                  onLoad={() => setIsLoading(false)}
-                 
 
+                <Image
+                  source={{uri: item?.workout_image}}
+                  onLoad={() => setIsLoading(false)}
                   style={{
                     width: 80,
                     height: 80,
@@ -250,25 +251,45 @@ const FocuseWorkoutList = ({navigation, route}) => {
     }
   };
 
-  const getCustomeWorkoutTimeDetails = async () => {
+  // const getCustomeWorkoutTimeDetails = async () => {
+  //   try {
+  //     const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         user_id: getUserDataDetails?.id,
+  //       },
+  //     });
+  //     console.log('userId-->', data.data.results);
+  //     if (data.data.results.length > 0) {
+  //       dispatch(setWorkoutTimeCal(data.data.results));
+  //     } else {
+  //       dispatch(setWorkoutTimeCal([]));
+  //     }
+  //   } catch (error) {
+  //     console.log('UCustomeCorkout details', error);
+  //   }
+  // };
+
+  const getWorkoutStatus = async () => {
     try {
-      const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          user_id: getUserDataDetails?.id,
-        },
-      });
-      console.log('userId-->', data.data.results);
-      if (data.data.results.length > 0) {
-        dispatch(setWorkoutTimeCal(data.data.results));
+      const exerciseStatus = await axios.get(
+        `${NewAppapi.USER_EXERCISE_COMPLETE_STATUS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
+      );
+
+      if (
+        exerciseStatus?.data.msg ==
+        'Please update the app to the latest version'
+      ) {
+      } else if (exerciseStatus?.data.length > 0) {
+        dispatch(setWorkoutTimeCal(exerciseStatus?.data));
       } else {
         dispatch(setWorkoutTimeCal([]));
       }
     } catch (error) {
-      console.log('UCustomeCorkout details', error);
+      console.log('Workout-Status', error);
     }
   };
   const getProgress = useMemo(() => (item, totalTime) => {
@@ -278,8 +299,15 @@ const FocuseWorkoutList = ({navigation, route}) => {
         return item1.workout_id == item.workout_id;
       });
 
-      let remainingTime = time[0].totalRestTime;
-      resulttime = ((remainingTime / totalTime) * 100).toFixed(0);
+      remainingTime = time[0]?.workout_data?.length;
+      if (remainingTime != undefined) {
+        resulttime = (
+          (remainingTime / item?.workout_duration.split('')[0]) *
+          100
+        ).toFixed(0);
+      } else {
+        resulttime = 0;
+      }
     } else {
       resulttime = 0;
     }
@@ -292,7 +320,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
             speed={0.5}
             autoPlay
             resizeMode="cover"
-            style={{width: 50, height: 60, right: -10}}
+            style={{width: 50, height: 60, right: 10}}
           />
         ) : resulttime == 0 ? (
           <Image

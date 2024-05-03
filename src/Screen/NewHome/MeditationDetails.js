@@ -22,6 +22,8 @@ import moment from 'moment';
 import NativeAddTest from '../../Component/NativeAddTest';
 import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
 import RNFetchBlob from 'rn-fetch-blob';
+import { BannerAdd } from '../../Component/BannerAdd';
+import { bannerAdId } from '../../Component/AdsId';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -585,6 +587,7 @@ const MeditationDetails = ({navigation, route}) => {
           )}
         </View>
       </>
+      <BannerAdd bannerAdId={bannerAdId} />
     </View>
   );
 };

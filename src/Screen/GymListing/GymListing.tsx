@@ -21,6 +21,8 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../../Component/ActivityLoader';
 import GradientText from '../../Component/GradientText';
+import { BannerAdd } from '../../Component/BannerAdd';
+import { bannerAdId } from '../../Component/AdsId';
 
 type Coordinates = {
   latitude: number;
@@ -230,7 +232,7 @@ const GymListing = ({navigation}: any) => {
     [gymsData],
   );
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
+    <View style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <NewHeader header={'Near by Gyms'} SearchButton={false} backButton />
       <View
@@ -275,7 +277,8 @@ const GymListing = ({navigation}: any) => {
           />
         )}
       </View>
-    </SafeAreaView>
+      <BannerAdd bannerAdId={bannerAdId} />
+    </View>
   );
 };
 

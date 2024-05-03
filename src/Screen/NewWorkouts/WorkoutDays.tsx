@@ -570,9 +570,12 @@ const WorkoutDays = ({navigation, route}: any) => {
               <Image
                 source={localImage.Rest}
                 style={{
-                  height: DeviceWidth * 0.1,
-                  width: DeviceWidth * 0.1,
+                  height: DeviceWidth * 0.15,
+                  width: DeviceWidth * 0.15,
                  // marginLeft: DeviceWidth * 0.12,
+                 borderRadius:10,
+                 borderWidth:1,
+                 borderColor:'#D9D9D9',
                   opacity: percent ? 0.5 : 1,
                 }}
                 resizeMode="contain"

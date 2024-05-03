@@ -29,6 +29,8 @@ import {showMessage} from 'react-native-flash-message';
 import {useIsFocused} from '@react-navigation/native';
 import RNFetchBlob from 'rn-fetch-blob';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import { BannerAdd } from '../../Component/BannerAdd';
+import { bannerAdId } from '../../Component/AdsId';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -635,6 +637,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           </TouchableOpacity>
         </BlurView>
       </Modal>
+      <BannerAdd bannerAdId={bannerAdId} />
     </>
   );
 };

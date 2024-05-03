@@ -29,6 +29,8 @@ import VersionNumber from 'react-native-version-number';
 import {setAllExercise} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import { BannerAdd } from '../../Component/BannerAdd';
+import { bannerAdId } from '../../Component/AdsId';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -453,6 +455,7 @@ const CustomWorkout = ({navigation, route}) => {
         </TouchableOpacity>
         {/* </BlurView> */}
       </Modal>
+      <BannerAdd bannerAdId={bannerAdId} />
     </>
   );
 };
