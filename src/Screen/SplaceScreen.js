@@ -105,7 +105,7 @@ const SplaceScreen = ({navigation}) => {
     });
   };
   const loadScreen = () => {
-    if (showIntro) {
+    // if (showIntro) {
       if (
         getUserDataDetails?.id && 
         getUserDataDetails?.profile_compl_status == 1
@@ -115,9 +115,10 @@ const SplaceScreen = ({navigation}) => {
        // navigation.replace('LogSignUp');
        navigation.replace('LetsStart');
       }
-    } else {
-      navigation.replace('IntroductionScreen1');
-    }
+    // } 
+    // else {
+    //   navigation.replace('IntroductionScreen1');
+    // }
   };
   if (loaded) {
     setLoaded(false);

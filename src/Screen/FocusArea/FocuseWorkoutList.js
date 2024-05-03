@@ -134,7 +134,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
                 padding: 5,
                 borderColor: '#fff',
                 borderWidth: 1,
-                //  shadowColor: 'rgba(0, 0, 0, 1)',
+                shadowColor: 'rgba(0, 0, 0, 1)',
                 ...Platform.select({
                   ios: {
                     shadowColor: '#000000',

@@ -47,6 +47,7 @@ const NewPersonalDetails = ({route, navigation}) => {
   const [isEditible, setEditable] = useState(false);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const [isFocus, setIsFocus] = useState(false);
+  console.log('User Details', getUserDataDetails);
 
 console.log("dsfdscdsfds",getUserDataDetails);
   useEffect(() => {

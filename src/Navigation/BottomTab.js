@@ -30,6 +30,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import HomeNew from '../Screen/NewHome/HomeNew';
 import Profile from '../Screen/NewHome/Profile';
 import {ClipPath, Defs, Path, Polygon, Rect, Svg} from 'react-native-svg';
+import NewProfile from '../Screen/NewProfile';
 const Tabs = createBottomTabNavigator();
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
@@ -402,7 +403,7 @@ const BottomTab = () => {
 
         <Tabs.Screen
           name="Profile"
-          component={Profile}
+          component={NewProfile}
           options={{tabBarShowLabel: false}}
         />
       </Tabs.Navigator>

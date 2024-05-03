@@ -149,4 +149,16 @@ export const localImage = {
   ReportsRed: require('../Icon/Images/NewImage2/ReportsRed.png'),
   MyPlansRed: require('../Icon/Images/NewImage2/MyPlansRed.png'),
   PlayIcon: require('../Icon/Images/NewImage2/PlayIcon.png'),
+  NewPen:require('../Icon/Images/NewImage2/NewPen.png'),
+  Bell:require('../Icon/Images/NewImage2/bell.png'),
+  Planning:require('../Icon/Images/NewImage2/planning.png'),
+  NewPrfile:require('../Icon/Images/NewImage2/NewProfile.png'),
+  NSounds:require('../Icon/Images/NewImage2/NSounds.png'),
+  NPedometer:require('../Icon/Images/NewImage2/NPdeometer.png'),
+  NContact:require('../Icon/Images/NewImage2/NContact.png'),
+  NPrivacy:require('../Icon/Images/NewImage2/NPrivacy.png'),
+  NPolicy:require('../Icon/Images/NewImage2/NDocument.png'),
+  NRate:require('../Icon/Images/NewImage2/NRate.png'),
+  NDelete:require('../Icon/Images/NewImage2/NDelete.png'),
+  NLogOut:require('../Icon/Images/NewImage2/NLogout.png')
 };

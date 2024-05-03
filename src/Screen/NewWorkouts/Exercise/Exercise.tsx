@@ -35,6 +35,11 @@ import TrackPlayer, {
   State,
   usePlaybackState,
 } from 'react-native-track-player';
+import TrackPlayer, {
+  Capability,
+  State,
+  usePlaybackState,
+} from 'react-native-track-player';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -224,11 +229,6 @@ const Exercise = ({navigation, route}: any) => {
               postCurrentExerciseAPI(index);
               setDemoW(demoW + 100 / timer);
               setTimer(timer - 1);
-           !playW &&  Tts.speak(
-                `Get Ready for ${
-                  allExercise[index + 1]?.exercise_title
-                } Exercise`,
-              );
             } else if (demo) {
               console.log(demoW);
               setDemoW(demoW + 100 / timer);

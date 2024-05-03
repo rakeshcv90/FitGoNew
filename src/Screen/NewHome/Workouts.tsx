@@ -235,6 +235,30 @@ const Workouts = ({navigation}: any) => {
       dispatch(setCustomWorkoutData([]));
     }
   };
+  // const getCustomWorkout = async () => {
+  //   try {
+  //     const data = await axios.get(
+  //       `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${getUserDataDetails?.id}`,
+  //     );
+
+  //     if (data?.data?.msg != 'data not found.') {
+  //       dispatch(setCustomWorkoutData(data?.data?.data));
+      
+  //     } else {
+  //       dispatch(setCustomWorkoutData([]));
+  //     }
+  //   } catch (error) {
+  //     showMessage({
+  //       message: 'Something went wrong pleasr try again',
+  //       type: 'danger',
+  //       animationDuration: 500,
+  //       floating: true,
+  //       icon: {icon: 'auto', position: 'left'},
+  //     });
+  //     console.log('Custom Workout Error', error);
+  //     dispatch(setCustomWorkoutData([]));
+  //   }
+  // };
   const renderItem = useMemo(() => {
     return ({item}: any) => (
       <>

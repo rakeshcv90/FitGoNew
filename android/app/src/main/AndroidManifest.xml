@@ -28,8 +28,6 @@
     <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-sdk tools:overrideLibrary="com.facebook.react" />
-
 
     <application
         android:name=".MainApplication"

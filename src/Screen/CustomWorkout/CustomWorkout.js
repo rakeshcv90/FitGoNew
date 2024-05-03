@@ -285,7 +285,7 @@ const CustomWorkout = ({navigation, route}) => {
       const exerciseData = await axios.get(
         `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
       );
-
+   
       if (
         exerciseData?.data?.msg == 'Please update the app to the latest version'
       ) {
