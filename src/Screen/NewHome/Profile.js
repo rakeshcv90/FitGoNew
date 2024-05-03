@@ -77,7 +77,6 @@ const Profile = () => {
         setNotificationTimer('');
         dispatch(setIsAlarmEnabled(false));
       }
-   
     });
   }, []);
 
@@ -88,7 +87,6 @@ const Profile = () => {
     } else {
       setVisible(true);
     }
-
   };
   const setAlarmIsEnabled = data => {
     dispatch(setIsAlarmEnabled(data));
@@ -759,7 +757,9 @@ const Profile = () => {
                     color: AppColor.WHITE,
                     fontSize: 20,
                   }}>
-                  {getUserDataDetails?.name==null?'Guest':getUserDataDetails?.name}
+                  {getUserDataDetails?.name == null
+                    ? 'Guest'
+                    : getUserDataDetails?.name}
                 </Text>
                 <Text
                   style={{
@@ -767,7 +767,9 @@ const Profile = () => {
                     color: AppColor.WHITE,
                     fontSize: 12,
                   }}>
-                  {getUserDataDetails?.email==null?'guest.gmail.com': getUserDataDetails?.email}
+                  {getUserDataDetails?.email == null
+                    ? 'guest.gmail.com'
+                    : getUserDataDetails?.email}
                 </Text>
               </View>
             </View>
@@ -830,20 +832,22 @@ const Profile = () => {
                   `CV_FITME_CLICKED_ON_${value?.text1?.replace(' ', '_')}`,
                 );
 
-              if (value.text1 == 'Personal Details') {
-                navigation.navigate('NewPersonalDetails');
-              } else if (value.text1 == 'Subscription') {
-                navigation.navigate('Subscription');
-              } else if (value.text1 == 'Privacy Policy') {
-                navigation.navigate('TermaAndCondition', {
-                  title: 'Privacy & Policy',
-                });
-              } else {
-                showMessage({
-                  message: 'Work In Progress',
-                  type: 'info',
-                  animationDuration: 500,
-
+                if (
+                  value.text1 == 'Personal Details' &&
+                  getUserDataDetails.email != null
+                ) {
+                  navigation.navigate('NewPersonalDetails');
+                } else if (value.text1 == 'Subscription') {
+                  navigation.navigate('Subscription');
+                } else if (value.text1 == 'Privacy Policy') {
+                  navigation.navigate('TermaAndCondition', {
+                    title: 'Privacy & Policy',
+                  });
+                } else {
+                  showMessage({
+                    message: 'Please Signup First',
+                    type: 'info',
+                    animationDuration: 500,
 
                     floating: true,
                     icon: {icon: 'auto', position: 'left'},
@@ -961,7 +965,8 @@ const Profile = () => {
             </TouchableOpacity>
           ))}
         </View>
-        <View style={[styles.UserDetailsView, {marginBottom: DeviceHeigth*0.05}]}>
+        <View
+          style={[styles.UserDetailsView, {marginBottom: DeviceHeigth * 0.05}]}>
           {SecondView.map((value, index) => (
             <TouchableOpacity
               key={index}
@@ -972,10 +977,9 @@ const Profile = () => {
                   `CV_FITME_CLICKED_ON_${value?.text1?.replace(' ', '_')}`,
                 );
                 // navigation.navigate('Personal Details');
-                 if (value.text1 == 'Contact Us') {
-                openMailApp();
-              } 
-                else if (value.text1 == 'Privacy Policy') {
+                if (value.text1 == 'Contact Us') {
+                  openMailApp();
+                } else if (value.text1 == 'Privacy Policy') {
                   navigation.navigate('TermaAndCondition', {
                     title: 'Privacy & Policy',
                   });

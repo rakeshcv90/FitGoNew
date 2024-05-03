@@ -30,6 +30,8 @@ import moment from 'moment';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import {setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
+import { BannerAdd } from '../../Component/BannerAdd';
+import { bannerAdId } from '../../Component/AdsId';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -201,6 +203,7 @@ const Store = ({navigation}) => {
       <View
         style={{
           width: '95%',
+          height: DeviceHeigth>=1024?DeviceHeigth * 0.53:DeviceHeigth * 0.48,
           borderRadius: 10,
           alignSelf: 'center',
           alignItems: 'center',
@@ -325,7 +328,9 @@ const Store = ({navigation}) => {
             />
           )}
         </View>
+        <BannerAdd bannerAdId={bannerAdId} />
       </View>
+      
     </View>
   );
 };
@@ -349,17 +354,19 @@ var styles = StyleSheet.create({
     marginBottom: 0, // Set your desired margin for the last item
   },
   listItem2: {
-    marginHorizontal: 5,
-    // top: -10,
+    width: DeviceWidth * 0.26,
+    // height: DeviceWidth * 0.25,
+    marginHorizontal: 12,
+    top: 10,
     borderRadius: 10,
     paddingRight: 10,
     paddingTop: 10,
-    paddingBottom: 20,
+    paddingBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
     paddingLeft: 10,
     backgroundColor: AppColor.WHITE,
-    marginBottom: 10,
+    marginBottom: 20,
     shadowColor: 'rgba(0, 0, 0, 1)',
     ...Platform.select({
       ios: {
@@ -372,6 +379,29 @@ var styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+    // marginHorizontal: 5,
+    // // top: -10,
+    // borderRadius: 10,
+    // paddingRight: 10,
+    // paddingTop: 10,
+    // paddingBottom: 20,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // paddingLeft: 10,
+    // backgroundColor: AppColor.WHITE,
+    // marginBottom: 10,
+    // shadowColor: 'rgba(0, 0, 0, 1)',
+    // ...Platform.select({
+    //   ios: {
+    //     shadowColor: '#000000',
+    //     shadowOffset: {width: 0, height: 2},
+    //     shadowOpacity: 0.3,
+    //     shadowRadius: 4,
+    //   },
+    //   android: {
+    //     elevation: 5,
+    //   },
+    // }),
   },
 });
 export default Store;

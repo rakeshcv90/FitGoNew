@@ -775,6 +775,7 @@ const OneDay = ({navigation, route}: any) => {
           <Icons name={'fire'} size={15} color={AppColor.INPUTTEXTCOLOR} />
           {` ${dayData?.total_calories} Kcal`}
         </Text>
+
         {forLoading ? (
           <FlatList
             data={simerData}
@@ -795,6 +796,7 @@ const OneDay = ({navigation, route}: any) => {
             style={{marginBottom: 100, flex: 1}}
           />
         )}
+
         <GradientButton
           // play={false}
           // oneDay

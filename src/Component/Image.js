@@ -91,7 +91,7 @@ export const localImage = {
   User: require('../Icon/Images/NewImage/User.png'),
   Boot: require('../Icon/Images/NewImage/Trainer1.png'),
   Send: require('../Icon/Images/NewImage/send.png'),
-  Rest: require('../Icon/Images/NewImage/Rest.png'),
+  Rest: require('../Icon/Images/NewImage2/restDay.png'),
   ChatHistory: require('../Icon/Images/NewImage/chatHistory.png'),
   Tick2: require('../Icon/Images/NewImage/Tick2.png'),
   Feedback: require('../Icon/Images/NewImage/Feedback.png'),
