@@ -119,7 +119,7 @@ const CreateWorkout = ({navigation, route}) => {
                 }),
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                {isLoading && (
+                {/* {isLoading && (
                   // <ActivityIndicator
                   //   style={styles.loader}
                   //   size="small"
@@ -130,7 +130,7 @@ const CreateWorkout = ({navigation, route}) => {
                     ref={avatarRef}
                     autoRun
                   />
-                )}
+                )} */}
                 <Image
                   onLoad={() => setIsLoading(false)}
                   // source={{uri: item.exercise_image_link}}

@@ -13,6 +13,7 @@ import {AppColor} from '../../../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { showMessage } from 'react-native-flash-message';
+import { useSelector } from 'react-redux';
 
 const BottomSheetExercise = ({
   isVisible,
@@ -27,6 +28,7 @@ const BottomSheetExercise = ({
   setSeconds,
   handleExerciseChange
 }: any) => {
+  const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const Box = ({selected, item, index}: any) => {
     return (
       <TouchableOpacity
@@ -68,7 +70,10 @@ const BottomSheetExercise = ({
             alignItems: 'center',
           }}>
           <Image
-            source={{uri: item?.exercise_image}}
+            source={{uri: getStoreVideoLoc[item?.exercise_title + 'Image']
+            ? 'file://' +
+              getStoreVideoLoc[item?.exercise_title + 'Image']
+            : item.exercise_image_link}}
             style={{height: 80, width: 60, marginLeft: DeviceWidth * 0.12}}
             resizeMode="contain"
           />

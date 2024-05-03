@@ -158,16 +158,27 @@ const Box = ({item, index}: any) => {
               ref={avatarRef}
             />
           )} */}
-      <Image
-        source={{uri: item?.exercise_image_link}}
-        onLoad={() => setIsLoading(false)}
+      <View
         style={{
           height: 50,
           width: 50,
-          alignSelf: 'center',
-        }}
-        resizeMode="contain"
-      />
+          borderRadius: 5,
+          borderWidth: 0.5,
+          borderColor: 'lightgrey',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Image
+          source={{uri: item?.exercise_image_link}}
+          onLoad={() => setIsLoading(false)}
+          style={{
+            height: 40,
+            width: 40,
+            alignSelf: 'center',
+          }}
+          resizeMode="contain"
+        />
+      </View>
       <View
         style={{
           alignItems: 'center',
@@ -302,7 +313,7 @@ const MyPlans = ({navigation}: any) => {
       if (res?.data?.msg != 'No data found.') {
         const days = new Set(); // Use a Set to store unique days
         res?.data?.forEach((item: any) => {
-          days.add(item.user_day);
+          days.add(item?.user_day);
         });
         console.log('DAYs', days);
         setWeekStatus([...days]);
@@ -601,9 +612,12 @@ const MyPlans = ({navigation}: any) => {
             style={[
               styles.semiBold,
               {
-                marginLeft: 10,
+                marginLeft:
+                  DeviceHeigth >= 1024
+                    ? DeviceWidth * 0.03
+                    : DeviceWidth * 0.05,
                 width: DeviceWidth * 0.7,
-                marginBottom: DeviceWidth * 0.05,
+                // marginBottom: DeviceWidth * 0.05,
               },
             ]}>
             Get Fit{' '}
@@ -613,7 +627,7 @@ const MyPlans = ({navigation}: any) => {
         <View
           style={{
             flexDirection: 'row',
-            width: Platform.OS == 'ios' ? DeviceWidth : DeviceWidth * 0.95,
+            width: DeviceWidth * 0.95,
             justifyContent: 'space-between',
             alignItems: 'center',
             alignSelf: 'center',
@@ -703,9 +717,9 @@ const MyPlans = ({navigation}: any) => {
                       end={{x: 1, y: 1}}
                       colors={['#0A93F1', '#2B4E9F']}
                       style={{
-                        width: 50,
-                        height: 50,
-                        borderRadius: 50 / 2,
+                        width: DeviceHeigth >= 1024 ? 50 : 35,
+                        height: DeviceHeigth >= 1024 ? 50 : 35,
+                        borderRadius: DeviceHeigth >= 1024 ? 50 / 2 : 35 / 2,
                         overflow: 'hidden',
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -715,8 +729,8 @@ const MyPlans = ({navigation}: any) => {
                       <Image
                         source={localImage.PlayIcon}
                         style={{
-                          height: 20,
-                          width: 20,
+                          height: DeviceHeigth >= 1024 ? 15 : 10,
+                          width: DeviceHeigth >= 1024 ? 15 : 10,
                         }}
                         resizeMode="contain"
                       />

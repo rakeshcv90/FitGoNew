@@ -570,12 +570,18 @@ const WorkoutDays = ({navigation, route}: any) => {
               <Image
                 source={localImage.Rest}
                 style={{
-                  height: DeviceWidth * 0.15,
-                  width: DeviceWidth * 0.15,
-                 // marginLeft: DeviceWidth * 0.12,
-                 borderRadius:10,
-                 borderWidth:1,
-                 borderColor:'#D9D9D9',
+                  height:
+                    DeviceHeigth >= 1024
+                      ? DeviceWidth * 0.15
+                      : DeviceWidth * 0.17,
+                  width:
+                    DeviceHeigth >= 1024
+                      ? DeviceWidth * 0.15
+                      : DeviceWidth * 0.17,
+                  // marginLeft: DeviceWidth * 0.12,
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: '#D9D9D9',
                   opacity: percent ? 0.5 : 1,
                 }}
                 resizeMode="contain"
@@ -583,24 +589,28 @@ const WorkoutDays = ({navigation, route}: any) => {
             ) : (
               <>
                 {isLoading && (
-              
-                <ShimmerPlaceholder
-                  style={styles.loader}
-                  ref={avatarRef}
-                  autoRun
-                />
-                )} 
+                  <ShimmerPlaceholder
+                    style={styles.loader}
+                    ref={avatarRef}
+                    autoRun
+                  />
+                )}
                 <Image
-                  source={{uri: data?.workout_image_link}}
+                  source={{uri: data?.workout_image}}
                   onLoad={() => setIsLoading(false)}
                   style={{
-                    height: DeviceWidth * 0.225,
-                    width:
-                      DeviceHeigth < 1280
+                    height:
+                      DeviceHeigth >= 1024
                         ? DeviceWidth * 0.15
-                        : DeviceWidth * 0.2,
-
+                        : DeviceWidth * 0.17,
+                    width:
+                      DeviceHeigth >= 1024
+                        ? DeviceWidth * 0.15
+                        : DeviceWidth * 0.17,
                     opacity: percent ? 0.5 : 1,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: '#D9D9D9',
                   }}
                   resizeMode="contain"
                 />
@@ -612,7 +622,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 marginHorizontal: 10,
-                width: '75%',
+                width: DeviceHeigth >= 1024 ? '80%' : '75%',
               }}>
               <View>
                 <Text
@@ -635,6 +645,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                           percent && item?.total_rest != 0
                             ? AppColor.WHITE
                             : '#941000',
+                        lineHeight: DeviceHeigth >= 1024 ? 30 : 20,
                       },
                     ]}>
                     Rest
@@ -683,7 +694,6 @@ const WorkoutDays = ({navigation, route}: any) => {
                       ? AppColor.WHITE
                       : AppColor.BLACK
                   }
-                 
                 />
               )}
             </View>
