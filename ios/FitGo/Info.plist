@@ -76,7 +76,7 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>FitGo needs Location access to show Gyms on the basis of Current User's location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
     <string>FitGo needs Location access to show Gyms on the basis of Current User's location</string>

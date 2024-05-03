@@ -113,7 +113,6 @@ const Workouts = ({navigation}: any) => {
     },
   ];
   const allWorkoutApi = async () => {
-  
     // try {
     //   setRefresh(true);
     //   const payload = new FormData();
@@ -127,7 +126,6 @@ const Workouts = ({navigation}: any) => {
     //     },
     //     data: payload,
     //   });
-
     //   if (res?.data?.msg == 'Please update the app to the latest version.') {
     //     showMessage({
     //       message: res?.data?.msg,
@@ -203,10 +201,8 @@ const Workouts = ({navigation}: any) => {
       ) {
       } else if (exerciseStatus?.data.length > 0) {
         dispatch(setWorkoutTimeCal(exerciseStatus?.data));
-      
       } else {
         dispatch(setWorkoutTimeCal([]));
-     
       }
     } catch (error) {
       console.log('Workout-Status', error);
@@ -243,7 +239,7 @@ const Workouts = ({navigation}: any) => {
 
   //     if (data?.data?.msg != 'data not found.') {
   //       dispatch(setCustomWorkoutData(data?.data?.data));
-      
+
   //     } else {
   //       dispatch(setCustomWorkoutData([]));
   //     }
@@ -414,7 +410,10 @@ const Workouts = ({navigation}: any) => {
               </ImageBackground>
               <View
                 style={{
-                  marginTop: DeviceHeigth * 0.05,
+                  marginTop:
+                    DeviceHeigth >= 1024
+                      ? DeviceHeigth * 0.15
+                      : DeviceHeigth * 0.05,
                   marginHorizontal: 10,
                   zIndex: 1,
                 }}>
