@@ -23,10 +23,11 @@ import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
 import {SetAIMessageHistory} from '../../Component/ThemeRedux/Actions';
 import {Alert} from 'react-native';
-import {MyRewardedAd} from '../../Component/BannerAdd';
+import {BannerAdd, MyRewardedAd} from '../../Component/BannerAdd';
 import moment from 'moment';
 import Tts from 'react-native-tts';
 import {useIsFocused} from '@react-navigation/native';
+import { bannerAdId } from '../../Component/AdsId';
 
 // const apiKey = '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';
 // const apiKey = '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';
@@ -595,7 +596,9 @@ const AITrainer = ({navigation, route}) => {
             />
           </TouchableOpacity>
         </View>
+        <BannerAdd bannerAdId={bannerAdId} />
       </KeyboardAvoidingView>
+     
     </View>
   );
 };

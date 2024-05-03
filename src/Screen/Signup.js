@@ -50,6 +50,7 @@ import {
   requestPermissionforNotification,
 } from '../Component/Helper/PushNotification';
 import analytics from '@react-native-firebase/analytics';
+import {useIsFocused} from '@react-navigation/native';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 const Signup = ({navigation}) => {
@@ -63,7 +64,7 @@ const Signup = ({navigation}) => {
   const [appVersion, setAppVersion] = useState(0);
   const dispatch = useDispatch();
   const [cancelLogin, setCancelLogin] = useState(false);
-
+  const isFocused = useIsFocused();
   const getFcmToken = useSelector(state => state.getFcmToken);
 
   useEffect(() => {
@@ -110,11 +111,13 @@ const Signup = ({navigation}) => {
   }, []);
 
   useEffect(() => {
-    DeviceInfo.syncUniqueId().then(uniqueId => {
-      setDeviceId(uniqueId);
-    });
-    setAppVersion(VersionNumber.appVersion);
-  });
+    if (isFocused) {
+      DeviceInfo.syncUniqueId().then(uniqueId => {
+        setDeviceId(uniqueId);
+      });
+      setAppVersion(VersionNumber.appVersion);
+    }
+  }, [isFocused]);
 
   const GoogleSignup = async () => {
     analytics().logEvent('CV_FITME_GOOGLE_SIGNUP');
@@ -192,6 +195,7 @@ const Signup = ({navigation}) => {
           version: appVersion,
           devicetoken: getFcmToken,
           platform: Platform.OS,
+          deviceid: deviceId,
         },
       });
 
@@ -225,6 +229,7 @@ const Signup = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
+        getProfileData1(data.data?.id);
       } else if (
         data.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -265,7 +270,7 @@ const Signup = ({navigation}) => {
           social_id: 0,
           social_token: 0,
           social_type: '',
-          //deviceid: deviceId,
+          deviceid: deviceId,
           version: appVersion,
           devicetoken: getFcmToken,
           platform: Platform.OS,
@@ -273,7 +278,7 @@ const Signup = ({navigation}) => {
       });
 
       setForLoading(false);
-
+      console.log('dfdfdfgdfdf', data?.data);
       if (data?.data?.status == 0) {
         setForLoading(false);
         showMessage({
@@ -329,13 +334,14 @@ const Signup = ({navigation}) => {
           socialid: value.id,
           socialtoken: token,
           socialtype: 'google',
-          //  deviceid: deviceId,
+          deviceid: deviceId,
           version: appVersion,
           devicetoken: getFcmToken,
           platform: Platform.OS,
         },
       });
-      console.log('Uder Registdecvzxcvxc');
+      console.log('Uder Registdecvzxcvxc', data.data);
+      await GoogleSignin.signOut();
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
@@ -368,6 +374,8 @@ const Signup = ({navigation}) => {
           type: 'danger',
           icon: {icon: 'auto', position: 'left'},
         });
+
+        getProfileData1(data.data?.id);
         await GoogleSignin.signOut();
       } else if (
         data.data?.msg == 'Please update the app to the latest version.'
@@ -418,7 +426,7 @@ const Signup = ({navigation}) => {
       socialid: value.userID,
       socialtoken: '',
       socialtype: 'facebook',
-      // deviceid: deviceId,
+      deviceid: deviceId,
       version: appVersion,
       devicetoken: getFcmToken,
       platform: Platform.OS,
@@ -474,7 +482,7 @@ const Signup = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-        // navigationRef.navigate('BottomTab');
+        getProfileData1(data.data?.id);
       } else if (
         data.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -538,7 +546,7 @@ const Signup = ({navigation}) => {
       try {
         let payload = new FormData();
         payload.append('email', Emailsend);
-        const OTPdata = await axios(`${Api}/${Appapi.ResendOTP}`, {
+        const OTPdata = await axios(`${NewApi}/${Appapi.ResendOTP}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -601,7 +609,31 @@ const Signup = ({navigation}) => {
               email: Emailsend,
             },
           });
-          if (OtpMsg.data.msg == 'Email verified successfully') {
+
+          if (
+            OtpMsg?.data?.msg == 'Email verified successfully' &&
+            OtpMsg?.data?.profile_compl_status == 1
+          ) {
+            setForLoading(false);
+            showMessage({
+              message: 'Email verified successfully!',
+              floating: true,
+              duration: 500,
+              type: 'success',
+              icon: {icon: 'auto', position: 'left'},
+            });
+
+            getProfileData1(OtpMsg.data?.id);
+            dispatch(setUserId(OtpMsg.data?.id));
+            setVerifyVisible(false);
+            setTxt1('');
+            setTxt2('');
+            setTxt3('');
+            setTxt4('');
+          } else if (
+            OtpMsg?.data?.msg == 'Email verified successfully' &&
+            OtpMsg?.data?.profile_compl_status == 0
+          ) {
             setForLoading(false);
             showMessage({
               message: 'Email verified successfully!',
@@ -898,7 +930,7 @@ const Signup = ({navigation}) => {
           version: appVersion,
         },
       });
-    
+
       if (data.data.profile) {
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));
@@ -917,6 +949,43 @@ const Signup = ({navigation}) => {
         setForLoading(false);
         dispatch(setUserProfileData([]));
         navigationRef.navigate('Yourself');
+      }
+    } catch (error) {
+      console.log('User Profile Error', error);
+      setForLoading(false);
+    }
+  };
+  const getProfileData1 = async user_id => {
+    try {
+      const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          id: user_id,
+          version: appVersion,
+        },
+      });
+
+      if (data.data.profile) {
+        setForLoading(false);
+        dispatch(setUserProfileData(data.data.profile));
+        navigationRef.navigate('BottomTab');
+      } else if (
+        data?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: data?.data?.msg,
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        setForLoading(false);
+        dispatch(setUserProfileData([]));
+        navigationRef.navigate('BottomTab');
       }
     } catch (error) {
       console.log('User Profile Error', error);

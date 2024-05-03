@@ -100,7 +100,9 @@ const SplaceScreen = ({navigation}) => {
     interstitialAd.load();
     interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {});
     interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
-    interstitialAd.addAdEventListener(AdEventType.ERROR, () => {});
+    interstitialAd.addAdEventListener(AdEventType.ERROR, () => {
+      loadScreen();
+    });
   };
   const loadScreen = () => {
     if (showIntro) {

@@ -23,6 +23,8 @@ import {localImage} from '../../Component/Image';
 import AnimatedLottieView from 'lottie-react-native';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
+import {BannerAdd} from '../../Component/BannerAdd';
+import {bannerAdId} from '../../Component/AdsId';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -190,10 +192,17 @@ const ProductsList = ({route}) => {
           imageLoadingColor="#2196F3"
         />
       </View>
+    
       <View
         style={{
           width: '95%',
           borderRadius: 10,
+          height:
+            DeviceHeigth >= 1024
+              ? DeviceHeigth * 0.59
+              : DeviceHeigth >= 932
+              ? DeviceHeigth * 0.59
+              : DeviceHeigth * 0.55,
           alignSelf: 'center',
           alignItems: 'center',
           top: 20,
@@ -314,6 +323,7 @@ const ProductsList = ({route}) => {
           )}
         </View>
       </View>
+      <BannerAdd bannerAdId={bannerAdId} />
     </View>
   );
 };

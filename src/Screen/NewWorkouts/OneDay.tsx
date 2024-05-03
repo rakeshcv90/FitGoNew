@@ -743,14 +743,15 @@ const OneDay = ({navigation, route}: any) => {
           contentContainerStyle={{flexGrow: 1}}
           showsVerticalScrollIndicator={false}
           style={{marginBottom: 100, flex: 1}}>
-          {exerciseData.map((item, index) => (
+            {/* {exerciseData} */}
+          {/* {exerciseData.map((item, index) => (
             <Box selected={-1} index={index + 1} item={item} key={index} />
-          ))}
-          {/* {forLoading
+          ))} */}
+          {forLoading
             ? simerData.map((item, index) => <Box2 />)
             : exerciseData.map((item, index) => (
                 <Box selected={-1} index={index + 1} item={item} key={index} />
-              ))} */}
+              ))}
         </ScrollView>
         <GradientButton
           // play={false}
