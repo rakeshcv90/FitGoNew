@@ -1353,7 +1353,11 @@ const HomeNew = ({navigation}) => {
                     </Text>
                   </View>
 
-                  <PercentageBar height={20} percentage={progressHight} />
+                  <PercentageBar height={20} 
+                    percentage={(
+                      (day / currentChallenge[0]?.total_days) *
+                      100
+                    ).toFixed(0)} />
                 </View>
               </View>
               <TouchableOpacity

@@ -31,7 +31,7 @@ const PercentageBar = ({
         <LinearGradient
           colors={['#D01818', '#941000']}
           style={{
-            width: percentage?.split('%')[0] > 10 ? percentage : '10%',
+            width: percentage > 10 ? `${percentage}%` : '10%',
             height: getheight,
             marginVertical: 10,
             borderRadius: 50,
@@ -40,16 +40,20 @@ const PercentageBar = ({
           }}></LinearGradient>
         <View
           style={{
-            width: percentage?.split('%')[0] > 10 ? percentage : '10%',
+            width: percentage > 10 ? `${percentage}%` : '10%',
             height: getheight,
+            // position: 'absolute',
+            bottom: 30,
 
-            top:
-              Platform.OS == 'ios'
-                ? -DeviceHeigth * 0.033
-                : -DeviceHeigth * 0.037,
+            // top:
+            //   Platform.OS == 'ios'
+            //     ? DeviceHeigth >= 1024
+            //       ? -DeviceHeigth * 0.03
+            //       : -DeviceHeigth * 0.033
+            //     : -DeviceHeigth * 0.037,
           }}>
           <Text style={{textAlign: 'center', color: 'white'}}>
-            {percentage?.split('%')[0] == 'NAN' ? percentage : '0%'}
+            {percentage > 10 ? `${percentage}%` : '0%'}
           </Text>
         </View>
       </View>

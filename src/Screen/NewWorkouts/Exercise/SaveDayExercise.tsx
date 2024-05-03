@@ -1,5 +1,5 @@
 import {Image, Platform, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColor} from '../../../Component/Color';
 import {localImage} from '../../../Component/Image';
@@ -12,15 +12,47 @@ import axios from 'axios';
 import {setChallengesData} from '../../../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import VersionNumber, {appVersion} from 'react-native-version-number';
+import moment from 'moment';
 
+const WeekArray = Array(7)
+  .fill(0)
+  .map(
+    (item, index) =>
+      (item = moment()
+        .add(index, 'days')
+        .subtract(moment().isoWeekday() - 1, 'days')
+        .format('dddd')),
+  );
 const SaveDayExercise = ({navigation, route}: any) => {
   const {data, day, allExercise, type, challenge} = route?.params;
   let fire, clock, action;
-
+  const [workoutName, setWorkooutName] = useState('');
   const dispatch = useDispatch();
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
+
+  const getWeeklyAPI = async () => {
+    try {
+      const res = await axios({
+        url:
+          NewAppapi.GET_PLANS_EXERCISE +
+          '?version=' +
+          VersionNumber.appVersion +
+          '&day=' +
+          WeekArray[day] +
+          '&user_id=' +
+          getUserDataDetails.id,
+      });
+      if (res.data?.msg != 'User not exist.') {
+        setWorkooutName(res.data?.title);
+      } else {
+        setWorkooutName('');
+      }
+    } catch (error) {
+      setWorkooutName('');
+    }
+  };
   if (type == 'day') {
     for (const d in data?.days) {
       if (d.split('day_')[1] == day) {
@@ -35,6 +67,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
       fire = item?.exercise_calories;
       clock = item?.exercise_rest?.split(' ')[0];
     });
+    if (type == 'weekly') getWeeklyAPI();
   }
 
   const TESTAPI = async () => {
@@ -100,7 +133,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
       <GradientText
         text="Congratulations!"
         fontSize={32}
-        width={DeviceWidth * 0.7}
+        width={DeviceHeigth >= 1024 ? DeviceWidth * 0.4 : DeviceWidth * 0.7}
       />
       <Text
         style={{
@@ -113,10 +146,13 @@ const SaveDayExercise = ({navigation, route}: any) => {
           textAlign: 'center',
         }}>
         You completed your{' '}
-        {data?.workout_title == undefined
-          ? data?.title
-          : data?.workout_title + ' Exercise'}
+        {type != 'weekly'
+          ? data?.workout_title == undefined
+            ? data?.title
+            : data?.workout_title + ' Exercise'
+          : workoutName + ' Exercises'}
       </Text>
+
       <View
         style={{
           marginHorizontal: 10,
@@ -130,7 +166,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
             style={{flex: 1}}
             resizeMode="contain"
           />
-          <GradientText text={fire} width={50} fontSize={28} x={'5'} />
+          <GradientText text={fire} width={50} fontSize={28} x={'15'} />
           <Text
             style={{
               fontSize: 16,

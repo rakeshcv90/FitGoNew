@@ -32,7 +32,8 @@ export const AppColor={
     HEADERTEXTCOLOR:'#333333',
     NewRed: '#CE1817',
     SUBHEADING:'#434343',
-
+    NEW_GREEN: '#49AEAA',
+    NEW_GREEN_DARK: '#3D8889',
   }
   export const Fonts = {
     MONTSERRAT_BOLD: 'Montserrat-Bold',

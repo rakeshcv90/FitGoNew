@@ -15,6 +15,9 @@ import axios from 'axios';
 
 const FocuseWorkoutList = ({navigation, route}) => {
   const [data, setData] = useState([]);
+  const [likeData, setLikeData] = useState([]);
+  const [updateLikeID, setUpdateLikeID] = useState(-1);
+  const [action, setAction] = useState(0);
   const dispatch = useDispatch();
   const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
 
@@ -27,8 +30,63 @@ const FocuseWorkoutList = ({navigation, route}) => {
   useEffect(() => {
     if (isFocused) {
       getCustomeWorkoutTimeDetails();
+      getAllLikeStatusAPI();
     }
   }, [isFocused]);
+
+  const getAllLikeStatusAPI = async () => {
+    const payload = new FormData();
+    payload.append('user_id', getUserDataDetails?.id);
+    try {
+      // setRefresh(true);
+      const res = await axios({
+        url: NewAppapi.GET_LIKE_WORKOUTS,
+        method: 'post',
+        data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (res.data) {
+        // setRefresh(false);
+        // Merge likeData into each corresponding WorkoutData object
+        const like = res.data?.user_like[0]?.workout_id
+          ?.split(',')
+          ?.map(str => parseInt(str));
+        setLikeData(like);
+      }
+    } catch (error) {
+      // setRefresh(false);
+      console.error(error, 'LikeError');
+      setLikeData([]);
+    }
+  };
+  const postLikeAPI = async workoutID => {
+    try {
+      const payload = new FormData();
+      payload.append('user_id', getUserDataDetails?.id);
+      payload.append('workout_id', workoutID);
+      // setRefresh(true);
+      const res = await axios({
+        url: NewAppapi.POST_LIKE_WORKOUT,
+        method: 'post',
+        data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (res.data?.msg == 'Workout removed from like') {
+        setAction(-1);
+        setUpdateLikeID(workoutID);
+      } else {
+        setAction(+1);
+        setUpdateLikeID(workoutID);
+      }
+    } catch (error) {
+      // setRefresh(false);
+      console.error(error, 'likeERRPost');
+    }
+  };
   const renderItem = useMemo(
     () =>
       ({item}) => {
@@ -181,14 +239,43 @@ const FocuseWorkoutList = ({navigation, route}) => {
                         alignItems: 'center',
                         //left: -10,
                         width: 55,
+                      }}
+                      onPress={() => {
+                        const current = likeData.findIndex(
+                          it => it == item?.workout_id,
+                        );
+                        if (current == -1) {
+                          likeData.push(item?.workout_id);
+                          postLikeAPI(item?.workout_id);
+                        } else {
+                          const remove = likeData.filter(
+                            it => it != item?.workout_id,
+                          );
+                          setLikeData(remove);
+                          postLikeAPI(item?.workout_id);
+                        }
                       }}>
-                      <AnimatedLottieView
-                        source={require('../../Icon/Images/NewImage/Heart.json')}
-                        speed={0.5}
-                        autoPlay
-                        // resizeMode='cover'
-                        style={{width: 40, height: 40}}
-                      />
+                      {likeData?.includes(item?.workout_id) ? (
+                        <AnimatedLottieView
+                          source={require('../../Icon/Images/NewImage/Heart.json')}
+                          autoPlay
+                          speed={0.5}
+                          style={{
+                            width: 40,
+                            height: 40,
+                          }}
+                        />
+                      ) : (
+                        <AnimatedLottieView
+                          source={require('../../Icon/Images/NewImage/Heartless.json')}
+                          autoPlay
+                          speed={0.5}
+                          style={{
+                            width: 40,
+                            height: 40,
+                          }}
+                        />
+                      )}
                       <Text
                         style={{
                           fontSize: 13,
@@ -199,7 +286,9 @@ const FocuseWorkoutList = ({navigation, route}) => {
                         }}>
                         {/* {' '} */}
                         {/* {item?.total_workout_like} */}
-                        {convertLike(item?.total_workout_like)}
+                        {item?.workout_id == updateLikeID && action > 0
+                          ? convertLike(item?.total_workout_like + action)
+                          : convertLike(item?.total_workout_like)}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -211,7 +300,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
           </>
         );
       },
-    [],
+    [likeData, updateLikeID, action],
   );
   const convertLike = number => {
     if (number == undefined || number == null) {
@@ -343,6 +432,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderItem}
             ListEmptyComponent={emptyComponent}
+            showsVerticalScrollIndicator={false}
             initialNumToRender={10}
             maxToRenderPerBatch={10}
             updateCellsBatchingPeriod={100}

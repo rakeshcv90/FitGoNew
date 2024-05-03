@@ -59,7 +59,6 @@ const CreateWorkout = ({navigation, route}) => {
           : withTiming(0, {duration: 500}),
     };
   });
-  console.log("fffffffff",getAllExercise)
   useEffect(() => {
     const datalist = getAllExercise?.filter(listdata => {
       return listdata.exercise_bodypart == bodyPart;
@@ -130,13 +129,14 @@ const CreateWorkout = ({navigation, route}) => {
                   />
                 )}
                 <Image
-                  source={{uri: item.exercise_image_link}}
                   onLoad={() => setIsLoading(false)}
                   // source={{uri: item.exercise_image_link}}
                   source={{
-                    uri: 'file://' + getStoreVideoLoc[item?.exercise_title],
+                    uri: getStoreVideoLoc[item?.exercise_title + 'Image']
+                      ? 'file://' +
+                        getStoreVideoLoc[item?.exercise_title + 'Image']
+                      : item.exercise_image_link,
                   }}
-
                   style={{
                     width: 80,
                     height: 80,
