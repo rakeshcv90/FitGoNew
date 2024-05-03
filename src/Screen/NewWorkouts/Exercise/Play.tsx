@@ -76,7 +76,7 @@ const Play: FC<Props> = ({...props}) => {
             height: props.h ? props.h : 50,
             marginVertical: props.mV,
             paddingVertical: props.pV,
-            borderRadius: props.bR ? props.bR : 20 / 2,
+            borderRadius: props.bR ? props.bR : 80 / 2,
           },
           props.oneDay && {
             justifyContent: 'center',

@@ -35,6 +35,11 @@ import TrackPlayer, {
   State,
   usePlaybackState,
 } from 'react-native-track-player';
+import TrackPlayer, {
+  Capability,
+  State,
+  usePlaybackState,
+} from 'react-native-track-player';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -141,7 +146,10 @@ const Exercise = ({navigation, route}: any) => {
         await Tts.setDefaultLanguage('en-IN');
         await Tts.setDucking(true);
         await Tts.setIgnoreSilentSwitch('ignore');
-
+        await Tts.addEventListener('tts-finish', event => {
+          // console.log('event',event)
+          Tts.stop();
+        });
         setTtsInitialized(true);
       }
     };
@@ -168,13 +176,19 @@ const Exercise = ({navigation, route}: any) => {
               setTimerS(10);
               setSeparateTimer(false);
               PauseAudio(playbackState);
+              setPause(true);
             } else if (timerS == 4) {
               // Tts.speak(`${timerS}`);
               setTimerS(timerS - 1);
               setDemoS(prev => prev + 10);
               StartAudio(playbackState);
+            } else if (timerS == 10) {
+              Tts.speak(
+                `Get Ready for ${allExercise[0]?.exercise_title} Exercise`,
+              );
+              setTimerS(timerS - 1);
+              setDemoS(prev => prev + 10);
             } else {
-              console.log(demoS);
               setTimerS(timerS - 1);
               setDemoS(prev => prev + 10);
             }
@@ -642,31 +656,28 @@ const Exercise = ({navigation, route}: any) => {
               GET READY
             </Text>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginTop: 10,
-            }}>
-            <Text
-              style={[
-                styles.name,
-                {width: DeviceWidth * 0.7, fontSize: 25, fontWeight: '700'},
-              ]}>
-              {separateTimer
-                ? allExercise[0]?.exercise_title
-                : allExercise[number + 1]?.exercise_title}
-            </Text>
-            <Text style={[styles.name, {color: '#505050'}]}>
-              <Icons
-                name={'clock-outline'}
-                size={20}
-                color={AppColor.INPUTTEXTCOLOR}
-              />
-              {timerS == 10 ? ` ${timerS} sec` : ` 0${timerS} sec`}
-            </Text>
-          </View>
+          <Text
+            style={[
+              styles.name,
+              {width: DeviceWidth * 0.7, fontSize: 25, fontWeight: '700'},
+            ]}>
+            {separateTimer
+              ? allExercise[0]?.exercise_title
+              : allExercise[number + 1]?.exercise_title}
+          </Text>
+          <Text
+            style={[
+              styles.name,
+              {
+                width: DeviceWidth * 0.7,
+                fontSize: 25,
+                fontWeight: '700',
+                paddingTop: 10,
+              },
+            ]}>
+            00:
+            {timerS < 10 ? '0' + timerS : timerS}
+          </Text>
           <Play
             play={!demo1}
             fill={100 - demoS}
@@ -677,7 +688,7 @@ const Exercise = ({navigation, route}: any) => {
             }}
             next={() => {}}
             back={() => {}}
-            colors={['blue', 'blue']}
+            colors={['#941000', '#941000']}
           />
         </>
       ) : restStart ? (
@@ -767,31 +778,28 @@ const Exercise = ({navigation, route}: any) => {
               GET READY
             </Text>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginTop: 10,
-            }}>
-            <Text
-              style={[
-                styles.name,
-                {width: DeviceWidth * 0.7, fontSize: 25, fontWeight: '700'},
-              ]}>
-              {separateTimer
-                ? allExercise[0]?.exercise_title
-                : allExercise[number + 1]?.exercise_title}
-            </Text>
-            <Text style={[styles.name, {color: '#505050'}]}>
-              <Icons
-                name={'clock-outline'}
-                size={20}
-                color={AppColor.INPUTTEXTCOLOR}
-              />
-              {timer == 10 ? ` ${timer} sec` : ` 0${timer} sec`}
-            </Text>
-          </View>
+          <Text
+            style={[
+              styles.name,
+              {width: DeviceWidth * 0.7, fontSize: 25, fontWeight: '700'},
+            ]}>
+            {separateTimer
+              ? allExercise[0]?.exercise_title
+              : allExercise[number + 1]?.exercise_title}
+          </Text>
+          <Text
+            style={[
+              styles.name,
+              {
+                width: DeviceWidth * 0.7,
+                fontSize: 25,
+                fontWeight: '700',
+                paddingTop: 10,
+              },
+            ]}>
+            00:
+            {timer < 10 ? '0' + timer : timer}
+          </Text>
           <Play
             play={!demo}
             fill={100 - demoW}
@@ -802,7 +810,8 @@ const Exercise = ({navigation, route}: any) => {
             }}
             next={() => {}}
             back={() => {}}
-            colors={['blue', 'blue']}
+            // colors={['blue', 'blue']}
+            colors={['#941000', '#941000']}
           />
         </>
       ) : (

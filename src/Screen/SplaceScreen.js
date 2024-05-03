@@ -100,7 +100,9 @@ const SplaceScreen = ({navigation}) => {
     interstitialAd.load();
     interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {});
     interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
-    interstitialAd.addAdEventListener(AdEventType.ERROR, () => {});
+    interstitialAd.addAdEventListener(AdEventType.ERROR, () => {
+      loadScreen();
+    });
   };
   const loadScreen = () => {
     // if (showIntro) {
@@ -297,7 +299,7 @@ const SplaceScreen = ({navigation}) => {
     try {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
-        StoringData[data?.exercise_title] = filePath;
+        StoringData[data?.exercise_title+'Image'] = filePath;
         // setDownloade(true);
       } else {
         await RNFetchBlob.config({
@@ -311,7 +313,7 @@ const SplaceScreen = ({navigation}) => {
             // key: 'Config.REACT_APP_API_KEY',
           })
           .then(res => {
-            StoringData[data?.exercise_title] = res.path();
+            StoringData[data?.exercise_title+'Image'] = res.path();
             // setDownloade(true);
           })
           .catch(err => {

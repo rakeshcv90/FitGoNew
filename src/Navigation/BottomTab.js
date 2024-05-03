@@ -35,139 +35,139 @@ const Tabs = createBottomTabNavigator();
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
-export const MyPLans = ({focused, onPress}) => {
-  const [startAnimation, setStartAnimation] = useState(false);
-  const progressAnimation = useRef(new Animated.Value(0)).current;
-  const currentSelectedDay = useSelector(state => state.currentSelectedDay);
-  useEffect(() => {
-    if (startAnimation) {
-      onPress(currentSelectedDay);
-      Animated.timing(progressAnimation, {
-        toValue: 1,
-        duration: 3000,
-        useNativeDriver: false,
-      }).start(() => {
-        progressAnimation.setValue(0);
-        setStartAnimation(false);
-      });
-    }
-  }, [startAnimation]);
+// export const MyPLans = ({focused, onPress}) => {
+//   const [startAnimation, setStartAnimation] = useState(false);
+//   const progressAnimation = useRef(new Animated.Value(0)).current;
+//   const currentSelectedDay = useSelector(state => state.currentSelectedDay);
+//   useEffect(() => {
+//     if (startAnimation) {
+//       onPress(currentSelectedDay);
+//       Animated.timing(progressAnimation, {
+//         toValue: 1,
+//         duration: 3000,
+//         useNativeDriver: false,
+//       }).start(() => {
+//         progressAnimation.setValue(0);
+//         setStartAnimation(false);
+//       });
+//     }
+//   }, [startAnimation]);
 
-  const animatedHeight = progressAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 60],
-  });
-  return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={() => {
-        focused ? setStartAnimation(true) : onPress();
-      }}
-      style={{
-        ...Platform.select({
-          ios: {
-            shadowColor: focused ? '#D5191A' : '#909090',
-            shadowOffset: {width: 0, height: 4},
-            shadowOpacity: 0.4,
-            shadowRadius: 3,
-          },
-          android: {
-            elevation: 4,
-          },
-        }),
-        justifyContent: 'center',
-        alignItems: 'center',
-        bottom:
-          Platform.OS == 'ios' ? DeviceHeigth * 0.045 : DeviceHeigth * 0.035,
-        // backgroundColor: 'blue',
-      }}>
-      <View
-        style={[
-          styles.nextButton,
-          {
-            overflow: 'hidden',
-            width: 70,
-            height: 70,
-            borderRadius: 70 / 2,
-            shadowColor: 'red',
-            backgroundColor: 'white',
-            ...Platform.select({
-              ios: {
-                shadowOffset: {width: 0, height: 1},
-                shadowOpacity: 0.1,
-                shadowRadius: 8,
-              },
-              android: {
-                elevation: 4,
-              },
-            }),
-          },
-        ]}>
-        {focused ? (
-          <Svg height="80" width="80" viewBox="0 0 60 60">
-            <Defs>
-              <ClipPath id="clip">
-                <Path d="M 20 18 L 45 30 L 20 45 Z" />
-              </ClipPath>
-            </Defs>
-            <Rect
-              x="0"
-              y="0"
-              width="60"
-              height="60"
-              fill="grey" // You can change the fill color here
-              clipPath="url(#clip)"
-              style={
-                {
-                  // transform: [{translateY: 60}, {scaleY: -1}], // Flip the rectangle to fill from bottom to top
-                }
-              }
-            />
-            <AnimatedRect
-              x="0"
-              y="0" // Start from the bottom of the SVG
-              width="60"
-              height={animatedHeight}
-              fill="red" // End color, change it as needed
-              clipPath="url(#clip)"
-              // style={{
-              //   transform: [{ translateY: Animated.multiply(animatedHeight, -1) }],
-              // }}
-            />
-          </Svg>
-        ) : (
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <Image
-              source={localImage.MyPlans}
-              style={{
-                height: 25,
-                width: 25,
-                marginBottom: 5,
-              }}
-              resizeMode="contain"
-            />
-            <Text
-              style={{
-                fontSize: 12,
-                lineHeight: 14.63,
-                fontWeight: '500',
-                fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                color: '#121212B2',
-                zIndex: 1,
-                marginBottom: 5,
-              }}>
-              My Plan
-            </Text>
-          </View>
-        )}
-      </View>
-    </TouchableOpacity>
-  );
-};
+//   const animatedHeight = progressAnimation.interpolate({
+//     inputRange: [0, 1],
+//     outputRange: [0, 60],
+//   });
+//   return (
+//     <TouchableOpacity
+//       activeOpacity={1}
+//       onPress={() => {
+//         focused ? setStartAnimation(true) : onPress();
+//       }}
+//       style={{
+//         ...Platform.select({
+//           ios: {
+//             shadowColor: focused ? '#D5191A' : '#909090',
+//             shadowOffset: {width: 0, height: 4},
+//             shadowOpacity: 0.4,
+//             shadowRadius: 3,
+//           },
+//           android: {
+//             elevation: 4,
+//           },
+//         }),
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//         bottom:
+//           Platform.OS == 'ios' ? DeviceHeigth * 0.045 : DeviceHeigth * 0.035,
+//         // backgroundColor: 'blue',
+//       }}>
+//       <View
+//         style={[
+//           styles.nextButton,
+//           {
+//             overflow: 'hidden',
+//             width: 70,
+//             height: 70,
+//             borderRadius: 70 / 2,
+//             shadowColor: 'red',
+//             backgroundColor: 'white',
+//             ...Platform.select({
+//               ios: {
+//                 shadowOffset: {width: 0, height: 1},
+//                 shadowOpacity: 0.1,
+//                 shadowRadius: 8,
+//               },
+//               android: {
+//                 elevation: 4,
+//               },
+//             }),
+//           },
+//         ]}>
+//         {focused ? (
+//           <Svg height="80" width="80" viewBox="0 0 60 60">
+//             <Defs>
+//               <ClipPath id="clip">
+//                 <Path d="M 20 18 L 45 30 L 20 45 Z" />
+//               </ClipPath>
+//             </Defs>
+//             <Rect
+//               x="0"
+//               y="0"
+//               width="60"
+//               height="60"
+//               fill="grey" // You can change the fill color here
+//               clipPath="url(#clip)"
+//               style={
+//                 {
+//                   // transform: [{translateY: 60}, {scaleY: -1}], // Flip the rectangle to fill from bottom to top
+//                 }
+//               }
+//             />
+//             <AnimatedRect
+//               x="0"
+//               y="0" // Start from the bottom of the SVG
+//               width="60"
+//               height={animatedHeight}
+//               fill="red" // End color, change it as needed
+//               clipPath="url(#clip)"
+//               // style={{
+//               //   transform: [{ translateY: Animated.multiply(animatedHeight, -1) }],
+//               // }}
+//             />
+//           </Svg>
+//         ) : (
+//           <View
+//             style={{
+//               alignItems: 'center',
+//               justifyContent: 'center',
+//             }}>
+//             <Image
+//               source={localImage.MyPlans}
+//               style={{
+//                 height: 25,
+//                 width: 25,
+//                 marginBottom: 5,
+//               }}
+//               resizeMode="contain"
+//             />
+//             <Text
+//               style={{
+//                 fontSize: 12,
+//                 lineHeight: 14.63,
+//                 fontWeight: '500',
+//                 fontFamily: Fonts.MONTSERRAT_MEDIUM,
+//                 color: '#121212B2',
+//                 zIndex: 1,
+//                 marginBottom: 5,
+//               }}>
+//               My Plan
+//             </Text>
+//           </View>
+//         )}
+//       </View>
+//     </TouchableOpacity>
+//   );
+// };
 const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const Dispatch = useDispatch();
@@ -229,52 +229,46 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
         return (
           <>
             {isFocused ? (
-              label == 'MyPlans' ? (
-                <MyPLans focused={isFocused} onPress={handleStart} />
-              ) : (
-                <TouchableOpacity
-                  key={route.key}
-                  onPress={onPress}
-                  style={[
-                    styles.tabButton,
+              <TouchableOpacity
+                key={route.key}
+                onPress={onPress}
+                style={[
+                  styles.tabButton,
+                  {
+                    marginVertical: 10,
+                    marginBottom: 10,
+                    paddingHorizontal: 5,
+                  },
+                ]}>
+                <View
+                  style={
                     {
-                      marginVertical: 10,
-                      marginBottom: 10,
-                      paddingHorizontal: 5,
-                    },
-                  ]}>
-                  <View
-                    style={
-                      {
-                        //padding: 5,
-                      }
-                    }>
-                    <Image
-                      source={localImage[route.name + 'Red']}
-                      resizeMode="contain"
-                      style={{
-                        width: 25,
-                        height: 25,
-                      }}
-                    />
-                  </View>
-
-                  <Text
+                      // padding: 5,
+                    }
+                  }>
+                  <Image
+                    source={localImage[route.name + 'Red']}
+                    resizeMode="contain"
                     style={{
-                      color: AppColor.NewRed,
-                      fontFamily: 'Montserrat-Medium',
-                      fontSize: 12,
-                      lineHeight: 14.63,
-                      fontWeight: '600',
-                      marginTop: 5,
-                      textAlign: 'center',
-                    }}>
-                    {label}
-                  </Text>
-                </TouchableOpacity>
-              )
-            ) : label == 'MyPlans' ? (
-              <MyPLans focused={false} onPress={onPress} />
+                      width: 30,
+                      height: 30,
+                    }}
+                  />
+                </View>
+
+                <Text
+                  style={{
+                    color: AppColor.NewRed,
+                    fontFamily: 'Montserrat-Medium',
+                    fontSize: 14,
+                    lineHeight: 14.63,
+                    fontWeight: '600',
+                    marginTop: 5,
+                    textAlign: 'center',
+                  }}>
+                  {label == 'MyPlans' ? 'Plan' : label}
+                </Text>
+              </TouchableOpacity>
             ) : (
               <TouchableOpacity
                 key={route.key}
@@ -290,22 +284,22 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                   source={localImage[route.name]}
                   resizeMode="contain"
                   style={{
-                    width: 25,
-                    height: 25,
+                    width: 30,
+                    height: 30,
                   }}
                 />
                 <Text
                   style={{
                     color: '#121212B2',
                     opacity: 0.7,
-                    fontSize: 12,
+                    fontSize: 14,
                     lineHeight: 14.63,
                     fontWeight: '500',
                     fontFamily: 'Montserrat-Medium',
                     marginTop: 5,
                     textAlign: 'center',
                   }}>
-                  {label}
+                  {label == 'MyPlans' ? 'Plan' : label}
                 </Text>
               </TouchableOpacity>
             )}
@@ -392,13 +386,13 @@ const BottomTab = () => {
           options={{tabBarShowLabel: false}}
         />
         <Tabs.Screen
-          name="Workout"
-          component={Workouts}
+          name="MyPlans"
+          component={MyPlans}
           options={{tabBarShowLabel: false}}
         />
         <Tabs.Screen
-          name="MyPlans"
-          component={MyPlans}
+          name="Workout"
+          component={Workouts}
           options={{tabBarShowLabel: false}}
         />
         <Tabs.Screen

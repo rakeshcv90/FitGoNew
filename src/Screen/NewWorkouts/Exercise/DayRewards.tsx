@@ -103,7 +103,7 @@ const DayRewards = ({navigation, route}: any) => {
       <GradientText
         text="Congratulations!"
         fontSize={32}
-        width={Platform.OS == 'ios' ? DeviceWidth * 0.9 : DeviceWidth * 0.7}
+        width={DeviceHeigth >= 1024 ? DeviceWidth * 0.4 : DeviceWidth * 0.7}
         y={'70'}
         x={'10%'}
         height={100}

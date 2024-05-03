@@ -32,31 +32,37 @@ import {useIsFocused} from '@react-navigation/native';
 
 import AnimatedLottieView from 'lottie-react-native';
 import {reset} from 'react-native-track-player/lib/trackPlayer';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
+  const [imageLoad, setImageLoad] = useState(true);
   const completeProfileData = useSelector(
     (state: any) => state.completeProfileData,
   );
   const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
 
+  const avatarRef = React.createRef();
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
 
   const getUserID = useSelector((state: any) => state.getUserID);
- 
+
   const getChallengesData = useSelector(
     (state: any) => state.getChallengesData,
   );
 
   useEffect(() => {
     if (isFocused) {
-      // allWorkoutData?.workout_Data?.length == 0 && 
+      // allWorkoutData?.workout_Data?.length == 0 &&
       allWorkoutApi();
       ChallengesDataAPI();
-      getCustomeWorkoutTimeDetails();
+      // getCustomeWorkoutTimeDetails();
       getCustomWorkout();
+      getWorkoutStatus();
     }
   }, [isFocused]);
   const [refresh, setRefresh] = useState(false);
@@ -107,41 +113,42 @@ const Workouts = ({navigation}: any) => {
     },
   ];
   const allWorkoutApi = async () => {
-    try {
-      setRefresh(true);
-      const payload = new FormData();
-      payload.append('id', getUserDataDetails?.id);
-      payload.append('version', VersionNumber.appVersion);
-      const res = await axios({
-        url: NewAppapi.ALL_WORKOUTS,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: payload,
-      });
+  
+    // try {
+    //   setRefresh(true);
+    //   const payload = new FormData();
+    //   payload.append('id', getUserDataDetails?.id);
+    //   payload.append('version', VersionNumber.appVersion);
+    //   const res = await axios({
+    //     url: NewAppapi.ALL_WORKOUTS,
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data',
+    //     },
+    //     data: payload,
+    //   });
 
-      if (res?.data?.msg == 'Please update the app to the latest version.') {
-        showMessage({
-          message: res?.data?.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setRefresh(false);
-      } else if (res?.data) {
-        setRefresh(false);
-        dispatch(setAllWorkoutData(res?.data));
-      } else {
-        setRefresh(false);
-        dispatch(setAllWorkoutData([]));
-      }
-    } catch (error) {
-      setRefresh(false);
-      console.error(error, 'customWorkoutDataApiError');
-      dispatch(setAllWorkoutData([]));
-    }
+    //   if (res?.data?.msg == 'Please update the app to the latest version.') {
+    //     showMessage({
+    //       message: res?.data?.msg,
+    //       type: 'danger',
+    //       animationDuration: 500,
+    //       floating: true,
+    //       icon: {icon: 'auto', position: 'left'},
+    //     });
+    //     setRefresh(false);
+    //   } else if (res?.data) {
+    //     setRefresh(false);
+    //     dispatch(setAllWorkoutData(res?.data));
+    //   } else {
+    //     setRefresh(false);
+    //     dispatch(setAllWorkoutData([]));
+    //   }
+    // } catch (error) {
+    //   setRefresh(false);
+    //   console.error(error, 'customWorkoutDataApiError');
+    //   dispatch(setAllWorkoutData([]));
+    // }
   };
 
   const ChallengesDataAPI = async () => {
@@ -163,25 +170,46 @@ const Workouts = ({navigation}: any) => {
       console.error(error, 'ChallengesDataAPI ERRR');
     }
   };
-  const getCustomeWorkoutTimeDetails = async () => {
-    try {
-      const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          user_id: getUserDataDetails?.id
-        },
-      });
+  // const getCustomeWorkoutTimeDetails = async () => {
+  //   try {
+  //     const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         user_id: getUserDataDetails?.id,
+  //       },
+  //     });
 
-      if (data.data.results.length > 0) {
-        dispatch(setWorkoutTimeCal(data.data.results));
+  //     if (data.data.results.length > 0) {
+  //       dispatch(setWorkoutTimeCal(data.data.results));
+  //     } else {
+  //       dispatch(setWorkoutTimeCal([]));
+  //     }
+  //   } catch (error) {
+  //     console.log('UCustomeCorkout details', error);
+  //   }
+  // };
+  const getWorkoutStatus = async () => {
+    try {
+      const exerciseStatus = await axios.get(
+        `${NewAppapi.USER_EXERCISE_COMPLETE_STATUS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
+      );
+
+      if (
+        exerciseStatus?.data.msg ==
+        'Please update the app to the latest version'
+      ) {
+      } else if (exerciseStatus?.data.length > 0) {
+        dispatch(setWorkoutTimeCal(exerciseStatus?.data));
+      
       } else {
         dispatch(setWorkoutTimeCal([]));
+     
       }
     } catch (error) {
-      console.log('UCustomeCorkout details', error);
+      console.log('Workout-Status', error);
     }
   };
   const getCustomWorkout = async () => {
@@ -192,7 +220,6 @@ const Workouts = ({navigation}: any) => {
 
       if (data?.data?.msg != 'data not found.') {
         dispatch(setCustomWorkoutData(data?.data?.data));
-      
       } else {
         dispatch(setCustomWorkoutData([]));
       }
@@ -208,6 +235,30 @@ const Workouts = ({navigation}: any) => {
       dispatch(setCustomWorkoutData([]));
     }
   };
+  // const getCustomWorkout = async () => {
+  //   try {
+  //     const data = await axios.get(
+  //       `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${getUserDataDetails?.id}`,
+  //     );
+
+  //     if (data?.data?.msg != 'data not found.') {
+  //       dispatch(setCustomWorkoutData(data?.data?.data));
+      
+  //     } else {
+  //       dispatch(setCustomWorkoutData([]));
+  //     }
+  //   } catch (error) {
+  //     showMessage({
+  //       message: 'Something went wrong pleasr try again',
+  //       type: 'danger',
+  //       animationDuration: 500,
+  //       floating: true,
+  //       icon: {icon: 'auto', position: 'left'},
+  //     });
+  //     console.log('Custom Workout Error', error);
+  //     dispatch(setCustomWorkoutData([]));
+  //   }
+  // };
   const renderItem = useMemo(() => {
     return ({item}: any) => (
       <>
@@ -526,9 +577,31 @@ const Workouts = ({navigation}: any) => {
                                       },
                                     }),
                                   }}>
+                                  {/* {imageLoad && (
+                                    <View
+                                      style={{
+                                       // position: 'absolute',
+                                        bottom: 5,
+                                        width: 70,
+                                        height: 70,
+                                      }}>
+                                      <ShimmerPlaceholder
+                                        style={{
+                                          width: '100%',
+                                          height: '100%',
+                                          borderRadius: 40,
+                                          justifyContent: 'center',
+                                          alignSelf: 'center',
+                                        }}
+                                        ref={avatarRef}
+                                        autoRun
+                                      />
+                                    </View>
+                                  )} */}
                                   <Image
-                                  //  source={require('../../Icon/Images/NewImage2/human.png')}
-                                  source={{uri:item?.bodypart_image}}
+                                    //  source={require('../../Icon/Images/NewImage2/human.png')}
+                                    source={{uri: item?.bodypart_image}}
+                                    onLoad={() => setImageLoad(false)}
                                     style={{
                                       width: '100%',
                                       height: '100%',
@@ -538,7 +611,7 @@ const Workouts = ({navigation}: any) => {
                                     resizeMode="contain"
                                   />
                                 </View>
-                              
+
                                 <Text
                                   style={{
                                     color: 'black',
@@ -678,11 +751,7 @@ const Workouts = ({navigation}: any) => {
                         Workout Categories
                       </Text>
                     </View>
-                    <View
-                      style={[
-                        styles.meditionBox,
-                        {alignItems: 'center', marginVertical: 5},
-                      ]}>
+                    <View style={[styles.meditionBox, {marginVertical: 5}]}>
                       <FlatList
                         data={catogery}
                         horizontal

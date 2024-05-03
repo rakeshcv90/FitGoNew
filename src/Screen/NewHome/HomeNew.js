@@ -65,6 +65,7 @@ import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
 import GradientButton from '../../Component/GradientButton';
 
+
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
 
@@ -338,7 +339,8 @@ const HomeNew = ({navigation}) => {
   }, [isAlarmEnabled]);
   useEffect(() => {
     if (isFocused) {
-      getCustomeWorkoutTimeDetails();
+     // getCustomeWorkoutTimeDetails();
+     getWorkoutStatus()
 
       setTimeout(() => {
         ActivityPermission();
@@ -742,28 +744,46 @@ const HomeNew = ({navigation}) => {
       delay: 60000,
     },
   };
-  const getCustomeWorkoutTimeDetails = async () => {
-    try {
-      const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          user_id: getUserID != 0 ? getUserID : getUserDataDetails.id,
-        },
-      });
+  // const getCustomeWorkoutTimeDetails = async () => {
+  //   try {
+  //     const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         user_id: getUserID != 0 ? getUserID : getUserDataDetails.id,
+  //       },
+  //     });
 
-      if (data.data.results.length > 0) {
-        dispatch(setWorkoutTimeCal(data.data.results));
+  //     if (data.data.results.length > 0) {
+  //       dispatch(setWorkoutTimeCal(data.data.results));
+  //     } else {
+  //       dispatch(setWorkoutTimeCal([]));
+  //     }
+  //   } catch (error) {
+  //     console.log('UCustomeCorkout details', error);
+  //   }
+  // };
+  const getWorkoutStatus = async () => {
+    try {
+      const exerciseStatus = await axios.get(
+        `${NewAppapi.USER_EXERCISE_COMPLETE_STATUS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
+      );
+
+      if (
+        exerciseStatus?.data.msg ==
+        'Please update the app to the latest version'
+      ) {
+      } else if (exerciseStatus?.data.length > 0) {
+        dispatch(setWorkoutTimeCal(exerciseStatus?.data));
       } else {
         dispatch(setWorkoutTimeCal([]));
       }
     } catch (error) {
-      console.log('UCustomeCorkout details', error);
+      console.log('Workout-Status', error);
     }
   };
-
   const allWorkoutApi = async () => {
     try {
       //  setRefresh(true);
@@ -1353,7 +1373,11 @@ const HomeNew = ({navigation}) => {
                     </Text>
                   </View>
 
-                  <PercentageBar height={20} percentage={progressHight} />
+                  <PercentageBar height={20} 
+                    percentage={(
+                      (day / currentChallenge[0]?.total_days) *
+                      100
+                    ).toFixed(0)} />
                 </View>
               </View>
               <TouchableOpacity

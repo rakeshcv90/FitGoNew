@@ -49,6 +49,7 @@ const NewPersonalDetails = ({route, navigation}) => {
   const [isFocus, setIsFocus] = useState(false);
   console.log('User Details', getUserDataDetails);
 
+console.log("dsfdscdsfds",getUserDataDetails);
   useEffect(() => {
     ProfileDataAPI();
   }, []);
@@ -152,78 +153,81 @@ const NewPersonalDetails = ({route, navigation}) => {
     return null;
   };
   const handleFormSubmit = async (values, action) => {
-    console.log('DDDDDDDDD', values);
-    // setForLoading(true);
-    // try {
-    //   const data = await axios(`${NewAppapi.UpdateUserProfile}`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //     data: {
-    //       name: values.name,
-    //       id: getUserDataDetails.id,
-    //       token: getUserDataDetails.login_token,
-    //       version: VersionNumber.appVersion,
-    //       goal: values.goal,
-    //       injury: values.injury,
-    //       weight: values.name,
-    //       target_weight: values.targetWeight,
-    //       equipment_type: values.equipment,
-    //       focusarea:
-    //         values.focuseAres.length > 0
-    //           ? values.focuseAres.join(',')
-    //           : getUserDataDetails.focus_area,
-    //       place: values.workPlace,
-    //       gender: values.gender,
-    //     },
-    //   });
+    
+  setForLoading(true);
+    try {
+      const dataItem = await axios(`${NewAppapi.UpdateUserProfile}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          name: values.name,
+          id: getUserDataDetails.id,
+          token: getUserDataDetails.login_token,
+          version: VersionNumber.appVersion,
+          goal: values.goal,
+          injury: values.injury,
+          weight: values.name,
+          target_weight: values.targetWeight,
+          equipment_type: values.equipment,
+          focusarea:
+            values.focuseAres.length > 0
+              ? values.focuseAres.join(',')
+              : getUserDataDetails.focus_area,
+          place: values.workPlace,
+          gender: values.gender,
+          experience:getUserDataDetails.experience,
+          workout_plans:values.workout_plans,
+        },
+      });
+      console.log('DDDDDDDDD', dataItem.data.profile);
+     
+      if (dataItem.data.msg == 'User Updated Successfully') {
+        showMessage({
+          message: dataItem.data.msg,
+          floating: true,
+          type: 'success',
+          animationDuration: 750,
+          icon: {icon: 'none', position: 'left'},
+        });
 
-    //   if (data?.data?.msg == 'User Updated Successfully') {
-    //     showMessage({
-    //       message: data.data.msg,
-    //       floating: true,
-    //       type: 'success',
-    //       animationDuration: 750,
-    //       icon: {icon: 'none', position: 'left'},
-    //     });
+        setForLoading(false);
+        dispatch(setUserProfileData(dataItem.data.profile));
+        // dispatch(setCustomWorkoutData(dataItem?.data.allworkouts));
+      } else if (
+        dataItem?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: dataItem?.data?.msg,
+          floating: true,
+          type: 'danger',
+          animationDuration: 750,
+          icon: {icon: 'none', position: 'left'},
+        });
 
-    //     setForLoading(false);
-    //     dispatch(setUserProfileData(data.data.profile));
-    //     dispatch(setCustomWorkoutData(data?.data.allworkouts));
-    //   } else if (
-    //     data?.data?.msg == 'Please update the app to the latest version.'
-    //   ) {
-    //     showMessage({
-    //       message: data?.data?.msg,
-    //       floating: true,
-    //       type: 'danger',
-    //       animationDuration: 750,
-    //       icon: {icon: 'none', position: 'left'},
-    //     });
-
-    //     setForLoading(false);
-    //   } else {
-    //     showMessage({
-    //       message: data.data.msg,
-    //       floating: true,
-    //       type: 'danger',
-    //       animationDuration: 750,
-    //       icon: {icon: 'none', position: 'left'},
-    //     });
-    //     setForLoading(false);
-    //   }
-    // } catch (error) {
-    //   setForLoading(false);
-    //   console.log('Update Profile Data', error);
-    //   //  showMessage({
-    //   //     message: data.data.msg,
-    //   //     floating: true,
-    //   //     type: 'danger',
-    //   //     animationDuration: 750,
-    //   //     icon: {icon: 'none', position: 'left'},
-    //   //   });
-    // }
+        setForLoading(false);
+      } else {
+        showMessage({
+          message: dataItem.data.msg,
+          floating: true,
+          type: 'danger',
+          animationDuration: 750,
+          icon: {icon: 'none', position: 'left'},
+        });
+        setForLoading(false);
+      }
+    } catch (error) {
+      setForLoading(false);
+      console.log('Update Profile Data', error);
+      //  showMessage({
+      //     message: data.data.msg,
+      //     floating: true,
+      //     type: 'danger',
+      //     animationDuration: 750,
+      //     icon: {icon: 'none', position: 'left'},
+      //   });
+    }
   };
 
   return (

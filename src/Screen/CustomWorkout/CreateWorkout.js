@@ -28,6 +28,8 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
 import {setCustomWorkoutData} from '../../Component/ThemeRedux/Actions';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import { BannerAdd } from '../../Component/BannerAdd';
+import { bannerAdId } from '../../Component/AdsId';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -59,7 +61,7 @@ const CreateWorkout = ({navigation, route}) => {
           : withTiming(0, {duration: 500}),
     };
   });
-  console.log("fffffffff",getAllExercise)
+
   useEffect(() => {
     const datalist = getAllExercise?.filter(listdata => {
       return listdata.exercise_bodypart == bodyPart;
@@ -130,9 +132,13 @@ const CreateWorkout = ({navigation, route}) => {
                   />
                 )}
                 <Image
+                  onLoad={() => setIsLoading(false)}
                   // source={{uri: item.exercise_image_link}}
                   source={{
-                    uri: 'file://' + getStoreVideoLoc[item?.exercise_title],
+                    uri: getStoreVideoLoc[item?.exercise_title + 'Image']
+                      ? 'file://' +
+                        getStoreVideoLoc[item?.exercise_title + 'Image']
+                      : item.exercise_image_link,
                   }}
                   style={{
                     width: 80,
@@ -468,7 +474,7 @@ const CreateWorkout = ({navigation, route}) => {
             alignItems: 'center',
             position: 'absolute',
             alignSelf: 'center',
-            bottom: Platform.OS == 'ios' ? 35 : 10,
+            bottom: Platform.OS == 'ios' ? 20 : 10,
           }}>
           <TouchableOpacity
             style={{
@@ -497,6 +503,7 @@ const CreateWorkout = ({navigation, route}) => {
           </TouchableOpacity>
         </LinearGradient>
       </View>
+      <BannerAdd bannerAdId={bannerAdId} />
     </>
   );
 };

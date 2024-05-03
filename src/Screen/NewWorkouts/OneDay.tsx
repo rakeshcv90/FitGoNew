@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  FlatList,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -318,7 +319,12 @@ const OneDay = ({navigation, route}: any) => {
               />
             )} */}
             <Image
-              source={{uri: 'file://' + getStoreVideoLoc[item?.exercise_title]}}
+              source={{
+                uri:getStoreVideoLoc[item?.exercise_title + 'Image']
+                ? 'file://' +
+                  getStoreVideoLoc[item?.exercise_title + 'Image']
+                : item.exercise_image_link
+              }}
               // source={{uri: item?.exercise_image}}
               // onLoad={() => setIsLoading(false)}
               style={{height: 75, width: 75, alignSelf: 'center'}}
@@ -516,6 +522,29 @@ const OneDay = ({navigation, route}: any) => {
     postCurrentDayAPI();
     setreward(0);
   }
+  const emptyComponent = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <AnimatedLottieView
+          source={require('../../Icon/Images/NewImage/NoData.json')}
+          speed={2}
+          autoPlay
+          loop
+          resizeMode="contain"
+          style={{
+            width: DeviceWidth * 0.5,
+
+            height: DeviceHeigth * 0.5,
+          }}
+        />
+      </View>
+    );
+  };
   const PaddoMeterPermissionModal = () => {
     return (
       <Modal
@@ -703,7 +732,10 @@ const OneDay = ({navigation, route}: any) => {
         />
       </TouchableOpacity>
       <Image
-        source={{uri: data?.workout_image_link}}
+        source={{uri: getStoreVideoLoc[data?.workout_title + 'Image']
+        ? 'file://' +
+          getStoreVideoLoc[data?.workout_title + 'Image']
+        : data?.workout_image_link}}
         style={{
           height: DeviceWidth * 0.5,
           width: DeviceWidth,
@@ -745,19 +777,28 @@ const OneDay = ({navigation, route}: any) => {
           <Icons name={'fire'} size={15} color={AppColor.INPUTTEXTCOLOR} />
           {` ${dayData?.total_calories} Kcal`}
         </Text>
-        <ScrollView
-          contentContainerStyle={{flexGrow: 1}}
-          showsVerticalScrollIndicator={false}
-          style={{marginBottom: 100, flex: 1}}>
-          {exerciseData.map((item, index) => (
-            <Box selected={-1} index={index + 1} item={item} key={index} />
-          ))}
-          {/* {forLoading
-            ? simerData.map((item, index) => <Box2 />)
-            : exerciseData.map((item, index) => (
-                <Box selected={-1} index={index + 1} item={item} key={index} />
-              ))} */}
-        </ScrollView>
+
+        {forLoading ? (
+          <FlatList
+            data={simerData}
+            renderItem={({item, index}: any) => <Box2 />}
+            contentContainerStyle={{flexGrow: 1}}
+            showsVerticalScrollIndicator={false}
+            style={{marginBottom: 100, flex: 1}}
+          />
+        ) : (
+          <FlatList
+            data={exerciseData}
+            renderItem={({item, index}: any) => (
+              <Box selected={-1} index={index + 1} item={item} key={index} />
+            )}
+            ListEmptyComponent={emptyComponent}
+            contentContainerStyle={{flexGrow: 1}}
+            showsVerticalScrollIndicator={false}
+            style={{marginBottom: 100, flex: 1}}
+          />
+        )}
+
         <GradientButton
           // play={false}
           // oneDay
