@@ -81,7 +81,6 @@ export const NewAppapi = {
   GET_LIKE_WORKOUTS: NewApi + 'total_like_view',
   POST_LIKE_WORKOUT: NewApi + 'like_dislike',
   POST_WORKOUT_VIEWS: NewApi + 'workout_view_count',
-
   WEEKLY_STATUS: NewApi + 'oneweek_exercise_data',
   GET_PLANS_EXERCISE: NewApi + 'get_weekday_exercise',
   DELETE_TRACK_EXERCISE: NewApi + 'delete_exercise',

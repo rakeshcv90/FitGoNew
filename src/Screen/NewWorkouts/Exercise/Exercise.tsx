@@ -30,11 +30,7 @@ import {string} from 'yup';
 import {showMessage} from 'react-native-flash-message';
 import VersionNumber from 'react-native-version-number';
 import moment from 'moment';
-import TrackPlayer, {
-  Capability,
-  State,
-  usePlaybackState,
-} from 'react-native-track-player';
+
 import TrackPlayer, {
   Capability,
   State,
