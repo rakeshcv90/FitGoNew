@@ -277,9 +277,9 @@ const HomeNew = ({navigation}) => {
             item => item?.user_day == result.two[0],
           );
 
-          setTrackerData(temp2);
-          setTotalCount(temp2?.length);
-          setTrainingCount(temp2?.length - temp?.length);
+          // setTrackerData(temp2);
+          // setTotalCount(temp2?.length);
+          // setTrainingCount(temp2?.length - temp?.length);
           // setSelected(result.two[0] - 1);
           setDay(result.two[0]);
           // setOpen(true);

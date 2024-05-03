@@ -49,7 +49,6 @@ import {MyRewardedAd} from '../../Component/BannerAdd';
 import RNFetchBlob from 'rn-fetch-blob';
 import Play from './Exercise/Play';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
-
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount, challenge} = route.params;
   const [exerciseData, setExerciseData] = useState([]);
@@ -88,35 +87,42 @@ const OneDay = ({navigation, route}: any) => {
   const allWorkoutApi = async () => {
     // setLoader(true);
     setForLoading(true);
-    try {
-      const res = await axios({
-        // url:'https://fitme.cvinfotech.in/adserver/public/api/days?day=1&workout_id=44'
-        url:
-          NewAppapi.Get_DAYS +
-          '?day=' +
-          day +
-          '&workout_id=' +
-          data?.workout_id,
-      });
-      if (res.data?.msg != 'no data found.') {
+    if (challenge) {
+      data?.days['day_' + day] &&
+        data?.days['day_' + day]?.exercises &&
+        setExerciseData(data?.days['day_' + day]?.exercises);
+      setForLoading(false);
+    } else {
+      try {
+        const res = await axios({
+          // url:'https://fitme.cvinfotech.in/adserver/public/api/days?day=1&workout_id=44'
+          url:
+            NewAppapi.Get_DAYS +
+            '?day=' +
+            day +
+            '&workout_id=' +
+            data?.workout_id,
+        });
+        if (res.data?.msg != 'no data found.') {
+          setLoader(false);
+          setExerciseData(res.data);
+          setForLoading(false);
+          setOpen(true);
+        } else {
+          setLoader(false);
+          data?.days['day_' + day] &&
+            data?.days['day_' + day]?.exercises &&
+            setExerciseData(data?.days['day_' + day]?.exercises);
+          setForLoading(false);
+          setOpen(true);
+        }
+      } catch (error) {
         setLoader(false);
-        setExerciseData(res.data);
-        setForLoading(false);
-        setOpen(true);
-      } else {
-        setLoader(false);
-        data?.days['day_' + day] &&
-          data?.days['day_' + day]?.exercises &&
-          setExerciseData(data?.days['day_' + day]?.exercises);
+        console.error(error, 'DaysAPIERror');
+        setExerciseData([]);
         setForLoading(false);
         setOpen(true);
       }
-    } catch (error) {
-      setLoader(false);
-      console.error(error, 'DaysAPIERror');
-      setExerciseData([]);
-      setForLoading(false);
-      setOpen(true);
     }
   };
   const sanitizeFileName = (fileName: string) => {
@@ -290,7 +296,7 @@ const OneDay = ({navigation, route}: any) => {
               backgroundColor: AppColor.WHITE,
 
               borderRadius: 10,
-            
+
               shadowColor: 'rgba(0, 0, 0, 1)',
               ...Platform.select({
                 ios: {
