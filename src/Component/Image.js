@@ -116,7 +116,7 @@ export const localImage = {
   StartWorkoutButton: require('../Icon/Images/NewImage/StartWorkoutButton.png'),
   MyPlansWhite: require('../Icon/Images/NewImage/MyPlansWhite.png'),
   MyPlans: require('../Icon/Images/NewImage/MyPlans.png'),
-  RedTick: require('../Icon/Images/NewImage/RedTick.png'),
+  RedTick: require('../Icon/Images/NewImage2/GreenTick.png'),
   Location: require('../Icon/Images/NewImage/Location.png'),
   ClockGrey: require('../Icon/Images/NewImage/ClockGrey.png'),
   WeeklyPlay: require('../Icon/Images/NewImage/WeeklyPlay.png'),
@@ -147,4 +147,6 @@ export const localImage = {
   ProfileRed: require('../Icon/Images/NewImage2/ProfileRed.png'),
   WorkoutRed: require('../Icon/Images/NewImage2/WorkoutRed.png'),
   ReportsRed: require('../Icon/Images/NewImage2/ReportsRed.png'),
+  MyPlansRed: require('../Icon/Images/NewImage2/MyPlansRed.png'),
+  PlayIcon: require('../Icon/Images/NewImage2/PlayIcon.png'),
 };

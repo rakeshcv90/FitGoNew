@@ -105,7 +105,10 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
           <Icon name="close" color={AppColor.DARKGRAY} size={25} />
         </TouchableOpacity>
         <Image
-          source={{uri:'file://' + getStoreVideoLoc[data?.exercise_title]|| data?.workout_image_link || data?.exercise_image}}
+          source={{uri:getStoreVideoLoc[data?.exercise_title + 'Image']
+          ? 'file://' +
+            getStoreVideoLoc[data?.exercise_title + 'Image']
+          : data?.workout_image_link || data?.exercise_image}}
           style={{
             height: DeviceWidth / 1.5,
             width: DeviceWidth * 0.95,
