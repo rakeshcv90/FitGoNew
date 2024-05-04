@@ -107,7 +107,7 @@ const NativeAddTest = ({media, type}) => {
             justifyContent: 'center',
             alignItems: 'center',
             opacity: !loading && !error && loaded ? 0 : 1,
-            zIndex: !loading && !error && loaded ? 0 : 10,
+            zIndex: !loading && !error && loaded ? 10 : 10,
           }}>
           {!loading && <AnimatedLottieView
           // source={{
@@ -117,9 +117,9 @@ const NativeAddTest = ({media, type}) => {
           speed={2}
           autoPlay
           loop
-          style={{width: DeviceWidth *0.25, height: DeviceHeigth *0.07,}}
+          style={{width: DeviceWidth *0.3, height: DeviceHeigth *0.09,top:-10}}
         />}
-          {error && <Text style={{color: '#a9a9a9'}}>loading</Text>}
+          {error && <Text style={{color: '#a9a9a9',fontSize:17}}>loading</Text>}
         </View>
 
         <View
