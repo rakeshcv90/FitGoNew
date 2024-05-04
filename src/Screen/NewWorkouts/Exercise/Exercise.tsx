@@ -222,11 +222,15 @@ const Exercise = ({navigation, route}: any) => {
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
+              Tts.speak(
+                `Get Ready for ${
+                  allExercise[index + 1]?.exercise_title
+                } Exercise`,
+              );
               postCurrentExerciseAPI(index);
               setDemoW(demoW + 100 / timer);
               setTimer(timer - 1);
             } else if (demo) {
-              console.log(demoW);
               setDemoW(demoW + 100 / timer);
               setTimer(timer - 1);
             }
@@ -854,7 +858,7 @@ const Exercise = ({navigation, route}: any) => {
           <View
             style={{
               height: DeviceHeigth * 0.5,
-              marginTop: -DeviceHeigth * 0.06,
+              marginTop: -DeviceHeigth * 0.03,
               zIndex: -1,
             }}>
             {/* <Text>{trackerData[number]?.id}</Text> */}

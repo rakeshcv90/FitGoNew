@@ -166,7 +166,16 @@ const SaveDayExercise = ({navigation, route}: any) => {
             style={{flex: 1}}
             resizeMode="contain"
           />
-          <GradientText text={fire} width={50} fontSize={28} x={'15'} />
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: 'Poppins',
+              lineHeight: 30,
+              color: AppColor.RED1,
+              fontWeight: '500',
+            }}>
+            {fire}
+          </Text>
           <Text
             style={{
               fontSize: 16,
@@ -184,7 +193,16 @@ const SaveDayExercise = ({navigation, route}: any) => {
             style={{flex: 1}}
             resizeMode="contain"
           />
-          <GradientText text={clock} width={50} fontSize={28} x={'5'} />
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: 'Poppins',
+              lineHeight: 30,
+              color: AppColor.RED1,
+              fontWeight: '500',
+            }}>
+            {clock}
+          </Text>
           <Text
             style={{
               fontSize: 16,
@@ -202,7 +220,16 @@ const SaveDayExercise = ({navigation, route}: any) => {
             style={{flex: 1}}
             resizeMode="contain"
           />
-          <GradientText text={action} width={30} fontSize={28} x={'5'} />
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: 'Poppins',
+              lineHeight: 30,
+              color: AppColor.RED1,
+              fontWeight: '500',
+            }}>
+            {action}
+          </Text>
           <Text
             style={{
               fontSize: 16,

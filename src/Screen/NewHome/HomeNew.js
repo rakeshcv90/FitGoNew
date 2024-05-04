@@ -59,12 +59,9 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Slider} from '@miblanchard/react-native-slider';
 import GoogleFit, {Scopes} from 'react-native-google-fit';
 import {setPedomterData} from '../../Component/ThemeRedux/Actions';
-import {AlarmNotification} from '../../Component/Reminder';
-import notifee from '@notifee/react-native';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
 import GradientButton from '../../Component/GradientButton';
-
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -130,7 +127,6 @@ const HomeNew = ({navigation}) => {
   const caloriesRef = useRef(Calories);
   const [distance, setDistance] = useState(0);
   const distanceRef = useRef(distance);
-  const isAlarmEnabled = useSelector(state => state.isAlarmEnabled);
   const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
   const getStepCounterOnoff = useSelector(state => state.getStepCounterOnoff);
   const [PaddoModalShow, setPaddoModalShow] = useState(false);
@@ -321,26 +317,9 @@ const HomeNew = ({navigation}) => {
     return {one, two};
   }
   useEffect(() => {
-    if (!isAlarmEnabled) {
-      notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));
-      const currenTime = new Date();
-      currenTime.setHours(7);
-      currenTime.setMinutes(0);
-      //AlarmNotification(currenTime);
-      AlarmNotification(currenTime)
-        .then(res => console.log('ALARM SET', res))
-        .catch(errr => {
-          console.log("Alarm error",errr);
-          currenTime.setDate(currenTime.getDate() + 1);
-          AlarmNotification(currenTime);
-        });
-      dispatch(setIsAlarmEnabled(true));
-    }
-  }, [isAlarmEnabled]);
-  useEffect(() => {
     if (isFocused) {
-     // getCustomeWorkoutTimeDetails();
-     getWorkoutStatus()
+      // getCustomeWorkoutTimeDetails();
+      getWorkoutStatus();
 
       setTimeout(() => {
         ActivityPermission();
@@ -573,10 +552,10 @@ const HomeNew = ({navigation}) => {
     );
   };
   const checkPermissions = async () => {
-    if(Platform.Version<30){
-      fetchTotalSteps()
-      startRecording()
-      dispatch(setStepCounterOnOff(true))
+    if (Platform.Version < 30) {
+      fetchTotalSteps();
+      startRecording();
+      dispatch(setStepCounterOnOff(true));
     }
     const fitnessPermissionResult = await check(
       PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
@@ -586,8 +565,6 @@ const HomeNew = ({navigation}) => {
         PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
       );
       if (permissionRequestResult === RESULTS.GRANTED) {
-
-
         if (getStepCounterOnoff == true) {
           fetchTotalSteps();
           startRecording();
@@ -1251,11 +1228,12 @@ const HomeNew = ({navigation}) => {
               getTimeOfDayMessage() +
               ', ' +
               (Object.keys(getUserDataDetails).length > 0
-                ? getUserDataDetails.name==null?'Guest':getUserDataDetails.name.split(' ')[0]
+                ? getUserDataDetails.name == null
+                  ? 'Guest'
+                  : getUserDataDetails.name.split(' ')[0]
                 : 'Guest')
             }
           />
-
         </View>
         {currentChallenge?.length > 0 && (
           <View style={{width: '95%', alignSelf: 'center', marginVertical: 10}}>
@@ -1269,7 +1247,7 @@ const HomeNew = ({navigation}) => {
                 alignItems: 'center',
                 justifyContent: 'flex-start',
               }}>
-              Daily Challenge
+              Challenge Zone
             </Text>
 
             <View
@@ -1281,18 +1259,18 @@ const HomeNew = ({navigation}) => {
                 borderWidth: 1,
                 alignSelf: 'center',
                 backgroundColor: AppColor.WHITE,
-                shadowColor: 'rgba(0, 0, 0, 1)',
-              ...Platform.select({
-                ios: {
-                  //shadowColor: '#000000',
-                  shadowOffset: {width: 0, height: 2},
-                  shadowOpacity: 0.3,
-                  shadowRadius: 4,
-                },
-                android: {
-                  elevation: 3,
-                },
-              }),
+                shadowColor: 'grey',
+                ...Platform.select({
+                  ios: {
+                    //shadowColor: '#000000',
+                    shadowOffset: {width: 0, height: 2},
+                    shadowOpacity: 0.2,
+                    shadowRadius: 4,
+                  },
+                  android: {
+                    elevation: 3,
+                  },
+                }),
                 borderColor: '#D9D9D9',
               }}>
               <View
@@ -1373,11 +1351,13 @@ const HomeNew = ({navigation}) => {
                     </Text>
                   </View>
 
-                  <PercentageBar height={20} 
+                  <PercentageBar
+                    height={20}
                     percentage={(
                       (day / currentChallenge[0]?.total_days) *
                       100
-                    ).toFixed(0)} />
+                    ).toFixed(0)}
+                  />
                 </View>
               </View>
               <TouchableOpacity
@@ -2144,18 +2124,18 @@ var styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
     marginBottom: 30,
 
-                shadowColor: 'rgba(0, 0, 0, 1)',
-              ...Platform.select({
-                ios: {
-                  //shadowColor: '#000000',
-                  shadowOffset: {width: 0, height: 2},
-                  shadowOpacity: 0.3,
-                  shadowRadius: 4,
-                },
-                android: {
-                  elevation: 3,
-                },
-              }),
+    shadowColor: 'grey',
+    ...Platform.select({
+      ios: {
+        //shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   circle: {
     width: 80,

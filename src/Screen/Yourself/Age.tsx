@@ -152,6 +152,7 @@ const Age = ({route, navigation}: any) => {
       }}>
       <ProgressBar screen={screen} />
 
+
       <View style={{marginTop: -DeviceHeigth * 0.06,alignSelf:"center"}}>
         <Bulb screen={'How old are you?'} />
       </View>
