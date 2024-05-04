@@ -223,7 +223,7 @@ const LetsStart = ({navigation}) => {
               {color: AppColor.RED1, fontFamily: Fonts.MONTSERRAT_SEMIBOLD},
             ]}
             onPress={() => {
-              navigation.navigate('LogSignUp');
+              navigation.replace('LogSignUp');
             }}>
             Log in
           </Text>

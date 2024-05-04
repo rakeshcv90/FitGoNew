@@ -279,12 +279,12 @@ const Workouts = ({navigation}: any) => {
               flexDirection: 'row',
               padding: 5,
 
-              shadowColor: 'rgba(0, 0, 0, 1)',
+              shadowColor: 'grey',
               ...Platform.select({
                 ios: {
                   //shadowColor: '#000000',
                   shadowOffset: {width: 0, height: 2},
-                  shadowOpacity: 0.3,
+                  shadowOpacity: 0.2,
                   shadowRadius: 4,
                 },
                 android: {
@@ -411,8 +411,8 @@ const Workouts = ({navigation}: any) => {
               <View
                 style={{
                   marginTop:
-                    DeviceHeigth >= 1024
-                      ? DeviceHeigth * 0.15
+                    DeviceHeigth >= 930
+                      ? DeviceHeigth * 0.14
                       : DeviceHeigth * 0.05,
                   marginHorizontal: 10,
                   zIndex: 1,
@@ -563,16 +563,16 @@ const Workouts = ({navigation}: any) => {
                                     justifyContent: 'center',
                                     alignSelf: 'center',
                                     padding: 7,
-                                    shadowColor: 'rgba(0, 0, 0, 0.5)',
+                                    shadowColor: 'grey',
                                     ...Platform.select({
                                       ios: {
-                                        shadowColor: '#000000',
+                                        //shadowColor: '#000000',
                                         shadowOffset: {width: 0, height: 2},
-                                        shadowOpacity: 0.3,
+                                        shadowOpacity: 0.2,
                                         shadowRadius: 4,
                                       },
                                       android: {
-                                        elevation: 10,
+                                        elevation: 3,
                                       },
                                     }),
                                   }}>
