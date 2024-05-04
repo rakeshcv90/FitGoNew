@@ -17,6 +17,8 @@ import NativeAdView, {
 } from 'react-native-admob-native-ads';
 import {MediaView} from './MediaView';
 import { adUnitIDs } from './AdsId';
+import AnimatedLottieView from 'lottie-react-native';
+import { DeviceHeigth, DeviceWidth } from './Config';
 // import {adUnitIDs} from './utils';
 
 const NativeAddTest = ({media, type}) => {
@@ -35,15 +37,15 @@ const NativeAddTest = ({media, type}) => {
   };
 
   const onAdLoaded = () => {
-    //console.log('AD', 'LOADED', 'Ad has loaded successfully');
+    console.log('AD', 'LOADED', 'Ad has loaded successfully');
   };
 
   const onAdClicked = () => {
-    //console.log('AD', 'CLICK', 'User has clicked the Ad');
+    console.log('AD', 'CLICK', 'User has clicked the Ad');
   };
 
   const onAdImpression = () => {
-    //console.log('AD', 'IMPRESSION', 'Ad impression recorded');
+    console.log('AD', 'IMPRESSION', 'Ad impression recorded');
   };
 
   const onNativeAdLoaded = event => {
@@ -100,14 +102,23 @@ const NativeAddTest = ({media, type}) => {
           style={{
             // width: '100%',
             // height: '100%',
-            backgroundColor: '#f0f0f0',
+           // backgroundColor: '#f0f0f0',
             position: 'absolute',
             justifyContent: 'center',
             alignItems: 'center',
             opacity: !loading && !error && loaded ? 0 : 1,
             zIndex: !loading && !error && loaded ? 0 : 10,
           }}>
-          {!loading && <ActivityIndicator size={28} color="#a9a9a9" />}
+          {!loading && <AnimatedLottieView
+          // source={{
+          //   uri: 'https://assets7.lottiefiles.com/packages/lf20_qgq2nqsy.json',
+          // }} // Replace with your animation file
+          source={require('../Icon/Images/NewImage2/Adloader.json')}
+          speed={2}
+          autoPlay
+          loop
+          style={{width: DeviceWidth *0.25, height: DeviceHeigth *0.07,}}
+        />}
           {error && <Text style={{color: '#a9a9a9'}}>loading</Text>}
         </View>
 

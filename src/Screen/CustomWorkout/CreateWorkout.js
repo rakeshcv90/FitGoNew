@@ -30,6 +30,7 @@ import {setCustomWorkoutData} from '../../Component/ThemeRedux/Actions';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import { BannerAdd } from '../../Component/BannerAdd';
 import { bannerAdId } from '../../Component/AdsId';
+import NativeAddTest from '../../Component/NativeAddTest';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -51,6 +52,7 @@ const CreateWorkout = ({navigation, route}) => {
   const [bodyPart, setBodyPart] = useState(
     completeProfileData?.focusarea[0].bodypart_title,
   );
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const avatarRef = React.createRef();
   const [filteredCategories, setFilteredCategories] = useState([]);
   const animatedStyle = useAnimatedStyle(() => {
@@ -79,7 +81,7 @@ const CreateWorkout = ({navigation, route}) => {
   };
   const renderItem1 = useMemo(
     () =>
-      ({item}) => {
+      ({index,item}) => {
         const isSelected = selectedItems?.includes(item?.exercise_id);
 
         return (
@@ -212,11 +214,57 @@ const CreateWorkout = ({navigation, route}) => {
                 resizeMode="contain"
               />
             </TouchableOpacity>
+            {getAdsDisplay(index, item)}
           </>
         );
       },
     [selectedItems],
   );
+
+
+
+  const getAdsDisplay = (index, item) => {
+    if (filteredCategories.length > 1) {
+      if (index == 0) {
+        return getNativeAdsDisplay();
+      } else if ((index + 1) % 8 == 0) {
+        return getNativeAdsDisplay();
+      }
+    }
+  };
+  const getNativeAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return (
+          <View
+            style={{
+              alignSelf: 'center',
+              alignItems: 'center',
+
+              //  top: DeviceHeigth * 0.1,
+            }}>
+            <NativeAddTest type="image" media={false} />
+          </View>
+        );
+      }
+    } else {
+      return (
+        <View
+          style={{
+            alignSelf: 'center',
+            alignItems: 'center',
+
+            //top: DeviceHeigth * 0.1,
+          }}>
+          <NativeAddTest type="image" media={false} />
+        </View>
+      );
+    }
+  };
   const emptyComponent = () => {
     return (
       <View
@@ -451,6 +499,7 @@ const CreateWorkout = ({navigation, route}) => {
             ]}>
             <FlatList
               data={filteredCategories}
+              showsVerticalScrollIndicator={false}
               keyExtractor={(item, index) => index.toString()}
               renderItem={renderItem1}
               ListEmptyComponent={emptyComponent}
