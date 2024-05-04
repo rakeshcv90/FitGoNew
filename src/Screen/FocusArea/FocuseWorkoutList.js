@@ -349,27 +349,27 @@ const FocuseWorkoutList = ({navigation, route}) => {
     }
   };
 
-  // const getCustomeWorkoutTimeDetails = async () => {
-  //   try {
-  //     const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       data: {
-  //         user_id: getUserDataDetails?.id,
-  //       },
-  //     });
-  //     console.log('userId-->', data.data.results);
-  //     if (data.data.results.length > 0) {
-  //       dispatch(setWorkoutTimeCal(data.data.results));
-  //     } else {
-  //       dispatch(setWorkoutTimeCal([]));
-  //     }
-  //   } catch (error) {
-  //     console.log('UCustomeCorkout details', error);
-  //   }
-  // };
+  const getCustomeWorkoutTimeDetails = async () => {
+    try {
+      const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          user_id: getUserDataDetails?.id,
+        },
+      });
+      console.log('userId-->', data.data.results);
+      if (data.data.results.length > 0) {
+        dispatch(setWorkoutTimeCal(data.data.results));
+      } else {
+        dispatch(setWorkoutTimeCal([]));
+      }
+    } catch (error) {
+      console.log('UCustomeCorkout details', error);
+    }
+  };
 
   const getWorkoutStatus = async () => {
     try {

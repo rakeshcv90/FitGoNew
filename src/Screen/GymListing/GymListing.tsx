@@ -3,6 +3,7 @@ import {
   Image,
   Linking,
   Platform,
+  RefreshControl,
   StatusBar,
   StyleSheet,
   Text,
@@ -21,8 +22,8 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../../Component/ActivityLoader';
 import GradientText from '../../Component/GradientText';
-import { BannerAdd } from '../../Component/BannerAdd';
-import { bannerAdId } from '../../Component/AdsId';
+import {BannerAdd} from '../../Component/BannerAdd';
+import {bannerAdId} from '../../Component/AdsId';
 
 type Coordinates = {
   latitude: number;
@@ -121,15 +122,24 @@ const GymListing = ({navigation}: any) => {
         return (
           <View key={index} style={styles.box}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Image
-                source={{uri: item?.image}}
+              <View style={{margin: 10}}>
+                <Image
+                  source={{uri: item?.image}}
+                  style={{
+                    width: DeviceWidth * 0.2,
+                    height: DeviceWidth * 0.2,
+                    borderRadius: 20,
+                  }}
+                />
+              </View>
+              <View
                 style={{
-                  width: DeviceWidth * 0.25,
-                  height: DeviceWidth * 0.25,
-                  borderRadius: 20,
-                }}
-              />
-              <View style={{width: DeviceWidth * 0.65}}>
+                  width:
+                    DeviceHeigth >= 1024
+                      ? DeviceWidth * 0.7
+                      : DeviceWidth * 0.65,
+                  marginLeft: 10,
+                }}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -138,7 +148,7 @@ const GymListing = ({navigation}: any) => {
                   }}>
                   <Text style={styles.heading}>{item?.center_name}</Text>
                   <GradientText
-                    text={`${item?.distance.toFixed(2)} km`}
+                    text={`   ${item?.distance.toFixed(2)} km`}
                     // width={item?.distance < 1 && 40}
                     height={20}
                     y={15}
@@ -197,6 +207,7 @@ const GymListing = ({navigation}: any) => {
                       width: 25,
                       height: 25,
                       borderRadius: 20,
+                      marginRight: DeviceWidth * 0.05,
                     }}
                     activeOpacity={1}>
                     <Image
@@ -249,20 +260,27 @@ const GymListing = ({navigation}: any) => {
               justifyContent: 'center',
             }}
             renderItem={renderItem}
+            refreshControl={
+              <RefreshControl
+                refreshing={loader}
+                onRefresh={() => GetGymsAPI(coords)}
+                colors={[AppColor.RED, AppColor.WHITE]}
+              />
+            }
             ListEmptyComponent={
               <View
                 style={{
                   flex: 1,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginTop: DeviceHeigth * 0.15
+                  marginTop: DeviceHeigth * 0.15,
                 }}>
                 <Image
                   source={require('../../Icon/Images/NewImage2/NoLocation.png')}
                   style={{
                     width: DeviceWidth * 0.6,
                     height: DeviceWidth * 0.6,
-                    marginBottom: 20
+                    marginBottom: 20,
                   }}
                   resizeMode="contain"
                 />
@@ -291,6 +309,7 @@ const styles = StyleSheet.create({
     borderColor: '#D9D9D9',
     backgroundColor: '#FDFDFD',
     width: DeviceWidth * 0.95,
+    alignSelf: 'center',
     padding: 3,
     marginVertical: 7,
     shadowColor: 'rgba(0, 0, 0, 1)',
@@ -313,7 +332,7 @@ const styles = StyleSheet.create({
     lineHeight: 25,
     fontWeight: '600',
     textAlign: 'center',
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
   },
   features: {
     color: '#505050',
