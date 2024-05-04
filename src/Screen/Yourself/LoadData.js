@@ -365,8 +365,8 @@ const LoadData = ({navigation}) => {
       </View>
       {/* <Text style={styles.text}>49%</Text> */}
       <Text style={styles.text1}>Creating your personalized plan...</Text>
-      <Text style={styles.text2}>10,00,000+</Text>
-      <Text style={styles.text2}>Training Plan</Text>
+      <Text style={styles.text2}>10,000+</Text>
+      <Text style={styles.text2}>Active Users</Text>
       <Text
         style={[
           styles.text2,

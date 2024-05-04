@@ -28,8 +28,8 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
 import {setCustomWorkoutData} from '../../Component/ThemeRedux/Actions';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-import { BannerAdd } from '../../Component/BannerAdd';
-import { bannerAdId } from '../../Component/AdsId';
+import {BannerAdd} from '../../Component/BannerAdd';
+import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
@@ -66,7 +66,15 @@ const CreateWorkout = ({navigation, route}) => {
 
   useEffect(() => {
     const datalist = getAllExercise?.filter(listdata => {
-      return listdata.exercise_bodypart == bodyPart;
+      if (bodyPart == 'Biceps') {
+        return listdata.exercise_bodypart == 'Triceps';
+      } else if (bodyPart == 'Quads') {
+        return listdata.exercise_bodypart == 'Abs';
+      } else if (bodyPart == 'Calves') {
+        return listdata.exercise_bodypart == 'Legs';
+      } else {
+        return listdata.exercise_bodypart == bodyPart;
+      }
     });
 
     setWorkoutList(datalist);
@@ -81,7 +89,7 @@ const CreateWorkout = ({navigation, route}) => {
   };
   const renderItem1 = useMemo(
     () =>
-      ({index,item}) => {
+      ({index, item}) => {
         const isSelected = selectedItems?.includes(item?.exercise_id);
 
         return (
@@ -92,9 +100,9 @@ const CreateWorkout = ({navigation, route}) => {
                 selectedExercise(item?.exercise_id);
               }}
               style={{
-                width: '100%',
+                width: '97%',
                 borderRadius: 10,
-               // backgroundColor: '#FDFDFD',
+                // backgroundColor: '#FDFDFD',
                 marginVertical: 8,
                 flexDirection: 'row',
                 alignSelf: 'center',
@@ -107,12 +115,12 @@ const CreateWorkout = ({navigation, route}) => {
                 borderWidth: 1,
                 justifyContent: 'space-between',
                 backgroundColor: AppColor.WHITE,
-                shadowColor: 'rgba(0, 0, 0, 1)',
+                shadowColor: 'grey',
                 ...Platform.select({
                   ios: {
                     //shadowColor: '#000000',
                     shadowOffset: {width: 0, height: 2},
-                    shadowOpacity: 0.3,
+                    shadowOpacity: 0.2,
                     shadowRadius: 4,
                   },
                   android: {
@@ -133,25 +141,35 @@ const CreateWorkout = ({navigation, route}) => {
                     autoRun
                   />
                 )} */}
-                <Image
-                  onLoad={() => setIsLoading(false)}
-                  // source={{uri: item.exercise_image_link}}
-                  source={{
-                    uri: getStoreVideoLoc[item?.exercise_title + 'Image']
-                      ? 'file://' +
-                        getStoreVideoLoc[item?.exercise_title + 'Image']
-                      : item.exercise_image_link,
-                  }}
+                <View
                   style={{
-                    width: 80,
-                    height: 80,
-                    justifyContent: 'center',
-                    alignSelf: 'center',
-                    // backgroundColor:'red',
-                    marginHorizontal: -7,
-                  }}
-                  resizeMode="contain"
-                />
+                    width: 81,
+                    height: 81,
+                    borderRadius: 10,
+                    borderColor: 'black',
+                    borderWidth: 1,
+                    //backgroundColor:"red"
+                  }}>
+                  <Image
+                    onLoad={() => setIsLoading(false)}
+                    // source={{uri: item.exercise_image_link}}
+                    source={{
+                      uri: getStoreVideoLoc[item?.exercise_title + 'Image']
+                        ? 'file://' +
+                          getStoreVideoLoc[item?.exercise_title + 'Image']
+                        : item.exercise_image_link,
+                    }}
+                    style={{
+                      width: 80,
+                      height: 80,
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      // backgroundColor:'red',
+                      marginHorizontal: -7,
+                    }}
+                    resizeMode="contain"
+                  />
+                </View>
                 <View
                   style={{
                     marginHorizontal: 15,
@@ -220,8 +238,6 @@ const CreateWorkout = ({navigation, route}) => {
       },
     [selectedItems],
   );
-
-
 
   const getAdsDisplay = (index, item) => {
     if (filteredCategories.length > 1) {

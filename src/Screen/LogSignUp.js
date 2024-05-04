@@ -20,7 +20,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {navigationRef} from '../../App';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 const Tab = createMaterialTopTabNavigator();
-const LogSignUp = () => {
+const LogSignUp = ({navigation}) => {
   const [showLogin, setShowLogin] = useState('Welcome');
 
   useEffect(() => {
@@ -113,7 +113,7 @@ const LogSignUp = () => {
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <TouchableOpacity
       onPress={()=>{
-       navigationRef.goBack()
+        navigation.goBack()
    
       }}
         style={{

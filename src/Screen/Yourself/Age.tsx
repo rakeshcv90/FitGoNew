@@ -151,20 +151,11 @@ const Age = ({route, navigation}: any) => {
         backgroundColor: AppColor.WHITE,
       }}>
       <ProgressBar screen={screen} />
-      {/* <Bulb
-        screen={'How old are you?'}
-      /> */}
-      <Text
-        style={{
-          color: 'black',
-          fontSize: 24,
-          fontFamily: 'Montserrat-Bold',
-          fontWeight: 'bold',
-          lineHeight: 30,
-          textAlign: 'center',
-        }}>
-        How old are you?
-      </Text>
+
+
+      <View style={{marginTop: -DeviceHeigth * 0.06,alignSelf:"center"}}>
+        <Bulb screen={'How old are you?'} />
+      </View>
       {/* <View
         style={{
           // flexDirection: 'row',
@@ -185,7 +176,6 @@ const Age = ({route, navigation}: any) => {
           flexDirection: 'row',
 
           //top: -DeviceHeigth * 0.1,
-
         }}>
         <TextInput
           keyboardType="number-pad"
