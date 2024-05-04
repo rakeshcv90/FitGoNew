@@ -379,7 +379,7 @@ const Weight = ({route, navigation}: any) => {
           />
         </ImageBackground>
         <View>
-          <View style={[styles.buttons, {bottom: -DeviceHeigth * 0.28}]}>
+          <View style={[styles.buttons, {bottom: -DeviceHeigth * 0.25}]}>
             <TouchableOpacity
               style={{
                 backgroundColor: '#F7F8F8',

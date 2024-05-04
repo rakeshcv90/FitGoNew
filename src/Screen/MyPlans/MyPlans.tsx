@@ -591,7 +591,7 @@ const MyPlans = ({navigation}: any) => {
           alignItems: 'center',
         }}>
         <AnimatedLottieView
-          source={require('../../Icon/Images/NewImage/NoData.json')}
+          source={require('../../Icon/Images/NewImage2/Adloader.json')}
           speed={2}
           autoPlay
           loop

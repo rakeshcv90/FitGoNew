@@ -109,7 +109,7 @@ const CreateWorkout = ({navigation, route}) => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 paddingHorizontal: 20,
-                //padding: 5,
+                padding: 5,
                 // borderColor: '#D9D9D9',
                 borderColor: isSelected ? 'red' : AppColor.GRAY2,
                 borderWidth: 1,
@@ -143,11 +143,12 @@ const CreateWorkout = ({navigation, route}) => {
                 )} */}
                 <View
                   style={{
-                    width: 81,
-                    height: 81,
-                    borderRadius: 10,
-                    borderColor: 'black',
-                    borderWidth: 1,
+                    height: 70,
+                    width: 70,
+                    borderRadius: 5,
+                    borderWidth: 0.5,
+                    borderColor: 'lightgrey',
+                    marginHorizontal: -12,
                     //backgroundColor:"red"
                   }}>
                   <Image
@@ -160,8 +161,8 @@ const CreateWorkout = ({navigation, route}) => {
                         : item.exercise_image_link,
                     }}
                     style={{
-                      width: 80,
-                      height: 80,
+                      width: 60,
+                      height: 60,
                       justifyContent: 'center',
                       alignSelf: 'center',
                       // backgroundColor:'red',
@@ -197,32 +198,10 @@ const CreateWorkout = ({navigation, route}) => {
 
                         fontFamily: Fonts.MONTSERRAT_MEDIUM,
                       }}>
-                      {'Set: '}
-                      {item?.exercise_sets}
+                      {'Time : '}
+                      {item?.exercise_rest}
                     </Text>
-                    <Text
-                      style={{
-                        fontSize: 30,
-                        fontWeight: '600',
-                        color: '#202020',
-                        lineHeight: 20,
-                        marginHorizontal: 10,
-                        fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                      }}>
-                      .
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        fontWeight: '600',
-                        color: '#202020',
-                        lineHeight: 30,
-
-                        fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                      }}>
-                      {'Reps: '}
-                      {item?.exercise_reps}
-                    </Text>
+                   
                   </View>
                 </View>
               </View>

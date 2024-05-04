@@ -251,7 +251,7 @@ const Exercise = ({navigation, route}: any) => {
                 setSeconds(prevSeconds => prevSeconds - 1);
               }
             }
-            if (playW >= 65 && playW <= 68) Tts.speak('Lets Go');
+            if (playW >= 65 && playW <= 68) Tts.speak('Ready to Finish');
             if (playW >= 100 && number == allExercise?.length - 1) {
               setPause(false);
               postCurrentExerciseAPI(number);
@@ -936,7 +936,7 @@ const Exercise = ({navigation, route}: any) => {
                 ? '0' + remainingSeconds
                 : remainingSeconds}
             </Text>
-            <Text style={[styles.name, {color: '#505050'}]}>
+            <Text style={[styles.name, {color: '#505050',marginLeft:-15}]}>
               <Icons
                 name={'clock-outline'}
                 size={20}
