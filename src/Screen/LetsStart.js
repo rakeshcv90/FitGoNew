@@ -22,6 +22,8 @@ import ActivityLoader from '../Component/ActivityLoader';
 import axios from 'axios';
 import {setUserId, setUserProfileData} from '../Component/ThemeRedux/Actions';
 import {showMessage} from 'react-native-flash-message';
+import { BannerAdd } from '../Component/BannerAdd';
+import { bannerAdId } from '../Component/AdsId';
 
 const LetsStart = ({navigation}) => {
   const dispatch = useDispatch();
@@ -290,9 +292,14 @@ const LetsStart = ({navigation}) => {
               Terms of use
             </Text>{' '}
           </Text>
-          {console.log("DDDD",DeviceHeigth)}
+        
         </View>
+
+   
       </View>
+    <View style={{position:'absolute',bottom:0}}>
+    <BannerAdd bannerAdId={bannerAdId} />
+    </View>
     </View>
   );
 };
@@ -337,11 +344,11 @@ var styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   button: {
-    fontSize: 12,
+    fontSize: 16,
     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
     textAlign: 'center',
     color: '#F9F9F9',
-    fontWeight: '600',
+    fontWeight: '700',
     backgroundColor: 'transparent',
     lineHeight: 15,
   },

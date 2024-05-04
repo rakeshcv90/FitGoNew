@@ -140,9 +140,12 @@ console.log(nextScreen)
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Bulb
+         <View style={{marginTop:- DeviceHeigth * 0.06}}>
+         <Bulb
           screen={'Do you have Injury in any body part?'}
         />
+      </View>
+       
       </View>
       <View style={{flexDirection: 'row', height: DeviceHeigth * 0.6}}>
         <View

@@ -149,9 +149,11 @@ const CustomWorkout = ({navigation, route}) => {
                     alignSelf: 'center',
                     // backgroundColor:'red',
                     borderRadius: 10,
+                    //borderWidth:1,
+                    //overflow:'hidden',
                     marginHorizontal: -7,
                   }}
-                  resizeMode="contain"
+                  resizeMode="cover"
                 />
                 <View
                   style={{
@@ -203,11 +205,14 @@ const CustomWorkout = ({navigation, route}) => {
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
+          alignSelf:'center'
+   
         }}>
+      
         <Image
           source={localImage.Createworkout}
           resizeMode="contain"
-          style={{width: DeviceWidth * 0.7, height: DeviceHeigth * 0.4}}
+          style={{width: DeviceWidth * 0.7, height: DeviceHeigth * 0.4,marginTop:DeviceHeigth*0.1}}
         />
 
         <LinearGradient
@@ -244,7 +249,7 @@ const CustomWorkout = ({navigation, route}) => {
               style={{width: 20, height: 20}}
               tintColor={AppColor.WHITE}
             />
-            <Text style={styles.button}>{'Add Custom'}</Text>
+            <Text style={styles.button}>{'Create Workout'}</Text>
           </TouchableOpacity>
         </LinearGradient>
       </View>
@@ -303,7 +308,7 @@ const CustomWorkout = ({navigation, route}) => {
   return (
     <>
       <NewHeader
-        header={'Custom Workout'}
+        header={'Create Plan'}
         SearchButton={false}
         backButton={true}
       />
@@ -312,6 +317,7 @@ const CustomWorkout = ({navigation, route}) => {
         <View style={[styles.meditionBox, {top: -20}]}>
           <FlatList
             data={customWorkoutData}
+            // contentContainerStyle={{ flex: 1,  }}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderItem}
             ListEmptyComponent={emptyComponent}
@@ -338,7 +344,7 @@ const CustomWorkout = ({navigation, route}) => {
                 style={{width: 20, height: 20}}
                 tintColor={AppColor.WHITE}
               />
-              <Text style={styles.button}>{'Add Custom'}</Text>
+              <Text style={styles.button}>{'Create Workout'}</Text>
             </LinearGradient>
           </TouchableOpacity>
         )}
@@ -357,7 +363,8 @@ const CustomWorkout = ({navigation, route}) => {
             backgroundColor: 'rgba(0,0,0,.5)',
           }}
           activeOpacity={1}
-          onPress={() => setIsCustomWorkout(false)}>
+          // onPress={() => setIsCustomWorkout(false)}
+          >
           <View
             style={{
               width: DeviceWidth * 0.9,

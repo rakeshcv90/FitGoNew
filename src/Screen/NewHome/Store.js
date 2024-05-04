@@ -15,7 +15,11 @@ import {AppColor} from '../../Component/Color';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {Platform} from 'react-native';
-import {useFocusEffect, useIsFocused, useNavigation} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 import {SliderBox} from 'react-native-image-slider-box';
 import FastImage from 'react-native-fast-image';
 import {useDispatch, useSelector} from 'react-redux';
@@ -30,15 +34,14 @@ import moment from 'moment';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import {setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
-import { BannerAdd } from '../../Component/BannerAdd';
-import { bannerAdId } from '../../Component/AdsId';
+import {BannerAdd} from '../../Component/BannerAdd';
+import {bannerAdId} from '../../Component/AdsId';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const Store = ({navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getStoreData = useSelector(state => state.getStoreData);
-
 
   const [searchText, setsearchText] = useState('');
   const [forLoading, setForLoading] = useState(false);
@@ -203,7 +206,8 @@ const Store = ({navigation}) => {
       <View
         style={{
           width: '95%',
-          height: DeviceHeigth>=1024?DeviceHeigth * 0.53:DeviceHeigth * 0.48,
+          height:
+            DeviceHeigth >= 1024 ? DeviceHeigth * 0.53 : DeviceHeigth * 0.48,
           borderRadius: 10,
           alignSelf: 'center',
           alignItems: 'center',
@@ -213,12 +217,12 @@ const Store = ({navigation}) => {
         <Text
           style={{
             fontSize: 17,
-           
+
             fontFamily: 'Montserrat-SemiBold',
             fontWeight: '700',
             lineHeight: 30,
             marginBottom: 20,
-            color:AppColor.BLACK
+            color: AppColor.BLACK,
           }}>
           Our Products
         </Text>
@@ -328,9 +332,10 @@ const Store = ({navigation}) => {
             />
           )}
         </View>
-        <BannerAdd bannerAdId={bannerAdId} />
+        <View style={{position: 'absolute', bottom: 0}}>
+          <BannerAdd bannerAdId={bannerAdId} />
+        </View>
       </View>
-      
     </View>
   );
 };
@@ -348,7 +353,7 @@ var styles = StyleSheet.create({
     lineHeight: 18,
     fontWeight: '600',
     fontFamily: 'Montserrat',
-    color:'#000',
+    color: '#000',
   },
   lastItemMargin: {
     marginBottom: 0, // Set your desired margin for the last item

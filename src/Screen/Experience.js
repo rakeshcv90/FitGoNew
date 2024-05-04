@@ -98,7 +98,10 @@ const Experience = ({route, navigation}) => {
   return (
     <View style={styles.Container}>
       <ProgressBar screen={screen} Type />
+      <View style={{marginTop:- DeviceHeigth * 0.06}}>
       <Bulb screen={'Choose your fitness level'} />
+      </View>
+  
       <View style={{marginTop: DeviceHeigth * 0.06}}>
         <Card
           ItemArray={ExperienceArray}
@@ -153,6 +156,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
     alignItems: 'center',
     padding: 10,
+    shadowColor: 'rgba(0, 0, 0, 1)',
     ...Platform.select({
       ios: {
         shadowColor: '#000000',
