@@ -909,7 +909,7 @@ const styles = StyleSheet.create({
     height: DeviceHeigth >= 1024 ? 120 : 80,
     width: DeviceHeigth >= 1024 ? DeviceWidth * 0.18 : DeviceWidth * 0.18,
 
-    left: DeviceHeigth >= 1024 ? -20 : -10,
+    left: DeviceHeigth >= 1024 ? -20 : -5,
     borderRadius: 10,
   },
 });

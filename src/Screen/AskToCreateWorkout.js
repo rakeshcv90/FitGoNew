@@ -249,7 +249,8 @@ const AskToCreateWorkout = ({route, navigation}) => {
   return (
     <View style={styles.Container}>
       <ProgressBar Type screen={screen} ExperienceScreen />
-      <Bulb screen={'Select One Option'} />
+      <View style={{marginTop:- DeviceHeigth * 0.06}}>
+      <Bulb screen={'Select One Option'} /></View>
       {Loader ? <ActivityLoader /> : null}
       <View style={{marginTop: DeviceHeigth * 0.06}}>
         <Card

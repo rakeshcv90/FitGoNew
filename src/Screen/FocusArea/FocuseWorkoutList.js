@@ -38,7 +38,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
   useEffect(() => {
     if (isFocused) {
 
-      getCustomeWorkoutTimeDetails();
+      //getCustomeWorkoutTimeDetails();
       getAllLikeStatusAPI();
        getWorkoutStatus();
     }
@@ -328,7 +328,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
         );
       },
 
-    [likeData, updateLikeID, action,isLoading],
+    [likeData, updateLikeID, action,isLoading,isFocused],
 
 
   );
@@ -418,7 +418,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
             speed={0.5}
             autoPlay
             resizeMode="cover"
-            style={{width: 50, height: 60, right: 10}}
+            style={{width: 50, height: 60, right: -5}}
           />
         ) : resulttime == 0 ? (
           <Image

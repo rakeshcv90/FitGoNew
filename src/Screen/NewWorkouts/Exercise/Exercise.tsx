@@ -167,12 +167,12 @@ const Exercise = ({navigation, route}: any) => {
       separateTimer
         ? setTimeout(() => {
             if (timerS == 0) {
-              setDemoS(0);
-              setDemo1(!demo1);
-              setTimerS(10);
               setSeparateTimer(false);
               PauseAudio(playbackState);
               setPause(true);
+              setDemoS(0);
+              setDemo1(!demo1);
+              setTimerS(10);
             } else if (timerS == 4) {
               // Tts.speak(`${timerS}`);
               setTimerS(timerS - 1);
