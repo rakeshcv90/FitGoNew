@@ -15,7 +15,6 @@ import {
   setExperience,
   setLaterButtonData,
   setProgressBarCounter,
-
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
@@ -72,7 +71,12 @@ const AskToCreateWorkout = ({route, navigation}) => {
   const handleButtonPress = IDs => {
     setLoader(true);
     DeviceInfo.getUniqueId().then(id => {
-      IDs == 1 ? WholeData(id) : handle2nd();
+      if (IDs == 1) {
+        WholeData(id);
+      } else {
+        handle2nd();
+        setLoader(false);
+      }
     });
   };
   // animation
@@ -149,7 +153,6 @@ const AskToCreateWorkout = ({route, navigation}) => {
   };
   // getuserDetail api
   const getProfileData = async user_id => {
-   
     const currrentdata = [
       {
         gender: gender,
@@ -235,7 +238,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
           '?version=' +
           VersionNumber.appVersion +
           '&user_id=' +
-          getUserID
+          getUserID,
       });
       if (res.data?.msg != 'version  is required') {
         dispatch(setChallengesData(res.data));
@@ -266,7 +269,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
       <View style={styles.buttons}>
         <TouchableOpacity
           onPress={() => {
-            dispatch(setProgressBarCounter(7));
+            dispatch(setProgressBarCounter(9));
             navigation.goBack();
           }}
           style={{

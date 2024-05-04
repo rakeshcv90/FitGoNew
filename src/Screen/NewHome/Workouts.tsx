@@ -113,7 +113,6 @@ const Workouts = ({navigation}: any) => {
     },
   ];
   const allWorkoutApi = async () => {
-  
     // try {
     //   setRefresh(true);
     //   const payload = new FormData();
@@ -127,7 +126,6 @@ const Workouts = ({navigation}: any) => {
     //     },
     //     data: payload,
     //   });
-
     //   if (res?.data?.msg == 'Please update the app to the latest version.') {
     //     showMessage({
     //       message: res?.data?.msg,
@@ -203,10 +201,8 @@ const Workouts = ({navigation}: any) => {
       ) {
       } else if (exerciseStatus?.data.length > 0) {
         dispatch(setWorkoutTimeCal(exerciseStatus?.data));
-      
       } else {
         dispatch(setWorkoutTimeCal([]));
-     
       }
     } catch (error) {
       console.log('Workout-Status', error);
@@ -243,7 +239,7 @@ const Workouts = ({navigation}: any) => {
 
   //     if (data?.data?.msg != 'data not found.') {
   //       dispatch(setCustomWorkoutData(data?.data?.data));
-      
+
   //     } else {
   //       dispatch(setCustomWorkoutData([]));
   //     }
@@ -283,12 +279,12 @@ const Workouts = ({navigation}: any) => {
               flexDirection: 'row',
               padding: 5,
 
-              shadowColor: 'rgba(0, 0, 0, 1)',
+              shadowColor: 'grey',
               ...Platform.select({
                 ios: {
                   //shadowColor: '#000000',
                   shadowOffset: {width: 0, height: 2},
-                  shadowOpacity: 0.3,
+                  shadowOpacity: 0.2,
                   shadowRadius: 4,
                 },
                 android: {
@@ -414,7 +410,10 @@ const Workouts = ({navigation}: any) => {
               </ImageBackground>
               <View
                 style={{
-                  marginTop: DeviceHeigth * 0.05,
+                  marginTop:
+                    DeviceHeigth >= 930
+                      ? DeviceHeigth * 0.14
+                      : DeviceHeigth * 0.05,
                   marginHorizontal: 10,
                   zIndex: 1,
                 }}>
@@ -564,16 +563,16 @@ const Workouts = ({navigation}: any) => {
                                     justifyContent: 'center',
                                     alignSelf: 'center',
                                     padding: 7,
-                                    shadowColor: 'rgba(0, 0, 0, 0.5)',
+                                    shadowColor: 'grey',
                                     ...Platform.select({
                                       ios: {
-                                        shadowColor: '#000000',
+                                        //shadowColor: '#000000',
                                         shadowOffset: {width: 0, height: 2},
-                                        shadowOpacity: 0.3,
+                                        shadowOpacity: 0.2,
                                         shadowRadius: 4,
                                       },
                                       android: {
-                                        elevation: 10,
+                                        elevation: 3,
                                       },
                                     }),
                                   }}>

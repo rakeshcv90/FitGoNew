@@ -42,28 +42,12 @@ const FocusArea = ({route, navigation}) => {
   return (
     <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          //position: 'absolute',
-          marginTop:
-             DeviceHeigth * 0.07,
-        }}>
+     
         <ProgressBar screen={screen} />
-      </View>
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop:-
-          DeviceHeigth * 0.03,
-        }}>
+     
+      <View style={{}}>
         <Bulb
           screen={'Select your Focus area'}
-          header={
-            'Knowing your age can help us for you based on different metabolic rates.'
-          }
         />
       </View>
       <View>

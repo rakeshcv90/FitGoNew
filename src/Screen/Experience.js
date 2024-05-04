@@ -71,7 +71,7 @@ const Experience = ({route, navigation}) => {
   };
   const handleButtonPress = () => {
    if(selected?.txt!='Beginner'){
-    dispatch(setProgressBarCounter(8))
+    dispatch(setProgressBarCounter(10))
     navigation.navigate(
     'AskToCreateWorkout',
       {

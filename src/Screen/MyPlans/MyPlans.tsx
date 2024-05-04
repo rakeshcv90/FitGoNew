@@ -158,16 +158,27 @@ const Box = ({item, index}: any) => {
               ref={avatarRef}
             />
           )} */}
-      <Image
-        source={{uri: item?.exercise_image_link}}
-        onLoad={() => setIsLoading(false)}
+      <View
         style={{
           height: 50,
           width: 50,
-          alignSelf: 'center',
-        }}
-        resizeMode="contain"
-      />
+          borderRadius: 5,
+          borderWidth: 0.5,
+          borderColor: 'lightgrey',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Image
+          source={{uri: item?.exercise_image_link}}
+          onLoad={() => setIsLoading(false)}
+          style={{
+            height: 40,
+            width: 40,
+            alignSelf: 'center',
+          }}
+          resizeMode="contain"
+        />
+      </View>
       <View
         style={{
           alignItems: 'center',
@@ -302,7 +313,7 @@ const MyPlans = ({navigation}: any) => {
       if (res?.data?.msg != 'No data found.') {
         const days = new Set(); // Use a Set to store unique days
         res?.data?.forEach((item: any) => {
-          days.add(item.user_day);
+          days.add(item?.user_day);
         });
         console.log('DAYs', days);
         setWeekStatus([...days]);
@@ -483,17 +494,17 @@ const MyPlans = ({navigation}: any) => {
               height: 40,
               backgroundColor: AppColor.WHITE,
               alignSelf: 'center',
-              // justifyContent: 'center',
-              shadowColor: 'rgba(0, 0, 0, 1)',
+             
+              shadowColor: 'grey',
               ...Platform.select({
                 ios: {
-                  shadowColor: '#000000',
-                  shadowOffset: {width: 0, height: 1},
-                  shadowOpacity: 0.1,
+                  //shadowColor: '#000000',
+                  shadowOffset: {width: 0, height: 2},
+                  shadowOpacity: 0.2,
                   shadowRadius: 4,
                 },
                 android: {
-                  elevation: 4,
+                  elevation: 3,
                 },
               }),
               borderRadius: 5,
@@ -601,9 +612,12 @@ const MyPlans = ({navigation}: any) => {
             style={[
               styles.semiBold,
               {
-                marginLeft: 10,
+                marginLeft:
+                  DeviceHeigth >= 1024
+                    ? DeviceWidth * 0.03
+                    : DeviceWidth * 0.05,
                 width: DeviceWidth * 0.7,
-                marginBottom: DeviceWidth * 0.05,
+                // marginBottom: DeviceWidth * 0.05,
               },
             ]}>
             Get Fit{' '}
@@ -613,7 +627,7 @@ const MyPlans = ({navigation}: any) => {
         <View
           style={{
             flexDirection: 'row',
-            width: Platform.OS == 'ios' ? DeviceWidth : DeviceWidth * 0.95,
+            width: DeviceWidth * 0.95,
             justifyContent: 'space-between',
             alignItems: 'center',
             alignSelf: 'center',
@@ -644,104 +658,191 @@ const MyPlans = ({navigation}: any) => {
             firstItem={selectedDay}
             renderItem={({current, currentIndex}: any) => (
               <View style={styles.box}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    padding: 10,
-                    marginVertical: 5,
-                  }}>
-                  <Image
-                    source={{
-                      uri: getWeeklyPlansData[WeekArray[selectedDay]]?.image,
-                    }}
-                    // onLoad={() => setIsLoading(false)}
-                    style={{
-                      height: 50,
-                      width: 50,
-                      alignSelf: 'center',
-                    }}
-                    resizeMode="contain"
-                  />
+                {WeekStatus?.includes(WeekArray[selectedDay]) ? (
                   <View
                     style={{
                       justifyContent: 'center',
-                      marginHorizontal: 20,
-                      flex: 1,
-                      // width: DeviceWidth * 0.55,
+                      alignItems: 'center',
+                      paddingVertical: 10,
                     }}>
+                    <AnimatedLottieView
+                      source={require('../../Icon/Images/RedTick.json')}
+                      speed={1}
+                      autoPlay
+                      loop
+                      resizeMode="contain"
+                      style={{
+                        width: DeviceWidth * 0.2,
+                        height: DeviceHeigth * 0.2,
+                      }}
+                    />
                     <Text
                       style={{
                         fontFamily: Fonts.MONTSERRAT_BOLD,
                         fontSize: 16,
-                        fontWeight: '700',
+                        fontWeight: '600',
                         color: AppColor.LITELTEXTCOLOR,
                         lineHeight: 30,
                       }}>
-                      {getWeeklyPlansData[WeekArray[selectedDay]]?.title}
+                      Workout Completed
                     </Text>
                     <Text
                       style={{
                         fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                        fontSize: 12,
-                        fontWeight: '600',
-                        color: AppColor.BoldText,
-                        lineHeight: 15,
-                        opacity: 0.7,
+                        fontSize: 14,
+                        fontWeight: '500',
+                        color: AppColor.LITELTEXTCOLOR,
+                        lineHeight: 20,
                       }}>
-                      {
-                        getWeeklyPlansData[WeekArray[selectedDay]]?.exercises
-                          ?.length
-                      }{' '}
-                      Exercises
+                      {WeekArray[selectedDay]}
                     </Text>
-                  </View>
-                  <TouchableOpacity
-                    activeOpacity={1}
-                    onPress={() => handleStart()}>
-                    <LinearGradient
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 1}}
-                      colors={['#0A93F1', '#2B4E9F']}
+                    <View
                       style={{
-                        width: 50,
-                        height: 50,
-                        borderRadius: 50 / 2,
-                        overflow: 'hidden',
+                        width: DeviceWidth * 0.8,
+                        height: 1,
+                        backgroundColor: 'lightgrey',
+                        marginTop: DeviceWidth * 0.05,
+                      }}
+                    />
+                    <View
+                      style={{
+                        flexDirection: 'row',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        alignSelf: 'center',
-                        marginLeft: 5,
+                        marginVertical: DeviceWidth * 0.05,
                       }}>
                       <Image
-                        source={localImage.PlayIcon}
+                        source={{
+                          uri: getWeeklyPlansData[WeekArray[selectedDay]]
+                            ?.image,
+                        }}
+                        // onLoad={() => setIsLoading(false)}
                         style={{
-                          height: 20,
-                          width: 20,
+                          height: 40,
+                          width: 40,
+                          alignSelf: 'center',
+                          marginRight: 10,
                         }}
                         resizeMode="contain"
                       />
-                    </LinearGradient>
-                  </TouchableOpacity>
-                </View>
-                <FlatList
-                  data={getWeeklyPlansData[WeekArray[selectedDay]]?.exercises}
-                  keyExtractor={(item, index) => index.toString()}
-                  refreshControl={
-                    <RefreshControl
-                      refreshing={refresh}
-                      onRefresh={() => WeeklyStatusAPI()}
-                      colors={[AppColor.RED, AppColor.WHITE]}
+                      <Text
+                        style={{
+                          fontFamily: Fonts.MONTSERRAT_BOLD,
+                          fontSize: 16,
+                          fontWeight: '700',
+                          color: AppColor.RED1,
+                          lineHeight: 30,
+                        }}>
+                        {getWeeklyPlansData[WeekArray[selectedDay]]?.title}
+                      </Text>
+                    </View>
+                  </View>
+                ) : (
+                  <>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        padding: 10,
+                        marginVertical: 5,
+                      }}>
+                      <Image
+                        source={{
+                          uri: getWeeklyPlansData[WeekArray[selectedDay]]
+                            ?.image,
+                        }}
+                        // onLoad={() => setIsLoading(false)}
+                        style={{
+                          height: 50,
+                          width: 50,
+                          alignSelf: 'center',
+                        }}
+                        resizeMode="contain"
+                      />
+                      <View
+                        style={{
+                          justifyContent: 'center',
+                          marginHorizontal: 20,
+                          flex: 1,
+                          // width: DeviceWidth * 0.55,
+                        }}>
+                        <Text
+                          style={{
+                            fontFamily: Fonts.MONTSERRAT_BOLD,
+                            fontSize: 16,
+                            fontWeight: '700',
+                            color: AppColor.LITELTEXTCOLOR,
+                            lineHeight: 30,
+                          }}>
+                          {getWeeklyPlansData[WeekArray[selectedDay]]?.title}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                            fontSize: 12,
+                            fontWeight: '600',
+                            color: AppColor.BoldText,
+                            lineHeight: 15,
+                            opacity: 0.7,
+                          }}>
+                          {
+                            getWeeklyPlansData[WeekArray[selectedDay]]
+                              ?.exercises?.length
+                          }{' '}
+                          Exercises
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        activeOpacity={1}
+                        onPress={() => handleStart()}>
+                        <LinearGradient
+                          start={{x: 0, y: 0}}
+                          end={{x: 1, y: 1}}
+                          colors={['#0A93F1', '#2B4E9F']}
+                          style={{
+                            width: DeviceHeigth >= 1024 ? 50 : 35,
+                            height: DeviceHeigth >= 1024 ? 50 : 35,
+                            borderRadius:
+                              DeviceHeigth >= 1024 ? 50 / 2 : 35 / 2,
+                            overflow: 'hidden',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            alignSelf: 'center',
+                            marginLeft: 5,
+                          }}>
+                          <Image
+                            source={localImage.PlayIcon}
+                            style={{
+                              height: DeviceHeigth >= 1024 ? 15 : 10,
+                              width: DeviceHeigth >= 1024 ? 15 : 10,
+                            }}
+                            resizeMode="contain"
+                          />
+                        </LinearGradient>
+                      </TouchableOpacity>
+                    </View>
+                    <FlatList
+                      data={
+                        getWeeklyPlansData[WeekArray[selectedDay]]?.exercises
+                      }
+                      keyExtractor={(item, index) => index.toString()}
+                      refreshControl={
+                        <RefreshControl
+                          refreshing={refresh}
+                          onRefresh={() => WeeklyStatusAPI()}
+                          colors={[AppColor.RED, AppColor.WHITE]}
+                        />
+                      }
+                      renderItem={({item, index}) => (
+                        <Box item={item} index={index} />
+                      )}
+                      showsVerticalScrollIndicator={false}
+                      initialNumToRender={10}
+                      maxToRenderPerBatch={10}
+                      updateCellsBatchingPeriod={100}
+                      removeClippedSubviews={true}
                     />
-                  }
-                  renderItem={({item, index}) => (
-                    <Box item={item} index={index} />
-                  )}
-                  showsVerticalScrollIndicator={false}
-                  initialNumToRender={10}
-                  maxToRenderPerBatch={10}
-                  updateCellsBatchingPeriod={100}
-                  removeClippedSubviews={true}
-                />
+                  </>
+                )}
               </View>
             )}
             showsHorizontalScrollIndicator={false}
@@ -797,16 +898,16 @@ const styles = StyleSheet.create({
     // padding: 5,
     // paddingTop: 1,
     marginTop: 7,
-    shadowColor: 'rgba(0, 0, 0, 1)',
+    shadowColor: 'grey',
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.1,
+        //shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.2,
         shadowRadius: 4,
       },
       android: {
-        elevation: 4,
+        elevation: 3,
       },
     }),
   },
