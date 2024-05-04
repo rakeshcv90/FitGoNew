@@ -15,6 +15,7 @@ import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import VersionNumber, {appVersion} from 'react-native-version-number';
+import { legacy_createStore } from 'redux';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -72,6 +73,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
     }
   };
   const postLikeAPI = async workoutID => {
+   
     try {
       const payload = new FormData();
       payload.append('user_id', getUserDataDetails?.id);
@@ -277,14 +279,14 @@ const FocuseWorkoutList = ({navigation, route}) => {
                         width: 55,
                       }}
                       onPress={() => {
-                        const current = likeData.findIndex(
+                        const current = likeData?.findIndex(
                           it => it == item?.workout_id,
                         );
                         if (current == -1) {
-                          likeData.push(item?.workout_id);
+                          likeData?.push(item?.workout_id);
                           postLikeAPI(item?.workout_id);
                         } else {
-                          const remove = likeData.filter(
+                          const remove = likeData?.filter(
                             it => it != item?.workout_id,
                           );
                           setLikeData(remove);
