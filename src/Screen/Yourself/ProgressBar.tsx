@@ -5,7 +5,7 @@ import {AppColor} from '../../Component/Color';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
-const ProgressBar = ({screen, ExperienceScreen}: any) => {
+const ProgressBar = ({screen}: any) => {
   const getProgressBarCounter = useSelector(
     state => state.getProgressBarCounter,
   );
@@ -48,7 +48,7 @@ const ProgressBar = ({screen, ExperienceScreen}: any) => {
             width:
               screen == 0
                 ? '12.5%'
-                : `${getProgressBarCounter == 7 ? 14.25 * screen: 12.5 * screen}%`,
+                : `${getProgressBarCounter == 9 ? 11.12 * screen: 10 * screen}%`,
             height: 5,
             borderRadius: 5,
           }}

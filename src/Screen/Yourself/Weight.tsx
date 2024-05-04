@@ -119,7 +119,7 @@ const Weight = ({route, navigation}: any) => {
       {
       }
       dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-      navigation.navigate('WorkoutArea', {nextScreen: screen + 1});
+      navigation.navigate('Age', {nextScreen: screen + 1});
     } else {
       showMessage({
         message: 'Current Weight can not be equal to Target weight',
