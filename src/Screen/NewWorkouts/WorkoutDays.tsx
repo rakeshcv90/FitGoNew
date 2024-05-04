@@ -830,12 +830,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 8,
     backgroundColor: AppColor.WHITE,
-    shadowColor: 'rgba(0, 0, 0, 1)',
+    shadowColor: 'grey',
     ...Platform.select({
       ios: {
         //shadowColor: '#000000',
         shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.3,
+        shadowOpacity: 0.2,
         shadowRadius: 4,
       },
       android: {
