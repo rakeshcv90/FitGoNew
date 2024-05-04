@@ -42,7 +42,7 @@ import {
   setSoundOnOff,
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
-import { LogOut } from '../Component/LogOut';
+import {LogOut} from '../Component/LogOut';
 const NewProfile = ({navigation}) => {
   useEffect(() => {
     notifee.getTriggerNotifications().then(res => {
@@ -68,7 +68,7 @@ const NewProfile = ({navigation}) => {
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const [notificationTimer, setNotificationTimer] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  console.log("getUserDataDetails",getUserDataDetails)
+  console.log('getUserDataDetails', getUserDataDetails);
   const setAlarmIsEnabled = data => {
     dispatch(setIsAlarmEnabled(data));
   };
@@ -88,6 +88,19 @@ const NewProfile = ({navigation}) => {
       id: 3,
       txt: 'My Details',
       img: localImage.NewPrfile,
+    },
+  ];
+  const CardData1 = [
+    {
+      id: 1,
+      txt: 'Reminder',
+      img: localImage.Bell,
+      txt1: moment(notificationTimer).format('LT'),
+    },
+    {
+      id: 2,
+      txt: 'Subscription',
+      img: localImage.Planning,
     },
   ];
   const handleCardDataPress = id => {
@@ -118,8 +131,7 @@ const NewProfile = ({navigation}) => {
       navigation.navigate('TermaAndCondition', {
         title: 'Terms & Condition',
       });
-    }
-    else if(id==6){
+    } else if (id == 6) {
       if (Platform.OS == 'ios') {
         Linking.openURL(
           'https://apps.apple.com/us/app/fitme-health-and-fitness-app/id6470018217',
@@ -129,12 +141,10 @@ const NewProfile = ({navigation}) => {
           'https://play.google.com/store/apps/details?id=fitme.health.fitness.homeworkouts.equipment&hl=en-IN&pli=1',
         );
       }
-    }
-    else if(id==7){
+    } else if (id == 7) {
       setModalVisible(true);
-    }
-    else if(id==8){
-     LogOut(dispatch)
+    } else if (id == 8) {
+      LogOut(dispatch);
     }
   };
   const ListData = [
@@ -174,10 +184,43 @@ const NewProfile = ({navigation}) => {
       img: localImage.NDelete,
     },
     {
-      id:8,
-      txt:'Log Out',
-      img:localImage.NLogOut
-    }
+      id: 8,
+      txt: 'Log Out',
+      img: localImage.NLogOut,
+    },
+  ];
+  const ListData1 = [
+    {
+      id: 1,
+      txt: 'Sound Options',
+      img: localImage.NSounds,
+    },
+    {
+      id: 2,
+      txt: 'Health Notification',
+      img: localImage.NPedometer,
+    },
+    {
+      id: 3,
+      txt: 'Contact Us',
+      img: localImage.NContact,
+    },
+    {
+      id: 4,
+      txt: 'Privacy Policy',
+      img: localImage.NPrivacy,
+    },
+    {
+      id: 5,
+      txt: 'Terms & Conditions',
+      img: localImage.NPolicy,
+    },
+    {
+      id: 6,
+      txt: 'Rate Us',
+      img: localImage.NRate,
+    },
+ 
   ];
   const UpdateProfileModal = () => {
     const [modalImageUploaded, setModalImageUploaded] = useState(false);
@@ -557,7 +600,10 @@ const NewProfile = ({navigation}) => {
         />
         {forLoading ? <ActivityLoader /> : ''}
         <View
-          style={[styles.modalContent1, {backgroundColor: AppColor.BACKGROUNG}]}>
+          style={[
+            styles.modalContent1,
+            {backgroundColor: AppColor.BACKGROUNG},
+          ]}>
           <View
             style={{
               width: DeviceWidth * 0.85,
@@ -627,92 +673,195 @@ const NewProfile = ({navigation}) => {
   return (
     <View style={styles.Container}>
       <NewHeader header={'Profile'} />
-      <View style={styles.ProfileContainer}>
-        <View style={styles.profileView}>
-          <Image
-            source={
-              getUserDataDetails.image_path == null
-                ? localImage.avt
-                : {uri: getUserDataDetails.image_path}
-            }
-            style={styles.img}
-            onLoad={() => setIsLoading(false)}
-            resizeMode="cover"
-          />
-          <TouchableOpacity
-            style={styles.pen}
-            onPress={() => setUpadteScreenVisibilty(true)}
-            activeOpacity={0.5}>
-            <Image
-              source={localImage.NewPen}
-              style={{height: 17, width: 15}}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={{marginLeft: 15}}>
-          <Text
-            style={{
-              fontFamily: Fonts.MONTSERRAT_BOLD,
-              color: AppColor.BLACK,
-              fontSize: 20,
-              top: -16,
-            }}>
-            {getUserDataDetails?.name == null
-              ? 'Guest'
-              : getUserDataDetails?.name}
-          </Text>
-          <Text
-            style={{
-              fontFamily: Fonts.MONTSERRAT_REGULAR,
-              color: AppColor.BLACK,
-              fontSize: 14,
-              fontWeight: '500',
-              top: -16,
-            }}>
-            {getUserDataDetails?.email == null
-              ? 'guest@gmail.com'
-              : getUserDataDetails?.email}
-          </Text>
-        </View>
-      </View>
-      <View style={styles.card}>
-        {CardData?.map((v, i) => (
-          <TouchableOpacity
-            key={i}
-            style={{justifyContent: 'center', alignItems: 'center'}}
-            onPress={() => handleCardDataPress(v.id)}>
-            <Image
-              source={v.img}
-              style={{height: 35, width: 35}}
-              resizeMode="contain"
-            />
-            <Text
-              style={{
-                textAlign: 'center',
-                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                fontWeight: '600',
-                marginTop: 10,
-              }}>
-              {v.txt}
-            </Text>
-            {v.txt1 == 'Invalid date' ? null : (
+      {getUserDataDetails?.name || getUserDataDetails.email != null ? (
+        <>
+          <View style={styles.ProfileContainer}>
+            <View style={styles.profileView}>
+              <Image
+                source={
+                  getUserDataDetails.image_path == null
+                    ? localImage.avt
+                    : {uri: getUserDataDetails.image_path}
+                }
+                style={styles.img}
+                onLoad={() => setIsLoading(false)}
+                resizeMode="cover"
+              />
+              <TouchableOpacity
+                style={styles.pen}
+                onPress={() => setUpadteScreenVisibilty(true)}
+                activeOpacity={0.5}>
+                <Image
+                  source={localImage.NewPen}
+                  style={{height: 17, width: 15}}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{marginLeft: 15}}>
               <Text
                 style={{
-                  textAlign: 'center',
-                  fontFamily: Fonts.MONTSERRAT_REGULAR,
-                  fontWeight: '500',
-                  marginTop: 6,
-                  color: AppColor.RED1,
+                  fontFamily: Fonts.MONTSERRAT_BOLD,
+                  color: AppColor.BLACK,
+                  fontSize: 20,
+                  top: -16,
                 }}>
-                {v.txt1}
+                {getUserDataDetails?.name == null
+                  ? 'Guest'
+                  : getUserDataDetails?.name}
               </Text>
-            )}
-          </TouchableOpacity>
-        ))}
+              <Text
+                style={{
+                  fontFamily: Fonts.MONTSERRAT_REGULAR,
+                  color: AppColor.BLACK,
+                  fontSize: 14,
+                  fontWeight: '500',
+                  top: -16,
+                }}>
+                {getUserDataDetails?.email == null
+                  ? 'guest@gmail.com'
+                  : getUserDataDetails?.email}
+              </Text>
+            </View>
+          </View>
+        </>
+      ) : (
+        <>
+          <View style={{width: DeviceWidth * 0.95, paddingHorizontal: 10}}>
+            <Text style={{fontSize: 17, fontFamily: Fonts.MONTSERRAT_BOLD}}>
+              Create Profile
+            </Text>
+            <Text
+              style={{
+                fontSize: 13,
+                fontFamily: Fonts.MONTSERRAT_REGULAR,
+                marginVertical: 10,
+              }}>
+              Sign up for free to save your workouts
+            </Text>
+            <View style={{flexDirection: 'row', top: 5}}>
+              <TouchableOpacity
+              onPress={()=>{
+                navigation.navigate('LogSignUp')
+              }}
+                style={{
+                  width: 100,
+                  height: 40,
+                  backgroundColor: 'red',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 50,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontFamily: Fonts.MONTSERRAT_REGULAR,
+                    color: AppColor.WHITE,
+                    fontWeight: '600',
+                  }}>
+                  Sign up
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={()=>{
+                navigation.navigate('LogSignUp')
+              }}
+                style={{
+                  width: 100,
+                  height: 40,
+                  // backgroundColor: 'red',
+                  marginHorizontal: 10,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontFamily: Fonts.MONTSERRAT_REGULAR,
+                    color: AppColor.RED1,
+                    fontWeight: '600',
+                  }}>
+                  Log in
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </>
+      )}
+      <View style={styles.card}>
+        {getUserDataDetails?.name || getUserDataDetails.email != null
+          ? CardData?.map((v, i) => (
+              <TouchableOpacity
+                key={i}
+                style={{justifyContent: 'center', alignItems: 'center'}}
+                onPress={() => handleCardDataPress(v.id)}>
+                <Image
+                  source={v.img}
+                  style={{height: 35, width: 35}}
+                  resizeMode="contain"
+                />
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                    fontWeight: '600',
+                    marginTop: 10,
+                  }}>
+                  {v.txt}
+                </Text>
+                {v.txt1 == 'Invalid date' ? null : (
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      fontFamily: Fonts.MONTSERRAT_REGULAR,
+                      fontWeight: '500',
+                      marginTop: 6,
+                      color: AppColor.RED1,
+                    }}>
+                    {v.txt1}
+                  </Text>
+                )}
+              </TouchableOpacity>
+            ))
+          : CardData1?.map((v, i) => (
+              <TouchableOpacity
+                key={i}
+                style={{justifyContent: 'center', alignItems: 'center'}}
+                onPress={() => handleCardDataPress(v.id)}>
+                <Image
+                  source={v.img}
+                  style={{height: 35, width: 35}}
+                  resizeMode="contain"
+                />
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                    fontWeight: '600',
+                    marginTop: 10,
+                  }}>
+                  {v.txt}
+                </Text>
+                {v.txt1 == 'Invalid date' ? null : (
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      fontFamily: Fonts.MONTSERRAT_REGULAR,
+                      fontWeight: '500',
+                      marginTop: 6,
+                      color: AppColor.RED1,
+                    }}>
+                    {v.txt1}
+                  </Text>
+                )}
+              </TouchableOpacity>
+            ))}
       </View>
-      <ScrollView showsVerticalScrollIndicator={false} style={{marginBottom:25}}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{marginBottom: 25}}>
         <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
+    
           {ListData.slice(0, 2).map((v, i) => (
             <View
               key={i}
@@ -814,7 +963,24 @@ const NewProfile = ({navigation}) => {
           Others
         </Text>
         <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
-          {ListData.slice(2).map((v, i) => (
+        {getUserDataDetails.name||getUserDataDetails.email!=null?
+          ListData.slice(2).map((v, i) => (
+            <TouchableOpacity
+              key={i}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginVertical: 10,
+              }}
+              onPress={() => HandleButtons(v.id, v.txt)}>
+              <Image
+                source={v.img}
+                style={{height: 35, width: 35}}
+                resizeMode="contain"
+              />
+              <Text style={styles.ListText}>{v.txt}</Text>
+            </TouchableOpacity>
+          )):ListData1.slice(2).map((v, i) => (
             <TouchableOpacity
               key={i}
               style={{
@@ -840,7 +1006,7 @@ const NewProfile = ({navigation}) => {
         />
       </ScrollView>
       {UpdateScreenVisibility ? <UpdateProfileModal /> : null}
-      <DeleteAccount/>
+      <DeleteAccount />
     </View>
   );
 };

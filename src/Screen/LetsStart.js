@@ -106,7 +106,7 @@ const LetsStart = ({navigation}) => {
           version: VersionNumber.appVersion,
         },
       });
-      console.log('Device Data', data.data.profile);
+
       if (data?.data?.profile) {
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));

@@ -160,23 +160,29 @@ const FocuseWorkoutList = ({navigation, route}) => {
                     autoRun
                   />
                 )}
-
+                <View
+                  style={{
+                    height: 70,
+                    width: 70,
+                    borderRadius: 5,
+                    borderWidth: 0.5,
+                    borderColor: 'lightgrey',
+                    marginHorizontal: -12,
+                  }}>
                 <Image
                   source={{uri: item?.workout_image}}
                   onLoad={() => setIsLoading(false)}
                   style={{
-                    width: 80,
-                    height: 80,
+                    width: 60,
+                    height: 60,
                     justifyContent: 'center',
                     alignSelf: 'center',
                     // backgroundColor:'red',
-                    marginHorizontal: -7,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: '#D9D9D9',
+                 
+                  
                   }}
                   resizeMode="contain"
-                />
+                /></View>
                 <View style={{marginHorizontal: 25, top: 10}}>
                   <View style={{width: DeviceWidth * 0.47}}>
                     <Text
@@ -518,9 +524,9 @@ const styles = StyleSheet.create({
 
     backgroundColor: AppColor.GRAY,
     zIndex: 1,
-    height: 80,
-    width: 90,
-    left: -8,
+    height: 70,
+    width: 70,
+    left: -10,
     borderRadius: 10,
   },
 });

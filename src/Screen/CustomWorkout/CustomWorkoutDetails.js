@@ -29,8 +29,8 @@ import {showMessage} from 'react-native-flash-message';
 import {useIsFocused} from '@react-navigation/native';
 import RNFetchBlob from 'rn-fetch-blob';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-import { BannerAdd } from '../../Component/BannerAdd';
-import { bannerAdId } from '../../Component/AdsId';
+import {BannerAdd} from '../../Component/BannerAdd';
+import {bannerAdId} from '../../Component/AdsId';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -109,7 +109,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-   
+
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -119,15 +119,11 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data?.user_details) {
-       
         setTrackerData(res.data?.user_details);
       } else {
-     
         setTrackerData([]);
       }
-   
     } catch (error) {
-
       console.error(error, 'PostDaysAPIERror');
       setTrackerData([]);
     }
@@ -206,6 +202,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
   const renderItem = useMemo(
     () =>
       ({item}) => {
+        console.log("dgdgfdfgddfgdfg",item)
         return (
           <>
             <TouchableOpacity
@@ -227,7 +224,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                 borderColor: '#D9D9D9',
 
                 borderWidth: 1,
-        
+
                 shadowColor: 'grey',
                 ...Platform.select({
                   ios: {
@@ -243,32 +240,40 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 {isLoading && (
-          
                   <ShimmerPlaceholder
                     style={styles.loader}
                     ref={avatarRef}
                     autoRun
                   />
                 )}
-
-                <Image
-                  //  source={{uri: item?.exercise_image_link}}
-                  source={
-                    item?.exercise_image_link != null
-                      ? {uri: item?.exercise_image_link}
-                      : localImage.Noimage
-                  }
-                  onLoad={() => setIsLoading(false)}
+                <View
                   style={{
-                    width: 80,
-                    height: 80,
-                    justifyContent: 'center',
-                    alignSelf: 'center',
-                    // backgroundColor:'red',
-                    marginHorizontal: -7,
-                  }}
-                  resizeMode="contain"
-                />
+                    height: 70,
+                    width: 70,
+                    borderRadius: 5,
+                    borderWidth: 0.5,
+                    borderColor: 'lightgrey',
+                    marginHorizontal: -12,
+                    // alignItems: 'center',
+                  }}>
+                  <Image
+                    //  source={{uri: item?.exercise_image_link}}
+                    source={
+                      item?.exercise_image_link != null
+                        ? {uri: item?.exercise_image_link}
+                        : localImage.Noimage
+                    }
+                    onLoad={() => setIsLoading(false)}
+                    style={{
+                      width: 60,
+                      height: 60,
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      // backgroundColor:'red',
+                    }}
+                    resizeMode="contain"
+                  />
+                </View>
                 <View
                   style={{
                     marginHorizontal: 25,
@@ -294,49 +299,26 @@ const CustomWorkoutDetails = ({navigation, route}) => {
 
                         fontFamily: Fonts.MONTSERRAT_MEDIUM,
                       }}>
-                      {'Set: '}
-                      {item?.exercise_sets}
+                      {'Time : '}
+                      {item?.exercise_rest}
                     </Text>
-                    <Text
-                      style={{
-                        fontSize: 30,
-                        fontWeight: '600',
-                        color: '#202020',
-                        lineHeight: 20,
-                        marginHorizontal: 10,
-                        fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                      }}>
-                      .
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        fontWeight: '600',
-                        color: '#202020',
-                        lineHeight: 30,
-
-                        fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                      }}>
-                      {'Reps: '}
-                      {item?.exercise_reps}
-                    </Text>
+                   
                   </View>
                 </View>
               </View>
-              {getExerciseStatus(item?.exercise_id,trackerData)}
+              {getExerciseStatus(item?.exercise_id, trackerData)}
             </TouchableOpacity>
           </>
         );
       },
-    [trackerData,],
+    [trackerData],
   );
 
-  const getExerciseStatus = useMemo(() => (item_id,allData) => {
-
+  const getExerciseStatus = useMemo(() => (item_id, allData) => {
     let status_data = allData?.filter(item1 => {
       return item1?.user_exercise_id == item_id;
     });
-  
+
     return (
       <View>
         {status_data[0]?.exercise_status == 'completed' && (
@@ -468,17 +450,19 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Image
               // source={{uri: data.workout_image_link}}
-              source={data?.image==''?localImage.Noimage:{uri:data?.image}}
+              source={
+                data?.image == '' ? localImage.NOWORKOUT : {uri: data?.image}
+              }
               style={{
-                width: 80,
-                height: 80,
+                width: 70,
+                height: 70,
                 justifyContent: 'center',
                 alignSelf: 'center',
-                borderRadius:10,
-                // backgroundColor:'red',
+                borderRadius: 10,
+
                 marginHorizontal: -7,
               }}
-              resizeMode="contain"
+              resizeMode="cover"
             />
             <View
               style={{
@@ -525,7 +509,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               lineHeight: 20,
               fontSize: 20,
               top: 15,
-              marginVertical:15,
+              marginVertical: 15,
               alignItems: 'center',
             }}>
             Exercises
@@ -711,8 +695,8 @@ const styles = StyleSheet.create({
 
     backgroundColor: AppColor.GRAY,
     zIndex: 1,
-    height: 80,
-    width: 90,
+    height: 70,
+    width: 70,
     left: -10,
     borderRadius: 10,
   },
