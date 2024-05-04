@@ -31,6 +31,7 @@ import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import { BannerAdd } from '../../Component/BannerAdd';
 import { bannerAdId } from '../../Component/AdsId';
+import NativeAddTest from '../../Component/NativeAddTest';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -46,6 +47,7 @@ const CustomWorkout = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(true);
   const isFocused = useIsFocused();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
 
   useEffect(() => {
     if (isFocused) {
@@ -93,7 +95,7 @@ const CustomWorkout = ({navigation, route}) => {
   };
   const renderItem = useMemo(
     () =>
-      ({item}) => {
+      ({index,item}) => {
         return (
           <>
             <TouchableOpacity
@@ -193,11 +195,54 @@ const CustomWorkout = ({navigation, route}) => {
                   style={{width: 30, height: 30}}
                 />
             </TouchableOpacity>
+            {getAdsDisplay(index, item)}
           </>
         );
       },
     [isLoading],
   );
+  const getAdsDisplay = (index, item) => {
+    if (customWorkoutData.length > 1) {
+      if (index == 0) {
+        return getNativeAdsDisplay();
+      } else if ((index + 1) % 8 == 0) {
+        return getNativeAdsDisplay();
+      }
+    }
+  };
+  const getNativeAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return (
+          <View
+            style={{
+              alignSelf: 'center',
+              alignItems: 'center',
+
+              //  top: DeviceHeigth * 0.1,
+            }}>
+            <NativeAddTest type="image" media={false} />
+          </View>
+        );
+      }
+    } else {
+      return (
+        <View
+          style={{
+            alignSelf: 'center',
+            alignItems: 'center',
+
+            //top: DeviceHeigth * 0.1,
+          }}>
+          <NativeAddTest type="image" media={false} />
+        </View>
+      );
+    }
+  };
   const emptyComponent = () => {
     return (
       <View
