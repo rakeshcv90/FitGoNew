@@ -413,6 +413,8 @@ const Workouts = ({navigation}: any) => {
                   marginTop:
                     DeviceHeigth >= 930
                       ? DeviceHeigth * 0.14
+                      : DeviceHeigth >= 812
+                      ? DeviceHeigth * 0.10
                       : DeviceHeigth * 0.05,
                   marginHorizontal: 10,
                   zIndex: 1,

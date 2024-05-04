@@ -35,6 +35,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   setAllWorkoutData,
   setCurrentSelectedDay,
+  setIsAlarmEnabled,
   setVideoLocation,
   setWeeklyPlansData,
 } from '../../Component/ThemeRedux/Actions';
@@ -44,6 +45,8 @@ import {useFocusEffect} from '@react-navigation/native';
 import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
 import Carousel from 'react-native-snap-carousel';
 import AnimatedLottieView from 'lottie-react-native';
+import {AlarmNotification} from '../../Component/Reminder';
+import notifee from '@notifee/react-native';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -183,6 +186,7 @@ const Box = ({item, index}: any) => {
         style={{
           alignItems: 'center',
           marginHorizontal: 20,
+          marginTop: 5,
         }}>
         <View>
           <Text
@@ -222,6 +226,7 @@ const Box = ({item, index}: any) => {
 const MyPlans = ({navigation}: any) => {
   const [downloaded, setDownloade] = useState(false);
   const [refresh, setRefresh] = useState(false);
+  const [loader, setLoader] = useState(false);
   const [selectedDay, setSelectedDay] = useState((moment().day() + 6) % 7);
   const [WeekStatus, setWeekStatus] = useState([]);
   const getUserDataDetails = useSelector(
@@ -231,12 +236,31 @@ const MyPlans = ({navigation}: any) => {
     (state: any) => state.getWeeklyPlansData,
   );
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
+  const isAlarmEnabled = useSelector((state: any) => state.isAlarmEnabled);
   const dispatch = useDispatch();
   useEffect(() => {
     Promise.all(WeekArray.map(item => getWeeklyAPI(item))).finally(() =>
       dispatch(setWeeklyPlansData(All_Weeks_Data)),
     );
   }, []);
+
+  useEffect(() => {
+    if (!isAlarmEnabled) {
+      notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));
+      const currenTime = new Date();
+      currenTime.setHours(7);
+      currenTime.setMinutes(0);
+      //AlarmNotification(currenTime);
+      AlarmNotification(currenTime)
+        .then(res => console.log('ALARM SET', res))
+        .catch(errr => {
+          console.log('Alarm error', errr);
+          currenTime.setDate(currenTime.getDate() + 1);
+          AlarmNotification(currenTime);
+        });
+      dispatch(setIsAlarmEnabled(true));
+    }
+  }, [isAlarmEnabled]);
   useFocusEffect(
     useCallback(() => {
       WeeklyStatusAPI();
@@ -282,6 +306,7 @@ const MyPlans = ({navigation}: any) => {
     }
   };
   const getWeeklyAPI = async (day: string) => {
+    setLoader(true);
     try {
       const res = await axios({
         url:
@@ -300,7 +325,9 @@ const MyPlans = ({navigation}: any) => {
       } else {
         All_Weeks_Data[day] = [];
       }
+      setLoader(false);
     } catch (error) {
+      setLoader(false);
       console.error(error?.response, 'DaysAPIERror');
     }
   };
@@ -494,7 +521,7 @@ const MyPlans = ({navigation}: any) => {
               height: 40,
               backgroundColor: AppColor.WHITE,
               alignSelf: 'center',
-             
+
               shadowColor: 'grey',
               ...Platform.select({
                 ios: {
@@ -585,11 +612,7 @@ const MyPlans = ({navigation}: any) => {
         backgroundColor: AppColor.WHITE,
       }}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <NewHeader
-        header={'Workout Plan'}
-        SearchButton={false}
-        backButton={false}
-      />
+      <NewHeader header={'Week Plan'} SearchButton={false} backButton={false} />
       <View
         style={{
           flex: 1,
@@ -643,9 +666,20 @@ const MyPlans = ({navigation}: any) => {
             />
           ))}
         </View>
-        {getWeeklyPlansData[WeekArray[selectedDay]] &&
-        getWeeklyPlansData[WeekArray[selectedDay]]?.exercises &&
-        getWeeklyPlansData[WeekArray[selectedDay]]?.exercises?.length > 0 ? (
+        {loader ? (
+          <View
+            style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+            <AnimatedLottieView
+              source={require('../../Icon/Images/NewImage2/Adloader.json')}
+              speed={2}
+              autoPlay
+              loop
+              style={{width: DeviceWidth * 0.4, height: DeviceHeigth * 0.4}}
+            />
+          </View>
+        ) : getWeeklyPlansData[WeekArray[selectedDay]] &&
+          getWeeklyPlansData[WeekArray[selectedDay]]?.exercises &&
+          getWeeklyPlansData[WeekArray[selectedDay]]?.exercises?.length > 0 ? (
           <Carousel
             data={WeekArray}
             horizontal
