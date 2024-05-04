@@ -32,8 +32,8 @@ export const Card = ({
             style={[
               styles.button,
               {
-                borderWidth: selectedB == v.id ? 2 : 0,
-                borderColor: selectedB == v.id ? AppColor.RED : null,
+                borderWidth: 2,
+                borderColor: selectedB == v.id ? AppColor.RED : AppColor.WHITE,
                 flexDirection:Goal?'row-reverse':'row',
                 justifyContent:Goal?'space-between':'flex-start'
               },
@@ -65,11 +65,12 @@ const styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
     alignItems: 'center',
     padding: 11,
+    borderColor: '#fff',
     ...Platform.select({
       ios: {
         shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.3,
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.2,
         shadowRadius: 4,
       },
       android: {

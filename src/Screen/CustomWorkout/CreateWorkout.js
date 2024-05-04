@@ -495,7 +495,7 @@ const CreateWorkout = ({navigation, route}) => {
               tintColor={AppColor.WHITE}
               style={{width: 20, height: 20}}
             />
-            <Text style={styles.button}>{'Add Custom'}</Text>
+            <Text style={styles.button}>{'Add Exercise'}</Text>
 
             <Text style={[styles.button, {marginHorizontal: -5}]}>
               ({selectedItems?.length})

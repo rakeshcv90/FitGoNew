@@ -91,12 +91,14 @@ const Gender = ({route, navigation}: any) => {
         alignItems:'center'
       }}>
       <ProgressBar screen={screen}/>
+      <View style={{marginTop:- DeviceHeigth * 0.06}}>
       <Bulb
         screen={'Select your Gender'}
-        header={
-          'Knowing your gender can help us for you based on different metabolic rates.'
-        }
+    
       />
+      </View>
+  
+      
       <View
         style={{
           flexDirection: 'row',
@@ -124,9 +126,10 @@ const Gender = ({route, navigation}: any) => {
               width: DeviceWidth / 2,
             }}>
             <Image
-              source={{
-                uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/fc1e357f-2310-4e50-8087-519663fe9400/public',
-              }}
+              // source={{
+              //   uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/fc1e357f-2310-4e50-8087-519663fe9400/public',
+              // }}
+              source={require('../../Icon/Images/NewImage2/Male.png')}
               style={{height: DeviceHeigth * 0.5, width: DeviceWidth}}
               resizeMode="contain"
             />
@@ -149,12 +152,13 @@ const Gender = ({route, navigation}: any) => {
               // marginLeft: selected == 'F' ? 50 : 0,
             }}>
             <Image
-              source={{
-                uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/e71b96f8-e68c-462e-baaf-a371b6fbc100/public',
-              }}
+              // source={{
+              //   uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/e71b96f8-e68c-462e-baaf-a371b6fbc100/public',
+              // }}
+              source={require('../../Icon/Images/NewImage2/Fmale.png')}
               style={{
                 height: DeviceHeigth * 0.5,
-                width: DeviceWidth / 2,
+                width: DeviceWidth / 1,
               }}
               resizeMode="contain"
             />

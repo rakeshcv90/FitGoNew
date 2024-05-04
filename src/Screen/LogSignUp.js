@@ -18,6 +18,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {NavigationContainer} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import {navigationRef} from '../../App';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 const Tab = createMaterialTopTabNavigator();
 const LogSignUp = () => {
   const [showLogin, setShowLogin] = useState('Welcome');
@@ -112,7 +113,7 @@ const LogSignUp = () => {
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <TouchableOpacity
       onPress={()=>{
-      //  navigationRef.navigate('Yourself');
+       navigationRef.goBack()
    
       }}
         style={{
@@ -120,7 +121,7 @@ const LogSignUp = () => {
           height: DeviceHeigth* 0.03,
           justifyContent: 'center',
           alignItems: 'center',
-          alignSelf: 'flex-end',
+          alignSelf: 'flex-start',
           marginRight: 30,
          // borderRadius: 30,
           marginTop:Platform.OS=='ios'?DeviceHeigth*0.08:DeviceHeigth*0.03,
@@ -136,6 +137,7 @@ const LogSignUp = () => {
           }}>
           Later
         </Text> */}
+        <Icons  name={'chevron-left'}size={25} color={AppColor.INPUTTEXTCOLOR} />
       </TouchableOpacity>
       <View style={styles.TextContainer}>
         <Text style={styles.LoginText2}>{'Hey there,'}</Text>
