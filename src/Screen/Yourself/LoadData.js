@@ -131,6 +131,8 @@ const LoadData = ({navigation}) => {
       payload.append('goal', mergedObject?.goal);
       payload.append('fitnesslevel', mergedObject?.experience); // static values change  it accordingly
       payload.append('weight', mergedObject?.currentWeight);
+      payload.append('age', mergedObject?.age);
+      payload.append('focusarea', mergedObject?.focuseArea?.join(','));
       payload.append('targetweight', mergedObject?.targetWeight);
       payload.append('experience', mergedObject?.experience);
       payload.append('workout_plans', mergedObject?.workout_plans);

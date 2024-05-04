@@ -43,7 +43,7 @@ console.log(nextScreen)
 
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     analytics().logEvent(`CV_FITME_INJURY_${imageView}`);
-    navigation.navigate('Weight', {nextScreen: screen + 1});
+    navigation.navigate('FocusArea', {nextScreen: screen + 1});
   };
   const [bodyPart, setBordyPart] = useState(
     completeProfileData?.injury?.filter(

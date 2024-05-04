@@ -140,7 +140,7 @@ const Age = ({route, navigation}: any) => {
       age: selected,
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-    navigation.navigate('Equipment', {nextScreen: screen + 1});
+    navigation.navigate('PredictionScreen', {nextScreen: screen + 1});
   };
   return (
     <TouchableOpacity
@@ -148,17 +148,14 @@ const Age = ({route, navigation}: any) => {
       onPress={() => Keyboard.dismiss()}
       style={{
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        // justifyContent: 'center',
+        // alignItems: 'center',
         // marginTop: 50,
         backgroundColor: AppColor.WHITE,
       }}>
       <ProgressBar screen={screen} />
       <Bulb
         screen={'How old are you?'}
-        header={
-          'Knowing your age can help us for you based on different metabolic rates.'
-        }
       />
 
       {/* <View
@@ -179,7 +176,7 @@ const Age = ({route, navigation}: any) => {
           alignSelf: 'center',
           // flex: 1
           flexDirection: 'row',
-          top: -DeviceHeigth * 0.1,
+          top: DeviceHeigth * 0.08,
         }}>
         <TextInput
           keyboardType="number-pad"
