@@ -99,7 +99,6 @@ const Age = ({route, navigation}: any) => {
     for (let index = 0; index < positions.length; index++) {
       const {start, end} = positions[index];
       if (center + 25 >= start && center - 25 <= end) {
-      
         // setSelected(index);
       }
     }
@@ -115,8 +114,7 @@ const Age = ({route, navigation}: any) => {
         icon: {icon: 'auto', position: 'left'},
       });
       return;
-    }
-    else if (parseInt(selected)<15) {
+    } else if (parseInt(selected) < 15) {
       showMessage({
         message: 'You are below 15 !!!',
         type: 'danger',
@@ -125,8 +123,7 @@ const Age = ({route, navigation}: any) => {
         icon: {icon: 'auto', position: 'left'},
       });
       return;
-    }
-    else if (parseInt(selected)>60) {
+    } else if (parseInt(selected) > 60) {
       showMessage({
         message: 'You are over age !!!',
         type: 'danger',
@@ -157,7 +154,17 @@ const Age = ({route, navigation}: any) => {
       <Bulb
         screen={'How old are you?'}
       />
-
+      <Text
+        style={{
+          color: 'black',
+          fontSize: 24,
+          fontFamily: 'Montserrat-Bold',
+          fontWeight: 'bold',
+          lineHeight: 30,
+          textAlign: 'center',
+        }}>
+        How old are you?
+      </Text>
       {/* <View
         style={{
           // flexDirection: 'row',
@@ -176,7 +183,9 @@ const Age = ({route, navigation}: any) => {
           alignSelf: 'center',
           // flex: 1
           flexDirection: 'row',
-          top: DeviceHeigth * 0.08,
+
+          //top: -DeviceHeigth * 0.1,
+
         }}>
         <TextInput
           keyboardType="number-pad"
