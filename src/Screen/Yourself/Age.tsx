@@ -151,9 +151,9 @@ const Age = ({route, navigation}: any) => {
         backgroundColor: AppColor.WHITE,
       }}>
       <ProgressBar screen={screen} />
-      <Bulb
+      {/* <Bulb
         screen={'How old are you?'}
-      />
+      /> */}
       <Text
         style={{
           color: 'black',
