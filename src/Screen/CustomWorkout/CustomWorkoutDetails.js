@@ -202,7 +202,6 @@ const CustomWorkoutDetails = ({navigation, route}) => {
   const renderItem = useMemo(
     () =>
       ({item}) => {
-        console.log("dgdgfdfgddfgdfg",item)
         return (
           <>
             <TouchableOpacity

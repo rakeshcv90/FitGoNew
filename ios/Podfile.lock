@@ -15,8 +15,8 @@ PODS:
     - React-Core
     - SSZipArchive (~> 2.2.2)
   - DoubleConversion (1.1.6)
-  - FBAEMKit (14.1.0):
-    - FBSDKCoreKit_Basics (= 14.1.0)
+  - FBAEMKit (17.0.0):
+    - FBSDKCoreKit_Basics (= 17.0.0)
   - FBLazyVector (0.72.4)
   - FBReactNativeSpec (0.72.4):
     - RCT-Folly (= 2021.07.22.00)
@@ -25,18 +25,18 @@ PODS:
     - React-Core (= 0.72.4)
     - React-jsi (= 0.72.4)
     - ReactCommon/turbomodule/core (= 0.72.4)
-  - FBSDKCoreKit (14.1.0):
-    - FBAEMKit (= 14.1.0)
-    - FBSDKCoreKit_Basics (= 14.1.0)
-  - FBSDKCoreKit_Basics (14.1.0)
-  - FBSDKGamingServicesKit (14.1.0):
-    - FBSDKCoreKit (= 14.1.0)
-    - FBSDKCoreKit_Basics (= 14.1.0)
-    - FBSDKShareKit (= 14.1.0)
-  - FBSDKLoginKit (14.1.0):
-    - FBSDKCoreKit (= 14.1.0)
-  - FBSDKShareKit (14.1.0):
-    - FBSDKCoreKit (= 14.1.0)
+  - FBSDKCoreKit (17.0.0):
+    - FBAEMKit (= 17.0.0)
+    - FBSDKCoreKit_Basics (= 17.0.0)
+  - FBSDKCoreKit_Basics (17.0.0)
+  - FBSDKGamingServicesKit (17.0.0):
+    - FBSDKCoreKit (= 17.0.0)
+    - FBSDKCoreKit_Basics (= 17.0.0)
+    - FBSDKShareKit (= 17.0.0)
+  - FBSDKLoginKit (17.0.0):
+    - FBSDKCoreKit (= 17.0.0)
+  - FBSDKShareKit (17.0.0):
+    - FBSDKCoreKit (= 17.0.0)
   - Firebase (10.20.0):
     - Firebase/Core (= 10.20.0)
   - Firebase/Analytics (10.20.0):
@@ -539,20 +539,20 @@ PODS:
   - react-native-blur (4.4.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
-  - react-native-fbsdk-next (10.1.0):
+  - react-native-fbsdk-next (13.0.0):
     - React-Core
-    - react-native-fbsdk-next/Core (= 10.1.0)
-    - react-native-fbsdk-next/Login (= 10.1.0)
-    - react-native-fbsdk-next/Share (= 10.1.0)
-  - react-native-fbsdk-next/Core (10.1.0):
-    - FBSDKCoreKit (~> 14.1.0)
+    - react-native-fbsdk-next/Core (= 13.0.0)
+    - react-native-fbsdk-next/Login (= 13.0.0)
+    - react-native-fbsdk-next/Share (= 13.0.0)
+  - react-native-fbsdk-next/Core (13.0.0):
+    - FBSDKCoreKit (~> 17.0.0)
     - React-Core
-  - react-native-fbsdk-next/Login (10.1.0):
-    - FBSDKLoginKit (~> 14.1.0)
+  - react-native-fbsdk-next/Login (13.0.0):
+    - FBSDKLoginKit (~> 17.0.0)
     - React-Core
-  - react-native-fbsdk-next/Share (10.1.0):
-    - FBSDKGamingServicesKit (~> 14.1.0)
-    - FBSDKShareKit (~> 14.1.0)
+  - react-native-fbsdk-next/Share (13.0.0):
+    - FBSDKGamingServicesKit (~> 17.0.0)
+    - FBSDKShareKit (~> 17.0.0)
     - React-Core
   - react-native-geolocation (3.2.1):
     - RCT-Folly (= 2021.07.22.00)
@@ -564,7 +564,7 @@ PODS:
     - React-Core
   - react-native-keep-awake (4.0.0):
     - React
-  - react-native-netinfo (9.5.0):
+  - react-native-netinfo (11.3.1):
     - React-Core
   - react-native-pager-view (6.3.1):
     - RCT-Folly (= 2021.07.22.00)
@@ -1091,14 +1091,14 @@ SPEC CHECKSUMS:
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   CodePush: eaa66fc8dd9ff611304ecc48397ce8831ba79ac9
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
-  FBAEMKit: a899515e45476027f73aef377b5cffadcd56ca3a
+  FBAEMKit: 31a20c2d8744d8c57d3a5b7ae4e27b4fdd819193
   FBLazyVector: 5d4a3b7f411219a45a6d952f77d2c0a6c9989da5
   FBReactNativeSpec: 3fc2d478e1c4b08276f9dd9128f80ec6d5d85c1f
-  FBSDKCoreKit: 24f8bc8d3b5b2a8c5c656a1329492a12e8efa792
-  FBSDKCoreKit_Basics: 6e578c9bdc7aa1365dbbbde633c9ebb536bcaa98
-  FBSDKGamingServicesKit: 548f294d6c1cc91a1a1517ade872aaa36bf3a085
-  FBSDKLoginKit: 787de205d524c3a4b17d527916f1d066e4361660
-  FBSDKShareKit: b9c1cd1fa6a320a50f0f353cf30d589049c8db77
+  FBSDKCoreKit: dac911b656816f8d0b06e5fa4bac60e89505bb3b
+  FBSDKCoreKit_Basics: 92b7b7458d57091370b0b6cc197578874c3b4b16
+  FBSDKGamingServicesKit: 0ae05466560dca03aa6c8691746e664c351b5d9e
+  FBSDKLoginKit: 5d5271ebfd1e39c6b071de8db5c4bd6255be3561
+  FBSDKShareKit: 09dbbe11cf43a4a831b92f064f974e9a01b4f8bc
   Firebase: 10c8cb12fb7ad2ae0c09ffc86cd9c1ab392a0031
   FirebaseAnalytics: a2731bf3670747ce8f65368b118d18aa8e368246
   FirebaseAppCheckInterop: a1955ce8c30f38f87e7d091630e871e91154d65d
@@ -1147,12 +1147,12 @@ SPEC CHECKSUMS:
   react-native-admob-native-ads: 97b6667c5d4d3e5a75baf264450dbb54ba53a181
   react-native-background-actions: ecffd3f0864140ef6cf21c29be6819a02b531a52
   react-native-blur: 69ecfe61d81b32ee7baae10f5d17aeb4e2594b10
-  react-native-fbsdk-next: d6e1c6ad1693c891add104ab529d96906784ba9c
+  react-native-fbsdk-next: 84746ea062dc3b1a422154d7674ba4c5836b6d82
   react-native-geolocation: 1279fd4390e311ec3f2fc2878279934147fdd061
   react-native-image-picker: 51fdb07f7ef722988c8a219e1416153760a25e4d
   react-native-in-app-review: db8bb167a5f238e7ceca5c242d6b36ce8c4404a4
   react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
-  react-native-netinfo: 48c5f79a84fbc3ba1d28a8b0d04adeda72885fa8
+  react-native-netinfo: bdb108d340cdb41875c9ced535977cac6d2ff321
   react-native-pager-view: 712081434052f3af89ef00e8a353a7d351e62eeb
   react-native-render-html: 984dfe2294163d04bf5fe25d7c9f122e60e05ebe
   react-native-safe-area-context: dcab599c527c2d7de2d76507a523d20a0b83823d
