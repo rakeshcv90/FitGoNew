@@ -48,10 +48,19 @@ const WeekArray = Array(7)
   );
 const songs = [
   {
+    id: 1,
     // title: 'song 1',
     // artist: 'XYZ',
     // artwork: localImage.Play3,
     url: require('../../../Icon/Images/Exercise_Timer.wav'),
+    // url: route.params.item.exercise_mindset_audio,
+  },
+  {
+    id: 2,
+    // title: 'song 1',
+    // artist: 'XYZ',
+    // artwork: localImage.Play3,
+    url: require('../../../Icon/Images/Exercise_Start.mp3'),
     // url: route.params.item.exercise_mindset_audio,
   },
 ];
@@ -157,8 +166,7 @@ const Exercise = ({navigation, route}: any) => {
     await TrackPlayer.play();
   };
   const PauseAudio = async (playbackState: any) => {
-    console.log('playbackState', playbackState);
-
+    console.log('PauseState', playbackState);
     await TrackPlayer.reset();
   };
   const dispatch = useDispatch();
@@ -173,6 +181,7 @@ const Exercise = ({navigation, route}: any) => {
               setDemoS(0);
               setDemo1(!demo1);
               setTimerS(10);
+              setupPlayer();
             } else if (timerS == 4) {
               // Tts.speak(`${timerS}`);
               setTimerS(timerS - 1);
@@ -214,6 +223,7 @@ const Exercise = ({navigation, route}: any) => {
               setDemoW(0);
               setDemo(!demo);
               PauseAudio(playbackState);
+              setupPlayer();
             } else if (timer == 4) {
               setTimer(timer - 1);
               setDemoW(demoW + 100 / timer);
@@ -243,15 +253,26 @@ const Exercise = ({navigation, route}: any) => {
               clearTimeout(playTimerRef.current);
             }
             if (pause) {
+              if (playW >= 2 && playW <= 5) {
+                // console.log(playW, 'playW', playbackState);
+                TrackPlayer.skipToNext();
+                StartAudio(playbackState);
+              }
+              if (playW == 5) {
+                Tts.speak('Lets Go');
+              }
+              if (playW > 5) {
+                PauseAudio(playbackState);
+              }
               setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
               if (seconds > 1) {
                 if (seconds <= 4) {
                   Tts.speak(`${seconds - 1}`);
                 }
+                if (seconds == 12) Tts.speak('10 seconds to go');
                 setSeconds(prevSeconds => prevSeconds - 1);
               }
             }
-            if (playW >= 65 && playW <= 68) Tts.speak('Ready to Finish');
             if (playW >= 100 && number == allExercise?.length - 1) {
               setPause(false);
               postCurrentExerciseAPI(number);
@@ -936,7 +957,7 @@ const Exercise = ({navigation, route}: any) => {
                 ? '0' + remainingSeconds
                 : remainingSeconds}
             </Text>
-            <Text style={[styles.name, {color: '#505050',marginLeft:-15}]}>
+            <Text style={[styles.name, {color: '#505050', marginLeft: -15}]}>
               <Icons
                 name={'clock-outline'}
                 size={20}
