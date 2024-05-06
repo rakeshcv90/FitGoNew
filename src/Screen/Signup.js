@@ -37,7 +37,7 @@ import {showMessage} from 'react-native-flash-message';
 import {useDispatch, useSelector} from 'react-redux';
 import ActivityLoader from '../Component/ActivityLoader';
 import {setUserId, setUserProfileData} from '../Component/ThemeRedux/Actions';
-import {LoginManager, Profile} from 'react-native-fbsdk-next';
+// import {LoginManager, Profile} from 'react-native-fbsdk-next';
 import AnimatedLottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {TextInput} from 'react-native-paper';
@@ -138,29 +138,29 @@ const Signup = ({navigation}) => {
       }
     }
   };
-  const FacebookSignup = () => {
-    analytics().logEvent('CV_FITME_FACEBOOK_SIGNUP');
-    LoginManager.logInWithPermissions(['public_profile', 'email']).then(
-      function (result) {
-        if (result.isCancelled) {
-          // alert('Cancel');
-          setCancelLogin(true);
-        } else {
-          const currentProfile = Profile.getCurrentProfile().then(function (
-            currentProfile,
-          ) {
-            if (currentProfile) {
-              //  console.log("Face Book Data ",currentProfile)
-              socialFacebookLogiIn(currentProfile);
-            }
-          });
-        }
-      },
-      function (error) {
-        alert('Login failed with error: ' + error);
-      },
-    );
-  };
+  // const FacebookSignup = () => {
+  //   analytics().logEvent('CV_FITME_FACEBOOK_SIGNUP');
+  //   LoginManager.logInWithPermissions(['public_profile', 'email']).then(
+  //     function (result) {
+  //       if (result.isCancelled) {
+  //         // alert('Cancel');
+  //         setCancelLogin(true);
+  //       } else {
+  //         const currentProfile = Profile.getCurrentProfile().then(function (
+  //           currentProfile,
+  //         ) {
+  //           if (currentProfile) {
+  //             //  console.log("Face Book Data ",currentProfile)
+  //             socialFacebookLogiIn(currentProfile);
+  //           }
+  //         });
+  //       }
+  //     },
+  //     function (error) {
+  //       alert('Login failed with error: ' + error);
+  //     },
+  //   );
+  // };
   const onApplePress = async () => {
     analytics().logEvent('CV_FITME_APPLE_SIGNUP');
     await appleAuth
@@ -416,109 +416,109 @@ const Signup = ({navigation}) => {
       await GoogleSignin.signOut();
     }
   };
-  const socialFacebookLogiIn = async value => {
-    analytics().logEvent('CV_FITME_FACEBOOK_SIGNUP');
-    // setForLoading(true);
-    const data = {
-      name: value.name,
-      email: value.email,
-      signuptype: 'social',
-      socialid: value.userID,
-      socialtoken: '',
-      socialtype: 'facebook',
-      deviceid: deviceId,
-      version: appVersion,
-      devicetoken: getFcmToken,
-      platform: Platform.OS,
-    };
+  // const socialFacebookLogiIn = async value => {
+  //   analytics().logEvent('CV_FITME_FACEBOOK_SIGNUP');
+  //   // setForLoading(true);
+  //   const data = {
+  //     name: value.name,
+  //     email: value.email,
+  //     signuptype: 'social',
+  //     socialid: value.userID,
+  //     socialtoken: '',
+  //     socialtype: 'facebook',
+  //     deviceid: deviceId,
+  //     version: appVersion,
+  //     devicetoken: getFcmToken,
+  //     platform: Platform.OS,
+  //   };
 
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.signup}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          name: value.name,
-          email: value.email == undefined ? 'NULL' : value.email,
-          signuptype: 'social',
-          socialid: value.userID,
-          socialtoken: '',
-          socialtype: 'facebook',
-          // deviceid: deviceId,
-          version: appVersion,
-          devicetoken: getFcmToken,
-          platform: Platform.OS,
-        },
-      });
-      setForLoading(false);
+  //   try {
+  //     const data = await axios(`${NewApi}${NewAppapi.signup}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         name: value.name,
+  //         email: value.email == undefined ? 'NULL' : value.email,
+  //         signuptype: 'social',
+  //         socialid: value.userID,
+  //         socialtoken: '',
+  //         socialtype: 'facebook',
+  //         // deviceid: deviceId,
+  //         version: appVersion,
+  //         devicetoken: getFcmToken,
+  //         platform: Platform.OS,
+  //       },
+  //     });
+  //     setForLoading(false);
 
-      if (
-        data.data.msg == 'User already exists' &&
-        data.data.profile_compl_status == 0
-      ) {
-        setForLoading(false);
-        getProfileData(data.data?.id);
-        dispatch(setUserId(data.data?.id));
-        // navigationRef.navigate('Yourself');
-      } else if (
-        data.data.msg == 'User registered via social login' &&
-        data.data.profile_compl_status == 0
-      ) {
-        setForLoading(false);
+  //     if (
+  //       data.data.msg == 'User already exists' &&
+  //       data.data.profile_compl_status == 0
+  //     ) {
+  //       setForLoading(false);
+  //       getProfileData(data.data?.id);
+  //       dispatch(setUserId(data.data?.id));
+  //       // navigationRef.navigate('Yourself');
+  //     } else if (
+  //       data.data.msg == 'User registered via social login' &&
+  //       data.data.profile_compl_status == 0
+  //     ) {
+  //       setForLoading(false);
 
-        dispatch(setUserId(data.data?.id));
-        getProfileData(data.data?.id);
-        // navigationRef.navigate('Yourself');
-      } else if (
-        data.data.msg == 'User already exists' &&
-        data.data.profile_compl_status == 1
-      ) {
-        setForLoading(false);
-        showMessage({
-          message: data.data.msg,
-          type: 'danger',
-          animationDuration: 1000,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        getProfileData1(data.data?.id);
-      } else if (
-        data.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        setForLoading(false);
-        showMessage({
-          message: data.data.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else if (
-        data.data?.msg == 'User already exists via other authentication'
-      ) {
-        setForLoading(false);
+  //       dispatch(setUserId(data.data?.id));
+  //       getProfileData(data.data?.id);
+  //       // navigationRef.navigate('Yourself');
+  //     } else if (
+  //       data.data.msg == 'User already exists' &&
+  //       data.data.profile_compl_status == 1
+  //     ) {
+  //       setForLoading(false);
+  //       showMessage({
+  //         message: data.data.msg,
+  //         type: 'danger',
+  //         animationDuration: 1000,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       getProfileData1(data.data?.id);
+  //     } else if (
+  //       data.data?.msg == 'Please update the app to the latest version.'
+  //     ) {
+  //       setForLoading(false);
+  //       showMessage({
+  //         message: data.data.msg,
+  //         type: 'danger',
+  //         animationDuration: 500,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //     } else if (
+  //       data.data?.msg == 'User already exists via other authentication'
+  //     ) {
+  //       setForLoading(false);
 
-        showMessage({
-          message: data.data.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        await GoogleSignin.signOut();
-      } else {
-        setForLoading(false);
+  //       showMessage({
+  //         message: data.data.msg,
+  //         type: 'danger',
+  //         animationDuration: 500,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       await GoogleSignin.signOut();
+  //     } else {
+  //       setForLoading(false);
 
-        dispatch(setUserId(data.data?.id));
-        getProfileData(data.data?.id);
-        // navigationRef.navigate('Yourself');
-      }
-    } catch (error) {
-      setForLoading(false);
-      console.log('FaceBook Signup Error', error?.response);
-    }
-  };
+  //       dispatch(setUserId(data.data?.id));
+  //       getProfileData(data.data?.id);
+  //       // navigationRef.navigate('Yourself');
+  //     }
+  //   } catch (error) {
+  //     setForLoading(false);
+  //     console.log('FaceBook Signup Error', error?.response);
+  //   }
+  // };
   const ModalView = () => {
     const [forLoading, setForLoading] = useState(false);
     const t1 = useRef();
@@ -1394,7 +1394,7 @@ const Signup = ({navigation}) => {
           <Button2
             onGooglePress={GoogleSignup}
             onApplePress={onApplePress}
-            onFBPress={FacebookSignup}
+            // onFBPress={FacebookSignup}
           />
         </View>
       </ScrollView>

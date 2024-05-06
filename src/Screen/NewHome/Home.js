@@ -45,7 +45,7 @@ import {Slider} from '@miblanchard/react-native-slider';
 import axios from 'axios';
 import {setPedomterData} from '../../Component/ThemeRedux/Actions';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import GoogleFit, {Scopes} from 'react-native-google-fit';
+// import GoogleFit, {Scopes} from 'react-native-google-fit';
 import {
   Stop,
   Circle,
@@ -242,189 +242,189 @@ const Home = ({navigation}) => {
       console.log('PedometerAPi Error', error.response);
     }
   };
-  const sleep = time =>
-    new Promise(resolve => setTimeout(() => resolve(), time));
-  const veryIntensiveTask = async taskDataArguments => {
-    const {delay} = taskDataArguments;
-    const isSpecificTime = (hour, minute) => {
-      const now = moment.utc(); // Get current time in UTC
-      const specificTimeUTC = now
-        .clone()
-        .set({hour, minute, second: 0, millisecond: 0});
-      const istTime = moment.utc().add(5, 'hours').add(30, 'minutes');
-      // Compare only the hours and minutes
-      return (
-        istTime.hours() === specificTimeUTC.hours() &&
-        istTime.minutes() === specificTimeUTC.minutes()
-      );
-    };
-    // Example usage with a specific time (midnight in IST)
-    const specificHour = 23;
-    const specificMinute = 29;
-    await new Promise(async resolve => {
-      for (let i = 0; BackgroundService.isRunning(); i++) {
-        if (isSpecificTime(specificHour, specificMinute)) {
-          PedoMeterData();
-        } else {
-        }
-        try {
-          const dailySteps = await GoogleFit.getDailySteps();
-          dailySteps.reduce(
-            (total, acc) =>
-              (totalSteps = total + acc.steps[0] ? acc.steps[0].value : 0),
-            0,
-          );
-        } catch (error) {
-          console.error('Error fetching total steps', error);
-        }
-        BackgroundService.updateNotification({
-          taskDesc: `${totalSteps}`,
-          color: AppColor.RED,
-          progressBar: {
-            max: stepGoalProfile,
-            value: stepsRef.current,
-            indeterminate: false,
-            color: AppColor.RED,
-          },
-          parameters: {
-            delay: 60000,
-          },
-        });
+  // const sleep = time =>
+  //   new Promise(resolve => setTimeout(() => resolve(), time));
+  // const veryIntensiveTask = async taskDataArguments => {
+  //   const {delay} = taskDataArguments;
+  //   const isSpecificTime = (hour, minute) => {
+  //     const now = moment.utc(); // Get current time in UTC
+  //     const specificTimeUTC = now
+  //       .clone()
+  //       .set({hour, minute, second: 0, millisecond: 0});
+  //     const istTime = moment.utc().add(5, 'hours').add(30, 'minutes');
+  //     // Compare only the hours and minutes
+  //     return (
+  //       istTime.hours() === specificTimeUTC.hours() &&
+  //       istTime.minutes() === specificTimeUTC.minutes()
+  //     );
+  //   };
+  //   // Example usage with a specific time (midnight in IST)
+  //   const specificHour = 23;
+  //   const specificMinute = 29;
+  //   await new Promise(async resolve => {
+  //     for (let i = 0; BackgroundService.isRunning(); i++) {
+  //       if (isSpecificTime(specificHour, specificMinute)) {
+  //         PedoMeterData();
+  //       } else {
+  //       }
+  //       try {
+  //         const dailySteps = await GoogleFit.getDailySteps();
+  //         dailySteps.reduce(
+  //           (total, acc) =>
+  //             (totalSteps = total + acc.steps[0] ? acc.steps[0].value : 0),
+  //           0,
+  //         );
+  //       } catch (error) {
+  //         console.error('Error fetching total steps', error);
+  //       }
+  //       BackgroundService.updateNotification({
+  //         taskDesc: `${totalSteps}`,
+  //         color: AppColor.RED,
+  //         progressBar: {
+  //           max: stepGoalProfile,
+  //           value: stepsRef.current,
+  //           indeterminate: false,
+  //           color: AppColor.RED,
+  //         },
+  //         parameters: {
+  //           delay: 60000,
+  //         },
+  //       });
 
-        await sleep(delay);
-      }
-    });
-  };
-  const options1 = {
-    taskName: 'StepUpdateBackgroundTask',
-    taskTitle: `Steps`,
-    taskDesc: `${stepsRef.current}`,
-    taskIcon: {
-      name: 'ic_launcher',
-      type: 'mipmap',
-    },
-    progressBar: {
-      max: stepGoalProfile,
-      value: stepsRef.current,
-      indeterminate: false,
-    },
-    color: AppColor.RED,
-    linkingURI: 'yourapp://backgroundTask',
-    parameters: {
-      delay: 60000,
-    },
-  };
-  const startStepUpdateBackgroundTask = async () => {
-    try {
-      await BackgroundService.start(veryIntensiveTask, options1);
-    } catch (e) {
-      console.error('Error starting step update background service:', e);
-    }
-  };
-  const fetchData = async () => {
-    if (!getStepCounterOnoff) {
-      // setPaddoModalShow(true);
-      Alert.alert('FitMe wants to track your health data !', '', [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Allow',
-          onPress: () => {
-            handleAlert();
-          },
-        },
-      ]);
-    } else {
-      GoogleFit.authorize(options)
-        .then(authResult => {
-          if (authResult.success) {
-            checkPermissions();
-          } else {
-          }
-        })
-        .catch(error => {
-          console.error('Authentication error', error);
-        });
-    }
-  };
-  const options = {
-    scopes: [Scopes.FITNESS_ACTIVITY_READ, Scopes.FITNESS_ACTIVITY_WRITE],
-  };
-  const handleAlert = async () => {
-    setPaddoModalShow(false);
-    await GoogleFit.authorize(options)
-      .then(authResult => {
-        if (authResult.success) {
-          checkPermissions();
-        } else {
-        }
-      })
-      .catch(error => {
-        console.error('Authentication error', error);
-      });
-  };
-  const checkPermissions = async () => {
-    const fitnessPermissionResult = await check(
-      PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
-    );
-    if (fitnessPermissionResult != RESULTS.GRANTED) {
-      const permissionRequestResult = await request(
-        PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
-      );
-      if (permissionRequestResult === RESULTS.GRANTED) {
-        if (getStepCounterOnoff == true) {
-          fetchTotalSteps();
-          startRecording();
-        } else {
-          fetchTotalSteps();
-          startStepUpdateBackgroundTask();
-          Dispatch(setStepCounterOnOff(true));
-        }
-      } else {
-      }
-    } else {
-      if (getStepCounterOnoff == true) {
-        fetchTotalSteps();
-        startRecording();
-      } else {
-        fetchTotalSteps();
-        startStepUpdateBackgroundTask();
-        Dispatch(setStepCounterOnOff(true));
-      }
-    }
-  };
-  const startRecording = () => {
-    GoogleFit.startRecording(() => {
-      GoogleFit.observeSteps(() => {
-        fetchTotalSteps();
-      });
-    });
-  };
-  const fetchTotalSteps = async () => {
-    try {
-      await AsyncStorage.setItem('hasPermissionForStepCounter', 'true');
-      const dailySteps = await GoogleFit.getDailySteps();
+  //       await sleep(delay);
+  //     }
+  //   });
+  // };
+  // const options1 = {
+  //   taskName: 'StepUpdateBackgroundTask',
+  //   taskTitle: `Steps`,
+  //   taskDesc: `${stepsRef.current}`,
+  //   taskIcon: {
+  //     name: 'ic_launcher',
+  //     type: 'mipmap',
+  //   },
+  //   progressBar: {
+  //     max: stepGoalProfile,
+  //     value: stepsRef.current,
+  //     indeterminate: false,
+  //   },
+  //   color: AppColor.RED,
+  //   linkingURI: 'yourapp://backgroundTask',
+  //   parameters: {
+  //     delay: 60000,
+  //   },
+  // };
+  // const startStepUpdateBackgroundTask = async () => {
+  //   try {
+  //     await BackgroundService.start(veryIntensiveTask, options1);
+  //   } catch (e) {
+  //     console.error('Error starting step update background service:', e);
+  //   }
+  // };
+  // const fetchData = async () => {
+  //   if (!getStepCounterOnoff) {
+  //     // setPaddoModalShow(true);
+  //     Alert.alert('FitMe wants to track your health data !', '', [
+  //       {
+  //         text: 'Cancel',
+  //         style: 'cancel',
+  //       },
+  //       {
+  //         text: 'Allow',
+  //         onPress: () => {
+  //           handleAlert();
+  //         },
+  //       },
+  //     ]);
+  //   } else {
+  //     GoogleFit.authorize(options)
+  //       .then(authResult => {
+  //         if (authResult.success) {
+  //           checkPermissions();
+  //         } else {
+  //         }
+  //       })
+  //       .catch(error => {
+  //         console.error('Authentication error', error);
+  //       });
+  //   }
+  // };
+  // const options = {
+  //   scopes: [Scopes.FITNESS_ACTIVITY_READ, Scopes.FITNESS_ACTIVITY_WRITE],
+  // };
+  // const handleAlert = async () => {
+  //   setPaddoModalShow(false);
+  //   await GoogleFit.authorize(options)
+  //     .then(authResult => {
+  //       if (authResult.success) {
+  //         checkPermissions();
+  //       } else {
+  //       }
+  //     })
+  //     .catch(error => {
+  //       console.error('Authentication error', error);
+  //     });
+  // };
+  // const checkPermissions = async () => {
+  //   const fitnessPermissionResult = await check(
+  //     PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
+  //   );
+  //   if (fitnessPermissionResult != RESULTS.GRANTED) {
+  //     const permissionRequestResult = await request(
+  //       PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
+  //     );
+  //     if (permissionRequestResult === RESULTS.GRANTED) {
+  //       if (getStepCounterOnoff == true) {
+  //         fetchTotalSteps();
+  //         startRecording();
+  //       } else {
+  //         fetchTotalSteps();
+  //         startStepUpdateBackgroundTask();
+  //         Dispatch(setStepCounterOnOff(true));
+  //       }
+  //     } else {
+  //     }
+  //   } else {
+  //     if (getStepCounterOnoff == true) {
+  //       fetchTotalSteps();
+  //       startRecording();
+  //     } else {
+  //       fetchTotalSteps();
+  //       startStepUpdateBackgroundTask();
+  //       Dispatch(setStepCounterOnOff(true));
+  //     }
+  //   }
+  // };
+  // const startRecording = () => {
+  //   GoogleFit.startRecording(() => {
+  //     GoogleFit.observeSteps(() => {
+  //       fetchTotalSteps();
+  //     });
+  //   });
+  // };
+  // const fetchTotalSteps = async () => {
+  //   try {
+  //     await AsyncStorage.setItem('hasPermissionForStepCounter', 'true');
+  //     const dailySteps = await GoogleFit.getDailySteps();
 
-      dailySteps.reduce(
-        (total, acc) =>
-          (totalSteps = total + acc.steps[0] ? acc.steps[0].value : 0),
-        0,
-      );
-      stepsRef.current = totalSteps;
-      setSteps(totalSteps);
-      distanceRef.current = ((totalSteps / 20) * 0.01).toFixed(2);
-      setDistance(((totalSteps / 20) * 0.01).toFixed(2));
-      caloriesRef.current = ((totalSteps / 20) * 1).toFixed(1);
-      setCalories(Math.round(((totalSteps / 20) * 1).toFixed(2)));
-    } catch (error) {
-      console.error('Error fetching total steps', error);
-    }
-  };
+  //     dailySteps.reduce(
+  //       (total, acc) =>
+  //         (totalSteps = total + acc.steps[0] ? acc.steps[0].value : 0),
+  //       0,
+  //     );
+  //     stepsRef.current = totalSteps;
+  //     setSteps(totalSteps);
+  //     distanceRef.current = ((totalSteps / 20) * 0.01).toFixed(2);
+  //     setDistance(((totalSteps / 20) * 0.01).toFixed(2));
+  //     caloriesRef.current = ((totalSteps / 20) * 1).toFixed(1);
+  //     setCalories(Math.round(((totalSteps / 20) * 1).toFixed(2)));
+  //   } catch (error) {
+  //     console.error('Error fetching total steps', error);
+  //   }
+  // };
   const ActivityPermission = async () => {
     if (Platform.OS == 'android') {
-      fetchData();
+      //fetchData();
     } else if (Platform.OS == 'ios') {
       AppleHealthKit.isAvailable((err, available) => {
         const permissions = {

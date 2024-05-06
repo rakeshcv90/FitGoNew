@@ -561,8 +561,10 @@ const styles = StyleSheet.create({
 
     backgroundColor: AppColor.GRAY,
     zIndex: 1,
-    height: 80,
-    width: 90,
+    // height: 80,
+    // width: 90,
+    height: DeviceHeigth >= 1024 ? 120 : 70,
+    width: DeviceHeigth >= 1024 ? DeviceWidth * 0.18 : DeviceWidth * 0.19,
     left: -8,
     borderRadius: 10,
   },

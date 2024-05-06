@@ -695,9 +695,9 @@ const styles = StyleSheet.create({
 
     backgroundColor: AppColor.GRAY,
     zIndex: 1,
-    height: 70,
+    height: 72,
     width: 70,
-    left: -10,
+    left: -12,
     borderRadius: 10,
   },
 });

@@ -5,7 +5,7 @@ import notifee, {
   TriggerType,
 } from '@notifee/react-native';
 import axios from 'axios';
-import GoogleFit, {Scopes} from 'react-native-google-fit';
+// import GoogleFit, {Scopes} from 'react-native-google-fit';
 import AppleHealthKit from 'react-native-health';
 import {NewAppapi} from './Config';
 import NetInfo from '@react-native-community/netinfo';

@@ -567,53 +567,89 @@ const WorkoutDays = ({navigation, route}: any) => {
               alignItems: 'center',
             }}>
             {item?.total_rest == 0 ? (
-              <Image
-                source={localImage.Rest}
+              <View
                 style={{
                   height:
                     DeviceHeigth >= 1024
-                      ? DeviceWidth * 0.15
-                      : DeviceWidth * 0.17,
+                      ? DeviceWidth * 0.18
+                      : DeviceWidth * 0.18,
                   width:
                     DeviceHeigth >= 1024
-                      ? DeviceWidth * 0.15
-                      : DeviceWidth * 0.17,
+                      ? DeviceWidth * 0.18
+                      : DeviceWidth * 0.18,
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   // marginLeft: DeviceWidth * 0.12,
                   borderRadius: 10,
                   borderWidth: 1,
                   borderColor: '#D9D9D9',
-                  opacity: percent ? 0.5 : 1,
-                }}
-                resizeMode="contain"
-              />
-            ) : (
-              <>
-                {isLoading && (
-                  <ShimmerPlaceholder
-                    style={styles.loader}
-                    ref={avatarRef}
-                    autoRun
-                  />
-                )}
+                }}>
                 <Image
-                  source={{uri: data?.workout_image}}
-                  onLoad={() => setIsLoading(false)}
+                  source={localImage.Rest}
                   style={{
                     height:
                       DeviceHeigth >= 1024
-                        ? DeviceWidth * 0.15
-                        : DeviceWidth * 0.17,
+                        ? DeviceWidth * 0.14
+                        : DeviceWidth * 0.15,
                     width:
                       DeviceHeigth >= 1024
-                        ? DeviceWidth * 0.15
-                        : DeviceWidth * 0.17,
+                        ? DeviceWidth * 0.14
+                        : DeviceWidth * 0.16,
+                    // marginLeft: DeviceWidth * 0.12,
+                    // borderRadius: 10,
+                    // borderWidth: 1,
+                    // borderColor: '#D9D9D9',
                     opacity: percent ? 0.5 : 1,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: '#D9D9D9',
                   }}
                   resizeMode="contain"
                 />
+              </View>
+            ) : (
+              <>
+                <View
+                  style={{
+                    height:
+                      DeviceHeigth >= 1024
+                        ? DeviceWidth * 0.18
+                        : DeviceWidth * 0.18,
+                    width:
+                      DeviceHeigth >= 1024
+                        ? DeviceWidth * 0.18
+                        : DeviceWidth * 0.18,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    // marginLeft: DeviceWidth * 0.12,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: '#D9D9D9',
+                  }}>
+                  {isLoading && (
+                    <ShimmerPlaceholder
+                      style={styles.loader}
+                      ref={avatarRef}
+                      autoRun
+                    />
+               )} 
+                  <Image
+                    source={{uri: data?.workout_image}}
+                    onLoad={() => setIsLoading(false)}
+                    style={{
+                      height:
+                      DeviceHeigth >= 1024
+                        ? DeviceWidth * 0.14
+                        : DeviceWidth * 0.15,
+                    width:
+                      DeviceHeigth >= 1024
+                        ? DeviceWidth * 0.14
+                        : DeviceWidth * 0.16,
+                      opacity: percent ? 0.5 : 1,
+                      // borderRadius: 10,
+                      // borderWidth: 1,
+                      // borderColor: '#D9D9D9',
+                    }}
+                    resizeMode="contain"
+                  />
+                </View>
               </>
             )}
             <View
@@ -917,9 +953,9 @@ const styles = StyleSheet.create({
     backgroundColor: AppColor.GRAY,
     zIndex: 1,
     height: DeviceHeigth >= 1024 ? 120 : 80,
-    width: DeviceHeigth >= 1024 ? DeviceWidth * 0.18 : DeviceWidth * 0.18,
+    width: DeviceHeigth >= 1024 ? DeviceWidth * 0.18 : DeviceWidth * 0.19,
 
-    left: DeviceHeigth >= 1024 ? -20 : -5,
+    left: DeviceHeigth >= 1024 ? -20 : 0,
     borderRadius: 10,
   },
 });
