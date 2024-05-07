@@ -222,11 +222,12 @@ const Exercise = ({navigation, route}: any) => {
               const index = allExercise?.findIndex(
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
-              Tts.speak(
-                `Get Ready for ${
-                  allExercise[index + 1]?.exercise_title
-                } Exercise`,
-              );
+              index < allExercise?.length - 1 &&
+                Tts.speak(
+                  `Get Ready for ${
+                    allExercise[index + 1]?.exercise_title
+                  } Exercise`,
+                );
               postCurrentExerciseAPI(index);
               setDemoW(demoW + 100 / timer);
               setTimer(timer - 1);
@@ -936,7 +937,7 @@ const Exercise = ({navigation, route}: any) => {
                 ? '0' + remainingSeconds
                 : remainingSeconds}
             </Text>
-            <Text style={[styles.name, {color: '#505050',marginLeft:-15}]}>
+            <Text style={[styles.name, {color: '#505050', marginLeft: -15}]}>
               <Icons
                 name={'clock-outline'}
                 size={20}

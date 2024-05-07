@@ -30,7 +30,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 import ActivityLoader from '../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
-import {LoginManager, Profile} from 'react-native-fbsdk-next';
+// import {LoginManager, Profile} from 'react-native-fbsdk-next';
 import AnimatedLottieView from 'lottie-react-native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
@@ -192,96 +192,96 @@ const Login = ({navigation}) => {
       await GoogleSignin.signOut();
     }
   };
-  const FacebookLogin = () => {
-    analytics().logEvent('CV_FITME_FACEBOOK_LOGIN');
-    LoginManager.logInWithPermissions(['public_profile', 'email']).then(
-      function (result) {
-        if (result.isCancelled) {
-          setCancelLogin(true);
-        } else {
-          const currentProfile = Profile.getCurrentProfile().then(function (
-            currentProfile,
-          ) {
-            if (currentProfile) {
-              socialFacebookLogiIn(currentProfile);
-            }
-          });
-        }
-      },
-      function (error) {
-        alert('Login failed with error: ' + error);
-      },
-    );
-  };
-  const socialFacebookLogiIn = async value => {
-    setForLoading(true);
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.login}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          name: value.name,
-          email: value.email,
-          signuptype: 'social',
-          socialid: value.userID,
-          socialtoken: '',
-          socialtype: 'facebook',
-          version: appVersion,
-          devicetoken: getFcmToken,
-          platform: Platform.OS,
-        },
-      });
-      if (data.data.profile_status == 1) {
-        showMessage({
-          message: data.data.msg,
-          type: 'success',
-          animationDuration: 500,
+  // const FacebookLogin = () => {
+  //   analytics().logEvent('CV_FITME_FACEBOOK_LOGIN');
+  //   LoginManager.logInWithPermissions(['public_profile', 'email']).then(
+  //     function (result) {
+  //       if (result.isCancelled) {
+  //         setCancelLogin(true);
+  //       } else {
+  //         const currentProfile = Profile.getCurrentProfile().then(function (
+  //           currentProfile,
+  //         ) {
+  //           if (currentProfile) {
+  //             socialFacebookLogiIn(currentProfile);
+  //           }
+  //         });
+  //       }
+  //     },
+  //     function (error) {
+  //       alert('Login failed with error: ' + error);
+  //     },
+  //   );
+  // };
+  // const socialFacebookLogiIn = async value => {
+  //   setForLoading(true);
+  //   try {
+  //     const data = await axios(`${NewApi}${NewAppapi.login}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         name: value.name,
+  //         email: value.email,
+  //         signuptype: 'social',
+  //         socialid: value.userID,
+  //         socialtoken: '',
+  //         socialtype: 'facebook',
+  //         version: appVersion,
+  //         devicetoken: getFcmToken,
+  //         platform: Platform.OS,
+  //       },
+  //     });
+  //     if (data.data.profile_status == 1) {
+  //       showMessage({
+  //         message: data.data.msg,
+  //         type: 'success',
+  //         animationDuration: 500,
 
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setForLoading(false);
-        getProfileData(data.data.id, data.data.profile_status);
-        getCustomWorkout(data.data.id);
-        Meal_List(data.data.login_token);
-        PurchaseDetails(data.data.id, data.data.login_token);
-      } else if (
-        data.data.msg ==
-        'User does not exist with provided Facebook social credentials'
-      ) {
-        showMessage({
-          message: 'You are not registered,You need to Signup first',
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setForLoading(false);
-      } else if (
-        data.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        setForLoading(false);
-        showMessage({
-          message: data.data.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        setForLoading(false);
-        // setModalVisible(true);
-        dispatch(setCustomWorkoutData([]));
-        getProfileData(data.data.id, data.data.profile_status);
-        Meal_List(data.data.login_token);
-      }
-    } catch (error) {
-      setForLoading(false);
-      console.log('Facebook Signup Error', error);
-    }
-  };
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       setForLoading(false);
+  //       getProfileData(data.data.id, data.data.profile_status);
+  //       getCustomWorkout(data.data.id);
+  //       Meal_List(data.data.login_token);
+  //       PurchaseDetails(data.data.id, data.data.login_token);
+  //     } else if (
+  //       data.data.msg ==
+  //       'User does not exist with provided Facebook social credentials'
+  //     ) {
+  //       showMessage({
+  //         message: 'You are not registered,You need to Signup first',
+  //         type: 'danger',
+  //         animationDuration: 500,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       setForLoading(false);
+  //     } else if (
+  //       data.data?.msg == 'Please update the app to the latest version.'
+  //     ) {
+  //       setForLoading(false);
+  //       showMessage({
+  //         message: data.data.msg,
+  //         type: 'danger',
+  //         animationDuration: 500,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //     } else {
+  //       setForLoading(false);
+  //       // setModalVisible(true);
+  //       dispatch(setCustomWorkoutData([]));
+  //       getProfileData(data.data.id, data.data.profile_status);
+  //       Meal_List(data.data.login_token);
+  //     }
+  //   } catch (error) {
+  //     setForLoading(false);
+  //     console.log('Facebook Signup Error', error);
+  //   }
+  // };
   const onApplePress = async () => {
     analytics().logEvent('CV_FITME_APPLE_LOGIN');
     await appleAuth
@@ -1183,7 +1183,10 @@ const Login = ({navigation}) => {
         </KeyboardAvoidingView>
         <View style={{marginTop: DeviceHeigth * 0.02, paddingBottom: 10}}>
           {Platform.OS == 'android' && (
-            <Button2 onGooglePress={GoogleSignup} onFBPress={FacebookLogin} />
+            <Button2 onGooglePress={GoogleSignup} 
+            //onFBPress={FacebookLogin} 
+
+            />
           )}
           {Platform.OS == 'ios' && (
             <Button2 onGooglePress={GoogleSignup} onApplePress={onApplePress} />

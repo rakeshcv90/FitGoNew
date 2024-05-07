@@ -26,7 +26,7 @@ import AppleHealthKit from 'react-native-health';
 import {setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
 import {Calendar} from 'react-native-calendars';
 import AnimatedLottieView from 'lottie-react-native';
-import GoogleFit, {Scopes} from 'react-native-google-fit';
+// import GoogleFit, {Scopes} from 'react-native-google-fit';
 import {
   VictoryBar,
   VictoryChart,
@@ -96,36 +96,36 @@ const NewProgressScreen = ({navigation}) => {
       });
     } else if (Platform.OS == 'android') {
       if (getStepCounterOnoff) {
-        async function getDailyData() {
-          try {
-            const options = {
-              scopes: [
-                Scopes.FITNESS_ACTIVITY_READ,
-                Scopes.FITNESS_ACTIVITY_WRITE,
-              ],
-            };
+        // async function getDailyData() {
+        //   try {
+        //     const options = {
+        //       scopes: [
+        //         Scopes.FITNESS_ACTIVITY_READ,
+        //         Scopes.FITNESS_ACTIVITY_WRITE,
+        //       ],
+        //     };
 
-            const authResult = await GoogleFit?.authorize(options);
-            if (authResult.success) {
-              const dailySteps = await GoogleFit?.getDailySteps();
-              const totalSteps = dailySteps?.reduce(
-                (total, acc) => total + (acc?.steps[0]?.value || 0),
-                0,
-              );
-              const calories = parseInt(((totalSteps / 20) * 1).toFixed(0));
-              setCalories(calories + parseInt(Calories2)); // Assuming Calories2 is defined elsewhere
-            } else {
-              setCalories(parseInt(Calories2))
-              console.error('Authorization failed');
+        //     const authResult = await GoogleFit?.authorize(options);
+        //     if (authResult.success) {
+        //       const dailySteps = await GoogleFit?.getDailySteps();
+        //       const totalSteps = dailySteps?.reduce(
+        //         (total, acc) => total + (acc?.steps[0]?.value || 0),
+        //         0,
+        //       );
+        //       const calories = parseInt(((totalSteps / 20) * 1).toFixed(0));
+        //       setCalories(calories + parseInt(Calories2)); // Assuming Calories2 is defined elsewhere
+        //     } else {
+        //       setCalories(parseInt(Calories2))
+        //       console.error('Authorization failed');
               
-            }
-          } catch (error) {
-            setCalories(parseInt(Calories2))
-            console.error('Error fetching daily steps:', error);
-          }
-        }
+        //     }
+        //   } catch (error) {
+        //     setCalories(parseInt(Calories2))
+        //     console.error('Error fetching daily steps:', error);
+        //   }
+        // }
 
-        getDailyData();
+        // getDailyData();
       } else {
         setCalories(parseInt(Calories2));
       }

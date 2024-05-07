@@ -150,6 +150,23 @@ const FocuseWorkoutList = ({navigation, route}) => {
                 }),
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View
+                  style={{
+                    height:
+                      DeviceHeigth >= 1024
+                        ? DeviceWidth * 0.18
+                        : DeviceWidth * 0.18,
+                    width:
+                      DeviceHeigth >= 1024
+                        ? DeviceWidth * 0.18
+                        : DeviceWidth * 0.18,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                   
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: '#D9D9D9',
+                  }}>
                 {isLoading && (
                   // <ActivityIndicator
                   //   style={styles.loader}
@@ -162,15 +179,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
                     autoRun
                   />
                 )}
-                <View
-                  style={{
-                    height: 70,
-                    width: 70,
-                    borderRadius: 5,
-                    borderWidth: 0.5,
-                    borderColor: 'lightgrey',
-                    marginHorizontal: -12,
-                  }}>
+            
                 <Image
                   source={{uri: item?.workout_image}}
                   onLoad={() => setIsLoading(false)}
@@ -179,12 +188,14 @@ const FocuseWorkoutList = ({navigation, route}) => {
                     height: 60,
                     justifyContent: 'center',
                     alignSelf: 'center',
+                    //borderRadius: 5,
                     // backgroundColor:'red',
                  
                   
                   }}
-                  resizeMode="contain"
-                /></View>
+                  resizeMode="cover"
+                />
+            </View>
                 <View style={{marginHorizontal: 25, top: 10}}>
                   <View style={{width: DeviceWidth * 0.47}}>
                     <Text

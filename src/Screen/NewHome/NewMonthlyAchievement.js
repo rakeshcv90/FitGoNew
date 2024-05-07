@@ -24,7 +24,7 @@ import Calories from '../../Component/Calories';
 import ActivityLoader from '../../Component/ActivityLoader';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
-import GoogleFit, {Scopes} from 'react-native-google-fit';
+// import GoogleFit, {Scopes} from 'react-native-google-fit';
 import Loader from '../../Component/Loader';
 const NewMonthlyAchievement = () => {
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
@@ -70,7 +70,7 @@ const NewMonthlyAchievement = () => {
       if (getStepCounterOnoff) {
         const getDailyData = async () => {
           try {
-            const dailySteps = await GoogleFit.getDailySteps();
+            const dailySteps =20 //await GoogleFit.getDailySteps();
             const totalSteps = dailySteps.reduce(
               (total, acc) => (total + acc.steps[0] ? acc.steps[0].value : 0),
               0,
