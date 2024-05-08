@@ -132,7 +132,7 @@ const LoadData = ({navigation}) => {
       payload.append('fitnesslevel', mergedObject?.experience); // static values change  it accordingly
       payload.append('weight', mergedObject?.currentWeight);
       payload.append('age', mergedObject?.age);
-      payload.append('focusarea', mergedObject?.focuseArea?.join(','));
+      // payload.append('focusarea', mergedObject?.focuseArea?.join(','));
       payload.append('targetweight', mergedObject?.targetWeight);
       payload.append('experience', mergedObject?.experience);
       payload.append('workout_plans', mergedObject?.workout_plans);
@@ -141,7 +141,7 @@ const LoadData = ({navigation}) => {
         mergedObject?.injury != null ? mergedObject?.injury?.join(',') : null,
       );
       payload.append('equipment', mergedObject?.equipment);
-      payload.append('workoutarea', mergedObject?.workoutArea?.join(','));
+      // payload.append('workoutarea', mergedObject?.workoutArea?.join(','));
       payload.append('version', VersionNumber.appVersion);
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',

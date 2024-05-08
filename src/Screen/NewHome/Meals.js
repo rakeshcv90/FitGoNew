@@ -133,6 +133,21 @@ const Meals = ({navigation}) => {
     }
     dispatch(setVideoLocation(StoringData));
   };
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+
+      
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
+  };
   return (
     <View style={styles.container}>
       <NewHeader header={'Meals'} SearchButton={false} backButton={true} />
@@ -278,12 +293,13 @@ const Meals = ({navigation}) => {
           </>
         )}
       </View>
-
+      
       <View
         style={{
           top: DeviceHeigth * 0.05,
           alignSelf: 'center',
-          height: DeviceHeigth * 0.48,
+          height:
+            DeviceHeigth >= 808 ? DeviceHeigth * 0.48 : DeviceHeigth * 0.407,
           width: '100%',
           alignItems: 'center',
           paddingBottom: Platform.OS == 'android' ? 50 : 50,
@@ -344,7 +360,7 @@ const Meals = ({navigation}) => {
           removeClippedSubviews={true}
         />
       </View>
-      <BannerAdd bannerAdId={bannerAdId} />
+      {bannerAdsDisplay()}
     </View>
   );
 };

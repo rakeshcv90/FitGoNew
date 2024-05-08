@@ -31,6 +31,7 @@ import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
+import moment from 'moment';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -395,6 +396,21 @@ const CreateWorkout = ({navigation, route}) => {
 
     setFilteredCategories(filteredItems);
   };
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+
+      
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
+  };
   return (
     <>
       <NewHeader
@@ -547,7 +563,7 @@ const CreateWorkout = ({navigation, route}) => {
           </TouchableOpacity>
         </LinearGradient>
       </View>
-      <BannerAdd bannerAdId={bannerAdId} />
+  {    bannerAdsDisplay()}
     </>
   );
 };

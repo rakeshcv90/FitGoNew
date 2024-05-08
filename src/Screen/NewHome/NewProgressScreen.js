@@ -70,7 +70,7 @@ const NewProgressScreen = ({navigation}) => {
   let arrayForData = [];
   let arrayForData1 = [];
   // Update state with useEffect
-
+console.log("xdcfdsfdsf",getCustttomeTimeCal)
   useEffect(() => {
     const Calories1 = getCustttomeTimeCal?.map(value => value.totalCalories);
     const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
@@ -85,6 +85,7 @@ const NewProgressScreen = ({navigation}) => {
         includeManuallyAdded: true, // optional: default true
       };
       AppleHealthKit.getStepCount(options, (callbackError, results) => {
+   
         if (callbackError) {
           console.error('Error while getting the data:', callbackError);
         } else {
@@ -730,7 +731,7 @@ const NewProgressScreen = ({navigation}) => {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             activeOpacity={0.5}
             onPress={() => {
               navigation.navigate('Report');
@@ -740,7 +741,7 @@ const NewProgressScreen = ({navigation}) => {
               style={{height: 20, width: 20}}
               resizeMode="contain"
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View style={styles.profileView}>
           {Object.keys(getUserDataDetails)?.length > 0 && (

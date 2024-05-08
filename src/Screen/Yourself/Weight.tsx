@@ -150,7 +150,7 @@ const Weight = ({route, navigation}: any) => {
           alignItems: 'center',
           // backgroundColor: AppColor.RED,
           height: DeviceHeigth * 0.54,
-          top: -DeviceHeigth * 0.1,
+          top:Platform.OS=='ios'? -DeviceHeigth * 0.1: -DeviceHeigth * 0.09,
         }}>
           
         <ProgressBar screen={screen} />
@@ -159,7 +159,7 @@ const Weight = ({route, navigation}: any) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <View style={{marginTop: -DeviceHeigth * 0.06}}>
+          <View style={{marginTop:Platform.OS=='ios'?- DeviceHeigth * 0.06:- DeviceHeigth * 0.02}}>
             <Bulb screen={'What’s your Current weight?'} />
           </View>
 
@@ -218,7 +218,7 @@ const Weight = ({route, navigation}: any) => {
           style={[
             styles.buttons,
             {
-               bottom: -DeviceHeigth * 0.3,
+               bottom: Platform.OS=='ios'?-DeviceHeigth * 0.3:-DeviceHeigth * 0.25,
             },
           ]}>
           <TouchableOpacity
@@ -261,10 +261,10 @@ const Weight = ({route, navigation}: any) => {
           display: targetSelected ? 'flex' : 'none',
           justifyContent: 'center',
           alignItems: 'center',
-          top: -DeviceHeigth * 0.09,
+          top: Platform.OS=='ios'?-DeviceHeigth * 0.09:-DeviceHeigth * 0.06,
         }}>
         <ProgressBar screen={screen} />
-        <View style={{marginTop: -DeviceHeigth * 0.06}}>
+        <View style={{marginTop:Platform.OS=='ios'?- DeviceHeigth * 0.06:- DeviceHeigth * 0.02}}>
         <Bulb screen={'What’s your Target weight?'} />
 
           </View>
@@ -379,7 +379,7 @@ const Weight = ({route, navigation}: any) => {
           />
         </ImageBackground>
         <View>
-          <View style={[styles.buttons, {bottom: -DeviceHeigth * 0.25}]}>
+          <View style={[styles.buttons, {bottom:Platform.OS=='ios'? -DeviceHeigth * 0.25: -DeviceHeigth * 0.24}]}>
             <TouchableOpacity
               style={{
                 backgroundColor: '#F7F8F8',

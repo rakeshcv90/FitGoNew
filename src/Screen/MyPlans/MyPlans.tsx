@@ -697,7 +697,7 @@ const MyPlans = ({navigation}: any) => {
                     style={{
                       justifyContent: 'center',
                       alignItems: 'center',
-                      paddingVertical: 10,
+                      paddingVertical: 5,
                     }}>
                     <AnimatedLottieView
                       source={require('../../Icon/Images/RedTick.json')}
@@ -713,8 +713,9 @@ const MyPlans = ({navigation}: any) => {
                     <Text
                       style={{
                         fontFamily: Fonts.MONTSERRAT_BOLD,
-                        fontSize: 16,
+                        fontSize: 18,
                         fontWeight: '600',
+                        top:-20,
                         color: AppColor.LITELTEXTCOLOR,
                         lineHeight: 30,
                       }}>
@@ -725,6 +726,7 @@ const MyPlans = ({navigation}: any) => {
                         fontFamily: Fonts.MONTSERRAT_MEDIUM,
                         fontSize: 14,
                         fontWeight: '500',
+                        top:-10,
                         color: AppColor.LITELTEXTCOLOR,
                         lineHeight: 20,
                       }}>
@@ -755,7 +757,7 @@ const MyPlans = ({navigation}: any) => {
                           height: 40,
                           width: 40,
                           alignSelf: 'center',
-                          marginRight: 10,
+                          marginRight: 20,
                         }}
                         resizeMode="contain"
                       />
@@ -766,6 +768,7 @@ const MyPlans = ({navigation}: any) => {
                           fontWeight: '700',
                           color: AppColor.RED1,
                           lineHeight: 30,
+                        left:-20,
                         }}>
                         {getWeeklyPlansData[WeekArray[selectedDay]]?.title}
                       </Text>

@@ -27,7 +27,7 @@ import {BannerAdd, MyRewardedAd} from '../../Component/BannerAdd';
 import moment from 'moment';
 import Tts from 'react-native-tts';
 import {useIsFocused} from '@react-navigation/native';
-import { bannerAdId } from '../../Component/AdsId';
+import {bannerAdId} from '../../Component/AdsId';
 
 // const apiKey = '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';
 // const apiKey = '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';
@@ -41,12 +41,13 @@ const AITrainer = ({navigation, route}) => {
   const [ttsSound, setTtsSound] = useState(
     `Hey there! I m ${route?.params?.item?.title} your friendly chat bot here to assist you.`,
   );
-  const {getAIMessageHistory, getPurchaseHistory, getUserDataDetails} =
-    useSelector(state => state);
+
   let isFocuse = useIsFocused();
   const [searchText, setSearchText] = useState('');
   const flatListRef = useRef(null);
   const [reward, setreward] = useState(0);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+  const getAIMessageHistory = useSelector(state => state.getAIMessageHistory);
   const [senderMessage, setsenderMessage] = useState([
     {
       message: `Hey there! I m ${route?.params?.item?.title} your friendly chat bot here to assist you.`,
@@ -313,6 +314,19 @@ const AITrainer = ({navigation, route}) => {
     // } catch (error) {
     //   console.error('Error fetching data:', error);
     // }
+  };
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
   };
   return (
     <View style={styles.container}>
@@ -596,9 +610,8 @@ const AITrainer = ({navigation, route}) => {
             />
           </TouchableOpacity>
         </View>
-        <BannerAdd bannerAdId={bannerAdId} />
+        {bannerAdsDisplay()}
       </KeyboardAvoidingView>
-     
     </View>
   );
 };

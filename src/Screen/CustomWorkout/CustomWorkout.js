@@ -32,6 +32,7 @@ import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import { BannerAdd } from '../../Component/BannerAdd';
 import { bannerAdId } from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
+import moment from 'moment';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -202,7 +203,7 @@ const CustomWorkout = ({navigation, route}) => {
     [isLoading],
   );
   const getAdsDisplay = (index, item) => {
-    if (customWorkoutData.length > 1) {
+    if (customWorkoutData.length >= 1) {
       if (index == 0) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0) {
@@ -223,7 +224,7 @@ const CustomWorkout = ({navigation, route}) => {
               alignSelf: 'center',
               alignItems: 'center',
 
-              //  top: DeviceHeigth * 0.1,
+     
             }}>
             <NativeAddTest type="image" media={false} />
           </View>
@@ -236,7 +237,7 @@ const CustomWorkout = ({navigation, route}) => {
             alignSelf: 'center',
             alignItems: 'center',
 
-            //top: DeviceHeigth * 0.1,
+    
           }}>
           <NativeAddTest type="image" media={false} />
         </View>
@@ -348,6 +349,21 @@ const CustomWorkout = ({navigation, route}) => {
     } catch (error) {
       dispatch(setAllExercise([]));
       console.log('All-EXCERSIE-ERROR', error);
+    }
+  };
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+
+      
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
     }
   };
   return (
@@ -507,7 +523,8 @@ const CustomWorkout = ({navigation, route}) => {
         </TouchableOpacity>
         {/* </BlurView> */}
       </Modal>
-      <BannerAdd bannerAdId={bannerAdId} />
+      {/* <BannerAdd bannerAdId={bannerAdId} /> */}
+      {bannerAdsDisplay()}
     </>
   );
 };

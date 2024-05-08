@@ -57,8 +57,17 @@ const EditCustomWorkout = ({navigation, route}) => {
   });
   useEffect(() => {
     const datalist = getAllExercise?.filter(listdata => {
-      return listdata.exercise_equipment == bodyPart;
+      if (bodyPart == 'Biceps') {
+        return listdata.exercise_bodypart == 'Triceps';
+      } else if (bodyPart == 'Quads') {
+        return listdata.exercise_bodypart == 'Abs';
+      } else if (bodyPart == 'Calves') {
+        return listdata.exercise_bodypart == 'Legs';
+      } else {
+        return listdata.exercise_bodypart == bodyPart;
+      }
     });
+
     setWorkoutList(datalist);
     setFilteredCategories(datalist);
   }, [bodyPart]);
@@ -78,6 +87,7 @@ const EditCustomWorkout = ({navigation, route}) => {
       </View>
     );
   };
+
   const renderItem1 = useMemo(
     () =>
       ({item}) => {
@@ -149,41 +159,30 @@ const EditCustomWorkout = ({navigation, route}) => {
                     {item?.exercise_title}
                   </Text>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text
+                  <Text
                       style={{
                         fontSize: 12,
-                        fontWeight: '600',
+                        fontWeight: '700',
                         color: '#202020',
                         lineHeight: 30,
 
                         fontFamily: Fonts.MONTSERRAT_MEDIUM,
                       }}>
-                      {'Set: '}
-                      {item?.exercise_sets}
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 30,
-                        fontWeight: '600',
-                        color: '#202020',
-                        lineHeight: 20,
-                        marginHorizontal: 10,
-                        fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                      }}>
-                      .
-                    </Text>
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        fontWeight: '600',
-                        color: '#202020',
-                        lineHeight: 30,
+                      {'Time : '}
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontWeight: '600',
+                          color: '#202020',
+                          lineHeight: 30,
 
-                        fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                      }}>
-                      {'Reps: '}
-                      {item?.exercise_reps}
+                          fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                        }}>
+                        {' '}
+                        {item?.exercise_rest}
+                      </Text>
                     </Text>
+                    
                   </View>
                 </View>
               </View>

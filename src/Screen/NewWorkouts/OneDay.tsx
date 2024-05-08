@@ -311,19 +311,16 @@ const OneDay = ({navigation, route}: any) => {
                 },
               }),
             }}>
-            {/* {isLoading && (
-              <ShimmerPlaceholder
-                style={{height: 75, width: 75, alignSelf: 'center'}}
-                autoRun
-                ref={avatarRef}
-              />
-            )} */}
+          
             <Image
               source={{
-                uri:getStoreVideoLoc[item?.exercise_title + 'Image']
-                ? 'file://' +
-                  getStoreVideoLoc[item?.exercise_title + 'Image']
-                : item.exercise_image_link
+                uri:
+                  getStoreVideoLoc[item?.exercise_title + 'Image'] != undefined
+                    ? 'file://' +
+                      getStoreVideoLoc[item?.exercise_title + 'Image']
+                    : item.exercise_image_link != ''
+                    ? item.exercise_image
+                    : item.exercise_image_link,
               }}
               // source={{uri: item?.exercise_image}}
               // onLoad={() => setIsLoading(false)}
@@ -732,10 +729,11 @@ const OneDay = ({navigation, route}: any) => {
         />
       </TouchableOpacity>
       <Image
-        source={{uri: getStoreVideoLoc[data?.workout_title + 'Image']
-        ? 'file://' +
-          getStoreVideoLoc[data?.workout_title + 'Image']
-        : data?.workout_image_link}}
+        source={{
+          uri: getStoreVideoLoc[data?.workout_title + 'Image']
+            ? 'file://' + getStoreVideoLoc[data?.workout_title + 'Image']
+            : data?.workout_image_link,
+        }}
         style={{
           height: DeviceWidth * 0.5,
           width: DeviceWidth,

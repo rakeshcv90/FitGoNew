@@ -43,7 +43,7 @@ console.log(nextScreen)
 
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
     analytics().logEvent(`CV_FITME_INJURY_${imageView}`);
-    navigation.navigate('FocusArea', {nextScreen: screen + 1});
+    navigation.navigate('Weight', {nextScreen: screen + 1});
   };
   const [bodyPart, setBordyPart] = useState(
     completeProfileData?.injury?.filter(
@@ -140,7 +140,7 @@ console.log(nextScreen)
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-         <View style={{marginTop:- DeviceHeigth * 0.06}}>
+       <View style={{marginTop:Platform.OS=='ios'?- DeviceHeigth * 0.06:- DeviceHeigth * 0.03}}>
          <Bulb
           screen={'Do you have Injury in any body part?'}
         />

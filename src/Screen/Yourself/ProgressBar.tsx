@@ -47,8 +47,8 @@ const ProgressBar = ({screen}: any) => {
           style={{
             width:
               screen == 0
-                ? '12.5%'
-                : `${getProgressBarCounter == 9 ? 11.12 * screen: 10 * screen}%`,
+                ? '14.5%'
+                : `${getProgressBarCounter == 7 ? 14.25 * screen: 12.5 * screen}%`,
             height: 5,
             borderRadius: 5,
           }}

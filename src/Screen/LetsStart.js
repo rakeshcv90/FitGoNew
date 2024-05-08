@@ -22,8 +22,8 @@ import ActivityLoader from '../Component/ActivityLoader';
 import axios from 'axios';
 import {setUserId, setUserProfileData} from '../Component/ThemeRedux/Actions';
 import {showMessage} from 'react-native-flash-message';
-import { BannerAdd } from '../Component/BannerAdd';
-import { bannerAdId } from '../Component/AdsId';
+import {BannerAdd} from '../Component/BannerAdd';
+import {bannerAdId} from '../Component/AdsId';
 
 const LetsStart = ({navigation}) => {
   const dispatch = useDispatch();
@@ -57,7 +57,6 @@ const LetsStart = ({navigation}) => {
         },
       });
 
-   
       if (
         data?.data?.msg == 'user registerd successfully' &&
         data?.data?.profile_compl_status == 0
@@ -178,20 +177,28 @@ const LetsStart = ({navigation}) => {
         <Image
           resizeMode="contain"
           source={require('../Icon/Images/NewImage2/Welcome.png')}
-          style={{width: DeviceHeigth>=1024?350:192, height: DeviceHeigth>=1024?150:70, alignSelf: 'center'}}
+          style={{
+            width: DeviceHeigth >= 1024 ? 350 : 192,
+            height: DeviceHeigth >= 1024 ? 150 : 70,
+            alignSelf: 'center',
+            // top: -DeviceHeigth * 0.05,
+          }}
         />
         <View
           style={{
-           
-            top: DeviceHeigth * 0.04,
+            top: DeviceHeigth * 0.05,
             alignItems: 'center',
             alignSelf: 'center',
             justifyContent: 'center',
           }}>
           <Image
-           resizeMode="contain"
+            resizeMode="contain"
             source={require('../Icon/Images/NewImage2/GetStart.png')}
-            style={{width: DeviceHeigth>=1024?350:250, height: DeviceHeigth>=1024?350:250, alignSelf: 'center'}}
+            style={{
+              width: DeviceHeigth >= 1024 ? 350 : 250,
+              height: DeviceHeigth >= 1024 ? 350 : 250,
+              alignSelf: 'center',
+            }}
           />
         </View>
         <View
@@ -207,99 +214,97 @@ const LetsStart = ({navigation}) => {
           </Text>
         </View>
       </View>
-      <View
-        style={{
-          alignItems: 'center',
-          alignSelf: 'center',
-          width: '100%',
-          justifyContent: 'center',
-          top:DeviceHeigth>808? DeviceHeigth * 0.25: DeviceHeigth * 0.22,
-        }}>
-        <Text style={styles.LoginText2}>
-          Have an account?{' '}
-          <Text
-            style={[
-              styles.LoginText2,
-              {color: AppColor.RED1, fontFamily: Fonts.MONTSERRAT_SEMIBOLD},
-            ]}
-            onPress={() => {
-              navigation.navigate('LogSignUp');
-            }}>
-            Log in
-          </Text>
-        </Text>
-        <LinearGradient
-          start={{x: 0, y: 1}}
-          end={{x: 1, y: 0}}
-          colors={['#D01818', '#941000']}
+
+      <View style={{position: 'absolute', bottom: 0}}>
+        <View
           style={{
-            width: '85%',
-            height: 50,
-            backgroundColor: 'red,',
-            alignSelf: 'center',
-            borderRadius: 30,
             alignItems: 'center',
-            top: DeviceHeigth * 0.03,
+            alignSelf: 'center',
+            width: '100%',
             justifyContent: 'center',
+            // top: DeviceHeigth > 808 ? DeviceHeigth * 0.18 : DeviceHeigth * 0.2,
           }}>
-          <TouchableOpacity
+          <Text style={[styles.LoginText2,{top:-DeviceHeigth*0.05}]}>
+            Have an account?{' '}
+            <Text
+              style={[
+                styles.LoginText2,
+                {color: AppColor.RED1, fontFamily: Fonts.MONTSERRAT_SEMIBOLD},
+              ]}
+              onPress={() => {
+                navigation.navigate('LogSignUp');
+              }}>
+              Log in
+            </Text>
+          </Text>
+          <LinearGradient
+            start={{x: 0, y: 1}}
+            end={{x: 1, y: 0}}
+            colors={['#D01818', '#941000']}
             style={{
-              width: '100%',
+              width: '85%',
               height: 50,
               backgroundColor: 'red,',
               alignSelf: 'center',
               borderRadius: 30,
               alignItems: 'center',
+               top: -DeviceHeigth * 0.02,
               justifyContent: 'center',
-            }}
-            activeOpacity={0.5}
-            onPress={() => {
-              deviceIdRegister();
             }}>
-            <Text style={styles.button}>Get Started</Text>
-          </TouchableOpacity>
-        </LinearGradient>
-        <View
-          style={{
-            width: '85%',
-            height: 50,
-            backgroundColor: 'red,',
-            alignSelf: 'center',
-            alignItems: 'center',
-            justifyContent: 'center',
-            top: DeviceHeigth * 0.05,
-          }}>
-          <Text style={styles.policyText}>
-            By continuing you accept our{' '}
-            <Text
-              onPress={() => {
-                navigation.navigate('TermaAndCondition', {
-                  title: 'Privacy & Policy',
-                });
+            <TouchableOpacity
+              style={{
+                width: '100%',
+                height: 50,
+                backgroundColor: 'red,',
+                alignSelf: 'center',
+                borderRadius: 30,
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
-              style={styles.policyText1}>
-              Privacy Policy
-            </Text>{' '}
-            and
-            <Text
-              style={styles.policyText1}
+              activeOpacity={0.5}
               onPress={() => {
-                navigation.navigate('TermaAndCondition', {
-                  title: 'Terms & Condition',
-                });
+                deviceIdRegister();
               }}>
-              {' '}
-              Terms of use
-            </Text>{' '}
-          </Text>
-        
+              <Text style={styles.button}>Get Started</Text>
+            </TouchableOpacity>
+          </LinearGradient>
+          <View
+            style={{
+              width: '85%',
+              height: 50,
+              backgroundColor: 'red,',
+              alignSelf: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
+              top: -DeviceHeigth * 0.01,
+            }}>
+            <Text style={styles.policyText}>
+              By continuing you accept our{' '}
+              <Text
+                onPress={() => {
+                  navigation.navigate('TermaAndCondition', {
+                    title: 'Privacy & Policy',
+                  });
+                }}
+                style={styles.policyText1}>
+                Privacy Policy
+              </Text>{' '}
+              and
+              <Text
+                style={styles.policyText1}
+                onPress={() => {
+                  navigation.navigate('TermaAndCondition', {
+                    title: 'Terms & Condition',
+                  });
+                }}>
+                {' '}
+                Terms of use
+              </Text>{' '}
+            </Text>
+          </View>
         </View>
-
-   
+        <BannerAdd bannerAdId={bannerAdId} />
       </View>
-    <View style={{position:'absolute',bottom:0}}>
-    <BannerAdd bannerAdId={bannerAdId} />
-    </View>
     </View>
   );
 };
@@ -309,7 +314,7 @@ var styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
   },
   TextContainer: {
-    top:DeviceHeigth>808?DeviceHeigth * 0.13:DeviceHeigth * 0.1,
+    top: DeviceHeigth > 808 ? DeviceHeigth * 0.13 : DeviceHeigth * 0.1,
     // Platform.OS=='ios'?DeviceHeigth * 0.13:DeviceHeigth * 0.1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -354,12 +359,11 @@ var styles = StyleSheet.create({
   },
   LoginText2: {
     fontSize: 16,
-    fontFamily:Fonts.MONTSERRAT_SEMIBOLD,
-    fontWeight:'600',
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    fontWeight: '600',
 
     color: '#333333',
     lineHeight: 22,
-
   },
 });
 export default LetsStart;

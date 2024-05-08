@@ -106,16 +106,16 @@ const SplaceScreen = ({navigation}) => {
   };
   const loadScreen = () => {
     // if (showIntro) {
-      if (
-        getUserDataDetails?.id && 
-        getUserDataDetails?.profile_compl_status == 1
-      ) {
-        navigation.replace('BottomTab');
-      } else {
-       // navigation.replace('LogSignUp');
-       navigation.replace('LetsStart');
-      }
-    // } 
+    if (
+      getUserDataDetails?.id &&
+      getUserDataDetails?.profile_compl_status == 1
+    ) {
+      navigation.replace('BottomTab');
+    } else {
+      // navigation.replace('LogSignUp');
+      navigation.replace('LetsStart');
+    }
+    // }
     // else {
     //   navigation.replace('IntroductionScreen1');
     // }
@@ -299,7 +299,7 @@ const SplaceScreen = ({navigation}) => {
     try {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
-        StoringData[data?.exercise_title+'Image'] = filePath;
+        StoringData[data?.exercise_title + 'Image'] = filePath;
         // setDownloade(true);
       } else {
         await RNFetchBlob.config({
@@ -313,7 +313,7 @@ const SplaceScreen = ({navigation}) => {
             // key: 'Config.REACT_APP_API_KEY',
           })
           .then(res => {
-            StoringData[data?.exercise_title+'Image'] = res.path();
+            StoringData[data?.exercise_title + 'Image'] = res.path();
             // setDownloade(true);
           })
           .catch(err => {

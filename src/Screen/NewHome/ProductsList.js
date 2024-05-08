@@ -25,6 +25,8 @@ import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
+import moment from 'moment';
+import {useDispatch, useSelector} from 'react-redux';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -32,6 +34,7 @@ const ProductsList = ({route}) => {
   const [searchText, setsearchText] = useState();
   const [productList, setproductList] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState([]);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [forLoading, setForLoading] = useState(true);
   const avatarRef = React.createRef();
   let isFocuse = useIsFocused();
@@ -103,6 +106,20 @@ const ProductsList = ({route}) => {
     );
 
     setFilteredCategories(filteredItems);
+  };
+
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
   };
   return (
     <View style={styles.container}>
@@ -192,7 +209,7 @@ const ProductsList = ({route}) => {
           imageLoadingColor="#2196F3"
         />
       </View>
-    
+
       <View
         style={{
           width: '95%',
@@ -323,7 +340,9 @@ const ProductsList = ({route}) => {
           )}
         </View>
       </View>
-      <BannerAdd bannerAdId={bannerAdId} />
+      <View style={{position: 'absolute', bottom: -2}}>
+   {bannerAdsDisplay()}
+      </View>
     </View>
   );
 };

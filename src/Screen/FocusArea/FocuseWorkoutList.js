@@ -15,7 +15,11 @@ import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import VersionNumber, {appVersion} from 'react-native-version-number';
-import { legacy_createStore } from 'redux';
+import moment from 'moment';
+import { BannerAdd } from '../../Component/BannerAdd';
+import { bannerAdId } from '../../Component/AdsId';
+import NativeAddTest from '../../Component/NativeAddTest';
+
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -32,6 +36,9 @@ const FocuseWorkoutList = ({navigation, route}) => {
   const dispatch = useDispatch();
   const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  const getPurchaseHistory = useSelector(
+    (state) => state.getPurchaseHistory,
+  );
   const isFocused = useIsFocused();
   useEffect(() => {
     setexecrise(route?.params?.bodyexercise);
@@ -104,7 +111,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
 
   const renderItem = useMemo(
     () =>
-      ({item}) => {
+      ({item,index}) => {
         let totalTime = 0;
         let totalExercise = 0;
 
@@ -150,7 +157,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
                 }),
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View
+              {/* <View
                   style={{
                     height:
                       DeviceHeigth >= 1024
@@ -166,13 +173,9 @@ const FocuseWorkoutList = ({navigation, route}) => {
                     borderRadius: 10,
                     borderWidth: 1,
                     borderColor: '#D9D9D9',
-                  }}>
+                  }}> */}
                 {isLoading && (
-                  // <ActivityIndicator
-                  //   style={styles.loader}
-                  //   size="small"
-                  //   color="#0000ff"
-                  // />
+             
                   <ShimmerPlaceholder
                     style={styles.loader}
                     ref={avatarRef}
@@ -184,18 +187,19 @@ const FocuseWorkoutList = ({navigation, route}) => {
                   source={{uri: item?.workout_image}}
                   onLoad={() => setIsLoading(false)}
                   style={{
-                    width: 60,
-                    height: 60,
+                    width: 70,
+                    height: 70,
                     justifyContent: 'center',
                     alignSelf: 'center',
-                    //borderRadius: 5,
-                    // backgroundColor:'red',
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    borderColor: '#D9D9D9',
                  
                   
                   }}
                   resizeMode="cover"
                 />
-            </View>
+            {/* </View> */}
                 <View style={{marginHorizontal: 25, top: 10}}>
                   <View style={{width: DeviceWidth * 0.47}}>
                     <Text
@@ -346,6 +350,8 @@ const FocuseWorkoutList = ({navigation, route}) => {
 
               <View>{getProgress(item, totalTime)}</View>
             </TouchableOpacity>
+          
+            {getAdsDisplay(item,index)}
           </>
         );
       },
@@ -493,6 +499,62 @@ const FocuseWorkoutList = ({navigation, route}) => {
       </View>
     );
   };
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
+  };
+  const getAdsDisplay = (item,index) => {
+  
+    if (execrise.length >= 1) {
+      if (index == 0) {
+        return getNativeAdsDisplay();
+      } else if ((index + 1) % 8 == 0) {
+        return getNativeAdsDisplay();
+      }
+    }
+  };
+  const getNativeAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return  null;
+      } else {
+        return (
+          <View
+            style={{
+              alignSelf: 'center',
+              alignItems: 'center',
+
+     
+            }}>
+            <NativeAddTest type="image" media={false} />
+          </View>
+        );
+      }
+    } else {
+      return (
+        <View
+          style={{
+            alignSelf: 'center',
+            alignItems: 'center',
+
+    
+          }}>
+          <NativeAddTest type="image" media={false} />
+        </View>
+      );
+    }
+  };
   return (
     <>
       <NewHeader
@@ -519,6 +581,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
           />
         </View>
       </View>
+      {bannerAdsDisplay()}
     </>
   );
 };
@@ -539,8 +602,8 @@ const styles = StyleSheet.create({
     zIndex: 1,
     height: 70,
     width: 70,
-    left: -10,
-    borderRadius: 10,
+    left: 0,
+    borderRadius: 5,
   },
 });
 export default FocuseWorkoutList;

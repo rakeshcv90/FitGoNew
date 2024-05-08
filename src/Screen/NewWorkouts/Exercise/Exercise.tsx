@@ -449,6 +449,7 @@ const Exercise = ({navigation, route}: any) => {
 
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
+    
     try {
       const res = await axios({
         url: challenge ? NewAppapi.POST_CHALLENGE : NewAppapi.POST_EXERCISE,
@@ -566,7 +567,11 @@ const Exercise = ({navigation, route}: any) => {
             <TouchableOpacity
               style={{alignSelf: 'center', marginTop: 20}}
               onPress={() => {
-                type == 'day' ? navigation.goBack() : deleteTrackExercise();
+                type == 'day'
+                  ? navigation.goBack()
+                  : type == 'custom'
+                  ? navigation.goBack()
+                  : deleteTrackExercise();
               }}>
               <Text
                 style={{
