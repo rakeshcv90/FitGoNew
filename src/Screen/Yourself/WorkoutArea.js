@@ -140,7 +140,7 @@ const WorkoutArea = ({route, navigation}) => {
         style={{
           justifyContent: 'center',
           alignItems: 'center',
-          marginTop:-(Platform.OS=='android'?DeviceHeigth * 0.035:DeviceHeigth * 0.065)
+          marginTop:-(Platform.OS=='android'?DeviceHeigth * 0.03:DeviceHeigth * 0.065)
           
         }}>
         <Bulb

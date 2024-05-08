@@ -31,6 +31,8 @@ import RNFetchBlob from 'rn-fetch-blob';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
+import GradientButton from '../../Component/GradientButton';
+import moment from 'moment';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -41,7 +43,8 @@ const CustomWorkoutDetails = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [forLoading, setForLoading] = useState(false);
   const [trackerData, setTrackerData] = useState([]);
-  const [downloaded, setDownloade] = useState(0);
+  const [downloaded, setDownloade] = useState(false);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
 
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const dispatch = useDispatch();
@@ -66,7 +69,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
         StoringData[data?.exercise_title] = filePath;
-        setDownloade(pre => pre + 1);
+        setDownloade(true);
         console.log('Downloaded Items is', filePath);
       } else {
         await RNFetchBlob.config({
@@ -81,7 +84,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           })
           .then(res => {
             StoringData[data?.exercise_title] = res.path();
-            setDownloade(pre => pre + 1);
+            setDownloade(true);
             console.log('Downloadeding Items is', res.path());
           })
           .catch(err => {
@@ -144,6 +147,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
         user_exercise_id: exercise?.exercise_id,
       });
     }
+  
     Promise.all(
       data?.exercise_data.map((item, index) =>
         downloadVideos(item, index, data?.exercise_data.length),
@@ -155,13 +159,13 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           method: 'Post',
           data: {user_details: datas},
         });
-
+      console.log("ghhghghghgghghgh",res.data)
         if (res.data) {
           if (
             res.data?.msg ==
             'Exercise Status for All Users Inserted Successfully'
           ) {
-            setDownloade(0);
+            setDownloade(false);
             navigation.navigate('Exercise', {
               allExercise: data?.exercise_data,
               // currentExercise: data?.exercise_data[0],
@@ -177,7 +181,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               type: 'custom',
             });
           } else {
-            setDownloade(0);
+            setDownloade(false);
             navigation.navigate('Exercise', {
               allExercise: data?.exercise_data,
               // currentExercise: data?.exercise_data[0],
@@ -202,6 +206,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
   const renderItem = useMemo(
     () =>
       ({item}) => {
+
         return (
           <>
             <TouchableOpacity
@@ -238,13 +243,6 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                 }),
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                {isLoading && (
-                  <ShimmerPlaceholder
-                    style={styles.loader}
-                    ref={avatarRef}
-                    autoRun
-                  />
-                )}
                 <View
                   style={{
                     height: 70,
@@ -255,12 +253,19 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                     marginHorizontal: -12,
                     // alignItems: 'center',
                   }}>
+                  {isLoading && (
+                    <ShimmerPlaceholder
+                      style={styles.loader}
+                      ref={avatarRef}
+                      autoRun
+                    />
+                  )}
                   <Image
                     //  source={{uri: item?.exercise_image_link}}
                     source={
                       item?.exercise_image_link != null
                         ? {uri: item?.exercise_image_link}
-                        : localImage.Noimage
+                        : localImage.NOWORKOUT
                     }
                     onLoad={() => setIsLoading(false)}
                     style={{
@@ -275,10 +280,12 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                 </View>
                 <View
                   style={{
+                    width: DeviceWidth * 0.5,
                     marginHorizontal: 25,
                     justifyContent: 'center',
                   }}>
                   <Text
+                    numberOfLines={1}
                     style={{
                       fontSize: 17,
                       fontWeight: '600',
@@ -292,16 +299,26 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                     <Text
                       style={{
                         fontSize: 12,
-                        fontWeight: '600',
+                        fontWeight: '700',
                         color: '#202020',
                         lineHeight: 30,
 
                         fontFamily: Fonts.MONTSERRAT_MEDIUM,
                       }}>
                       {'Time : '}
-                      {item?.exercise_rest}
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontWeight: '600',
+                          color: '#202020',
+                          lineHeight: 30,
+
+                          fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                        }}>
+                        {' '}
+                        {item?.exercise_rest}
+                      </Text>
                     </Text>
-                   
                   </View>
                 </View>
               </View>
@@ -424,6 +441,19 @@ const CustomWorkoutDetails = ({navigation, route}) => {
       dispatch(setCustomWorkoutData([]));
     }
   };
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
+  };
   return (
     <>
       <NewHeader
@@ -527,24 +557,39 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           />
         </View>
         {data?.exercise_data.length > 0 && (
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            activeOpacity={0.5}
-            onPress={() => {
-              postCurrentDayAPI();
-            }}>
-            <LinearGradient
-              start={{x: 0, y: 1}}
-              end={{x: 1, y: 0}}
-              colors={['#D01818', '#941000']}
-              style={styles.buttonStyle}>
-              <Image
-                source={localImage.Biceps}
-                style={{width: 20, height: 20}}
-              />
-              <Text style={styles.button}>{'Start Workout'}</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+          <View style={{alignSelf: 'flex-end'}}>
+            <GradientButton
+              // play={false}
+              // oneDay
+              flex={0.01}
+              w={DeviceWidth * 0.4}
+              text={downloaded ? `Downloading` : `Start Workout`}
+              h={DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1}
+              textStyle={{
+                fontSize: DeviceHeigth >= 1024 ? 20 : 16,
+                fontFamily: 'Montserrat-SemiBold',
+                lineHeight: 30,
+                fontWeight: '700',
+                zIndex: 1,
+                color: AppColor.WHITE,
+              }}
+              alignSelf
+              bR={
+                DeviceHeigth >= 1024
+                  ? (DeviceWidth * 0.08) / 2
+                  : (DeviceHeigth * 0.1) / 2
+              }
+              // mB={80}
+              bottm={30}
+              mR={20}
+              weeklyAnimation={downloaded}
+              // fillBack="#EB1900"
+              // fill={downloaded > 0 ? `${100 / downloaded}%` : '0%'}
+              onPress={() => {
+                postCurrentDayAPI();
+              }}
+            />
+          </View>
         )}
       </View>
       <Modal
@@ -620,7 +665,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           </TouchableOpacity>
         </BlurView>
       </Modal>
-      <BannerAdd bannerAdId={bannerAdId} />
+      {bannerAdsDisplay()}
     </>
   );
 };
@@ -695,9 +740,10 @@ const styles = StyleSheet.create({
     backgroundColor: AppColor.GRAY,
     zIndex: 1,
     height: 72,
-    width: 70,
-    left: -12,
-    borderRadius: 10,
+    top: -2,
+    width: 75,
+    left: -2,
+    borderRadius: 5,
   },
 });
 export default CustomWorkoutDetails;

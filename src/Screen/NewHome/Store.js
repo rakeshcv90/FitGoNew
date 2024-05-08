@@ -47,6 +47,7 @@ const Store = ({navigation}) => {
   const [forLoading, setForLoading] = useState(false);
   const [category, setcategory] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState(getStoreData);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const avatarRef = React.createRef();
   const dispatch = useDispatch();
   useFocusEffect(
@@ -116,6 +117,19 @@ const Store = ({navigation}) => {
         />
       </View>
     );
+  };
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
   };
   return (
     <View style={styles.container}>
@@ -212,7 +226,7 @@ const Store = ({navigation}) => {
           alignSelf: 'center',
           alignItems: 'center',
           top: 10,
-          marginBottom: DeviceHeigth * 0.42,
+          marginBottom: DeviceHeigth * 0.45,
         }}>
         <Text
           style={{
@@ -231,13 +245,14 @@ const Store = ({navigation}) => {
           style={{
             alignSelf: 'center',
 
-            paddingBottom:
-              Platform.OS == 'android'
-                ? 50
-                : DeviceHeigth <= 667
-                ? DeviceHeigth * 0.15
-                : 15,
-          }}>
+            // paddingBottom:
+            //   Platform.OS == 'android'
+            //     ? 50
+            //     : DeviceHeigth <= 667
+            //     ? DeviceHeigth * 0.15
+            //     : 15,
+          }}
+          >
           {forLoading ? (
             <FlatList
               data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
@@ -251,9 +266,10 @@ const Store = ({navigation}) => {
                       ref={avatarRef}
                       autoRun
                       style={{
-                        height: 90,
-                        width: 90,
-                        borderRadius: 180 / 2,
+                        height: 80,
+                        width: 80,
+                        top: 5,
+                        borderRadius: 160 / 2,
                         alignSelf: 'center',
                       }}
                     />
@@ -262,7 +278,7 @@ const Store = ({navigation}) => {
                       autoRun
                       style={{
                         width: 80,
-                        top: 10,
+                        top: 5,
                         alignSelf: 'center',
                       }}
                     />
@@ -332,9 +348,14 @@ const Store = ({navigation}) => {
             />
           )}
         </View>
-        <View style={{position: 'absolute', bottom: 0}}>
-          <BannerAdd bannerAdId={bannerAdId} />
-        </View>
+      </View>
+      {console.log('CVDvdfgdg', DeviceHeigth)}
+      <View
+        style={{
+          position: 'absolute',
+          bottom: DeviceHeigth >= 844 ? -DeviceHeigth * 0.005 : 0,
+        }}>
+    {   bannerAdsDisplay()}
       </View>
     </View>
   );

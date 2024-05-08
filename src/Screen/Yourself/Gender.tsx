@@ -91,7 +91,7 @@ const Gender = ({route, navigation}: any) => {
         alignItems:'center'
       }}>
       <ProgressBar screen={screen}/>
-      <View style={{marginTop:- DeviceHeigth * 0.06}}>
+      <View style={{marginTop:Platform.OS=='ios'?- DeviceHeigth * 0.06:- DeviceHeigth * 0.03}}>
       <Bulb
         screen={'Select your Gender'}
     

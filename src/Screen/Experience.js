@@ -71,7 +71,7 @@ const Experience = ({route, navigation}) => {
   };
   const handleButtonPress = () => {
    if(selected?.txt!='Beginner'){
-    dispatch(setProgressBarCounter(10))
+    dispatch(setProgressBarCounter(8))
     navigation.navigate(
     'AskToCreateWorkout',
       {
@@ -98,7 +98,7 @@ const Experience = ({route, navigation}) => {
   return (
     <View style={styles.Container}>
       <ProgressBar screen={screen} Type />
-      <View style={{marginTop:- DeviceHeigth * 0.06}}>
+      <View style={{marginTop:Platform.OS=='ios'?- DeviceHeigth * 0.06:- DeviceHeigth * 0.03}}>
       <Bulb screen={'Choose your fitness level'} />
       </View>
   

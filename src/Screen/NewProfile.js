@@ -561,7 +561,7 @@ const NewProfile = ({navigation}) => {
           setModalVisible(false);
           showMessage({
             message: 'Your account deleted successfully',
-            statusBarHeight: getStatusBarHeight(),
+            // statusBarHeight: getStatusBarHeight(),
             floating: true,
             type: 'info',
             animationDuration: 750,
@@ -575,7 +575,7 @@ const NewProfile = ({navigation}) => {
         setModalVisible(false);
         showMessage({
           message: 'Something went wrong',
-          statusBarHeight: getStatusBarHeight(),
+          // statusBarHeight: getStatusBarHeight(),
           floating: true,
           type: 'danger',
           animationDuration: 750,
@@ -676,7 +676,7 @@ const NewProfile = ({navigation}) => {
       {getUserDataDetails?.name || getUserDataDetails.email != null ? (
         <>
           <View style={styles.ProfileContainer}>
-            <View style={styles.profileView}>
+            <View style={[styles.profileView,{}]}>
               <Image
                 source={
                   getUserDataDetails.image_path == null
@@ -704,7 +704,7 @@ const NewProfile = ({navigation}) => {
                   fontFamily: Fonts.MONTSERRAT_BOLD,
                   color: AppColor.BLACK,
                   fontSize: 20,
-                  top: -16,
+            
                 }}>
                 {getUserDataDetails?.name == null
                   ? 'Guest'
@@ -716,7 +716,7 @@ const NewProfile = ({navigation}) => {
                   color: AppColor.BLACK,
                   fontSize: 14,
                   fontWeight: '500',
-                  top: -16,
+                 
                 }}>
                 {getUserDataDetails?.email == null
                   ? 'guest@gmail.com'
@@ -806,6 +806,7 @@ const NewProfile = ({navigation}) => {
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     fontWeight: '600',
                     marginTop: 10,
+                    color:AppColor.BLACK
                   }}>
                   {v.txt}
                 </Text>
@@ -881,6 +882,7 @@ const NewProfile = ({navigation}) => {
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     fontSize: 16,
                     marginLeft: 10,
+                    color:AppColor.BLACK
                   }}>
                   {v.txt}
                 </Text>
@@ -959,6 +961,7 @@ const NewProfile = ({navigation}) => {
             fontSize: 18,
             marginLeft: 20,
             marginVertical: 10,
+            color:AppColor.BLACK
           }}>
           Others
         </Text>
@@ -1032,17 +1035,17 @@ const styles = StyleSheet.create({
     borderRadius: 100 / 2,
     justifyContent: 'center',
     alignItems: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 5},
-        shadowOpacity: 0.3,
-        shadowRadius: 10,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
+    // ...Platform.select({
+    //   ios: {
+    //     shadowColor: '#000000',
+    //     shadowOffset: {width: 0, height: 5},
+    //     shadowOpacity: 0.3,
+    //     shadowRadius: 10,
+    //   },
+    //   android: {
+    //     elevation: 5,
+    //   },
+    // }),
   },
   ProfileContainer: {
     flexDirection: 'row',
@@ -1057,9 +1060,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#D9D9D9',
     justifyContent: 'center',
     alignItems: 'center',
-    // position: 'absolute',
-    top: -27,
-    left: 25,
+    position: 'absolute',
+    top: 74,
+    right: 12,
     borderWidth: 1,
     borderColor: AppColor.GRAY,
   },
@@ -1077,6 +1080,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
     fontSize: 16,
     marginLeft: 10,
+    color:AppColor.BLACK
   },
   modalContainer: {
     justifyContent: 'flex-end',

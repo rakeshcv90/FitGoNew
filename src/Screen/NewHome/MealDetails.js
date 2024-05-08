@@ -19,17 +19,33 @@ import {useSelector} from 'react-redux';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import HTMLRender from 'react-native-render-html';
-import { BannerAdd } from '../../Component/BannerAdd';
-import { bannerAdId } from '../../Component/AdsId';
+import {BannerAdd} from '../../Component/BannerAdd';
+import {bannerAdId} from '../../Component/AdsId';
+import moment from 'moment';
 
 const MealDetails = ({route, navigation}) => {
   const getStoreVideoLoc = useSelector(state => state.getStoreVideoLoc);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
 
   const customStyles = {
     fontFamily: 'Poppins',
     fontSize: 10,
     fontWeight: '400',
     color: AppColor.INPUTLABLECOLOR,
+  };
+
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
   };
   return (
     <View style={styles.container}>
@@ -190,7 +206,7 @@ const MealDetails = ({route, navigation}) => {
             </View>
           </View>
         </View>
-        <View style={{width: '100%', height:DeviceHeigth*0.03,}} />
+        <View style={{width: '100%', height: DeviceHeigth * 0.03}} />
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{flexGrow: 1}}>
@@ -293,7 +309,7 @@ const MealDetails = ({route, navigation}) => {
           <View
             style={{
               marginVertical: DeviceHeigth * 0.032,
-            //  marginBottom: DeviceHeigth * 0.45,
+              //  marginBottom: DeviceHeigth * 0.45,
             }}>
             <View
               style={{
@@ -345,7 +361,10 @@ const MealDetails = ({route, navigation}) => {
           </View>
         </ScrollView>
       </View>
-      <BannerAdd bannerAdId={bannerAdId} />
+
+      <View style={{position: 'absolute', bottom: -2}}>
+        {bannerAdsDisplay()}
+      </View>
     </View>
   );
 };

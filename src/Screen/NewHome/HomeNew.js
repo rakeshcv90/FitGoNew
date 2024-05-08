@@ -191,7 +191,10 @@ const HomeNew = ({navigation}) => {
   useEffect(() => {
     if (isFocused) {
       allWorkoutApi();
-      allWorkoutData?.length == 0 && allWorkoutApi();
+      getWorkoutStatus();
+      setTimeout(() => {
+        ActivityPermission();
+      }, 2000);
     }
   }, [isFocused]);
   useEffect(() => {
@@ -316,19 +319,9 @@ const HomeNew = ({navigation}) => {
 
     return {one, two};
   }
-  useEffect(() => {
-    if (isFocused) {
-      // getCustomeWorkoutTimeDetails();
-      getWorkoutStatus();
 
-      setTimeout(() => {
-        ActivityPermission();
-      }, 2000);
-    }
-  }, [isFocused]);
   const ActivityPermission = async () => {
     if (Platform.OS == 'android') {
-      // fetchData();
     } else if (Platform.OS == 'ios') {
       AppleHealthKit.isAvailable((err, available) => {
         const permissions = {
@@ -392,47 +385,6 @@ const HomeNew = ({navigation}) => {
         }
       });
     }
-  };
-  // const fetchData = async () => {
-  //   if (!getStepCounterOnoff) {
-  //     // setPaddoModalShow(true);
-  //     Alert.alert('FitMe wants to track your health data !', '', [
-  //       {
-  //         text: 'Cancel',
-  //         style: 'cancel',
-  //       },
-  //       {
-  //         text: 'Allow',
-  //         onPress: () => {
-  //           handleAlert();
-  //         },
-  //       },
-  //     ]);
-  //   } else {
-  //     GoogleFit.authorize(options)
-  //       .then(authResult => {
-  //         if (authResult.success) {
-  //           checkPermissions();
-  //         } else {
-  //         }
-  //       })
-  //       .catch(error => {
-  //         console.error('Authentication error', error);
-  //       });
-  //   }
-  // };
-  const handleAlert = async () => {
-    setPaddoModalShow(false);
-    await GoogleFit.authorize(options)
-      .then(authResult => {
-        if (authResult.success) {
-          checkPermissions();
-        } else {
-        }
-      })
-      .catch(error => {
-        console.error('Authentication error', error);
-      });
   };
 
   const locationPermission = () => {
@@ -551,197 +503,7 @@ const HomeNew = ({navigation}) => {
       </Modal>
     );
   };
-  const checkPermissions = async () => {
-    if (Platform.Version < 30) {
-      fetchTotalSteps();
-      startRecording();
-      dispatch(setStepCounterOnOff(true));
-    }
-    const fitnessPermissionResult = await check(
-      PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
-    );
-    if (fitnessPermissionResult != RESULTS.GRANTED) {
-      const permissionRequestResult = await request(
-        PERMISSIONS.ANDROID.ACTIVITY_RECOGNITION,
-      );
-      if (permissionRequestResult === RESULTS.GRANTED) {
-        if (getStepCounterOnoff == true) {
-          fetchTotalSteps();
-          startRecording();
-        } else {
-          fetchTotalSteps();
-          // startStepUpdateBackgroundTask();
-          dispatch(setStepCounterOnOff(true));
-        }
-      } else {
-      }
-    } else {
-      if (getStepCounterOnoff == true) {
-        fetchTotalSteps();
-        startRecording();
-      } else {
-        fetchTotalSteps();
-        //startStepUpdateBackgroundTask();
-        dispatch(setStepCounterOnOff(true));
-      }
-    }
-  };
-  const startRecording = () => {
-    GoogleFit.startRecording(() => {
-      GoogleFit.observeSteps(() => {
-        fetchTotalSteps();
-      });
-    });
-  };
-  const fetchTotalSteps = async () => {
-    try {
-      await AsyncStorage.setItem('hasPermissionForStepCounter', 'true');
-      const dailySteps = await GoogleFit.getDailySteps();
 
-      dailySteps.reduce(
-        (total, acc) =>
-          (totalSteps = total + acc.steps[0] ? acc.steps[0].value : 0),
-        0,
-      );
-      stepsRef.current = totalSteps;
-      setSteps(totalSteps);
-      distanceRef.current = ((totalSteps / 20) * 0.01).toFixed(2);
-      setDistance(((totalSteps / 20) * 0.01).toFixed(2));
-      caloriesRef.current = ((totalSteps / 20) * 1).toFixed(1);
-      setCalories(Math.round(((totalSteps / 20) * 1).toFixed(2)));
-    } catch (error) {
-      console.error('Error fetching total steps', error);
-    }
-  };
-  // const options = {
-  //   scopes: [Scopes.FITNESS_ACTIVITY_READ, Scopes.FITNESS_ACTIVITY_WRITE],
-  // };
-  // const startStepUpdateBackgroundTask = async () => {
-  //   try {
-  //     await BackgroundService.start(veryIntensiveTask, options1);
-  //   } catch (e) {
-  //     console.error('Error starting step update background service:', e);
-  //   }
-  // };
-  // const PedoMeterData = async () => {
-  //   try {
-  //     const res = await axios({
-  //       url: NewAppapi.PedometerAPI,
-  //       method: 'post',
-  //       data: {
-  //         user_id: getUserDataDetails?.id,
-  //         steps: stepsRef.current,
-  //         calories: caloriesRef.current,
-  //         distance: distanceRef.current,
-  //         version: VersionNumber.appVersion,
-  //       },
-  //     });
-  //     if (res?.data?.msg == 'Please update the app to the latest version.') {
-  //       showMessage({
-  //         message: res?.data?.msg,
-  //         type: 'danger',
-  //         animationDuration: 500,
-  //         floating: true,
-  //         icon: {icon: 'auto', position: 'left'},
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log('PedometerAPi Error', error.response);
-  //   }
-  // };
-  // const sleep = time =>
-  //   new Promise(resolve => setTimeout(() => resolve(), time));
-  // const veryIntensiveTask = async taskDataArguments => {
-  //   const {delay} = taskDataArguments;
-  //   const isSpecificTime = (hour, minute) => {
-  //     const now = moment.utc(); // Get current time in UTC
-  //     const specificTimeUTC = now
-  //       .clone()
-  //       .set({hour, minute, second: 0, millisecond: 0});
-  //     const istTime = moment.utc().add(5, 'hours').add(30, 'minutes');
-  //     // Compare only the hours and minutes
-  //     return (
-  //       istTime.hours() === specificTimeUTC.hours() &&
-  //       istTime.minutes() === specificTimeUTC.minutes()
-  //     );
-  //   };
-  //   // Example usage with a specific time (midnight in IST)
-  //   const specificHour = 23;
-  //   const specificMinute = 29;
-  //   await new Promise(async resolve => {
-  //     for (let i = 0; BackgroundService.isRunning(); i++) {
-  //       if (isSpecificTime(specificHour, specificMinute)) {
-  //         PedoMeterData();
-  //       } else {
-  //       }
-  //       try {
-  //         const dailySteps = await GoogleFit.getDailySteps();
-  //         dailySteps.reduce(
-  //           (total, acc) =>
-  //             (totalSteps = total + acc.steps[0] ? acc.steps[0].value : 0),
-  //           0,
-  //         );
-  //       } catch (error) {
-  //         console.error('Error fetching total steps', error);
-  //       }
-  //       BackgroundService.updateNotification({
-  //         taskDesc: `${totalSteps}`,
-  //         color: AppColor.RED,
-  //         progressBar: {
-  //           max: stepGoalProfile,
-  //           value: stepsRef.current,
-  //           indeterminate: false,
-  //           color: AppColor.RED,
-  //         },
-  //         parameters: {
-  //           delay: 60000,
-  //         },
-  //       });
-
-  //       await sleep(delay);
-  //     }
-  //   });
-  // };
-  // const options1 = {
-  //   taskName: 'StepUpdateBackgroundTask',
-  //   taskTitle: `Steps`,
-  //   taskDesc: `${stepsRef.current}`,
-  //   taskIcon: {
-  //     name: 'ic_launcher',
-  //     type: 'mipmap',
-  //   },
-  //   progressBar: {
-  //     max: stepGoalProfile,
-  //     value: stepsRef.current,
-  //     indeterminate: false,
-  //   },
-  //   color: AppColor.RED,
-  //   linkingURI: 'yourapp://backgroundTask',
-  //   parameters: {
-  //     delay: 60000,
-  //   },
-  // };
-  // const getCustomeWorkoutTimeDetails = async () => {
-  //   try {
-  //     const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       data: {
-  //         user_id: getUserID != 0 ? getUserID : getUserDataDetails.id,
-  //       },
-  //     });
-
-  //     if (data.data.results.length > 0) {
-  //       dispatch(setWorkoutTimeCal(data.data.results));
-  //     } else {
-  //       dispatch(setWorkoutTimeCal([]));
-  //     }
-  //   } catch (error) {
-  //     console.log('UCustomeCorkout details', error);
-  //   }
-  // };
   const getWorkoutStatus = async () => {
     try {
       const exerciseStatus = await axios.get(
@@ -763,7 +525,6 @@ const HomeNew = ({navigation}) => {
   };
   const allWorkoutApi = async () => {
     try {
-      //  setRefresh(true);
       const payload = new FormData();
       payload.append('id', getUserDataDetails?.id);
 
@@ -890,22 +651,8 @@ const HomeNew = ({navigation}) => {
           onPress={() => {
             navigation.navigate('AITrainer', {item: item});
           }}>
-          {/* {imageLoad && (
-            <ShimmerPlaceholder
-              style={{
-                height: 90,
-                width: 90,
-                borderRadius: 180 / 2,
-                alignSelf: 'center',
-                top: -5,
-              }}
-              ref={avatarRef}
-              autoRun
-            />
-          )} */}
           <Image
             source={item?.img}
-            // onLoad={() => setImageLoad(false)}
             style={[
               styles.img,
               {
@@ -1209,7 +956,7 @@ const HomeNew = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           flexGrow: 1,
-          paddingBottom: DeviceHeigth * 0.05,
+          paddingBottom: DeviceHeigth * 0.1,
         }}
         refreshControl={
           <RefreshControl
@@ -1284,21 +1031,22 @@ const HomeNew = ({navigation}) => {
                   style={{
                     width: 90,
                     height: 100,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: '#D9D9D9',
+                    // borderRadius: 10,
+                    // borderWidth: 1,
+                    //  borderColor: '#D9D9D9',
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginHorizontal: 11,
                     marginVertical: 10,
                   }}>
                   <Image
-                    source={require('../../Icon/Images/NewImage2/human.png')}
+                    source={{uri: currentChallenge[0]?.workout_image}}
                     style={{
-                      width: 70,
-                      height: 70,
+                      width: 90,
+                      height: 90,
+                      borderRadius: 10,
                     }}
-                    resizeMode="contain"
+                    resizeMode="cover"
                   />
                 </View>
                 <View
@@ -1313,7 +1061,7 @@ const HomeNew = ({navigation}) => {
                       fontSize: 14,
                       fontWeight: '600',
                       lineHeight: 18,
-                      marginHorizontal: 10,
+                      //marginHorizontal: 5,
                       color: AppColor.HEADERTEXTCOLOR,
                     }}>
                     {currentChallenge[0]?.title}
@@ -1324,7 +1072,7 @@ const HomeNew = ({navigation}) => {
                       fontSize: 14,
                       fontWeight: '600',
                       lineHeight: 20,
-                      marginHorizontal: 10,
+                      // marginHorizontal: 5,
                       top: 5,
                       color: AppColor.HEADERTEXTCOLOR,
                     }}>
@@ -1373,7 +1121,7 @@ const HomeNew = ({navigation}) => {
                   style={{
                     width: 50,
                     height: 50,
-                    marginRight: 10,
+                    marginRight: 20,
                     //alignContent: 'flex-end',
                   }}
                   resizeMode="contain"
@@ -1382,381 +1130,243 @@ const HomeNew = ({navigation}) => {
             </View>
           </View>
         )}
-        <View style={{width: '95%', alignSelf: 'center'}}>
-          <Text
-            style={{
-              color: AppColor.HEADERTEXTCOLOR,
-              fontFamily: Fonts.MONTSERRAT_BOLD,
-              fontWeight: '600',
-              lineHeight: 19,
-              fontSize: 18,
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-            }}>
-            Health Overview
-          </Text>
-        </View>
-        <View style={{width: '95%', alignSelf: 'center'}}>
-          <View style={styles.CardBox}>
-            <TouchableOpacity
-              onPress={handleLongPress}
-              activeOpacity={0.5}
-              style={{
-                width: 20,
-                height: 20,
-                right: -5,
-                top: -10,
-                margin: 10,
-                alignItems: 'center',
-                alignSelf: 'flex-end',
-                justifyContent: 'center',
-                zIndex: 1,
-              }}>
-              <Image
-                source={require('../../Icon/Images/NewImage/editpen.png')}
-                style={[
-                  styles.img,
-                  {
-                    height: 20,
-                    width: 20,
-                  },
-                ]}
-                resizeMode="contain"></Image>
-            </TouchableOpacity>
-
-            <View
-              style={{
-                width: '100%',
-                padding: 10,
-
-                marginTop: -40,
-                justifyContent: 'space-evenly',
-                flexDirection: 'row',
-              }}>
-              <View style={{alignItems: 'center'}}>
-                <View style={styles.circle}>
-                  <LinearGradient
-                    style={[
-                      styles.circleFill,
-                      {
-                        height: getPercent(
-                          Platform.OS == 'ios' ? steps : stepsRef.current,
-                          stepGoalProfile,
-                        ),
-                      },
-                    ]}
-                    start={{x: 0, y: 1}}
-                    end={{x: 1, y: 0}}
-                    colors={['#5FB67B', '#00B53A']}
-                  />
-                  <Image
-                    source={localImage.Step3}
-                    style={[
-                      styles.img,
-                      {
-                        height: 40,
-                        width: 30,
-                      },
-                    ]}
-                    resizeMode="contain"
-                  />
-                </View>
-
-                <View style={{marginVertical: 10}}>
-                  <Text
-                    style={[
-                      styles.monetText,
-                      {
-                        color: '#5FB67B',
-                        fontSize: 12,
-                        fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                      },
-                    ]}>
-                    {Platform.OS == 'ios' ? steps : stepsRef.current}
-                    <Text
-                      style={[
-                        styles.monetText,
-                        {
-                          color: '#505050',
-                          fontSize: 10,
-                          fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                        },
-                      ]}>
-                      {`/${stepGoalProfile}`}
-                    </Text>
-                  </Text>
-                </View>
-                <View>
-                  <Text style={styles.monetText2}>Steps</Text>
-                </View>
-              </View>
-              <View style={{alignItems: 'center'}}>
-                <View style={styles.circle}>
-                  <LinearGradient
-                    style={[
-                      styles.circleFill,
-                      {
-                        height: getPercent(
-                          Platform.OS == 'ios' ? distance : distanceRef.current,
-                          DistanceGoalProfile,
-                        ),
-                      },
-                    ]}
-                    start={{x: 0, y: 1}}
-                    end={{x: 1, y: 0}}
-                    colors={['#FFBA12', '#F1AC02']}
-                  />
-                  <Image
-                    source={require('../../Icon/Images/NewImage2/Point.png')}
-                    style={[
-                      styles.img,
-                      {
-                        height: 35,
-                        width: 30,
-                      },
-                    ]}
-                    resizeMode="contain"></Image>
-                </View>
-                <View style={{marginVertical: 10}}>
-                  <Text
-                    style={[
-                      styles.monetText,
-                      {
-                        color: '#FCBB1D',
-                        fontSize: 12,
-                        fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                      },
-                    ]}>
-                    {Platform.OS == 'ios' ? distance : distanceRef.current}
-                    <Text
-                      style={[
-                        styles.monetText,
-                        {
-                          color: '#505050',
-                          fontSize: 10,
-                          fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                        },
-                      ]}>
-                      {`/${DistanceGoalProfile} km `}
-                    </Text>
-                  </Text>
-                </View>
-                <View>
-                  <Text style={styles.monetText2}>Distance</Text>
-                </View>
-              </View>
-              <View style={{alignItems: 'center'}}>
-                <View style={styles.circle}>
-                  <LinearGradient
-                    style={[
-                      styles.circleFill,
-                      {
-                        height: getPercent(
-                          Platform.OS == 'ios' ? Calories : caloriesRef.current,
-                          CalriesGoalProfile,
-                        ),
-                      },
-                    ]}
-                    start={{x: 0, y: 1}}
-                    end={{x: 1, y: 0}}
-                    colors={['#941000', '#D5191A']}
-                  />
-                  <Image
-                    source={localImage.Step1}
-                    style={[
-                      styles.img,
-                      {
-                        height: 35,
-                        width: 30,
-                      },
-                    ]}
-                    resizeMode="contain"></Image>
-                </View>
-                <View style={{marginVertical: 10}}>
-                  <Text
-                    style={[
-                      styles.monetText,
-                      {
-                        color: '#D01818',
-                        fontSize: 12,
-                        fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                      },
-                    ]}>
-                    {Platform.OS == 'ios' ? Calories : caloriesRef.current}
-                    <Text
-                      style={[
-                        styles.monetText,
-                        {
-                          color: '#505050',
-                          fontSize: 10,
-                          fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                        },
-                      ]}>
-                      {`/${CalriesGoalProfile} Kcal`}
-                    </Text>
-                  </Text>
-                </View>
-                <View>
-                  <Text style={styles.monetText2}>Calories</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
-        <View
-          style={{
-            width: '95%',
-            alignSelf: 'center',
-            top: DeviceHeigth * 0.07,
-          }}>
-          <Text
-            style={{
-              color: AppColor.HEADERTEXTCOLOR,
-              fontFamily: Fonts.MONTSERRAT_BOLD,
-              fontWeight: '600',
-              lineHeight: 21,
-              fontSize: 18,
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-            }}>
-            Nearby Gyms
-          </Text>
-        </View>
-        <LinearGradient
-          start={{x: 1, y: 0}}
-          end={{x: 0, y: 1}}
-          colors={['#142D91', '#142D91', '#27A4C2']}
-          style={{
-            width: '95%',
-            alignSelf: 'center',
-            borderRadius: 20,
-            top: DeviceHeigth * 0.09,
-            // top: DeviceHeigth >= 1024 ? -30 : -20,
-            paddingVertical: 15,
-            opacity: 0.8,
-            justifyContent: 'center',
-          }}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={locationPermission}
-            style={
-              {
-                //  backgroundColor: AppColor.WHITE,
-              }
-            }>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}>
-              <View
-                style={{
-                  marginHorizontal:
-                    Platform.OS == 'android'
-                      ? DeviceWidth * 0.03
-                      : DeviceHeigth >= 1024
-                      ? DeviceWidth * 0.03
-                      : DeviceWidth * 0.02,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    color: AppColor.WHITE,
-                    lineHeight: 30,
-                    fontWeight: '600',
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                  }}>
-                  Nearby Gyms
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    color: AppColor.WHITE,
-
-                    fontWeight: '500',
-                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                  }}>{`Gyms near your location`}</Text>
-              </View>
-              <Image
-                source={localImage.Gym}
-                style={{
-                  width: DeviceWidth * 0.3,
-                  height: 70,
-                  //backgroundColor: 'red',
-                }}
-                resizeMode="contain"
-              />
-            </View>
-          </TouchableOpacity>
-        </LinearGradient>
-        <View
-          style={{
-            flexDirection: 'row',
-            width: '95%',
-            alignSelf: 'center',
-            marginVertical: DeviceHeigth * 0.135,
-            justifyContent: 'space-between',
-          }}>
-          <Text
-            style={{
-              color: AppColor.HEADERTEXTCOLOR,
-              fontFamily: Fonts.MONTSERRAT_BOLD,
-              fontWeight: '600',
-              lineHeight: 21,
-              fontSize: 18,
-              alignItems: 'center',
-              justifyContent: 'flex-start',
-            }}>
-            Meditation
-          </Text>
-
-          {allWorkoutData?.mindset_workout_data?.length > 0 && (
-            <TouchableOpacity
-              onPress={() => {
-                analytics().logEvent('CV_FITME_CLICKED_ON_MEDITATION');
-                navigation.navigate('MeditationDetails', {
-                  item: allWorkoutData?.mindset_workout_data[0],
-                });
-              }}>
+        {Platform.OS == 'ios' && (
+          <>
+            <View style={{width: '95%', alignSelf: 'center'}}>
               <Text
                 style={{
-                  color: AppColor.BoldText,
-                  fontFamily: 'Montserrat-SemiBold',
+                  color: AppColor.HEADERTEXTCOLOR,
+                  fontFamily: Fonts.MONTSERRAT_BOLD,
                   fontWeight: '600',
-                  color: AppColor.RED1,
-                  fontSize: 12,
-                  lineHeight: 14,
+                  lineHeight: 19,
+                  fontSize: 18,
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
                 }}>
-                View All
+                Health Overview
               </Text>
-            </TouchableOpacity>
-          )}
-        </View>
-        <View style={[styles.meditionBox, {top: -DeviceHeigth * 0.115}]}>
-          <FlatList
-            data={allWorkoutData?.mindset_workout_data}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => index.toString()}
-            ListEmptyComponent={emptyComponent}
-            renderItem={({item, index}) => {
-              return (
-                <ListItem title={item} color={colors[index % colors.length]} />
-              );
-            }}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
-            updateCellsBatchingPeriod={100}
-            removeClippedSubviews={true}
-          />
-        </View>
+            </View>
+            <View style={{width: '95%', alignSelf: 'center'}}>
+              <View style={styles.CardBox}>
+                <TouchableOpacity
+                  onPress={handleLongPress}
+                  activeOpacity={0.5}
+                  style={{
+                    width: 20,
+                    height: 20,
+                    right: -5,
+                    top: -10,
+                    margin: 10,
+                    alignItems: 'center',
+                    alignSelf: 'flex-end',
+                    justifyContent: 'center',
+                    zIndex: 1,
+                  }}>
+                  <Image
+                    source={require('../../Icon/Images/NewImage/editpen.png')}
+                    style={[
+                      styles.img,
+                      {
+                        height: 20,
+                        width: 20,
+                      },
+                    ]}
+                    resizeMode="contain"></Image>
+                </TouchableOpacity>
+
+                <View
+                  style={{
+                    width: '100%',
+                    padding: 10,
+
+                    marginTop: -40,
+                    justifyContent: 'space-evenly',
+                    flexDirection: 'row',
+                  }}>
+                  <View style={{alignItems: 'center'}}>
+                    <View style={styles.circle}>
+                      <LinearGradient
+                        style={[
+                          styles.circleFill,
+                          {
+                            height: getPercent(
+                              Platform.OS == 'ios' ? steps : stepsRef.current,
+                              stepGoalProfile,
+                            ),
+                          },
+                        ]}
+                        start={{x: 0, y: 1}}
+                        end={{x: 1, y: 0}}
+                        colors={['#5FB67B', '#00B53A']}
+                      />
+                      <Image
+                        source={localImage.Step3}
+                        style={[
+                          styles.img,
+                          {
+                            height: 40,
+                            width: 30,
+                          },
+                        ]}
+                        resizeMode="contain"
+                      />
+                    </View>
+
+                    <View style={{marginVertical: 10}}>
+                      <Text
+                        style={[
+                          styles.monetText,
+                          {
+                            color: '#5FB67B',
+                            fontSize: 12,
+                            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                          },
+                        ]}>
+                        {Platform.OS == 'ios' ? steps : stepsRef.current}
+                        <Text
+                          style={[
+                            styles.monetText,
+                            {
+                              color: '#505050',
+                              fontSize: 10,
+                              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                            },
+                          ]}>
+                          {`/${stepGoalProfile}`}
+                        </Text>
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={styles.monetText2}>Steps</Text>
+                    </View>
+                  </View>
+                  <View style={{alignItems: 'center'}}>
+                    <View style={styles.circle}>
+                      <LinearGradient
+                        style={[
+                          styles.circleFill,
+                          {
+                            height: getPercent(
+                              Platform.OS == 'ios'
+                                ? distance
+                                : distanceRef.current,
+                              DistanceGoalProfile,
+                            ),
+                          },
+                        ]}
+                        start={{x: 0, y: 1}}
+                        end={{x: 1, y: 0}}
+                        colors={['#FFBA12', '#F1AC02']}
+                      />
+                      <Image
+                        source={require('../../Icon/Images/NewImage2/Point.png')}
+                        style={[
+                          styles.img,
+                          {
+                            height: 35,
+                            width: 30,
+                          },
+                        ]}
+                        resizeMode="contain"></Image>
+                    </View>
+                    <View style={{marginVertical: 10}}>
+                      <Text
+                        style={[
+                          styles.monetText,
+                          {
+                            color: '#FCBB1D',
+                            fontSize: 12,
+                            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                          },
+                        ]}>
+                        {Platform.OS == 'ios' ? distance : distanceRef.current}
+                        <Text
+                          style={[
+                            styles.monetText,
+                            {
+                              color: '#505050',
+                              fontSize: 10,
+                              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                            },
+                          ]}>
+                          {`/${DistanceGoalProfile} km `}
+                        </Text>
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={styles.monetText2}>Distance</Text>
+                    </View>
+                  </View>
+                  <View style={{alignItems: 'center'}}>
+                    <View style={styles.circle}>
+                      <LinearGradient
+                        style={[
+                          styles.circleFill,
+                          {
+                            height: getPercent(
+                              Platform.OS == 'ios'
+                                ? Calories
+                                : caloriesRef.current,
+                              CalriesGoalProfile,
+                            ),
+                          },
+                        ]}
+                        start={{x: 0, y: 1}}
+                        end={{x: 1, y: 0}}
+                        colors={['#941000', '#D5191A']}
+                      />
+                      <Image
+                        source={localImage.Step1}
+                        style={[
+                          styles.img,
+                          {
+                            height: 35,
+                            width: 30,
+                          },
+                        ]}
+                        resizeMode="contain"></Image>
+                    </View>
+                    <View style={{marginVertical: 10}}>
+                      <Text
+                        style={[
+                          styles.monetText,
+                          {
+                            color: '#D01818',
+                            fontSize: 12,
+                            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                          },
+                        ]}>
+                        {Platform.OS == 'ios' ? Calories : caloriesRef.current}
+                        <Text
+                          style={[
+                            styles.monetText,
+                            {
+                              color: '#505050',
+                              fontSize: 10,
+                              fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                            },
+                          ]}>
+                          {`/${CalriesGoalProfile} Kcal`}
+                        </Text>
+                      </Text>
+                    </View>
+                    <View>
+                      <Text style={styles.monetText2}>Calories</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </>
+        )}
+
         <>
           <View
             style={{
               width: '95%',
               alignSelf: 'center',
-              top: -DeviceHeigth * 0.085,
+              top: 5,
+              marginVertical: Platform.OS == 'ios' ? DeviceHeigth * 0.06 : 0,
             }}>
             <Text
               style={{
@@ -1778,7 +1388,10 @@ const HomeNew = ({navigation}) => {
             style={{
               width: '95%',
               borderRadius: 20,
-              top: -DeviceHeigth * 0.06,
+              marginVertical:
+                Platform.OS == 'android'
+                  ? DeviceHeigth * 0.02
+                  : -DeviceHeigth * 0.035,
               paddingVertical: 15,
               alignSelf: 'center',
               justifyContent: 'center',
@@ -1845,11 +1458,177 @@ const HomeNew = ({navigation}) => {
             flexDirection: 'row',
             width: '95%',
             alignSelf: 'center',
+            marginVertical:
+              Platform.OS == 'android'
+                ? DeviceHeigth * 0.025
+                : DeviceHeigth * 0.075,
+            justifyContent: 'space-between',
+          }}>
+          <Text
+            style={{
+              color: AppColor.HEADERTEXTCOLOR,
+              fontFamily: Fonts.MONTSERRAT_BOLD,
+              fontWeight: '600',
+              lineHeight: 21,
+              fontSize: 18,
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+            }}>
+            Meditation
+          </Text>
+
+          {allWorkoutData?.mindset_workout_data?.length > 0 && (
+            <TouchableOpacity
+              onPress={() => {
+                analytics().logEvent('CV_FITME_CLICKED_ON_MEDITATION');
+                navigation.navigate('MeditationDetails', {
+                  item: allWorkoutData?.mindset_workout_data[0],
+                });
+              }}>
+              <Text
+                style={{
+                  color: AppColor.BoldText,
+                  fontFamily: 'Montserrat-SemiBold',
+                  fontWeight: '600',
+                  color: AppColor.RED1,
+                  fontSize: 12,
+                  lineHeight: 14,
+                }}>
+                View All
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+        <View
+          style={[
+            styles.meditionBox,
+            {
+              marginVertical:
+                Platform.OS == 'ios'
+                  ? -DeviceHeigth * 0.05
+                  : DeviceHeigth * 0.0,
+            },
+          ]}>
+          <FlatList
+            data={allWorkoutData?.mindset_workout_data}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            ListEmptyComponent={emptyComponent}
+            renderItem={({item, index}) => {
+              return (
+                <ListItem title={item} color={colors[index % colors.length]} />
+              );
+            }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
+          />
+        </View>
+        <View
+          style={{
+            width: '95%',
+            alignSelf: 'center',
+            top:
+              Platform.OS == 'android'
+                ? DeviceHeigth * 0.03
+                : DeviceHeigth * 0.07,
+          }}>
+          <Text
+            style={{
+              color: AppColor.HEADERTEXTCOLOR,
+              fontFamily: Fonts.MONTSERRAT_BOLD,
+              fontWeight: '600',
+              lineHeight: 21,
+              fontSize: 18,
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+            }}>
+            Nearby Gyms
+          </Text>
+        </View>
+        <LinearGradient
+          start={{x: 1, y: 0}}
+          end={{x: 0, y: 1}}
+          colors={['#142D91', '#142D91', '#27A4C2']}
+          style={{
+            width: '95%',
+            alignSelf: 'center',
+            borderRadius: 20,
+            marginVertical:
+              Platform.OS == 'android'
+                ? DeviceHeigth * 0.055
+                : DeviceHeigth * 0.095,
+
+            paddingVertical: 15,
+            opacity: 0.8,
+            justifyContent: 'center',
+          }}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={locationPermission}
+            style={
+              {
+                //  backgroundColor: AppColor.WHITE,
+              }
+            }>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <View
+                style={{
+                  marginHorizontal:
+                    Platform.OS == 'android'
+                      ? DeviceWidth * 0.03
+                      : DeviceHeigth >= 1024
+                      ? DeviceWidth * 0.03
+                      : DeviceWidth * 0.02,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: AppColor.WHITE,
+                    lineHeight: 30,
+                    fontWeight: '600',
+                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                  }}>
+                  Nearby Gyms
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: AppColor.WHITE,
+
+                    fontWeight: '500',
+                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                  }}>{`Gyms near your location`}</Text>
+              </View>
+              <Image
+                source={localImage.Gym}
+                style={{
+                  width: DeviceWidth * 0.3,
+                  height: 70,
+                  //backgroundColor: 'red',
+                }}
+                resizeMode="contain"
+              />
+            </View>
+          </TouchableOpacity>
+        </LinearGradient>
+        <View
+          style={{
+            flexDirection: 'row',
+            width: '95%',
+            alignSelf: 'center',
             // backgroundColor:'red',
             //top: DeviceHeigth * 0.03,
             alignItems: 'center',
             justifyContent: 'space-between',
-            top: -DeviceHeigth * 0.015,
+            marginVertical: Platform.OS=='android'?-DeviceHeigth * 0.01:-DeviceHeigth * 0.055,
           }}>
           <Text
             style={{
@@ -1869,7 +1648,7 @@ const HomeNew = ({navigation}) => {
             width: '95%',
             alignSelf: 'center',
             backgroundColor: 'white',
-            top: -DeviceHeigth * 0.004,
+            top:Platform.OS=='android'? DeviceHeigth * 0.03: DeviceHeigth * 0.06,
             alignItems: 'center',
           }}>
           <FlatList
@@ -1896,7 +1675,7 @@ const HomeNew = ({navigation}) => {
             //top: DeviceHeigth * 0.03,
             alignItems: 'center',
             justifyContent: 'space-between',
-            top: DeviceHeigth * 0.01,
+            top: Platform.OS=='android'?DeviceHeigth * 0.04:DeviceHeigth * 0.065,
           }}>
           <Text
             style={{
@@ -1915,7 +1694,7 @@ const HomeNew = ({navigation}) => {
           style={{
             width: '95%',
             //padding: 10,
-            top: DeviceHeigth * 0.03,
+            top: Platform.OS=='android'?DeviceHeigth * 0.06:DeviceHeigth * 0.08,
             alignSelf: 'center',
             flexDirection: 'row',
 
