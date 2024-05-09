@@ -16,9 +16,10 @@ import RenderHTML from 'react-native-render-html';
 import Tts from 'react-native-tts';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector, useDispatch} from 'react-redux';
+import AnimatedLottieView from 'lottie-react-native';
 const WorkoutsDescription = ({data, open, setOpen}: any) => {
   const [ttsInitialized, setTtsInitialized] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(true);
   const TextSpeech = `${data?.exercise_instructions}`;
   const [description, SetDescription] = useState('');
 
@@ -104,7 +105,23 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
           }}>
           <Icon name="close" color={AppColor.DARKGRAY} size={25} />
         </TouchableOpacity>
+        {isLoading && (
+          <View style={styles.loader}>
+            <AnimatedLottieView
+              source={require('../../Icon/Images/NewImage2/Adloader.json')}
+              speed={2}
+              autoPlay
+              loop
+              resizeMode="contain"
+              style={{
+                height: DeviceWidth / 1.5,
+                width: DeviceWidth * 0.95,
+              }}
+            />
+          </View>
+        )}
         <Image
+
           source={{
             uri:
               getStoreVideoLoc[data?.exercise_title + 'Image'] != undefined
@@ -115,6 +132,9 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
                 ? data?.workout_image_link
                 : data?.exercise_image_link,
           }}
+
+         onLoad={() => setIsLoading(false)}
+
           style={{
             height: DeviceWidth / 1.5,
             width: DeviceWidth * 0.95,
@@ -191,5 +211,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: AppColor.BoldText,
     lineHeight: 30,
+  },
+  loader: {
+    position: 'absolute',
+    justifyContent: 'center',
+
+    height: DeviceWidth / 1.5,
+    width: DeviceWidth * 0.95,
+    zIndex: 1,
+    borderRadius: 5,
   },
 });

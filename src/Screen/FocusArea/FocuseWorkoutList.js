@@ -16,15 +16,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import moment from 'moment';
-import { BannerAdd } from '../../Component/BannerAdd';
-import { bannerAdId } from '../../Component/AdsId';
+import {BannerAdd} from '../../Component/BannerAdd';
+import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
-
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const FocuseWorkoutList = ({navigation, route}) => {
-
   const [data, setData] = useState([]);
   const [likeData, setLikeData] = useState([]);
   const [updateLikeID, setUpdateLikeID] = useState(-1);
@@ -36,19 +34,16 @@ const FocuseWorkoutList = ({navigation, route}) => {
   const dispatch = useDispatch();
   const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
-  const getPurchaseHistory = useSelector(
-    (state) => state.getPurchaseHistory,
-  );
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const isFocused = useIsFocused();
   useEffect(() => {
     setexecrise(route?.params?.bodyexercise);
   }, [route?.params]);
   useEffect(() => {
     if (isFocused) {
-
       //getCustomeWorkoutTimeDetails();
       getAllLikeStatusAPI();
-       getWorkoutStatus();
+      getWorkoutStatus();
     }
   }, [isFocused]);
 
@@ -80,7 +75,6 @@ const FocuseWorkoutList = ({navigation, route}) => {
     }
   };
   const postLikeAPI = async workoutID => {
-   
     try {
       const payload = new FormData();
       payload.append('user_id', getUserDataDetails?.id);
@@ -107,11 +101,9 @@ const FocuseWorkoutList = ({navigation, route}) => {
     }
   };
 
-
-
   const renderItem = useMemo(
     () =>
-      ({item,index}) => {
+      ({item, index}) => {
         let totalTime = 0;
         let totalExercise = 0;
 
@@ -157,7 +149,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
                 }),
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              {/* <View
+                {/* <View
                   style={{
                     height:
                       DeviceHeigth >= 1024
@@ -175,14 +167,13 @@ const FocuseWorkoutList = ({navigation, route}) => {
                     borderColor: '#D9D9D9',
                   }}> */}
                 {isLoading && (
-             
                   <ShimmerPlaceholder
                     style={styles.loader}
                     ref={avatarRef}
                     autoRun
                   />
                 )}
-            
+
                 <Image
                   source={{uri: item?.workout_image}}
                   onLoad={() => setIsLoading(false)}
@@ -194,12 +185,10 @@ const FocuseWorkoutList = ({navigation, route}) => {
                     borderRadius: 5,
                     borderWidth: 1,
                     borderColor: '#D9D9D9',
-                 
-                  
                   }}
                   resizeMode="cover"
                 />
-            {/* </View> */}
+                {/* </View> */}
                 <View style={{marginHorizontal: 25, top: 10}}>
                   <View style={{width: DeviceWidth * 0.47}}>
                     <Text
@@ -350,15 +339,13 @@ const FocuseWorkoutList = ({navigation, route}) => {
 
               <View>{getProgress(item, totalTime)}</View>
             </TouchableOpacity>
-          
-            {getAdsDisplay(item,index)}
+
+            {getAdsDisplay(item, index)}
           </>
         );
       },
 
-    [likeData, updateLikeID, action,isLoading,isFocused],
-
-
+    [likeData, updateLikeID, action, isLoading, isFocused],
   );
   const convertLike = number => {
     if (number == undefined || number == null) {
@@ -512,12 +499,11 @@ const FocuseWorkoutList = ({navigation, route}) => {
       return <BannerAdd bannerAdId={bannerAdId} />;
     }
   };
-  const getAdsDisplay = (item,index) => {
-  
+  const getAdsDisplay = (item, index) => {
     if (execrise.length >= 1) {
-      if (index == 0) {
+      if (index == 0 && execrise.length > 1) {
         return getNativeAdsDisplay();
-      } else if ((index + 1) % 8 == 0) {
+      } else if ((index + 1) % 8 == 0&&execrise.length>8) {
         return getNativeAdsDisplay();
       }
     }
@@ -527,15 +513,13 @@ const FocuseWorkoutList = ({navigation, route}) => {
       if (
         getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
       ) {
-        return  null;
+        return null;
       } else {
         return (
           <View
             style={{
               alignSelf: 'center',
               alignItems: 'center',
-
-     
             }}>
             <NativeAddTest type="image" media={false} />
           </View>
@@ -547,8 +531,6 @@ const FocuseWorkoutList = ({navigation, route}) => {
           style={{
             alignSelf: 'center',
             alignItems: 'center',
-
-    
           }}>
           <NativeAddTest type="image" media={false} />
         </View>

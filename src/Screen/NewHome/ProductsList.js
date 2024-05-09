@@ -122,228 +122,219 @@ const ProductsList = ({route}) => {
     }
   };
   return (
-    <View style={styles.container}>
-      <NewHeader
-        header={route.params.item.type_title}
-        SearchButton={false}
-        backButton={true}
-      />
-      <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-
-      <View
-        style={{
-          width: '95%',
-          height: 50,
-          alignSelf: 'center',
-          backgroundColor: '#FCFCFC',
-          borderRadius: 6,
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingLeft: 10,
-          top: -DeviceHeigth * 0.02,
-          shadowColor: 'rgba(0, 0, 0, 1)',
-          ...Platform.select({
-            ios: {
-              shadowColor: '#000000',
-              shadowOffset: {width: 0, height: 2},
-              shadowOpacity: 0.1,
-              shadowRadius: 4,
-            },
-            android: {
-              elevation: 5,
-            },
-          }),
-        }}>
-        <Icons name="search" size={25} color={'rgba(80, 80, 80, 0.6)'} />
-        <TextInput
-          placeholder="Search Products"
-          placeholderTextColor={'rgba(80, 80, 80, 0.6)'}
-          value={searchText}
-          onChangeText={text => {
-            setsearchText(text);
-            updateFilteredCategories(text);
-          }}
-          style={styles.inputText}
+    <>
+      <View style={styles.container}>
+        <NewHeader
+          header={route.params.item.type_title}
+          SearchButton={false}
+          backButton={true}
         />
-      </View>
+        <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
 
-      <View
-        style={{
-          width: '95%',
-          height: 150,
-          borderRadius: 10,
-
-          alignSelf: 'center',
-          alignItems: 'center',
-        }}>
-        <SliderBox
-          ImageComponent={FastImage}
-          images={data}
-          sliderBoxHeight={150}
-          dotColor="#FFEE58"
-          inactiveDotColor="#90A4AE"
-          paginationBoxVerticalPadding={20}
-          autoplay
-          circleLoop
-          resizeMethod={'resize'}
-          resizeMode={'cover'}
-          paginationBoxStyle={{
-            position: 'absolute',
-            bottom: 0,
-            padding: 0,
-            alignItems: 'center',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            paddingVertical: 10,
-          }}
-          dotStyle={{
-            width: 10,
-            height: 10,
-            borderRadius: 5,
-            marginHorizontal: 0,
-            padding: 0,
-            margin: 0,
-            backgroundColor: 'rgba(128, 128, 128, 0.92)',
-          }}
-          ImageComponentStyle={{borderRadius: 15, width: '95%'}}
-          imageLoadingColor="#2196F3"
-        />
-      </View>
-
-      <View
-        style={{
-          width: '95%',
-          borderRadius: 10,
-          height:
-            DeviceHeigth >= 1024
-              ? DeviceHeigth * 0.59
-              : DeviceHeigth >= 932
-              ? DeviceHeigth * 0.59
-              : DeviceHeigth * 0.55,
-          alignSelf: 'center',
-          alignItems: 'center',
-          top: 20,
-        }}>
-        <Text
-          style={{
-            fontSize: 15,
-            fontFamily: 'Poppins',
-            fontWeight: '700',
-            lineHeight: 21,
-            marginBottom: 0,
-          }}>
-          Our Products
-        </Text>
         <View
           style={{
+            width: '95%',
+            height: 50,
             alignSelf: 'center',
-
-            paddingBottom:
-              Platform.OS == 'android'
-                ? 40
-                : DeviceHeigth <= 667
-                ? DeviceHeigth * 0.15
-                : 15,
+            backgroundColor: '#FCFCFC',
+            borderRadius: 6,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingLeft: 10,
+            top: -DeviceHeigth * 0.02,
+            shadowColor: 'rgba(0, 0, 0, 1)',
+            ...Platform.select({
+              ios: {
+                shadowColor: '#000000',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+              },
+              android: {
+                elevation: 5,
+              },
+            }),
           }}>
-          {forLoading ? (
-            <FlatList
-              data={[1, 2, 3, 4, 5, 6]}
-              numColumns={3}
-              showsVerticalScrollIndicator={false}
-              renderItem={({item, index}) => {
-                return (
-                  <>
-                    <TouchableOpacity style={styles.listItem2}>
-                      <ShimmerPlaceholder
-                        ref={avatarRef}
-                        autoRun
-                        style={{
-                          height: 90,
-                          width: 90,
-                          borderRadius: 180 / 2,
-                          alignSelf: 'center',
-                        }}
-                      />
+          <Icons name="search" size={25} color={'rgba(80, 80, 80, 0.6)'} />
+          <TextInput
+            placeholder="Search Products"
+            placeholderTextColor={'rgba(80, 80, 80, 0.6)'}
+            value={searchText}
+            onChangeText={text => {
+              setsearchText(text);
+              updateFilteredCategories(text);
+            }}
+            style={styles.inputText}
+          />
+        </View>
 
-                      <View style={{width: 90, paddingBottom: 10}}>
+        <View
+          style={{
+            width: '95%',
+            height: 150,
+            borderRadius: 10,
+
+            alignSelf: 'center',
+            alignItems: 'center',
+          }}>
+          <SliderBox
+            ImageComponent={FastImage}
+            images={data}
+            sliderBoxHeight={150}
+            dotColor="#FFEE58"
+            inactiveDotColor="#90A4AE"
+            paginationBoxVerticalPadding={20}
+            autoplay
+            circleLoop
+            resizeMethod={'resize'}
+            resizeMode={'cover'}
+            paginationBoxStyle={{
+              position: 'absolute',
+              bottom: 0,
+              padding: 0,
+              alignItems: 'center',
+              alignSelf: 'center',
+              justifyContent: 'center',
+              paddingVertical: 10,
+            }}
+            dotStyle={{
+              width: 10,
+              height: 10,
+              borderRadius: 5,
+              marginHorizontal: 0,
+              padding: 0,
+              margin: 0,
+              backgroundColor: 'rgba(128, 128, 128, 0.92)',
+            }}
+            ImageComponentStyle={{borderRadius: 15, width: '95%'}}
+            imageLoadingColor="#2196F3"
+          />
+        </View>
+
+        <View
+          style={{
+            width: '95%',
+            borderRadius: 10,
+
+            alignSelf: 'center',
+            alignItems: 'center',
+            top: 20,
+          }}>
+          <Text
+            style={{
+              fontSize: 17,
+
+              fontFamily: 'Montserrat-SemiBold',
+              fontWeight: '700',
+              lineHeight: 30,
+              marginBottom: 0,
+              color: AppColor.BLACK,
+            }}>
+            Our Products
+          </Text>
+          <View
+            style={{
+              paddingBottom: Platform.OS == 'android' ? DeviceHeigth * 0.5 : 50,
+              alignSelf: 'center',
+            }}>
+            {forLoading ? (
+              <FlatList
+                data={[1, 2, 3, 4, 5, 6]}
+                numColumns={3}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item, index}) => {
+                  return (
+                    <>
+                      <TouchableOpacity style={styles.listItem2}>
                         <ShimmerPlaceholder
                           ref={avatarRef}
                           autoRun
                           style={{
-                            width: 80,
-                            top: 10,
+                            height: 90,
+                            width: 90,
+                            borderRadius: 180 / 2,
                             alignSelf: 'center',
                           }}
                         />
-                      </View>
-                    </TouchableOpacity>
-                  </>
-                );
-              }}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              updateCellsBatchingPeriod={100}
-              removeClippedSubviews={true}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          ) : (
-            <FlatList
-              data={filteredCategories}
-              numColumns={3}
-              showsVerticalScrollIndicator={false}
-              renderItem={({item, index}) => {
-                return (
-                  <>
-                    <TouchableOpacity
-                      style={styles.listItem2}
-                      onPress={() => {
-                        Linking.openURL(item.product_link);
-                      }}>
-                      <Image
-                        source={
-                          item.product_image_link == null
-                            ? localImage.Noimage
-                            : {uri: item.product_image_link}
-                        }
-                        style={{
-                          height: 90,
-                          width: 90,
-                          // borderRadius: 180 / 2,
-                          alignSelf: 'center',
-                        }}
-                        resizeMode="contain"></Image>
-                      <View style={{width: 90}}>
-                        <Text
-                          numberOfLines={1}
+
+                        <View style={{width: 90, paddingBottom: 10}}>
+                          <ShimmerPlaceholder
+                            ref={avatarRef}
+                            autoRun
+                            style={{
+                              width: 80,
+                              top: 10,
+                              alignSelf: 'center',
+                            }}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    </>
+                  );
+                }}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                updateCellsBatchingPeriod={100}
+                removeClippedSubviews={true}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            ) : (
+              <FlatList
+                data={filteredCategories}
+                numColumns={3}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item, index}) => {
+                  return (
+                    <>
+                      <TouchableOpacity
+                        style={styles.listItem2}
+                        onPress={() => {
+                          Linking.openURL(item.product_link);
+                        }}>
+                        <Image
+                          source={
+                            item.product_image_link == null
+                              ? localImage.Noimage
+                              : {uri: item.product_image_link}
+                          }
                           style={{
-                            fontSize: 12,
-                            fontWeight: '500',
-                            lineHeight: 18,
-                            fontFamily: 'Poppins',
-                            textAlign: 'center',
-                            color: AppColor.BoldText,
-                          }}>
-                          {item.product_title}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  </>
-                );
-              }}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              updateCellsBatchingPeriod={100}
-              removeClippedSubviews={true}
-              ListEmptyComponent={emptyComponent}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          )}
+                            height: 90,
+                            width: 90,
+                            // borderRadius: 180 / 2,
+                            alignSelf: 'center',
+                          }}
+                          resizeMode="contain"></Image>
+                        <View style={{width: 90}}>
+                          <Text
+                            numberOfLines={1}
+                            style={{
+                              fontSize: 12,
+                              fontWeight: '500',
+                              lineHeight: 18,
+                              fontFamily: 'Poppins',
+                              textAlign: 'center',
+                              color: AppColor.BoldText,
+                            }}>
+                            {item.product_title}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </>
+                  );
+                }}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                updateCellsBatchingPeriod={100}
+                removeClippedSubviews={true}
+                ListEmptyComponent={emptyComponent}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            )}
+          </View>
         </View>
       </View>
-      <View style={{position: 'absolute', bottom: -2}}>
-   {bannerAdsDisplay()}
-      </View>
-    </View>
+      {bannerAdsDisplay()}
+    </>
   );
 };
 var styles = StyleSheet.create({

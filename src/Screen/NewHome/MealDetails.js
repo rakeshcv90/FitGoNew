@@ -48,6 +48,7 @@ const MealDetails = ({route, navigation}) => {
     }
   };
   return (
+    <>
     <View style={styles.container}>
       <StatusBar
         barStyle={'dark-content'}
@@ -65,7 +66,6 @@ const MealDetails = ({route, navigation}) => {
             : {uri: route?.params?.item?.diet_image}
         }
       />
-
       <TouchableOpacity
         onPress={() => {
           navigation.goBack();
@@ -89,16 +89,16 @@ const MealDetails = ({route, navigation}) => {
         />
       </TouchableOpacity>
       <View
-        style={{
+    style={{
           width: '100%',
-          height: '52%',
+          height: '100%',
           backgroundColor: '#fff',
           borderTopRightRadius: 20,
           borderTopLeftRadius: 20,
           top: -25,
         }}>
         <Text
-          style={{
+         style={{
             color: AppColor.BLACK,
             fontFamily: 'Poppins',
             fontWeight: '700',
@@ -206,7 +206,7 @@ const MealDetails = ({route, navigation}) => {
             </View>
           </View>
         </View>
-        <View style={{width: '100%', height: DeviceHeigth * 0.03}} />
+    
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{flexGrow: 1}}>
@@ -309,7 +309,7 @@ const MealDetails = ({route, navigation}) => {
           <View
             style={{
               marginVertical: DeviceHeigth * 0.032,
-              //  marginBottom: DeviceHeigth * 0.45,
+             marginBottom: DeviceHeigth * 0.45,
             }}>
             <View
               style={{
@@ -362,10 +362,13 @@ const MealDetails = ({route, navigation}) => {
         </ScrollView>
       </View>
 
-      <View style={{position: 'absolute', bottom: -2}}>
+      {/* <View style={{position: 'absolute', bottom: -2}}>
         {bannerAdsDisplay()}
-      </View>
+      </View> */}
     </View>
+    {bannerAdsDisplay()}
+    <BannerAdd bannerAdId={bannerAdId} />
+    </>
   );
 };
 var styles = StyleSheet.create({

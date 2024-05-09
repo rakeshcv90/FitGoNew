@@ -38,8 +38,10 @@ import moment from 'moment';
 import axios from 'axios';
 import {BlurView} from '@react-native-community/blur';
 import KeepAwake from 'react-native-keep-awake';
+
 import {
   setIsAlarmEnabled,
+  setScreenAwake,
   setSoundOnOff,
   setUserProfileData,
   setScreenAwake,
@@ -872,7 +874,7 @@ const NewProfile = ({navigation}) => {
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{marginBottom: 25}}>
+        style={{marginBottom:DeviceHeigth*0.025}}>
         <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
           {ListData.slice(0, 2).map((v, i) => (
             <View

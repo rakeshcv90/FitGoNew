@@ -258,7 +258,7 @@ const NewMonthlyAchievement = () => {
     <SafeAreaView style={styles.Container}>
       <NewHeader header={'Monthly Achievement'} backButton={true} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View
+        {/* <View
           style={{
             width: DeviceWidth * 0.9,
             alignSelf: 'center',
@@ -278,7 +278,7 @@ const NewMonthlyAchievement = () => {
               <Text style={styles.txts}>{value.txt2}</Text>
             </View>
           ))}
-        </View>
+        </View> */}
 
         <View style={styles.card}>
           <Calendar

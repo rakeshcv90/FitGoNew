@@ -268,7 +268,7 @@ const GymListing = ({navigation}: any) => {
   };
   const getAdsDisplay = (item, index) => {
     if (gymsData?.length >= 1) {
-      if (index == 0) {
+      if (index == 0&&gymsData?.length>1) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0) {
         return getNativeAdsDisplay();
