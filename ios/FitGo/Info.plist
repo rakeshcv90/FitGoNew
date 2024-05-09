@@ -54,7 +54,6 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
-  
 	<array>
 		<string>fbapi</string>
 		<string>fb-messenger-api</string>
@@ -76,16 +75,16 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>FitGo needs Location access to show Gyms on the basis of Current User's location</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-    <string>FitGo needs Location access to show Gyms on the basis of Current User's location</string>
 	<key>NSCameraUsageDescription</key>
 	<string> FitGo needs camera access for user's profile photo</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Read and understand health data.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Share workout data with other apps.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>FitGo needs Location access to show Gyms on the basis of Current User's location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>FitGo needs Location access to show Gyms on the basis of Current User's location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string> FitGo needs library access for user's profile photo</string>
 	<key>UIAppFonts</key>
@@ -128,6 +127,7 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
+		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchScreen</key>
@@ -141,7 +141,7 @@
 	<key>UIRequiresFullScreen</key>
 	<true/>
 	<key>UIStatusBarStyle</key>
-	<string/>
+	<string></string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

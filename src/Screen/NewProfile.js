@@ -44,6 +44,7 @@ import {
   setScreenAwake,
   setSoundOnOff,
   setUserProfileData,
+  setScreenAwake,
 } from '../Component/ThemeRedux/Actions';
 import {LogOut} from '../Component/LogOut';
 const NewProfile = ({navigation}) => {
@@ -63,7 +64,7 @@ const NewProfile = ({navigation}) => {
   const avatarRef = React.createRef();
   const [isEnabled, setIsEnabled] = useState(false);
   const [PhotoUploaded, setPhotoUploaded] = useState(true);
-  const {getUserDataDetails, isAlarmEnabled, getSoundOffOn, allWorkoutData} =
+  const {getUserDataDetails, isAlarmEnabled, getSoundOffOn, getScreenAwake} =
     useSelector(state => state);
   const dispatch = useDispatch();
   const [UpdateScreenVisibility, setUpadteScreenVisibilty] = useState(false);
@@ -75,6 +76,13 @@ const NewProfile = ({navigation}) => {
   const setAlarmIsEnabled = data => {
     dispatch(setIsAlarmEnabled(data));
   };
+  useEffect(() => {
+    if (getScreenAwake) {
+      KeepAwake.activate();
+    } else {
+      KeepAwake.deactivate();
+    }
+  }, [getScreenAwake]);
   const CardData = [
     {
       id: 1,
@@ -158,9 +166,14 @@ const NewProfile = ({navigation}) => {
     },
     {
       id: 2,
-      txt: 'Health Notification',
-      img: localImage.NPedometer,
+      txt: 'Display Always On',
+      img: localImage.DisplayOn,
     },
+    // {
+    //   id: 2,
+    //   txt: 'Health Notification',
+    //   img: localImage.NPedometer,
+    // },
     {
       id: 3,
       txt: 'Contact Us',
@@ -223,7 +236,6 @@ const NewProfile = ({navigation}) => {
       txt: 'Rate Us',
       img: localImage.NRate,
     },
- 
   ];
   const UpdateProfileModal = () => {
     const [modalImageUploaded, setModalImageUploaded] = useState(false);
@@ -679,7 +691,7 @@ const NewProfile = ({navigation}) => {
       {getUserDataDetails?.name || getUserDataDetails.email != null ? (
         <>
           <View style={styles.ProfileContainer}>
-            <View style={[styles.profileView,{}]}>
+            <View style={[styles.profileView, {}]}>
               <Image
                 source={
                   getUserDataDetails.image_path == null
@@ -707,7 +719,6 @@ const NewProfile = ({navigation}) => {
                   fontFamily: Fonts.MONTSERRAT_BOLD,
                   color: AppColor.BLACK,
                   fontSize: 20,
-            
                 }}>
                 {getUserDataDetails?.name == null
                   ? 'Guest'
@@ -719,7 +730,6 @@ const NewProfile = ({navigation}) => {
                   color: AppColor.BLACK,
                   fontSize: 14,
                   fontWeight: '500',
-                 
                 }}>
                 {getUserDataDetails?.email == null
                   ? 'guest@gmail.com'
@@ -731,7 +741,7 @@ const NewProfile = ({navigation}) => {
       ) : (
         <>
           <View style={{width: DeviceWidth * 0.95, paddingHorizontal: 10}}>
-            <Text style={{fontSize: 17, fontFamily: Fonts.MONTSERRAT_BOLD}}>
+            <Text style={{fontSize: 17, fontFamily: Fonts.MONTSERRAT_BOLD, color:AppColor.BLACK}}>
               Create Profile
             </Text>
             <Text
@@ -739,14 +749,15 @@ const NewProfile = ({navigation}) => {
                 fontSize: 13,
                 fontFamily: Fonts.MONTSERRAT_REGULAR,
                 marginVertical: 10,
+                color:AppColor.BLACK
               }}>
               Sign up for free to save your workouts
             </Text>
             <View style={{flexDirection: 'row', top: 5}}>
               <TouchableOpacity
-              onPress={()=>{
-                navigation.navigate('LogSignUp')
-              }}
+                onPress={() => {
+                  navigation.navigate('LogSignUp');
+                }}
                 style={{
                   width: 100,
                   height: 40,
@@ -766,9 +777,9 @@ const NewProfile = ({navigation}) => {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={()=>{
-                navigation.navigate('LogSignUp')
-              }}
+                onPress={() => {
+                  navigation.navigate('LogSignUp');
+                }}
                 style={{
                   width: 100,
                   height: 40,
@@ -809,7 +820,7 @@ const NewProfile = ({navigation}) => {
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     fontWeight: '600',
                     marginTop: 10,
-                    color:AppColor.BLACK
+                    color: AppColor.BLACK,
                   }}>
                   {v.txt}
                 </Text>
@@ -865,7 +876,6 @@ const NewProfile = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         style={{marginBottom:DeviceHeigth*0.025}}>
         <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
-    
           {ListData.slice(0, 2).map((v, i) => (
             <View
               key={i}
@@ -885,7 +895,7 @@ const NewProfile = ({navigation}) => {
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     fontSize: 16,
                     marginLeft: 10,
-                    color:AppColor.BLACK
+                    color: AppColor.BLACK,
                   }}>
                   {v.txt}
                 </Text>
@@ -934,8 +944,28 @@ const NewProfile = ({navigation}) => {
                   />
                 ) : (
                   <Switch
-                    value={isEnabled}
-                    onValueChange={() => toggleSwitch()}
+                    value={getScreenAwake}
+                    onValueChange={text => {
+                      if (text == true) {
+                        showMessage({
+                          message: 'Display Always on',
+                          type: 'success',
+                          animationDuration: 500,
+                          floating: true,
+                          icon: {icon: 'auto', position: 'left'},
+                        });
+                        dispatch(setScreenAwake(true));
+                      } else {
+                        showMessage({
+                          message: 'Display Always Off',
+                          animationDuration: 500,
+                          type: 'danger',
+                          floating: true,
+                          icon: {icon: 'auto', position: 'left'},
+                        });
+                        dispatch(setScreenAwake(false));
+                      }
+                    }}
                     disabled={false}
                     circleSize={19}
                     barHeight={21}
@@ -964,45 +994,46 @@ const NewProfile = ({navigation}) => {
             fontSize: 18,
             marginLeft: 20,
             marginVertical: 10,
-            color:AppColor.BLACK
+            color: AppColor.BLACK,
           }}>
           Others
         </Text>
         <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
-        {getUserDataDetails.name||getUserDataDetails.email!=null?
-          ListData.slice(2).map((v, i) => (
-            <TouchableOpacity
-              key={i}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginVertical: 10,
-              }}
-              onPress={() => HandleButtons(v.id, v.txt)}>
-              <Image
-                source={v.img}
-                style={{height: 35, width: 35}}
-                resizeMode="contain"
-              />
-              <Text style={styles.ListText}>{v.txt}</Text>
-            </TouchableOpacity>
-          )):ListData1.slice(2).map((v, i) => (
-            <TouchableOpacity
-              key={i}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginVertical: 10,
-              }}
-              onPress={() => HandleButtons(v.id, v.txt)}>
-              <Image
-                source={v.img}
-                style={{height: 35, width: 35}}
-                resizeMode="contain"
-              />
-              <Text style={styles.ListText}>{v.txt}</Text>
-            </TouchableOpacity>
-          ))}
+          {getUserDataDetails.name || getUserDataDetails.email != null
+            ? ListData.slice(2).map((v, i) => (
+                <TouchableOpacity
+                  key={i}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginVertical: 10,
+                  }}
+                  onPress={() => HandleButtons(v.id, v.txt)}>
+                  <Image
+                    source={v.img}
+                    style={{height: 35, width: 35}}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.ListText}>{v.txt}</Text>
+                </TouchableOpacity>
+              ))
+            : ListData1.slice(2).map((v, i) => (
+                <TouchableOpacity
+                  key={i}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginVertical: 10,
+                  }}
+                  onPress={() => HandleButtons(v.id, v.txt)}>
+                  <Image
+                    source={v.img}
+                    style={{height: 35, width: 35}}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.ListText}>{v.txt}</Text>
+                </TouchableOpacity>
+              ))}
         </View>
         <Reminder
           visible={visible}
@@ -1083,7 +1114,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
     fontSize: 16,
     marginLeft: 10,
-    color:AppColor.BLACK
+    color: AppColor.BLACK,
   },
   modalContainer: {
     justifyContent: 'flex-end',

@@ -842,7 +842,7 @@ const NewProgressScreen = ({navigation}) => {
             )}
           </>
         ) : null}
-        <LineText Txt1={'Meditation Duration'} Txt2={'Weekly'} Duration />
+        {/* <LineText Txt1={'Meditation Duration'} Txt2={'Weekly'} Duration />
         {array1.length != 0 ? (
           <View style={styles.card}>
             <RenderEmojis />
@@ -870,7 +870,7 @@ const NewProgressScreen = ({navigation}) => {
           </View>
         ) : (
           <EmptyComponent />
-        )}
+        )} */}
         <LineText Txt1={'Monthly Achievement'} />
         <View style={[styles.card, {flexDirection: 'column'}]}>
           <View

@@ -121,11 +121,20 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
           </View>
         )}
         <Image
+
+          source={{
+            uri:
+              getStoreVideoLoc[data?.exercise_title + 'Image'] != undefined
+                ? 'file://' + getStoreVideoLoc[data?.exercise_title + 'Image']
+                : getStoreVideoLoc[data?.workout_title + 'Image'] != undefined
+                ? 'file://' + getStoreVideoLoc[data?.workout_title + 'Image']
+                : data?.workout_image_link
+                ? data?.workout_image_link
+                : data?.exercise_image_link,
+          }}
+
          onLoad={() => setIsLoading(false)}
-          source={{uri:getStoreVideoLoc[data?.exercise_title + 'Image']
-          ? 'file://' +
-            getStoreVideoLoc[data?.exercise_title + 'Image']
-          : data?.workout_image_link || data?.exercise_image}}
+
           style={{
             height: DeviceWidth / 1.5,
             width: DeviceWidth * 0.95,

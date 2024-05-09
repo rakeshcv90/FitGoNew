@@ -163,4 +163,5 @@ export const localImage = {
   NLogOut:require('../Icon/Images/NewImage2/NLogout.png'),
   NOWORKOUT:require('../Icon/Images/NewImage2/Noworkout.png'),
   UpdateAppLottie:require('../Icon/Images/NewImage2/UpdateAppLottie.json'),
+  DisplayOn:require('../Icon/Images/NewImage2/DisplayOn.png'),
 };

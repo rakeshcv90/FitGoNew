@@ -117,14 +117,21 @@ const DayRewards = ({navigation, route}: any) => {
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <GradientText
-        text="Congratulations!"
-        fontSize={32}
-        width={DeviceHeigth >= 1024 ? DeviceWidth * 0.4 : DeviceWidth * 0.7}
-        y={'70'}
-        x={'10%'}
-        height={100}
-      />
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          alignSelf: 'center',
+        }}>
+        <GradientText
+          text="Congratulations!"
+          fontSize={32}
+          width={DeviceHeigth >= 1024 ? DeviceWidth * 0.4 : DeviceWidth * 0.7}
+          y={'70'}
+          // x={'10%'}
+          height={100}
+        />
+      </View>
       <AnimatedLottieView
         // source={{
         //   uri: 'https://assets7.lottiefiles.com/packages/lf20_qgq2nqsy.json',

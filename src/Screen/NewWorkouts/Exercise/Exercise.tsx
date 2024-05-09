@@ -181,7 +181,9 @@ const Exercise = ({navigation, route}: any) => {
               setDemoS(0);
               setDemo1(!demo1);
               setTimerS(10);
-              setupPlayer();
+              Platform.OS == 'android'
+                ? Platform.Version != 34 && setupPlayer()
+                : setupPlayer();
             } else if (timerS == 4) {
               // Tts.speak(`${timerS}`);
               setTimerS(timerS - 1);
@@ -223,7 +225,9 @@ const Exercise = ({navigation, route}: any) => {
               setDemoW(0);
               setDemo(!demo);
               PauseAudio(playbackState);
-              setupPlayer();
+              Platform.OS == 'android'
+                ? Platform.Version != 34 && setupPlayer()
+                : setupPlayer();
             } else if (timer == 4) {
               setTimer(timer - 1);
               setDemoW(demoW + 100 / timer);
@@ -297,7 +301,9 @@ const Exercise = ({navigation, route}: any) => {
               setPause(false);
               setRestStart(true);
               setDemoW(0);
-              setupPlayer();
+              Platform.OS == 'android'
+                ? Platform.Version != 34 && setupPlayer()
+                : setupPlayer();
             }
           }, 1000));
     } else {
@@ -320,7 +326,9 @@ const Exercise = ({navigation, route}: any) => {
       handleExerciseChange(currentExercise?.exercise_title);
       setSeparateTimer(true);
     } else setRestStart(true);
-    setupPlayer();
+    Platform.OS == 'android'
+      ? Platform.Version != 34 && setupPlayer()
+      : setupPlayer();
   }, []);
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e: any) => {
