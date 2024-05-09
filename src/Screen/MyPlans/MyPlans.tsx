@@ -339,7 +339,7 @@ const MyPlans = ({navigation}: any) => {
         url: NewAppapi.HOME_GRAPH_DATA,
         method: 'post',
         data: {
-          user_id: 227,
+          user_id: getUserDataDetails?.id,
           version: VersionNumber.appVersion,
         },
       });
@@ -570,7 +570,7 @@ const MyPlans = ({navigation}: any) => {
               padding: 5,
               borderTopLeftRadius: 0,
               borderTopRightRadius: 0,
-              marginBottom: DeviceHeigth * 0.17,
+              marginBottom: DeviceHeigth * 0.1,
             }}>
             <LinearGradient
               start={{x: 1, y: 0}}

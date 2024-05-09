@@ -311,7 +311,6 @@ const OneDay = ({navigation, route}: any) => {
                 },
               }),
             }}>
-          
             <Image
               source={{
                 uri:
@@ -730,9 +729,12 @@ const OneDay = ({navigation, route}: any) => {
       </TouchableOpacity>
       <Image
         source={{
-          uri: getStoreVideoLoc[data?.workout_title + 'Image']
-            ? 'file://' + getStoreVideoLoc[data?.workout_title + 'Image']
-            : data?.workout_image_link,
+          uri:
+            getStoreVideoLoc[data?.workout_title + 'Image'] != undefined
+              ? 'file://' + getStoreVideoLoc[data?.workout_title + 'Image']
+              // : data?.workout_image_link != ''
+              // ? data?.workout_image_link
+              : data?.workout_image,
         }}
         style={{
           height: DeviceWidth * 0.5,

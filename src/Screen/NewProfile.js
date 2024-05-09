@@ -44,7 +44,6 @@ import {
   setScreenAwake,
   setSoundOnOff,
   setUserProfileData,
-  setScreenAwake,
 } from '../Component/ThemeRedux/Actions';
 import {LogOut} from '../Component/LogOut';
 const NewProfile = ({navigation}) => {
@@ -854,6 +853,7 @@ const NewProfile = ({navigation}) => {
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     fontWeight: '600',
                     marginTop: 10,
+                    color:AppColor.BLACK,
                   }}>
                   {v.txt}
                 </Text>

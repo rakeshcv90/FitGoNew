@@ -799,7 +799,6 @@ const WorkoutDays = ({navigation, route}: any) => {
     );
   };
   const getAdsDisplay = (index, item) => {
-  console.log("ahahahaha",Object.values(data?.days).length)
     if (Object.values(data?.days).length >= 1) {
       if (index == 1) {
         return getNativeAdsDisplay();

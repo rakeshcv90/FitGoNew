@@ -1,7 +1,7 @@
 import {Image, Platform, StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {AppColor} from '../../../Component/Color';
+import {AppColor, Fonts} from '../../../Component/Color';
 import {localImage} from '../../../Component/Image';
 import GradientText from '../../../Component/GradientText';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../../Component/Config';
@@ -148,11 +148,23 @@ const SaveDayExercise = ({navigation, route}: any) => {
         style={{flex: 0.6, marginTop: DeviceHeigth * 0.02}}
         resizeMode="contain"
       />
-      <GradientText
-        text="Congratulations!"
-        fontSize={32}
-        width={DeviceHeigth >= 1024 ? DeviceWidth * 0.4 : DeviceWidth * 0.7}
-      />
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          alignSelf: 'center',
+        }}>
+        <Text
+          style={{
+            color: AppColor.RED1,
+            fontSize: 28,
+            lineHeight: 40,
+            fontWeight: '600',
+            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+          }}>
+          Congratulations!
+        </Text>
+      </View>
       <Text
         style={{
           fontSize: 16,
