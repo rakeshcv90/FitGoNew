@@ -1482,7 +1482,7 @@ const HomeNew = ({navigation}) => {
             }}>
             Meditation
           </Text>
-          {console.log('Sdfsdfsdfsdfsdf')}
+      
           {allWorkoutData?.mindset_workout_data?.length > 0 && (
             <TouchableOpacity
               onPress={() => {

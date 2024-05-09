@@ -339,7 +339,7 @@ const MyPlans = ({navigation}: any) => {
         url: NewAppapi.HOME_GRAPH_DATA,
         method: 'post',
         data: {
-          user_id: 227,
+          user_id: getUserDataDetails?.id,
           version: VersionNumber.appVersion,
         },
       });
