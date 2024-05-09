@@ -35,6 +35,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   setAllWorkoutData,
   setCurrentSelectedDay,
+  setHomeGraphData,
   setIsAlarmEnabled,
   setVideoLocation,
   setWeeklyPlansData,
@@ -266,6 +267,7 @@ const MyPlans = ({navigation}: any) => {
       WeeklyStatusAPI();
       allWorkoutApi1();
       dispatch(setCurrentSelectedDay(selectedDay));
+      getGraphData()
     }, [selectedDay]),
   );
 
@@ -328,7 +330,37 @@ const MyPlans = ({navigation}: any) => {
       setLoader(false);
     } catch (error) {
       setLoader(false);
-      console.error(error?.response, 'DaysAPIERror');
+      console.error(error, 'DaysAPIERror');
+    }
+  };
+  const getGraphData = async () => {
+    try {
+      const res = await axios({
+        url: NewAppapi.HOME_GRAPH_DATA,
+        method: 'post',
+        data: {
+          user_id: 227,
+          version: VersionNumber.appVersion,
+        },
+      });
+
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (res.data?.message != 'No data found') {
+        dispatch(setHomeGraphData(res.data));
+
+      } else {
+        dispatch(setHomeGraphData([]));
+      }
+    } catch (error) {
+      console.error(error, 'GraphError');
+      dispatch(setHomeGraphData([]));
     }
   };
   const WeeklyStatusAPI = async () => {

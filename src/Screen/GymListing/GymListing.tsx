@@ -49,6 +49,7 @@ const GymListing = ({navigation}: any) => {
     }, []),
   );
   const getCurrentLocation = () => {
+    setLoader(true)
     Geolocation.getCurrentPosition(
       position => {
         const pos = position.coords;
@@ -60,6 +61,7 @@ const GymListing = ({navigation}: any) => {
         GetGymsAPI(pos);
       },
       error => {
+        setLoader(false)
         console.log('err Coord', error.code, error);
       },
       {enableHighAccuracy: false, maximumAge: 0},

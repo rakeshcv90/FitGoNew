@@ -70,7 +70,6 @@ const NewProgressScreen = ({navigation}) => {
   let arrayForData = [];
   let arrayForData1 = [];
   // Update state with useEffect
-console.log("xdcfdsfdsf",getCustttomeTimeCal)
   useEffect(() => {
     const Calories1 = getCustttomeTimeCal?.map(value => value.totalCalories);
     const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
@@ -842,7 +841,7 @@ console.log("xdcfdsfdsf",getCustttomeTimeCal)
             )}
           </>
         ) : null}
-        <LineText Txt1={'Meditation Duration'} Txt2={'Weekly'} Duration />
+        {/* <LineText Txt1={'Meditation Duration'} Txt2={'Weekly'} Duration />
         {array1.length != 0 ? (
           <View style={styles.card}>
             <RenderEmojis />
@@ -870,7 +869,7 @@ console.log("xdcfdsfdsf",getCustttomeTimeCal)
           </View>
         ) : (
           <EmptyComponent />
-        )}
+        )} */}
         <LineText Txt1={'Monthly Achievement'} />
         <View style={[styles.card, {flexDirection: 'column'}]}>
           <View

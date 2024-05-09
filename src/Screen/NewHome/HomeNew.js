@@ -647,7 +647,13 @@ const HomeNew = ({navigation}) => {
     return (
       <>
         <TouchableOpacity
-          style={styles.listItem2}
+        style={[
+          styles.listItem2,
+          {
+            paddingRight:
+              index == fitnessInstructor?.length - 1 ? DeviceWidth * 0.04 : 0,
+          },
+        ]}
           onPress={() => {
             navigation.navigate('AITrainer', {item: item});
           }}>
