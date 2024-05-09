@@ -24,6 +24,9 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import GradientText from '../../Component/GradientText';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
+import {useSelector} from 'react-redux';
+import moment from 'moment';
+import NativeAddTest from '../../Component/NativeAddTest';
 
 type Coordinates = {
   latitude: number;
@@ -32,6 +35,9 @@ type Coordinates = {
 
 const GymListing = ({navigation}: any) => {
   const [loader, setLoader] = useState(false);
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
+  );
   const [coords, setCoords] = useState<Coordinates>({
     latitude: -1,
     longitude: -1,
@@ -120,128 +126,182 @@ const GymListing = ({navigation}: any) => {
     () =>
       ({item, index}: any) => {
         return (
-          <View key={index} style={styles.box}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View style={{margin: 10}}>
-                <Image
-                  source={{uri: item?.image}}
-                  style={{
-                    width: DeviceWidth * 0.2,
-                    height: DeviceWidth * 0.2,
-                    borderRadius: 20,
-                  }}
-                />
-              </View>
-              <View
-                style={{
-                  width:
-                    DeviceHeigth >= 1024
-                      ? DeviceWidth * 0.7
-                      : DeviceWidth * 0.65,
-                  marginLeft: 10,
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}>
-                  <Text style={styles.heading}>{item?.center_name}</Text>
-                  <GradientText
-                    text={`   ${item?.distance.toFixed(2)} km`}
-                    // width={item?.distance < 1 && 40}
-                    height={20}
-                    y={15}
-                    alignSelf
+          <>
+            <View key={index} style={styles.box}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View style={{margin: 10}}>
+                  <Image
+                    source={{uri: item?.image}}
+                    style={{
+                      width: DeviceWidth * 0.2,
+                      height: DeviceWidth * 0.2,
+                      borderRadius: 20,
+                    }}
                   />
                 </View>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                    lineHeight: 16,
-                    color: '#202020',
-                  }}>
-                  {item?.location}
-                </Text>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-
-                    marginTop: 3,
+                    width:
+                      DeviceHeigth >= 1024
+                        ? DeviceWidth * 0.7
+                        : DeviceWidth * 0.65,
+                    marginLeft: 10,
                   }}>
                   <View
                     style={{
                       flexDirection: 'row',
+                      justifyContent: 'space-between',
                       alignItems: 'center',
                     }}>
-                    <Image
-                      style={{
-                        width: 15,
-                        height: 15,
-                        marginRight: 5,
-                      }}
-                      resizeMode="contain"
-                      source={localImage.ClockGrey}
+                    <Text style={styles.heading}>{item?.center_name}</Text>
+                    <GradientText
+                      text={`   ${item?.distance.toFixed(2)} km`}
+                      // width={item?.distance < 1 && 40}
+                      height={20}
+                      y={15}
+                      alignSelf
                     />
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                        lineHeight: 16,
-                        color: '#202020',
-                      }}>
-                      {item?.open_time}
-                      {' - '}
-                      {item?.close_time}
-                    </Text>
                   </View>
-                  <TouchableOpacity
-                    onPress={() => openGoogleMaps(item)}
+                  <Text
                     style={{
-                      backgroundColor: '#E5E5E5',
-                      justifyContent: 'center',
+                      fontSize: 12,
+                      fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                      lineHeight: 16,
+                      color: '#202020',
+                    }}>
+                    {item?.location}
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
                       alignItems: 'center',
-                      width: 25,
-                      height: 25,
-                      borderRadius: 20,
-                      marginRight: DeviceWidth * 0.05,
-                    }}
-                    activeOpacity={1}>
-                    <Image
-                      source={localImage.Location}
+
+                      marginTop: 3,
+                    }}>
+                    <View
                       style={{
-                        width: 15,
-                        height: 15,
-                        tintColor: '#7A7A7A',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
+                      <Image
+                        style={{
+                          width: 15,
+                          height: 15,
+                          marginRight: 5,
+                        }}
+                        resizeMode="contain"
+                        source={localImage.ClockGrey}
+                      />
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                          lineHeight: 16,
+                          color: '#202020',
+                        }}>
+                        {item?.open_time}
+                        {' - '}
+                        {item?.close_time}
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      onPress={() => openGoogleMaps(item)}
+                      style={{
+                        backgroundColor: '#E5E5E5',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: 25,
+                        height: 25,
+                        borderRadius: 20,
+                        marginRight: DeviceWidth * 0.05,
                       }}
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
+                      activeOpacity={1}>
+                      <Image
+                        source={localImage.Location}
+                        style={{
+                          width: 15,
+                          height: 15,
+                          tintColor: '#7A7A7A',
+                        }}
+                        resizeMode="contain"
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
+              <FlatList
+                data={JSON.parse(item?.features)}
+                keyExtractor={(_, index: number) => index.toString()}
+                contentContainerStyle={{}}
+                style={{
+                  justifyContent: 'space-between',
+                  width: DeviceWidth * 0.9,
+                }}
+                numColumns={DeviceHeigth >= 1024 ? 4 : 2}
+                scrollEnabled={false}
+                renderItem={({item}: any) => (
+                  <Text style={styles.features}>{item}</Text>
+                )}
+              />
             </View>
-            <FlatList
-              data={JSON.parse(item?.features)}
-              keyExtractor={(_, index: number) => index.toString()}
-              contentContainerStyle={{}}
-              style={{
-                justifyContent: 'space-between',
-                width: DeviceWidth * 0.9,
-              }}
-              numColumns={DeviceHeigth >= 1024 ? 4 : 2}
-              scrollEnabled={false}
-              renderItem={({item}: any) => (
-                <Text style={styles.features}>{item}</Text>
-              )}
-            />
-          </View>
+            {getAdsDisplay(item, index)}
+          </>
         );
       },
     [gymsData],
   );
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
+  };
+  const getAdsDisplay = (item, index) => {
+    if (gymsData?.length >= 1) {
+      if (index == 0) {
+        return getNativeAdsDisplay();
+      } else if ((index + 1) % 8 == 0) {
+        return getNativeAdsDisplay();
+      }
+    }
+  };
+  const getNativeAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return (
+          <View
+            style={{
+              alignSelf: 'center',
+              alignItems: 'center',
+            }}>
+            <NativeAddTest type="image" media={false} />
+          </View>
+        );
+      }
+    } else {
+      return (
+        <View
+          style={{
+            alignSelf: 'center',
+            alignItems: 'center',
+          }}>
+          <NativeAddTest type="image" media={false} />
+        </View>
+      );
+    }
+  };
   return (
     <View style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -295,7 +355,7 @@ const GymListing = ({navigation}: any) => {
           />
         )}
       </View>
-      <BannerAdd bannerAdId={bannerAdId} />
+      {bannerAdsDisplay()}
     </View>
   );
 };

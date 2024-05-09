@@ -161,5 +161,6 @@ export const localImage = {
   NRate:require('../Icon/Images/NewImage2/NRate.png'),
   NDelete:require('../Icon/Images/NewImage2/NDelete.png'),
   NLogOut:require('../Icon/Images/NewImage2/NLogout.png'),
-  NOWORKOUT:require('../Icon/Images/NewImage2/Noworkout.png')
+  NOWORKOUT:require('../Icon/Images/NewImage2/Noworkout.png'),
+  UpdateAppLottie:require('../Icon/Images/NewImage2/UpdateAppLottie.json'),
 };

@@ -252,7 +252,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
   return (
     <View style={styles.Container}>
       <ProgressBar Type screen={screen} ExperienceScreen />
-      <View style={{marginTop:- DeviceHeigth * 0.06}}>
+      <View style={{marginTop:Platform.OS=='ios'?- DeviceHeigth * 0.06:- DeviceHeigth * 0.03}}>
       <Bulb screen={'Select One Option'} /></View>
       {Loader ? <ActivityLoader /> : null}
       <View style={{marginTop: DeviceHeigth * 0.06}}>
@@ -269,7 +269,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
       <View style={styles.buttons}>
         <TouchableOpacity
           onPress={() => {
-            dispatch(setProgressBarCounter(9));
+            dispatch(setProgressBarCounter(7));
             navigation.goBack();
           }}
           style={{

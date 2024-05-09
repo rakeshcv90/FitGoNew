@@ -41,7 +41,7 @@ const intialState = {
   getChallengesData:[],
   getWeeklyPlansData: {},
   currentSelectedDay: 0,
-  getProgressBarCounter:9
+  getProgressBarCounter:7
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {

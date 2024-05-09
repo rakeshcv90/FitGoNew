@@ -1,5 +1,12 @@
-import {View, Text, StyleSheet, TouchableOpacity, Image, ScrollView} from 'react-native';
-import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {useIsFocused} from '@react-navigation/native';
@@ -7,14 +14,15 @@ import {AppColor, Fonts} from '../../Component/Color';
 import RenderHTML from 'react-native-render-html';
 import Tts from 'react-native-tts';
 import {useSelector, useDispatch} from 'react-redux';
-
+import AnimatedLottieView from 'lottie-react-native';
 
 const WorkoutDetail = ({navigation, route}) => {
   const data = route.params.item;
   const [ttsInitialized, setTtsInitialized] = useState(false);
-  const getSoundOffOn = useSelector((state) => state.getSoundOffOn);
+  const getSoundOffOn = useSelector(state => state.getSoundOffOn);
   const TextSpeech = `${data?.exercise_instructions}`;
   const [description, SetDescription] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   let isFocuse = useIsFocused();
   const cleanText = TextSpeech.replace(/<\/?[^>]+(>|$)/g, '');
 
@@ -45,12 +53,11 @@ const WorkoutDetail = ({navigation, route}) => {
   }, []);
   useEffect(() => {
     if (isFocuse && getSoundOffOn == true) {
-      Tts.speak(cleanText);
+       Tts.speak(cleanText);
     } else {
       Tts.stop();
     }
   }, [isFocuse]);
-
 
   const tag = {
     p: {
@@ -87,8 +94,24 @@ const WorkoutDetail = ({navigation, route}) => {
         backButton={true}
       />
       <View style={styles.container}>
+        {isLoading && (
+          <View style={styles.loader}>
+            <AnimatedLottieView
+              source={require('../../Icon/Images/NewImage2/Adloader.json')}
+              speed={2}
+              autoPlay
+              loop
+              resizeMode="contain"
+              style={{
+                height: DeviceWidth / 1.5,
+                width: DeviceWidth * 0.95,
+              }}
+            />
+          </View>
+        )}
         <Image
           source={{uri: data?.exercise_image_link || data?.exercise_image}}
+          onLoad={() => setIsLoading(false)}
           style={{
             height: DeviceWidth / 1.5,
             width: DeviceWidth * 0.95,
@@ -97,7 +120,7 @@ const WorkoutDetail = ({navigation, route}) => {
           }}
           resizeMode="contain"
         />
-       
+
         <View style={styles.container1}>
           <View style={styles.content}>
             <Text
@@ -109,21 +132,20 @@ const WorkoutDetail = ({navigation, route}) => {
               {data?.workout_title || data?.exercise_title}
             </Text>
             <Text />
-            <ScrollView
-            showsVerticalScrollIndicator={false}>
-            {data?.workout_description ? (
-              <RenderHTML
-                source={{html: data?.workout_description}}
-                contentWidth={DeviceWidth}
-                tagsStyles={tag}
-              />
-            ) : (
-              <RenderHTML
-                source={{html: data?.exercise_instructions}}
-                contentWidth={DeviceWidth}
-                tagsStyles={tag}
-              />
-            )}
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {data?.workout_description ? (
+                <RenderHTML
+                  source={{html: data?.workout_description}}
+                  contentWidth={DeviceWidth}
+                  tagsStyles={tag}
+                />
+              ) : (
+                <RenderHTML
+                  source={{html: data?.exercise_instructions}}
+                  contentWidth={DeviceWidth}
+                  tagsStyles={tag}
+                />
+              )}
             </ScrollView>
           </View>
           <View style={styles.shadow}></View>
@@ -143,8 +165,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     padding: 10,
-
-  },  container1: {
+  },
+  container1: {
     flex: 1,
     position: 'relative',
   },
@@ -160,6 +182,15 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     zIndex: -1, // Push the shadow behind the content
+  },
+  loader: {
+    position: 'absolute',
+    justifyContent: 'center',
+
+    height: DeviceWidth / 1.5,
+    width: DeviceWidth * 0.95,
+    zIndex: 1,
+    borderRadius: 5,
   },
 });
 export default WorkoutDetail;

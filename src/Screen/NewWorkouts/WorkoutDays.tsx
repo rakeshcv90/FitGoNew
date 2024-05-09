@@ -24,7 +24,11 @@ import axios from 'axios';
 import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import analytics from '@react-native-firebase/analytics';
-import {MyInterstitialAd, MyRewardedAd} from '../../Component/BannerAdd';
+import {
+  BannerAdd,
+  MyInterstitialAd,
+  MyRewardedAd,
+} from '../../Component/BannerAdd';
 import {
   setSubscriptiomModal,
   setVideoLocation,
@@ -32,6 +36,8 @@ import {
 import AnimatedLottieView from 'lottie-react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import {bannerAdId} from '../../Component/AdsId';
+import NativeAddTest from '../../Component/NativeAddTest';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -506,52 +512,25 @@ const WorkoutDays = ({navigation, route}: any) => {
       </View>
     );
   };
-
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
+  };
   const Box = ({selected, item, index, active, percent}: any) => {
     return (
-      <TouchableOpacity
-        key={index}
-        disabled={item?.total_rest == 0}
-        style={[
-          styles.box,
-          {
-            width:
-              DeviceHeigth < 1280 ? DeviceWidth * 0.95 : DeviceWidth * 0.99,
-            height: DeviceHeigth * 0.125,
-          },
-        ]}
-        activeOpacity={1}
-        onPress={() => {
-          analytics().logEvent(`CV_FITME_CLICKED_ON_DAY_${index}_EXERCISES`);
-          index - 1 == 0
-            ? navigation.navigate('OneDay', {
-                data: data,
-                dayData: item,
-                day: index,
-                trainingCount: trainingCount,
-                challenge,
-              })
-            : active
-            ? navigation.navigate('OneDay', {
-                data: data,
-                dayData: item,
-                day: index,
-                trainingCount: trainingCount,
-                challenge,
-              })
-            : showMessage({
-                message: `Please complete Day ${index - 1} Exercise First !!!`,
-                type: 'danger',
-              });
-        }}>
-        <LinearGradient
-          start={{x: 1, y: 0}}
-          end={{x: 0, y: 1}}
-          colors={
-            percent && item?.total_rest != 0
-              ? ['#941000', '#D5191A']
-              : [AppColor.WHITE, AppColor.WHITE]
-          }
+      <>
+        <TouchableOpacity
+          key={index}
+          disabled={item?.total_rest == 0}
           style={[
             styles.box,
             {
@@ -559,53 +538,56 @@ const WorkoutDays = ({navigation, route}: any) => {
                 DeviceHeigth < 1280 ? DeviceWidth * 0.95 : DeviceWidth * 0.99,
               height: DeviceHeigth * 0.125,
             },
-          ]}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            {item?.total_rest == 0 ? (
-              <View
-                style={{
-                  height:
-                    DeviceHeigth >= 1024
-                      ? DeviceWidth * 0.18
-                      : DeviceWidth * 0.18,
-                  width:
-                    DeviceHeigth >= 1024
-                      ? DeviceWidth * 0.18
-                      : DeviceWidth * 0.18,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  // marginLeft: DeviceWidth * 0.12,
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  borderColor: '#D9D9D9',
-                }}>
-                <Image
-                  source={localImage.Rest}
-                  style={{
-                    height:
-                      DeviceHeigth >= 1024
-                        ? DeviceWidth * 0.14
-                        : DeviceWidth * 0.15,
-                    width:
-                      DeviceHeigth >= 1024
-                        ? DeviceWidth * 0.14
-                        : DeviceWidth * 0.16,
-                    // marginLeft: DeviceWidth * 0.12,
-                    // borderRadius: 10,
-                    // borderWidth: 1,
-                    // borderColor: '#D9D9D9',
-                    opacity: percent ? 0.5 : 1,
-                  }}
-                  resizeMode="contain"
-                />
-              </View>
-            ) : (
-              <>
+          ]}
+          activeOpacity={1}
+          onPress={() => {
+            analytics().logEvent(`CV_FITME_CLICKED_ON_DAY_${index}_EXERCISES`);
+            index - 1 == 0
+              ? navigation.navigate('OneDay', {
+                  data: data,
+                  dayData: item,
+                  day: index,
+                  trainingCount: trainingCount,
+                  challenge,
+                })
+              : active
+              ? navigation.navigate('OneDay', {
+                  data: data,
+                  dayData: item,
+                  day: index,
+                  trainingCount: trainingCount,
+                  challenge,
+                })
+              : showMessage({
+                  message: `Please complete Day ${
+                    index - 1
+                  } Exercise First !!!`,
+                  type: 'danger',
+                });
+          }}>
+          <LinearGradient
+            start={{x: 1, y: 0}}
+            end={{x: 0, y: 1}}
+            colors={
+              percent && item?.total_rest != 0
+                ? ['#941000', '#D5191A']
+                : [AppColor.WHITE, AppColor.WHITE]
+            }
+            style={[
+              styles.box,
+              {
+                width:
+                  DeviceHeigth < 1280 ? DeviceWidth * 0.95 : DeviceWidth * 0.99,
+                height: DeviceHeigth * 0.125,
+              },
+            ]}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              {item?.total_rest == 0 ? (
                 <View
                   style={{
                     height:
@@ -623,162 +605,237 @@ const WorkoutDays = ({navigation, route}: any) => {
                     borderWidth: 1,
                     borderColor: '#D9D9D9',
                   }}>
-                  {isLoading && (
-                    <ShimmerPlaceholder
-                      style={styles.loader}
-                      ref={avatarRef}
-                      autoRun
-                    />
-               )} 
                   <Image
-                    source={{uri: data?.workout_image}}
-                    onLoad={() => setIsLoading(false)}
+                    source={localImage.Rest}
                     style={{
                       height:
-                      DeviceHeigth >= 1024
-                        ? DeviceWidth * 0.14
-                        : DeviceWidth * 0.15,
-                    width:
-                      DeviceHeigth >= 1024
-                        ? DeviceWidth * 0.14
-                        : DeviceWidth * 0.16,
-                      opacity: percent ? 0.5 : 1,
+                        DeviceHeigth >= 1024
+                          ? DeviceWidth * 0.14
+                          : DeviceWidth * 0.15,
+                      width:
+                        DeviceHeigth >= 1024
+                          ? DeviceWidth * 0.14
+                          : DeviceWidth * 0.16,
+                      // marginLeft: DeviceWidth * 0.12,
                       // borderRadius: 10,
                       // borderWidth: 1,
                       // borderColor: '#D9D9D9',
+                      opacity: percent ? 0.5 : 1,
                     }}
                     resizeMode="contain"
                   />
                 </View>
-              </>
-            )}
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginHorizontal: 10,
-                width: DeviceHeigth >= 1024 ? '80%' : '75%',
-              }}>
-              <View>
-                <Text
-                  style={[
-                    styles.category,
-                    {
-                      fontSize: DeviceHeigth < 1280 ? 16 : 14,
-                      color:
-                        percent && item?.total_rest != 0
-                          ? AppColor.WHITE
-                          : AppColor.BLACK,
-                    },
-                  ]}>{`Day ${index}`}</Text>
-                {item?.total_rest == 0 ? (
-                  <Text
-                    style={[
-                      styles.small,
-                      {
-                        color:
-                          percent && item?.total_rest != 0
-                            ? AppColor.WHITE
-                            : '#941000',
-                        lineHeight: DeviceHeigth >= 1024 ? 30 : 20,
-                      },
-                    ]}>
-                    Rest
-                  </Text>
-                ) : (
-                  <Text
-                    style={[
-                      styles.small,
-                      {
-                        color:
-                          percent && item?.total_rest != 0
-                            ? AppColor.WHITE
-                            : '#941000',
-                      },
-                    ]}>
-                    {item?.total_rest > 60
-                      ? `${(item?.total_rest / 60).toFixed(0)} min`
-                      : `${item?.total_rest} sec`}
-                    {'   '}
-                    <Text
+              ) : (
+                <>
+                  <View
+                    style={{
+                      height:
+                        DeviceHeigth >= 1024
+                          ? DeviceWidth * 0.18
+                          : DeviceWidth * 0.18,
+                      width:
+                        DeviceHeigth >= 1024
+                          ? DeviceWidth * 0.18
+                          : DeviceWidth * 0.18,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      // marginLeft: DeviceWidth * 0.12,
+                    }}>
+                    {isLoading && (
+                      <ShimmerPlaceholder
+                        style={styles.loader}
+                        ref={avatarRef}
+                        autoRun
+                      />
+                    )}
+                    <Image
+                      source={{uri: data?.workout_image}}
+                      onLoad={() => setIsLoading(false)}
                       style={{
-                        fontSize: 30,
-                        fontWeight: '600',
+                        height:
+                          DeviceHeigth >= 1024
+                            ? DeviceWidth * 0.18
+                            : DeviceWidth * 0.18,
+                        width:
+                          DeviceHeigth >= 1024
+                            ? DeviceWidth * 0.18
+                            : DeviceWidth * 0.18,
+                        opacity: percent ? 0.5 : 1,
+                        borderRadius: 5,
+
+                        borderColor: '#D9D9D9',
+                      }}
+                      resizeMode="contain"
+                    />
+                  </View>
+                </>
+              )}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginHorizontal: 10,
+                  width: DeviceHeigth >= 1024 ? '80%' : '75%',
+                }}>
+                <View>
+                  <Text
+                    style={[
+                      styles.category,
+                      {
+                        fontSize: DeviceHeigth < 1280 ? 16 : 14,
                         color:
                           percent && item?.total_rest != 0
                             ? AppColor.WHITE
-                            : '#505050',
-                        lineHeight: 20,
-                        marginHorizontal: 10,
-                        fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                      }}>
-                      .
+                            : AppColor.BLACK,
+                      },
+                    ]}>{`Day ${index}`}</Text>
+                  {item?.total_rest == 0 ? (
+                    <Text
+                      style={[
+                        styles.small,
+                        {
+                          color:
+                            percent && item?.total_rest != 0
+                              ? AppColor.WHITE
+                              : '#941000',
+                          lineHeight: DeviceHeigth >= 1024 ? 30 : 20,
+                        },
+                      ]}>
+                      Rest
                     </Text>
-                    {'   '}
-                    {item?.total_calories} Kcal
-                    {/* {moment(139).format('S')} min | {item?.total_calories} Kcal */}
-                  </Text>
+                  ) : (
+                    <Text
+                      style={[
+                        styles.small,
+                        {
+                          color:
+                            percent && item?.total_rest != 0
+                              ? AppColor.WHITE
+                              : '#941000',
+                        },
+                      ]}>
+                      {item?.total_rest > 60
+                        ? `${(item?.total_rest / 60).toFixed(0)} min`
+                        : `${item?.total_rest} sec`}
+                      {'   '}
+                      <Text
+                        style={{
+                          fontSize: 30,
+                          fontWeight: '600',
+                          color:
+                            percent && item?.total_rest != 0
+                              ? AppColor.WHITE
+                              : '#505050',
+                          lineHeight: 20,
+                          marginHorizontal: 10,
+                          fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                        }}>
+                        .
+                      </Text>
+                      {'   '}
+                      {item?.total_calories} Kcal
+                      {/* {moment(139).format('S')} min | {item?.total_calories} Kcal */}
+                    </Text>
+                  )}
+                </View>
+                {item?.total_rest != 0 && (
+                  <Icons
+                    name={'chevron-right'}
+                    size={25}
+                    color={
+                      percent && item?.total_rest != 0
+                        ? AppColor.WHITE
+                        : AppColor.BLACK
+                    }
+                  />
                 )}
               </View>
-              {item?.total_rest != 0 && (
-                <Icons
-                  name={'chevron-right'}
-                  size={25}
-                  color={
-                    percent && item?.total_rest != 0
-                      ? AppColor.WHITE
-                      : AppColor.BLACK
-                  }
-                />
-              )}
             </View>
-          </View>
-          {selected && trainingCount != -1 && (
-            <ProgressButton
-              text={
-                downloaded > 0 && downloaded != 100
-                  ? `Downloading`
-                  : `Start Training`
-              }
-              w={DeviceWidth * 0.75}
-              bR={10}
-              mB={10}
-              fill={
-                totalCount == -1
-                  ? '0%'
-                  : `${100 - (trainingCount / totalCount) * 100}%`
-              }
-              h={DeviceHeigth * 0.08}
-              // textStyle={{
-              //   color:
-              //     downloaded > 0 && downloaded != 100
-              //       ? AppColor.BLACK
-              //       : AppColor.WHITE,
-              // }}
-              onPress={() => {
-                analytics().logEvent(
-                  `CV_FITME_START_TRAINING_${day}_EXERCISES`,
-                );
-                navigation.navigate('Exercise', {
-                  allExercise: exerciseData,
-                  currentExercise:
-                    trainingCount == -1
-                      ? exerciseData[0]
-                      : exerciseData[trainingCount],
-                  data: data,
-                  day: day,
-                  exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
-                  trackerData: trackerData,
-                });
-              }}
-            />
-          )}
-        </LinearGradient>
-      </TouchableOpacity>
+            {selected && trainingCount != -1 && (
+              <ProgressButton
+                text={
+                  downloaded > 0 && downloaded != 100
+                    ? `Downloading`
+                    : `Start Training`
+                }
+                w={DeviceWidth * 0.75}
+                bR={10}
+                mB={10}
+                fill={
+                  totalCount == -1
+                    ? '0%'
+                    : `${100 - (trainingCount / totalCount) * 100}%`
+                }
+                h={DeviceHeigth * 0.08}
+                // textStyle={{
+                //   color:
+                //     downloaded > 0 && downloaded != 100
+                //       ? AppColor.BLACK
+                //       : AppColor.WHITE,
+                // }}
+                onPress={() => {
+                  analytics().logEvent(
+                    `CV_FITME_START_TRAINING_${day}_EXERCISES`,
+                  );
+                  navigation.navigate('Exercise', {
+                    allExercise: exerciseData,
+                    currentExercise:
+                      trainingCount == -1
+                        ? exerciseData[0]
+                        : exerciseData[trainingCount],
+                    data: data,
+                    day: day,
+                    exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
+                    trackerData: trackerData,
+                  });
+                }}
+              />
+            )}
+          </LinearGradient>
+        </TouchableOpacity>
+        {getAdsDisplay(index, item)}
+      </>
     );
   };
-
+  const getAdsDisplay = (index, item) => {
+    if (Object.values(data?.days).length >= 1) {
+      if (index == 1) {
+        return getNativeAdsDisplay();
+      } else if ((index + 1) % 8 == 0) {
+        return getNativeAdsDisplay();
+      }
+    }
+  };
+  const getNativeAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return (
+          <View
+            style={{
+              alignSelf: 'center',
+              alignItems: 'center',
+            }}>
+            <NativeAddTest type="image" media={false} />
+          </View>
+        );
+      }
+    } else {
+      return (
+        <View
+          style={{
+            alignSelf: 'center',
+            alignItems: 'center',
+          }}>
+          <NativeAddTest type="image" media={false} />
+        </View>
+      );
+    }
+  };
   return (
     <View style={styles.container}>
       <Header
@@ -799,16 +856,17 @@ const WorkoutDays = ({navigation, route}: any) => {
       <Text style={[styles.category, {marginVertical: 10, marginLeft: 10}]}>
         {moment().format('dddd DD MMMM')}
       </Text>
-      {!refresh && (
-        <>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              // flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <View>
-              {Object.values(data?.days).map((item: any, index: number) => {
+
+      <>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            // flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <View style={{bottom: 10}}>
+            {!refresh &&
+              Object.values(data?.days).map((item: any, index: number) => {
                 return (
                   <Box
                     active={
@@ -826,10 +884,12 @@ const WorkoutDays = ({navigation, route}: any) => {
                   />
                 );
               })}
-            </View>
-          </ScrollView>
-        </>
-      )}
+          </View>
+        </ScrollView>
+      </>
+
+      <View></View>
+      {bannerAdsDisplay()}
       <ActivityLoader visible={refresh} />
       <PaddoMeterPermissionModal />
     </View>
@@ -842,7 +902,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: AppColor.WHITE,
-    paddingHorizontal: 5,
+    // paddingHorizontal: 5,
   },
   category: {
     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,

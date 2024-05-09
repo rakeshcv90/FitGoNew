@@ -25,15 +25,17 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import SeekBar from '../../Component/SeekBar';
 import {useIsFocused} from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
+import moment from 'moment';
 
 const MeditationExerciseDetails = ({navigation, route}) => {
   let isFocused = useIsFocused();
   const playbackState = usePlaybackState();
   const getStoreVideoLoc = useSelector(state => state.getStoreVideoLoc);
   const {position, buffered, duration} = useProgress();
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const songs = [
     {
       title: 'song 1',
@@ -78,7 +80,19 @@ const MeditationExerciseDetails = ({navigation, route}) => {
   const handleSlidingComplete = async value => {
     await TrackPlayer.seekTo(value);
   };
-
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
+  };
   const handleValueChange = value => {};
   return (
     <>
@@ -112,7 +126,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
           backgroundColor={'transparent'}
           translucent={true}
         />
-        <View></View>
+
         <View
           style={{
             width: '100%',
@@ -145,11 +159,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
               height: '100%',
             }}
             resizeMode="contain"
-            source={
-              require('../../Icon/Images/NewImage/meditation.png')
-            }>
-
-            </Image>
+            source={require('../../Icon/Images/NewImage/meditation.png')}></Image>
 
           <Text
             style={{
@@ -252,8 +262,8 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                     left: playbackState.state === State.Paused && 2,
                     alignSelf: 'center',
                     tintColor: '#fff',
-                    justifyContent:'center',
-                    alignItems:'center'
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}
                   resizeMode="contain"></Image>
               </TouchableOpacity>
@@ -285,7 +295,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
         </View>
       </LinearGradient>
 
-      <BannerAdd bannerAdId={bannerAdId} />
+      {bannerAdsDisplay()}
     </>
   );
 };

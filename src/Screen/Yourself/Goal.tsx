@@ -120,7 +120,7 @@ const Goal = ({navigation, route}: any) => {
       }}>
       <ProgressBar screen={screen} Type/>
    
-      <View style={{marginTop:- DeviceHeigth * 0.06}}>
+      <View style={{marginTop:Platform.OS=='ios'?- DeviceHeigth * 0.06:- DeviceHeigth * 0.03}}>
       <Bulb screen={"What's your fitness goal?"} />
       </View>
       <View style={{justifyContent: 'center', marginTop: DeviceHeigth * 0.06}}>

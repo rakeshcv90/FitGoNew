@@ -18,6 +18,8 @@ import {localImage} from '../../../Component/Image';
 import GradientButton from '../../../Component/GradientButton';
 import {StatusBar} from 'react-native';
 import moment from 'moment';
+import {BannerAdd} from '../../../Component/BannerAdd';
+import {bannerAdId} from '../../../Component/AdsId';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -33,6 +35,9 @@ const DayRewards = ({navigation, route}: any) => {
   const {data, day} = route?.params;
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
+  );
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
   );
   const [days, setDays] = useState<Array<any>>([]);
   const [weekly, setWeekly] = useState(false);
@@ -96,7 +101,19 @@ const DayRewards = ({navigation, route}: any) => {
       console.error(error, 'WEEKLYSTATUS ERRR');
     }
   };
-
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
+  };
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -248,19 +265,28 @@ const DayRewards = ({navigation, route}: any) => {
           }}>
           Good Luck
         </Text>
-        <GradientButton
-          onPress={() =>
-            weekly
-              ? navigation.navigate('BottomTab')
-              : navigation.navigate('WorkoutDays', {data: data})
-          }
-          text="Collect Rewards"
-          bR={50}
-          h={70}
-          position="absolute"
-          bottm={10}
-          alignSelf
-        />
+        <View
+          style={{
+            marginBottom: DeviceHeigth * 0.002,
+            top: DeviceHeigth * 0.17,
+          }}>
+          <GradientButton
+            onPress={() =>
+              weekly
+                ? navigation.navigate('BottomTab')
+                : navigation.navigate('WorkoutDays', {data: data})
+            }
+            text="Collect Rewards"
+            bR={50}
+            h={70}
+            position="absolute"
+            bottm={10}
+            alignSelf
+          />
+        </View>
+      </View>
+      <View style={{position: 'absolute', bottom: 0}}>
+        {bannerAdsDisplay()}
       </View>
     </SafeAreaView>
     // <ScrollView

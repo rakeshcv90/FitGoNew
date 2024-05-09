@@ -45,7 +45,8 @@ const FocusArea = ({route, navigation}) => {
      
         <ProgressBar screen={screen} />
      
-      <View style={{marginTop:- DeviceHeigth * 0.05,alignSelf:'center'}}>
+      {/* <View style={{marginTop:- DeviceHeigth * 0.05,alignSelf:'center'}}> */}
+      <View style={{marginTop:Platform.OS=='ios'?- DeviceHeigth * 0.05:- DeviceHeigth * 0.02,alignSelf:'center'}}>
         <Bulb
           screen={'Select your Focus area'}
         />

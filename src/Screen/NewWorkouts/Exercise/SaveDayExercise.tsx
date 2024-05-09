@@ -13,6 +13,8 @@ import {setChallengesData} from '../../../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import moment from 'moment';
+import {BannerAdd} from '../../../Component/BannerAdd';
+import {bannerAdId} from '../../../Component/AdsId';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -30,6 +32,9 @@ const SaveDayExercise = ({navigation, route}: any) => {
   const dispatch = useDispatch();
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
+  );
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
   );
 
   const getWeeklyAPI = async () => {
@@ -117,6 +122,19 @@ const SaveDayExercise = ({navigation, route}: any) => {
       ? ChallengesDataAPI()
       : navigation.navigate('DayRewards', {data, day});
   };
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
+  };
   return (
     <SafeAreaView
       style={{
@@ -127,7 +145,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
       }}>
       <Image
         source={localImage.Congrats}
-        style={{flex: 0.6, marginTop: DeviceHeigth * 0.1}}
+        style={{flex: 0.6, marginTop: DeviceHeigth * 0.02}}
         resizeMode="contain"
       />
       <GradientText
@@ -158,7 +176,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
           marginHorizontal: 10,
           flexDirection: 'row',
           alignItems: 'center',
-          marginVertical: DeviceHeigth * 0.1,
+          marginVertical: DeviceHeigth * 0.02,
         }}>
         <View style={styles.container}>
           <Image
@@ -242,18 +260,24 @@ const SaveDayExercise = ({navigation, route}: any) => {
           </Text>
         </View>
       </View>
-      <GradientButton
-        onPress={() => {
-          // analytics().logEvent(`CV_FITME_COMPLETED_DAY_${day}_EXERCISES`);
-          ReviewApp(onPresh);
-          // TESTAPI()
-        }}
-        text="Save and Continue"
-        bR={10}
-        h={70}
-        flex={0.2}
-        alignSelf
-      />
+      <View
+        style={{marginBottom: DeviceHeigth * 0.002, top: DeviceHeigth * 0.1}}>
+        <GradientButton
+          onPress={() => {
+            // analytics().logEvent(`CV_FITME_COMPLETED_DAY_${day}_EXERCISES`);
+            ReviewApp(onPresh);
+            // TESTAPI()
+          }}
+          text="Save and Continue"
+          bR={10}
+          h={70}
+          flex={0.2}
+          alignSelf
+        />
+      </View>
+      <View style={{position: 'absolute', bottom: 0}}>
+        {bannerAdsDisplay()}
+      </View>
     </SafeAreaView>
   );
 };
