@@ -44,7 +44,7 @@ import {
   setScreenAwake,
   setSoundOnOff,
   setUserProfileData,
-  setScreenAwake,
+  
 } from '../Component/ThemeRedux/Actions';
 import {LogOut} from '../Component/LogOut';
 const NewProfile = ({navigation}) => {

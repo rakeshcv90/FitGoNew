@@ -115,10 +115,18 @@ const ProductsList = ({route}) => {
       ) {
         return null;
       } else {
-        return <BannerAdd bannerAdId={bannerAdId} />;
+        return (
+          <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
+          <BannerAdd bannerAdId={bannerAdId} />
+        </View>
+        );
       }
     } else {
-      return <BannerAdd bannerAdId={bannerAdId} />;
+      return (
+        <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
+          <BannerAdd bannerAdId={bannerAdId} />
+        </View>
+      );
     }
   };
   return (
@@ -234,7 +242,12 @@ const ProductsList = ({route}) => {
           </Text>
           <View
             style={{
-              paddingBottom: Platform.OS == 'android' ? DeviceHeigth * 0.5 : 50,
+              paddingBottom:
+                Platform.OS == 'android'
+                  ? DeviceHeigth <= 808
+                    ? DeviceHeigth * 0.45
+                    : DeviceHeigth * 0.41
+                  : 50,
               alignSelf: 'center',
             }}>
             {forLoading ? (
