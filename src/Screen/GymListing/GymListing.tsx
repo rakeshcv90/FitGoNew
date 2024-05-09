@@ -312,16 +312,16 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     padding: 3,
     marginVertical: 7,
-    shadowColor: 'rgba(0, 0, 0, 1)',
+    shadowColor: 'grey',
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.1,
+        //shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.2,
         shadowRadius: 4,
       },
       android: {
-        elevation: 4,
+        elevation: 3,
       },
     }),
   },
