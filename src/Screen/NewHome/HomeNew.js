@@ -1476,7 +1476,7 @@ const HomeNew = ({navigation}) => {
             }}>
             Meditation
           </Text>
-
+          {console.log('Sdfsdfsdfsdfsdf')}
           {allWorkoutData?.mindset_workout_data?.length > 0 && (
             <TouchableOpacity
               onPress={() => {
@@ -1509,22 +1509,42 @@ const HomeNew = ({navigation}) => {
                   : DeviceHeigth * 0.0,
             },
           ]}>
-          <FlatList
-            data={allWorkoutData?.mindset_workout_data}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => index.toString()}
-            ListEmptyComponent={emptyComponent}
-            renderItem={({item, index}) => {
-              return (
-                <ListItem title={item} color={colors[index % colors.length]} />
-              );
-            }}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
-            updateCellsBatchingPeriod={100}
-            removeClippedSubviews={true}
-          />
+          {allWorkoutData?.mindset_workout_data?.length > 0 ? (
+            <FlatList
+              data={allWorkoutData?.mindset_workout_data}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => index.toString()}
+              ListEmptyComponent={emptyComponent}
+              renderItem={({item, index}) => {
+                return (
+                  <ListItem
+                    title={item}
+                    color={colors[index % colors.length]}
+                  />
+                );
+              }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
+            />
+          ) : (
+            <View>
+              <AnimatedLottieView
+                source={require('../../Icon/Images/NewImage2/Adloader.json')}
+                speed={2}
+                autoPlay
+                loop
+                resizeMode="contain"
+                style={{
+                  width: DeviceWidth * 0.5,
+
+                  height: DeviceHeigth * 0.1,
+                }}
+              />
+            </View>
+          )}
         </View>
         <View
           style={{
@@ -1628,7 +1648,10 @@ const HomeNew = ({navigation}) => {
             //top: DeviceHeigth * 0.03,
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginVertical: Platform.OS=='android'?-DeviceHeigth * 0.01:-DeviceHeigth * 0.055,
+            marginVertical:
+              Platform.OS == 'android'
+                ? -DeviceHeigth * 0.01
+                : -DeviceHeigth * 0.055,
           }}>
           <Text
             style={{
@@ -1648,7 +1671,10 @@ const HomeNew = ({navigation}) => {
             width: '95%',
             alignSelf: 'center',
             backgroundColor: 'white',
-            top:Platform.OS=='android'? DeviceHeigth * 0.03: DeviceHeigth * 0.06,
+            top:
+              Platform.OS == 'android'
+                ? DeviceHeigth * 0.03
+                : DeviceHeigth * 0.06,
             alignItems: 'center',
           }}>
           <FlatList
@@ -1675,7 +1701,10 @@ const HomeNew = ({navigation}) => {
             //top: DeviceHeigth * 0.03,
             alignItems: 'center',
             justifyContent: 'space-between',
-            top: Platform.OS=='android'?DeviceHeigth * 0.04:DeviceHeigth * 0.065,
+            top:
+              Platform.OS == 'android'
+                ? DeviceHeigth * 0.04
+                : DeviceHeigth * 0.065,
           }}>
           <Text
             style={{
@@ -1694,7 +1723,10 @@ const HomeNew = ({navigation}) => {
           style={{
             width: '95%',
             //padding: 10,
-            top: Platform.OS=='android'?DeviceHeigth * 0.06:DeviceHeigth * 0.08,
+            top:
+              Platform.OS == 'android'
+                ? DeviceHeigth * 0.06
+                : DeviceHeigth * 0.08,
             alignSelf: 'center',
             flexDirection: 'row',
 

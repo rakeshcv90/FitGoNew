@@ -202,7 +202,6 @@ const CreateWorkout = ({navigation, route}) => {
                       {'Time : '}
                       {item?.exercise_rest}
                     </Text>
-                   
                   </View>
                 </View>
               </View>
@@ -223,7 +222,7 @@ const CreateWorkout = ({navigation, route}) => {
     if (filteredCategories.length > 1) {
       if (index == 0) {
         return getNativeAdsDisplay();
-      } else if ((index + 1) % 8 == 0) {
+      } else if ((index + 1) % 8 == 0 && filteredCategories.length > 8) {
         return getNativeAdsDisplay();
       }
     }
@@ -402,8 +401,6 @@ const CreateWorkout = ({navigation, route}) => {
         getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
       ) {
         return null;
-
-      
       } else {
         return <BannerAdd bannerAdId={bannerAdId} />;
       }
@@ -563,7 +560,7 @@ const CreateWorkout = ({navigation, route}) => {
           </TouchableOpacity>
         </LinearGradient>
       </View>
-  {    bannerAdsDisplay()}
+      {bannerAdsDisplay()}
     </>
   );
 };

@@ -35,7 +35,7 @@ import Bulb from '../Yourself/Bulb';
 import moment from 'moment';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {ReviewApp} from '../../Component/ReviewApp';
-import { LogOut } from '../../Component/LogOut';
+import {LogOut} from '../../Component/LogOut';
 
 const Subscription = ({navigation}) => {
   const dispatch = useDispatch();
@@ -343,7 +343,6 @@ const Subscription = ({navigation}) => {
     }
   };
   const getName = item => {
-
     if (getPurchaseHistory.length > 0) {
       if (Platform.OS == 'android') {
         if (
@@ -415,9 +414,8 @@ const Subscription = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      //  LogOut(dispatch);
-      } 
-      else {
+        //  LogOut(dispatch);
+      } else {
         dispatch(setPurchaseHistory([]));
       }
     } catch (error) {
@@ -660,8 +658,9 @@ const Subscription = ({navigation}) => {
             style={{
               fontFamily: 'Montserrat-Medium',
               fontWeight: '600',
-              fontSize: 15,
+              fontSize: 13,
               marginHorizontal: 5,
+              lineHeight: 20,
               textAlign: 'center',
               color: '#FFFFFF',
             }}>
@@ -685,7 +684,7 @@ const Subscription = ({navigation}) => {
             borderTopRightRadius: 5,
             borderBottomLeftRadius: 5,
             top: -DeviceHeigth * 0.02,
-            marginRight: 5,
+            marginRight: DeviceWidth * 0.025,
             backgroundColor: '#D5191A33',
           }}>
           <Text>3 Days Free Trial</Text>
@@ -802,7 +801,7 @@ const Subscription = ({navigation}) => {
             }}>
             Get Your Plan!
           </Text>
-          <View
+          {/* <View
             style={{
               flexDirection: 'row',
               alignSelf: 'center',
@@ -843,7 +842,7 @@ const Subscription = ({navigation}) => {
               }}>
               Your Ages: {getUserDataDetails?.age}
             </Text>
-          </View>
+          </View> */}
           <View
             style={{
               flexDirection: 'row',
@@ -851,7 +850,8 @@ const Subscription = ({navigation}) => {
               width: '95%',
               paddingLeft: 5,
               paddingRight: 5,
-              top: 5,
+              marginVertical: 10,
+              top:10,
               justifyContent: 'space-between',
             }}>
             <Text
@@ -983,7 +983,6 @@ const Subscription = ({navigation}) => {
                           </Text>
                           {getRecommended(item)}
                         </View>
-                        <View></View>
                       </View>
                       {Platform.OS == 'android' && getFreeTrial(item)}
                     </View>
@@ -1110,7 +1109,7 @@ const Subscription = ({navigation}) => {
               keyExtractor={(item, index) => index.toString()}
             />
           </View>
-          <View style={{bottom: 15, alignSelf: 'center'}}>
+          <View style={{bottom: DeviceHeigth*0.02, alignSelf: 'center'}}>
             <Button
               buttonText={Platform.OS == 'ios' ? 'Proceed' : getButtonName()}
               onPresh={() => {
@@ -1141,7 +1140,7 @@ const Subscription = ({navigation}) => {
                     lineHeight: 16,
                     paddingLeft: 10,
                     paddingRight: 10,
-                    color:AppColor.BLACK,
+                    color: AppColor.BLACK,
                   }}>
                   {Platform.OS == 'android'
                     ? `You can cancel your subscription anytime from Google Play Store. On Cancellation Payment is Non-Refundable, but you still access the features of subscription period. We recommend you to review the terms of use before proceeding with any online transaction.`
@@ -1160,7 +1159,9 @@ const Subscription = ({navigation}) => {
                 By continuing you accept our{' '}
                 <Text
                   onPress={() => {
-                    navigation.navigate('TermaAndCondition',{title:'Privacy & Policy'});
+                    navigation.navigate('TermaAndCondition', {
+                      title: 'Privacy & Policy',
+                    });
                   }}
                   style={styles.policyText1}>
                   Privacy Policy
@@ -1169,7 +1170,9 @@ const Subscription = ({navigation}) => {
                 <Text
                   style={styles.policyText1}
                   onPress={() => {
-                    navigation.navigate('TermaAndCondition',{title:'Terms & Condition'});
+                    navigation.navigate('TermaAndCondition', {
+                      title: 'Terms & Condition',
+                    });
                   }}>
                   {' '}
                   Terms of use

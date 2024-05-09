@@ -204,9 +204,9 @@ const CustomWorkout = ({navigation, route}) => {
   );
   const getAdsDisplay = (index, item) => {
     if (customWorkoutData.length >= 1) {
-      if (index == 0) {
+      if (index == 0&&customWorkoutData.length>1) {
         return getNativeAdsDisplay();
-      } else if ((index + 1) % 8 == 0) {
+      } else if ((index + 1) % 8 == 0&&customWorkoutData.length>8) {
         return getNativeAdsDisplay();
       }
     }

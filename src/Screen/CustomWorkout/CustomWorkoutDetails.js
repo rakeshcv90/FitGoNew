@@ -159,7 +159,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           method: 'Post',
           data: {user_details: datas},
         });
-      console.log("ghhghghghgghghgh",res.data)
+  
         if (res.data) {
           if (
             res.data?.msg ==
