@@ -70,7 +70,7 @@ const NewProgressScreen = ({navigation}) => {
   let arrayForData = [];
   let arrayForData1 = [];
   // Update state with useEffect
-console.log("xdcfdsfdsf",getCustttomeTimeCal)
+
   useEffect(() => {
     const Calories1 = getCustttomeTimeCal?.map(value => value.totalCalories);
     const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
@@ -783,7 +783,7 @@ console.log("xdcfdsfdsf",getCustttomeTimeCal)
               : 'Guest'
           }`}
         </Text>
-        <View style={styles.card}>
+        {/* <View style={styles.card}>
           {Card_Data.map((value, index) => (
             <View key={index} style={{justifyContent: 'space-between'}}>
               <Image
@@ -810,7 +810,7 @@ console.log("xdcfdsfdsf",getCustttomeTimeCal)
               </Text>
             </View>
           ))}
-        </View>
+        </View> */}
 
         {getUserDataDetails?.workout_plans != 'CustomCreated' ? (
           <>

@@ -267,8 +267,8 @@ const Exercise = ({navigation, route}: any) => {
               }
               setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
               if (seconds > 1) {
-                if (seconds <= 4) {
-                  Tts.speak(`${seconds - 1}`);
+              if (seconds <= 3) {
+                  Tts.speak(`${seconds}`);
                 }
                 if (seconds == 12) Tts.speak('10 seconds to go');
                 setSeconds(prevSeconds => prevSeconds - 1);
