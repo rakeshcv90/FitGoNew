@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {AppColor} from '../../../Component/Color';
+import {AppColor, Fonts} from '../../../Component/Color';
 import GradientText from '../../../Component/GradientText';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../../Component/Config';
 import axios from 'axios';
@@ -20,7 +20,10 @@ import {StatusBar} from 'react-native';
 import moment from 'moment';
 import {BannerAdd} from '../../../Component/BannerAdd';
 import {bannerAdId} from '../../../Component/AdsId';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
 
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const WeekArray = Array(7)
   .fill(0)
   .map(
@@ -39,12 +42,15 @@ const DayRewards = ({navigation, route}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
+  const avatarRef = React.createRef();
   const [days, setDays] = useState<Array<any>>([]);
   const [weekly, setWeekly] = useState(false);
+  const [loader, setLoader] = useState(false);
   useEffect(() => {
     getCurrentDayAPI();
   }, []);
   const getCurrentDayAPI = async () => {
+    setLoader(true);
     try {
       const payload = new FormData();
       payload.append('id', getUserDataDetails?.id);
@@ -66,8 +72,10 @@ const DayRewards = ({navigation, route}: any) => {
         WeeklyStatusAPI();
         setWeekly(true);
       }
+      setLoader(false);
     } catch (error) {
       console.error(error, 'DAPIERror');
+      setLoader(false);
     }
   };
 
@@ -122,15 +130,18 @@ const DayRewards = ({navigation, route}: any) => {
           alignItems: 'center',
           justifyContent: 'center',
           alignSelf: 'center',
+          marginVertical: DeviceHeigth * 0.05,
         }}>
-        <GradientText
-          text="Congratulations!"
-          fontSize={32}
-          width={DeviceHeigth >= 1024 ? DeviceWidth * 0.4 : DeviceWidth * 0.7}
-          y={'70'}
-          // x={'10%'}
-          height={100}
-        />
+        <Text
+          style={{
+            color: AppColor.RED1,
+            fontSize: 28,
+            lineHeight: 40,
+            fontWeight: '600',
+            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+          }}>
+          Congratulations!
+        </Text>
       </View>
       <AnimatedLottieView
         // source={{
@@ -177,78 +188,97 @@ const DayRewards = ({navigation, route}: any) => {
           }}>
           Weekly Achievement
         </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: DeviceWidth * 0.9,
-            marginTop: 10,
-          }}>
-          {weekly
-            ? WeekArray.map((item: any, index: number) => {
-                return (
-                  <View style={{alignItems: 'center'}}>
-                    {days.includes(item) ? (
-                      <Image
-                        source={localImage.RedCircle}
-                        style={{height: 40, width: 40}}
-                      />
-                    ) : (
-                      <View
+        {loader ? (
+          <View
+            style={{
+              width: DeviceWidth * 0.9,
+              height: 50,
+              borderRadius: 30,
+              justifyContent: 'center',
+              alignItems: 'center',
+              overflow: 'hidden',
+              marginTop: 10,
+            }}>
+            <ShimmerPlaceholder
+              style={{height: '100%', width: '100%'}}
+              ref={avatarRef}
+              autoRun
+            />
+          </View>
+        ) : (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: DeviceWidth * 0.9,
+              marginTop: 10,
+            }}>
+            {weekly
+              ? WeekArray.map((item: any, index: number) => {
+                  return (
+                    <View style={{alignItems: 'center'}}>
+                      {days.includes(item) ? (
+                        <Image
+                          source={localImage.RedCircle}
+                          style={{height: 40, width: 40}}
+                        />
+                      ) : (
+                        <View
+                          style={{
+                            height: 40,
+                            width: 40,
+                            borderRadius: 50,
+                            backgroundColor: '#EDF1F4',
+                          }}
+                        />
+                      )}
+                      <Text
                         style={{
-                          height: 40,
-                          width: 40,
-                          borderRadius: 50,
-                          backgroundColor: '#EDF1F4',
-                        }}
-                      />
-                    )}
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        fontFamily: 'Poppins',
-                        lineHeight: 30,
-                        color: '#505050',
-                        fontWeight: '500',
-                      }}>
-                      {item?.substring(0, 1)}
-                    </Text>
-                  </View>
-                );
-              })
-            : numberArray.map((item: any, index: number) => {
-                return (
-                  <View style={{alignItems: 'center'}}>
-                    {days.includes(item) ? (
-                      <Image
-                        source={localImage.RedCircle}
-                        style={{height: 40, width: 40}}
-                      />
-                    ) : (
-                      <View
+                          fontSize: 16,
+                          fontFamily: 'Poppins',
+                          lineHeight: 30,
+                          color: '#505050',
+                          fontWeight: '500',
+                        }}>
+                        {item?.substring(0, 1)}
+                      </Text>
+                    </View>
+                  );
+                })
+              : numberArray.map((item: any, index: number) => {
+                  return (
+                    <View style={{alignItems: 'center'}}>
+                      {days.includes(item) ? (
+                        <Image
+                          source={localImage.RedCircle}
+                          style={{height: 40, width: 40}}
+                        />
+                      ) : (
+                        <View
+                          style={{
+                            height: 40,
+                            width: 40,
+                            borderRadius: 50,
+                            backgroundColor: '#EDF1F4',
+                          }}
+                        />
+                      )}
+                      <Text
                         style={{
-                          height: 40,
-                          width: 40,
-                          borderRadius: 50,
-                          backgroundColor: '#EDF1F4',
-                        }}
-                      />
-                    )}
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        fontFamily: 'Poppins',
-                        lineHeight: 30,
-                        color: '#505050',
-                        fontWeight: '500',
-                      }}>
-                      {item}
-                    </Text>
-                  </View>
-                );
-              })}
-        </View>
+                          fontSize: 16,
+                          fontFamily: 'Poppins',
+                          lineHeight: 30,
+                          color: '#505050',
+                          fontWeight: '500',
+                        }}>
+                        {item}
+                      </Text>
+                    </View>
+                  );
+                })}
+          </View>
+        )}
         <Text
           style={{
             fontSize: 16,
@@ -275,7 +305,7 @@ const DayRewards = ({navigation, route}: any) => {
         <View
           style={{
             marginBottom: DeviceHeigth * 0.002,
-            top: DeviceHeigth * 0.17,
+            top: DeviceHeigth * 0.14,
           }}>
           <GradientButton
             onPress={() =>

@@ -570,7 +570,7 @@ const MyPlans = ({navigation}: any) => {
               padding: 5,
               borderTopLeftRadius: 0,
               borderTopRightRadius: 0,
-              marginBottom: DeviceHeigth * 0.17,
+              marginBottom: DeviceHeigth * 0.1,
             }}>
             <LinearGradient
               start={{x: 1, y: 0}}

@@ -128,9 +128,9 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
                 ? 'file://' + getStoreVideoLoc[data?.exercise_title + 'Image']
                 : getStoreVideoLoc[data?.workout_title + 'Image'] != undefined
                 ? 'file://' + getStoreVideoLoc[data?.workout_title + 'Image']
-                : data?.workout_image_link
-                ? data?.workout_image_link
-                : data?.exercise_image_link,
+                : data?.exercise_image?.includes('https')
+                ? data?.exercise_image
+                : data?.exercise_image_link
           }}
 
          onLoad={() => setIsLoading(false)}
@@ -139,7 +139,9 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             height: DeviceWidth / 1.5,
             width: DeviceWidth * 0.95,
             alignSelf: 'center',
-            marginTop: 10,
+            // marginTop: 10,
+            top: -DeviceHeigth*0.07,
+            zIndex: -1,
           }}
           resizeMode="contain"
         />
@@ -184,6 +186,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: 'relative',
+    marginTop: -DeviceHeigth * 0.05
   },
   content: {
     flex: 1,

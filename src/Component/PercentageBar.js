@@ -53,7 +53,7 @@ const PercentageBar = ({
             //     : -DeviceHeigth * 0.037,
           }}>
           <Text style={{textAlign: 'center', color: 'white'}}>
-            {percentage > 10 ? `${percentage}%` : '0%'}
+            {`${percentage}%`}
           </Text>
         </View>
       </View>
