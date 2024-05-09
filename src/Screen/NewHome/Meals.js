@@ -140,10 +140,18 @@ const Meals = ({navigation}) => {
       ) {
         return null;
       } else {
-        return <BannerAdd bannerAdId={bannerAdId} />;
+        return (
+        <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
+          <BannerAdd bannerAdId={bannerAdId} />
+        </View>
+      );
       }
     } else {
-      return <BannerAdd bannerAdId={bannerAdId} />;
+      return (
+        <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
+          <BannerAdd bannerAdId={bannerAdId} />
+        </View>
+      );
     }
   };
   return (
@@ -300,7 +308,7 @@ const Meals = ({navigation}) => {
 
             width: '100%',
             alignItems: 'center',
-            marginBottom: Platform.OS == 'android' ? DeviceHeigth * 0.49 : 50,
+            paddingBottom: Platform.OS == 'android' ? DeviceHeigth * 0.47 : 50,
           }}>
           <FlatList
             data={mealData}
