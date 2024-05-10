@@ -45,7 +45,6 @@ export const navigationRef = createNavigationContainerRef();
 // clear data from code push appcenter codepush deployment clear -a thefitnessandworkout-gmail.com/FitmeAndroid Production
 let codePushOptions = {checkFrequency: codePush.CheckFrequency.MANUAL};
 
-
 LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 LogBox.ignoreAllLogs(); //Ignore all log notifications
 LogBox.ignoreLogs([
@@ -61,7 +60,6 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-
     try {
       analytics().setAnalyticsCollectionEnabled(true);
       crashlytics().setCrashlyticsCollectionEnabled(true);
@@ -106,7 +104,6 @@ const App = () => {
   // }, []);
   useEffect(() => {
     async function initializePlayer() {
-
       await TrackPlayer.setupPlayer();
     }
 
@@ -187,7 +184,7 @@ const App = () => {
                 fontSize: 17,
                 fontFamily: 'Montserrat-Regular',
                 fontWeight: '700',
-                color:AppColor.BLACK
+                color: AppColor.BLACK,
               }}>
               Downloading......
             </Text>
@@ -214,7 +211,7 @@ const App = () => {
                     fontWeight: '700',
                     lineHeight: 35,
                     fontFamily: 'Montserrat-Regular',
-           
+
                     color: 'rgb(0, 0, 0)',
                   }}
                 />
@@ -226,7 +223,7 @@ const App = () => {
                   fontSize: 15,
                   fontFamily: 'Montserrat-Regular',
                   fontWeight: '700',
-                  color:AppColor.BLACK
+                  color: AppColor.BLACK,
                 }}>{`${(Number(progress?.receivedBytes) / 1048576).toFixed(
                 2,
               )}MB/${(Number(progress?.totalBytes) / 1048576).toFixed(
@@ -238,7 +235,7 @@ const App = () => {
       </Modal>
     );
   };
- 
+
   return (
     <>
       <NavigationContainer
@@ -256,6 +253,9 @@ const App = () => {
       </NavigationContainer>
       <FlashMessage
         position="top"
+        hideOnPress={true}
+        autoHide={true}
+        duration={2500}
         statusBarHeight={StatusBar_Bar_Height + 30}
       />
 

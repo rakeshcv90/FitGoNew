@@ -11,6 +11,8 @@ import {
   Modal,
   Alert,
   Linking,
+  BackHandler,
+  ToastAndroid,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
@@ -28,7 +30,7 @@ import {
   RESULTS,
   requestMultiple,
 } from 'react-native-permissions';
-import {useIsFocused} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BackgroundService from 'react-native-background-actions';
 import moment from 'moment';
@@ -49,6 +51,7 @@ import {showMessage} from 'react-native-flash-message';
 import {
   setAllWorkoutData,
   setChallengesData,
+  setFitmeMealAdsCount,
   setIsAlarmEnabled,
   setStepCounterOnOff,
   setWorkoutTimeCal,
@@ -62,6 +65,8 @@ import {setPedomterData} from '../../Component/ThemeRedux/Actions';
 import AppleHealthKit from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
 import GradientButton from '../../Component/GradientButton';
+import {getStatusBarHeight} from 'react-native-status-bar-height';
+import {MyInterstitialAd} from '../../Component/BannerAdd';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -121,6 +126,8 @@ const HomeNew = ({navigation}) => {
   const [CalriesGoalProfile, setCaloriesGoalProfile] = useState(
     getPedomterData[2] ? getPedomterData[2].RCalories : 250,
   );
+  const getFitmeMealAdsCount = useSelector(state => state.getFitmeMealAdsCount);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [steps, setSteps] = useState(0);
   const stepsRef = useRef(steps);
   const [Calories, setCalories] = useState(0);
@@ -130,6 +137,9 @@ const HomeNew = ({navigation}) => {
   const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
   const getStepCounterOnoff = useSelector(state => state.getStepCounterOnoff);
   const [PaddoModalShow, setPaddoModalShow] = useState(false);
+  const [backPressCount, setBackPressCount] = useState(0);
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+
   const colors = [
     {color1: '#E3287A', color2: '#EE7CBA'},
     {color1: '#5A76F4', color2: '#61DFF6'},
@@ -191,16 +201,68 @@ const HomeNew = ({navigation}) => {
   useEffect(() => {
     if (isFocused) {
       allWorkoutApi();
+      initInterstitial();
+      ChallengesDataAPI();
       getWorkoutStatus();
       setTimeout(() => {
         ActivityPermission();
       }, 2000);
     }
   }, [isFocused]);
-  useEffect(() => {
-    ChallengesDataAPI();
-  }, []);
 
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBackPress,
+    );
+
+    return () => backHandler.remove();
+  }, [backPressCount]);
+  useFocusEffect(
+    React.useCallback(() => {
+      setBackPressCount(0);
+    }, []),
+  );
+  const handleBackPress = () => {
+    if (backPressCount === 1) {
+      BackHandler.exitApp();
+      return true;
+    } else {
+      ToastAndroid.show('Press back again to exit', ToastAndroid.TOP);
+      setBackPressCount(1);
+      setTimeout(() => {
+        setBackPressCount(0);
+      }, 2000);
+      return true;
+    }
+  };
+
+  const checkMealAddCount = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        dispatch(setFitmeMealAdsCount(0));
+        return false;
+      } else {
+        if (getFitmeMealAdsCount < 3) {
+          dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
+          return false;
+        } else {
+          dispatch(setFitmeMealAdsCount(0));
+          return true;
+        }
+      }
+    } else {
+      if (getFitmeMealAdsCount < 3) {
+        dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
+        return false;
+      } else {
+        dispatch(setFitmeMealAdsCount(0));
+        return true;
+      }
+    }
+  };
   const ChallengesDataAPI = async () => {
     try {
       const res = await axios({
@@ -393,7 +455,14 @@ const HomeNew = ({navigation}) => {
           if (result === RESULTS.GRANTED) {
             console.log('Location permission granted IOS');
             setLocationP(false);
-            navigationRef.navigate('GymListing');
+            analytics().logEvent(`CV_FITME_CLICKED_ON_GYM_LISTING_SCREEN`);
+            let checkAdsShow = checkMealAddCount();
+            if (checkAdsShow == true) {
+              showInterstitialAd();
+              navigationRef.navigate('GymListing');
+            } else {
+              navigationRef.navigate('GymListing');
+            }
             // getCurrentLocation();
           } else {
             setLocationP(true);
@@ -406,8 +475,15 @@ const HomeNew = ({navigation}) => {
         ]).then(async result => {
           if (result['android.permission.ACCESS_FINE_LOCATION'] == 'granted') {
             console.log('Location permission granted Android');
+            analytics().logEvent(`CV_FITME_CLICKED_ON_GYM_LISTING_SCREEN`);
             setLocationP(false);
-            navigationRef.navigate('GymListing');
+            let checkAdsShow = checkMealAddCount();
+            if (checkAdsShow == true) {
+              showInterstitialAd();
+              navigationRef.navigate('GymListing');
+            } else {
+              navigationRef.navigate('GymListing');
+            }
             // getCurrentLocation();
           } else {
             setLocationP(true);
@@ -577,7 +653,13 @@ const HomeNew = ({navigation}) => {
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={() => {
-        navigation.navigate('MeditationDetails', {item: title});
+        let checkAdsShow = checkMealAddCount();
+        if (checkAdsShow == true) {
+          showInterstitialAd();
+          navigation.navigate('MeditationDetails', {item: title});
+        } else {
+          navigation.navigate('MeditationDetails', {item: title});
+        }
       }}>
       <View
         style={{
@@ -647,15 +729,22 @@ const HomeNew = ({navigation}) => {
     return (
       <>
         <TouchableOpacity
-        style={[
-          styles.listItem2,
-          {
-            paddingRight:
-              index == fitnessInstructor?.length - 1 ? DeviceWidth * 0.04 : 0,
-          },
-        ]}
+          style={[
+            styles.listItem2,
+            {
+              paddingRight:
+                index == fitnessInstructor?.length - 1 ? DeviceWidth * 0.04 : 0,
+            },
+          ]}
           onPress={() => {
-            navigation.navigate('AITrainer', {item: item});
+            let checkAdsShow = checkMealAddCount();
+            if (checkAdsShow == true) {
+              showInterstitialAd();
+              navigation.navigate('AITrainer', {item: item});
+            } else {
+              navigation.navigate('AITrainer', {item: item});
+            }
+        
           }}>
           <Image
             source={item?.img}
@@ -1405,7 +1494,13 @@ const HomeNew = ({navigation}) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
-                navigation.navigate('CustomWorkout');
+                let checkAdsShow = checkMealAddCount();
+                if (checkAdsShow == true) {
+                  showInterstitialAd();
+                  navigation.navigate('CustomWorkout');
+                } else {
+                  navigation.navigate('CustomWorkout');
+                }
               }}
               style={
                 {
@@ -1482,14 +1577,22 @@ const HomeNew = ({navigation}) => {
             }}>
             Meditation
           </Text>
-      
+
           {allWorkoutData?.mindset_workout_data?.length > 0 && (
             <TouchableOpacity
               onPress={() => {
                 analytics().logEvent('CV_FITME_CLICKED_ON_MEDITATION');
-                navigation.navigate('MeditationDetails', {
-                  item: allWorkoutData?.mindset_workout_data[0],
-                });
+                let checkAdsShow = checkMealAddCount();
+                if (checkAdsShow == true) {
+                  showInterstitialAd();
+                  navigation.navigate('MeditationDetails', {
+                    item: allWorkoutData?.mindset_workout_data[0],
+                  });
+                } else {
+                  navigation.navigate('MeditationDetails', {
+                    item: allWorkoutData?.mindset_workout_data[0],
+                  });
+                }
               }}>
               <Text
                 style={{
@@ -1751,7 +1854,14 @@ const HomeNew = ({navigation}) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
-                navigation.navigate('Meals');
+                let checkAdsShow = checkMealAddCount();
+                if (checkAdsShow == true) {
+                  showInterstitialAd();
+                  navigation.navigate('Meals');
+                } else {
+                  navigation.navigate('Meals');
+                }
+          
               }}
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View style={{zIndex: 1}}>
@@ -1803,7 +1913,14 @@ const HomeNew = ({navigation}) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
-                navigation.navigate('Store');
+                let checkAdsShow = checkMealAddCount();
+                if (checkAdsShow == true) {
+                  showInterstitialAd();
+                  navigation.navigate('Store');
+                } else {
+                  navigation.navigate('Store');
+                }
+        
               }}
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View>

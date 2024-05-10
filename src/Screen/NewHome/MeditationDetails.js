@@ -84,11 +84,11 @@ const MeditationDetails = ({navigation, route}) => {
       } else if (data?.data?.status == 'data found') {
         setForLoading(false);
         setmindsetExercise(data.data.data);
-        Promise.all(
-          data.data.data.map((item, index) =>
-            downloadVideos(item, index, data.data.data.length),
-          ),
-        ).finally(() => setmindsetExercise(data.data.data));
+        // Promise.all(
+        //   data.data.data.map((item, index) =>
+        //     downloadVideos(item, index, data.data.data.length),
+        //   ),
+        // ).finally(() => setmindsetExercise(data.data.data));
       } else {
         setForLoading(false);
         setmindsetExercise([]);
@@ -522,7 +522,7 @@ const MeditationDetails = ({navigation, route}) => {
                               left: -12,
                             }}>
                             <TouchableOpacity
-                              disabled={downloaded > 0 && downloaded != 100}
+                              // disabled={downloaded > 0 && downloaded != 100}
                               onPress={() => {
                                 navigation.navigate(
                                   'MeditationExerciseDetails',

@@ -10,6 +10,7 @@ import {
   Modal,
   Alert,
   Linking,
+  PermissionsAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import NewHeader from '../Component/Headers/NewHeader';
@@ -460,12 +461,13 @@ const NewProfile = ({navigation}) => {
               </View>
               <Image
                 defaultSource={localImage.avt}
-                source={{
-                  uri:
-                    userAvatar != null
-                      ? userAvatar.uri
-                      : getUserDataDetails.image_path,
-                }}
+                source={
+                  userAvatar != null
+                    ? {uri: userAvatar.uri}
+                    : getUserDataDetails.image_path
+                    ? {uri: getUserDataDetails.image_path}
+                    : localImage.avt
+                }
                 style={styles.Icon}
               />
               <View

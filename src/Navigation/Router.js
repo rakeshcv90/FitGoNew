@@ -144,7 +144,7 @@ export const LoginStack = () => {
       <Stack.Screen name="AITrainer" component={AITrainer} />
       <Stack.Screen name="AIMessageHistory" component={AIMessageHistory} />
       <Stack.Screen name="Subscription" component={Subscription} />
-      <Stack.Screen name="NewProgressScreen" component={NewMonthlyAchievement}/>
+      <Stack.Screen name="NewMonthlyAchievement" component={NewMonthlyAchievement}/>
       <Stack.Screen name="FocuseWorkoutList" component={FocuseWorkoutList}/>
       <Stack.Screen name="CustomWorkout" component={CustomWorkout}/>
       <Stack.Screen name="CustomWorkoutDetails" component={CustomWorkoutDetails}/>
