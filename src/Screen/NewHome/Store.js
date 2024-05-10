@@ -234,7 +234,7 @@ const Store = ({navigation}) => {
             alignSelf: 'center',
             alignItems: 'center',
             top: 10,
-          
+            
           }}>
           <Text
             style={{
@@ -354,6 +354,7 @@ const Store = ({navigation}) => {
                 keyExtractor={(item, index) => index.toString()}
               />
             )}
+            <View style={{height: DeviceHeigth * 0.025}} />
           </View>
         </View>
       </View>

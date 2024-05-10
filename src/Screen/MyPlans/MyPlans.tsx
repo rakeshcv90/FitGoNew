@@ -229,6 +229,7 @@ const Box = ({item, index}: any) => {
 };
 const MyPlans = ({navigation}: any) => {
   const [downloaded, setDownloade] = useState(false);
+  const [hasAds, setHasAds] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [loader, setLoader] = useState(false);
   const [selectedDay, setSelectedDay] = useState((moment().day() + 6) % 7);
@@ -254,8 +255,9 @@ const MyPlans = ({navigation}: any) => {
     allWorkoutApi1();
     getGraphData();
     Promise.all(WeekArray.map(item => getWeeklyAPI(item))).finally(() =>
-      dispatch(setWeeklyPlansData(All_Weeks_Data)), 
+      dispatch(setWeeklyPlansData(All_Weeks_Data)),
     );
+    checkMealAddCount()
   }, []);
 
   useEffect(() => {
@@ -581,7 +583,7 @@ const MyPlans = ({navigation}: any) => {
       console.error(error, 'PostDaysAPIERror');
     }
   };
-  const DownloadingWorkout = () => {
+  const DownloadingWorkout = (props: any) => {
     const progressAnimation = new Animated.Value(0);
     const progressBarWidth = progressAnimation.interpolate({
       inputRange: [0, 1],
@@ -600,7 +602,11 @@ const MyPlans = ({navigation}: any) => {
     return (
       <Modal visible={downloaded} transparent>
         <View
-          style={{flex: 1, justifyContent: 'flex-end', alignItems: 'center'}}>
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
           <View
             style={{
               width: DeviceWidth * 0.95,
@@ -624,7 +630,16 @@ const MyPlans = ({navigation}: any) => {
               padding: 5,
               borderTopLeftRadius: 0,
               borderTopRightRadius: 0,
-              marginBottom: DeviceHeigth * 0.1,
+              position: 'absolute',
+              bottom: props.hasAds ? DeviceHeigth * 0.15 : DeviceHeigth * 0.1,
+              // bottom:
+              //   DeviceHeigth >= 812
+              //     ? props.hasAds
+              //       ? DeviceHeigth * 0.15
+              //       : DeviceHeigth * 0.1
+              //     : props.hasAds
+              //     ? DeviceHeigth * 0.15
+              //     : DeviceHeigth * 0.1,
             }}>
             <LinearGradient
               start={{x: 1, y: 0}}
@@ -697,8 +712,10 @@ const MyPlans = ({navigation}: any) => {
         getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
       ) {
         dispatch(setFitmeMealAdsCount(0));
+        setHasAds(false);
         return false;
       } else {
+        setHasAds(true);
         if (getFitmeMealAdsCount < 3) {
           dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
           return false;
@@ -708,6 +725,7 @@ const MyPlans = ({navigation}: any) => {
         }
       }
     } else {
+      setHasAds(true);
       if (getFitmeMealAdsCount < 3) {
         dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
         return false;
@@ -1000,7 +1018,7 @@ const MyPlans = ({navigation}: any) => {
           emptyComponent()
         )}
       </View>
-      <DownloadingWorkout />
+      <DownloadingWorkout hasAds={hasAds} />
     </SafeAreaView>
   );
 };
