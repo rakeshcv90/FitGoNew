@@ -12,15 +12,12 @@ import {
 import React, {useMemo, useState, useEffect} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {AppColor, Fonts} from '../../Component/Color';
-import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {Calendar} from 'react-native-calendars';
-import AppleHealthKit from 'react-native-health';
 import moment from 'moment';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 import AnimatedLottieView from 'lottie-react-native';
-import Calories from '../../Component/Calories';
 import ActivityLoader from '../../Component/ActivityLoader';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
@@ -35,60 +32,8 @@ const NewMonthlyAchievement = () => {
   const {getUserDataDetails, getCustttomeTimeCal, getStepCounterOnoff} =
     useSelector(state => state);
   const [ApiData, setApiData] = useState([]);
-  const [WorkoutCount, setWorkoutCount] = useState(0);
-  const [WokoutCalories, setWorkoutCalories] = useState(0);
-  const [WokroutTime_m, setWorkoutTime_m] = useState(0);
-  const [WokroutTime_s, setWorkoutTime_s] = useState(0);
-  const [calories1, setCalories1] = useState(0);
-  const [Wtime, setWtime] = useState(0);
+ 
   const [isLoaded, setIsLoaded] = useState(false);
-  useEffect(() => {
-    const Calories1 = getCustttomeTimeCal.map(value => value.totalCalories);
-    const Calories2 = Calories1?.reduce((acc, ind) => acc + ind, 0);
-    const time1 = getCustttomeTimeCal?.map(value =>
-      parseInt(value.totalRestTime),
-    );
-    const Time2 = time1?.reduce((acc, ind) => Math.ceil((acc + ind) / 60), 0);
-    setWtime(Time2);
-    if (Platform.OS == 'ios') {
-      let options = {
-        date: new Date().toISOString(), // optional; default now
-        includeManuallyAdded: true, // optional: default true
-      };
-      AppleHealthKit.getStepCount(options, (callbackError, results) => {
-        if (callbackError) {
-          console.error('Error while getting the data:', callbackError);
-          // Handle the error as needed
-        } else {
-          setCalories1(
-            parseInt(((results?.value / 20) * 1).toFixed(0)) +
-              parseInt(Calories2),
-          );
-        }
-      });
-    } else if (Platform.OS == 'android') {
-      if (getStepCounterOnoff) {
-        const getDailyData = async () => {
-          try {
-            const dailySteps =20 //await GoogleFit.getDailySteps();
-            const totalSteps = dailySteps.reduce(
-              (total, acc) => (total + acc.steps[0] ? acc.steps[0].value : 0),
-              0,
-            );
-            setCalories1(
-              parseInt(totalSteps ? ((totalSteps / 20) * 1).toFixed(0) : 0) +
-                parseInt(Calories2),
-            );
-          } catch (error) {
-            console.error('Error fetching total steps', error);
-          }
-        };
-        getDailyData();
-      } else {
-        setCalories1(parseInt(Calories2));
-      }
-    }
-  }, []);
   const theme = useMemo(() => {
     return {
       calendarBackground: AppColor.BACKGROUNG,
@@ -153,25 +98,7 @@ const NewMonthlyAchievement = () => {
       setIsLoaded(true);
     }
   };
-  const HandleStepsAndCalories = Date1 => {
-    if (Platform.OS == 'ios') {
-      let options = {
-        date: new Date(Date1).toISOString(), // optional; default now
-        includeManuallyAdded: true, // optional: default true
-      };
-      AppleHealthKit.getStepCount(options, (callbackError, results) => {
-        if (callbackError) {
-          console.error('Error while getting the data:', callbackError);
-          // Handle the error as needed
-        } else {
-          setSteps(results?.value);
-          setDistance(((results?.value / 20) * 0.01).toFixed(2));
-          setCalories(((results?.value / 20) * 1).toFixed(0));
-        }
-      });
-    } else if (Platform.OS == 'android') {
-    }
-  };
+
 
   const EmptyComponent = () => {
     return (
@@ -196,90 +123,10 @@ const NewMonthlyAchievement = () => {
       </View>
     );
   };
-  const DailyData = [
-    {
-      id: 1,
-      img: (
-        <Image
-          source={localImage.Step1}
-          style={{height: 25, width: 25}}
-          resizeMode="contain"
-        />
-      ),
-      txt: `${parseInt(calories) + WokoutCalories} Kcal`,
-    },
-    {
-      id: 2,
-      img: (
-        <Image
-          source={localImage.Step2}
-          style={{height: 25, width: 25}}
-          resizeMode="contain"
-        />
-      ),
-      txt: `${Distance} Km`,
-    },
-    {
-      id: 3,
-      img: (
-        <Image
-          source={localImage.Step3}
-          style={{height: 25, width: 25}}
-          resizeMode="contain"
-          tintColor={AppColor.RED}
-        />
-      ),
-      txt: steps,
-    },
-  ];
-  const Card_Data = [
-    {
-      id: 1,
-      img: localImage.Fire1,
-      txt1: calories1,
-      txt2: 'Kcal',
-    },
-    {
-      id: 2,
-      img: localImage.Clock_p,
-      txt1: Wtime,
-      txt2: 'Min',
-    },
-    {
-      id: 3,
-      img: localImage.Biceps_p,
-      txt1: getCustttomeTimeCal[0]
-        ? getCustttomeTimeCal[0]?.exerciseCount
-        : '0',
-      txt2: 'Actions',
-    },
-  ];
   return (
     <SafeAreaView style={styles.Container}>
       <NewHeader header={'Monthly Achievement'} backButton={true} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* <View
-          style={{
-            width: DeviceWidth * 0.9,
-            alignSelf: 'center',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          {Card_Data.map((value, index) => (
-            <View key={index} style={styles.cards}>
-              <Image
-                source={value.img}
-                style={{width: 50, height: 50, alignSelf: 'center'}}
-                resizeMode="contain"
-              />
-              <Text style={[styles.txts, {color: AppColor.RED}]}>
-                {value?.txt1}
-              </Text>
-              <Text style={styles.txts}>{value.txt2}</Text>
-            </View>
-          ))}
-        </View> */}
-
         <View style={styles.card}>
           <Calendar
             onDayPress={day => {

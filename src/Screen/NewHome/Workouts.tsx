@@ -22,6 +22,7 @@ import {
   setAllWorkoutData,
   setChallengesData,
   setCustomWorkoutData,
+  setFitmeMealAdsCount,
   setWorkoutTimeCal,
 } from '../../Component/ThemeRedux/Actions';
 import NewHeader from '../../Component/Headers/NewHeader';
@@ -31,8 +32,10 @@ import {showMessage} from 'react-native-flash-message';
 import {useIsFocused} from '@react-navigation/native';
 
 import AnimatedLottieView from 'lottie-react-native';
-import {reset} from 'react-native-track-player/lib/trackPlayer';
+
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import {MyInterstitialAd} from '../../Component/BannerAdd';
+import moment from 'moment';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
@@ -43,6 +46,13 @@ const Workouts = ({navigation}: any) => {
     (state: any) => state.completeProfileData,
   );
   const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
+  const getFitmeMealAdsCount = useSelector(
+    (state: any) => state.getFitmeMealAdsCount,
+  );
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
+  );
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
 
   const avatarRef = React.createRef();
   const getUserDataDetails = useSelector(
@@ -57,7 +67,7 @@ const Workouts = ({navigation}: any) => {
 
   useEffect(() => {
     if (isFocused) {
-      // allWorkoutData?.workout_Data?.length == 0 &&
+      initInterstitial();
       allWorkoutApi();
       ChallengesDataAPI();
       // getCustomeWorkoutTimeDetails();
@@ -168,27 +178,7 @@ const Workouts = ({navigation}: any) => {
       console.error(error, 'ChallengesDataAPI ERRR');
     }
   };
-  // const getCustomeWorkoutTimeDetails = async () => {
-  //   try {
-  //     const data = await axios(`${NewAppapi.Custome_Workout_Cal_Time}`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       data: {
-  //         user_id: getUserDataDetails?.id,
-  //       },
-  //     });
 
-  //     if (data.data.results.length > 0) {
-  //       dispatch(setWorkoutTimeCal(data.data.results));
-  //     } else {
-  //       dispatch(setWorkoutTimeCal([]));
-  //     }
-  //   } catch (error) {
-  //     console.log('UCustomeCorkout details', error);
-  //   }
-  // };
   const getWorkoutStatus = async () => {
     try {
       const exerciseStatus = await axios.get(
@@ -231,30 +221,7 @@ const Workouts = ({navigation}: any) => {
       dispatch(setCustomWorkoutData([]));
     }
   };
-  // const getCustomWorkout = async () => {
-  //   try {
-  //     const data = await axios.get(
-  //       `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${getUserDataDetails?.id}`,
-  //     );
 
-  //     if (data?.data?.msg != 'data not found.') {
-  //       dispatch(setCustomWorkoutData(data?.data?.data));
-
-  //     } else {
-  //       dispatch(setCustomWorkoutData([]));
-  //     }
-  //   } catch (error) {
-  //     showMessage({
-  //       message: 'Something went wrong pleasr try again',
-  //       type: 'danger',
-  //       animationDuration: 500,
-  //       floating: true,
-  //       icon: {icon: 'auto', position: 'left'},
-  //     });
-  //     console.log('Custom Workout Error', error);
-  //     dispatch(setCustomWorkoutData([]));
-  //   }
-  // };
   const renderItem = useMemo(() => {
     return ({item}: any) => (
       <>
@@ -342,10 +309,19 @@ const Workouts = ({navigation}: any) => {
     } else {
       bodyexercise = getFilterCaterogy(mydata?.subtitle);
     }
-    navigation.navigate('FocuseWorkoutList', {
-      bodyexercise,
-      item: mydata,
-    });
+    let checkAdsShow = checkMealAddCount();
+    if (checkAdsShow == true) {
+      showInterstitialAd();
+      navigation.navigate('FocuseWorkoutList', {
+        bodyexercise,
+        item: mydata,
+      });
+    } else {
+      navigation.navigate('FocuseWorkoutList', {
+        bodyexercise,
+        item: mydata,
+      });
+    }
   };
   const renderItem1 = useMemo(() => {
     return ({item}: any) => (
@@ -353,10 +329,19 @@ const Workouts = ({navigation}: any) => {
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => {
-            navigation.navigate('WorkoutDays', {
-              data: item,
-              challenge: true,
-            });
+            let checkAdsShow = checkMealAddCount();
+            if (checkAdsShow == true) {
+              showInterstitialAd();
+              navigation.navigate('WorkoutDays', {
+                data: item,
+                challenge: true,
+              });
+            } else {
+              navigation.navigate('WorkoutDays', {
+                data: item,
+                challenge: true,
+              });
+            }
           }}
           style={{
             width: DeviceWidth * 0.95,
@@ -414,7 +399,7 @@ const Workouts = ({navigation}: any) => {
                     DeviceHeigth >= 930
                       ? DeviceHeigth * 0.14
                       : DeviceHeigth >= 812
-                      ? DeviceHeigth * 0.10
+                      ? DeviceHeigth * 0.1
                       : DeviceHeigth * 0.05,
                   marginHorizontal: 10,
                   zIndex: 1,
@@ -477,11 +462,46 @@ const Workouts = ({navigation}: any) => {
     const bodyexercise = allWorkoutData?.workout_Data?.filter((item: any) => {
       return item.workout_bodypart == data.bodypart_id;
     });
+    let checkAdsShow = checkMealAddCount();
+    if (checkAdsShow == true) {
+      showInterstitialAd();
+      navigation.navigate('FocuseWorkoutList', {
+        bodyexercise: bodyexercise,
+        item: data,
+      });
+    } else {
+      navigation.navigate('FocuseWorkoutList', {
+        bodyexercise: bodyexercise,
+        item: data,
+      });
+    }
+  };
 
-    navigation.navigate('FocuseWorkoutList', {
-      bodyexercise: bodyexercise,
-      item: data,
-    });
+  const checkMealAddCount = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        dispatch(setFitmeMealAdsCount(0));
+        return false;
+      } else {
+        if (getFitmeMealAdsCount < 3) {
+          dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
+          return false;
+        } else {
+          dispatch(setFitmeMealAdsCount(0));
+          return true;
+        }
+      }
+    } else {
+      if (getFitmeMealAdsCount < 3) {
+        dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
+        return false;
+      } else {
+        dispatch(setFitmeMealAdsCount(0));
+        return true;
+      }
+    }
   };
   return (
     <>
@@ -536,7 +556,6 @@ const Workouts = ({navigation}: any) => {
                         keyExtractor={(item: any, index: number) =>
                           index.toString()
                         }
-                        // ListEmptyComponent={emptyComponent}
                         renderItem={({item, index}: any) => {
                           return (
                             <>
@@ -578,29 +597,7 @@ const Workouts = ({navigation}: any) => {
                                       },
                                     }),
                                   }}>
-                                  {/* {imageLoad && (
-                                    <View
-                                      style={{
-                                       // position: 'absolute',
-                                        bottom: 5,
-                                        width: 70,
-                                        height: 70,
-                                      }}>
-                                      <ShimmerPlaceholder
-                                        style={{
-                                          width: '100%',
-                                          height: '100%',
-                                          borderRadius: 40,
-                                          justifyContent: 'center',
-                                          alignSelf: 'center',
-                                        }}
-                                        ref={avatarRef}
-                                        autoRun
-                                      />
-                                    </View>
-                                  )} */}
                                   <Image
-                                    //  source={require('../../Icon/Images/NewImage2/human.png')}
                                     source={{uri: item?.bodypart_image}}
                                     onLoad={() => setImageLoad(false)}
                                     style={{
@@ -672,9 +669,17 @@ const Workouts = ({navigation}: any) => {
                       <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
-                          navigation.navigate('CustomWorkout', {
-                            routeName: 'Beginner',
-                          });
+                          let checkAdsShow = checkMealAddCount();
+                          if (checkAdsShow == true) {
+                            showInterstitialAd();
+                            navigation.navigate('CustomWorkout', {
+                              routeName: 'Beginner',
+                            });
+                          } else {
+                            navigation.navigate('CustomWorkout', {
+                              routeName: 'Beginner',
+                            });
+                          }
                         }}
                         style={
                           {

@@ -41,8 +41,9 @@ const MeditationExerciseDetails = ({navigation, route}) => {
       title: 'song 1',
       artist: 'XYZ',
       artwork: localImage.Play3,
-      url: getStoreVideoLoc[route.params.item.id],
-      // url: route.params.item.exercise_mindset_audio,
+      url: route.params.item.exercise_mindset_audio,
+      // url: getStoreVideoLoc[route.params.item.id],
+    
     },
   ];
   useEffect(() => {

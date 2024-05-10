@@ -24,6 +24,7 @@ import {setUserId, setUserProfileData} from '../Component/ThemeRedux/Actions';
 import {showMessage} from 'react-native-flash-message';
 import {BannerAdd} from '../Component/BannerAdd';
 import {bannerAdId} from '../Component/AdsId';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LetsStart = ({navigation}) => {
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ const LetsStart = ({navigation}) => {
     }
   }, [isFocused]);
 
-  const deviceIdRegister = async (value, token) => {
+  const deviceIdRegister = async () => {
     analytics().logEvent('CV_FITME_GOOGLE_SIGNUP');
     setForLoading(true);
     try {
@@ -56,18 +57,38 @@ const LetsStart = ({navigation}) => {
           platform: Platform.OS,
         },
       });
-
+      console.log('DFdssdfsdfdsf', data?.data);
+      setForLoading(false);
       if (
+        data?.data?.msg == 'User already registered' &&
+        data?.data?.profile_compl_status == 1
+      ) {
+        showMessage({
+          message:
+            'Welcome back! It looks like you already have an account. Please log in to access it.',
+          type: 'success',
+          animationDuration: 500,
+          floating: true,
+          titleStyle: {
+            fontFamily: Fonts.MONTSERRAT_MEDIUM,
+            fontWeight: '400',
+            fontSize: 13,
+          },
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (
         data?.data?.msg == 'user registerd successfully' &&
         data?.data?.profile_compl_status == 0
       ) {
         getProfileData(data.data?.id);
+        await AsyncStorage.setItem('userID', `${data.data?.id}`);
         dispatch(setUserId(data.data?.id));
       } else if (
         data?.data?.msg == 'User already exists' &&
         data?.data?.profile_compl_status == 0
       ) {
         getProfileData(data.data?.id);
+        await AsyncStorage.setItem('userID', `${data.data?.id}`);
         dispatch(setUserId(data.data?.id));
       } else if (
         data?.data?.msg == 'User already exists' &&
@@ -75,6 +96,7 @@ const LetsStart = ({navigation}) => {
       ) {
         setForLoading(false);
         getProfileData1(data.data?.id);
+        await AsyncStorage.setItem('userID', `${data.data?.id}`);
         dispatch(setUserId(data.data?.id));
       } else if (
         data?.data?.msg == 'Please update the app to the latest version.'
@@ -147,7 +169,7 @@ const LetsStart = ({navigation}) => {
       if (data?.data?.profile) {
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));
-        navigation.navigate('BottomTab');
+        navigation.replace('BottomTab');
       } else if (
         data?.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -162,7 +184,7 @@ const LetsStart = ({navigation}) => {
       } else {
         setForLoading(false);
         dispatch(setUserProfileData([]));
-        navigation.navigate('BottomTab');
+        navigation.replace('BottomTab');
       }
     } catch (error) {
       console.log('User Profile Error', error);
@@ -224,7 +246,7 @@ const LetsStart = ({navigation}) => {
             justifyContent: 'center',
             // top: DeviceHeigth > 808 ? DeviceHeigth * 0.18 : DeviceHeigth * 0.2,
           }}>
-          <Text style={[styles.LoginText2,{top:-DeviceHeigth*0.05}]}>
+          <Text style={[styles.LoginText2, {top: -DeviceHeigth * 0.05}]}>
             Have an account?{' '}
             <Text
               style={[
@@ -248,7 +270,7 @@ const LetsStart = ({navigation}) => {
               alignSelf: 'center',
               borderRadius: 30,
               alignItems: 'center',
-               top: -DeviceHeigth * 0.02,
+              top: -DeviceHeigth * 0.02,
               justifyContent: 'center',
             }}>
             <TouchableOpacity

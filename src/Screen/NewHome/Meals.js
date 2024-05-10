@@ -141,10 +141,10 @@ const Meals = ({navigation}) => {
         return null;
       } else {
         return (
-        <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
-          <BannerAdd bannerAdId={bannerAdId} />
-        </View>
-      );
+          <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
+            <BannerAdd bannerAdId={bannerAdId} />
+          </View>
+        );
       }
     } else {
       return (
@@ -340,7 +340,12 @@ const Meals = ({navigation}) => {
                         alignSelf: 'center',
                       }}
                       resizeMode="cover"></Image>
-                    <View style={{width: DeviceWidth * 0.2,alignItems:'center',justifyContent:'center'}}>
+                    <View
+                      style={{
+                        width: DeviceWidth * 0.2,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
                       <Text
                         style={[
                           styles.title,
@@ -368,8 +373,7 @@ const Meals = ({navigation}) => {
           />
         </View>
       </View>
-       {bannerAdsDisplay()}
-
+      {bannerAdsDisplay()}
     </>
   );
 };
@@ -398,7 +402,7 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingLeft: 15,
-    paddingRight:15,
+    paddingRight: 15,
     backgroundColor: AppColor.WHITE,
     marginBottom: 20,
     shadowColor: 'rgba(0, 0, 0, 1)',

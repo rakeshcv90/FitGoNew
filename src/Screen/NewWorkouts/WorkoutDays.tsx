@@ -30,6 +30,7 @@ import {
   MyRewardedAd,
 } from '../../Component/BannerAdd';
 import {
+  setFitmeMealAdsCount,
   setSubscriptiomModal,
   setVideoLocation,
 } from '../../Component/ThemeRedux/Actions';
@@ -55,6 +56,11 @@ const WorkoutDays = ({navigation, route}: any) => {
   const [downloaded, setDownloade] = useState(0);
   const avatarRef = React.createRef();
   const [isLoading, setIsLoading] = useState(true);
+  const getFitmeMealAdsCount = useSelector(
+    (state: any) => state.getFitmeMealAdsCount,
+  );
+
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
 
   let isFocuse = useIsFocused();
   const dispatch = useDispatch();
@@ -81,6 +87,7 @@ const WorkoutDays = ({navigation, route}: any) => {
       postViewsAPI();
       getCurrentDayAPI();
       setreward(0);
+      initInterstitial();
     }
   }, [isFocuse]);
   const getCurrentDayAPI = async () => {
@@ -542,28 +549,55 @@ const WorkoutDays = ({navigation, route}: any) => {
           activeOpacity={1}
           onPress={() => {
             analytics().logEvent(`CV_FITME_CLICKED_ON_DAY_${index}_EXERCISES`);
-            index - 1 == 0
-              ? navigation.navigate('OneDay', {
-                  data: data,
-                  dayData: item,
-                  day: index,
-                  trainingCount: trainingCount,
-                  challenge,
-                })
-              : active
-              ? navigation.navigate('OneDay', {
-                  data: data,
-                  dayData: item,
-                  day: index,
-                  trainingCount: trainingCount,
-                  challenge,
-                })
-              : showMessage({
-                  message: `Please complete Day ${
-                    index - 1
-                  } Exercise First !!!`,
-                  type: 'danger',
-                });
+            let checkAdsShow = checkMealAddCount();
+            if (checkAdsShow == true) {
+              showInterstitialAd();
+              index - 1 == 0
+                ? navigation.navigate('OneDay', {
+                    data: data,
+                    dayData: item,
+                    day: index,
+                    trainingCount: trainingCount,
+                    challenge,
+                  })
+                : active
+                ? navigation.navigate('OneDay', {
+                    data: data,
+                    dayData: item,
+                    day: index,
+                    trainingCount: trainingCount,
+                    challenge,
+                  })
+                : showMessage({
+                    message: `Please complete Day ${
+                      index - 1
+                    } Exercise First !!!`,
+                    type: 'danger',
+                  });
+            } else {
+              index - 1 == 0
+                ? navigation.navigate('OneDay', {
+                    data: data,
+                    dayData: item,
+                    day: index,
+                    trainingCount: trainingCount,
+                    challenge,
+                  })
+                : active
+                ? navigation.navigate('OneDay', {
+                    data: data,
+                    dayData: item,
+                    day: index,
+                    trainingCount: trainingCount,
+                    challenge,
+                  })
+                : showMessage({
+                    message: `Please complete Day ${
+                      index - 1
+                    } Exercise First !!!`,
+                    type: 'danger',
+                  });
+            }
           }}>
           <LinearGradient
             start={{x: 1, y: 0}}
@@ -802,7 +836,7 @@ const WorkoutDays = ({navigation, route}: any) => {
     if (Object.values(data?.days).length >= 1) {
       if (index == 1) {
         return getNativeAdsDisplay();
-      } else if ((index + 1) % 8 == 0&&Object.values(data?.days).length>7) {
+      } else if ((index + 1) % 8 == 0 && Object.values(data?.days).length > 7) {
         return getNativeAdsDisplay();
       }
     }
@@ -834,6 +868,32 @@ const WorkoutDays = ({navigation, route}: any) => {
           <NativeAddTest type="image" media={false} />
         </View>
       );
+    }
+  };
+  const checkMealAddCount = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        dispatch(setFitmeMealAdsCount(0));
+        return false;
+      } else {
+        if (getFitmeMealAdsCount < 3) {
+          dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
+          return false;
+        } else {
+          dispatch(setFitmeMealAdsCount(0));
+          return true;
+        }
+      }
+    } else {
+      if (getFitmeMealAdsCount < 3) {
+        dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
+        return false;
+      } else {
+        dispatch(setFitmeMealAdsCount(0));
+        return true;
+      }
     }
   };
   return (

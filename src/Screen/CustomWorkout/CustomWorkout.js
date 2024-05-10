@@ -36,10 +36,10 @@ import moment from 'moment';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
-const CustomWorkout = ({navigation, route}) => {
+const CustomWorkout = ({navigation,}) => {
   const avatarRef = React.createRef();
   const dispatch = useDispatch();
-  const routeName = route?.params?.routeName;
+  // const routeName = route?.params?.routeName;
   const customWorkoutData = useSelector(state => state.customWorkoutData);
   const getExperience = useSelector(state => state.getExperience);
   const [isCustomWorkout, setIsCustomWorkout] = useState(false);

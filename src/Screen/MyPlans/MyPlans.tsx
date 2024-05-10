@@ -35,6 +35,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   setAllWorkoutData,
   setCurrentSelectedDay,
+  setFitmeMealAdsCount,
   setHomeGraphData,
   setIsAlarmEnabled,
   setVideoLocation,
@@ -48,6 +49,8 @@ import Carousel from 'react-native-snap-carousel';
 import AnimatedLottieView from 'lottie-react-native';
 import {AlarmNotification} from '../../Component/Reminder';
 import notifee from '@notifee/react-native';
+import {MyInterstitialAd} from '../../Component/BannerAdd';
+import analytics from '@react-native-firebase/analytics';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -230,6 +233,13 @@ const MyPlans = ({navigation}: any) => {
   const [loader, setLoader] = useState(false);
   const [selectedDay, setSelectedDay] = useState((moment().day() + 6) % 7);
   const [WeekStatus, setWeekStatus] = useState([]);
+  const getFitmeMealAdsCount = useSelector(
+    (state: any) => state.getFitmeMealAdsCount,
+  );
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
+  );
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -240,8 +250,11 @@ const MyPlans = ({navigation}: any) => {
   const isAlarmEnabled = useSelector((state: any) => state.isAlarmEnabled);
   const dispatch = useDispatch();
   useEffect(() => {
+    initInterstitial();
+    allWorkoutApi1();
+    getGraphData();
     Promise.all(WeekArray.map(item => getWeeklyAPI(item))).finally(() =>
-      dispatch(setWeeklyPlansData(All_Weeks_Data)),
+      dispatch(setWeeklyPlansData(All_Weeks_Data)), 
     );
   }, []);
 
@@ -265,9 +278,6 @@ const MyPlans = ({navigation}: any) => {
   useFocusEffect(
     useCallback(() => {
       WeeklyStatusAPI();
-      allWorkoutApi1();
-      dispatch(setCurrentSelectedDay(selectedDay));
-      getGraphData()
     }, [selectedDay]),
   );
 
@@ -354,7 +364,6 @@ const MyPlans = ({navigation}: any) => {
         });
       } else if (res.data?.message != 'No data found') {
         dispatch(setHomeGraphData(res.data));
-
       } else {
         dispatch(setHomeGraphData([]));
       }
@@ -457,20 +466,43 @@ const MyPlans = ({navigation}: any) => {
       if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {
-        // console.log('DATA ADDDDDDEDEDEDED', res.data?.inserted_data);
-        navigation.navigate('Exercise', {
-          allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
-          currentExercise:
-            // trainingCount != -1
-            //   ? exerciseData[trainingCount]
-            getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
-          data: [],
-          day: selectedDay,
-          exerciseNumber: 0,
-          trackerData: res?.data?.inserted_data,
-          type: 'weekly',
-        });
         setDownloade(false);
+        let checkAdsShow = checkMealAddCount();
+
+        if (checkAdsShow == true) {
+          showInterstitialAd();
+          analytics().logEvent(
+            `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_WEEKLY_PLAN`,
+          );
+          navigation.navigate('Exercise', {
+            allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
+            currentExercise:
+              // trainingCount != -1
+              //   ? exerciseData[trainingCount]
+              getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
+            data: [],
+            day: selectedDay,
+            exerciseNumber: 0,
+            trackerData: res?.data?.inserted_data,
+            type: 'weekly',
+          });
+        } else {
+          analytics().logEvent(
+            `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_WEEKLY_PLAN`,
+          );
+          navigation.navigate('Exercise', {
+            allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
+            currentExercise:
+              // trainingCount != -1
+              //   ? exerciseData[trainingCount]
+              getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
+            data: [],
+            day: selectedDay,
+            exerciseNumber: 0,
+            trackerData: res?.data?.inserted_data,
+            type: 'weekly',
+          });
+        }
       } else {
         toNextScreen(selectedDay);
       }
@@ -506,20 +538,42 @@ const MyPlans = ({navigation}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data?.user_details) {
-        // console.log(res.data)
-        navigation.navigate('Exercise', {
-          allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
-          currentExercise:
-            // trainingCount != -1
-            //   ? exerciseData[trainingCount]
-            getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
-          data: [],
-          day: selectedDay,
-          exerciseNumber: 0,
-          trackerData: res?.data?.user_details,
-          type: 'weekly',
-        });
         setDownloade(false);
+        let checkAdsShow = checkMealAddCount();
+        if (checkAdsShow == true) {
+          showInterstitialAd();
+          analytics().logEvent(
+            `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_WEEKLY_PLAN`,
+          );
+          navigation.navigate('Exercise', {
+            allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
+            currentExercise:
+              // trainingCount != -1
+              //   ? exerciseData[trainingCount]
+              getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
+            data: [],
+            day: selectedDay,
+            exerciseNumber: 0,
+            trackerData: res?.data?.user_details,
+            type: 'weekly',
+          });
+        } else {
+          analytics().logEvent(
+            `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_WEEKLY_PLAN`,
+          );
+          navigation.navigate('Exercise', {
+            allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
+            currentExercise:
+              // trainingCount != -1
+              //   ? exerciseData[trainingCount]
+              getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
+            data: [],
+            day: selectedDay,
+            exerciseNumber: 0,
+            trackerData: res?.data?.user_details,
+            type: 'weekly',
+          });
+        }
       } else {
       }
     } catch (error) {
@@ -637,6 +691,32 @@ const MyPlans = ({navigation}: any) => {
       </View>
     );
   };
+  const checkMealAddCount = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        dispatch(setFitmeMealAdsCount(0));
+        return false;
+      } else {
+        if (getFitmeMealAdsCount < 3) {
+          dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
+          return false;
+        } else {
+          dispatch(setFitmeMealAdsCount(0));
+          return true;
+        }
+      }
+    } else {
+      if (getFitmeMealAdsCount < 3) {
+        dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
+        return false;
+      } else {
+        dispatch(setFitmeMealAdsCount(0));
+        return true;
+      }
+    }
+  };
   return (
     <SafeAreaView
       style={{
@@ -747,7 +827,7 @@ const MyPlans = ({navigation}: any) => {
                         fontFamily: Fonts.MONTSERRAT_BOLD,
                         fontSize: 18,
                         fontWeight: '600',
-                        top:-20,
+                        top: -20,
                         color: AppColor.LITELTEXTCOLOR,
                         lineHeight: 30,
                       }}>
@@ -758,7 +838,7 @@ const MyPlans = ({navigation}: any) => {
                         fontFamily: Fonts.MONTSERRAT_MEDIUM,
                         fontSize: 14,
                         fontWeight: '500',
-                        top:-10,
+                        top: -10,
                         color: AppColor.LITELTEXTCOLOR,
                         lineHeight: 20,
                       }}>
@@ -800,7 +880,7 @@ const MyPlans = ({navigation}: any) => {
                           fontWeight: '700',
                           color: AppColor.RED1,
                           lineHeight: 30,
-                        left:-20,
+                          left: -20,
                         }}>
                         {getWeeklyPlansData[WeekArray[selectedDay]]?.title}
                       </Text>

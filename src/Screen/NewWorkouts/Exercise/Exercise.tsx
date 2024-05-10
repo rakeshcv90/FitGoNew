@@ -36,6 +36,7 @@ import TrackPlayer, {
   State,
   usePlaybackState,
 } from 'react-native-track-player';
+import {MyInterstitialAd} from '../../../Component/BannerAdd';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -105,6 +106,10 @@ const Exercise = ({navigation, route}: any) => {
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const restTimerRef = useRef(0);
   const playTimerRef = useRef<any>(null);
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
+  );
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const [seconds, setSeconds] = useState(
     parseInt(currentData?.exercise_rest.split(' ')[0]),
   );
@@ -145,6 +150,7 @@ const Exercise = ({navigation, route}: any) => {
   const remainingSeconds = seconds % 60;
 
   useEffect(() => {
+    initInterstitial();
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();
       if (!ttsStatus.isInitialized) {
@@ -271,9 +277,8 @@ const Exercise = ({navigation, route}: any) => {
               }
               setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
               if (seconds > 1) {
-              if (seconds <= 3) {
-                  Tts.speak(`${seconds}`);
-                }
+                if (seconds == 5) Tts.speak('three.           two.');
+                if (seconds == 3) Tts.speak('one.    Done');
                 if (seconds == 12) Tts.speak('10 seconds to go');
                 setSeconds(prevSeconds => prevSeconds - 1);
               }
@@ -282,13 +287,25 @@ const Exercise = ({navigation, route}: any) => {
               setPause(false);
               postCurrentExerciseAPI(number);
               if (skipCount == 0) {
-                navigation.navigate('SaveDayExercise', {
-                  data,
-                  day,
-                  allExercise,
-                  type,
-                  challenge,
-                });
+                let checkAdsShow = checkMealAddCount();
+                if (checkAdsShow == true) {
+                  showInterstitialAd();
+                  navigation.navigate('SaveDayExercise', {
+                    data,
+                    day,
+                    allExercise,
+                    type,
+                    challenge,
+                  });
+                } else {
+                  navigation.navigate('SaveDayExercise', {
+                    data,
+                    day,
+                    allExercise,
+                    type,
+                    challenge,
+                  });
+                }
 
                 clearTimeout(restTimerRef.current);
                 clearTimeout(playTimerRef.current);
@@ -457,7 +474,7 @@ const Exercise = ({navigation, route}: any) => {
 
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
-    
+
     try {
       const res = await axios({
         url: challenge ? NewAppapi.POST_CHALLENGE : NewAppapi.POST_EXERCISE,
@@ -596,6 +613,19 @@ const Exercise = ({navigation, route}: any) => {
         </View>
       </Modal>
     );
+  };
+  const checkMealAddCount = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
   };
   return (
     <SafeAreaView
