@@ -36,6 +36,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import moment from 'moment';
+import FastImage from 'react-native-fast-image';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
@@ -597,7 +598,7 @@ const Workouts = ({navigation}: any) => {
                                       },
                                     }),
                                   }}>
-                                  <Image
+                                  {/* <Image
                                     source={{uri: item?.bodypart_image}}
                                     onLoad={() => setImageLoad(false)}
                                     style={{
@@ -607,6 +608,26 @@ const Workouts = ({navigation}: any) => {
                                       alignSelf: 'center',
                                     }}
                                     resizeMode="contain"
+                                  /> */}
+                                  <FastImage
+                                    fallback={true}
+                                    // onError={onError}
+                                    // onLoadEnd={onLoadEnd}
+                                    // onLoadStart={onLoadStart}
+
+                                    style={{
+                                      width: '100%',
+                                      height: '100%',
+                                      justifyContent: 'center',
+                                      alignSelf: 'center',
+                                    }}
+                                    source={{
+                                      uri: item?.bodypart_image,
+                                      headers: {Authorization: 'someAuthToken'},
+                                      priority: FastImage.priority.high,
+                                    }}
+                                    resizeMode={FastImage.resizeMode.contain}
+                                    defaultSource={localImage.NOWORKOUT}
                                   />
                                 </View>
 

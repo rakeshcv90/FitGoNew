@@ -47,9 +47,12 @@ const NewPersonalDetails = ({route, navigation}) => {
   const [isEditible, setEditable] = useState(false);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const [isFocus, setIsFocus] = useState(false);
-  console.log('User Details', getUserDataDetails);
+  const getLaterButtonData = useSelector(state => state.getLaterButtonData);
 
-console.log("dsfdscdsfds",getUserDataDetails);
+  const completeProfileData = useSelector(state => state.completeProfileData);
+
+
+console.log("dsfdscdsfds",completeProfileData);
   useEffect(() => {
     ProfileDataAPI();
   }, []);
@@ -181,7 +184,7 @@ console.log("dsfdscdsfds",getUserDataDetails);
           workout_plans:values.workout_plans,
         },
       });
-      console.log('DDDDDDDDD', dataItem.data.profile);
+   
      
       if (dataItem.data.msg == 'User Updated Successfully') {
         showMessage({
@@ -235,6 +238,7 @@ console.log("dsfdscdsfds",getUserDataDetails);
       <NewHeader header={'Details'} backButton />
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       {forLoading ? <ActivityLoader /> : ''}
+
       <Formik
         initialValues={{
           name: getUserDataDetails?.name,
@@ -264,7 +268,7 @@ console.log("dsfdscdsfds",getUserDataDetails);
           setFieldValue,
         }) => (
           <>
-            <View style={{flex: 8.5}}>
+            <View style={{flex: 8.5,}}>
               <ScrollView
                 keyboardDismissMode="interactive"
                 showsVerticalScrollIndicator={false}
@@ -275,6 +279,7 @@ console.log("dsfdscdsfds",getUserDataDetails);
                     style={{
                       paddingTop: 5,
                       marginLeft: 10,
+                      
                     }}>
                     <InputText
                       errors={errors.name}
@@ -345,6 +350,7 @@ console.log("dsfdscdsfds",getUserDataDetails);
                     style={{
                       marginTop: DeviceHeigth * 0.02,
                       marginLeft: 10,
+                      marginBottom:10
                     }}>
                     <InputText
                       errors={errors.experience}
@@ -718,7 +724,8 @@ console.log("dsfdscdsfds",getUserDataDetails);
           </>
         )}
       </Formik>
-    </View>
+      </View>
+
   );
 };
 const styles = StyleSheet.create({

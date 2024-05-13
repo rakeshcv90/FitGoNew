@@ -51,6 +51,7 @@ import {AlarmNotification} from '../../Component/Reminder';
 import notifee from '@notifee/react-native';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import analytics from '@react-native-firebase/analytics';
+import FastImage from 'react-native-fast-image';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -175,7 +176,7 @@ const Box = ({item, index}: any) => {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Image
+        {/* <Image
           source={{uri: item?.exercise_image_link}}
           onLoad={() => setIsLoading(false)}
           style={{
@@ -184,6 +185,27 @@ const Box = ({item, index}: any) => {
             alignSelf: 'center',
           }}
           resizeMode="contain"
+        /> */}
+
+        <FastImage
+          fallback={true}
+          // onError={onError}
+          // onLoadEnd={onLoadEnd}
+          // onLoadStart={onLoadStart}
+
+          style={{
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignSelf: 'center',
+          }}
+          source={{
+            uri: item?.exercise_image_link,
+            headers: {Authorization: 'someAuthToken'},
+            priority: FastImage.priority.high,
+          }}
+          resizeMode={FastImage.resizeMode.contain}
+          defaultSource={localImage.NOWORKOUT}
         />
       </View>
       <View
@@ -257,7 +279,7 @@ const MyPlans = ({navigation}: any) => {
     Promise.all(WeekArray.map(item => getWeeklyAPI(item))).finally(() =>
       dispatch(setWeeklyPlansData(All_Weeks_Data)),
     );
-    checkMealAddCount()
+    checkMealAddCount();
   }, []);
 
   useEffect(() => {

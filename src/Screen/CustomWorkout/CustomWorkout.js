@@ -29,14 +29,14 @@ import VersionNumber from 'react-native-version-number';
 import {setAllExercise} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-import { BannerAdd } from '../../Component/BannerAdd';
-import { bannerAdId } from '../../Component/AdsId';
+import {BannerAdd} from '../../Component/BannerAdd';
+import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
 import moment from 'moment';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
-const CustomWorkout = ({navigation,}) => {
+const CustomWorkout = ({navigation}) => {
   const avatarRef = React.createRef();
   const dispatch = useDispatch();
   // const routeName = route?.params?.routeName;
@@ -96,7 +96,7 @@ const CustomWorkout = ({navigation,}) => {
   };
   const renderItem = useMemo(
     () =>
-      ({index,item}) => {
+      ({index, item}) => {
         return (
           <>
             <TouchableOpacity
@@ -118,17 +118,17 @@ const CustomWorkout = ({navigation,}) => {
                 borderColor: '#fff',
                 borderWidth: 1,
                 shadowColor: 'grey',
-              ...Platform.select({
-                ios: {
-                  //shadowColor: '#000000',
-                  shadowOffset: {width: 0, height: 2},
-                  shadowOpacity: 0.2,
-                  shadowRadius: 4,
-                },
-                android: {
-                  elevation: 3,
-                },
-              }),
+                ...Platform.select({
+                  ios: {
+                    //shadowColor: '#000000',
+                    shadowOffset: {width: 0, height: 2},
+                    shadowOpacity: 0.2,
+                    shadowRadius: 4,
+                  },
+                  android: {
+                    elevation: 3,
+                  },
+                }),
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 {isLoading && (
@@ -138,11 +138,13 @@ const CustomWorkout = ({navigation,}) => {
                     autoRun
                   />
                 )}
-                
+
                 <Image
                   // source={{uri: item.workout_image_link}}
                   source={
-                    item?.image == '' ? localImage.NOWORKOUT : {uri: item?.image}
+                    item?.image == ''
+                      ? localImage.NOWORKOUT
+                      : {uri: item?.image}
                   }
                   onLoad={() => setIsLoading(false)}
                   style={{
@@ -188,13 +190,12 @@ const CustomWorkout = ({navigation,}) => {
                     {' Exercises'}
                   </Text>
                 </View>
-                
               </View>
               <Image
-                  source={localImage.Next}
-                  resizeMode="contain"
-                  style={{width: 30, height: 30}}
-                />
+                source={localImage.Next}
+                resizeMode="contain"
+                style={{width: 30, height: 30}}
+              />
             </TouchableOpacity>
             {getAdsDisplay(index, item)}
           </>
@@ -204,9 +205,9 @@ const CustomWorkout = ({navigation,}) => {
   );
   const getAdsDisplay = (index, item) => {
     if (customWorkoutData.length >= 1) {
-      if (index == 0&&customWorkoutData.length>1) {
+      if (index == 0 && customWorkoutData.length > 1) {
         return getNativeAdsDisplay();
-      } else if ((index + 1) % 8 == 0&&customWorkoutData.length>8) {
+      } else if ((index + 1) % 8 == 0 && customWorkoutData.length > 8) {
         return getNativeAdsDisplay();
       }
     }
@@ -223,8 +224,6 @@ const CustomWorkout = ({navigation,}) => {
             style={{
               alignSelf: 'center',
               alignItems: 'center',
-
-     
             }}>
             <NativeAddTest type="image" media={false} />
           </View>
@@ -236,8 +235,6 @@ const CustomWorkout = ({navigation,}) => {
           style={{
             alignSelf: 'center',
             alignItems: 'center',
-
-    
           }}>
           <NativeAddTest type="image" media={false} />
         </View>
@@ -251,14 +248,16 @@ const CustomWorkout = ({navigation,}) => {
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
-          alignSelf:'center'
-   
+          alignSelf: 'center',
         }}>
-      
         <Image
           source={localImage.Createworkout}
           resizeMode="contain"
-          style={{width: DeviceWidth * 0.7, height: DeviceHeigth * 0.4,marginTop:DeviceHeigth*0.1}}
+          style={{
+            width: DeviceWidth * 0.7,
+            height: DeviceHeigth * 0.4,
+            marginTop: DeviceHeigth * 0.1,
+          }}
         />
 
         <LinearGradient
@@ -336,7 +335,7 @@ const CustomWorkout = ({navigation,}) => {
       const exerciseData = await axios.get(
         `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
       );
-   
+
       if (
         exerciseData?.data?.msg == 'Please update the app to the latest version'
       ) {
@@ -357,8 +356,6 @@ const CustomWorkout = ({navigation,}) => {
         getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
       ) {
         return null;
-
-      
       } else {
         return <BannerAdd bannerAdId={bannerAdId} />;
       }
@@ -425,7 +422,7 @@ const CustomWorkout = ({navigation,}) => {
           }}
           activeOpacity={1}
           // onPress={() => setIsCustomWorkout(false)}
-          >
+        >
           <View
             style={{
               width: DeviceWidth * 0.9,

@@ -39,6 +39,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
+import FastImage from 'react-native-fast-image';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -573,6 +574,10 @@ const WorkoutDays = ({navigation, route}: any) => {
                       index - 1
                     } Exercise First !!!`,
                     type: 'danger',
+
+                    animationDuration: 500,
+                    floating: true,
+                    icon: {icon: 'auto', position: 'left'},
                   });
             } else {
               index - 1 == 0
@@ -596,6 +601,10 @@ const WorkoutDays = ({navigation, route}: any) => {
                       index - 1
                     } Exercise First !!!`,
                     type: 'danger',
+
+                    animationDuration: 500,
+                    floating: true,
+                    icon: {icon: 'auto', position: 'left'},
                   });
             }
           }}>
@@ -675,14 +684,14 @@ const WorkoutDays = ({navigation, route}: any) => {
                       justifyContent: 'center',
                       // marginLeft: DeviceWidth * 0.12,
                     }}>
-                    {isLoading && (
+                    {/* {isLoading && (
                       <ShimmerPlaceholder
                         style={styles.loader}
                         ref={avatarRef}
                         autoRun
                       />
-                    )}
-                    <Image
+                    )} */}
+                    {/* <Image
                       source={{uri: data?.workout_image}}
                       onLoad={() => setIsLoading(false)}
                       style={{
@@ -700,6 +709,35 @@ const WorkoutDays = ({navigation, route}: any) => {
                         borderColor: '#D9D9D9',
                       }}
                       resizeMode="contain"
+                    /> */}
+                    <FastImage
+                      fallback={true}
+                      // onError={onError}
+                      // onLoadEnd={onLoadEnd}
+                      // onLoadStart={onLoadStart}
+                      // onLoad={() => setIsLoading(false)}
+                      style={{
+                        height:
+                          DeviceHeigth >= 1024
+                            ? DeviceWidth * 0.18
+                            : DeviceWidth * 0.18,
+                        width:
+                          DeviceHeigth >= 1024
+                            ? DeviceWidth * 0.18
+                            : DeviceWidth * 0.18,
+                        opacity: percent ? 0.5 : 1,
+                        borderRadius: 5,
+
+                        borderColor: '#D9D9D9',
+                      }}
+                      source={{
+                        uri:
+                        data?.workout_image,
+                        headers: {Authorization: 'someAuthToken'},
+                        priority: FastImage.priority.high,
+                      }}
+                      resizeMode={FastImage.resizeMode.cover}
+                      defaultSource={localImage.NOWORKOUT}
                     />
                   </View>
                 </>
