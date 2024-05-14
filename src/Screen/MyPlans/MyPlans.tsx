@@ -655,6 +655,7 @@ const MyPlans = ({navigation}: any) => {
                 marginTop: -10,
                 borderTopLeftRadius: 5,
                 borderTopRightRadius: 5,
+                zIndex: -1,
               }}>
               <Animated.View
                 style={{
@@ -664,7 +665,6 @@ const MyPlans = ({navigation}: any) => {
                   marginTop: -50,
                   right: 0,
                   position: 'absolute',
-                  zIndex: -1,
                 }}
               />
             </LinearGradient>

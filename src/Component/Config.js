@@ -94,4 +94,5 @@ export const NewAppapi = {
   EDIT_CUSTOM_WORKOUY: NewApi + 'edit_custom_workout',
   LET_GO_USER: NewApi + 'user_lets_go',
   USER_EXERCISE_COMPLETE_STATUS: NewApi + 'user_exercise_complete_status_data',
+  RESEND_OTP: NewApi + 'resend_otp',
 };

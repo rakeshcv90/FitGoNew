@@ -546,7 +546,7 @@ const Signup = ({navigation}) => {
       try {
         let payload = new FormData();
         payload.append('email', Emailsend);
-        const OTPdata = await axios(`${NewApi}/${Appapi.ResendOTP}`, {
+        const OTPdata = await axios(`${NewAppapi.RESEND_OTP}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -565,7 +565,7 @@ const Signup = ({navigation}) => {
             message: 'OTP has been sent to your email',
             type: 'success',
             duration: 500,
-            statusBarHeight: StatusBar_Bar_Height,
+            // statusBarHeight: StatusBar_Bar_Height,
             floating: true,
             icon: {icon: 'auto', position: 'left'},
           });
@@ -573,7 +573,7 @@ const Signup = ({navigation}) => {
           showMessage({
             message: OTPdata.data[0].msg,
             type: 'success',
-            statusBarHeight: StatusBar_Bar_Height,
+            // statusBarHeight: StatusBar_Bar_Height,
             floating: true,
             icon: {icon: 'auto', position: 'left'},
           });
@@ -581,7 +581,7 @@ const Signup = ({navigation}) => {
       } catch (error) {
         console.log('erere', error);
         setResendTxt('Resent OTP');
-        setTimeleft(60);
+        // setTimeleft(60);
       }
     };
     const handleOTP = async () => {
