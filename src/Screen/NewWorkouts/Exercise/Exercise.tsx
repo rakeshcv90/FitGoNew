@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   Button,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColor} from '../../../Component/Color';
 import ExerciseProgressBar from './ExerciseProgressBar';
@@ -168,11 +168,11 @@ const Exercise = ({navigation, route}: any) => {
     initTts();
   }, []);
   const StartAudio = async (playbackState: any) => {
-    console.log('playbackState', playbackState);
+    // console.log('playbackState', playbackState);
     await TrackPlayer.play();
   };
   const PauseAudio = async (playbackState: any) => {
-    console.log('PauseState', playbackState);
+    // console.log('PauseState', playbackState);
     await TrackPlayer.reset();
   };
   const dispatch = useDispatch();
@@ -503,117 +503,119 @@ const Exercise = ({navigation, route}: any) => {
     }
   };
 
-  const PauseModal = ({back}: any) => {
-    return (
-      <Modal
-        visible={back}
-        onRequestClose={() => setBack(false)}
-        animationType="slide">
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: AppColor.WHITE,
-
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            marginBottom: 20,
-          }}>
+  const PauseModal = useMemo(() => {
+    return ({back}: any) => {
+      return (
+        <Modal
+          visible={back}
+          onRequestClose={() => setBack(false)}
+          animationType="slide">
           <View
             style={{
-              justifyContent: 'center',
+              flex: 1,
+              backgroundColor: AppColor.WHITE,
+
+              justifyContent: 'flex-end',
               alignItems: 'center',
-              paddingLeft: DeviceWidth / 2,
+              marginBottom: 20,
             }}>
-            <GradientText
-              text={'Hold on!'}
-              fontWeight={'700'}
-              fontSize={32}
-              width={DeviceWidth}
-              x={30}
-              alignSelf
-            />
-            <GradientText
-              alignSelf
-              width={DeviceWidth}
-              text={`Don't give up!`}
-              fontWeight={'700'}
-              fontSize={32}
-              x={-2}
-            />
-          </View>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: '500',
-              fontFamily: 'Poppins',
-              lineHeight: 30,
-              marginTop: 20,
-              color: AppColor.BLACK,
-            }}>
-            {`You have finished `}
-            <Text style={{color: AppColor.RED}}>
-              {((number / parseInt(allExercise?.length)) * 100).toFixed(0) +
-                '%'}
-            </Text>
-            {'\n'}
-            {' only '}
-            <Text style={{color: AppColor.RED}}>
-              {parseInt(allExercise?.length) - number + ' Exercises'}
-            </Text>
-            {' left '}
-          </Text>
-          <View style={{marginTop: 30}}>
-            <ProgreesButton
-              text="Resume"
-              h={55}
-              bR={30}
-              flex={-1}
-              mV={20}
-              onPress={() => setBack(false)}
-              bW={1}
-            />
-            <ProgreesButton
-              onPress={() => setPlayW(0)}
-              text="Restart this Exercise"
-              h={55}
-              bR={30}
-              flex={-1}
-              colors={['#F3F3F3', '#F3F3F3']}
-              textStyle={{
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingLeft: DeviceWidth / 2,
+              }}>
+              <GradientText
+                text={'Hold on!'}
+                fontWeight={'700'}
+                fontSize={32}
+                width={DeviceWidth}
+                x={30}
+                alignSelf
+              />
+              <GradientText
+                alignSelf
+                width={DeviceWidth}
+                text={`Don't give up!`}
+                fontWeight={'700'}
+                fontSize={32}
+                x={-2}
+              />
+            </View>
+            <Text
+              style={{
                 fontSize: 20,
+                fontWeight: '500',
                 fontFamily: 'Poppins',
                 lineHeight: 30,
+                marginTop: 20,
                 color: AppColor.BLACK,
-                fontWeight: '700',
-              }}
-              bC="white"
-              bW={1}
-            />
-            <TouchableOpacity
-              style={{alignSelf: 'center', marginTop: 20}}
-              onPress={() => {
-                type == 'day'
-                  ? navigation.goBack()
-                  : type == 'custom'
-                  ? navigation.goBack()
-                  : deleteTrackExercise();
               }}>
-              <Text
-                style={{
+              {`You have finished `}
+              <Text style={{color: AppColor.RED}}>
+                {((number / parseInt(allExercise?.length)) * 100).toFixed(0) +
+                  '%'}
+              </Text>
+              {'\n'}
+              {' only '}
+              <Text style={{color: AppColor.RED}}>
+                {parseInt(allExercise?.length) - number + ' Exercises'}
+              </Text>
+              {' left '}
+            </Text>
+            <View style={{marginTop: 30}}>
+              <ProgreesButton
+                text="Resume"
+                h={55}
+                bR={30}
+                flex={-1}
+                mV={20}
+                onPress={() => setBack(false)}
+                bW={1}
+              />
+              <ProgreesButton
+                onPress={() => setPlayW(0)}
+                text="Restart this Exercise"
+                h={55}
+                bR={30}
+                flex={-1}
+                colors={['#F3F3F3', '#F3F3F3']}
+                textStyle={{
                   fontSize: 20,
                   fontFamily: 'Poppins',
                   lineHeight: 30,
                   color: AppColor.BLACK,
                   fontWeight: '700',
+                }}
+                bC="white"
+                bW={1}
+              />
+              <TouchableOpacity
+                style={{alignSelf: 'center', marginTop: 20}}
+                onPress={() => {
+                  type == 'day'
+                    ? navigation.goBack()
+                    : type == 'custom'
+                    ? navigation.goBack()
+                    : deleteTrackExercise();
                 }}>
-                Quit
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontFamily: 'Poppins',
+                    lineHeight: 30,
+                    color: AppColor.BLACK,
+                    fontWeight: '700',
+                  }}>
+                  Quit
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </Modal>
-    );
-  };
+        </Modal>
+      );
+    };
+  }, [back]);
   const checkMealAddCount = () => {
     if (getPurchaseHistory.length > 0) {
       if (

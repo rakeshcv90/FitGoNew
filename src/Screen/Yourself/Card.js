@@ -9,8 +9,7 @@ import {
 import React from 'react';
 import {AppColor} from '../../Component/Color';
 import {DeviceWidth} from '../../Component/Config';
-import {GameRequestDialog} from 'react-native-fbsdk-next';
-import { opacity } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
+import {localImage} from '../../Component/Image';
 export const Card = ({
   ItemArray,
   Ih,
@@ -33,23 +32,44 @@ export const Card = ({
               styles.button,
               {
                 borderWidth: 2,
-                borderColor: selectedB == v.id ? AppColor.RED : AppColor.WHITE,
-                flexDirection:Goal?'row-reverse':'row',
-                justifyContent:Goal?'space-between':'flex-start'
+                borderColor: Goal
+                  ? selectedB == v?.goal_id
+                    ? AppColor.RED
+                    : AppColor.WHITE
+                  : selectedB == v.id
+                  ? AppColor.RED
+                  : AppColor.WHITE,
+                flexDirection: Goal ? 'row-reverse' : 'row',
+                justifyContent: Goal ? 'space-between' : 'flex-start',
               },
             ]}
             key={i}
             onPress={() => SelectedButton(v)}>
             <View>
               <Image
-                source={v.img}
-                style={{height: Goal?v.id==2?30:Ih: Ih, width: Iw,}} // to add customize ih , checked extra condition
+                source={
+                  !Goal
+                    ? v.img
+                    : v?.goal_id == 1 || v?.goal_id == 3
+                    ? localImage.WeightLoss
+                    : v?.goal_id == 2 || v?.goal_id == 6
+                    ? localImage.BuildMuscle
+                    : localImage.Strength
+                }
+                style={{
+                  height: Goal
+                    ? v?.goal_id == 2 || v?.goal_id == 6
+                      ? 30
+                      : Ih
+                    : Ih,
+                  width: Iw,
+                }} // to add customize ih , checked extra condition
                 resizeMode="contain"
               />
             </View>
             <View style={{}}>
-              <Text style={Styletxt1}>{v.txt}</Text>
-              {Goal ? <Text style={Styletxt2}>{v.txt1}</Text> : null}
+              <Text style={Styletxt1}>{!Goal ? v.txt : v?.goal_title}</Text>
+              {/* {Goal ? <Text style={Styletxt2}>{v.txt1}</Text> : null} */}
             </View>
           </TouchableOpacity>
         </Animated.View>
@@ -76,7 +96,6 @@ const styles = StyleSheet.create({
       android: {
         elevation: 5,
         shadowColor: 'darkgrey',
-        
       },
     }),
   },

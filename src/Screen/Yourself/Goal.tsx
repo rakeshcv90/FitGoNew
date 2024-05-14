@@ -25,11 +25,14 @@ const Goal = ({navigation, route}: any) => {
   const goalsAnimation = useRef(new Animated.Value(0)).current;
   const [selectedB, setSelectedB] = useState(0);
   const dispatch = useDispatch();
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState<any>({});
   const [screen, setScreen] = useState(nextScreen);
+  const [goalsData, setGoalsData] = useState([]);
 
   useEffect(() => {
     setScreen(nextScreen);
+    const temp = data?.filter((item: any) => item?.goal_gender == gender);
+    setGoalsData(temp);
   }, []);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -50,8 +53,8 @@ const Goal = ({navigation, route}: any) => {
             : 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/e71b96f8-e68c-462e-baaf-a371b6fbc100/public',
       },
       {
-        goal: selected?.id,
-        goal_name: selected?.txt,
+        goal: selected?.goal_id,
+        goal_name: selected?.goal_title,
       },
       {
         experience: experience,
@@ -62,7 +65,7 @@ const Goal = ({navigation, route}: any) => {
     ];
 
     dispatch(setLaterButtonData(currentData));
-    navigation.navigate('Injury', {nextScreen: screen+1});
+    navigation.navigate('Injury', {nextScreen: screen + 1});
   };
 
   const GoalData = [
@@ -108,7 +111,7 @@ const Goal = ({navigation, route}: any) => {
   // selected Buttons
   const SelectedButton = item => {
     setSelected(item);
-    setSelectedB(item?.id);
+    setSelectedB(item?.goal_id);
   };
   return (
     <View
@@ -116,16 +119,19 @@ const Goal = ({navigation, route}: any) => {
         flex: 1,
         alignItems: 'center',
         backgroundColor: AppColor.BACKGROUNG,
-   
       }}>
-      <ProgressBar screen={screen} Type/>
-   
-      <View style={{marginTop:Platform.OS=='ios'?- DeviceHeigth * 0.06:- DeviceHeigth * 0.03}}>
-      <Bulb screen={"What's your fitness goal?"} />
+      <ProgressBar screen={screen} Type />
+
+      <View
+        style={{
+          marginTop:
+            Platform.OS == 'ios' ? -DeviceHeigth * 0.06 : -DeviceHeigth * 0.03,
+        }}>
+        <Bulb screen={"What's your fitness goal?"} />
       </View>
       <View style={{justifyContent: 'center', marginTop: DeviceHeigth * 0.06}}>
         <Card
-          ItemArray={GoalData}
+          ItemArray={goalsData}
           Ih={37}
           Iw={37}
           selectedB={selectedB}
@@ -251,7 +257,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-SemiBold',
     color: AppColor.BLACK,
     fontSize: 17,
-    marginBottom: 7,
+    // marginBottom: 7,
   },
   txt2: {
     fontFamily: 'Montserrat-Regular',
