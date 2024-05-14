@@ -83,16 +83,16 @@ const SplaceScreen = ({navigation}) => {
   };
   const initInterstitial = async () => {
     const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
-      keywords: [
-        'action',
-        'puzzle',
-        'adventure',
-        'sports',
-        'racing',
-        'platformer',
-        'simulation',
-        'arcade',
-      ],
+      // keywords: [
+      //   'action',
+      //   'puzzle',
+      //   'adventure',
+      //   'sports',
+      //   'racing',
+      //   'platformer',
+      //   'simulation',
+      //   'arcade',
+      // ],
     });
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
       setLoaded(interstitialAd);

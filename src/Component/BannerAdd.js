@@ -54,8 +54,8 @@ export const NewInterstitialAd = (setClosed) => { // Created specially for Splas
   const adStatus = useRef(true);
   const initInterstitial = async () => {
     const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
-      requestNonPersonalizedAdsOnly: true,
-      keywords: ['fashion', 'clothing'],
+      // requestNonPersonalizedAdsOnly: true,
+      // keywords: ['fashion', 'clothing'],
     });
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
       adStatus.current = interstitialAd;

@@ -50,6 +50,7 @@ import {MyRewardedAd} from '../../Component/BannerAdd';
 import RNFetchBlob from 'rn-fetch-blob';
 import Play from './Exercise/Play';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import FastImage from 'react-native-fast-image';
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount, challenge} = route.params;
   const [exerciseData, setExerciseData] = useState([]);
@@ -311,7 +312,7 @@ const OneDay = ({navigation, route}: any) => {
                 },
               }),
             }}>
-            <Image
+            {/* <Image
               source={{
                 uri:
                   getStoreVideoLoc[item?.exercise_title + 'Image'] != undefined
@@ -321,10 +322,30 @@ const OneDay = ({navigation, route}: any) => {
                     ? item.exercise_image
                     : item.exercise_image_link,
               }}
-              // source={{uri: item?.exercise_image}}
-              // onLoad={() => setIsLoading(false)}
+            
               style={{height: 75, width: 75, alignSelf: 'center'}}
               resizeMode="contain"
+            /> */}
+            <FastImage
+              fallback={true}
+              // onError={onError}
+              // onLoadEnd={onLoadEnd}
+              // onLoadStart={onLoadStart}
+
+              style={{height: 75, width: 75, alignSelf: 'center'}}
+              source={{
+                uri:
+                  // getStoreVideoLoc[item?.exercise_title + 'Image'] != undefined
+                  //   ? 'file://' +
+                  //     getStoreVideoLoc[item?.exercise_title + 'Image']
+                  item.exercise_image_link != ''
+                    ? item.exercise_image
+                    : item.exercise_image_link,
+                headers: {Authorization: 'someAuthToken'},
+                priority: FastImage.priority.high,
+              }}
+              resizeMode={FastImage.resizeMode.contain}
+              defaultSource={localImage.NOWORKOUT}
             />
             {trackerData[index - 1]?.exercise_status == 'completed' && (
               <Image
@@ -732,9 +753,9 @@ const OneDay = ({navigation, route}: any) => {
           uri:
             getStoreVideoLoc[data?.workout_title + 'Image'] != undefined
               ? 'file://' + getStoreVideoLoc[data?.workout_title + 'Image']
-              // : data?.workout_image_link != ''
-              // ? data?.workout_image_link
-              : data?.workout_image,
+              : // : data?.workout_image_link != ''
+                // ? data?.workout_image_link
+                data?.workout_image,
         }}
         style={{
           height: DeviceWidth * 0.5,

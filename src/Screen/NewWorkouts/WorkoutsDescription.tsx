@@ -17,6 +17,8 @@ import Tts from 'react-native-tts';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector, useDispatch} from 'react-redux';
 import AnimatedLottieView from 'lottie-react-native';
+import FastImage from 'react-native-fast-image';
+import {localImage} from '../../Component/Image';
 const WorkoutsDescription = ({data, open, setOpen}: any) => {
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -100,12 +102,12 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             left: -10,
             alignItems: 'center',
             justifyContent: 'center',
-
+backgroundColor:'red',
             marginTop: DeviceHeigth * 0.045,
           }}>
           <Icon name="close" color={AppColor.DARKGRAY} size={25} />
         </TouchableOpacity>
-        {isLoading && (
+        {/* {isLoading && (
           <View style={styles.loader}>
             <AnimatedLottieView
               source={require('../../Icon/Images/NewImage2/Adloader.json')}
@@ -119,9 +121,8 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
               }}
             />
           </View>
-        )}
-        <Image
-
+        )} */}
+        {/* <Image
           source={{
             uri:
               getStoreVideoLoc[data?.exercise_title + 'Image'] != undefined
@@ -130,22 +131,50 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
                 ? 'file://' + getStoreVideoLoc[data?.workout_title + 'Image']
                 : data?.exercise_image?.includes('https')
                 ? data?.exercise_image
-                : data?.exercise_image_link
+                : data?.exercise_image_link,
           }}
-
-         onLoad={() => setIsLoading(false)}
-
+          onLoad={() => setIsLoading(false)}
           style={{
             height: DeviceWidth / 1.5,
             width: DeviceWidth * 0.95,
             alignSelf: 'center',
             // marginTop: 10,
-            top: -DeviceHeigth*0.07,
+            top: -DeviceHeigth * 0.07,
             zIndex: -1,
           }}
           resizeMode="contain"
-        />
+        /> */}
+        <FastImage
+          fallback={true}
+          // onError={onError}
+          // onLoadEnd={onLoadEnd}
+          // onLoadStart={onLoadStart}
+          // onLoad={() => setIsLoading(false)}
+          style={{
+            height: DeviceWidth / 1.5,
+            width: DeviceWidth * 0.95,
+            alignSelf: 'center',
+            backgroundColor:'yellow',
+            // marginTop: 10,
+            top: -DeviceHeigth * 0.07,
+            zIndex: -1,
+          }}
+          source={{
+            uri:
+              getStoreVideoLoc[data?.exercise_title + 'Image'] != undefined
+                ? 'file://' + getStoreVideoLoc[data?.exercise_title + 'Image']
+                : getStoreVideoLoc[data?.workout_title + 'Image'] != undefined
+                ? 'file://' + getStoreVideoLoc[data?.workout_title + 'Image']
+                : data?.exercise_image?.includes('https')
+                ? data?.exercise_image
+                : data?.exercise_image_link,
 
+            headers: {Authorization: 'someAuthToken'},
+            priority: FastImage.priority.high,
+          }}
+          resizeMode={FastImage.resizeMode.contain}
+          defaultSource={localImage.NOWORKOUT}
+        />
         <View style={styles.container}>
           <View style={styles.content}>
             <Text
@@ -186,7 +215,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: 'relative',
-    marginTop: -DeviceHeigth * 0.05
+    marginTop: -DeviceHeigth * 0.05,
   },
   content: {
     flex: 1,

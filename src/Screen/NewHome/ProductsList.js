@@ -247,7 +247,7 @@ const ProductsList = ({route}) => {
                   ? DeviceHeigth <= 808
                     ? DeviceHeigth * 0.45
                     : DeviceHeigth * 0.41
-                  : 50,
+                  :  DeviceHeigth * 0.47,
               alignSelf: 'center',
             }}>
             {forLoading ? (

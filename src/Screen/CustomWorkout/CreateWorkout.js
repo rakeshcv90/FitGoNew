@@ -32,6 +32,7 @@ import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
 import moment from 'moment';
+import FastImage from 'react-native-fast-image';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -152,7 +153,7 @@ const CreateWorkout = ({navigation, route}) => {
                     marginHorizontal: -12,
                     //backgroundColor:"red"
                   }}>
-                  <Image
+                  {/* <Image
                     onLoad={() => setIsLoading(false)}
                     // source={{uri: item.exercise_image_link}}
                     source={{
@@ -170,6 +171,34 @@ const CreateWorkout = ({navigation, route}) => {
                       marginHorizontal: -7,
                     }}
                     resizeMode="contain"
+                  /> */}
+                  <FastImage
+                    fallback={true}
+                    // onLoad={() => setIsLoading(false)}
+                    
+                    // onError={onError}
+                    // onLoadEnd={onLoadEnd}
+                    // onLoadStart={onLoadStart}
+
+                    style={{
+                      width: 60,
+                      height: 60,
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      // backgroundColor:'red',
+                      marginHorizontal: -7,
+                    }}
+                    source={{
+                      uri: getStoreVideoLoc[item?.exercise_title + 'Image']
+                        ? 'file://' +
+                          getStoreVideoLoc[item?.exercise_title + 'Image']
+                        : item.exercise_image_link,
+                      headers: {Authorization: 'someAuthToken'},
+                      priority: FastImage.priority.high,
+                 
+                    }}
+                    resizeMode={FastImage.resizeMode.contain}
+                    defaultSource={localImage.NOWORKOUT}
                   />
                 </View>
                 <View

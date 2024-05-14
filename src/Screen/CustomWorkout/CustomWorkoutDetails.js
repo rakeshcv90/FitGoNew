@@ -33,6 +33,7 @@ import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import GradientButton from '../../Component/GradientButton';
 import moment from 'moment';
+import FastImage from 'react-native-fast-image';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -147,7 +148,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
         user_exercise_id: exercise?.exercise_id,
       });
     }
-  
+
     Promise.all(
       data?.exercise_data.map((item, index) =>
         downloadVideos(item, index, data?.exercise_data.length),
@@ -159,7 +160,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           method: 'Post',
           data: {user_details: datas},
         });
-  
+
         if (res.data) {
           if (
             res.data?.msg ==
@@ -206,7 +207,6 @@ const CustomWorkoutDetails = ({navigation, route}) => {
   const renderItem = useMemo(
     () =>
       ({item}) => {
-
         return (
           <>
             <TouchableOpacity
@@ -253,14 +253,14 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                     marginHorizontal: -12,
                     // alignItems: 'center',
                   }}>
-                  {isLoading && (
+                  {/* {isLoading && (
                     <ShimmerPlaceholder
                       style={styles.loader}
                       ref={avatarRef}
                       autoRun
                     />
-                  )}
-                  <Image
+                  )} */}
+                  {/* <Image
                     //  source={{uri: item?.exercise_image_link}}
                     source={
                       item?.exercise_image_link != null
@@ -276,6 +276,26 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                       // backgroundColor:'red',
                     }}
                     resizeMode="contain"
+                  /> */}
+                  <FastImage
+                    fallback={true}
+                    // onError={onError}
+                    // onLoadEnd={onLoadEnd}
+                    // onLoadStart={onLoadStart}
+
+                    style={{
+                      width: 60,
+                      height: 60,
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                    }}
+                    source={{
+                      uri: item?.exercise_image_link,
+                      headers: {Authorization: 'someAuthToken'},
+                      priority: FastImage.priority.high,
+                    }}
+                    resizeMode={FastImage.resizeMode.contain}
+                    defaultSource={localImage.NOWORKOUT}
                   />
                 </View>
                 <View

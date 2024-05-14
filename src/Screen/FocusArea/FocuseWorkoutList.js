@@ -19,6 +19,7 @@ import moment from 'moment';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
+import FastImage from 'react-native-fast-image';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -30,6 +31,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
   const [execrise, setexecrise] = useState([]);
   const avatarRef = React.createRef();
   const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const dispatch = useDispatch();
   const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
@@ -101,6 +103,20 @@ const FocuseWorkoutList = ({navigation, route}) => {
     }
   };
 
+
+  function onLoadEnd() {
+    setIsLoading(false);
+  }
+
+  function onError() {
+    setIsLoading(false);
+    setErrorMessage(true);
+  }
+  function onLoadStart() {
+    setIsLoading(true);
+    setErrorMessage(false);
+  }
+
   const renderItem = useMemo(
     () =>
       ({item, index}) => {
@@ -149,34 +165,17 @@ const FocuseWorkoutList = ({navigation, route}) => {
                 }),
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                {/* <View
-                  style={{
-                    height:
-                      DeviceHeigth >= 1024
-                        ? DeviceWidth * 0.18
-                        : DeviceWidth * 0.18,
-                    width:
-                      DeviceHeigth >= 1024
-                        ? DeviceWidth * 0.18
-                        : DeviceWidth * 0.18,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                   
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: '#D9D9D9',
-                  }}> */}
-                {isLoading && (
+                {/* {isLoading && (
                   <ShimmerPlaceholder
                     style={styles.loader}
                     ref={avatarRef}
                     autoRun
                   />
-                )}
+                )} */}
 
-                <Image
+                {/* <Image
                   source={{uri: item?.workout_image}}
-                  onLoad={() => setIsLoading(false)}
+                  // onLoad={() => setIsLoading(false)}
                   style={{
                     width: 70,
                     height: 70,
@@ -187,8 +186,32 @@ const FocuseWorkoutList = ({navigation, route}) => {
                     borderColor: '#D9D9D9',
                   }}
                   resizeMode="cover"
+                /> */}
+                <FastImage
+                  fallback={true}
+                  // onError={onError}
+                  // onLoadEnd={onLoadEnd}
+                  // onLoadStart={onLoadStart}
+
+                  style={{
+                    width: 70,
+                    height: 70,
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    borderColor: '#D9D9D9',
+                  }}
+                  source={{
+                    uri: item?.workout_image,
+                    headers: {Authorization: 'someAuthToken'},
+                    priority: FastImage.priority.high,
+                  }}
+                  
+                  resizeMode={FastImage.resizeMode.cover}
+                  defaultSource={localImage.NOWORKOUT}
                 />
-                {/* </View> */}
+
                 <View style={{marginHorizontal: 25, top: 10}}>
                   <View style={{width: DeviceWidth * 0.47}}>
                     <Text
@@ -503,7 +526,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
     if (execrise.length >= 1) {
       if (index == 0 && execrise.length > 1) {
         return getNativeAdsDisplay();
-      } else if ((index + 1) % 8 == 0&&execrise.length>8) {
+      } else if ((index + 1) % 8 == 0 && execrise.length > 8) {
         return getNativeAdsDisplay();
       }
     }

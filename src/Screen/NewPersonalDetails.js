@@ -47,9 +47,10 @@ const NewPersonalDetails = ({route, navigation}) => {
   const [isEditible, setEditable] = useState(false);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const [isFocus, setIsFocus] = useState(false);
-  console.log('User Details', getUserDataDetails);
+  const getLaterButtonData = useSelector(state => state.getLaterButtonData);
+  const [goalsData, setGoalsData] = useState([]);
+  const completeProfileData = useSelector(state => state.completeProfileData);
 
-console.log("dsfdscdsfds",getUserDataDetails);
   useEffect(() => {
     ProfileDataAPI();
   }, []);
@@ -57,16 +58,7 @@ console.log("dsfdscdsfds",getUserDataDetails);
     {label: 'Male', value: 'Male'},
     {label: 'Female', value: 'Female'},
   ];
-  const maleGole = [
-    {label: 'Weight Loss', value: 3},
-    {label: 'Build Muscle', value: 6},
-    {label: 'Strength', value: 13},
-  ];
-  const fmaleGole = [
-    {label: 'Weight Loss', value: 1},
-    {label: 'Build Muscle', value: 2},
-    {label: 'Strength', value: 4},
-  ];
+
   const injury = [
     {
       injury_id: 4,
@@ -136,11 +128,17 @@ console.log("dsfdscdsfds",getUserDataDetails);
 
       if (res.data) {
         dispatch(setCompleteProfileData(res.data));
+        const temp = res.data?.goal?.filter(
+          item => item?.goal_gender == getUserDataDetails?.gender,
+        );
+        setGoalsData(temp);
       } else {
         dispatch(setCompleteProfileData([]));
+        setGoalsData([]);
       }
     } catch (error) {
       dispatch(setCompleteProfileData([]));
+      setGoalsData([]);
 
       console.log(error);
     }
@@ -153,8 +151,7 @@ console.log("dsfdscdsfds",getUserDataDetails);
     return null;
   };
   const handleFormSubmit = async (values, action) => {
-    
-  setForLoading(true);
+    setForLoading(true);
     try {
       const dataItem = await axios(`${NewAppapi.UpdateUserProfile}`, {
         method: 'POST',
@@ -177,12 +174,11 @@ console.log("dsfdscdsfds",getUserDataDetails);
               : getUserDataDetails.focus_area,
           place: values.workPlace,
           gender: values.gender,
-          experience:getUserDataDetails.experience,
-          workout_plans:values.workout_plans,
+          experience: getUserDataDetails.experience,
+          workout_plans: values.workout_plans,
         },
       });
-      console.log('DDDDDDDDD', dataItem.data.profile);
-     
+
       if (dataItem.data.msg == 'User Updated Successfully') {
         showMessage({
           message: dataItem.data.msg,
@@ -235,6 +231,7 @@ console.log("dsfdscdsfds",getUserDataDetails);
       <NewHeader header={'Details'} backButton />
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       {forLoading ? <ActivityLoader /> : ''}
+
       <Formik
         initialValues={{
           name: getUserDataDetails?.name,
@@ -345,6 +342,7 @@ console.log("dsfdscdsfds",getUserDataDetails);
                     style={{
                       marginTop: DeviceHeigth * 0.02,
                       marginLeft: 10,
+                      marginBottom: 10,
                     }}>
                     <InputText
                       errors={errors.experience}
@@ -372,17 +370,15 @@ console.log("dsfdscdsfds",getUserDataDetails);
                           placeholderStyle={styles.placeholderStyle}
                           itemTextStyle={{color: AppColor.BLACK}}
                           selectedTextStyle={styles.selectedTextStyle}
-                          data={
-                            values.gender == 'Female' ? fmaleGole : maleGole
-                          }
-                          labelField="label"
-                          valueField="label"
+                          data={goalsData}
+                          labelField="goal_title"
+                          valueField="goal_id"
                           placeholder={getUserDataDetails?.goal_title}
                           value={values.goal}
                           onFocus={() => setIsFocus(true)}
                           onBlur={() => setIsFocus(false)}
                           onChange={item => {
-                            setFieldValue('goal', item.label);
+                            setFieldValue('goal', item.goal_title);
                           }}
                         />
                       </View>
@@ -546,11 +542,9 @@ console.log("dsfdscdsfds",getUserDataDetails);
                             placeholderStyle={styles.placeholderStyle}
                             itemTextStyle={{color: AppColor.BLACK}}
                             selectedTextStyle={styles.selectedTextStyle}
-                            data={
-                              values.gender == 'Female' ? fmaleGole : maleGole
-                            }
-                            labelField="label"
-                            valueField="label"
+                            data={goalsData}
+                            labelField="goal_title"
+                            valueField="goal_id"
                             placeholder={
                               getUserDataDetails?.goal_title == null
                                 ? 'Select Fitness Goal'
@@ -560,7 +554,7 @@ console.log("dsfdscdsfds",getUserDataDetails);
                             onFocus={() => setIsFocus(true)}
                             onBlur={() => setIsFocus(false)}
                             onChange={item => {
-                              setFieldValue('goal', item.label);
+                              setFieldValue('goal', item.goal_title);
                             }}
                           />
                         </View>
@@ -597,6 +591,8 @@ console.log("dsfdscdsfds",getUserDataDetails);
                           style={{
                             marginTop: DeviceHeigth * 0.02,
                             marginLeft: 10,
+                          paddingBottom:DeviceHeigth*0.05,
+                        
                           }}>
                           <InputText
                             errors={errors.targetWeight}
@@ -612,7 +608,7 @@ console.log("dsfdscdsfds",getUserDataDetails);
                             placeholder="Target Weight"
                           />
                         </View>
-                        <View
+                        {/* <View
                           style={{
                             marginTop: DeviceHeigth * 0.02,
 
@@ -640,9 +636,9 @@ console.log("dsfdscdsfds",getUserDataDetails);
                               setFieldValue('equipment', item.value);
                             }}
                           />
-                        </View>
+                        </View> */}
 
-                        <View
+                        {/* <View
                           style={{
                             marginTop: DeviceHeigth * 0.02,
 
@@ -670,8 +666,8 @@ console.log("dsfdscdsfds",getUserDataDetails);
                             }}
                             selectedStyle={styles.selectedStyle}
                           />
-                        </View>
-                        <View
+                        </View> */}
+                        {/* <View
                           style={{
                             marginTop: DeviceHeigth * 0.02,
 
@@ -701,7 +697,7 @@ console.log("dsfdscdsfds",getUserDataDetails);
                               );
                             }}
                           />
-                        </View>
+                        </View> */}
                       </>
                     )}
                 </KeyboardAvoidingView>
