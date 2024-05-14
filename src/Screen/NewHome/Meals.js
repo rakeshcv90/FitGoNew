@@ -308,7 +308,7 @@ const Meals = ({navigation}) => {
 
             width: '100%',
             alignItems: 'center',
-            paddingBottom: Platform.OS == 'android' ? DeviceHeigth * 0.47 : 50,
+            paddingBottom: Platform.OS == 'android' ? DeviceHeigth * 0.47 : DeviceHeigth * 0.5,
           }}>
           <FlatList
             data={mealData}

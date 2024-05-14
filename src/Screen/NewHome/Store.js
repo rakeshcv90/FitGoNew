@@ -252,7 +252,7 @@ const Store = ({navigation}) => {
           <View
             style={{
               alignSelf: 'center',
-              paddingBottom: Platform.OS == 'android' ? DeviceHeigth<=808?DeviceHeigth * 0.45:DeviceHeigth * 0.4 : 50,
+              paddingBottom: Platform.OS == 'android' ? DeviceHeigth<=808?DeviceHeigth * 0.45:DeviceHeigth * 0.4 : DeviceHeigth * 0.42,
               // paddingBottom:
               //   Platform.OS == 'android'
               //     ? 50

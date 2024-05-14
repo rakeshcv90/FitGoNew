@@ -278,7 +278,7 @@ const Signup = ({navigation}) => {
       });
 
       setForLoading(false);
-   
+   console.log("fffffffff",data?.data)
       if (data?.data?.status == 0) {
         setForLoading(false);
         showMessage({
