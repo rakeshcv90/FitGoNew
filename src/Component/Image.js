@@ -164,4 +164,6 @@ export const localImage = {
   NOWORKOUT:require('../Icon/Images/NewImage2/Noworkout.png'),
   UpdateAppLottie:require('../Icon/Images/NewImage2/UpdateAppLottie.json'),
   DisplayOn:require('../Icon/Images/NewImage2/DisplayOn.png'),
+  Exercise_Info:require('../Icon/Images/NewImage2/Exercise_Info.png'),
+  Exercise_List:require('../Icon/Images/NewImage2/Exercise_List.png'),
 };

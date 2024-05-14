@@ -16,7 +16,6 @@ import {
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
 import NewHeader from '../../Component/Headers/NewHeader';
-import Play from '../NewWorkouts/Exercise/Play';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import moment from 'moment';
