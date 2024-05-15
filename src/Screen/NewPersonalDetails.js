@@ -413,6 +413,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                         style={{
                           marginTop: DeviceHeigth * 0.02,
                           marginLeft: 10,
+                          paddingBottom:DeviceHeigth*0.05,
                         }}>
                         <InputText
                           errors={errors.targetWeight}
@@ -424,7 +425,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                           placeholder="Target Weight"
                         />
                       </View>
-                      <View
+                      {/* <View
                         style={{
                           marginTop: DeviceHeigth * 0.02,
 
@@ -448,8 +449,8 @@ const NewPersonalDetails = ({route, navigation}) => {
                             setFieldValue('equipment', item.value);
                           }}
                         />
-                      </View>
-                      <View
+                      </View> */}
+                      {/* <View
                         style={{
                           marginTop: DeviceHeigth * 0.02,
 
@@ -473,8 +474,8 @@ const NewPersonalDetails = ({route, navigation}) => {
                           }}
                           selectedStyle={styles.selectedStyle}
                         />
-                      </View>
-                      <View
+                      </View> */}
+                      {/* <View
                         style={{
                           marginTop: DeviceHeigth * 0.02,
 
@@ -497,7 +498,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                             setFieldValue('workPlace', item.workoutarea_title);
                           }}
                         />
-                      </View>
+                      </View> */}
                     </>
                   )}
                   {values.experience == 'Experienced' && (
