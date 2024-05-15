@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
   Container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: AppColor.WHITE,
+    backgroundColor: '#f9f9f9',
   },
   button: {
     width: DeviceWidth * 0.9,

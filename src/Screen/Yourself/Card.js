@@ -41,21 +41,14 @@ export const Card = ({
                   : AppColor.WHITE,
                 flexDirection: Goal ? 'row-reverse' : 'row',
                 justifyContent: Goal ? 'space-between' : 'flex-start',
+                paddingVertical: Goal ? DeviceWidth * 0.05 : 11,
               },
             ]}
             key={i}
             onPress={() => SelectedButton(v)}>
             <View>
               <Image
-                source={
-                  !Goal
-                    ? v.img
-                    : v?.goal_id == 1 || v?.goal_id == 3
-                    ? localImage.WeightLoss
-                    : v?.goal_id == 2 || v?.goal_id == 6
-                    ? localImage.BuildMuscle
-                    : localImage.Strength
-                }
+                source={!Goal ? v.img : {uri: v?.goal_image}}
                 style={{
                   height: Goal
                     ? v?.goal_id == 2 || v?.goal_id == 6
@@ -85,19 +78,6 @@ const styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
     alignItems: 'center',
     padding: 11,
-    borderColor: '#fff',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 5,
-        shadowColor: 'darkgrey',
-      },
-    }),
   },
   txt: {
     paddingVertical: 14,

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {Image} from 'react-native';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 import {useDispatch} from 'react-redux';
 import Bulb from './Bulb';
@@ -118,7 +118,7 @@ const Goal = ({navigation, route}: any) => {
       style={{
         flex: 1,
         alignItems: 'center',
-        backgroundColor: AppColor.BACKGROUNG,
+        backgroundColor: '#f9f9f9',
       }}>
       <ProgressBar screen={screen} Type />
 
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     }),
   },
   txt1: {
-    fontFamily: 'Montserrat-SemiBold',
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
     color: AppColor.BLACK,
     fontSize: 17,
     // marginBottom: 7,
