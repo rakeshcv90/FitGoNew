@@ -92,7 +92,7 @@ const Exercise = ({navigation, route}: any) => {
   const [open, setOpen] = useState(false);
   const [back, setBack] = useState(false);
   const [timer, setTimer] = useState(10);
-  const [timerS, setTimerS] = useState(3);
+  const [timerS, setTimerS] = useState(10);
   const [restStart, setRestStart] = useState(false);
   const [randomCount, setRandomCount] = useState(0);
   const [skipCount, setSkipCount] = useState(0);
@@ -770,13 +770,6 @@ const Exercise = ({navigation, route}: any) => {
               <View style={{width: 10}} />
             </View>
           </View>
-          <ExerciseProgressBar
-            ExerciseData={allExercise}
-            INDEX={number}
-            time={1}
-            w={`${100}%`}
-            color={AppColor.RED}
-          />
         </>
       ) : restStart ? (
         <>
@@ -890,7 +883,7 @@ const Exercise = ({navigation, route}: any) => {
                   fontFamily: Fonts.MONTSERRAT_MEDIUM,
                   fontWeight: '500',
                 }}>
-                {currentData?.exercise_title}
+                {allExercise[number+1]?.exercise_title}
               </Text>
             </View>
             <View
@@ -951,13 +944,6 @@ const Exercise = ({navigation, route}: any) => {
               <View style={{width: 10}} />
             </View>
           </View>
-          <ExerciseProgressBar
-            ExerciseData={allExercise}
-            INDEX={number}
-            time={1}
-            w={`${100}%`}
-            color={AppColor.RED}
-          />
         </>
       ) : (
         <>
