@@ -518,7 +518,7 @@ const NewProgressScreen = ({navigation}) => {
               : 'Guest'
           }`}
         </Text>
-   {console.log("zxcxzcxz",getUserDataDetails )}
+  
         {getUserDataDetails?.workout_plans != 'CustomCreated' && (
           <>
             <LineText
