@@ -12,12 +12,15 @@ import {
 import React, {useMemo, useState, useEffect} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {AppColor, Fonts} from '../../Component/Color';
+import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {Calendar} from 'react-native-calendars';
+import AppleHealthKit from 'react-native-health';
 import moment from 'moment';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 import AnimatedLottieView from 'lottie-react-native';
+import Calories from '../../Component/Calories';
 import ActivityLoader from '../../Component/ActivityLoader';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
@@ -25,30 +28,13 @@ import {showMessage} from 'react-native-flash-message';
 import Loader from '../../Component/Loader';
 const NewMonthlyAchievement = () => {
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
-  const [selected, setSelected] = useState(false);
   const [steps, setSteps] = useState(0);
   const [Distance, setDistance] = useState(0);
   const [calories, setCalories] = useState(0);
-  const {getUserDataDetails, getCustttomeTimeCal, getStepCounterOnoff} =
-    useSelector(state => state);
+  const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
   const [ApiData, setApiData] = useState([]);
- 
+  const [WokoutCalories, setWorkoutCalories] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
-  const theme = useMemo(() => {
-    return {
-      calendarBackground: AppColor.BACKGROUNG,
-      selectedDayBackgroundColor: AppColor.RED,
-      selectedDayTextColor: AppColor.WHITE,
-      todayTextColor: AppColor.BLACK,
-      arrowColor: AppColor.RED,
-      monthTextColor: AppColor.RED,
-      indicatorColor: AppColor.RED,
-      textMonthFontSize: 17,
-      textDayFontFamily: 'Poppins-SemiBold',
-      textMonthFontFamily: 'Poppins-SemiBold',
-      dayTextColor: AppColor.BLACK,
-    };
-  }, []);
   useEffect(() => {
     DateWiseData(moment.utc().format('YYYY-MM-DD')); // to get the datewise data
   }, []);
@@ -76,21 +62,14 @@ const NewMonthlyAchievement = () => {
       } else if (res) {
         setIsLoaded(true);
         setApiData(res.data.data);
-        const Calories = res.data.data.map(value =>
-          parseInt(value.exercise_calories),
+        const Calories = res?.data?.data?.map(value =>
+          parseInt(value?.exercise_calories),
         );
-        //  cont Time=res.data.data.map((value)=>parseInt(value.))
         setWorkoutCalories(Calories?.reduce((acc, num) => acc + num, 0)); // adding steps calories here
         setIsLoaded(true);
 
         if (Platform.OS == 'android') {
-          setSteps(res?.data?.steps[0]?.steps ? res?.data?.steps[0]?.steps : 0);
-          setCalories(
-            res?.data?.steps[0]?.calories ? res?.data?.steps[0]?.calories : 0,
-          );
-          setDistance(
-            res?.data?.steps[0]?.distance ? res?.data?.steps[0]?.distance : 0,
-          );
+          // nothing to show for now
         }
       }
     } catch (error) {
@@ -98,7 +77,25 @@ const NewMonthlyAchievement = () => {
       setIsLoaded(true);
     }
   };
-
+  const HandleStepsAndCalories = Date1 => {
+    if (Platform.OS == 'ios') {
+      let options = {
+        date: new Date(Date1).toISOString(), // optional; default now
+        includeManuallyAdded: true, // optional: default true
+      };
+      AppleHealthKit.getStepCount(options, (callbackError, results) => {
+        if (callbackError) {
+          console.error('Error while getting the data:', callbackError);
+          // Handle the error as needed
+        } else {
+          setSteps(results?.value);
+          setDistance(((results?.value / 20) * 0.01).toFixed(2));
+          setCalories(((results?.value / 20) * 1).toFixed(0));
+        }
+      });
+    } else if (Platform.OS == 'android') {
+    }
+  };
 
   const EmptyComponent = () => {
     return (
@@ -123,6 +120,57 @@ const NewMonthlyAchievement = () => {
       </View>
     );
   };
+  const DailyData = useMemo(() => [
+    {
+      id: 1,
+      img: (
+        <Image
+          source={localImage.Step1}
+          style={{ height: 25, width: 25 }}
+          resizeMode="contain"
+        />
+      ),
+      txt: `${parseInt(calories) + WokoutCalories} Kcal`,
+    },
+    {
+      id: 2,
+      img: (
+        <Image
+          source={localImage.Step2}
+          style={{ height: 25, width: 25 }}
+          resizeMode="contain"
+        />
+      ),
+      txt: `${Distance} Km`,
+    },
+    {
+      id: 3,
+      img: (
+        <Image
+          source={localImage.Step3}
+          style={{ height: 25, width: 25 }}
+          resizeMode="contain"
+          tintColor={AppColor.RED}
+        />
+      ),
+      txt: steps,
+    },
+  ], [calories, WokoutCalories, Distance, steps]);
+  const theme = useMemo(() => {
+    return {
+      calendarBackground: AppColor.BACKGROUNG,
+      selectedDayBackgroundColor: AppColor.RED,
+      selectedDayTextColor: AppColor.WHITE,
+      todayTextColor: AppColor.BLACK,
+      arrowColor: AppColor.RED,
+      monthTextColor: AppColor.RED,
+      indicatorColor: AppColor.RED,
+      textMonthFontSize: 17,
+      textDayFontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+      textMonthFontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+      dayTextColor: AppColor.BLACK,
+    };
+  }, []);
   return (
     <SafeAreaView style={styles.Container}>
       <NewHeader header={'Monthly Achievement'} backButton={true} />
@@ -131,7 +179,6 @@ const NewMonthlyAchievement = () => {
           <Calendar
             onDayPress={day => {
               setDate(day.dateString);
-              setSelected(true);
               HandleStepsAndCalories(day.dateString);
               DateWiseData(day.dateString);
               setIsLoaded(false);
@@ -167,7 +214,6 @@ const NewMonthlyAchievement = () => {
           }}>
           <Text
             style={{
-           
               fontSize: 24,
               color: AppColor.BLACK,
               fontFamily: 'Montserrat-SemiBold',
@@ -175,7 +221,6 @@ const NewMonthlyAchievement = () => {
               lineHeight: 19.5,
               fontSize: 18,
               alignItems: 'center',
-             
             }}>
             {moment(getDate).format('MMM DD, YYYY')}
           </Text>
@@ -197,7 +242,6 @@ const NewMonthlyAchievement = () => {
             </Text>
           )}
         </View>
-
         {ApiData.length == 0 ? (
           isLoaded ? (
             <EmptyComponent />
@@ -210,6 +254,7 @@ const NewMonthlyAchievement = () => {
             <FlatList
               data={ApiData}
               horizontal
+              //showsHorizontalScrollIndicator={false}
               renderItem={(value, index) => {
                 return (
                   <View>
@@ -221,7 +266,7 @@ const NewMonthlyAchievement = () => {
                         borderRadius: 20,
                         justifyContent: 'center',
                         alignItems: 'center',
-                        backgroundColor: AppColor.GRAY,
+                        backgroundColor: AppColor.WHITE,
                       }}>
                       <Image
                         source={{uri: value.item.exercise_image_link}}
@@ -273,7 +318,7 @@ const NewMonthlyAchievement = () => {
                     style={{
                       textAlign: 'center',
                       color: AppColor.HEADERTEXTCOLOR,
-                     
+
                       fontSize: 14,
                       fontWeight: '600',
                       marginLeft: 8,
@@ -341,7 +386,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Regular',
     fontSize: 16,
     marginTop: 10,
-    
   },
 });
 export default NewMonthlyAchievement;

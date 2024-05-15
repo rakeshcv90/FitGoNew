@@ -15,6 +15,7 @@ import {
   setInappPurchase,
   setPurchaseHistory,
   setStoreData,
+  setUserProfileData,
   setVideoLocation,
 } from '../Component/ThemeRedux/Actions';
 import VersionNumber from 'react-native-version-number';
@@ -57,6 +58,7 @@ const SplaceScreen = ({navigation}) => {
     getPlanData();
     ProfileDataAPI();
     Object.keys(getUserDataDetails).length > 0 && PurchaseDetails(),
+      getProfileData(getUserDataDetails?.id),
       getCustomWorkout();
     dispatch(setFitmeAdsCount(0));
     initInterstitial();
@@ -260,6 +262,38 @@ const SplaceScreen = ({navigation}) => {
       dispatch(setCompleteProfileData([]));
 
       console.log(error);
+    }
+  };
+  const getProfileData = async user_id => {
+    try {
+      const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          id: user_id,
+          version: VersionNumber.appVersion,
+        },
+      });
+
+      if (data?.data?.profile) {
+        dispatch(setUserProfileData(data.data.profile));
+      } else if (
+        data?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: data?.data?.msg,
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        dispatch(setUserProfileData([]));
+      }
+    } catch (error) {
+      console.log('User Profile Error', error);
     }
   };
   const getAllExerciseData = async () => {

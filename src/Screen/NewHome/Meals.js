@@ -310,7 +310,7 @@ const Meals = ({navigation}) => {
             alignItems: 'center',
             paddingBottom:
               Platform.OS == 'android'
-                ? DeviceHeigth * 0.43
+                ? DeviceHeigth<=846?DeviceHeigth * 0.45:DeviceHeigth * 0.4
                 : DeviceHeigth * 0.45,
           }}>
           <FlatList

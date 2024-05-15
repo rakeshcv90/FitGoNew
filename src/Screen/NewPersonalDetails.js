@@ -167,7 +167,7 @@ const NewPersonalDetails = ({route, navigation}) => {
           version: VersionNumber.appVersion,
           goal: values.goal,
           injury: values.injury,
-          // weight: values.name,
+          weight: getUserDataDetails?.weight,
           target_weight: values.targetWeight,
          
           // focusarea:
