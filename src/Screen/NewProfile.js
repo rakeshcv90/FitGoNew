@@ -73,7 +73,7 @@ const NewProfile = ({navigation}) => {
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const [notificationTimer, setNotificationTimer] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  console.log('getUserDataDetails', getUserDataDetails);
+  
   const setAlarmIsEnabled = data => {
     dispatch(setIsAlarmEnabled(data));
   };

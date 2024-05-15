@@ -279,7 +279,7 @@ const Exercise = ({navigation, route}: any) => {
               }
               setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
               if (seconds > 1) {
-                if (seconds == 5) Tts.speak('three.           two.');
+                if (seconds == 5) Tts.speak('three.            two.');
                 if (seconds == 3) Tts.speak('one.    Done');
                 if (seconds == 12) Tts.speak('10 seconds to go');
                 setSeconds(prevSeconds => prevSeconds - 1);
@@ -536,7 +536,13 @@ const Exercise = ({navigation, route}: any) => {
                 bW={1}
               />
               <ProgreesButton
-                onPress={() => setPlayW(0)}
+                onPress={() =>{
+                  setPlayW(0)
+                  setBack(false)
+                  setSeconds(
+                    parseInt(currentExercise?.exercise_rest.split(' ')[0]),
+                  );
+                }}
                 text="Restart this Exercise"
                 h={55}
                 bR={30}

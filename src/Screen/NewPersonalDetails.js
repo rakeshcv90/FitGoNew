@@ -150,6 +150,8 @@ const NewPersonalDetails = ({route, navigation}) => {
     }
     return null;
   };
+
+
   const handleFormSubmit = async (values, action) => {
     setForLoading(true);
     try {
@@ -165,14 +167,14 @@ const NewPersonalDetails = ({route, navigation}) => {
           version: VersionNumber.appVersion,
           goal: values.goal,
           injury: values.injury,
-          weight: values.name,
+          weight: getUserDataDetails?.weight,
           target_weight: values.targetWeight,
-          equipment_type: values.equipment,
-          focusarea:
-            values.focuseAres.length > 0
-              ? values.focuseAres.join(',')
-              : getUserDataDetails.focus_area,
-          place: values.workPlace,
+         
+          // focusarea:
+          //   values.focuseAres.length > 0
+          //     ? values.focuseAres.join(',')
+          //     : getUserDataDetails.focus_area,
+  
           gender: values.gender,
           experience: getUserDataDetails.experience,
           workout_plans: values.workout_plans,
@@ -372,7 +374,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                           selectedTextStyle={styles.selectedTextStyle}
                           data={goalsData}
                           labelField="goal_title"
-                          valueField="goal_id"
+                          valueField="goal_title"
                           placeholder={getUserDataDetails?.goal_title}
                           value={values.goal}
                           onFocus={() => setIsFocus(true)}
@@ -544,7 +546,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                             selectedTextStyle={styles.selectedTextStyle}
                             data={goalsData}
                             labelField="goal_title"
-                            valueField="goal_id"
+                            valueField="goal_title"
                             placeholder={
                               getUserDataDetails?.goal_title == null
                                 ? 'Select Fitness Goal'
@@ -605,6 +607,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                             onBlur={handleBlur('targetWeight')}
                             onChangeText={handleChange('targetWeight')}
                             label="Target Weight"
+                             keyboardType='number-pad'
                             placeholder="Target Weight"
                           />
                         </View>

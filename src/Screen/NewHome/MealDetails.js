@@ -42,14 +42,14 @@ const MealDetails = ({route, navigation}) => {
         return null;
       } else {
         return (
-          <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
+          <View style={{marginBottom: DeviceHeigth <= 846 ? -1 : -10}}>
             <BannerAdd bannerAdId={bannerAdId} />
           </View>
         );
       }
     } else {
       return (
-        <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
+        <View style={{marginBottom: DeviceHeigth <= 846? -1 : -10}}>
           <BannerAdd bannerAdId={bannerAdId} />
         </View>
       );

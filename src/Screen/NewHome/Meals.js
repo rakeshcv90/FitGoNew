@@ -8,7 +8,7 @@ import {
   Platform,
   StatusBar,
 } from 'react-native';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {AppColor, Fonts} from '../../Component/Color';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -27,6 +27,8 @@ import moment from 'moment';
 import axios from 'axios';
 import RNFetchBlob from 'rn-fetch-blob';
 import {bannerAdId} from '../../Component/AdsId';
+import Carousel from 'react-native-snap-carousel';
+import {Item} from 'react-native-paper/lib/typescript/components/Drawer/Drawer';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const Meals = ({navigation}) => {
@@ -35,33 +37,14 @@ const Meals = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [imageLoad, setImageLoad] = useState(true);
   const avatarRef = React.createRef();
-  const [itemData, setItemData] = useState();
+
   const getFitmeMealAdsCount = useSelector(state => state.getFitmeMealAdsCount);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const getStoreVideoLoc = useSelector(state => state.getStoreVideoLoc);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const dispatch = useDispatch();
+  const carouselRef = useRef(null);
 
-  const generateRandomNumber = useMemo(() => {
-    return () => {
-      if (mealData.length > 0) {
-        const min = 1;
-        const max = mealData.length;
-        const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-
-        const filteredMeals = mealData.filter(
-          (item, index) => index + 1 === randomNumber,
-        );
-
-        if (filteredMeals.length > 0) {
-          setSelectedMeal(filteredMeals[0]);
-        }
-      }
-    };
-  }, [mealData]);
-  useEffect(() => {
-    generateRandomNumber();
-  }, [generateRandomNumber]);
   useEffect(() => {
     initInterstitial();
     mealData?.map((item, index) => downloadVideos(item, index));
@@ -94,9 +77,7 @@ const Meals = ({navigation}) => {
       }
     }
   };
-  const resetFitmeCount = async () => {
-    dispatch(setFitmeMealAdsCount(0));
-  };
+
   const sanitizeFileName = fileName => {
     fileName = fileName.replace(/\s+/g, '_');
     return fileName;
@@ -110,7 +91,6 @@ const Meals = ({navigation}) => {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
         StoringData[data?.diet_title] = filePath;
-        console.log('ImageExists', videoExists, filePath);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -133,6 +113,7 @@ const Meals = ({navigation}) => {
     }
     dispatch(setVideoLocation(StoringData));
   };
+
   const bannerAdsDisplay = () => {
     if (getPurchaseHistory.length > 0) {
       if (
@@ -141,18 +122,127 @@ const Meals = ({navigation}) => {
         return null;
       } else {
         return (
-          <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
+          <View style={{marginBottom: DeviceHeigth <= 846 ? -1 : -10}}>
             <BannerAdd bannerAdId={bannerAdId} />
           </View>
         );
       }
     } else {
       return (
-        <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
+        <View style={{marginBottom: DeviceHeigth <= 846 ? -1 : -10}}>
           <BannerAdd bannerAdId={bannerAdId} />
         </View>
       );
     }
+  };
+  const renderItem = ({item, index}) => {
+    return (
+      <View
+        style={{
+          borderRadius: 5,
+
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: 220,
+          marginRight: 25,
+        }}>
+        <TouchableOpacity
+          onPress={() => {
+            checkMealAddCount(item);
+          }}
+          style={{
+            width: 200,
+            height: 150,
+            borderRadius: 10,
+            marginVertical: 10,
+            //alignSelf:'center',
+          }}>
+          <Image
+            source={{uri: item?.diet_image}}
+            resizeMode="cover"
+            style={{
+              width: 200,
+              height: 150,
+              borderRadius: 10,
+              marginVertical: 10,
+              alignSelf: 'center',
+            }}
+          />
+        </TouchableOpacity>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: '600',
+            lineHeight: 27,
+            fontFamily: 'Montserrat-SemiBold',
+            textAlign: 'center',
+            color: '#1E1E1E',
+          }}>
+          {item?.diet_title}
+        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            top: DeviceHeigth * 0.01,
+            width: '100%',
+            marginBottom: 20,
+            alignItems: 'center',
+            justifyContent: 'center',
+            alignSelf: 'center',
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignSelf: 'center',
+
+              alignItems: 'center',
+            }}>
+            <Image
+              source={localImage.Step1}
+              style={{width: 20, height: 20}}
+              resizeMode="contain"
+            />
+
+            <Text
+              style={{
+                // fontFamily: 'Montserrat-SemiBold',
+                fontSize: 13,
+                fontWeight: '500',
+                color: AppColor.BLACK,
+              }}>
+              {item?.diet_calories} kcal
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginLeft: 20,
+              alignSelf: 'center',
+
+              alignItems: 'center',
+            }}>
+            <Image
+              source={localImage.Watch}
+              style={{width: 17, height: 17}}
+              resizeMode="contain"
+            />
+
+            <Text
+              style={{
+                // fontFamily: 'Montserrat-SemiBold',
+                fontSize: 13,
+                fontWeight: '500',
+                color: AppColor.BLACK,
+                marginHorizontal: 5,
+              }}>
+              {item?.diet_time}
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
   };
   return (
     <>
@@ -163,7 +253,7 @@ const Meals = ({navigation}) => {
           style={{
             width: '95%',
             alignSelf: 'center',
-            top: -DeviceHeigth * 0.02,
+            top: -20,
           }}>
           <Text
             style={{
@@ -177,138 +267,51 @@ const Meals = ({navigation}) => {
             }}>
             Top diet recipes
           </Text>
-          {selectedMeal && (
-            <>
-              <View style={[styles.meditionBox, {marginVertical: 10}]}>
-                {/* {isLoading && (
-              <ShimmerPlaceholder
-                style={{width: '100%', height: '100%', borderRadius: 15}}
-                ref={avatarRef}
-                autoRun
-              />
-            )} */}
-                <TouchableOpacity
-                  style={{width: '100%', height: '100%', borderRadius: 15}}
-                  onPress={() => {
-                    navigation.navigate('MealDetails', {item: selectedMeal});
-                  }}>
-                  <Image
-                    style={{width: '100%', height: '100%', borderRadius: 15}}
-                    resizeMode="cover"
-                    // onLoad={() => setIsLoading(false)}
-                    source={
-                      selectedMeal.diet_image_link == null
-                        ? localImage.Noimage
-                        : {uri: selectedMeal.diet_image_link}
-                    }></Image>
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{
-                  width: '95%',
-                  alignSelf: 'center',
-                  top: DeviceHeigth * 0.02,
-                }}>
-                <Text
-                  style={{
-                    color: AppColor.BLACK,
-                    fontFamily: 'Montserrat-SemiBold',
-                    fontWeight: '700',
-                    lineHeight: 21,
-                    fontSize: 14,
-                    justifyContent: 'flex-start',
-                  }}>
-                  {selectedMeal.diet_title}
-                </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  top: DeviceHeigth * 0.03,
-                  width: '95%',
-                  alignSelf: 'center',
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
 
-                    alignSelf: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={localImage.Step1}
-                    style={{width: 20, height: 20}}
-                    resizeMode="contain"
-                  />
+          <Carousel
+            ref={carouselRef}
+            layout={'default'}
+            // horizontal
 
-                  <Text
-                    style={{
-                      // fontFamily: 'Montserrat-SemiBold',
-                      fontSize: 13,
-                      fontWeight: '500',
-                      color: AppColor.BLACK,
-                      marginHorizontal: 5,
-                    }}>
-                    {selectedMeal.diet_calories} kcal
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    marginHorizontal: DeviceWidth * 0.07,
-                    alignSelf: 'center',
-                    alignSelf: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={localImage.Watch}
-                    style={{width: 17, height: 17}}
-                    resizeMode="contain"
-                  />
-
-                  <Text
-                    style={{
-                      // fontFamily: 'Montserrat-SemiBold',
-                      fontSize: 13,
-                      fontWeight: '500',
-                      color: AppColor.BLACK,
-                      marginHorizontal: 5,
-                    }}>
-                    {selectedMeal.diet_time}
-                  </Text>
-                </View>
-              </View>
-              <View
-                style={{
-                  width: '95%',
-                  alignSelf: 'center',
-                  top: DeviceHeigth * 0.06,
-                }}>
-                <Text
-                  style={{
-                    color: AppColor.HEADERTEXTCOLOR,
-                    fontFamily: Fonts.MONTSERRAT_BOLD,
-                    fontWeight: 'bold',
-                    lineHeight: 19.5,
-                    fontSize: 18,
-                    alignItems: 'center',
-                    justifyContent: 'flex-start',
-                  }}>
-                  Recipes
-                </Text>
-              </View>
-            </>
-          )}
+            keyExtractor={(_, index) => index.toString()}
+            itemWidth={DeviceWidth * 0.63}
+            sliderWidth={DeviceWidth}
+            data={mealData}
+            enableSnap
+            renderItem={renderItem}
+            firstItem={2}
+          />
         </View>
-
         <View
           style={{
-            top: DeviceHeigth * 0.05,
+            width: '95%',
+            alignSelf: 'center',
+            top: -20,
+          }}>
+          <Text
+            style={{
+              color: AppColor.HEADERTEXTCOLOR,
+              fontFamily: Fonts.MONTSERRAT_BOLD,
+              fontWeight: 'bold',
+              lineHeight: 19.5,
+              fontSize: 18,
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+            }}>
+            Categories
+          </Text>
+        </View>
+        <View
+          style={{
+            top: -DeviceHeigth * 0.015,
             alignSelf: 'center',
 
             width: '100%',
             alignItems: 'center',
-            paddingBottom: Platform.OS == 'android' ? DeviceHeigth * 0.47 : DeviceHeigth * 0.5,
+            paddingBottom:
+              Platform.OS == 'android'
+                ? DeviceHeigth<=846?DeviceHeigth * 0.45:DeviceHeigth * 0.4
+                : DeviceHeigth * 0.45,
           }}>
           <FlatList
             data={mealData}
@@ -321,32 +324,42 @@ const Meals = ({navigation}) => {
                   <TouchableOpacity
                     style={styles.listItem2}
                     onPress={() => {
-                      //
-                      setItemData(item);
                       checkMealAddCount(item);
                     }}>
-                    <Image
-                      source={
-                        item.diet_image == null
-                          ? localImage.Noimage
-                          : {
-                              uri: item.diet_image,
-                            }
-                      }
+                    <View
                       style={{
-                        height: 70,
-                        width: 70,
-                        borderRadius: 140 / 2,
-                        alignSelf: 'center',
-                      }}
-                      resizeMode="cover"></Image>
+                        height: 100,
+                        width: 110,
+                        backgroundColor: '#F7F7F7',
+                        justifyContent: 'center',
+                        borderRadius: 10,
+                      }}>
+                      <Image
+                        source={
+                          item.diet_image == null
+                            ? localImage.Noimage
+                            : {
+                                uri: item.diet_image,
+                              }
+                        }
+                        style={{
+                          height: 70,
+                          width: 70,
+                          borderRadius: 140 / 2,
+
+                          alignSelf: 'center',
+                        }}
+                        resizeMode="cover"></Image>
+                    </View>
                     <View
                       style={{
                         width: DeviceWidth * 0.2,
                         alignItems: 'center',
+                        marginTop: 10,
                         justifyContent: 'center',
                       }}>
                       <Text
+                        numberOfLines={1}
                         style={[
                           styles.title,
                           {
@@ -392,7 +405,6 @@ var styles = StyleSheet.create({
   },
   listItem2: {
     width: DeviceWidth * 0.26,
-    // height: DeviceWidth * 0.25,
     marginHorizontal: 12,
     top: 10,
     borderRadius: 10,
@@ -404,19 +416,7 @@ var styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     backgroundColor: AppColor.WHITE,
-    marginBottom: 20,
-    shadowColor: 'rgba(0, 0, 0, 1)',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
+    marginBottom: 10,
   },
 });
 export default Meals;

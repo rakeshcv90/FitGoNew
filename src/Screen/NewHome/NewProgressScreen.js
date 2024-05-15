@@ -461,7 +461,7 @@ const NewProgressScreen = ({navigation}) => {
               openMailApp();
             }}>
             <Image
-              source={localImage.Feedback}
+              source={require('../../Icon/Images/NewImage2/Feed.png')}
               style={{width: 15, height: 15}}
               resizeMode="contain"
             />
@@ -518,14 +518,15 @@ const NewProgressScreen = ({navigation}) => {
               : 'Guest'
           }`}
         </Text>
-        {getUserDataDetails?.workout_plans != 'CustomCreated' ? (
+   {console.log("zxcxzcxz",getUserDataDetails )}
+        {getUserDataDetails?.workout_plans != 'CustomCreated' && (
           <>
             <LineText
               Txt1={'Weight'}
               Txt2={'Weekly'}
               setGraphValue={setValue}
             />
-            {getUserDataDetails?.weight ? (
+            {getUserDataDetails?.weight!='undefined' ? (
               <View style={[styles.card, {}]}>
                 <LineChart
                   style={{paddingRight: 30}}
@@ -551,7 +552,7 @@ const NewProgressScreen = ({navigation}) => {
               <EmptyComponent />
             )}
           </>
-        ) : null}
+        )}
         <LineText
           Txt1={'Monthly Achievement'}
           NavigationScrnName={'NewMonthlyAchievement'}
