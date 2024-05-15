@@ -102,7 +102,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             left: -10,
             alignItems: 'center',
             justifyContent: 'center',
-backgroundColor:'red',
+
             marginTop: DeviceHeigth * 0.045,
           }}>
           <Icon name="close" color={AppColor.DARKGRAY} size={25} />
@@ -154,7 +154,7 @@ backgroundColor:'red',
             height: DeviceWidth / 1.5,
             width: DeviceWidth * 0.95,
             alignSelf: 'center',
-            backgroundColor:'yellow',
+     
             // marginTop: 10,
             top: -DeviceHeigth * 0.07,
             zIndex: -1,

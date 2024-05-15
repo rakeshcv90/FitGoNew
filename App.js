@@ -226,9 +226,9 @@ const App = () => {
                   color: AppColor.BLACK,
                 }}>{`${(Number(progress?.receivedBytes) / 1048576).toFixed(
                 2,
-              )}MB/${(Number(progress?.totalBytes) / 1048576).toFixed(
+              )} MB /${(Number(progress?.totalBytes) / 1048576).toFixed(
                 2,
-              )}`}</Text>
+              )} MB`}</Text>
             </View>
           </View>
         </View>
