@@ -48,7 +48,6 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {MyRewardedAd} from '../../Component/BannerAdd';
 import RNFetchBlob from 'rn-fetch-blob';
-import Play from './Exercise/Play';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import FastImage from 'react-native-fast-image';
 const OneDay = ({navigation, route}: any) => {

@@ -56,27 +56,24 @@ const Play: FC<Props> = ({...props}) => {
       {...props}
       style={{
         flex: 1,
-        width: props.w ? props.w : DeviceWidth * 0.9,
+        width: props.w ? props.w : DeviceWidth * 0.5,
         justifyContent: 'center',
         alignItems: 'center',
         //alignSelf: !props.alignSelf ? 'flex-start' : 'center',
         marginBottom: props.mB,
-        bottom: 0,
-        position: 'absolute',
+        // bottom: 0,
+        // position: 'absolute',
         alignSelf: 'center',
       }}>
-      <LinearGradient
-        start={{x: 1, y: 0}}
-        end={{x: 0, y: 1}}
-        colors={props.colors ? props.colors : ['#941000', '#D5191A']}
+      <View
         style={[
           styles.nextButton,
           {
-            width: props.w ? props.w : DeviceWidth * 0.9,
+            width: props.w ? props.w : DeviceWidth * 0.5,
             height: props.h ? props.h : 50,
             marginVertical: props.mV,
             paddingVertical: props.pV,
-            borderRadius: props.bR ? props.bR : 80 / 2,
+            // borderRadius: props.bR ? props.bR : 80 / 2,
           },
           props.oneDay && {
             justifyContent: 'center',
@@ -105,17 +102,20 @@ const Play: FC<Props> = ({...props}) => {
                 zIndex: 1,
               }}
               onPress={props.back}>
-              <Icons name={'chevron-left'} size={40} color={AppColor.WHITE} />
+              <Icons name={'skip-previous'} size={30} color='#333333CC' />
             </TouchableOpacity>
             <TouchableOpacity
               style={{
                 zIndex: 1,
+                backgroundColor: AppColor.NEW_DARK_RED,
+                borderRadius: 30,
+                padding: 10
               }}
               onPress={props.playy}>
               {props.play ? (
-                <Icons name={'play'} size={40} color={AppColor.WHITE} />
+                <Icons name={'play'} size={30} color={AppColor.WHITE} />
               ) : (
-                <Icons name={'pause'} size={40} color={AppColor.WHITE} />
+                <Icons name={'pause'} size={30} color={AppColor.WHITE} />
               )}
             </TouchableOpacity>
             <TouchableOpacity
@@ -123,13 +123,13 @@ const Play: FC<Props> = ({...props}) => {
                 zIndex: 1,
               }}
               onPress={props.next}>
-              <Icons name={'chevron-right'} size={40} color={AppColor.WHITE} />
+              <Icons name={'skip-next'} size={30} color='#333333CC' />
             </TouchableOpacity>
           </>
         )}
         <Animated.View
           style={{
-            backgroundColor: props.fillBack ? props.fillBack : '#D9D9D9',
+            backgroundColor: props.fillBack ? props.fillBack : 'transparent',
             height: props.h ? props.h : 50,
             width: progressBarWidth,
             marginTop: -50,
@@ -139,7 +139,7 @@ const Play: FC<Props> = ({...props}) => {
             zIndex: !props.oneDay && props.fillBack ? -1 : 0,
           }}
         />
-      </LinearGradient>
+      </View>
     </PARENT>
   );
 };
