@@ -67,6 +67,7 @@ import {NativeEventEmitter, NativeModules} from 'react-native';
 import GradientButton from '../../Component/GradientButton';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -653,6 +654,7 @@ const HomeNew = ({navigation}) => {
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={() => {
+        AnalyticsConsole(`MeditationDetails_BUTTON`);
         let checkAdsShow = checkMealAddCount();
         if (checkAdsShow == true) {
           showInterstitialAd();
@@ -737,6 +739,7 @@ const HomeNew = ({navigation}) => {
             },
           ]}
           onPress={() => {
+            AnalyticsConsole(`AI_TRAINER_BUTTON`);
             let checkAdsShow = checkMealAddCount();
             if (checkAdsShow == true) {
               showInterstitialAd();
@@ -1204,12 +1207,13 @@ const HomeNew = ({navigation}) => {
                 </View>
               </View>
               <TouchableOpacity
-                onPress={() =>
+                onPress={() =>{
+                  AnalyticsConsole(`D_Wrk_DAYS_BUTTON_FR_Home`);
                   navigation.navigate('WorkoutDays', {
                     data: currentChallenge[0],
                     challenge: true,
                   })
-                }
+                }}
                 style={{width: '10%', alignItems: 'center', top: 20}}>
                 <Image
                   source={require('../../Icon/Images/NewImage2/play.png')}
@@ -1494,6 +1498,7 @@ const HomeNew = ({navigation}) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
+                AnalyticsConsole(`CustomWrk_FR_Home`);
                 let checkAdsShow = checkMealAddCount();
                 if (checkAdsShow == true) {
                   showInterstitialAd();
@@ -1854,6 +1859,7 @@ const HomeNew = ({navigation}) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
+                AnalyticsConsole(`MEALS_BUTTON`);
                 let checkAdsShow = checkMealAddCount();
                 if (checkAdsShow == true) {
                   showInterstitialAd();
@@ -1913,6 +1919,7 @@ const HomeNew = ({navigation}) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
+                AnalyticsConsole(`STORE_BUTTON`);
                 let checkAdsShow = checkMealAddCount();
                 if (checkAdsShow == true) {
                   showInterstitialAd();

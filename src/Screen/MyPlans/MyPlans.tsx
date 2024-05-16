@@ -51,6 +51,7 @@ import notifee from '@notifee/react-native';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import analytics from '@react-native-firebase/analytics';
 import FastImage from 'react-native-fast-image';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -148,7 +149,10 @@ const Box = ({item, index}: any) => {
   return (
     <TouchableOpacity
       key={index}
-      onPress={() => setVisible(true)}
+      onPress={() => {
+        AnalyticsConsole(`${item?.exercise_title?.split(' ')[0]}_DESC`);
+        setVisible(true);
+      }}
       activeOpacity={1}
       style={{flexDirection: 'row', padding: 10, marginVertical: 5}}>
       {/* <View

@@ -42,7 +42,7 @@ const LetsStart = ({navigation}) => {
   }, [isFocused]);
 
   const deviceIdRegister = async () => {
-    analytics().logEvent('CV_FITME_GOOGLE_SIGNUP');
+    analytics().logEvent('CV_FITME_GET_STARTED_BUTTON');
     setForLoading(true);
     try {
       const data = await axios(`${NewAppapi.LET_GO_USER}`, {

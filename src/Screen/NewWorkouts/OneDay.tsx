@@ -285,6 +285,7 @@ const OneDay = ({navigation, route}: any) => {
         style={styles.box}
         activeOpacity={0.9}
         onPress={() => {
+          analytics().logEvent(`CV_FITME_${item?.exercise_title?.split(' ')[0]}_FR_Day`);
           setOpen(false);
           setCurrentExercise(item);
           setVisible(true);

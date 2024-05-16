@@ -20,6 +20,7 @@ import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
 import FastImage from 'react-native-fast-image';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -103,7 +104,6 @@ const FocuseWorkoutList = ({navigation, route}) => {
     }
   };
 
-
   function onLoadEnd() {
     setIsLoading(false);
   }
@@ -133,6 +133,9 @@ const FocuseWorkoutList = ({navigation, route}) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
+                AnalyticsConsole(
+                  `${item?.workout_title?.split(' ')[0]}Wrk_FR_Focus`,
+                );
                 navigation.navigate('WorkoutDays', {
                   data: item,
                   challenge: false,
@@ -207,7 +210,6 @@ const FocuseWorkoutList = ({navigation, route}) => {
                     headers: {Authorization: 'someAuthToken'},
                     priority: FastImage.priority.high,
                   }}
-                  
                   resizeMode={FastImage.resizeMode.cover}
                   defaultSource={localImage.NOWORKOUT}
                 />
@@ -306,6 +308,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
                         width: 55,
                       }}
                       onPress={() => {
+                        AnalyticsConsole('LIKE_Wrk_FR_Focus')
                         const current = likeData?.findIndex(
                           it => it == item?.workout_id,
                         );

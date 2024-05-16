@@ -17,7 +17,6 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
-
 import {
   setAllWorkoutData,
   setChallengesData,
@@ -37,6 +36,7 @@ import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
@@ -310,6 +310,7 @@ const Workouts = ({navigation}: any) => {
     } else {
       bodyexercise = getFilterCaterogy(mydata?.subtitle);
     }
+    AnalyticsConsole(`${mydata?.title?.split(' ')[0]}_W_CATE`)
     let checkAdsShow = checkMealAddCount();
     if (checkAdsShow == true) {
       showInterstitialAd();
@@ -330,6 +331,7 @@ const Workouts = ({navigation}: any) => {
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => {
+            AnalyticsConsole(`D_Wrk_DAYS_FR_Wrk`);
             let checkAdsShow = checkMealAddCount();
             if (checkAdsShow == true) {
               showInterstitialAd();
@@ -690,6 +692,7 @@ const Workouts = ({navigation}: any) => {
                       <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
+                            AnalyticsConsole(`CustomWrk_FR_WRK`);
                           let checkAdsShow = checkMealAddCount();
                           if (checkAdsShow == true) {
                             showInterstitialAd();

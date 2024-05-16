@@ -27,6 +27,7 @@ import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import moment from 'moment';
 import {useDispatch, useSelector} from 'react-redux';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -302,6 +303,7 @@ const ProductsList = ({route}) => {
                       <TouchableOpacity
                         style={styles.listItem2}
                         onPress={() => {
+                          AnalyticsConsole(`PROD_${item?.product_title?.split(' ')[0]}`);
                           Linking.openURL(item.product_link);
                         }}>
                         <Image
