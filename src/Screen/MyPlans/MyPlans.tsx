@@ -844,6 +844,7 @@ const MyPlans = ({navigation}: any) => {
             onSnapToItem={index => setSelectedDay(index)}
             onBeforeSnapToItem={index => setSelectedDay(index)}
             enableSnap
+            activeSlideAlignment="center"
             firstItem={selectedDay}
             renderItem={({current, currentIndex}: any) => (
               <View style={styles.box}>

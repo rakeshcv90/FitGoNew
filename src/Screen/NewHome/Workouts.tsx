@@ -36,7 +36,7 @@ import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
@@ -60,7 +60,7 @@ const Workouts = ({navigation}: any) => {
     (state: any) => state.getUserDataDetails,
   );
 
-  const getUserID = useSelector((state: any) => state.getUserID);
+  const getAllExercise = useSelector((state: any) => state.getAllExercise);
 
   const getChallengesData = useSelector(
     (state: any) => state.getChallengesData,
@@ -310,7 +310,7 @@ const Workouts = ({navigation}: any) => {
     } else {
       bodyexercise = getFilterCaterogy(mydata?.subtitle);
     }
-    AnalyticsConsole(`${mydata?.title?.split(' ')[0]}_W_CATE`)
+    AnalyticsConsole(`${mydata?.title?.split(' ')[0]}_W_CATE`);
     let checkAdsShow = checkMealAddCount();
     if (checkAdsShow == true) {
       showInterstitialAd();
@@ -462,20 +462,21 @@ const Workouts = ({navigation}: any) => {
   };
 
   const getbodyPartWorkout = (data: any) => {
-    const bodyexercise = allWorkoutData?.workout_Data?.filter((item: any) => {
-      return item.workout_bodypart == data.bodypart_id;
-    });
+    const exercises = getAllExercise?.filter(
+      (item: any) => item?.exercise_bodypart == data?.bodypart_title,
+    );
     let checkAdsShow = checkMealAddCount();
+    AnalyticsConsole(`${data?.bodypart_title}_FR_Wrk`);
     if (checkAdsShow == true) {
       showInterstitialAd();
-      navigation.navigate('FocuseWorkoutList', {
-        bodyexercise: bodyexercise,
-        item: data,
+      navigation.navigate('NewFocusWorkouts', {
+        focusExercises: exercises,
+        focusedPart: data?.bodypart_title,
       });
     } else {
-      navigation.navigate('FocuseWorkoutList', {
-        bodyexercise: bodyexercise,
-        item: data,
+      navigation.navigate('NewFocusWorkouts', {
+        focusExercises: exercises,
+        focusedPart: data?.bodypart_title,
       });
     }
   };
@@ -692,7 +693,7 @@ const Workouts = ({navigation}: any) => {
                       <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
-                            AnalyticsConsole(`CustomWrk_FR_WRK`);
+                          AnalyticsConsole(`CustomWrk_FR_WRK`);
                           let checkAdsShow = checkMealAddCount();
                           if (checkAdsShow == true) {
                             showInterstitialAd();
