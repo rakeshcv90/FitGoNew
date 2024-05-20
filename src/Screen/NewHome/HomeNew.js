@@ -654,7 +654,7 @@ const HomeNew = ({navigation}) => {
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={() => {
-        AnalyticsConsole(`MeditationDetails_BUTTON`);
+        AnalyticsConsole(`MediDetails`);
         let checkAdsShow = checkMealAddCount();
         if (checkAdsShow == true) {
           showInterstitialAd();
