@@ -1,7 +1,7 @@
 import {View, Text, SafeAreaView, TouchableOpacity, Image} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {StatusBar} from 'react-native';
 import Bulb from '../Yourself/Bulb';
@@ -16,7 +16,6 @@ import {
   Text as SvgText,
   LinearGradient as SvgGrad,
 } from 'react-native-svg';
-
 
 const GradientText = ({item, fontWeight, fontSize, width}: any) => {
   const gradientColors = ['#D5191A', '#941000'];
@@ -139,14 +138,14 @@ const PredictionScreen = ({navigation, route}: any) => {
     weightHistoryArray[weightHistoryArray.length - 1]?.date &&
       setFinalDate(weightHistoryArray[weightHistoryArray.length - 1]?.date);
   };
- 
+
   return (
     <View style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <View style={{alignItems: 'center', marginTop: DeviceHeigth * 0.1}}>
         <Text style={styles.t}>
           We predict that you’ll{' '}
-          {currentWeight > TargetWeight ? 'loss' : 'gain'}
+          {currentWeight > TargetWeight ? 'lose' : 'gain'}
         </Text>
         <View
           style={{
@@ -156,13 +155,21 @@ const PredictionScreen = ({navigation, route}: any) => {
             width: DeviceWidth,
             marginBottom: -30,
           }}>
-          <Text style={[styles.t, {color: AppColor.RED}]}>
+          <Text
+            style={[
+              styles.t,
+              {color: AppColor.RED, fontFamily: Fonts.MONTSERRAT_BOLD},
+            ]}>
             {currentWeight > TargetWeight
               ? (currentWeight - TargetWeight).toFixed(0)
               : (TargetWeight - currentWeight).toFixed(0)}
           </Text>
           <Text style={styles.t}>Kg by</Text>
-          <Text style={[styles.t, {color: AppColor.RED}]}>
+          <Text
+            style={[
+              styles.t,
+              {color: AppColor.RED, fontFamily: Fonts.MONTSERRAT_BOLD},
+            ]}>
             {finalDate ? moment(finalDate).format('DD MMM YYYY') : ''}
           </Text>
         </View>
@@ -175,7 +182,7 @@ const PredictionScreen = ({navigation, route}: any) => {
         }}>
         <Bulb
           header={
-            'We will filter unsuitable workouts for you, Also you can select 1 or 2 Injuries only'
+            'We have predicted this by analyzing the details shared by you. Start your fitness routine today to achieve your fitness goals with our workout plans.'
           }
         />
         {weightHistory.length != 0 && zeroData.length != 0 && (
@@ -209,12 +216,13 @@ const PredictionScreen = ({navigation, route}: any) => {
       /> */}
       <View
         style={{
-          bottom: DeviceHeigth * 0.05,
-          position: 'absolute',
+          marginTop: 30,
           alignItems: 'center',
           width: DeviceWidth,
         }}>
-        <Text style={styles.t}>You are doing great!</Text>
+        <Text style={[styles.t, {fontFamily: Fonts.MONTSERRAT_MEDIUM}]}>
+          You can do it!
+        </Text>
         <Text style={[styles.t, {fontSize: 16}]}>Keep going</Text>
       </View>
       <View style={styles.buttons}>
@@ -288,7 +296,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   t: {
-    fontFamily: 'Poppins-Bold',
+    fontFamily: Fonts.MONTSERRAT_MEDIUM,
     fontSize: 25,
     fontWeight: '600',
     lineHeight: 30,

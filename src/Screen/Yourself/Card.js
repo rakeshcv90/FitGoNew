@@ -5,6 +5,7 @@ import {
   Animated,
   TouchableOpacity,
   Image,
+  Platform,
 } from 'react-native';
 import React from 'react';
 import {AppColor} from '../../Component/Color';
@@ -35,10 +36,10 @@ export const Card = ({
                 borderColor: Goal
                   ? selectedB == v?.goal_id
                     ? AppColor.RED
-                    : AppColor.WHITE
+                    : AppColor.BACKGROUNG
                   : selectedB == v.id
                   ? AppColor.RED
-                  : AppColor.WHITE,
+                  : AppColor.BACKGROUNG,
                 flexDirection: Goal ? 'row-reverse' : 'row',
                 justifyContent: Goal ? 'space-between' : 'flex-start',
                 paddingVertical: Goal ? DeviceWidth * 0.05 : 11,
@@ -50,11 +51,7 @@ export const Card = ({
               <Image
                 source={!Goal ? v.img : {uri: v?.goal_image}}
                 style={{
-                  height: Goal
-                    ? v?.goal_id == 2 || v?.goal_id == 6
-                      ? 30
-                      : Ih
-                    : Ih,
+                  height: Ih,
                   width: Iw,
                 }} // to add customize ih , checked extra condition
                 resizeMode="contain"
@@ -75,9 +72,21 @@ const styles = StyleSheet.create({
     width: DeviceWidth * 0.9,
     marginTop: 15,
     borderRadius: 7,
-    backgroundColor: AppColor.WHITE,
+    backgroundColor: AppColor.BACKGROUNG,
     alignItems: 'center',
     padding: 11,
+    ...Platform.select({
+      android:{
+        elevation:5,
+        shadowColor:'grey'
+      },
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 5, height: 5},
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+      },
+    })
   },
   txt: {
     paddingVertical: 14,

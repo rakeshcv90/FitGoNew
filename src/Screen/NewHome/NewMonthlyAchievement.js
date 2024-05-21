@@ -120,42 +120,45 @@ const NewMonthlyAchievement = () => {
       </View>
     );
   };
-  const DailyData = useMemo(() => [
-    {
-      id: 1,
-      img: (
-        <Image
-          source={localImage.Step1}
-          style={{ height: 25, width: 25 }}
-          resizeMode="contain"
-        />
-      ),
-      txt: `${parseInt(calories) + WokoutCalories} Kcal`,
-    },
-    {
-      id: 2,
-      img: (
-        <Image
-          source={localImage.Step2}
-          style={{ height: 25, width: 25 }}
-          resizeMode="contain"
-        />
-      ),
-      txt: `${Distance} Km`,
-    },
-    {
-      id: 3,
-      img: (
-        <Image
-          source={localImage.Step3}
-          style={{ height: 25, width: 25 }}
-          resizeMode="contain"
-          tintColor={AppColor.RED}
-        />
-      ),
-      txt: steps,
-    },
-  ], [calories, WokoutCalories, Distance, steps]);
+  const DailyData = useMemo(
+    () => [
+      {
+        id: 1,
+        img: (
+          <Image
+            source={localImage.Step1}
+            style={{height: 25, width: 25}}
+            resizeMode="contain"
+          />
+        ),
+        txt: `${parseInt(calories) + WokoutCalories} Kcal`,
+      },
+      {
+        id: 2,
+        img: (
+          <Image
+            source={localImage.Step2}
+            style={{height: 25, width: 25}}
+            resizeMode="contain"
+          />
+        ),
+        txt: `${Distance} Km`,
+      },
+      {
+        id: 3,
+        img: (
+          <Image
+            source={localImage.Step3}
+            style={{height: 25, width: 25}}
+            resizeMode="contain"
+            tintColor={AppColor.RED}
+          />
+        ),
+        txt: steps,
+      },
+    ],
+    [calories, WokoutCalories, Distance, steps],
+  );
   const theme = useMemo(() => {
     return {
       calendarBackground: AppColor.BACKGROUNG,

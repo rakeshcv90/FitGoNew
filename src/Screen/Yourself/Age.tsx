@@ -107,7 +107,7 @@ const Age = ({route, navigation}: any) => {
   const toNextScreen = () => {
     if (selected.length == 0) {
       showMessage({
-        message: 'Please Enter your Age!!!',
+        message: 'Please enter your age',
         type: 'danger',
         animationDuration: 500,
         floating: true,
@@ -116,7 +116,7 @@ const Age = ({route, navigation}: any) => {
       return;
     } else if (parseInt(selected) < 15) {
       showMessage({
-        message: 'You are below 15 !!!',
+        message: 'You are below 15 ',
         type: 'danger',
         animationDuration: 500,
         floating: true,
@@ -125,7 +125,7 @@ const Age = ({route, navigation}: any) => {
       return;
     } else if (parseInt(selected) > 60) {
       showMessage({
-        message: 'You are over age !!!',
+        message: 'You are over age ',
         type: 'danger',
         animationDuration: 500,
         floating: true,

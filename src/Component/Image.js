@@ -166,4 +166,6 @@ export const localImage = {
   DisplayOn:require('../Icon/Images/NewImage2/DisplayOn.png'),
   Exercise_Info:require('../Icon/Images/NewImage2/Exercise_Info.png'),
   Exercise_List:require('../Icon/Images/NewImage2/Exercise_List.png'),
+  MaleNew:require('../Icon/Images/NewImage2/MaleN.png'),
+  FemaleNew:require('../Icon/Images/NewImage2/FemaleNew.png')
 };
