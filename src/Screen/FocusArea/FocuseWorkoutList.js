@@ -103,7 +103,6 @@ const FocuseWorkoutList = ({navigation, route}) => {
     }
   };
 
-
   function onLoadEnd() {
     setIsLoading(false);
   }
@@ -207,7 +206,6 @@ const FocuseWorkoutList = ({navigation, route}) => {
                     headers: {Authorization: 'someAuthToken'},
                     priority: FastImage.priority.high,
                   }}
-                  
                   resizeMode={FastImage.resizeMode.cover}
                   defaultSource={localImage.NOWORKOUT}
                 />
@@ -368,7 +366,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
         );
       },
 
-    [likeData, updateLikeID, action, isLoading, isFocused],
+    [likeData, updateLikeID, action, isLoading,getCustttomeTimeCal],
   );
   const convertLike = number => {
     if (number == undefined || number == null) {
@@ -420,6 +418,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
         'Please update the app to the latest version'
       ) {
       } else if (exerciseStatus?.data.length > 0) {
+     
         dispatch(setWorkoutTimeCal(exerciseStatus?.data));
       } else {
         dispatch(setWorkoutTimeCal([]));

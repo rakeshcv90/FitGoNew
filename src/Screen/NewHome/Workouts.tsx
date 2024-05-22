@@ -347,7 +347,6 @@ const Workouts = ({navigation}: any) => {
           style={{
             width: DeviceWidth * 0.95,
             height: DeviceHeigth * 0.35,
-
             marginVertical: DeviceHeigth * 0.015,
           }}>
           <ImageBackground

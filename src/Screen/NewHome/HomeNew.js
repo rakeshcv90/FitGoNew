@@ -137,7 +137,7 @@ const HomeNew = ({navigation}) => {
   const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
   const getStepCounterOnoff = useSelector(state => state.getStepCounterOnoff);
   const [PaddoModalShow, setPaddoModalShow] = useState(false);
-  const [backPressCount, setBackPressCount] = useState(0);
+  // const [backPressCount, setBackPressCount] = useState(0);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
 
   const colors = [
@@ -209,33 +209,6 @@ const HomeNew = ({navigation}) => {
       }, 2000);
     }
   }, [isFocused]);
-
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      handleBackPress,
-    );
-
-    return () => backHandler.remove();
-  }, [backPressCount]);
-  useFocusEffect(
-    React.useCallback(() => {
-      setBackPressCount(0);
-    }, []),
-  );
-  const handleBackPress = () => {
-    if (backPressCount === 1) {
-      BackHandler.exitApp();
-      return true;
-    } else {
-      ToastAndroid.show('Press back again to exit', ToastAndroid.TOP);
-      setBackPressCount(1);
-      setTimeout(() => {
-        setBackPressCount(0);
-      }, 2000);
-      return true;
-    }
-  };
 
   const checkMealAddCount = () => {
     if (getPurchaseHistory.length > 0) {
@@ -729,13 +702,7 @@ const HomeNew = ({navigation}) => {
     return (
       <>
         <TouchableOpacity
-          style={[
-            styles.listItem2,
-            {
-              paddingRight:
-                index == fitnessInstructor?.length - 1 ? DeviceWidth * 0.04 : 0,
-            },
-          ]}
+          style={[styles.listItem2]}
           onPress={() => {
             let checkAdsShow = checkMealAddCount();
             if (checkAdsShow == true) {
@@ -744,7 +711,6 @@ const HomeNew = ({navigation}) => {
             } else {
               navigation.navigate('AITrainer', {item: item});
             }
-        
           }}>
           <Image
             source={item?.img}
@@ -1082,7 +1048,7 @@ const HomeNew = ({navigation}) => {
             <Text
               style={{
                 color: AppColor.HEADERTEXTCOLOR,
-                fontFamily: 'Montserrat-SemiBold',
+                fontFamily: Fonts.MONTSERRAT_BOLD,
                 fontWeight: '600',
                 lineHeight: 21,
                 fontSize: 18,
@@ -1473,7 +1439,7 @@ const HomeNew = ({navigation}) => {
                 alignItems: 'center',
                 justifyContent: 'flex-start',
               }}>
-              Personalized Workouts
+              Custom made
             </Text>
           </View>
           <LinearGradient
@@ -1530,7 +1496,7 @@ const HomeNew = ({navigation}) => {
                       fontWeight: '600',
                       fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     }}>
-                    Custom Workout
+                    Your workouts
                   </Text>
                   <Text
                     style={{
@@ -1539,7 +1505,7 @@ const HomeNew = ({navigation}) => {
 
                       fontWeight: '500',
                       fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                    }}>{`A balanced diet is a healthy life`}</Text>
+                    }}>{`Personalized to you`}</Text>
                 </View>
                 <Image
                   source={localImage.NewWorkout}
@@ -1777,7 +1743,7 @@ const HomeNew = ({navigation}) => {
         </View>
         <View
           style={{
-            width: '95%',
+            width: '100%',
             alignSelf: 'center',
             backgroundColor: 'white',
             top:
@@ -1861,7 +1827,6 @@ const HomeNew = ({navigation}) => {
                 } else {
                   navigation.navigate('Meals');
                 }
-          
               }}
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View style={{zIndex: 1}}>
@@ -1883,7 +1848,7 @@ const HomeNew = ({navigation}) => {
                     lineHeight: 15,
                     fontSize: 12,
                   }}>
-                  {'A balanced diet is \na healthy life'}
+                  {'Achieve your goals faster with a balanced diet.'}
                 </Text>
               </View>
               <View style={{}}>
@@ -1891,10 +1856,10 @@ const HomeNew = ({navigation}) => {
                   source={require('../../Icon/Images/NewImage2/diet.png')}
                   resizeMode="contain"
                   style={{
-                    width: DeviceHeigth >= 1024 ? 100 : 70,
-                    height: DeviceHeigth >= 1024 ? 250 : 80,
-                    right: DeviceHeigth >= 1024 ? 0 : 20,
-                    top: DeviceHeigth >= 1024 ? -40 : 35,
+                    width: DeviceHeigth >= 1024 ? 100 : 60,
+                    height: DeviceHeigth >= 1024 ? 250 : DeviceHeigth*0.07,
+                    right: DeviceHeigth >= 1024 ? 0 : DeviceHeigth*0.04,
+                    top: DeviceHeigth >= 1024 ? -40 : DeviceHeigth*0.065
                   }}
                 />
               </View>
@@ -1920,7 +1885,6 @@ const HomeNew = ({navigation}) => {
                 } else {
                   navigation.navigate('Store');
                 }
-        
               }}
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View>
@@ -1942,7 +1906,7 @@ const HomeNew = ({navigation}) => {
                     lineHeight: 15,
                     fontSize: 12,
                   }}>
-                  {'Quality over quantity for\noptimal health benefits'}
+                  {'Shop top-notch fitness products.'}
                 </Text>
               </View>
               <View style={{}}>
@@ -1969,6 +1933,7 @@ const HomeNew = ({navigation}) => {
 var styles = StyleSheet.create({
   container: {
     flex: 1,
+
     backgroundColor: AppColor.WHITE,
   },
   profileView: {
@@ -2016,9 +1981,9 @@ var styles = StyleSheet.create({
     }),
   },
   meditionBox: {
-    width: '95%',
+    width: '100%',
     alignSelf: 'center',
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
 
     alignItems: 'center',
   },

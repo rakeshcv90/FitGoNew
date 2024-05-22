@@ -116,14 +116,20 @@ const Index = ({navigation, route}: any) => {
     
       if (res.data) {
         dispatch(setCompleteProfileData(res.data));
-        navigation.navigate('Gender', {
-          data: res.data?.goal,
-          nextScreen: screen,
-        });
+        setTimeout(() => {
+          navigation.navigate('Gender', {
+            data: res.data?.goal,
+            nextScreen: screen,
+          });
+        }, 3000)
+       
       }
     } catch (error) {
       dispatch(setCompleteProfileData([]));
-      navigation.navigate('Gender', {data: [], nextScreen: screen});
+      setTimeout(() => {
+        navigation.navigate('Gender', {data: [], nextScreen: screen});
+      }, 3000)
+     
       console.log(error);
     }
   };
@@ -167,7 +173,7 @@ const Index = ({navigation, route}: any) => {
           textAlign: 'center',
           marginTop: 5,
         }}>
-        To give you a better experience and personalized plan
+       Start your journey to a healthier, happier you with us today!
       </Text>
     </SafeAreaView>
   );

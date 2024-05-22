@@ -29,6 +29,7 @@ import Tts from 'react-native-tts';
 import {string} from 'yup';
 import {showMessage} from 'react-native-flash-message';
 import VersionNumber from 'react-native-version-number';
+import KeepAwake from 'react-native-keep-awake';
 import moment from 'moment';
 
 import TrackPlayer, {
@@ -38,7 +39,10 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import {MyInterstitialAd} from '../../../Component/BannerAdd';
 import {localImage} from '../../../Component/Image';
-import CircularProgress from 'react-native-circular-progress-indicator';
+import CircularProgress, {
+  ProgressRef,
+} from 'react-native-circular-progress-indicator';
+import {setScreenAwake} from '../../../Component/ThemeRedux/Actions';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -96,10 +100,12 @@ const Exercise = ({navigation, route}: any) => {
   const [restStart, setRestStart] = useState(false);
   const [randomCount, setRandomCount] = useState(0);
   const [skipCount, setSkipCount] = useState(0);
+  const ProgressRef = useRef<ProgressRef>(null);
   const [currentData, setCurrentData] = useState(currentExercise);
   const [isLoading, setIsLoading] = useState(true);
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
+  const getScreenAwake = useSelector(state => state);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -107,6 +113,7 @@ const Exercise = ({navigation, route}: any) => {
   const [separateTimer, setSeparateTimer] = useState(false);
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const restTimerRef = useRef(0);
+  const seperateTimerRef = useRef(0);
   const playTimerRef = useRef<any>(null);
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
@@ -141,7 +148,13 @@ const Exercise = ({navigation, route}: any) => {
 
     return () => clearInterval(intervalId);
   }, [seconds, isRunning]);
-
+  useEffect(() => {
+    if (getScreenAwake) {
+      KeepAwake.activate();
+    } else {
+      KeepAwake.deactivate();
+    }
+  }, [getScreenAwake]);
   const startStopTimer = () => {
     setIsRunning(prevState => !prevState);
   };
@@ -181,7 +194,7 @@ const Exercise = ({navigation, route}: any) => {
   useEffect(() => {
     if (!back) {
       separateTimer
-        ? setTimeout(() => {
+        ? (seperateTimerRef.current = setTimeout(() => {
             if (timerS == 0) {
               setSeparateTimer(false);
               PauseAudio(playbackState);
@@ -207,7 +220,7 @@ const Exercise = ({navigation, route}: any) => {
               setTimerS(timerS - 1);
               setDemoS(prev => prev + 10);
             }
-          }, 1000)
+          }, 1000))
         : restStart
         ? (restTimerRef.current = setTimeout(() => {
             if (timer === 0) {
@@ -279,7 +292,7 @@ const Exercise = ({navigation, route}: any) => {
               }
               setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
               if (seconds > 1) {
-                if (seconds == 5) Tts.speak('three.            two.');
+                if (seconds == 5) Tts.speak('three.           two.');
                 if (seconds == 3) Tts.speak('one.    Done');
                 if (seconds == 12) Tts.speak('10 seconds to go');
                 setSeconds(prevSeconds => prevSeconds - 1);
@@ -317,6 +330,7 @@ const Exercise = ({navigation, route}: any) => {
                 clearTimeout(playTimerRef.current);
               }
             } else if (playW >= 100 && number < allExercise?.length - 1) {
+              ProgressRef.current?.play();
               setPause(false);
               setRestStart(true);
               setDemoW(0);
@@ -344,6 +358,7 @@ const Exercise = ({navigation, route}: any) => {
       setCurrentData(currentExercise);
       handleExerciseChange(currentExercise?.exercise_title);
       setSeparateTimer(true);
+      ProgressRef.current?.play();
     } else setRestStart(true);
     Platform.OS == 'android'
       ? Platform.Version != 34 && setupPlayer()
@@ -536,13 +551,7 @@ const Exercise = ({navigation, route}: any) => {
                 bW={1}
               />
               <ProgreesButton
-                onPress={() =>{
-                  setPlayW(0)
-                  setBack(false)
-                  setSeconds(
-                    parseInt(currentExercise?.exercise_rest.split(' ')[0]),
-                  );
-                }}
+                onPress={() => setPlayW(0)}
                 text="Restart this Exercise"
                 h={55}
                 bR={30}
@@ -754,7 +763,10 @@ const Exercise = ({navigation, route}: any) => {
                   }}
                 />
                 <TouchableOpacity
-                  onPress={() => setTimer(0)}
+                  onPress={() => {
+                    clearInterval(seperateTimerRef.current);
+                    setTimerS(0);
+                  }}
                   style={{
                     zIndex: 1,
                     marginLeft: 30,
@@ -889,7 +901,7 @@ const Exercise = ({navigation, route}: any) => {
                   fontFamily: Fonts.MONTSERRAT_MEDIUM,
                   fontWeight: '500',
                 }}>
-                {allExercise[number+1]?.exercise_title}
+                {allExercise[number + 1]?.exercise_title}
               </Text>
             </View>
             <View
@@ -911,7 +923,10 @@ const Exercise = ({navigation, route}: any) => {
                   // width: '50%',
                 }}>
                 <CircularProgress
+                  ref={ProgressRef}
                   value={timer}
+                  initialValue={10}
+                  startInPausedState={true}
                   radius={40}
                   progressValueColor="#A93737"
                   inActiveStrokeColor={'#FCECF0'}
@@ -928,7 +943,10 @@ const Exercise = ({navigation, route}: any) => {
                   }}
                 />
                 <TouchableOpacity
-                  onPress={() => setTimer(0)}
+                  onPress={() => {
+                    clearInterval(restTimerRef.current);
+                    setTimer(0);
+                  }}
                   style={{
                     zIndex: 1,
                     marginLeft: 30,
@@ -968,6 +986,11 @@ const Exercise = ({navigation, route}: any) => {
               <TouchableOpacity
                 onPress={() => {
                   setBack(true);
+                  if (getScreenAwake) {
+                    dispatch(setScreenAwake(false));
+                  } else {
+                    dispatch(setScreenAwake(true));
+                  }
                 }}
                 style={{
                   width: 40,

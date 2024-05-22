@@ -365,7 +365,7 @@ const LoadData = ({navigation}) => {
       </View>
       {/* <Text style={styles.text}>49%</Text> */}
       <Text style={styles.text1}>Creating your personalized plan...</Text>
-      <Text style={styles.text2}>10,000+</Text>
+      <Text style={styles.text2}>10K+</Text>
       <Text style={styles.text2}>Active Users</Text>
       <Text
         style={[
@@ -377,7 +377,7 @@ const LoadData = ({navigation}) => {
             fontWeight: '600',
           },
         ]}>
-        Have Completed
+      have achieved their fitness goals
       </Text>
       <View
         style={{
@@ -440,7 +440,7 @@ const LoadData = ({navigation}) => {
         {activeNext && (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('BottomTab');
+              navigation.replace('BottomTab');
             }}>
             <LinearGradient
               start={{x: 0, y: 1}}

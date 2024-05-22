@@ -15,11 +15,11 @@ import NewHeader from '../../Component/Headers/NewHeader';
 import {useSelector, useDispatch} from 'react-redux';
 import {TouchableOpacity} from 'react-native';
 import {AppColor, Fonts} from '../../Component/Color';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import LinearGradient from 'react-native-linear-gradient';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
-import {BlurView} from '@react-native-community/blur';
+
 import {TextInput} from 'react-native-paper';
 import {showMessage} from 'react-native-flash-message';
 import {PERMISSIONS, request} from 'react-native-permissions';
@@ -246,65 +246,167 @@ const CustomWorkout = ({navigation}) => {
       <View
         style={{
           flex: 1,
-          justifyContent: 'center',
+
           alignItems: 'center',
-          alignSelf: 'center',
         }}>
         <Image
           source={localImage.Createworkout}
           resizeMode="contain"
           style={{
             width: DeviceWidth * 0.7,
-            height: DeviceHeigth * 0.4,
+            height: DeviceHeigth * 0.3,
+
             marginTop: DeviceHeigth * 0.1,
           }}
         />
-
-        <LinearGradient
-          start={{x: 0, y: 1}}
-          end={{x: 1, y: 0}}
-          // colors={['#941000', '#D01818']}
-          colors={['#D01818', '#941000']}
+        <View
           style={{
-            width: 180,
-            height: 40,
-            borderRadius: 30,
-            justifyContent: 'center',
+            width: DeviceWidth,
             alignItems: 'center',
-            marginBottom: 100,
-            top:
-              Platform.OS == 'android' ? -40 : DeviceHeigth >= 1024 ? 30 : -40,
           }}>
-          <TouchableOpacity
+          <Text
+            style={{
+              color: '#1E1E1E',
+              fontSize: 18,
+              fontWeight: '700',
+              lineHeight: 26,
+              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+            }}>
+            Nothing here yet!
+          </Text>
+        </View>
+        <View
+          style={{
+            width: DeviceWidth,
+            alignItems: 'center',
+            zIndex: -1,
+            marginVertical: 15,
+          }}>
+          <Text
+            style={{
+              color: '#333333',
+              fontSize: 14,
+              fontWeight: '400',
+              lineHeight: 16,
+              opacity: 0.6,
+              fontFamily: Fonts.MONTSERRAT_MEDIUM,
+
+         
+            }}>
+            Create your perfect workout plan based 
+          </Text>
+          <Text
+            style={{
+              color: '#333333',
+              fontSize: 14,
+              fontWeight: '400',
+              lineHeight: 30,
+              opacity: 0.6,
+              fontFamily: Fonts.MONTSERRAT_MEDIUM,
+            }}>
+           on your preferences.
+          </Text>
+          <LinearGradient
+            start={{x: 0, y: 1}}
+            end={{x: 1, y: 0}}
+            // colors={['#941000', '#D01818']}
+            colors={['#D01818', '#941000']}
             style={{
               width: 180,
               height: 40,
-
               borderRadius: 30,
               justifyContent: 'center',
               alignItems: 'center',
-              flexDirection: 'row',
-            }}
-            activeOpacity={0.5}
-            onPress={() => {
-              setIsCustomWorkout(!isCustomWorkout);
+              marginBottom: 100,
+              top: DeviceHeigth * 0.05,
+              //  Platform.OS == 'android' ? -40 : DeviceHeigth >= 1024 ? 30 : -40,
             }}>
-            <Image
-              source={localImage.Plus}
-              style={{width: 20, height: 20}}
-              tintColor={AppColor.WHITE}
-            />
-            <Text style={styles.button}>{'Create Workout'}</Text>
-          </TouchableOpacity>
-        </LinearGradient>
+            <TouchableOpacity
+              style={{
+                width: 180,
+                height: 40,
+
+                borderRadius: 30,
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
+              }}
+              activeOpacity={0.5}
+              onPress={() => {
+                setIsCustomWorkout(!isCustomWorkout);
+              }}>
+              <Image
+                source={localImage.Plus}
+                style={{width: 20, height: 20}}
+                tintColor={AppColor.WHITE}
+              />
+              <Text style={styles.button}>{'Create Workout'}</Text>
+            </TouchableOpacity>
+          </LinearGradient>
+        </View>
       </View>
+      // <View
+      //   style={{
+      //     flex: 1,
+      //     justifyContent: 'center',
+      //     alignItems: 'center',
+
+      //   }}>
+      //   <Image
+      //     source={localImage.Createworkout}
+      //     resizeMode="contain"
+      //     style={{
+      //       width: DeviceWidth * 0.7,
+      //       height: DeviceHeigth * 0.4,
+      //       marginTop: DeviceHeigth * 0.1,
+      //     }}
+      //   />
+
+      //   <LinearGradient
+      //     start={{x: 0, y: 1}}
+      //     end={{x: 1, y: 0}}
+      //     // colors={['#941000', '#D01818']}
+      //     colors={['#D01818', '#941000']}
+      //     style={{
+      //       width: 180,
+      //       height: 40,
+      //       borderRadius: 30,
+      //       justifyContent: 'center',
+      //       alignItems: 'center',
+      //       marginBottom: 100,
+      //       top:
+      //         Platform.OS == 'android' ? -40 : DeviceHeigth >= 1024 ? 30 : -40,
+      //     }}>
+      //     <TouchableOpacity
+      //       style={{
+      //         width: 180,
+      //         height: 40,
+
+      //         borderRadius: 30,
+      //         justifyContent: 'center',
+      //         alignItems: 'center',
+      //         flexDirection: 'row',
+      //       }}
+      //       activeOpacity={0.5}
+      //       onPress={() => {
+      //         setIsCustomWorkout(!isCustomWorkout);
+      //       }}>
+      //       <Image
+      //         source={localImage.Plus}
+      //         style={{width: 20, height: 20}}
+      //         tintColor={AppColor.WHITE}
+      //       />
+      //       <Text style={styles.button}>{'Create Workout'}</Text>
+      //     </TouchableOpacity>
+      //   </LinearGradient>
+      // </View>
     );
   };
 
   const createWorkout = () => {
     if (text.trim().length <= 0) {
       showMessage({
-        message: 'Please Enter WorkoutName',
+        message: 'Please enter your workout name',
         type: 'danger',
         animationDuration: 500,
 
@@ -313,7 +415,15 @@ const CustomWorkout = ({navigation}) => {
       });
     } else if (text.trim().length < 3) {
       showMessage({
-        message: 'Please enter Proper Message',
+        message: 'Please enter proper workout name',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+    } else if (getWorkoutAvt == null) {
+      showMessage({
+        message: 'Please select image for workout',
         type: 'danger',
         animationDuration: 500,
         floating: true,
@@ -460,21 +570,41 @@ const CustomWorkout = ({navigation}) => {
               }}>
               <Image
                 source={
-                  getWorkoutAvt == null ? localImage?.Plus : getWorkoutAvt
+                  getWorkoutAvt == null
+                    ? require('../../Icon/Images/NewImage2/upload.png')
+                    : getWorkoutAvt
                 }
                 resizeMode={getWorkoutAvt == null ? 'contain' : 'cover'}
                 style={{
-                  height: getWorkoutAvt == null ? 35 : 95,
-                  width: getWorkoutAvt == null ? 35 : 95,
+                  height: getWorkoutAvt == null ? 35 : 85,
+                  width: getWorkoutAvt == null ? 35 : 85,
                 }}
               />
             </TouchableOpacity>
+            <Text
+              style={{
+                top: 8,
+                color: '#202020',
+                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                fontSize: 16,
+                lineHeight: 24,
+                fontWeight: '700',
+              }}>
+              Enter workout name
+            </Text>
             <TextInput
-              label="Enter workout name"
               value={text}
-              activeOutlineColor="#707070"
+              activeOutlineColor="red"
+              underlineColor="#20202099"
+              activeUnderlineColor="#20202099"
               outlineStyle={{borderRadius: 15}}
-              style={{marginVertical: 10, backgroundColor: '#F8F9F9'}}
+              placeholder="Eg: Monday chest day"
+              isFocused={true}
+              style={{
+                marginVertical: 10,
+                backgroundColor: '#fff',
+                paddingHorizontal: -5,
+              }}
               onChangeText={text => setText(text)}
             />
             <View
@@ -583,24 +713,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   imageView: {
-    backgroundColor: AppColor.GRAY1,
+    // backgroundColor: AppColor.GRAY1,
     height: 95,
     width: 95,
     borderRadius: 10,
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
+    borderColor: '#33333333',
+    borderStyle: 'dotted',
+
+    borderWidth: 2,
   },
   headerstyle: {
     fontWeight: '600',
