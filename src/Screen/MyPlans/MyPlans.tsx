@@ -13,7 +13,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {localImage} from '../../Component/Image';
@@ -253,12 +257,14 @@ const Box = ({item, index}: any) => {
   );
 };
 const MyPlans = ({navigation}: any) => {
-  const [downloaded, setDownloade] = useState(false);
+  const [downloaded, setDownloade] = useState(0);
   const [hasAds, setHasAds] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [loader, setLoader] = useState(false);
   const [selectedDay, setSelectedDay] = useState((moment().day() + 6) % 7);
   const [WeekStatus, setWeekStatus] = useState([]);
+  const [buttonClicked, setButtonClicked] = useState(false);
+  const [visible, setVisible] = useState(false);
   const getFitmeMealAdsCount = useSelector(
     (state: any) => state.getFitmeMealAdsCount,
   );
@@ -426,7 +432,8 @@ const MyPlans = ({navigation}: any) => {
     fileName = fileName.replace(/\s+/g, '_');
     return fileName;
   };
-  let StoringData: Object = {};
+  let StoringData: Object = {},
+    downloadCounter = 0;
   const downloadVideos = async (data: any, index: number, len: number) => {
     const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
       data?.exercise_title,
@@ -435,47 +442,65 @@ const MyPlans = ({navigation}: any) => {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
         StoringData[data?.exercise_title] = filePath;
-        setDownloade(true);
+        setButtonClicked(true);
+        downloadCounter++;
+        setDownloade((downloadCounter / len) * 100);
       } else {
-        await RNFetchBlob.config({
-          fileCache: true,
-          // IOSBackgroundTask: true, // Add this for iOS background downloads
-          path: filePath,
-          appendExt: '.mp4',
+      await RNFetchBlob.config({
+        fileCache: true,
+        // IOSBackgroundTask: true, // Add this for iOS background downloads
+        path: filePath,
+        appendExt: '.mp4',
+      })
+        .fetch('GET', data?.exercise_video, {
+          'Content-Type': 'application/mp4',
+          // key: 'Config.REACT_APP_API_KEY',
         })
-          .fetch('GET', data?.exercise_video, {
-            'Content-Type': 'application/mp4',
-            // key: 'Config.REACT_APP_API_KEY',
-          })
-          .then(res => {
-            StoringData[data?.exercise_title] = res.path();
-            setDownloade(true);
-          })
-          .catch(err => {
-            console.log(err);
-          });
+        .then(res => {
+          setButtonClicked(true);
+          StoringData[data?.exercise_title] = res.path();
+          downloadCounter++;
+          setDownloade((downloadCounter / len) * 100);
+          console.log(downloadCounter);
+        })
+        .catch(err => {
+          console.log(err);
+        });
       }
     } catch (error) {
       console.log('ERRRR', error);
+      setButtonClicked(false)
+      setVisible(false)
+      showMessage({
+        message: 'Download interrupted',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
     }
     dispatch(setVideoLocation(StoringData));
   };
   let datas = [];
   const handleStart = () => {
-    Promise.all(
-      getWeeklyPlansData[WeekArray[selectedDay]]?.exercises?.map(
-        (item: any, index: number) => {
-          return downloadVideos(
-            item,
-            index,
-            getWeeklyPlansData[WeekArray[selectedDay]]?.exercises?.length,
-          );
-        },
-      ),
-    ).finally(() => beforeNextScreen(selectedDay));
+    if (!visible) {
+      setVisible(true)
+      Promise.all(
+        getWeeklyPlansData[WeekArray[selectedDay]]?.exercises?.map(
+          (item: any, index: number) => {
+            return downloadVideos(
+              item,
+              index,
+              getWeeklyPlansData[WeekArray[selectedDay]]?.exercises?.length,
+            );
+          },
+        ),
+      ).finally(() => beforeNextScreen(selectedDay));
+    }
   };
 
   const beforeNextScreen = async (selectedDay: any) => {
+    downloadCounter = 0;
     for (const item of getWeeklyPlansData[WeekArray[selectedDay]]?.exercises) {
       datas.push({
         user_id: getUserDataDetails?.id,
@@ -493,13 +518,15 @@ const MyPlans = ({navigation}: any) => {
       if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {
-        setDownloade(false);
+        setDownloade(0);
+        setButtonClicked(false);
+        setVisible(false);
         let checkAdsShow = checkMealAddCount();
 
         if (checkAdsShow == true) {
           showInterstitialAd();
           analytics().logEvent(
-            `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_WEEKLY_PLAN`,
+            `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
           );
           navigation.navigate('Exercise', {
             allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
@@ -515,7 +542,7 @@ const MyPlans = ({navigation}: any) => {
           });
         } else {
           analytics().logEvent(
-            `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_WEEKLY_PLAN`,
+            `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
           );
           navigation.navigate('Exercise', {
             allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
@@ -535,17 +562,25 @@ const MyPlans = ({navigation}: any) => {
       }
     } catch (error) {
       console.error(error, 'PostDaysAPIERror');
-      setDownloade(false);
+      setDownloade(0);
+      setButtonClicked(false)
+      setVisible(false)
+      showMessage({
+        message: 'Error, Please try again later',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
     }
   };
   const toNextScreen = async (selectedDay: any) => {
-    setDownloade(false);
     const payload = new FormData();
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('workout_id', `-${selectedDay + 1}`);
     payload.append('user_day', WeekArray[selectedDay]);
     payload.append('version', VersionNumber.appVersion);
-
+    
     try {
       const res = await axios({
         url: NewAppapi.TRACK_CURRENT_DAY_EXERCISE,
@@ -555,7 +590,7 @@ const MyPlans = ({navigation}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-
+      
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -565,14 +600,16 @@ const MyPlans = ({navigation}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data?.user_details) {
-        setDownloade(false);
+        setButtonClicked(false);
+        setVisible(false);
+        setDownloade(0);
         let checkAdsShow = checkMealAddCount();
         if (checkAdsShow == true) {
           showInterstitialAd();
           analytics().logEvent(
-            `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_WEEKLY_PLAN`,
-          );
-          navigation.navigate('Exercise', {
+            `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
+            );
+            navigation.navigate('Exercise', {
             allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
             currentExercise:
               // trainingCount != -1
@@ -586,7 +623,7 @@ const MyPlans = ({navigation}: any) => {
           });
         } else {
           analytics().logEvent(
-            `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_WEEKLY_PLAN`,
+            `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
           );
           navigation.navigate('Exercise', {
             allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
@@ -604,107 +641,104 @@ const MyPlans = ({navigation}: any) => {
       } else {
       }
     } catch (error) {
-      setDownloade(false);
+      setDownloade(0);
+      setButtonClicked(false)
+      setVisible(false)
       console.error(error, 'PostDaysAPIERror');
+      showMessage({
+        message: 'Error, Please try again later',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
     }
   };
-  const DownloadingWorkout = (props: any) => {
-    const progressAnimation = new Animated.Value(0);
-    const progressBarWidth = progressAnimation.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['100%', '0%'],
-      extrapolate: 'extend',
-    });
-    useEffect(() => {
-      if (downloaded) {
-        Animated.timing(progressAnimation, {
-          toValue: 1,
-          duration: 4000,
-          useNativeDriver: false,
-        }).start();
-      }
-    }, [downloaded, progressAnimation]);
+  const DownloadingWorkout = ({buttonClicked, hasAds, downloaded}: any) => {
     return (
-      <Modal visible={downloaded} transparent>
-        <View
+      // <Modal visible={buttonClicked} transparent>
+      //   <View
+      //     style={{
+      //       flex: 1,
+      //       justifyContent: 'center',
+      //       alignItems: 'center',
+      //     }}>
+      <View
+        style={{
+          bottom: hasAds ? DeviceHeigth * 0.05 : DeviceHeigth * 0.02,
+          display: buttonClicked ? 'flex' : 'none',
+          width: DeviceWidth * 0.95,
+          height: 40,
+          backgroundColor: AppColor.WHITE,
+          alignSelf: 'center',
+
+          shadowColor: 'grey',
+          ...Platform.select({
+            ios: {
+              //shadowColor: '#000000',
+              shadowOffset: {width: 0, height: 2},
+              shadowOpacity: 0.2,
+              shadowRadius: 4,
+            },
+            android: {
+              elevation: 3,
+            },
+          }),
+          borderRadius: 5,
+          padding: 5,
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+          position: 'absolute',
+          // bottom:
+          //   DeviceHeigth >= 812
+          //     ? hasAds
+          //       ? DeviceHeigth * 0.15
+          //       : DeviceHeigth * 0.1
+          //     : hasAds
+          //     ? DeviceHeigth * 0.15
+          //     : DeviceHeigth * 0.1,
+        }}>
+        <LinearGradient
+          start={{x: 1, y: 0}}
+          end={{x: 0, y: 1}}
+          colors={['#941000', '#D5191A']}
           style={{
-            flex: 1,
+            width: DeviceWidth * 0.95,
+            height: 6,
+            overflow: 'hidden',
             justifyContent: 'center',
             alignItems: 'center',
+            alignSelf: 'center',
+            marginTop: -10,
+            borderTopLeftRadius: 5,
+            borderTopRightRadius: 5,
+            zIndex: 1,
           }}>
-          <View
+          <Animated.View
             style={{
-              width: DeviceWidth * 0.95,
-              height: 40,
-              backgroundColor: AppColor.WHITE,
-              alignSelf: 'center',
-
-              shadowColor: 'grey',
-              ...Platform.select({
-                ios: {
-                  //shadowColor: '#000000',
-                  shadowOffset: {width: 0, height: 2},
-                  shadowOpacity: 0.2,
-                  shadowRadius: 4,
-                },
-                android: {
-                  elevation: 3,
-                },
-              }),
-              borderRadius: 5,
-              padding: 5,
-              borderTopLeftRadius: 0,
-              borderTopRightRadius: 0,
+              backgroundColor: '#D9D9D9',
+              height: 6,
+              width: `${100 - downloaded}%`,
+              marginTop: -50,
+              right: 0,
               position: 'absolute',
-              bottom: props.hasAds ? DeviceHeigth * 0.15 : DeviceHeigth * 0.1,
-              // bottom:
-              //   DeviceHeigth >= 812
-              //     ? props.hasAds
-              //       ? DeviceHeigth * 0.15
-              //       : DeviceHeigth * 0.1
-              //     : props.hasAds
-              //     ? DeviceHeigth * 0.15
-              //     : DeviceHeigth * 0.1,
-            }}>
-            <LinearGradient
-              start={{x: 1, y: 0}}
-              end={{x: 0, y: 1}}
-              colors={['#941000', '#D5191A']}
-              style={{
-                width: DeviceWidth * 0.95,
-                height: 6,
-                overflow: 'hidden',
-                justifyContent: 'center',
-                alignItems: 'center',
-                alignSelf: 'center',
-                marginTop: -10,
-                borderTopLeftRadius: 5,
-                borderTopRightRadius: 5,
-                zIndex: -1,
-              }}>
-              <Animated.View
-                style={{
-                  backgroundColor: '#D9D9D9',
-                  height: 6,
-                  width: progressBarWidth,
-                  marginTop: -50,
-                  right: 0,
-                  position: 'absolute',
-                }}
-              />
-            </LinearGradient>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginTop: 5,
-              }}>
-              <Text style={styles.small}>Downloading Workouts</Text>
-            </View>
-          </View>
+              zIndex: 0,
+            }}
+          />
+        </LinearGradient>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: 5,
+          }}>
+          <Text style={styles.small}>Downloading Workouts</Text>
+          <Text style={styles.small}>{downloaded.toFixed(0)}%</Text>
         </View>
-      </Modal>
+      </View>
+      //   </View>
+      // </Modal>
     );
   };
 
@@ -795,7 +829,7 @@ const MyPlans = ({navigation}: any) => {
                     ? DeviceWidth * 0.03
                     : DeviceWidth * 0.05,
                 width: DeviceWidth * 0.7,
-                // marginBottom: DeviceWidth * 0.05,
+                marginBottom: DeviceWidth * 0.03,
               },
             ]}>
             Get Fit{' '}
@@ -841,7 +875,7 @@ const MyPlans = ({navigation}: any) => {
             keyExtractor={(_, index) => index.toString()}
             itemWidth={DeviceWidth}
             sliderWidth={DeviceWidth}
-            onSnapToItem={index => setSelectedDay(index)}
+            // onSnapToItem={index => setSelectedDay(index)}
             onBeforeSnapToItem={index => setSelectedDay(index)}
             enableSnap
             activeSlideAlignment="center"
@@ -936,7 +970,7 @@ const MyPlans = ({navigation}: any) => {
                       style={{
                         flexDirection: 'row',
                         padding: 10,
-                        marginVertical: 5,
+                        // marginVertical: 5,
                       }}>
                       <Image
                         source={{
@@ -985,7 +1019,8 @@ const MyPlans = ({navigation}: any) => {
                         </Text>
                       </View>
                       <TouchableOpacity
-                        activeOpacity={1}
+                        activeOpacity={0.5}
+                        disabled={visible}
                         onPress={() => handleStart()}>
                         <LinearGradient
                           start={{x: 0, y: 0}}
@@ -1022,7 +1057,7 @@ const MyPlans = ({navigation}: any) => {
                         <RefreshControl
                           refreshing={refresh}
                           onRefresh={() => WeeklyStatusAPI()}
-                          colors={[AppColor.RED, AppColor.WHITE]}
+                          colors={[AppColor.RED, AppColor.RED]}
                         />
                       }
                       renderItem={({item, index}) => (
@@ -1044,7 +1079,11 @@ const MyPlans = ({navigation}: any) => {
           emptyComponent()
         )}
       </View>
-      <DownloadingWorkout hasAds={hasAds} />
+      <DownloadingWorkout
+        hasAds={hasAds}
+        downloaded={downloaded}
+        buttonClicked={buttonClicked}
+      />
     </SafeAreaView>
   );
 };
