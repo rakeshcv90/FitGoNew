@@ -65,7 +65,7 @@ const Goal = ({navigation, route}: any) => {
     ];
 
     dispatch(setLaterButtonData(currentData));
-    navigation.navigate('Injury', {nextScreen: screen + 1});
+    navigation.navigate('Weight', {nextScreen: screen + 1});
   };
 
   const GoalData = [
@@ -118,7 +118,7 @@ const Goal = ({navigation, route}: any) => {
       style={{
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#f9f9f9',
+        backgroundColor: AppColor.WHITE,
       }}>
       <ProgressBar screen={screen} Type />
 
@@ -127,7 +127,7 @@ const Goal = ({navigation, route}: any) => {
           marginTop:
             Platform.OS == 'ios' ? -DeviceHeigth * 0.06 : -DeviceHeigth * 0.03,
         }}>
-        <Bulb screen={"What's your fitness goal?"} />
+        <Bulb screen={'What is your fitness goal?'} />
       </View>
       <View style={{justifyContent: 'center', marginTop: DeviceHeigth * 0.06}}>
         <Card

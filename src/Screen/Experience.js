@@ -71,7 +71,7 @@ const Experience = ({route, navigation}) => {
   };
   const handleButtonPress = () => {
    if(selected?.txt!='Beginner'){
-    dispatch(setProgressBarCounter(8))
+    dispatch(setProgressBarCounter(7))
     navigation.navigate(
     'AskToCreateWorkout',
       {
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   Container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: AppColor.BACKGROUNG,
+    backgroundColor: AppColor.WHITE,
   },
   button: {
     flexDirection: 'row',

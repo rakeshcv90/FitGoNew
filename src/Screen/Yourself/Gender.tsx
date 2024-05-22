@@ -1,175 +1,135 @@
-import {View, Platform, TouchableOpacity, Animated, Easing} from 'react-native';
+import {
+  View,
+  Platform,
+  TouchableOpacity,
+  Animated,
+  Easing,
+  Text,
+} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {Image} from 'react-native';
-import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import ProgressBar from './ProgressBar';
 import Bulb from './Bulb';
 import {useDispatch} from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import analytics from '@react-native-firebase/analytics';
-const Gender = ({route, navigation}: any) => {
+import {localImage} from '../../Component/Image';
+
+const Gender = ({route, navigation}) => {
   const {data, nextScreen} = route.params;
 
   const dispatch = useDispatch();
   const [screen, setScreen] = useState(nextScreen);
-  const translateX = useRef(new Animated.Value(0)).current;
-  const translateX1 = useRef(new Animated.Value(0)).current;
+  const [selectedbutton, setSelectedButton] = useState('');
 
   useEffect(() => {
     setScreen(nextScreen);
   }, []);
 
-  const handleImagePress = (gender: string) => {
-    // Set the selected gender
-     analytics().logEvent(`CV_FITME_GENDER_${gender}` )
-    const easing = Easing.linear(1);
-    // Animate the translation of the unselected image
-    if (gender == '') {
-      Animated.parallel([
-        Animated.timing(translateX, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver: true,
-          delay: 0, // Delay the return to center animation for a smoother effect
-        }),
-        Animated.timing(translateX1, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver: true,
-          delay: 0, // Delay the return to center animation for a smoother effect
-        }),
-      ]).start();
-      // setTimeout(() => {
-      //   navigation.navigate('LogSignUp')
-      // }, 500);
-    } else {
-      Animated.parallel([
-        Animated.timing(translateX, {
-          toValue: gender == 'Male' ? DeviceWidth * 0.2 : -DeviceWidth / 2,
-          duration: 500,
-          useNativeDriver: true,
-          delay: gender == 'Male' ? 0 : 500, // Delay the return to center animation for a smoother effect
-        }),
-        Animated.timing(translateX1, {
-          toValue: gender == 'Female' ? -DeviceWidth * 0.25 : DeviceWidth / 2,
-          duration: 500,
-          useNativeDriver: true,
-          delay: gender == 'Female' ? 500 : 0, // Delay the return to center animation for a smoother effect
-        }),
-      ]).start();
-      setTimeout(() => {
-        // setSelected(gender);
-        toNextScreen(gender);
-      }, 1000);
-    }
+  const handleImagePress = gender => {
+    analytics().logEvent(`CV_FITME_GENDER_${gender}`);
+    setSelectedButton(gender);
+    toNextScreen(gender);
   };
-  const toNextScreen = (item: any) => {
 
-    // if (item == 'Male') {
-      setTimeout(() => {
-        navigation.navigate('Experience', {
-          nextScreen: screen + 1,
-          data: data,
-          gender: item,
-        });
-      }, 1000);
-    // } else
-    //   navigation.navigate('Experience', {
-    //     nextScreen: screen + 1,
-    //     data: data,
-    //     gender: item,
-    //   });
+  const toNextScreen = gender => {
+    setTimeout(() => {
+      navigation.navigate('Experience', {
+        nextScreen: screen + 1,
+        data: data,
+        gender: gender,
+      });
+    }, 500);
   };
 
   return (
     <View
-      style={{
-        flex: 1,
-        backgroundColor: AppColor.WHITE,
-        alignItems:'center'
-      }}>
-      <ProgressBar screen={screen}/>
-      <View style={{marginTop:Platform.OS=='ios'?- DeviceHeigth * 0.06:- DeviceHeigth * 0.03}}>
-      <Bulb
-        screen={'Select your Gender'}
-    
-      />
+      style={{flex: 1, backgroundColor: AppColor.WHITE, alignItems: 'center'}}>
+      <ProgressBar screen={screen} />
+      <View
+        style={{
+          marginTop:
+            Platform.OS === 'ios' ? -DeviceHeigth * 0.06 : -DeviceHeigth * 0.03,
+        }}>
+        <Bulb screen={'Select your gender'} />
       </View>
-  
-      
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          alignSelf: 'flex-end',
           height: DeviceHeigth * 0.6,
           width: DeviceWidth,
-          // marginTop: DeviceHeigth * 0.1
         }}>
-        {/* {selected != 'F' ? ( */}
-
         <TouchableOpacity
           activeOpacity={1}
-          onPress={() => {
-            handleImagePress('Male');
+          onPress={() => handleImagePress('Male')}
+          style={{
+            width: DeviceWidth / 2.35,
+            backgroundColor: AppColor.BACKGROUNG,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginLeft: 16,
+            borderRadius: 12,
+            borderWidth: 2,
+            borderColor:
+              selectedbutton == 'Male' ? AppColor.RED : AppColor.WHITE,
           }}>
-          <Animated.View
+          <Image
+            source={localImage.MaleNew}
+            style={{height: DeviceHeigth * 0.15, width: '100%', marginTop: 20}}
+            resizeMode="contain"
+          />
+          <Text
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              alignItems: 'center',
-              alignSelf: 'center',
-              overflow:'hidden',
-              transform: [{translateX: translateX}],
-              width: DeviceWidth / 2,
+
+              textAlign: 'center',
+              fontSize: 18,
+              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+              color: selectedbutton=='Male'?AppColor.RED:AppColor.BLACK,
+              marginVertical: 20,
+
             }}>
-            <Image
-              // source={{
-              //   uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/fc1e357f-2310-4e50-8087-519663fe9400/public',
-              // }}
-              source={require('../../Icon/Images/NewImage2/Male.png')}
-              style={{height: DeviceHeigth * 0.5, width: DeviceWidth}}
-              resizeMode="contain"
-            />
-          </Animated.View>
+            Male
+          </Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           activeOpacity={1}
-          onPress={() => {
-            handleImagePress('Female');
+          onPress={() => handleImagePress('Female')}
+          style={{
+            width: DeviceWidth / 2.35,
+            backgroundColor: AppColor.BACKGROUNG,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 16,
+            borderRadius: 12,
+            borderWidth: 2,
+            borderColor:
+              selectedbutton == 'Female' ? AppColor.RED : AppColor.WHITE,
           }}>
-          <Animated.View
+          <Image
+            source={localImage.FemaleNew}
+            style={{height: DeviceHeigth * 0.15, width: '106%', marginTop: 20}}
+            resizeMode="contain"
+          />
+          <Text
             style={{
-              // flexDirection: 'row-reverse',
-              // justifyContent: 'space-around',
-              alignItems: 'center',
-              alignSelf: 'center',
-              overflow:'hidden',
-              transform: [{translateX: translateX1}],
-              width: DeviceWidth / 2,
-              // marginLeft: selected == 'F' ? 50 : 0,
-            }}
-            >
-            <Image
-              // source={{
-              //   uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/e71b96f8-e68c-462e-baaf-a371b6fbc100/public',
-              // }}
-              source={require('../../Icon/Images/NewImage2/Fmale.png')}
-              style={{
-                height: DeviceHeigth * 0.5,
-                width: DeviceWidth / 1,
-              }}
-              resizeMode="contain"
-            />
-          </Animated.View>
+
+              textAlign: 'center',
+              fontSize: 18,
+              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+              color: selectedbutton=='Female'?AppColor.RED:AppColor.BLACK,
+              marginVertical: 20,
+            }}>
+            Female
+          </Text>
+
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={{
           alignSelf: 'flex-start',
           marginLeft: DeviceWidth * 0.04,
@@ -177,18 +137,14 @@ const Gender = ({route, navigation}: any) => {
           width: 45,
           height: 45,
           borderRadius: 15,
-          overflow: 'hidden',
           justifyContent: 'center',
           alignItems: 'center',
-
           bottom: DeviceHeigth * 0.02,
           position: 'absolute',
         }}
-        onPress={() => {
-          handleImagePress('');
-        }}>
+        onPress={() => handleImagePress('')}>
         <Icons name="chevron-left" size={25} color={'#000'} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

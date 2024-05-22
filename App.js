@@ -117,6 +117,7 @@ const App = () => {
 
   //   initializeTrackPlayer();
 
+
   //   // Clean up function
   //   return () => {
   //     TrackPlayer.destroy();
@@ -263,6 +264,7 @@ const App = () => {
   //                   lineHeight: 35,
   //                   fontFamily: 'Montserrat-Regular',
 
+
   //                   color: 'rgb(0, 0, 0)',
   //                 }}
   //               />
@@ -330,4 +332,6 @@ const styles = StyleSheet.create({
   },
 });
 export default App;
+
 //export default codePush(codePushOptions)(App);
+
