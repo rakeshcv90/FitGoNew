@@ -360,13 +360,13 @@ const CustomWorkoutDetails = ({navigation, route}) => {
     return (
       <View>
         {status_data[0]?.exercise_status == 'completed' && (
-          <AnimatedLottieView
-            source={require('../../Icon/Images/NewImage/compleate.json')}
-            speed={0.5}
-            autoPlay
-            resizeMode="cover"
-            style={{width: 50, height: 60, right: -10}}
-          />
+        <AnimatedLottieView
+          source={require('../../Icon/Images/NewImage/compleate.json')}
+          speed={0.5}
+          autoPlay
+          resizeMode="cover"
+          style={{width: 50, height: 50, right: 5}}
+        />
         )}
       </View>
     );
@@ -407,7 +407,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
       if (response?.data?.msg == 'data deleted successfully') {
         getCustomWorkout();
         showMessage({
-          message: response?.data?.msg,
+          message: 'Workout deleted successfully.',
           type: 'success',
           animationDuration: 500,
           floating: true,
@@ -519,8 +519,10 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               style={{
                 marginHorizontal: 25,
                 justifyContent: 'center',
+                width: DeviceWidth * 0.5,
               }}>
               <Text
+                numberOfLines={1}
                 style={{
                   fontSize: 17,
                   fontWeight: '600',

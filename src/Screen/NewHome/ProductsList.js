@@ -10,7 +10,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {StatusBar} from 'react-native';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {SliderBox} from 'react-native-image-slider-box';
 import FastImage from 'react-native-fast-image';
@@ -33,17 +33,17 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const ProductsList = ({route}) => {
   const [searchText, setsearchText] = useState();
-  const [productList, setproductList] = useState([]);
+  const [productList, setproductList] = useState();
   const [filteredCategories, setFilteredCategories] = useState([]);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
-  const [forLoading, setForLoading] = useState(true);
+
   const avatarRef = React.createRef();
   let isFocuse = useIsFocused();
+
   useEffect(() => {
     if (isFocuse) {
-      if (route.params.item) {
-        getCaterogy(route.params.item.type_id);
-      }
+      setproductList(route.params.item);
+      setFilteredCategories(route.params.item);
     }
   }, [isFocuse]);
   const data = [
@@ -55,32 +55,6 @@ const ProductsList = ({route}) => {
     require('../../Icon/Images/product_1631791758.jpg'),
   ];
 
-  const getCaterogy = async type => {
-    try {
-      const data = await axios(`${NewAppapi.Get_Product_List}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          type_id: type,
-        },
-      });
-      setForLoading(false);
-      if (data.data.status == 'data found') {
-        setForLoading(false);
-        setproductList(data.data.data);
-        setFilteredCategories(data.data.data);
-      } else {
-        setproductList([]);
-        setForLoading(false);
-      }
-    } catch (error) {
-      setForLoading(false);
-      setproductList([]);
-      console.log('Product List Error', error);
-    }
-  };
   const emptyComponent = () => {
     return (
       <View
@@ -118,8 +92,8 @@ const ProductsList = ({route}) => {
       } else {
         return (
           <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
-          <BannerAdd bannerAdId={bannerAdId} />
-        </View>
+            <BannerAdd bannerAdId={bannerAdId} />
+          </View>
         );
       }
     } else {
@@ -134,7 +108,7 @@ const ProductsList = ({route}) => {
     <>
       <View style={styles.container}>
         <NewHeader
-          header={route.params.item.type_title}
+          header={'Products Details'}
           SearchButton={false}
           backButton={true}
         />
@@ -180,50 +154,62 @@ const ProductsList = ({route}) => {
         <View
           style={{
             width: '95%',
-            height: 150,
-            borderRadius: 10,
-
             alignSelf: 'center',
             alignItems: 'center',
+            justifyContent: 'center',
+            paddingBottom:DeviceHeigth*0.18
+             
+                
           }}>
-          <SliderBox
-            ImageComponent={FastImage}
-            images={data}
-            sliderBoxHeight={150}
-            dotColor="#FFEE58"
-            inactiveDotColor="#90A4AE"
-            paginationBoxVerticalPadding={20}
-            autoplay
-            circleLoop
-            resizeMethod={'resize'}
-            resizeMode={'cover'}
-            paginationBoxStyle={{
-              position: 'absolute',
-              bottom: 0,
-              padding: 0,
-              alignItems: 'center',
-              alignSelf: 'center',
-              justifyContent: 'center',
-              paddingVertical: 10,
-            }}
-            dotStyle={{
-              width: 10,
-              height: 10,
-              borderRadius: 5,
-              marginHorizontal: 0,
-              padding: 0,
-              margin: 0,
-              backgroundColor: 'rgba(128, 128, 128, 0.92)',
-            }}
-            ImageComponentStyle={{borderRadius: 15, width: '95%'}}
-            imageLoadingColor="#2196F3"
-          />
-        </View>
+          <FlatList
+            data={filteredCategories}
+            numColumns={2}
+            showsVerticalScrollIndicator={false}
+            renderItem={({item, index}) => {
+              return (
+                <>
+                  <TouchableOpacity
+                    style={styles.listItem2}
+                    onPress={() => {
+                      Linking.openURL(item.product_link);
+                    }}>
+                    <View
+                      style={{
+                        width: DeviceWidth * 0.45,
+                        height: DeviceWidth * 0.4,
+                        backgroundColor: '#F3F4F1',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: 10,
+                      }}>
+                      <Image
+                        source={
+                          item.product_image_link == null
+                            ? localImage.Noimage
+                            : {uri: item.product_image_link}
+                        }
+                        style={{
+                          width: DeviceWidth * 0.4,
+                        height: DeviceWidth * 0.35,
+                          // borderRadius: 180 / 2,
+                          alignSelf: 'center',
+                        }}
+                        resizeMode="contain"
+                      />
+                    </View>
 
-        <View
-          style={{
-            width: '95%',
-            borderRadius: 10,
+                    <View
+                      style={{
+                        width: DeviceWidth * 0.45,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        top:8,
+                      }}>
+                      <Text
+                        numberOfLines={1}
+                        style={{
+                          fontSize: 18,
+
 
             alignSelf: 'center',
             alignItems: 'center',
@@ -305,47 +291,28 @@ const ProductsList = ({route}) => {
                         onPress={() => {
                           AnalyticsConsole(`PROD_${item?.product_title?.split(' ')[0]}`);
                           Linking.openURL(item.product_link);
+
+                          fontFamily: Fonts.MONTSERRAT_REGULAR,
+                          fontWeight: '700',
+                          lineHeight: 30,
+                          // marginBottom: 20,
+                          color: AppColor.BLACK,
+
                         }}>
-                        <Image
-                          source={
-                            item.product_image_link == null
-                              ? localImage.Noimage
-                              : {uri: item.product_image_link}
-                          }
-                          style={{
-                            height: 90,
-                            width: 90,
-                            // borderRadius: 180 / 2,
-                            alignSelf: 'center',
-                          }}
-                          resizeMode="contain"></Image>
-                        <View style={{width: 90}}>
-                          <Text
-                            numberOfLines={1}
-                            style={{
-                              fontSize: 12,
-                              fontWeight: '500',
-                              lineHeight: 18,
-                              fontFamily: 'Poppins',
-                              textAlign: 'center',
-                              color: AppColor.BoldText,
-                            }}>
-                            {item.product_title}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </>
-                  );
-                }}
-                initialNumToRender={10}
-                maxToRenderPerBatch={10}
-                updateCellsBatchingPeriod={100}
-                removeClippedSubviews={true}
-                ListEmptyComponent={emptyComponent}
-                keyExtractor={(item, index) => index.toString()}
-              />
-            )}
-          </View>
+                        {item.product_title}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </>
+              );
+            }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
+            ListEmptyComponent={emptyComponent}
+            keyExtractor={(item, index) => index.toString()}
+          />
         </View>
       </View>
       {bannerAdsDisplay()}
@@ -370,28 +337,9 @@ var styles = StyleSheet.create({
   },
   listItem2: {
     marginHorizontal: 5,
-    top: 10,
-    borderRadius: 10,
-    paddingRight: 10,
-    paddingTop: 10,
-    paddingBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingLeft: 10,
-    backgroundColor: AppColor.WHITE,
     marginBottom: 20,
-    shadowColor: 'rgba(0, 0, 0, 1)',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
   },
 });
 export default ProductsList;

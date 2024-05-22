@@ -359,24 +359,25 @@ const CreateWorkout = ({navigation, route}) => {
             'Content-Type': 'multipart/form-data',
           },
         });
-
+    
         if (res.data.msg == 'data inserted successfully') {
           getCustomWorkout();
         } else {
           setForLoading(false);
-          showMessage({
-            message: 'Something went wrong pleasr try again',
-            type: 'danger',
-            animationDuration: 500,
-            floating: true,
-            icon: {icon: 'auto', position: 'left'},
-          });
+        
+          // showMessage({
+          //   message: 'Something went wrong pleasr try again',
+          //   type: 'danger',
+          //   animationDuration: 500,
+          //   floating: true,
+          //   icon: {icon: 'auto', position: 'left'},
+          // });
         }
       } catch (error) {
         setForLoading(false);
-        console.log(error);
+  
         showMessage({
-          message: 'Something went wrong pleasr try again',
+          message: 'Something went wrong please try again!',
           type: 'danger',
           animationDuration: 500,
           floating: true,
@@ -394,7 +395,7 @@ const CreateWorkout = ({navigation, route}) => {
       if (data?.data?.msg != 'data not found.') {
         setForLoading(false);
         showMessage({
-          message: 'Workout create Successful',
+          message: 'Workout created successfully.',
           type: 'success',
           animationDuration: 500,
           floating: true,
@@ -452,11 +453,11 @@ const CreateWorkout = ({navigation, route}) => {
             style={[
               {
                 top: -10,
-                width: DeviceWidth * 0.95,
+                width: DeviceWidth ,
                 height: 50,
                 zIndex: 1,
 
-                paddingHorizontal: 10,
+                paddingHorizontal: 20,
                 backgroundColor: value == 1 ? '#e7e7e7' : AppColor.WHITE,
                 alignSelf: 'flex-end',
                 flexDirection: 'row',
@@ -506,7 +507,7 @@ const CreateWorkout = ({navigation, route}) => {
                   fontSize: 18,
                   alignItems: 'center',
                 }}>
-                Your Routine
+                Choose Your Exercise
               </Text>
             </View>
           )}

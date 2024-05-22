@@ -371,7 +371,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
         );
       },
 
-    [likeData, updateLikeID, action, isLoading, isFocused],
+    [likeData, updateLikeID, action, isLoading,getCustttomeTimeCal],
   );
   const convertLike = number => {
     if (number == undefined || number == null) {
@@ -423,6 +423,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
         'Please update the app to the latest version'
       ) {
       } else if (exerciseStatus?.data.length > 0) {
+     
         dispatch(setWorkoutTimeCal(exerciseStatus?.data));
       } else {
         dispatch(setWorkoutTimeCal([]));

@@ -122,6 +122,7 @@ const Gender = ({route, navigation}: any) => {
               justifyContent: 'space-around',
               alignItems: 'center',
               alignSelf: 'center',
+              overflow:'hidden',
               transform: [{translateX: translateX}],
               width: DeviceWidth / 2,
             }}>
@@ -147,10 +148,12 @@ const Gender = ({route, navigation}: any) => {
               // justifyContent: 'space-around',
               alignItems: 'center',
               alignSelf: 'center',
+              overflow:'hidden',
               transform: [{translateX: translateX1}],
               width: DeviceWidth / 2,
               // marginLeft: selected == 'F' ? 50 : 0,
-            }}>
+            }}
+            >
             <Image
               // source={{
               //   uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/e71b96f8-e68c-462e-baaf-a371b6fbc100/public',
