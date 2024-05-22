@@ -84,11 +84,13 @@ const Gender = ({route, navigation}) => {
           />
           <Text
             style={{
+
               textAlign: 'center',
               fontSize: 18,
               fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
               color: selectedbutton=='Male'?AppColor.RED:AppColor.BLACK,
               marginVertical: 20,
+
             }}>
             Male
           </Text>
@@ -114,6 +116,7 @@ const Gender = ({route, navigation}) => {
           />
           <Text
             style={{
+
               textAlign: 'center',
               fontSize: 18,
               fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
@@ -122,6 +125,7 @@ const Gender = ({route, navigation}) => {
             }}>
             Female
           </Text>
+
         </TouchableOpacity>
       </View>
 

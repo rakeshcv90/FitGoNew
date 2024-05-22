@@ -8,6 +8,7 @@ import {
   Image,
   ActivityIndicator,
   Button,
+  BackHandler,
 } from 'react-native';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -29,6 +30,7 @@ import Tts from 'react-native-tts';
 import {string} from 'yup';
 import {showMessage} from 'react-native-flash-message';
 import VersionNumber from 'react-native-version-number';
+import KeepAwake from 'react-native-keep-awake';
 import moment from 'moment';
 
 import TrackPlayer, {
@@ -38,7 +40,15 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import {MyInterstitialAd} from '../../../Component/BannerAdd';
 import {localImage} from '../../../Component/Image';
-import CircularProgress from 'react-native-circular-progress-indicator';
+
+import {setSoundOnOff} from '../../../Component/ThemeRedux/Actions';
+import {navigationRef} from '../../../../App';
+
+import CircularProgress, {
+  ProgressRef,
+} from 'react-native-circular-progress-indicator';
+import {setScreenAwake} from '../../../Component/ThemeRedux/Actions';
+
 
 const WeekArray = Array(7)
   .fill(0)
@@ -85,6 +95,7 @@ const Exercise = ({navigation, route}: any) => {
   const [demoW, setDemoW] = useState(0);
   const [demoS, setDemoS] = useState(0);
   const [number, setNumber] = useState(0);
+  const [completed, setCompleted] = useState(0);
   const [currentVideo, setCurrentVideo] = useState('');
   const [pause, setPause] = useState(false);
   const [demo, setDemo] = useState(false);
@@ -96,10 +107,12 @@ const Exercise = ({navigation, route}: any) => {
   const [restStart, setRestStart] = useState(false);
   const [randomCount, setRandomCount] = useState(0);
   const [skipCount, setSkipCount] = useState(0);
+  const ProgressRef = useRef<ProgressRef>(null);
   const [currentData, setCurrentData] = useState(currentExercise);
   const [isLoading, setIsLoading] = useState(true);
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
+  const getScreenAwake = useSelector(state => state);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -107,6 +120,7 @@ const Exercise = ({navigation, route}: any) => {
   const [separateTimer, setSeparateTimer] = useState(false);
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const restTimerRef = useRef(0);
+  const seperateTimerRef = useRef(0);
   const playTimerRef = useRef<any>(null);
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
@@ -141,7 +155,13 @@ const Exercise = ({navigation, route}: any) => {
 
     return () => clearInterval(intervalId);
   }, [seconds, isRunning]);
-
+  useEffect(() => {
+    if (getScreenAwake) {
+      KeepAwake.activate();
+    } else {
+      KeepAwake.deactivate();
+    }
+  }, [getScreenAwake]);
   const startStopTimer = () => {
     setIsRunning(prevState => !prevState);
   };
@@ -177,11 +197,14 @@ const Exercise = ({navigation, route}: any) => {
     // console.log('PauseState', playbackState);
     await TrackPlayer.reset();
   };
+  const SPEAK = (words: string) => {
+    getSoundOffOn && Tts.speak(words);
+  };
   const dispatch = useDispatch();
   useEffect(() => {
     if (!back) {
       separateTimer
-        ? setTimeout(() => {
+        ? (seperateTimerRef.current = setTimeout(() => {
             if (timerS == 0) {
               setSeparateTimer(false);
               PauseAudio(playbackState);
@@ -198,16 +221,14 @@ const Exercise = ({navigation, route}: any) => {
               setDemoS(prev => prev + 10);
               StartAudio(playbackState);
             } else if (timerS == 10) {
-              Tts.speak(
-                `Get Ready for ${allExercise[0]?.exercise_title} Exercise`,
-              );
+              SPEAK(`Get Ready for ${allExercise[0]?.exercise_title} Exercise`);
               setTimerS(timerS - 1);
               setDemoS(prev => prev + 10);
             } else {
               setTimerS(timerS - 1);
               setDemoS(prev => prev + 10);
             }
-          }, 1000)
+          }, 1000))
         : restStart
         ? (restTimerRef.current = setTimeout(() => {
             if (timer === 0) {
@@ -227,7 +248,7 @@ const Exercise = ({navigation, route}: any) => {
               setCurrentData(allExercise[index + 1]);
               setNumber(number + 1);
               handleExerciseChange(allExercise[index + 1]?.exercise_title);
-              setRandomCount(randomCount + 1);
+              // setRandomCount(randomCount + 1);
 
               setTimer(10);
               setDemoW(0);
@@ -245,7 +266,7 @@ const Exercise = ({navigation, route}: any) => {
                 (item: any) => item?.exercise_id == currentData?.exercise_id,
               );
               index < allExercise?.length - 1 &&
-                Tts.speak(
+                SPEAK(
                   `Get Ready for ${
                     allExercise[index + 1]?.exercise_title
                   } Exercise`,
@@ -257,14 +278,9 @@ const Exercise = ({navigation, route}: any) => {
               setDemoW(demoW + 100 / timer);
               setTimer(timer - 1);
             }
-            // getSoundOffOn && Tts.speak(`${timer - 1}`);
+            // getSoundOffOn && SPEAK(`${timer - 1}`);
           }, 1000))
         : (playTimerRef.current = setTimeout(() => {
-            if (playW >= 100 && randomCount == allExercise?.length) {
-              navigation.goBack();
-              clearTimeout(restTimerRef.current);
-              clearTimeout(playTimerRef.current);
-            }
             if (pause) {
               if (playW >= 2 && playW <= 5) {
                 // console.log(playW, 'playW', playbackState);
@@ -272,51 +288,65 @@ const Exercise = ({navigation, route}: any) => {
                 StartAudio(playbackState);
               }
               if (playW == 5) {
-                Tts.speak('Lets Go');
+                SPEAK('Lets Go');
               }
               if (playW > 5) {
                 PauseAudio(playbackState);
               }
               setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
               if (seconds > 1) {
-                if (seconds == 5) Tts.speak('three.            two.');
-                if (seconds == 3) Tts.speak('one.    Done');
-                if (seconds == 12) Tts.speak('10 seconds to go');
+
+                if (seconds == 5) SPEAK('three.            two.');
+                if (seconds == 3) SPEAK('one.    Done');
+                if (seconds == 12) SPEAK('10 seconds to go');
+
                 setSeconds(prevSeconds => prevSeconds - 1);
               }
             }
-            if (playW >= 100 && number == allExercise?.length - 1) {
+            if (playW >= 100 && randomCount == allExercise?.length) {
+              navigationRef.current.goBack();
+              clearTimeout(restTimerRef.current);
+              clearTimeout(playTimerRef.current);
+            } else if (
+              playW >= 100 &&
+              number == allExercise?.length - 1 &&
+              skipCount == 0
+            ) {
               setPause(false);
               postCurrentExerciseAPI(number);
-              if (skipCount == 0) {
-                let checkAdsShow = checkMealAddCount();
-                if (checkAdsShow == true) {
-                  showInterstitialAd();
-                  navigation.navigate('SaveDayExercise', {
-                    data,
-                    day,
-                    allExercise,
-                    type,
-                    challenge,
-                  });
-                } else {
-                  navigation.navigate('SaveDayExercise', {
-                    data,
-                    day,
-                    allExercise,
-                    type,
-                    challenge,
-                  });
-                }
-
-                clearTimeout(restTimerRef.current);
-                clearTimeout(playTimerRef.current);
+              let checkAdsShow = checkMealAddCount();
+              if (checkAdsShow == true) {
+                showInterstitialAd();
+                navigation.navigate('SaveDayExercise', {
+                  data,
+                  day,
+                  allExercise,
+                  type,
+                  challenge,
+                });
               } else {
-                navigation.goBack();
-                clearTimeout(restTimerRef.current);
-                clearTimeout(playTimerRef.current);
+                navigation.navigate('SaveDayExercise', {
+                  data,
+                  day,
+                  allExercise,
+                  type,
+                  challenge,
+                });
               }
+
+              clearTimeout(restTimerRef.current);
+              clearTimeout(playTimerRef.current);
+            } else if (
+              playW >= 100 &&
+              number == allExercise?.length - 1 &&
+              skipCount != 0
+            ) {
+              postCurrentExerciseAPI(number);
+              navigationRef.current.goBack();
+              clearTimeout(restTimerRef.current);
+              clearTimeout(playTimerRef.current);
             } else if (playW >= 100 && number < allExercise?.length - 1) {
+              ProgressRef.current?.play();
               setPause(false);
               setRestStart(true);
               setDemoW(0);
@@ -344,6 +374,7 @@ const Exercise = ({navigation, route}: any) => {
       setCurrentData(currentExercise);
       handleExerciseChange(currentExercise?.exercise_title);
       setSeparateTimer(true);
+      ProgressRef.current?.play();
     } else setRestStart(true);
     Platform.OS == 'android'
       ? Platform.Version != 34 && setupPlayer()
@@ -359,25 +390,23 @@ const Exercise = ({navigation, route}: any) => {
         setBack(true);
       }
     });
-    const unsubscribe1 = navigation.addListener(
+    const unsubscribe1 = BackHandler.addEventListener(
       'hardwareBackPress',
-      (e: any) => {
-        // Check if goBack has been called
-        if (!e.data.action) {
-          setPause(false);
-          setDemo(false);
-          setDemoS(false);
-          setBack(true);
-        }
-      },
+      handleBackPress,
     );
 
     return () => {
       unsubscribe;
-      unsubscribe1;
+      unsubscribe1.remove();
     };
   }, [navigation]);
-
+  const handleBackPress = () => {
+    setPause(false);
+    setDemo(false);
+    setDemoS(0);
+    setBack(true);
+    return true;
+  };
   // Function to check if the currently opened exercise exists in the provided JSON object
   const handleExerciseChange = (exerciseName: string) => {
     if (getStoreVideoLoc.hasOwnProperty(exerciseName)) {
@@ -410,7 +439,7 @@ const Exercise = ({navigation, route}: any) => {
     } catch (error) {
       console.log('DELE TRACK ERRR', error);
     }
-    navigation.goBack();
+    navigationRef.current.goBack();
   };
   const postCurrentExerciseAPI = async (index: number) => {
     const payload = new FormData();
@@ -456,6 +485,7 @@ const Exercise = ({navigation, route}: any) => {
         });
       } else if (res.data) {
         // console.log(res.data, trackerData[index], payload);
+        setCompleted(completed + 1);
         setCurrentData(allExercise[index]);
         setRestStart(true);
         setPlayW(0);
@@ -536,13 +566,15 @@ const Exercise = ({navigation, route}: any) => {
                 bW={1}
               />
               <ProgreesButton
-                onPress={() =>{
-                  setPlayW(0)
-                  setBack(false)
+
+                onPress={() => {
+                  setPlayW(0);
+                  setBack(false);
                   setSeconds(
                     parseInt(currentExercise?.exercise_rest.split(' ')[0]),
                   );
                 }}
+
                 text="Restart this Exercise"
                 h={55}
                 bR={30}
@@ -562,9 +594,9 @@ const Exercise = ({navigation, route}: any) => {
                 style={{alignSelf: 'center', marginTop: 20}}
                 onPress={() => {
                   type == 'day'
-                    ? navigation.goBack()
+                    ? navigationRef.current.goBack()
                     : type == 'custom'
-                    ? navigation.goBack()
+                    ? navigationRef.current.goBack()
                     : deleteTrackExercise();
                 }}>
                 <Text
@@ -754,7 +786,10 @@ const Exercise = ({navigation, route}: any) => {
                   }}
                 />
                 <TouchableOpacity
-                  onPress={() => setTimer(0)}
+                  onPress={() => {
+                    clearInterval(seperateTimerRef.current);
+                    setTimerS(0);
+                  }}
                   style={{
                     zIndex: 1,
                     marginLeft: 30,
@@ -889,7 +924,7 @@ const Exercise = ({navigation, route}: any) => {
                   fontFamily: Fonts.MONTSERRAT_MEDIUM,
                   fontWeight: '500',
                 }}>
-                {allExercise[number+1]?.exercise_title}
+                {allExercise[number + 1]?.exercise_title}
               </Text>
             </View>
             <View
@@ -911,7 +946,10 @@ const Exercise = ({navigation, route}: any) => {
                   // width: '50%',
                 }}>
                 <CircularProgress
+                  ref={ProgressRef}
                   value={timer}
+                  initialValue={10}
+                  startInPausedState={true}
                   radius={40}
                   progressValueColor="#A93737"
                   inActiveStrokeColor={'#FCECF0'}
@@ -928,7 +966,10 @@ const Exercise = ({navigation, route}: any) => {
                   }}
                 />
                 <TouchableOpacity
-                  onPress={() => setTimer(0)}
+                  onPress={() => {
+                    clearInterval(restTimerRef.current);
+                    setTimer(0);
+                  }}
                   style={{
                     zIndex: 1,
                     marginLeft: 30,
@@ -968,6 +1009,11 @@ const Exercise = ({navigation, route}: any) => {
               <TouchableOpacity
                 onPress={() => {
                   setBack(true);
+                  if (getScreenAwake) {
+                    dispatch(setScreenAwake(false));
+                  } else {
+                    dispatch(setScreenAwake(true));
+                  }
                 }}
                 style={{
                   width: 40,
@@ -1001,6 +1047,27 @@ const Exercise = ({navigation, route}: any) => {
                 right: DeviceWidth * 0.05,
                 top: DeviceWidth * 0.04,
               }}>
+              <TouchableOpacity
+                onPress={() => {
+                  dispatch(setSoundOnOff(!getSoundOffOn));
+                }}
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: restStart ? 50 : 25,
+                  width: restStart ? 50 : 25,
+                  height: restStart ? 50 : 25,
+                  backgroundColor: restStart ? 'transparent' : '#3333331A',
+                  marginVertical: 5,
+                  // marginTop: restStart ? (Platform.OS == 'ios' ? 25 : 10) : 5,
+                  // alignSelf: restStart ? 'flex-end' : 'auto',
+                }}>
+                <Image
+                  source={getSoundOffOn ? localImage.BULB : localImage.BELL}
+                  style={{width: 15, height: 15}}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
                   setOpen(true);
@@ -1169,6 +1236,7 @@ const Exercise = ({navigation, route}: any) => {
               playy={() => {
                 setPause(!pause);
               }}
+              nextDisabled={number == allExercise?.length - 1}
               next={() => {
                 setPause(!pause);
                 // setDefaultPre(0);
@@ -1193,6 +1261,7 @@ const Exercise = ({navigation, route}: any) => {
                   );
                 }, 1500);
               }}
+              backDisabled={number == 0}
               back={() => {
                 if (number == 0) return;
                 setPlayW(prevTimer => 0);
@@ -1213,7 +1282,7 @@ const Exercise = ({navigation, route}: any) => {
           </View>
           <ExerciseProgressBar
             ExerciseData={allExercise}
-            INDEX={number}
+            INDEX={completed}
             time={currentData?.exercise_rest == 1 ? 60 : 1}
             w={restStart ? '100%' : `${100}%`}
             color={restStart ? AppColor.WHITE : AppColor.RED}
@@ -1232,6 +1301,7 @@ const Exercise = ({navigation, route}: any) => {
         currentExercise={currentExercise}
         setSeconds={setSeconds}
         handleExerciseChange={handleExerciseChange}
+        setNumber={setNumber}
       />
       <PauseModal back={back} />
 

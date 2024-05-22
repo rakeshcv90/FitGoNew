@@ -27,6 +27,7 @@ const BottomSheetExercise = ({
   currentExercise,
   setSeconds,
   handleExerciseChange,
+  setNumber,
 }: any) => {
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const Box = ({selected, item, index}: any) => {
@@ -54,6 +55,7 @@ const BottomSheetExercise = ({
           setRandomCount(index);
           clearInterval(playTimerRef.current);
           handleExerciseChange(item?.exercise_title);
+          setNumber(index - 1);
           // }
         }}
         style={[

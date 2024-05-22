@@ -34,6 +34,7 @@ import {bannerAdId} from '../../Component/AdsId';
 import GradientButton from '../../Component/GradientButton';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -211,6 +212,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           <>
             <TouchableOpacity
               onPress={() => {
+                AnalyticsConsole(`${item?.exercise_title?.split(' ')[0]}_DESC`);
                 navigation.navigate('WorkoutDetail', {item: item});
               }}
               activeOpacity={0.8}
@@ -358,13 +360,13 @@ const CustomWorkoutDetails = ({navigation, route}) => {
     return (
       <View>
         {status_data[0]?.exercise_status == 'completed' && (
-          <AnimatedLottieView
-            source={require('../../Icon/Images/NewImage/compleate.json')}
-            speed={0.5}
-            autoPlay
-            resizeMode="cover"
-            style={{width: 50, height: 60, right: -10}}
-          />
+        <AnimatedLottieView
+          source={require('../../Icon/Images/NewImage/compleate.json')}
+          speed={0.5}
+          autoPlay
+          resizeMode="cover"
+          style={{width: 50, height: 50, right: 5}}
+        />
         )}
       </View>
     );
@@ -405,7 +407,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
       if (response?.data?.msg == 'data deleted successfully') {
         getCustomWorkout();
         showMessage({
-          message: response?.data?.msg,
+          message: 'Workout deleted successfully.',
           type: 'success',
           animationDuration: 500,
           floating: true,
@@ -517,8 +519,10 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               style={{
                 marginHorizontal: 25,
                 justifyContent: 'center',
+                width: DeviceWidth * 0.5,
               }}>
               <Text
+                numberOfLines={1}
                 style={{
                   fontSize: 17,
                   fontWeight: '600',
@@ -636,6 +640,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               <TouchableOpacity
                 onPress={() => {
                   setIsMenuOpen(false);
+                  AnalyticsConsole(`Custom_EDIT_BUTTON`);
                   navigation.navigate('EditCustomWorkout', {item: data});
                 }}
                 style={{
@@ -660,6 +665,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
+                  AnalyticsConsole(`Custom_DEL_BUTTON`);
                   deleteCustomeWorkout();
                 }}
                 style={{

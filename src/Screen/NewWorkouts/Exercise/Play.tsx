@@ -28,7 +28,9 @@ export type Props = TouchableWithoutFeedbackProps & {
   alignSelf?: boolean;
   playy?: any;
   back?: any;
+  backDisabled?: boolean;
   next?: any;
+  nextDisabled?: boolean;
   BM?: number;
   colors?: Array<any>;
   oneDay?: boolean | false;
@@ -101,15 +103,20 @@ const Play: FC<Props> = ({...props}) => {
               style={{
                 zIndex: 1,
               }}
+              disabled={props.backDisabled}
               onPress={props.back}>
-              <Icons name={'skip-previous'} size={30} color='#333333CC' />
+              <Icons
+                name={'skip-previous'}
+                size={30}
+                color={props.backDisabled ? '#3333334D' : '#333333CC'}
+              />
             </TouchableOpacity>
             <TouchableOpacity
               style={{
                 zIndex: 1,
                 backgroundColor: AppColor.NEW_DARK_RED,
                 borderRadius: 30,
-                padding: 10
+                padding: 10,
               }}
               onPress={props.playy}>
               {props.play ? (
@@ -122,8 +129,13 @@ const Play: FC<Props> = ({...props}) => {
               style={{
                 zIndex: 1,
               }}
+              disabled={props.nextDisabled}
               onPress={props.next}>
-              <Icons name={'skip-next'} size={30} color='#333333CC' />
+              <Icons
+                name={'skip-next'}
+                size={30}
+                color={props.nextDisabled ? '#3333334D' : '#333333CC'}
+              />
             </TouchableOpacity>
           </>
         )}

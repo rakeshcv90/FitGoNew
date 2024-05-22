@@ -19,11 +19,14 @@ import {useSelector, useDispatch} from 'react-redux';
 import AnimatedLottieView from 'lottie-react-native';
 import FastImage from 'react-native-fast-image';
 import {localImage} from '../../Component/Image';
+import {setSoundOnOff} from '../../Component/ThemeRedux/Actions';
+
 const WorkoutsDescription = ({data, open, setOpen}: any) => {
   const [ttsInitialized, setTtsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const TextSpeech = `${data?.exercise_instructions}`;
   const [description, SetDescription] = useState('');
+  const dispatch = useDispatch();
 
   const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
@@ -59,7 +62,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
     } else {
       Tts.stop();
     }
-  }, [open]);
+  }, [open,getSoundOffOn]);
   const tag = {
     p: {
       color: '#3A4750',
@@ -93,20 +96,57 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
           flex: 1,
           backgroundColor: AppColor.WHITE,
         }}>
-        <TouchableOpacity
-          onPress={() => setOpen(false)}
+        <View
           style={{
-            width: 25,
-            height: 25,
-            alignSelf: 'flex-end',
-            left: -10,
-            alignItems: 'center',
-            justifyContent: 'center',
-
-            marginTop: DeviceHeigth * 0.045,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingLeft: 10,
+            paddingRight: 10,
+            marginTop: DeviceHeigth * 0.03,
           }}>
-          <Icon name="close" color={AppColor.DARKGRAY} size={25} />
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setOpen(false)}
+            style={{
+              width: 25,
+              height: 25,
+
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Icon name="close" color={AppColor.DARKGRAY} size={25} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              if (getSoundOffOn) {
+                dispatch(setSoundOnOff(false));
+              } else {
+                dispatch(setSoundOnOff(true));
+              }
+            }}
+            style={{
+              width: 25,
+              height: 25,
+
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              style={{
+                width: 30,
+                height: 30,
+
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              source={
+                getSoundOffOn
+                  ? require('../../Icon/Images/NewImage2/sound.png')
+                  : require('../../Icon/Images/NewImage2/soundmute.png')
+              }
+            />
+          </TouchableOpacity>
+        </View>
+
         {/* {isLoading && (
           <View style={styles.loader}>
             <AnimatedLottieView
@@ -154,7 +194,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             height: DeviceWidth / 1.5,
             width: DeviceWidth * 0.95,
             alignSelf: 'center',
-     
+
             // marginTop: 10,
             top: -DeviceHeigth * 0.07,
             zIndex: -1,

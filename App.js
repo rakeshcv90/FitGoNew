@@ -12,7 +12,7 @@ import {
   Modal,
   ActivityIndicator,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   NavigationContainer,
   createNavigationContainerRef,
@@ -33,7 +33,7 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
 import codePush from 'react-native-code-push';
 import CircularProgress from 'react-native-circular-progress-indicator';
-
+import {AppState} from 'react-native';
 import {AppColor} from './src/Component/Color';
 import {LogBox} from 'react-native';
 import {LogOut} from './src/Component/LogOut';
@@ -54,6 +54,9 @@ const App = () => {
   //const [isConnected, setConnected] = useState(true);
 
   const [progress, setProgress] = useState(false);
+  const [isTrackPlayerInitialized, setIsTrackPlayerInitialized] =
+    useState(false);
+    const isPlayerInitializedRef = useRef(false);
   useEffect(() => {
     requestPermissionforNotification(dispatch);
     // RemoteMessage();
@@ -102,13 +105,62 @@ const App = () => {
   //     subscription();
   //   };
   // }, []);
+  // useEffect(() => {
+  //   const initializeTrackPlayer = async () => {
+  //     try {
+  //       await TrackPlayer.setupPlayer();
+  //       setIsTrackPlayerInitialized(true);
+  //     } catch (error) {
+  //       console.error('Error initializing Track Player', error);
+  //     }
+  //   };
+
+  //   initializeTrackPlayer();
+
+
+  //   // Clean up function
+  //   return () => {
+  //     TrackPlayer.destroy();
+  //   };
+  // }, []);
   useEffect(() => {
-    async function initializePlayer() {
-      await TrackPlayer.setupPlayer();
+    const initializeTrackPlayer = async () => {
+      if (!isPlayerInitializedRef.current) {
+        try {
+          await TrackPlayer.setupPlayer();
+          isPlayerInitializedRef.current = true;
+          setIsTrackPlayerInitialized(true);
+        } catch (error) {
+          console.error('Error initializing Track Player', error);
+        }
+      }
+    };
+
+    const handleAppStateChange = (nextAppState) => {
+      if (nextAppState === 'active' && !isPlayerInitializedRef.current) {
+        initializeTrackPlayer();
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    // Initialize player if the app is already in the foreground when the component mounts
+    if (AppState.currentState === 'active' && !isPlayerInitializedRef.current) {
+      initializeTrackPlayer();
     }
 
-    initializePlayer();
+    // Clean up function
+    return () => {
+      subscription.remove();
+      if (isPlayerInitializedRef.current) {
+        TrackPlayer.reset();
+        isPlayerInitializedRef.current = false;
+      }
+    };
   }, []);
+
+
+
 
   // useEffect(() => {
   //   var updateDialogOptions = {
@@ -212,6 +264,7 @@ const App = () => {
   //                   lineHeight: 35,
   //                   fontFamily: 'Montserrat-Regular',
 
+
   //                   color: 'rgb(0, 0, 0)',
   //                 }}
   //               />
@@ -279,4 +332,6 @@ const styles = StyleSheet.create({
   },
 });
 export default App;
-// export default codePush(codePushOptions)(App);
+
+//export default codePush(codePushOptions)(App);
+

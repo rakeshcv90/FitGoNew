@@ -15,6 +15,7 @@ import VersionNumber, {appVersion} from 'react-native-version-number';
 import moment from 'moment';
 import {BannerAdd} from '../../../Component/BannerAdd';
 import {bannerAdId} from '../../../Component/AdsId';
+import { AnalyticsConsole } from '../../../Component/AnalyticsConsole';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -116,6 +117,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
     }
   };
   const onPresh = () => {
+    AnalyticsConsole(`Save_Button_After_Exer_Com`);
     type == 'custom'
       ? navigation.navigate('CustomWorkoutDetails', {item: data})
       : challenge

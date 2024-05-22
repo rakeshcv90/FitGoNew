@@ -42,7 +42,7 @@ const LetsStart = ({navigation}) => {
   }, [isFocused]);
 
   const deviceIdRegister = async () => {
-    analytics().logEvent('CV_FITME_GOOGLE_SIGNUP');
+    analytics().logEvent('CV_FITME_GET_STARTED_BUTTON');
     setForLoading(true);
     try {
       const data = await axios(`${NewAppapi.LET_GO_USER}`, {
@@ -254,19 +254,6 @@ const LetsStart = ({navigation}) => {
               justifyContent: 'center',
               // top: DeviceHeigth > 808 ? DeviceHeigth * 0.18 : DeviceHeigth * 0.2,
             }}>
-            <Text style={[styles.LoginText2, {top: -DeviceHeigth * 0.05}]}>
-              Have an account?{' '}
-              <Text
-                style={[
-                  styles.LoginText2,
-                  {color: AppColor.RED1, fontFamily: Fonts.MONTSERRAT_SEMIBOLD},
-                ]}
-                onPress={() => {
-                  navigation.navigate('LogSignUp');
-                }}>
-                Log in
-              </Text>
-            </Text>
             <LinearGradient
               start={{x: 0, y: 1}}
               end={{x: 1, y: 0}}
@@ -278,13 +265,13 @@ const LetsStart = ({navigation}) => {
                 alignSelf: 'center',
                 borderRadius: 30,
                 alignItems: 'center',
-                top: -DeviceHeigth * 0.02,
+                top: -DeviceHeigth * 0.04,
                 justifyContent: 'center',
               }}>
               <TouchableOpacity
                 style={{
                   width: '100%',
-                  height: 50,
+                  height: 53,
                   backgroundColor: 'red,',
                   alignSelf: 'center',
                   borderRadius: 30,
@@ -298,6 +285,65 @@ const LetsStart = ({navigation}) => {
                 <Text style={styles.button}>Get Started</Text>
               </TouchableOpacity>
             </LinearGradient>
+            <Text
+              style={[
+                styles.LoginText2,
+                {top: -DeviceHeigth * 0.03, fontSize: 15},
+              ]}>
+              Or
+            </Text>
+            <Text
+              style={[
+                styles.LoginText2,
+                {top: -DeviceHeigth * 0.025, fontSize: 13},
+              ]}>
+              Already have an account?{' '}
+              <Text
+                style={[
+                  styles.LoginText2,
+                  {
+                    color: AppColor.RED1,
+                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                    fontSize: 13,
+                    alignSelf: 'center',
+                    textDecorationLine: 'underline',
+                  },
+                ]}
+                onPress={() => {
+                  navigation.navigate('LogSignUp', {screen: 'Log In'});
+                }}>
+                Log In{' '}
+              </Text>
+              <Text
+                style={[
+                  styles.LoginText2,
+                  {
+                    color: AppColor.LITELTEXTCOLOR,
+                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                    fontSize: 13,
+                    alignSelf: 'center',
+                  },
+                ]}>
+                Or{' '}
+              </Text>
+              <Text
+                style={[
+                  styles.LoginText2,
+                  {
+                    color: AppColor.RED1,
+                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                    fontSize: 13,
+                    textDecorationLine: 'underline',
+                    alignSelf: 'center',
+                  },
+                ]}
+                onPress={() => {
+                  navigation.navigate('LogSignUp', {screen: 'Sign Up'});
+                }}>
+                Sign Up
+              </Text>
+            </Text>
+
             <View
               style={{
                 width: '85%',
@@ -357,7 +403,7 @@ var styles = StyleSheet.create({
     fontWeight: '700',
   },
   LoginText2: {
-    fontSize: 16,
+    fontSize: 10,
     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
     color: AppColor.LITELTEXTCOLOR,
     fontWeight: '600',

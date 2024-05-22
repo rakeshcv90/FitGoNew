@@ -244,7 +244,7 @@ const EditCustomWorkout = ({navigation, route}) => {
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
     payload.append('custom_workout_id', data?.custom_workout_id);
-    console.log('dvdvdvxcvsdfds', payload);
+
     try {
       const res = await axios(`${NewAppapi.EDIT_CUSTOM_WORKOUY}`, {
         data: payload,
@@ -253,10 +253,10 @@ const EditCustomWorkout = ({navigation, route}) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('dvdvdvxcvsdfds', res.data);
+  
       if (res?.data?.msg == 'data updated successfully') {
         showMessage({
-          message: res?.data?.msg,
+          message: 'Workout updated successfully.',
           type: 'success',
           animationDuration: 500,
           floating: true,
@@ -266,7 +266,7 @@ const EditCustomWorkout = ({navigation, route}) => {
       } else {
         setForLoading(false);
         showMessage({
-          message: 'Something went wrong pleasr try again',
+          message: 'Something went wrong please try again!',
           type: 'danger',
           animationDuration: 500,
           floating: true,
@@ -329,28 +329,29 @@ const EditCustomWorkout = ({navigation, route}) => {
       {forLoading ? <ActivityLoader /> : ''}
       <View style={styles.container}>
         <View style={{width: '95%', alignSelf: 'center'}}>
-          <Animated.View
+        <Animated.View
             style={[
               {
                 top: -10,
-                width: DeviceWidth * 0.85,
+                width: DeviceWidth ,
                 height: 50,
                 zIndex: 1,
 
-                paddingHorizontal: 10,
+                paddingHorizontal: 20,
                 backgroundColor: value == 1 ? '#e7e7e7' : AppColor.WHITE,
                 alignSelf: 'flex-end',
                 flexDirection: 'row',
                 borderRadius: 10,
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginRight: value == 1 ? 30 : 40,
+                marginRight: value == 1 ? 20 : 10,
               },
               animatedStyle,
             ]}>
             <TextInput
-              style={{width: '90%'}}
+              style={{width: '100%', color: 'black'}}
               placeholder={'Search here......'}
+              placeholderTextColor={'gray'}
               value={searchQuery}
               onChangeText={text => {
                 setSearchQuery(text);
@@ -358,7 +359,9 @@ const EditCustomWorkout = ({navigation, route}) => {
               }}
             />
             <TouchableOpacity
+              //style={{marginRight:10}}
               onPress={() => {
+                setSearchQuery('');
                 if (animation.value == 1) {
                   animation.value = 0;
                   setValue(0);
@@ -368,7 +371,7 @@ const EditCustomWorkout = ({navigation, route}) => {
                 }
               }}>
               <Image
-                style={{width: 20, height: 20}}
+                style={{width: 15, height: 15}}
                 source={value == 0 ? localImage.Search : localImage.Cross}
               />
             </TouchableOpacity>
@@ -384,7 +387,8 @@ const EditCustomWorkout = ({navigation, route}) => {
                   fontSize: 18,
                   alignItems: 'center',
                 }}>
-                Your Routine
+                Choose Your Exercise
+
               </Text>
             </View>
           )}
@@ -459,10 +463,10 @@ const EditCustomWorkout = ({navigation, route}) => {
               tintColor={AppColor.WHITE}
               style={{width: 20, height: 20}}
             />
-            <Text style={styles.button}>{'Update Custom '}</Text>
+            <Text style={styles.button}>{'Update Workout '}</Text>
 
             <Text style={[styles.button, {marginHorizontal: -5}]}>
-              ({selectedItems?.length})
+             ({selectedItems?.length}) {' '}
             </Text>
           </TouchableOpacity>
         </LinearGradient>

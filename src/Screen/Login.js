@@ -30,7 +30,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 import ActivityLoader from '../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
-// import {LoginManager, Profile} from 'react-native-fbsdk-next';
+import {LoginManager, Profile} from 'react-native-fbsdk-next';
 import AnimatedLottieView from 'lottie-react-native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
@@ -60,7 +60,6 @@ import {Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNFetchBlob from 'rn-fetch-blob';
 import AppUpdateComponent from '../Component/AppUpdateComponent';
-
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -348,7 +347,7 @@ const Login = ({navigation}) => {
         data.data?.msg == 'Please update the app to the latest version.'
       ) {
         setForLoading(false);
-      
+
         // showMessage({
         //   message: data.data.msg,
         //   type: 'danger',
@@ -373,7 +372,7 @@ const Login = ({navigation}) => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (email == null) {
       showMessage({
-        message: 'Please Enter Email id',
+        message: 'Please enter ypur email id',
         floating: true,
         duration: 500,
         type: 'danger',
@@ -492,8 +491,9 @@ const Login = ({navigation}) => {
         // status == 1
         //   ? navigation.navigate('BottomTab')
         //   : navigationRef.navigate('Yourself');
-        if (status == 1) navigation.replace('BottomTab');
-        else {
+        if (status == 1) {
+          navigation.replace('BottomTab');
+        } else {
           showMessage({
             message: 'Please complete your Profile Details',
             type: 'success',
@@ -862,7 +862,7 @@ const Login = ({navigation}) => {
                       fontFamily: 'Poppins',
                       marginTop: 10,
                     }}>
-                    Please enter your email below to receive
+                    Please enter your registered email below to receive
                   </Text>
                   <Text
                     style={{
@@ -872,9 +872,9 @@ const Login = ({navigation}) => {
                       textAlign: 'center',
                       fontFamily: 'Poppins',
                       marginBottom: 15,
-                      marginTop: 10,
+                      marginTop: 5,
                     }}>
-                    your password reset code
+                    your password reset link
                   </Text>
 
                   <Formik
@@ -985,23 +985,16 @@ const Login = ({navigation}) => {
             </Text>
             <Text
               style={{
-                fontSize: 18,
+                fontSize: 13,
                 fontWeight: '600',
                 color: '#202020',
                 marginTop: 15,
+                marginLeft:16,
+                marginRight:16,
+                lineHeight:20,
                 fontFamily: 'Montserrat-SemiBold',
               }}>
-              {`Login/Sign Up`}
-            </Text>
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: '600',
-                color: '#202020',
-                marginTop: 5,
-                fontFamily: 'Montserrat-SemiBold',
-              }}>
-              {`Incomplete`}
+              Are you sure you want to quit/go back without completing Sign Up?
             </Text>
 
             <LinearGradient
@@ -1186,10 +1179,7 @@ const Login = ({navigation}) => {
         </KeyboardAvoidingView>
         <View style={{marginTop: DeviceHeigth * 0.02, paddingBottom: 10}}>
           {Platform.OS == 'android' && (
-            <Button2 onGooglePress={GoogleSignup} 
-            onFBPress={FacebookLogin} 
-
-            />
+            <Button2 onGooglePress={GoogleSignup} onFBPress={FacebookLogin} />
           )}
           {Platform.OS == 'ios' && (
             <Button2 onGooglePress={GoogleSignup} onApplePress={onApplePress} />
@@ -1198,7 +1188,7 @@ const Login = ({navigation}) => {
       </ScrollView>
       <CompleateProfileModal />
       <LoginCancelModal />
-    {/* `<AppUpdateComponent visible={true}/>` */}
+      {/* `<AppUpdateComponent visible={true}/>` */}
       <ModalView />
     </SafeAreaView>
   );

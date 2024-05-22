@@ -54,8 +54,7 @@ export const NewInterstitialAd = (setClosed) => { // Created specially for Splas
   const adStatus = useRef(true);
   const initInterstitial = async () => {
     const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
-      // requestNonPersonalizedAdsOnly: true,
-      // keywords: ['fashion', 'clothing'],
+      
     });
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
       adStatus.current = interstitialAd;
@@ -94,7 +93,7 @@ export const MyInterstitialAd = () => {
   const initInterstitial = async () => {
     const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
       requestNonPersonalizedAdsOnly: true,
-      keywords: ['fashion', 'clothing'],
+  
     });
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
       adStatus.current = interstitialAd;
@@ -146,7 +145,7 @@ export const MyInterstitialAd = () => {
 export const MyRewardedAd = setreward => {
   const rewarded = RewardedAd.createForAdRequest(rewardedAdId, {
     requestNonPersonalizedAdsOnly: true,
-    keywords: ['fashion', 'clothing'],
+  
   });
   const unsubscribeLoaded = rewarded.addAdEventListener(
     RewardedAdEventType.LOADED,

@@ -45,9 +45,9 @@ import {
   setScreenAwake,
   setSoundOnOff,
   setUserProfileData,
-
 } from '../Component/ThemeRedux/Actions';
 import {LogOut} from '../Component/LogOut';
+import { AnalyticsConsole } from '../Component/AnalyticsConsole';
 const NewProfile = ({navigation}) => {
   useEffect(() => {
     notifee.getTriggerNotifications().then(res => {
@@ -73,7 +73,7 @@ const NewProfile = ({navigation}) => {
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const [notificationTimer, setNotificationTimer] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  
+
   const setAlarmIsEnabled = data => {
     dispatch(setIsAlarmEnabled(data));
   };
@@ -117,10 +117,13 @@ const NewProfile = ({navigation}) => {
   ];
   const handleCardDataPress = id => {
     if (id == 1) {
+      AnalyticsConsole(`REMINDER_BUTTON`);
       setVisible(true);
     } else if (id == 2) {
+      AnalyticsConsole(`SUBSCRIPTION_BUTTON`);
       navigation.navigate('Subscription');
     } else if (id == 3) {
+      AnalyticsConsole(`PERSO_DETAILS_BUTTON`);
       navigation.navigate('NewPersonalDetails');
     }
   };
@@ -136,14 +139,17 @@ const NewProfile = ({navigation}) => {
       );
       openMailApp();
     } else if (id == 4) {
+      AnalyticsConsole(`PRIVACY_BUTTON`);
       navigation.navigate('TermaAndCondition', {
         title: 'Privacy & Policy',
       });
     } else if (id == 5) {
+      AnalyticsConsole(`Terms_n Cond_BUTTON`);
       navigation.navigate('TermaAndCondition', {
         title: 'Terms & Condition',
       });
     } else if (id == 6) {
+      AnalyticsConsole(`APP_RATING_BUTTON`);
       if (Platform.OS == 'ios') {
         Linking.openURL(
           'https://apps.apple.com/us/app/fitme-health-and-fitness-app/id6470018217',
@@ -156,6 +162,7 @@ const NewProfile = ({navigation}) => {
     } else if (id == 7) {
       setModalVisible(true);
     } else if (id == 8) {
+      AnalyticsConsole(`LOGOUT_BUTTON`);
       LogOut(dispatch);
     }
   };
@@ -483,6 +490,7 @@ const NewProfile = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.cameraButton}
                   onPress={() => {
+                    AnalyticsConsole(`OPEN_CAMERA_BUTTON`);
                     if (Platform.OS == 'ios') {
                       askPermissionForCamera(PERMISSIONS.IOS.CAMERA);
                     } else {
@@ -495,6 +503,7 @@ const NewProfile = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.cameraButton}
                   onPress={() => {
+                    AnalyticsConsole(`OPEN_GALLERY_BUTTON`);
                     if (Platform.OS == 'ios') {
                       askPermissionForLibrary(PERMISSIONS.IOS.PHOTO_LIBRARY);
                     } else {
@@ -524,6 +533,7 @@ const NewProfile = ({navigation}) => {
                         margin: 5,
                       }}
                       onPress={() => {
+                        AnalyticsConsole(`UPLOAD_IMAGE_BUTTON`);
                         setImguploaded(false);
                         UploadImage(userAvatar);
                       }}>
@@ -568,6 +578,7 @@ const NewProfile = ({navigation}) => {
     const {getUserDataDetails} = useSelector(state => state);
     const Delete = async () => {
       setForLoading(true);
+      AnalyticsConsole(`DEL_BUTTON_API`);
       try {
         const res = await axios({
           url: `${NewAppapi.Delete_Account}/${getUserDataDetails?.id}`,
@@ -584,6 +595,7 @@ const NewProfile = ({navigation}) => {
             animationDuration: 750,
             icon: {icon: 'none', position: 'left'},
           });
+          AnalyticsConsole(`DEL_BUTTON_API_COMPLETE`);
           LogOut(dispatch);
         }
       } catch (error) {
@@ -743,7 +755,12 @@ const NewProfile = ({navigation}) => {
       ) : (
         <>
           <View style={{width: DeviceWidth * 0.95, paddingHorizontal: 10}}>
-            <Text style={{fontSize: 17, fontFamily: Fonts.MONTSERRAT_BOLD, color:AppColor.BLACK}}>
+            <Text
+              style={{
+                fontSize: 17,
+                fontFamily: Fonts.MONTSERRAT_BOLD,
+                color: AppColor.BLACK,
+              }}>
               Create Profile
             </Text>
             <Text
@@ -751,14 +768,15 @@ const NewProfile = ({navigation}) => {
                 fontSize: 13,
                 fontFamily: Fonts.MONTSERRAT_REGULAR,
                 marginVertical: 10,
-                color:AppColor.BLACK
+                color: AppColor.BLACK,
               }}>
               Sign up for free to save your workouts
             </Text>
             <View style={{flexDirection: 'row', top: 5}}>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('LogSignUp');
+                  // navigation.navigate('LogSignUp');
+                  navigation.navigate('LogSignUp', {screen: 'Sign Up'});
                 }}
                 style={{
                   width: 100,
@@ -780,7 +798,8 @@ const NewProfile = ({navigation}) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('LogSignUp');
+                  // navigation.navigate('LogSignUp');
+                  navigation.navigate('LogSignUp', {screen: 'Log In'});
                 }}
                 style={{
                   width: 100,
@@ -856,7 +875,7 @@ const NewProfile = ({navigation}) => {
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     fontWeight: '600',
                     marginTop: 10,
-                    color:AppColor.BLACK,
+                    color: AppColor.BLACK,
                   }}>
                   {v.txt}
                 </Text>
@@ -877,7 +896,7 @@ const NewProfile = ({navigation}) => {
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{marginBottom:DeviceHeigth*0.025}}>
+        style={{marginBottom: DeviceHeigth * 0.025}}>
         <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
           {ListData.slice(0, 2).map((v, i) => (
             <View
@@ -908,6 +927,7 @@ const NewProfile = ({navigation}) => {
                   <Switch
                     value={getSoundOffOn}
                     onValueChange={text => {
+                      AnalyticsConsole(`SOUND_ON/OFF_BUTTON`);
                       if (text == true) {
                         showMessage({
                           message: 'Sound Is Unmute',
@@ -949,6 +969,7 @@ const NewProfile = ({navigation}) => {
                   <Switch
                     value={getScreenAwake}
                     onValueChange={text => {
+                      AnalyticsConsole(`DISPLAY_ALWAYS_ON_BUTTON`);
                       if (text == true) {
                         showMessage({
                           message: 'Display Always on',

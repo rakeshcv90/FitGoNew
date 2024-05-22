@@ -31,143 +31,11 @@ import HomeNew from '../Screen/NewHome/HomeNew';
 import Profile from '../Screen/NewHome/Profile';
 import {ClipPath, Defs, Path, Polygon, Rect, Svg} from 'react-native-svg';
 import NewProfile from '../Screen/NewProfile';
+import { AnalyticsConsole } from '../Component/AnalyticsConsole';
 const Tabs = createBottomTabNavigator();
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
-// export const MyPLans = ({focused, onPress}) => {
-//   const [startAnimation, setStartAnimation] = useState(false);
-//   const progressAnimation = useRef(new Animated.Value(0)).current;
-//   const currentSelectedDay = useSelector(state => state.currentSelectedDay);
-//   useEffect(() => {
-//     if (startAnimation) {
-//       onPress(currentSelectedDay);
-//       Animated.timing(progressAnimation, {
-//         toValue: 1,
-//         duration: 3000,
-//         useNativeDriver: false,
-//       }).start(() => {
-//         progressAnimation.setValue(0);
-//         setStartAnimation(false);
-//       });
-//     }
-//   }, [startAnimation]);
-
-//   const animatedHeight = progressAnimation.interpolate({
-//     inputRange: [0, 1],
-//     outputRange: [0, 60],
-//   });
-//   return (
-//     <TouchableOpacity
-//       activeOpacity={1}
-//       onPress={() => {
-//         focused ? setStartAnimation(true) : onPress();
-//       }}
-//       style={{
-//         ...Platform.select({
-//           ios: {
-//             shadowColor: focused ? '#D5191A' : '#909090',
-//             shadowOffset: {width: 0, height: 4},
-//             shadowOpacity: 0.4,
-//             shadowRadius: 3,
-//           },
-//           android: {
-//             elevation: 4,
-//           },
-//         }),
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//         bottom:
-//           Platform.OS == 'ios' ? DeviceHeigth * 0.045 : DeviceHeigth * 0.035,
-//         // backgroundColor: 'blue',
-//       }}>
-//       <View
-//         style={[
-//           styles.nextButton,
-//           {
-//             overflow: 'hidden',
-//             width: 70,
-//             height: 70,
-//             borderRadius: 70 / 2,
-//             shadowColor: 'red',
-//             backgroundColor: 'white',
-//             ...Platform.select({
-//               ios: {
-//                 shadowOffset: {width: 0, height: 1},
-//                 shadowOpacity: 0.1,
-//                 shadowRadius: 8,
-//               },
-//               android: {
-//                 elevation: 4,
-//               },
-//             }),
-//           },
-//         ]}>
-//         {focused ? (
-//           <Svg height="80" width="80" viewBox="0 0 60 60">
-//             <Defs>
-//               <ClipPath id="clip">
-//                 <Path d="M 20 18 L 45 30 L 20 45 Z" />
-//               </ClipPath>
-//             </Defs>
-//             <Rect
-//               x="0"
-//               y="0"
-//               width="60"
-//               height="60"
-//               fill="grey" // You can change the fill color here
-//               clipPath="url(#clip)"
-//               style={
-//                 {
-//                   // transform: [{translateY: 60}, {scaleY: -1}], // Flip the rectangle to fill from bottom to top
-//                 }
-//               }
-//             />
-//             <AnimatedRect
-//               x="0"
-//               y="0" // Start from the bottom of the SVG
-//               width="60"
-//               height={animatedHeight}
-//               fill="red" // End color, change it as needed
-//               clipPath="url(#clip)"
-//               // style={{
-//               //   transform: [{ translateY: Animated.multiply(animatedHeight, -1) }],
-//               // }}
-//             />
-//           </Svg>
-//         ) : (
-//           <View
-//             style={{
-//               alignItems: 'center',
-//               justifyContent: 'center',
-//             }}>
-//             <Image
-//               source={localImage.MyPlans}
-//               style={{
-//                 height: 25,
-//                 width: 25,
-//                 marginBottom: 5,
-//               }}
-//               resizeMode="contain"
-//             />
-//             <Text
-//               style={{
-//                 fontSize: 12,
-//                 lineHeight: 14.63,
-//                 fontWeight: '500',
-//                 fontFamily: Fonts.MONTSERRAT_MEDIUM,
-//                 color: '#121212B2',
-//                 zIndex: 1,
-//                 marginBottom: 5,
-//               }}>
-//               My Plan
-//             </Text>
-//           </View>
-//         )}
-//       </View>
-//     </TouchableOpacity>
-//   );
-// };
 const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const Dispatch = useDispatch();
@@ -191,6 +59,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
         const isFocused = state.index === index;
 
         const onPress = () => {
+          AnalyticsConsole(`${route.name}_TAB`)
           const event = navigation.emit({
             type: 'tabPress',
             target: route.key,

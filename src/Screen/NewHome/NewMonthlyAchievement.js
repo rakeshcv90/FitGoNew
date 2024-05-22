@@ -26,6 +26,7 @@ import VersionNumber, {appVersion} from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
 // import GoogleFit, {Scopes} from 'react-native-google-fit';
 import Loader from '../../Component/Loader';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 const NewMonthlyAchievement = () => {
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const [steps, setSteps] = useState(0);
@@ -181,6 +182,7 @@ const NewMonthlyAchievement = () => {
         <View style={styles.card}>
           <Calendar
             onDayPress={day => {
+              AnalyticsConsole(`${day.dateString.replaceAll('-','_')}`);
               setDate(day.dateString);
               HandleStepsAndCalories(day.dateString);
               DateWiseData(day.dateString);

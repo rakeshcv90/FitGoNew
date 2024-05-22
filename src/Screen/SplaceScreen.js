@@ -1,6 +1,6 @@
 import {StyleSheet, Image, StatusBar, Platform, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {DeviceWidth, NewAppapi} from '../Component/Config';
+import {DeviceWidth, NewApi, NewAppapi} from '../Component/Config';
 import {localImage} from '../Component/Image';
 import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
@@ -85,16 +85,7 @@ const SplaceScreen = ({navigation}) => {
   };
   const initInterstitial = async () => {
     const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
-      // keywords: [
-      //   'action',
-      //   'puzzle',
-      //   'adventure',
-      //   'sports',
-      //   'racing',
-      //   'platformer',
-      //   'simulation',
-      //   'arcade',
-      // ],
+
     });
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
       setLoaded(interstitialAd);
@@ -293,7 +284,7 @@ const SplaceScreen = ({navigation}) => {
         dispatch(setUserProfileData([]));
       }
     } catch (error) {
-      console.log('User Profile Error', error);
+      console.log('User Profile Error123', error);
     }
   };
   const getAllExerciseData = async () => {

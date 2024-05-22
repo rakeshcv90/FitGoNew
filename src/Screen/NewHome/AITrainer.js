@@ -21,7 +21,10 @@ import {showMessage} from 'react-native-flash-message';
 import AnimatedLottieView from 'lottie-react-native';
 import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
-import {SetAIMessageHistory} from '../../Component/ThemeRedux/Actions';
+import {
+  SetAIMessageHistory,
+  setSoundOnOff,
+} from '../../Component/ThemeRedux/Actions';
 import {Alert} from 'react-native';
 import {BannerAdd, MyRewardedAd} from '../../Component/BannerAdd';
 import moment from 'moment';
@@ -39,7 +42,8 @@ const systemMessage = {
 const AITrainer = ({navigation, route}) => {
   const dispatch = useDispatch();
   const [ttsSound, setTtsSound] = useState(
-    `Hey there! I m ${route?.params?.item?.title} your friendly chat bot here to assist you.`,
+    `Hello! I am${route?.params?.item?.title} your personal fitness instructor. I am here to assist you in your fitness journey.
+    `,
   );
 
   let isFocuse = useIsFocused();
@@ -48,15 +52,18 @@ const AITrainer = ({navigation, route}) => {
   const [reward, setreward] = useState(0);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const getAIMessageHistory = useSelector(state => state.getAIMessageHistory);
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const [senderMessage, setsenderMessage] = useState([
     {
-      message: `Hey there! I m ${route?.params?.item?.title} your friendly chat bot here to assist you.`,
+      message: `Hello! I am${route?.params?.item?.title} your personal fitness instructor. I am here to assist you in your fitness journey.
+      `,
       sender: 'ChatGpt',
     },
   ]);
   const [ttsStatus, setTtsStatus] = useState('initiliazing');
   const [speechRate, setSpeechRate] = useState(0.5);
   const [speechPitch, setSpeechPitch] = useState(1);
+  const getSoundOffOn = useSelector(state => state.getSoundOffOn);
   useEffect(() => {
     Tts.addEventListener('tts-start', _event => setTtsStatus('started'));
     Tts.addEventListener('tts-finish', _event => setTtsStatus('finished'));
@@ -78,22 +85,25 @@ const AITrainer = ({navigation, route}) => {
     //     (_event) => setTtsStatus('cancelled'),
     //   );
     // };
-  }, []);
+  }, [getSoundOffOn]);
   const initTts = async () => {
-    if (Platform.OS == 'android') {
-      await Tts.setDefaultLanguage(route?.params?.item?.language);
-      await Tts.setDefaultVoice(route?.params?.item?.languageId);
-    } else {
-      await Tts.setDefaultVoice(route?.params?.item?.languageId);
-    }
+    // if (Platform.OS == 'android') {
+    //   await Tts.setDefaultLanguage(route?.params?.item?.language);
+    //   await Tts.setDefaultVoice(route?.params?.item?.languageId);
+    // } else {
+    //   await Tts.setDefaultVoice(route?.params?.item?.languageId);
+    // }
 
     readText();
     setTtsStatus('initialized');
   };
 
   const readText = async () => {
-    Tts.stop();
-    Tts.speak(ttsSound);
+    if (getSoundOffOn) {
+      Tts.speak(ttsSound);
+    } else {
+      Tts.stop();
+    }
   };
   useEffect(() => {
     flatListRef.current.scrollToEnd({animated: true});
@@ -119,12 +129,11 @@ const AITrainer = ({navigation, route}) => {
         icon: {icon: 'auto', position: 'left'},
       });
       return false;
-    }
-    // else if (reward == 1) {
-    //   handleSend(searchText);
-    //   setSearchText('');
-    // }
-    else {
+    } else if (reward == 1) {
+      handleSend(searchText);
+      setSearchText('');
+    } else {
+      // handleSend(searchText);
       if (getPurchaseHistory.length > 0) {
         if (
           getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
@@ -456,8 +465,8 @@ const AITrainer = ({navigation, route}) => {
                                 width: 250,
                                 backgroundColor: '#fff',
                                 borderRadius: 16,
-                                borderWidth: 1,
-                                borderColor: '#f4c7c3',
+                                //borderWidth: 1,
+                                // borderColor: '#f4c7c3',
                                 shadowColor: '#000',
                                 shadowOffset: {
                                   width: 0,
@@ -489,13 +498,18 @@ const AITrainer = ({navigation, route}) => {
                                 </Text>
                                 <TouchableOpacity
                                   onPress={() => {
+                                    if (getSoundOffOn) {
+                                      dispatch(setSoundOnOff(false));
+                                    } else {
+                                      dispatch(setSoundOnOff(true));
+                                    }
                                     setTtsSound(item.message);
                                   }}
                                   style={{
                                     justifyContent: 'center',
                                     alignSelf: 'flex-end',
                                   }}>
-                                  <AnimatedLottieView
+                                  {/* <AnimatedLottieView
                                     source={require('../../Icon/Images/NewImage2/Sound.json')}
                                     autoPlay
                                     loop
@@ -504,6 +518,20 @@ const AITrainer = ({navigation, route}) => {
                                       height: 30,
                                       marginBottom: -10,
                                     }}
+                                  /> */}
+                                  <Image
+                                    style={{
+                                      width: 30,
+                                      height: 30,
+
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                    }}
+                                    source={
+                                      getSoundOffOn
+                                        ? require('../../Icon/Images/NewImage2/sound.png')
+                                        : require('../../Icon/Images/NewImage2/soundmute.png')
+                                    }
                                   />
                                 </TouchableOpacity>
                               </View>
@@ -545,9 +573,9 @@ const AITrainer = ({navigation, route}) => {
                             resizeMode="contain"
                             // source={localImage.User}
                             source={
-                              getUserDataDetails.image_path == null
+                              getUserDataDetails?.image_path == null
                                 ? localImage.User
-                                : {uri: getUserDataDetails.image_path}
+                                : {uri: getUserDataDetails?.image_path}
                             }
                             style={{
                               width: 30,
@@ -575,7 +603,7 @@ const AITrainer = ({navigation, route}) => {
         <View
           style={{
             width: '100%',
-            height: 75,
+            height: 50,
             alignSelf: 'center',
             backgroundColor: '#FCFCFC',
             borderTopLeftRadius: 16,
