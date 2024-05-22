@@ -33,6 +33,7 @@ import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
 import axios from 'axios';
 import ActivityLoader from '../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
+import { AnalyticsConsole } from '../Component/AnalyticsConsole';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -154,6 +155,7 @@ const NewPersonalDetails = ({route, navigation}) => {
 
   const handleFormSubmit = async (values, action) => {
     setForLoading(true);
+    AnalyticsConsole(`PROFILE_UPDATE_BUTTON`);
     try {
       const dataItem = await axios(`${NewAppapi.UpdateUserProfile}`, {
         method: 'POST',

@@ -1,6 +1,7 @@
 export const AppColor={
     RED:'#941000',
     FBBUTTON:'#4267B2',
+    LIGHTGREY2: '#f9f9f9',
     WHITE:'#ffffff',
     BLACK:'#000',
     INPUTLABLECOLOR:'#3A4750',

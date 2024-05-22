@@ -29,6 +29,7 @@ import {showMessage} from 'react-native-flash-message';
 import {Linking} from 'react-native';
 import analytics from '@react-native-firebase/analytics';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const NewProgressScreen = ({navigation}) => {
@@ -128,6 +129,7 @@ const NewProgressScreen = ({navigation}) => {
         ) : (
           <TouchableOpacity
             onPress={() => {
+              AnalyticsConsole(`MONTHLY_SCREEN`);
               navigation.navigate(NavigationScrnName);
             }}>
             <Icons name={'chevron-right'} size={25} color={AppColor.BLACK} />
@@ -224,7 +226,8 @@ const NewProgressScreen = ({navigation}) => {
           },
         ]);
       } else {
-        const BMI =
+      AnalyticsConsole(`Submit_BMI_BUTTON`);
+      const BMI =
           (selected == '' ? getUserDataDetails?.weight : selected) /
           (Dvalue == 'ft' ? height * 0.3048 : height / 100) ** 2;
         setBmi(BMI.toFixed(2));
@@ -582,7 +585,7 @@ const NewProgressScreen = ({navigation}) => {
           </View>
           <Calendar
             onDayPress={day => {
-              console.log(day);
+              AnalyticsConsole(`${day.dateString.replaceAll('-','_')}`);
               setDate(day.dateString);
             }}
             markingType="period"
@@ -749,6 +752,7 @@ const NewProgressScreen = ({navigation}) => {
             style={[styles.button_b, {marginVertical: 20}]}
             activeOpacity={0.5}
             onPress={() => {
+              AnalyticsConsole(`CALC_BMI_BUTTON`);
               setModalVisible(true);
             }}>
             <LinearGradient

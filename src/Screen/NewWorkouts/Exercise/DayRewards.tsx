@@ -22,6 +22,7 @@ import {BannerAdd} from '../../../Component/BannerAdd';
 import {bannerAdId} from '../../../Component/AdsId';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
+import { AnalyticsConsole } from '../../../Component/AnalyticsConsole';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const WeekArray = Array(7)
@@ -254,6 +255,19 @@ const DayRewards = ({navigation, route}: any) => {
                           source={localImage.RedCircle}
                           style={{height: 40, width: 40}}
                         />
+                      ) : (index + 1) % 2 == 0 &&
+                        index < days[days.length - 1] ? (
+                        <Image
+                          source={localImage.Rest}
+                          style={{
+                            height: 40,
+                            width: 40,
+                            borderRadius: 20,
+                            borderWidth: 1,
+                            borderColor: '#EDF1F4',
+                          }}
+                          resizeMode="contain"
+                        />
                       ) : (
                         <View
                           style={{
@@ -308,11 +322,12 @@ const DayRewards = ({navigation, route}: any) => {
             top: DeviceHeigth * 0.14,
           }}>
           <GradientButton
-            onPress={() =>
+            onPress={() =>{
+              AnalyticsConsole(`COLLECT_REWARDS`);
               weekly
                 ? navigation.navigate('BottomTab')
                 : navigation.navigate('WorkoutDays', {data: data})
-            }
+            }}
             text="Collect Rewards"
             bR={50}
             h={70}

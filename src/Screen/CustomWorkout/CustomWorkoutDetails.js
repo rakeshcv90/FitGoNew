@@ -34,6 +34,7 @@ import {bannerAdId} from '../../Component/AdsId';
 import GradientButton from '../../Component/GradientButton';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -211,6 +212,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           <>
             <TouchableOpacity
               onPress={() => {
+                AnalyticsConsole(`${item?.exercise_title?.split(' ')[0]}_DESC`);
                 navigation.navigate('WorkoutDetail', {item: item});
               }}
               activeOpacity={0.8}
@@ -638,6 +640,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               <TouchableOpacity
                 onPress={() => {
                   setIsMenuOpen(false);
+                  AnalyticsConsole(`Custom_EDIT_BUTTON`);
                   navigation.navigate('EditCustomWorkout', {item: data});
                 }}
                 style={{
@@ -662,6 +665,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
+                  AnalyticsConsole(`Custom_DEL_BUTTON`);
                   deleteCustomeWorkout();
                 }}
                 style={{

@@ -27,6 +27,7 @@ import {bannerAdId} from '../../Component/AdsId';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
 import NativeAddTest from '../../Component/NativeAddTest';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 
 type Coordinates = {
   latitude: number;
@@ -105,13 +106,14 @@ const GymListing = ({navigation}: any) => {
   };
   const openGoogleMaps = async (location: any) => {
     try {
+      AnalyticsConsole(`OPEN_MAPS_BUTTON`);
       var scheme =
         Platform.OS === 'ios'
           ? 'http://maps.apple.com/?daddr='
           : 'google.navigation:q=';
       var url = scheme + `${location.latitude},${location.longitude}`;
       // var url = scheme + `${location.latitude},${location.longitude}`+ "?q=" +location.center_name;
-      console.log(url);
+      // console.log(url);
       await Linking.openURL(url);
     } catch (error) {
       console.log('OPEN APP ERRR', error);

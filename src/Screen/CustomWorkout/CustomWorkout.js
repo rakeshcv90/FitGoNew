@@ -33,6 +33,7 @@ import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
 import moment from 'moment';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -102,6 +103,7 @@ const CustomWorkout = ({navigation}) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
+                AnalyticsConsole(`OPEN_Custom_Wrk`);
                 navigation.navigate('CustomWorkoutDetails', {item: item});
               }}
               style={{
@@ -430,6 +432,7 @@ const CustomWorkout = ({navigation}) => {
         icon: {icon: 'auto', position: 'left'},
       });
     } else {
+      AnalyticsConsole(`Create_Wrk_BUTTON`);
       navigation.navigate('CreateWorkout', {
         workoutTitle: text,
         workoutImg: getWorkoutAvt,

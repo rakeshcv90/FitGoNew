@@ -27,6 +27,7 @@ import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import moment from 'moment';
 import {useDispatch, useSelector} from 'react-redux';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -209,11 +210,94 @@ const ProductsList = ({route}) => {
                         style={{
                           fontSize: 18,
 
+
+            alignSelf: 'center',
+            alignItems: 'center',
+            top: 20,
+          }}>
+          <Text
+            style={{
+              fontSize: 17,
+
+              fontFamily: 'Montserrat-SemiBold',
+              fontWeight: '700',
+              lineHeight: 30,
+              marginBottom: 0,
+              color: AppColor.BLACK,
+            }}>
+            Our Products
+          </Text>
+          <View
+            style={{
+              paddingBottom:
+                Platform.OS == 'android'
+                  ? DeviceHeigth <= 808
+                    ? DeviceHeigth * 0.45
+                    : DeviceHeigth * 0.41
+                  :  DeviceHeigth * 0.47,
+              alignSelf: 'center',
+            }}>
+            {forLoading ? (
+              <FlatList
+                data={[1, 2, 3, 4, 5, 6]}
+                numColumns={3}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item, index}) => {
+                  return (
+                    <>
+                      <TouchableOpacity style={styles.listItem2}>
+                        <ShimmerPlaceholder
+                          ref={avatarRef}
+                          autoRun
+                          style={{
+                            height: 90,
+                            width: 90,
+                            borderRadius: 180 / 2,
+                            alignSelf: 'center',
+                          }}
+                        />
+
+                        <View style={{width: 90, paddingBottom: 10}}>
+                          <ShimmerPlaceholder
+                            ref={avatarRef}
+                            autoRun
+                            style={{
+                              width: 80,
+                              top: 10,
+                              alignSelf: 'center',
+                            }}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    </>
+                  );
+                }}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                updateCellsBatchingPeriod={100}
+                removeClippedSubviews={true}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            ) : (
+              <FlatList
+                data={filteredCategories}
+                numColumns={3}
+                showsVerticalScrollIndicator={false}
+                renderItem={({item, index}) => {
+                  return (
+                    <>
+                      <TouchableOpacity
+                        style={styles.listItem2}
+                        onPress={() => {
+                          AnalyticsConsole(`PROD_${item?.product_title?.split(' ')[0]}`);
+                          Linking.openURL(item.product_link);
+
                           fontFamily: Fonts.MONTSERRAT_REGULAR,
                           fontWeight: '700',
                           lineHeight: 30,
                           // marginBottom: 20,
                           color: AppColor.BLACK,
+
                         }}>
                         {item.product_title}
                       </Text>

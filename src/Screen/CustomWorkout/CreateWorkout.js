@@ -325,6 +325,7 @@ const CreateWorkout = ({navigation, route}) => {
     setSelectedItems(newSelectedItems);
   };
   const submitCustomExercise = async () => {
+    AnalyticsConsole(`Submit_Custom_Wrk_BUTTON`);
     // console.log("user_Id",getUserID,getUserDataDetails?.id)
     if (selectedItems.length <= 0) {
       showMessage({
