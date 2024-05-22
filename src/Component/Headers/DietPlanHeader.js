@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Platform,
   SafeAreaView,
+  Image,
 } from 'react-native';
 import React from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Config';
@@ -14,26 +15,33 @@ import {CommonActions, useNavigation} from '@react-navigation/native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {useDispatch, useSelector} from 'react-redux';
 
-import { setExperience } from '../ThemeRedux/Actions';
-import { navigationRef } from '../../../App';
+import {setExperience} from '../ThemeRedux/Actions';
+import {navigationRef} from '../../../App';
 
-const NewHeader = ({header, backButton, SearchButton,onPress}) => {
+const DietPlanHeader = ({
+  header,
+  backButton,
+  SearchButton,
+  onPress,
+  source,
+  onPressImage
+}) => {
   const navigation = useNavigation();
-const getExperience=useSelector(state=>state.getExperience)
-const dispatch=useDispatch()
+  const getExperience = useSelector(state => state.getExperience);
+  const dispatch = useDispatch();
   return (
-    <SafeAreaView
+    <View
       style={[
         style.container,
         {
           height:
             Platform.OS == 'ios'
-              ? (DeviceHeigth * 13) / 100
-              : (DeviceHeigth * 10) / 100,
+              ? (DeviceHeigth * 5) / 100
+              : (DeviceHeigth * 7) / 100,
           left: 1,
           paddingTop:
             Platform.OS == 'android'
-              ? DeviceHeigth * 0.03
+              ? DeviceHeigth * 0.02
               : DeviceHeigth * 0.01,
         },
       ]}>
@@ -41,26 +49,24 @@ const dispatch=useDispatch()
         <View style={{width: 20}}></View>
       ) : (
         <TouchableOpacity
-        style={{left:0}}
+          style={{left: 0}}
           onPress={() => {
-      
-          if(getExperience==true){
-            dispatch(setExperience(false))
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes:[{name:'BottomTab'}]
-              })
-            );
-           // navigationRef.current.navigate('BottomTab',{screen:'Home'})
-          }
-          else{
-           navigation.goBack()
-          }
+            if (getExperience == true) {
+              dispatch(setExperience(false));
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{name: 'BottomTab'}],
+                }),
+              );
+              // navigationRef.current.navigate('BottomTab',{screen:'Home'})
+            } else {
+              navigation.goBack();
+            }
           }}>
           <Icons
             name={'chevron-left'}
-            size={25}
+            size={28}
             color={AppColor.INPUTTEXTCOLOR}
           />
         </TouchableOpacity>
@@ -83,16 +89,25 @@ const dispatch=useDispatch()
       {!SearchButton ? (
         <View style={{width: 25}}></View>
       ) : (
-        <TouchableOpacity onPress={onPress}>
-          <Icons name={'magnify'} size={25} color={AppColor.INPUTTEXTCOLOR} />
+        <TouchableOpacity onPress={onPressImage} style={{marginRight: 5}}>
+          <Image
+            source={source}
+            style={{
+              height: 28,
+              width: 28,
+              alignSelf: 'center',
+            }}
+          />
         </TouchableOpacity>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 const style = StyleSheet.create({
   container: {
     width: DeviceWidth,
+  paddingLeft:10,
+  paddingRight:10,
     backgroundColor: '#fff',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -102,4 +117,4 @@ const style = StyleSheet.create({
     fontSize: 19,
   },
 });
-export default NewHeader;
+export default DietPlanHeader;

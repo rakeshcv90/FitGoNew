@@ -29,6 +29,7 @@ import Tts from 'react-native-tts';
 import {string} from 'yup';
 import {showMessage} from 'react-native-flash-message';
 import VersionNumber from 'react-native-version-number';
+import KeepAwake from 'react-native-keep-awake';
 import moment from 'moment';
 
 import TrackPlayer, {
@@ -41,6 +42,7 @@ import {localImage} from '../../../Component/Image';
 import CircularProgress, {
   ProgressRef,
 } from 'react-native-circular-progress-indicator';
+import {setScreenAwake} from '../../../Component/ThemeRedux/Actions';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -103,6 +105,7 @@ const Exercise = ({navigation, route}: any) => {
   const [isLoading, setIsLoading] = useState(true);
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
+  const getScreenAwake = useSelector(state => state);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
@@ -145,7 +148,13 @@ const Exercise = ({navigation, route}: any) => {
 
     return () => clearInterval(intervalId);
   }, [seconds, isRunning]);
-
+  useEffect(() => {
+    if (getScreenAwake) {
+      KeepAwake.activate();
+    } else {
+      KeepAwake.deactivate();
+    }
+  }, [getScreenAwake]);
   const startStopTimer = () => {
     setIsRunning(prevState => !prevState);
   };
@@ -977,6 +986,11 @@ const Exercise = ({navigation, route}: any) => {
               <TouchableOpacity
                 onPress={() => {
                   setBack(true);
+                  if (getScreenAwake) {
+                    dispatch(setScreenAwake(false));
+                  } else {
+                    dispatch(setScreenAwake(true));
+                  }
                 }}
                 style={{
                   width: 40,
@@ -1317,4 +1331,3 @@ const styles = StyleSheet.create({
     marginTop: DeviceHeigth * 0.02,
   },
 });
-

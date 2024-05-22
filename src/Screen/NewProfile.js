@@ -758,7 +758,8 @@ const NewProfile = ({navigation}) => {
             <View style={{flexDirection: 'row', top: 5}}>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('LogSignUp');
+                  // navigation.navigate('LogSignUp');
+                  navigation.navigate('LogSignUp', {screen: 'Sign Up'});
                 }}
                 style={{
                   width: 100,
@@ -780,7 +781,8 @@ const NewProfile = ({navigation}) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('LogSignUp');
+                  // navigation.navigate('LogSignUp');
+                  navigation.navigate('LogSignUp', {screen: 'Log In'});
                 }}
                 style={{
                   width: 100,

@@ -37,7 +37,7 @@ import {showMessage} from 'react-native-flash-message';
 import {useDispatch, useSelector} from 'react-redux';
 import ActivityLoader from '../Component/ActivityLoader';
 import {setUserId, setUserProfileData} from '../Component/ThemeRedux/Actions';
-// import {LoginManager, Profile} from 'react-native-fbsdk-next';
+import {LoginManager, Profile} from 'react-native-fbsdk-next';
 import AnimatedLottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {TextInput} from 'react-native-paper';
@@ -77,9 +77,9 @@ const Signup = ({navigation}) => {
   const validationSchema = Yup.object().shape({
     // name: Yup.string().required('Full Name is required'),
     name: Yup.string()
-      .required('Full Name is Required')
-      .matches(/^[A-Za-z].*/, 'First Name must start with a character')
-      .min(3, 'First Name must contain atleast 3 characters'),
+      .required('Full Name must contain at least 3 characters')
+      .matches(/^[A-Za-z].*/, 'Full Name must start with a character')
+      .min(3, 'Full Name must contain at least 3 characters'),
 
     email: Yup.string()
       .matches(/^[\w.\-]+@[\w.\-]+\.\w{2,4}$/, 'Invalid Email Format')
@@ -98,7 +98,7 @@ const Signup = ({navigation}) => {
         'Password must contain 1 Upper-Case letter, 1 Lower-Case letter, 1 Digit, 1 Special Character(@,$,-,^,&, !), and the length must be at least 8 characters',
       )
       .required('Confirm Password is Required')
-      .oneOf([Yup.ref('password')], 'Passwords must match'),
+      .oneOf([Yup.ref('password')], 'Confirm password does not match'),
   });
 
   useEffect(() => {
@@ -278,7 +278,7 @@ const Signup = ({navigation}) => {
       });
 
       setForLoading(false);
-   console.log("fffffffff",data?.data)
+
       if (data?.data?.status == 0) {
         setForLoading(false);
         showMessage({
@@ -340,7 +340,7 @@ const Signup = ({navigation}) => {
           platform: Platform.OS,
         },
       });
-      console.log('Uder Registdecvzxcvxc', data.data);
+ 
       await GoogleSignin.signOut();
       if (
         data.data.msg == 'User already exists' &&
@@ -967,7 +967,7 @@ const Signup = ({navigation}) => {
           version: appVersion,
         },
       });
-console.log("DFDFDFDFDFDF",data?.data?.profile)
+
       if (data?.data?.profile) {
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));

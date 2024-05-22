@@ -15,6 +15,8 @@ import RenderHTML from 'react-native-render-html';
 import Tts from 'react-native-tts';
 import {useSelector, useDispatch} from 'react-redux';
 import AnimatedLottieView from 'lottie-react-native';
+import {setSoundOnOff} from '../../Component/ThemeRedux/Actions';
+import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 
 const WorkoutDetail = ({navigation, route}) => {
   const data = route.params.item;
@@ -24,6 +26,7 @@ const WorkoutDetail = ({navigation, route}) => {
   const [description, SetDescription] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   let isFocuse = useIsFocused();
+  const dispatch = useDispatch();
   const cleanText = TextSpeech.replace(/<\/?[^>]+(>|$)/g, '');
 
   useEffect(() => {
@@ -53,11 +56,11 @@ const WorkoutDetail = ({navigation, route}) => {
   }, []);
   useEffect(() => {
     if (isFocuse && getSoundOffOn == true) {
-       Tts.speak(cleanText);
+      Tts.speak(cleanText);
     } else {
       Tts.stop();
     }
-  }, [isFocuse]);
+  }, [isFocuse, getSoundOffOn]);
 
   const tag = {
     p: {
@@ -87,11 +90,21 @@ const WorkoutDetail = ({navigation, route}) => {
   };
   return (
     <>
-      <NewHeader
-        //header={route?.params?.item?.workout_name}
-        header={data?.exercise_title}
-        SearchButton={false}
+      <DietPlanHeader
+        header={'Meals'}
+        SearchButton={true}
         backButton={true}
+        onPress={() => {
+          getFilterData();
+        }}
+        source={getSoundOffOn?require('../../Icon/Images/NewImage2/sound.png'):require('../../Icon/Images/NewImage2/soundmute.png')}
+        onPressImage={() => {
+          if (getSoundOffOn) {
+            dispatch(setSoundOnOff(false));
+          } else {
+            dispatch(setSoundOnOff(true));
+          }
+        }}
       />
       <View style={styles.container}>
         {isLoading && (
@@ -131,6 +144,7 @@ const WorkoutDetail = ({navigation, route}) => {
               }}>
               {data?.workout_title || data?.exercise_title}
             </Text>
+
             <Text />
             <ScrollView showsVerticalScrollIndicator={false}>
               {data?.workout_description ? (

@@ -405,7 +405,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
       if (response?.data?.msg == 'data deleted successfully') {
         getCustomWorkout();
         showMessage({
-          message: response?.data?.msg,
+          message: 'Workout deleted successfully.',
           type: 'success',
           animationDuration: 500,
           floating: true,
