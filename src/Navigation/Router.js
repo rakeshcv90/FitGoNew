@@ -69,6 +69,7 @@ import Trainer from '../Screen/NewHome/Trainer';
 import HomeNew from '../Screen/NewHome/HomeNew';
 import LetsStart from '../Screen/LetsStart';
 import NewFocusWorkouts from '../Screen/NewWorkouts/NewFocusWorkouts';
+import WorkoutCategories from '../Screen/NewWorkouts/WorkoutCategories';
 
 
 const Stack = createStackNavigator();
@@ -158,6 +159,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Home" component={HomeNew} />
       <Stack.Screen name="LetsStart" component={LetsStart} />
       <Stack.Screen name="NewFocusWorkouts" component={NewFocusWorkouts} />
+      <Stack.Screen name="WorkoutCategories" component={WorkoutCategories} />
     </Stack.Navigator>
   );
 };

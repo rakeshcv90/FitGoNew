@@ -95,4 +95,5 @@ export const NewAppapi = {
   LET_GO_USER: NewApi + 'user_lets_go',
   USER_EXERCISE_COMPLETE_STATUS: NewApi + 'user_exercise_complete_status_data',
   RESEND_OTP: NewApi + 'resend_otp',
+  POST_SINGLE_EXERCISE_COMPLETE: NewApi + 'single_exercise_status',
 };

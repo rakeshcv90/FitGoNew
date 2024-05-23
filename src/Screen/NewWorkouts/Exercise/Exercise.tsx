@@ -49,7 +49,6 @@ import CircularProgress, {
 } from 'react-native-circular-progress-indicator';
 import {setScreenAwake} from '../../../Component/ThemeRedux/Actions';
 
-
 const WeekArray = Array(7)
   .fill(0)
   .map(
@@ -271,7 +270,8 @@ const Exercise = ({navigation, route}: any) => {
                     allExercise[index + 1]?.exercise_title
                   } Exercise`,
                 );
-              postCurrentExerciseAPI(index);
+              if (type == 'focus') postSingleExerciseAPI(index);
+              else postCurrentExerciseAPI(index);
               setDemoW(demoW + 100 / timer);
               setTimer(timer - 1);
             } else if (demo) {
@@ -304,6 +304,7 @@ const Exercise = ({navigation, route}: any) => {
               }
             }
             if (playW >= 100 && randomCount == allExercise?.length) {
+              // postSingleExerciseAPI(number);
               navigationRef.current.goBack();
               clearTimeout(restTimerRef.current);
               clearTimeout(playTimerRef.current);
@@ -313,7 +314,9 @@ const Exercise = ({navigation, route}: any) => {
               skipCount == 0
             ) {
               setPause(false);
-              postCurrentExerciseAPI(number);
+              type == 'focus'
+                ? postSingleExerciseAPI(number)
+                : postCurrentExerciseAPI(number);
               let checkAdsShow = checkMealAddCount();
               if (checkAdsShow == true) {
                 showInterstitialAd();
@@ -341,7 +344,9 @@ const Exercise = ({navigation, route}: any) => {
               number == allExercise?.length - 1 &&
               skipCount != 0
             ) {
-              postCurrentExerciseAPI(number);
+              type == 'focus'
+                ? postSingleExerciseAPI(number)
+                : postCurrentExerciseAPI(number);
               navigationRef.current.goBack();
               clearTimeout(restTimerRef.current);
               clearTimeout(playTimerRef.current);
@@ -492,6 +497,43 @@ const Exercise = ({navigation, route}: any) => {
       }
     } catch (error) {
       console.error(error?.response, 'PostDaysAPIERror');
+    }
+  };
+  const postSingleExerciseAPI = async (index: number) => {
+    const payload = new FormData();
+    payload.append('day', day);
+    payload.append('exercise_id', currentData?.exercise_id);
+    payload.append('workout_id', 230);
+
+    payload.append('user_id', getUserDataDetails?.id);
+    payload.append('version', VersionNumber.appVersion);
+
+    try {
+      const res = await axios({
+        url: NewAppapi.POST_SINGLE_EXERCISE_COMPLETE,
+        method: 'post',
+        data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (res.data) {
+        console.log(res.data, payload);
+        setCompleted(completed + 1);
+        setCurrentData(allExercise[index]);
+        setRestStart(true);
+        setPlayW(0);
+      }
+    } catch (error) {
+      console.error(error, 'PostSINGLExerciseAPIERror');
     }
   };
 
