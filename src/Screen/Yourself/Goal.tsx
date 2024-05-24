@@ -21,7 +21,7 @@ import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import {Card} from './Card';
 const Goal = ({navigation, route}: any) => {
-  const {data, nextScreen, gender, experience, workout_plans} = route?.params;
+  const {data, nextScreen, gender, experience, workout_plans,name} = route?.params;
   const goalsAnimation = useRef(new Animated.Value(0)).current;
   const [selectedB, setSelectedB] = useState(0);
   const dispatch = useDispatch();
@@ -63,7 +63,9 @@ const Goal = ({navigation, route}: any) => {
         workout_plans: workout_plans,
       },
     ];
-
+    if (name) {
+      currentData.push({name: name });
+    }
     dispatch(setLaterButtonData(currentData));
     navigation.navigate('Weight', {nextScreen: screen + 1});
   };

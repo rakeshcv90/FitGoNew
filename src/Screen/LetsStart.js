@@ -20,7 +20,7 @@ import analytics from '@react-native-firebase/analytics';
 import {requestPermissionforNotification} from '../Component/Helper/PushNotification';
 import ActivityLoader from '../Component/ActivityLoader';
 import axios from 'axios';
-import {setUserId, setUserProfileData} from '../Component/ThemeRedux/Actions';
+import {setTempLogin, setUserId, setUserProfileData} from '../Component/ThemeRedux/Actions';
 import {showMessage} from 'react-native-flash-message';
 import {BannerAdd} from '../Component/BannerAdd';
 import {bannerAdId} from '../Component/AdsId';
@@ -40,7 +40,7 @@ const LetsStart = ({navigation}) => {
       });
     }
   }, [isFocused]);
-
+console.log(deviceId)
   const deviceIdRegister = async () => {
     analytics().logEvent('CV_FITME_GET_STARTED_BUTTON');
     setForLoading(true);
@@ -80,13 +80,18 @@ const LetsStart = ({navigation}) => {
         data?.data?.msg == 'user registerd successfully' &&
         data?.data?.profile_compl_status == 0
       ) {
+        dispatch(setTempLogin(data?.data?.temp))
+
         getProfileData(data.data?.id);
         await AsyncStorage.setItem('userID', `${data.data?.id}`);
         dispatch(setUserId(data.data?.id));
       } else if (
         data?.data?.msg == 'User already exists' &&
         data?.data?.profile_compl_status == 0
+        
       ) {
+
+        dispatch(setTempLogin(data?.data?.temp))
         getProfileData(data.data?.id);
         await AsyncStorage.setItem('userID', `${data.data?.id}`);
         dispatch(setUserId(data.data?.id));

@@ -29,9 +29,8 @@ import {showMessage} from 'react-native-flash-message';
 import {Linking} from 'react-native';
 import analytics from '@react-native-firebase/analytics';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-
 const NewProgressScreen = ({navigation}) => {
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
   const getHomeGraphData = useSelector(state => state?.getHomeGraphData);
@@ -138,7 +137,7 @@ const NewProgressScreen = ({navigation}) => {
       </View>
     );
   };
-// weight graph data
+  // weight graph data
   const data = {
     labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     datasets: [
@@ -163,7 +162,7 @@ const NewProgressScreen = ({navigation}) => {
     barPercentage: 0,
     useShadowColorFromDataset: false, // optional
   };
-  const specificDataIndex = array.length+1; // Index of the specific data point you want to emphasize
+  const specificDataIndex = array.length + 1; // Index of the specific data point you want to emphasize
 
   const renderCustomPoint = ({x, y, index, value}) => {
     if (index === specificDataIndex) {
@@ -215,7 +214,7 @@ const NewProgressScreen = ({navigation}) => {
       );
     };
     const HandleSubmitBMI = () => {
-      if (selected == '' || height == '') {
+      if (selected === '' || height === '' || isNaN(selected) || isNaN(height) || selected < 10) {
         Alert.alert('Please enter valid height and weight', '', [
           {
             text: 'Ok',
@@ -226,8 +225,8 @@ const NewProgressScreen = ({navigation}) => {
           },
         ]);
       } else {
-      AnalyticsConsole(`Submit_BMI_BUTTON`);
-      const BMI =
+        AnalyticsConsole(`Submit_BMI_BUTTON`);
+        const BMI =
           (selected == '' ? getUserDataDetails?.weight : selected) /
           (Dvalue == 'ft' ? height * 0.3048 : height / 100) ** 2;
         setBmi(BMI.toFixed(2));
@@ -235,177 +234,170 @@ const NewProgressScreen = ({navigation}) => {
         setheight(height);
       }
     };
+    
     return (
       <Modal
         animationType="fade"
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}>
-        <TouchableOpacity
-          style={{flex: 1, backgroundColor: 'red'}}
-          activeOpacity={1}
-          onPress={() => {
-            setModalVisible(false);
-          }}>
-          <BlurView
-            style={styles.modalContainer}
-            blurType="light"
-            blurAmount={1}
-            reducedTransparencyFallbackColor="white"
-          />
-          <View
-            style={[styles.modalContent, {backgroundColor: AppColor.WHITE}]}>
-            <TouchableOpacity
+        <BlurView
+          style={styles.modalContainer}
+          blurType="light"
+          blurAmount={1}
+          reducedTransparencyFallbackColor="white"
+        />
+        <View style={[styles.modalContent, {backgroundColor: AppColor.WHITE}]}>
+          <TouchableOpacity
+            style={{
+              alignSelf: 'flex-end',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 2,
+            }}
+            onPress={closeModal}>
+            <Icons name={'close'} size={25} color={AppColor.BLACK} />
+          </TouchableOpacity>
+          <View>
+            <Text
               style={{
-                alignSelf: 'flex-end',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: 2,
-              }}
-              onPress={closeModal}>
-              <Icons name={'close'} size={25} color={AppColor.BLACK} />
-            </TouchableOpacity>
-            <View>
-              <Text
+                color: AppColor.BLACK,
+                fontFamily: 'Montserrat-SemiBold',
+                textAlign: 'center',
+                lineHeight: 30,
+                fontSize: 18,
+                fontWeight: '700',
+              }}>
+              {isNextClicked
+                ? 'Select your current height'
+                : 'Enter your current weight'}
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignSelf: 'center',
+                marginVertical: 8,
+              }}>
+              <TextInput
+                keyboardType="number-pad"
+                value={isNextClicked ? height : selected}
+                onChangeText={text => {
+                  if (text == '.') {
+                    showMessage({
+                      message: 'Wrong Input',
+                      type: 'danger',
+                      animationDuration: 500,
+                      floating: true,
+                      icon: {icon: 'auto', position: 'left'},
+                    });
+                  } else isNextClicked ? setHeight(text) : setSelected(text);
+                }}
+                onFocus={setFocused}
+                cursorColor={AppColor.RED}
+                placeholder={
+                  focused
+                    ? isNextClicked
+                      ? height
+                      : selected
+                    : getUserDataDetails?.weight == 'undefined'
+                    ? '0.0'
+                    : isNextClicked
+                    ? '0.0'
+                    : getUserDataDetails?.weight
+                }
+                placeholderTextColor={focused ? AppColor.RED : AppColor.Gray5}
+                maxLength={3}
                 style={{
+                  fontSize: 30,
+                  fontFamily: 'Poppins-SemiBold',
                   color: AppColor.BLACK,
-                  fontFamily: 'Montserrat-SemiBold',
-                  textAlign: 'center',
-                  lineHeight: 30,
-                  fontSize: 18,
-                  fontWeight: '700',
-                }}>
-                {isNextClicked
-                  ? 'Select your current height'
-                  : 'Enter your current weight'}
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignSelf: 'center',
-                  marginVertical: 8,
-                }}>
-                <TextInput
-                  keyboardType="number-pad"
-                  value={isNextClicked ? height : selected}
-                  onChangeText={text => {
-                    if (text == '.') {
-                      showMessage({
-                        message: 'Wrong Input',
-                        type: 'danger',
-                        animationDuration: 500,
-                        floating: true,
-                        icon: {icon: 'auto', position: 'left'},
-                      });
-                    } else isNextClicked ? setHeight(text) : setSelected(text);
-                  }}
-                  onFocus={setFocused}
-                  cursorColor={AppColor.RED}
-                  placeholder={
-                    focused
-                      ? isNextClicked
-                        ? height
-                        : selected
-                      : getUserDataDetails?.weight == 'undefined'
-                      ? '0.0'
-                      : isNextClicked
-                      ? '0.0'
-                      : getUserDataDetails?.weight
-                  }
-                  placeholderTextColor={focused ? AppColor.RED : AppColor.Gray5}
-                  maxLength={3}
-                  style={{
-                    fontSize: 30,
-                    fontFamily: 'Poppins-SemiBold',
-                    color: AppColor.BLACK,
-                    width: focused
-                      ? isNextClicked
-                        ? height != ''
-                          ? null
-                          : 50
-                        : selected != ''
+                  width: focused
+                    ? isNextClicked
+                      ? height != ''
                         ? null
                         : 50
-                      : 50,
-                    borderColor: focused ? AppColor.RED : AppColor.DARKGRAY,
-                    borderBottomWidth: 1,
-                    alignSelf: 'center',
-                    paddingLeft: 4,
-                  }}
-                />
-                {isNextClicked == false ? (
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins-SemiBold',
-                      color: AppColor.BoldText,
-                      fontSize: 30,
-                      textAlign: 'center',
-                      marginLeft: 5,
-                    }}>
-                    {'Kg'}
-                  </Text>
-                ) : (
-                  <Dropdown
-                    style={[
-                      styles.dropdown,
-                      {
-                        width: DeviceWidth * 0.2,
-                        alignSelf: 'flex-end',
-                        position: 'absolute',
-                        left: 60,
-                        bottom: 5,
-                      },
-                    ]}
-                    placeholderStyle={[
-                      styles.placeholderStyle,
-                      {fontWeight: '600', fontSize: 18},
-                    ]}
-                    selectedTextStyle={[
-                      styles.selectedTextStyle,
-                      {fontWeight: '600'},
-                    ]}
-                    data={dropDownItems}
-                    maxHeight={300}
-                    labelField="label"
-                    valueField="value"
-                    placeholder={Dvalue}
-                    value={Dvalue}
-                    onChange={item => {
-                      setDValue(item.label);
-                    }}
-                    renderItem={renderDropItem}
-                  />
-                )}
-              </View>
-            </View>
-            <TouchableOpacity
-              style={{
-                width: DeviceWidth * 0.35,
-                borderRadius: 8,
-                alignSelf: 'center',
-                marginTop: 20,
-              }}
-              onPress={() => {
-                isNextClicked ? HandleSubmitBMI() : setNextClicked(true);
-              }}>
-              <LinearGradient
-                colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
-                style={[styles.button_b, {padding: 5}]}
-                start={{x: 0, y: 1}}
-                end={{x: 1, y: 0}}>
+                      : selected != ''
+                      ? null
+                      : 50
+                    : 50,
+                  borderColor: focused ? AppColor.RED : AppColor.DARKGRAY,
+                  borderBottomWidth: 1,
+                  alignSelf: 'center',
+                  paddingLeft: 4,
+                }}
+              />
+              {isNextClicked == false ? (
                 <Text
                   style={{
-                    fontFamily: 'Montserrat-SemiBold',
-                    fontSize: 18,
-                    fontWeight: '700',
-                    color: AppColor.WHITE,
+                    fontFamily: 'Poppins-SemiBold',
+                    color: AppColor.BoldText,
+                    fontSize: 30,
+                    textAlign: 'center',
+                    marginLeft: 5,
                   }}>
-                  {isNextClicked ? 'Submit' : 'Next'}
+                  {'Kg'}
                 </Text>
-              </LinearGradient>
-            </TouchableOpacity>
+              ) : (
+                <Dropdown
+                  style={[
+                    styles.dropdown,
+                    {
+                      width: DeviceWidth * 0.2,
+                      alignSelf: 'flex-end',
+                      position: 'absolute',
+                      left: 60,
+                      bottom: 5,
+                    },
+                  ]}
+                  placeholderStyle={[
+                    styles.placeholderStyle,
+                    {fontWeight: '600', fontSize: 18},
+                  ]}
+                  selectedTextStyle={[
+                    styles.selectedTextStyle,
+                    {fontWeight: '600'},
+                  ]}
+                  data={dropDownItems}
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={Dvalue}
+                  value={Dvalue}
+                  onChange={item => {
+                    setDValue(item.label);
+                  }}
+                  renderItem={renderDropItem}
+                />
+              )}
+            </View>
           </View>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              width: DeviceWidth * 0.35,
+              borderRadius: 8,
+              alignSelf: 'center',
+              marginTop: 20,
+            }}
+            onPress={() => {
+              isNextClicked ? HandleSubmitBMI() : setNextClicked(true);
+            }}>
+            <LinearGradient
+              colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
+              style={[styles.button_b, {padding: 5}]}
+              start={{x: 0, y: 1}}
+              end={{x: 1, y: 0}}>
+              <Text
+                style={{
+                  fontFamily: 'Montserrat-SemiBold',
+                  fontSize: 18,
+                  fontWeight: '700',
+                  color: AppColor.WHITE,
+                }}>
+                {isNextClicked ? 'Submit' : 'Next'}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
       </Modal>
     );
   };
@@ -521,7 +513,7 @@ const NewProgressScreen = ({navigation}) => {
               : 'Guest'
           }`}
         </Text>
-  
+
         {getUserDataDetails?.workout_plans != 'CustomCreated' && (
           <>
             <LineText
@@ -529,7 +521,7 @@ const NewProgressScreen = ({navigation}) => {
               Txt2={'Weekly'}
               setGraphValue={setValue}
             />
-            {getUserDataDetails?.weight!='undefined' ? (
+            {getUserDataDetails?.weight != 'undefined' ? (
               <View style={[styles.card, {}]}>
                 <LineChart
                   style={{paddingRight: 30}}
@@ -585,7 +577,7 @@ const NewProgressScreen = ({navigation}) => {
           </View>
           <Calendar
             onDayPress={day => {
-              AnalyticsConsole(`${day.dateString.replaceAll('-','_')}`);
+              AnalyticsConsole(`${day.dateString.replaceAll('-', '_')}`);
               setDate(day.dateString);
             }}
             markingType="period"

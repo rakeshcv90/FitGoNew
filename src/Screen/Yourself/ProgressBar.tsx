@@ -49,7 +49,11 @@ const ProgressBar = ({screen}: any) => {
               screen == 0
                 ? '16.2%'
                 : `${
-                    getProgressBarCounter == 6 ? 16.7 * screen : 14.25 * screen
+                    getProgressBarCounter == 6
+                      ? 16.7 * screen
+                      : getProgressBarCounter == 7
+                      ? 14.25 * screen
+                      : 12.5 * screen
                   }%`,
             height: 5,
             borderRadius: 5,

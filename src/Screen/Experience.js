@@ -11,19 +11,24 @@ import ProgressBar from './Yourself/ProgressBar';
 import Bulb from './Yourself/Bulb';
 import {AppColor} from '../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../Component/Config';
-import {setLaterButtonData, setProgressBarCounter} from '../Component/ThemeRedux/Actions';
+import {
+  setLaterButtonData,
+  setProgressBarCounter,
+} from '../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import {localImage} from '../Component/Image';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Card} from './Yourself/Card';
 import LinearGradient from 'react-native-linear-gradient';
 const Experience = ({route, navigation}) => {
-  const {data, nextScreen, gender} = route?.params;
+  const {data, nextScreen, gender, name} = route?.params;
   const [screen, setScreen] = useState(nextScreen);
   const dispatch = useDispatch();
   const getLaterButtonData = useSelector(state => state.getLaterButtonData);
+  const getProgressBarCounter=useSelector(state=>state?.getProgressBarCounter)
   const [selectedB, setSelectedB] = useState(0);
   const [selected, setSelected] = useState();
+  console.log(route.params);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       startAnimation();
@@ -70,38 +75,45 @@ const Experience = ({route, navigation}) => {
     setSelectedB(item?.id);
   };
   const handleButtonPress = () => {
-   if(selected?.txt!='Beginner'){
-    dispatch(setProgressBarCounter(7))
-    navigation.navigate(
-    'AskToCreateWorkout',
-      {
+    if (selected?.txt != 'Beginner') {
+      const params = {
         nextScreen: screen + 1,
-        gender: gender,
         data: data,
+        gender: gender,
         experience: selected?.txt,
-      },
-    );
-   }else{
-    navigation.navigate(
-       'Goal' ,
-      {
+      };
+
+      if (name) {
+        params.name = name;
+      }
+      dispatch(setProgressBarCounter(getProgressBarCounter+1));
+      navigation.navigate('AskToCreateWorkout', params);
+    } else {
+      const params = {
         nextScreen: screen + 1,
-        gender: gender,
         data: data,
+        gender: gender,
         experience: selected?.txt,
         workout_plans: 'AppCreated',
-      },
-    );
-   }
-    
+      };
+
+      if (name) {
+        params.name = name;
+      }
+      navigation.navigate('Goal', params);
+    }
   };
   return (
     <View style={styles.Container}>
       <ProgressBar screen={screen} Type />
-      <View style={{marginTop:Platform.OS=='ios'?- DeviceHeigth * 0.06:- DeviceHeigth * 0.03}}>
-      <Bulb screen={'Choose your fitness level'} />
+      <View
+        style={{
+          marginTop:
+            Platform.OS == 'ios' ? -DeviceHeigth * 0.06 : -DeviceHeigth * 0.03,
+        }}>
+        <Bulb screen={'Choose your fitness level'} />
       </View>
-  
+
       <View style={{marginTop: DeviceHeigth * 0.06}}>
         <Card
           ItemArray={ExperienceArray}

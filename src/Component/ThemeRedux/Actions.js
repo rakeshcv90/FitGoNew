@@ -236,15 +236,21 @@ export const setCurrentSelectedDay = data => {
     payload: data,
   };
 };
-export const setExperience=data=>{
-  return{
-    type:types.IS_EXPERIENCED,
-    payload:data
-  }
-}
-export const setProgressBarCounter=data=>{
-  return{
-    type:types.PROGRESS_BAR_COUNTER,
-    payload:data
-  }
-}
+export const setExperience = data => {
+  return {
+    type: types.IS_EXPERIENCED,
+    payload: data,
+  };
+};
+export const setProgressBarCounter = data => {
+  return {
+    type: types.PROGRESS_BAR_COUNTER,
+    payload: data,
+  };
+};
+export const setTempLogin = data => {
+  return {
+    type: types.TEMP_LOGIN,
+    payload: data,
+  };
+};

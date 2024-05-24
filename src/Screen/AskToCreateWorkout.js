@@ -29,10 +29,11 @@ import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../Component/ActivityLoader';
 import WorkoutArea from './Yourself/WorkoutArea';
 const AskToCreateWorkout = ({route, navigation}) => {
-  const {data, nextScreen, gender, experience} = route?.params;
+  const {data, nextScreen, gender, experience,name} = route?.params;
   const [screen, setScreen] = useState(nextScreen);
   const dispatch = useDispatch();
   const getLaterButtonData = useSelector(state => state.getLaterButtonData);
+  const getProgressBarCounter=useSelector(state=>state?.getProgressBarCounter)
   const getFcmToken = useSelector(state => state.getFcmToken);
   const getUserID = useSelector(state => state.getUserID);
   const [selectedB, setSelectedB] = useState(0);
@@ -60,13 +61,18 @@ const AskToCreateWorkout = ({route, navigation}) => {
     },
   ];
   const handle2nd = () => {
-    navigation.navigate('Goal', {
+    const params = {
       nextScreen: screen + 1,
       gender: gender,
       data: data,
       experience: experience,
       workout_plans: 'AppCreated',
-    });
+    };
+
+    if (name) {
+      params.name = name;
+    }
+    navigation.navigate('Goal', params);
   };
   const handleButtonPress = IDs => {
     setLoader(true);
@@ -117,6 +123,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
       payload.append('targetweight', mergedObject?.targetWeight);
       payload.append('experience', experience);
       payload.append('workout_plans', 'CustomCreated');
+      if(name){payload.append('name',name)}
       payload.append(
         'injury',
         mergedObject?.injury != null ? mergedObject?.injury?.join(',') : null,
@@ -274,7 +281,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
       <View style={styles.buttons}>
         <TouchableOpacity
           onPress={() => {
-            dispatch(setProgressBarCounter(6));
+            dispatch(setProgressBarCounter(getProgressBarCounter-1));
             navigation.goBack();
           }}
           style={{

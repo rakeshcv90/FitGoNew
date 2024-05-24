@@ -12,18 +12,16 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
 import ProgressBar from './ProgressBar';
 import Bulb from './Bulb';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import analytics from '@react-native-firebase/analytics';
 import {localImage} from '../../Component/Image';
-
 const Gender = ({route, navigation}) => {
-  const {data, nextScreen} = route.params;
-
+  const {data, nextScreen,name} = route?.params;
+const getUserDataDetails=useSelector(state=>state.getUserDataDetails)
   const dispatch = useDispatch();
   const [screen, setScreen] = useState(nextScreen);
   const [selectedbutton, setSelectedButton] = useState('');
-
   useEffect(() => {
     setScreen(nextScreen);
   }, []);
@@ -35,12 +33,19 @@ const Gender = ({route, navigation}) => {
   };
 
   const toNextScreen = gender => {
+   
     setTimeout(() => {
-      navigation.navigate('Experience', {
+      const params = {
         nextScreen: screen + 1,
         data: data,
         gender: gender,
-      });
+      };
+      
+      if (name) {
+        params.name = name;
+      }
+     
+      navigation.navigate('Experience', params);
     }, 500);
   };
 
@@ -84,7 +89,6 @@ const Gender = ({route, navigation}) => {
           />
           <Text
             style={{
-
               textAlign: 'center',
               fontSize: 18,
               fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
@@ -116,7 +120,6 @@ const Gender = ({route, navigation}) => {
           />
           <Text
             style={{
-
               textAlign: 'center',
               fontSize: 18,
               fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
@@ -125,26 +128,8 @@ const Gender = ({route, navigation}) => {
             }}>
             Female
           </Text>
-
         </TouchableOpacity>
       </View>
-
-      {/* <TouchableOpacity
-        style={{
-          alignSelf: 'flex-start',
-          marginLeft: DeviceWidth * 0.04,
-          backgroundColor: '#F7F8F8',
-          width: 45,
-          height: 45,
-          borderRadius: 15,
-          justifyContent: 'center',
-          alignItems: 'center',
-          bottom: DeviceHeigth * 0.02,
-          position: 'absolute',
-        }}
-        onPress={() => handleImagePress('')}>
-        <Icons name="chevron-left" size={25} color={'#000'} />
-      </TouchableOpacity> */}
     </View>
   );
 };

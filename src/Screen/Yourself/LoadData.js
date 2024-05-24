@@ -41,6 +41,7 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const LoadData = ({navigation}) => {
   const getFcmToken = useSelector(state => state.getFcmToken);
+  const getTempLogin=useSelector(state=>state.getTempLogin)
   const [loadData, setLoadData] = useState(0);
   const buttonName = [
     {
@@ -134,12 +135,9 @@ const LoadData = ({navigation}) => {
       payload.append('targetweight', mergedObject?.targetWeight);
       payload.append('experience', mergedObject?.experience);
       payload.append('workout_plans', mergedObject?.workout_plans);
-      payload.append(
-        'injury',
-        mergedObject?.injury != null ? mergedObject?.injury?.join(',') : null,
-      );
       payload.append('equipment', mergedObject?.equipment);
       payload.append('version', VersionNumber.appVersion);
+      if(getTempLogin){payload.append('name',mergedObject?.name)}
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {

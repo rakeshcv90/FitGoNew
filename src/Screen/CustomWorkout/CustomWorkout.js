@@ -33,7 +33,7 @@ import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
 import moment from 'moment';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -75,7 +75,7 @@ const CustomWorkout = ({navigation}) => {
       } catch (error) {
         console.log('LibimageError', error);
       }
-    } else if (Platform.OS == 'ios') {
+    } else if (resultLib == 'blocked') {
       Alert.alert(
         'Permission Required',
         'To use the photo library ,Please enable library access in settings',
@@ -92,7 +92,13 @@ const CustomWorkout = ({navigation}) => {
         {cancelable: false},
       );
     } else {
-      console.log('Gallery error occured');
+      showMessage({
+        message: 'Something went wrong',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
     }
   };
   const renderItem = useMemo(
@@ -292,10 +298,8 @@ const CustomWorkout = ({navigation}) => {
               lineHeight: 16,
               opacity: 0.6,
               fontFamily: Fonts.MONTSERRAT_MEDIUM,
-
-         
             }}>
-            Create your perfect workout plan based 
+            Create your perfect workout plan based
           </Text>
           <Text
             style={{
@@ -306,7 +310,7 @@ const CustomWorkout = ({navigation}) => {
               opacity: 0.6,
               fontFamily: Fonts.MONTSERRAT_MEDIUM,
             }}>
-           on your preferences.
+            on your preferences.
           </Text>
           <LinearGradient
             start={{x: 0, y: 1}}

@@ -26,7 +26,7 @@ const intialState = {
   getPurchaseHistory: [],
   getScreenAwake: false,
   getSoundOffOn: true,
-  getBmi: '',
+  getBmi: {},
   getHomeGraphData: [],
   getProfile_imgData: [],
   getCustttomeTimeCal: [],
@@ -36,12 +36,13 @@ const intialState = {
   getFitmeMealAdsCount: 0,
   getStoreVideoLoc: {},
   isAlarmEnabled: false,
-  getAllExercise:[],
-  getExperience:false,
-  getChallengesData:[],
+  getAllExercise: [],
+  getExperience: false,
+  getChallengesData: [],
   getWeeklyPlansData: {},
   currentSelectedDay: 0,
-  getProgressBarCounter:6
+  getProgressBarCounter: 6,
+  getTempLogin: false,
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -201,32 +202,38 @@ const ThemeReducer = (state = intialState, action) => {
         getChallengesData: action.payload,
       };
 
-      case types.ALARM_ENABLED:
-        return {
-          ...state,
-          isAlarmEnabled: action.payload,
-        };
-      case types.ALL_EXERCISE:
-        return{
-          ...state,
-          getAllExercise:action.payload
-        }
-      case types.CURRENT_SELECTED_DAY:
-        return{
-          ...state,
-          currentSelectedDay:action.payload
-        }
-        case types.IS_EXPERIENCED:
-          return{
-            ...state,
-            getExperience:action.payload
-          }
-        case types.PROGRESS_BAR_COUNTER:
-          return{
-            ...state,
-            getProgressBarCounter:action.payload
-          }  
-
+    case types.ALARM_ENABLED:
+      return {
+        ...state,
+        isAlarmEnabled: action.payload,
+      };
+    case types.ALL_EXERCISE:
+      return {
+        ...state,
+        getAllExercise: action.payload,
+      };
+    case types.CURRENT_SELECTED_DAY:
+      return {
+        ...state,
+        currentSelectedDay: action.payload,
+      };
+    case types.IS_EXPERIENCED:
+      return {
+        ...state,
+        getExperience: action.payload,
+      };
+    case types.PROGRESS_BAR_COUNTER:
+      return {
+        ...state,
+        getProgressBarCounter: action.payload,
+      };
+    case types.BMI:
+      return {...state, getBmi: action.payload};
+    case types.TEMP_LOGIN:
+      return {
+        ...state,
+        getTempLogin: action.payload,
+      };
     default:
       return state;
   }

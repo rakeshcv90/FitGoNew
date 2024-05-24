@@ -32,6 +32,7 @@ import Profile from '../Screen/NewHome/Profile';
 import {ClipPath, Defs, Path, Polygon, Rect, Svg} from 'react-native-svg';
 import NewProfile from '../Screen/NewProfile';
 import { AnalyticsConsole } from '../Component/AnalyticsConsole';
+import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
 const Tabs = createBottomTabNavigator();
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
@@ -266,7 +267,7 @@ const BottomTab = () => {
         />
         <Tabs.Screen
           name="Reports"
-          component={NewProgressScreen}
+          component={NewMonthlyAchievement}
           options={{tabBarShowLabel: false}}
         />
 

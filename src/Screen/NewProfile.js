@@ -347,7 +347,7 @@ const NewProfile = ({navigation}) => {
         } catch (error) {
           console.log('CameraimageError', error);
         }
-      } else if (Platform.OS == 'ios') {
+      } else if (result=='blocked') {
         Alert.alert(
           'Permission Required',
           'To use the camera feature ,Please enable camera access in settings',
@@ -386,7 +386,7 @@ const NewProfile = ({navigation}) => {
         } catch (error) {
           console.log('LibimageError', error);
         }
-      } else if (Platform.OS == 'ios') {
+      } else if (resultLib=='blocked') {
         Alert.alert(
           'Permission Required',
           'To use the photo library ,Please enable library access in settings',
@@ -490,7 +490,7 @@ const NewProfile = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.cameraButton}
                   onPress={() => {
-                    AnalyticsConsole(`OPEN_CAMERA_BUTTON`);
+                    AnalyticsConsole(`OPEN_CAMERA`);
                     if (Platform.OS == 'ios') {
                       askPermissionForCamera(PERMISSIONS.IOS.CAMERA);
                     } else {
@@ -503,7 +503,7 @@ const NewProfile = ({navigation}) => {
                 <TouchableOpacity
                   style={styles.cameraButton}
                   onPress={() => {
-                    AnalyticsConsole(`OPEN_GALLERY_BUTTON`);
+                    AnalyticsConsole(`OPEN_GALLERY`);
                     if (Platform.OS == 'ios') {
                       askPermissionForLibrary(PERMISSIONS.IOS.PHOTO_LIBRARY);
                     } else {
@@ -595,7 +595,7 @@ const NewProfile = ({navigation}) => {
             animationDuration: 750,
             icon: {icon: 'none', position: 'left'},
           });
-          AnalyticsConsole(`DEL_BUTTON_API_COMPLETE`);
+          // AnalyticsConsole(`DEL_BUTTON_API_COMPLETE`);
           LogOut(dispatch);
         }
       } catch (error) {
@@ -702,7 +702,7 @@ const NewProfile = ({navigation}) => {
   return (
     <View style={styles.Container}>
       <NewHeader header={'Profile'} />
-      {getUserDataDetails?.name || getUserDataDetails.email != null ? (
+      {getUserDataDetails.email != null ? (
         <>
           <View style={styles.ProfileContainer}>
             <View style={[styles.profileView, {}]}>
@@ -824,7 +824,7 @@ const NewProfile = ({navigation}) => {
         </>
       )}
       <View style={styles.card}>
-        {getUserDataDetails?.name || getUserDataDetails.email != null
+        {getUserDataDetails.email != null
           ? CardData?.map((v, i) => (
               <TouchableOpacity
                 key={i}
@@ -1023,7 +1023,7 @@ const NewProfile = ({navigation}) => {
           Others
         </Text>
         <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
-          {getUserDataDetails.name || getUserDataDetails.email != null
+          {getUserDataDetails.email != null
             ? ListData.slice(2).map((v, i) => (
                 <TouchableOpacity
                   key={i}

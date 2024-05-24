@@ -145,27 +145,12 @@ const Age = ({route, navigation}: any) => {
       onPress={() => Keyboard.dismiss()}
       style={{
         flex: 1,
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        // marginTop: 50,
         backgroundColor: AppColor.WHITE,
       }}>
       <ProgressBar screen={screen} />
-
-
-      {/* <View style={{marginTop: -DeviceHeigth * 0.06,}}> */}
       <View style={{marginTop:Platform.OS=='ios'?- DeviceHeigth * 0.06:- DeviceHeigth * 0.02,alignSelf:"center"}}>
         <Bulb screen={'How old are you?'} />
       </View>
-      {/* <View
-        style={{
-          // flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          alignSelf: 'center',
-          height: DeviceHeigth * 0.6,
-          // width: DeviceWidth,
-        }}>*/}
       <View
         style={{
           width: DeviceWidth,
@@ -173,10 +158,7 @@ const Age = ({route, navigation}: any) => {
           justifyContent: 'center',
           alignItems: 'center',
           alignSelf: 'center',
-          // flex: 1
           flexDirection: 'row',
-
-          //top: -DeviceHeigth * 0.1,
         }}>
         <TextInput
           keyboardType="number-pad"
@@ -217,61 +199,6 @@ const Age = ({route, navigation}: any) => {
           }}>
           years old
         </Text>
-        {/* <FlatList
-          ref={flatListRef}
-          data={data}
-          horizontal
-          onScroll={event => {
-            Vibration.vibrate(200);
-            const y = event.nativeEvent.contentOffset.x;
-            getActiveItem(y);
-          }}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}: any) => {
-            return (
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                }}>
-                {index == selected ? (
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      alignSelf: 'center',
-                      width: 100,
-                      height: 100,
-                      marginRight: 20,
-                      //   backgroundColor: 'blue',
-                    }}>
-                    <Icon
-                      name="arrow-drop-down"
-                      color={AppColor.RED}
-                      size={20}
-                    />
-                    <GradientText item={item} />
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        lineHeight: 16,
-                        fontFamily: 'Poppins',
-                        color: '#94989B',
-                        marginTop: 10,
-                      }}>
-                      years old
-                    </Text>
-                    <Icon name="arrow-drop-up" color={AppColor.RED} size={20} />
-                  </View>
-                ) : (
-                  <Text style={styles.text}>{item}</Text>
-                )}
-              </View>
-            );
-          }}
-        /> */}
-        {/* </View> */}
       </View>
       <View style={styles.buttons}>
         <TouchableOpacity
