@@ -32,6 +32,8 @@ export type Props = TouchableWithoutFeedbackProps & {
   Image?: StyleProp<ImageSourcePropType>;
   ImageStyle?: StyleProp<ImageStyle>;
   weeklyAnimation?: boolean | false;
+  normalFill?: string;
+  normalAnimation?: boolean | false;
   activeOpacity?: number | 0.2;
   mR?: number | 0;
   colors?: Array<any>;
@@ -84,7 +86,7 @@ const GradientButton: FC<Props> = ({...props}) => {
             paddingVertical: props.pV,
             borderRadius: props.bR ? props.bR : 50 / 2,
             borderColor: props.bC ? props.bC : '',
-            borderWidth: props.bC ? 1.5 : 0,
+            borderWidth: props.bC ? 1 : 0,
           },
         ]}>
         {props.Image ? (
@@ -144,12 +146,17 @@ const GradientButton: FC<Props> = ({...props}) => {
         <Animated.View
           style={{
             backgroundColor: '#D9D9D9',
-            height: props.weeklyAnimation ? (props.h ? props.h : 50) : 0,
-            width: progressBarWidth,
+            height:
+              props.weeklyAnimation || props.normalAnimation
+                ? props.h
+                  ? props.h
+                  : 50
+                : 0,
+            width: props.weeklyAnimation ? progressBarWidth : props.normalFill,
             marginTop: -50,
             right: 0,
             position: 'absolute',
-            zIndex: props.weeklyAnimation ? 0 : -1,
+            zIndex: props.weeklyAnimation || props.normalAnimation ? 0 : -1,
           }}
         />
       </LinearGradient>

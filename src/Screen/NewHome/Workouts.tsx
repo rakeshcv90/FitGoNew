@@ -40,25 +40,55 @@ import FastImage from 'react-native-fast-image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
 const MaleCategory = [
-  {id: 1, title: 'Quick Fit', image: '', category: 'Cardio/Abs/Legs/Fourarms/Bi-Tri'},
-  {id: 2, title: 'Body Blast', image: '', category: 'Chest/Back/Shoulders/Bi-Tri/Fourarms'},
-  {id: 3, title: 'Flex flow', image: '', category: 'Cardio/Abs'},
-  {id: 4, title: 'life fit', image: '', category: 'Legs/Cardio'},
-  {id: 5, title: 'blast burn', image: '', category: 'Abs/Chest/Back'},
-  {id: 6, title: 'warrior workout', image: '', category: 'Chest/Back/Shoulders/Legs'},
-  {id: 7, title: 'Diesel Drill', image: '', category: 'Legs/Cardio/Abs/Back'},
-  {id: 8, title: 'Beach Ready', image: '', category: 'Abs/Chest/Legs'},
+  {
+    id: 230,
+    title: 'Quick Fit',
+    image: '',
+    category: 'Cardio/Abs/Legs/Fourarms/Biceps/Triceps',
+  },
+  {
+    id: 231,
+    title: 'Body Blast',
+    image: '',
+    category: 'Chest/Back/Shoulders/Biceps/Triceps/Fourarms',
+  },
+  {id: 232, title: 'Flex flow', image: '', category: 'Cardio/Abs'},
+  {id: 233, title: 'life fit', image: '', category: 'Legs/Cardio'},
+  {id: 234, title: 'blast burn', image: '', category: 'Abs/Chest/Back'},
+  {
+    id: 235,
+    title: 'warrior workout',
+    image: '',
+    category: 'Chest/Back/Shoulders/Legs',
+  },
+  {id: 236, title: 'Diesel Drill', image: '', category: 'Legs/Cardio/Abs/Back'},
+  {id: 237, title: 'Beach Ready', image: '', category: 'Abs/Chest/Legs'},
 ];
 
 const FemaleCategory = [
-  {id: 1, title: 'Cardio Queen', image: '', category: 'Cardio/Legs/Abs'},
-  {id: 2, title: 'Booty Boost', image: '', category: 'Legs'},
-  {id: 3, title: 'Sweat &shine', image: '', category: 'Chest/Back/Fourarms/Bi-Tri'},
-  {id: 4, title: 'Tummy toners', image: '', category: 'Abs/Back/Legs/Cardio'},
-  {id: 5, title: 'Total Body Blitz', image: '', category: ''},
-  {id: 6, title: 'Strong her', image: '', category: 'Chest/Back/Abs/Fourarms/Bi-Tri'},
-  {id: 7, title: 'Lean Ladies', image: '', category: 'Legs/Cardio/Abs'},
-  {id: 8, title: 'Quick fit', image: '', category: 'Cardio/Abs/Legs/Fourarms/Bi-Tri'},
+  {id: 230, title: 'Cardio Queen', image: '', category: 'Cardio/Legs/Abs'},
+  {id: 231, title: 'Booty Boost', image: '', category: 'Legs'},
+  {
+    id: 232,
+    title: 'Sweat &shine',
+    image: '',
+    category: 'Chest/Back/Fourarms/Biceps/Triceps',
+  },
+  {id: 233, title: 'Tummy toners', image: '', category: 'Abs/Back/Legs/Cardio'},
+  {id: 234, title: 'Total Body Blitz', image: '', category: ''},
+  {
+    id: 235,
+    title: 'Strong her',
+    image: '',
+    category: 'Chest/Back/Abs/Fourarms/Biceps/Triceps',
+  },
+  {id: 236, title: 'Lean Ladies', image: '', category: 'Legs/Cardio/Abs'},
+  {
+    id: 237,
+    title: 'Quick fit',
+    image: '',
+    category: 'Cardio/Abs/Legs/Fourarms/Biceps/Triceps',
+  },
 ];
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
@@ -300,28 +330,35 @@ const Workouts = ({navigation}: any) => {
       </>
     );
   }, []);
+  const shuffleArray = (array: Array<any>) => {
+    let currentIndex = array.length,
+      randomIndex;
 
-  const getFilterCaterogy = useMemo(
-    () => (mydata: any) => {
-      return getAllExercise?.filter(
-        (item: any) => item.exercise_goal == mydata,
-      );
-    },
-    [getAllExercise],
-  );
+    // While there remain elements to shuffle...
+    while (currentIndex !== 0) {
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex],
+        array[currentIndex],
+      ];
+    }
+
+    return array;
+  };
+  const getFilterCategory = (categories: string, exerciseBodyPart: string) => {
+    return categories.split('/').includes(exerciseBodyPart);
+  };
 
   const handleNavigation = (mydata: any) => {
-    let bodyexercise: any = [];
-    console.log(mydata);
-    if (mydata?.title == 'Beach Ready') {
-      bodyexercise = getAllExercise;
-    } else if (mydata?.title == 'Corporate Cardio') {
-      bodyexercise = getAllExercise?.filter(
-        (item: any) => item.exercise_goal != 'Build Muscle',
-      );
-    } else {
-      bodyexercise = getFilterCaterogy(mydata?.subtitle);
-    }
+    let bodyexercise: Array<any> = getAllExercise?.filter((item: any) =>
+      getFilterCategory(mydata.category, item?.exercise_bodypart),
+    );
+    bodyexercise = shuffleArray(bodyexercise);
+
     // AnalyticsConsole(`${mydata?.title?.split(' ')[0]}_W_CATE`);
     // let checkAdsShow = checkMealAddCount();
     // if (checkAdsShow == true) {
@@ -795,7 +832,7 @@ const Workouts = ({navigation}: any) => {
                     </View>
                     <View style={[styles.meditionBox, {marginVertical: 5}]}>
                       <FlatList
-                        data={currentCategories.slice(0, 3)}
+                        data={currentCategories.slice(0, 4)}
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item: any, index: number) =>

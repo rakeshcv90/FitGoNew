@@ -503,7 +503,7 @@ const Exercise = ({navigation, route}: any) => {
     const payload = new FormData();
     payload.append('day', day);
     payload.append('exercise_id', currentData?.exercise_id);
-    payload.append('workout_id', 230);
+    payload.append('workout_id', data?.id);
 
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);

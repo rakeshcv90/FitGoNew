@@ -52,7 +52,10 @@ const DietPlanHeader = ({
         <View style={{width: 20}}></View>
       ) : (
         <TouchableOpacity
-          style={{left: 16}}
+          style={{
+            left:
+              DeviceHeigth >= 1024 ? DeviceWidth * 0.045 : DeviceWidth * 0.04,
+          }}
           onPress={() => {
             if (backPressCheck) {
               onPress();
@@ -93,6 +96,7 @@ const DietPlanHeader = ({
 
             width: DeviceWidth * 0.8,
             textAlign: 'center',
+            textTransform: 'capitalize',
           },
         ]}>
         {header}
