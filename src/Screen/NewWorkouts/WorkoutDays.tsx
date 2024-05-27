@@ -40,6 +40,7 @@ import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
 import FastImage from 'react-native-fast-image';
+import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -110,7 +111,7 @@ const WorkoutDays = ({navigation, route}: any) => {
 
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
-        const result = analyzeExerciseData(res.data?.user_details);
+        const result: any = analyzeExerciseData(res.data?.user_details);
         // console.log("dsfsdfsdfewtrd",result)
         if (result.two.length == 0) {
           let day = parseInt(result.one[result.one.length - 1]);
@@ -542,9 +543,11 @@ const WorkoutDays = ({navigation, route}: any) => {
           style={[
             styles.box,
             {
+              opacity: !selected && item?.total_rest != 0 ? 0.9 : 1,
               width:
-                DeviceHeigth < 1280 ? DeviceWidth * 0.95 : DeviceWidth * 0.99,
-              height: DeviceHeigth * 0.125,
+                DeviceHeigth < 1280 ? DeviceWidth * 0.85 : DeviceWidth * 0.89,
+              height: DeviceHeigth * 0.085,
+              marginTop: 6,
             },
           ]}
           activeOpacity={1}
@@ -577,7 +580,7 @@ const WorkoutDays = ({navigation, route}: any) => {
 
                     animationDuration: 500,
                     floating: true,
-                    icon: {icon: 'auto', position: 'left'},
+                    // icon: {icon: 'auto', position: 'left'},
                   });
             } else {
               index - 1 == 0
@@ -604,24 +607,21 @@ const WorkoutDays = ({navigation, route}: any) => {
 
                     animationDuration: 500,
                     floating: true,
-                    icon: {icon: 'auto', position: 'left'},
+                    // icon: {icon: 'auto', position: 'left'},
                   });
             }
           }}>
           <LinearGradient
             start={{x: 1, y: 0}}
             end={{x: 0, y: 1}}
-            colors={
-              percent && item?.total_rest != 0
-                ? ['#941000', '#D5191A']
-                : [AppColor.WHITE, AppColor.WHITE]
-            }
+            colors={[AppColor.WHITE, AppColor.WHITE]}
             style={[
               styles.box,
               {
+                opacity: !selected && item?.total_rest != 0 ? 0.9 : 1,
                 width:
-                  DeviceHeigth < 1280 ? DeviceWidth * 0.95 : DeviceWidth * 0.99,
-                height: DeviceHeigth * 0.125,
+                  DeviceHeigth < 1280 ? DeviceWidth * 0.85 : DeviceWidth * 0.89,
+                height: DeviceHeigth * 0.085,
               },
             ]}>
             <View
@@ -684,61 +684,21 @@ const WorkoutDays = ({navigation, route}: any) => {
                       justifyContent: 'center',
                       // marginLeft: DeviceWidth * 0.12,
                     }}>
-                    {/* {isLoading && (
-                      <ShimmerPlaceholder
-                        style={styles.loader}
-                        ref={avatarRef}
-                        autoRun
-                      />
-                    )} */}
-                    {/* <Image
-                      source={{uri: data?.workout_image}}
-                      onLoad={() => setIsLoading(false)}
+                    <Text
                       style={{
-                        height:
-                          DeviceHeigth >= 1024
-                            ? DeviceWidth * 0.18
-                            : DeviceWidth * 0.18,
-                        width:
-                          DeviceHeigth >= 1024
-                            ? DeviceWidth * 0.18
-                            : DeviceWidth * 0.18,
-                        opacity: percent ? 0.5 : 1,
+                        fontWeight: '700',
+                        fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                        fontSize: 32,
+                        lineHeight: 40,
+                        color: selected ? '#D5191A' : '#A3A3A3',
                         borderRadius: 5,
-
-                        borderColor: '#D9D9D9',
-                      }}
-                      resizeMode="contain"
-                    /> */}
-                    <FastImage
-                      fallback={true}
-                      // onError={onError}
-                      // onLoadEnd={onLoadEnd}
-                      // onLoadStart={onLoadStart}
-                      // onLoad={() => setIsLoading(false)}
-                      style={{
-                        height:
-                          DeviceHeigth >= 1024
-                            ? DeviceWidth * 0.18
-                            : DeviceWidth * 0.18,
-                        width:
-                          DeviceHeigth >= 1024
-                            ? DeviceWidth * 0.18
-                            : DeviceWidth * 0.18,
-                        opacity: percent ? 0.5 : 1,
-                        borderRadius: 5,
-
-                        borderColor: '#D9D9D9',
-                      }}
-                      source={{
-                        uri:
-                        data?.workout_image,
-                        headers: {Authorization: 'someAuthToken'},
-                        priority: FastImage.priority.high,
-                      }}
-                      resizeMode={FastImage.resizeMode.cover}
-                      defaultSource={localImage.NOWORKOUT}
-                    />
+                        borderColor: '#d9d9d9',
+                        borderWidth: 1,
+                        padding: 5,
+                        paddingLeft: 7,
+                      }}>
+                      {index < 10 ? `0${index}` : index}
+                    </Text>
                   </View>
                 </>
               )}
@@ -757,20 +717,21 @@ const WorkoutDays = ({navigation, route}: any) => {
                       {
                         fontSize: DeviceHeigth < 1280 ? 16 : 14,
                         color:
-                          percent && item?.total_rest != 0
-                            ? AppColor.WHITE
+                          !selected && item?.total_rest != 0
+                            ? '#333333B2'
                             : AppColor.BLACK,
+                        marginBottom: 10,
                       },
-                    ]}>{`Day ${index}`}</Text>
+                    ]}>{`Day-${index}`}</Text>
                   {item?.total_rest == 0 ? (
                     <Text
                       style={[
                         styles.small,
                         {
                           color:
-                            percent && item?.total_rest != 0
-                              ? AppColor.WHITE
-                              : '#941000',
+                            !selected && item?.total_rest != 0
+                              ? '#333333B2'
+                              : AppColor.BLACK,
                           lineHeight: DeviceHeigth >= 1024 ? 30 : 20,
                         },
                       ]}>
@@ -782,9 +743,9 @@ const WorkoutDays = ({navigation, route}: any) => {
                         styles.small,
                         {
                           color:
-                            percent && item?.total_rest != 0
-                              ? AppColor.WHITE
-                              : '#941000',
+                            !selected && item?.total_rest != 0
+                              ? '#333333B2'
+                              : AppColor.BLACK,
                         },
                       ]}>
                       {item?.total_rest > 60
@@ -796,8 +757,8 @@ const WorkoutDays = ({navigation, route}: any) => {
                           fontSize: 30,
                           fontWeight: '600',
                           color:
-                            percent && item?.total_rest != 0
-                              ? AppColor.WHITE
+                            !percent && item?.total_rest != 0
+                              ? '#333333B2'
                               : '#505050',
                           lineHeight: 20,
                           marginHorizontal: 10,
@@ -811,66 +772,30 @@ const WorkoutDays = ({navigation, route}: any) => {
                     </Text>
                   )}
                 </View>
-                {item?.total_rest != 0 && (
-                  <Icons
-                    name={'chevron-right'}
-                    size={25}
-                    color={
-                      percent && item?.total_rest != 0
-                        ? AppColor.WHITE
-                        : AppColor.BLACK
-                    }
-                  />
-                )}
+                <Icons
+                  name={
+                    percent && item?.total_rest != 0 ? 'check' : 'chevron-right'
+                  }
+                  size={25}
+                  color={
+                    percent && item?.total_rest != 0
+                      ? '#D5191A'
+                      : !selected && item?.total_rest != 0
+                      ? '#33333380'
+                      : AppColor.BLACK
+                  }
+                />
+
+                {/* percent && item?.total_rest != 0 */}
               </View>
             </View>
-            {selected && trainingCount != -1 && (
-              <ProgressButton
-                text={
-                  downloaded > 0 && downloaded != 100
-                    ? `Downloading`
-                    : `Start Training`
-                }
-                w={DeviceWidth * 0.75}
-                bR={10}
-                mB={10}
-                fill={
-                  totalCount == -1
-                    ? '0%'
-                    : `${100 - (trainingCount / totalCount) * 100}%`
-                }
-                h={DeviceHeigth * 0.08}
-                // textStyle={{
-                //   color:
-                //     downloaded > 0 && downloaded != 100
-                //       ? AppColor.BLACK
-                //       : AppColor.WHITE,
-                // }}
-                onPress={() => {
-                  analytics().logEvent(
-                    `CV_FITME_START_TRAINING_${day}_EXERCISES`,
-                  );
-                  navigation.navigate('Exercise', {
-                    allExercise: exerciseData,
-                    currentExercise:
-                      trainingCount == -1
-                        ? exerciseData[0]
-                        : exerciseData[trainingCount],
-                    data: data,
-                    day: day,
-                    exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
-                    trackerData: trackerData,
-                  });
-                }}
-              />
-            )}
           </LinearGradient>
         </TouchableOpacity>
         {getAdsDisplay(index, item)}
       </>
     );
   };
-  const getAdsDisplay = (index, item) => {
+  const getAdsDisplay = (index: number, item: any) => {
     if (Object.values(data?.days).length >= 1) {
       if (index == 1) {
         return getNativeAdsDisplay();
@@ -936,24 +861,12 @@ const WorkoutDays = ({navigation, route}: any) => {
   };
   return (
     <View style={styles.container}>
-      <Header
+      <DietPlanHeader
         header={
           data?.workout_title == undefined ? data?.title : data?.workout_title
         }
-        backButton
-        SearchButton={false}
+        shadow
       />
-      <GradientText
-        text={'Today'}
-        fontWeight={'700'}
-        fontSize={22}
-        width={DeviceWidth}
-        x={15}
-        marginTop={-10}
-      />
-      <Text style={[styles.category, {marginVertical: 10, marginLeft: 10}]}>
-        {moment().format('dddd DD MMMM')}
-      </Text>
 
       <>
         <ScrollView
@@ -962,7 +875,7 @@ const WorkoutDays = ({navigation, route}: any) => {
             // flexDirection: 'row',
             alignItems: 'center',
           }}>
-          <View style={{bottom: 10}}>
+          <View style={{top: 10}}>
             {!refresh &&
               Object.values(data?.days).map((item: any, index: number) => {
                 return (
@@ -977,6 +890,11 @@ const WorkoutDays = ({navigation, route}: any) => {
                     percent={
                       challenge
                         ? selected != 0 && index < selected - 1
+                        : selected != 0 && index < selected
+                    }
+                    selected={
+                      challenge
+                        ? selected != 0 && index == selected - 1
                         : selected != 0 && index < selected
                     }
                   />
@@ -1004,16 +922,16 @@ const styles = StyleSheet.create({
   },
   category: {
     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-    fontSize: 26,
-    fontWeight: '600',
+    fontSize: 16,
+    fontWeight: '500',
     color: AppColor.LITELTEXTCOLOR,
-    lineHeight: 30,
+    lineHeight: 24,
   },
   small: {
     fontFamily: Fonts.MONTSERRAT_REGULAR,
     fontSize: 12,
     fontWeight: '500',
-    lineHeight: 30,
+    lineHeight: 16,
   },
   box: {
     //   flex: 1,
@@ -1022,7 +940,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     borderRadius: 10,
-    marginVertical: 8,
+    marginVertical: 6,
     backgroundColor: AppColor.WHITE,
     shadowColor: 'grey',
     ...Platform.select({

@@ -6,8 +6,9 @@ import {
   Platform,
   SafeAreaView,
   Image,
+  ImageRequireSource,
 } from 'react-native';
-import React from 'react';
+import React, {FC} from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Config';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -19,7 +20,19 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setExperience} from '../ThemeRedux/Actions';
 import {navigationRef} from '../../../App';
 
-const DietPlanHeader = ({
+type Props = {
+  header: string;
+  backButton?: boolean;
+  SearchButton?: boolean;
+  onPress?: () => void;
+  source?: ImageRequireSource | any;
+  onPressImage?: () => void;
+  backPressCheck?: boolean;
+  workoutCat?: boolean;
+  shadow?: boolean;
+};
+
+const DietPlanHeader: FC<Props> = ({
   header,
   backButton,
   SearchButton,
@@ -31,7 +44,7 @@ const DietPlanHeader = ({
   shadow,
 }) => {
   const navigation = useNavigation();
-  const getExperience = useSelector(state => state.getExperience);
+  const getExperience = useSelector((state: any) => state.getExperience);
   const dispatch = useDispatch();
   return (
     <View
@@ -50,7 +63,7 @@ const DietPlanHeader = ({
               : DeviceHeigth * 0.01,
         },
       ]}>
-      {!backButton ? (
+      {backButton ? (
         <View style={{width: 20}}></View>
       ) : (
         <TouchableOpacity
@@ -59,7 +72,7 @@ const DietPlanHeader = ({
               DeviceHeigth >= 1024 ? DeviceWidth * 0.045 : DeviceWidth * 0.04,
           }}
           onPress={() => {
-            if (backPressCheck) {
+            if (backPressCheck && onPress) {
               onPress();
             } else {
               if (getExperience == true) {
