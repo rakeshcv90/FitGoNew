@@ -15,7 +15,7 @@ import VersionNumber, {appVersion} from 'react-native-version-number';
 import moment from 'moment';
 import {BannerAdd} from '../../../Component/BannerAdd';
 import {bannerAdId} from '../../../Component/AdsId';
-import { AnalyticsConsole } from '../../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../../Component/AnalyticsConsole';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -28,6 +28,7 @@ const WeekArray = Array(7)
   );
 const SaveDayExercise = ({navigation, route}: any) => {
   const {data, day, allExercise, type, challenge} = route?.params;
+  const getAllExercise = useSelector((state: any) => state.getAllExercise);
   let fire, clock, action;
   const [workoutName, setWorkooutName] = useState('');
   const dispatch = useDispatch();
@@ -116,12 +117,25 @@ const SaveDayExercise = ({navigation, route}: any) => {
       navigation.navigate('WorkoutDays', {data, challenge});
     }
   };
+
+  let categoryExercise: Array<any> = [];
+
   const onPresh = () => {
-    AnalyticsConsole(`Save_Button_After_Exer_Com`);
+    AnalyticsConsole(`SBA_Exer_Com`);
+    if (type == 'focus') {
+      categoryExercise = getAllExercise?.filter((item: any) =>
+        data.category.split('/').includes(item?.exercise_bodypart),
+      );
+    }
     type == 'custom'
       ? navigation.navigate('CustomWorkoutDetails', {item: data})
       : challenge
       ? ChallengesDataAPI()
+      : type == 'focus'
+      ? navigation.navigate('WorkoutCategories', {
+          categoryExercise,
+          CategoryDetails: data,
+        })
       : navigation.navigate('DayRewards', {data, day});
   };
   const bannerAdsDisplay = () => {

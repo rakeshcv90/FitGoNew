@@ -28,6 +28,7 @@ const DietPlanHeader = ({
   onPressImage,
   backPressCheck,
   workoutCat,
+  shadow,
 }) => {
   const navigation = useNavigation();
   const getExperience = useSelector(state => state.getExperience);
@@ -36,6 +37,7 @@ const DietPlanHeader = ({
     <View
       style={[
         style.container,
+        shadow && style.shadow,
         {
           height:
             Platform.OS == 'ios'
@@ -130,6 +132,20 @@ const style = StyleSheet.create({
   headerstyle: {
     fontWeight: '600',
     fontSize: 19,
+  },
+  shadow: {
+    shadowColor: 'grey',
+    ...Platform.select({
+      ios: {
+        //shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
 });
 export default DietPlanHeader;

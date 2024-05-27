@@ -134,52 +134,6 @@ const Workouts = ({navigation}: any) => {
     }
   }, [isFocused]);
   const [refresh, setRefresh] = useState(false);
-  let catogery = [
-    {
-      id: 1,
-      title: 'Get Fit',
-      subtitle: 'Weight Loss',
-      img: require('../../Icon/Images/NewImage2/Img7.png'),
-    },
-    {
-      id: 2,
-      title: 'Lose Weight',
-      subtitle: 'Weight Loss',
-      img: require('../../Icon/Images/NewImage2/Img6.png'),
-    },
-    {
-      id: 3,
-      title: 'HIIT',
-      subtitle: 'Strength',
-      img: require('../../Icon/Images/NewImage2/Img5.png'),
-    },
-  ];
-  let catogery2 = [
-    {
-      id: 1,
-      title: 'Immunity Booster',
-      subtitle: 'Strength',
-      img: require('../../Icon/Images/NewImage2/Img4.png'),
-    },
-    {
-      id: 2,
-      title: 'Build Muscle',
-      subtitle: 'Build Muscle',
-      img: require('../../Icon/Images/NewImage2/Img3.png'),
-    },
-    {
-      id: 3,
-      title: 'Corporate Cardio',
-      subtitle: 'Strength/Weight Loss',
-      img: require('../../Icon/Images/NewImage2/Img2.png'),
-    },
-    {
-      id: 4,
-      title: 'Beach Ready',
-      subtitle: 'Build Muscle/Weight Loss/Strength',
-      img: require('../../Icon/Images/NewImage2/Img1.png'),
-    },
-  ];
 
   const getAllExerciseData = async () => {
     try {
@@ -302,7 +256,7 @@ const Workouts = ({navigation}: any) => {
               }),
             }}>
             <Image
-              source={item.img}
+              source={localImage.NOWORKOUT}
               style={{
                 width: 30,
                 height: 30,
