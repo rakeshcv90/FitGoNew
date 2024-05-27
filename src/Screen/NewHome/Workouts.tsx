@@ -18,6 +18,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {
+  setAllExercise,
   setAllWorkoutData,
   setChallengesData,
   setCustomWorkoutData,
@@ -38,11 +39,64 @@ import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
+const MaleCategory = [
+  {
+    id: 230,
+    title: 'Quick Fit',
+    image: '',
+    category: 'Cardio/Abs/Legs/Fourarms/Biceps/Triceps',
+  },
+  {
+    id: 231,
+    title: 'Body Blast',
+    image: '',
+    category: 'Chest/Back/Shoulders/Biceps/Triceps/Fourarms',
+  },
+  {id: 232, title: 'Flex flow', image: '', category: 'Cardio/Abs'},
+  {id: 233, title: 'life fit', image: '', category: 'Legs/Cardio'},
+  {id: 234, title: 'blast burn', image: '', category: 'Abs/Chest/Back'},
+  {
+    id: 235,
+    title: 'warrior workout',
+    image: '',
+    category: 'Chest/Back/Shoulders/Legs',
+  },
+  {id: 236, title: 'Diesel Drill', image: '', category: 'Legs/Cardio/Abs/Back'},
+  {id: 237, title: 'Beach Ready', image: '', category: 'Abs/Chest/Legs'},
+];
+
+const FemaleCategory = [
+  {id: 230, title: 'Cardio Queen', image: '', category: 'Cardio/Legs/Abs'},
+  {id: 231, title: 'Booty Boost', image: '', category: 'Legs'},
+  {
+    id: 232,
+    title: 'Sweat &shine',
+    image: '',
+    category: 'Chest/Back/Fourarms/Biceps/Triceps',
+  },
+  {id: 233, title: 'Tummy toners', image: '', category: 'Abs/Back/Legs/Cardio'},
+  {id: 234, title: 'Total Body Blitz', image: '', category: ''},
+  {
+    id: 235,
+    title: 'Strong her',
+    image: '',
+    category: 'Chest/Back/Abs/Fourarms/Biceps/Triceps',
+  },
+  {id: 236, title: 'Lean Ladies', image: '', category: 'Legs/Cardio/Abs'},
+  {
+    id: 237,
+    title: 'Quick fit',
+    image: '',
+    category: 'Cardio/Abs/Legs/Fourarms/Biceps/Triceps',
+  },
+];
+
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const [imageLoad, setImageLoad] = useState(true);
+  const [currentCategories, setCurrentCategories] = useState<Array<any>>([]);
   const completeProfileData = useSelector(
     (state: any) => state.completeProfileData,
   );
@@ -69,97 +123,38 @@ const Workouts = ({navigation}: any) => {
   useEffect(() => {
     if (isFocused) {
       initInterstitial();
-      allWorkoutApi();
+      // allWorkoutApi();
       ChallengesDataAPI();
-      // getCustomeWorkoutTimeDetails();
+      getAllExerciseData();
       getCustomWorkout();
       getWorkoutStatus();
+      setCurrentCategories(
+        getUserDataDetails?.gender == 'Female' ? FemaleCategory : MaleCategory,
+      );
     }
   }, [isFocused]);
   const [refresh, setRefresh] = useState(false);
-  let catogery = [
-    {
-      id: 1,
-      title: 'Get Fit',
-      subtitle: 'Weight Loss',
-      img: require('../../Icon/Images/NewImage2/Img7.png'),
-    },
-    {
-      id: 2,
-      title: 'Lose Weight',
-      subtitle: 'Weight Loss',
-      img: require('../../Icon/Images/NewImage2/Img6.png'),
-    },
-    {
-      id: 3,
-      title: 'HIIT',
-      subtitle: 'Strength',
-      img: require('../../Icon/Images/NewImage2/Img5.png'),
-    },
-  ];
-  let catogery2 = [
-    {
-      id: 1,
-      title: 'Immunity Booster',
-      subtitle: 'Strength',
-      img: require('../../Icon/Images/NewImage2/Img4.png'),
-    },
-    {
-      id: 2,
-      title: 'Build Muscle',
-      subtitle: 'Build Muscle',
-      img: require('../../Icon/Images/NewImage2/Img3.png'),
-    },
-    {
-      id: 3,
-      title: 'Corporate Cardio',
-      subtitle: 'Strength/Weight Loss',
-      img: require('../../Icon/Images/NewImage2/Img2.png'),
-    },
-    {
-      id: 4,
-      title: 'Beach Ready',
-      subtitle: 'Build Muscle/Weight Loss/Strength',
-      img: require('../../Icon/Images/NewImage2/Img1.png'),
-    },
-  ];
-  const allWorkoutApi = async () => {
-    // try {
-    //   setRefresh(true);
-    //   const payload = new FormData();
-    //   payload.append('id', getUserDataDetails?.id);
-    //   payload.append('version', VersionNumber.appVersion);
-    //   const res = await axios({
-    //     url: NewAppapi.ALL_WORKOUTS,
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //     data: payload,
-    //   });
-    //   if (res?.data?.msg == 'Please update the app to the latest version.') {
-    //     showMessage({
-    //       message: res?.data?.msg,
-    //       type: 'danger',
-    //       animationDuration: 500,
-    //       floating: true,
-    //       icon: {icon: 'auto', position: 'left'},
-    //     });
-    //     setRefresh(false);
-    //   } else if (res?.data) {
-    //     setRefresh(false);
-    //     dispatch(setAllWorkoutData(res?.data));
-    //   } else {
-    //     setRefresh(false);
-    //     dispatch(setAllWorkoutData([]));
-    //   }
-    // } catch (error) {
-    //   setRefresh(false);
-    //   console.error(error, 'customWorkoutDataApiError');
-    //   dispatch(setAllWorkoutData([]));
-    // }
-  };
 
+  const getAllExerciseData = async () => {
+    try {
+      const exerciseData = await axios.get(
+        `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
+      );
+
+      if (
+        exerciseData?.data?.msg == 'Please update the app to the latest version'
+      ) {
+        dispatch(setAllExercise([]));
+      } else if (exerciseData?.data?.length > 0) {
+        dispatch(setAllExercise(exerciseData?.data));
+      } else {
+        dispatch(setAllExercise([]));
+      }
+    } catch (error) {
+      dispatch(setAllExercise([]));
+      console.log('All-EXCERSIE-ERROR', error);
+    }
+  };
   const ChallengesDataAPI = async () => {
     try {
       const res = await axios({
@@ -238,8 +233,8 @@ const Workouts = ({navigation}: any) => {
               //width: DeviceWidth * 0.6,
               //height: DeviceHeigth * 0.1,
               borderRadius: 50,
-              borderWidth: 2,
-              borderColor: '#fff',
+              borderWidth: 1,
+              borderColor: '#D9D9D9',
               marginVertical: DeviceHeigth * 0.01,
               alignItems: 'center',
               alignSelf: 'center',
@@ -261,7 +256,7 @@ const Workouts = ({navigation}: any) => {
               }),
             }}>
             <Image
-              source={item.img}
+              source={localImage.NOWORKOUT}
               style={{
                 width: 30,
                 height: 30,
@@ -289,41 +284,49 @@ const Workouts = ({navigation}: any) => {
       </>
     );
   }, []);
+  const shuffleArray = (array: Array<any>) => {
+    let currentIndex = array.length,
+      randomIndex;
 
-  const getFilterCaterogy = useMemo(
-    () => (mydata: any) => {
-      return allWorkoutData?.workout_Data?.filter(
-        (item: any) => item.goal_title == mydata,
-      );
-    },
-    [allWorkoutData?.workout_Data],
-  );
+    // While there remain elements to shuffle...
+    while (currentIndex !== 0) {
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex],
+        array[currentIndex],
+      ];
+    }
+
+    return array;
+  };
+  const getFilterCategory = (categories: string, exerciseBodyPart: string) => {
+    return categories.split('/').includes(exerciseBodyPart);
+  };
 
   const handleNavigation = (mydata: any) => {
-    let bodyexercise: any = [];
-    if (mydata?.title == 'Beach Ready') {
-      bodyexercise = allWorkoutData?.workout_Data;
-    } else if (mydata?.title == 'Corporate Cardio') {
-      bodyexercise = allWorkoutData?.workout_Data?.filter(
-        (item: any) => item.goal_title != 'Build Muscle',
-      );
-    } else {
-      bodyexercise = getFilterCaterogy(mydata?.subtitle);
-    }
-    AnalyticsConsole(`${mydata?.title?.split(' ')[0]}_W_CATE`);
-    let checkAdsShow = checkMealAddCount();
-    if (checkAdsShow == true) {
-      showInterstitialAd();
-      navigation.navigate('FocuseWorkoutList', {
-        bodyexercise,
-        item: mydata,
-      });
-    } else {
-      navigation.navigate('FocuseWorkoutList', {
-        bodyexercise,
-        item: mydata,
-      });
-    }
+    let bodyexercise: Array<any> = getAllExercise?.filter((item: any) =>
+      getFilterCategory(mydata.category, item?.exercise_bodypart),
+    );
+    bodyexercise = shuffleArray(bodyexercise);
+
+    // AnalyticsConsole(`${mydata?.title?.split(' ')[0]}_W_CATE`);
+    // let checkAdsShow = checkMealAddCount();
+    // if (checkAdsShow == true) {
+    //   showInterstitialAd();
+    //   navigation.navigate('WorkoutCategories', {
+    //     bodyexercise,
+    //     item: mydata,
+    //   });
+    // } else {
+    navigation.navigate('WorkoutCategories', {
+      categoryExercise: bodyexercise,
+      CategoryDetails: mydata,
+    });
+    // }
   };
   const renderItem1 = useMemo(() => {
     return ({item}: any) => (
@@ -517,7 +520,7 @@ const Workouts = ({navigation}: any) => {
             <RefreshControl
               refreshing={refresh}
               onRefresh={() => {
-                allWorkoutApi();
+                getAllExerciseData();
                 ChallengesDataAPI();
                 // workoutStatusApi();
                 getCustomWorkout();
@@ -783,7 +786,7 @@ const Workouts = ({navigation}: any) => {
                     </View>
                     <View style={[styles.meditionBox, {marginVertical: 5}]}>
                       <FlatList
-                        data={catogery}
+                        data={currentCategories.slice(0, 4)}
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item: any, index: number) =>
@@ -803,7 +806,7 @@ const Workouts = ({navigation}: any) => {
                         {alignItems: 'center', top: -10},
                       ]}>
                       <FlatList
-                        data={catogery2}
+                        data={currentCategories.slice(4)}
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item: any, index: number) =>
