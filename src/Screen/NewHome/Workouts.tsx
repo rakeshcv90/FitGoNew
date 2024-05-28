@@ -89,6 +89,27 @@ const FemaleCategory = [
     image: '',
     category: 'Cardio/Abs/Legs/Fourarms/Biceps/Triceps',
   },
+];  const focuseArea = [
+  {
+    id: 1,
+    title: 'Upper Body',
+    image: require('../../Icon/Images/NewImage2/uperBody.png'),
+  },
+  {
+    id: 1,
+    title: 'Lower Body',
+    image: require('../../Icon/Images/NewImage2/lowerBody.png'),
+  },
+  {
+    id: 1,
+    title: 'Full Body',
+    image: require('../../Icon/Images/NewImage2/fullBody.png'),
+  },
+  {
+    id: 1,
+    title: 'Core',
+    image: require('../../Icon/Images/NewImage2/core.png'),
+  },
 ];
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
@@ -118,43 +139,6 @@ const Workouts = ({navigation}: any) => {
   );
 
   const focuseArea = [
-    {
-      id: 1,
-      title: 'Upper Body',
-      image: require('../../Icon/Images/NewImage2/uperBody.png'),
-    },
-    {
-      id: 1,
-      title: 'Lower Body',
-      image: require('../../Icon/Images/NewImage2/lowerBody.png'),
-    },
-    {
-      id: 1,
-      title: 'Full Body',
-      image: require('../../Icon/Images/NewImage2/fullBody.png'),
-    },
-    {
-      id: 1,
-      title: 'Core',
-      image: require('../../Icon/Images/NewImage2/core.png'),
-    },
-  ];
-  useEffect(() => {
-    if (isFocused) {
-      initInterstitial();
-      // allWorkoutApi();
-      ChallengesDataAPI();
-      getAllExerciseData();
-      getCustomWorkout();
-      getWorkoutStatus();
-      setCurrentCategories(
-        getUserDataDetails?.gender == 'Female' ? FemaleCategory : MaleCategory,
-      );
-    }
-  }, [isFocused]);
-
-  const [refresh, setRefresh] = useState(false);
-  let catogery = [
     {
       id: 1,
       title: 'Get Fit',
