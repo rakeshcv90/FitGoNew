@@ -11,6 +11,7 @@ import {
 import React, {FC} from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Config';
 import Icons from 'react-native-vector-icons/AntDesign';
+import Icons from 'react-native-vector-icons/AntDesign';
 import {AppColor} from '../Color';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';

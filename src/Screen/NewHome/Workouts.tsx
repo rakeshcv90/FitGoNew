@@ -117,6 +117,28 @@ const Workouts = ({navigation}: any) => {
     (state: any) => state.getChallengesData,
   );
 
+  const focuseArea = [
+    {
+      id: 1,
+      title: 'Upper Body',
+      image: require('../../Icon/Images/NewImage2/uperBody.png'),
+    },
+    {
+      id: 1,
+      title: 'Lower Body',
+      image: require('../../Icon/Images/NewImage2/lowerBody.png'),
+    },
+    {
+      id: 1,
+      title: 'Full Body',
+      image: require('../../Icon/Images/NewImage2/fullBody.png'),
+    },
+    {
+      id: 1,
+      title: 'Core',
+      image: require('../../Icon/Images/NewImage2/core.png'),
+    },
+  ];
   useEffect(() => {
     if (isFocused) {
       initInterstitial();
@@ -130,6 +152,7 @@ const Workouts = ({navigation}: any) => {
       );
     }
   }, [isFocused]);
+
   const [refresh, setRefresh] = useState(false);
   let catogery = [
     {
