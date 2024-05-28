@@ -24,7 +24,7 @@ const Name = ({navigation, route}) => {
         <TextInput
           underlineColor="transparent"
           mode="flat"
-          keyboardType="name-phone-pad"
+          keyboardType={AppColor.BLACK}
           activeUnderlineColor="transparent"
           outlineColor={AppColor.WHITE}
           activeOutlineColor={AppColor.WHITE}

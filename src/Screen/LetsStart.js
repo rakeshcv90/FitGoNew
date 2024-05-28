@@ -214,10 +214,12 @@ console.log(deviceId)
           />
           <View
             style={{
-              top: DeviceHeigth * 0.05,
+              // top: DeviceHeigth * 0.05,
+              marginTop: DeviceHeigth * 0.05,
               alignItems: 'center',
               alignSelf: 'center',
               justifyContent: 'center',
+            
             }}>
             <Image
               resizeMode="contain"
@@ -234,7 +236,7 @@ console.log(deviceId)
               alignItems: 'center',
               alignSelf: 'center',
               justifyContent: 'center',
-              top: DeviceHeigth * 0.07,
+              marginTop: DeviceHeigth * 0.03,
               borderColor: AppColor.BLACK,
             }}>
             <Text style={styles.LoginText2}>
@@ -396,7 +398,7 @@ var styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
   },
   TextContainer: {
-    top: DeviceHeigth > 808 ? DeviceHeigth * 0.13 : DeviceHeigth * 0.1,
+    marginTop: DeviceHeigth > 808 ? DeviceHeigth * 0.08 : DeviceHeigth * 0.05,
     // Platform.OS=='ios'?DeviceHeigth * 0.13:DeviceHeigth * 0.1,
     justifyContent: 'center',
     alignItems: 'center',

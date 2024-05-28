@@ -15,6 +15,7 @@ import {
   setExperience,
   setLaterButtonData,
   setProgressBarCounter,
+  setTempLogin,
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
@@ -142,7 +143,6 @@ const AskToCreateWorkout = ({route, navigation}) => {
         },
         data: payload,
       });
-      console.log('Whole Data', data?.data);
       if (data?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: data?.data?.msg,
@@ -153,6 +153,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
         });
       } else {
         getProfileData(getUserID);
+        dispatch(setTempLogin(false))
       }
     } catch (error) {
       console.log('Whole Data Error', error);

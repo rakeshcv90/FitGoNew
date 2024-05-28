@@ -33,6 +33,7 @@ import {
   Setmealdata,
   setCurrentWorkoutData,
   setCustomWorkoutData,
+  setTempLogin,
   setUserProfileData,
 } from '../../Component/ThemeRedux/Actions';
 import {showMessage} from 'react-native-flash-message';
@@ -159,6 +160,7 @@ const LoadData = ({navigation}) => {
         getUserID != 0
           ? getCustomWorkout(getUserID)
           : customFreeWorkoutDataApi(deviceID);
+          dispatch(setTempLogin(false))
       }
     } catch (error) {
       console.log('Whole Data Error', error);
