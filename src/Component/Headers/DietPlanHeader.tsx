@@ -10,8 +10,7 @@ import {
 } from 'react-native';
 import React, {FC} from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Config';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icons from 'react-native-vector-icons/AntDesign';
 import {AppColor} from '../Color';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
@@ -54,13 +53,13 @@ const DietPlanHeader: FC<Props> = ({
         {
           height:
             Platform.OS == 'ios'
-              ? (DeviceHeigth * 5) / 100
-              : (DeviceHeigth * 7) / 100,
+              ? (DeviceHeigth * 13) / 100
+              : (DeviceHeigth * 10) / 100,
           left: 1,
           paddingTop:
             Platform.OS == 'android'
               ? DeviceHeigth * 0.02
-              : DeviceHeigth * 0.01,
+              : DeviceHeigth * 0.055,
         },
       ]}>
       {backButton ? (

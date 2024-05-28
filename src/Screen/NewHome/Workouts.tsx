@@ -101,6 +101,7 @@ const Workouts = ({navigation}: any) => {
     (state: any) => state.completeProfileData,
   );
   const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
+
   const getFitmeMealAdsCount = useSelector(
     (state: any) => state.getFitmeMealAdsCount,
   );
@@ -108,14 +109,10 @@ const Workouts = ({navigation}: any) => {
     (state: any) => state.getPurchaseHistory,
   );
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
-
-  const avatarRef = React.createRef();
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
-
   const getAllExercise = useSelector((state: any) => state.getAllExercise);
-
   const getChallengesData = useSelector(
     (state: any) => state.getChallengesData,
   );
@@ -134,26 +131,87 @@ const Workouts = ({navigation}: any) => {
     }
   }, [isFocused]);
   const [refresh, setRefresh] = useState(false);
-
-  const getAllExerciseData = async () => {
-    try {
-      const exerciseData = await axios.get(
-        `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
-      );
-
-      if (
-        exerciseData?.data?.msg == 'Please update the app to the latest version'
-      ) {
-        dispatch(setAllExercise([]));
-      } else if (exerciseData?.data?.length > 0) {
-        dispatch(setAllExercise(exerciseData?.data));
-      } else {
-        dispatch(setAllExercise([]));
-      }
-    } catch (error) {
-      dispatch(setAllExercise([]));
-      console.log('All-EXCERSIE-ERROR', error);
-    }
+  let catogery = [
+    {
+      id: 1,
+      title: 'Get Fit',
+      subtitle: 'Weight Loss',
+      img: require('../../Icon/Images/NewImage2/Img7.png'),
+    },
+    {
+      id: 2,
+      title: 'Lose Weight',
+      subtitle: 'Weight Loss',
+      img: require('../../Icon/Images/NewImage2/Img6.png'),
+    },
+    {
+      id: 3,
+      title: 'HIIT',
+      subtitle: 'Strength',
+      img: require('../../Icon/Images/NewImage2/Img5.png'),
+    },
+  ];
+  let catogery2 = [
+    {
+      id: 1,
+      title: 'Immunity Booster',
+      subtitle: 'Strength',
+      img: require('../../Icon/Images/NewImage2/Img4.png'),
+    },
+    {
+      id: 2,
+      title: 'Build Muscle',
+      subtitle: 'Build Muscle',
+      img: require('../../Icon/Images/NewImage2/Img3.png'),
+    },
+    {
+      id: 3,
+      title: 'Corporate Cardio',
+      subtitle: 'Strength/Weight Loss',
+      img: require('../../Icon/Images/NewImage2/Img2.png'),
+    },
+    {
+      id: 4,
+      title: 'Beach Ready',
+      subtitle: 'Build Muscle/Weight Loss/Strength',
+      img: require('../../Icon/Images/NewImage2/Img1.png'),
+    },
+  ];
+  const allWorkoutApi = async () => {
+    // try {
+    //   setRefresh(true);
+    //   const payload = new FormData();
+    //   payload.append('id', getUserDataDetails?.id);
+    //   payload.append('version', VersionNumber.appVersion);
+    //   const res = await axios({
+    //     url: NewAppapi.ALL_WORKOUTS,
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data',
+    //     },
+    //     data: payload,
+    //   });
+    //   if (res?.data?.msg == 'Please update the app to the latest version.') {
+    //     showMessage({
+    //       message: res?.data?.msg,
+    //       type: 'danger',
+    //       animationDuration: 500,
+    //       floating: true,
+    //       icon: {icon: 'auto', position: 'left'},
+    //     });
+    //     setRefresh(false);
+    //   } else if (res?.data) {
+    //     setRefresh(false);
+    //     dispatch(setAllWorkoutData(res?.data));
+    //   } else {
+    //     setRefresh(false);
+    //     dispatch(setAllWorkoutData([]));
+    //   }
+    // } catch (error) {
+    //   setRefresh(false);
+    //   console.error(error, 'customWorkoutDataApiError');
+    //   dispatch(setAllWorkoutData([]));
+    // }
   };
   const ChallengesDataAPI = async () => {
     try {
@@ -464,25 +522,105 @@ const Workouts = ({navigation}: any) => {
   };
 
   const getbodyPartWorkout = (data: any) => {
-    const exercises = getAllExercise?.filter(
-      (item: any) => item?.exercise_bodypart == data?.bodypart_title,
-    );
     let checkAdsShow = checkMealAddCount();
     AnalyticsConsole(`${data?.bodypart_title}_FR_Wrk`);
-    if (checkAdsShow == true) {
-      showInterstitialAd();
-      navigation.navigate('NewFocusWorkouts', {
-        focusExercises: exercises,
-        focusedPart: data?.bodypart_title,
-      });
+
+    if (data?.title == 'Upper Body') {
+      let exercises = getAllExercise?.filter(
+        (item: any) =>
+          item?.exercise_bodypart == 'Shoulders' ||
+          item?.exercise_bodypart == 'Triceps' ||
+          item?.exercise_bodypart == 'Forearms' ||
+          item?.exercise_bodypart == 'Chest' ||
+          item?.exercise_bodypart == 'Back' ||
+          item?.exercise_bodypart == 'Biceps',
+      );
+
+      if (checkAdsShow == true) {
+        showInterstitialAd();
+        navigation.navigate('NewFocusWorkouts', {
+          focusExercises: exercises,
+          focusedPart: data?.title,
+        });
+      } else {
+        navigation.navigate('NewFocusWorkouts', {
+          focusExercises: exercises,
+          focusedPart: data?.title,
+        });
+      }
+    } else if (data?.title == 'Lower Body') {
+      let exercises = getAllExercise?.filter(
+        (item: any) =>
+          item?.exercise_bodypart == 'Legs' ||
+          item?.exercise_bodypart == 'Calves',
+      );
+
+      if (checkAdsShow == true) {
+        showInterstitialAd();
+        navigation.navigate('NewFocusWorkouts', {
+          focusExercises: exercises,
+          focusedPart: data?.title,
+        });
+      } else {
+        navigation.navigate('NewFocusWorkouts', {
+          focusExercises: exercises,
+          focusedPart: data?.title,
+        });
+      }
+    } else if (data?.title == 'Core') {
+      let exercises = getAllExercise?.filter(
+        (item: any) =>
+          item?.exercise_bodypart == 'Abs' ||
+          item?.exercise_bodypart == 'Cardio',
+      );
+
+      if (checkAdsShow == true) {
+        showInterstitialAd();
+        navigation.navigate('NewFocusWorkouts', {
+          focusExercises: exercises,
+          focusedPart: data?.title,
+        });
+      } else {
+        navigation.navigate('NewFocusWorkouts', {
+          focusExercises: exercises,
+          focusedPart: data?.title,
+        });
+      }
     } else {
-      navigation.navigate('NewFocusWorkouts', {
-        focusExercises: exercises,
-        focusedPart: data?.bodypart_title,
-      });
+      if (checkAdsShow == true) {
+        showInterstitialAd();
+        navigation.navigate('NewFocusWorkouts', {
+          focusExercises: getAllExercise,
+          focusedPart: data?.title,
+        });
+      } else {
+        navigation.navigate('NewFocusWorkouts', {
+          focusExercises: getAllExercise,
+          focusedPart: data?.title,
+        });
+      }
     }
   };
+  const getAllExerciseData = async () => {
+    try {
+      const exerciseData = await axios.get(
+        `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
+      );
 
+      if (
+        exerciseData?.data?.msg == 'Please update the app to the latest version'
+      ) {
+        dispatch(setAllExercise([]));
+      } else if (exerciseData?.data?.length > 0) {
+        dispatch(setAllExercise(exerciseData?.data));
+      } else {
+        dispatch(setAllExercise([]));
+      }
+    } catch (error) {
+      dispatch(setAllExercise([]));
+      console.log('All-EXCERSIE-ERROR', error);
+    }
+  };
   const checkMealAddCount = () => {
     if (getPurchaseHistory.length > 0) {
       if (
@@ -551,12 +689,12 @@ const Workouts = ({navigation}: any) => {
                           alignItems: 'center',
                           justifyContent: 'flex-start',
                         }}>
-                        Focus Area
+                        Body Type
                       </Text>
                     </View>
                     <View style={styles.meditionBox}>
                       <FlatList
-                        data={completeProfileData?.focusarea}
+                        data={focuseArea}
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item: any, index: number) =>
@@ -603,9 +741,9 @@ const Workouts = ({navigation}: any) => {
                                       },
                                     }),
                                   }}>
-                                  {/* <Image
-                                    source={{uri: item?.bodypart_image}}
-                                    onLoad={() => setImageLoad(false)}
+                                  <Image
+                                    source={item.image}
+                                    // onLoad={() => setImageLoad(false)}
                                     style={{
                                       width: '100%',
                                       height: '100%',
@@ -613,26 +751,6 @@ const Workouts = ({navigation}: any) => {
                                       alignSelf: 'center',
                                     }}
                                     resizeMode="contain"
-                                  /> */}
-                                  <FastImage
-                                    fallback={true}
-                                    // onError={onError}
-                                    // onLoadEnd={onLoadEnd}
-                                    // onLoadStart={onLoadStart}
-
-                                    style={{
-                                      width: '100%',
-                                      height: '100%',
-                                      justifyContent: 'center',
-                                      alignSelf: 'center',
-                                    }}
-                                    source={{
-                                      uri: item?.bodypart_image,
-                                      headers: {Authorization: 'someAuthToken'},
-                                      priority: FastImage.priority.high,
-                                    }}
-                                    resizeMode={FastImage.resizeMode.contain}
-                                    defaultSource={localImage.NOWORKOUT}
                                   />
                                 </View>
 
@@ -645,7 +763,7 @@ const Workouts = ({navigation}: any) => {
                                     top: -8,
                                     fontFamily: Fonts.MONTSERRAT_MEDIUM,
                                   }}>
-                                  {item.bodypart_title}
+                                  {item.title}
                                 </Text>
                               </TouchableOpacity>
                             </>
