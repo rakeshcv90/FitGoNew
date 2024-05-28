@@ -54,13 +54,13 @@ const DietPlanHeader: FC<Props> = ({
         {
           height:
             Platform.OS == 'ios'
-              ? (DeviceHeigth * 5) / 100
-              : (DeviceHeigth * 7) / 100,
+              ? (DeviceHeigth * 13) / 100
+              : (DeviceHeigth * 10) / 100,
           left: 1,
           paddingTop:
             Platform.OS == 'android'
               ? DeviceHeigth * 0.02
-              : DeviceHeigth * 0.01,
+              : DeviceHeigth * 0.055,
         },
       ]}>
       {backButton ? (
@@ -136,6 +136,8 @@ const DietPlanHeader: FC<Props> = ({
 const style = StyleSheet.create({
   container: {
     width: DeviceWidth,
+    paddingLeft: 10,
+    paddingRight: 10,
     paddingLeft: 10,
     paddingRight: 10,
     backgroundColor: '#fff',

@@ -168,7 +168,7 @@ const NewPersonalDetails = ({route, navigation}) => {
           token: getUserDataDetails.login_token,
           version: VersionNumber.appVersion,
           goal: values.goal,
-          injury: values.injury,
+          injury: getUserDataDetails?.injury,
           weight: getUserDataDetails?.weight,
           target_weight: values.targetWeight,
          
@@ -185,7 +185,7 @@ const NewPersonalDetails = ({route, navigation}) => {
 
       if (dataItem.data.msg == 'User Updated Successfully') {
         showMessage({
-          message: dataItem.data.msg,
+          message: 'Details updated successfully',
           floating: true,
           type: 'success',
           animationDuration: 750,
@@ -244,7 +244,7 @@ const NewPersonalDetails = ({route, navigation}) => {
           experience: getUserDataDetails?.experience,
           workout_plans: getUserDataDetails?.workout_plans,
           goal: getUserDataDetails?.goal_title,
-          injury: getUserDataDetails?.injury,
+          // injury: getUserDataDetails?.injury,
 
           targetWeight: getUserDataDetails?.target_weight,
           equipment: getUserDataDetails?.equipment,
@@ -386,7 +386,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                           }}
                         />
                       </View>
-                      <View
+                      {/* <View
                         style={{
                           marginTop: DeviceHeigth * 0.02,
 
@@ -409,7 +409,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                             setFieldValue('injury', item.injury_title);
                           }}
                         />
-                      </View>
+                      </View> */}
 
                       <View
                         style={{
@@ -563,7 +563,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                             }}
                           />
                         </View>
-                        <View
+                        {/* <View
                           style={{
                             marginTop: DeviceHeigth * 0.02,
 
@@ -590,7 +590,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                               setFieldValue('injury', item.injury_title);
                             }}
                           />
-                        </View>
+                        </View> */}
 
                         <View
                           style={{

@@ -1,7 +1,7 @@
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/index';
+import Yourself from '../Screen/Yourself/Index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -62,7 +62,8 @@ import GymListing from '../Screen/GymListing/GymListing';
 import Trainer from '../Screen/NewHome/Trainer';
 import HomeNew from '../Screen/NewHome/HomeNew';
 import LetsStart from '../Screen/LetsStart';
-import NewFocusWorkouts from '../Screen/NewWorkouts/NewFocusWorkouts';
+import NewFocusWorkouts from '../Screen/FocusArea/NewFocusWorkouts';
+
 import WorkoutCategories from '../Screen/NewWorkouts/WorkoutCategories';
 import Name from '../Screen/Yourself/Name';
 

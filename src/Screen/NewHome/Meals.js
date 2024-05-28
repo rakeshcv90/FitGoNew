@@ -650,7 +650,7 @@ const Meals = ({navigation}) => {
               alignItems: 'center',
               justifyContent: 'flex-start',
             }}>
-            Top diet recipes
+            Top Recipes
           </Text>
 
           <Carousel
@@ -683,7 +683,7 @@ const Meals = ({navigation}) => {
               alignItems: 'center',
               justifyContent: 'flex-start',
             }}>
-            Categories
+            Recipes
           </Text>
         </View>
         <View

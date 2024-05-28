@@ -309,7 +309,7 @@ const MeditationDetails = ({navigation, route}) => {
               fontSize: 12,
               top: 2,
             }}>
-            Looking for something specific?
+            Select your meditation practice.
           </Text>
         </View>
         <View style={styles.meditionBox}>
@@ -357,7 +357,7 @@ const MeditationDetails = ({navigation, route}) => {
               fontSize: 12,
               top: 2,
             }}>
-            Start your session with daily favorites picked for you.
+            Start the meditation of your choice.
           </Text>
         </View>
         <View style={[styles.meditionBox, {flex: 1}]}>

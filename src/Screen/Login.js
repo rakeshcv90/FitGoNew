@@ -152,7 +152,7 @@ const Login = ({navigation}) => {
       ) {
         showMessage({
           message:
-            'You need to Signup first/Your Email Not Signup with Goole-login',
+            'This email id is not registered. Sign Up to continue',
           type: 'danger',
           animationDuration: 1000,
           floating: true,
