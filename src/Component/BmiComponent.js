@@ -86,14 +86,14 @@ export const BmiMeter = ({getBmi}) => {
           style={{
             color: AppColor.BLACK,
             position: 'absolute',
-            fontFamily: 'Poppins-SemiBold',
+            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
           }}>
           {'0'}
         </Text>
         <Text
           style={{
             color: AppColor.BLACK,
-            fontFamily: 'Poppins-SemiBold',
+            fontFamily:Fonts.MONTSERRAT_SEMIBOLD,
             textAlign: 'center',
             width: 85,
             marginLeft:
@@ -108,13 +108,11 @@ export const BmiMeter = ({getBmi}) => {
         <Text
           style={{
             color: AppColor.BLACK,
-            fontFamily: 'Poppins-SemiBold',
+            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
             right: isFinite(getBmi) ? null : 28,
             textAlign: 'center',
           }}>
-          {isNaN(getBmi)
-            ? 'No data'
-            : getBmi < 18
+          {getBmi < 18
             ? (getBmi * 2 + 10).toFixed(0)
             : getBmi > 18 && getBmi < 25
             ? (getBmi * 2).toFixed(0)
@@ -221,7 +219,10 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
         }),
       );
       setModalVisible(false);
-      setHeight(height);
+      setHeight('');
+      setWeight('');
+      setHeightType('ft');
+      setWeightType('kg')
     }
   };
 
