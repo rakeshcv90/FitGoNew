@@ -120,7 +120,6 @@ const Workouts = ({navigation}: any) => {
   useEffect(() => {
     if (isFocused) {
       initInterstitial();
-      allWorkoutApi();
       ChallengesDataAPI();
       // getCustomeWorkoutTimeDetails();
       getCustomWorkout();
@@ -131,7 +130,7 @@ const Workouts = ({navigation}: any) => {
     }
   }, [isFocused]);
   const [refresh, setRefresh] = useState(false);
-  let catogery = [
+  let focuseArea = [
     {
       id: 1,
       title: 'Upper Body',
@@ -164,28 +163,7 @@ const Workouts = ({navigation}: any) => {
     }
   }, [isFocused]);
 
-  const [refresh, setRefresh] = useState(false);
 
-  const getAllExerciseData = async () => {
-    try {
-      const exerciseData = await axios.get(
-        `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
-      );
-
-      if (
-        exerciseData?.data?.msg == 'Please update the app to the latest version'
-      ) {
-        dispatch(setAllExercise([]));
-      } else if (exerciseData?.data?.length > 0) {
-        dispatch(setAllExercise(exerciseData?.data));
-      } else {
-        dispatch(setAllExercise([]));
-      }
-    } catch (error) {
-      dispatch(setAllExercise([]));
-      console.log('All-EXCERSIE-ERROR', error);
-    }
-  };
   const ChallengesDataAPI = async () => {
     try {
       const res = await axios({

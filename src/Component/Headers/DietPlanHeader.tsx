@@ -138,8 +138,6 @@ const style = StyleSheet.create({
     width: DeviceWidth,
     paddingLeft: 10,
     paddingRight: 10,
-    paddingLeft: 10,
-    paddingRight: 10,
     backgroundColor: '#fff',
     flexDirection: 'row',
     justifyContent: 'space-between',

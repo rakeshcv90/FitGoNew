@@ -416,8 +416,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
             ? CategoryDetails?.title
             : CategoryDetails?.bodypart_title
         }
-        SearchButton={false}
-        backButton
         workoutCat={switchButton}
         backPressCheck={switchButton}
         onPress={() => {
@@ -425,8 +423,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
           setSwitchButton(false);
           setItemsLength(0);
         }}
-        onPressImage={null}
-        source={null}
         key={CategoryDetails?.id}
       />
       <View style={styles.container}>
