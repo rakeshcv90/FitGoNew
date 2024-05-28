@@ -18,6 +18,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {
+  setAllExercise,
   setAllWorkoutData,
   setChallengesData,
   setCustomWorkoutData,
@@ -42,11 +43,11 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
-  const [imageLoad, setImageLoad] = useState(true);
   const completeProfileData = useSelector(
     (state: any) => state.completeProfileData,
   );
   const allWorkoutData = useSelector((state: any) => state.allWorkoutData);
+
   const getFitmeMealAdsCount = useSelector(
     (state: any) => state.getFitmeMealAdsCount,
   );
@@ -54,18 +55,36 @@ const Workouts = ({navigation}: any) => {
     (state: any) => state.getPurchaseHistory,
   );
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
-
-  const avatarRef = React.createRef();
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
-
   const getAllExercise = useSelector((state: any) => state.getAllExercise);
-
   const getChallengesData = useSelector(
     (state: any) => state.getChallengesData,
   );
 
+  const focuseArea = [
+    {
+      id: 1,
+      title: 'Upper Body',
+      image: require('../../Icon/Images/NewImage2/uperBody.png'),
+    },
+    {
+      id: 1,
+      title: 'Lower Body',
+      image: require('../../Icon/Images/NewImage2/lowerBody.png'),
+    },
+    {
+      id: 1,
+      title: 'Full Body',
+      image: require('../../Icon/Images/NewImage2/fullBody.png'),
+    },
+    {
+      id: 1,
+      title: 'Core',
+      image: require('../../Icon/Images/NewImage2/core.png'),
+    },
+  ];
   useEffect(() => {
     if (isFocused) {
       initInterstitial();
@@ -74,8 +93,10 @@ const Workouts = ({navigation}: any) => {
       // getCustomeWorkoutTimeDetails();
       getCustomWorkout();
       getWorkoutStatus();
+      getAllExerciseData();
     }
   }, [isFocused]);
+
   const [refresh, setRefresh] = useState(false);
   let catogery = [
     {
@@ -461,25 +482,105 @@ const Workouts = ({navigation}: any) => {
   };
 
   const getbodyPartWorkout = (data: any) => {
-    const exercises = getAllExercise?.filter(
-      (item: any) => item?.exercise_bodypart == data?.bodypart_title,
-    );
     let checkAdsShow = checkMealAddCount();
     AnalyticsConsole(`${data?.bodypart_title}_FR_Wrk`);
-    if (checkAdsShow == true) {
-      showInterstitialAd();
-      navigation.navigate('NewFocusWorkouts', {
-        focusExercises: exercises,
-        focusedPart: data?.bodypart_title,
-      });
+
+    if (data?.title == 'Upper Body') {
+      let exercises = getAllExercise?.filter(
+        (item: any) =>
+          item?.exercise_bodypart == 'Shoulders' ||
+          item?.exercise_bodypart == 'Triceps' ||
+          item?.exercise_bodypart == 'Forearms' ||
+          item?.exercise_bodypart == 'Chest' ||
+          item?.exercise_bodypart == 'Back' ||
+          item?.exercise_bodypart == 'Biceps',
+      );
+
+      if (checkAdsShow == true) {
+        showInterstitialAd();
+        navigation.navigate('NewFocusWorkouts', {
+          focusExercises: exercises,
+          focusedPart: data?.title,
+        });
+      } else {
+        navigation.navigate('NewFocusWorkouts', {
+          focusExercises: exercises,
+          focusedPart: data?.title,
+        });
+      }
+    } else if (data?.title == 'Lower Body') {
+      let exercises = getAllExercise?.filter(
+        (item: any) =>
+          item?.exercise_bodypart == 'Legs' ||
+          item?.exercise_bodypart == 'Calves',
+      );
+
+      if (checkAdsShow == true) {
+        showInterstitialAd();
+        navigation.navigate('NewFocusWorkouts', {
+          focusExercises: exercises,
+          focusedPart: data?.title,
+        });
+      } else {
+        navigation.navigate('NewFocusWorkouts', {
+          focusExercises: exercises,
+          focusedPart: data?.title,
+        });
+      }
+    } else if (data?.title == 'Core') {
+      let exercises = getAllExercise?.filter(
+        (item: any) =>
+          item?.exercise_bodypart == 'Abs' ||
+          item?.exercise_bodypart == 'Cardio',
+      );
+
+      if (checkAdsShow == true) {
+        showInterstitialAd();
+        navigation.navigate('NewFocusWorkouts', {
+          focusExercises: exercises,
+          focusedPart: data?.title,
+        });
+      } else {
+        navigation.navigate('NewFocusWorkouts', {
+          focusExercises: exercises,
+          focusedPart: data?.title,
+        });
+      }
     } else {
-      navigation.navigate('NewFocusWorkouts', {
-        focusExercises: exercises,
-        focusedPart: data?.bodypart_title,
-      });
+      if (checkAdsShow == true) {
+        showInterstitialAd();
+        navigation.navigate('NewFocusWorkouts', {
+          focusExercises: getAllExercise,
+          focusedPart: data?.title,
+        });
+      } else {
+        navigation.navigate('NewFocusWorkouts', {
+          focusExercises: getAllExercise,
+          focusedPart: data?.title,
+        });
+      }
     }
   };
+  const getAllExerciseData = async () => {
+    try {
+      const exerciseData = await axios.get(
+        `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
+      );
 
+      if (
+        exerciseData?.data?.msg == 'Please update the app to the latest version'
+      ) {
+        dispatch(setAllExercise([]));
+      } else if (exerciseData?.data?.length > 0) {
+        dispatch(setAllExercise(exerciseData?.data));
+      } else {
+        dispatch(setAllExercise([]));
+      }
+    } catch (error) {
+      dispatch(setAllExercise([]));
+      console.log('All-EXCERSIE-ERROR', error);
+    }
+  };
   const checkMealAddCount = () => {
     if (getPurchaseHistory.length > 0) {
       if (
@@ -548,12 +649,12 @@ const Workouts = ({navigation}: any) => {
                           alignItems: 'center',
                           justifyContent: 'flex-start',
                         }}>
-                        Focus Area
+                        Body Type
                       </Text>
                     </View>
                     <View style={styles.meditionBox}>
                       <FlatList
-                        data={completeProfileData?.focusarea}
+                        data={focuseArea}
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item: any, index: number) =>
@@ -600,9 +701,9 @@ const Workouts = ({navigation}: any) => {
                                       },
                                     }),
                                   }}>
-                                  {/* <Image
-                                    source={{uri: item?.bodypart_image}}
-                                    onLoad={() => setImageLoad(false)}
+                                  <Image
+                                    source={item.image}
+                                    // onLoad={() => setImageLoad(false)}
                                     style={{
                                       width: '100%',
                                       height: '100%',
@@ -610,26 +711,6 @@ const Workouts = ({navigation}: any) => {
                                       alignSelf: 'center',
                                     }}
                                     resizeMode="contain"
-                                  /> */}
-                                  <FastImage
-                                    fallback={true}
-                                    // onError={onError}
-                                    // onLoadEnd={onLoadEnd}
-                                    // onLoadStart={onLoadStart}
-
-                                    style={{
-                                      width: '100%',
-                                      height: '100%',
-                                      justifyContent: 'center',
-                                      alignSelf: 'center',
-                                    }}
-                                    source={{
-                                      uri: item?.bodypart_image,
-                                      headers: {Authorization: 'someAuthToken'},
-                                      priority: FastImage.priority.high,
-                                    }}
-                                    resizeMode={FastImage.resizeMode.contain}
-                                    defaultSource={localImage.NOWORKOUT}
                                   />
                                 </View>
 
@@ -642,7 +723,7 @@ const Workouts = ({navigation}: any) => {
                                     top: -8,
                                     fontFamily: Fonts.MONTSERRAT_MEDIUM,
                                   }}>
-                                  {item.bodypart_title}
+                                  {item.title}
                                 </Text>
                               </TouchableOpacity>
                             </>

@@ -13,7 +13,8 @@ import NewHeader from '../../Component/Headers/NewHeader';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
 import {useDispatch, useSelector} from 'react-redux';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+// import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icons from 'react-native-vector-icons/FontAwesome5';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -46,9 +47,7 @@ const CreateWorkout = ({navigation, route}) => {
   const [workoutList, setWorkoutList] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [forLoading, setForLoading] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [value, setValue] = useState(0);
-  const animation = useSharedValue(0);
+
   const completeProfileData = useSelector(state => state.completeProfileData);
   const {getUserID} = useSelector(state => state);
   const [bodyPart, setBodyPart] = useState(
@@ -57,14 +56,6 @@ const CreateWorkout = ({navigation, route}) => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const avatarRef = React.createRef();
   const [filteredCategories, setFilteredCategories] = useState([]);
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      width:
-        animation.value == 1
-          ? withTiming(DeviceWidth * 0.85, {duration: 500})
-          : withTiming(0, {duration: 500}),
-    };
-  });
 
   useEffect(() => {
     const datalist = getAllExercise?.filter(listdata => {
@@ -82,13 +73,7 @@ const CreateWorkout = ({navigation, route}) => {
     setWorkoutList(datalist);
     setFilteredCategories(datalist);
   }, [bodyPart]);
-  const renderItem = item => {
-    return (
-      <View style={styles.item}>
-        <Text style={styles.textItem}>{item.bodypart_title}</Text>
-      </View>
-    );
-  };
+
   const renderItem1 = useMemo(
     () =>
       ({index, item}) => {
@@ -126,7 +111,7 @@ const CreateWorkout = ({navigation, route}) => {
                     shadowRadius: 4,
                   },
                   android: {
-                    elevation: 3,
+                    elevation: 0,
                   },
                 }),
               }}>
@@ -175,7 +160,7 @@ const CreateWorkout = ({navigation, route}) => {
                   <FastImage
                     fallback={true}
                     // onLoad={() => setIsLoading(false)}
-                    
+
                     // onError={onError}
                     // onLoadEnd={onLoadEnd}
                     // onLoadStart={onLoadStart}
@@ -195,7 +180,6 @@ const CreateWorkout = ({navigation, route}) => {
                         : item.exercise_image_link,
                       headers: {Authorization: 'someAuthToken'},
                       priority: FastImage.priority.high,
-                 
                     }}
                     resizeMode={FastImage.resizeMode.contain}
                     defaultSource={localImage.NOWORKOUT}
@@ -244,7 +228,7 @@ const CreateWorkout = ({navigation, route}) => {
           </>
         );
       },
-    [selectedItems],
+    [selectedItems, bodyPart],
   );
 
   const getAdsDisplay = (index, item) => {
@@ -253,6 +237,7 @@ const CreateWorkout = ({navigation, route}) => {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0 && filteredCategories.length > 8) {
         return getNativeAdsDisplay();
+      } else {
       }
     }
   };
@@ -359,12 +344,12 @@ const CreateWorkout = ({navigation, route}) => {
             'Content-Type': 'multipart/form-data',
           },
         });
-    
+
         if (res.data.msg == 'data inserted successfully') {
           getCustomWorkout();
         } else {
           setForLoading(false);
-        
+
           // showMessage({
           //   message: 'Something went wrong pleasr try again',
           //   type: 'danger',
@@ -375,7 +360,7 @@ const CreateWorkout = ({navigation, route}) => {
         }
       } catch (error) {
         setForLoading(false);
-  
+
         showMessage({
           message: 'Something went wrong please try again!',
           type: 'danger',
@@ -448,74 +433,43 @@ const CreateWorkout = ({navigation, route}) => {
       />
       {forLoading ? <ActivityLoader /> : ''}
       <View style={styles.container}>
-        <View style={{width: '95%', alignSelf: 'center'}}>
-          <Animated.View
-            style={[
-              {
-                top: -10,
-                width: DeviceWidth ,
-                height: 50,
-                zIndex: 1,
+        <View
+          style={{
+            width: '95%',
+            height: 50,
+            alignSelf: 'center',
+            backgroundColor: '#F3F5F5',
+            borderRadius: 6,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingLeft: 10,
+            top: -10,
+          }}>
+          <Icons name="search" size={18} color={'#333333E5'} />
+          <TextInput
+            placeholder="Search Exercise"
+            placeholderTextColor={'rgba(80, 80, 80, 0.6)'}
+            value={searchQuery}
+            onChangeText={text => {
+              setSearchQuery(text);
+              updateFilteredCategories(text);
+            }}
+            style={styles.inputText}
+          />
+        </View>
 
-                paddingHorizontal: 20,
-                backgroundColor: value == 1 ? '#e7e7e7' : AppColor.WHITE,
-                alignSelf: 'flex-end',
-                flexDirection: 'row',
-                borderRadius: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: value == 1 ? 20 : 10,
-              },
-              animatedStyle,
-            ]}>
-            <TextInput
-              style={{width: '100%', color: 'black'}}
-              placeholder={'Search here......'}
-              placeholderTextColor={'gray'}
-              value={searchQuery}
-              onChangeText={text => {
-                setSearchQuery(text);
-                updateFilteredCategories(text);
-              }}
-            />
-            <TouchableOpacity
-              //style={{marginRight:10}}
-              onPress={() => {
-                setSearchQuery('');
-                if (animation.value == 1) {
-                  animation.value = 0;
-                  setValue(0);
-                } else {
-                  animation.value = 1;
-                  setValue(1);
-                }
-              }}>
-              <Image
-                style={{width: 15, height: 15}}
-                source={value == 0 ? localImage.Search : localImage.Cross}
-              />
-            </TouchableOpacity>
-          </Animated.View>
-          {value == 0 && (
-            <View style={{top: -DeviceHeigth * 0.06}}>
-              <Text
-                style={{
-                  color: '#202020',
-                  fontFamily: Fonts.MONTSERRAT_BOLD,
-                  fontWeight: '700',
-                  lineHeight: 30,
-                  fontSize: 18,
-                  alignItems: 'center',
-                }}>
-                Choose Your Exercise
-              </Text>
-            </View>
-          )}
-          <View
-            style={{
-              top: value == 1 ? 20 : -25,
-            }}>
-            <Dropdown
+        <View
+          style={{
+            marginVertical: 10,
+            height: DeviceHeigth * 0.05,
+            alignItems: 'center',
+            // zIndex: -1,
+            justifyContent: 'center',
+            alignSelf: 'center',
+            width: '100%',
+            alignSelf: 'center',
+          }}>
+          {/* <Dropdown
               style={styles.dropdown}
               placeholderStyle={styles.placeholderStyle}
               selectedTextStyle={styles.selectedTextStyle}
@@ -529,25 +483,66 @@ const CreateWorkout = ({navigation, route}) => {
                 setBodyPart(item.bodypart_title);
               }}
               renderItem={renderItem}
-            />
-          </View>
-          <View
-            style={[
-              styles.meditionBox,
-              {paddingBottom: 300, top: value == 1 ? DeviceHeigth * 0.05 : 0},
-            ]}>
-            <FlatList
-              data={filteredCategories}
-              showsVerticalScrollIndicator={false}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={renderItem1}
-              ListEmptyComponent={emptyComponent}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              updateCellsBatchingPeriod={100}
-              removeClippedSubviews={true}
-            />
-          </View>
+            /> */}
+
+          <FlatList
+            data={completeProfileData?.focusarea}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item, index}) => (
+              <TouchableOpacity
+                activeOpacity={0.9}
+                style={[
+                  styles.listView,
+                  {
+                    backgroundColor:
+                      bodyPart == item.bodypart_title ? '#A937371A' : '#fff',
+                    borderWidth: bodyPart != item.bodypart_title ? 2 : 0,
+                    borderColor:
+                      bodyPart != item.bodypart_title
+                        ? '#33333333'
+                        : '#A937371A',
+                  },
+                ]}
+                onPress={() => {
+                  setBodyPart(item.bodypart_title);
+                }}>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontWeight: '500',
+                    lineHeight: 16,
+                    textAlign: 'center',
+                    color:
+                      bodyPart != item.bodypart_title ? '#333333E5' : '#A93737',
+                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                  }}>
+                  {item.bodypart_title}
+                </Text>
+              </TouchableOpacity>
+            )}
+            showsVerticalScrollIndicator={false}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
+          />
+        </View>
+
+        <View style={[styles.meditionBox]}>
+          <FlatList
+            data={filteredCategories}
+            contentContainerStyle={{paddingBottom: DeviceHeigth * 0.25}}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={renderItem1}
+            ListEmptyComponent={emptyComponent}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
+          />
         </View>
         <LinearGradient
           start={{x: 0, y: 1}}
@@ -635,6 +630,7 @@ const styles = StyleSheet.create({
   },
   meditionBox: {
     backgroundColor: 'white',
+    top: 0,
   },
   button: {
     fontSize: 15,
@@ -655,6 +651,27 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     borderRadius: 100 / 2,
+  },
+  listView: {
+    paddingLeft: 15,
+    paddingRight: 15,
+    height: 30,
+
+    borderRadius: 25,
+    marginHorizontal: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inputText: {
+    paddingLeft: 15,
+    paddingRight: 15,
+    width: '90%',
+    height: 50,
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: '600',
+    fontFamily: 'Montserrat',
+    color: '#000',
   },
 });
 export default CreateWorkout;

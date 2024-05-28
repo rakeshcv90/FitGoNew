@@ -87,7 +87,7 @@ const NewProfile = ({navigation}) => {
   const CardData = [
     {
       id: 1,
-      txt: 'Reminder',
+      txt: 'Daily Reminder',
       img: localImage.Bell,
       txt1: moment(notificationTimer).format('LT'),
     },
@@ -169,7 +169,7 @@ const NewProfile = ({navigation}) => {
   const ListData = [
     {
       id: 1,
-      txt: 'Sound Options',
+      txt: 'Mute Voice Assistant',
       img: localImage.NSounds,
     },
     {
@@ -216,7 +216,7 @@ const NewProfile = ({navigation}) => {
   const ListData1 = [
     {
       id: 1,
-      txt: 'Sound Options',
+      txt: 'Mute Voice Assistant',
       img: localImage.NSounds,
     },
     {
@@ -305,7 +305,7 @@ const NewProfile = ({navigation}) => {
         });
         if (ProfileData?.data) {
           showMessage({
-            message: ProfileData?.data[0]?.msg,
+            message: 'Profile photo update successfully',
             type: 'success',
             animationDuration: 500,
 
@@ -770,7 +770,7 @@ const NewProfile = ({navigation}) => {
                 marginVertical: 10,
                 color: AppColor.BLACK,
               }}>
-              Sign up for free to save your workouts
+             Sign Up or Log In to Save your progress.
             </Text>
             <View style={{flexDirection: 'row', top: 5}}>
               <TouchableOpacity
@@ -930,7 +930,7 @@ const NewProfile = ({navigation}) => {
                       AnalyticsConsole(`SOUND_ON/OFF_BUTTON`);
                       if (text == true) {
                         showMessage({
-                          message: 'Sound Is Unmute',
+                          message: 'Sound unmuted',
                           type: 'success',
                           animationDuration: 500,
                           floating: true,
@@ -938,7 +938,7 @@ const NewProfile = ({navigation}) => {
                         });
                       } else {
                         showMessage({
-                          message: 'Sound Is Mute',
+                          message: 'Sound muted',
                           animationDuration: 500,
                           type: 'danger',
                           floating: true,

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Config';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icons from 'react-native-vector-icons/AntDesign';
 import {AppColor} from '../Color';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
@@ -24,7 +24,8 @@ const DietPlanHeader = ({
   SearchButton,
   onPress,
   source,
-  onPressImage
+  onPressImage,
+  backPressCheck,
 }) => {
   const navigation = useNavigation();
   const getExperience = useSelector(state => state.getExperience);
@@ -36,13 +37,13 @@ const DietPlanHeader = ({
         {
           height:
             Platform.OS == 'ios'
-              ? (DeviceHeigth * 5) / 100
-              : (DeviceHeigth * 7) / 100,
+              ? (DeviceHeigth * 13) / 100
+              : (DeviceHeigth * 10) / 100,
           left: 1,
           paddingTop:
             Platform.OS == 'android'
               ? DeviceHeigth * 0.02
-              : DeviceHeigth * 0.01,
+              : DeviceHeigth * 0.055,
         },
       ]}>
       {!backButton ? (
@@ -51,24 +52,23 @@ const DietPlanHeader = ({
         <TouchableOpacity
           style={{left: 0}}
           onPress={() => {
-            if (getExperience == true) {
-              dispatch(setExperience(false));
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  routes: [{name: 'BottomTab'}],
-                }),
-              );
-              // navigationRef.current.navigate('BottomTab',{screen:'Home'})
+            if (backPressCheck) {
+              onPress();
             } else {
-              navigation.goBack();
+              if (getExperience == true) {
+                dispatch(setExperience(false));
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{name: 'BottomTab'}],
+                  }),
+                );
+              } else {
+                navigation.goBack();
+              }
             }
           }}>
-          <Icons
-            name={'chevron-left'}
-            size={28}
-            color={AppColor.INPUTTEXTCOLOR}
-          />
+          <Icons name={'arrowleft'} size={25} color={AppColor.INPUTTEXTCOLOR} />
         </TouchableOpacity>
       )}
 
@@ -106,8 +106,8 @@ const DietPlanHeader = ({
 const style = StyleSheet.create({
   container: {
     width: DeviceWidth,
-  paddingLeft:10,
-  paddingRight:10,
+    paddingLeft: 10,
+    paddingRight: 10,
     backgroundColor: '#fff',
     flexDirection: 'row',
     justifyContent: 'space-between',
