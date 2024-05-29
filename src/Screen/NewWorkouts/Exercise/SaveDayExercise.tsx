@@ -38,7 +38,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
-
+console.log('Data---->',data,type)
   const getWeeklyAPI = async () => {
     try {
       const res = await axios({
@@ -136,7 +136,14 @@ const SaveDayExercise = ({navigation, route}: any) => {
           categoryExercise,
           CategoryDetails: data,
         })
-      : navigation.navigate('DayRewards', {data, day});
+      : type=='bodypart'?navigation.navigate('NewFocusWorkouts',{
+        focusExercises:allExercise,
+        focusedPart:data?.title,
+        searchCriteria:data?.searchCriteria,
+        searchCriteriaRedux:data?.searchCriteriaRedux,
+        CategoryDetails:data
+
+      }):navigation.navigate('MyPlans') //add here 
   };
   const bannerAdsDisplay = () => {
     if (getPurchaseHistory.length > 0) {
@@ -151,6 +158,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
       return <BannerAdd bannerAdId={bannerAdId} />;
     }
   };
+
   return (
     <SafeAreaView
       style={{

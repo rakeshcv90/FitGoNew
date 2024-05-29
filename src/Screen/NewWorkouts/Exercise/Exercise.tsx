@@ -270,7 +270,7 @@ const Exercise = ({navigation, route}: any) => {
                     allExercise[index + 1]?.exercise_title
                   } Exercise`,
                 );
-              if (type == 'focus') postSingleExerciseAPI(index);
+              if (type == 'focus' || 'bodypart') postSingleExerciseAPI(index);
               else postCurrentExerciseAPI(index);
               setDemoW(demoW + 100 / timer);
               setTimer(timer - 1);
@@ -314,7 +314,7 @@ const Exercise = ({navigation, route}: any) => {
               skipCount == 0
             ) {
               setPause(false);
-              type == 'focus'
+              type == 'focus' || 'bodypart'
                 ? postSingleExerciseAPI(number)
                 : postCurrentExerciseAPI(number);
               let checkAdsShow = checkMealAddCount();
@@ -344,7 +344,7 @@ const Exercise = ({navigation, route}: any) => {
               number == allExercise?.length - 1 &&
               skipCount != 0
             ) {
-              type == 'focus'
+              type == 'focus' || 'bodypart'
                 ? postSingleExerciseAPI(number)
                 : postCurrentExerciseAPI(number);
               navigationRef.current.goBack();

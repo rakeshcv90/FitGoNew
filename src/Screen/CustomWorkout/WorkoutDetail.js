@@ -93,11 +93,14 @@ const WorkoutDetail = ({navigation, route}) => {
       <DietPlanHeader
         header={'Meals'}
         SearchButton={true}
-        backButton={true}
         onPress={() => {
           getFilterData();
         }}
-        source={getSoundOffOn?require('../../Icon/Images/NewImage2/sound.png'):require('../../Icon/Images/NewImage2/soundmute.png')}
+        source={
+          getSoundOffOn
+            ? require('../../Icon/Images/NewImage2/sound.png')
+            : require('../../Icon/Images/NewImage2/soundmute.png')
+        }
         onPressImage={() => {
           if (getSoundOffOn) {
             dispatch(setSoundOnOff(false));

@@ -18,23 +18,53 @@ import NativeAddTest from '../../Component/NativeAddTest';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
-import Icons from 'react-native-vector-icons/AntDesign';
-import Icon from 'react-native-vector-icons/Entypo';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Iconss from 'react-native-vector-icons/FontAwesome5';
 import FastImage from 'react-native-fast-image';
 import {localImage} from '../../Component/Image';
 import Button from '../../Component/Button';
+import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
+import {CircularProgressBase} from 'react-native-circular-progress-indicator';
+
+import {
+  setCoreCount,
+  setCoreFilOpt,
+  setLowerBodyCount,
+  setLowerBodyFilOpt,
+  setUprBdyOpt,
+  setUprBodyCount,
+  setVideoLocation,
+} from '../../Component/ThemeRedux/Actions';
+import RNFetchBlob from 'rn-fetch-blob';
+import GradientButton from '../../Component/GradientButton';
+import {getActiveTrackIndex} from 'react-native-track-player/lib/src/trackPlayer';
 
 const NewFocusWorkouts = ({route, navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  const getUperBodyFilOption = useSelector(
+    state => state?.getUperBodyFilOption,
+  );
+  const getLowerBodyFilOpt = useSelector(state => state.getLowerBodyFilOpt);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+  const getCoreFiltOpt = useSelector(state => state.getCoreFiltOpt);
   const exerciseData = route?.params?.focusExercises;
+  const searchCriteria = route?.params?.searchCriteria;
+  const searchCriteriaRedux = route?.params?.searchCriteriaRedux;
   const isFocused = useIsFocused();
-
   const [searchQuery, setSearchQuery] = useState('');
   const refStandard = useRef();
-
   const [filterList, setFilterList] = useState(exerciseData);
+  const getUprBodyCount = useSelector(state => state.getUprBodyCount);
+  const getLowerBodyCount = useSelector(state => state.getLowerBodyCount);
+  const getCoreCount = useSelector(state => state.getCoreCount);
+  const [visible, setVisible] = useState(false);
+  const CategoryDetails = route.params?.CategoryDetails;
+  const [item, setitem] = useState();
+  const [downloaded, setDownloade] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [downloadProgress, setDownloadProgress] = useState(0);
+  const dispatch = useDispatch();
   const uperBody = [
     {
       id: 1,
@@ -48,7 +78,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
     },
     {
       id: 3,
-      title: 'Shoulder',
+      title: 'Shoulders',
       ima: require('../../Icon/Images/NewImage2/shoulder.png'),
     },
     {
@@ -88,15 +118,68 @@ const NewFocusWorkouts = ({route, navigation}) => {
   ];
   useEffect(() => {
     if (route?.params?.focusedPart == 'Upper Body') {
-      refStandard.current.open();
+      if (getUprBodyCount == 0) {
+        refStandard.current.open();
+      }
     } else if (route?.params?.focusedPart == 'Lower Body') {
-      refStandard.current.open();
+      if (getLowerBodyCount == 0) {
+        refStandard.current.open();
+      }
     } else if (route?.params?.focusedPart == 'Core') {
-      refStandard.current.open();
+      if (getCoreCount == 0) {
+        refStandard.current.open();
+      }
     } else {
       refStandard.current.close();
     }
   }, []);
+  // automatic filter when user comes to this screen
+  useEffect(() => {
+    if (searchCriteriaRedux?.length == 0) {
+      filterExercises(exerciseData, searchCriteria);
+    } else {
+      filterExercises(exerciseData, searchCriteriaRedux);
+    }
+  }, []);
+  // filter logic
+  const filterExercises = (exercises, filterCriteria) => {
+    let modifiedFilter = [...filterCriteria];
+    if (filterCriteria.length === 0) {
+      setFilterList(exercises);
+    } else if (filterCriteria.includes('Arms')) {
+      // replacing Arms with Biceps triceps and forearms
+      modifiedFilter.pop('Arms');
+      modifiedFilter.push(...['Biceps', 'Triceps', 'Forearms']);
+      setFilterList(
+        exercises.filter(exercise =>
+          modifiedFilter.includes(exercise.exercise_bodypart),
+        ),
+      );
+    } else {
+      setFilterList(
+        exercises.filter(exercise =>
+          filterCriteria.includes(exercise.exercise_bodypart),
+        ),
+      );
+    }
+    const focusedPart = route?.params?.focusedPart;
+    if (focusedPart === 'Upper Body') {
+      dispatch(setUprBdyOpt(filterCriteria));
+      dispatch(setUprBodyCount(1));
+    } else if (focusedPart === 'Lower Body') {
+      dispatch(setLowerBodyFilOpt(filterCriteria));
+      dispatch(setLowerBodyCount(1));
+    } else if (focusedPart === 'Core') {
+      dispatch(setCoreFilOpt(filterCriteria));
+      dispatch(setCoreCount(1));
+    } else {
+      return searchCriteria;
+    }
+    refStandard.current.close();
+  };
+
+  //
+
   const updateFilteredCategories = test => {
     const filteredItems = workoutList.filter(item =>
       item.exercise_title.toLowerCase().includes(test.toLowerCase()),
@@ -154,7 +237,65 @@ const NewFocusWorkouts = ({route, navigation}) => {
       );
     }
   };
+
   const BottomSheet = () => {
+    const determineFilterCriteria = (
+      route,
+      getUperBodyFilOption,
+      getLowerBodyFilOpt,
+      getCoreFiltOpt,
+      searchCriteria,
+    ) => {
+      const focusedPart = route?.params?.focusedPart;
+      if (focusedPart === 'Upper Body') {
+        return getUperBodyFilOption.length === 0
+          ? searchCriteria
+          : getUperBodyFilOption;
+      } else if (focusedPart === 'Lower Body') {
+        return getLowerBodyFilOpt.length === 0
+          ? searchCriteria
+          : getLowerBodyFilOpt;
+      } else if (focusedPart === 'Core') {
+        return getCoreFiltOpt.length === 0 ? searchCriteria : getCoreFiltOpt;
+      } else {
+        return searchCriteria;
+      }
+    };
+    const [filterCritera, setFilterCriteria] = useState(
+      determineFilterCriteria(
+        route,
+        getUperBodyFilOption,
+        getLowerBodyFilOpt,
+        getCoreFiltOpt,
+        searchCriteria,
+      ),
+    );
+    console.log('Filter---->', searchCriteria, filterCritera);
+    // handle whenever filter data changes
+    const handleFilterChange = bodyPart => {
+      setFilterCriteria(prev =>
+        prev.includes(bodyPart)
+          ? prev.filter(item => item !== bodyPart)
+          : [...prev, bodyPart],
+      );
+    };
+    // to check if there are any changes in filter
+    const arraysAreEqual = (arr1, arr2) => {
+      if (arr1.length !== arr2.length) return false;
+      const sortedArr1 = [...arr1].sort();
+      const sortedArr2 = [...arr2].sort();
+      return sortedArr1.every((value, index) => value === sortedArr2[index]);
+    };
+    const isFilterChanged = !arraysAreEqual(
+      filterCritera,
+      determineFilterCriteria(
+        route,
+        getUperBodyFilOption,
+        getLowerBodyFilOpt,
+        getCoreFiltOpt,
+        searchCriteria,
+      ),
+    );
     return (
       <>
         <RBSheet
@@ -168,7 +309,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             container: {
               borderTopLeftRadius: 10,
               borderTopRightRadius: 10,
-               height: DeviceHeigth * 0.55,
+              height: DeviceHeigth * 0.55,
             },
             draggableIcon: {
               width: 80,
@@ -197,6 +338,15 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 activeOpacity={0.7}
                 onPress={() => {
                   refStandard.current.close();
+                  setFilterCriteria(
+                    determineFilterCriteria(
+                      route,
+                      getUperBodyFilOption,
+                      getLowerBodyFilOpt,
+                      getCoreFiltOpt,
+                      searchCriteria,
+                    ),
+                  );
                 }}>
                 <Icons name={'close'} size={25} color={AppColor.BLACK} />
               </TouchableOpacity>
@@ -247,7 +397,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
                     <>
                       <TouchableOpacity
                         activeOpacity={0.8}
-                        onPress={() => {}}
+                        onPress={() => {
+                          handleFilterChange(item?.title);
+                        }}
                         style={{
                           marginHorizontal: 10,
                           width: 172,
@@ -309,7 +461,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                             Exercise x8
                           </Text>
                         </View>
-                        <View
+                        {/* <View
                           style={{
                             width: 25,
                             height: 25,
@@ -322,14 +474,23 @@ const NewFocusWorkouts = ({route, navigation}) => {
                             alignItems: 'center',
                             borderColor: '#333333',
                             borderRadius: 30 / 2,
-                            // backgroundColor: AppColor.NEW_DARK_RED,
-                          }}>
-                          <Icon
-                            name={'check'}
-                            size={15}
-                            color={AppColor.BLACK}
-                          />
-                        </View>
+                            // backgroundColor: '#A93737',
+                          }}> */}
+                        <Icon
+                          name={
+                            filterCritera.includes(item.title)
+                              ? 'check-circle'
+                              : 'checkbox-blank-circle-outline'
+                          }
+                          size={25}
+                          color={
+                            filterCritera.includes(item.title)
+                              ? AppColor.RED
+                              : AppColor.GRAY1
+                          }
+                          style={{marginTop: 8}}
+                        />
+                        {/* </View> */}
                         <View />
                       </TouchableOpacity>
                     </>
@@ -360,7 +521,13 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 alignSelf: 'flex-end',
                 justifyContent: 'center',
                 alignItems: 'center',
-              }}>
+                opacity:
+                  filterCritera.length === 0 || !isFilterChanged ? 0.6 : 1,
+              }}
+              disabled={
+                filterCritera.length === 0 || !isFilterChanged ? true : false
+              }
+              onPress={() => filterExercises(exerciseData, filterCritera)}>
               <Text
                 style={{
                   color: '#FFFFFF',
@@ -379,13 +546,114 @@ const NewFocusWorkouts = ({route, navigation}) => {
       </>
     );
   };
+  // downloading video logic
+  const sanitizeFileName = fileName => {
+    fileName = fileName.replace(/\s+/g, '_');
+    return fileName;
+  };
+  let StoringData = {},
+    downloadCounter = 0;
+
+  const downloadVideos = async (data, index, len) => {
+    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
+      data?.exercise_title,
+    )}.mp4`;
+    try {
+      const videoExists = await RNFetchBlob.fs.exists(filePath);
+      if (videoExists) {
+        StoringData[data?.exercise_title] = filePath;
+        downloadCounter++;
+        setDownloade((downloadCounter / len) * 100);
+        setDownloadProgress(100);
+      } else {
+        await RNFetchBlob.config({
+          fileCache: true,
+          // IOSBackgroundTask: true, // Add this for iOS background downloads
+          path: filePath,
+          appendExt: '.mp4',
+        })
+          .fetch('GET', data?.exercise_video, {
+            'Content-Type': 'application/mp4',
+            // key: 'Config.REACT_APP_API_KEY',
+          })
+          .progress((received, total) => {
+            setDownloadProgress((received / total) * 100);
+            console.log(downloadProgress * 100);
+          })
+          .then(res => {
+            StoringData[data?.exercise_title] = res.path();
+            downloadCounter++;
+            setDownloade((downloadCounter / len) * 100);
+          })
+
+          .catch(err => {
+            console.log(err, 'Video Download error');
+          });
+      }
+    } catch (error) {
+      console.log('ERRRR', error);
+    }
+    dispatch(setVideoLocation(StoringData));
+  };
+  const Start = exercise => {
+    Promise.all(
+      exercise?.map((item, index) => {
+        return downloadVideos(item, index, exercise?.length);
+      }),
+    ).finally(() => {
+      setDownloade(0);
+      navigation.navigate('Exercise', {
+        allExercise: exercise,
+        currentExercise: exercise[0],
+        data: CategoryDetails,
+        day: -11,
+        exerciseNumber: 0,
+        trackerData: [],
+        type: 'bodypart',
+        challenge: false,
+      });
+    });
+  };
+  const handleIconPress = (item, index) => {
+    downloadVideos(item, index, 1).finally(() => {
+      setDownloade(0);
+      setDownloadProgress(0);
+      navigation.navigate('Exercise', {
+        allExercise: [item],
+        currentExercise: item,
+        data: CategoryDetails,
+        day: -11,
+        exerciseNumber: 0,
+        trackerData: [],
+        type: 'bodypart',
+        challenge: false,
+      });
+    });
+  };
+  // const ProgressCircle=React.memo(()=>
+  //   <CircularProgressBase
+  //   value={selectedIndex == index ? downloadProgress : 0}
+  //   radius={16}
+  //   activeStrokeColor={AppColor.RED}
+  //   inActiveStrokeColor={AppColor.GRAY1}
+  //   activeStrokeWidth={3}
+  //   inActiveStrokeWidth={3}
+  //   maxValue={100}>
+  //   <Icons
+  //     name={'play'}
+  //     size={30}
+  //     opacity={0.6}
+  //     color={'#333333'}
+  //   />
+  //   </CircularProgressBase>
+  // )
   return (
     <>
       <View style={styles.container}>
         <DietPlanHeader
           header={route?.params?.focusedPart}
           SearchButton={true}
-          backButton={true}
+          // backButton={true}
           // backPressCheck={true}
           // onPress={()=>{
 
@@ -445,6 +713,10 @@ const NewFocusWorkouts = ({route, navigation}) => {
                       paddingHorizontal: 20,
                       flexDirection: 'row',
                       alignItems: 'center',
+                    }}
+                    onPress={() => {
+                      setVisible(true);
+                      setitem(item);
                     }}>
                     <FastImage
                       fallback={true}
@@ -490,13 +762,27 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         {item?.exercise_rest}
                       </Text>
                     </View>
-                    <TouchableOpacity style={{alignSelf: 'center', right: -20}}>
-                      <Icons
-                        name={'playcircleo'}
-                        size={25}
-                        opacity={0.6}
-                        color={'#333333'}
-                      />
+                    <TouchableOpacity
+                      style={{right: -25, padding: 2}}
+                      onPress={() => {
+                        setSelectedIndex(index);
+                        handleIconPress(item, index);
+                      }}>
+                      <CircularProgressBase
+                        value={selectedIndex == index ? downloadProgress : 0}
+                        radius={16}
+                        activeStrokeColor={AppColor.RED}
+                        inActiveStrokeColor={AppColor.GRAY1}
+                        activeStrokeWidth={3}
+                        inActiveStrokeWidth={3}
+                        maxValue={100}>
+                        <Icons
+                          name={'play'}
+                          size={30}
+                          opacity={0.6}
+                          color={'#333333'}
+                        />
+                      </CircularProgressBase>
                     </TouchableOpacity>
                   </TouchableOpacity>
                   {index !== exerciseData.length - 1 && (
@@ -519,34 +805,24 @@ const NewFocusWorkouts = ({route, navigation}) => {
             removeClippedSubviews={true}
           />
         </View>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => {}}
-          style={{
-            position: 'absolute',
-            width: DeviceWidth * 0.91,
-            height: 50,
-            backgroundColor: AppColor.NEW_DARK_RED,
-            justifyContent: 'center',
-            alignItems: 'center',
-            alignSelf: 'center',
-            bottom: 5,
-            borderRadius: 6,
-          }}>
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: '500',
-              lineHeight: 20,
-              textAlign: 'center',
-              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-              color: '#fff',
-            }}>
-            Start All
-          </Text>
-        </TouchableOpacity>
-        {/* <Button buttonText={'Login'} /> */}
+        <GradientButton
+          // flex={0.01}
+          text={downloaded ? `Downloading` : 'Start All'}
+          h={50}
+          colors={['#A93737', '#A93737']}
+          textStyle={styles.buttonText}
+          alignSelf
+          bR={6}
+          normalAnimation={downloaded > 0}
+          normalFill={`${100 - downloaded}%`}
+          bottm={5}
+          position={'absolute'}
+          onPress={() => {
+            Start(filterList);
+          }}
+        />
         <BottomSheet />
+        <WorkoutsDescription data={item} open={visible} setOpen={setVisible} />
       </View>
       {bannerAdsDisplay()}
     </>
@@ -587,6 +863,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'Montserrat',
     color: '#000',
+  },
+  buttonText: {
+    fontSize: 14,
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    lineHeight: 20,
+    fontWeight: '500',
+    zIndex: 1,
+    color: AppColor.WHITE,
   },
 });
 export default NewFocusWorkouts;

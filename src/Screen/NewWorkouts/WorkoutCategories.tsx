@@ -20,8 +20,8 @@ import {StyleSheet} from 'react-native';
 import {AppColor, Fonts} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import AnimatedLottieView from 'lottie-react-native';
-import CircularProgress from 'react-native-circular-progress-indicator';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import {CircularProgressBase} from 'react-native-circular-progress-indicator';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Font from 'react-native-vector-icons/FontAwesome5';
 import Fontasio from 'react-native-vector-icons/Fontisto';
 import {useSelector, useDispatch} from 'react-redux';
@@ -55,6 +55,8 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 interface BoxProps {
   item: any;
   index: number;
+  downloadProgress:number;
+  isItemDownload:boolean;
   // selectedExercise: Array<any>;
   // setSelectedExercise: React.Dispatch<React.SetStateAction<Array<any>>>;
   isSelected: boolean;
@@ -76,7 +78,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
   const [downloaded, setDownloade] = useState<number>(0);
   const [visible, setVisible] = useState(false);
   const [itemsLength, setItemsLength] = useState(0);
-
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [downloadProgress, setDownloadProgress] = useState(0);
   const dispatch = useDispatch();
   const getCustttomeTimeCal = useSelector(
     (state: any) => state.getCustttomeTimeCal,
@@ -112,6 +115,10 @@ const WorkoutCategories = ({navigation, route}: any) => {
   let StoringData: any = {},
     downloadCounter = 0;
   const downloadVideos = async (data: any, index: number, len: number) => {
+    if(len == 1){
+
+      setSelectedIndex(index)
+    }
     const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
       data?.exercise_title,
     )}.mp4`;
@@ -131,6 +138,9 @@ const WorkoutCategories = ({navigation, route}: any) => {
           .fetch('GET', data?.exercise_video, {
             'Content-Type': 'application/mp4',
             // key: 'Config.REACT_APP_API_KEY',
+          }) .progress((received, total) => {
+            setDownloadProgress((received / total) * 100)
+            console.log("download",downloadProgress * 100)
           })
           .then(res => {
             StoringData[data?.exercise_title] = res.path();
@@ -183,6 +193,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
     } else {
       downloadVideos(item, index, 1).finally(() => {
         setDownloade(0);
+        setDownloadProgress(0)
         navigation.navigate('Exercise', {
           allExercise: [item],
           currentExercise: item,
@@ -198,7 +209,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
   };
   const Box: FC<BoxProps> = useMemo(
     () =>
-      ({item, index, isSelected, switchButton}) => {
+      ({item, index, isSelected, switchButton,isItemDownload,downloadProgress}) => {
         return (
           <View
             style={{
@@ -207,7 +218,10 @@ const WorkoutCategories = ({navigation, route}: any) => {
             }}>
             <TouchableOpacity
               key={index}
-              onPress={() => handlePress(item)}
+              onPress={() =>{ 
+                handlePress(item)
+
+              }}
               activeOpacity={switchButton ? 0.8 : 1}
               style={styles.boxContainer}>
               <View style={styles.boxImage}>
@@ -251,7 +265,10 @@ const WorkoutCategories = ({navigation, route}: any) => {
                   </Text>
                 </View>
               </View>
-              <TouchableOpacity onPress={() => handleIconPress(item, index)}>
+              <TouchableOpacity onPress={() => {
+                handleIconPress(item, index)
+                console.log('index--->',index)
+                }}>
                 {switchButton ? (
                   <View
                     style={[
@@ -264,7 +281,20 @@ const WorkoutCategories = ({navigation, route}: any) => {
                     {isSelected && <Font name="check" color="white" />}
                   </View>
                 ) : (
-                  <AntDesign name="playcircleo" color="#33333399" size={25} />
+                  <CircularProgressBase
+                    value={isItemDownload ? downloadProgress : 0}
+                    radius={16}
+                    activeStrokeColor={AppColor.RED}
+                    inActiveStrokeColor={AppColor.GRAY1}
+                    activeStrokeWidth={3}
+                    inActiveStrokeWidth={3}
+                    maxValue={100}>
+                    <Icons
+                      name={'play'}
+                      size={30}
+                      color={'#333333'}
+                    />
+                  </CircularProgressBase>
                 )}
               </TouchableOpacity>
             </TouchableOpacity>
@@ -402,9 +432,11 @@ const WorkoutCategories = ({navigation, route}: any) => {
         index={index}
         isSelected={selectedExercise.includes(item?.exercise_id)}
         switchButton={switchButton}
+        downloadProgress={downloadProgress}
+        isItemDownload={selectedIndex == index}
       />
     ),
-    [selectedExercise, switchButton, navigation, setSelectedExercise],
+    [selectedExercise, switchButton, navigation, setSelectedExercise,downloadProgress, selectedIndex],
   );
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
@@ -416,6 +448,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
             ? CategoryDetails?.title
             : CategoryDetails?.bodypart_title
         }
+  
         workoutCat={switchButton}
         backPressCheck={switchButton}
         onPress={() => {

@@ -43,6 +43,12 @@ const intialState = {
   currentSelectedDay: 0,
   getProgressBarCounter: 6,
   getTempLogin: false,
+  getUperBodyFilOption: [],
+  getLowerBodyFilOpt:[],
+  getCoreFiltOpt:[],
+  getUprBodyCount:0,
+  getLowerBodyCount:0,
+  getCoreCount:0
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -234,6 +240,31 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         getTempLogin: action.payload,
       };
+    case types.UPRBDYFILTEROPT:
+      return {
+        ...state,
+        getUperBodyFilOption: action.payload,
+      };
+      case types.LWRBDYFILTEROPT:
+        return{
+          ...state,getLowerBodyFilOpt:action.payload
+        }
+        case types.COREFILTOPRION:
+          return{
+            ...state,getCoreFiltOpt:action.payload
+          }
+          case types.UPRBODYCOUNT:
+            return{
+              ...state,getUprBodyCount:action.payload
+            }
+            case types.LWERBODYCOUNT:
+              return{
+                ...state,getLowerBodyCount:action.payload
+              }
+              case types.CORECOUNT:
+                return{
+                  ...state,getCoreCount:action.payload
+                }
     default:
       return state;
   }

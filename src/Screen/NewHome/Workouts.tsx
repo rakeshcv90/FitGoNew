@@ -38,6 +38,7 @@ import {MyInterstitialAd} from '../../Component/BannerAdd';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import FocusArea from '../FocusArea';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
@@ -166,9 +167,17 @@ const Workouts = ({navigation}: any) => {
       category: 'Cardio/Abs/Legs/Fourarms/Biceps/Triceps',
     },
   ];
+
+  const getUperBodyFilOption = useSelector(
+    (state:any) => state?.getUperBodyFilOption,
+  );
+  const getLowerBodyFilOpt = useSelector( (state:any) => state.getLowerBodyFilOpt);
+  const getCoreFiltOpt = useSelector( (state:any) => state.getCoreFiltOpt);
+
   useEffect(() => {
     if (isFocused) {
       initInterstitial();
+      getAllExerciseData()
       ChallengesDataAPI();
       // getCustomeWorkoutTimeDetails();
       getCustomWorkout();
@@ -179,39 +188,72 @@ const Workouts = ({navigation}: any) => {
     }
   }, [isFocused]);
   const [refresh, setRefresh] = useState(false);
-  let focuseArea = [
+  const focuseArea = [
     {
-      id: 1,
+      id: 238,
       title: 'Upper Body',
       image: require('../../Icon/Images/NewImage2/uperBody.png'),
+      //extr information for diff navigation screen
+      searchCriteria:["Chest","Back","Shoulders","Arms"],
+      searchCriteriaRedux:getUperBodyFilOption,
     },
     {
-      id: 1,
+      id: 239,
       title: 'Lower Body',
       image: require('../../Icon/Images/NewImage2/lowerBody.png'),
+      searchCriteria: ["Legs", "Quads", "Calves"],
+      searchCriteriaRedux:getLowerBodyFilOpt,
     },
     {
-      id: 1,
+      id: 240,
       title: 'Full Body',
       image: require('../../Icon/Images/NewImage2/fullBody.png'),
+      //
+      searchCriteria: [],
+      searchCriteriaRedux:[],
+
     },
     {
-      id: 1,
+      id: 241,
       title: 'Core',
       image: require('../../Icon/Images/NewImage2/core.png'),
+      //
+      searchCriteria:["Abs", "Cardio"],
+      searchCriteriaRedux:getCoreFiltOpt,
     },
   ];
-  useEffect(() => {
-    if (isFocused) {
-      initInterstitial();
-      // allWorkoutApi();
-      ChallengesDataAPI();
-      getAllExerciseData();
-      getCustomWorkout();
-      getWorkoutStatus();
-    }
-  }, [isFocused]);
+  
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     initInterstitial();
+  //     // allWorkoutApi();
+  //     ChallengesDataAPI();
+  //     getAllExerciseData();
+  //     getCustomWorkout();
+  //     getWorkoutStatus();
+  //   }
+  // }, [isFocused]);
 
+  const getAllExerciseData = async () => {
+    try {
+      const exerciseData = await axios.get(
+        `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
+      );
+
+      if (
+        exerciseData?.data?.msg == 'Please update the app to the latest version'
+      ) {
+        dispatch(setAllExercise([]));
+      } else if (exerciseData?.data?.length > 0) {
+        dispatch(setAllExercise(exerciseData?.data));
+      } else {
+        dispatch(setAllExercise([]));
+      }
+    } catch (error) {
+      dispatch(setAllExercise([]));
+      console.log('All-EXCERSIE-ERROR', error);
+    }
+  };
   const ChallengesDataAPI = async () => {
     try {
       const res = await axios({
@@ -264,7 +306,7 @@ const Workouts = ({navigation}: any) => {
       }
     } catch (error) {
       showMessage({
-        message: 'Something went wrong pleasr try again',
+        message: 'Something went wrong please try again',
         type: 'danger',
         animationDuration: 500,
         floating: true,
@@ -323,7 +365,6 @@ const Workouts = ({navigation}: any) => {
               }}
               resizeMode="contain"
             />
-
             <Text
               style={{
                 marginHorizontal: 10,
@@ -540,11 +581,17 @@ const Workouts = ({navigation}: any) => {
         navigation.navigate('NewFocusWorkouts', {
           focusExercises: exercises,
           focusedPart: data?.title,
+          searchCriteria:["Chest","Back","Shoulders","Arms"],
+          searchCriteriaRedux:getUperBodyFilOption,
+          CategoryDetails:data
         });
       } else {
         navigation.navigate('NewFocusWorkouts', {
           focusExercises: exercises,
           focusedPart: data?.title,
+          searchCriteria:["Chest","Back","Shoulders","Arms"],
+          searchCriteriaRedux:getUperBodyFilOption,
+          CategoryDetails:data
         });
       }
     } else if (data?.title == 'Lower Body') {
@@ -559,11 +606,17 @@ const Workouts = ({navigation}: any) => {
         navigation.navigate('NewFocusWorkouts', {
           focusExercises: exercises,
           focusedPart: data?.title,
+          searchCriteria: ["Legs", "Quads", "Calves"],
+          searchCriteriaRedux:getLowerBodyFilOpt,
+          CategoryDetails:data
         });
       } else {
         navigation.navigate('NewFocusWorkouts', {
           focusExercises: exercises,
           focusedPart: data?.title,
+          searchCriteria: ["Legs", "Quads", "Calves"],
+          searchCriteriaRedux:getLowerBodyFilOpt,
+          CategoryDetails:data
         });
       }
     } else if (data?.title == 'Core') {
@@ -571,6 +624,7 @@ const Workouts = ({navigation}: any) => {
         (item: any) =>
           item?.exercise_bodypart == 'Abs' ||
           item?.exercise_bodypart == 'Cardio',
+   
       );
 
       if (checkAdsShow == true) {
@@ -578,11 +632,17 @@ const Workouts = ({navigation}: any) => {
         navigation.navigate('NewFocusWorkouts', {
           focusExercises: exercises,
           focusedPart: data?.title,
+          searchCriteria:["Abs", "Cardio"],
+          searchCriteriaRedux:getCoreFiltOpt,
+          CategoryDetails:data
         });
       } else {
         navigation.navigate('NewFocusWorkouts', {
           focusExercises: exercises,
           focusedPart: data?.title,
+          searchCriteria:["Abs", "Cardio"],
+          searchCriteriaRedux:getCoreFiltOpt,
+          CategoryDetails:data
         });
       }
     } else {
@@ -591,33 +651,19 @@ const Workouts = ({navigation}: any) => {
         navigation.navigate('NewFocusWorkouts', {
           focusExercises: getAllExercise,
           focusedPart: data?.title,
+          searchCriteria: [],
+          searchCriteriaRedux:[],
+          CategoryDetails:data
         });
       } else {
         navigation.navigate('NewFocusWorkouts', {
           focusExercises: getAllExercise,
           focusedPart: data?.title,
+          searchCriteria: [],
+          searchCriteriaRedux:[],
+          CategoryDetails:data
         });
       }
-    }
-  };
-  const getAllExerciseData = async () => {
-    try {
-      const exerciseData = await axios.get(
-        `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
-      );
-
-      if (
-        exerciseData?.data?.msg == 'Please update the app to the latest version'
-      ) {
-        dispatch(setAllExercise([]));
-      } else if (exerciseData?.data?.length > 0) {
-        dispatch(setAllExercise(exerciseData?.data));
-      } else {
-        dispatch(setAllExercise([]));
-      }
-    } catch (error) {
-      dispatch(setAllExercise([]));
-      console.log('All-EXCERSIE-ERROR', error);
     }
   };
   const checkMealAddCount = () => {

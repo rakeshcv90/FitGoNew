@@ -254,3 +254,39 @@ export const setTempLogin = data => {
     payload: data,
   };
 };
+export const setUprBdyOpt = data => {
+  return {
+    type: types.UPRBDYFILTEROPT,
+    payload: data,
+  };
+};
+export const setLowerBodyFilOpt = data => {
+  return {
+    type: types.LWRBDYFILTEROPT,
+    payload: data,
+  };
+};
+export const setCoreFilOpt = data => {
+  return {
+    type: types.COREFILTOPRION,
+    payload: data,
+  };
+};
+export const setUprBodyCount = data => {
+  return {
+    type: types.UPRBODYCOUNT,
+    payload: data,
+  };
+};
+export const setLowerBodyCount = data => {
+  return {
+    type: types.LWERBODYCOUNT,
+    payload: data,
+  };
+};
+export const setCoreCount = data => {
+  return {
+    type: types.CORECOUNT,
+    payload: data,
+  };
+};
