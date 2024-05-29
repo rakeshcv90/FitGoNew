@@ -573,12 +573,12 @@ const WorkoutDays = ({navigation, route}: any) => {
                     challenge,
                   })
                 : showMessage({
-                    message: `Please complete Day ${
+                    message: `Please complete day ${
                       index - 1
-                    } Exercise First !!!`,
+                    } workout to unlock day ${index}`,
                     type: 'danger',
 
-                    animationDuration: 500,
+                    duration: 1000,
                     floating: true,
                     // icon: {icon: 'auto', position: 'left'},
                   });
@@ -600,12 +600,12 @@ const WorkoutDays = ({navigation, route}: any) => {
                     challenge,
                   })
                 : showMessage({
-                    message: `Please complete Day ${
-                      index - 1
-                    } Exercise First !!!`,
-                    type: 'danger',
+                  message: `Please complete day ${
+                    index - 1
+                  } workout to unlock day ${index}`,
+                  type: 'danger',
 
-                    animationDuration: 500,
+                  duration: 1000,
                     floating: true,
                     // icon: {icon: 'auto', position: 'left'},
                   });
@@ -864,6 +864,11 @@ const WorkoutDays = ({navigation, route}: any) => {
       <DietPlanHeader
         header={
           data?.workout_title == undefined ? data?.title : data?.workout_title
+        }
+        h={
+          Platform.OS == 'ios'
+            ? (DeviceHeigth * 13) / 100
+            : (DeviceHeigth * 7) / 100
         }
         shadow
       />

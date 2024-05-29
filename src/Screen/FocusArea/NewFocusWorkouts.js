@@ -322,7 +322,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                             alignItems: 'center',
                             borderColor: '#333333',
                             borderRadius: 30 / 2,
-                            // backgroundColor: '#A93737',
+                            // backgroundColor: AppColor.NEW_DARK_RED,
                           }}>
                           <Icon
                             name={'check'}
@@ -355,7 +355,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
               style={{
                 width: 150,
                 height: 50,
-                backgroundColor: '#A93737',
+                backgroundColor: AppColor.NEW_DARK_RED,
                 borderRadius: 6,
                 alignSelf: 'flex-end',
                 justifyContent: 'center',
@@ -526,7 +526,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             position: 'absolute',
             width: DeviceWidth * 0.91,
             height: 50,
-            backgroundColor: '#A93737',
+            backgroundColor: AppColor.NEW_DARK_RED,
             justifyContent: 'center',
             alignItems: 'center',
             alignSelf: 'center',

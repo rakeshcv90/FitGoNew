@@ -39,58 +39,6 @@ import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
-const MaleCategory = [
-  {
-    id: 230,
-    title: 'Quick Fit',
-    image: '',
-    category: 'Cardio/Abs/Legs/Fourarms/Biceps/Triceps',
-  },
-  {
-    id: 231,
-    title: 'Body Blast',
-    image: '',
-    category: 'Chest/Back/Shoulders/Biceps/Triceps/Fourarms',
-  },
-  {id: 232, title: 'Flex flow', image: '', category: 'Cardio/Abs'},
-  {id: 233, title: 'life fit', image: '', category: 'Legs/Cardio'},
-  {id: 234, title: 'blast burn', image: '', category: 'Abs/Chest/Back'},
-  {
-    id: 235,
-    title: 'warrior workout',
-    image: '',
-    category: 'Chest/Back/Shoulders/Legs',
-  },
-  {id: 236, title: 'Diesel Drill', image: '', category: 'Legs/Cardio/Abs/Back'},
-  {id: 237, title: 'Beach Ready', image: '', category: 'Abs/Chest/Legs'},
-];
-
-const FemaleCategory = [
-  {id: 230, title: 'Cardio Queen', image: '', category: 'Cardio/Legs/Abs'},
-  {id: 231, title: 'Booty Boost', image: '', category: 'Legs'},
-  {
-    id: 232,
-    title: 'Sweat &shine',
-    image: '',
-    category: 'Chest/Back/Fourarms/Biceps/Triceps',
-  },
-  {id: 233, title: 'Tummy toners', image: '', category: 'Abs/Back/Legs/Cardio'},
-  {id: 234, title: 'Total Body Blitz', image: '', category: ''},
-  {
-    id: 235,
-    title: 'Strong her',
-    image: '',
-    category: 'Chest/Back/Abs/Fourarms/Biceps/Triceps',
-  },
-  {id: 236, title: 'Lean Ladies', image: '', category: 'Legs/Cardio/Abs'},
-  {
-    id: 237,
-    title: 'Quick fit',
-    image: '',
-    category: 'Cardio/Abs/Legs/Fourarms/Biceps/Triceps',
-  },
-];
-
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
   const dispatch = useDispatch();
@@ -117,6 +65,107 @@ const Workouts = ({navigation}: any) => {
     (state: any) => state.getChallengesData,
   );
 
+  const MaleCategory = [
+    {
+      id: 230,
+      title: 'Quick Fit',
+      image: require('../../Icon/Images/WorkoutCategories/Quick_Fit.png'),
+      category: 'Cardio/Abs/Legs/Fourarms/Biceps/Triceps',
+    },
+    {
+      id: 231,
+      title: 'Body Blast',
+      image: require('../../Icon/Images/WorkoutCategories/Body_Blast.png'),
+      category: 'Chest/Back/Shoulders/Biceps/Triceps/Fourarms',
+    },
+    {
+      id: 232,
+      title: 'Flex flow',
+      image: require('../../Icon/Images/WorkoutCategories/Flex_Flow.png'),
+      category: 'Cardio/Abs',
+    },
+    {
+      id: 233,
+      title: 'life fit',
+      image: require('../../Icon/Images/WorkoutCategories/Fit_Life.png'),
+      category: 'Legs/Cardio',
+    },
+    {
+      id: 234,
+      title: 'blast burn',
+      image: require('../../Icon/Images/WorkoutCategories/Blast_Burn.png'),
+      category: 'Abs/Chest/Back',
+    },
+    {
+      id: 235,
+      title: 'warrior workout',
+      image: require('../../Icon/Images/WorkoutCategories/Warrior_Workout.png'),
+      category: 'Chest/Back/Shoulders/Legs',
+    },
+    {
+      id: 236,
+      title: 'Diesel Drill',
+      image: require('../../Icon/Images/WorkoutCategories/Diesel_Drill.png'),
+      category: 'Legs/Cardio/Abs/Back',
+    },
+    {
+      id: 237,
+      title: 'Beach Ready',
+      image: require('../../Icon/Images/WorkoutCategories/Beach_Ready.png'),
+      category: 'Abs/Chest/Legs',
+    },
+  ];
+
+  const FemaleCategory = [
+    {
+      id: 230,
+      title: 'Cardio Queen',
+      image: require('../../Icon/Images/WorkoutCategories/Cardio_Queen.png'),
+      category: 'Cardio/Legs/Abs',
+    },
+    {
+      id: 231,
+      title: 'Booty Boost',
+      image: require('../../Icon/Images/WorkoutCategories/Booty_Boost.png'),
+      category: 'Legs',
+    },
+    {
+      id: 232,
+      title: 'Sweat &shine',
+      image: require('../../Icon/Images/WorkoutCategories/sweat.png'),
+      category: 'Chest/Back/Fourarms/Biceps/Triceps',
+    },
+    {
+      id: 233,
+      title: 'Tummy toners',
+      image: require('../../Icon/Images/WorkoutCategories/Tummy_Toning.png'),
+      category: 'Abs/Back/Legs/Cardio',
+    },
+    {
+      id: 234,
+      title: 'Total Body Blitz',
+      image: require('../../Icon/Images/WorkoutCategories/Total_Body_Blitz.png'),
+      category: '',
+    },
+    {
+      id: 235,
+      title: 'Strong her',
+      image: require('../../Icon/Images/WorkoutCategories/Strong_Her.png'),
+      category: 'Chest/Back/Abs/Fourarms/Biceps/Triceps',
+    },
+    {
+      id: 236,
+      title: 'Lean Ladies',
+      image: require('../../Icon/Images/WorkoutCategories/Lean_Ladies.png'),
+      category: 'Legs/Cardio/Abs',
+    },
+    {
+      id: 237,
+      title: 'Quick fit',
+      image: require('../../Icon/Images/WorkoutCategories/Quick_FitF.png'),
+      category: 'Cardio/Abs/Legs/Fourarms/Biceps/Triceps',
+    },
+  ];
   useEffect(() => {
     if (isFocused) {
       initInterstitial();
@@ -162,7 +211,6 @@ const Workouts = ({navigation}: any) => {
       getWorkoutStatus();
     }
   }, [isFocused]);
-
 
   const ChallengesDataAPI = async () => {
     try {
@@ -265,7 +313,7 @@ const Workouts = ({navigation}: any) => {
               }),
             }}>
             <Image
-              source={localImage.NOWORKOUT}
+              source={item?.image}
               style={{
                 width: 30,
                 height: 30,

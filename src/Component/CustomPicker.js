@@ -3,18 +3,9 @@ import {Animated, Text, View, StyleSheet} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {AppColor} from './Color';
 const CustomPicker = props => {
-  const {
-    items,
-    onIndexChange,
-    itemHeight,
-    toggle,
-    textStyle,
-    width,
-    outputRange,
-    ActiveIndex,
-  } = props;
+  const {items, onIndexChange, itemHeight, toggle} = props;
   const scrollY = useRef(new Animated.Value(0)).current;
-  const modifiedItems = ['', '', ...items, '', ' '];
+  const modifiedItems = ['','', ...items, '',' '];
   const renderItem = ({item, index}) => {
     const inputRange = [
       (index - 4) * itemHeight,
@@ -25,7 +16,7 @@ const CustomPicker = props => {
     ];
     const scale = scrollY.interpolate({
       inputRange,
-      outputRange: outputRange || [1, 1.4, 2.8, 1.4, 1],
+      outputRange: [1, 1.4, 2.8, 1.4, 1],
     });
     return (
       <Animated.View
@@ -35,20 +26,13 @@ const CustomPicker = props => {
         ]}>
         <Text
           style={[
-            textStyle,
             styles.pickerItem,
-            {
-              textAlign: 'center',
-              color: ActiveIndex == index - 2 ? '#ed4530' : 'lightgrey',
-            },
+            {textAlign: 'center', textAlign: 'center', color: AppColor.RED},
           ]}>
           {`${
-            toggle == 'kg' || toggle == ''
+            toggle == 'kg'
               ? item
-              : index == 0 ||
-                index == modifiedItems.length - 1 ||
-                index == 1 ||
-                index == modifiedItems.length - 2
+              : index == 0 || index == modifiedItems.length - 1 || index==1 || index == modifiedItems.length - 2
               ? ''
               : (item * 2.2).toFixed(2)
           } `}
@@ -59,7 +43,7 @@ const CustomPicker = props => {
 
   const momentumScrollEnd = event => {
     const y = event.nativeEvent.contentOffset.y;
-    const index = Math.round(y / itemHeight).toFixed(0);
+    const index = Math.round(y / itemHeight);
     onIndexChange(index);
   };
   return (
@@ -67,9 +51,8 @@ const CustomPicker = props => {
       style={{
         height: itemHeight * 5,
         justifyContent: 'center',
-        width: width || DeviceWidth,
-        marginTop: toggle == '' ? DeviceWidth * 0.05 : DeviceHeigth * 0.08,
-        marginRight: toggle == '' ? 20 : 0,
+        width: DeviceWidth,
+        marginTop:DeviceHeigth*0.08
       }}>
       <Animated.FlatList
         data={modifiedItems}
@@ -79,7 +62,6 @@ const CustomPicker = props => {
         onMomentumScrollEnd={momentumScrollEnd}
         scrollEventThrottle={30}
         initialNumToRender={5}
-        keyExtractor={(_, index) => index.toString()}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {y: scrollY}}}],
           {useNativeDriver: true},
@@ -91,34 +73,20 @@ const CustomPicker = props => {
         })}
       />
       <View style={[styles.indicatorHolder, {top: itemHeight * 2}]}>
-        <View
-          style={[
-            styles.indicator,
-            {
-              width: toggle == '' ? 60 : 120,
-            },
-          ]}
-        />
-        {toggle != '' && (
-          <Text
-            style={{
-              color: AppColor.RED,
-              position: 'absolute',
-              fontSize: 30,
-              textAlign: 'center',
-              lineHeight: itemHeight,
-              left: toggle == 'kg' ? 100 : 150,
-              fontWeight: '700',
-            }}>
-            {toggle == 'kg' ? 'kg' : 'lb'}
-          </Text>
-        )}
-        <View
-          style={[
-            styles.indicator,
-            {marginTop: itemHeight, width: toggle == '' ? 60 : 120},
-          ]}
-        />
+        <View style={styles.indicator} />
+        <Text
+          style={{
+            color: AppColor.RED,
+            position: 'absolute',
+            fontSize: 30,
+            textAlign: 'center',
+            lineHeight: itemHeight,
+            left: toggle == 'kg' ? 100 : 150,
+            fontWeight: '700',
+          }}>
+          {toggle == 'kg' ? 'kg' : 'lb'}
+        </Text>
+        <View style={[styles.indicator, {marginTop: itemHeight}]} />
       </View>
     </View>
   );
@@ -136,8 +104,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   indicator: {
+    width: 120,
     height: 1,
-    // backgroundColor: '#ccc',
+    backgroundColor: '#ccc',
     alignSelf: 'center',
   },
   animatedContainer: {

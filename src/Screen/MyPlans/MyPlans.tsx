@@ -801,7 +801,7 @@ const MyPlans = ({navigation}: any) => {
         backgroundColor: AppColor.WHITE,
       }}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <NewHeader header={'Week Plan'} SearchButton={false} backButton={false} />
+      <NewHeader header={'Weekly Plan'} SearchButton={false} backButton={false} />
       <View
         style={{
           flex: 1,

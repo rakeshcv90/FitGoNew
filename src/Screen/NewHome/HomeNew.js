@@ -1443,7 +1443,7 @@ const HomeNew = ({navigation}) => {
                 alignItems: 'center',
                 justifyContent: 'flex-start',
               }}>
-              Custom made
+              Custom Made
             </Text>
           </View>
           <LinearGradient
@@ -1510,7 +1510,7 @@ const HomeNew = ({navigation}) => {
 
                       fontWeight: '500',
                       fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                    }}>{`Personalized to you`}</Text>
+                    }}>{`Create your custom plans`}</Text>
                 </View>
                 <Image
                   source={localImage.NewWorkout}

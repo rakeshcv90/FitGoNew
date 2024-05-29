@@ -13,7 +13,7 @@ import React, {useEffect, useState} from 'react';
 import Button from '../Component/Button';
 import InputText from '../Component/InputText';
 import {StyleSheet} from 'react-native';
-import {AppColor} from '../Component/Color';
+import {AppColor, Fonts} from '../Component/Color';
 import {
   DeviceHeigth,
   DeviceWidth,
@@ -372,9 +372,9 @@ const Login = ({navigation}) => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (email == null) {
       showMessage({
-        message: 'Please enter ypur email id',
+        message: 'Please enter your email id',
         floating: true,
-        duration: 500,
+        duration: 1000,
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
       });
@@ -874,7 +874,7 @@ const Login = ({navigation}) => {
                       marginBottom: 15,
                       marginTop: 5,
                     }}>
-                    your password reset link
+                    the link to reset your password.
                   </Text>
 
                   <Formik
@@ -954,11 +954,11 @@ const Login = ({navigation}) => {
           }}>
           <View
             style={{
-              width: DeviceWidth * 0.7,
+              width: DeviceWidth * 0.8,
               height: DeviceHeigth * 0.3,
               backgroundColor: 'white',
-              borderRadius: 20,
-              paddingVertical: 20,
+              borderRadius: 8,
+              padding: 20,
               alignItems: 'center',
               shadowColor: '#000',
               shadowOffset: {
@@ -969,67 +969,55 @@ const Login = ({navigation}) => {
               shadowRadius: 4,
               elevation: 5,
             }}>
-            <Image
-              source={require('../Icon/Images/NewImage/alert.png')}
-              style={{width: 50, height: 50}}
-            />
+            <Image source={localImage.Alert} style={{width: 70, height: 70}} />
             <Text
               style={{
-                fontSize: 20,
-                fontWeight: '700',
-                color: '#202020',
+                fontSize: 18,
+                fontWeight: '600',
+                color: AppColor.LITELTEXTCOLOR,
                 marginTop: 10,
-                fontFamily: 'Montserrat-Regular',
+                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                lineHeight: 26,
               }}>
-              ALERT
+              Alert
             </Text>
             <Text
               style={{
-                fontSize: 13,
+                fontSize: 16,
                 fontWeight: '600',
-                color: '#202020',
-                marginTop: 15,
-                marginLeft:16,
-                marginRight:16,
-                lineHeight:20,
-                fontFamily: 'Montserrat-SemiBold',
+                color: AppColor.HEADERTEXTCOLOR,
+                marginVertical: 7,
+                textAlign: 'center',
+                lineHeight: 24,
+                fontFamily: Fonts.MONTSERRAT_MEDIUM,
               }}>
-              Are you sure you want to quit/go back without completing Sign Up?
+              Are you sure you want to go back without completing Login?
             </Text>
 
-            <LinearGradient
-              start={{x: 0, y: 1}}
-              end={{x: 1, y: 0}}
-              // colors={['#941000', '#D01818']}
-              colors={['#D01818', '#941000']}
-              style={{
-                width: '100%',
-                height: 60,
-                bottom: 0,
-                position: 'absolute',
-                paddingLeft: 5,
-                borderBottomRightRadius: 20,
-                borderBottomLeftRadius: 20,
-                backgroundColor: 'red',
-                alignItems: 'center',
-                // justifyContent:'center',
+            <TouchableOpacity
+            style={{
+              backgroundColor: AppColor.NEW_DARK_RED,
+              width: '50%',
+              paddingVertical: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 5,
+              marginTop: 10
+            }}
+              onPress={() => {
+                setCancelLogin(false);
               }}>
-              <TouchableOpacity
-                onPress={() => {
-                  setCancelLogin(false);
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: '500',
+                  color: AppColor.WHITE,
+                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                  lineHeight: 20
                 }}>
-                <Text
-                  style={{
-                    fontSize: 22,
-                    fontWeight: '700',
-                    color: '#fff',
-                    marginTop: 10,
-                    fontFamily: 'Montserrat-Regular',
-                  }}>
-                  OK
-                </Text>
-              </TouchableOpacity>
-            </LinearGradient>
+                OK
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>

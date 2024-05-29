@@ -55,7 +55,7 @@ const AITrainer = ({navigation, route}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const [senderMessage, setsenderMessage] = useState([
     {
-      message: `Hello! I am${route?.params?.item?.title} your personal fitness instructor. I am here to assist you in your fitness journey.
+      message: `Hello! I am ${route?.params?.item?.title} your personal fitness instructor. I am here to assist you in your fitness journey.
       `,
       sender: 'ChatGpt',
     },
@@ -345,29 +345,31 @@ const AITrainer = ({navigation, route}) => {
       />
 
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <TouchableOpacity
-        style={{
-          width: 25,
-          height: 25,
-          justifyContent: 'flex-end',
-          alignSelf: 'flex-end',
-          top: -DeviceHeigth * 0.065,
-          marginHorizontal: DeviceWidth * 0.03,
-        }}
-        onPress={() => {
-          navigation.navigate('AIMessageHistory');
-        }}>
-        <Image
-          resizeMode="contain"
-          source={localImage.ChatHistory}
+      {getAIMessageHistory?.length > 0 && (
+        <TouchableOpacity
           style={{
             width: 25,
             height: 25,
             justifyContent: 'flex-end',
             alignSelf: 'flex-end',
+            top: -DeviceHeigth * 0.065,
+            marginHorizontal: DeviceWidth * 0.03,
           }}
-        />
-      </TouchableOpacity>
+          onPress={() => {
+            navigation.navigate('AIMessageHistory');
+          }}>
+          <Image
+            resizeMode="contain"
+            source={localImage.ChatHistory}
+            style={{
+              width: 25,
+              height: 25,
+              justifyContent: 'flex-end',
+              alignSelf: 'flex-end',
+            }}
+          />
+        </TouchableOpacity>
+      )}
       <KeyboardAvoidingView
         behavior={Platform.OS == 'ios' ? 'padding' : undefined}
         contentContainerStyle={{flexGrow: 1}}

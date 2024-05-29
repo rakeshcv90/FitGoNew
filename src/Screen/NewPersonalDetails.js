@@ -33,7 +33,7 @@ import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
 import axios from 'axios';
 import ActivityLoader from '../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
-import { AnalyticsConsole } from '../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../Component/AnalyticsConsole';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -117,8 +117,8 @@ const NewPersonalDetails = ({route, navigation}) => {
     },
   ];
   const workout_plans = [
-    {label: 'AppCreated', value: 'AppCreated'},
-    {label: 'CustomCreated', value: 'CustomCreated'},
+    {label: 'Workout Created by Us', value: 'AppCreated'},
+    {label: 'Custom Workout', value: 'CustomCreated'},
   ];
   const ProfileDataAPI = async () => {
     try {
@@ -152,7 +152,6 @@ const NewPersonalDetails = ({route, navigation}) => {
     return null;
   };
 
-
   const handleFormSubmit = async (values, action) => {
     setForLoading(true);
     AnalyticsConsole(`PROFILE_UPDATE_BUTTON`);
@@ -171,12 +170,12 @@ const NewPersonalDetails = ({route, navigation}) => {
           injury: getUserDataDetails?.injury,
           weight: getUserDataDetails?.weight,
           target_weight: values.targetWeight,
-         
+
           // focusarea:
           //   values.focuseAres.length > 0
           //     ? values.focuseAres.join(',')
           //     : getUserDataDetails.focus_area,
-  
+
           gender: values.gender,
           experience: getUserDataDetails.experience,
           workout_plans: values.workout_plans,
@@ -242,7 +241,10 @@ const NewPersonalDetails = ({route, navigation}) => {
           email: getUserDataDetails?.email,
           gender: getUserDataDetails?.gender,
           experience: getUserDataDetails?.experience,
-          workout_plans: getUserDataDetails?.workout_plans,
+          workout_plans:
+            getUserDataDetails?.workout_plans == 'AppCreated'
+              ? 'Workout Created by Us'
+              : 'Custom Workout',
           goal: getUserDataDetails?.goal_title,
           // injury: getUserDataDetails?.injury,
 
@@ -354,7 +356,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                       onBlur={handleBlur('experience')}
                       value={values.experience}
                       onChangeText={handleChange('experience')}
-                      label="Fitness-Level"
+                      label="Fitness Level"
                       placeholder={getUserDataDetails?.experience}
                       editable={false}
                     />
@@ -415,7 +417,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                         style={{
                           marginTop: DeviceHeigth * 0.02,
                           marginLeft: 10,
-                          paddingBottom:DeviceHeigth*0.05,
+                          paddingBottom: DeviceHeigth * 0.05,
                         }}>
                         <InputText
                           errors={errors.targetWeight}
@@ -510,7 +512,7 @@ const NewPersonalDetails = ({route, navigation}) => {
 
                         alignItems: 'center',
                       }}>
-                      {renderLabel('Workout-Plan')}
+                      {renderLabel('Workout Plan')}
 
                       <Dropdown
                         style={[styles.dropdown]}
@@ -525,7 +527,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                         onFocus={() => setIsFocus(true)}
                         onBlur={() => setIsFocus(false)}
                         onChange={item => {
-                          setFieldValue('workout_plans', item.label);
+                          setFieldValue('workout_plans', item.value);
                         }}
                       />
                     </View>
@@ -596,8 +598,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                           style={{
                             marginTop: DeviceHeigth * 0.02,
                             marginLeft: 10,
-                          paddingBottom:DeviceHeigth*0.05,
-                        
+                            paddingBottom: DeviceHeigth * 0.05,
                           }}>
                           <InputText
                             errors={errors.targetWeight}
@@ -610,7 +611,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                             onBlur={handleBlur('targetWeight')}
                             onChangeText={handleChange('targetWeight')}
                             label="Target Weight"
-                             keyboardType='number-pad'
+                            keyboardType="number-pad"
                             placeholder="Target Weight"
                           />
                         </View>

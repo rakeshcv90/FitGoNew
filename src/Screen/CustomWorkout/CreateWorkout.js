@@ -34,6 +34,7 @@ import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
+import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -87,7 +88,7 @@ const CreateWorkout = ({navigation, route}) => {
                 selectedExercise(item?.exercise_id);
               }}
               style={{
-                width: '97%',
+                width: '90%',
                 borderRadius: 10,
                 // backgroundColor: '#FDFDFD',
                 marginVertical: 8,
@@ -97,6 +98,7 @@ const CreateWorkout = ({navigation, route}) => {
                 justifyContent: 'space-between',
                 paddingHorizontal: 20,
                 padding: 5,
+                paddingVertical: 8,
                 // borderColor: '#D9D9D9',
                 borderColor: isSelected ? 'red' : AppColor.GRAY2,
                 borderWidth: 1,
@@ -135,7 +137,7 @@ const CreateWorkout = ({navigation, route}) => {
                     borderRadius: 5,
                     borderWidth: 0.5,
                     borderColor: 'lightgrey',
-                    marginHorizontal: -12,
+                    marginLeft: -12,
                     //backgroundColor:"red"
                   }}>
                   {/* <Image
@@ -426,50 +428,52 @@ const CreateWorkout = ({navigation, route}) => {
   };
   return (
     <>
-      <NewHeader
-        header={route?.params?.workoutTitle}
-        SearchButton={false}
-        backButton={true}
-      />
       {forLoading ? <ActivityLoader /> : ''}
       <View style={styles.container}>
-        <View
-          style={{
-            width: '95%',
-            height: 50,
-            alignSelf: 'center',
-            backgroundColor: '#F3F5F5',
-            borderRadius: 6,
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingLeft: 10,
-            top: -10,
-          }}>
-          <Icons name="search" size={18} color={'#333333E5'} />
-          <TextInput
-            placeholder="Search Exercise"
-            placeholderTextColor={'rgba(80, 80, 80, 0.6)'}
-            value={searchQuery}
-            onChangeText={text => {
-              setSearchQuery(text);
-              updateFilteredCategories(text);
-            }}
-            style={styles.inputText}
+        <View style={styles.shadow}>
+          <DietPlanHeader
+            header={route?.params?.workoutTitle}
+            left={
+              DeviceHeigth >= 1024 ? DeviceWidth * 0.045 : DeviceWidth * 0.02
+            }
           />
-        </View>
+          <View
+            style={{
+              width: '90%',
+              height: 50,
+              alignSelf: 'center',
+              backgroundColor: '#F3F5F5',
+              borderRadius: 6,
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingLeft: 10,
+              top: -DeviceWidth*0.05,
+            }}>
+            <Icons name="search" size={18} color={'#333333E5'} />
+            <TextInput
+              placeholder="Search Exercise"
+              placeholderTextColor="#33333380"
+              value={searchQuery}
+              onChangeText={text => {
+                setSearchQuery(text);
+                updateFilteredCategories(text);
+              }}
+              style={styles.inputText}
+            />
+          </View>
 
-        <View
-          style={{
-            marginVertical: 10,
-            height: DeviceHeigth * 0.05,
-            alignItems: 'center',
-            // zIndex: -1,
-            justifyContent: 'center',
-            alignSelf: 'center',
-            width: '100%',
-            alignSelf: 'center',
-          }}>
-          {/* <Dropdown
+          <View
+            style={{
+              marginVertical: 5,
+              height: DeviceHeigth * 0.05,
+              alignItems: 'center',
+              // zIndex: -1,
+              justifyContent: 'center',
+              alignSelf: 'center',
+              width: '100%',
+              alignSelf: 'center',
+            }}>
+            {/* <Dropdown
               style={styles.dropdown}
               placeholderStyle={styles.placeholderStyle}
               selectedTextStyle={styles.selectedTextStyle}
@@ -485,49 +489,57 @@ const CreateWorkout = ({navigation, route}) => {
               renderItem={renderItem}
             /> */}
 
-          <FlatList
-            data={completeProfileData?.focusarea}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({item, index}) => (
-              <TouchableOpacity
-                activeOpacity={0.9}
-                style={[
-                  styles.listView,
-                  {
-                    backgroundColor:
-                      bodyPart == item.bodypart_title ? '#A937371A' : '#fff',
-                    borderWidth: bodyPart != item.bodypart_title ? 2 : 0,
-                    borderColor:
-                      bodyPart != item.bodypart_title
-                        ? '#33333333'
-                        : '#A937371A',
-                  },
-                ]}
-                onPress={() => {
-                  setBodyPart(item.bodypart_title);
-                }}>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: '500',
-                    lineHeight: 16,
-                    textAlign: 'center',
-                    color:
-                      bodyPart != item.bodypart_title ? '#333333E5' : '#A93737',
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+            <FlatList
+              data={completeProfileData?.focusarea}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item, index}) => (
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  style={[
+                    styles.listView,
+                    {
+                      backgroundColor:
+                        bodyPart == item.bodypart_title ? '#A937371A' : '#fff',
+                      borderWidth: bodyPart != item.bodypart_title ? 1 : 0,
+                      borderColor:
+                        bodyPart != item.bodypart_title
+                          ? '#33333333'
+                          : '#A937371A',
+                      marginLeft: index == 0 ? DeviceWidth * 0.06 : 0,
+                      marginRight:
+                        index == completeProfileData?.focusarea?.length - 1
+                          ? DeviceWidth * 0.06
+                          : 5,
+                    },
+                  ]}
+                  onPress={() => {
+                    setBodyPart(item.bodypart_title);
                   }}>
-                  {item.bodypart_title}
-                </Text>
-              </TouchableOpacity>
-            )}
-            showsVerticalScrollIndicator={false}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
-            updateCellsBatchingPeriod={100}
-            removeClippedSubviews={true}
-          />
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontWeight: '500',
+                      lineHeight: 16,
+                      textAlign: 'center',
+                      color:
+                        bodyPart != item.bodypart_title
+                          ? '#333333E5'
+                          : '#A93737',
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                    }}>
+                    {item.bodypart_title}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              showsVerticalScrollIndicator={false}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
+            />
+          </View>
         </View>
 
         <View style={[styles.meditionBox]}>
@@ -551,7 +563,7 @@ const CreateWorkout = ({navigation, route}) => {
           colors={['#D01818', '#941000']}
           style={{
             width: 180,
-            height: 40,
+            height: 45,
             borderRadius: 30,
             justifyContent: 'center',
             alignItems: 'center',
@@ -672,6 +684,21 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'Montserrat',
     color: '#000',
+  },
+  shadow: {
+    marginBottom: 10,
+    shadowColor: 'grey',
+    ...Platform.select({
+      ios: {
+        //shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
 });
 export default CreateWorkout;

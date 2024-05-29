@@ -483,7 +483,7 @@ const CustomWorkout = ({navigation}) => {
   return (
     <>
       <NewHeader
-        header={'Create Plan'}
+        header={'Create Custom Workout'}
         SearchButton={false}
         backButton={true}
       />

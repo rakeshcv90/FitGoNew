@@ -560,7 +560,7 @@ const Exercise = ({navigation, route}: any) => {
                 paddingLeft: DeviceWidth / 2,
               }}>
               <GradientText
-                text={'Hold on!'}
+                text={'Keep Going!'}
                 fontWeight={'700'}
                 fontSize={32}
                 width={DeviceWidth}
@@ -570,7 +570,7 @@ const Exercise = ({navigation, route}: any) => {
               <GradientText
                 alignSelf
                 width={DeviceWidth}
-                text={`Don't give up!`}
+                text={`Don't Give Up!`}
                 fontWeight={'700'}
                 fontSize={32}
                 x={-2}

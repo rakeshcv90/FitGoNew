@@ -30,6 +30,8 @@ type Props = {
   backPressCheck?: boolean;
   workoutCat?: boolean;
   shadow?: boolean;
+  left?: number;
+  h?: number;
 };
 
 const DietPlanHeader: FC<Props> = ({
@@ -42,6 +44,8 @@ const DietPlanHeader: FC<Props> = ({
   backPressCheck,
   workoutCat,
   shadow,
+  left,
+  h,
 }) => {
   const navigation = useNavigation();
   const getExperience = useSelector((state: any) => state.getExperience);
@@ -52,10 +56,11 @@ const DietPlanHeader: FC<Props> = ({
         style.container,
         shadow && style.shadow,
         {
-          height:
-            Platform.OS == 'ios'
-              ? (DeviceHeigth * 13) / 100
-              : (DeviceHeigth * 10) / 100,
+          height: h
+            ? h
+            : Platform.OS == 'ios'
+            ? (DeviceHeigth * 13) / 100
+            : (DeviceHeigth * 10) / 100,
           left: 1,
           paddingTop:
             Platform.OS == 'android'
@@ -68,8 +73,11 @@ const DietPlanHeader: FC<Props> = ({
       ) : (
         <TouchableOpacity
           style={{
-            left:
-              DeviceHeigth >= 1024 ? DeviceWidth * 0.045 : DeviceWidth * 0.04,
+            left: left
+              ? left
+              : DeviceHeigth >= 1024
+              ? DeviceWidth * 0.045
+              : DeviceWidth * 0.04,
           }}
           onPress={() => {
             if (backPressCheck && onPress) {

@@ -167,5 +167,6 @@ export const localImage = {
   Exercise_Info:require('../Icon/Images/NewImage2/Exercise_Info.png'),
   Exercise_List:require('../Icon/Images/NewImage2/Exercise_List.png'),
   MaleNew:require('../Icon/Images/NewImage2/MaleN.png'),
-  FemaleNew:require('../Icon/Images/NewImage2/FemaleNew.png')
+  FemaleNew:require('../Icon/Images/NewImage2/FemaleNew.png'),
+  Alert:require('../Icon/Images/NewImage2/Alert.png'),
 };
