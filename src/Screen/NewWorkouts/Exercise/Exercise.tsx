@@ -270,7 +270,8 @@ const Exercise = ({navigation, route}: any) => {
                     allExercise[index + 1]?.exercise_title
                   } Exercise`,
                 );
-              if (type == 'focus' || 'bodypart') postSingleExerciseAPI(index);
+              if (type == 'focus' || type == 'bodypart')
+                postSingleExerciseAPI(index);
               else postCurrentExerciseAPI(index);
               setDemoW(demoW + 100 / timer);
               setTimer(timer - 1);
@@ -295,7 +296,6 @@ const Exercise = ({navigation, route}: any) => {
               }
               setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
               if (seconds > 1) {
-
                 if (seconds == 5) SPEAK('three.            two.');
                 if (seconds == 3) SPEAK('one.    Done');
                 if (seconds == 12) SPEAK('10 seconds to go');
@@ -314,7 +314,7 @@ const Exercise = ({navigation, route}: any) => {
               skipCount == 0
             ) {
               setPause(false);
-              type == 'focus' || 'bodypart'
+              type == 'focus' || type == 'bodypart'
                 ? postSingleExerciseAPI(number)
                 : postCurrentExerciseAPI(number);
               let checkAdsShow = checkMealAddCount();
@@ -344,7 +344,7 @@ const Exercise = ({navigation, route}: any) => {
               number == allExercise?.length - 1 &&
               skipCount != 0
             ) {
-              type == 'focus' || 'bodypart'
+              type == 'focus' || type == 'bodypart'
                 ? postSingleExerciseAPI(number)
                 : postCurrentExerciseAPI(number);
               navigationRef.current.goBack();
@@ -489,7 +489,7 @@ const Exercise = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data) {
-        // console.log(res.data, trackerData[index], payload);
+        // console.log(res.data, payload, 'Exercise');
         setCompleted(completed + 1);
         setCurrentData(allExercise[index]);
         setRestStart(true);
@@ -526,7 +526,7 @@ const Exercise = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data) {
-        console.log(res.data, payload);
+        // console.log(res.data, payload, 'SINGLE');
         setCompleted(completed + 1);
         setCurrentData(allExercise[index]);
         setRestStart(true);
@@ -608,7 +608,6 @@ const Exercise = ({navigation, route}: any) => {
                 bW={1}
               />
               <ProgreesButton
-
                 onPress={() => {
                   setPlayW(0);
                   setBack(false);
@@ -616,7 +615,6 @@ const Exercise = ({navigation, route}: any) => {
                     parseInt(currentExercise?.exercise_rest.split(' ')[0]),
                   );
                 }}
-
                 text="Restart this Exercise"
                 h={55}
                 bR={30}

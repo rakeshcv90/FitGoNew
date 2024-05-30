@@ -14,6 +14,7 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import {StyleSheet} from 'react-native';
@@ -55,14 +56,10 @@ const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 interface BoxProps {
   item: any;
   index: number;
-  downloadProgress:number;
-  isItemDownload:boolean;
-  // selectedExercise: Array<any>;
-  // setSelectedExercise: React.Dispatch<React.SetStateAction<Array<any>>>;
+  downloadProgress: number;
+  isItemDownload: boolean;
   isSelected: boolean;
   switchButton: boolean;
-  // navigation: any; // Define a more specific type if you know it
-  // CategoryDetails: Object;
 }
 const WorkoutCategories = ({navigation, route}: any) => {
   const [data, setData] = useState([]);
@@ -90,6 +87,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
+  const downloadProgressRef = useRef(0);
   const isFocused = useIsFocused();
   useEffect(() => {
     setExercise(categoryExercise);
@@ -113,11 +111,11 @@ const WorkoutCategories = ({navigation, route}: any) => {
     return fileName;
   };
   let StoringData: any = {},
-    downloadCounter = 0;
+    downloadCounter = 0,
+    progressUpdateTimeout = null;
   const downloadVideos = async (data: any, index: number, len: number) => {
-    if(len == 1){
-
-      setSelectedIndex(index)
+    if (len == 1) {
+      setSelectedIndex(index);
     }
     const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
       data?.exercise_title,
@@ -138,9 +136,17 @@ const WorkoutCategories = ({navigation, route}: any) => {
           .fetch('GET', data?.exercise_video, {
             'Content-Type': 'application/mp4',
             // key: 'Config.REACT_APP_API_KEY',
-          }) .progress((received, total) => {
-            setDownloadProgress((received / total) * 100)
-            console.log("download",downloadProgress * 100)
+          })
+          .progress((received, total) => {
+            const progress = (received / total) * 100;
+            downloadProgressRef.current = progress;
+
+            if (!progressUpdateTimeout) {
+              progressUpdateTimeout = setTimeout(() => {
+                setDownloadProgress(downloadProgressRef.current);
+                progressUpdateTimeout = null;
+              }, 1000); // Update state every second
+            }
           })
           .then(res => {
             StoringData[data?.exercise_title] = res.path();
@@ -151,6 +157,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
             console.log(err);
           });
       }
+      progressUpdateTimeout = null;
+      downloadProgressRef.current = 0;
     } catch (error) {
       console.log('ERRRR', error);
     }
@@ -193,7 +201,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
     } else {
       downloadVideos(item, index, 1).finally(() => {
         setDownloade(0);
-        setDownloadProgress(0)
+        setDownloadProgress(0);
         navigation.navigate('Exercise', {
           allExercise: [item],
           currentExercise: item,
@@ -209,7 +217,14 @@ const WorkoutCategories = ({navigation, route}: any) => {
   };
   const Box: FC<BoxProps> = useMemo(
     () =>
-      ({item, index, isSelected, switchButton,isItemDownload,downloadProgress}) => {
+      ({
+        item,
+        index,
+        isSelected,
+        switchButton,
+        isItemDownload,
+        downloadProgress,
+      }) => {
         return (
           <View
             style={{
@@ -218,15 +233,14 @@ const WorkoutCategories = ({navigation, route}: any) => {
             }}>
             <TouchableOpacity
               key={index}
-              onPress={() =>{ 
-                handlePress(item)
-
+              onPress={() => {
+                handlePress(item);
               }}
               activeOpacity={switchButton ? 0.8 : 1}
               style={styles.boxContainer}>
               <View style={styles.boxImage}>
                 <FastImage
-                  fallback={true}
+                  // fallback={true}
                   style={{
                     width: '100%',
                     height: '100%',
@@ -265,17 +279,22 @@ const WorkoutCategories = ({navigation, route}: any) => {
                   </Text>
                 </View>
               </View>
-              <TouchableOpacity onPress={() => {
-                handleIconPress(item, index)
-                console.log('index--->',index)
+              <TouchableOpacity
+                onPress={() => {
+                  handleIconPress(item, index);
+                  console.log('index--->', index);
                 }}>
                 {switchButton ? (
                   <View
                     style={[
                       styles.boxIconView,
                       {
-                        backgroundColor: isSelected ? AppColor.NEW_DARK_RED : 'white',
-                        borderColor: isSelected ? AppColor.NEW_DARK_RED : '#33333399',
+                        backgroundColor: isSelected
+                          ? AppColor.NEW_DARK_RED
+                          : 'white',
+                        borderColor: isSelected
+                          ? AppColor.NEW_DARK_RED
+                          : '#33333399',
                       },
                     ]}>
                     {isSelected && <Font name="check" color="white" />}
@@ -283,17 +302,13 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 ) : (
                   <CircularProgressBase
                     value={isItemDownload ? downloadProgress : 0}
-                    radius={16}
+                    radius={14}
                     activeStrokeColor={AppColor.RED}
-                    inActiveStrokeColor={AppColor.GRAY1}
-                    activeStrokeWidth={3}
-                    inActiveStrokeWidth={3}
+                    inActiveStrokeColor="#33333399"
+                    activeStrokeWidth={2}
+                    inActiveStrokeWidth={2}
                     maxValue={100}>
-                    <Icons
-                      name={'play'}
-                      size={30}
-                      color={'#333333'}
-                    />
+                    <Icons name={'play'} size={25} color={'#33333399'} />
                   </CircularProgressBase>
                 )}
               </TouchableOpacity>
@@ -425,19 +440,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
       });
     });
   };
-  const renderItem = useCallback(
-    ({item, index}: any) => (
-      <Box
-        item={item}
-        index={index}
-        isSelected={selectedExercise.includes(item?.exercise_id)}
-        switchButton={switchButton}
-        downloadProgress={downloadProgress}
-        isItemDownload={selectedIndex == index}
-      />
-    ),
-    [selectedExercise, switchButton, navigation, setSelectedExercise,downloadProgress, selectedIndex],
-  );
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <DietPlanHeader
@@ -448,7 +451,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
             ? CategoryDetails?.title
             : CategoryDetails?.bodypart_title
         }
-  
         workoutCat={switchButton}
         backPressCheck={switchButton}
         onPress={() => {
@@ -456,6 +458,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
           setSwitchButton(false);
           setItemsLength(0);
         }}
+        h={Platform.OS == 'ios' ? DeviceWidth * 0.2 : DeviceWidth * 0.15}
         key={CategoryDetails?.id}
       />
       <View style={styles.container}>
@@ -493,10 +496,20 @@ const WorkoutCategories = ({navigation, route}: any) => {
             ]}
           />
         </View>
+        <View style={{height: (DeviceWidth * 0.1) / 4}} />
         <FlatList
           data={filteredExercise}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={renderItem}
+          renderItem={({item, index}: any) => (
+            <Box
+              item={item}
+              index={index}
+              isSelected={selectedExercise.includes(item?.exercise_id)}
+              switchButton={switchButton}
+              isItemDownload={selectedIndex == index}
+              downloadProgress={downloadProgress}
+            />
+          )}
           ListEmptyComponent={emptyComponent}
           showsVerticalScrollIndicator={false}
           initialNumToRender={10}
