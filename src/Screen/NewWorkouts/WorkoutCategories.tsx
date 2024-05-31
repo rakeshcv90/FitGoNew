@@ -51,6 +51,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import WorkoutsDescription from './WorkoutsDescription';
 import {TextInput} from 'react-native-paper';
+import { showMessage } from 'react-native-flash-message';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 interface BoxProps {
@@ -78,6 +79,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const dispatch = useDispatch();
+  const [item,setItem]=useState()
   const getCustttomeTimeCal = useSelector(
     (state: any) => state.getCustttomeTimeCal,
   );
@@ -126,7 +128,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
         StoringData[data?.exercise_title] = filePath;
         downloadCounter++;
         setDownloade((downloadCounter / len) * 100);
-        setDownloadProgress(100)
+        setDownloadProgress(100);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -236,6 +238,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
               key={index}
               onPress={() => {
                 handlePress(item);
+                setItem(item)
               }}
               activeOpacity={switchButton ? 0.8 : 1}
               style={styles.boxContainer}>
@@ -314,11 +317,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 )}
               </TouchableOpacity>
             </TouchableOpacity>
-            <WorkoutsDescription
-              data={item}
-              open={visible}
-              setOpen={setVisible}
-            />
           </View>
         );
       },
@@ -502,14 +500,17 @@ const WorkoutCategories = ({navigation, route}: any) => {
           data={filteredExercise}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}: any) => (
-            <Box
-              item={item}
-              index={index}
-              isSelected={selectedExercise.includes(item?.exercise_id)}
-              switchButton={switchButton}
-              isItemDownload={selectedIndex == index}
-              downloadProgress={downloadProgress}
-            />
+            <>
+              <Box
+                item={item}
+                index={index}
+                isSelected={selectedExercise.includes(item?.exercise_id)}
+                switchButton={switchButton}
+                isItemDownload={selectedIndex == index}
+                downloadProgress={downloadProgress}
+              />
+            
+            </>
           )}
           ListEmptyComponent={emptyComponent}
           showsVerticalScrollIndicator={false}
@@ -549,7 +550,14 @@ const WorkoutCategories = ({navigation, route}: any) => {
                   const finalExercises = exercise.filter((item: any) =>
                     selectedExercise.includes(item?.exercise_id),
                   );
-                  Start(finalExercises);
+                  finalExercises.length > 0
+                  ? Start(finalExercises)
+                  : showMessage({
+                      message: 'Please select exercise',
+                      animationDuration: 750,
+                      floating: true,
+                      type: 'success',
+                    });
                 } else Start(exercise);
               }}
             />
@@ -570,6 +578,11 @@ const WorkoutCategories = ({navigation, route}: any) => {
           </View>
         )}
       </View>
+      <WorkoutsDescription
+                data={item}
+                open={visible}
+                setOpen={setVisible}
+              />
       {/* {bannerAdsDisplay()} */}
     </SafeAreaView>
   );

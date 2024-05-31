@@ -248,6 +248,7 @@ const HomeNew = ({navigation}) => {
           getUserDataDetails?.id,
       });
       if (res.data?.msg != 'version  is required') {
+        setRefresh(false)
         dispatch(setChallengesData(res.data));
         const challenge = res.data?.filter(item => item?.status == 'active');
         // console.log('challenge', challenge);
@@ -255,9 +256,11 @@ const HomeNew = ({navigation}) => {
         getCurrentDayAPI(challenge);
       } else {
         dispatch(setChallengesData([]));
+        setRefresh(false)
       }
     } catch (error) {
       console.error(error, 'ChallengesDataAPI ERRR');
+      setRefresh(false)
     }
   };
   const getCurrentDayAPI = async challenge => {
@@ -281,6 +284,7 @@ const HomeNew = ({navigation}) => {
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
         const result = analyzeExerciseData(res.data?.user_details);
+        setRefresh(false)
 
         if (result.two.length == 0) {
           let day = parseInt(result.one[result.one.length - 1]);
@@ -322,6 +326,7 @@ const HomeNew = ({navigation}) => {
         }
       } else {
         // setSelected(0);
+        setRefresh(false)
       }
       const percentage = (
         (day / currentChallenge[0]?.total_days) *
@@ -1174,7 +1179,7 @@ const HomeNew = ({navigation}) => {
               </View>
               <TouchableOpacity
                 onPress={() =>{
-                  AnalyticsConsole(`D_Wrk_DAYS_BUTTON_FR_Home`);
+                  AnalyticsConsole(`D_Wrk_DAYS`);
                   navigation.navigate('WorkoutDays', {
                     data: currentChallenge[0],
                     challenge: true,

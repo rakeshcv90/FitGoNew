@@ -102,7 +102,10 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             justifyContent: 'space-between',
             paddingLeft: 10,
             paddingRight: 10,
-            marginTop: DeviceHeigth * 0.03,
+            marginTop:
+            Platform.OS == 'android'
+              ? DeviceHeigth * 0.03
+              : DeviceHeigth * 0.06,
           }}>
           <TouchableOpacity
             onPress={() => setOpen(false)}

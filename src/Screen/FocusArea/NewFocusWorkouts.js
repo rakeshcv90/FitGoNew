@@ -26,6 +26,7 @@ import {localImage} from '../../Component/Image';
 import Button from '../../Component/Button';
 import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
+import moment from 'moment';
 
 import {
   setCoreCount,

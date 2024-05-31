@@ -144,7 +144,7 @@ const NewProfile = ({navigation}) => {
         title: 'Privacy & Policy',
       });
     } else if (id == 5) {
-      AnalyticsConsole(`Terms_n Cond_BUTTON`);
+      AnalyticsConsole(`Terms_n_Cond`);
       navigation.navigate('TermaAndCondition', {
         title: 'Terms & Condition',
       });

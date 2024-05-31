@@ -767,7 +767,7 @@ const Signup = ({navigation}) => {
                       keyboardType="number-pad"
                       activeUnderlineColor="transparent"
                       maxLength={1}
-                      activeOutlineColor="#E3E3E3"
+                      activeOutlineColor="#C8170D"
                       value={txt1}
                       onChangeText={txt => {
                         if (txt.length >= 1) {
@@ -789,7 +789,7 @@ const Signup = ({navigation}) => {
                       maxLength={1}
                       outlineStyle={{borderRadius: 10}}
                       outlineColor={AppColor.BORDERCOLOR}
-                      activeOutlineColor="#E3E3E3"
+                      activeOutlineColor="#C8170D"
                       value={txt2}
                       onChangeText={txt => {
                         if (txt.length >= 1) {
