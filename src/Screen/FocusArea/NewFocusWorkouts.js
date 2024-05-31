@@ -52,39 +52,43 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const searchCriteria = route?.params?.searchCriteria;
   const searchCriteriaRedux = route?.params?.searchCriteriaRedux;
   const isFocused = useIsFocused();
-  const [searchQuery, setSearchQuery] = useState('');
   const refStandard = useRef();
   const [filterList, setFilterList] = useState(exerciseData);
+  const [downloadProgress, setDownloadProgress] = useState(0);
   const getUprBodyCount = useSelector(state => state.getUprBodyCount);
   const getLowerBodyCount = useSelector(state => state.getLowerBodyCount);
   const getCoreCount = useSelector(state => state.getCoreCount);
+  const getExerciseCount = useSelector(state => state.getExerciseCount);
   const [visible, setVisible] = useState(false);
   const CategoryDetails = route.params?.CategoryDetails;
   const [item, setitem] = useState();
   const [downloaded, setDownloade] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [downloadProgress, setDownloadProgress] = useState(0);
   const dispatch = useDispatch();
   const uperBody = [
     {
       id: 1,
       title: 'Chest',
       ima: require('../../Icon/Images/NewImage2/chest.png'),
+      exCount: getExerciseCount?.exCount1 ?? 0,
     },
     {
       id: 2,
       title: 'Back',
       ima: require('../../Icon/Images/NewImage2/back.png'),
+      exCount: getExerciseCount?.exCount2 ?? 0,
     },
     {
       id: 3,
       title: 'Shoulders',
       ima: require('../../Icon/Images/NewImage2/shoulder.png'),
+      exCount: getExerciseCount?.exCount3 ?? 0,
     },
     {
       id: 4,
       title: 'Arms',
       ima: require('../../Icon/Images/NewImage2/arms.png'),
+      exCount: getExerciseCount?.exCount4 ?? 0,
     },
   ];
   const lowerBody = [
@@ -92,16 +96,19 @@ const NewFocusWorkouts = ({route, navigation}) => {
       id: 1,
       title: 'Legs',
       ima: require('../../Icon/Images/NewImage2/calves.png'),
+      exCount: getExerciseCount?.exCount1 ?? 0,
     },
     {
       id: 2,
       title: 'Quads',
       ima: require('../../Icon/Images/NewImage2/quards.png'),
+      exCount: getExerciseCount?.exCount2 ?? 0,
     },
     {
       id: 3,
       title: 'Calves',
       ima: require('../../Icon/Images/NewImage2/calves.png'),
+      exCount: getExerciseCount?.exCount3 ?? 0,
     },
   ];
   const core = [
@@ -109,11 +116,13 @@ const NewFocusWorkouts = ({route, navigation}) => {
       id: 1,
       title: 'Abs',
       ima: require('../../Icon/Images/NewImage2/core.png'),
+      exCount: getExerciseCount?.exCount1 ?? 0,
     },
     {
       id: 2,
       title: 'Cardio',
       ima: require('../../Icon/Images/NewImage2/Cardio.png'),
+      exCount: getExerciseCount?.exCount2 ?? 0,
     },
   ];
   useEffect(() => {
@@ -178,14 +187,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
     refStandard.current.close();
   };
 
-  //
-
-  const updateFilteredCategories = test => {
-    const filteredItems = workoutList.filter(item =>
-      item.exercise_title.toLowerCase().includes(test.toLowerCase()),
-    );
-    setFilteredCategories(filteredItems);
-  };
   const bannerAdsDisplay = () => {
     if (getPurchaseHistory.length > 0) {
       if (
@@ -270,7 +271,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
         searchCriteria,
       ),
     );
-    console.log('Filter---->', searchCriteria, filterCritera);
     // handle whenever filter data changes
     const handleFilterChange = bodyPart => {
       setFilterCriteria(prev =>
@@ -320,6 +320,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
+                width: DeviceWidth * 0.9,
+                alignSelf: 'center',
+                alignItems: 'center',
                 // top: -10,
               }}>
               <View />
@@ -348,7 +351,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                     ),
                   );
                 }}>
-                <Icons name={'close'} size={25} color={AppColor.BLACK} />
+                <Icons name={'close'} size={24} color={AppColor.BLACK} />
               </TouchableOpacity>
             </View>
             <View
@@ -368,14 +371,21 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 lineHeight: 24,
                 fontFamily: Fonts.MONTSERRAT_BOLD,
                 color: '#1E1E1E',
+
+                width: DeviceWidth * 0.9,
+                alignSelf: 'center',
               }}>
-              Upper Body
+              {route?.params?.focusedPart}
             </Text>
             <View
               style={{
                 //height: DeviceHeigth * 0.35,
                 marginTop: 20,
                 justifyContent: 'center',
+                width: DeviceWidth * 0.9,
+                alignSelf: 'center',
+                alignItems: 'center',
+         
               }}>
               <FlatList
                 data={
@@ -401,7 +411,8 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           handleFilterChange(item?.title);
                         }}
                         style={{
-                          marginHorizontal: 10,
+                          // marginHorizontal: 10,
+                          marginEnd: 20,
                           width: 172,
                           height: 124,
                           justifyContent: 'space-between',
@@ -410,6 +421,10 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           backgroundColor: '#F9F9F9',
                           flexDirection: 'row',
                           borderRadius: 10,
+                          borderWidth: 1.5,
+                          borderColor: filterCritera.includes(item.title)
+                            ? AppColor.RED
+                            : AppColor.LIGHTGREY2,
                         }}>
                         <View
                           style={{
@@ -458,24 +473,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
                               textAlign: 'center',
                               fontFamily: Fonts.MONTSERRAT_MEDIUM,
                             }}>
-                            Exercise x8
+                            Exercise x{item?.exCount}
                           </Text>
                         </View>
-                        {/* <View
-                          style={{
-                            width: 25,
-                            height: 25,
-
-                            top: 15,
-                            left: 0,
-                            borderWidth: 3,
-                            opacity: 0.2,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderColor: '#333333',
-                            borderRadius: 30 / 2,
-                            // backgroundColor: '#A93737',
-                          }}> */}
                         <Icon
                           name={
                             filterCritera.includes(item.title)
@@ -490,7 +490,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           }
                           style={{marginTop: 8}}
                         />
-                        {/* </View> */}
                         <View />
                       </TouchableOpacity>
                     </>
@@ -512,7 +511,8 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 alignSelf: 'center',
               }}
             />
-            <TouchableOpacity
+           <View style={{width:DeviceWidth*0.9,alignSelf:'center'}}> 
+           <TouchableOpacity
               style={{
                 width: 150,
                 height: 50,
@@ -541,6 +541,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 Show Result
               </Text>
             </TouchableOpacity>
+           </View>
           </View>
         </RBSheet>
       </>
@@ -630,29 +631,14 @@ const NewFocusWorkouts = ({route, navigation}) => {
       });
     });
   };
-  // const ProgressCircle=React.memo(()=>
-  //   <CircularProgressBase
-  //   value={selectedIndex == index ? downloadProgress : 0}
-  //   radius={16}
-  //   activeStrokeColor={AppColor.RED}
-  //   inActiveStrokeColor={AppColor.GRAY1}
-  //   activeStrokeWidth={3}
-  //   inActiveStrokeWidth={3}
-  //   maxValue={100}>
-  //   <Icons
-  //     name={'play'}
-  //     size={30}
-  //     opacity={0.6}
-  //     color={'#333333'}
-  //   />
-  //   </CircularProgressBase>
-  // )
   return (
     <>
       <View style={styles.container}>
         <DietPlanHeader
           header={route?.params?.focusedPart}
-          SearchButton={true}
+          SearchButton={
+            route?.params?.focusedPart == 'Full Body' ? false : true
+          }
           // backButton={true}
           // backPressCheck={true}
           // onPress={()=>{
@@ -672,30 +658,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
           source={require('../../Icon/Images/NewImage2/filter.png')}
         />
         <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-        <View
-          style={{
-            width: '95%',
-            height: 50,
-            alignSelf: 'center',
-            backgroundColor: '#F3F5F5',
-            borderRadius: 6,
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingLeft: 10,
-            top: -10,
-          }}>
-          <Iconss name="search" size={18} color={'#333333E5'} />
-          <TextInput
-            placeholder="Search Exercise"
-            placeholderTextColor={'rgba(80, 80, 80, 0.6)'}
-            value={searchQuery}
-            onChangeText={text => {
-              setSearchQuery(text);
-              updateFilteredCategories(text);
-            }}
-            style={styles.inputText}
-          />
-        </View>
         <View>
           <FlatList
             data={filterList}

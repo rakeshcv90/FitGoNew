@@ -137,7 +137,7 @@ const WeightHeight = ({
       <Text style={styles.txt2}>{heading}</Text>
       <View style={styles.View3}>
         <TextInput
-          style={{width: DeviceWidth * 0.5, height: DeviceHeigth * 0.07}}
+          style={{width: DeviceWidth * 0.5,}}
           underlineColor="transparent"
           mode="outlined"
           keyboardType="number-pad"

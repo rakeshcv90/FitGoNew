@@ -128,6 +128,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
         StoringData[data?.exercise_title] = filePath;
         downloadCounter++;
         setDownloade((downloadCounter / len) * 100);
+        setDownloadProgress(100)
       } else {
         await RNFetchBlob.config({
           fileCache: true,

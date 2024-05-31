@@ -290,3 +290,9 @@ export const setCoreCount = data => {
     payload: data,
   };
 };
+export const setExerciseCount=data=>{
+return{
+   type:types.EXERCISECOUNT,
+   payload:data
+}
+}
