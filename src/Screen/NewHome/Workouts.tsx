@@ -495,9 +495,8 @@ const Workouts = ({navigation}: any) => {
                   alignSelf: 'flex-end',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  top: 0,
                   zIndex: 1,
-                  right: 10,
+                  marginRight: 20,
                 }}
                 resizeMode="contain">
                 <Text

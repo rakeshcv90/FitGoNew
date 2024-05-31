@@ -126,22 +126,22 @@ const NewFocusWorkouts = ({route, navigation}) => {
     },
   ];
   useEffect(() => {
-    if (route?.params?.focusedPart == 'Upper Body') {
-      if (getUprBodyCount == 0) {
-        refStandard.current.open();
-      }
-    } else if (route?.params?.focusedPart == 'Lower Body') {
-      if (getLowerBodyCount == 0) {
-        refStandard.current.open();
-      }
-    } else if (route?.params?.focusedPart == 'Core') {
-      if (getCoreCount == 0) {
-        refStandard.current.open();
-      }
+    // delay for smooth animation
+   setTimeout(()=>{
+    if (route?.params?.focusedPart == 'Upper Body' && getUprBodyCount == 0) {
+      refStandard.current.open();
+    } else if (
+      route?.params?.focusedPart == 'Lower Body' &&
+      getLowerBodyCount == 0
+    ) {
+      refStandard.current.open();
+    } else if (route?.params?.focusedPart == 'Core' && getCoreCount == 0) {
+      refStandard.current.open();
     } else {
       refStandard.current.close();
     }
-  }, []);
+   },1000)
+  }, [route]);
   // automatic filter when user comes to this screen
   useEffect(() => {
     if (searchCriteriaRedux?.length == 0) {
@@ -174,19 +174,25 @@ const NewFocusWorkouts = ({route, navigation}) => {
     const focusedPart = route?.params?.focusedPart;
     if (focusedPart === 'Upper Body') {
       dispatch(setUprBdyOpt(filterCriteria));
-      dispatch(setUprBodyCount(1));
     } else if (focusedPart === 'Lower Body') {
       dispatch(setLowerBodyFilOpt(filterCriteria));
-      dispatch(setLowerBodyCount(1));
     } else if (focusedPart === 'Core') {
       dispatch(setCoreFilOpt(filterCriteria));
-      dispatch(setCoreCount(1));
     } else {
       return searchCriteria;
     }
     refStandard.current.close();
   };
-
+  const handleFilterVisibilty = () => {
+    const focusedPart = route?.params?.focusedPart;
+    if (focusedPart === 'Upper Body') {
+      dispatch(setUprBodyCount(1));
+    } else if (focusedPart === 'Lower Body') {
+      dispatch(setLowerBodyCount(1));
+    } else if (focusedPart === 'Core') {
+      dispatch(setCoreCount(1));
+    }
+  };
   const bannerAdsDisplay = () => {
     if (getPurchaseHistory.length > 0) {
       if (
@@ -309,7 +315,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             container: {
               borderTopLeftRadius: 10,
               borderTopRightRadius: 10,
-              height: DeviceHeigth * 0.55,
+              height: DeviceHeigth * 0.6,
             },
             draggableIcon: {
               width: 80,
@@ -385,7 +391,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 width: DeviceWidth * 0.9,
                 alignSelf: 'center',
                 alignItems: 'center',
-         
               }}>
               <FlatList
                 data={
@@ -413,7 +418,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         style={{
                           // marginHorizontal: 10,
                           marginEnd: 20,
-                          width: 172,
+                          width: DeviceWidth / 2.4,
                           height: 124,
                           justifyContent: 'space-between',
                           marginBottom: 20,
@@ -511,37 +516,40 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 alignSelf: 'center',
               }}
             />
-           <View style={{width:DeviceWidth*0.9,alignSelf:'center'}}> 
-           <TouchableOpacity
-              style={{
-                width: 150,
-                height: 50,
-                backgroundColor: AppColor.NEW_DARK_RED,
-                borderRadius: 6,
-                alignSelf: 'flex-end',
-                justifyContent: 'center',
-                alignItems: 'center',
-                opacity:
-                  filterCritera.length === 0 || !isFilterChanged ? 0.6 : 1,
-              }}
-              disabled={
-                filterCritera.length === 0 || !isFilterChanged ? true : false
-              }
-              onPress={() => filterExercises(exerciseData, filterCritera)}>
-              <Text
+            <View style={{width: DeviceWidth * 0.9, alignSelf: 'center'}}>
+              <TouchableOpacity
                 style={{
-                  color: '#FFFFFF',
-                  fontSize: 14,
-                  fontWeight: '500',
-                  lineHeight: 20,
-
-                  textAlign: 'center',
-                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                  width: 150,
+                  height: 50,
+                  backgroundColor: AppColor.NEW_DARK_RED,
+                  borderRadius: 6,
+                  alignSelf: 'flex-end',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  opacity:
+                    filterCritera.length === 0 || !isFilterChanged ? 0.6 : 1,
+                }}
+                disabled={
+                  filterCritera.length === 0 || !isFilterChanged ? true : false
+                }
+                onPress={() => {
+                  filterExercises(exerciseData, filterCritera);
+                  handleFilterVisibilty();
                 }}>
-                Show Result
-              </Text>
-            </TouchableOpacity>
-           </View>
+                <Text
+                  style={{
+                    color: '#FFFFFF',
+                    fontSize: 14,
+                    fontWeight: '500',
+                    lineHeight: 20,
+
+                    textAlign: 'center',
+                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                  }}>
+                  Show Result
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </RBSheet>
       </>

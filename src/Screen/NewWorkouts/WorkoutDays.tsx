@@ -108,11 +108,11 @@ const WorkoutDays = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-
+      console.log('data------>', res.data);
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
         const result: any = analyzeExerciseData(res.data?.user_details);
-        // console.log("dsfsdfsdfewtrd",result)
+        console.log('------>', result,selected);
         if (result.two.length == 0) {
           let day = parseInt(result.one[result.one.length - 1]);
           for (const item of Object.entries(data?.days)) {
@@ -123,7 +123,7 @@ const WorkoutDays = ({navigation, route}: any) => {
               setDay(index + 1);
               break;
             } else {
-              setSelected(day + 1);
+              setSelected(day );
               setDay(day + 1);
               // break;
             }
@@ -534,7 +534,14 @@ const WorkoutDays = ({navigation, route}: any) => {
       return <BannerAdd bannerAdId={bannerAdId} />;
     }
   };
-  const Box = ({selected, item, index, active, percent}: any) => {
+  const Box = ({
+    selected,
+    item,
+    index,
+    active,
+    percent,
+    selectedIndex,
+  }: any) => {
     return (
       <>
         <TouchableOpacity
@@ -600,12 +607,12 @@ const WorkoutDays = ({navigation, route}: any) => {
                     challenge,
                   })
                 : showMessage({
-                  message: `Please complete day ${
-                    index - 1
-                  } workout to unlock day ${index}`,
-                  type: 'danger',
+                    message: `Please complete day ${
+                      index - 1
+                    } workout to unlock day ${index}`,
+                    type: 'danger',
 
-                  duration: 1000,
+                    duration: 1000,
                     floating: true,
                     // icon: {icon: 'auto', position: 'left'},
                   });
@@ -690,7 +697,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                         fontFamily: Fonts.MONTSERRAT_MEDIUM,
                         fontSize: 32,
                         lineHeight: 40,
-                        color: selected ? '#D5191A' : '#A3A3A3',
+                        color: selectedIndex ? AppColor.RED : '#333333B2',
                         borderRadius: 5,
                         borderColor: '#d9d9d9',
                         borderWidth: 1,
@@ -717,7 +724,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                       {
                         fontSize: DeviceHeigth < 1280 ? 16 : 14,
                         color:
-                          !selected && item?.total_rest != 0
+                          !selectedIndex&& item?.total_rest != 0
                             ? '#333333B2'
                             : AppColor.BLACK,
                         marginBottom: 10,
@@ -729,7 +736,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                         styles.small,
                         {
                           color:
-                            !selected && item?.total_rest != 0
+                            !selectedIndex && item?.total_rest != 0
                               ? '#333333B2'
                               : AppColor.BLACK,
                           lineHeight: DeviceHeigth >= 1024 ? 30 : 20,
@@ -743,8 +750,8 @@ const WorkoutDays = ({navigation, route}: any) => {
                         styles.small,
                         {
                           color:
-                            !selected && item?.total_rest != 0
-                              ? '#333333B2'
+                            !selectedIndex 
+                              ? '#33333380'
                               : AppColor.BLACK,
                         },
                       ]}>
@@ -757,8 +764,8 @@ const WorkoutDays = ({navigation, route}: any) => {
                           fontSize: 30,
                           fontWeight: '600',
                           color:
-                            !percent && item?.total_rest != 0
-                              ? '#333333B2'
+                            !percent && selectedIndex
+                              ? AppColor.BLACK
                               : '#505050',
                           lineHeight: 20,
                           marginHorizontal: 10,
@@ -780,7 +787,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                   color={
                     percent && item?.total_rest != 0
                       ? '#D5191A'
-                      : !selected && item?.total_rest != 0
+                      : !selectedIndex && item?.total_rest != 0
                       ? '#33333380'
                       : AppColor.BLACK
                   }
@@ -902,6 +909,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                         ? selected != 0 && index == selected - 1
                         : selected != 0 && index < selected
                     }
+                    selectedIndex={selected == index}
                   />
                 );
               })}
@@ -935,7 +943,7 @@ const styles = StyleSheet.create({
   small: {
     fontFamily: Fonts.MONTSERRAT_REGULAR,
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: '600',
     lineHeight: 16,
   },
   box: {
