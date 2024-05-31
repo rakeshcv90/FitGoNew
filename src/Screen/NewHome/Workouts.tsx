@@ -326,7 +326,7 @@ const Workouts = ({navigation}: any) => {
   };
 
   const renderItem = useMemo(() => {
-    return ({item}: any) => (
+    return ({item, index}: any) => (
       <>
         <View
           style={{
@@ -349,6 +349,12 @@ const Workouts = ({navigation}: any) => {
               flexDirection: 'row',
               padding: 5,
 
+              marginLeft: index == 0 ? DeviceWidth * 0.04 : 0,
+              marginRight:
+                index == currentCategories.slice(0, 4)?.length - 1 ||
+                index == currentCategories.slice(4)?.length - 1
+                  ? DeviceWidth * 0.04
+                  : 5,
               shadowColor: 'grey',
               ...Platform.select({
                 ios: {
@@ -457,14 +463,15 @@ const Workouts = ({navigation}: any) => {
             }
           }}
           style={{
-            width: DeviceWidth * 0.95,
+            width: DeviceWidth * 0.9,
             height: DeviceHeigth * 0.35,
             marginVertical: DeviceHeigth * 0.015,
+            alignItems: 'center',
           }}>
           <ImageBackground
             source={{uri: item?.workout_image_link}}
             style={{
-              width: DeviceWidth * 0.95,
+              width: DeviceWidth * 0.9,
               height: DeviceHeigth * 0.35,
               borderRadius: 20,
               overflow: 'hidden',
@@ -785,7 +792,7 @@ const Workouts = ({navigation}: any) => {
                     <View
                       style={{
                         flexDirection: 'row',
-                        width: '100%',
+                        width: '90%',
                         alignSelf: 'center',
 
                         justifyContent: 'space-between',
@@ -820,11 +827,16 @@ const Workouts = ({navigation}: any) => {
                                   getbodyPartWorkout(item);
                                 }}
                                 style={{
-                                  marginHorizontal: 10,
                                   paddingBottom: 10,
                                   alignItems: 'center',
                                   justifyContent: 'center',
                                   alignSelf: 'center',
+                                  marginLeft:
+                                    index == 0 ? DeviceWidth * 0.06 : 10,
+                                  marginRight:
+                                    index == focuseArea?.length - 1
+                                      ? DeviceWidth * 0.06
+                                      : 10,
                                 }}>
                                 <View
                                   style={{
@@ -892,7 +904,7 @@ const Workouts = ({navigation}: any) => {
                   <>
                     <View
                       style={{
-                        width: '100%',
+                        width: '90%',
                         alignSelf: 'center',
                         // marginVertical: DeviceHeigth * 0.02,
                       }}>
@@ -914,12 +926,13 @@ const Workouts = ({navigation}: any) => {
                       end={{x: 0, y: 1}}
                       colors={['#379CBE', '#81CAF1', '#81CAF1']}
                       style={{
-                        width: '100%',
+                        width: '90%',
 
                         borderRadius: 20,
                         marginVertical: 15,
                         paddingVertical: 15,
                         justifyContent: 'center',
+                        alignSelf: 'center',
                       }}>
                       <TouchableOpacity
                         activeOpacity={0.8}
@@ -995,7 +1008,7 @@ const Workouts = ({navigation}: any) => {
                     <View
                       style={{
                         flexDirection: 'row',
-                        width: '100%',
+                        width: '90%',
                         alignSelf: 'center',
                         marginVertical: DeviceHeigth * 0.0,
                         justifyContent: 'space-between',
@@ -1056,7 +1069,7 @@ const Workouts = ({navigation}: any) => {
                     <View
                       style={{
                         flexDirection: 'row',
-                        width: '100%',
+                        width: '90%',
                         alignSelf: 'center',
                         marginVertical: DeviceHeigth * 0.02,
                         justifyContent: 'space-between',
@@ -1111,7 +1124,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: AppColor.WHITE,
-    paddingHorizontal: 10,
+    // paddingHorizontal: 16,
     marginTop: -30,
   },
   category: {
