@@ -555,6 +555,8 @@ PODS:
     - FBSDKGamingServicesKit (~> 17.0.0)
     - FBSDKShareKit (~> 17.0.0)
     - React-Core
+  - react-native-geocoder-reborn (0.9.0):
+    - React
   - react-native-geolocation (3.2.1):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
@@ -819,6 +821,7 @@ DEPENDENCIES:
   - react-native-background-actions (from `../node_modules/react-native-background-actions`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
+  - react-native-geocoder-reborn (from `../node_modules/react-native-geocoder-reborn`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-in-app-review (from `../node_modules/react-native-in-app-review`)
@@ -976,6 +979,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/blur"
   react-native-fbsdk-next:
     :path: "../node_modules/react-native-fbsdk-next"
+  react-native-geocoder-reborn:
+    :path: "../node_modules/react-native-geocoder-reborn"
   react-native-geolocation:
     :path: "../node_modules/@react-native-community/geolocation"
   react-native-image-picker:
@@ -1149,6 +1154,7 @@ SPEC CHECKSUMS:
   react-native-background-actions: ecffd3f0864140ef6cf21c29be6819a02b531a52
   react-native-blur: 69ecfe61d81b32ee7baae10f5d17aeb4e2594b10
   react-native-fbsdk-next: 84746ea062dc3b1a422154d7674ba4c5836b6d82
+  react-native-geocoder-reborn: c31cbc630d9307ebbceea1dea2746d0054be35c4
   react-native-geolocation: 1279fd4390e311ec3f2fc2878279934147fdd061
   react-native-image-picker: 51fdb07f7ef722988c8a219e1416153760a25e4d
   react-native-in-app-review: db8bb167a5f238e7ceca5c242d6b36ce8c4404a4
