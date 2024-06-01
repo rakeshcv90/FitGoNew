@@ -38,6 +38,7 @@ export type Props = TouchableWithoutFeedbackProps & {
   mR?: number | 0;
   colors?: Array<any>;
   bC?: string;
+  opacity?: number
 };
 
 const GradientButton: FC<Props> = ({...props}) => {
@@ -87,6 +88,7 @@ const GradientButton: FC<Props> = ({...props}) => {
             borderRadius: props.bR ? props.bR : 50 / 2,
             borderColor: props.bC ? props.bC : '',
             borderWidth: props.bC ? 1 : 0,
+            opacity: props.opacity,
           },
         ]}>
         {props.Image ? (
