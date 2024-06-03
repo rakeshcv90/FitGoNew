@@ -50,6 +50,7 @@ const intialState = {
   getLowerBodyCount: 0,
   getCoreCount: 0,
   getExerciseCount: {},
+  getOfferAgreement: {},
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -273,6 +274,11 @@ const ThemeReducer = (state = intialState, action) => {
       };
     case types.EXERCISECOUNT:
       return {...state, getExerciseCount: action.payload};
+    case types.OFFERAGREEMENT:
+      return {
+        ...state,
+        getOfferAgreement: action.payload,
+      };
     default:
       return state;
   }

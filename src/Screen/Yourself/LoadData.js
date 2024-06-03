@@ -33,16 +33,19 @@ import {
   Setmealdata,
   setCurrentWorkoutData,
   setCustomWorkoutData,
+  setOfferAgreement,
   setTempLogin,
   setUserProfileData,
 } from '../../Component/ThemeRedux/Actions';
 import {showMessage} from 'react-native-flash-message';
+import {calendarFormat} from 'moment';
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 
 const LoadData = ({navigation}) => {
   const getFcmToken = useSelector(state => state.getFcmToken);
-  const getTempLogin=useSelector(state=>state.getTempLogin)
+  const getTempLogin = useSelector(state => state.getTempLogin);
+  const getOfferAgreement=useSelector(state=>state.getOfferAgreement)
   const [loadData, setLoadData] = useState(0);
   const buttonName = [
     {
@@ -117,7 +120,6 @@ const LoadData = ({navigation}) => {
   };
   useEffect(() => {
     DeviceInfo.getUniqueId().then(id => {
-      Meal_List(id);
       WholeData(id);
     });
   }, []);
@@ -138,7 +140,9 @@ const LoadData = ({navigation}) => {
       payload.append('workout_plans', mergedObject?.workout_plans);
       payload.append('equipment', mergedObject?.equipment);
       payload.append('version', VersionNumber.appVersion);
-      if(getTempLogin){payload.append('name',mergedObject?.name)}
+      if (getTempLogin) {
+        payload.append('name', mergedObject?.name);
+      }
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {
@@ -160,7 +164,7 @@ const LoadData = ({navigation}) => {
         getUserID != 0
           ? getCustomWorkout(getUserID)
           : customFreeWorkoutDataApi(deviceID);
-          dispatch(setTempLogin(false))
+        dispatch(setTempLogin(false));
       }
     } catch (error) {
       console.log('Whole Data Error', error);
@@ -184,7 +188,6 @@ const LoadData = ({navigation}) => {
         dispatch(setCustomWorkoutData(data?.data));
         setActiveNext(true);
         // currentWorkoutDataApi(data.data?.workout[0]);
-        setLoadData(100);
       } else if (
         data?.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -198,13 +201,11 @@ const LoadData = ({navigation}) => {
       } else {
         dispatch(setCustomWorkoutData([]));
         setActiveNext(true);
-        setLoadData(100);
       }
     } catch (error) {
       console.log('Custom Workout Error', error);
       dispatch(setCustomWorkoutData([]));
       setActiveNext(true);
-      setLoadData(100);
     }
   };
 
@@ -224,9 +225,9 @@ const LoadData = ({navigation}) => {
       });
 
       if (res.data?.workout) {
-        setLoadData(100);
         setActiveNext(true);
         dispatch(setCustomWorkoutData(res.data));
+        Meal_List();
         // currentWorkoutDataApi(res.data?.workout[0]);
       } else if (
         res?.data?.msg == 'Please update the app to the latest version.'
@@ -241,13 +242,11 @@ const LoadData = ({navigation}) => {
       } else {
         dispatch(setCustomWorkoutData([]));
         setActiveNext(true);
-        setLoadData(100);
       }
     } catch (error) {
       console.error(error?.response, 'customWorkoutDataApiError');
       dispatch(setCustomWorkoutData([]));
       setActiveNext(true);
-      setLoadData(100);
     }
   };
   const Meal_List = async () => {
@@ -294,6 +293,7 @@ const LoadData = ({navigation}) => {
       console.log('Load Data Proile ', data?.data?.profile);
       if (data?.data?.profile) {
         dispatch(setUserProfileData(data.data.profile));
+        getAgreementStatus();
       } else if (
         data?.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -306,6 +306,7 @@ const LoadData = ({navigation}) => {
         });
       } else {
         dispatch(setUserProfileData([]));
+        getAgreementStatus();
       }
     } catch (error) {
       console.log('User Profile Error', error);
@@ -329,7 +330,29 @@ const LoadData = ({navigation}) => {
       </Animated.View>
     );
   };
-
+  const getAgreementStatus = async () => {
+    try {
+      const ApiCall = await axios(NewAppapi.GET_AGR_STATUS, {
+        method: 'POST',
+        data: {
+          user_id: getUserID != 0 ? getUserID : null,
+          version: VersionNumber.appVersion,
+        },
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (ApiCall?.data) {
+        setLoadData(100);
+        dispatch(setOfferAgreement(ApiCall?.data));
+      } else {
+        setLoadData(100);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoadData(100);
+    }
+  };
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -374,9 +397,7 @@ const LoadData = ({navigation}) => {
             fontWeight: '600',
           },
         ]}>
-
-         have achieved their fitness goals
-
+        have achieved their fitness goals
       </Text>
       <View
         style={{
@@ -439,7 +460,12 @@ const LoadData = ({navigation}) => {
         {activeNext && (
           <TouchableOpacity
             onPress={() => {
-              navigation.replace('BottomTab');
+              if(getAgreementStatus?.term_conditon=='Accepted'){
+                navigation.replace('BottomTab');
+              }
+             else{
+              navigation.navigate('OfferTerms')
+             }
             }}>
             <LinearGradient
               start={{x: 0, y: 1}}

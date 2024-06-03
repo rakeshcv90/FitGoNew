@@ -16,9 +16,10 @@ import FitText from '../../Component/Utilities/FitText';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {navigationRef} from '../../../App';
 import GradientButton from '../../Component/GradientButton';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import Geolocation from '@react-native-community/geolocation';
 import Geocoder from 'react-native-geocoder-reborn';
+import NewButton from '../../Component/NewButton';
 
 type Coordinates = {
   latitude: number;
@@ -38,45 +39,6 @@ const OfferTerms = ({navigation, route}: any) => {
   const [selected, setSelected] = useState('1');
   const [opened, setOpened] = useState(false);
   const [checked, setChecked] = useState(false);
-  const [coords, setCoords] = useState<Coordinates>({
-    latitude: -1,
-    longitude: -1,
-  });
-  useFocusEffect(
-    useCallback(() => {
-      getCurrentLocation();
-    }, []),
-  );
-  const getCurrentLocation = () => {
-    // setLoader(true);
-    Geolocation.getCurrentPosition(
-      position => {
-        const pos = position.coords;
-        console.log('pos', pos);
-        setCoords({
-          latitude: pos.latitude,
-          longitude: pos.longitude,
-        });
-        Geocoder.geocodePosition({
-          lat: 28.6129,
-          lng: 77.2295,
-        })
-          .then(res => {
-            console.log('COUNTRY', res);
-            // res is an Array of geocoding object (see below)
-          })
-          .catch(err => console.log(err));
-        // GetGymsAPI(pos);
-        // setLoader(false);
-      },
-      error => {
-        // setLoader(false);
-        console.log('err Coord', error.code, error);
-      },
-      {enableHighAccuracy: false, maximumAge: 0},
-    );
-  };
-
   const CheckBox = () => {
     return (
       <View style={styles.checkBoxContainer}>
@@ -93,7 +55,9 @@ const OfferTerms = ({navigation, route}: any) => {
       </View>
     );
   };
-
+  const handleAgreement = () => {
+    navigation.navigate('CountryLocation');
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -191,16 +155,12 @@ const OfferTerms = ({navigation, route}: any) => {
           <FitText type="normal" value="·asdasdasdasdasdasdasdasda" />
           <View style={styles.HLine} />
           <CheckBox />
-
-          <GradientButton
-            text="I Agree"
-            h={50}
-            colors={[AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED]}
-            textStyle={styles.buttonText}
-            alignSelf
-            bR={6}
-            opacity={checked ? 1 : 0.8}
-            // onPress={() => setSwitchButton(true)}
+          <NewButton
+            pV={14}
+            title={'I Agree'}
+            disabled={!checked}
+            opacity={checked ? 1 : 0.7}
+            onPress={() => handleAgreement()}
           />
         </ScrollView>
       </View>

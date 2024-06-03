@@ -36,6 +36,7 @@ export const AppColor={
     NEW_GREEN: '#49AEAA',
     NEW_GREEN_DARK: '#3D8889',
     NEW_DARK_RED: '#A93737',
+    NEW_GREY:'#333333CC'
   }
   export const Fonts = {
     MONTSERRAT_BOLD: 'Montserrat-Bold',

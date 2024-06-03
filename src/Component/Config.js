@@ -96,4 +96,6 @@ export const NewAppapi = {
   USER_EXERCISE_COMPLETE_STATUS: NewApi + 'user_exercise_complete_status_data',
   RESEND_OTP: NewApi + 'resend_otp',
   POST_SINGLE_EXERCISE_COMPLETE: NewApi + 'single_exercise_status',
+  STORE_USER_AGR_COUNTRY:NewApi+'condition',
+  GET_AGR_STATUS:NewApi+'check_condition'
 };

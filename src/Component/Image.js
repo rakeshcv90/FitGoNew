@@ -169,4 +169,5 @@ export const localImage = {
   MaleNew:require('../Icon/Images/NewImage2/MaleN.png'),
   FemaleNew:require('../Icon/Images/NewImage2/FemaleNew.png'),
   Alert:require('../Icon/Images/NewImage2/Alert.png'),
+  location_icon:require('../Icon/Images/NewImage2/location_searching.png')
 };
