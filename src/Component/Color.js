@@ -1,3 +1,5 @@
+import { Platform } from "react-native"
+
 export const AppColor={
     RED:'#941000',
     FBBUTTON:'#4267B2',
@@ -36,6 +38,8 @@ export const AppColor={
     NEW_GREEN: '#49AEAA',
     NEW_GREEN_DARK: '#3D8889',
     NEW_DARK_RED: '#A93737',
+    BORDER_COLOR: '#EAECF0',
+    GREEN: '#0A6847',
   }
   export const Fonts = {
     MONTSERRAT_BOLD: 'Montserrat-Bold',
@@ -45,5 +49,5 @@ export const AppColor={
 
 }
 
-
+export const PLATFORM_IOS = Platform.OS == 'ios'
 

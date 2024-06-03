@@ -35,8 +35,8 @@ import {LogOut} from '../Component/LogOut';
 import RNFetchBlob from 'rn-fetch-blob';
 
 const products = Platform.select({
-  ios: ['fitme_monthly', 'fitme_quarterly', 'fitme_yearly'],
-  android: ['fitme_monthly', 'fitme_quarterly', 'fitme_year'],
+  ios: ['fitme_noob',  'fitme_pro',  'fitme_legend'],
+  android: ['fitme_monthly', 'a_monthly', 'fitme_legend'],
 });
 
 const SplaceScreen = ({navigation}) => {
@@ -84,9 +84,10 @@ const SplaceScreen = ({navigation}) => {
     }
   };
   const initInterstitial = async () => {
-    const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
-
-    });
+    const interstitialAd = InterstitialAd.createForAdRequest(
+      interstitialAdId,
+      {},
+    );
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
       setLoaded(interstitialAd);
     });

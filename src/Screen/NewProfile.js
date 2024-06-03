@@ -121,7 +121,7 @@ const NewProfile = ({navigation}) => {
       setVisible(true);
     } else if (id == 2) {
       AnalyticsConsole(`SUBSCRIPTION_BUTTON`);
-      navigation.navigate('Subscription');
+      navigation.navigate('NewSubscription');
     } else if (id == 3) {
       AnalyticsConsole(`PERSO_DETAILS_BUTTON`);
       navigation.navigate('NewPersonalDetails');

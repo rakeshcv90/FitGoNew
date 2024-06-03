@@ -719,16 +719,16 @@ const Subscription = ({navigation}) => {
     }
   };
   const getButtonName = () => {
-    if (selectedItems.length <= 0) {
+    if (selectedItems?.length <= 0) {
       return 'Proceed';
     } else {
-      if (selectedItems.name == 'Quarterly') {
+      if (selectedItems?.name == 'Quarterly') {
         return 'Proceed';
-      } else if (selectedItems.name == 'Monthly') {
+      } else if (selectedItems?.name == 'Monthly') {
         return 'Proceed';
       } else {
         if (
-          selectedItems.subscriptionOfferDetails[0]?.pricingPhases
+          selectedItems?.subscriptionOfferDetails[0]?.pricingPhases
             ?.pricingPhaseList.length == 1
         ) {
           return 'Proceed';

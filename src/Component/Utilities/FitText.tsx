@@ -9,12 +9,13 @@ type Props = {
   value: string;
   errorType?: boolean;
   textAlign?: 'center' | 'left' | 'right';
-  textTransform?: 'capitalize' | 'uppercase'|'none';
+  textTransform?: 'capitalize' | 'uppercase' | 'none';
   letterSpacing?: number;
   fontFamily?: string;
   fontWeight?: string;
   fontSize?: number;
   lineHeight?: number;
+  marginVertical?: number;
 };
 
 const FitText: FC<Props> = ({
@@ -30,6 +31,7 @@ const FitText: FC<Props> = ({
   fontSize,
   fontWeight,
   lineHeight,
+  marginVertical,
 }) => {
   const getTypeStyle = () => {
     switch (type) {
@@ -43,6 +45,7 @@ const FitText: FC<Props> = ({
           textAlign: textAlign || 'auto',
           textTransform: textTransform || 'none',
           letterSpacing: letterSpacing || 0,
+          marginVertical,
         };
       case 'SubHeading':
         return {
@@ -54,6 +57,7 @@ const FitText: FC<Props> = ({
           textAlign: textAlign || 'auto',
           textTransform: textTransform || 'none',
           letterSpacing: letterSpacing || 0,
+          marginVertical,
         };
       case 'normal':
         return {
@@ -65,6 +69,7 @@ const FitText: FC<Props> = ({
           textAlign: textAlign || 'auto',
           textTransform: textTransform || 'none',
           letterSpacing: letterSpacing || 0,
+          marginVertical,
         };
       default:
         return {};

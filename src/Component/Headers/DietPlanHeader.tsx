@@ -32,6 +32,7 @@ type Props = {
   shadow?: boolean;
   left?: number;
   h?: number;
+  paddingTop?: number;
 };
 
 const DietPlanHeader: FC<Props> = ({
@@ -46,6 +47,7 @@ const DietPlanHeader: FC<Props> = ({
   shadow,
   left,
   h,
+  paddingTop,
 }) => {
   const navigation = useNavigation();
   const getExperience = useSelector((state: any) => state.getExperience);
@@ -62,10 +64,11 @@ const DietPlanHeader: FC<Props> = ({
             ? (DeviceHeigth * 13) / 100
             : (DeviceHeigth * 10) / 100,
           left: 1,
-          paddingTop:
-            Platform.OS == 'android'
-              ? DeviceHeigth * 0.02
-              : DeviceHeigth * 0.055,
+          paddingTop: paddingTop
+            ? paddingTop
+            : Platform.OS == 'android'
+            ? DeviceHeigth * 0.02
+            : DeviceHeigth * 0.055,
         },
       ]}>
       {backButton ? (

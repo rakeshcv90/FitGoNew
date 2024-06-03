@@ -999,7 +999,8 @@ const MyPlans = ({navigation}: any) => {
                             color: AppColor.LITELTEXTCOLOR,
                             lineHeight: 30,
                           }}>
-                          {getWeeklyPlansData[WeekArray[selectedDay]]?.title}
+                          {/* {getWeeklyPlansData[WeekArray[selectedDay]]?.title} */}
+                          Coins: {getWeeklyPlansData[WeekArray[selectedDay]]?.total_coins}
                         </Text>
                         <Text
                           style={{

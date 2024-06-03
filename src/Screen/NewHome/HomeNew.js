@@ -53,6 +53,7 @@ import {
   setChallengesData,
   setFitmeMealAdsCount,
   setIsAlarmEnabled,
+  setPurchaseHistory,
   setStepCounterOnOff,
   setWorkoutTimeCal,
 } from '../../Component/ThemeRedux/Actions';
@@ -67,7 +68,7 @@ import {NativeEventEmitter, NativeModules} from 'react-native';
 import GradientButton from '../../Component/GradientButton';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -1033,6 +1034,12 @@ const HomeNew = ({navigation}) => {
         }
         style={styles.container}
         nestedScrollEnabled>
+        <TouchableOpacity
+          // onPress={PlanPurchasetoBackendAPI}
+          // onPress={() => navigation.navigate('UpcomingEvent')}
+        >
+          <Text>Upcoming Event</Text>
+        </TouchableOpacity>
         <View style={styles.profileView}>
           <GradientText
             item={
@@ -1173,12 +1180,12 @@ const HomeNew = ({navigation}) => {
                 </View>
               </View>
               <TouchableOpacity
-                onPress={() =>{
+                onPress={() => {
                   AnalyticsConsole(`D_Wrk_DAYS_BUTTON_FR_Home`);
                   navigation.navigate('WorkoutDays', {
                     data: currentChallenge[0],
                     challenge: true,
-                  })
+                  });
                 }}
                 style={{width: '10%', alignItems: 'center', top: 20}}>
                 <Image
@@ -1863,9 +1870,9 @@ const HomeNew = ({navigation}) => {
                   resizeMode="contain"
                   style={{
                     width: DeviceHeigth >= 1024 ? 100 : 60,
-                    height: DeviceHeigth >= 1024 ? 250 : DeviceHeigth*0.07,
-                    right: DeviceHeigth >= 1024 ? 0 : DeviceHeigth*0.04,
-                    top: DeviceHeigth >= 1024 ? -40 : DeviceHeigth*0.065
+                    height: DeviceHeigth >= 1024 ? 250 : DeviceHeigth * 0.07,
+                    right: DeviceHeigth >= 1024 ? 0 : DeviceHeigth * 0.04,
+                    top: DeviceHeigth >= 1024 ? -40 : DeviceHeigth * 0.065,
                   }}
                 />
               </View>
