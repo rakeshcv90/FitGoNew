@@ -290,3 +290,17 @@ export const setCoreCount = data => {
     payload: data,
   };
 };
+
+//Rewards
+export const setEnteredCurrentEvent = data => {
+  return {
+    type: types.ENTERED_CURRENT_EVENT,
+    payload: data,
+  };
+};
+export const setEnteredUpcomingEvent = data => {
+  return {
+    type: types.ENTERED_UPCOMING_EVENT,
+    payload: data,
+  };
+};

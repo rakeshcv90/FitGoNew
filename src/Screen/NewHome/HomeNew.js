@@ -1034,12 +1034,6 @@ const HomeNew = ({navigation}) => {
         }
         style={styles.container}
         nestedScrollEnabled>
-        <TouchableOpacity
-          // onPress={PlanPurchasetoBackendAPI}
-          // onPress={() => navigation.navigate('UpcomingEvent')}
-        >
-          <Text>Upcoming Event</Text>
-        </TouchableOpacity>
         <View style={styles.profileView}>
           <GradientText
             item={

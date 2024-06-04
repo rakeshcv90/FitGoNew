@@ -25,8 +25,13 @@ import {showMessage} from 'react-native-flash-message';
 import * as RNIap from 'react-native-iap';
 import moment from 'moment';
 import axios from 'axios';
-import {setPurchaseHistory} from '../../Component/ThemeRedux/Actions';
+import {
+  setEnteredCurrentEvent,
+  setEnteredUpcomingEvent,
+  setPurchaseHistory,
+} from '../../Component/ThemeRedux/Actions';
 import {useIsFocused} from '@react-navigation/native';
+import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 
 const NewSubscription = ({navigation}: any) => {
   const dispatch = useDispatch();
@@ -416,6 +421,12 @@ const NewSubscription = ({navigation}: any) => {
           (item: any) => result.data?.data?.product_id == item?.productId,
         );
         findIndex == -1 ? setCurrentSelected(2) : setCurrentSelected(findIndex);
+        EnteringEventFunction(
+          dispatch,
+          result.data?.data,
+          setEnteredCurrentEvent,
+          setEnteredUpcomingEvent,
+        );
       }
     } catch (error) {
       console.log(error);

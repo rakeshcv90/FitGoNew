@@ -104,6 +104,9 @@ const Exercise = ({navigation, route}: any) => {
   const [timer, setTimer] = useState(10);
   const [timerS, setTimerS] = useState(10);
   const [restStart, setRestStart] = useState(false);
+  const [skip, setSkip] = useState(false);
+  const [next, setNext] = useState(false);
+  const [previous, setPrevious] = useState(false);
   const [randomCount, setRandomCount] = useState(0);
   const [skipCount, setSkipCount] = useState(0);
   const ProgressRef = useRef<ProgressRef>(null);
@@ -114,6 +117,9 @@ const Exercise = ({navigation, route}: any) => {
   const getScreenAwake = useSelector(state => state);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
+  );
+  const enteredCurrentEvent = useSelector(
+    (state: any) => state.enteredCurrentEvent,
   );
   const getSoundOffOn = useSelector((state: any) => state.getSoundOffOn);
   const [separateTimer, setSeparateTimer] = useState(false);
@@ -272,7 +278,11 @@ const Exercise = ({navigation, route}: any) => {
                 );
               if (type == 'focus' || type == 'bodypart')
                 postSingleExerciseAPI(index);
-              else postCurrentExerciseAPI(index);
+              else {
+                enteredCurrentEvent
+                  ? postCurrentRewardsExerciseAPI(index)
+                  : postCurrentExerciseAPI(index);
+              }
               setDemoW(demoW + 100 / timer);
               setTimer(timer - 1);
             } else if (demo) {
@@ -316,6 +326,8 @@ const Exercise = ({navigation, route}: any) => {
               setPause(false);
               type == 'focus' || type == 'bodypart'
                 ? postSingleExerciseAPI(number)
+                : enteredCurrentEvent
+                ? postCurrentRewardsExerciseAPI(number)
                 : postCurrentExerciseAPI(number);
               let checkAdsShow = checkMealAddCount();
               if (checkAdsShow == true) {
@@ -346,7 +358,10 @@ const Exercise = ({navigation, route}: any) => {
             ) {
               type == 'focus' || type == 'bodypart'
                 ? postSingleExerciseAPI(number)
+                : enteredCurrentEvent
+                ? postCurrentRewardsExerciseAPI(number)
                 : postCurrentExerciseAPI(number);
+
               navigationRef.current.goBack();
               clearTimeout(restTimerRef.current);
               clearTimeout(playTimerRef.current);
@@ -446,6 +461,56 @@ const Exercise = ({navigation, route}: any) => {
     }
     navigationRef.current.goBack();
   };
+  const postCurrentRewardsExerciseAPI = async (index: number) => {
+    const payload = new FormData();
+    payload.append('id', trackerData[index]?.id);
+
+    payload.append('day', type == 'day' ? day : WeekArray[day]);
+    payload.append(
+      'workout_id',
+      type == 'day'
+        ? data?.workout_id == undefined
+          ? data?.custom_workout_id
+          : data?.workout_id
+        : `-${day + 1}`,
+    );
+    payload.append('user_id', getUserDataDetails?.id);
+    payload.append('version', '1.18');
+    next && payload.append('next_status', 1);
+    previous && payload.append('prev_status', 1);
+    skip && payload.append('skip_status', 1);
+
+    try {
+      const res = await axios({
+        url: NewAppapi.POST_REWARDS_EXERCISE,
+        method: 'post',
+        data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (res?.data?.msg == 'Please update the app to the latest version.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (res.data) {
+        // console.log(res.data, payload, 'Exercise');
+        setCompleted(completed + 1);
+        setCurrentData(allExercise[index]);
+        setRestStart(true);
+        setPlayW(0);
+      }
+      setSkip(false);
+      setNext(false);
+      setPrevious(false);
+    } catch (error) {
+      console.error(error?.response, 'PostREWARDSAPIERror');
+    }
+  };
   const postCurrentExerciseAPI = async (index: number) => {
     const payload = new FormData();
     payload.append('id', trackerData[index]?.id);
@@ -459,15 +524,6 @@ const Exercise = ({navigation, route}: any) => {
           : data?.workout_id
         : `-${day + 1}`,
     );
-
-    // payload.append('day', day);
-    //   payload.append(
-    //     'workout_id',
-    //     data?.workout_id == undefined
-    //       ? data?.custom_workout_id
-    //       : data?.workout_id,
-    //   );
-
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
 
@@ -827,6 +883,7 @@ const Exercise = ({navigation, route}: any) => {
                 />
                 <TouchableOpacity
                   onPress={() => {
+                    setSkip(true);
                     clearInterval(seperateTimerRef.current);
                     setTimerS(0);
                   }}
@@ -1007,6 +1064,7 @@ const Exercise = ({navigation, route}: any) => {
                 />
                 <TouchableOpacity
                   onPress={() => {
+                    setSkip(false);
                     clearInterval(restTimerRef.current);
                     setTimer(0);
                   }}
@@ -1278,6 +1336,7 @@ const Exercise = ({navigation, route}: any) => {
               }}
               nextDisabled={number == allExercise?.length - 1}
               next={() => {
+                setNext(true);
                 setPause(!pause);
                 // setDefaultPre(0);
                 setPlayW(prevTimer => 0);
@@ -1291,7 +1350,7 @@ const Exercise = ({navigation, route}: any) => {
                   );
                   // postCurrentExerciseAPI(index + 1);
                   setNumber(number + 1);
-                  setSkipCount(skipCount + 1);
+                  !enteredCurrentEvent && setSkipCount(skipCount + 1);
                   setCurrentData(allExercise[index + 1]);
                   handleExerciseChange(allExercise[index + 1]?.exercise_title);
                   setSeconds(
@@ -1304,6 +1363,7 @@ const Exercise = ({navigation, route}: any) => {
               backDisabled={number == 0}
               back={() => {
                 if (number == 0) return;
+                setPrevious(true);
                 setPlayW(prevTimer => 0);
                 setPause(false);
                 clearInterval(playTimerRef.current);

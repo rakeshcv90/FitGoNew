@@ -99,4 +99,5 @@ export const NewAppapi = {
   EVENT_SUBSCRIPTION_POST: NewApi + 'event',
   EVENT_SUBSCRIPTION_GET: NewApi + 'event_details',
   CURRENT_DAY_EVENT_EXERCISE: NewApi + 'user_event__exercise_status',
+  POST_REWARDS_EXERCISE: NewApi + 'event_exercise_complete_status', //Done App Version
 };
