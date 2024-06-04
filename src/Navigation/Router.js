@@ -68,6 +68,7 @@ import WorkoutCategories from '../Screen/NewWorkouts/WorkoutCategories';
 import Name from '../Screen/Yourself/Name';
 import CountryLocation from '../Screen/Terms&Country/CountryLocation';
 import OfferTerms from '../Screen/Terms&Country/OfferTerms';
+import RewardModal from '../Component/Utilities/RewardModal';
 
 const Stack = createStackNavigator();
 

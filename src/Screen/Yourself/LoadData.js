@@ -45,7 +45,7 @@ const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 const LoadData = ({navigation}) => {
   const getFcmToken = useSelector(state => state.getFcmToken);
   const getTempLogin = useSelector(state => state.getTempLogin);
-  const getOfferAgreement=useSelector(state=>state.getOfferAgreement)
+  const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const [loadData, setLoadData] = useState(0);
   const buttonName = [
     {
@@ -460,12 +460,7 @@ const LoadData = ({navigation}) => {
         {activeNext && (
           <TouchableOpacity
             onPress={() => {
-              if(getAgreementStatus?.term_conditon=='Accepted'){
-                navigation.replace('BottomTab');
-              }
-             else{
-              navigation.navigate('OfferTerms')
-             }
+              navigation.navigate('OfferTerms');
             }}>
             <LinearGradient
               start={{x: 0, y: 1}}

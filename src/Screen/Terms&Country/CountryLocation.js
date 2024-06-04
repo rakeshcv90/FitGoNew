@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
@@ -11,18 +11,26 @@ import axios from 'axios';
 import VersionNumber from 'react-native-version-number';
 import {useSelector, useDispatch} from 'react-redux';
 import {setOfferAgreement} from '../../Component/ThemeRedux/Actions';
+import {Image} from 'react-native';
+import ActivityLoader from '../../Component/ActivityLoader';
+import {showMessage} from 'react-native-flash-message';
 const CountryLocation = ({navigation, route}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  const [loaded, setLoaded] = useState(true);
+  const routeName = route?.params?.routeName;
+  const CustomCreated=route?.params?.CustomCreated
   const dispatch = useDispatch();
   const getCountry = async () => {
+    setLoaded(false);
     try {
       const country = await locationPermission();
-      await StoreInfoApi(country);
+      await StoreAgreementApi(country);
     } catch (error) {
       console.log(error);
     }
   };
-  const StoreInfoApi = async country => {
+
+  const StoreAgreementApi = async country => {
     const payload = new FormData();
     payload.append('version', VersionNumber?.appVersion);
     payload.append('user_id', getUserDataDetails?.id);
@@ -34,11 +42,12 @@ const CountryLocation = ({navigation, route}) => {
         data: payload,
         headers: {'Content-Type': 'multipart/form-data'},
       });
-      if (Apicall.data) {
+      if (Apicall?.data) {
         getAgreementStatus();
       }
     } catch (error) {
       console.log(error);
+      setLoaded(true);
     }
   };
   const getAgreementStatus = async () => {
@@ -57,24 +66,37 @@ const CountryLocation = ({navigation, route}) => {
         ApiCall?.data?.msg == 'Please update the app to the latest version.'
       ) {
         showMessage({
-          message: data?.data?.msg,
+          message: ApiCall?.data?.msg,
           floating: true,
           duration: 500,
           type: 'danger',
           icon: {icon: 'auto', position: 'left'},
         });
+        setLoaded(true);
       } else {
         dispatch(setOfferAgreement(ApiCall?.data));
-        console.log(ApiCall?.data);
+        setLoaded(true);
+        if (CustomCreated) {
+          navigation.navigate('CustomWorkout', {routeName: routeName});
+        } else {
+          navigation.navigate('BottomTab');
+        }
       }
     } catch (error) {
       console.log(error);
+      setLoaded(true);
     }
   };
   return (
     <View style={styles.Container}>
       <NewHeader backButton />
+      {loaded ? null : <ActivityLoader />}
       <View style={styles.view1}>
+        <Image
+          source={localImage.location_ping}
+          style={{height: 90, width: 90, marginBottom: 15}}
+          resizeMode="contain"
+        />
         <Text style={styles.txt1}>Enter your current location</Text>
         <Text style={styles.txt2}>
           We need your location to provide better services
@@ -87,7 +109,17 @@ const CountryLocation = ({navigation, route}) => {
           image={localImage.location_icon}
           onPress={() => getCountry()}
         />
-        <Text style={styles.txt3}>skip</Text>
+        <Text
+          style={styles.txt3}
+          onPress={() => {
+            if (CustomCreated) {
+              navigation.navigate('CustomWorkout', {routeName: routeName});
+            } else {
+              navigation.navigate('BottomTab');
+            }
+          }}>
+          skip
+        </Text>
       </View>
     </View>
   );

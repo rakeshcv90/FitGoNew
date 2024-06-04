@@ -1,6 +1,6 @@
 import {StyleSheet, Image, StatusBar, Platform, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {DeviceWidth, NewApi, NewAppapi} from '../Component/Config';
+import {Appapi, DeviceWidth, NewApi, NewAppapi} from '../Component/Config';
 import {localImage} from '../Component/Image';
 import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
@@ -13,6 +13,7 @@ import {
   setCustomWorkoutData,
   setFitmeAdsCount,
   setInappPurchase,
+  setOfferAgreement,
   setPurchaseHistory,
   setStoreData,
   setUserProfileData,
@@ -47,7 +48,8 @@ const SplaceScreen = ({navigation}) => {
   const getUserID = useSelector(state => state.getUserID);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [loaded, setLoaded] = useState(false);
-
+  const [ApiDataloaded, setApiDataLoaded] = useState(false);
+  const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   useEffect(() => {
     requestPermissionforNotification(dispatch);
     DeviceInfo.syncUniqueId().then(uniqueId => {
@@ -64,8 +66,44 @@ const SplaceScreen = ({navigation}) => {
     initInterstitial();
     getAllExerciseData();
     ChallengesDataAPI();
+    if (getUserDataDetails?.id) {
+      getOffertermsStatus();
+    }
   }, []);
-
+  //offerTerms
+  const getOffertermsStatus = async () => {
+    try {
+      const ApiCall = await axios(NewAppapi.GET_AGR_STATUS, {
+        method: 'POST',
+        data: {
+          user_id: getUserDataDetails?.id,
+          version: VersionNumber.appVersion,
+        },
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (
+        ApiCall?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: ApiCall?.data?.msg,
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setApiDataLoaded(true);
+      } else {
+        dispatch(setOfferAgreement(ApiCall?.data));
+        console.log('offer Agreement', getOfferAgreement);
+        setApiDataLoaded(true);
+      }
+    } catch (error) {
+      console.log(error);
+      setApiDataLoaded(true);
+    }
+  };
   const ChallengesDataAPI = async () => {
     try {
       const res = await axios({
@@ -84,9 +122,10 @@ const SplaceScreen = ({navigation}) => {
     }
   };
   const initInterstitial = async () => {
-    const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
-
-    });
+    const interstitialAd = InterstitialAd.createForAdRequest(
+      interstitialAdId,
+      {},
+    );
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
       setLoaded(interstitialAd);
     });
@@ -98,20 +137,23 @@ const SplaceScreen = ({navigation}) => {
     });
   };
   const loadScreen = () => {
-    // if (showIntro) {
-    if (
-      getUserDataDetails?.id &&
-      getUserDataDetails?.profile_compl_status == 1
-    ) {
-      navigation.replace('BottomTab');
-    } else {
-      // navigation.replace('LogSignUp');
-      navigation.replace('LetsStart');
-    }
-    // }
-    // else {
-    //   navigation.replace('IntroductionScreen1');
-    // }
+    //to check the condtion id user is already login and have not provided consent yet
+  
+      if (
+        getUserDataDetails?.id &&
+        getUserDataDetails?.profile_compl_status == 1
+      ) {
+        if(getOfferAgreement?.term_conditon){
+          navigation.replace('BottomTab');
+        }else{
+          navigation.replace('OfferTerms');
+        }
+       
+      } else {
+
+        navigation.replace('LetsStart');
+      }
+
   };
   if (loaded) {
     setLoaded(false);

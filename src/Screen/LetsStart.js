@@ -21,6 +21,7 @@ import {requestPermissionforNotification} from '../Component/Helper/PushNotifica
 import ActivityLoader from '../Component/ActivityLoader';
 import axios from 'axios';
 import {
+  setOfferAgreement,
   setTempLogin,
   setUserId,
   setUserProfileData,
@@ -29,6 +30,7 @@ import {showMessage} from 'react-native-flash-message';
 import {BannerAdd} from '../Component/BannerAdd';
 import {bannerAdId} from '../Component/AdsId';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {VictoryLegend} from 'victory-native';
 
 const LetsStart = ({navigation}) => {
   const dispatch = useDispatch();
@@ -36,6 +38,7 @@ const LetsStart = ({navigation}) => {
   const [deviceId, setDeviceId] = useState(0);
   const isFocused = useIsFocused();
   const [forLoading, setForLoading] = useState(false);
+  const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   useEffect(() => {
     if (isFocused) {
       requestPermissionforNotification(dispatch);
@@ -103,6 +106,7 @@ const LetsStart = ({navigation}) => {
       ) {
         setForLoading(false);
         getProfileData1(data.data?.id);
+
         await AsyncStorage.setItem('userID', `${data.data?.id}`);
         dispatch(setUserId(data.data?.id));
       } else if (
@@ -176,7 +180,7 @@ const LetsStart = ({navigation}) => {
       if (data?.data?.profile) {
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));
-        navigation.replace('BottomTab');
+        getOffertermsStatus(user_id);
       } else if (
         data?.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -195,6 +199,46 @@ const LetsStart = ({navigation}) => {
       }
     } catch (error) {
       console.log('User Profile Error', error);
+      setForLoading(false);
+    }
+  };
+  //
+  const getOffertermsStatus = async id => {
+    try {
+      const ApiCall = await axios(NewAppapi.GET_AGR_STATUS, {
+        method: 'POST',
+        data: {
+          user_id: id,
+          version: VersionNumber.appVersion,
+        },
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (
+        ApiCall?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: ApiCall?.data?.msg,
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setForLoading(false);
+      } else {
+        if (ApiCall?.data?.term_conditon == 'Accepted') {
+          navigation.replace('BottomTab'); //
+          dispatch(setOfferAgreement(ApiCall?.data));
+          setForLoading(false);
+        } else {
+          navigation.replace('OfferTerms'); //
+          dispatch(setOfferAgreement(ApiCall?.data));
+          setForLoading(false);
+        }
+      }
+    } catch (error) {
+      console.log(error);
       setForLoading(false);
     }
   };
@@ -252,7 +296,7 @@ const LetsStart = ({navigation}) => {
             alignSelf: 'center',
             width: '100%',
             justifyContent: 'center',
-            marginTop:DeviceHeigth*0.04
+            marginTop: DeviceHeigth * 0.04,
             // top: DeviceHeigth > 808 ? DeviceHeigth * 0.18 : DeviceHeigth * 0.2,
           }}>
           <LinearGradient

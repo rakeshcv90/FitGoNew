@@ -97,5 +97,6 @@ export const NewAppapi = {
   RESEND_OTP: NewApi + 'resend_otp',
   POST_SINGLE_EXERCISE_COMPLETE: NewApi + 'single_exercise_status',
   STORE_USER_AGR_COUNTRY:NewApi+'condition',
-  GET_AGR_STATUS:NewApi+'check_condition'
+  GET_AGR_STATUS:NewApi+'check_condition',
+  GET_AGREEMENT:NewApi+'get_termconditon_data'
 };

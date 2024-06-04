@@ -1,14 +1,12 @@
 import Geolocation from '@react-native-community/geolocation';
 import {Alert} from 'react-native';
 import geocoder from 'react-native-geocoder-reborn';
-
-const {
+import {
   PERMISSIONS,
   RESULTS,
   requestMultiple,
   openSettings,
-} = require('react-native-permissions');
-
+} from 'react-native-permissions';
 
 export const locationPermission = async () => {
   if (Platform.OS === 'ios') {
@@ -25,7 +23,9 @@ export const locationPermission = async () => {
     ]);
     if (result['android.permission.ACCESS_FINE_LOCATION'] === 'granted') {
       return await getCurrentLocation();
-    } else if (result['android.permission.ACCESS_FINE_LOCATION'] === RESULTS.BLOCKED) {
+    } else if (
+      result['android.permission.ACCESS_FINE_LOCATION'] === RESULTS.BLOCKED
+    ) {
       showPermissionAlert();
     }
   }
@@ -36,14 +36,15 @@ const showPermissionAlert = () => {
     'Permission Required',
     'To use the rewards feature, please enable location access in settings',
     [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Open settings', onPress: openSettings },
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'Open settings', onPress: openSettings},
     ],
-    { cancelable: false }
+    {cancelable: false},
   );
 };
 
 const getCurrentLocation = () => {
+  console.log('getCoutnry')
   return new Promise((resolve, reject) => {
     Geolocation.getCurrentPosition(
       position => {
@@ -56,15 +57,17 @@ const getCurrentLocation = () => {
           .geocodePosition(Coords)
           .then(res => {
             const country = res[0].country;
-            resolve(country);
+            resolve(country);     
           })
-          .catch(err => reject(err));
+          .catch(err => {
+            reject(err);
+          });
       },
       error => {
         console.log('err Coord', error.code, error);
         reject(error);
       },
-      { enableHighAccuracy: false, maximumAge: 0 }
+      {enableHighAccuracy: false, maximumAge: 0},
     );
   });
 };

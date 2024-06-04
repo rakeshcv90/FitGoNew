@@ -1,30 +1,35 @@
 import {
+  Modal,
   Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {
+  Api,
+  DeviceHeigth,
+  DeviceWidth,
+  NewApi,
+  NewAppapi,
+} from '../../Component/Config';
 import RadioButtons from '../../Component/Utilities/RadioButtons';
 import FitText from '../../Component/Utilities/FitText';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {navigationRef} from '../../../App';
-import GradientButton from '../../Component/GradientButton';
-import {useFocusEffect} from '@react-navigation/native';
-import Geolocation from '@react-native-community/geolocation';
-import Geocoder from 'react-native-geocoder-reborn';
+import VersionNumber from 'react-native-version-number';
 import NewButton from '../../Component/NewButton';
-
-type Coordinates = {
-  latitude: number;
-  longitude: number;
-};
+import axios from 'axios';
+import {showMessage} from 'react-native-flash-message';
+import HTML from 'react-native-render-html';
+import ActivityLoader from '../../Component/ActivityLoader';
+import {RadioButton} from 'react-native-paper';
+import {setChallengesData} from '../../Component/ThemeRedux/Actions';
 const radioData = [
   {
     id: 1,
@@ -36,9 +41,56 @@ const radioData = [
   },
 ];
 const OfferTerms = ({navigation, route}: any) => {
-  const [selected, setSelected] = useState('1');
+  const [language, setLanguage] = useState('English');
   const [opened, setOpened] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [content, setContent] = useState('');
+  const [loaded, setLoaded] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const routeName = route?.params?.routeName;
+  const CustomCreated = route?.params?.CustomCreated;
+  const {width: windowWidth} = useWindowDimensions();
+  const contentWidth = windowWidth;
+  // console.log(routeName);
+  useEffect(() => {
+    getAgreementContent();
+    console.log('call');
+  }, [language]);
+  const getAgreementContent = async () => {
+    setLoaded(false)
+    try {
+      const ApiCall = await axios(
+        `${NewAppapi.GET_AGREEMENT}?version=${VersionNumber.appVersion}`,
+        {
+          method: 'GET',
+        },
+      );
+
+      if (
+        ApiCall?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        setLoaded(true);
+        showMessage({
+          message: ApiCall?.data?.msg,
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        if (language == 'English') {
+          setContent(ApiCall?.data?.data[0]?.term_condition_english);
+          setLoaded(true);
+        } else {
+          setContent(ApiCall?.data?.data[0]?.term_condition_hindi);
+          setLoaded(true);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      setLoaded(true);
+    }
+  };
   const CheckBox = () => {
     return (
       <View style={styles.checkBoxContainer}>
@@ -56,7 +108,22 @@ const OfferTerms = ({navigation, route}: any) => {
     );
   };
   const handleAgreement = () => {
-    navigation.navigate('CountryLocation');
+    navigation.navigate('CountryLocation', {CustomCreated: CustomCreated});
+  };
+  // to check and uncheck the box automatically
+  const handleScroll = event => {
+    const {contentOffset, layoutMeasurement, contentSize} = event.nativeEvent;
+    // If the user scrolls to the top (offset is 0), uncheck the box
+    if (contentOffset.y === 0) {
+      setChecked(false);
+    } // Calculate the scroll position relative to the bottom of the content
+    const scrollPosition = layoutMeasurement.height + contentOffset.y;
+    const scrollHeight = contentSize.height;
+
+    // If the user scrolls to the bottom, check the box
+    if (scrollPosition >= scrollHeight) {
+      setChecked(true);
+    }
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -76,13 +143,7 @@ const OfferTerms = ({navigation, route}: any) => {
             },
           }),
         }}>
-        <AntDesign
-          name={'arrowleft'}
-          size={25}
-          color={AppColor.INPUTTEXTCOLOR}
-          onPress={() => navigation.goBack()}
-          style={{marginLeft: 16}}
-        />
+        {loaded ? null : <ActivityLoader />}
         <View
           style={{
             marginTop: 10,
@@ -117,7 +178,7 @@ const OfferTerms = ({navigation, route}: any) => {
               }}>
               <FitText
                 type="normal"
-                value={selected == '1' ? 'English' : 'Hindi'}
+                value={language}
                 fontWeight="500"
                 fontSize={12}
               />
@@ -126,42 +187,85 @@ const OfferTerms = ({navigation, route}: any) => {
             {opened && (
               <View
                 style={{
-                  position: 'absolute',
-                  right: 5,
-                  top: DeviceWidth * 0.1,
+                  marginRight: 16,
                 }}>
-                <RadioButtons
-                  data={radioData}
-                  errors=""
-                  displayType="column"
-                  radioColor=""
-                  selected={selected}
-                  setSelected={setSelected}
-                  touched={false}
-                  bgItem="#3333330A"
-                  pV={20}
-                  w={DeviceWidth * 0.3}
-                  shadow
-                />
+                <Modal transparent visible={opened}>
+                  <View
+                    style={{
+                      // width: DeviceWidth * 0.3,
+                      backgroundColor: 'lightgrey',
+                      justifyContent: 'flex-end',
+                      alignSelf: 'flex-end',
+                      top: DeviceHeigth * 0.1,
+                      marginRight: 16,
+                      paddingHorizontal: 10,
+                      paddingVertical: 8,
+                    }}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <RadioButton
+                        value="English"
+                        status={
+                          language === 'English' ? 'checked' : 'unchecked'
+                        }
+                        onPress={() => {
+                          setLanguage('English');
+                          // setModalVisible(false)
+                          setTimeout(() => {
+                            setOpened(!opened);
+                          }, 250);
+                        }}
+                        color={AppColor.RED}
+                      />
+                      <Text style={{color: AppColor.BLACK}}>English</Text>
+                    </View>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <RadioButton
+                        value="Hindi"
+                        status={language === 'Hindi' ? 'checked' : 'unchecked'}
+                        onPress={() => {
+                          setLanguage('Hindi');
+                          // setModalVisible(false);
+                          setTimeout(() => {
+                            setOpened(!opened);
+                          }, 250);
+                        }}
+                        color={AppColor.RED}
+                      />
+                      <Text style={{color: AppColor.BLACK}}>Hindi</Text>
+                    </View>
+                  </View>
+                </Modal>
               </View>
             )}
           </TouchableOpacity>
         </View>
       </View>
       <View style={{flex: 1}}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <FitText type="SubHeading" value="asdasdasdasdasdasdasdasda" />
-          <FitText type="Heading" value="·····asdasdasdasdasdasdasdasda" />
-          <FitText type="normal" value="·asdasdasdasdasdasdasdasda" />
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          onScroll={handleScroll}>
+          <View
+            style={{
+              marginHorizontal: 16,
+            }}>
+            <HTML
+              source={{html: content}}
+              tagsStyles={tagStyle}
+              contentWidth={contentWidth}
+            />
+          </View>
+
           <View style={styles.HLine} />
           <CheckBox />
-          <NewButton
-            pV={14}
-            title={'I Agree'}
-            disabled={!checked}
-            opacity={checked ? 1 : 0.7}
-            onPress={() => handleAgreement()}
-          />
+          <View style={{marginBottom: 15}}>
+            <NewButton
+              pV={14}
+              title={'I Agree'}
+              disabled={!checked}
+              opacity={checked ? 1 : 0.7}
+              onPress={() => handleAgreement()}
+            />
+          </View>
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -169,7 +273,25 @@ const OfferTerms = ({navigation, route}: any) => {
 };
 
 export default OfferTerms;
-
+const tagStyle = {
+  h1: {
+    color: AppColor.BLACK,
+  },
+  h2: {
+    color: AppColor.BLACK,
+  },
+  p: {
+    color: AppColor.BLACK,
+    fontSize: 15,
+    lineHeight: 20,
+  },
+  ul: {
+    color: AppColor.BLACK,
+  },
+  li: {
+    color: AppColor.BLACK,
+  },
+};
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: AppColor.WHITE},
   policyText: {

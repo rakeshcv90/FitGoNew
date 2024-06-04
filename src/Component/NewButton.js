@@ -2,7 +2,7 @@ import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import React from 'react';
 import {DeviceWidth} from './Config';
 import {AppColor, Fonts} from './Color';
-const NewButton = ({image, title, pH, pV, bR,onPress,disabled,opacity}) => {
+const NewButton = ({image, title, pH, pV, bR,onPress,disabled,opacity,ButtonWidth}) => {
   return (
     <TouchableOpacity
       style={[
@@ -11,7 +11,8 @@ const NewButton = ({image, title, pH, pV, bR,onPress,disabled,opacity}) => {
           paddingHorizontal: pH ?? 0,
           paddingVertical: pV ?? 0,
           borderRadius: bR ?? 8,
-          opacity:opacity??1
+          opacity:opacity??1,
+          width:ButtonWidth??DeviceWidth * 0.9
         },
       ]} 
       onPress={onPress}
@@ -24,7 +25,6 @@ const NewButton = ({image, title, pH, pV, bR,onPress,disabled,opacity}) => {
 };
 const styles = StyleSheet.create({
   Button: {
-    width: DeviceWidth * 0.9,
     backgroundColor: AppColor.RED,
     justifyContent: 'center',
     alignItems: 'center',
