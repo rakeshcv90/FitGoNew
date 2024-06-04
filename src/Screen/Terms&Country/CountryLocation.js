@@ -14,11 +14,13 @@ import {setOfferAgreement} from '../../Component/ThemeRedux/Actions';
 import {Image} from 'react-native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
+import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
+import FitText from '../../Component/Utilities/FitText';
 const CountryLocation = ({navigation, route}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const [loaded, setLoaded] = useState(true);
   const routeName = route?.params?.routeName;
-  const CustomCreated=route?.params?.CustomCreated
+  const CustomCreated = route?.params?.CustomCreated;
   const dispatch = useDispatch();
   const getCountry = async () => {
     setLoaded(false);
@@ -89,7 +91,7 @@ const CountryLocation = ({navigation, route}) => {
   };
   return (
     <View style={styles.Container}>
-      <NewHeader backButton />
+      <DietPlanHeader header="" shadow />
       {loaded ? null : <ActivityLoader />}
       <View style={styles.view1}>
         <Image
@@ -97,14 +99,23 @@ const CountryLocation = ({navigation, route}) => {
           style={{height: 90, width: 90, marginBottom: 15}}
           resizeMode="contain"
         />
-        <Text style={styles.txt1}>Enter your current location</Text>
-        <Text style={styles.txt2}>
-          We need your location to provide better services
-        </Text>
+        <FitText
+          value="Enter Your Current Location"
+          type="Heading"
+          fontSize={20}
+          fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+          lineHeight={40}
+        />
+        <FitText
+          type="SubHeading"
+          value="We need your location to provide"
+          textAlign="center"
+        />
+        <FitText type="SubHeading" value="better services" textAlign="center" />
       </View>
       <View style={styles.View2}>
         <NewButton
-          title={'Use current location'}
+          title={'Use Current Location'}
           pV={15}
           image={localImage.location_icon}
           onPress={() => getCountry()}
@@ -118,7 +129,7 @@ const CountryLocation = ({navigation, route}) => {
               navigation.navigate('BottomTab');
             }
           }}>
-          skip
+          Skip
         </Text>
       </View>
     </View>
@@ -167,6 +178,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     fontSize: 16,
     marginTop: 8,
+    lineHeight:24
   },
 });
 export default CountryLocation;

@@ -44,7 +44,6 @@ const showPermissionAlert = () => {
 };
 
 const getCurrentLocation = () => {
-  console.log('getCoutnry')
   return new Promise((resolve, reject) => {
     Geolocation.getCurrentPosition(
       position => {
@@ -54,8 +53,9 @@ const getCurrentLocation = () => {
           lng: pos.longitude,
         };
         geocoder
-          .geocodePosition(Coords)
-          .then(res => {
+        .geocodePosition(Coords)
+        .then(res => {
+            console.log('getCoutnry',res)
             const country = res[0].country;
             resolve(country);     
           })

@@ -99,7 +99,7 @@ export const NewAppapi = {
   //In App Rewards
   STORE_USER_AGR_COUNTRY:NewApi+'condition',
   GET_AGR_STATUS:NewApi+'check_condition',
-  GET_AGREEMENT:NewApi+'get_termconditon_data'
+  GET_AGREEMENT:NewApi+'get_termconditon_data',
   EVENT_SUBSCRIPTION_POST: NewApi + 'event',
   EVENT_SUBSCRIPTION_GET: NewApi + 'event_details',
   CURRENT_DAY_EVENT_EXERCISE: NewApi + 'user_event__exercise_status',

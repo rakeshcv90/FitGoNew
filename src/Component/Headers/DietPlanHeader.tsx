@@ -67,7 +67,7 @@ const DietPlanHeader: FC<Props> = ({
           paddingTop: paddingTop
             ? paddingTop
             : Platform.OS == 'android'
-            ? DeviceHeigth * 0.02
+            ? DeviceHeigth * 0.035
             : DeviceHeigth * 0.055,
         },
       ]}>
