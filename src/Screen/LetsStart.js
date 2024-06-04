@@ -20,11 +20,17 @@ import analytics from '@react-native-firebase/analytics';
 import {requestPermissionforNotification} from '../Component/Helper/PushNotification';
 import ActivityLoader from '../Component/ActivityLoader';
 import axios from 'axios';
-import {setTempLogin, setUserId, setUserProfileData} from '../Component/ThemeRedux/Actions';
+import {
+  setOfferAgreement,
+  setTempLogin,
+  setUserId,
+  setUserProfileData,
+} from '../Component/ThemeRedux/Actions';
 import {showMessage} from 'react-native-flash-message';
 import {BannerAdd} from '../Component/BannerAdd';
 import {bannerAdId} from '../Component/AdsId';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {VictoryLegend} from 'victory-native';
 
 const LetsStart = ({navigation}) => {
   const dispatch = useDispatch();
@@ -32,6 +38,7 @@ const LetsStart = ({navigation}) => {
   const [deviceId, setDeviceId] = useState(0);
   const isFocused = useIsFocused();
   const [forLoading, setForLoading] = useState(false);
+  const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   useEffect(() => {
     if (isFocused) {
       requestPermissionforNotification(dispatch);
@@ -40,7 +47,7 @@ const LetsStart = ({navigation}) => {
       });
     }
   }, [isFocused]);
-console.log(deviceId)
+  console.log(deviceId);
   const deviceIdRegister = async () => {
     analytics().logEvent('CV_FITME_GET_STARTED_BUTTON');
     setForLoading(true);
@@ -80,7 +87,7 @@ console.log(deviceId)
         data?.data?.msg == 'user registerd successfully' &&
         data?.data?.profile_compl_status == 0
       ) {
-        dispatch(setTempLogin(data?.data?.temp))
+        dispatch(setTempLogin(data?.data?.temp));
 
         getProfileData(data.data?.id);
         await AsyncStorage.setItem('userID', `${data.data?.id}`);
@@ -88,10 +95,8 @@ console.log(deviceId)
       } else if (
         data?.data?.msg == 'User already exists' &&
         data?.data?.profile_compl_status == 0
-        
       ) {
-
-        dispatch(setTempLogin(data?.data?.temp))
+        dispatch(setTempLogin(data?.data?.temp));
         getProfileData(data.data?.id);
         await AsyncStorage.setItem('userID', `${data.data?.id}`);
         dispatch(setUserId(data.data?.id));
@@ -101,6 +106,7 @@ console.log(deviceId)
       ) {
         setForLoading(false);
         getProfileData1(data.data?.id);
+
         await AsyncStorage.setItem('userID', `${data.data?.id}`);
         dispatch(setUserId(data.data?.id));
       } else if (
@@ -174,7 +180,7 @@ console.log(deviceId)
       if (data?.data?.profile) {
         setForLoading(false);
         dispatch(setUserProfileData(data.data.profile));
-        navigation.replace('BottomTab');
+        getOffertermsStatus(user_id);
       } else if (
         data?.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -193,6 +199,46 @@ console.log(deviceId)
       }
     } catch (error) {
       console.log('User Profile Error', error);
+      setForLoading(false);
+    }
+  };
+  //
+  const getOffertermsStatus = async id => {
+    try {
+      const ApiCall = await axios(NewAppapi.GET_AGR_STATUS, {
+        method: 'POST',
+        data: {
+          user_id: id,
+          version: VersionNumber.appVersion,
+        },
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (
+        ApiCall?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: ApiCall?.data?.msg,
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setForLoading(false);
+      } else {
+        if (ApiCall?.data?.term_conditon == 'Accepted') {
+          navigation.replace('BottomTab'); //
+          dispatch(setOfferAgreement(ApiCall?.data));
+          setForLoading(false);
+        } else {
+          navigation.replace('OfferTerms'); //
+          dispatch(setOfferAgreement(ApiCall?.data));
+          setForLoading(false);
+        }
+      }
+    } catch (error) {
+      console.log(error);
       setForLoading(false);
     }
   };
@@ -219,7 +265,6 @@ console.log(deviceId)
               alignItems: 'center',
               alignSelf: 'center',
               justifyContent: 'center',
-            
             }}>
             <Image
               resizeMode="contain"
@@ -247,144 +292,126 @@ console.log(deviceId)
 
         <View
           style={{
-            position: 'absolute',
-            bottom: 0,
-            justifyContent: 'center',
             alignItems: 'center',
             alignSelf: 'center',
+            width: '100%',
+            justifyContent: 'center',
+            marginTop: DeviceHeigth * 0.04,
+            // top: DeviceHeigth > 808 ? DeviceHeigth * 0.18 : DeviceHeigth * 0.2,
           }}>
-          <View
+          <LinearGradient
+            start={{x: 0, y: 1}}
+            end={{x: 1, y: 0}}
+            colors={['#D01818', '#941000']}
             style={{
-              alignItems: 'center',
+              width: '85%',
+              height: 50,
+              backgroundColor: 'red,',
               alignSelf: 'center',
-              width: '100%',
+              borderRadius: 30,
+              alignItems: 'center',
+              // top: -DeviceHeigth * 0.04,
               justifyContent: 'center',
-              // top: DeviceHeigth > 808 ? DeviceHeigth * 0.18 : DeviceHeigth * 0.2,
             }}>
-            <LinearGradient
-              start={{x: 0, y: 1}}
-              end={{x: 1, y: 0}}
-              colors={['#D01818', '#941000']}
+            <TouchableOpacity
               style={{
-                width: '85%',
-                height: 50,
+                width: '100%',
+                height: 53,
                 backgroundColor: 'red,',
                 alignSelf: 'center',
                 borderRadius: 30,
                 alignItems: 'center',
-                top: -DeviceHeigth * 0.04,
                 justifyContent: 'center',
+              }}
+              activeOpacity={0.5}
+              onPress={() => {
+                deviceIdRegister();
               }}>
-              <TouchableOpacity
-                style={{
-                  width: '100%',
-                  height: 53,
-                  backgroundColor: 'red,',
+              <Text style={styles.button}>Get Started</Text>
+            </TouchableOpacity>
+          </LinearGradient>
+          <Text style={[styles.LoginText2, {fontSize: 15}]}>Or</Text>
+          <Text style={[styles.LoginText2, {fontSize: 13}]}>
+            Already have an account?{' '}
+            <Text
+              style={[
+                styles.LoginText2,
+                {
+                  color: AppColor.RED1,
+                  fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                  fontSize: 13,
                   alignSelf: 'center',
-                  borderRadius: 30,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                activeOpacity={0.5}
-                onPress={() => {
-                  deviceIdRegister();
-                }}>
-                <Text style={styles.button}>Get Started</Text>
-              </TouchableOpacity>
-            </LinearGradient>
-            <Text
-              style={[
-                styles.LoginText2,
-                {top: -DeviceHeigth * 0.03, fontSize: 15},
-              ]}>
-              Or
-            </Text>
-            <Text
-              style={[
-                styles.LoginText2,
-                {top: -DeviceHeigth * 0.025, fontSize: 13},
-              ]}>
-              Already have an account?{' '}
-              <Text
-                style={[
-                  styles.LoginText2,
-                  {
-                    color: AppColor.RED1,
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontSize: 13,
-                    alignSelf: 'center',
-                    textDecorationLine: 'underline',
-                  },
-                ]}
-                onPress={() => {
-                  navigation.navigate('LogSignUp', {screen: 'Log In'});
-                }}>
-                Log In{' '}
-              </Text>
-              <Text
-                style={[
-                  styles.LoginText2,
-                  {
-                    color: AppColor.LITELTEXTCOLOR,
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontSize: 13,
-                    alignSelf: 'center',
-                  },
-                ]}>
-                Or{' '}
-              </Text>
-              <Text
-                style={[
-                  styles.LoginText2,
-                  {
-                    color: AppColor.RED1,
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontSize: 13,
-                    textDecorationLine: 'underline',
-                    alignSelf: 'center',
-                  },
-                ]}
-                onPress={() => {
-                  navigation.navigate('LogSignUp', {screen: 'Sign Up'});
-                }}>
-                Sign Up
-              </Text>
-            </Text>
-
-            <View
-              style={{
-                width: '85%',
-                height: 50,
-                backgroundColor: 'red,',
-                alignSelf: 'center',
-                alignItems: 'center',
-                justifyContent: 'center',
-                top: -DeviceHeigth * 0.01,
+                  textDecorationLine: 'underline',
+                },
+              ]}
+              onPress={() => {
+                navigation.navigate('LogSignUp', {screen: 'Log In'});
               }}>
-              <Text style={styles.policyText}>
-                By continuing you accept our{' '}
-                <Text
-                  onPress={() => {
-                    navigation.navigate('TermaAndCondition', {
-                      title: 'Privacy & Policy',
-                    });
-                  }}
-                  style={styles.policyText1}>
-                  Privacy Policy
-                </Text>{' '}
-                and
-                <Text
-                  style={styles.policyText1}
-                  onPress={() => {
-                    navigation.navigate('TermaAndCondition', {
-                      title: 'Terms & Condition',
-                    });
-                  }}>
-                  {' '}
-                  Terms of use
-                </Text>{' '}
-              </Text>
-            </View>
+              Log In{' '}
+            </Text>
+            <Text
+              style={[
+                styles.LoginText2,
+                {
+                  color: AppColor.LITELTEXTCOLOR,
+                  fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                  fontSize: 13,
+                  alignSelf: 'center',
+                },
+              ]}>
+              Or{' '}
+            </Text>
+            <Text
+              style={[
+                styles.LoginText2,
+                {
+                  color: AppColor.RED1,
+                  fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                  fontSize: 13,
+                  textDecorationLine: 'underline',
+                  alignSelf: 'center',
+                },
+              ]}
+              onPress={() => {
+                navigation.navigate('LogSignUp', {screen: 'Sign Up'});
+              }}>
+              Sign Up
+            </Text>
+          </Text>
+
+          <View
+            style={{
+              width: '85%',
+              height: 50,
+              backgroundColor: 'red,',
+              alignSelf: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
+              top: -DeviceHeigth * 0.01,
+            }}>
+            <Text style={styles.policyText}>
+              By continuing you accept our{' '}
+              <Text
+                onPress={() => {
+                  navigation.navigate('TermaAndCondition', {
+                    title: 'Privacy & Policy',
+                  });
+                }}
+                style={styles.policyText1}>
+                Privacy Policy
+              </Text>{' '}
+              and
+              <Text
+                style={styles.policyText1}
+                onPress={() => {
+                  navigation.navigate('TermaAndCondition', {
+                    title: 'Terms & Condition',
+                  });
+                }}>
+                {' '}
+                Terms of use
+              </Text>{' '}
+            </Text>
           </View>
         </View>
       </View>
@@ -398,10 +425,11 @@ var styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
   },
   TextContainer: {
-    marginTop: DeviceHeigth > 808 ? DeviceHeigth * 0.08 : DeviceHeigth * 0.05,
+    marginTop: DeviceHeigth > 808 ? DeviceHeigth * 0.09 : DeviceHeigth * 0.07,
     // Platform.OS=='ios'?DeviceHeigth * 0.13:DeviceHeigth * 0.1,
     justifyContent: 'center',
     alignItems: 'center',
+    // borderWidth: 1,
   },
   LoginText: {
     fontSize: 25,
@@ -439,7 +467,6 @@ var styles = StyleSheet.create({
     color: '#F9F9F9',
     fontWeight: '700',
     backgroundColor: 'transparent',
-    lineHeight: 15,
   },
   LoginText2: {
     fontSize: 16,

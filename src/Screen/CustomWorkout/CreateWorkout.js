@@ -35,6 +35,7 @@ import NativeAddTest from '../../Component/NativeAddTest';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -312,7 +313,7 @@ const CreateWorkout = ({navigation, route}) => {
     setSelectedItems(newSelectedItems);
   };
   const submitCustomExercise = async () => {
-    AnalyticsConsole(`Submit_Custom_Wrk_BUTTON`);
+    AnalyticsConsole(`Custom_Wrk_BUTTON`);
     // console.log("user_Id",getUserID,getUserDataDetails?.id)
     if (selectedItems.length <= 0) {
       showMessage({

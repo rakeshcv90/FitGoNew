@@ -38,6 +38,7 @@ export const AppColor={
     NEW_GREEN: '#49AEAA',
     NEW_GREEN_DARK: '#3D8889',
     NEW_DARK_RED: '#A93737',
+    NEW_GREY:'#333333CC'
     BORDER_COLOR: '#EAECF0',
     GREEN: '#0A6847',
   }

@@ -39,9 +39,9 @@ import {LogOut} from '../../Component/LogOut';
 
 const Subscription = ({navigation}) => {
   const dispatch = useDispatch();
-  const getInAppPurchase = useSelector(state => state.getInAppPurchase);
-  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
-  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+  const getInAppPurchase = useSelector(state => state?.getInAppPurchase);
+  const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
+  const getPurchaseHistory = useSelector(state => state?.getPurchaseHistory);
   const [selectedItems, setSelectedItems] = useState(getInAppPurchase[2]);
   let isFocuse = useIsFocused();
   const [visible, setVisible] = React.useState(false);

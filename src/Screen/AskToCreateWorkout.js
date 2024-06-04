@@ -14,6 +14,7 @@ import {
   setCustomWorkoutData,
   setExperience,
   setLaterButtonData,
+  setOfferAgreement,
   setProgressBarCounter,
   setTempLogin,
   setUserProfileData,
@@ -30,7 +31,7 @@ import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../Component/ActivityLoader';
 import WorkoutArea from './Yourself/WorkoutArea';
 const AskToCreateWorkout = ({route, navigation}) => {
-  const {data, nextScreen, gender, experience,name} = route?.params;
+  const {data, nextScreen, gender, experience, name} = route?.params;
   const [screen, setScreen] = useState(nextScreen);
   const dispatch = useDispatch();
   const getLaterButtonData = useSelector(state => state.getLaterButtonData);
@@ -124,7 +125,9 @@ const AskToCreateWorkout = ({route, navigation}) => {
       payload.append('targetweight', mergedObject?.targetWeight);
       payload.append('experience', experience);
       payload.append('workout_plans', 'CustomCreated');
-      if(name){payload.append('name',name)}
+      if (name) {
+        payload.append('name', name);
+      }
       payload.append(
         'injury',
         mergedObject?.injury != null ? mergedObject?.injury?.join(',') : null,
@@ -153,7 +156,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
         });
       } else {
         getProfileData(getUserID);
-        dispatch(setTempLogin(false))
+        dispatch(setTempLogin(false));
       }
     } catch (error) {
       console.log('Whole Data Error', error);
@@ -184,6 +187,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
       });
 
       if (data?.data?.profile) {
+      
         dispatch(setUserProfileData(data?.data?.profile));
         dispatch(setLaterButtonData(currrentdata));
         dispatch(setExperience(true));
@@ -203,12 +207,13 @@ const AskToCreateWorkout = ({route, navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
+      
         dispatch(setUserProfileData([]));
         dispatch(setLaterButtonData(currrentdata));
         dispatch(setExperience(true));
         ChallengesDataAPI();
-        //navigation.navigate('CustomWorkout');
         getCustomWorkout(getUserID);
+
         setLoader(false);
       }
     } catch (error) {
@@ -227,15 +232,15 @@ const AskToCreateWorkout = ({route, navigation}) => {
 
       if (data?.data?.msg != 'data not found.') {
         dispatch(setCustomWorkoutData(data?.data?.data));
-        navigation.navigate('CustomWorkout', {routeName: 'Exprience'});
+        navigation.navigate('OfferTerms', {routeName: 'Exprience',CustomCreated:true});
       } else {
         dispatch(setCustomWorkoutData([]));
-        navigation.navigate('CustomWorkout');
+        navigation.navigate('OfferTerms',{CustomCreated:true});
       }
     } catch (error) {
       console.log('Custom Workout Error', error);
       dispatch(setCustomWorkoutData([]));
-      navigation.navigate('CustomWorkout', {routeName: 'Exprience'});
+      navigation.navigate('OfferTerms', {routeName: 'Exprience',CustomCreated:true});
     }
   };
   const ChallengesDataAPI = async () => {
@@ -282,7 +287,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
       <View style={styles.buttons}>
         <TouchableOpacity
           onPress={() => {
-            dispatch(setProgressBarCounter(getProgressBarCounter-1));
+            dispatch(setProgressBarCounter(getProgressBarCounter - 1));
             navigation.goBack();
           }}
           style={{

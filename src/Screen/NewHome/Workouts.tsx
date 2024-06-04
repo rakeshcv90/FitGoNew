@@ -10,7 +10,7 @@ import {
   Platform,
   ImageBackground,
 } from 'react-native';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
@@ -22,6 +22,7 @@ import {
   setAllWorkoutData,
   setChallengesData,
   setCustomWorkoutData,
+  setExerciseCount,
   setFitmeMealAdsCount,
   setWorkoutTimeCal,
 } from '../../Component/ThemeRedux/Actions';
@@ -39,11 +40,13 @@ import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import FocusArea from '../FocusArea';
+import ActivityLoader from '../../Component/ActivityLoader';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
+  const [isLoaded, setIsLoaded] = useState(false);
   const [imageLoad, setImageLoad] = useState(true);
   const [currentCategories, setCurrentCategories] = useState<Array<any>>([]);
   const completeProfileData = useSelector(
@@ -65,7 +68,7 @@ const Workouts = ({navigation}: any) => {
   const getChallengesData = useSelector(
     (state: any) => state.getChallengesData,
   );
-
+  const getExerciseCount = useSelector((state: any) => state.getExerciseCount);
   const MaleCategory = [
     {
       id: 230,
@@ -244,13 +247,17 @@ const Workouts = ({navigation}: any) => {
       if (
         exerciseData?.data?.msg == 'Please update the app to the latest version'
       ) {
+        setIsLoaded(true);
         dispatch(setAllExercise([]));
       } else if (exerciseData?.data?.length > 0) {
+        setIsLoaded(true);
         dispatch(setAllExercise(exerciseData?.data));
       } else {
+        setIsLoaded(true);
         dispatch(setAllExercise([]));
       }
     } catch (error) {
+      setIsLoaded(true);
       dispatch(setAllExercise([]));
       console.log('All-EXCERSIE-ERROR', error);
     }
@@ -381,6 +388,7 @@ const Workouts = ({navigation}: any) => {
                 lineHeight: 25,
                 color: '#434343',
                 textAlign: 'center',
+                textTransform: 'capitalize',
               }}>
               {item.title}
             </Text>
@@ -418,20 +426,20 @@ const Workouts = ({navigation}: any) => {
     );
     bodyexercise = shuffleArray(bodyexercise);
 
-    // AnalyticsConsole(`${mydata?.title?.split(' ')[0]}_W_CATE`);
-    // let checkAdsShow = checkMealAddCount();
-    // if (checkAdsShow == true) {
-    //   showInterstitialAd();
-    //   navigation.navigate('WorkoutCategories', {
-    //     bodyexercise,
-    //     item: mydata,
-    //   });
-    // } else {
-    navigation.navigate('WorkoutCategories', {
-      categoryExercise: bodyexercise,
-      CategoryDetails: mydata,
-    });
-    // }
+    AnalyticsConsole(`${mydata?.title?.split(' ')[0]}_W_CATE`);
+    let checkAdsShow = checkMealAddCount();
+    if (checkAdsShow == true) {
+      showInterstitialAd();
+      navigation.navigate('WorkoutCategories', {
+        categoryExercise: bodyexercise,
+        CategoryDetails: mydata,
+      });
+    } else {
+      navigation.navigate('WorkoutCategories', {
+        categoryExercise: bodyexercise,
+        CategoryDetails: mydata,
+      });
+    }
   };
   const renderItem1 = useMemo(() => {
     return ({item}: any) => (
@@ -487,9 +495,8 @@ const Workouts = ({navigation}: any) => {
                   alignSelf: 'flex-end',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  top: 0,
                   zIndex: 1,
-                  right: 10,
+                  marginRight: 20,
                 }}
                 resizeMode="contain">
                 <Text
@@ -568,24 +575,49 @@ const Workouts = ({navigation}: any) => {
       </View>
     );
   };
-
   const getbodyPartWorkout = (data: any) => {
     let checkAdsShow = checkMealAddCount();
     AnalyticsConsole(`${data?.bodypart_title}_FR_Wrk`);
 
     if (data?.title == 'Upper Body') {
-      let exercises = getAllExercise?.filter(
-        (item: any) =>
-          item?.exercise_bodypart == 'Shoulders' ||
-          item?.exercise_bodypart == 'Triceps' ||
-          item?.exercise_bodypart == 'Forearms' ||
-          item?.exercise_bodypart == 'Chest' ||
-          item?.exercise_bodypart == 'Back' ||
-          item?.exercise_bodypart == 'Biceps',
+      let Ccount = 0;
+      let Bcount = 0;
+      let Acount = 0;
+      let Scount = 0;
+      let exercises = getAllExercise?.filter((item: any) => {
+        if (item?.exercise_bodypart == 'Shoulders') {
+          Scount++;
+          return true;
+        } else if (item?.exercise_bodypart == 'Triceps') {
+          Acount++;
+          return true;
+        } else if (item?.exercise_bodypart == 'Forearms') {
+          Acount++;
+          return true;
+        } else if (item?.exercise_bodypart == 'Chest') {
+          Ccount++;
+          return true;
+        } else if (item?.exercise_bodypart == 'Back') {
+          Bcount++;
+          return true;
+        } else if (item?.exercise_bodypart == 'Biceps') {
+          Acount++;
+          return true;
+        } else {
+          return false;
+        }
+      });
+      dispatch(
+        setExerciseCount({
+          exCount1: Ccount,
+          exCount2: Bcount,
+          exCount3: Scount,
+          exCount4: Acount,
+        }),
       );
-
       if (checkAdsShow == true) {
         showInterstitialAd();
+
         navigation.navigate('NewFocusWorkouts', {
           focusExercises: exercises,
           focusedPart: data?.title,
@@ -603,12 +635,31 @@ const Workouts = ({navigation}: any) => {
         });
       }
     } else if (data?.title == 'Lower Body') {
-      let exercises = getAllExercise?.filter(
-        (item: any) =>
-          item?.exercise_bodypart == 'Legs' ||
-          item?.exercise_bodypart == 'Calves',
-      );
+      let Lcount = 0;
+      let Qcount = 0;
+      let Ccount = 0;
+      let exercises = getAllExercise?.filter((item: any) => {
+        if (item?.exercise_bodypart == 'Legs') {
+          Lcount++;
+          return true;
+        } else if (item?.exercise_bodypart == 'Quads') {
+          Qcount++;
+          return true;
+        } else if (item?.exercise_bodypart == 'Calves') {
+          Ccount++;
+          return true;
+        } else {
+          return false;
+        }
+      });
 
+      dispatch(
+        setExerciseCount({
+          exCount1: Lcount,
+          exCount2: Qcount,
+          exCount3: Ccount,
+        }),
+      );
       if (checkAdsShow == true) {
         showInterstitialAd();
         navigation.navigate('NewFocusWorkouts', {
@@ -628,12 +679,25 @@ const Workouts = ({navigation}: any) => {
         });
       }
     } else if (data?.title == 'Core') {
-      let exercises = getAllExercise?.filter(
-        (item: any) =>
-          item?.exercise_bodypart == 'Abs' ||
-          item?.exercise_bodypart == 'Cardio',
+      let Acount = 0;
+      let Ccount = 0;
+      let exercises = getAllExercise?.filter((item: any) => {
+        if (item?.exercise_bodypart == 'Abs') {
+          Acount++;
+          return true;
+        } else if (item?.exercise_bodypart == 'Cardio') {
+          Ccount++;
+          return true;
+        } else {
+          return false;
+        }
+      });
+      dispatch(
+        setExerciseCount({
+          exCount1: Acount,
+          exCount2: Ccount,
+        }),
       );
-
       if (checkAdsShow == true) {
         showInterstitialAd();
         navigation.navigate('NewFocusWorkouts', {
@@ -703,6 +767,7 @@ const Workouts = ({navigation}: any) => {
     <>
       <NewHeader header={'Workouts'} SearchButton={false} backButton={false} />
       <View style={styles.container}>
+        {isLoaded ? null : <ActivityLoader />}
         <FlatList
           data={[1, 2, 3, 4]}
           showsVerticalScrollIndicator={false}

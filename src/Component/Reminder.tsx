@@ -13,13 +13,14 @@ import notifee, {
   RepeatFrequency,
   TimestampTrigger,
   TriggerType,
+  
 } from '@notifee/react-native';
+
 
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {AppColor} from './Color';
 import {showMessage} from 'react-native-flash-message';
 import messaging from '@react-native-firebase/messaging';
-import CustomPicker from './CustomPicker';
 
 export const AlarmNotification = async (time: any) => {
   const trigger: TimestampTrigger = {
@@ -65,14 +66,9 @@ export const AlarmNotification = async (time: any) => {
     },
     trigger,
   );
-  console.log(trigger.timestamp);
+  console.log(trigger.timestamp)
 };
-const Reminder = ({
-  visible,
-  setVisible,
-  setAlarmIsEnabled,
-  setNotificationTimer,
-}: any) => {
+const Reminder = ({visible, setVisible, setAlarmIsEnabled, setNotificationTimer}: any) => {
   const typeData = ['AM', 'PM'];
   const hourData = Array(12)
     .fill(0)
@@ -81,16 +77,16 @@ const Reminder = ({
     .fill(0)
     .map((item: any, index, arr) => arr[index] + index);
 
-  const [hours, setHours] = useState(1);
-  const [min, setMin] = useState(0);
+  const [hours, setHours] = useState('1');
+  const [min, setMin] = useState('0');
   const [type, setType] = useState('AM');
 
   async function onCreateTriggerNotification() {
     // const date = moment().add(1, 'days');
 
     // Assuming you have 'hours', 'minutes', and 'type' variables
-    let selectedHours = hours;
-    let selectedMinutes = min;
+    let selectedHours = parseInt(hours);
+    let selectedMinutes = parseInt(min);
 
     // If 'type' is 'PM' and the selected hours are less than 12, add 12 hours
     if (type === 'PM' && selectedHours < 12) {
@@ -101,14 +97,14 @@ const Reminder = ({
     if (type === 'AM' && selectedHours === 12) {
       selectedHours = 0;
     }
-
+    
     const currentTime = new Date(Date.now());
     const selectedTime = new Date(Date.now());
     selectedTime.setHours(selectedHours);
     selectedTime.setMinutes(selectedMinutes);
     try {
-      AlarmNotification(selectedTime);
-      setNotificationTimer(selectedTime);
+      AlarmNotification(selectedTime)
+      setNotificationTimer(selectedTime)
       setAlarmIsEnabled(true);
       setVisible(false);
     } catch (error) {
@@ -118,10 +114,10 @@ const Reminder = ({
         animationDuration: 500,
 
         floating: true,
+        icon: {icon: 'auto', position: 'left'},
       });
     }
   }
-  const outputRange = [0.8, 1.4, 2.2, 1.4, 0.8];
   return (
     <Modal
       visible={visible}
@@ -175,42 +171,36 @@ const Reminder = ({
               flexDirection: 'row',
               height: '70%',
             }}>
-            <CustomPicker
-              items={hourData}
-              onIndexChange={(index: number) => {
-                setHours(index);
-              }}
-              itemHeight={30}
-              toggle={''}
-              ActiveIndex={hours}
-              textStyle={styles.textStyle}
-              width={DeviceWidth / 6}
-              outputRange={outputRange}
-            />
-            <CustomPicker
-              items={minData}
-              onIndexChange={(index: number) => {
-                setMin(index);
-              }}
-              itemHeight={30}
-              toggle={''}
-              ActiveIndex={min}
-              textStyle={styles.textStyle}
-              width={DeviceWidth / 6}
-              outputRange={outputRange}
-            />
-            <CustomPicker
-              items={typeData}
-              onIndexChange={(index: number) => {
-                setType(typeData[index]);
-              }}
-              itemHeight={30}
-              toggle={''}
-              ActiveIndex={type}
-              textStyle={styles.textStyle}
-              width={DeviceWidth / 6}
-              outputRange={outputRange}
-            />
+            <Picker
+              style={{flex: 1}}
+              selectedValue={hours}
+              onValueChange={(itemValue: any, itemIndex) => {
+                setHours(itemValue);
+              }}>
+              {hourData.map((hr: any) => (
+                <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
+              ))}
+            </Picker>
+            <Picker
+              style={{flex: 1}}
+              selectedValue={min}
+              onValueChange={(itemValue: any, itemIndex) => {
+                setMin(itemValue);
+              }}>
+              {minData.map((hr: any) => (
+                <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
+              ))}
+            </Picker>
+            <Picker
+              style={{flex: 1}}
+              selectedValue={type}
+              onValueChange={(itemValue: any, itemIndex) => {
+                setType(itemValue);
+              }}>
+              {typeData.map((hr: any) => (
+                <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
+              ))}
+            </Picker>
           </View>
           <View
             style={{
@@ -254,11 +244,4 @@ const Reminder = ({
 
 export default Reminder;
 
-const styles = StyleSheet.create({
-  textStyle: {
-    fontSize: 12,
-    fontWeight: '600',
-    textAlign: 'center',
-    color: '#ED4530',
-  },
-});
+const styles = StyleSheet.create({});

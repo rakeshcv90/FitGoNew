@@ -22,12 +22,13 @@ const Name = ({navigation, route}) => {
       <Text style={styles.txt1}>What's your name?</Text>
       <View style={styles.View1}>
         <TextInput
-          underlineColor="transparent"
+          underlineColor="grey"
           mode="flat"
           keyboardType={AppColor.BLACK}
-          activeUnderlineColor="transparent"
+          activeUnderlineColor={AppColor.RED}
+          
           outlineColor={AppColor.WHITE}
-          activeOutlineColor={AppColor.WHITE}
+          activeOutlineColor={AppColor.RED}
           placeholder="Write your name"
           placeholderTextColor={AppColor.GRAY2}
           onChangeText={txt => setName(txt)}
@@ -37,9 +38,7 @@ const Name = ({navigation, route}) => {
             fontWeight: '600',
             fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
             color: AppColor.BLACK,
-            borderBottomWidth: 2,
             backgroundColor: AppColor.WHITE,
-            borderColor: AppColor.GRAY1,
             textAlign: 'center'
           }}
         />

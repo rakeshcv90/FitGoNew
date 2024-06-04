@@ -1,7 +1,7 @@
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/Index';
+import Yourself from '../Screen/Yourself/index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -66,6 +66,9 @@ import NewFocusWorkouts from '../Screen/FocusArea/NewFocusWorkouts';
 
 import WorkoutCategories from '../Screen/NewWorkouts/WorkoutCategories';
 import Name from '../Screen/Yourself/Name';
+import CountryLocation from '../Screen/Terms&Country/CountryLocation';
+import OfferTerms from '../Screen/Terms&Country/OfferTerms';
+import RewardModal from '../Component/Utilities/RewardModal';
 import NewSubscription from '../Screen/Subscription/NewSubscription';
 import UpcomingEvent from '../Screen/Event/UpcomingEvent';
 
@@ -85,7 +88,7 @@ export const LoginStack = () => {
     <Stack.Navigator screenOptions={screenOptions}>
     
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
-      
+
       <Stack.Screen
         name="IntroductionScreen1"
         component={IntroductionScreen1}
@@ -100,7 +103,7 @@ export const LoginStack = () => {
       />
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
-      <Stack.Screen name="Name" component={Name}/>
+      <Stack.Screen name="Name" component={Name} />
       <Stack.Screen name="Injury" component={Injury} />
       <Stack.Screen name="Experience" component={Experience} />
       <Stack.Screen name="AskToCreateWorkout" component={AskToCreateWorkout} />
@@ -123,6 +126,8 @@ export const LoginStack = () => {
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="NewEditProfile" component={NewEditProfile} />
       <Stack.Screen name="WorkoutsDescription" component={WorkoutDescription} />
+      <Stack.Screen name="CountryLocation" component={CountryLocation} />
+      <Stack.Screen name="OfferTerms" component={OfferTerms}/>
       <Stack.Screen name="WorkoutDays" component={WorkoutDays} />
       <Stack.Screen name="OneDay" component={OneDay} />
       <Stack.Screen name="Exercise" component={Exercise} />

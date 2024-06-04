@@ -36,6 +36,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Setmealdata,
   setCustomWorkoutData,
+  setOfferAgreement,
   setPurchaseHistory,
   setUserId,
   setUserProfileData,
@@ -79,6 +80,7 @@ const Login = ({navigation}) => {
   const [IsVerifyVisible, setVerifyVisible] = useState(false);
   const [appVersion, setAppVersion] = useState(0);
   const [cancelLogin, setCancelLogin] = useState(false);
+  const getOfferAgreement=useSelector(state=>state?.getOfferAgreement)
   const getFcmToken = useSelector(state => state.getFcmToken);
   useEffect(() => {
     requestPermissionforNotification(dispatch);
@@ -94,7 +96,7 @@ const Login = ({navigation}) => {
     setAppVersion(VersionNumber.appVersion);
   });
   const GoogleSignup = async () => {
-    analytics().logEvent('CV_FITME_GOOGLE_LOGIN');
+    analytics().logEvent('GOOGLE_LOGIN');
     try {
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.hasPlayServices();
@@ -104,9 +106,9 @@ const Login = ({navigation}) => {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         setCancelLogin(true);
       } else if (error.code === statusCodes.IN_PROGRESS) {
-        alert('Signin in progress');
+        // alert('Signin in progress');
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        alert('PLAY_SERVICES_NOT_AVAILABLE');
+        // alert('PLAY_SERVICES_NOT_AVAILABLE');
       } else {
       }
     }
@@ -491,9 +493,10 @@ const Login = ({navigation}) => {
         // status == 1
         //   ? navigation.navigate('BottomTab')
         //   : navigationRef.navigate('Yourself');
-        if (status == 1) {
-          navigation.replace('BottomTab');
-        } else {
+        if (status == 1 ) {
+          getOffertermsStatus(user_id)
+        }
+         else {
           showMessage({
             message: 'Please complete your Profile Details',
             type: 'success',
@@ -519,7 +522,9 @@ const Login = ({navigation}) => {
         // status == 1
         //   ? navigation.navigate('BottomTab')
         //   : navigationRef.navigate('Yourself');
-        if (status == 1) navigation.replace('BottomTab');
+        if (status == 1) {
+getOffertermsStatus(user_id)
+        }
         else {
           showMessage({
             message: 'Please complete your Profile Details',
@@ -533,7 +538,9 @@ const Login = ({navigation}) => {
       }
     } catch (error) {
       console.log('User Profile Error', error);
-      if (status == 1) navigation.replace('BottomTab');
+      if (status == 1) {
+        getOffertermsStatus(user_id)
+                }
       else {
         showMessage({
           message: 'Please complete your Profile Details',
@@ -548,6 +555,42 @@ const Login = ({navigation}) => {
       //   ? navigation.navigate('BottomTab')
       //   : navigationRef.navigate('Yourself');
       setForLoading(false);
+    }
+  };
+  // getOfferAgreement status
+  const getOffertermsStatus = async (id) => {
+    try {
+      const ApiCall = await axios(NewAppapi.GET_AGR_STATUS, {
+        method: 'POST',
+        data: {
+          user_id: id,
+          version: VersionNumber.appVersion,
+        },
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if (
+        ApiCall?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: ApiCall?.data?.msg,
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
+        // setApiDataLoaded(true);
+      } else  {
+       if(ApiCall?.data?.term_conditon){
+        navigation.replace('BottomTab');
+       }else{
+        navigation.replace('OfferTerms');
+       }
+      }
+    } catch (error) {
+      console.log(error);
+      // setApiDataLoaded(true);
     }
   };
   const CompleateProfileModal = () => {
@@ -586,8 +629,14 @@ const Login = ({navigation}) => {
                   padding: 10,
                 }}
                 onPress={() => {
-                  navigationRef.navigate('BottomTab');
-                  setModalVisible(false);
+                  if(getOfferAgreement?.term_conditons){
+                    navigationRef.navigate('BottomTab');
+                    setModalVisible(false);
+                  }else{
+                    navigationRef.navigate('OfferTerms');
+                    setModalVisible(false);
+                  }
+                
                 }}>
                 <Text style={styles.textStyle}>Cancel</Text>
               </TouchableOpacity>

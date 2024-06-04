@@ -49,6 +49,8 @@ const intialState = {
   getUprBodyCount: 0,
   getLowerBodyCount: 0,
   getCoreCount: 0,
+  getExerciseCount: {},
+  getOfferAgreement: {},
   enteredCurrentEvent: false,
   enteredUpcomingEvent: false,
 };
@@ -284,7 +286,11 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         enteredUpcomingEvent: action.payload,
       };
-
+    case types.OFFERAGREEMENT:
+      return {
+        ...state,
+        getOfferAgreement: action.payload,
+      };
     default:
       return state;
   }

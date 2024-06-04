@@ -781,7 +781,7 @@ const NewProfile = ({navigation}) => {
                 style={{
                   width: 100,
                   height: 40,
-                  backgroundColor: 'red',
+                  backgroundColor: AppColor.RED,
                   justifyContent: 'center',
                   alignItems: 'center',
                   borderRadius: 50,
@@ -789,7 +789,7 @@ const NewProfile = ({navigation}) => {
                 <Text
                   style={{
                     fontSize: 15,
-                    fontFamily: Fonts.MONTSERRAT_REGULAR,
+                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
                     color: AppColor.WHITE,
                     fontWeight: '600',
                   }}>
@@ -813,7 +813,7 @@ const NewProfile = ({navigation}) => {
                   style={{
                     fontSize: 15,
                     fontFamily: Fonts.MONTSERRAT_REGULAR,
-                    color: AppColor.RED1,
+                    color: AppColor.RED,
                     fontWeight: '600',
                   }}>
                   Log in
@@ -927,7 +927,7 @@ const NewProfile = ({navigation}) => {
                   <Switch
                     value={getSoundOffOn}
                     onValueChange={text => {
-                      AnalyticsConsole(`SOUND_ON/OFF_BUTTON`);
+                      AnalyticsConsole(`SOUND_ON_OFF`);
                       if (text == true) {
                         showMessage({
                           message: 'Sound unmuted',
@@ -969,7 +969,7 @@ const NewProfile = ({navigation}) => {
                   <Switch
                     value={getScreenAwake}
                     onValueChange={text => {
-                      AnalyticsConsole(`DISPLAY_ALWAYS_ON_BUTTON`);
+                      AnalyticsConsole(`DISPLAY_ALWAYS_ON`);
                       if (text == true) {
                         showMessage({
                           message: 'Display Always on',
