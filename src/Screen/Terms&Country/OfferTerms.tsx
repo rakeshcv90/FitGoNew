@@ -54,7 +54,7 @@ const OfferTerms = ({navigation, route}: any) => {
   // console.log(routeName);
   useEffect(() => {
     getAgreementContent();
-    console.log('call');
+
   }, [language]);
   const getAgreementContent = async () => {
     setLoaded(false)
@@ -125,6 +125,8 @@ const OfferTerms = ({navigation, route}: any) => {
       setChecked(true);
     }
   };
+  // Agreement Api
+  
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -189,7 +191,7 @@ const OfferTerms = ({navigation, route}: any) => {
                 style={{
                   marginRight: 16,
                 }}>
-                <Modal transparent visible={opened}>
+                <Modal transparent visible={opened} style={{backgroundColor:'red'}}>
                   <View
                     style={{
                       // width: DeviceWidth * 0.3,

@@ -310,15 +310,21 @@ export const setExerciseCount = data => {
     payload: data,
   };
 };
-export const setOfferAgreement=(data)=>{
-  return{
-    type:types.OFFERAGREEMENT,
-    payload:data
-  }
-}
-export const setSubscriptionPlan=(data)=>{
-  return{
-    type:types.SUBSCRIPTION_PLAN,
-    payload:data
-  }
-}
+export const setOfferAgreement = data => {
+  return {
+    type: types.OFFERAGREEMENT,
+    payload: data,
+  };
+};
+export const setRewardModal = data => {
+  return {
+    type: types.REWARD_MODAL,
+    payload: data,
+  };
+};
+export const setSubscriptionPlan = data => {
+  return {
+    type: types.SUBSCRIPTION_PLAN,
+    payload: data,
+  };
+};

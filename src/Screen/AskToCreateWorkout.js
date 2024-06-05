@@ -41,6 +41,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
   const [selectedB, setSelectedB] = useState(0);
   const [selected, setSelected] = useState();
   const [Loader, setLoader] = useState(false);
+  const getUserDataDetails=useSelector(state=>state?.email)
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       startAnimation();
@@ -229,18 +230,22 @@ const AskToCreateWorkout = ({route, navigation}) => {
       const data = await axios.get(
         `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${data}`,
       );
-
-      if (data?.data?.msg != 'data not found.') {
-        dispatch(setCustomWorkoutData(data?.data?.data));
-        navigation.navigate('OfferTerms', {routeName: 'Exprience',CustomCreated:true});
-      } else {
-        dispatch(setCustomWorkoutData([]));
-        navigation.navigate('OfferTerms',{CustomCreated:true});
+      if(getUserDataDetails.email != null){
+        if (data?.data?.msg != 'data not found.') {
+          dispatch(setCustomWorkoutData(data?.data?.data));
+          navigation.navigate('OfferTerms', {routeName: 'Exprience',CustomCreated:true});
+        } else {
+          dispatch(setCustomWorkoutData([]));
+          navigation.navigate('OfferTerms',{CustomCreated:true});
+        }
+      }else{
+        navigation.navigate('CustomWorkout',{routeName: 'Exprience'})
       }
+    
     } catch (error) {
       console.log('Custom Workout Error', error);
       dispatch(setCustomWorkoutData([]));
-      navigation.navigate('OfferTerms', {routeName: 'Exprience',CustomCreated:true});
+      navigation.navigate('CustomWorkout', {routeName: 'Exprience',CustomCreated:true});
     }
   };
   const ChallengesDataAPI = async () => {
