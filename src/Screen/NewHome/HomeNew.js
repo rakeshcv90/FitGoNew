@@ -51,10 +51,14 @@ import {showMessage} from 'react-native-flash-message';
 import {
   setAllWorkoutData,
   setChallengesData,
+  setEnteredCurrentEvent,
+  setEnteredUpcomingEvent,
   setFitmeMealAdsCount,
   setIsAlarmEnabled,
   setPurchaseHistory,
+  setRewardModal,
   setStepCounterOnOff,
+  setSubscriptionPlan,
   setWorkoutTimeCal,
 } from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
@@ -69,6 +73,12 @@ import GradientButton from '../../Component/GradientButton';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import RewardModal from '../../Component/Utilities/RewardModal';
+import {Banner} from 'react-native-paper';
+import Banners from '../../Component/Utilities/Banner';
+import {checkLocationPermission} from '../Terms&Country/LocationPermission';
+import {EnteringEventFunction} from '../Event/EnteringEventFunction';
+import {handleStart} from '../../Component/Utilities/Bannerfunctions';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -136,10 +146,17 @@ const HomeNew = ({navigation}) => {
   const caloriesRef = useRef(Calories);
   const [distance, setDistance] = useState(0);
   const distanceRef = useRef(distance);
-  const getCustttomeTimeCal = useSelector(state => state.getCustttomeTimeCal);
-  const getStepCounterOnoff = useSelector(state => state.getStepCounterOnoff);
-  const [PaddoModalShow, setPaddoModalShow] = useState(false);
+  const getRewardModalStatus = useSelector(
+    state => state?.getRewardModalStatus,
+  );
+  const getOfferAgreement = useSelector(state => state.getOfferAgreement);
+  const [BannerType, setBannertype] = useState('');
+  const enteredUpcomingEvent = useSelector(
+    state => state?.enteredUpcomingEvent,
+  );
+  const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
   // const [backPressCount, setBackPressCount] = useState(0);
+  const getSubsciptionPlan = useSelector(state => state?.getSubsciptionPlan);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
 
   const colors = [
@@ -201,17 +218,79 @@ const HomeNew = ({navigation}) => {
     },
   ];
   useEffect(() => {
+    if (getOfferAgreement?.location == 'India') {
+      if (enteredCurrentEvent && enteredUpcomingEvent) {
+        // show coin
+        setBannertype('upcoming');
+        console.log('inside1');
+      } else if (enteredCurrentEvent && !enteredUpcomingEvent) {
+        console.log('inside2', enteredUpcomingEvent, enteredCurrentEvent);
+        //show coin
+        setBannertype('upcoming');
+      } else if (!enteredCurrentEvent && enteredUpcomingEvent) {
+        console.log('inside3');
+        setBannertype('upcoming');
+      } else {
+        setBannertype('upcoming');
+        console.log('inside4', getSubsciptionPlan, enteredUpcomingEvent);
+      }
+    } else if (
+      getOfferAgreement?.location != 'India' ||
+      !getOfferAgreement?.location
+    ) {
+      checkLocationPermission()
+        .then(result => {
+          if (result == 'granted') {
+            setBannertype('coming soon');
+          } else if (result == 'blocked' || result == 'denied') {
+            setBannertype('start');
+            console.log(result);
+          }
+        })
+        .catch(err => {
+          setBannertype('start');
+        });
+    } else {
+      setBannertype('start');
+      console.log('outside');
+    }
+  });
+  useEffect(() => {
     if (isFocused) {
       allWorkoutApi();
       initInterstitial();
       ChallengesDataAPI();
       getWorkoutStatus();
+      PurchaseDetails();
       setTimeout(() => {
         ActivityPermission();
       }, 2000);
     }
   }, [isFocused]);
-
+  const PurchaseDetails = async () => {
+    try {
+      setRefresh(true);
+      const result = await axios(
+        `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
+      );
+      setRefresh(false);
+      if (result.data?.message == 'Not any subscription') {
+        dispatch(setSubscriptionPlan([]));
+      } else {
+        dispatch(setSubscriptionPlan(result.data.data));
+        // dispatch(setEvent(true));
+        EnteringEventFunction(
+          dispatch,
+          result.data?.data,
+          setEnteredCurrentEvent,
+          setEnteredUpcomingEvent,
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      setRefresh(false);
+    }
+  };
   const checkMealAddCount = () => {
     if (getPurchaseHistory.length > 0) {
       if (
@@ -1047,6 +1126,7 @@ const HomeNew = ({navigation}) => {
             }
           />
         </View>
+        <Banners type={BannerType} navigation={navigation} />
         {currentChallenge?.length > 0 && (
           <View style={{width: '95%', alignSelf: 'center', marginVertical: 10}}>
             <Text
@@ -1447,6 +1527,7 @@ const HomeNew = ({navigation}) => {
               Custom Made
             </Text>
           </View>
+         
           <LinearGradient
             start={{x: 1, y: 0}}
             end={{x: 0, y: 1}}
@@ -1935,6 +2016,7 @@ const HomeNew = ({navigation}) => {
       </ScrollView>
       {modalVisible ? <UpdateGoalModal /> : null}
       <PermissionModal locationP={locationP} setLocationP={setLocationP} />
+      <RewardModal visible={getRewardModalStatus} navigation={navigation} />
     </SafeAreaView>
   );
 };

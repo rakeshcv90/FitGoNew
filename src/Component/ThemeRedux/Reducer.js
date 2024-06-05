@@ -53,6 +53,8 @@ const intialState = {
   getOfferAgreement: {},
   enteredCurrentEvent: false,
   enteredUpcomingEvent: false,
+  getRewardModalStatus: false,
+  getSubsciptionPlan: [],
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -291,6 +293,10 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         getOfferAgreement: action.payload,
       };
+    case types.REWARD_MODAL:
+      return {...state, getRewardModalStatus: action.payload};
+    case types.SUBSCRIPTION_PLAN:
+      return {...state, getSubsciptionPlan: action.payload};
     default:
       return state;
   }

@@ -29,6 +29,7 @@ import {
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
   setPurchaseHistory,
+  setSubscriptionPlan,
 } from '../../Component/ThemeRedux/Actions';
 import {useIsFocused} from '@react-navigation/native';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
@@ -412,10 +413,10 @@ const NewSubscription = ({navigation}: any) => {
       );
       setRefresh(false);
       if (result.data?.message == 'Not any subscription') {
-        dispatch(setPurchaseHistory([]));
+        dispatch(setSubscriptionPlan([]));
         setCurrentSelected(2);
       } else {
-        dispatch(setPurchaseHistory(result.data.data));
+        dispatch(setSubscriptionPlan(result.data.data));
         // dispatch(setEvent(true));
         const findIndex = getInAppPurchase?.findIndex(
           (item: any) => result.data?.data?.product_id == item?.productId,

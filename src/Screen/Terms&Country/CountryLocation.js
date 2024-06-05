@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
 import NewHeader from '../../Component/Headers/NewHeader';
@@ -10,12 +10,16 @@ import {locationPermission} from './LocationPermission';
 import axios from 'axios';
 import VersionNumber from 'react-native-version-number';
 import {useSelector, useDispatch} from 'react-redux';
-import {setOfferAgreement} from '../../Component/ThemeRedux/Actions';
+import {
+  setOfferAgreement,
+  setRewardModal,
+} from '../../Component/ThemeRedux/Actions';
 import {Image} from 'react-native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import FitText from '../../Component/Utilities/FitText';
+import {openSettings} from 'react-native-permissions';
 const CountryLocation = ({navigation, route}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const [loaded, setLoaded] = useState(true);
@@ -24,15 +28,25 @@ const CountryLocation = ({navigation, route}) => {
   const dispatch = useDispatch();
   const getCountry = async () => {
     setLoaded(false);
-    try {
-      const country = await locationPermission();
-      await StoreAgreementApi(country);
-    } catch (error) {
-      console.log(error);
-    }
+      locationPermission()
+        .then(result => {
+          if (result == 'blocked') {
+            showPermissionAlert();
+          } else if (result === 'denied') {
+            StoreAgreementApi('');
+          } else if(result){
+            StoreAgreementApi(result);
+            dispatch(setRewardModal(true));
+          }else if(!result){
+            StoreAgreementApi('');
+          }
+        })
+        .catch(err => {
+          console.log('location Error', err);
+        });
   };
-
   const StoreAgreementApi = async country => {
+    setLoaded(false)
     const payload = new FormData();
     payload.append('version', VersionNumber?.appVersion);
     payload.append('user_id', getUserDataDetails?.id);
@@ -77,6 +91,7 @@ const CountryLocation = ({navigation, route}) => {
         setLoaded(true);
       } else {
         dispatch(setOfferAgreement(ApiCall?.data));
+        
         setLoaded(true);
         if (CustomCreated) {
           navigation.navigate('CustomWorkout', {routeName: routeName});
@@ -88,6 +103,29 @@ const CountryLocation = ({navigation, route}) => {
       console.log(error);
       setLoaded(true);
     }
+  };
+  const showPermissionAlert = () => {
+    Alert.alert(
+      'Permission Required',
+      'To use the rewards feature, please enable location access in settings',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: () => {
+            StoreAgreementApi('');
+          },
+        },
+        {
+          text: 'Open settings',
+          onPress: () => {
+            openSettings;
+            setLoaded(false);
+          },
+        },
+      ],
+      {cancelable: false},
+    );
   };
   return (
     <View style={styles.Container}>
@@ -123,11 +161,7 @@ const CountryLocation = ({navigation, route}) => {
         <Text
           style={styles.txt3}
           onPress={() => {
-            if (CustomCreated) {
-              navigation.navigate('CustomWorkout', {routeName: routeName});
-            } else {
-              navigation.navigate('BottomTab');
-            }
+            StoreAgreementApi('');
           }}>
           Skip
         </Text>
@@ -178,7 +212,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     fontSize: 16,
     marginTop: 8,
-    lineHeight:24
+    lineHeight: 24,
   },
 });
 export default CountryLocation;

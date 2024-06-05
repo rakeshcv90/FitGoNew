@@ -6,6 +6,8 @@ import {
   RESULTS,
   requestMultiple,
   openSettings,
+  check,
+  checkMultiple,
 } from 'react-native-permissions';
 
 export const locationPermission = async () => {
@@ -13,8 +15,10 @@ export const locationPermission = async () => {
     const result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
     if (result === RESULTS.GRANTED) {
       return await getCurrentLocation();
+    } else if (result == RESULTS.DENIED) {
+      return RESULTS.DENIED;
     } else if (result === RESULTS.BLOCKED) {
-      showPermissionAlert();
+      return RESULTS.BLOCKED;
     }
   } else {
     const result = await requestMultiple([
@@ -23,26 +27,15 @@ export const locationPermission = async () => {
     ]);
     if (result['android.permission.ACCESS_FINE_LOCATION'] === 'granted') {
       return await getCurrentLocation();
+    } else if (result['android.permission.ACCESS_FINE_LOCATION'] === 'denied') {
+      return RESULTS.DENIED;
     } else if (
       result['android.permission.ACCESS_FINE_LOCATION'] === RESULTS.BLOCKED
     ) {
-      showPermissionAlert();
+      return RESULTS.BLOCKED;
     }
   }
 };
-
-const showPermissionAlert = () => {
-  Alert.alert(
-    'Permission Required',
-    'To use the rewards feature, please enable location access in settings',
-    [
-      {text: 'Cancel', style: 'cancel'},
-      {text: 'Open settings', onPress: openSettings},
-    ],
-    {cancelable: false},
-  );
-};
-
 const getCurrentLocation = () => {
   return new Promise((resolve, reject) => {
     Geolocation.getCurrentPosition(
@@ -53,11 +46,11 @@ const getCurrentLocation = () => {
           lng: pos.longitude,
         };
         geocoder
-        .geocodePosition(Coords)
-        .then(res => {
-            console.log('getCoutnry',res)
+          .geocodePosition(Coords)
+          .then(res => {
+            console.log('getCoutnry', res);
             const country = res[0].country;
-            resolve(country);     
+            resolve(country);
           })
           .catch(err => {
             reject(err);
@@ -70,4 +63,30 @@ const getCurrentLocation = () => {
       {enableHighAccuracy: false, maximumAge: 0},
     );
   });
+};
+export const checkLocationPermission = async () => {
+  if (Platform.OS === 'ios') {
+    const result = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+    if (result === RESULTS.GRANTED) {
+      return RESULTS.GRANTED;
+    } else if (result == 'denied') {
+      return RESULTS.DENIED;
+    } else if (result === RESULTS.BLOCKED) {
+      return RESULTS.BLOCKED;
+    }
+  } else {
+    const result = await checkMultiple([
+      PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
+      PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+    ]);
+    if (result['android.permission.ACCESS_FINE_LOCATION'] === 'granted') {
+      return RESULTS.GRANTED;
+    } else if (result['android.permission.ACCESS_FINE_LOCATION'] === 'denied') {
+      return RESULTS.DENIED;
+    } else if (
+      result['android.permission.ACCESS_FINE_LOCATION'] === RESULTS.BLOCKED
+    ) {
+      return RESULTS.BLOCKED;
+    }
+  }
 };
