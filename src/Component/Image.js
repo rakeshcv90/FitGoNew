@@ -174,4 +174,5 @@ export const localImage = {
   ModalCoin: require('../Icon/Images/NewImage2/ModalCoin.png'),
   Modal_img: require('../Icon/Images/NewImage2/Modal_img.png'),
   RecommendFitme:require('../Icon/Images/InAppRewards/RecommendFitme.png'),
+  ChangePlan:require('../Icon/Images/InAppRewards/ChangePlan.png'),
 };

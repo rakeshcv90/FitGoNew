@@ -1,8 +1,8 @@
-import {StyleSheet, Text, TextStyle, View} from 'react-native';
+import {StyleSheet, Text, TextProps, TextStyle, View} from 'react-native';
 import React, {FC} from 'react';
 import {AppColor, Fonts} from '../Color';
 
-type Props = {
+type Props = TextProps & {
   customStyle?: TextStyle;
   type: 'normal' | 'SubHeading' | 'Heading' | 'none';
   color?: string;
@@ -16,6 +16,7 @@ type Props = {
   fontSize?: number;
   lineHeight?: number;
   marginVertical?: number;
+  fontStyle?: 'normal' | 'italic';
 };
 
 const FitText: FC<Props> = ({
@@ -32,6 +33,7 @@ const FitText: FC<Props> = ({
   fontWeight,
   lineHeight,
   marginVertical,
+  fontStyle,
 }) => {
   const getTypeStyle = () => {
     switch (type) {
@@ -46,6 +48,7 @@ const FitText: FC<Props> = ({
           textTransform: textTransform || 'none',
           letterSpacing: letterSpacing || 0,
           marginVertical,
+          fontStyle,
         };
       case 'SubHeading':
         return {
@@ -58,6 +61,7 @@ const FitText: FC<Props> = ({
           textTransform: textTransform || 'none',
           letterSpacing: letterSpacing || 0,
           marginVertical,
+          fontStyle,
         };
       case 'normal':
         return {
@@ -70,6 +74,7 @@ const FitText: FC<Props> = ({
           textTransform: textTransform || 'none',
           letterSpacing: letterSpacing || 0,
           marginVertical,
+          fontStyle,
         };
       default:
         return {};

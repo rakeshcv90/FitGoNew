@@ -50,9 +50,11 @@ const intialState = {
   getLowerBodyCount: 0,
   getCoreCount: 0,
   getExerciseCount: {},
+  //Rewards
   getOfferAgreement: {},
   enteredCurrentEvent: false,
   enteredUpcomingEvent: false,
+  getSubsciptionPlan: [],
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -290,6 +292,11 @@ const ThemeReducer = (state = intialState, action) => {
       return {
         ...state,
         getOfferAgreement: action.payload,
+      };
+    case types.SUBSCRIPTION_PLAN:
+      return {
+        ...state,
+        getSubsciptionPlan: action.payload,
       };
     default:
       return state;

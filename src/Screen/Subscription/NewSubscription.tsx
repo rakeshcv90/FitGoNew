@@ -29,6 +29,7 @@ import {
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
   setPurchaseHistory,
+  setSubscriptionPlan,
 } from '../../Component/ThemeRedux/Actions';
 import {useIsFocused} from '@react-navigation/native';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
@@ -39,10 +40,23 @@ const NewSubscription = ({navigation}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
+  const getSubsciptionPlan = useSelector(
+    (state: any) => state.getSubsciptionPlan,
+  );
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
-  const [selected, setSelected] = useState<any>(getInAppPurchase[2]);
+  // Sorting the subscriptions by title (Basic, Pro, Premium)
+  const sortedSubscriptions: [] = PLATFORM_IOS
+    ? getInAppPurchase.sort((a: any, b: any) => {
+        const order = ['Basic Plan', 'Pro plan', 'Premium Plan'];
+        return order.indexOf(a.title) - order.indexOf(b.title);
+      })
+    : getInAppPurchase.sort((a: any, b: any) => {
+        const order = ['Monthly', 'Month', 'Premium'];
+        return order.indexOf(a.name) - order.indexOf(b.name);
+      });
+  const [selected, setSelected] = useState<any>(sortedSubscriptions[2]);
   const [loading, setForLoading] = useState(false);
   const [currentSelected, setCurrentSelected] = useState(0);
   const [refresh, setRefresh] = useState(false);
@@ -370,7 +384,10 @@ const NewSubscription = ({navigation}: any) => {
       transaction_id: jsonObject.orderId,
       platform: Platform.OS,
       product_id: selected?.productId,
-      plan_value: parseInt(normalizedPrice.split('₹')[1]),
+      plan_value:
+        jsonObject.productId == 'fitme_legend'
+          ? 399
+          : parseInt(normalizedPrice.split('₹')[1]),
     };
     PlanPurchasetoBackendAPI(postData);
   };
@@ -398,6 +415,7 @@ const NewSubscription = ({navigation}: any) => {
           floating: true,
         });
       }
+      navigation.navigate('UpcomingEvent');
     } catch (error) {
       setForLoading(false);
       console.log('Purchase Store Data Error', error, data);
@@ -406,17 +424,16 @@ const NewSubscription = ({navigation}: any) => {
 
   const PurchaseDetails = async () => {
     try {
-      setRefresh(true);
       const result = await axios(
         `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
       );
       setRefresh(false);
       if (result.data?.message == 'Not any subscription') {
-        dispatch(setPurchaseHistory([]));
+        dispatch(setSubscriptionPlan([]));
         setCurrentSelected(2);
       } else {
-        dispatch(setPurchaseHistory(result.data.data));
-        // dispatch(setEvent(true));
+        dispatch(setSubscriptionPlan(result.data.data));
+        // console.log(result.data);
         const findIndex = getInAppPurchase?.findIndex(
           (item: any) => result.data?.data?.product_id == item?.productId,
         );
@@ -431,9 +448,9 @@ const NewSubscription = ({navigation}: any) => {
     } catch (error) {
       console.log(error);
       setRefresh(false);
+      dispatch(setSubscriptionPlan([]));
     }
   };
-
   const renderItem = useMemo(
     () =>
       ({item, index}: any) => {
@@ -451,7 +468,7 @@ const NewSubscription = ({navigation}: any) => {
           />
         );
         const lowOpacity = getInAppPurchase?.findIndex(
-          (item: any) => getPurchaseHistory?.product_id == item?.productId,
+          (item: any) => getSubsciptionPlan?.product_id == item?.productId,
         );
         return (
           <TouchableOpacity
@@ -486,7 +503,8 @@ const NewSubscription = ({navigation}: any) => {
               }),
             }}>
             {!normalizedPrice.includes('₹99') &&
-              !normalizedPrice.includes('₹199') && (
+              !normalizedPrice.includes('₹199') &&
+              !getSubsciptionPlan && (
                 <Image
                   source={localImage.RecommendFitme}
                   resizeMode="contain"
@@ -520,26 +538,31 @@ const NewSubscription = ({navigation}: any) => {
                 lineHeight={34}
                 marginVertical={5}
               />
-              {getPurchaseHistory?.product_id == item?.productId && (
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#0A684733',
-                    padding: 5,
-                    paddingVertical: 2,
-                    borderRadius: 5,
-                  }}>
-                  <FitText
-                    type="normal"
-                    value="Active"
-                    color={AppColor.GREEN}
-                    fontSize={12}
-                    lineHeight={16}
-                    fontWeight="600"
-                  />
-                </View>
-              )}
+              {getSubsciptionPlan?.product_id &&
+                normalizedPrice.includes(
+                  getSubsciptionPlan?.plan_value == 399 && !PLATFORM_IOS
+                    ? 400
+                    : getSubsciptionPlan?.plan_value,
+                ) && (
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: '#0A684733',
+                      padding: 5,
+                      paddingVertical: 2,
+                      borderRadius: 5,
+                    }}>
+                    <FitText
+                      type="normal"
+                      value="Active"
+                      color={AppColor.GREEN}
+                      fontSize={12}
+                      lineHeight={16}
+                      fontWeight="600"
+                    />
+                  </View>
+                )}
             </View>
             <Text numberOfLines={1} style={{color: '#3333331A'}}>
               {Array(100).fill('- ')}
@@ -599,7 +622,7 @@ const NewSubscription = ({navigation}: any) => {
           </TouchableOpacity>
         );
       },
-    [getPurchaseHistory, currentSelected],
+    [getSubsciptionPlan, currentSelected],
   );
   const Test = () => {
     return (
@@ -623,16 +646,26 @@ const NewSubscription = ({navigation}: any) => {
     );
   };
   const handlePurchase = () => {
-    if (getPurchaseHistory) {
+    if (getSubsciptionPlan) {
       const index = getInAppPurchase?.findIndex(
-        (item: any) => getPurchaseHistory?.product_id == item?.productId,
+        (item: any) => getSubsciptionPlan?.product_id == item?.productId,
       );
       if (currentSelected < index) {
         showMessage({
           message: 'You can not downgrade the Plan',
-          titleStyle: {textAlign: 'center'},
           type: 'danger',
           floating: true,
+        });
+      } else if (
+        getSubsciptionPlan?.used_plan <= getSubsciptionPlan?.allow_usage
+      ) {
+        showMessage({
+          message: `You have ${
+            getSubsciptionPlan?.allow_usage - getSubsciptionPlan?.used_plan
+          } limit left. Please use them before Purchase new Plan`,
+          type: 'danger',
+          floating: true,
+          duration: 2000,
         });
       } else {
         PLATFORM_IOS
@@ -703,8 +736,8 @@ const NewSubscription = ({navigation}: any) => {
               </Text>
             </TouchableOpacity>
           </View>
-          {getInAppPurchase &&
-            getInAppPurchase?.map((item: any, index: number) =>
+          {sortedSubscriptions &&
+            sortedSubscriptions?.map((item: any, index: number) =>
               renderItem({item, index}),
             )}
           <GradientButton
@@ -718,9 +751,9 @@ const NewSubscription = ({navigation}: any) => {
             mV={15}
             onPress={handlePurchase}
             opacity={
-              getPurchaseHistory?.product_id != selected?.productId ? 1 : 0.8
+              getSubsciptionPlan?.product_id != selected?.productId ? 1 : 0.8
             }
-            disabled={getPurchaseHistory?.product_id == selected?.productId}
+            disabled={getSubsciptionPlan?.product_id == selected?.productId}
           />
           <View
             style={{

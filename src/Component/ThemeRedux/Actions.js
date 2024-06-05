@@ -316,3 +316,9 @@ export const setOfferAgreement=(data)=>{
     payload:data
   }
 }
+export const setSubscriptionPlan=(data)=>{
+  return{
+    type:types.SUBSCRIPTION_PLAN,
+    payload:data
+  }
+}

@@ -498,7 +498,7 @@ const Exercise = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data) {
-        // console.log(res.data, payload, 'Exercise');
+        // console.log(res.data, payload, 'Rewards Exercise');
         setCompleted(completed + 1);
         setCurrentData(allExercise[index]);
         setRestStart(true);

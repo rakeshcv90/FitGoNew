@@ -41,6 +41,9 @@ export const AppColor={
     NEW_GREY:'#333333CC',
     BORDER_COLOR: '#EAECF0',
     GREEN: '#0A6847',
+    ORANGE: '#F38029',
+    SUBS_BLUE: '#446AB3',
+    SUBS_GREEN: '#07B47E',
   }
   export const Fonts = {
     MONTSERRAT_BOLD: 'Montserrat-Bold',

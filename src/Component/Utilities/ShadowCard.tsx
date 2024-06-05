@@ -13,7 +13,9 @@ import {AppColor} from '../Color';
 
 type Props = {
   w?: number;
+  h?: number;
   bgColor?: string;
+  bColor?: string;
   shadow?: boolean;
   padding?: number;
   bR?: number;
@@ -38,6 +40,8 @@ const ShadowCard: FC<Props> = ({
   alignItems,
   justifyContent,
   alignSelf,
+  h,
+  bColor,
 }) => {
   return (
     <View
@@ -51,10 +55,13 @@ const ShadowCard: FC<Props> = ({
           paddingVertical: pV ?? 10,
           marginVertical: mV ?? 10,
           width: w ?? DeviceWidth * 0.9,
-          flex: 1,
+          display: 'flex',
           justifyContent: justifyContent ?? 'center',
           alignItems: alignItems ?? 'center',
           alignSelf: alignSelf ?? 'center',
+          height: h ?? 'auto',
+          borderColor: bColor ?? '#3333331A',
+          borderWidth: 1,
         },
       ]}>
       {children}
@@ -66,7 +73,7 @@ export default ShadowCard;
 
 const styles = StyleSheet.create({
   shadow: {
-    shadowColor: 'grey',
+    shadowColor: 'gray',
     ...Platform.select({
       ios: {
         //shadowColor: '#000000',
