@@ -361,7 +361,7 @@ const HomeNew = ({navigation}) => {
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
         const result = analyzeExerciseData(res.data?.user_details);
-
+        setRefresh(false);
         if (result.two.length == 0) {
           let day = parseInt(result.one[result.one.length - 1]);
           for (const item of Object.entries(data?.days)) {
@@ -401,6 +401,7 @@ const HomeNew = ({navigation}) => {
           // setOpen(true);
         }
       } else {
+        setRefresh(false);
         // setSelected(0);
       }
       const percentage = (
@@ -1125,6 +1126,7 @@ const HomeNew = ({navigation}) => {
                 : 'Guest')
             }
           />
+          <Text onPress={() => navigation.navigate('Leaderboard')}>COINS</Text>
         </View>
         <Banners type={BannerType} navigation={navigation} />
         {currentChallenge?.length > 0 && (
@@ -1527,7 +1529,7 @@ const HomeNew = ({navigation}) => {
               Custom Made
             </Text>
           </View>
-         
+
           <LinearGradient
             start={{x: 1, y: 0}}
             end={{x: 0, y: 1}}

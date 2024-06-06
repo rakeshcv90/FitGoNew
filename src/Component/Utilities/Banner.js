@@ -101,7 +101,7 @@ const Banners = ({type, onPress, navigation}) => {
       } else {
         dispatch(setOfferAgreement(ApiCall?.data));
         if (ApiCall?.data?.location == 'India') {
-          navigation.navigate('Upcoming');
+          navigation.navigate('UpcomingEvent');
         }
         setLoaded(true);
       }

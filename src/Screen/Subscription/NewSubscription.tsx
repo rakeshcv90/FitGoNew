@@ -335,7 +335,7 @@ const NewSubscription = ({navigation}: any) => {
     }
   };
   const fetchPurchaseHistoryIOS = async (item: any, startDate: any) => {
-    const price: string = findKeyInObject(selected, 'formattedPrice');
+    const price: string = findKeyInObject(selected, 'localizedPrice');
     const normalizedPrice = price.replace(/\s/g, '');
     let data = {
       user_id: getUserDataDetails.id,
@@ -504,7 +504,7 @@ const NewSubscription = ({navigation}: any) => {
             }}>
             {!normalizedPrice.includes('₹99') &&
               !normalizedPrice.includes('₹199') &&
-              !getSubsciptionPlan && (
+              getSubsciptionPlan?.length == 0 && (
                 <Image
                   source={localImage.RecommendFitme}
                   resizeMode="contain"

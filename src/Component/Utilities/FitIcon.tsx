@@ -2,9 +2,10 @@ import {StyleProp, StyleSheet, Text, TextStyle, View} from 'react-native';
 import React, {FC} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 type IconTypes = {
-  type: 'MaterialCommunityIcons' | 'AntDesign';
+  type: 'MaterialCommunityIcons' | 'AntDesign' | 'MaterialIcons';
   color?: string;
   size: number;
   onPress?: () => void;
@@ -28,6 +29,14 @@ const FitIcon: FC<IconTypes> = ({
     <View>
       {type == 'AntDesign' ? (
         <AntDesign
+          name={name}
+          size={size}
+          onPress={onPress}
+          color={color}
+          style={[style ? style : {marginLeft: mL ?? 0, marginRight: mR ?? 0}]}
+        />
+      ) : type == 'MaterialIcons' ? (
+        <MaterialIcons
           name={name}
           size={size}
           onPress={onPress}

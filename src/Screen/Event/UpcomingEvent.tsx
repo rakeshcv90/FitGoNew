@@ -217,7 +217,14 @@ const UpcomingEvent = ({navigation}: any) => {
   };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
-      <DietPlanHeader header="Upcoming Contest" shadow />
+      <DietPlanHeader
+        header="Upcoming Contest"
+        h={DeviceWidth * 0.15}
+        paddingTop={
+          Platform.OS == 'android' ? DeviceHeigth * 0.02 : DeviceHeigth * 0.025
+        }
+        shadow
+      />
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{marginHorizontal: 16, flex: 1, zIndex: -1}}
@@ -455,6 +462,13 @@ const UpcomingEvent = ({navigation}: any) => {
                   mR={5}
                   size={13}
                   type="MaterialCommunityIcons"
+                  color={
+                    getSubsciptionPlan?.plan_value == 99
+                      ? AppColor.SUBS_BLUE
+                      : getSubsciptionPlan?.plan_value == 199
+                      ? AppColor.SUBS_GREEN
+                      : AppColor.ORANGE
+                  }
                 />
                 <FitText
                   type="normal"

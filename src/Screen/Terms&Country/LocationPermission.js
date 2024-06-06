@@ -8,6 +8,7 @@ import {
   openSettings,
   check,
   checkMultiple,
+  request,
 } from 'react-native-permissions';
 
 export const locationPermission = async () => {

@@ -1,4 +1,11 @@
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Keyboard,
+} from 'react-native';
 import React, {useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
 import ProgressBar from './ProgressBar';
@@ -17,7 +24,10 @@ const Name = ({navigation, route}) => {
     });
   };
   return (
-    <View style={styles.Container}>
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={() => Keyboard.dismiss()}
+      style={styles.Container}>
       <ProgressBar screen={1} />
       <Text style={styles.txt1}>What's your name?</Text>
       <View style={styles.View1}>
@@ -26,7 +36,6 @@ const Name = ({navigation, route}) => {
           mode="flat"
           keyboardType={AppColor.BLACK}
           activeUnderlineColor={AppColor.RED}
-          
           outlineColor={AppColor.WHITE}
           activeOutlineColor={AppColor.RED}
           placeholder="Write your name"
@@ -39,14 +48,14 @@ const Name = ({navigation, route}) => {
             fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
             color: AppColor.BLACK,
             backgroundColor: AppColor.WHITE,
-            textAlign: 'center'
+            textAlign: 'center',
           }}
         />
       </View>
-      <View style={styles.buttons}>
-        <View></View>
-        {name !== '' ? (
+      <KeyboardAvoidingView behavior="position">
+        {name !== '' && (
           <TouchableOpacity
+            style={styles.buttons}
             onPress={() => {
               toNextScreen();
             }}>
@@ -58,9 +67,9 @@ const Name = ({navigation, route}) => {
               <Icons name="chevron-right" size={25} color={'#fff'} />
             </LinearGradient>
           </TouchableOpacity>
-        ) : null}
-      </View>
-    </View>
+        )}
+      </KeyboardAvoidingView>
+    </TouchableOpacity>
   );
 };
 const styles = StyleSheet.create({
@@ -82,13 +91,9 @@ const styles = StyleSheet.create({
     color: AppColor.BLACK,
   },
   buttons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: DeviceWidth * 0.9,
-    alignItems: 'center',
-    alignSelf: 'center',
     bottom: DeviceHeigth * 0.02,
     position: 'absolute',
+    right: 20,
   },
   nextButton: {
     backgroundColor: 'red',

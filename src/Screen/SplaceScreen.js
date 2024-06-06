@@ -99,9 +99,11 @@ const SplaceScreen = ({navigation}) => {
         console.log('offer Agreement', getOfferAgreement);
         setApiDataLoaded(true);
       }
+      loadScreen()
     } catch (error) {
       console.log(error);
       setApiDataLoaded(true);
+      loadScreen()
     }
   };
   const ChallengesDataAPI = async () => {

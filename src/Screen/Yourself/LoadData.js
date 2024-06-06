@@ -460,7 +460,11 @@ const LoadData = ({navigation}) => {
         {activeNext && (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('OfferTerms');
+              if (getUserDataDetails?.email) {
+                navigation.navigate('OfferTerms');
+              } else {
+                navigation.navigate('BoottomTab');
+              }
             }}>
             <LinearGradient
               start={{x: 0, y: 1}}
