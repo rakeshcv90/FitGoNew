@@ -72,6 +72,7 @@ import RewardModal from '../Component/Utilities/RewardModal';
 import NewSubscription from '../Screen/Subscription/NewSubscription';
 import UpcomingEvent from '../Screen/Event/UpcomingEvent';
 import Leaderboard from '../Screen/Leaderboard/Leaderboard';
+import Winner from '../Screen/Leaderboard/Winner';
 
 const Stack = createStackNavigator();
 
@@ -172,6 +173,7 @@ export const LoginStack = () => {
       <Stack.Screen name="UpcomingEvent" component={UpcomingEvent} />
       <Stack.Screen name="NewSubscription" component={NewSubscription} />
       <Stack.Screen name="Leaderboard" component={Leaderboard} />
+      <Stack.Screen name="Winner" component={Winner} />
     </Stack.Navigator>
   );
 };

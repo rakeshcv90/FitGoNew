@@ -25,7 +25,9 @@ export const EnteringEventFunction = (
   data: Data,
   setEnteredCurrentEvent: any,
   setEnteredUpcomingEvent: any,
+  setPlanType: any
 ) => {
+  dispatch(setPlanType(data?.plan_value))
   if (data?.event_start_date_upcoming == null) {
     console.log(data?.event_start_date_current, 'PLANSSSSS');
     if (

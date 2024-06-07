@@ -39,6 +39,7 @@ import {
   setFitmeMealAdsCount,
   setHomeGraphData,
   setIsAlarmEnabled,
+  setPlanType,
   setPurchaseHistory,
   setVideoLocation,
   setWeeklyPlansData,
@@ -310,6 +311,7 @@ const MyPlans = ({navigation}: any) => {
           result.data?.data,
           setEnteredCurrentEvent,
           setEnteredUpcomingEvent,
+          setPlanType
         );
       }
     } catch (error) {

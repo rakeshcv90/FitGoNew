@@ -9,7 +9,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
@@ -31,12 +31,10 @@ type TypeData = {
   image_path: string | null;
 };
 const Leaderboard = ({navigation, route}: any) => {
-  const getAllExercise = useSelector((state: any) => state.getAllExercise);
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
   const dispatch = useDispatch();
-
   const [mainData, setMainData] = useState<Array<TypeData>>([]);
   const [otherData, setOtherData] = useState<Array<TypeData>>([]);
   const [refresh, setRefresh] = useState(false);
@@ -57,7 +55,10 @@ const Leaderboard = ({navigation, route}: any) => {
         const after5 = result.data?.data?.filter((item: any) => item?.rank > 5);
         setMainData(top5);
         setOtherData(after5);
-        console.log(mainData, after5);
+        // console.log(result.data);
+        const myRank = result.data?.data?.findIndex(
+          (item: TypeData) => item?.id == getUserDataDetails?.id,
+        );
       }
       setLoader(false);
       setRefresh(false);
@@ -136,6 +137,7 @@ const Leaderboard = ({navigation, route}: any) => {
                   type="SubHeading"
                   value={item?.name}
                   textTransform="capitalize"
+                  w="80%"
                 />
               </View>
             ) : (
@@ -157,6 +159,7 @@ const Leaderboard = ({navigation, route}: any) => {
                   type="SubHeading"
                   value={item?.name}
                   textTransform="capitalize"
+                  w="80%"
                 />
               </View>
             )}
@@ -236,8 +239,7 @@ const Leaderboard = ({navigation, route}: any) => {
               width: DeviceWidth,
               marginBottom: 20,
               paddingVertical: 10,
-            }}
-          >
+            }}>
             <LinearGradient
               colors={['#FFB400B2', '#F38029']}
               start={{x: 0, y: 1}}
@@ -328,7 +330,7 @@ export default Leaderboard;
 
 const styles = StyleSheet.create({
   itemContainer: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: '#F9F9F9',
     flexDirection: 'row',
     justifyContent: 'space-between',

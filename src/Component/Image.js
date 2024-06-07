@@ -180,4 +180,8 @@ export const localImage = {
   PinkGradient:require('../Icon/Images/InAppRewards/PinkGradient.png'),
   BlueGradient:require('../Icon/Images/InAppRewards/BlueGradient.png'),
   Top5Boundary:require('../Icon/Images/InAppRewards/Top5Boundary.png'),
+  Winner:require('../Icon/Images/InAppRewards/Winner.png'),
+  WinnerBackground:require('../Icon/Images/InAppRewards/WinnerBackground.png'),
+  LoserBackground:require('../Icon/Images/InAppRewards/LoserBackground.png'),
+  WorlCup:require('../Icon/Images/InAppRewards/WorlCup.png'),
 };

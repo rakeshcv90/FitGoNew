@@ -28,7 +28,8 @@ import axios from 'axios';
 import {
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
-  setSubscriptionPlan,
+  setPlanType,
+  setPurchaseHistory,
 } from '../../Component/ThemeRedux/Actions';
 import {EnteringEventFunction} from './EnteringEventFunction';
 import {showMessage} from 'react-native-flash-message';
@@ -39,8 +40,8 @@ const UpcomingEvent = ({navigation}: any) => {
   const enteredUpcomingEvent = useSelector(
     (state: any) => state.enteredUpcomingEvent,
   );
-  const getSubsciptionPlan = useSelector(
-    (state: any) => state.getSubsciptionPlan,
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
   );
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
@@ -54,15 +55,15 @@ const UpcomingEvent = ({navigation}: any) => {
     const data = {
       user_id: getUserDataDetails.id,
       plan:
-        getSubsciptionPlan?.plan_value == 99
+        getPurchaseHistory?.plan_value == 99
           ? 'noob'
-          : getSubsciptionPlan?.plan_value == 199
+          : getPurchaseHistory?.plan_value == 199
           ? 'pro'
           : 'legend',
-      transaction_id: getSubsciptionPlan?.transaction_id,
+      transaction_id: getPurchaseHistory?.transaction_id,
       platform: Platform.OS,
-      product_id: getSubsciptionPlan?.product_id,
-      plan_value: getSubsciptionPlan?.plan_value,
+      product_id: getPurchaseHistory?.product_id,
+      plan_value: getPurchaseHistory?.plan_value,
     };
     try {
       const res = await axios(`${NewAppapi.EVENT_SUBSCRIPTION_POST}`, {
@@ -98,15 +99,16 @@ const UpcomingEvent = ({navigation}: any) => {
       if (result.data?.message == 'Not any subscription') {
         setLoading(false);
         setRefresh(false);
-        dispatch(setSubscriptionPlan([]));
+        dispatch(setPurchaseHistory([]));
       } else {
         setRefresh(false);
-        dispatch(setSubscriptionPlan(result.data.data));
+        dispatch(setPurchaseHistory(result.data.data));
         EnteringEventFunction(
           dispatch,
           result.data?.data,
           setEnteredCurrentEvent,
           setEnteredUpcomingEvent,
+          setPlanType
         );
         setLoading(false);
       }
@@ -114,7 +116,7 @@ const UpcomingEvent = ({navigation}: any) => {
       setRefresh(false);
       setLoading(false);
       console.log(error);
-      dispatch(setSubscriptionPlan([]));
+      dispatch(setPurchaseHistory([]));
     }
   };
 
@@ -153,8 +155,8 @@ const UpcomingEvent = ({navigation}: any) => {
                   marginBottom: 10,
                 }}
               />
-              {getSubsciptionPlan?.used_plan ==
-                getSubsciptionPlan?.allow_usage && (
+              {getPurchaseHistory?.used_plan ==
+                getPurchaseHistory?.allow_usage && (
                 <FitText
                   type="Heading"
                   value="Are you sure ?"
@@ -166,11 +168,11 @@ const UpcomingEvent = ({navigation}: any) => {
               <FitText
                 type="normal"
                 value={
-                  getSubsciptionPlan?.used_plan <=
-                  getSubsciptionPlan?.allow_usage
+                  getPurchaseHistory?.used_plan <=
+                  getPurchaseHistory?.allow_usage
                     ? `You have ${
-                        getSubsciptionPlan?.allow_usage -
-                        getSubsciptionPlan?.used_plan
+                        getPurchaseHistory?.allow_usage -
+                        getPurchaseHistory?.used_plan
                       } limit left. Please use them${'\n'} before Purchase new Plan`
                     : `You want to change your${'\n'} current plan`
                 }
@@ -183,8 +185,8 @@ const UpcomingEvent = ({navigation}: any) => {
                 onPress={() => {
                   setOpenChange(false);
                   if (
-                    getSubsciptionPlan?.used_plan ==
-                    getSubsciptionPlan?.allow_usage
+                    getPurchaseHistory?.used_plan ==
+                    getPurchaseHistory?.allow_usage
                   )
                     navigation.navigate('NewSubscription');
                 }}
@@ -200,8 +202,8 @@ const UpcomingEvent = ({navigation}: any) => {
                 <FitText
                   type="normal"
                   value={
-                    getSubsciptionPlan?.used_plan <=
-                    getSubsciptionPlan?.allow_usage
+                    getPurchaseHistory?.used_plan <=
+                    getPurchaseHistory?.allow_usage
                       ? 'OK'
                       : 'Yes'
                   }
@@ -274,7 +276,7 @@ const UpcomingEvent = ({navigation}: any) => {
               <FitText
                 type="SubHeading"
                 value={`${moment(
-                  getSubsciptionPlan?.event_start_date_current,
+                  getPurchaseHistory?.event_start_date_current,
                 ).diff(moment().format('YYYY-MM-DD'), 'days')} days left`}
                 color={AppColor.ORANGE}
                 fontSize={14}
@@ -315,7 +317,7 @@ const UpcomingEvent = ({navigation}: any) => {
               />
               <FitText
                 value={`${moment(
-                  getSubsciptionPlan?.event_start_date_current,
+                  getPurchaseHistory?.event_start_date_current,
                 ).format('DD-MMM-YYYY')} | Monday`}
                 type="normal"
                 color="#1E1E1E"
@@ -351,6 +353,7 @@ const UpcomingEvent = ({navigation}: any) => {
             fontStyle="italic"
             fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
             fontWeight="700"
+            fontSize={14}
           />
           <FitText
             type="normal"
@@ -361,7 +364,7 @@ const UpcomingEvent = ({navigation}: any) => {
             fontWeight="600"
           />
 
-          {getSubsciptionPlan?.used_plan <= getSubsciptionPlan?.allow_usage &&
+          {getPurchaseHistory?.used_plan <= getPurchaseHistory?.allow_usage &&
             !enteredUpcomingEvent && (
               <TouchableOpacity
                 onPress={PlanPurchasetoBackendAPI}
@@ -383,177 +386,181 @@ const UpcomingEvent = ({navigation}: any) => {
               </TouchableOpacity>
             )}
         </ShadowCard>
-        <FitText value="Your Plan" type="SubHeading" />
-        <ShadowCard
-          shadow
-          mV={DeviceHeigth * 0.02}
-          alignItems={'flex-start'}
-          bColor={
-            getSubsciptionPlan?.plan_value == 99
-              ? AppColor.SUBS_BLUE
-              : getSubsciptionPlan?.plan_value == 199
-              ? AppColor.SUBS_GREEN
-              : AppColor.ORANGE
-          }>
-          <FitText
-            type="SubHeading"
-            errorType
-            fontSize={18}
-            lineHeight={24}
-            value={
-              getSubsciptionPlan?.plan_value == 99
-                ? 'Basic plan'
-                : getSubsciptionPlan?.plan_value == 199
-                ? 'Medium plan'
-                : 'Premium plan'
-            }
-            marginVertical={5}
-            color={
-              getSubsciptionPlan?.plan_value == 99
-                ? AppColor.SUBS_BLUE
-                : getSubsciptionPlan?.plan_value == 199
-                ? AppColor.SUBS_GREEN
-                : AppColor.ORANGE
-            }
-          />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: '100%',
-            }}>
-            <FitText
-              type="Heading"
-              value={`${getSubsciptionPlan?.plan_value}/month`}
-              fontSize={28}
-              lineHeight={34}
-              marginVertical={5}
-            />
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: '#0A684733',
-                padding: 5,
-                paddingVertical: 2,
-                borderRadius: 5,
-              }}>
+        {getPurchaseHistory && (
+          <>
+            <FitText value="Your Plan" type="SubHeading" />
+            <ShadowCard
+              shadow
+              mV={DeviceHeigth * 0.02}
+              alignItems={'flex-start'}
+              bColor={
+                getPurchaseHistory?.plan_value == 99
+                  ? AppColor.SUBS_BLUE
+                  : getPurchaseHistory?.plan_value == 199
+                  ? AppColor.SUBS_GREEN
+                  : AppColor.ORANGE
+              }>
               <FitText
-                type="normal"
-                value="Active"
-                color={AppColor.GREEN}
-                fontSize={12}
-                lineHeight={16}
-                fontWeight="600"
-                fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+                type="SubHeading"
+                errorType
+                fontSize={18}
+                lineHeight={24}
+                value={
+                  getPurchaseHistory?.plan_value == 99
+                    ? 'Basic plan'
+                    : getPurchaseHistory?.plan_value == 199
+                    ? 'Medium plan'
+                    : 'Premium plan'
+                }
+                marginVertical={5}
+                color={
+                  getPurchaseHistory?.plan_value == 99
+                    ? AppColor.SUBS_BLUE
+                    : getPurchaseHistory?.plan_value == 199
+                    ? AppColor.SUBS_GREEN
+                    : AppColor.ORANGE
+                }
               />
-            </View>
-          </View>
-          <Text numberOfLines={1} style={{color: '#3333331A'}}>
-            {Array(100).fill('- ')}
-          </Text>
-          {getSubsciptionPlan?.plan_value != 99 &&
-            getSubsciptionPlan?.plan_value != 199 &&
-            !PLATFORM_IOS && (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '100%',
+                }}>
+                <FitText
+                  type="Heading"
+                  value={`${getPurchaseHistory?.plan_value}/month`}
+                  fontSize={28}
+                  lineHeight={34}
+                  marginVertical={5}
+                />
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#0A684733',
+                    padding: 5,
+                    paddingVertical: 2,
+                    borderRadius: 5,
+                  }}>
+                  <FitText
+                    type="normal"
+                    value="Active"
+                    color={AppColor.GREEN}
+                    fontSize={12}
+                    lineHeight={16}
+                    fontWeight="600"
+                    fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+                  />
+                </View>
+              </View>
+              <Text numberOfLines={1} style={{color: '#3333331A'}}>
+                {Array(100).fill('- ')}
+              </Text>
+              {getPurchaseHistory?.plan_value != 99 &&
+                getPurchaseHistory?.plan_value != 199 &&
+                !PLATFORM_IOS && (
+                  <View style={styles.row}>
+                    <FitIcon
+                      name="check"
+                      mR={5}
+                      size={13}
+                      type="MaterialCommunityIcons"
+                      color={
+                        getPurchaseHistory?.plan_value == 99
+                          ? AppColor.SUBS_BLUE
+                          : getPurchaseHistory?.plan_value == 199
+                          ? AppColor.SUBS_GREEN
+                          : AppColor.ORANGE
+                      }
+                    />
+                    <FitText
+                      type="normal"
+                      value="3 day free trial"
+                      color="#333333E5"
+                      marginVertical={3}
+                    />
+                  </View>
+                )}
               <View style={styles.row}>
                 <FitIcon
+                  color={
+                    getPurchaseHistory?.plan_value == 99
+                      ? AppColor.SUBS_BLUE
+                      : getPurchaseHistory?.plan_value == 199
+                      ? AppColor.SUBS_GREEN
+                      : AppColor.ORANGE
+                  }
                   name="check"
                   mR={5}
                   size={13}
                   type="MaterialCommunityIcons"
-                  color={
-                    getSubsciptionPlan?.plan_value == 99
-                      ? AppColor.SUBS_BLUE
-                      : getSubsciptionPlan?.plan_value == 199
-                      ? AppColor.SUBS_GREEN
-                      : AppColor.ORANGE
-                  }
                 />
                 <FitText
                   type="normal"
-                  value="3 day free trial"
+                  value="Winning price 1000/-"
                   color="#333333E5"
                   marginVertical={3}
                 />
               </View>
-            )}
-          <View style={styles.row}>
-            <FitIcon
-              color={
-                getSubsciptionPlan?.plan_value == 99
-                  ? AppColor.SUBS_BLUE
-                  : getSubsciptionPlan?.plan_value == 199
-                  ? AppColor.SUBS_GREEN
-                  : AppColor.ORANGE
-              }
-              name="check"
-              mR={5}
-              size={13}
-              type="MaterialCommunityIcons"
-            />
-            <FitText
-              type="normal"
-              value="Winning price 1000/-"
-              color="#333333E5"
-              marginVertical={3}
-            />
-          </View>
-          <View style={styles.row}>
-            <FitIcon
-              color={
-                getSubsciptionPlan?.plan_value == 99
-                  ? AppColor.SUBS_BLUE
-                  : getSubsciptionPlan?.plan_value == 199
-                  ? AppColor.SUBS_GREEN
-                  : AppColor.ORANGE
-              }
-              name="check"
-              mR={5}
-              size={13}
-              type="MaterialCommunityIcons"
-            />
-            <FitText
-              type="normal"
-              value={
-                getSubsciptionPlan?.plan_value == 99
-                  ? '1 event/month'
-                  : getSubsciptionPlan?.plan_value == 199
-                  ? '2 event/month'
-                  : '3 event/month'
-              }
-              color="#333333E5"
-              marginVertical={3}
-            />
-          </View>
-          <View style={styles.row}>
-            <FitIcon
-              color={
-                getSubsciptionPlan?.plan_value == 99
-                  ? AppColor.SUBS_BLUE
-                  : getSubsciptionPlan?.plan_value == 199
-                  ? AppColor.SUBS_GREEN
-                  : AppColor.ORANGE
-              }
-              name="check"
-              mR={5}
-              size={13}
-              type="MaterialCommunityIcons"
-            />
-            <FitText
-              type="normal"
-              value={
-                getSubsciptionPlan[0]?.plan_value?.includes('99')
-                  ? 'With Ads'
-                  : getSubsciptionPlan[0]?.plan_value?.includes('199')
-                  ? 'Fewer Ads'
-                  : 'No Ads'
-              }
-              color="#333333E5"
-              marginVertical={3}
-            />
-          </View>
-        </ShadowCard>
+              <View style={styles.row}>
+                <FitIcon
+                  color={
+                    getPurchaseHistory?.plan_value == 99
+                      ? AppColor.SUBS_BLUE
+                      : getPurchaseHistory?.plan_value == 199
+                      ? AppColor.SUBS_GREEN
+                      : AppColor.ORANGE
+                  }
+                  name="check"
+                  mR={5}
+                  size={13}
+                  type="MaterialCommunityIcons"
+                />
+                <FitText
+                  type="normal"
+                  value={
+                    getPurchaseHistory?.plan_value == 99
+                      ? '1 event/month'
+                      : getPurchaseHistory?.plan_value == 199
+                      ? '2 event/month'
+                      : '3 event/month'
+                  }
+                  color="#333333E5"
+                  marginVertical={3}
+                />
+              </View>
+              <View style={styles.row}>
+                <FitIcon
+                  color={
+                    getPurchaseHistory?.plan_value == 99
+                      ? AppColor.SUBS_BLUE
+                      : getPurchaseHistory?.plan_value == 199
+                      ? AppColor.SUBS_GREEN
+                      : AppColor.ORANGE
+                  }
+                  name="check"
+                  mR={5}
+                  size={13}
+                  type="MaterialCommunityIcons"
+                />
+                <FitText
+                  type="normal"
+                  value={
+                    getPurchaseHistory[0]?.plan_value?.includes('99')
+                      ? 'With Ads'
+                      : getPurchaseHistory[0]?.plan_value?.includes('199')
+                      ? 'Fewer Ads'
+                      : 'No Ads'
+                  }
+                  color="#333333E5"
+                  marginVertical={3}
+                />
+              </View>
+            </ShadowCard>
+          </>
+        )}
       </ScrollView>
       <View
         style={{

@@ -322,7 +322,7 @@ export const setRewardModal = data => {
     payload: data,
   };
 };
-export const setSubscriptionPlan = data => {
+export const setPlanType = data => {
   return {
     type: types.SUBSCRIPTION_PLAN,
     payload: data,

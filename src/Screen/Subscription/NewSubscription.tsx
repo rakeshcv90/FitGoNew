@@ -28,8 +28,8 @@ import axios from 'axios';
 import {
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
+  setPlanType,
   setPurchaseHistory,
-  setSubscriptionPlan,
 } from '../../Component/ThemeRedux/Actions';
 import {useIsFocused} from '@react-navigation/native';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
@@ -39,9 +39,6 @@ const NewSubscription = ({navigation}: any) => {
   const getInAppPurchase = useSelector((state: any) => state.getInAppPurchase);
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
-  );
-  const getSubsciptionPlan = useSelector(
-    (state: any) => state.getSubsciptionPlan,
   );
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
@@ -429,10 +426,10 @@ const NewSubscription = ({navigation}: any) => {
       );
       setRefresh(false);
       if (result.data?.message == 'Not any subscription') {
-        dispatch(setSubscriptionPlan([]));
+        dispatch(setPurchaseHistory([]));
         setCurrentSelected(2);
       } else {
-        dispatch(setSubscriptionPlan(result.data.data));
+        dispatch(setPurchaseHistory(result.data.data));
         // console.log(result.data);
         const findIndex = getInAppPurchase?.findIndex(
           (item: any) => result.data?.data?.product_id == item?.productId,
@@ -443,12 +440,13 @@ const NewSubscription = ({navigation}: any) => {
           result.data?.data,
           setEnteredCurrentEvent,
           setEnteredUpcomingEvent,
+          setPlanType
         );
       }
     } catch (error) {
       console.log(error);
       setRefresh(false);
-      dispatch(setSubscriptionPlan([]));
+      dispatch(setPurchaseHistory([]));
     }
   };
   const renderItem = useMemo(
@@ -468,7 +466,7 @@ const NewSubscription = ({navigation}: any) => {
           />
         );
         const lowOpacity = getInAppPurchase?.findIndex(
-          (item: any) => getSubsciptionPlan?.product_id == item?.productId,
+          (item: any) => getPurchaseHistory?.product_id == item?.productId,
         );
         return (
           <TouchableOpacity
@@ -504,7 +502,7 @@ const NewSubscription = ({navigation}: any) => {
             }}>
             {!normalizedPrice.includes('₹99') &&
               !normalizedPrice.includes('₹199') &&
-              getSubsciptionPlan?.length == 0 && (
+              getPurchaseHistory?.length == 0 && (
                 <Image
                   source={localImage.RecommendFitme}
                   resizeMode="contain"
@@ -538,11 +536,11 @@ const NewSubscription = ({navigation}: any) => {
                 lineHeight={34}
                 marginVertical={5}
               />
-              {getSubsciptionPlan?.product_id &&
+              {getPurchaseHistory?.product_id &&
                 normalizedPrice.includes(
-                  getSubsciptionPlan?.plan_value == 399 && !PLATFORM_IOS
+                  getPurchaseHistory?.plan_value == 399 && !PLATFORM_IOS
                     ? 400
-                    : getSubsciptionPlan?.plan_value,
+                    : getPurchaseHistory?.plan_value,
                 ) && (
                   <View
                     style={{
@@ -622,7 +620,7 @@ const NewSubscription = ({navigation}: any) => {
           </TouchableOpacity>
         );
       },
-    [getSubsciptionPlan, currentSelected],
+    [getPurchaseHistory, currentSelected],
   );
   const Test = () => {
     return (
@@ -646,9 +644,9 @@ const NewSubscription = ({navigation}: any) => {
     );
   };
   const handlePurchase = () => {
-    if (getSubsciptionPlan) {
+    if (getPurchaseHistory) {
       const index = getInAppPurchase?.findIndex(
-        (item: any) => getSubsciptionPlan?.product_id == item?.productId,
+        (item: any) => getPurchaseHistory?.product_id == item?.productId,
       );
       if (currentSelected < index) {
         showMessage({
@@ -657,11 +655,11 @@ const NewSubscription = ({navigation}: any) => {
           floating: true,
         });
       } else if (
-        getSubsciptionPlan?.used_plan <= getSubsciptionPlan?.allow_usage
+        getPurchaseHistory?.used_plan <= getPurchaseHistory?.allow_usage
       ) {
         showMessage({
           message: `You have ${
-            getSubsciptionPlan?.allow_usage - getSubsciptionPlan?.used_plan
+            getPurchaseHistory?.allow_usage - getPurchaseHistory?.used_plan
           } limit left. Please use them before Purchase new Plan`,
           type: 'danger',
           floating: true,
@@ -751,9 +749,9 @@ const NewSubscription = ({navigation}: any) => {
             mV={15}
             onPress={handlePurchase}
             opacity={
-              getSubsciptionPlan?.product_id != selected?.productId ? 1 : 0.8
+              getPurchaseHistory?.product_id != selected?.productId ? 1 : 0.8
             }
-            disabled={getSubsciptionPlan?.product_id == selected?.productId}
+            disabled={getPurchaseHistory?.product_id == selected?.productId}
           />
           <View
             style={{

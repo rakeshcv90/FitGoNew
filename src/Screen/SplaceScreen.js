@@ -11,9 +11,12 @@ import {
   setChallengesData,
   setCompleteProfileData,
   setCustomWorkoutData,
+  setEnteredCurrentEvent,
+  setEnteredUpcomingEvent,
   setFitmeAdsCount,
   setInappPurchase,
   setOfferAgreement,
+  setPlanType,
   setPurchaseHistory,
   setStoreData,
   setUserProfileData,
@@ -34,9 +37,10 @@ import {
 import {interstitialAdId} from '../Component/AdsId';
 import {LogOut} from '../Component/LogOut';
 import RNFetchBlob from 'rn-fetch-blob';
+import { EnteringEventFunction } from './Event/EnteringEventFunction';
 
 const products = Platform.select({
-  ios: ['fitme_noob',  'fitme_pro',  'fitme_legend'],
+  ios: ['fitme_noob', 'fitme_pro', 'fitme_legend'],
   android: ['fitme_monthly', 'a_monthly', 'fitme_legend'],
 });
 
@@ -59,13 +63,14 @@ const SplaceScreen = ({navigation}) => {
     });
     getPlanData();
     ProfileDataAPI();
-    Object.keys(getUserDataDetails).length > 0 && PurchaseDetails(),
+    Object.keys(getUserDataDetails).length > 0 && PurchaseDetails2(),
       getProfileData(getUserDataDetails?.id),
       getCustomWorkout();
     dispatch(setFitmeAdsCount(0));
     initInterstitial();
     getAllExerciseData();
     ChallengesDataAPI();
+    PurchaseDetails();
     if (getUserDataDetails?.id) {
       getOffertermsStatus();
     }
@@ -99,11 +104,11 @@ const SplaceScreen = ({navigation}) => {
         console.log('offer Agreement', getOfferAgreement);
         setApiDataLoaded(true);
       }
-      loadScreen()
+      loadScreen();
     } catch (error) {
       console.log(error);
       setApiDataLoaded(true);
-      loadScreen()
+      loadScreen();
     }
   };
   const ChallengesDataAPI = async () => {
@@ -140,22 +145,19 @@ const SplaceScreen = ({navigation}) => {
   };
   const loadScreen = () => {
     //to check the condtion id user is already login and have not provided consent yet
-  
-      if (
-        getUserDataDetails?.id &&
-        getUserDataDetails?.profile_compl_status == 1
-      ) {
-        if(getOfferAgreement?.term_conditon){
-          navigation.replace('BottomTab');
-        }else{
-          navigation.replace('OfferTerms');
-        }
-       
+
+    if (
+      getUserDataDetails?.id &&
+      getUserDataDetails?.profile_compl_status == 1
+    ) {
+      if (getOfferAgreement?.term_conditon) {
+        navigation.replace('BottomTab');
       } else {
-
-        navigation.replace('LetsStart');
+        navigation.replace('OfferTerms');
       }
-
+    } else {
+      navigation.replace('LetsStart');
+    }
   };
   if (loaded) {
     setLoaded(false);
@@ -249,6 +251,28 @@ const SplaceScreen = ({navigation}) => {
   };
 
   const PurchaseDetails = async () => {
+    try {
+      const result = await axios(
+        `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
+      );
+      if (result.data?.message == 'Not any subscription') {
+        dispatch(setPurchaseHistory([]));
+      } else {
+        dispatch(setPurchaseHistory(result.data.data));
+        EnteringEventFunction(
+          dispatch,
+          result.data?.data,
+          setEnteredCurrentEvent,
+          setEnteredUpcomingEvent,
+          setPlanType
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch(setPurchaseHistory([]));
+    }
+  };
+  const PurchaseDetails2 = async () => {
     try {
       const res = await axios(`${NewAppapi.TransctionsDetails}`, {
         method: 'POST',

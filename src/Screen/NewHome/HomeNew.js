@@ -55,10 +55,10 @@ import {
   setEnteredUpcomingEvent,
   setFitmeMealAdsCount,
   setIsAlarmEnabled,
+  setPlanType,
   setPurchaseHistory,
   setRewardModal,
   setStepCounterOnOff,
-  setSubscriptionPlan,
   setWorkoutTimeCal,
 } from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
@@ -156,7 +156,6 @@ const HomeNew = ({navigation}) => {
   );
   const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
   // const [backPressCount, setBackPressCount] = useState(0);
-  const getSubsciptionPlan = useSelector(state => state?.getSubsciptionPlan);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
 
   const colors = [
@@ -232,7 +231,7 @@ const HomeNew = ({navigation}) => {
         setBannertype('upcoming');
       } else {
         setBannertype('upcoming');
-        console.log('inside4', getSubsciptionPlan, enteredUpcomingEvent);
+        console.log('inside4', getPurchaseHistory, enteredUpcomingEvent);
       }
     } else if (
       getOfferAgreement?.location != 'India' ||
@@ -275,15 +274,16 @@ const HomeNew = ({navigation}) => {
       );
       setRefresh(false);
       if (result.data?.message == 'Not any subscription') {
-        dispatch(setSubscriptionPlan([]));
+        dispatch(setPurchaseHistory([]));
       } else {
-        dispatch(setSubscriptionPlan(result.data.data));
+        dispatch(setPurchaseHistory(result.data.data));
         // dispatch(setEvent(true));
         EnteringEventFunction(
           dispatch,
           result.data?.data,
           setEnteredCurrentEvent,
           setEnteredUpcomingEvent,
+          setPlanType
         );
       }
     } catch (error) {

@@ -17,6 +17,7 @@ type Props = TextProps & {
   lineHeight?: number;
   marginVertical?: number;
   fontStyle?: 'normal' | 'italic';
+  w?: string;
 };
 
 const FitText: FC<Props> = ({
@@ -34,6 +35,7 @@ const FitText: FC<Props> = ({
   lineHeight,
   marginVertical,
   fontStyle,
+  w
 }) => {
   const getTypeStyle = () => {
     switch (type) {
@@ -49,6 +51,7 @@ const FitText: FC<Props> = ({
           letterSpacing: letterSpacing || 0,
           marginVertical,
           fontStyle,
+          width: w?? 'auto',
         };
       case 'SubHeading':
         return {
@@ -62,6 +65,7 @@ const FitText: FC<Props> = ({
           letterSpacing: letterSpacing || 0,
           marginVertical,
           fontStyle,
+          width: w?? 'auto',
         };
       case 'normal':
         return {
@@ -75,6 +79,7 @@ const FitText: FC<Props> = ({
           letterSpacing: letterSpacing || 0,
           marginVertical,
           fontStyle,
+          width: w?? 'auto',
         };
       default:
         return {};
