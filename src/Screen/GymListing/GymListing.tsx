@@ -255,19 +255,19 @@ const GymListing = ({navigation}: any) => {
       },
     [gymsData],
   );
-  const bannerAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        return null;
-      } else {
-        return <BannerAdd bannerAdId={bannerAdId} />;
-      }
-    } else {
-      return <BannerAdd bannerAdId={bannerAdId} />;
-    }
-  };
+  // const bannerAdsDisplay = () => {
+  //   if (getPurchaseHistory.length > 0) {
+  //     if (
+  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+  //     ) {
+  //       return null;
+  //     } else {
+  //       return <BannerAdd bannerAdId={bannerAdId} />;
+  //     }
+  //   } else {
+  //     return <BannerAdd bannerAdId={bannerAdId} />;
+  //   }
+  // };
   const getAdsDisplay = (item, index) => {
     if (gymsData?.length >= 1) {
       if (index == 0&&gymsData?.length>1) {
@@ -359,7 +359,8 @@ const GymListing = ({navigation}: any) => {
           />
         )}
       </View>
-      {bannerAdsDisplay()}
+      {/* {bannerAdsDisplay()} */}
+          <BannerAdd bannerAdId={bannerAdId} />
     </View>
   );
 };

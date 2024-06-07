@@ -428,9 +428,15 @@ const NewSubscription = ({navigation}: any) => {
       if (result.data?.message == 'Not any subscription') {
         dispatch(setPurchaseHistory([]));
         setCurrentSelected(2);
+        EnteringEventFunction(
+          dispatch,
+          [],
+          setEnteredCurrentEvent,
+          setEnteredUpcomingEvent,
+          setPlanType,
+        );
       } else {
         dispatch(setPurchaseHistory(result.data.data));
-        // console.log(result.data);
         const findIndex = getInAppPurchase?.findIndex(
           (item: any) => result.data?.data?.product_id == item?.productId,
         );
@@ -440,7 +446,7 @@ const NewSubscription = ({navigation}: any) => {
           result.data?.data,
           setEnteredCurrentEvent,
           setEnteredUpcomingEvent,
-          setPlanType
+          setPlanType,
         );
       }
     } catch (error) {
@@ -537,11 +543,7 @@ const NewSubscription = ({navigation}: any) => {
                 marginVertical={5}
               />
               {getPurchaseHistory?.product_id &&
-                normalizedPrice.includes(
-                  getPurchaseHistory?.plan_value == 399 && !PLATFORM_IOS
-                    ? 400
-                    : getPurchaseHistory?.plan_value,
-                ) && (
+                normalizedPrice.includes(`${getPurchaseHistory?.plan_value}.00`) && (
                   <View
                     style={{
                       justifyContent: 'center',
@@ -655,7 +657,7 @@ const NewSubscription = ({navigation}: any) => {
           floating: true,
         });
       } else if (
-        getPurchaseHistory?.used_plan <= getPurchaseHistory?.allow_usage
+        getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage
       ) {
         showMessage({
           message: `You have ${

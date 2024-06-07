@@ -258,21 +258,21 @@ const MeditationDetails = ({navigation, route}) => {
       }
     }
   };
-  const bannerAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        return null;
-      } else {
-        return <BannerAdd bannerAdId={bannerAdId} />
+  // const bannerAdsDisplay = () => {
+  //   if (getPurchaseHistory.length > 0) {
+  //     if (
+  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+  //     ) {
+  //       return null;
+  //     } else {
+  //       return <BannerAdd bannerAdId={bannerAdId} />
     
-      }
-    } else {
-      return   <BannerAdd bannerAdId={bannerAdId} />
+  //     }
+  //   } else {
+  //     return   <BannerAdd bannerAdId={bannerAdId} />
  
-    }
-  };
+  //   }
+  // };
   return (
     <View style={styles.container}>
       <NewHeader
@@ -602,7 +602,8 @@ const MeditationDetails = ({navigation, route}) => {
           )}
         </View>
       </>
-      {bannerAdsDisplay()}
+      {/* {bannerAdsDisplay()} */}
+          <BannerAdd bannerAdId={bannerAdId} />
   
     </View>
   );

@@ -110,19 +110,19 @@ const DayRewards = ({navigation, route}: any) => {
       console.error(error, 'WEEKLYSTATUS ERRR');
     }
   };
-  const bannerAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        return null;
-      } else {
-        return <BannerAdd bannerAdId={bannerAdId} />;
-      }
-    } else {
-      return <BannerAdd bannerAdId={bannerAdId} />;
-    }
-  };
+  // const bannerAdsDisplay = () => {
+  //   if (getPurchaseHistory.length > 0) {
+  //     if (
+  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+  //     ) {
+  //       return null;
+  //     } else {
+  //       return <BannerAdd bannerAdId={bannerAdId} />;
+  //     }
+  //   } else {
+  //     return <BannerAdd bannerAdId={bannerAdId} />;
+  //   }
+  // };
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -338,7 +338,8 @@ const DayRewards = ({navigation, route}: any) => {
         </View>
       </View>
       <View style={{position: 'absolute', bottom: 0}}>
-        {bannerAdsDisplay()}
+        {/* {bannerAdsDisplay()} */}
+          <BannerAdd bannerAdId={bannerAdId} />
       </View>
     </SafeAreaView>
     // <ScrollView

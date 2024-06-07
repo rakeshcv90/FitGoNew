@@ -521,19 +521,19 @@ const WorkoutDays = ({navigation, route}: any) => {
       </View>
     );
   };
-  const bannerAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        return null;
-      } else {
-        return <BannerAdd bannerAdId={bannerAdId} />;
-      }
-    } else {
-      return <BannerAdd bannerAdId={bannerAdId} />;
-    }
-  };
+  // const bannerAdsDisplay = () => {
+  //   if (getPurchaseHistory.length > 0) {
+  //     if (
+  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+  //     ) {
+  //       return null;
+  //     } else {
+  //       return <BannerAdd bannerAdId={bannerAdId} />;
+  //     }
+  //   } else {
+  //     return <BannerAdd bannerAdId={bannerAdId} />;
+  //   }
+  // };
   const Box = ({
     selected,
     item,
@@ -918,7 +918,8 @@ const WorkoutDays = ({navigation, route}: any) => {
       </>
 
       <View></View>
-      {bannerAdsDisplay()}
+      {/* {bannerAdsDisplay()} */}
+          <BannerAdd bannerAdId={bannerAdId} />
       <ActivityLoader visible={refresh} />
       <PaddoMeterPermissionModal />
     </View>

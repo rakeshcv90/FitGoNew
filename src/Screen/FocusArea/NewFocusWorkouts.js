@@ -193,19 +193,19 @@ const NewFocusWorkouts = ({route, navigation}) => {
       dispatch(setCoreCount(1));
     }
   };
-  const bannerAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        return null;
-      } else {
-        return <BannerAdd bannerAdId={bannerAdId} />;
-      }
-    } else {
-      return <BannerAdd bannerAdId={bannerAdId} />;
-    }
-  };
+  // const bannerAdsDisplay = () => {
+  //   if (getPurchaseHistory.length > 0) {
+  //     if (
+  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+  //     ) {
+  //       return null;
+  //     } else {
+  //       return <BannerAdd bannerAdId={bannerAdId} />;
+  //     }
+  //   } else {
+  //     return <BannerAdd bannerAdId={bannerAdId} />;
+  //   }
+  // };
   const getAdsDisplay = (item, index) => {
     if (execrise.length >= 1) {
       if (index == 0 && execrise.length > 1) {
@@ -794,7 +794,8 @@ const NewFocusWorkouts = ({route, navigation}) => {
         <BottomSheet />
         <WorkoutsDescription data={item} open={visible} setOpen={setVisible} />
       </View>
-      {bannerAdsDisplay()}
+      {/* {bannerAdsDisplay()} */}
+          <BannerAdd bannerAdId={bannerAdId} />
     </>
   );
 };

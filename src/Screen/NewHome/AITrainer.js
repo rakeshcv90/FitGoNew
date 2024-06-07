@@ -324,19 +324,19 @@ const AITrainer = ({navigation, route}) => {
     //   console.error('Error fetching data:', error);
     // }
   };
-  const bannerAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        return null;
-      } else {
-        return <BannerAdd bannerAdId={bannerAdId} />;
-      }
-    } else {
-      return <BannerAdd bannerAdId={bannerAdId} />;
-    }
-  };
+  // const bannerAdsDisplay = () => {
+  //   if (getPurchaseHistory.length > 0) {
+  //     if (
+  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+  //     ) {
+  //       return null;
+  //     } else {
+  //       return <BannerAdd bannerAdId={bannerAdId} />;
+  //     }
+  //   } else {
+  //     return <BannerAdd bannerAdId={bannerAdId} />;
+  //   }
+  // };
   return (
     <View style={styles.container}>
       <NewHeader
@@ -640,7 +640,8 @@ const AITrainer = ({navigation, route}) => {
             />
           </TouchableOpacity>
         </View>
-        {bannerAdsDisplay()}
+        {/* {bannerAdsDisplay()} */}
+          <BannerAdd bannerAdId={bannerAdId} />
       </KeyboardAvoidingView>
     </View>
   );

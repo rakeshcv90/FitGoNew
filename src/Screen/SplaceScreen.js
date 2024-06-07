@@ -37,7 +37,7 @@ import {
 import {interstitialAdId} from '../Component/AdsId';
 import {LogOut} from '../Component/LogOut';
 import RNFetchBlob from 'rn-fetch-blob';
-import { EnteringEventFunction } from './Event/EnteringEventFunction';
+import {EnteringEventFunction} from './Event/EnteringEventFunction';
 
 const products = Platform.select({
   ios: ['fitme_noob', 'fitme_pro', 'fitme_legend'],
@@ -61,6 +61,7 @@ const SplaceScreen = ({navigation}) => {
 
       Meal_List(uniqueId);
     });
+    PurchaseDetails();
     getPlanData();
     ProfileDataAPI();
     Object.keys(getUserDataDetails).length > 0 && PurchaseDetails2(),
@@ -70,7 +71,6 @@ const SplaceScreen = ({navigation}) => {
     initInterstitial();
     getAllExerciseData();
     ChallengesDataAPI();
-    PurchaseDetails();
     if (getUserDataDetails?.id) {
       getOffertermsStatus();
     }
@@ -255,8 +255,16 @@ const SplaceScreen = ({navigation}) => {
       const result = await axios(
         `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
       );
+      console.log("SPLASHHHHSAD",result.data)
       if (result.data?.message == 'Not any subscription') {
         dispatch(setPurchaseHistory([]));
+        EnteringEventFunction(
+          dispatch,
+          [],
+          setEnteredCurrentEvent,
+          setEnteredUpcomingEvent,
+          setPlanType,
+        );
       } else {
         dispatch(setPurchaseHistory(result.data.data));
         EnteringEventFunction(
@@ -264,7 +272,7 @@ const SplaceScreen = ({navigation}) => {
           result.data?.data,
           setEnteredCurrentEvent,
           setEnteredUpcomingEvent,
-          setPlanType
+          setPlanType,
         );
       }
     } catch (error) {

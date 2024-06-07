@@ -364,7 +364,7 @@ const UpcomingEvent = ({navigation}: any) => {
             fontWeight="600"
           />
 
-          {getPurchaseHistory?.used_plan <= getPurchaseHistory?.allow_usage &&
+          {getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage &&
             !enteredUpcomingEvent && (
               <TouchableOpacity
                 onPress={PlanPurchasetoBackendAPI}

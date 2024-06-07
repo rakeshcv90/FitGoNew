@@ -145,19 +145,19 @@ console.log('Data---->',data,type)
 
       }):navigation.navigate('MyPlans') //add here 
   };
-  const bannerAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        return null;
-      } else {
-        return <BannerAdd bannerAdId={bannerAdId} />;
-      }
-    } else {
-      return <BannerAdd bannerAdId={bannerAdId} />;
-    }
-  };
+  // const bannerAdsDisplay = () => {
+  //   if (getPurchaseHistory.length > 0) {
+  //     if (
+  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+  //     ) {
+  //       return null;
+  //     } else {
+  //       return <BannerAdd bannerAdId={bannerAdId} />;
+  //     }
+  //   } else {
+  //     return <BannerAdd bannerAdId={bannerAdId} />;
+  //   }
+  // };
 
   return (
     <SafeAreaView
@@ -312,7 +312,8 @@ console.log('Data---->',data,type)
         />
       </View>
       <View style={{position: 'absolute', bottom: 0}}>
-        {bannerAdsDisplay()}
+        {/* {bannerAdsDisplay()} */}
+          <BannerAdd bannerAdId={bannerAdId} />
       </View>
     </SafeAreaView>
   );

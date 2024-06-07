@@ -9,16 +9,35 @@ import {
 import {interstitialAdId, rewardedAdId} from './AdsId';
 import {View} from 'react-native';
 import {useState, useRef} from 'react';
+import {useSelector} from 'react-redux';
+import moment from 'moment';
 
 export const BannerAdd = ({bannerAdId}) => {
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+  const planType = useSelector(state => state.planType);
+  console.log(planType);
   return (
-    <BannerAd
-      unitId={bannerAdId}
-      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-      requestOptions={{
-        requestNonPersonalizedAdsOnly: true,
-      }}
-    />
+    <>
+      {planType < 199 && planType == -1 ? (
+        <BannerAd
+          unitId={bannerAdId}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+        />
+      ) : (
+        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD') && (
+          <BannerAd
+            unitId={bannerAdId}
+            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+            requestOptions={{
+              requestNonPersonalizedAdsOnly: true,
+            }}
+          />
+        )
+      )}
+    </>
   );
 };
 
@@ -50,39 +69,37 @@ export const BannerAdd = ({bannerAdId}) => {
 //   );
 //   return interstitialAd;
 // };
-export const NewInterstitialAd = (setClosed) => { // Created specially for Splash Screen by Sahil
+export const NewInterstitialAd = setClosed => {
+  // Created specially for Splash Screen by Sahil
   const adStatus = useRef(true);
   const initInterstitial = async () => {
-    const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
-      
-    });
+    const interstitialAd = InterstitialAd.createForAdRequest(
+      interstitialAdId,
+      {},
+    );
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
       adStatus.current = interstitialAd;
-
     });
     interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
       interstitialAd.load();
     });
-    interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {
-
-    });
+    interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
     interstitialAd.addAdEventListener(AdEventType.ERROR, error => {
-      setClosed(true)
+      setClosed(true);
     });
     interstitialAd.addAdEventListener(AdEventType.OPENED, () => {
-      setClosed(true)
+      setClosed(true);
     });
     interstitialAd.load();
   };
 
   const showInterstitialAd = async () => {
-   
     if (adStatus.current?._loaded) {
       adStatus.current.show();
       console.log('Add loade ddscdsdsvdv');
     } else {
-      console.log("ADD NOT SHOWN",adStatus)
-      setClosed(true)
+      console.log('ADD NOT SHOWN', adStatus);
+      setClosed(true);
     }
   };
 
@@ -93,26 +110,19 @@ export const MyInterstitialAd = () => {
   const initInterstitial = async () => {
     const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
       requestNonPersonalizedAdsOnly: true,
-  
     });
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
       adStatus.current = interstitialAd;
-
     });
     interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
       interstitialAd.load();
     });
-    interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {
-
-    });
-    interstitialAd.addAdEventListener(AdEventType.ERROR, error => {
-
-    });
+    interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
+    interstitialAd.addAdEventListener(AdEventType.ERROR, error => {});
     interstitialAd.load();
   };
 
   const showInterstitialAd = async () => {
-   
     if (adStatus.current?._loaded) {
       adStatus.current.show();
       console.log('Add loade ddscdsdsvdv');
@@ -145,7 +155,6 @@ export const MyInterstitialAd = () => {
 export const MyRewardedAd = setreward => {
   const rewarded = RewardedAd.createForAdRequest(rewardedAdId, {
     requestNonPersonalizedAdsOnly: true,
-  
   });
   const unsubscribeLoaded = rewarded.addAdEventListener(
     RewardedAdEventType.LOADED,

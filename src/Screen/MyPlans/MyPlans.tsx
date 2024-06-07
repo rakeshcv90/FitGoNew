@@ -401,7 +401,7 @@ const MyPlans = ({navigation}: any) => {
       setLoader(false);
     } catch (error) {
       setLoader(false);
-      console.error(error, 'DaysAPIERror');
+      console.error(error?.response, 'DaysAPIERror');
     }
   };
   const getGraphData = async () => {

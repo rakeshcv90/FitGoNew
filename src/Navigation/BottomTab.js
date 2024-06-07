@@ -183,47 +183,47 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
 const BottomTab = () => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
 
-  const getPurchaseStatusData = () => {
-    if (getPurchaseHistory.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        return null;
-      } else {
-        return (
-          <View
-            style={{
-              marginTop:
-                Platform.OS == 'ios'
-                  ? DeviceHeigth == 667
-                    ? -DeviceHeigth * 0.01
-                    : DeviceHeigth >= 1024
-                    ? 0
-                    : DeviceHeigth * 0.0
-                  : 0,
-            }}>
-            <BannerAdd bannerAdId={bannerAdId} />
-          </View>
-        );
-      }
-    } else {
-      return (
-        <View
-          style={{
-            marginTop:
-              Platform.OS == 'ios'
-                ? DeviceHeigth == 667
-                  ? -DeviceHeigth * 0.01
-                  : DeviceHeigth >= 1024
-                  ? 0
-                  : DeviceHeigth * 0.0
-                : 0,
-          }}>
-          <BannerAdd bannerAdId={bannerAdId} />
-        </View>
-      );
-    }
-  };
+  // const getPurchaseStatusData = () => {
+  //   if (getPurchaseHistory.length > 0) {
+  //     if (
+  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+  //     ) {
+  //       return null;
+  //     } else {
+  //       return (
+  //         <View
+  //           style={{
+  //             marginTop:
+  //               Platform.OS == 'ios'
+  //                 ? DeviceHeigth == 667
+  //                   ? -DeviceHeigth * 0.01
+  //                   : DeviceHeigth >= 1024
+  //                   ? 0
+  //                   : DeviceHeigth * 0.0
+  //                 : 0,
+  //           }}>
+  //           <BannerAdd bannerAdId={bannerAdId} />
+  //         </View>
+  //       );
+  //     }
+  //   } else {
+  //     return (
+  //       <View
+  //         style={{
+  //           marginTop:
+  //             Platform.OS == 'ios'
+  //               ? DeviceHeigth == 667
+  //                 ? -DeviceHeigth * 0.01
+  //                 : DeviceHeigth >= 1024
+  //                 ? 0
+  //                 : DeviceHeigth * 0.0
+  //               : 0,
+  //         }}>
+  //         <BannerAdd bannerAdId={bannerAdId} />
+  //       </View>
+  //     );
+  //   }
+  // };
   return (
     <>
       <Tabs.Navigator
@@ -277,7 +277,20 @@ const BottomTab = () => {
           options={{tabBarShowLabel: false}}
         />
       </Tabs.Navigator>
-      {getPurchaseStatusData()}
+      {/* {getPurchaseStatusData()} */}
+      <View
+          style={{
+            marginTop:
+              Platform.OS == 'ios'
+                ? DeviceHeigth == 667
+                  ? -DeviceHeigth * 0.01
+                  : DeviceHeigth >= 1024
+                  ? 0
+                  : DeviceHeigth * 0.0
+                : 0,
+          }}>
+          <BannerAdd bannerAdId={bannerAdId} />
+        </View>
     </>
   );
 };

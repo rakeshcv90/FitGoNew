@@ -499,27 +499,27 @@ const Meals = ({navigation}) => {
     dispatch(setVideoLocation(StoringData));
   };
 
-  const bannerAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        return null;
-      } else {
-        return (
-          <View style={{marginBottom: DeviceHeigth <= 846 ? -1 : -10}}>
-            <BannerAdd bannerAdId={bannerAdId} />
-          </View>
-        );
-      }
-    } else {
-      return (
-        <View style={{marginBottom: DeviceHeigth <= 846 ? -1 : -10}}>
-          <BannerAdd bannerAdId={bannerAdId} />
-        </View>
-      );
-    }
-  };
+  // const bannerAdsDisplay = () => {
+  //   if (getPurchaseHistory.length > 0) {
+  //     if (
+  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+  //     ) {
+  //       return null;
+  //     } else {
+  //       return (
+  //         <View style={{marginBottom: DeviceHeigth <= 846 ? -1 : -10}}>
+  //           <BannerAdd bannerAdId={bannerAdId} />
+  //         </View>
+  //       );
+  //     }
+  //   } else {
+  //     return (
+  //       <View style={{marginBottom: DeviceHeigth <= 846 ? -1 : -10}}>
+  //         <BannerAdd bannerAdId={bannerAdId} />
+  //       </View>
+  //     );
+  //   }
+  // };
   const renderItem = ({item, index}) => {
     return (
       <View
@@ -771,7 +771,10 @@ const Meals = ({navigation}) => {
           />
         </View>
       </View>
-      {bannerAdsDisplay()}
+      {/* {bannerAdsDisplay()} */}
+          <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
+            <BannerAdd bannerAdId={bannerAdId} />
+          </View>
     </>
   );
 };

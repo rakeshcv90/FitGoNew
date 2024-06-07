@@ -34,27 +34,27 @@ const MealDetails = ({route, navigation}) => {
     color: AppColor.INPUTLABLECOLOR,
   };
 
-  const bannerAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        return null;
-      } else {
-        return (
-          <View style={{marginBottom: DeviceHeigth <= 846 ? -1 : -10}}>
-            <BannerAdd bannerAdId={bannerAdId} />
-          </View>
-        );
-      }
-    } else {
-      return (
-        <View style={{marginBottom: DeviceHeigth <= 846? -1 : -10}}>
-          <BannerAdd bannerAdId={bannerAdId} />
-        </View>
-      );
-    }
-  };
+  // const bannerAdsDisplay = () => {
+  //   if (getPurchaseHistory.length > 0) {
+  //     if (
+  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+  //     ) {
+  //       return null;
+  //     } else {
+  //       return (
+  //         <View style={{marginBottom: DeviceHeigth <= 846 ? -1 : -10}}>
+  //           <BannerAdd bannerAdId={bannerAdId} />
+  //         </View>
+  //       );
+  //     }
+  //   } else {
+  //     return (
+  //       <View style={{marginBottom: DeviceHeigth <= 846? -1 : -10}}>
+  //         <BannerAdd bannerAdId={bannerAdId} />
+  //       </View>
+  //     );
+  //   }
+  // };
   return (
     <>
       <View style={styles.container}>
@@ -372,7 +372,10 @@ const MealDetails = ({route, navigation}) => {
 
         
       </View>
-      {bannerAdsDisplay()}
+      {/* {bannerAdsDisplay()} */}
+          <View style={{marginBottom: DeviceHeigth <= 846 ? -1 : -10}}>
+            <BannerAdd bannerAdId={bannerAdId} />
+          </View>
     </>
   );
 };

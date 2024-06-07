@@ -467,19 +467,19 @@ const CustomWorkout = ({navigation}) => {
       console.log('All-EXCERSIE-ERROR', error);
     }
   };
-  const bannerAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        return null;
-      } else {
-        return <BannerAdd bannerAdId={bannerAdId} />;
-      }
-    } else {
-      return <BannerAdd bannerAdId={bannerAdId} />;
-    }
-  };
+  // const bannerAdsDisplay = () => {
+  //   if (getPurchaseHistory.length > 0) {
+  //     if (
+  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+  //     ) {
+  //       return null;
+  //     } else {
+  //       return <BannerAdd bannerAdId={bannerAdId} />;
+  //     }
+  //   } else {
+  //     return <BannerAdd bannerAdId={bannerAdId} />;
+  //   }
+  // };
   return (
     <>
       <NewHeader
@@ -657,8 +657,8 @@ const CustomWorkout = ({navigation}) => {
         </TouchableOpacity>
         {/* </BlurView> */}
       </Modal>
-      {/* <BannerAdd bannerAdId={bannerAdId} /> */}
-      {bannerAdsDisplay()}
+      <BannerAdd bannerAdId={bannerAdId} />
+      {/* {bannerAdsDisplay()} */}
     </>
   );
 };

@@ -22,81 +22,87 @@ type Data = {
 
 export const EnteringEventFunction = (
   dispatch: React.Dispatch<Action>,
-  data: Data,
+  data: Data | any,
   setEnteredCurrentEvent: any,
   setEnteredUpcomingEvent: any,
-  setPlanType: any
+  setPlanType: any,
 ) => {
-  dispatch(setPlanType(data?.plan_value))
-  if (data?.event_start_date_upcoming == null) {
-    console.log(data?.event_start_date_current, 'PLANSSSSS');
-    if (
-      moment(data?.event_start_date_current).diff(
-        moment().format('YYYY-MM-DD'),
-        'days',
-      ) >= 1
-    ) {
-      dispatch(setEnteredUpcomingEvent(true));
-      dispatch(setEnteredCurrentEvent(false));
+  if (data?.length > 0) {
+    dispatch(setPlanType(data?.plan_value));
+    if (data?.event_start_date_upcoming == null) {
+      console.log(data?.event_start_date_current, 'PLANSSSSS');
+      if (
+        moment(data?.event_start_date_current).diff(
+          moment().format('YYYY-MM-DD'),
+          'days',
+        ) >= 1
+      ) {
+        dispatch(setEnteredUpcomingEvent(true));
+        dispatch(setEnteredCurrentEvent(false));
+      } else {
+        dispatch(setEnteredCurrentEvent(true));
+        dispatch(setEnteredUpcomingEvent(false));
+      }
+      // console.log(
+      //     data,
+      //     'PLANSSSSS',
+      //     moment(data?.event_start_date_current).diff(
+      //       moment().format('YYYY-MM-DD'),
+      //       'days',
+      //     ) >= 1
+      //       ? 'Upcoming'
+      //       : 'Current',
+      //   );
     } else {
-      dispatch(setEnteredCurrentEvent(true));
-      dispatch(setEnteredUpcomingEvent(false));
+      console.log(
+        data?.event_start_date_current,
+        'upcoming',
+        data.event_start_date_upcoming,
+        moment(data?.event_start_date_current).diff(
+          moment().format('YYYY-MM-DD'),
+          'days',
+        ) <= 0,
+      );
+      if (
+        moment(data?.event_start_date_upcoming).diff(
+          moment().format('YYYY-MM-DD'),
+          'days',
+        ) >= 1
+      ) {
+        dispatch(setEnteredUpcomingEvent(true));
+        //   dispatch(setEnteredCurrentEvent(false));
+      }
+      if (
+        moment(data?.event_start_date_current).diff(
+          moment().format('YYYY-MM-DD'),
+          'days',
+        ) <= 0
+      ) {
+        dispatch(setEnteredCurrentEvent(true));
+        //   dispatch(setEnteredUpcomingEvent(false));
+      }
+      // console.log(
+      //     data,
+      //     'upcoming',
+      //     moment(data?.event_start_date_upcoming).diff(
+      //       moment().format('YYYY-MM-DD'),
+      //       'days',
+      //     ) >= 1
+      //       ? 'Upcoming'
+      //       : 'Current',
+      //     data?.event_start_date_current,
+      //     'current',
+      //     moment(data?.event_start_date_current).diff(
+      //       moment().format('YYYY-MM-DD'),
+      //       'days',
+      //     ) >= 1
+      //       ? 'Upcoming'
+      //       : 'Current',
+      //   );
     }
-    // console.log(
-    //     data,
-    //     'PLANSSSSS',
-    //     moment(data?.event_start_date_current).diff(
-    //       moment().format('YYYY-MM-DD'),
-    //       'days',
-    //     ) >= 1
-    //       ? 'Upcoming'
-    //       : 'Current',
-    //   );
   } else {
-    console.log(
-      data?.event_start_date_current,
-      'upcoming',
-      data.event_start_date_upcoming,
-      moment(data?.event_start_date_current).diff(
-        moment().format('YYYY-MM-DD'),
-        'days',
-      ) <= 0,
-    );
-    if (
-      moment(data?.event_start_date_upcoming).diff(
-        moment().format('YYYY-MM-DD'),
-        'days',
-      ) >= 1
-    ) {
-      dispatch(setEnteredUpcomingEvent(true));
-      //   dispatch(setEnteredCurrentEvent(false));
-    }
-    if (
-      moment(data?.event_start_date_current).diff(
-        moment().format('YYYY-MM-DD'),
-        'days',
-      ) <= 0
-    ) {
-      dispatch(setEnteredCurrentEvent(true));
-      //   dispatch(setEnteredUpcomingEvent(false));
-    }
-    // console.log(
-    //     data,
-    //     'upcoming',
-    //     moment(data?.event_start_date_upcoming).diff(
-    //       moment().format('YYYY-MM-DD'),
-    //       'days',
-    //     ) >= 1
-    //       ? 'Upcoming'
-    //       : 'Current',
-    //     data?.event_start_date_current,
-    //     'current',
-    //     moment(data?.event_start_date_current).diff(
-    //       moment().format('YYYY-MM-DD'),
-    //       'days',
-    //     ) >= 1
-    //       ? 'Upcoming'
-    //       : 'Current',
-    //   );
+    dispatch(setPlanType(-1));
+    dispatch(setEnteredCurrentEvent(false));
+    dispatch(setEnteredUpcomingEvent(false));
   }
 };
