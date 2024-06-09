@@ -175,12 +175,12 @@ const RewardModal = ({visible, navigation}) => {
         </View>
         <View style={{marginVertical: 30}}>
           <Text style={styles.txt1}>
-            Join the Workout Event and{' '}
-            <Text style={{color: AppColor.RED}}>{'\nEarn money!'}</Text>
+            <Text style={{color: AppColor.RED}}>{'Earn While You Burn\n'}</Text>
+            Join the fitness challenge today for a healthier you and a wealthier wallet!
           </Text>
           <NewButton
             pV={15}
-            title={'Get Earn'}
+            title={'Get Started'}
             ButtonWidth={DeviceWidth * 0.6}
             onPress={() => {
               dispatch(setRewardModal(false));

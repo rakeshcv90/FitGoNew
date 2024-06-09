@@ -156,13 +156,13 @@ const OfferTerms = ({navigation, route}: any) => {
           }}>
           <View>
             <FitText
-              value="Agreement"
+              value="Terms and Conditions"
               type="SubHeading"
               textTransform="uppercase"
               fontWeight="500"
               letterSpacing={0.2}
             />
-            <FitText value="Terms & Conditions" type="Heading" />
+            <FitText value="for In-App Cash Rewards" type="Heading" />
           </View>
           <TouchableOpacity
             onPress={() => setOpened(!opened)}

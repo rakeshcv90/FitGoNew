@@ -213,7 +213,7 @@ const Leaderboard = ({navigation, route}: any) => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <DietPlanHeader
-        header="Leaderboard"
+        header="FitFame"
         h={DeviceWidth * 0.15}
         paddingTop={PLATFORM_IOS ? DeviceHeigth * 0.025 : DeviceHeigth * 0.02}
         shadow

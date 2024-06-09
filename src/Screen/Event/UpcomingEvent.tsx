@@ -108,7 +108,7 @@ const UpcomingEvent = ({navigation}: any) => {
           result.data?.data,
           setEnteredCurrentEvent,
           setEnteredUpcomingEvent,
-          setPlanType
+          setPlanType,
         );
         setLoading(false);
       }
@@ -159,7 +159,7 @@ const UpcomingEvent = ({navigation}: any) => {
                 getPurchaseHistory?.allow_usage && (
                 <FitText
                   type="Heading"
-                  value="Are you sure ?"
+                  value="Gear Up for Your Next Challenge!"
                   fontSize={18}
                   lineHeight={24}
                   marginVertical={5}
@@ -170,11 +170,12 @@ const UpcomingEvent = ({navigation}: any) => {
                 value={
                   getPurchaseHistory?.used_plan <=
                   getPurchaseHistory?.allow_usage
-                    ? `You have ${
-                        getPurchaseHistory?.allow_usage -
-                        getPurchaseHistory?.used_plan
-                      } limit left. Please use them${'\n'} before Purchase new Plan`
+                    ? 'Every week is a new opportunity. Gear up for your next challenge!'
                     : `You want to change your${'\n'} current plan`
+                  // ? `You have ${
+                  //     getPurchaseHistory?.allow_usage -
+                  //     getPurchaseHistory?.used_plan
+                  //   } limit left. Please use them${'\n'} before Purchase new Plan`
                 }
                 textAlign="center"
                 fontSize={16}
@@ -220,7 +221,7 @@ const UpcomingEvent = ({navigation}: any) => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <DietPlanHeader
-        header="Upcoming Contest"
+        header="Upcoming Challenge"
         h={DeviceWidth * 0.15}
         paddingTop={
           Platform.OS == 'android' ? DeviceHeigth * 0.02 : DeviceHeigth * 0.025
@@ -349,7 +350,7 @@ const UpcomingEvent = ({navigation}: any) => {
           </LinearGradient>
           <FitText
             type="SubHeading"
-            value="Your Contest will be start from Monday"
+            value="Your challenge will start on Monday"
             fontStyle="italic"
             fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
             fontWeight="700"
@@ -357,7 +358,7 @@ const UpcomingEvent = ({navigation}: any) => {
           />
           <FitText
             type="normal"
-            value={`Until your contest starts, you can workout using our app." in simple way.`}
+            value={`You can do the exercise using our App until the challenge begins.`}
             textAlign="center"
             color="#333333"
             fontFamily={Fonts.MONTSERRAT_MEDIUM}

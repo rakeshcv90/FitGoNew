@@ -784,7 +784,7 @@ const NewSubscription = ({navigation}: any) => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <DietPlanHeader
-        header="Choose Your Plan"
+        header="Unlock Challenges"
         paddingTop={
           Platform.OS == 'android' ? DeviceHeigth * 0.02 : DeviceHeigth * 0.025
         }
@@ -809,7 +809,7 @@ const NewSubscription = ({navigation}: any) => {
               marginBottom: 20,
             }}>
             <FitText
-              value="Subscription Plans"
+              value="Challenge Packages"
               type="Heading"
               fontSize={16}
               lineHeight={24}

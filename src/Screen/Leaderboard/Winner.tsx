@@ -265,7 +265,7 @@ const Winner = ({navigation}: any) => {
         backgroundColor: !userWinner ? AppColor.WHITE : AppColor.BLACK,
       }}>
       <DietPlanHeader
-        header="Winner of the Week"
+        header="Champions & Contenders"
         h={DeviceWidth * 0.15}
         paddingTop={PLATFORM_IOS ? DeviceHeigth * 0.025 : DeviceHeigth * 0.02}
         shadow
@@ -317,8 +317,7 @@ const Winner = ({navigation}: any) => {
                   position: 'relative',
                   // top: 10,
                 }}>
-                We are excited to announce that John Doe is the ultimate winner
-                for this week's contest.{' '}
+                Amazing job! You've won the challenge. Claim your well-deserved reward
                 <Text
                   style={{
                     fontFamily: Fonts.MONTSERRAT_BOLD,
@@ -387,7 +386,7 @@ const Winner = ({navigation}: any) => {
               }}>
               <FitText
                 type="normal"
-                value="Better Luck Next Time"
+                value={`Don’t quit – your best is yet to come!`}
                 color={AppColor.WHITE}
               />
             </View>

@@ -138,7 +138,7 @@ const CountryLocation = ({navigation, route}) => {
           resizeMode="contain"
         />
         <FitText
-          value="Enter Your Current Location"
+          value="Allow us to access your current location"
           type="Heading"
           fontSize={20}
           fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
@@ -146,14 +146,14 @@ const CountryLocation = ({navigation, route}) => {
         />
         <FitText
           type="SubHeading"
-          value="We need your location to provide"
+          value="We need your current location to provide you"
           textAlign="center"
         />
-        <FitText type="SubHeading" value="better services" textAlign="center" />
+        <FitText type="SubHeading" value="with better services" textAlign="center" />
       </View>
       <View style={styles.View2}>
         <NewButton
-          title={'Use Current Location'}
+          title={'Access the Current Location'}
           pV={15}
           image={localImage.location_icon}
           onPress={() => getCountry()}
