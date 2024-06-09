@@ -18,6 +18,7 @@ type Props = TextProps & {
   marginVertical?: number;
   fontStyle?: 'normal' | 'italic';
   w?: string;
+  textDecorationLine?: 'line-through'
 };
 
 const FitText: FC<Props> = ({
@@ -35,7 +36,8 @@ const FitText: FC<Props> = ({
   lineHeight,
   marginVertical,
   fontStyle,
-  w
+  w,
+  textDecorationLine
 }) => {
   const getTypeStyle = () => {
     switch (type) {
@@ -52,6 +54,7 @@ const FitText: FC<Props> = ({
           marginVertical,
           fontStyle,
           width: w?? 'auto',
+          textDecorationLine
         };
       case 'SubHeading':
         return {
@@ -66,6 +69,7 @@ const FitText: FC<Props> = ({
           marginVertical,
           fontStyle,
           width: w?? 'auto',
+          textDecorationLine
         };
       case 'normal':
         return {
@@ -80,6 +84,7 @@ const FitText: FC<Props> = ({
           marginVertical,
           fontStyle,
           width: w?? 'auto',
+          textDecorationLine
         };
       default:
         return {};

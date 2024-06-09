@@ -105,4 +105,5 @@ export const NewAppapi = {
   CURRENT_DAY_EVENT_EXERCISE: NewApi + 'user_event__exercise_status',
   POST_REWARDS_EXERCISE: NewApi + 'event_exercise_complete_status', //Done App Version
   GET_LEADERBOARD: NewApi + 'leader_board', //Done App Version
+  POST_API_FOR_COIN_CALCULATION: NewApi + 'add_coins', //Done App Version
 };

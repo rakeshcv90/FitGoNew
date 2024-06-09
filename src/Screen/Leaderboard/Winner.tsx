@@ -17,6 +17,7 @@ import {useSelector} from 'react-redux';
 import {localImage} from '../../Component/Image';
 import FitText from '../../Component/Utilities/FitText';
 import AnimatedLottieView from 'lottie-react-native';
+import { appVersion } from 'react-native-version-number';
 
 type TypeData = {
   name: string;
@@ -48,8 +49,7 @@ const Winner = ({navigation}: any) => {
   const getLeaderboardDataAPI = async () => {
     try {
       const result = await axios({
-        // url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${appVersion}`,
-        url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=1.18`,
+        url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${appVersion}`,
       });
       if (result.data) {
         // if (result.data?.data[0]?.id == 243) {
@@ -443,9 +443,9 @@ const Winner = ({navigation}: any) => {
             <TouchableOpacity
               onPress={() => {
                 if (getPurchaseHistory) {
-                  getPurchaseHistory?.plan_value == 99
+                  getPurchaseHistory?.plan_value == 30
                     ? navigation?.navigate('NewSubscription')
-                    : getPurchaseHistory?.plan_value != 99 &&
+                    : getPurchaseHistory?.plan_value != 30 &&
                       getPurchaseHistory?.used_plan <=
                         getPurchaseHistory?.allow_usage &&
                       navigation?.navigate('UpcomingEvent');

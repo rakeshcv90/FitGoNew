@@ -283,7 +283,7 @@ const HomeNew = ({navigation}) => {
           result.data?.data,
           setEnteredCurrentEvent,
           setEnteredUpcomingEvent,
-          setPlanType
+          setPlanType,
         );
       }
     } catch (error) {
@@ -1126,7 +1126,17 @@ const HomeNew = ({navigation}) => {
                 : 'Guest')
             }
           />
-          <Text onPress={() => navigation.navigate('Leaderboard')}>COINS</Text>
+          <Text
+            onPress={() => {
+              const today = moment().day();
+              if (today == 0 || today == 6) {
+                navigation.navigate('Winner');
+              } else {
+                navigation.navigate('Leaderboard');
+              }
+            }}>
+            coins
+          </Text>
         </View>
         <Banners type={BannerType} navigation={navigation} />
         {currentChallenge?.length > 0 && (

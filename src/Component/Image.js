@@ -184,4 +184,8 @@ export const localImage = {
   WinnerBackground:require('../Icon/Images/InAppRewards/WinnerBackground.png'),
   LoserBackground:require('../Icon/Images/InAppRewards/LoserBackground.png'),
   WorlCup:require('../Icon/Images/InAppRewards/WorlCup.png'),
+  BasicPlan:require('../Icon/Images/InAppRewards/BasicPlan.png'),
+  MediumPlan:require('../Icon/Images/InAppRewards/MediumPlan.png'),
+  PremiumPlan:require('../Icon/Images/InAppRewards/PremiumPlan.png'),
+  PlanBenifits:require('../Icon/Images/InAppRewards/PlanBenifits.png'),
 };

@@ -55,9 +55,9 @@ const UpcomingEvent = ({navigation}: any) => {
     const data = {
       user_id: getUserDataDetails.id,
       plan:
-        getPurchaseHistory?.plan_value == 99
+        getPurchaseHistory?.plan_value == 30
           ? 'noob'
-          : getPurchaseHistory?.plan_value == 199
+          : getPurchaseHistory?.plan_value == 69
           ? 'pro'
           : 'legend',
       transaction_id: getPurchaseHistory?.transaction_id,
@@ -394,9 +394,9 @@ const UpcomingEvent = ({navigation}: any) => {
               mV={DeviceHeigth * 0.02}
               alignItems={'flex-start'}
               bColor={
-                getPurchaseHistory?.plan_value == 99
+                getPurchaseHistory?.plan_value == 30
                   ? AppColor.SUBS_BLUE
-                  : getPurchaseHistory?.plan_value == 199
+                  : getPurchaseHistory?.plan_value == 69
                   ? AppColor.SUBS_GREEN
                   : AppColor.ORANGE
               }>
@@ -406,17 +406,17 @@ const UpcomingEvent = ({navigation}: any) => {
                 fontSize={18}
                 lineHeight={24}
                 value={
-                  getPurchaseHistory?.plan_value == 99
+                  getPurchaseHistory?.plan_value == 30
                     ? 'Basic plan'
-                    : getPurchaseHistory?.plan_value == 199
+                    : getPurchaseHistory?.plan_value == 69
                     ? 'Medium plan'
                     : 'Premium plan'
                 }
                 marginVertical={5}
                 color={
-                  getPurchaseHistory?.plan_value == 99
+                  getPurchaseHistory?.plan_value == 30
                     ? AppColor.SUBS_BLUE
-                    : getPurchaseHistory?.plan_value == 199
+                    : getPurchaseHistory?.plan_value == 69
                     ? AppColor.SUBS_GREEN
                     : AppColor.ORANGE
                 }
@@ -458,8 +458,8 @@ const UpcomingEvent = ({navigation}: any) => {
               <Text numberOfLines={1} style={{color: '#3333331A'}}>
                 {Array(100).fill('- ')}
               </Text>
-              {getPurchaseHistory?.plan_value != 99 &&
-                getPurchaseHistory?.plan_value != 199 &&
+              {getPurchaseHistory?.plan_value != 30 &&
+                getPurchaseHistory?.plan_value != 69 &&
                 !PLATFORM_IOS && (
                   <View style={styles.row}>
                     <FitIcon
@@ -468,9 +468,9 @@ const UpcomingEvent = ({navigation}: any) => {
                       size={13}
                       type="MaterialCommunityIcons"
                       color={
-                        getPurchaseHistory?.plan_value == 99
+                        getPurchaseHistory?.plan_value == 30
                           ? AppColor.SUBS_BLUE
-                          : getPurchaseHistory?.plan_value == 199
+                          : getPurchaseHistory?.plan_value == 69
                           ? AppColor.SUBS_GREEN
                           : AppColor.ORANGE
                       }
@@ -486,9 +486,9 @@ const UpcomingEvent = ({navigation}: any) => {
               <View style={styles.row}>
                 <FitIcon
                   color={
-                    getPurchaseHistory?.plan_value == 99
+                    getPurchaseHistory?.plan_value == 30
                       ? AppColor.SUBS_BLUE
-                      : getPurchaseHistory?.plan_value == 199
+                      : getPurchaseHistory?.plan_value == 69
                       ? AppColor.SUBS_GREEN
                       : AppColor.ORANGE
                   }
@@ -507,9 +507,9 @@ const UpcomingEvent = ({navigation}: any) => {
               <View style={styles.row}>
                 <FitIcon
                   color={
-                    getPurchaseHistory?.plan_value == 99
+                    getPurchaseHistory?.plan_value == 30
                       ? AppColor.SUBS_BLUE
-                      : getPurchaseHistory?.plan_value == 199
+                      : getPurchaseHistory?.plan_value == 69
                       ? AppColor.SUBS_GREEN
                       : AppColor.ORANGE
                   }
@@ -521,9 +521,9 @@ const UpcomingEvent = ({navigation}: any) => {
                 <FitText
                   type="normal"
                   value={
-                    getPurchaseHistory?.plan_value == 99
+                    getPurchaseHistory?.plan_value == 30
                       ? '1 event/month'
-                      : getPurchaseHistory?.plan_value == 199
+                      : getPurchaseHistory?.plan_value == 69
                       ? '2 event/month'
                       : '3 event/month'
                   }
@@ -534,9 +534,9 @@ const UpcomingEvent = ({navigation}: any) => {
               <View style={styles.row}>
                 <FitIcon
                   color={
-                    getPurchaseHistory?.plan_value == 99
+                    getPurchaseHistory?.plan_value == 30
                       ? AppColor.SUBS_BLUE
-                      : getPurchaseHistory?.plan_value == 199
+                      : getPurchaseHistory?.plan_value == 69
                       ? AppColor.SUBS_GREEN
                       : AppColor.ORANGE
                   }
@@ -548,9 +548,9 @@ const UpcomingEvent = ({navigation}: any) => {
                 <FitText
                   type="normal"
                   value={
-                    getPurchaseHistory[0]?.plan_value?.includes('99')
+                    getPurchaseHistory[0]?.plan_value?.includes('30')
                       ? 'With Ads'
-                      : getPurchaseHistory[0]?.plan_value?.includes('199')
+                      : getPurchaseHistory[0]?.plan_value?.includes('69')
                       ? 'Fewer Ads'
                       : 'No Ads'
                   }

@@ -15,10 +15,10 @@ import moment from 'moment';
 export const BannerAdd = ({bannerAdId}) => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const planType = useSelector(state => state.planType);
-  console.log(planType);
+  // console.log(planType);
   return (
     <>
-      {planType < 199 && planType == -1 ? (
+      {planType < 69 && planType == -1 ? (
         <BannerAd
           unitId={bannerAdId}
           size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}

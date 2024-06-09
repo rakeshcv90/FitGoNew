@@ -29,6 +29,9 @@ const WeekArray = Array(7)
 const SaveDayExercise = ({navigation, route}: any) => {
   const {data, day, allExercise, type, challenge} = route?.params;
   const getAllExercise = useSelector((state: any) => state.getAllExercise);
+  const enteredCurrentEvent = useSelector(
+    (state: any) => state.enteredCurrentEvent,
+  );
   let fire, clock, action;
   const [workoutName, setWorkooutName] = useState('');
   const dispatch = useDispatch();
@@ -38,7 +41,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
-console.log('Data---->',data,type)
+  console.log('Data---->', data, type);
   const getWeeklyAPI = async () => {
     try {
       const res = await axios({
@@ -79,15 +82,17 @@ console.log('Data---->',data,type)
 
   const TESTAPI = async () => {
     try {
-      const data = await axios(`${NewAppapi.total_Calories}`, {
+      const data = await axios(`${NewAppapi.POST_API_FOR_COIN_CALCULATION}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
         },
         data: {
-          user_id: 111,
+          user_id: getUserDataDetails?.id,
+          user_day: WeekArray[day],
         },
       });
+      navigation.navigate('MyPlans');
       if (data.data) {
         console.log('TEST API DATA', data.data);
       }
@@ -122,28 +127,32 @@ console.log('Data---->',data,type)
 
   const onPresh = () => {
     AnalyticsConsole(`SBA_Exer_Com`);
-    if (type == 'focus') {
-      categoryExercise = getAllExercise?.filter((item: any) =>
-        data.category.split('/').includes(item?.exercise_bodypart),
-      );
+    if (enteredCurrentEvent) TESTAPI();
+    else {
+      if (type == 'focus') {
+        categoryExercise = getAllExercise?.filter((item: any) =>
+          data.category.split('/').includes(item?.exercise_bodypart),
+        );
+      }
+      type == 'custom'
+        ? navigation.navigate('CustomWorkoutDetails', {item: data})
+        : challenge
+        ? ChallengesDataAPI()
+        : type == 'focus'
+        ? navigation.navigate('WorkoutCategories', {
+            categoryExercise,
+            CategoryDetails: data,
+          })
+        : type == 'bodypart'
+        ? navigation.navigate('NewFocusWorkouts', {
+            focusExercises: allExercise,
+            focusedPart: data?.title,
+            searchCriteria: data?.searchCriteria,
+            searchCriteriaRedux: data?.searchCriteriaRedux,
+            CategoryDetails: data,
+          })
+        : navigation.navigate('MyPlans'); //add here
     }
-    type == 'custom'
-      ? navigation.navigate('CustomWorkoutDetails', {item: data})
-      : challenge
-      ? ChallengesDataAPI()
-      : type == 'focus'
-      ? navigation.navigate('WorkoutCategories', {
-          categoryExercise,
-          CategoryDetails: data,
-        })
-      : type=='bodypart'?navigation.navigate('NewFocusWorkouts',{
-        focusExercises:allExercise,
-        focusedPart:data?.title,
-        searchCriteria:data?.searchCriteria,
-        searchCriteriaRedux:data?.searchCriteriaRedux,
-        CategoryDetails:data
-
-      }):navigation.navigate('MyPlans') //add here 
   };
   // const bannerAdsDisplay = () => {
   //   if (getPurchaseHistory.length > 0) {
@@ -313,7 +322,7 @@ console.log('Data---->',data,type)
       </View>
       <View style={{position: 'absolute', bottom: 0}}>
         {/* {bannerAdsDisplay()} */}
-          <BannerAdd bannerAdId={bannerAdId} />
+        <BannerAdd bannerAdId={bannerAdId} />
       </View>
     </SafeAreaView>
   );

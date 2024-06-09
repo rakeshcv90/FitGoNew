@@ -33,6 +33,8 @@ import {
 } from '../../Component/ThemeRedux/Actions';
 import {useIsFocused} from '@react-navigation/native';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
+import Carousel from 'react-native-snap-carousel';
+
 
 const NewSubscription = ({navigation}: any) => {
   const dispatch = useDispatch();
@@ -44,7 +46,7 @@ const NewSubscription = ({navigation}: any) => {
     (state: any) => state.getUserDataDetails,
   );
   // Sorting the subscriptions by title (Basic, Pro, Premium)
-  const sortedSubscriptions: [] = PLATFORM_IOS
+  const sortedSubscriptions: any = PLATFORM_IOS
     ? getInAppPurchase.sort((a: any, b: any) => {
         const order = ['Basic Plan', 'Pro plan', 'Premium Plan'];
         return order.indexOf(a.title) - order.indexOf(b.title);
@@ -455,197 +457,292 @@ const NewSubscription = ({navigation}: any) => {
       dispatch(setPurchaseHistory([]));
     }
   };
-  const renderItem = useMemo(
-    () =>
-      ({item, index}: any) => {
-        const price: string = findKeyInObject(
-          item,
-          PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
-        );
-        const normalizedPrice = price.replace(/\s/g, '');
-        const CheckIcon = () => (
-          <Icon
-            name="check"
-            color={AppColor.NEW_DARK_RED}
-            size={15}
-            style={{marginRight: 10}}
-          />
-        );
-        const lowOpacity = getInAppPurchase?.findIndex(
-          (item: any) => getPurchaseHistory?.product_id == item?.productId,
-        );
-        return (
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => {
-              setCurrentSelected(index);
-              setSelected(item);
-            }}
-            style={{
-              padding: 10,
-              paddingHorizontal: 15,
-              marginVertical: 10,
-              borderColor:
-                currentSelected == index
-                  ? AppColor.NEW_DARK_RED
-                  : AppColor.BORDER_COLOR,
-              borderRadius: 5,
-              borderWidth: 1,
-              backgroundColor: AppColor.WHITE,
-              opacity: index < lowOpacity ? 0.7 : 1,
-              shadowColor: 'grey',
-              ...Platform.select({
-                ios: {
-                  //shadowColor: '#000000',
-                  shadowOffset: {width: 0, height: 2},
-                  shadowOpacity: 0.2,
-                  shadowRadius: 4,
-                },
-                android: {
-                  elevation: 3,
-                },
-              }),
-            }}>
-            {!normalizedPrice.includes('₹99') &&
-              !normalizedPrice.includes('₹199') &&
-              getPurchaseHistory?.length == 0 && (
-                <Image
-                  source={localImage.RecommendFitme}
-                  resizeMode="contain"
-                  style={styles.recommendContainer}
-                />
-              )}
-            <FitText
-              type="SubHeading"
-              errorType
-              fontSize={18}
-              lineHeight={24}
-              value={
-                normalizedPrice.includes('₹99')
-                  ? 'Basic plan'
-                  : normalizedPrice.includes('₹199')
-                  ? 'Medium plan'
-                  : 'Premium plan'
-              }
-              marginVertical={5}
-            />
+  const RenderItem = ({item, index}: any) => {
+    // const {item, index} = route.params;
+    const price: string = findKeyInObject(
+      item,
+      PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
+    );
+    const normalizedPrice = price.replace(/\s/g, '');
+    const color = normalizedPrice.includes('₹30')
+      ? AppColor.NEW_SUBS_BLUE
+      : normalizedPrice.includes('₹69')
+      ? AppColor.NEW_SUBS_GREEN
+      : AppColor.NEW_SUBS_ORANGE;
+    const CheckIcon = () => (
+      <Image
+        source={localImage.PlanBenifits}
+        style={{marginRight: 10, width: 15, height: 15}}
+        resizeMode="contain"
+        tintColor={color}
+      />
+    );
+    const lowOpacity = getInAppPurchase?.findIndex(
+      (item: any) => getPurchaseHistory?.product_id == item?.productId,
+    );
+    const Line = () => (
+      <Text numberOfLines={1} style={{color: '#3333331A'}}>
+        {Array(80).fill('- ')}
+      </Text>
+    );
+    // !PLATFORM_IOS&& console.log(normalizedPrice)
+    return (
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => {
+          setCurrentSelected(index);
+          setSelected(item);
+        }}
+        style={{
+          flex: 1,
+          padding: 10,
+          // paddingHorizontal: 15,
+          // margin: 10,
+          borderColor: color,
+          borderRadius: 5,
+          borderWidth: 1,
+          backgroundColor: AppColor.WHITE,
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: DeviceHeigth * 0.65,
+          width: DeviceWidth * 0.88,
+          alignSelf: 'center',
+          // opacity: index < lowOpacity ? 0.7 : 1,
+          // shadowColor: 'grey',
+          // ...Platform.select({
+          //   ios: {
+          //     //shadowColor: '#000000',
+          //     shadowOffset: {width: 0, height: 2},
+          //     shadowOpacity: 0.2,
+          //     shadowRadius: 4,
+          //   },
+          //   android: {
+          //     elevation: 3,
+          //   },
+          // }),
+        }}>
+        {getPurchaseHistory?.product_id &&
+          normalizedPrice.includes(`${getPurchaseHistory?.plan_value}.00`) && (
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                justifyContent: 'center',
                 alignItems: 'center',
+                backgroundColor: '#1B8900',
+                padding: 5,
+                paddingVertical: 2,
+                borderBottomLeftRadius: 5,
+                borderBottomRightRadius: 5,
+                position: 'absolute',
+                top: 0,
+                right: 5,
               }}>
               <FitText
-                type="Heading"
-                value={`${normalizedPrice}/month`}
-                fontSize={28}
-                lineHeight={34}
-                marginVertical={5}
+                type="normal"
+                value="Active"
+                color={AppColor.WHITE}
+                fontSize={12}
+                lineHeight={16}
+                fontWeight="600"
               />
-              {getPurchaseHistory?.product_id &&
-                normalizedPrice.includes(`${getPurchaseHistory?.plan_value}.00`) && (
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: '#0A684733',
-                      padding: 5,
-                      paddingVertical: 2,
-                      borderRadius: 5,
-                    }}>
-                    <FitText
-                      type="normal"
-                      value="Active"
-                      color={AppColor.GREEN}
-                      fontSize={12}
-                      lineHeight={16}
-                      fontWeight="600"
-                    />
-                  </View>
-                )}
             </View>
-            <Text numberOfLines={1} style={{color: '#3333331A'}}>
-              {Array(100).fill('- ')}
-            </Text>
-            {!normalizedPrice.includes('₹99') &&
-              !normalizedPrice.includes('₹199') &&
-              !PLATFORM_IOS && (
-                <View style={styles.row}>
-                  <CheckIcon />
-                  <FitText
-                    type="normal"
-                    value="3 day free trial"
-                    color="#333333E5"
-                    marginVertical={3}
-                  />
-                </View>
-              )}
-            <View style={styles.row}>
+          )}
+        <Image
+          source={
+            index == 0
+              ? localImage.BasicPlan
+              : index == 1
+              ? localImage.MediumPlan
+              : localImage.PremiumPlan
+          }
+          resizeMode="contain"
+          style={{
+            width: '50%',
+            height: '40%',
+          }}
+        />
+        {!normalizedPrice.includes('₹30') &&
+          !normalizedPrice.includes('₹69') &&
+          getPurchaseHistory?.length == 0 && (
+            <Image
+              source={localImage.RecommendFitme}
+              resizeMode="contain"
+              style={styles.recommendContainer}
+            />
+          )}
+        <FitText
+          type="SubHeading"
+          color={color}
+          fontSize={18}
+          lineHeight={24}
+          value={
+            normalizedPrice.includes('₹30')
+              ? 'Basic plan'
+              : normalizedPrice.includes('₹69')
+              ? 'Medium plan'
+              : 'Premium plan'
+          }
+          marginVertical={5}
+        />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 10,
+          }}>
+          <FitText
+            type="Heading"
+            value={
+              normalizedPrice.includes('₹30')
+                ? '₹99'
+                : normalizedPrice.includes('₹69')
+                ? '₹199'
+                : '₹399'
+            }
+            fontSize={28}
+            lineHeight={34}
+            marginVertical={5}
+            fontFamily={Fonts.MONTSERRAT_MEDIUM}
+            color="#ADADAD"
+            textDecorationLine="line-through"
+          />
+          <FitText
+            type="Heading"
+            value={` ${normalizedPrice.split('.')[0]}/month`}
+            fontSize={28}
+            lineHeight={34}
+            marginVertical={5}
+          />
+        </View>
+        {!normalizedPrice.includes('₹30') &&
+          !normalizedPrice.includes('₹69') &&
+          !PLATFORM_IOS &&
+          getPurchaseHistory?.plan_value == null && (
+            <View
+              style={[
+                styles.row,
+                {
+                  width: '90%',
+                },
+              ]}>
               <CheckIcon />
               <FitText
                 type="normal"
-                value="Winning price 1000/-"
+                value="3 day free trial"
                 color="#333333E5"
+                fontFamily={Fonts.MONTSERRAT_MEDIUM}
                 marginVertical={3}
               />
             </View>
-            <View style={styles.row}>
-              <CheckIcon />
-              <FitText
-                type="normal"
-                value={
-                  normalizedPrice.includes('₹99')
-                    ? '1 event/month'
-                    : normalizedPrice.includes('₹199')
-                    ? '2 event/month'
-                    : '3 event/month'
-                }
-                color="#333333E5"
-                marginVertical={3}
-              />
-            </View>
-            <View style={styles.row}>
-              <CheckIcon />
-              <FitText
-                type="normal"
-                value={
-                  normalizedPrice.includes('₹99')
-                    ? 'With Ads'
-                    : normalizedPrice.includes('₹199')
-                    ? 'Fewer Ads'
-                    : 'No Ads'
-                }
-                color="#333333E5"
-                marginVertical={3}
-              />
-            </View>
-          </TouchableOpacity>
-        );
-      },
-    [getPurchaseHistory, currentSelected],
-  );
-  const Test = () => {
-    return (
-      <View
-        style={{
-          width: DeviceWidth * 0.905,
-          backgroundColor:
-            currentSelected == 0
-              ? 'red'
-              : currentSelected == 1
-              ? 'blue'
-              : 'green',
-          height: 200,
-          borderTopRightRadius: currentSelected == 2 ? 0 : 10,
-          borderTopLeftRadius: currentSelected == 0 ? 0 : 10,
-          borderBottomLeftRadius: 10,
-          borderBottomRightRadius: 10,
-        }}>
-        <Text>OPENED</Text>
-      </View>
+          )}
+        {!normalizedPrice.includes('₹30') &&
+          !normalizedPrice.includes('₹69') &&
+          !PLATFORM_IOS && <Line />}
+        <View
+          style={[
+            styles.row,
+            {
+              width: '90%',
+            },
+          ]}>
+          <CheckIcon />
+          <FitText
+            type="normal"
+            value="Winning price 1000/-"
+            color="#333333E5"
+            fontFamily={Fonts.MONTSERRAT_MEDIUM}
+            marginVertical={3}
+          />
+        </View>
+        <Line />
+        <View
+          style={[
+            styles.row,
+            {
+              width: '90%',
+            },
+          ]}>
+          <CheckIcon />
+          <FitText
+            type="normal"
+            value={
+              normalizedPrice.includes('₹30')
+                ? '1 event/month'
+                : normalizedPrice.includes('₹69')
+                ? '2 event/month'
+                : '3 event/month'
+            }
+            color="#333333E5"
+            fontFamily={Fonts.MONTSERRAT_MEDIUM}
+            marginVertical={3}
+          />
+        </View>
+        <Line />
+        <View
+          style={[
+            styles.row,
+            {
+              width: '90%',
+            },
+          ]}>
+          <CheckIcon />
+          <FitText
+            type="normal"
+            value={
+              normalizedPrice.includes('₹30')
+                ? 'With Ads'
+                : normalizedPrice.includes('₹69')
+                ? 'Fewer Ads'
+                : 'No Ads'
+            }
+            color="#333333E5"
+            fontFamily={Fonts.MONTSERRAT_MEDIUM}
+            marginVertical={3}
+          />
+        </View>
+        {(normalizedPrice.includes('₹30') || normalizedPrice.includes('₹69')) &&
+          getPurchaseHistory?.plan_value == null && (
+            <View style={{height: 50, width: '100%'}} />
+          )}
+        <GradientButton
+          text="Proceed"
+          h={50}
+          colors={
+            normalizedPrice.includes('₹30') || normalizedPrice.includes('₹69')
+              ? [AppColor.WHITE, AppColor.WHITE]
+              : [color, color]
+          }
+          textStyle={[
+            styles.buttonText,
+            {
+              color:
+                normalizedPrice.includes('₹30') ||
+                normalizedPrice.includes('₹69')
+                  ? color
+                  : AppColor.WHITE,
+            },
+          ]}
+          bC={
+            normalizedPrice.includes('₹30') || normalizedPrice.includes('₹69')
+              ? color
+              : AppColor.WHITE
+          }
+          alignSelf
+          bR={6}
+          w={DeviceWidth * 0.8}
+          mV={15}
+          onPress={() => {
+            handlePurchase(item);
+          }}
+          opacity={
+            getPurchaseHistory?.product_id != selected?.productId ? 1 : 0.8
+          }
+          disabled={getPurchaseHistory?.product_id == selected?.productId}
+        />
+      </TouchableOpacity>
     );
   };
-  const handlePurchase = () => {
+  const handlePurchase = (item: any) => {
     if (getPurchaseHistory) {
       const index = getInAppPurchase?.findIndex(
         (item: any) => getPurchaseHistory?.product_id == item?.productId,
@@ -669,18 +766,18 @@ const NewSubscription = ({navigation}: any) => {
         });
       } else {
         PLATFORM_IOS
-          ? purchaseItems(selected)
+          ? purchaseItems(item)
           : purchaseItemsAndroid(
-              selected.productId,
-              selected.subscriptionOfferDetails[0].offerToken,
+              item.productId,
+              item.subscriptionOfferDetails[0].offerToken,
             );
       }
     } else {
       PLATFORM_IOS
-        ? purchaseItems(selected)
+        ? purchaseItems(item)
         : purchaseItemsAndroid(
-            selected.productId,
-            selected.subscriptionOfferDetails[0].offerToken,
+            item.productId,
+            item.subscriptionOfferDetails[0].offerToken,
           );
     }
   };
@@ -694,7 +791,7 @@ const NewSubscription = ({navigation}: any) => {
         h={Platform.OS == 'ios' ? DeviceWidth * 0.15 : DeviceWidth * 0.15}
         shadow
       />
-      <View style={{flex: 1, margin: 16}}>
+      <View style={{flex: 1, marginHorizontal: 20, marginTop: 10}}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           refreshControl={
@@ -709,6 +806,7 @@ const NewSubscription = ({navigation}: any) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
+              marginBottom: 20,
             }}>
             <FitText
               value="Subscription Plans"
@@ -736,32 +834,91 @@ const NewSubscription = ({navigation}: any) => {
               </Text>
             </TouchableOpacity>
           </View>
-          {sortedSubscriptions &&
-            sortedSubscriptions?.map((item: any, index: number) =>
-              renderItem({item, index}),
-            )}
-          <GradientButton
-            text="Proceed"
-            h={50}
-            colors={[AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED]}
-            textStyle={styles.buttonText}
-            alignSelf
-            bR={6}
-            w={DeviceWidth * 0.9}
-            mV={15}
-            onPress={handlePurchase}
-            opacity={
-              getPurchaseHistory?.product_id != selected?.productId ? 1 : 0.8
-            }
-            disabled={getPurchaseHistory?.product_id == selected?.productId}
-          />
+          {sortedSubscriptions && (
+            <Carousel
+              data={sortedSubscriptions}
+              keyExtractor={(_, index) => index.toString()}
+              itemWidth={DeviceWidth * 0.9}
+              sliderWidth={DeviceWidth * 0.9}
+              onBeforeSnapToItem={index => setCurrentSelected(index)}
+              enableSnap
+              activeSlideAlignment="start"
+              firstItem={currentSelected}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              renderItem={({item, index}: any) => RenderItem({item, index})}
+            />
+          )}
+
+          <View style={styles.tabContainer}>
+            {sortedSubscriptions?.map((item: any, index: number) => (
+              // <View style={{flex: 1,justifyContent: 'center',alignItems: 'center',}}>
+              <>
+                {currentSelected == index ? (
+                  <TouchableOpacity
+                    key={index}
+                    // onPress={handlePress}
+                    style={[
+                      styles.tabButton,
+                      {
+                        height: DeviceWidth * 0.15,
+                        backgroundColor:
+                          index == 0
+                            ? AppColor.NEW_SUBS_BLUE
+                            : index == 1
+                            ? AppColor.NEW_SUBS_GREEN
+                            : AppColor.NEW_SUBS_ORANGE,
+                      },
+                    ]}>
+                    <Text
+                      style={{
+                        color: AppColor.WHITE,
+                        fontFamily: Fonts.MONTSERRAT_BOLD,
+                        fontSize: 14,
+                        lineHeight: 14.63,
+                        fontWeight: '600',
+                        marginTop: 5,
+                        textAlign: 'center',
+                      }}>
+                      {index == 0 ? 'Basic' : index == 1 ? 'Medium' : 'Premium'}
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    key={index}
+                    // onPress={handlePress}
+                    style={[
+                      styles.tabButton,
+                      {
+                        marginVertical: 10,
+                        paddingHorizontal: 5,
+                      },
+                    ]}>
+                    <Text
+                      style={{
+                        color: '#121212B2',
+                        opacity: 0.7,
+                        fontSize: 14,
+                        lineHeight: 14.63,
+                        fontWeight: '500',
+                        fontFamily: 'Montserrat-Medium',
+                        marginTop: 5,
+                        textAlign: 'center',
+                      }}>
+                      {index == 0 ? 'Basic' : index == 1 ? 'Medium' : 'Premium'}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </>
+            ))}
+          </View>
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
               width: DeviceWidth * 0.9,
-              backgroundColor: '#f5f5f5',
+              // backgroundColor: '#f5f5f5',
               padding: 15,
               borderRadius: 10,
               marginTop: 20,
@@ -943,5 +1100,38 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#333333',
     textDecorationLine: 'underline',
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    height: DeviceWidth * 0.15,
+    backgroundColor: AppColor.WHITE,
+    borderRadius: 50,
+    marginVertical: 20,
+    width: DeviceWidth * 0.9,
+    alignSelf: 'center',
+    shadowColor: '#121212B2',
+    ...Platform.select({
+      ios: {
+        shadowOffset: {width: 1, height: 2},
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 10,
+      },
+    }),
+  },
+  tabButton: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderRadius: 50,
+  },
+  nextButton: {
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
 });

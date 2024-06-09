@@ -35,7 +35,7 @@ import NativeAddTest from '../../Component/NativeAddTest';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -233,13 +233,13 @@ const CreateWorkout = ({navigation, route}) => {
       },
     [selectedItems, bodyPart],
   );
-
+  const planType = useSelector(state => state.planType);
   const getAdsDisplay = (index, item) => {
     if (filteredCategories.length > 1) {
-      if (index == 0) {
-        return getNativeAdsDisplay();
+      if (planType < 69 && index == 0) {
+        return <NativeAddTest type="image" media={false} />;
       } else if ((index + 1) % 8 == 0 && filteredCategories.length > 8) {
-        return getNativeAdsDisplay();
+        return <NativeAddTest type="image" media={false} />;
       } else {
       }
     }
@@ -448,7 +448,7 @@ const CreateWorkout = ({navigation, route}) => {
               flexDirection: 'row',
               alignItems: 'center',
               paddingLeft: 10,
-              top: -DeviceWidth*0.05,
+              top: -DeviceWidth * 0.05,
             }}>
             <Icons name="search" size={18} color={'#333333E5'} />
             <TextInput
@@ -600,7 +600,7 @@ const CreateWorkout = ({navigation, route}) => {
         </LinearGradient>
       </View>
       {/* {bannerAdsDisplay()} */}
-          <BannerAdd bannerAdId={bannerAdId} />
+      <BannerAdd bannerAdId={bannerAdId} />
     </>
   );
 };

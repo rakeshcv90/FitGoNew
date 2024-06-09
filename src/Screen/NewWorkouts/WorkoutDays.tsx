@@ -112,7 +112,7 @@ const WorkoutDays = ({navigation, route}: any) => {
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
         const result: any = analyzeExerciseData(res.data?.user_details);
-        console.log('------>', result,selected);
+        console.log('------>', result, selected);
         if (result.two.length == 0) {
           let day = parseInt(result.one[result.one.length - 1]);
           for (const item of Object.entries(data?.days)) {
@@ -123,7 +123,7 @@ const WorkoutDays = ({navigation, route}: any) => {
               setDay(index + 1);
               break;
             } else {
-              setSelected(day );
+              setSelected(day);
               setDay(day + 1);
               // break;
             }
@@ -724,7 +724,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                       {
                         fontSize: DeviceHeigth < 1280 ? 16 : 14,
                         color:
-                          !selectedIndex&& item?.total_rest != 0
+                          !selectedIndex && item?.total_rest != 0
                             ? '#333333B2'
                             : AppColor.BLACK,
                         marginBottom: 10,
@@ -749,10 +749,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                       style={[
                         styles.small,
                         {
-                          color:
-                            !selectedIndex 
-                              ? '#33333380'
-                              : AppColor.BLACK,
+                          color: !selectedIndex ? '#33333380' : AppColor.BLACK,
                         },
                       ]}>
                       {item?.total_rest > 60
@@ -802,9 +799,10 @@ const WorkoutDays = ({navigation, route}: any) => {
       </>
     );
   };
+  const planType = useSelector((state: any) => state.planType);
   const getAdsDisplay = (index: number, item: any) => {
     if (Object.values(data?.days).length >= 1) {
-      if (index == 1) {
+      if (planType < 69 && index == 1) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0 && Object.values(data?.days).length > 7) {
         return getNativeAdsDisplay();
@@ -919,7 +917,7 @@ const WorkoutDays = ({navigation, route}: any) => {
 
       <View></View>
       {/* {bannerAdsDisplay()} */}
-          <BannerAdd bannerAdId={bannerAdId} />
+      <BannerAdd bannerAdId={bannerAdId} />
       <ActivityLoader visible={refresh} />
       <PaddoMeterPermissionModal />
     </View>

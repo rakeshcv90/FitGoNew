@@ -43,6 +43,9 @@ export const AppColor={
     GREEN: '#0A6847',
     ORANGE: '#F38029',
     SUBS_BLUE: '#446AB3',
+    NEW_SUBS_BLUE: '#0055F7',
+    NEW_SUBS_GREEN: '#00BB81',
+    NEW_SUBS_ORANGE: '#FF7E1D',
     SUBS_GREEN: '#07B47E',
   }
   export const Fonts = {
