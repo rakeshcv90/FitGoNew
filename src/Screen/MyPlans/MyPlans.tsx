@@ -152,7 +152,7 @@ const MyPlans = ({navigation}: any) => {
           result.data?.data,
           setEnteredCurrentEvent,
           setEnteredUpcomingEvent,
-          setPlanType
+          setPlanType,
         );
       }
     } catch (error) {
@@ -886,6 +886,7 @@ const MyPlans = ({navigation}: any) => {
           enteredCurrentEvent ? (
             <ExerciseComponentWithEvent
               dayObject={
+                getEditedDayExercise &&
                 getEditedDayExercise[WeekArrayWithEvent[selectedDay]]
                   ? getEditedDayExercise[WeekArrayWithEvent[selectedDay]]
                   : getWeeklyPlansData[WeekArrayWithEvent[selectedDay]]

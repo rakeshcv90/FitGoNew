@@ -1149,7 +1149,7 @@ const HomeNew = ({navigation}) => {
             refreshing={refresh}
             onRefresh={() => {
               ChallengesDataAPI();
-              bannerApi()
+              bannerApi();
             }}
             colors={[AppColor.RED, AppColor.WHITE]}
           />
