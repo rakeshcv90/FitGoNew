@@ -71,6 +71,7 @@ import OfferTerms from '../Screen/Terms&Country/OfferTerms';
 import RewardModal from '../Component/Utilities/RewardModal';
 import NewSubscription from '../Screen/Subscription/NewSubscription';
 import UpcomingEvent from '../Screen/Event/UpcomingEvent';
+import AddWorkouts from '../Screen/MyPlans/AddWorkouts';
 import Leaderboard from '../Screen/Leaderboard/Leaderboard';
 import Winner from '../Screen/Leaderboard/Winner';
 
@@ -88,7 +89,6 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-    
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
 
       <Stack.Screen
@@ -129,7 +129,7 @@ export const LoginStack = () => {
       <Stack.Screen name="NewEditProfile" component={NewEditProfile} />
       <Stack.Screen name="WorkoutsDescription" component={WorkoutDescription} />
       <Stack.Screen name="CountryLocation" component={CountryLocation} />
-      <Stack.Screen name="OfferTerms" component={OfferTerms}/>
+      <Stack.Screen name="OfferTerms" component={OfferTerms} />
       <Stack.Screen name="WorkoutDays" component={WorkoutDays} />
       <Stack.Screen name="OneDay" component={OneDay} />
       <Stack.Screen name="Exercise" component={Exercise} />
@@ -172,6 +172,7 @@ export const LoginStack = () => {
       <Stack.Screen name="WorkoutCategories" component={WorkoutCategories} />
       <Stack.Screen name="UpcomingEvent" component={UpcomingEvent} />
       <Stack.Screen name="NewSubscription" component={NewSubscription} />
+      <Stack.Screen name="AddWorkouts" component={AddWorkouts} />
       <Stack.Screen name="Leaderboard" component={Leaderboard} />
       <Stack.Screen name="Winner" component={Winner} />
     </Stack.Navigator>

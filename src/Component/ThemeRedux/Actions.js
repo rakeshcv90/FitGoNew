@@ -328,3 +328,15 @@ export const setPlanType = data => {
     payload: data,
   };
 };
+export const setBanners=data=>{
+  return{
+    type:types.BANNERS,
+    payload:data
+  }
+}
+export const setEditedExercise=data=>{
+  return{
+    type:types.EDITED_DAY_EXERCISE,
+    payload:data
+  }
+}

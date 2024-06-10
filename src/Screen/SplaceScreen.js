@@ -8,6 +8,7 @@ import * as RNIap from 'react-native-iap';
 import {
   Setmealdata,
   setAllExercise,
+  setBanners,
   setChallengesData,
   setCompleteProfileData,
   setCustomWorkoutData,
@@ -22,7 +23,7 @@ import {
   setUserProfileData,
   setVideoLocation,
 } from '../Component/ThemeRedux/Actions';
-import VersionNumber from 'react-native-version-number';
+import VersionNumber, {appVersion} from 'react-native-version-number';
 import DeviceInfo from 'react-native-device-info';
 import axios from 'axios';
 import {showMessage} from 'react-native-flash-message';
@@ -61,6 +62,10 @@ const SplaceScreen = ({navigation}) => {
 
       Meal_List(uniqueId);
     });
+    if (getUserDataDetails?.id) {
+      getOffertermsStatus();
+    }
+    bannerApi();
     PurchaseDetails();
     getPlanData();
     ProfileDataAPI();
@@ -71,9 +76,6 @@ const SplaceScreen = ({navigation}) => {
     initInterstitial();
     getAllExerciseData();
     ChallengesDataAPI();
-    if (getUserDataDetails?.id) {
-      getOffertermsStatus();
-    }
   }, []);
   //offerTerms
   const getOffertermsStatus = async () => {
@@ -106,9 +108,45 @@ const SplaceScreen = ({navigation}) => {
       }
       loadScreen();
     } catch (error) {
+      loadScreen();
       console.log(error);
       setApiDataLoaded(true);
-      loadScreen();
+    }
+  };
+  //banner Api
+  const bannerApi = async () => {
+    try {
+      const response = await axios(
+        `${NewAppapi.EVENT_BANNERS}?version=${VersionNumber.appVersion}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+
+      if (
+        response?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: response?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (response?.data?.msg == 'version is required') {
+        console.log('version error', response?.data?.msg);
+      } else {
+        const objects = {};
+        response.data.data.forEach(item => {
+          objects[item.name] = item.image;
+        });
+        dispatch(setBanners(objects));
+      }
+    } catch (error) {
+      console.log('BannerApiError', error);
     }
   };
   const ChallengesDataAPI = async () => {

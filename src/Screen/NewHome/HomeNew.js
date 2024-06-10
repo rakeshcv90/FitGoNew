@@ -50,6 +50,7 @@ import {navigationRef} from '../../../App';
 import {showMessage} from 'react-native-flash-message';
 import {
   setAllWorkoutData,
+  setBanners,
   setChallengesData,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
@@ -79,6 +80,7 @@ import Banners from '../../Component/Utilities/Banner';
 import {checkLocationPermission} from '../Terms&Country/LocationPermission';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import {handleStart} from '../../Component/Utilities/Bannerfunctions';
+import FitCoins from '../../Component/Utilities/FitCoins';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -93,7 +95,9 @@ const GradientText = ({item}) => {
         alignItems: 'flex-start',
         alignSelf: 'center',
       }}>
-      <Svg height="40" width={DeviceWidth * 0.9}>
+      <Svg
+        height="40"
+        style={{padding: 10, width: DeviceWidth * 0.7, borderWidth: 1}}>
         <SvgGrad id="grad" x1="0" y1="0" x2="100%" y2="0">
           <Stop offset="0" stopColor={gradientColors[0]} />
           <Stop offset="1" stopColor={gradientColors[1]} />
@@ -216,6 +220,7 @@ const HomeNew = ({navigation}) => {
           : 'com-apple.voice.compact.en-AU.Karen',
     },
   ];
+  // banners
   useEffect(() => {
     if (getOfferAgreement?.location == 'India') {
       if (enteredCurrentEvent && enteredUpcomingEvent) {
@@ -254,6 +259,42 @@ const HomeNew = ({navigation}) => {
       console.log('outside');
     }
   });
+  //banner api
+  const bannerApi = async () => {
+    try {
+      const response = await axios(
+        `${NewAppapi.EVENT_BANNERS}?version=${VersionNumber.appVersion}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+
+      if (
+        response?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: response?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (response?.data?.msg == 'version is required') {
+        console.log('version error', response?.data?.msg);
+      } else {
+        const objects = {};
+        response.data.data.forEach(item => {
+          objects[item.name] = item.image;
+        });
+        dispatch(setBanners(objects));
+      }
+    } catch (error) {
+      console.log('BannerApiError', error);
+    }
+  };
   useEffect(() => {
     if (isFocused) {
       allWorkoutApi();
@@ -1108,6 +1149,7 @@ const HomeNew = ({navigation}) => {
             refreshing={refresh}
             onRefresh={() => {
               ChallengesDataAPI();
+              bannerApi()
             }}
             colors={[AppColor.RED, AppColor.WHITE]}
           />
@@ -1115,7 +1157,7 @@ const HomeNew = ({navigation}) => {
         style={styles.container}
         nestedScrollEnabled>
         <View style={styles.profileView}>
-          <GradientText
+          {/* <GradientText
             item={
               getTimeOfDayMessage() +
               ', ' +
@@ -1125,18 +1167,22 @@ const HomeNew = ({navigation}) => {
                   : getUserDataDetails.name.split(' ')[0]
                 : 'Guest')
             }
-          />
+          /> */}
           <Text
-            onPress={() => {
-              const today = moment().day();
-              if (today == 0 || today == 6) {
-                navigation.navigate('Winner');
-              } else {
-                navigation.navigate('Leaderboard');
-              }
+            style={{
+              color: AppColor.RED,
+              fontSize: 20,
+              fontFamily: Fonts.MONTSERRAT_BOLD,
             }}>
-            coins
+            {getTimeOfDayMessage() +
+              ', ' +
+              (Object.keys(getUserDataDetails).length > 0
+                ? getUserDataDetails.name == null
+                  ? 'Guest'
+                  : getUserDataDetails.name.split(' ')[0]
+                : 'Guest')}
           </Text>
+          <FitCoins coins={25} />
         </View>
         <Banners type={BannerType} navigation={navigation} />
         {currentChallenge?.length > 0 && (
@@ -2039,8 +2085,12 @@ var styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
   },
   profileView: {
-    width: '95%',
+    alignSelf: 'center',
     marginVertical: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: DeviceWidth * 0.95,
   },
   monetText: {
     fontSize: 12,
