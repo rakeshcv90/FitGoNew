@@ -149,6 +149,7 @@ const HomeNew = ({navigation}) => {
   const [Calories, setCalories] = useState(0);
   const caloriesRef = useRef(Calories);
   const [distance, setDistance] = useState(0);
+  const [myRankData, setMyRankData] = useState([]);
   const distanceRef = useRef(distance);
   const getRewardModalStatus = useSelector(
     state => state?.getRewardModalStatus,
@@ -297,6 +298,7 @@ const HomeNew = ({navigation}) => {
   };
   useEffect(() => {
     if (isFocused) {
+      getLeaderboardDataAPI();
       allWorkoutApi();
       initInterstitial();
       ChallengesDataAPI();
@@ -1134,6 +1136,25 @@ const HomeNew = ({navigation}) => {
     return colorPercent;
   };
 
+  const getLeaderboardDataAPI = async () => {
+    try {
+      const result = await axios({
+        // url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${appVersion}`,
+        url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=1.18`,
+      });
+      if (result.data) {
+        const myRank = result.data?.data?.findIndex(
+          item => item?.id == getUserDataDetails?.id,
+        );
+        setMyRankData(result.data?.data[myRank]);
+        // console.log('RANK DATA', myRankData);
+      }
+      setRefresh(false);
+    } catch (error) {
+      console.log(error);
+      setRefresh(false);
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -1150,6 +1171,7 @@ const HomeNew = ({navigation}) => {
             onRefresh={() => {
               ChallengesDataAPI();
               bannerApi();
+              getLeaderboardDataAPI();
             }}
             colors={[AppColor.RED, AppColor.WHITE]}
           />
@@ -1182,7 +1204,19 @@ const HomeNew = ({navigation}) => {
                   : getUserDataDetails.name.split(' ')[0]
                 : 'Guest')}
           </Text>
-          <FitCoins coins={25} />
+          {enteredCurrentEvent && (
+            <FitCoins
+              onPress={() => {
+                const today = moment().day();
+                if (today == 0 || today == 6) {
+                  navigation.navigate('Winner');
+                } else {
+                  navigation.navigate('Leaderboard');
+                }
+              }}
+              coins={myRankData?.fit_coins}
+            />
+          )}
         </View>
         <Banners type={BannerType} navigation={navigation} />
         {currentChallenge?.length > 0 && (

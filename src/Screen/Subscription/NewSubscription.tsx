@@ -35,7 +35,6 @@ import {useIsFocused} from '@react-navigation/native';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import Carousel from 'react-native-snap-carousel';
 
-
 const NewSubscription = ({navigation}: any) => {
   const dispatch = useDispatch();
   const getInAppPurchase = useSelector((state: any) => state.getInAppPurchase);
@@ -439,9 +438,14 @@ const NewSubscription = ({navigation}: any) => {
         );
       } else {
         dispatch(setPurchaseHistory(result.data.data));
-        const findIndex = getInAppPurchase?.findIndex(
-          (item: any) => result.data?.data?.product_id == item?.productId,
-        );
+        const findIndex = getInAppPurchase?.findIndex((item: any) => {
+          const price: string = findKeyInObject(
+            item,
+            PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
+          );
+          // console.log('price', price);
+          return price.includes(getPurchaseHistory?.plan_value);
+        });
         findIndex == -1 ? setCurrentSelected(2) : setCurrentSelected(findIndex);
         EnteringEventFunction(
           dispatch,
@@ -496,8 +500,6 @@ const NewSubscription = ({navigation}: any) => {
         style={{
           flex: 1,
           padding: 10,
-          // paddingHorizontal: 15,
-          // margin: 10,
           borderColor: color,
           borderRadius: 5,
           borderWidth: 1,
@@ -505,21 +507,14 @@ const NewSubscription = ({navigation}: any) => {
           justifyContent: 'center',
           alignItems: 'center',
           height: DeviceHeigth * 0.65,
+          // !normalizedPrice.includes('₹30') &&
+          // !normalizedPrice.includes('₹69') &&
+          // !PLATFORM_IOS &&
+          // getPurchaseHistory?.plan_value == null
+          //   ? DeviceHeigth * 0.65
+          //   : DeviceHeigth * 0.55,
           width: DeviceWidth * 0.88,
           alignSelf: 'center',
-          // opacity: index < lowOpacity ? 0.7 : 1,
-          // shadowColor: 'grey',
-          // ...Platform.select({
-          //   ios: {
-          //     //shadowColor: '#000000',
-          //     shadowOffset: {width: 0, height: 2},
-          //     shadowOpacity: 0.2,
-          //     shadowRadius: 4,
-          //   },
-          //   android: {
-          //     elevation: 3,
-          //   },
-          // }),
         }}>
         {getPurchaseHistory?.product_id &&
           normalizedPrice.includes(`${getPurchaseHistory?.plan_value}.00`) && (
@@ -836,6 +831,7 @@ const NewSubscription = ({navigation}: any) => {
                   lineHeight: 20,
                   fontFamily: Fonts.MONTSERRAT_MEDIUM,
                   color: '#333333',
+                  textDecorationLine: 'underline',
                 }}>
                 {PLATFORM_IOS ? 'Restore Purchase' : 'Manage Subscription'}
               </Text>

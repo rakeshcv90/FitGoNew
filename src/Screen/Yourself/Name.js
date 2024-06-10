@@ -7,7 +7,7 @@ import {
   Keyboard,
 } from 'react-native';
 import React, {useState} from 'react';
-import {AppColor, Fonts} from '../../Component/Color';
+import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import ProgressBar from './ProgressBar';
 import {TextInput} from 'react-native-paper';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
@@ -52,7 +52,7 @@ const Name = ({navigation, route}) => {
           }}
         />
       </View>
-      <KeyboardAvoidingView behavior="position">
+      <KeyboardAvoidingView behavior={PLATFORM_IOS ? 'position' : 'height'}>
         {name !== '' && (
           <TouchableOpacity
             style={styles.buttons}

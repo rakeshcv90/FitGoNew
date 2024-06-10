@@ -302,12 +302,25 @@ const Signup = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
+      } else if (
+        data.data?.msg == 'User already registered with deviceID and active'
+      ) {
+        console.log(data.data)
+        setForLoading(false);
+        showMessage({
+          message: `It looks like your device ID is already registered with us using your ${data.data?.email}. Please log in with your existing credentials.`,
+          floating: true,
+          duration: 3000,
+          type: 'error',
+          icon: {icon: 'auto', position: 'left'},
+        });
+        //action.resetForm();
       } else {
         setForLoading(false);
         showMessage({
           message: data.data.msg,
           floating: true,
-          duration: 500,
+          duration: 1000,
           type: 'error',
           icon: {icon: 'auto', position: 'left'},
         });
@@ -1052,15 +1065,15 @@ const Signup = ({navigation}) => {
             </Text>
 
             <TouchableOpacity
-            style={{
-              backgroundColor: AppColor.NEW_DARK_RED,
-              width: '50%',
-              paddingVertical: 10,
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: 5,
-              marginTop: 10
-            }}
+              style={{
+                backgroundColor: AppColor.NEW_DARK_RED,
+                width: '50%',
+                paddingVertical: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 5,
+                marginTop: 10,
+              }}
               onPress={() => {
                 setCancelLogin(false);
               }}>
@@ -1070,7 +1083,7 @@ const Signup = ({navigation}) => {
                   fontWeight: '500',
                   color: AppColor.WHITE,
                   fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                  lineHeight: 20
+                  lineHeight: 20,
                 }}>
                 OK
               </Text>

@@ -74,6 +74,7 @@ const NewProfile = ({navigation}) => {
   const [notificationTimer, setNotificationTimer] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
+  const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const setAlarmIsEnabled = data => {
     dispatch(setIsAlarmEnabled(data));
   };
@@ -825,7 +826,9 @@ const NewProfile = ({navigation}) => {
       )}
       <View style={styles.card}>
         {getUserDataDetails.email != null
-          ? CardData?.map((v, i) => (
+          ? CardData?.map((v, i) => {
+            if(getOfferAgreement?.location != 'India' && v.txt == 'Subscription') return
+            return(
               <TouchableOpacity
                 key={i}
                 style={{justifyContent: 'center', alignItems: 'center'}}
@@ -858,7 +861,7 @@ const NewProfile = ({navigation}) => {
                   </Text>
                 )}
               </TouchableOpacity>
-            ))
+            )})
           : CardData1?.map((v, i) => (
               <TouchableOpacity
                 key={i}

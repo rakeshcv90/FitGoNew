@@ -109,6 +109,7 @@ export const NewAppapi = {
   EDIT_EVENT_EXERCISE:NewApi+'user_edit_exercises',
   GET_EDITED_EXERCISES:NewApi+'get_weekday_exercise',
   GET_COINS:NewApi+'exercise_points_day',
+  DELETE_EVENT_WEEKLY_DATA:NewApi+'delete_exercise_event',
   GET_LEADERBOARD: NewApi + 'leader_board', //Done App Version
   POST_API_FOR_COIN_CALCULATION: NewApi + 'add_coins', //Done App Version
 };

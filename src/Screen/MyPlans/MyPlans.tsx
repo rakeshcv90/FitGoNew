@@ -115,6 +115,7 @@ const MyPlans = ({navigation}: any) => {
       dispatch(setWeeklyPlansData(All_Weeks_Data)),
     );
     checkMealAddCount();
+    PurchaseDetails()
   }, []);
   const getAllExerciseData = async () => {
     try {
@@ -186,7 +187,7 @@ const MyPlans = ({navigation}: any) => {
   const getEarnedCoins = async () => {
     try {
       const response = await axios(
-        `${NewAppapi.GET_COINS}?user_id=${getUserDataDetails?.id}&day=${selectedDay}`,
+        `${NewAppapi.GET_COINS}?user_id=${getUserDataDetails?.id}&day=${WeekArrayWithEvent[selectedDay]}`,
       );
       if (
         response?.data?.msg == 'Please update the app to the latest version.'
@@ -201,6 +202,7 @@ const MyPlans = ({navigation}: any) => {
       } else if (response?.data?.error) {
         console.log('inavlid day--->', response?.data?.error);
       } else {
+        console.log('response.data',response.data)
         setCoins(response?.data?.responses);
       }
     } catch (error) {

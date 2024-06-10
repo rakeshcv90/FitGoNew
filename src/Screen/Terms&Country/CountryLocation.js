@@ -138,7 +138,7 @@ const CountryLocation = ({navigation, route}) => {
           resizeMode="contain"
         />
         <FitText
-          value="Allow us to access your current location"
+          value="Allow your current location"
           type="Heading"
           fontSize={20}
           fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
@@ -146,10 +146,10 @@ const CountryLocation = ({navigation, route}) => {
         />
         <FitText
           type="SubHeading"
-          value="We need your current location to provide you"
+          value="We need your current location to provide"
           textAlign="center"
         />
-        <FitText type="SubHeading" value="with better services" textAlign="center" />
+        <FitText type="SubHeading" value="you with better services" textAlign="center" />
       </View>
       <View style={styles.View2}>
         <NewButton

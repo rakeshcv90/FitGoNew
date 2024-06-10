@@ -395,7 +395,7 @@ const UpcomingEvent = ({navigation}: any) => {
               </TouchableOpacity>
             )}
         </ShadowCard>
-        {getPurchaseHistory && (
+        {getPurchaseHistory?.plan_value != null && (
           <>
             <FitText value="Your Plan" type="SubHeading" />
             <ShadowCard
@@ -571,50 +571,52 @@ const UpcomingEvent = ({navigation}: any) => {
           </>
         )}
       </ScrollView>
-      <View
-        style={{
-          ...ShadowStyle,
-          width: DeviceWidth,
-          backgroundColor: AppColor.WHITE,
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: DeviceWidth / 3,
-          borderTopColor: '#00000024',
-          borderTopWidth: 0.5,
-        }}>
-        <TouchableOpacity
-          onPress={() => setOpenChange(true)}
+      {getPurchaseHistory?.plan_value != null && (
+        <View
           style={{
-            width: DeviceWidth * 0.9,
+            ...ShadowStyle,
+            width: DeviceWidth,
+            backgroundColor: AppColor.WHITE,
             justifyContent: 'center',
             alignItems: 'center',
-            borderRadius: 5,
-            borderWidth: 1,
-            borderColor: AppColor.NEW_DARK_RED,
-            paddingVertical: 10,
+            height: DeviceWidth / 3,
+            borderTopColor: '#00000024',
+            borderTopWidth: 0.5,
           }}>
+          <TouchableOpacity
+            onPress={() => setOpenChange(true)}
+            style={{
+              width: DeviceWidth * 0.9,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 5,
+              borderWidth: 1,
+              borderColor: AppColor.NEW_DARK_RED,
+              paddingVertical: 10,
+            }}>
+            <FitText
+              type="normal"
+              value="Change Plan"
+              color={AppColor.NEW_DARK_RED}
+              fontFamily={Fonts.MONTSERRAT_MEDIUM}
+            />
+          </TouchableOpacity>
           <FitText
             type="normal"
-            value="Change Plan"
+            value="Cancel Plan"
             color={AppColor.NEW_DARK_RED}
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
+            marginVertical={15}
+            onPress={() => {
+              PLATFORM_IOS
+                ? Linking.openSettings()
+                : Linking.openURL(
+                    'https://play.google.com/store/account/subscriptions',
+                  );
+            }}
           />
-        </TouchableOpacity>
-        <FitText
-          type="normal"
-          value="Cancel Plan"
-          color={AppColor.NEW_DARK_RED}
-          fontFamily={Fonts.MONTSERRAT_MEDIUM}
-          marginVertical={15}
-          onPress={() => {
-            PLATFORM_IOS
-              ? Linking.openSettings()
-              : Linking.openURL(
-                  'https://play.google.com/store/account/subscriptions',
-                );
-          }}
-        />
-      </View>
+        </View>
+      )}
       <ChangeModal />
       <ActivityLoader visible={loading} />
     </SafeAreaView>

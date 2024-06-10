@@ -448,7 +448,9 @@ const Exercise = ({navigation, route}: any) => {
     try {
       const res = await axios({
         url:
-          NewAppapi.DELETE_TRACK_EXERCISE +
+          (enteredCurrentEvent
+            ? NewAppapi.DELETE_EVENT_WEEKLY_DATA
+            : NewAppapi.DELETE_TRACK_EXERCISE) +
           '?workout_id=' +
           `-${day + 1}` +
           '&user_id=' +
