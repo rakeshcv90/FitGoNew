@@ -72,7 +72,7 @@ const Leaderboard = ({navigation, route}: any) => {
   const renderItem = useMemo(
     () =>
       ({item, index}: any) => {
-        if (index > 4 || mainData[0]?.rank == item?.rank) return null;
+        if (index > 4 || item?.rank == 1) return null;
         const Name = item?.name.substring(0, 1);
         return (
           <View
@@ -213,7 +213,7 @@ const Leaderboard = ({navigation, route}: any) => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <DietPlanHeader
-        header="FitFame"
+        header="Leaderboard"
         h={DeviceWidth * 0.15}
         paddingTop={PLATFORM_IOS ? DeviceHeigth * 0.025 : DeviceHeigth * 0.02}
         shadow

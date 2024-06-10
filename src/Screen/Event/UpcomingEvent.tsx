@@ -221,7 +221,7 @@ const UpcomingEvent = ({navigation}: any) => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <DietPlanHeader
-        header="Upcoming Challenge"
+        header={enteredUpcomingEvent ? 'Upcoming Challenge' : 'My Challenge'}
         h={DeviceWidth * 0.15}
         paddingTop={
           Platform.OS == 'android' ? DeviceHeigth * 0.02 : DeviceHeigth * 0.025
@@ -350,7 +350,11 @@ const UpcomingEvent = ({navigation}: any) => {
           </LinearGradient>
           <FitText
             type="SubHeading"
-            value="Your challenge will start on Monday"
+            value={
+              enteredUpcomingEvent
+                ? 'Gear Up for Your Next Challenge!'
+                : 'Your challenge will start on Monday'
+            }
             fontStyle="italic"
             fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
             fontWeight="700"
@@ -358,7 +362,11 @@ const UpcomingEvent = ({navigation}: any) => {
           />
           <FitText
             type="normal"
-            value={`You can do the exercise using our App until the challenge begins.`}
+            value={
+              enteredUpcomingEvent
+                ? 'Every week is a new opportunity. Gear up for your next challenge!'
+                : `You can do the exercise using our App until the challenge begins.`
+            }
             textAlign="center"
             color="#333333"
             fontFamily={Fonts.MONTSERRAT_MEDIUM}

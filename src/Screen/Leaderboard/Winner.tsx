@@ -17,7 +17,7 @@ import {useSelector} from 'react-redux';
 import {localImage} from '../../Component/Image';
 import FitText from '../../Component/Utilities/FitText';
 import AnimatedLottieView from 'lottie-react-native';
-import { appVersion } from 'react-native-version-number';
+import {appVersion} from 'react-native-version-number';
 
 type TypeData = {
   name: string;
@@ -317,7 +317,8 @@ const Winner = ({navigation}: any) => {
                   position: 'relative',
                   // top: 10,
                 }}>
-                Amazing job! You've won the challenge. Claim your well-deserved reward
+                Amazing job! You've won the challenge. Claim your well-deserved
+                reward
                 <Text
                   style={{
                     fontFamily: Fonts.MONTSERRAT_BOLD,
@@ -434,7 +435,9 @@ const Winner = ({navigation}: any) => {
             />
             <FitText
               type="normal"
-              value="👍 Keep Going!"
+              value={`👍 Don’t lose hope! "Losing a challenge today means winning a stronger you 
+              Tomorrow!
+              `}
               color={AppColor.WHITE}
               fontWeight="400"
               marginVertical={2}

@@ -490,7 +490,7 @@ const NewSubscription = ({navigation}: any) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => {
-          setCurrentSelected(index);
+          // setCurrentSelected(index);
           setSelected(item);
         }}
         style={{
@@ -705,7 +705,11 @@ const NewSubscription = ({navigation}: any) => {
             <View style={{height: 50, width: '100%'}} />
           )}
         <GradientButton
-          text="Proceed"
+          text={
+            price.includes(getPurchaseHistory?.plan_value)
+              ? 'Purchased'
+              : 'Proceed'
+          }
           h={50}
           colors={
             normalizedPrice.includes('₹30') || normalizedPrice.includes('₹69')
@@ -734,19 +738,22 @@ const NewSubscription = ({navigation}: any) => {
           onPress={() => {
             handlePurchase(item);
           }}
-          opacity={
-            getPurchaseHistory?.product_id != selected?.productId ? 1 : 0.8
-          }
-          disabled={getPurchaseHistory?.product_id == selected?.productId}
+          // opacity={price.includes(getPurchaseHistory?.plan_value) ? 0.8 : 1}
+          disabled={price.includes(getPurchaseHistory?.plan_value)}
         />
       </TouchableOpacity>
     );
   };
   const handlePurchase = (item: any) => {
-    if (getPurchaseHistory) {
-      const index = getInAppPurchase?.findIndex(
-        (item: any) => getPurchaseHistory?.product_id == item?.productId,
-      );
+    if (getPurchaseHistory?.plan_value != null) {
+      const index = getInAppPurchase?.findIndex((item: any) => {
+        const price: string = findKeyInObject(
+          item,
+          PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
+        );
+        // console.log('price', price);
+        return price.includes(getPurchaseHistory?.plan_value);
+      });
       if (currentSelected < index) {
         showMessage({
           message: 'You can not downgrade the Plan',
@@ -857,7 +864,9 @@ const NewSubscription = ({navigation}: any) => {
                 {currentSelected == index ? (
                   <TouchableOpacity
                     key={index}
-                    // onPress={handlePress}
+                    onPress={() => {
+                      setCurrentSelected(index);
+                    }}
                     style={[
                       styles.tabButton,
                       {
@@ -886,7 +895,9 @@ const NewSubscription = ({navigation}: any) => {
                 ) : (
                   <TouchableOpacity
                     key={index}
-                    // onPress={handlePress}
+                    onPress={() => {
+                      setCurrentSelected(index);
+                    }}
                     style={[
                       styles.tabButton,
                       {
