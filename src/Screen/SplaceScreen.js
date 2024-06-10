@@ -8,6 +8,7 @@ import * as RNIap from 'react-native-iap';
 import {
   Setmealdata,
   setAllExercise,
+  setBanners,
   setChallengesData,
   setCompleteProfileData,
   setCustomWorkoutData,
@@ -19,7 +20,7 @@ import {
   setUserProfileData,
   setVideoLocation,
 } from '../Component/ThemeRedux/Actions';
-import VersionNumber from 'react-native-version-number';
+import VersionNumber, {appVersion} from 'react-native-version-number';
 import DeviceInfo from 'react-native-device-info';
 import axios from 'axios';
 import {showMessage} from 'react-native-flash-message';
@@ -34,9 +35,10 @@ import {
 import {interstitialAdId} from '../Component/AdsId';
 import {LogOut} from '../Component/LogOut';
 import RNFetchBlob from 'rn-fetch-blob';
+import {Form} from 'formik';
 
 const products = Platform.select({
-  ios: ['fitme_noob',  'fitme_pro',  'fitme_legend'],
+  ios: ['fitme_noob', 'fitme_pro', 'fitme_legend'],
   android: ['fitme_monthly', 'a_monthly', 'fitme_legend'],
 });
 
@@ -57,6 +59,10 @@ const SplaceScreen = ({navigation}) => {
 
       Meal_List(uniqueId);
     });
+    if (getUserDataDetails?.id) {
+      getOffertermsStatus();
+    }
+    bannerApi();
     getPlanData();
     ProfileDataAPI();
     Object.keys(getUserDataDetails).length > 0 && PurchaseDetails(),
@@ -66,9 +72,6 @@ const SplaceScreen = ({navigation}) => {
     initInterstitial();
     getAllExerciseData();
     ChallengesDataAPI();
-    if (getUserDataDetails?.id) {
-      getOffertermsStatus();
-    }
   }, []);
   //offerTerms
   const getOffertermsStatus = async () => {
@@ -102,6 +105,42 @@ const SplaceScreen = ({navigation}) => {
     } catch (error) {
       console.log(error);
       setApiDataLoaded(true);
+    }
+  };
+  //banner Api
+  const bannerApi = async () => {
+    try {
+      const response = await axios(
+        `${NewAppapi.EVENT_BANNERS}?version=${VersionNumber.appVersion}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+
+      if (
+        response?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: response?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (response?.data?.msg == 'version is required') {
+        console.log('version error', response?.data?.msg);
+      } else {
+        const objects = {};
+        response.data.data.forEach(item => {
+          objects[item.name] = item.image;
+        });
+        dispatch(setBanners(objects));
+      }
+    } catch (error) {
+      console.log('BannerApiError', error);
     }
   };
   const ChallengesDataAPI = async () => {
@@ -138,22 +177,19 @@ const SplaceScreen = ({navigation}) => {
   };
   const loadScreen = () => {
     //to check the condtion id user is already login and have not provided consent yet
-  
-      if (
-        getUserDataDetails?.id &&
-        getUserDataDetails?.profile_compl_status == 1
-      ) {
-        if(getOfferAgreement?.term_conditon){
-          navigation.replace('BottomTab');
-        }else{
-          navigation.replace('OfferTerms');
-        }
-       
+
+    if (
+      getUserDataDetails?.id &&
+      getUserDataDetails?.profile_compl_status == 1
+    ) {
+      if (getOfferAgreement?.term_conditon) {
+        navigation.replace('BottomTab');
       } else {
-
-        navigation.replace('LetsStart');
+        navigation.replace('OfferTerms');
       }
-
+    } else {
+      navigation.replace('LetsStart');
+    }
   };
   if (loaded) {
     setLoaded(false);

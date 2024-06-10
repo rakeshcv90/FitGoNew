@@ -19,21 +19,16 @@ import NewHeader from '../../Component/Headers/NewHeader';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import moment from 'moment';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import VersionNumber from 'react-native-version-number';
 import LinearGradient from 'react-native-linear-gradient';
-import GradientButton from '../../Component/GradientButton';
 import axios from 'axios';
-import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
-import {
-  GestureHandlerRootView,
-  PanGestureHandler,
-} from 'react-native-gesture-handler';
 import Timer from '../../Component/Timer';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  setAllExercise,
   setAllWorkoutData,
   setCurrentSelectedDay,
+  setEditedExercise,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
   setFitmeMealAdsCount,
@@ -46,16 +41,17 @@ import {
 import RNFetchBlob from 'rn-fetch-blob';
 import {showMessage} from 'react-native-flash-message';
 import {useFocusEffect} from '@react-navigation/native';
-import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
-import Carousel from 'react-native-snap-carousel';
 import AnimatedLottieView from 'lottie-react-native';
 import {AlarmNotification} from '../../Component/Reminder';
 import notifee from '@notifee/react-native';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import analytics from '@react-native-firebase/analytics';
-import FastImage from 'react-native-fast-image';
-import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
+import {WeekTabWithEvents, WeekTabWithoutEvent} from './Tabs';
+import {
+  ExerciseComponentWithEvent,
+  ExerciseComponetWithoutEvents,
+} from './ExerciseComponent';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -66,198 +62,19 @@ const WeekArray = Array(7)
         .subtract(moment().isoWeekday() - 1, 'days')
         .format('dddd')),
   );
+const WeekArrayWithEvent = Array(5)
+  .fill(0)
+  .map(
+    (item, index) =>
+      (item = moment()
+        .add(index, 'days')
+        .subtract(moment().isoWeekday() - 1, 'days')
+        .format('dddd')),
+  );
 const All_Weeks_Data = {};
-const WeekTab = ({
-  day,
-  dayIndex,
-  selectedDay,
-  setSelectedDay,
-  WeekStatus,
-}: any) => {
-  return (
-    <TouchableOpacity
-      key={dayIndex}
-      onPress={() => setSelectedDay(dayIndex)}
-      style={{
-        alignItems: 'center',
-        alignSelf: 'center',
-        justifyContent: 'center',
-        backgroundColor: day == moment().format('dddd') ? '#92E3A94D' : 'white',
-        borderColor:
-          day == moment().format('dddd') ? AppColor.NEW_GREEN_DARK : 'white',
-        borderRadius: day == moment().format('dddd') ? 25 : 0,
-        padding: 5,
-        borderWidth: day == moment().format('dddd') ? 1.5 : 0,
-        width: 45,
-        height: 45,
-      }}>
-      <Text
-        style={[
-          styles.labelStyle,
-          {
-            color:
-              selectedDay == dayIndex
-                ? AppColor.NEW_GREEN_DARK
-                : AppColor.BoldText,
-            fontWeight: '600',
-            textTransform: 'capitalize',
-          },
-        ]}>
-        {day.substring(0, 3)}
-      </Text>
-      <View>
-        {WeekStatus?.includes(WeekArray[dayIndex]) ? (
-          <Image
-            source={localImage.RedTick}
-            style={{width: 10, height: 10, marginBottom: -8}}
-            resizeMode="contain"
-          />
-        ) : selectedDay == dayIndex ? (
-          <>
-            <View
-              style={{
-                width: DeviceWidth * 0.05,
-                height: 1,
-              }}
-            />
-            <LinearGradient
-              colors={[AppColor.NEW_GREEN_DARK, AppColor.NEW_GREEN_DARK]}
-              start={{x: 0, y: 1}}
-              end={{x: 1, y: 0}}
-              style={{
-                width: DeviceWidth * 0.03,
-                height: 2,
-                alignSelf: 'center',
-              }}
-            />
-          </>
-        ) : (
-          <View
-            style={{
-              width: 3,
-              height: 3,
-              borderRadius: 5,
-              backgroundColor: AppColor.BoldText,
-            }}
-          />
-        )}
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-const Box = ({item, index}: any) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [visible, setVisible] = useState(false);
-  const avatarRef = React.createRef();
-  return (
-    <TouchableOpacity
-      key={index}
-      onPress={() => {
-        AnalyticsConsole(`${item?.exercise_title?.split(' ')[0]}_DESC`);
-        setVisible(true);
-      }}
-      activeOpacity={1}
-      style={{flexDirection: 'row', padding: 10, marginVertical: 5}}>
-      {/* <View
-          style={{
-            height: 60,
-            width: 60,
-            // backgroundColor: AppColor.WHITE,
-            // borderRadius: 10,
-          }}> */}
-      {/* {isLoading && (
-            <ShimmerPlaceholder
-              style={{height: 75, width: 75, alignSelf: 'center'}}
-              autoRun
-              ref={avatarRef}
-            />
-          )} */}
-      <View
-        style={{
-          height: 50,
-          width: 50,
-          borderRadius: 5,
-          borderWidth: 0.5,
-          borderColor: 'lightgrey',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        {/* <Image
-          source={{uri: item?.exercise_image_link}}
-          onLoad={() => setIsLoading(false)}
-          style={{
-            height: 40,
-            width: 40,
-            alignSelf: 'center',
-          }}
-          resizeMode="contain"
-        /> */}
-
-        <FastImage
-          fallback={true}
-          // onError={onError}
-          // onLoadEnd={onLoadEnd}
-          // onLoadStart={onLoadStart}
-
-          style={{
-            width: '100%',
-            height: '100%',
-            justifyContent: 'center',
-            alignSelf: 'center',
-          }}
-          source={{
-            uri: item?.exercise_image_link,
-            headers: {Authorization: 'someAuthToken'},
-            priority: FastImage.priority.high,
-          }}
-          resizeMode={FastImage.resizeMode.contain}
-          defaultSource={localImage.NOWORKOUT}
-        />
-      </View>
-      <View
-        style={{
-          alignItems: 'center',
-          marginHorizontal: 20,
-          marginTop: 5,
-        }}>
-        <View>
-          <Text
-            style={{
-              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-              fontSize: 16,
-              fontWeight: '600',
-              color: '#202020',
-              lineHeight: 20,
-            }}>
-            {item?.exercise_title}
-            {/* {item?.exercise_id} */}
-          </Text>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text
-              style={{
-                fontFamily: Fonts.MONTSERRAT_BOLD,
-                fontSize: 12,
-                fontWeight: '600',
-                color: AppColor.BoldText,
-                lineHeight: 30,
-              }}>
-              Time:
-              <Text style={styles.small}>
-                {' '}
-                {item?.exercise_rest}
-                {'   '}
-              </Text>
-            </Text>
-          </View>
-        </View>
-      </View>
-      <WorkoutsDescription data={item} open={visible} setOpen={setVisible} />
-    </TouchableOpacity>
-  );
-};
 const MyPlans = ({navigation}: any) => {
   const [downloaded, setDownloade] = useState(0);
+  const [coins, setCoins] = useState({});
   const [hasAds, setHasAds] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -281,19 +98,43 @@ const MyPlans = ({navigation}: any) => {
   const getWeeklyPlansData = useSelector(
     (state: any) => state.getWeeklyPlansData,
   );
+  const getEditedDayExercise = useSelector(
+    (state: any) => state.getEditedDayExercise,
+  );
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const isAlarmEnabled = useSelector((state: any) => state.isAlarmEnabled);
   const dispatch = useDispatch();
   useEffect(() => {
     initInterstitial();
     allWorkoutApi1();
+    getAllExerciseData();
+    getEarnedCoins();
     getGraphData();
     Promise.all(WeekArray.map(item => getWeeklyAPI(item))).finally(() =>
       dispatch(setWeeklyPlansData(All_Weeks_Data)),
     );
     checkMealAddCount();
   }, []);
+  const getAllExerciseData = async () => {
+    try {
+      const exerciseData = await axios.get(
+        `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
+      );
 
+      if (
+        exerciseData?.data?.msg == 'Please update the app to the latest version'
+      ) {
+        dispatch(setAllExercise([]));
+      } else if (exerciseData?.data?.length > 0) {
+        dispatch(setAllExercise(exerciseData?.data));
+      } else {
+        dispatch(setAllExercise([]));
+      }
+    } catch (error) {
+      dispatch(setAllExercise([]));
+      console.log('All-EXCERSIE-ERROR', error);
+    }
+  };
   const PurchaseDetails = async () => {
     try {
       setRefresh(true);
@@ -339,7 +180,37 @@ const MyPlans = ({navigation}: any) => {
       WeeklyStatusAPI();
     }, [selectedDay]),
   );
-
+  // getCoinsdetails
+  const getEarnedCoins = async () => {
+    try {
+      const response = await axios(
+        `${NewAppapi.GET_COINS}?user_id=${getUserDataDetails?.id}&day=${selectedDay}`,
+      );
+      if (
+        response?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: response?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (response?.data?.error) {
+        console.log('inavlid day--->', response?.data?.error);
+      } else {
+        setCoins(response?.data?.responses);
+      }
+    } catch (error) {
+      showMessage({
+        message: 'Something went wrong.',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+    }
+  };
   const allWorkoutApi1 = async () => {
     try {
       //  setRefresh(true);
@@ -399,7 +270,7 @@ const MyPlans = ({navigation}: any) => {
       setLoader(false);
     } catch (error) {
       setLoader(false);
-      console.error(error, 'DaysAPIERror');
+      console.error(error.response, 'DaysAPIERror');
     }
   };
   const getGraphData = async () => {
@@ -471,26 +342,26 @@ const MyPlans = ({navigation}: any) => {
         downloadCounter++;
         setDownloade((downloadCounter / len) * 100);
       } else {
-      await RNFetchBlob.config({
-        fileCache: true,
-        // IOSBackgroundTask: true, // Add this for iOS background downloads
-        path: filePath,
-        appendExt: '.mp4',
-      })
-        .fetch('GET', data?.exercise_video, {
-          'Content-Type': 'application/mp4',
-          // key: 'Config.REACT_APP_API_KEY',
+        await RNFetchBlob.config({
+          fileCache: true,
+          // IOSBackgroundTask: true, // Add this for iOS background downloads
+          path: filePath,
+          appendExt: '.mp4',
         })
-        .then(res => {
-          setButtonClicked(true);
-          StoringData[data?.exercise_title] = res.path();
-          downloadCounter++;
-          setDownloade((downloadCounter / len) * 100);
-          console.log(downloadCounter);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+          .fetch('GET', data?.exercise_video, {
+            'Content-Type': 'application/mp4',
+            // key: 'Config.REACT_APP_API_KEY',
+          })
+          .then(res => {
+            setButtonClicked(true);
+            StoringData[data?.exercise_title] = res.path();
+            downloadCounter++;
+            setDownloade((downloadCounter / len) * 100);
+            console.log(downloadCounter);
+          })
+          .catch(err => {
+            console.log(err);
+          });
       }
     } catch (error) {
       console.log('ERRRR', error);
@@ -654,18 +525,18 @@ const MyPlans = ({navigation}: any) => {
         //   analytics().logEvent(
         //     `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
         //   );
-          navigation.navigate('Exercise', {
-            allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
-            currentExercise:
-              // trainingCount != -1
-              //   ? exerciseData[trainingCount]
-              getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
-            data: [],
-            day: selectedDay,
-            exerciseNumber: 0,
-            trackerData: res?.data?.inserted_data,
-            type: 'weekly',
-          });
+        navigation.navigate('Exercise', {
+          allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
+          currentExercise:
+            // trainingCount != -1
+            //   ? exerciseData[trainingCount]
+            getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
+          data: [],
+          day: selectedDay,
+          exerciseNumber: 0,
+          trackerData: res?.data?.inserted_data,
+          type: 'weekly',
+        });
         // }
       } else {
         // console.log("ALREADY EXIST",res.data)
@@ -916,6 +787,7 @@ const MyPlans = ({navigation}: any) => {
       }
     }
   };
+  // console.log('exercise---->', getEditedDayExercise[WeekArray[selectedDay]]);
   return (
     <SafeAreaView
       style={{
@@ -923,7 +795,11 @@ const MyPlans = ({navigation}: any) => {
         backgroundColor: AppColor.WHITE,
       }}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <NewHeader header={'Weekly Plan'} SearchButton={false} backButton={false} />
+      <NewHeader
+        header={'Weekly Plan'}
+        SearchButton={false}
+        backButton={false}
+      />
       <View
         style={{
           flex: 1,
@@ -957,26 +833,40 @@ const MyPlans = ({navigation}: any) => {
             Get Fit{' '}
           </Text>
         </View>
-        {/* <View {...panResponder.panHandlers} style={{flex: 1}}> */}
         <View
           style={{
             flexDirection: 'row',
-            width: DeviceWidth * 0.95,
+            width: DeviceWidth * 0.9,
             justifyContent: 'space-between',
             alignItems: 'center',
             alignSelf: 'center',
             marginBottom: DeviceWidth * 0.05,
           }}>
-          {WeekArray.map((item: any, index: number) => (
-            <WeekTab
-              day={item}
-              dayIndex={index}
-              selectedDay={selectedDay}
-              setSelectedDay={setSelectedDay}
-              WeekStatus={WeekStatus}
-            />
-          ))}
+          {enteredCurrentEvent
+            ? WeekArrayWithEvent.map((item: any, index: number) => (
+                <WeekTabWithEvents
+                  day={item}
+                  dayIndex={index}
+                  selectedDay={selectedDay}
+                  setSelectedDay={setSelectedDay}
+                  WeekStatus={WeekStatus}
+                  WeekArray={WeekArrayWithEvent}
+                  dayObject={getWeeklyPlansData}
+                  dayWiseCoins={coins}
+                />
+              ))
+            : WeekArray.map((item: any, index: number) => (
+                <WeekTabWithoutEvent
+                  day={item}
+                  dayIndex={index}
+                  selectedDay={selectedDay}
+                  setSelectedDay={setSelectedDay}
+                  WeekStatus={WeekStatus}
+                  WeekArray={WeekArray}
+                />
+              ))}
         </View>
+
         {loader ? (
           <View
             style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
@@ -991,212 +881,24 @@ const MyPlans = ({navigation}: any) => {
         ) : getWeeklyPlansData[WeekArray[selectedDay]] &&
           getWeeklyPlansData[WeekArray[selectedDay]]?.exercises &&
           getWeeklyPlansData[WeekArray[selectedDay]]?.exercises?.length > 0 ? (
-          <Carousel
-            data={WeekArray}
-            horizontal
-            keyExtractor={(_, index) => index.toString()}
-            itemWidth={DeviceWidth}
-            sliderWidth={DeviceWidth}
-            // onSnapToItem={index => setSelectedDay(index)}
-            onBeforeSnapToItem={index => setSelectedDay(index)}
-            enableSnap
-            activeSlideAlignment="center"
-            firstItem={selectedDay}
-            renderItem={({current, currentIndex}: any) => (
-              <View style={styles.box}>
-                {WeekStatus?.includes(WeekArray[selectedDay]) ? (
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      paddingVertical: 5,
-                    }}>
-                    <AnimatedLottieView
-                      source={require('../../Icon/Images/RedTick.json')}
-                      speed={1}
-                      autoPlay
-                      loop
-                      resizeMode="contain"
-                      style={{
-                        width: DeviceWidth * 0.2,
-                        height: DeviceHeigth * 0.2,
-                      }}
-                    />
-                    <Text
-                      style={{
-                        fontFamily: Fonts.MONTSERRAT_BOLD,
-                        fontSize: 18,
-                        fontWeight: '600',
-                        top: -20,
-                        color: AppColor.LITELTEXTCOLOR,
-                        lineHeight: 30,
-                      }}>
-                      Workout Completed
-                    </Text>
-                    <Text
-                      style={{
-                        fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                        fontSize: 14,
-                        fontWeight: '500',
-                        top: -10,
-                        color: AppColor.LITELTEXTCOLOR,
-                        lineHeight: 20,
-                      }}>
-                      {WeekArray[selectedDay]}
-                    </Text>
-                    <View
-                      style={{
-                        width: DeviceWidth * 0.8,
-                        height: 1,
-                        backgroundColor: 'lightgrey',
-                        marginTop: DeviceWidth * 0.05,
-                      }}
-                    />
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginVertical: DeviceWidth * 0.05,
-                      }}>
-                      <Image
-                        source={{
-                          uri: getWeeklyPlansData[WeekArray[selectedDay]]
-                            ?.image,
-                        }}
-                        // onLoad={() => setIsLoading(false)}
-                        style={{
-                          height: 40,
-                          width: 40,
-                          alignSelf: 'center',
-                          marginRight: 20,
-                        }}
-                        resizeMode="contain"
-                      />
-                      <Text
-                        style={{
-                          fontFamily: Fonts.MONTSERRAT_BOLD,
-                          fontSize: 16,
-                          fontWeight: '700',
-                          color: AppColor.RED1,
-                          lineHeight: 30,
-                          left: -20,
-                        }}>
-                        {getWeeklyPlansData[WeekArray[selectedDay]]?.title}
-                      </Text>
-                    </View>
-                  </View>
-                ) : (
-                  <>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        padding: 10,
-                        // marginVertical: 5,
-                      }}>
-                      <Image
-                        source={{
-                          uri: getWeeklyPlansData[WeekArray[selectedDay]]
-                            ?.image,
-                        }}
-                        // onLoad={() => setIsLoading(false)}
-                        style={{
-                          height: 50,
-                          width: 50,
-                          alignSelf: 'center',
-                        }}
-                        resizeMode="contain"
-                      />
-                      <View
-                        style={{
-                          justifyContent: 'center',
-                          marginHorizontal: 20,
-                          flex: 1,
-                          // width: DeviceWidth * 0.55,
-                        }}>
-                        <Text
-                          style={{
-                            fontFamily: Fonts.MONTSERRAT_BOLD,
-                            fontSize: 16,
-                            fontWeight: '700',
-                            color: AppColor.LITELTEXTCOLOR,
-                            lineHeight: 30,
-                          }}>
-                          {getWeeklyPlansData[WeekArray[selectedDay]]?.title}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                            fontSize: 12,
-                            fontWeight: '600',
-                            color: AppColor.BoldText,
-                            lineHeight: 15,
-                            opacity: 0.7,
-                          }}>
-                          {
-                            getWeeklyPlansData[WeekArray[selectedDay]]
-                              ?.exercises?.length
-                          }{' '}
-                          Exercises
-                        </Text>
-                      </View>
-                      <TouchableOpacity
-                        activeOpacity={0.5}
-                        disabled={visible}
-                        onPress={() => handleStart()}>
-                        <LinearGradient
-                          start={{x: 0, y: 0}}
-                          end={{x: 1, y: 1}}
-                          colors={['#0A93F1', '#2B4E9F']}
-                          style={{
-                            width: DeviceHeigth >= 1024 ? 50 : 35,
-                            height: DeviceHeigth >= 1024 ? 50 : 35,
-                            borderRadius:
-                              DeviceHeigth >= 1024 ? 50 / 2 : 35 / 2,
-                            overflow: 'hidden',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            alignSelf: 'center',
-                            marginLeft: 5,
-                          }}>
-                          <Image
-                            source={localImage.PlayIcon}
-                            style={{
-                              height: DeviceHeigth >= 1024 ? 15 : 10,
-                              width: DeviceHeigth >= 1024 ? 15 : 10,
-                            }}
-                            resizeMode="contain"
-                          />
-                        </LinearGradient>
-                      </TouchableOpacity>
-                    </View>
-                    <FlatList
-                      data={
-                        getWeeklyPlansData[WeekArray[selectedDay]]?.exercises
-                      }
-                      keyExtractor={(item, index) => index.toString()}
-                      refreshControl={
-                        <RefreshControl
-                          refreshing={refresh}
-                          onRefresh={() => PurchaseDetails()}
-                          colors={[AppColor.RED, AppColor.RED]}
-                        />
-                      }
-                      renderItem={({item, index}) => (
-                        <Box item={item} index={index} />
-                      )}
-                      showsVerticalScrollIndicator={false}
-                      initialNumToRender={10}
-                      maxToRenderPerBatch={10}
-                      updateCellsBatchingPeriod={100}
-                      removeClippedSubviews={true}
-                    />
-                  </>
-                )}
-              </View>
-            )}
-            showsHorizontalScrollIndicator={false}
-          />
+          enteredCurrentEvent ? (
+            <ExerciseComponentWithEvent
+              dayObject={
+                getEditedDayExercise[WeekArrayWithEvent[selectedDay]]
+                  ? getEditedDayExercise[WeekArrayWithEvent[selectedDay]]
+                  : getWeeklyPlansData[WeekArrayWithEvent[selectedDay]]
+              }
+              day={WeekArrayWithEvent[selectedDay]}
+              onPress={handleStart}
+              navigation={navigation}
+            />
+          ) : (
+            <ExerciseComponetWithoutEvents
+              dayObject={getWeeklyPlansData[WeekArray[selectedDay]]}
+              day={WeekArray[selectedDay]}
+              onPress={handleStart}
+            />
+          )
         ) : (
           emptyComponent()
         )}

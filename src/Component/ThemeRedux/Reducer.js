@@ -56,6 +56,8 @@ const intialState = {
   enteredUpcomingEvent: false,
   getRewardModalStatus: false,
   getSubsciptionPlan: [],
+  getBanners: {},
+  getEditedDayExercise: {},
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -298,6 +300,16 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, getRewardModalStatus: action.payload};
     case types.SUBSCRIPTION_PLAN:
       return {...state, getSubsciptionPlan: action.payload};
+    case types.BANNERS:
+      return {
+        ...state,
+        getBanners: action.payload,
+      };
+    case types.EDITED_DAY_EXERCISE:
+      return {
+        ...state,
+        getEditedDayExercise: action.payload,
+      };
     default:
       return state;
   }

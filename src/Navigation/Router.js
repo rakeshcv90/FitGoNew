@@ -1,7 +1,7 @@
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/Index';
+import Yourself from '../Screen/Yourself/index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -71,6 +71,7 @@ import OfferTerms from '../Screen/Terms&Country/OfferTerms';
 import RewardModal from '../Component/Utilities/RewardModal';
 import NewSubscription from '../Screen/Subscription/NewSubscription';
 import UpcomingEvent from '../Screen/Event/UpcomingEvent';
+import AddWorkouts from '../Screen/MyPlans/AddWorkouts';
 
 const Stack = createStackNavigator();
 
@@ -86,7 +87,6 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-    
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
 
       <Stack.Screen
@@ -127,7 +127,7 @@ export const LoginStack = () => {
       <Stack.Screen name="NewEditProfile" component={NewEditProfile} />
       <Stack.Screen name="WorkoutsDescription" component={WorkoutDescription} />
       <Stack.Screen name="CountryLocation" component={CountryLocation} />
-      <Stack.Screen name="OfferTerms" component={OfferTerms}/>
+      <Stack.Screen name="OfferTerms" component={OfferTerms} />
       <Stack.Screen name="WorkoutDays" component={WorkoutDays} />
       <Stack.Screen name="OneDay" component={OneDay} />
       <Stack.Screen name="Exercise" component={Exercise} />
@@ -170,6 +170,7 @@ export const LoginStack = () => {
       <Stack.Screen name="WorkoutCategories" component={WorkoutCategories} />
       <Stack.Screen name="UpcomingEvent" component={UpcomingEvent} />
       <Stack.Screen name="NewSubscription" component={NewSubscription} />
+      <Stack.Screen name="AddWorkouts" component={AddWorkouts} />
     </Stack.Navigator>
   );
 };

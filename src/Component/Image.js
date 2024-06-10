@@ -175,4 +175,10 @@ export const localImage = {
   Modal_img: require('../Icon/Images/NewImage2/Modal_img.png'),
   RecommendFitme:require('../Icon/Images/InAppRewards/RecommendFitme.png'),
   ChangePlan:require('../Icon/Images/InAppRewards/ChangePlan.png'),
+  Trophy:require('../Icon/Images/InAppRewards/Trophy.png'),
+  FitCoin:require('../Icon/Images/InAppRewards/FitCoin.png'),
+  testbanner:require('../Icon/Images/InAppRewards/Banner.png'),
+  completed:require('../Icon/Images/InAppRewards/Completed.png'),
+  Missed:require('../Icon/Images/InAppRewards/Missed.png'),
+  EditPen:require('../Icon/Images/InAppRewards/edit.png')
 };

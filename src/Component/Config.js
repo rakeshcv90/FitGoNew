@@ -104,4 +104,10 @@ export const NewAppapi = {
   EVENT_SUBSCRIPTION_GET: NewApi + 'event_details',
   CURRENT_DAY_EVENT_EXERCISE: NewApi + 'user_event__exercise_status',
   POST_REWARDS_EXERCISE: NewApi + 'event_exercise_complete_status', //Done App Version
+  EVENT_BANNERS:NewApi+'get_banners',
+  GET_USER_COINS:NewApi+'exercise_points_day',
+  EDIT_EVENT_EXERCISE:NewApi+'user_edit_exercises',
+  GET_EDITED_EXERCISES:NewApi+'get_weekday_exercise',
+  GET_COINS:NewApi+'exercise_points_day'
+
 };
