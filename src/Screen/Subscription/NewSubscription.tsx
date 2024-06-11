@@ -35,6 +35,7 @@ import {useIsFocused} from '@react-navigation/native';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import Carousel from 'react-native-snap-carousel';
 import ActivityLoader from '../../Component/ActivityLoader';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 
 const NewSubscription = ({navigation}: any) => {
   const dispatch = useDispatch();
@@ -755,6 +756,7 @@ const NewSubscription = ({navigation}: any) => {
           onPress={() => {
             setSelected(item);
             handlePurchase(item);
+            AnalyticsConsole(`Pur_${normalizedPrice}_PLAN`)
           }}
           // opacity={price.includes(getPurchaseHistory?.plan_value) ? 0.8 : 1}
           disabled={price.includes(getPurchaseHistory?.plan_value)}

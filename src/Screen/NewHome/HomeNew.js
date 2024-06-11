@@ -81,9 +81,7 @@ import {checkLocationPermission} from '../Terms&Country/LocationPermission';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import {handleStart} from '../../Component/Utilities/Bannerfunctions';
 import FitCoins from '../../Component/Utilities/FitCoins';
-import FitIcon from '../../Component/Utilities/FitIcon';
-import NewButton from '../../Component/NewButton';
-import FitText from '../../Component/Utilities/FitText';
+import NameUpdateModal from '../../Component/Utilities/NameUpdateModal';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -257,7 +255,7 @@ const HomeNew = ({navigation}) => {
           setBannertype1('new_join');
         });
     }
-  },[]);
+  }, []);
   //banner api
   const bannerApi = async () => {
     try {
@@ -305,19 +303,6 @@ const HomeNew = ({navigation}) => {
       setTimeout(() => {
         ActivityPermission();
       }, 2000);
-      if (getUserDataDetails.name == null && getUserDataDetails.email == null) {
-        setOpenEditModal(true);
-        setDatatype('both');
-      } else {
-        if (getUserDataDetails.name == null) {
-          setOpenEditModal(true);
-          setDatatype('name');
-        }
-        if (getUserDataDetails.email == null) {
-          setOpenEditModal(true);
-          setDatatype('email');
-        }
-      }
     }
   }, [isFocused]);
   const PurchaseDetails = async () => {
@@ -1166,65 +1151,32 @@ const HomeNew = ({navigation}) => {
       setRefresh(false);
     }
   };
-
-  const NameUpdateModal = () => {
-    const [edit, setEdit] = useState('');
-    return (
-      <Modal transparent visible={openEditModal}>
-        <BlurView
-          style={styles.modalContainer1}
-          blurType="light"
-          blurAmount={1}
-          reducedTransparencyFallbackColor="black"
-        />
-        <View style={styles.View1}>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <Image
-              source={localImage.Modal_img}
-              style={styles.img1}
-              resizeMode="stretch"
-            />
-            <Image
-              source={localImage.ModalCoin}
-              style={[styles.img2]}
-              resizeMode="contain"
-            />
-            {/* <FitIcon
-              name="close"
-              size={30}
-              color={AppColor.BLACK}
-              style={{margin: 16}}
-              onPress={() => setOpenEditModal(false)}
-            /> */}
-          </View>
-          <View style={{marginVertical: 30}}>
-            {/* <Text style={styles.txt1}> */}
-            <FitText type="Heading" value={`Please provide your ${dataType}`} />
-            <TextInput
-              placeholder={`Enter your ${dataType}`}
-              value={edit}
-              onChangeText={text => setEdit(text)}
-            />
-            <NewButton
-              pV={15}
-              title={'Update'}
-              ButtonWidth={DeviceWidth * 0.6}
-              onPress={() => {}}
-            />
-          </View>
-        </View>
-      </Modal>
-    );
-  };
+  useEffect(() => {
+    console.log(getUserDataDetails)
+    if (getUserDataDetails.name == null && getUserDataDetails.email == null) {
+      setOpenEditModal(true);
+      setDatatype('both');
+    } else {
+      if (getUserDataDetails.name == null) {
+        setOpenEditModal(true);
+        setDatatype('name');
+      }
+      if (getUserDataDetails.email == null) {
+        setOpenEditModal(true);
+        setDatatype('email');
+      }
+    }
+  }, [openEditModal, dataType]);
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <NameUpdateModal />
+      <NameUpdateModal
+        dataType={dataType}
+        openEditModal={openEditModal}
+        setOpenEditModal={setOpenEditModal}
+        user_id={getUserDataDetails?.id}
+      />
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
@@ -1274,6 +1226,7 @@ const HomeNew = ({navigation}) => {
           {enteredCurrentEvent && (
             <FitCoins
               onPress={() => {
+                AnalyticsConsole('LB')
                 const today = moment().day();
                 if (today == 0 || today == 6) {
                   navigation.navigate('Winner');
@@ -2366,45 +2319,6 @@ var styles = StyleSheet.create({
     borderRadius: 12,
     alignSelf: 'center',
     marginTop: 8,
-  },
-  Container: {
-    flex: 1,
-  },
-  //view
-  View1: {
-    backgroundColor: AppColor.WHITE,
-    // height: 300,
-    width: DeviceWidth * 0.9,
-    alignSelf: 'center',
-    borderRadius: 8,
-    top: DeviceHeigth / 4,
-    overflow: 'hidden',
-    position: 'absolute',
-  },
-  //img
-  img1: {
-    height: 100,
-    width: 100,
-    overflow: 'hidden',
-  },
-  img2: {
-    height: DeviceHeigth * 0.2,
-    width: DeviceWidth * 0.45,
-    right: DeviceWidth * 0.04,
-  },
-  //texts
-  txt1: {
-    color: AppColor.BLACK,
-    fontSize: 22,
-    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  modalContainer1: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // Semi-transparent background
   },
 });
 export default HomeNew;

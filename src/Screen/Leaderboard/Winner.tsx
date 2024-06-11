@@ -18,6 +18,7 @@ import {localImage} from '../../Component/Image';
 import FitText from '../../Component/Utilities/FitText';
 import AnimatedLottieView from 'lottie-react-native';
 import {appVersion} from 'react-native-version-number';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
 type TypeData = {
   name: string;
@@ -328,7 +329,10 @@ const Winner = ({navigation}: any) => {
                 </Text>
               </Text>
               <TouchableOpacity
-                onPress={() => Linking.openURL('googlegmail://')}
+                onPress={() => {
+                  AnalyticsConsole('W_GMAIL');
+                  Linking.openURL('googlegmail://');
+                }}
                 style={{
                   width: DeviceWidth * 0.4,
                   justifyContent: 'center',
@@ -444,6 +448,7 @@ const Winner = ({navigation}: any) => {
             />
             <TouchableOpacity
               onPress={() => {
+                AnalyticsConsole(`TRA_WIN`);
                 if (getPurchaseHistory) {
                   getPurchaseHistory?.plan_value == 30
                     ? navigation?.navigate('NewSubscription')

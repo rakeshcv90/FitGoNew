@@ -145,7 +145,7 @@ const NewProfile = ({navigation}) => {
         title: 'Privacy & Policy',
       });
     } else if (id == 5) {
-      AnalyticsConsole(`Terms_n Cond_BUTTON`);
+      AnalyticsConsole(`T_n_CBUTTON`);
       navigation.navigate('TermaAndCondition', {
         title: 'Terms & Condition',
       });
@@ -827,7 +827,7 @@ const NewProfile = ({navigation}) => {
       <View style={styles.card}>
         {getUserDataDetails.email != null
           ? CardData?.map((v, i) => {
-            // if(getOfferAgreement?.location != 'India' && v.txt == 'Subscription') return
+            if(getOfferAgreement?.location != 'India' && v.txt == 'Subscription') return
             return(
               <TouchableOpacity
                 key={i}

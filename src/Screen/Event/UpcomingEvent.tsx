@@ -34,6 +34,7 @@ import {
 import {EnteringEventFunction} from './EnteringEventFunction';
 import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../../Component/ActivityLoader';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 
 const UpcomingEvent = ({navigation, route}: any) => {
   // const {eventType} = route?.params;
@@ -188,6 +189,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
               />
               <TouchableOpacity
                 onPress={() => {
+                  AnalyticsConsole('CH_PLAN_BTN')
                   setOpenChange(false);
                   if (
                     getPurchaseHistory?.used_plan ==
@@ -646,6 +648,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
             marginVertical={15}
             onPress={() => {
+              AnalyticsConsole(`CanP_BTN`)
               PLATFORM_IOS
                 ? Linking.openSettings()
                 : Linking.openURL(
