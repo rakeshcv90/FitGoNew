@@ -109,7 +109,7 @@ const MyPlans = ({navigation}: any) => {
     initInterstitial();
     allWorkoutApi1();
     getAllExerciseData();
-    getEarnedCoins();
+ 
     getGraphData();
     Promise.all(WeekArray.map(item => getWeeklyAPI(item))).finally(() =>
       dispatch(setWeeklyPlansData(All_Weeks_Data)),
@@ -117,6 +117,15 @@ const MyPlans = ({navigation}: any) => {
     checkMealAddCount();
     PurchaseDetails()
   }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('Screen focused');
+      getEarnedCoins()
+      return () => {
+        getEarnedCoins() //cleanup
+      };
+    }, [])
+  );
   const getAllExerciseData = async () => {
     try {
       const exerciseData = await axios.get(
@@ -200,10 +209,11 @@ const MyPlans = ({navigation}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (response?.data?.error) {
-        console.log('inavlid day--->', response?.data?.error);
+        console.log('inavlid day--->', response?.data?.error,WeekArrayWithEvent[selectedDay]);
       } else {
         console.log('response.data',response.data)
         setCoins(response?.data?.responses);
+        console.log('coins0-->',response.data,selectedDay)
       }
     } catch (error) {
       showMessage({

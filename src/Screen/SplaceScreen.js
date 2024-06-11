@@ -7,6 +7,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import * as RNIap from 'react-native-iap';
 import {
   Setmealdata,
+  setAgreementContent,
   setAllExercise,
   setBanners,
   setChallengesData,
@@ -106,11 +107,48 @@ const SplaceScreen = ({navigation}) => {
         console.log('offer Agreement', getOfferAgreement);
         setApiDataLoaded(true);
       }
-      loadScreen();
+      getAgreementContent();
     } catch (error) {
-      loadScreen();
+      getAgreementContent();
       console.log(error);
       setApiDataLoaded(true);
+    }
+  };
+  //getRewardTermsContent
+  const getAgreementContent = async () => {
+    try {
+      const ApiCall = await axios(
+        `${NewAppapi.GET_AGREEMENT}?version=${VersionNumber.appVersion}`,
+        {
+          method: 'GET',
+        },
+      );
+
+      if (
+        ApiCall?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        setLoaded(true);
+        showMessage({
+          message: ApiCall?.data?.msg,
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        // if (language == 'English') {
+        //   setContent(ApiCall?.data?.data[0]?.term_condition_english);
+
+        // } else {
+        //   setContent(ApiCall?.data?.data[0]?.term_condition_hindi);
+
+        // }
+        dispatch(setAgreementContent(ApiCall?.data?.data[0]));
+        loadScreen();
+      }
+    } catch (error) {
+      console.log(error);
+      loadScreen();
     }
   };
   //banner Api
@@ -141,7 +179,7 @@ const SplaceScreen = ({navigation}) => {
       } else {
         const objects = {};
         response.data.data.forEach(item => {
-          objects[item.name] = item.image;
+          objects[item?.type] = item?.image;
         });
         dispatch(setBanners(objects));
       }
@@ -178,7 +216,7 @@ const SplaceScreen = ({navigation}) => {
     interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {});
     interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
     interstitialAd.addAdEventListener(AdEventType.ERROR, () => {
-      loadScreen();
+      // loadScreen();
     });
   };
   const loadScreen = () => {
@@ -191,7 +229,11 @@ const SplaceScreen = ({navigation}) => {
       if (getOfferAgreement?.term_conditon) {
         navigation.replace('BottomTab');
       } else {
-        navigation.replace('OfferTerms');
+        if (getUserDataDetails?.id != null) {
+          navigation.replace('OfferTerms');
+        } else {
+          navigation.replace('BottomTab');
+        }
       }
     } else {
       navigation.replace('LetsStart');
@@ -203,14 +245,14 @@ const SplaceScreen = ({navigation}) => {
       if (
         getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
       ) {
-        loadScreen();
+        // loadScreen();
       } else {
-        loaded.show();
-        loadScreen();
+        // loaded.show();
+        // loadScreen();
       }
     } else {
-      loaded.show();
-      loadScreen();
+      // loaded.show();
+      // loadScreen();
     }
   }
   const getPlanData = () => {
@@ -293,7 +335,7 @@ const SplaceScreen = ({navigation}) => {
       const result = await axios(
         `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
       );
-      console.log("SPLASHHHHSAD",result.data)
+      console.log('SPLASHHHHSAD', result.data);
       if (result.data?.message == 'Not any subscription') {
         dispatch(setPurchaseHistory([]));
         EnteringEventFunction(

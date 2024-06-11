@@ -16,15 +16,16 @@ import {setBanners, setOfferAgreement} from '../ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {openSettings} from 'react-native-permissions';
-import ActivityLoader from '../ActivityLoader';
+import {SliderBox} from 'react-native-image-slider-box';
 import {Image} from 'react-native';
 import {localImage} from '../Image';
-import {AppColor} from '../Color';
 import FastImage from 'react-native-fast-image';
-import {ActivityIndicator} from 'react-native';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-const Banners = ({type, onPress, navigation}) => {
+import {AppColor} from '../Color';
+import ActivityLoader from '../ActivityLoader';
+const Banners = ({type1, type2, onPress, navigation}) => {
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
+  const planType = useSelector(state => state.planType);
   const getBanners = useSelector(state => state?.getBanners);
   const [loading, setLoading] = useState(true);
   const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
@@ -113,7 +114,11 @@ const Banners = ({type, onPress, navigation}) => {
       } else {
         dispatch(setOfferAgreement(ApiCall?.data));
         if (ApiCall?.data?.location == 'India') {
-          navigation.navigate('UpcomingEvent');
+          if (planType == -1) {
+            navigation.navigate('NewSubscription');
+          } else {
+            navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+          }
         }
         setLoaded(true);
       }
@@ -157,7 +162,6 @@ const Banners = ({type, onPress, navigation}) => {
           },
         },
       );
-
       if (
         response?.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -173,7 +177,7 @@ const Banners = ({type, onPress, navigation}) => {
       } else {
         const objects = {};
         response.data.data.forEach(item => {
-          objects[item.name] = item.image;
+          objects[item.type] = item.image;
         });
         dispatch(setBanners(objects));
       }
@@ -181,60 +185,81 @@ const Banners = ({type, onPress, navigation}) => {
       console.log('BannerApiError', error);
     }
   };
-  const handleUpcoming = () => {
-    navigation.navigate('UpcomingEvent');
+  const handleEventClicks = index => {
+    if (type1 == 'joined_challenge' && type2 == 'ongoing_challenge') {
+      index == 0
+        ? navigation.navigate('UpcomingEvent', {type: 'current'})
+        : navigation.navigate('BottomTab',{screenName: 'MyPlans'});
+    } else if (type1 == 'joined_challenge' && type2 == 'upcoming_challenge') {
+      index == 0
+        ? navigation.navigate('UpcomingEvent', {eventType: 'current'})
+        : navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+    } else if (type1 == 'joined_challenge') {
+      navigation.navigate('UpcomingEvent', {type: 'current'});
+    } else if (type1 == 'new_join') {
+      handleStart();
+    } else if (type1 == 'coming_soon') {
+      showMessage({
+        message:
+          'This feature will be soon available in your country,Stay tuned!',
+        floating: true,
+        duration: 500,
+        type: 'danger',
+        icon: {icon: 'auto', position: 'left'},
+      });
+    }
   };
-
-  const Box = ({onPress, imageSource, text}) => {
+  const Box = ({imageSource}) => {
     return (
-      <TouchableOpacity
-        activeOpacity={0.8}
-        style={styles.background}
-        onPress={onPress}>
+      <View>
         {loaded ? null : <ActivityLoader />}
-        {loading && (
-          <ShimmerPlaceholder
-            ref={avatarRef}
-            autoRun
-            style={{
-              position: 'absolute',
-              zIndex: 1,
-              height: DeviceHeigth * 0.15,
-              width: DeviceWidth * 0.91,
-              borderRadius: 10,
-              alignSelf: 'center',
-            }}
-          />
-        )}
-        <Image
-          source={imageSource ? {uri: imageSource} : localImage.MaleWeight}
-          resizeMode="contain"
-          style={{height: '100%', width: '100%'}}
-          onLoad={() => setLoading(false)}
+        <SliderBox
+          ImageComponent={FastImage}
+          images={[...imageSource]}
+          sliderBoxHeight={DeviceHeigth * 0.18}
+          onCurrentImagePressed={index => {
+            handleEventClicks(index);
+          }}
+          dotColor={AppColor.RED}
+          inactiveDotColor="#90A4AE"
+          paginationBoxVerticalPadding={20}
+          autoplay
+          circleLoop
+          autoplayInterval={2500}
+          resizeMethod={'resize'}
+          resizeMode={'stretch'}
+          paginationBoxStyle={{
+            position: 'absolute',
+            bottom: 0,
+            padding: 0,
+            alignItems: 'center',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            paddingVertical: 10,
+          }}
+          dotStyle={{
+            width: 10,
+            height: 10,
+            borderRadius: 5,
+            marginHorizontal: 0,
+            padding: 0,
+            margin: 0,
+            backgroundColor: 'rgba(128, 128, 128, 0.92)',
+          }}
+          ImageComponentStyle={{borderRadius: 15, width: DeviceWidth * 0.95}}
+          imageLoadingColor={AppColor.RED}
         />
-      </TouchableOpacity>
+      </View>
     );
   };
   return (
     <View style={{marginVertical: 15}}>
-      {type == 'start' ? (
-        <Box
-          onPress={() => handleStart()}
-          text={'start'}
-          imageSource={getBanners?.upcoming}
-        />
-      ) : type == 'upcoming' ? (
-        <Box
-          onPress={() => handleUpcoming()}
-          text={'upcoming'}
-          imageSource={getBanners?.upcoming}
-        />
-      ) : type == 'coming soon' ? (
-        <Box
-          onPress={() => handleUpcoming()}
-          text={'coming soon'}
-          imageSource={getBanners?.upcoming}
-        />
+      {getBanners[type1] && getBanners[type2] ? (
+        <Box imageSource={[getBanners[type1], getBanners[type2]]} />
+      ) : getBanners[type1] && !getBanners[type2] ? (
+        <Box imageSource={[getBanners[type1]]} />
+      ) : !getBanners[type1] && getBanners[type2] ? (
+        <Box imageSource={[getBanners[type2]]} />
       ) : null}
     </View>
   );

@@ -38,9 +38,9 @@ export const EnteringEventFunction = (
       dispatch(setEnteredCurrentEvent(false));
     }
     if (data?.upcoming_day_status == 1) {
-      dispatch(setEnteredCurrentEvent(true));
+      dispatch(setEnteredUpcomingEvent(true));
     } else {
-      dispatch(setEnteredCurrentEvent(false));
+      dispatch(setEnteredUpcomingEvent(false));
     }
     // if (data?.event_start_date_upcoming == null) {
     //   //console.log(data?.event_start_date_current, 'PLANSSSSS');

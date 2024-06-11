@@ -76,7 +76,6 @@ import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import RewardModal from '../../Component/Utilities/RewardModal';
-import {Banner} from 'react-native-paper';
 import Banners from '../../Component/Utilities/Banner';
 import {checkLocationPermission} from '../Terms&Country/LocationPermission';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
@@ -125,8 +124,6 @@ const GradientText = ({item}) => {
 const HomeNew = ({navigation}) => {
   const dispatch = useDispatch();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
-  const getUserID = useSelector(state => state.getUserID);
-  const getStoreData = useSelector(state => state.getStoreData);
   const allWorkoutData = useSelector(state => state.allWorkoutData);
   const getChallengesData = useSelector(state => state.getChallengesData);
   const [progressHight, setProgressHight] = useState('0%');
@@ -159,6 +156,8 @@ const HomeNew = ({navigation}) => {
     state => state?.getRewardModalStatus,
   );
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
+  const [BannerType1, setBannertype1] = useState('');
+  const [Bannertype2, setBannerType2] = useState('');
   const [BannerType, setBannertype] = useState('');
   const [openEditModal, setOpenEditModal] = useState(false);
   const [dataType, setDatatype] = useState('');
@@ -232,40 +231,33 @@ const HomeNew = ({navigation}) => {
     if (getOfferAgreement?.location == 'India') {
       if (enteredCurrentEvent && enteredUpcomingEvent) {
         // show coin
-        setBannertype('upcoming');
-        console.log('inside1');
+        setBannertype1('joined_challenge');
+        setBannerType2('ongoing_challenge');
       } else if (enteredCurrentEvent && !enteredUpcomingEvent) {
-        console.log('inside2', enteredUpcomingEvent, enteredCurrentEvent);
         //show coin
-        setBannertype('upcoming');
+        setBannertype1('joined_challenge');
+        setBannerType2('upcoming_challenge');
       } else if (!enteredCurrentEvent && enteredUpcomingEvent) {
-        console.log('inside3');
-        setBannertype('upcoming');
+        setBannertype1('joined_challenge');
       } else {
-        setBannertype('upcoming');
-        console.log('inside4', getPurchaseHistory, enteredUpcomingEvent);
+        setBannertype1('new_join');
       }
-    } else if (
-      getOfferAgreement?.location != 'India' ||
-      !getOfferAgreement?.location
-    ) {
+    } else if (getOfferAgreement?.location != 'India') {
       checkLocationPermission()
         .then(result => {
-          if (result == 'granted') {
-            setBannertype('coming soon');
+          if (!getOfferAgreement?.location) {
+            setBannertype1('new_join');
+          } else if (result == 'granted') {
+            setBannertype1('coming_soon');
           } else if (result == 'blocked' || result == 'denied') {
-            setBannertype('start');
-            console.log(result);
+            setBannertype1('new_join');
           }
         })
         .catch(err => {
-          setBannertype('start');
+          setBannertype1('new_join');
         });
-    } else {
-      setBannertype('start');
-      console.log('outside');
     }
-  });
+  },[]);
   //banner api
   const bannerApi = async () => {
     try {
@@ -294,7 +286,7 @@ const HomeNew = ({navigation}) => {
       } else {
         const objects = {};
         response.data.data.forEach(item => {
-          objects[item.name] = item.image;
+          objects[item.type] = item.image;
         });
         dispatch(setBanners(objects));
       }
@@ -1293,7 +1285,11 @@ const HomeNew = ({navigation}) => {
             />
           )}
         </View>
-        <Banners type={BannerType} navigation={navigation} />
+        <Banners
+          type1={BannerType1}
+          type2={Bannertype2}
+          navigation={navigation}
+        />
         {currentChallenge?.length > 0 && (
           <View style={{width: '95%', alignSelf: 'center', marginVertical: 10}}>
             <Text

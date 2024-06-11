@@ -534,7 +534,7 @@ const NewSubscription = ({navigation}: any) => {
           width: DeviceWidth * 0.88,
           alignSelf: 'center',
         }}>
-        {getPurchaseHistory?.product_id &&
+        {getPurchaseHistory?.plan_value != null &&
           normalizedPrice.includes(
             PLATFORM_IOS
               ? `${getPurchaseHistory?.plan_value}.00`
