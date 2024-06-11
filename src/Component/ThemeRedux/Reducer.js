@@ -56,6 +56,7 @@ const intialState = {
   enteredUpcomingEvent: false,
   getRewardModalStatus: false,
   planType: -1,
+  getAgreementContent: {},
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -308,6 +309,11 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         getEditedDayExercise: action.payload,
       };
+      case types.AGREEMENT_CONTENT:
+        return{
+          ...state,
+          getAgreementContent:action.payload
+        }
     default:
       return state;
   }

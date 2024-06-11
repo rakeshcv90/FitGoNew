@@ -5,10 +5,8 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
 import NewButton from '../../Component/NewButton';
 import {FlatList} from 'react-native';
-import {useSelector} from 'react-redux';
 import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
 import moment from 'moment';
-import Carousel from 'react-native-snap-carousel';
 export const ExerciseComponetWithoutEvents = ({dayObject, day, onPress}) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
@@ -24,7 +22,6 @@ export const ExerciseComponetWithoutEvents = ({dayObject, day, onPress}) => {
           <Text style={styles.txt1}>{dayObject?.title ?? 'Power hour'}</Text>
           <Text style={styles.txt2}>{day ?? 'Monday'}</Text>
         </View>
-        {/* <View></View> */}
       </View>
       <NewButton title={'Start'} onPress={onPress} />
       <Text
@@ -98,7 +95,7 @@ export const ExerciseComponentWithEvent = ({
           />
           <View style={styles.View3}>
             <Text style={styles.txt1}>{dayObject?.title ?? 'Power hour'}</Text>
-            <Text style={styles.txt2}>{day ?? 'Monday'}</Text>
+            <Text style={styles.txt2}>{day ?? '--'}</Text>
           </View>
         </View>
         <TouchableOpacity

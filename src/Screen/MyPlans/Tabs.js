@@ -110,14 +110,13 @@ export const WeekTabWithoutEvent = ({
 export const WeekTabWithEvents = ({
   day,
   dayIndex,
-  selectedDay,
   setSelectedDay,
-  WeekStatus,
   WeekArray,
   dayObject,
   dayWiseCoins,
 }) => {
   const sameDay = day == moment().format('dddd'); // to avoid extra lines
+  console.log('dayWiseCoins--->', dayWiseCoins[WeekArray[dayIndex]]);
   return (
     <View style={{alignItems: 'center'}}>
       <Text style={[styles.labelStyle]}>{day.substring(0, 3)}</Text>
@@ -126,17 +125,18 @@ export const WeekTabWithEvents = ({
           styles.button,
           {
             borderWidth: sameDay ? 1 : 0,
-            borderColor: sameDay?AppColor.ORANGE:AppColor.WHITE,
+            borderColor: sameDay ? AppColor.ORANGE : AppColor.GRAY1,
             backgroundColor:
               dayWiseCoins[WeekArray[dayIndex]] < 0
                 ? '#F380291A'
-                : dayWiseCoins[WeekArray[dayIndex]] >= 0
+                : dayWiseCoins[WeekArray[dayIndex]] > 0
                 ? '#008416'
                 : dayWiseCoins[WeekArray[dayIndex]] == null && sameDay
                 ? '#F9F9F9'
+                : dayWiseCoins[WeekArray[dayIndex]] == 0
+                ? '#F380291A'
                 : AppColor.WHITE,
-                borderWidth:0.5,
-               
+            borderWidth: 0.5,
           },
         ]}
         onPress={() => setSelectedDay(dayIndex)}>
@@ -147,13 +147,15 @@ export const WeekTabWithEvents = ({
               color:
                 dayWiseCoins[WeekArray[dayIndex]] < 0
                   ? AppColor.RED
-                  : dayWiseCoins[WeekArray[dayIndex]] >= 0
+                  : dayWiseCoins[WeekArray[dayIndex]] > 0
                   ? AppColor.WHITE
                   : dayWiseCoins[WeekArray[dayIndex]] == null && sameDay
                   ? AppColor.BLACK
+                  : dayWiseCoins[WeekArray[dayIndex]] == 0
+                  ? AppColor.WHITE
                   : AppColor.BLACK,
-                  fontFamily:Fonts.MONTSERRAT_MEDIUM,
-                  fontSize:17
+              fontFamily: Fonts.MONTSERRAT_MEDIUM,
+              fontSize: 17,
             },
           ]}>
           {dayWiseCoins[WeekArray[dayIndex]] ??
@@ -164,11 +166,11 @@ export const WeekTabWithEvents = ({
           source={
             dayWiseCoins[WeekArray[dayIndex]] < 0
               ? localImage.Missed
-              : dayWiseCoins[WeekArray[dayIndex]] >= 0
+              : dayWiseCoins[WeekArray[dayIndex]] >0
               ? localImage.completed
               : localImage.FitCoin
           }
-          style={{height: 20, width: 20, marginVertical: 3,marginLeft:3}}
+          style={{height: 20, width: 20, marginVertical: 3,}}
           resizeMode="contain"
         />
       </TouchableOpacity>

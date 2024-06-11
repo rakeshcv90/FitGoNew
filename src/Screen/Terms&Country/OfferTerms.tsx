@@ -29,7 +29,11 @@ import {showMessage} from 'react-native-flash-message';
 import HTML from 'react-native-render-html';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {RadioButton} from 'react-native-paper';
-import {setChallengesData} from '../../Component/ThemeRedux/Actions';
+import {
+  setAgreementContent,
+  setChallengesData,
+} from '../../Component/ThemeRedux/Actions';
+import {useSelector, useDispatch} from 'react-redux';
 const radioData = [
   {
     id: 1,
@@ -41,23 +45,28 @@ const radioData = [
   },
 ];
 const OfferTerms = ({navigation, route}: any) => {
+  const dispatch = useDispatch();
   const [language, setLanguage] = useState('English');
   const [opened, setOpened] = useState(false);
   const [checked, setChecked] = useState(false);
   const [content, setContent] = useState('');
-  const [loaded, setLoaded] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [loaded, setLoaded] = useState(true);
+  const getAgreementContent = useSelector(
+    (state: any) => state.getAgreementContent,
+  );
+  const [modalVisible, setModalVisible] = useState(true);
   const routeName = route?.params?.routeName;
   const CustomCreated = route?.params?.CustomCreated;
   const {width: windowWidth} = useWindowDimensions();
   const contentWidth = windowWidth;
-  // console.log(routeName);
   useEffect(() => {
-    getAgreementContent();
-
-  }, [language]);
-  const getAgreementContent = async () => {
-    setLoaded(false)
+    setContent(getAgreementContent['term_condition_english']);
+    if (Object.keys(getAgreementContent).length == 0) {
+      getAgreementContentApi();
+    }
+  }, []);
+  const getAgreementContentApi = async () => {
+    setLoaded(false);
     try {
       const ApiCall = await axios(
         `${NewAppapi.GET_AGREEMENT}?version=${VersionNumber.appVersion}`,
@@ -78,18 +87,16 @@ const OfferTerms = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-        if (language == 'English') {
-          setContent(ApiCall?.data?.data[0]?.term_condition_english);
-          setLoaded(true);
-        } else {
-          setContent(ApiCall?.data?.data[0]?.term_condition_hindi);
-          setLoaded(true);
-        }
+        setLoaded(true);
+        dispatch(setAgreementContent(ApiCall?.data?.data[0]));
       }
     } catch (error) {
       console.log(error);
       setLoaded(true);
     }
+  };
+  const handleRadioButton = (param: any) => {
+    setContent(getAgreementContent[param]);
   };
   const CheckBox = () => {
     return (
@@ -126,7 +133,7 @@ const OfferTerms = ({navigation, route}: any) => {
     }
   };
   // Agreement Api
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -191,7 +198,10 @@ const OfferTerms = ({navigation, route}: any) => {
                 style={{
                   marginRight: 16,
                 }}>
-                <Modal transparent visible={opened} style={{backgroundColor:'red'}}>
+                <Modal
+                  transparent
+                  visible={opened}
+                  style={{backgroundColor: 'red'}}>
                   <View
                     style={{
                       // width: DeviceWidth * 0.3,
@@ -211,7 +221,7 @@ const OfferTerms = ({navigation, route}: any) => {
                         }
                         onPress={() => {
                           setLanguage('English');
-                          // setModalVisible(false)
+                          handleRadioButton('term_condition_english');
                           setTimeout(() => {
                             setOpened(!opened);
                           }, 250);
@@ -226,7 +236,7 @@ const OfferTerms = ({navigation, route}: any) => {
                         status={language === 'Hindi' ? 'checked' : 'unchecked'}
                         onPress={() => {
                           setLanguage('Hindi');
-                          // setModalVisible(false);
+                          handleRadioButton('term_condition_hindi');
                           setTimeout(() => {
                             setOpened(!opened);
                           }, 250);

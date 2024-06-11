@@ -109,13 +109,22 @@ const MyPlans = ({navigation}: any) => {
     initInterstitial();
     allWorkoutApi1();
     getAllExerciseData();
-    getEarnedCoins();
+ 
     getGraphData();
     Promise.all(WeekArray.map(item => getWeeklyAPI(item))).finally(() =>
       dispatch(setWeeklyPlansData(All_Weeks_Data)),
     );
     checkMealAddCount();
   }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('Screen focused');
+      getEarnedCoins()
+      return () => {
+        getEarnedCoins() //cleanup
+      };
+    }, [])
+  );
   const getAllExerciseData = async () => {
     try {
       const exerciseData = await axios.get(
@@ -186,7 +195,7 @@ const MyPlans = ({navigation}: any) => {
   const getEarnedCoins = async () => {
     try {
       const response = await axios(
-        `${NewAppapi.GET_COINS}?user_id=${getUserDataDetails?.id}&day=${selectedDay}`,
+        `${NewAppapi.GET_COINS}?user_id=${getUserDataDetails?.id}&day=${WeekArrayWithEvent[selectedDay]}`,
       );
       if (
         response?.data?.msg == 'Please update the app to the latest version.'
@@ -199,9 +208,10 @@ const MyPlans = ({navigation}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (response?.data?.error) {
-        console.log('inavlid day--->', response?.data?.error);
+        console.log('inavlid day--->', response?.data?.error,WeekArrayWithEvent[selectedDay]);
       } else {
         setCoins(response?.data?.responses);
+        console.log('coins0-->',response.data,selectedDay)
       }
     } catch (error) {
       showMessage({
