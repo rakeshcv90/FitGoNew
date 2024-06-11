@@ -16,7 +16,6 @@ import moment from 'moment';
 import {BannerAdd} from '../../../Component/BannerAdd';
 import {bannerAdId} from '../../../Component/AdsId';
 import {AnalyticsConsole} from '../../../Component/AnalyticsConsole';
-
 const WeekArray = Array(7)
   .fill(0)
   .map(
@@ -41,7 +40,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
-  console.log('Data---->', data, type);
+
   const getWeeklyAPI = async () => {
     try {
       const res = await axios({
@@ -92,11 +91,13 @@ const SaveDayExercise = ({navigation, route}: any) => {
           user_day: WeekArray[day],
         },
       });
-      navigation.navigate('MyPlans');
-      if (data.data) {
+
+      if (data?.data?.msg == 'coin added successfully') {
+        navigation.navigate('MyPlans');
         console.log('TEST API DATA', data.data);
       }
     } catch (error) {
+      navigation.navigate('MyPlans');
       console.log('UCustomeCorkout details', error);
     }
   };

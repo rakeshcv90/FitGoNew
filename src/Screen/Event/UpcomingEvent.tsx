@@ -37,8 +37,8 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 
 const UpcomingEvent = ({navigation, route}: any) => {
-  // const {eventType} = route?.params;
-  let eventType = 'upcoming';
+  const {eventType} = route?.params;
+  // let eventType = 'upcoming';
   const dispatch = useDispatch();
   const enteredUpcomingEvent = useSelector(
     (state: any) => state.enteredUpcomingEvent,
@@ -226,8 +226,8 @@ const UpcomingEvent = ({navigation, route}: any) => {
   };
   // console.log("MOMENT",moment().day(getPurchaseHistory?.currentDay).format('dddd'))
   console.log(
-    'mo',
-    moment().day(getPurchaseHistory?.currentDay).format('YYYY-MM-DD'),
+    'mo',getPurchaseHistory,eventType
+    // moment().day(getPurchaseHistory?.currentDay).format('YYYY-MM-DD'),
   );
 
   const dayLeft =

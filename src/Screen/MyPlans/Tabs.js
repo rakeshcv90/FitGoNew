@@ -114,9 +114,9 @@ export const WeekTabWithEvents = ({
   WeekArray,
   dayObject,
   dayWiseCoins,
+  selectedDay,
 }) => {
-  const sameDay = day == moment().format('dddd'); // to avoid extra lines
-  console.log('dayWiseCoins--->', dayWiseCoins[WeekArray[dayIndex]]);
+  const sameDay = day == WeekArray[selectedDay]; 
   return (
     <View style={{alignItems: 'center'}}>
       <Text style={[styles.labelStyle]}>{day.substring(0, 3)}</Text>
@@ -125,7 +125,12 @@ export const WeekTabWithEvents = ({
           styles.button,
           {
             borderWidth: sameDay ? 1 : 0,
-            borderColor: sameDay ? AppColor.ORANGE : AppColor.GRAY1,
+            borderColor:
+              dayWiseCoins[WeekArray[dayIndex]] > 0 && sameDay
+                ? '#008416'
+                : sameDay
+                ? AppColor.ORANGE
+                : AppColor.GRAY1,
             backgroundColor:
               dayWiseCoins[WeekArray[dayIndex]] < 0
                 ? '#F380291A'
@@ -136,7 +141,7 @@ export const WeekTabWithEvents = ({
                 : dayWiseCoins[WeekArray[dayIndex]] == 0
                 ? '#F380291A'
                 : AppColor.WHITE,
-            borderWidth: 0.5,
+            borderWidth: dayWiseCoins[WeekArray[dayIndex]] > 0 ? 2 : 0.5,
           },
         ]}
         onPress={() => setSelectedDay(dayIndex)}>
@@ -166,11 +171,11 @@ export const WeekTabWithEvents = ({
           source={
             dayWiseCoins[WeekArray[dayIndex]] < 0
               ? localImage.Missed
-              : dayWiseCoins[WeekArray[dayIndex]] >0
+              : dayWiseCoins[WeekArray[dayIndex]] > 0
               ? localImage.completed
               : localImage.FitCoin
           }
-          style={{height: 20, width: 20, marginVertical: 3,}}
+          style={{height: 20, width: 20, marginVertical: 3}}
           resizeMode="contain"
         />
       </TouchableOpacity>

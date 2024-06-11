@@ -25,6 +25,7 @@ import {AppColor} from '../Color';
 import ActivityLoader from '../ActivityLoader';
 const Banners = ({type1, type2, onPress, navigation}) => {
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
+  const getPurchaseHistory = useSelector(state => state?.getPurchaseHistory);
   const planType = useSelector(state => state.planType);
   const getBanners = useSelector(state => state?.getBanners);
   const [loading, setLoading] = useState(true);
@@ -185,18 +186,9 @@ const Banners = ({type1, type2, onPress, navigation}) => {
       console.log('BannerApiError', error);
     }
   };
+  console.log(type1, type2);
   const handleEventClicks = index => {
-    if (type1 == 'joined_challenge' && type2 == 'ongoing_challenge') {
-      index == 0
-        ? navigation.navigate('UpcomingEvent', {type: 'current'})
-        : navigation.navigate('BottomTab',{screenName: 'MyPlans'});
-    } else if (type1 == 'joined_challenge' && type2 == 'upcoming_challenge') {
-      index == 0
-        ? navigation.navigate('UpcomingEvent', {eventType: 'current'})
-        : navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
-    } else if (type1 == 'joined_challenge') {
-      navigation.navigate('UpcomingEvent', {type: 'current'});
-    } else if (type1 == 'new_join') {
+    if (type1 == 'new_join') {
       handleStart();
     } else if (type1 == 'coming_soon') {
       showMessage({
@@ -207,7 +199,24 @@ const Banners = ({type1, type2, onPress, navigation}) => {
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
       });
+    } else if (type1 == 'joined_challenge' && index == 0) {
+      navigation.navigate('UpcomingEvent', {eventType: 'current'});
+    } else if (type2 == 'ongoing_challenge') {
+      navigation.navigate('MyPlans');
+    } else if (type2 == 'upcoming_challenge' && index == 1) {
+      navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
     }
+    // if (type1 == 'joined_challenge' && type2 == 'ongoing_challenge') {
+    //   index == 0
+    //     ? navigation.navigate('UpcomingEvent', {eventType: 'current'})
+    //     : navigation.navigate('MyPlans');
+    // } else if (type1 == 'joined_challenge' && type2 == 'upcoming_challenge') {
+    //   index == 0
+    //     ? navigation.navigate('MyPlans')
+    //     : navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+    // } else if (type1 == 'joined_challenge') {
+    //   navigation.navigate('UpcomingEvent', {eventType: 'current'});
+    // }
   };
   const Box = ({imageSource}) => {
     return (
@@ -256,9 +265,9 @@ const Banners = ({type1, type2, onPress, navigation}) => {
     <View style={{marginVertical: 15}}>
       {getBanners[type1] && getBanners[type2] ? (
         <Box imageSource={[getBanners[type1], getBanners[type2]]} />
-      ) : getBanners[type1] && !getBanners[type2] ? (
+      ) : getBanners[type1] ? (
         <Box imageSource={[getBanners[type1]]} />
-      ) : !getBanners[type1] && getBanners[type2] ? (
+      ) : getBanners[type2] ? (
         <Box imageSource={[getBanners[type2]]} />
       ) : null}
     </View>

@@ -109,22 +109,20 @@ const MyPlans = ({navigation}: any) => {
     initInterstitial();
     allWorkoutApi1();
     getAllExerciseData();
- 
+
     getGraphData();
     Promise.all(WeekArray.map(item => getWeeklyAPI(item))).finally(() =>
       dispatch(setWeeklyPlansData(All_Weeks_Data)),
     );
     checkMealAddCount();
-    PurchaseDetails()
+    PurchaseDetails();
   }, []);
   useFocusEffect(
     React.useCallback(() => {
-      console.log('Screen focused');
-      getEarnedCoins()
-      return () => {
-        getEarnedCoins() //cleanup
-      };
-    }, [])
+      if (enteredCurrentEvent) {
+        getEarnedCoins();
+      }
+    }, []),
   );
   const getAllExerciseData = async () => {
     try {
@@ -209,11 +207,10 @@ const MyPlans = ({navigation}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (response?.data?.error) {
-        console.log('inavlid day--->', response?.data?.error,WeekArrayWithEvent[selectedDay]);
+        console.log('inavlid day--->', response?.data?.error);
       } else {
-        console.log('response.data',response.data)
+        console.log('repeat----->');
         setCoins(response?.data?.responses);
-        console.log('coins0-->',response.data,selectedDay)
       }
     } catch (error) {
       showMessage({
@@ -906,12 +903,19 @@ const MyPlans = ({navigation}: any) => {
               day={WeekArrayWithEvent[selectedDay]}
               onPress={handleStart}
               navigation={navigation}
+              WeekArray={WeekArrayWithEvent}
+              dayWiseCoins={coins}
+              getWeeklyPlansData={getWeeklyPlansData}
+              selectedDay={selectedDay}
             />
           ) : (
             <ExerciseComponetWithoutEvents
               dayObject={getWeeklyPlansData[WeekArray[selectedDay]]}
               day={WeekArray[selectedDay]}
               onPress={handleStart}
+              WeekStatus={WeekStatus}
+              WeekArray={WeekArray}
+              getWeeklyPlansData={getWeeklyPlansData}
             />
           )
         ) : (

@@ -229,11 +229,11 @@ const HomeNew = ({navigation}) => {
     if (getOfferAgreement?.location == 'India') {
       if (enteredCurrentEvent && enteredUpcomingEvent) {
         // show coin
-        setBannertype1('joined_challenge');
+        setBannertype1('upcoming_challenge');
         setBannerType2('ongoing_challenge');
       } else if (enteredCurrentEvent && !enteredUpcomingEvent) {
         //show coin
-        setBannertype1('joined_challenge');
+        setBannertype1('ongoing_challenge');
         setBannerType2('upcoming_challenge');
       } else if (!enteredCurrentEvent && enteredUpcomingEvent) {
         setBannertype1('joined_challenge');

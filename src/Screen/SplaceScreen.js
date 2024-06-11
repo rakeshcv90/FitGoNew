@@ -60,12 +60,10 @@ const SplaceScreen = ({navigation}) => {
     requestPermissionforNotification(dispatch);
     DeviceInfo.syncUniqueId().then(uniqueId => {
       getCaterogy(uniqueId);
-
       Meal_List(uniqueId);
     });
-    if (getUserDataDetails?.id) {
-      getOffertermsStatus();
-    }
+
+    getOffertermsStatus();
     bannerApi();
     PurchaseDetails();
     getPlanData();
@@ -102,16 +100,18 @@ const SplaceScreen = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         setApiDataLoaded(true);
+      } else if (ApiCall?.data?.message == 'user not found') {
+        // console.log('heloo',ApiCall.data)
+        getAgreementContent();
+        setApiDataLoaded(true);
       } else {
         dispatch(setOfferAgreement(ApiCall?.data));
-        console.log('offer Agreement', getOfferAgreement);
-        setApiDataLoaded(true);
+        getAgreementContent();
       }
-      getAgreementContent();
     } catch (error) {
-      getAgreementContent();
       console.log(error);
       setApiDataLoaded(true);
+      getAgreementContent();
     }
   };
   //getRewardTermsContent
@@ -136,13 +136,6 @@ const SplaceScreen = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-        // if (language == 'English') {
-        //   setContent(ApiCall?.data?.data[0]?.term_condition_english);
-
-        // } else {
-        //   setContent(ApiCall?.data?.data[0]?.term_condition_hindi);
-
-        // }
         dispatch(setAgreementContent(ApiCall?.data?.data[0]));
         loadScreen();
       }
