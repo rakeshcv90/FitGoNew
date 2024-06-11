@@ -97,19 +97,20 @@ export const NewAppapi = {
   RESEND_OTP: NewApi + 'resend_otp',
   POST_SINGLE_EXERCISE_COMPLETE: NewApi + 'single_exercise_status',
   //In App Rewards
-  STORE_USER_AGR_COUNTRY:NewApi+'condition',
-  GET_AGR_STATUS:NewApi+'check_condition',
-  GET_AGREEMENT:NewApi+'get_termconditon_data',
+  STORE_USER_AGR_COUNTRY: NewApi + 'condition',
+  GET_AGR_STATUS: NewApi + 'check_condition',
+  GET_AGREEMENT: NewApi + 'get_termconditon_data',
   EVENT_SUBSCRIPTION_POST: NewApi + 'event',
   EVENT_SUBSCRIPTION_GET: NewApi + 'event_details',
   CURRENT_DAY_EVENT_EXERCISE: NewApi + 'user_event__exercise_status',
   POST_REWARDS_EXERCISE: NewApi + 'event_exercise_complete_status', //Done App Version
-  EVENT_BANNERS:NewApi+'get_banners',
-  GET_USER_COINS:NewApi+'exercise_points_day',
-  EDIT_EVENT_EXERCISE:NewApi+'user_edit_exercises',
-  GET_EDITED_EXERCISES:NewApi+'get_weekday_exercise',
-  GET_COINS:NewApi+'exercise_points_day',
-  DELETE_EVENT_WEEKLY_DATA:NewApi+'delete_exercise_event',
+  EVENT_BANNERS: NewApi + 'get_banners',
+  GET_USER_COINS: NewApi + 'exercise_points_day',
+  EDIT_EVENT_EXERCISE: NewApi + 'user_edit_exercises',
+  GET_EDITED_EXERCISES: NewApi + 'get_weekday_exercise',
+  GET_COINS: NewApi + 'exercise_points_day',
+  DELETE_EVENT_WEEKLY_DATA: NewApi + 'delete_exercise_event',
+  POST_UPDATE_EMAIL_NAME: NewApi + 'update_name_email',
   GET_LEADERBOARD: NewApi + 'leader_board', //Done App Version
   POST_API_FOR_COIN_CALCULATION: NewApi + 'add_coins', //Done App Version
 };

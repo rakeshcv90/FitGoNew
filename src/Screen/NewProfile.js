@@ -827,7 +827,7 @@ const NewProfile = ({navigation}) => {
       <View style={styles.card}>
         {getUserDataDetails.email != null
           ? CardData?.map((v, i) => {
-            if(getOfferAgreement?.location != 'India' && v.txt == 'Subscription') return
+            // if(getOfferAgreement?.location != 'India' && v.txt == 'Subscription') return
             return(
               <TouchableOpacity
                 key={i}

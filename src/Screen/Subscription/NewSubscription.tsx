@@ -34,6 +34,7 @@ import {
 import {useIsFocused} from '@react-navigation/native';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import Carousel from 'react-native-snap-carousel';
+import ActivityLoader from '../../Component/ActivityLoader';
 
 const NewSubscription = ({navigation}: any) => {
   const dispatch = useDispatch();
@@ -353,7 +354,6 @@ const NewSubscription = ({navigation}: any) => {
 
   // PURCHASE START ANDROID
   const purchaseItemsAndroid = async (sku: RNIap.Sku, offerToken: any) => {
-    setForLoading(true);
     try {
       const purchase: any = await RNIap.requestSubscription({
         sku,
@@ -362,14 +362,13 @@ const NewSubscription = ({navigation}: any) => {
 
       fetchPurchaseHistoryAndroid(purchase[0].dataAndroid);
     } catch (error) {
-      setForLoading(false);
       console.log('Failed to purchase Android product', error);
     }
   };
   //'fitme_monthly', 'a_month', 'fitme_legend'localizedPrice
   const fetchPurchaseHistoryAndroid = async (data: any) => {
-    const price: string = findKeyInObject(selected, 'formattedPrice');
-    const normalizedPrice = price.replace(/\s/g, '');
+    setForLoading(true);
+    const price: string = findKeyInObject(selected, 'priceAmountMicros');
     const jsonObject = JSON.parse(data);
     const postData = {
       user_id: getUserDataDetails.id,
@@ -381,12 +380,20 @@ const NewSubscription = ({navigation}: any) => {
           : 'legend',
       transaction_id: jsonObject.orderId,
       platform: Platform.OS,
-      product_id: selected?.productId,
+      product_id: jsonObject?.productId,
       plan_value:
-        jsonObject.productId == 'fitme_legend'
-          ? 399
-          : parseInt(normalizedPrice.split('₹')[1]),
+        jsonObject.productId == 'fitme_monthly'
+          ? 30
+          : jsonObject.productId == 'a_monthly'
+          ? 69
+          : 149,
     };
+    console.log(
+      'POST',
+      postData,
+      // selected?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList[0],
+      // price,
+    );
     PlanPurchasetoBackendAPI(postData);
   };
 
@@ -400,10 +407,21 @@ const NewSubscription = ({navigation}: any) => {
         },
         data,
       });
-
+      console.log(res.data);
       if (res.data.message == 'Event created successfully') {
         PurchaseDetails();
         setForLoading(false);
+        setTimeout(() => {
+          navigation.navigate('UpcomingEvent');
+        }, 2000);
+      } else if (
+        res.data.message == 'Plan upgraded and new event created successfully'
+      ) {
+        PurchaseDetails();
+        setForLoading(false);
+        setTimeout(() => {
+          navigation.navigate('UpcomingEvent');
+        }, 2000);
       } else {
         setForLoading(false);
         showMessage({
@@ -413,7 +431,6 @@ const NewSubscription = ({navigation}: any) => {
           floating: true,
         });
       }
-      navigation.navigate('UpcomingEvent');
     } catch (error) {
       setForLoading(false);
       console.log('Purchase Store Data Error', error, data);
@@ -438,15 +455,11 @@ const NewSubscription = ({navigation}: any) => {
         );
       } else {
         dispatch(setPurchaseHistory(result.data.data));
-        const findIndex = getInAppPurchase?.findIndex((item: any) => {
-          const price: string = findKeyInObject(
-            item,
-            PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
-          );
-          // console.log('price', price);
-          return price.includes(getPurchaseHistory?.plan_value);
-        });
-        findIndex == -1 ? setCurrentSelected(2) : setCurrentSelected(findIndex);
+        result.data.data?.plan_value == 30
+          ? setCurrentSelected(0)
+          : result.data.data?.plan_value == 69
+          ? setCurrentSelected(1)
+          : setCurrentSelected(2);
         EnteringEventFunction(
           dispatch,
           result.data?.data,
@@ -465,9 +478,11 @@ const NewSubscription = ({navigation}: any) => {
     // const {item, index} = route.params;
     const price: string = findKeyInObject(
       item,
-      PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
+      PLATFORM_IOS ? 'localizedPrice' : 'priceAmountMicros',
     );
-    const normalizedPrice = price.replace(/\s/g, '');
+    const normalizedPrice = PLATFORM_IOS
+      ? price.replace(/\s/g, '')
+      : `₹${(parseInt(price) / 1000000).toString()}`;
     const color = normalizedPrice.includes('₹30')
       ? AppColor.NEW_SUBS_BLUE
       : normalizedPrice.includes('₹69')
@@ -489,14 +504,17 @@ const NewSubscription = ({navigation}: any) => {
         {Array(80).fill('- ')}
       </Text>
     );
-    // !PLATFORM_IOS&& console.log(normalizedPrice)
+    // !PLATFORM_IOS &&
+    //   console.log(
+    //     'normalizedPrice',
+    //     normalizedPrice.includes(
+    //       PLATFORM_IOS
+    //         ? `${getPurchaseHistory?.plan_value}.00`
+    //         : getPurchaseHistory?.plan_value,
+    //     ),
+    //   );
     return (
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={() => {
-          // setCurrentSelected(index);
-          setSelected(item);
-        }}
+      <View
         style={{
           flex: 1,
           padding: 10,
@@ -517,7 +535,11 @@ const NewSubscription = ({navigation}: any) => {
           alignSelf: 'center',
         }}>
         {getPurchaseHistory?.product_id &&
-          normalizedPrice.includes(`${getPurchaseHistory?.plan_value}.00`) && (
+          normalizedPrice.includes(
+            PLATFORM_IOS
+              ? `${getPurchaseHistory?.plan_value}.00`
+              : getPurchaseHistory?.plan_value,
+          ) && (
             <View
               style={{
                 justifyContent: 'center',
@@ -731,12 +753,13 @@ const NewSubscription = ({navigation}: any) => {
           w={DeviceWidth * 0.8}
           mV={15}
           onPress={() => {
+            setSelected(item);
             handlePurchase(item);
           }}
           // opacity={price.includes(getPurchaseHistory?.plan_value) ? 0.8 : 1}
           disabled={price.includes(getPurchaseHistory?.plan_value)}
         />
-      </TouchableOpacity>
+      </View>
     );
   };
   const handlePurchase = (item: any) => {
@@ -854,70 +877,81 @@ const NewSubscription = ({navigation}: any) => {
           )}
 
           <View style={styles.tabContainer}>
-            {sortedSubscriptions?.map((item: any, index: number) => (
-              // <View style={{flex: 1,justifyContent: 'center',alignItems: 'center',}}>
-              <>
-                {currentSelected == index ? (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      setCurrentSelected(index);
-                    }}
-                    style={[
-                      styles.tabButton,
-                      {
-                        height: DeviceWidth * 0.15,
-                        backgroundColor:
-                          index == 0
-                            ? AppColor.NEW_SUBS_BLUE
-                            : index == 1
-                            ? AppColor.NEW_SUBS_GREEN
-                            : AppColor.NEW_SUBS_ORANGE,
-                      },
-                    ]}>
-                    <Text
-                      style={{
-                        color: AppColor.WHITE,
-                        fontFamily: Fonts.MONTSERRAT_BOLD,
-                        fontSize: 14,
-                        lineHeight: 14.63,
-                        fontWeight: '600',
-                        marginTop: 5,
-                        textAlign: 'center',
-                      }}>
-                      {index == 0 ? 'Basic' : index == 1 ? 'Medium' : 'Premium'}
-                    </Text>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      setCurrentSelected(index);
-                    }}
-                    style={[
-                      styles.tabButton,
-                      {
-                        marginVertical: 10,
-                        paddingHorizontal: 5,
-                      },
-                    ]}>
-                    <Text
-                      style={{
-                        color: '#121212B2',
-                        opacity: 0.7,
-                        fontSize: 14,
-                        lineHeight: 14.63,
-                        fontWeight: '500',
-                        fontFamily: 'Montserrat-Medium',
-                        marginTop: 5,
-                        textAlign: 'center',
-                      }}>
-                      {index == 0 ? 'Basic' : index == 1 ? 'Medium' : 'Premium'}
-                    </Text>
-                  </TouchableOpacity>
-                )}
-              </>
-            ))}
+            {sortedSubscriptions?.map((item: any, index: number) => {
+              return (
+                // <View style={{flex: 1,justifyContent: 'center',alignItems: 'center',}}>
+                <>
+                  {currentSelected == index ? (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        console.log('CURENRETA', currentSelected, index);
+                        setCurrentSelected(index);
+                      }}
+                      style={[
+                        styles.tabButton,
+                        {
+                          height: DeviceWidth * 0.15,
+                          backgroundColor:
+                            index == 0
+                              ? AppColor.NEW_SUBS_BLUE
+                              : index == 1
+                              ? AppColor.NEW_SUBS_GREEN
+                              : AppColor.NEW_SUBS_ORANGE,
+                        },
+                      ]}>
+                      <Text
+                        style={{
+                          color: AppColor.WHITE,
+                          fontFamily: Fonts.MONTSERRAT_BOLD,
+                          fontSize: 14,
+                          lineHeight: 14.63,
+                          fontWeight: '600',
+                          marginTop: 5,
+                          textAlign: 'center',
+                        }}>
+                        {index == 0
+                          ? 'Basic'
+                          : index == 1
+                          ? 'Medium'
+                          : 'Premium'}
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        setCurrentSelected(index);
+                      }}
+                      style={[
+                        styles.tabButton,
+                        {
+                          marginVertical: 10,
+                          paddingHorizontal: 5,
+                        },
+                      ]}>
+                      <Text
+                        style={{
+                          color: '#121212B2',
+                          opacity: 0.7,
+                          fontSize: 14,
+                          lineHeight: 14.63,
+                          fontWeight: '500',
+                          fontFamily: 'Montserrat-Medium',
+                          marginTop: 5,
+                          textAlign: 'center',
+                        }}>
+                        {index == 0
+                          ? 'Basic'
+                          : index == 1
+                          ? 'Medium'
+                          : 'Premium'}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </>
+              );
+            })}
           </View>
           <View
             style={{
@@ -1049,6 +1083,7 @@ const NewSubscription = ({navigation}: any) => {
           <Test /> */}
         </ScrollView>
       </View>
+      {loading && <ActivityLoader visible={loading} />}
     </SafeAreaView>
   );
 };

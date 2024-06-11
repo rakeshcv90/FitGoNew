@@ -18,88 +18,101 @@ type Data = {
   updated_at: string;
   used_plan: number;
   user_id: number;
+  upcoming_day_status: number;
+  current_day_status: number;
+  current_day: number;
 };
 
 export const EnteringEventFunction = (
   dispatch: React.Dispatch<Action>,
-  data: Data | any,
+  data: Data,
   setEnteredCurrentEvent: any,
   setEnteredUpcomingEvent: any,
   setPlanType: any,
 ) => {
-  if (data?.plan_value !=  null) {
+  if (data?.plan_value != null) {
     dispatch(setPlanType(data?.plan_value));
-    if (data?.event_start_date_upcoming == null) {
-      console.log(data?.event_start_date_current, 'PLANSSSSS');
-      if (
-        moment(data?.event_start_date_current).diff(
-          moment().format('YYYY-MM-DD'),
-          'days',
-        ) >= 1
-      ) {
-        dispatch(setEnteredUpcomingEvent(true));
-        dispatch(setEnteredCurrentEvent(false));
-      } else {
-        dispatch(setEnteredCurrentEvent(true));
-        dispatch(setEnteredUpcomingEvent(false));
-      }
-      // console.log(
-      //     data,
-      //     'PLANSSSSS',
-      //     moment(data?.event_start_date_current).diff(
-      //       moment().format('YYYY-MM-DD'),
-      //       'days',
-      //     ) >= 1
-      //       ? 'Upcoming'
-      //       : 'Current',
-      //   );
+    if (data?.current_day_status == 1) {
+      dispatch(setEnteredCurrentEvent(true));
     } else {
-      console.log(
-        data?.event_start_date_current,
-        'upcoming',
-        data.event_start_date_upcoming,
-        moment(data?.event_start_date_current).diff(
-          moment().format('YYYY-MM-DD'),
-          'days',
-        ) <= 0,
-      );
-      if (
-        moment(data?.event_start_date_upcoming).diff(
-          moment().format('YYYY-MM-DD'),
-          'days',
-        ) >= 1
-      ) {
-        dispatch(setEnteredUpcomingEvent(true));
-        //   dispatch(setEnteredCurrentEvent(false));
-      }
-      if (
-        moment(data?.event_start_date_current).diff(
-          moment().format('YYYY-MM-DD'),
-          'days',
-        ) <= 0
-      ) {
-        dispatch(setEnteredCurrentEvent(true));
-        //   dispatch(setEnteredUpcomingEvent(false));
-      }
-      // console.log(
-      //     data,
-      //     'upcoming',
-      //     moment(data?.event_start_date_upcoming).diff(
-      //       moment().format('YYYY-MM-DD'),
-      //       'days',
-      //     ) >= 1
-      //       ? 'Upcoming'
-      //       : 'Current',
-      //     data?.event_start_date_current,
-      //     'current',
-      //     moment(data?.event_start_date_current).diff(
-      //       moment().format('YYYY-MM-DD'),
-      //       'days',
-      //     ) >= 1
-      //       ? 'Upcoming'
-      //       : 'Current',
-      //   );
+      dispatch(setEnteredCurrentEvent(false));
     }
+    if (data?.upcoming_day_status == 1) {
+      dispatch(setEnteredCurrentEvent(true));
+    } else {
+      dispatch(setEnteredCurrentEvent(false));
+    }
+    // if (data?.event_start_date_upcoming == null) {
+    //   //console.log(data?.event_start_date_current, 'PLANSSSSS');
+    //   if (
+    //     moment(data?.event_start_date_current).diff(
+    //       moment().format('YYYY-MM-DD'),
+    //       'days',
+    //     ) >= 1
+    //   ) {
+    //     dispatch(setEnteredUpcomingEvent(true));
+    //     dispatch(setEnteredCurrentEvent(false));
+    //   } else {
+    //     dispatch(setEnteredCurrentEvent(true));
+    //     dispatch(setEnteredUpcomingEvent(false));
+    //   }
+    //   // console.log(
+    //   //     data,
+    //   //     'PLANSSSSS',
+    //   //     moment(data?.event_start_date_current).diff(
+    //   //       moment().format('YYYY-MM-DD'),
+    //   //       'days',
+    //   //     ) >= 1
+    //   //       ? 'Upcoming'
+    //   //       : 'Current',
+    //   //   );
+    // } else {
+    //   console.log(
+    //     data?.event_start_date_current,
+    //     'upcoming',
+    //     data.event_start_date_upcoming,
+    //     moment(data?.event_start_date_current).diff(
+    //       moment().format('YYYY-MM-DD'),
+    //       'days',
+    //     ) <= 0,
+    //   );
+    //   if (
+    //     moment(data?.event_start_date_upcoming).diff(
+    //       moment().format('YYYY-MM-DD'),
+    //       'days',
+    //     ) >= 1
+    //   ) {
+    //     dispatch(setEnteredUpcomingEvent(true));
+    //     //   dispatch(setEnteredCurrentEvent(false));
+    //   }
+    //   if (
+    //     moment(data?.event_start_date_current).diff(
+    //       moment().format('YYYY-MM-DD'),
+    //       'days',
+    //     ) <= 0
+    //   ) {
+    //     dispatch(setEnteredCurrentEvent(true));
+    //     //   dispatch(setEnteredUpcomingEvent(false));
+    //   }
+    //   // console.log(
+    //   //     data,
+    //   //     'upcoming',
+    //   //     moment(data?.event_start_date_upcoming).diff(
+    //   //       moment().format('YYYY-MM-DD'),
+    //   //       'days',
+    //   //     ) >= 1
+    //   //       ? 'Upcoming'
+    //   //       : 'Current',
+    //   //     data?.event_start_date_current,
+    //   //     'current',
+    //   //     moment(data?.event_start_date_current).diff(
+    //   //       moment().format('YYYY-MM-DD'),
+    //   //       'days',
+    //   //     ) >= 1
+    //   //       ? 'Upcoming'
+    //   //       : 'Current',
+    //   //   );
+    // }
   } else {
     dispatch(setPlanType(-1));
     dispatch(setEnteredCurrentEvent(false));

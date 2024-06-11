@@ -35,11 +35,14 @@ import {EnteringEventFunction} from './EnteringEventFunction';
 import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../../Component/ActivityLoader';
 
-const UpcomingEvent = ({navigation}: any) => {
+const UpcomingEvent = ({navigation, route}: any) => {
+  // const {eventType} = route?.params;
+  let eventType = 'upcoming';
   const dispatch = useDispatch();
   const enteredUpcomingEvent = useSelector(
     (state: any) => state.enteredUpcomingEvent,
   );
+  const planType = useSelector((state: any) => state.planType);
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
@@ -94,6 +97,7 @@ const UpcomingEvent = ({navigation}: any) => {
     try {
       const result = await axios(
         `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
+        // `${NewAppapi.EVENT_SUBSCRIPTION_GET}/7996`,
       );
       console.log(result.data);
       if (result.data?.message == 'Not any subscription') {
@@ -218,6 +222,18 @@ const UpcomingEvent = ({navigation}: any) => {
       </Modal>
     );
   };
+  // console.log("MOMENT",moment().day(getPurchaseHistory?.currentDay).format('dddd'))
+  console.log(
+    'mo',
+    moment().day(getPurchaseHistory?.currentDay).format('YYYY-MM-DD'),
+  );
+
+  const dayLeft =
+    getPurchaseHistory?.upcoming_day_status == 1 &&
+    getPurchaseHistory?.event_start_date_upcoming != null
+      ? getPurchaseHistory?.event_start_date_upcoming
+      : getPurchaseHistory?.event_start_date_current;
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <DietPlanHeader
@@ -258,34 +274,50 @@ const UpcomingEvent = ({navigation}: any) => {
               fontWeight="600"
               fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
             />
-            <View
-              style={{
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                backgroundColor: '#F380291A',
-                padding: 5,
-                borderRadius: 5,
-                flexDirection: 'row',
-              }}>
-              <FitIcon
-                name="clock-outline"
-                size={14}
-                type="MaterialCommunityIcons"
-                color={AppColor.ORANGE}
-                mR={5}
-              />
-              <FitText
-                type="SubHeading"
-                value={`${moment(
-                  getPurchaseHistory?.event_start_date_current,
-                ).diff(moment().format('YYYY-MM-DD'), 'days')} days left`}
-                color={AppColor.ORANGE}
-                fontSize={14}
-                lineHeight={18}
-                fontWeight="600"
-                fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
-              />
-            </View>
+            {eventType == 'upcoming' && (
+              <View
+                style={{
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  backgroundColor: '#F380291A',
+                  padding: 5,
+                  borderRadius: 5,
+                  flexDirection: 'row',
+                }}>
+                <FitIcon
+                  name="clock-outline"
+                  size={14}
+                  type="MaterialCommunityIcons"
+                  color={AppColor.ORANGE}
+                  mR={5}
+                />
+                <FitText
+                  type="SubHeading"
+                  value={
+                    getPurchaseHistory?.upcoming_day_status == 1
+                      ? `${moment(dayLeft).diff(
+                          moment()
+                            .day(getPurchaseHistory?.currentDay)
+                            .format('YYYY-MM-DD'),
+                          'days',
+                        )} days left`
+                      : `${moment(dayLeft)
+                          .add(7, 'days')
+                          .diff(
+                            moment()
+                              .day(getPurchaseHistory?.currentDay)
+                              .format('YYYY-MM-DD'),
+                            'days',
+                          )} days left`
+                  }
+                  color={AppColor.ORANGE}
+                  fontSize={14}
+                  lineHeight={18}
+                  fontWeight="600"
+                  fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+                />
+              </View>
+            )}
           </View>
           <View
             style={[
@@ -317,9 +349,13 @@ const UpcomingEvent = ({navigation}: any) => {
                 fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
               />
               <FitText
-                value={`${moment(
-                  getPurchaseHistory?.event_start_date_current,
-                ).format('DD-MMM-YYYY')} | Monday`}
+                value={
+                  getPurchaseHistory?.upcoming_day_status == 1
+                    ? `${moment(dayLeft).format('DD-MMM-YYYY')} | Monday`
+                    : `${moment(dayLeft)
+                        .add(7, 'days')
+                        .format('DD-MMM-YYYY')} | Monday`
+                }
                 type="normal"
                 color="#1E1E1E"
                 fontFamily={Fonts.MONTSERRAT_MEDIUM}
@@ -373,8 +409,10 @@ const UpcomingEvent = ({navigation}: any) => {
             fontWeight="600"
           />
 
-          {getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage &&
-            !enteredUpcomingEvent && (
+          {planType != -1 &&
+            getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage &&
+            eventType == 'upcoming' &&
+            getPurchaseHistory?.upcoming_day_status != 1 && (
               <TouchableOpacity
                 onPress={PlanPurchasetoBackendAPI}
                 style={{
