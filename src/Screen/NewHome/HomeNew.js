@@ -1224,7 +1224,7 @@ const HomeNew = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <NameUpdateModal />
+      {/* <NameUpdateModal /> */}
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}

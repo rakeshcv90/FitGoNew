@@ -141,52 +141,51 @@ const RewardModal = ({visible, navigation}) => {
   // };
   return (
     <Modal transparent visible={visible}>
-      <BlurView
-        style={styles.modalContainer1}
-        blurType="light"
-        blurAmount={1}
-        reducedTransparencyFallbackColor="white"
-      />
-      <View style={styles.View1}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <Image
-            source={localImage.Modal_img}
-            style={styles.img1}
-            resizeMode="stretch"
-          />
-          <Image
-            source={localImage.ModalCoin}
-            style={[styles.img2]}
-            resizeMode="contain"
-          />
-          <Icon
-            name="close"
-            size={30}
-            color={AppColor.BLACK}
-            style={{margin: 16}}
-            onPress={() => {
-              dispatch(setRewardModal(false));
-            }}
-          />
-        </View>
-        <View style={{marginVertical: 30}}>
-          <Text style={styles.txt1}>
-            <Text style={{color: AppColor.RED}}>{'Earn While You Burn\n'}</Text>
-            Join the fitness challenge today for a healthier you and a wealthier wallet!
-          </Text>
-          <NewButton
-            pV={15}
-            title={'Get Started'}
-            ButtonWidth={DeviceWidth * 0.6}
-            onPress={() => {
-              dispatch(setRewardModal(false));
-              navigation.navigate('NewSubscription');
-            }}
-          />
+      <View style={{backgroundColor: `rgba(0,0,0,0.4)`, flex: 1}}>
+        <View style={styles.View1}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Image
+              source={localImage.Modal_img}
+              style={styles.img1}
+              resizeMode="stretch"
+            />
+            <Image
+              source={localImage.ModalCoin}
+              style={[styles.img2]}
+              resizeMode="contain"
+            />
+            <Icon
+              name="close"
+              size={30}
+              color={AppColor.BLACK}
+              style={{margin: 16}}
+              onPress={() => {
+                dispatch(setRewardModal(false));
+              }}
+            />
+          </View>
+          <View style={{marginVertical: 30}}>
+            <Text style={styles.txt1}>
+              <Text style={{color: AppColor.RED}}>
+                {'Earn While You Burn\n'}
+              </Text>
+              Join the fitness challenge today for a healthier you and a
+              wealthier wallet!
+            </Text>
+            <NewButton
+              pV={15}
+              title={'Get Started'}
+              ButtonWidth={DeviceWidth * 0.6}
+              onPress={() => {
+                dispatch(setRewardModal(false));
+                navigation.navigate('NewSubscription');
+              }}
+            />
+          </View>
         </View>
       </View>
     </Modal>
