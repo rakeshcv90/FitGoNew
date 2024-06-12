@@ -330,7 +330,13 @@ const LetsStart = ({navigation}) => {
               <Text style={styles.button}>Get Started</Text>
             </TouchableOpacity>
           </LinearGradient>
-          <Text style={[styles.LoginText2, {fontSize: 15}]}>Or</Text>
+          <Text
+            style={[
+              styles.LoginText2,
+              {fontSize: 15, marginVertical: DeviceHeigth * 0.015},
+            ]}>
+            Or
+          </Text>
           <Text style={[styles.LoginText2, {fontSize: 13}]}>
             Already have an account?{' '}
             <Text

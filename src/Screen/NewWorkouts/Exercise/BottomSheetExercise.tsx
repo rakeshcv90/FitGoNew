@@ -124,6 +124,7 @@ const BottomSheetExercise = ({
           fontFamily: 'Poppins',
           fontSize: 20,
           lineHeight: 30,
+          top:-7
         }}
         onBackdropPress={true}
         onRequestClose={() => setVisible(!isVisible)}

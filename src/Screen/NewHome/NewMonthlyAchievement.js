@@ -273,9 +273,10 @@ const NewMonthlyAchievement = () => {
                             resizeMode="contain"
                           />
                           <Text
+                            numberOfLines={1}
                             style={{
                               textAlign: 'center',
-                              width: 90,
+                              width: 100,
                               fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                               color: AppColor.BoldText,
                               fontSize: 12,

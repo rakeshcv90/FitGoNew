@@ -220,10 +220,10 @@ const PredictionScreen = ({navigation, route}: any) => {
           alignItems: 'center',
           width: DeviceWidth,
         }}>
-        <Text style={[styles.t, {fontFamily: Fonts.MONTSERRAT_MEDIUM}]}>
+        <Text style={[styles.t, {fontFamily: Fonts.MONTSERRAT_SEMIBOLD}]}>
           You can do it!
         </Text>
-        <Text style={[styles.t, {fontSize: 16}]}>Keep going</Text>
+        <Text style={[styles.t, {fontSize: 16,fontFamily:Fonts.MONTSERRAT_SEMIBOLD}]}>Keep going</Text>
       </View>
       <View style={styles.buttons}>
         <TouchableOpacity

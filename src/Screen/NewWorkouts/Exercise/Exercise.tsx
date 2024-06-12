@@ -615,9 +615,9 @@ const Exercise = ({navigation, route}: any) => {
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                paddingLeft: DeviceWidth / 2,
+                // paddingLeft: DeviceWidth / 2,
               }}>
-              <GradientText
+              {/* <GradientText
                 text={'Keep Going!'}
                 fontWeight={'700'}
                 fontSize={32}
@@ -632,7 +632,20 @@ const Exercise = ({navigation, route}: any) => {
                 fontWeight={'700'}
                 fontSize={32}
                 x={-2}
-              />
+              /> */}
+              <Text
+                style={{
+                  fontWeight: '600',
+                  fontSize: 32,
+                  color:AppColor.RED1,
+                }}>
+                Keep Going!
+              </Text>
+              <Text  style={{
+                  fontWeight: '600',
+                  fontSize: 32,
+                  color:AppColor.RED1,
+                }}>Don't Give Up!</Text>
             </View>
             <Text
               style={{
@@ -1131,7 +1144,7 @@ const Exercise = ({navigation, route}: any) => {
               <Text
                 style={{
                   color: AppColor.HEADERTEXTCOLOR,
-                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                  fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                   fontSize: 16,
                   lineHeight: 20,
                   fontWeight: '600',
@@ -1164,7 +1177,7 @@ const Exercise = ({navigation, route}: any) => {
                 }}>
                 <Image
                   source={getSoundOffOn ? localImage.BULB : localImage.BELL}
-                  style={{width: 15, height: 15}}
+                  style={{width: 27, height: 27}}
                   resizeMode="contain"
                 />
               </TouchableOpacity>

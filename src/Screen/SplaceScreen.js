@@ -135,6 +135,7 @@ const SplaceScreen = ({navigation}) => {
           type: 'danger',
           icon: {icon: 'auto', position: 'left'},
         });
+        loadScreen();
       } else {
         dispatch(setAgreementContent(ApiCall?.data?.data[0]));
         loadScreen();

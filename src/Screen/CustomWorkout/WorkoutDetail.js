@@ -91,7 +91,7 @@ const WorkoutDetail = ({navigation, route}) => {
   return (
     <>
       <DietPlanHeader
-        header={'Meals'}
+        header={data?.exercise_title??'--'}
         SearchButton={true}
         onPress={() => {
           getFilterData();

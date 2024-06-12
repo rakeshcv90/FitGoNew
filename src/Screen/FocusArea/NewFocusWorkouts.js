@@ -478,7 +478,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                               textAlign: 'center',
                               fontFamily: Fonts.MONTSERRAT_MEDIUM,
                             }}>
-                            Exercise x{item?.exCount}
+                            Exercise x {item?.exCount}
                           </Text>
                         </View>
                         <Icon

@@ -496,7 +496,8 @@ const Workouts = ({navigation}: any) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   zIndex: 1,
-                  marginRight: 20,
+                  marginRight: DeviceWidth*0.07,
+                  top:-10
                 }}
                 resizeMode="contain">
                 <Text
@@ -958,7 +959,7 @@ const Workouts = ({navigation}: any) => {
                           style={{
                             flexDirection: 'row',
                             alignItems: 'center',
-                            justifyContent: 'space-between',
+                            justifyContent: 'space-evenly',
                           }}>
                           <View
                             style={{
@@ -993,6 +994,7 @@ const Workouts = ({navigation}: any) => {
                             style={{
                               width: DeviceWidth * 0.3,
                               height: 70,
+                              left:-15
                               //backgroundColor: 'red',
                             }}
                             resizeMode="contain"

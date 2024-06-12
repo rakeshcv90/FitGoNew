@@ -1449,6 +1449,7 @@ var styles = StyleSheet.create({
     lineHeight: 15,
     fontWeight: '400',
     textDecorationLine: 'underline',
+    fontFamily:Fonts.MONTSERRAT_SEMIBOLD
   },
   LoginText3: {
     fontSize: 16,

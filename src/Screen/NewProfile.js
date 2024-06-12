@@ -47,7 +47,7 @@ import {
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
 import {LogOut} from '../Component/LogOut';
-import { AnalyticsConsole } from '../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../Component/AnalyticsConsole';
 const NewProfile = ({navigation}) => {
   useEffect(() => {
     notifee.getTriggerNotifications().then(res => {
@@ -348,7 +348,7 @@ const NewProfile = ({navigation}) => {
         } catch (error) {
           console.log('CameraimageError', error);
         }
-      } else if (result=='blocked') {
+      } else if (result == 'blocked') {
         Alert.alert(
           'Permission Required',
           'To use the camera feature ,Please enable camera access in settings',
@@ -387,7 +387,7 @@ const NewProfile = ({navigation}) => {
         } catch (error) {
           console.log('LibimageError', error);
         }
-      } else if (resultLib=='blocked') {
+      } else if (resultLib == 'blocked') {
         Alert.alert(
           'Permission Required',
           'To use the photo library ,Please enable library access in settings',
@@ -771,7 +771,7 @@ const NewProfile = ({navigation}) => {
                 marginVertical: 10,
                 color: AppColor.BLACK,
               }}>
-             Sign Up or Log In to Save your progress.
+              Sign Up or Log In to Save your progress.
             </Text>
             <View style={{flexDirection: 'row', top: 5}}>
               <TouchableOpacity
@@ -827,41 +827,46 @@ const NewProfile = ({navigation}) => {
       <View style={styles.card}>
         {getUserDataDetails.email != null
           ? CardData?.map((v, i) => {
-            if(getOfferAgreement?.location != 'India' && v.txt == 'Subscription') return
-            return(
-              <TouchableOpacity
-                key={i}
-                style={{justifyContent: 'center', alignItems: 'center'}}
-                onPress={() => handleCardDataPress(v.id)}>
-                <Image
-                  source={v.img}
-                  style={{height: 35, width: 35}}
-                  resizeMode="contain"
-                />
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontWeight: '600',
-                    marginTop: 10,
-                    color: AppColor.BLACK,
-                  }}>
-                  {v.txt}
-                </Text>
-                {v.txt1 == 'Invalid date' ? null : (
+              if (
+                getOfferAgreement?.location != 'India' &&
+                v.txt == 'Subscription'
+              )
+                return;
+              return (
+                <TouchableOpacity
+                  key={i}
+                  style={{justifyContent: 'center', alignItems: 'center'}}
+                  onPress={() => handleCardDataPress(v.id)}>
+                  <Image
+                    source={v.img}
+                    style={{height: 35, width: 35}}
+                    resizeMode="contain"
+                  />
                   <Text
                     style={{
                       textAlign: 'center',
-                      fontFamily: Fonts.MONTSERRAT_REGULAR,
-                      fontWeight: '500',
-                      marginTop: 6,
-                      color: AppColor.RED1,
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      fontWeight: '600',
+                      marginTop: 10,
+                      color: AppColor.BLACK,
                     }}>
-                    {v.txt1}
+                    {v.txt}
                   </Text>
-                )}
-              </TouchableOpacity>
-            )})
+                  {v.txt1 == 'Invalid date' ? null : (
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        fontFamily: Fonts.MONTSERRAT_REGULAR,
+                        fontWeight: '500',
+                        marginTop: 6,
+                        color: AppColor.RED1,
+                      }}>
+                      {v.txt1}
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              );
+            })
           : CardData1?.map((v, i) => (
               <TouchableOpacity
                 key={i}
@@ -1015,16 +1020,17 @@ const NewProfile = ({navigation}) => {
             </View>
           ))}
         </View>
-        <Text
-          style={{
-            fontFamily: Fonts.MONTSERRAT_BOLD,
-            fontSize: 18,
-            marginLeft: 20,
-            marginVertical: 10,
-            color: AppColor.BLACK,
-          }}>
-          Others
-        </Text>
+        <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
+          <Text
+            style={{
+              fontFamily: Fonts.MONTSERRAT_BOLD,
+              fontSize: 18,
+              marginVertical: 10,
+              color: AppColor.BLACK,
+            }}>
+            Others
+          </Text>
+        </View>
         <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
           {getUserDataDetails.email != null
             ? ListData.slice(2).map((v, i) => (

@@ -9,7 +9,7 @@ import {
   BackHandler,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {AppColor} from '../Component/Color';
+import {AppColor, Fonts} from '../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import Signup from './Signup';
 import CustomSwitch from '../Component/CustomSwitch';
@@ -172,14 +172,14 @@ var styles = StyleSheet.create({
   },
   LoginText: {
     fontSize: 20,
-    fontFamily: 'Verdana',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
     color: AppColor.LITELTEXTCOLOR,
     fontWeight: '600',
     marginTop: 10,
   },
   LoginText2: {
     fontSize: 16,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: Fonts.MONTSERRAT_BOLD,
 
     color: '#3A4750',
     lineHeight: 20,

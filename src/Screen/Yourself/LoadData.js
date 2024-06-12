@@ -22,7 +22,7 @@ import {
   NewApi,
   NewAppapi,
 } from '../../Component/Config';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import axios from 'axios';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
@@ -392,9 +392,10 @@ const LoadData = ({navigation}) => {
           styles.text2,
           {
             color: AppColor.BLACK,
-            marginTop: 20,
+            marginTop: 10,
             fontSize: 20,
             fontWeight: '600',
+            fontFamily:Fonts.MONTSERRAT_MEDIUM
           },
         ]}>
         have achieved their fitness goals
@@ -495,10 +496,10 @@ const styles = StyleSheet.create({
   },
   text1: {
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '500',
     lineHeight: 30,
-    fontFamily: 'Poppins',
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
     color: '#424242',
     top: 15,
   },
