@@ -116,7 +116,7 @@ const Banners = ({type1, type2, onPress, navigation}) => {
         dispatch(setOfferAgreement(ApiCall?.data));
         if (ApiCall?.data?.location == 'India') {
           if (planType == -1) {
-            navigation.navigate('NewSubscription');
+            navigation.navigate('NewSubscription',{upgrade: false});
           } else {
             navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
           }

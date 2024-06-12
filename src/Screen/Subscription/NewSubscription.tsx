@@ -35,9 +35,10 @@ import {useIsFocused} from '@react-navigation/native';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import Carousel from 'react-native-snap-carousel';
 import ActivityLoader from '../../Component/ActivityLoader';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
-const NewSubscription = ({navigation}: any) => {
+const NewSubscription = ({navigation, route}: any) => {
+  const {upgrade} = route.params;
   const dispatch = useDispatch();
   const getInAppPurchase = useSelector((state: any) => state.getInAppPurchase);
   const getPurchaseHistory = useSelector(
@@ -456,7 +457,9 @@ const NewSubscription = ({navigation}: any) => {
         );
       } else {
         dispatch(setPurchaseHistory(result.data.data));
-        result.data.data?.plan_value == 30
+        upgrade
+          ? setCurrentSelected(2)
+          : result.data.data?.plan_value == 30
           ? setCurrentSelected(0)
           : result.data.data?.plan_value == 69
           ? setCurrentSelected(1)
@@ -756,7 +759,7 @@ const NewSubscription = ({navigation}: any) => {
           onPress={() => {
             setSelected(item);
             handlePurchase(item);
-            AnalyticsConsole(`Pur_${normalizedPrice}_PLAN`)
+            AnalyticsConsole(`Pur_${normalizedPrice}_PLAN`);
           }}
           // opacity={price.includes(getPurchaseHistory?.plan_value) ? 0.8 : 1}
           disabled={price.includes(getPurchaseHistory?.plan_value)}

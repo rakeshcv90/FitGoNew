@@ -51,7 +51,7 @@ const SplaceScreen = ({navigation}) => {
 
   const showIntro = useSelector(state => state.showIntro);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
-  const getUserID = useSelector(state => state.getUserID);
+  const planType = useSelector(state => state.planType);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [loaded, setLoaded] = useState(false);
   const [ApiDataloaded, setApiDataLoaded] = useState(false);
@@ -234,18 +234,19 @@ const SplaceScreen = ({navigation}) => {
   };
   if (loaded) {
     setLoaded(false);
-    if (getPurchaseHistory.length > 0) {
+    if (planType != -1) {
       if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        planType >= 149 &&
+        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
       ) {
-        // loadScreen();
+        loadScreen();
       } else {
-        // loaded.show();
-        // loadScreen();
+        loaded.show();
+        loadScreen();
       }
     } else {
-      // loaded.show();
-      // loadScreen();
+      loaded.show();
+      loadScreen();
     }
   }
   const getPlanData = () => {
@@ -349,7 +350,7 @@ const SplaceScreen = ({navigation}) => {
         );
       }
     } catch (error) {
-      console.log(error);
+      console.log('PURCHASEHIS SPL ERR', error);
       dispatch(setPurchaseHistory([]));
     }
   };

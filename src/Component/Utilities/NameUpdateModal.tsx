@@ -21,7 +21,7 @@ import {setCompleteProfileData} from '../ThemeRedux/Actions';
 import {useDispatch} from 'react-redux';
 import {BlurView} from '@react-native-community/blur';
 import {appVersion} from 'react-native-version-number';
-import { AnalyticsConsole } from '../AnalyticsConsole';
+import {AnalyticsConsole} from '../AnalyticsConsole';
 const validationSchemaBoth = Yup.object().shape({
   name: Yup.string()
     .required('Full Name must contain at least 3 characters')
@@ -75,7 +75,7 @@ const NameUpdateModal = ({
     }
   };
   const UpdateAPI = async (values: any) => {
-    AnalyticsConsole(`UP_${dataType}_Popup`)
+    AnalyticsConsole(`UP_${dataType}_Popup`);
     const payload = new FormData();
     values.name != '' && payload.append('name', values.name);
     payload.append('user_id', user_id);
@@ -114,15 +114,14 @@ const NameUpdateModal = ({
         style={[
           styles.content,
           {
-            bottom: DeviceHeigth / 3,
+            bottom: DeviceHeigth / 4,
           },
         ]}>
         <View style={styles.View1}>
           <FitText
             type="SubHeading"
-            value={`Please provide your ${
-              dataType == 'both' ? 'Name and Email' : 'Name'
-            }`}
+            value={`Oops! Looks like some details are missing in your registered profile. Please enter the details below:`}
+            textAlign="center"
           />
 
           <Formik
@@ -168,6 +167,7 @@ const NameUpdateModal = ({
                         color: AppColor.BLACK,
                         backgroundColor: AppColor.WHITE,
                         textAlign: 'center',
+                        marginVertical: 5,
                       }}
                     />
                     {errors.name && touched.name && (
@@ -186,7 +186,7 @@ const NameUpdateModal = ({
                       activeUnderlineColor={AppColor.RED}
                       outlineColor={AppColor.WHITE}
                       activeOutlineColor={AppColor.RED}
-                      placeholder="Write your Name"
+                      placeholder="Write your Email"
                       placeholderTextColor={AppColor.GRAY2}
                       style={{
                         width: DeviceWidth * 0.65,
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     width: DeviceWidth * 0.9,
     padding: 10,
     alignItems: 'center',
-    height: DeviceHeigth / 4,
+    height: DeviceHeigth / 2.5,
   },
   //img
   img1: {
@@ -276,6 +276,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: 'lightgrey',
     ...Platform.select({
       ios: {
         shadowColor: '#000000',

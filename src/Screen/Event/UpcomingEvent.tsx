@@ -34,7 +34,7 @@ import {
 import {EnteringEventFunction} from './EnteringEventFunction';
 import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../../Component/ActivityLoader';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
 const UpcomingEvent = ({navigation, route}: any) => {
   const {eventType} = route?.params;
@@ -189,7 +189,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
               />
               <TouchableOpacity
                 onPress={() => {
-                  AnalyticsConsole('CH_PLAN_BTN')
+                  AnalyticsConsole('CH_PLAN_BTN');
                   setOpenChange(false);
                   if (
                     getPurchaseHistory?.used_plan ==
@@ -226,7 +226,9 @@ const UpcomingEvent = ({navigation, route}: any) => {
   };
   // console.log("MOMENT",moment().day(getPurchaseHistory?.currentDay).format('dddd'))
   console.log(
-    'mo',getPurchaseHistory,eventType
+    'mo',
+    getPurchaseHistory,
+    eventType,
     // moment().day(getPurchaseHistory?.currentDay).format('YYYY-MM-DD'),
   );
 
@@ -239,7 +241,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <DietPlanHeader
-        header={enteredUpcomingEvent ? 'Upcoming Challenge' : 'My Challenge'}
+        header={eventType == 'upcoming' ? 'Upcoming Challenge' : 'My Challenge'}
         h={DeviceWidth * 0.15}
         paddingTop={
           Platform.OS == 'android' ? DeviceHeigth * 0.02 : DeviceHeigth * 0.025
@@ -383,7 +385,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
             </Svg>
             <View style={{marginLeft: 10}}>
               <FitText type="normal" value="Winnning price" />
-              <FitText type="Heading" value="1,000/-" />
+              <FitText type="Heading" value="₹1,000/-" />
             </View>
           </LinearGradient>
           <FitText
@@ -412,28 +414,38 @@ const UpcomingEvent = ({navigation, route}: any) => {
           />
 
           {planType != -1 &&
-            getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage &&
-            eventType == 'upcoming' &&
-            getPurchaseHistory?.upcoming_day_status != 1 && (
-              <TouchableOpacity
-                onPress={PlanPurchasetoBackendAPI}
-                style={{
-                  width: DeviceWidth * 0.4,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 5,
-                  backgroundColor: AppColor.NEW_DARK_RED,
-                  paddingVertical: 10,
-                  marginVertical: 20,
-                }}>
-                <FitText
-                  type="normal"
-                  value="Join Now"
-                  color={AppColor.WHITE}
-                  fontFamily={Fonts.MONTSERRAT_MEDIUM}
-                />
-              </TouchableOpacity>
-            )}
+          getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage &&
+          eventType == 'upcoming' &&
+          getPurchaseHistory?.upcoming_day_status != 1 ? (
+            <TouchableOpacity
+              onPress={PlanPurchasetoBackendAPI}
+              style={{
+                width: DeviceWidth * 0.4,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 5,
+                backgroundColor: AppColor.NEW_DARK_RED,
+                paddingVertical: 10,
+                marginVertical: 20,
+              }}>
+              <FitText
+                type="normal"
+                value="Join Now"
+                color={AppColor.WHITE}
+                fontFamily={Fonts.MONTSERRAT_MEDIUM}
+              />
+            </TouchableOpacity>
+          ) : (
+            <FitText
+              type="normal"
+              value="You've reached your limit to join the challenge. Upgrade your plan to join the new challenge"
+              textAlign="center"
+              color="#333333"
+              fontFamily={Fonts.MONTSERRAT_MEDIUM}
+              fontWeight="600"
+              marginVertical={10}
+            />
+          )}
         </ShadowCard>
         {getPurchaseHistory?.plan_value != null && (
           <>
@@ -479,7 +491,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
                 }}>
                 <FitText
                   type="Heading"
-                  value={`${getPurchaseHistory?.plan_value}/month`}
+                  value={`₹${getPurchaseHistory?.plan_value}/month`}
                   fontSize={28}
                   lineHeight={34}
                   marginVertical={5}
@@ -624,7 +636,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
             borderTopWidth: 0.5,
           }}>
           <TouchableOpacity
-            onPress={() => setOpenChange(true)}
+            onPress={() => navigation.navigate('NewSubscription',{upgrade: true})}
             style={{
               width: DeviceWidth * 0.9,
               justifyContent: 'center',
@@ -636,7 +648,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
             }}>
             <FitText
               type="normal"
-              value="Change Plan"
+              value="Upgrade Plan"
               color={AppColor.NEW_DARK_RED}
               fontFamily={Fonts.MONTSERRAT_MEDIUM}
             />
@@ -648,7 +660,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
             marginVertical={15}
             onPress={() => {
-              AnalyticsConsole(`CanP_BTN`)
+              AnalyticsConsole(`CanP_BTN`);
               PLATFORM_IOS
                 ? Linking.openSettings()
                 : Linking.openURL(
