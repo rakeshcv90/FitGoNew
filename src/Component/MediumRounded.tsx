@@ -11,7 +11,7 @@ import React, {FC} from 'react';
 import {AppColor} from './Color';
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {localImage} from './Image';
-import { navigationRef } from '../../App';
+import {navigationRef} from '../../App';
 
 export type Props = {
   viewAllButton?: boolean;
@@ -24,15 +24,30 @@ const MediumRounded: FC<Props> = ({...props}) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <Text style={styles.category}>
+        <Text
+          style={[
+            styles.category,
+            {
+              fontWeight: 'bold',
+              color: AppColor.BLACK,
+              fontSize: 18,
+              fontFamily: 'Montserrat',
+            },
+          ]}>
           {props.headText ? props.headText : 'Category'}
         </Text>
         {props.viewAllButton && (
           <Text
-          onPress={props.viewAllPress}
+            onPress={props.viewAllPress}
             style={[
               styles.category,
-              {fontSize: 12, color: 'rgba(80, 80, 80, 0.6) '},
+              {
+                fontFamily: 'Montserrat-SemiBold',
+                fontWeight: '600',
+                color: AppColor.RED1,
+                fontSize: 12,
+                lineHeight: 14,
+              },
             ]}>
             View All
           </Text>
@@ -64,7 +79,7 @@ const MediumRounded: FC<Props> = ({...props}) => {
                 }}>
                 <TouchableOpacity
                   onPress={() =>
-                    navigationRef.current?.navigate('WorkoutDays', {data: item})
+                    navigationRef.current?.navigate('WorkoutDays', {data: item, challenge: false})
                   }
                   activeOpacity={0.8}
                   style={[
@@ -75,11 +90,40 @@ const MediumRounded: FC<Props> = ({...props}) => {
                       marginLeft: index == 0 ? 5 : 10,
                     },
                   ]}>
+                  {/* <Image
+                    source={
+                      item.workout_price == 'Premium'
+                        ? require('../Icon/Images/NewImage/premium.png')
+                        : require('../Icon/Images/NewImage/free.png')
+                    }
+                    resizeMode="contain"
+                    style={{
+                      width: 100,
+                      height: 50,
+                      top:
+                        Platform.OS == 'android'
+                          ? DeviceHeigth * 0.01
+                          : DeviceHeigth >= 1024
+                          ? -DeviceHeigth * 0.007
+                          : DeviceHeigth >= 932
+                          ? DeviceHeigth * 0.005
+                          : DeviceHeigth * 0.005,
+                      left:
+                        Platform.OS == 'android'
+                          ? -DeviceWidth * 0.18
+                          : DeviceWidth >= 768
+                          ? -DeviceWidth * 0.24
+                          : DeviceHeigth >= 932
+                          ? -DeviceWidth * 0.195
+                          : -DeviceWidth * 0.18,
+                    }}></Image> */}
+
                   <Image
                     source={{uri: item?.workout_image_link}}
                     style={{
-                      height: DeviceWidth * 0.35,
+                      height: DeviceWidth * 0.3,
                       width: DeviceWidth * 0.55,
+                      //top: -15,
                     }}
                     resizeMode="contain"
                   />
@@ -90,36 +134,14 @@ const MediumRounded: FC<Props> = ({...props}) => {
                   numberOfLines={1}>
                   {item?.workout_title}
                 </Text>
-                {/* <Text
-                  style={[
-                    styles.category,
-                    {fontSize: 34, width: '75%', flexDirection: 'row', justifyContent: 'center',},
-                  ]}>
-                  <GradientText
-                    text={item?.level_title}
-                    width={item?.level_title?.length * 15}
-                    y={'12'}
-                  />
-                 <Text 
-                  style={[
-                    styles.category,
-                    {fontSize: 34, width: '85%', flexDirection: 'row', justifyContent: 'center',},
-                  ]} >.</Text>
-                  <GradientText
-                    y={'12'}
-                    text={
-                      !isNaN(totalTime)
-                        ? totalTime > 60
-                          ? `${(totalTime / 60).toFixed(0)} min`
-                          : `${totalTime} sec`
-                        : 0
-                    }
-                    width={100}
-                  />
-                </Text> */}
+           
               </View>
             );
           }}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={100}
+          removeClippedSubviews={true}
         />
       </View>
     </View>
@@ -160,7 +182,7 @@ const styles = StyleSheet.create({
         // shadowRadius: 10,
       },
       android: {
-        elevation: 10,
+        elevation: 3,
         shadowColor: 'rgba(0, 0, 0, 0.6)',
         shadowOffset: {width: 5, height: 5},
         shadowOpacity: 0.9,

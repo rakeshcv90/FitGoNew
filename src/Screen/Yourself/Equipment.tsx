@@ -11,7 +11,7 @@ import {
 import React, {useEffect, useRef, useState} from 'react';
 import {Image} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import ProgressBar from './ProgressBar';
@@ -20,15 +20,14 @@ import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useFocusEffect} from '@react-navigation/native';
-
+import analytics from '@react-native-firebase/analytics';
 const Equipment = ({route, navigation}: any) => {
   const [backbuttonVisiblity, setbackbuttonVisibility] = useState(true);
   const {nextScreen} = route.params;
 
-  const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
-    (state: any) => state,
+  const  getLaterButtonData= useSelector(
+    (state: any) => state.getLaterButtonData,
   );
-
   const dispatch = useDispatch();
   const [selected, setSelected] = useState('');
   const [screen, setScreen] = useState(nextScreen);
@@ -45,19 +44,7 @@ const Equipment = ({route, navigation}: any) => {
     return unsubscribe;
   }, [navigation]);
 
-  //   return unsubscribe;
-  // }, [navigation]);
-  // useFocusEffect({
-  //   useCallBack(() => {
-  //   },[])
-  // });
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     setScreen(nextScreen);
-  //     handleImagePress('');
-  //     setbackbuttonVisibility(true);
-  //   }, []),
-  // );
+
   const scaleSelectedInterpolate = scaleSelected.interpolate({
     inputRange: [0, 1],
     outputRange: [1, 1.1], // Adjust the starting and ending scale factors as needed
@@ -132,10 +119,9 @@ const Equipment = ({route, navigation}: any) => {
       equipment:
         gender == 'Without\nEquipment' ? 'Without Equipment' : 'With Equipment',
     };
-    {
-      console.log('Equipment  Screen Data', currentData);
-    }
+   
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
+    analytics().logEvent(`CV_FITME_EQUIPMENT_${gender?.replace('\n','_')}`)
     setTimeout(() => {
       navigation.navigate('FocusArea', {nextScreen: screen + 1});
     }, 2000);
@@ -284,7 +270,7 @@ const Equipment = ({route, navigation}: any) => {
                       style={{
                         fontSize: 16,
                         fontWeight: '600',
-                        fontFamily: 'Poppins-SemiBold',
+                        fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                         lineHeight: 18,
                         color: '#404040',
                         textAlign: 'center',
@@ -296,6 +282,11 @@ const Equipment = ({route, navigation}: any) => {
               </TouchableOpacity>
             );
           }}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          updateCellsBatchingPeriod={100}
+          removeClippedSubviews={true}
+          keyExtractor={(item, index) => index.toString()}
         />
       </View>
       <View style={styles.buttons}>

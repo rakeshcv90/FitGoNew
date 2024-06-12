@@ -1,8 +1,9 @@
 export const AppColor={
     RED:'#941000',
     FBBUTTON:'#4267B2',
+    LIGHTGREY2: '#f9f9f9',
     WHITE:'#ffffff',
-    BLACK:'#000000',
+    BLACK:'#000',
     INPUTLABLECOLOR:'#3A4750',
     INPUTTEXTCOLOR:'#303841',
     GOOGLEBUTTON:'#F5F5F5',
@@ -26,5 +27,23 @@ export const AppColor={
     GRAY2:'#D9D9D9',
     BoldText:'#505050',
     RED1:'#D5191A',
-    Gray5:"#999999"
+    Gray5:"#999999",
+    NewBlack: '#202020',
+    NewGray: '#857B7B',
+    HEADERTEXTCOLOR:'#333333',
+    NewRed: '#CE1817',
+    SUBHEADING:'#434343',
+    NEW_GREEN: '#49AEAA',
+    NEW_GREEN_DARK: '#3D8889',
+    NEW_DARK_RED: '#A93737',
   }
+  export const Fonts = {
+    MONTSERRAT_BOLD: 'Montserrat-Bold',
+    MONTSERRAT_SEMIBOLD: 'Montserrat-SemiBold',
+    MONTSERRAT_MEDIUM: 'Montserrat-Medium',
+    MONTSERRAT_REGULAR: 'Montserrat-Regular',
+
+}
+
+
+

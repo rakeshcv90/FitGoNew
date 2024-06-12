@@ -1,19 +1,18 @@
 import {
   Image,
+  Modal,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import Header from '../../Component/Headers/NewHeader';
 import GradientText from '../../Component/GradientText';
 import moment from 'moment';
-import {Canvas, Circle, Group, Line, vec} from '@shopify/react-native-skia';
 import LinearGradient from 'react-native-linear-gradient';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import ProgressButton from '../../Component/ProgressButton';
@@ -22,11 +21,31 @@ import {useDispatch, useSelector} from 'react-redux';
 import {localImage} from '../../Component/Image';
 import {showMessage} from 'react-native-flash-message';
 import axios from 'axios';
-import {useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
+import analytics from '@react-native-firebase/analytics';
+import {
+  BannerAdd,
+  MyInterstitialAd,
+  MyRewardedAd,
+} from '../../Component/BannerAdd';
+import {
+  setFitmeMealAdsCount,
+  setSubscriptiomModal,
+  setVideoLocation,
+} from '../../Component/ThemeRedux/Actions';
+import AnimatedLottieView from 'lottie-react-native';
+import RNFetchBlob from 'rn-fetch-blob';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import {bannerAdId} from '../../Component/AdsId';
+import NativeAddTest from '../../Component/NativeAddTest';
+import FastImage from 'react-native-fast-image';
+import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const WorkoutDays = ({navigation, route}: any) => {
-  const {data} = route.params;
+  const {data, challenge} = route.params;
   const [selected, setSelected] = useState(0);
   const [refresh, setRefresh] = useState(false);
   const [open, setOpen] = useState(true);
@@ -36,9 +55,26 @@ const WorkoutDays = ({navigation, route}: any) => {
   const [totalCount, setTotalCount] = useState(-1);
   const [trackerData, setTrackerData] = useState([]);
   const [exerciseData, setExerciseData] = useState([]);
-  // console.log(data?.days);
-  const {allWorkoutData, getUserDataDetails, getCount} = useSelector(
-    (state: any) => state,
+  const [downloaded, setDownloade] = useState(0);
+  const avatarRef = React.createRef();
+  const [isLoading, setIsLoading] = useState(true);
+  const getFitmeMealAdsCount = useSelector(
+    (state: any) => state.getFitmeMealAdsCount,
+  );
+
+  const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+
+  let isFocuse = useIsFocused();
+  const dispatch = useDispatch();
+  const [reward, setreward] = useState(0);
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
+  );
+  const getUserDataDetails = useSelector(
+    (state: any) => state.getUserDataDetails,
+  );
+  const getSubscriptionModal = useSelector(
+    (state: any) => state.getSubscriptionModal,
   );
   let totalTime = 0,
     restDays = [];
@@ -48,12 +84,14 @@ const WorkoutDays = ({navigation, route}: any) => {
     }
     totalTime = totalTime + parseInt(data?.days[day]?.total_rest);
   }
-  useFocusEffect(
-    useCallback(() => {
+  useEffect(() => {
+    if (isFocuse) {
+      postViewsAPI();
       getCurrentDayAPI();
-      // allWorkoutApi();
-    }, []),
-  );
+      setreward(0);
+      initInterstitial();
+    }
+  }, [isFocuse]);
   const getCurrentDayAPI = async () => {
     try {
       setRefresh(true);
@@ -61,18 +99,20 @@ const WorkoutDays = ({navigation, route}: any) => {
       payload.append('id', getUserDataDetails?.id);
       payload.append('workout_id', data?.workout_id);
       const res = await axios({
-        url: NewAppapi.CURRENT_DAY_EXERCISE_DETAILS,
+        url: challenge
+          ? NewAppapi.CURRENT_CHALLENGE_DAY_EXERCISE_DETAILS
+          : NewAppapi.CURRENT_DAY_EXERCISE_DETAILS,
         method: 'post',
         data: payload,
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-
+      console.log('data------>', res.data);
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
-        const result = analyzeExerciseData(res.data?.user_details);
-
+        const result: any = analyzeExerciseData(res.data?.user_details);
+        console.log('------>', result,selected);
         if (result.two.length == 0) {
           let day = parseInt(result.one[result.one.length - 1]);
           for (const item of Object.entries(data?.days)) {
@@ -83,7 +123,7 @@ const WorkoutDays = ({navigation, route}: any) => {
               setDay(index + 1);
               break;
             } else {
-              setSelected(day + 1);
+              setSelected(day );
               setDay(day + 1);
               // break;
             }
@@ -113,7 +153,6 @@ const WorkoutDays = ({navigation, route}: any) => {
         }
       } else {
         setSelected(0);
-        // console.log('first', res.data);
       }
 
       allWorkoutApi();
@@ -155,7 +194,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           '&workout_id=' +
           data?.workout_id,
       });
-      console.log(res.data?.length, 'DaysData', day);
+
       if (res.data?.msg != 'no data found.') {
         setExerciseData(res.data);
       } else setExerciseData([]);
@@ -166,7 +205,250 @@ const WorkoutDays = ({navigation, route}: any) => {
       setRefresh(false);
     }
   };
-  const dispatch = useDispatch();
+  const postViewsAPI = async () => {
+    try {
+      const payload = new FormData();
+      payload.append('workout_id', data?.workout_id);
+      const res = await axios({
+        url: NewAppapi.POST_WORKOUT_VIEWS,
+        method: 'post',
+        data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (res.data?.msg == 'Workout views ') {
+      }
+      setRefresh(false);
+    } catch (error) {
+      console.error(error, 'VIEWSPIERror');
+      setRefresh(false);
+    }
+  };
+
+  const sanitizeFileName = (fileName: string) => {
+    fileName = fileName.replace(/\s+/g, '_');
+    return fileName;
+  };
+  let StoringData: Object = {};
+  const downloadVideos = async (data: any, index: number, len: number) => {
+    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
+      data?.exercise_title,
+    )}.mp4`;
+    try {
+      const videoExists = await RNFetchBlob.fs.exists(filePath);
+      if (videoExists) {
+        StoringData[data?.exercise_title] = filePath;
+        setDownloade(100 / (len - index));
+        console.log('videoExists', videoExists, 100 / (len - index), filePath);
+      } else {
+        await RNFetchBlob.config({
+          fileCache: true,
+          // IOSBackgroundTask: true, // Add this for iOS background downloads
+          path: filePath,
+          appendExt: '.mp4',
+        })
+          .fetch('GET', data?.exercise_video, {
+            'Content-Type': 'application/mp4',
+            // key: 'Config.REACT_APP_API_KEY',
+          })
+          .then(res => {
+            StoringData[data?.exercise_title] = res.path();
+            setDownloade(100 / (len - index));
+            console.log(
+              'File downloaded successfully!',
+              res.path(),
+              100 / (len - index),
+            );
+            // Linking.openURL(`file://${fileDest}`);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    } catch (error) {
+      console.log('ERRRR', error);
+    }
+    dispatch(setVideoLocation(StoringData));
+  };
+  if (reward == 1) {
+    setreward(0);
+    navigation.navigate('Exercise', {
+      allExercise: exerciseData,
+      currentExercise:
+        trainingCount == -1 ? exerciseData[0] : exerciseData[trainingCount],
+      data: data,
+      day: day,
+      exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
+      trackerData: trackerData,
+    });
+  }
+  const PaddoMeterPermissionModal = () => {
+    return (
+      <Modal
+        transparent
+        visible={getSubscriptionModal}
+        onRequestClose={() => {
+          dispatch(setSubscriptiomModal(false));
+        }}>
+        <View style={styles.modalBackGround}>
+          <View
+            style={[
+              styles.modalContainer,
+              {
+                // height:
+                //   Platform.OS == 'android'
+                //     ? DeviceHeigth * 0.6
+                //     : DeviceHeigth >= 932
+                //     ? DeviceHeigth * 0.45
+                //     : DeviceHeigth * 0.55,
+              },
+            ]}>
+            <Icons
+              name="close"
+              color={AppColor.DARKGRAY}
+              size={30}
+              onPress={() => {
+                dispatch(setSubscriptiomModal(false));
+              }}
+              style={{
+                justifyContent: 'flex-end',
+                alignSelf: 'flex-end',
+                padding: 10,
+              }}
+            />
+            <AnimatedLottieView
+              source={require('../../Icon/Images/NewImage/Subscription.json')}
+              speed={2}
+              autoPlay
+              resizeMode="cover"
+              loop
+              style={{
+                width: DeviceWidth * 0.3,
+                height: DeviceHeigth * 0.2,
+                top: -DeviceHeigth * 0.06,
+              }}
+            />
+            <View
+              style={{
+                height: 40,
+                alignItems: 'center',
+                alignSelf: 'center',
+                top: -DeviceHeigth * 0.05,
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontFamily: 'Poppins',
+                  textAlign: 'center',
+                  color: '#D5191A',
+                  fontWeight: '700',
+                  backgroundColor: 'transparent',
+                  lineHeight: 30,
+                }}>
+                Premium Feature
+              </Text>
+              <View
+                style={{
+                  marginVertical: 10,
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    fontFamily: 'Poppins',
+                    textAlign: 'center',
+                    color: '#696969',
+                    fontWeight: '700',
+                    backgroundColor: 'transparent',
+                    lineHeight: 15,
+                  }}>
+                  This feature is locked
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    fontFamily: 'Poppins',
+                    textAlign: 'center',
+                    color: '#696969',
+                    fontWeight: '700',
+                    backgroundColor: 'transparent',
+                    lineHeight: 15,
+                    marginTop: 5,
+                  }}>
+                  {' '}
+                  please subscribe to access
+                </Text>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={[styles.buttonPaddo]}
+              activeOpacity={0.5}
+              onPress={() => {
+                navigation.navigate('Subscription');
+                dispatch(setSubscriptiomModal(false));
+              }}>
+              <LinearGradient
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 0}}
+                colors={['#D5191A', '#941000']}
+                style={[
+                  styles.buttonPaddo,
+                  {
+                    justifyContent: 'space-evenly',
+                  },
+                ]}>
+                <Image
+                  source={require('../../Icon/Images/NewImage/vip.png')}
+                  style={{width: 25, height: 25}}
+                  tintColor={AppColor.WHITE}
+                />
+                <Text style={[styles.buttonText, {left: 10}]}>Subscribe</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+            <View style={{marginVertical: 10}}>
+              <Text style={[styles.buttonText, {color: '#505050'}]}>OR</Text>
+            </View>
+            <TouchableOpacity
+              style={[
+                styles.buttonPaddo2,
+                {
+                  justifyContent: 'space-evenly',
+                },
+              ]}
+              activeOpacity={0.5}
+              onPress={() => {
+                MyRewardedAd(setreward).load();
+                dispatch(setSubscriptiomModal(false));
+              }}>
+              <LinearGradient
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 0}}
+                colors={['#D9D9D9', '#D9D9D9']}
+                style={[
+                  styles.buttonPaddo2,
+                  {
+                    justifyContent: 'space-evenly',
+                  },
+                ]}>
+                <Image
+                  source={require('../../Icon/Images/NewImage/ads.png')}
+                  style={{width: 25, height: 25}}
+                />
+                <Text style={[styles.buttonText, {color: '#505050', left: 10}]}>
+                  Watch Ads to unlock Workouts
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
   const BlackCircle = ({indexes, select, index}: any) => {
     return (
       <View
@@ -199,317 +481,446 @@ const WorkoutDays = ({navigation, route}: any) => {
     );
   };
 
+  // const resetFitmeCount=()=>{
+  //   return null
+  // }
   const Phase = ({index, percent, select}: any) => {
     const gradientColors = ['#D5191A', '#941000'];
     return (
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: DeviceWidth * 0.8,
           alignSelf: 'flex-end',
+          alignItems: 'center',
         }}>
+        <View
+          style={{
+            height: 5,
+            width: DeviceWidth * 0.2,
+            borderRadius: 5,
+            overflow: 'hidden',
+            backgroundColor: '#d9d9d9',
+          }}>
+          <LinearGradient
+            colors={gradientColors}
+            start={{x: 0, y: 1}}
+            end={{x: 1, y: 0}}
+            style={{
+              height: 5,
+              width: percent == 100 ? '100%' : `${percent}%`,
+            }}
+          />
+        </View>
         <GradientText
-          text={index == 1 ? `Phase 1: Start Easily` : `Phase 2: Warm Ups`}
+          text={index == 1 && day > 4 ? '100%' : `${percent}%`}
           fontSize={14}
           marginTop={0}
           y={20}
-          width={
-            index == 1
-              ? `Phase 1: Start Easily`.length * 8
-              : `Phase 1: Warm Ups`.length * 10
-          }
-          colors={select ? gradientColors : ['#505050', '#505050']}
+          width={50}
         />
-        {select && open && (
-          <View
-            style={{
-              flexDirection: 'row',
-              alignSelf: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                height: 5,
-                width: DeviceWidth * 0.2,
-                borderRadius: 5,
-                overflow: 'hidden',
-                backgroundColor: '#d9d9d9',
-              }}>
-              <LinearGradient
-                colors={gradientColors}
-                start={{x: 0, y: 1}}
-                end={{x: 1, y: 0}}
-                style={{
-                  height: 5,
-                  width: index == 1 && day > 4 ? '100%' : `${percent}%`,
-                }}
-              />
-            </View>
-            <GradientText
-              text={index == 1 && day > 4 ? '100%' : `${percent}%`}
-              fontSize={14}
-              marginTop={0}
-              y={20}
-              width={50}
-            />
-          </View>
-        )}
       </View>
     );
   };
-
-  const Box = ({selected, item, index}: any) => {
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
+  };
+  const Box = ({
+    selected,
+    item,
+    index,
+    active,
+    percent,
+    selectedIndex,
+  }: any) => {
     return (
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={() => {
-          index - 1 == 0
-            ? navigation.navigate('OneDay', {
-                data: data,
-                dayData: item,
-                day: index,
-                trainingCount: trainingCount,
-              })
-            : selected
-            ? navigation.navigate('OneDay', {
-                data: data,
-                dayData: item,
-                day: index,
-                trainingCount: trainingCount,
-              })
-            : showMessage({
-                message: `Please complete Day ${index - 1} Exercise First !!!`,
-                type: 'danger',
-              });
-        }}
-        style={[
-          styles.box,
-          {
-            backgroundColor: AppColor.WHITE,
-            // index == 1 || index == 5
-            //   ? '#F3F4F7'
-            //   : index == 2 || index == 6
-            //   ? '#EAEBFF'
-            //   : index == 3 || index == 7
-            //   ? '#FFE8E1'
-            //   : '#CEF2F9',
-            height:
-              selected && trainingCount != -1
-                ? DeviceHeigth * 0.2
-                : DeviceHeigth * 0.1,
-          },
-        ]}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          {item?.total_rest == 0 ? (
-            <Image
-              source={localImage.Rest}
-              style={{height: 60, width: 60, marginLeft: DeviceWidth * 0.12}}
-              resizeMode="contain"
-            />
-          ) : (
-            <Image
-              source={{uri: data?.workout_image_link}}
-              style={{height: 80, width: 60, marginLeft: DeviceWidth * 0.12}}
-              resizeMode="contain"
-            />
-          )}
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginHorizontal: 10,
-              width: '80%',
-            }}>
-            <View>
-              <Text
-                style={[
-                  styles.category,
-                  {fontSize: 20},
-                ]}>{`Day ${index}`}</Text>
-              {item?.total_rest == 0 ? (
-                <Text style={styles.small}>Rest</Text>
-              ) : (
-                <Text style={styles.small}>
-                  {item?.total_rest > 60
-                    ? `${(item?.total_rest / 60).toFixed(0)} min`
-                    : `${item?.total_rest} sec`}{' '}
-                  | {item?.total_calories} Kcal
-                  {/* {moment(139).format('S')} min | {item?.total_calories} Kcal */}
-                </Text>
-              )}
-            </View>
-            {item?.total_rest != 0 && (
-              <Icons
-                name={'chevron-right'}
-                size={25}
-                color={AppColor.INPUTTEXTCOLOR}
-              />
-            )}
-          </View>
-        </View>
-        {selected && trainingCount != -1 && (
-          <ProgressButton
-            text="Start Training"
-            w={DeviceWidth * 0.75}
-            bR={10}
-            mB={10}
-            fill={
-              totalCount == -1
-                ? '0%'
-                : `${100 - (trainingCount / totalCount) * 100}%`
+      <>
+        <TouchableOpacity
+          key={index}
+          disabled={item?.total_rest == 0}
+          style={[
+            styles.box,
+            {
+              opacity: !selected && item?.total_rest != 0 ? 0.9 : 1,
+              width:
+                DeviceHeigth < 1280 ? DeviceWidth * 0.85 : DeviceWidth * 0.89,
+              height: DeviceHeigth * 0.085,
+              marginTop: 6,
+            },
+          ]}
+          activeOpacity={1}
+          onPress={() => {
+            analytics().logEvent(`CV_FITME_CLICKED_ON_DAY_${index}_EXERCISES`);
+            let checkAdsShow = checkMealAddCount();
+            if (checkAdsShow == true) {
+              showInterstitialAd();
+              index - 1 == 0
+                ? navigation.navigate('OneDay', {
+                    data: data,
+                    dayData: item,
+                    day: index,
+                    trainingCount: trainingCount,
+                    challenge,
+                  })
+                : active
+                ? navigation.navigate('OneDay', {
+                    data: data,
+                    dayData: item,
+                    day: index,
+                    trainingCount: trainingCount,
+                    challenge,
+                  })
+                : showMessage({
+                    message: `Please complete day ${
+                      index - 1
+                    } workout to unlock day ${index}`,
+                    type: 'danger',
+
+                    duration: 1000,
+                    floating: true,
+                    // icon: {icon: 'auto', position: 'left'},
+                  });
+            } else {
+              index - 1 == 0
+                ? navigation.navigate('OneDay', {
+                    data: data,
+                    dayData: item,
+                    day: index,
+                    trainingCount: trainingCount,
+                    challenge,
+                  })
+                : active
+                ? navigation.navigate('OneDay', {
+                    data: data,
+                    dayData: item,
+                    day: index,
+                    trainingCount: trainingCount,
+                    challenge,
+                  })
+                : showMessage({
+                    message: `Please complete day ${
+                      index - 1
+                    } workout to unlock day ${index}`,
+                    type: 'danger',
+
+                    duration: 1000,
+                    floating: true,
+                    // icon: {icon: 'auto', position: 'left'},
+                  });
             }
-            h={DeviceHeigth * 0.08}
-            onPress={() => {
-              console.log(exerciseData, 'trackerData', trackerData);
-              navigation.navigate('Exercise', {
-                allExercise: exerciseData,
-                currentExercise:
-                  trainingCount == -1
-                    ? exerciseData[0]
-                    : exerciseData[trainingCount],
-                data: data,
-                day: day,
-                exerciseNumber: trainingCount == -1 ? 0 : trainingCount,
-                trackerData: trackerData,
-              });
-            }}
-          />
-        )}
-      </TouchableOpacity>
-    );
-  };
-
-  const Time = () => {
-    return (
-      <LinearGradient
-        start={{x: 1, y: 0}}
-        end={{x: 0, y: 1}}
-        colors={['#941000', '#D5191A']}
-        style={[
-          {
-            width: DeviceWidth,
-            height: 80,
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            marginLeft: -15,
-            // justifyContent: 'center',
-            alignItems: 'center',
-            paddingTop: 10,
-          },
-        ]}>
-        <Text
-          style={{
-            color: AppColor.WHITE,
-            fontSize: 18,
-            lineHeight: 30,
-            fontFamily: 'Poppins',
-            fontWeight: '500',
           }}>
-          Time
-        </Text>
-        <Text
-          style={{
-            color: AppColor.WHITE,
-            fontSize: 28,
-            lineHeight: 30,
-            fontFamily: 'Poppins',
-            fontWeight: '600',
-          }}>
-          {totalTime > 60
-            ? `${(totalTime / 60).toFixed(0)} min`
-            : `${totalTime} sec`}
-        </Text>
-      </LinearGradient>
-    );
-  };
-
-  return (
-    <View style={styles.container}>
-      <Header
-        header={
-          data?.workout_title == undefined ? 'Full Body' : data?.workout_title
-        }
-        backButton
-        SearchButton={false}
-      />
-      <GradientText
-        text={'Today'}
-        fontWeight={'500'}
-        fontSize={22}
-        width={150}
-        x={1}
-        marginTop={-10}
-      />
-      <Text style={[styles.category, {marginTop: 10}]}>
-        {moment().format('dddd DD MMMM')}
-      </Text>
-      {!refresh && (
-        <>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              // flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <View style={{alignSelf: 'flex-start'}}>
-              {Object.values(data?.days).map((item: any, index: number) => {
-                // if (item?.total_rest == 0) {
-                //   return (
-                //     <View>
-                //       {/* <Text>Rest</Text> */}
-                //       <Image source={localImage.Rest} style={{height: 50, width: 50,}} />
-                //     </View>
-                //   );
-                // }
-                return (
+          <LinearGradient
+            start={{x: 1, y: 0}}
+            end={{x: 0, y: 1}}
+            colors={[AppColor.WHITE, AppColor.WHITE]}
+            style={[
+              styles.box,
+              {
+                opacity: !selected && item?.total_rest != 0 ? 0.9 : 1,
+                width:
+                  DeviceHeigth < 1280 ? DeviceWidth * 0.85 : DeviceWidth * 0.89,
+                height: DeviceHeigth * 0.085,
+              },
+            ]}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              {item?.total_rest == 0 ? (
+                <View
+                  style={{
+                    height:
+                      DeviceHeigth >= 1024
+                        ? DeviceWidth * 0.18
+                        : DeviceWidth * 0.18,
+                    width:
+                      DeviceHeigth >= 1024
+                        ? DeviceWidth * 0.18
+                        : DeviceWidth * 0.18,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    // marginLeft: DeviceWidth * 0.12,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: '#D9D9D9',
+                  }}>
+                  <Image
+                    source={localImage.Rest}
+                    style={{
+                      height:
+                        DeviceHeigth >= 1024
+                          ? DeviceWidth * 0.14
+                          : DeviceWidth * 0.15,
+                      width:
+                        DeviceHeigth >= 1024
+                          ? DeviceWidth * 0.14
+                          : DeviceWidth * 0.16,
+                      // marginLeft: DeviceWidth * 0.12,
+                      // borderRadius: 10,
+                      // borderWidth: 1,
+                      // borderColor: '#D9D9D9',
+                      opacity: percent ? 0.5 : 1,
+                    }}
+                    resizeMode="contain"
+                  />
+                </View>
+              ) : (
+                <>
                   <View
                     style={{
-                      flexDirection: 'row',
+                      height:
+                        DeviceHeigth >= 1024
+                          ? DeviceWidth * 0.18
+                          : DeviceWidth * 0.18,
+                      width:
+                        DeviceHeigth >= 1024
+                          ? DeviceWidth * 0.18
+                          : DeviceWidth * 0.18,
                       alignItems: 'center',
-                      justifyContent: 'space-between',
+                      justifyContent: 'center',
+                      // marginLeft: DeviceWidth * 0.12,
                     }}>
-                    {index < 8 ? (
-                      <BlackCircle index={index} select={index == selected} />
-                    ) : (
-                      <View style={{width: 30}} />
-                    )}
-                    <View>
-                      {(index == 0 || index == 4) && (
-                        <Phase
-                          index={index + 1}
-                          percent={
-                            index < selected && index == 0 && selected > 4
-                              ? '100%'
-                              : selected < 4 && index == 0
-                              ? (selected / 4) * 100
-                              : (selected / 2 / 4) * 100
-                          }
-                          select={index <= selected}
-                        />
-                      )}
-                      <Box
-                        selected={selected != 0 && index == selected}
-                        index={index + 1}
-                        item={item}
-                      />
-                    </View>
+                    <Text
+                      style={{
+                        fontWeight: '700',
+                        fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                        fontSize: 32,
+                        lineHeight: 40,
+                        color: selectedIndex ? AppColor.RED : '#333333B2',
+                        borderRadius: 5,
+                        borderColor: '#d9d9d9',
+                        borderWidth: 1,
+                        padding: 5,
+                        paddingLeft: 7,
+                      }}>
+                      {index < 10 ? `0${index}` : index}
+                    </Text>
                   </View>
+                </>
+              )}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginHorizontal: 10,
+                  width: DeviceHeigth >= 1024 ? '80%' : '75%',
+                }}>
+                <View>
+                  <Text
+                    style={[
+                      styles.category,
+                      {
+                        fontSize: DeviceHeigth < 1280 ? 16 : 14,
+                        color:
+                          !selectedIndex&& item?.total_rest != 0
+                            ? '#333333B2'
+                            : AppColor.BLACK,
+                        marginBottom: 10,
+                      },
+                    ]}>{`Day-${index}`}</Text>
+                  {item?.total_rest == 0 ? (
+                    <Text
+                      style={[
+                        styles.small,
+                        {
+                          color:
+                            !selectedIndex && item?.total_rest != 0
+                              ? '#333333B2'
+                              : AppColor.BLACK,
+                          lineHeight: DeviceHeigth >= 1024 ? 30 : 20,
+                        },
+                      ]}>
+                      Rest
+                    </Text>
+                  ) : (
+                    <Text
+                      style={[
+                        styles.small,
+                        {
+                          color:
+                            !selectedIndex 
+                              ? '#33333380'
+                              : AppColor.BLACK,
+                        },
+                      ]}>
+                      {item?.total_rest > 60
+                        ? `${(item?.total_rest / 60).toFixed(0)} min`
+                        : `${item?.total_rest} sec`}
+                      {'   '}
+                      <Text
+                        style={{
+                          fontSize: 30,
+                          fontWeight: '600',
+                          color:
+                            !percent && selectedIndex
+                              ? AppColor.BLACK
+                              : '#505050',
+                          lineHeight: 20,
+                          marginHorizontal: 10,
+                          fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                        }}>
+                        .
+                      </Text>
+                      {'   '}
+                      {item?.total_calories} Kcal
+                      {/* {moment(139).format('S')} min | {item?.total_calories} Kcal */}
+                    </Text>
+                  )}
+                </View>
+                <Icons
+                  name={
+                    percent && item?.total_rest != 0 ? 'check' : 'chevron-right'
+                  }
+                  size={25}
+                  color={
+                    percent && item?.total_rest != 0
+                      ? '#D5191A'
+                      : !selectedIndex && item?.total_rest != 0
+                      ? '#33333380'
+                      : AppColor.BLACK
+                  }
+                />
+
+                {/* percent && item?.total_rest != 0 */}
+              </View>
+            </View>
+          </LinearGradient>
+        </TouchableOpacity>
+        {getAdsDisplay(index, item)}
+      </>
+    );
+  };
+  const getAdsDisplay = (index: number, item: any) => {
+    if (Object.values(data?.days).length >= 1) {
+      if (index == 1) {
+        return getNativeAdsDisplay();
+      } else if ((index + 1) % 8 == 0 && Object.values(data?.days).length > 7) {
+        return getNativeAdsDisplay();
+      }
+    }
+  };
+  const getNativeAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return (
+          <View
+            style={{
+              alignSelf: 'center',
+              alignItems: 'center',
+            }}>
+            <NativeAddTest type="image" media={false} />
+          </View>
+        );
+      }
+    } else {
+      return (
+        <View
+          style={{
+            alignSelf: 'center',
+            alignItems: 'center',
+          }}>
+          <NativeAddTest type="image" media={false} />
+        </View>
+      );
+    }
+  };
+  const checkMealAddCount = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        dispatch(setFitmeMealAdsCount(0));
+        return false;
+      } else {
+        if (getFitmeMealAdsCount < 3) {
+          dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
+          return false;
+        } else {
+          dispatch(setFitmeMealAdsCount(0));
+          return true;
+        }
+      }
+    } else {
+      if (getFitmeMealAdsCount < 3) {
+        dispatch(setFitmeMealAdsCount(getFitmeMealAdsCount + 1));
+        return false;
+      } else {
+        dispatch(setFitmeMealAdsCount(0));
+        return true;
+      }
+    }
+  };
+  return (
+    <View style={styles.container}>
+      <DietPlanHeader
+        header={
+          data?.workout_title == undefined ? data?.title : data?.workout_title
+        }
+        h={
+          Platform.OS == 'ios'
+            ? (DeviceHeigth * 13) / 100
+            : (DeviceHeigth * 7) / 100
+        }
+        shadow
+      />
+
+      <>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            // flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <View style={{top: 10}}>
+            {!refresh &&
+              Object.values(data?.days).map((item: any, index: number) => {
+                return (
+                  <Box
+                    active={
+                      selected != 0 &&
+                      index <= selected &&
+                      data?.days[index + 1]?.total_rest != 0
+                    }
+                    index={index + 1}
+                    item={item}
+                    percent={
+                      challenge
+                        ? selected != 0 && index < selected - 1
+                        : selected != 0 && index < selected
+                    }
+                    selected={
+                      challenge
+                        ? selected != 0 && index == selected - 1
+                        : selected != 0 && index < selected
+                    }
+                    selectedIndex={selected == index}
+                  />
                 );
               })}
-            </View>
-          </ScrollView>
-          <Time />
-        </>
-      )}
+          </View>
+        </ScrollView>
+      </>
+
+      <View></View>
+      {bannerAdsDisplay()}
       <ActivityLoader visible={refresh} />
+      <PaddoMeterPermissionModal />
     </View>
   );
 };
@@ -520,45 +931,120 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: AppColor.WHITE,
-    paddingHorizontal: 15,
+    // paddingHorizontal: 5,
   },
   category: {
-    fontFamily: 'Poppins',
-    fontSize: 26,
-    fontWeight: '600',
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    fontSize: 16,
+    fontWeight: '500',
     color: AppColor.LITELTEXTCOLOR,
-    lineHeight: 30,
+    lineHeight: 24,
   },
   small: {
-    fontFamily: 'Poppins',
+    fontFamily: Fonts.MONTSERRAT_REGULAR,
     fontSize: 12,
-    fontWeight: '500',
-    color: AppColor.BoldText,
-    lineHeight: 30,
+    fontWeight: '600',
+    lineHeight: 16,
   },
   box: {
     //   flex: 1,
     alignSelf: 'center',
-    width: DeviceWidth * 0.8,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    borderRadius: 15,
-    marginVertical: 8,
+    borderRadius: 10,
+    marginVertical: 6,
+    backgroundColor: AppColor.WHITE,
+    shadowColor: 'grey',
     ...Platform.select({
       ios: {
-        shadowColor: 'rgba(0, 0, 0, 0.6)',
-        shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.5,
-        // shadowRadius: 10,
+        //shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
       },
       android: {
-        elevation: 10,
-        shadowColor: 'rgba(0, 0, 0, 0.6)',
-        shadowOffset: {width: 1, height: 1},
-        shadowOpacity: 0.1,
-        // shadowRadius: 10,
+        elevation: 3,
       },
     }),
+  },
+  modalBackGround: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    width: '90%',
+    paddingBottom: 30,
+    backgroundColor: 'white',
+    borderRadius: 26,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonPaddo: {
+    height: 45,
+    borderRadius: 10,
+    //width: DeviceWidth * 0.4,
+    paddingLeft: 20,
+    paddingRight: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    // shadowColor: 'rgba(0, 0, 0, 1)',
+    ...Platform.select({
+      ios: {
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.3,
+        // shadowRadius: 4,
+      },
+      android: {
+        elevation: 200,
+      },
+    }),
+  },
+  buttonPaddo2: {
+    flexDirection: 'row',
+    height: 45,
+    paddingLeft: 20,
+    paddingRight: 20,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+
+    //bottom: DeviceHeigth * 0.05,
+    shadowColor: 'rgba(0, 0, 0, 1)',
+    ...Platform.select({
+      ios: {
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.3,
+        // shadowRadius: 4,
+      },
+      android: {
+        elevation: 100,
+      },
+    }),
+  },
+  buttonText: {
+    fontSize: 16,
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    textAlign: 'center',
+    color: AppColor.WHITE,
+    fontWeight: '700',
+    backgroundColor: 'transparent',
+  },
+  loader: {
+    position: 'absolute',
+    justifyContent: 'center',
+
+    backgroundColor: AppColor.GRAY,
+    zIndex: 1,
+    height: DeviceHeigth >= 1024 ? 120 : 80,
+    width: DeviceHeigth >= 1024 ? DeviceWidth * 0.18 : DeviceWidth * 0.19,
+
+    left: DeviceHeigth >= 1024 ? -20 : 0,
+    borderRadius: 10,
   },
 });

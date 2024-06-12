@@ -1,5 +1,6 @@
 import {
   Image,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,21 +12,51 @@ import BottomSheet from 'react-native-easy-bottomsheet';
 import {AppColor} from '../../../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {showMessage} from 'react-native-flash-message';
+import {useSelector} from 'react-redux';
 
 const BottomSheetExercise = ({
   isVisible,
   setVisible,
   exerciseData,
   setCurrentData,
+  setPlayW,
+  setPause,
+  setRandomCount,
+  playTimerRef,
+  currentExercise,
+  setSeconds,
+  handleExerciseChange,
+  setNumber,
 }: any) => {
+  const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const Box = ({selected, item, index}: any) => {
     return (
       <TouchableOpacity
         key={index}
         activeOpacity={1}
         onPress={() => {
+          // setVisible(false);
+          // setCurrentData(item);
+          // if (currentExercise?.exercise_title == item?.exercise_title) {
+          //   showMessage({
+          //     message: 'Current Exercise',
+          //     type: 'info',
+          //     animationDuration: 500,
+          //     floating: true,
+          //     icon: {icon: 'auto', position: 'left'},
+          //   });
+          // } else {
           setVisible(false);
           setCurrentData(item);
+          setSeconds(parseInt(item?.exercise_rest.split(' ')[0]));
+          setPlayW(0);
+          setPause(false);
+          setRandomCount(index);
+          clearInterval(playTimerRef.current);
+          handleExerciseChange(item?.exercise_title);
+          setNumber(index - 1);
+          // }
         }}
         style={[
           styles.box,
@@ -41,7 +72,14 @@ const BottomSheetExercise = ({
             alignItems: 'center',
           }}>
           <Image
-            source={{uri: item?.exercise_image}}
+            source={{
+              uri:
+                getStoreVideoLoc[item?.exercise_title + 'Image'] != undefined
+                  ? 'file://' + getStoreVideoLoc[item?.exercise_title + 'Image']
+                  : item.exercise_image?.includes('https')
+                  ? item.exercise_image
+                  : item.exercise_image_link
+            }}
             style={{height: 80, width: 60, marginLeft: DeviceWidth * 0.12}}
             resizeMode="contain"
           />
@@ -51,7 +89,7 @@ const BottomSheetExercise = ({
               justifyContent: 'space-between',
               alignItems: 'center',
               marginHorizontal: 10,
-              width: '80%',
+              width: '75%',
             }}>
             <View>
               <Text style={[styles.small, {fontSize: 14}]}>
@@ -73,11 +111,12 @@ const BottomSheetExercise = ({
     <View>
       <BottomSheet
         bottomSheetTitle={'Next Exercises'}
-        bottomSheetIconColor="#0A2463"
+        bottomSheetIconColor="#000000"
         bottomSheetStyle={{
           backgroundColor: 'white',
           maxHeight: '65%',
           minHeight: '25%',
+          marginBottom: Platform.OS == 'ios' ? -DeviceHeigth * 0.05 : 0,
         }}
         bottomSheetTitleStyle={{
           color: '#1E1E1E',
@@ -89,7 +128,11 @@ const BottomSheetExercise = ({
         onBackdropPress={true}
         onRequestClose={() => setVisible(!isVisible)}
         bottomSheetVisible={isVisible}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+        style={{
+          marginBottom: DeviceHeigth*0.07
+        }}
+          showsVerticalScrollIndicator={false}>
           {exerciseData.map((item: any, index: number) => (
             <Box selected={-1} index={index + 1} item={item} />
           ))}

@@ -19,36 +19,46 @@ import {useDispatch, useSelector} from 'react-redux';
 
 const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
   const dispatch = useDispatch();
-  const {defaultTheme, completeProfileData, getUserID} = useSelector(
-    state => state,
-  );
+  // const {defaultTheme, completeProfileData, getUserID} = useSelector(
+  //   state => state,
+  // );
+  const defaultTheme = useSelector(state => state.defaultTheme);
+  const completeProfileData = useSelector(state => state.completeProfileData);
+  const getUserID = useSelector(state => state.getUserID);
 
   const [imageView, setImageVIew] = useState([]);
   const [bodyPart, setBordyPart] = useState(
-    completeProfileData?.focusarea.filter(
+    completeProfileData?.focusarea?.filter(
       part =>
         part.bodypart_title !== 'Quads' &&
         part.bodypart_title !== 'Back' &&
         part.bodypart_title !== 'Legs' &&
         part.bodypart_title !== 'Triceps' &&
-        part.bodypart_title !== 'Abs',
+        part.bodypart_title !== 'Abs' &&
+        part.bodypart_title !== 'Forearms' &&
+        part.bodypart_title !== 'Cardio' &&
+        part.bodypart_title !== 'Calves',
     ),
   );
 
   const [bodyPart2, setBordyPart2] = useState(
-    completeProfileData?.focusarea.filter(
+    completeProfileData?.focusarea?.filter(
       part =>
         part.bodypart_title !== 'Quads' &&
         part.bodypart_title !== 'Back' &&
         part.bodypart_title !== 'Shoulders' &&
         part.bodypart_title !== 'Chest' &&
-        part.bodypart_title !== 'Biceps',
+        part.bodypart_title !== 'Biceps' &&
+        part.bodypart_title !== 'Forearms' &&
+        part.bodypart_title !== 'Cardio' &&
+        part.bodypart_title !== 'Calves',
     ),
   );
 
-
   const setImageFocusArea = (itemId, item) => {
+
     const index = selectedItems.indexOf(itemId);
+    console.log("Set Selected Area", index)
     const newSelectedItems = [...selectedItems];
     const newImageVIew = [...imageView];
     if (index === -1) {
@@ -67,7 +77,6 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
     setImageVIew(newImageVIew);
   };
 
-
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -84,7 +93,6 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
               scrollEnabled={false}
               extraData={({item, index}) => index.toString()}
               renderItem={({item, index}) => {
-              
                 const isSelected = selectedItems.includes(item.bodypart_id);
                 return (
                   <TouchableOpacity
@@ -112,6 +120,10 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
                   </TouchableOpacity>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           </View>
         </View>
@@ -171,7 +183,6 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
                 )}
               </View>
               <View>
-             
                 {imageView.find(num => num === 'Shoulders') && (
                   <View
                     style={{
@@ -482,6 +493,10 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
                   </TouchableOpacity>
                 );
               }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           </View>
         </View>

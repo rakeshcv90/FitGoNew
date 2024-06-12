@@ -6,6 +6,7 @@ import {
   StatusBar,
   TouchableOpacity,
   Platform,
+  BackHandler,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {AppColor} from '../Component/Color';
@@ -17,9 +18,24 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {NavigationContainer} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import {navigationRef} from '../../App';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 const Tab = createMaterialTopTabNavigator();
-const LogSignUp = () => {
+const LogSignUp = ({navigation}) => {
   const [showLogin, setShowLogin] = useState('Welcome');
+
+  useEffect(() => {
+    // Add an event listener to handle the hardware back press
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+    // Remove the event listener when the component is unmounted
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+  }, []);
+  const handleBackPress = () => {
+    // Do nothing to stop the hardware back press
+    return true;
+  };
 
   function MyTabBar({state, descriptors, navigation}) {
     return (
@@ -97,7 +113,7 @@ const LogSignUp = () => {
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <TouchableOpacity
       onPress={()=>{
-       // navigationRef.navigate('Yourself');
+        navigation.goBack()
    
       }}
         style={{
@@ -105,7 +121,7 @@ const LogSignUp = () => {
           height: DeviceHeigth* 0.03,
           justifyContent: 'center',
           alignItems: 'center',
-          alignSelf: 'flex-end',
+          alignSelf: 'flex-start',
           marginRight: 30,
          // borderRadius: 30,
           marginTop:Platform.OS=='ios'?DeviceHeigth*0.08:DeviceHeigth*0.03,
@@ -121,6 +137,7 @@ const LogSignUp = () => {
           }}>
           Later
         </Text> */}
+        <Icons  name={'chevron-left'}size={25} color={AppColor.INPUTTEXTCOLOR} />
       </TouchableOpacity>
       <View style={styles.TextContainer}>
         <Text style={styles.LoginText2}>{'Hey there,'}</Text>

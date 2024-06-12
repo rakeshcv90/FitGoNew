@@ -35,7 +35,8 @@ const GradientText = ({
           fontSize={fontSize ? fontSize : '16'}
           fill="url(#grad)"
           x={x ? x : '10'}
-          y={y ? y : '25'}>
+          y={y ? y : '25'}
+          >
           {text}
         </Text>
       </Svg>

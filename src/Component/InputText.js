@@ -27,18 +27,24 @@ const InputText = ({...Props}) => {
   return (
     <View style={styles.container}>
       <View style={styles.input}>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{}}>
           <TextInput
-          
+            multiline={false}
             {...Props}
             mode="outlined"
+            dense={true}
             activeOutlineColor="#707070"
             outlineStyle={{borderRadius: 15}}
+            contentStyle={{
+              paddingTop: 0,
+              paddingBottom: 0,
+            }}
             style={{
               backgroundColor: '#F8F9F9',
               width: DeviceWidth * 0.9,
               alignSelf: 'center',
               height: 55,
+
               fontFamily: 'Poppins',
             }}
           />
@@ -50,7 +56,7 @@ const InputText = ({...Props}) => {
             color: Props.colorText ? 'green' : 'red',
             fontSize: 12,
             textAlign: 'center',
-            marginTop:5
+            marginTop: 5,
           }}>
           {Props.errors}
         </Text>

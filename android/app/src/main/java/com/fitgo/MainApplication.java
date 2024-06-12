@@ -1,5 +1,5 @@
 package fitme.health.fitness.homeworkouts.equipment;
-import com.reactnative.googlefit.GoogleFitPackage;
+// import com.reactnative.googlefit.GoogleFitPackage;
 import android.app.Application;
 import com.microsoft.codepush.react.CodePush;
 import com.facebook.react.PackageList;
@@ -33,7 +33,7 @@ public class MainApplication extends Application implements ReactApplication {
  
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
-          new GoogleFitPackage(BuildConfig.APPLICATION_ID);
+          // new GoogleFitPackage(BuildConfig.APPLICATION_ID);
           return packages;
         }
         

@@ -29,10 +29,11 @@ import {AppColor} from '../../Component/Color';
 import {
   setCompleteProfileData,
   setCustomWorkoutData,
+  setProgressBarCounter,
 } from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import ActivityLoader from '../../Component/ActivityLoader';
-import Carousel from 'react-native-snap-carousel';
+
 import AnimatedLottieView from 'lottie-react-native';
 import Button from '../../Component/Button';
 import ProgressBar from './ProgressBar';
@@ -49,10 +50,6 @@ const height = Array(100)
   .map((item: any, index, arr) => arr[index] + index / 10);
 
 const Index = ({navigation, route}: any) => {
-  const {defaultTheme, completeProfileData, getUserID} = useSelector(
-    (state: any) => state,
-  );
-
   const dispatch = useDispatch();
   const [screen, setScreen] = useState(1);
   const [toggleW, setToggleW] = useState('kg');
@@ -68,12 +65,12 @@ const Index = ({navigation, route}: any) => {
   const [selectedWeight, setSelectedWeight] = useState('');
   const [selectedAge, setSelectedAge] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
-
+  const getTempLogin = useSelector(state => state?.getTempLogin);
   const [isRouteDataAvailable, setIsrouteDataAvailable] = useState(false);
+  console.log('temp-->', getTempLogin);
   useEffect(() => {
     if (route?.params?.id == undefined) {
       setScreen(1);
-      // console.log(Sid.id)
     } else {
       setScreen(route?.params?.id);
       setIsrouteDataAvailable(true);
@@ -81,6 +78,10 @@ const Index = ({navigation, route}: any) => {
   }, [route?.params?.id]);
   useEffect(() => {
     ProfileDataAPI();
+    console.log('temp-->', getTempLogin);
+    if (getTempLogin) {
+      dispatch(setProgressBarCounter(7));
+    }
   }, []);
   useEffect(() => {
     if (screen == 5 || screen == 4 || screen == 3) {
@@ -115,20 +116,27 @@ const Index = ({navigation, route}: any) => {
         url: NewAppapi.Get_COMPLETE_PROFILE,
         method: 'get',
       });
+
       if (res.data) {
         dispatch(setCompleteProfileData(res.data));
-        navigation.navigate('Gender', {
-          data: res.data?.goal,
-          nextScreen: screen,
-        });
+        setTimeout(() => {
+          navigation.replace(getTempLogin ? 'Name' : 'Gender', {
+            data: res.data?.goal,
+            nextScreen: screen,
+          });
+        }, 3000);
       }
     } catch (error) {
       dispatch(setCompleteProfileData([]));
-      navigation.navigate('Gender', {data: [], nextScreen: screen});
+      setTimeout(() => {
+        navigation.navigate(getTempLogin ? 'Name' : 'Gender', {
+          data: [],
+          nextScreen: screen,
+        });
+      }, 3000);
       console.log(error);
     }
   };
-
 
   return (
     <SafeAreaView
@@ -168,7 +176,7 @@ const Index = ({navigation, route}: any) => {
           textAlign: 'center',
           marginTop: 5,
         }}>
-        To give you a better experience and personalized plan
+        Start your journey to a healthier, happier you with us today!
       </Text>
     </SafeAreaView>
   );

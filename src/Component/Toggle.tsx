@@ -19,7 +19,7 @@ type Props = TouchableWithoutFeedbackProps & {
 };
 
 const Toggle: FC<Props> = ({...Props}) => {
-  const {defaultTheme} = useSelector((state: any) => state);
+  const defaultTheme = useSelector((state:any) => state.defaultTheme);
 
   return (
     <View

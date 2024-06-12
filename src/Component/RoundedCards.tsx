@@ -13,6 +13,11 @@ import {DeviceHeigth, DeviceWidth} from './Config';
 import {localImage} from './Image';
 import {navigationRef} from '../../App';
 import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
+import {ActivityIndicator} from 'react-native';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 export type Props = {
   viewAllButton?: boolean;
@@ -27,17 +32,28 @@ export type Props = {
 const RoundedCards: FC<Props> = ({...props}) => {
   const [open, setOpen] = useState(false);
   const [desc, setDesc] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const avatarRef = React.createRef();
   return (
     <>
       <View
         style={[
           styles.container,
-          {
-            marginBottom: props.type == 'core' ? DeviceHeigth * 0.05 : 0,
-          },
+          // {
+          //   marginPadd: props.type == 'core' ? DeviceHeigth * 0.09 : 0,
+          // },
         ]}>
         <View style={styles.row}>
-          <Text style={styles.category}>
+          <Text
+            style={[
+              styles.category,
+              {
+                fontWeight: 'bold',
+                color: AppColor.BLACK,
+                fontSize: 18,
+                fontFamily: 'Montserrat',
+              },
+            ]}>
             {props.headText ? props.headText : 'Category'}
           </Text>
           {props.viewAllButton && (
@@ -45,7 +61,13 @@ const RoundedCards: FC<Props> = ({...props}) => {
               onPress={props.viewAllPress}
               style={[
                 styles.category,
-                {fontSize: 12, color: 'rgba(80, 80, 80, 0.6) '},
+                {
+                  fontFamily: 'Montserrat-SemiBold',
+                  fontWeight: '600',
+                  color: AppColor.RED1,
+                  fontSize: 12,
+                  lineHeight: 14,
+                },
               ]}>
               View All
             </Text>
@@ -53,8 +75,12 @@ const RoundedCards: FC<Props> = ({...props}) => {
         </View>
         <View
           style={{
+            paddingBottom: DeviceHeigth * 0.02,
+            alignItems: 'center',
+            alignSelf: 'center',
+            justifyContent: 'center',
             height: props.horizontal ? DeviceWidth / 3 : DeviceHeigth / 2,
-            width: 'auto',
+            width: DeviceWidth,
           }}>
           <FlatList
             data={props.data}
@@ -76,7 +102,7 @@ const RoundedCards: FC<Props> = ({...props}) => {
               return (
                 <TouchableOpacity
                   onPress={() =>
-                    navigationRef.current?.navigate('WorkoutDays', {data: item})
+                    navigationRef.current?.navigate('WorkoutDays', {data: item, challenge: false})
                   }
                   activeOpacity={0.8}
                   style={[
@@ -84,27 +110,65 @@ const RoundedCards: FC<Props> = ({...props}) => {
                     {
                       width: props?.horizontal
                         ? DeviceWidth / 4
-                        : DeviceWidth * 0.92,
+                        : DeviceWidth * 0.9,
                       flexDirection: props?.horizontal ? 'column' : 'row',
                       justifyContent: props?.horizontal
                         ? 'center'
                         : 'space-between',
                       marginLeft: props.horizontal ? (index == 0 ? 5 : 10) : 3,
-                      // marginBottom:index===data.lenght-1?
+                      alignSelf: 'center',
+                      marginBottom: 5,
                     },
                   ]}>
-                  {
+                  {/* {props?.horizontal && item.workout_price == 'Premium' && (
                     <Image
-                      source={{uri: item?.workout_image_link}}
+                      source={require('../Icon/Images/NewImage/rect.png')}
+                      style={{
+                        width: 30,
+                        height: 30,
+                        top:
+                          Platform.OS == 'android'
+                            ? DeviceHeigth * 0.003
+                            : DeviceHeigth >= 1024
+                            ? -DeviceHeigth * 0.005
+                            : DeviceHeigth * 0.003,
+                        left:
+                          Platform.OS == 'android'
+                            ? -DeviceWidth * 0.095
+                            : DeviceWidth >= 768
+                            ? -DeviceWidth * 0.11
+                            : -DeviceWidth * 0.095,
+                      }}></Image>
+                  )} */}
+
+                  {isLoading && (
+                    <ShimmerPlaceholder
                       style={{
                         height: DeviceWidth / 6,
                         width: props.horizontal
                           ? DeviceWidth / 6
                           : DeviceWidth / 3,
+                        // position: 'absolute',
+                        // justifyContent: 'center',
+                        // alignSelf: 'center',
                       }}
-                      resizeMode="contain"
+                      ref={avatarRef}
+                      autoRun
                     />
-                  }
+                  )}
+
+                  <Image
+                    source={{uri: item?.workout_image_link}}
+                    onLoad={() => setIsLoading(false)}
+                    style={{
+                      height: DeviceWidth / 6,
+                      width: props.horizontal
+                        ? DeviceWidth / 6
+                        : DeviceWidth / 3,
+                    }}
+                    resizeMode="contain"
+                  />
+
                   {props?.trackerData?.includes(item?.workout_id) && (
                     <Image
                       source={localImage.Complete}
@@ -118,12 +182,31 @@ const RoundedCards: FC<Props> = ({...props}) => {
                     />
                   )}
                   {props.horizontal ? (
-                    <Text
-                      style={[styles.category, {fontSize: 14, width: '80%'}]}
-                      ellipsizeMode="tail"
-                      numberOfLines={1}>
-                      {item?.workout_title}
-                    </Text>
+                    <>
+                      {isLoading && (
+                        <ShimmerPlaceholder
+                          style={{
+                            width: '80%',
+                            top: 5,
+                          }}
+                          ref={avatarRef}
+                          autoRun
+                        />
+                      )}
+                      <Text
+                        style={[
+                          styles.category,
+                          {
+                            fontSize: 14,
+                            width: '80%',
+                            top: props.horizontal && -2,
+                          },
+                        ]}
+                        ellipsizeMode="tail"
+                        numberOfLines={1}>
+                        {item?.workout_title}
+                      </Text>
+                    </>
                   ) : (
                     <View
                       style={[
@@ -139,14 +222,33 @@ const RoundedCards: FC<Props> = ({...props}) => {
                         style={{
                           width: '70%',
                         }}>
+                        {isLoading && (
+                          <ShimmerPlaceholder
+                            style={{
+                              width: '80%',
+                              top: 5,
+                            }}
+                            ref={avatarRef}
+                            autoRun
+                          />
+                        )}
                         <Text
                           style={[styles.category]}
                           numberOfLines={2}
                           ellipsizeMode="tail">
                           {item?.workout_title}
                         </Text>
+                        {isLoading && (
+                          <ShimmerPlaceholder
+                            style={{
+                              width: '80%',
+                              top: 5,
+                            }}
+                            ref={avatarRef}
+                            autoRun
+                          />
+                        )}
                         <Text style={[styles.category, {fontSize: 14}]}>
-                          {/* {!isNaN(totalTime) ? totalTime : 0} */}
                           {!isNaN(totalTime)
                             ? totalTime > 60
                               ? `${(totalTime / 60).toFixed(0)} min`
@@ -164,16 +266,20 @@ const RoundedCards: FC<Props> = ({...props}) => {
                           style={{
                             width: 20,
                             height: 20,
-                           
+tintColor:'black',
                             marginRight: DeviceWidth,
                           }}
-                        /> 
+                        />
                       </TouchableOpacity>
                     </View>
                   )}
                 </TouchableOpacity>
               );
             }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
           />
         </View>
       </View>
@@ -186,7 +292,7 @@ export default RoundedCards;
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
     backgroundColor: AppColor.WHITE,
   },
   row: {
@@ -203,7 +309,8 @@ const styles = StyleSheet.create({
   },
   box: {
     backgroundColor: AppColor.WHITE,
-    height: DeviceWidth / 4,
+
+    height: DeviceWidth * 0.25,
     alignItems: 'center',
     borderRadius: 10,
     marginRight: 8,
@@ -216,12 +323,17 @@ const styles = StyleSheet.create({
         // shadowRadius: 10,
       },
       android: {
-        elevation: 10,
+        elevation: 3,
         shadowColor: 'rgba(0, 0, 0, 0.6)',
         shadowOffset: {width: 5, height: 5},
         shadowOpacity: 0.9,
         // shadowRadius: 10,
       },
     }),
+  },
+  loader: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
 });

@@ -8,11 +8,12 @@ import {
   TouchableWithoutFeedbackProps,
   View,
 } from 'react-native';
-import React, {FC} from 'react';
+import React, {FC, useEffect, useRef} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {DeviceWidth} from '../../../Component/Config';
 import {AppColor} from '../../../Component/Color';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Animated} from 'react-native';
 
 export type Props = TouchableWithoutFeedbackProps & {
   w?: number;
@@ -27,82 +28,131 @@ export type Props = TouchableWithoutFeedbackProps & {
   alignSelf?: boolean;
   playy?: any;
   back?: any;
+  backDisabled?: boolean;
   next?: any;
+  nextDisabled?: boolean;
   BM?: number;
   colors?: Array<any>;
+  oneDay?: boolean | false;
+  text?: string;
+  fillBack?: string | '#D9D9D9';
 };
 
 const Play: FC<Props> = ({...props}) => {
+  const progressAnimation = useRef(new Animated.Value(props.fill | 0)).current;
+  const progressBarWidth = progressAnimation.interpolate({
+    inputRange: [0, 100],
+    outputRange: ['0%', '100%'],
+    extrapolate: 'extend',
+  });
+  useEffect(() => {
+    Animated.timing(progressAnimation, {
+      toValue: props.fill,
+      duration: 1000,
+      useNativeDriver: false,
+    }).start();
+  }, [props.fill]);
+  const PARENT = props.oneDay ? TouchableOpacity : View;
   return (
-    <View
+    <PARENT
       {...props}
       style={{
         flex: 1,
-        width: props.w ? props.w : DeviceWidth * 0.9,
+        width: props.w ? props.w : DeviceWidth * 0.5,
         justifyContent: 'center',
         alignItems: 'center',
         //alignSelf: !props.alignSelf ? 'flex-start' : 'center',
         marginBottom: props.mB,
-        bottom:0,
-        position:'absolute',
-        alignSelf:'center',
-        
+        // bottom: 0,
+        // position: 'absolute',
+        alignSelf: 'center',
       }}>
-      <LinearGradient
-        start={{x: 1, y: 0}}
-        end={{x: 0, y: 1}}
-        colors={props.colors ? props.colors : ['#941000', '#D5191A']}
+      <View
         style={[
           styles.nextButton,
           {
-            width: props.w ? props.w : DeviceWidth * 0.9,
+            width: props.w ? props.w : DeviceWidth * 0.5,
             height: props.h ? props.h : 50,
             marginVertical: props.mV,
             paddingVertical: props.pV,
-            borderRadius: props.bR ? props.bR : 20 / 2,
+            // borderRadius: props.bR ? props.bR : 80 / 2,
+          },
+          props.oneDay && {
+            justifyContent: 'center',
           },
         ]}>
-        <>
-          <TouchableOpacity
-            style={{
-              zIndex: 1,
-            }}
-            onPress={props.back}>
-            <Icons name={'chevron-left'} size={40} color={AppColor.WHITE} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              zIndex: 1,
-            }}
-            onPress={props.playy}>
-            {props.play ? (
-              <Icons name={'play'} size={40} color={AppColor.WHITE} />
-            ) : (
-              <Icons name={'pause'} size={40} color={AppColor.WHITE} />
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              zIndex: 1,
-            }}
-            onPress={props.next}>
-            <Icons name={'chevron-right'} size={40} color={AppColor.WHITE} />
-          </TouchableOpacity>
-        </>
-        <View
+        {props.oneDay ? (
+          <Text
+            style={
+              props.textStyle
+                ? props.textStyle
+                : {
+                    fontSize: 20,
+                    fontFamily: 'Poppins',
+                    lineHeight: 30,
+                    color: AppColor.WHITE,
+                    fontWeight: '700',
+                    zIndex: 1,
+                  }
+            }>
+            {props.text}
+          </Text>
+        ) : (
+          <>
+            <TouchableOpacity
+              style={{
+                zIndex: 1,
+              }}
+              disabled={props.backDisabled}
+              onPress={props.back}>
+              <Icons
+                name={'skip-previous'}
+                size={30}
+                color={props.backDisabled ? '#3333334D' : '#333333CC'}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                zIndex: 1,
+                backgroundColor: AppColor.NEW_DARK_RED,
+                borderRadius: 30,
+                padding: 10,
+              }}
+              onPress={props.playy}>
+              {props.play ? (
+                <Icons name={'play'} size={30} color={AppColor.WHITE} />
+              ) : (
+                <Icons name={'pause'} size={30} color={AppColor.WHITE} />
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                zIndex: 1,
+              }}
+              disabled={props.nextDisabled}
+              onPress={props.next}>
+              <Icons
+                name={'skip-next'}
+                size={30}
+                color={props.nextDisabled ? '#3333334D' : '#333333CC'}
+              />
+            </TouchableOpacity>
+          </>
+        )}
+        <Animated.View
           style={{
-            backgroundColor: '#D9D9D9',
+            backgroundColor: props.fillBack ? props.fillBack : 'transparent',
             height: props.h ? props.h : 50,
-            width: props.fill,
+            width: progressBarWidth,
             marginTop: -50,
             // borderBottomRightRadius: props.bR ? props.bR : 50 / 2,
             right: 0,
             position: 'absolute',
-            // zIndex: -1,
+            zIndex: !props.oneDay && props.fillBack ? -1 : 0,
           }}
         />
-      </LinearGradient>
-    </View>
+      </View>
+    </PARENT>
   );
 };
 

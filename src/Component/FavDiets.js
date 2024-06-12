@@ -21,11 +21,11 @@ import {Api, Appapi} from '../Component/Config';
 import axios from 'axios';
 import Loader from '../Component/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { localImage } from './Image';
+import {localImage} from './Image';
 const FavDiets = () => {
- 
   const [Favdiet, setFavDiets] = useState([]);
-  const {defaultTheme} = useSelector(state => state);
+  // const {defaultTheme} = useSelector(state => state);
+  const defaultTheme = useSelector(state => state.defaultTheme);
   const [isLoaded, setIsLoaded] = useState(false);
   const navigation = useNavigation();
   const [update, setUpdate] = useState(0);
@@ -45,7 +45,7 @@ const FavDiets = () => {
             },
           },
         );
-      
+
         if (favDiet.data) {
           setFavDiets(favDiet.data);
           setUpdate(update + 1);
@@ -82,26 +82,34 @@ const FavDiets = () => {
                     color: defaultTheme ? '#FFF' : '#000',
                     fontSize: 20,
                     fontWeight: '500',
-                    marginVertical:15
+                    marginVertical: 15,
                   }}>
                   Nothing is added , Add Diets
                 </Text>
-                 <View>
-                  <TouchableOpacity onPress={()=>{navigation.navigate("Diets")}}>
-                   <Image source={localImage.addIcon} style={styles.add}/>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('Diets');
+                    }}>
+                    <Image source={localImage.addIcon} style={styles.add} />
                   </TouchableOpacity>
-                 </View>
+                </View>
               </View>
             </>
           ) : (
             <>
               <View
                 style={{
-                 flex:1,
+                  flex: 1,
                   backgroundColor: defaultTheme ? '#000' : '#fff',
                 }}>
                 <FlatList
                   data={Favdiet}
+                  initialNumToRender={10}
+                  maxToRenderPerBatch={10}
+                  updateCellsBatchingPeriod={100}
+                  removeClippedSubviews={true}
+                  keyExtractor={(item, index) => index.toString()}
                   renderItem={({item}) => {
                     return (
                       <TouchableOpacity
@@ -176,11 +184,11 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 70) / 100,
     justifyContent: 'space-between',
   },
-  add:{
-    width:DeviceWidth*15/100,
-    height:DeviceHeigth*5/100,
-    resizeMode:'contain',
-    tintColor:'#C8170D'
-  }
+  add: {
+    width: (DeviceWidth * 15) / 100,
+    height: (DeviceHeigth * 5) / 100,
+    resizeMode: 'contain',
+    tintColor: '#C8170D',
+  },
 });
 export default FavDiets;

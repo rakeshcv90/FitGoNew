@@ -143,41 +143,156 @@ export const setSoundOnOff = data => {
     payload: data,
   };
 };
-export const setFcmToken=data=>{
-  return{
-    type:types.FCM_TOKEN,
-    payload:data
-  }
-}
-export const setBmi=data=>{
-  return{
-    type:types.BMI,
-    payload:data
-  }
-}
-export const setHomeGraphData=data=>{
-  return{
-    type:types.HOME_GRAPH_DATA,
-    payload:data
-  }
-}
-export const setWorkoutTimeCal=data=>{
-  return{
-    type:types.Custome_Time_Cal,
-    payload:data
-  }
-}
-export const setProfileImg_Data=data=>{
-  return{
-    type:types.Profile_imgData,
-    payload:data
-  }
-}
-export const setStepCounterOnOff=data=>{
-  return{
-    type:types.IS_STEP_COUNTER_ON,
-    payload:data
-  }
-  
+export const setFcmToken = data => {
+  return {
+    type: types.FCM_TOKEN,
+    payload: data,
+  };
+};
+export const setBmi = data => {
+  return {
+    type: types.BMI,
+    payload: data,
+  };
+};
+export const setHomeGraphData = data => {
+  return {
+    type: types.HOME_GRAPH_DATA,
+    payload: data,
+  };
+};
+export const setWorkoutTimeCal = data => {
+  return {
+    type: types.Custome_Time_Cal,
+    payload: data,
+  };
+};
+export const setProfileImg_Data = data => {
+  return {
+    type: types.Profile_imgData,
+    payload: data,
+  };
+};
+export const setStepCounterOnOff = data => {
+  return {
+    type: types.IS_STEP_COUNTER_ON,
+    payload: data,
+  };
+};
+export const setSubscriptiomModal = data => {
+  return {
+    type: types.SUBSCRIPTION_MODAL,
+    payload: data,
+  };
+};
+export const setFitmeAdsCount = data => {
+  return {
+    type: types.FITME_ADD_COUNT,
+    payload: data,
+  };
+};
+export const setFitmeMealAdsCount = data => {
+  return {
+    type: types.FITME_ADD_COUNT_MEALS,
+    payload: data,
+  };
+};
+export const setVideoLocation = data => {
+  return {
+    type: types.STORE_VIDEO_LOC,
+    payload: data,
+  };
+};
+export const setIsAlarmEnabled = data => {
+  return {
+    type: types.ALARM_ENABLED,
+    payload: data,
+  };
+};
 
+export const setWeeklyPlansData = data => {
+  return {
+    type: types.WEEKLY_PLANS_DATA,
+    payload: data,
+  };
+};
+export const setChallengesData = data => {
+  return {
+    type: types.CHALLENGES_DATA,
+    payload: data,
+  };
+};
+export const setAllExercise = data => {
+  return {
+    type: types.ALL_EXERCISE,
+
+    payload: data,
+  };
+};
+export const setCurrentSelectedDay = data => {
+  return {
+    type: types.CURRENT_SELECTED_DAY,
+
+    payload: data,
+  };
+};
+export const setExperience = data => {
+  return {
+    type: types.IS_EXPERIENCED,
+    payload: data,
+  };
+};
+export const setProgressBarCounter = data => {
+  return {
+    type: types.PROGRESS_BAR_COUNTER,
+    payload: data,
+  };
+};
+export const setTempLogin = data => {
+  return {
+    type: types.TEMP_LOGIN,
+    payload: data,
+  };
+};
+export const setUprBdyOpt = data => {
+  return {
+    type: types.UPRBDYFILTEROPT,
+    payload: data,
+  };
+};
+export const setLowerBodyFilOpt = data => {
+  return {
+    type: types.LWRBDYFILTEROPT,
+    payload: data,
+  };
+};
+export const setCoreFilOpt = data => {
+  return {
+    type: types.COREFILTOPRION,
+    payload: data,
+  };
+};
+export const setUprBodyCount = data => {
+  return {
+    type: types.UPRBODYCOUNT,
+    payload: data,
+  };
+};
+export const setLowerBodyCount = data => {
+  return {
+    type: types.LWERBODYCOUNT,
+    payload: data,
+  };
+};
+export const setCoreCount = data => {
+  return {
+    type: types.CORECOUNT,
+    payload: data,
+  };
+};
+export const setExerciseCount=data=>{
+return{
+   type:types.EXERCISECOUNT,
+   payload:data
+}
 }

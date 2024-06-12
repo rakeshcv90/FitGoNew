@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {AppColor} from '../../../Component/Color';
+import {AppColor, Fonts} from '../../../Component/Color';
 import GradientText from '../../../Component/GradientText';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../../Component/Config';
 import axios from 'axios';
@@ -17,22 +17,46 @@ import AnimatedLottieView from 'lottie-react-native';
 import {localImage} from '../../../Component/Image';
 import GradientButton from '../../../Component/GradientButton';
 import {StatusBar} from 'react-native';
+import moment from 'moment';
+import {BannerAdd} from '../../../Component/BannerAdd';
+import {bannerAdId} from '../../../Component/AdsId';
+import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+import { AnalyticsConsole } from '../../../Component/AnalyticsConsole';
 
+const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+const WeekArray = Array(7)
+  .fill(0)
+  .map(
+    (item, index) =>
+      (item = moment()
+        .add(index, 'days')
+        .subtract(moment().isoWeekday() - 1, 'days')
+        .format('dddd')),
+  );
+const numberArray = [1, 2, 3, 4, 5, 6, 7];
 const DayRewards = ({navigation, route}: any) => {
   const {data, day} = route?.params;
-  const {allWorkoutData, getUserDataDetails, getCount} = useSelector(
-    (state: any) => state,
+  const getUserDataDetails = useSelector(
+    (state: any) => state.getUserDataDetails,
   );
+  const getPurchaseHistory = useSelector(
+    (state: any) => state.getPurchaseHistory,
+  );
+  const avatarRef = React.createRef();
   const [days, setDays] = useState<Array<any>>([]);
+  const [weekly, setWeekly] = useState(false);
+  const [loader, setLoader] = useState(false);
   useEffect(() => {
     getCurrentDayAPI();
   }, []);
   const getCurrentDayAPI = async () => {
+    setLoader(true);
     try {
       const payload = new FormData();
       payload.append('id', getUserDataDetails?.id);
       payload.append('workout_id', data?.workout_id);
-      //   console.log(data, 'das');
+
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EXERCISE_DETAILS,
         method: 'post',
@@ -41,16 +65,18 @@ const DayRewards = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('GET API TRACKER', res.data);
+
       if (res.data?.msg != 'No data found') {
-        // if(res.data?.user_details)
         analyzeExerciseData(res.data?.user_details);
+        setWeekly(false);
       } else {
-        // setSelected(0);
-        // console.log('first', res.data);
+        WeeklyStatusAPI();
+        setWeekly(true);
       }
+      setLoader(false);
     } catch (error) {
       console.error(error, 'DAPIERror');
+      setLoader(false);
     }
   };
 
@@ -64,17 +90,60 @@ const DayRewards = ({navigation, route}: any) => {
     });
     setDays(Array.from(daysCompletedAll));
   }
+
+  const WeeklyStatusAPI = async () => {
+    try {
+      const res = await axios({
+        url: NewAppapi.WEEKLY_STATUS + '?user_id=' + getUserDataDetails.id,
+      });
+      if (res.data?.msg != 'No data found.') {
+        const days = new Set(); // Use a Set to store unique days
+        res.data?.forEach((item: any) => {
+          days.add(item.user_day);
+        });
+        console.log('DAYS', days);
+        setDays([...days]);
+      } else {
+        setDays([]);
+      }
+    } catch (error) {
+      console.error(error, 'WEEKLYSTATUS ERRR');
+    }
+  };
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
+  };
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <GradientText
-        text="Congratulations!"
-        fontSize={32}
-        width={Platform.OS == 'ios' ? DeviceWidth * 0.9 : DeviceWidth * 0.7}
-        y={'70'}
-        x={'10%'}
-        height={100}
-      />
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          alignSelf: 'center',
+          marginVertical: DeviceHeigth * 0.05,
+        }}>
+        <Text
+          style={{
+            color: AppColor.RED1,
+            fontSize: 28,
+            lineHeight: 40,
+            fontWeight: '600',
+            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+          }}>
+          Congratulations!
+        </Text>
+      </View>
       <AnimatedLottieView
         // source={{
         //   uri: 'https://assets7.lottiefiles.com/packages/lf20_qgq2nqsy.json',
@@ -120,46 +189,110 @@ const DayRewards = ({navigation, route}: any) => {
           }}>
           Weekly Achievement
         </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: DeviceWidth * 0.9,
-            marginTop: 10,
-          }}>
-          {[1, 2, 3, 4, 5, 6, 7].map((item: any, index: number) => {
-            return (
-              <View style={{alignItems: 'center'}}>
-                {days.includes(item) ? (
-                  <Image
-                    source={localImage.RedCircle}
-                    style={{height: 40, width: 40}}
-                  />
-                ) : (
-                  <View
-                    style={{
-                      height: 40,
-                      width: 40,
-                      borderRadius: 50,
-                      backgroundColor: '#EDF1F4',
-                    }}
-                  />
-                )}
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontFamily: 'Poppins',
-                    lineHeight: 30,
-                    color: '#505050',
-                    fontWeight: '500',
-                  }}>
-                  {item}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
+        {loader ? (
+          <View
+            style={{
+              width: DeviceWidth * 0.9,
+              height: 50,
+              borderRadius: 30,
+              justifyContent: 'center',
+              alignItems: 'center',
+              overflow: 'hidden',
+              marginTop: 10,
+            }}>
+            <ShimmerPlaceholder
+              style={{height: '100%', width: '100%'}}
+              ref={avatarRef}
+              autoRun
+            />
+          </View>
+        ) : (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: DeviceWidth * 0.9,
+              marginTop: 10,
+            }}>
+            {weekly
+              ? WeekArray.map((item: any, index: number) => {
+                  return (
+                    <View style={{alignItems: 'center'}}>
+                      {days.includes(item) ? (
+                        <Image
+                          source={localImage.RedCircle}
+                          style={{height: 40, width: 40}}
+                        />
+                      ) : (
+                        <View
+                          style={{
+                            height: 40,
+                            width: 40,
+                            borderRadius: 50,
+                            backgroundColor: '#EDF1F4',
+                          }}
+                        />
+                      )}
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontFamily: 'Poppins',
+                          lineHeight: 30,
+                          color: '#505050',
+                          fontWeight: '500',
+                        }}>
+                        {item?.substring(0, 1)}
+                      </Text>
+                    </View>
+                  );
+                })
+              : numberArray.map((item: any, index: number) => {
+                  return (
+                    <View style={{alignItems: 'center'}}>
+                      {days.includes(item) ? (
+                        <Image
+                          source={localImage.RedCircle}
+                          style={{height: 40, width: 40}}
+                        />
+                      ) : (index + 1) % 2 == 0 &&
+                        index < days[days.length - 1] ? (
+                        <Image
+                          source={localImage.Rest}
+                          style={{
+                            height: 40,
+                            width: 40,
+                            borderRadius: 20,
+                            borderWidth: 1,
+                            borderColor: '#EDF1F4',
+                          }}
+                          resizeMode="contain"
+                        />
+                      ) : (
+                        <View
+                          style={{
+                            height: 40,
+                            width: 40,
+                            borderRadius: 50,
+                            backgroundColor: '#EDF1F4',
+                          }}
+                        />
+                      )}
+                      <Text
+                        style={{
+                          fontSize: 16,
+                          fontFamily: 'Poppins',
+                          lineHeight: 30,
+                          color: '#505050',
+                          fontWeight: '500',
+                        }}>
+                        {item}
+                      </Text>
+                    </View>
+                  );
+                })}
+          </View>
+        )}
         <Text
           style={{
             fontSize: 16,
@@ -183,15 +316,29 @@ const DayRewards = ({navigation, route}: any) => {
           }}>
           Good Luck
         </Text>
-        <GradientButton
-          onPress={() => navigation.navigate('BottomTab')}
-          text="Collect Rewards"
-          bR={50}
-          h={70}
-          position="absolute"
-          bottm={10}
-          alignSelf
-        />
+        <View
+          style={{
+            marginBottom: DeviceHeigth * 0.002,
+            top: DeviceHeigth * 0.14,
+          }}>
+          <GradientButton
+            onPress={() =>{
+              AnalyticsConsole(`COLLECT_REWARDS`);
+              weekly
+                ? navigation.navigate('BottomTab')
+                : navigation.navigate('WorkoutDays', {data: data})
+            }}
+            text="Collect Rewards"
+            bR={50}
+            h={70}
+            position="absolute"
+            bottm={10}
+            alignSelf
+          />
+        </View>
+      </View>
+      <View style={{position: 'absolute', bottom: 0}}>
+        {bannerAdsDisplay()}
       </View>
     </SafeAreaView>
     // <ScrollView

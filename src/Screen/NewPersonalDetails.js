@@ -33,6 +33,7 @@ import {Dropdown, MultiSelect} from 'react-native-element-dropdown';
 import axios from 'axios';
 import ActivityLoader from '../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
+import {AnalyticsConsole} from '../Component/AnalyticsConsole';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -45,8 +46,11 @@ const NewPersonalDetails = ({route, navigation}) => {
   const dispatch = useDispatch();
   const [forLoading, setForLoading] = useState(false);
   const [isEditible, setEditable] = useState(false);
-  const {getUserDataDetails, completeProfileData} = useSelector(state => state);
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const [isFocus, setIsFocus] = useState(false);
+  const getLaterButtonData = useSelector(state => state.getLaterButtonData);
+  const [goalsData, setGoalsData] = useState([]);
+  const completeProfileData = useSelector(state => state.completeProfileData);
 
   useEffect(() => {
     ProfileDataAPI();
@@ -55,16 +59,7 @@ const NewPersonalDetails = ({route, navigation}) => {
     {label: 'Male', value: 'Male'},
     {label: 'Female', value: 'Female'},
   ];
-  const maleGole = [
-    {label: 'Weight Loss', value: 3},
-    {label: 'Build Muscle', value: 6},
-    {label: 'Strength', value: 13},
-  ];
-  const fmaleGole = [
-    {label: 'Weight Loss', value: 1},
-    {label: 'Build Muscle', value: 2},
-    {label: 'Strength', value: 4},
-  ];
+
   const injury = [
     {
       injury_id: 4,
@@ -121,6 +116,10 @@ const NewPersonalDetails = ({route, navigation}) => {
       workoutarea_title: 'At Home',
     },
   ];
+  const workout_plans = [
+    {label: 'Workout Created by Us', value: 'AppCreated'},
+    {label: 'Custom Workout', value: 'CustomCreated'},
+  ];
   const ProfileDataAPI = async () => {
     try {
       const res = await axios({
@@ -130,30 +129,34 @@ const NewPersonalDetails = ({route, navigation}) => {
 
       if (res.data) {
         dispatch(setCompleteProfileData(res.data));
+        const temp = res.data?.goal?.filter(
+          item => item?.goal_gender == getUserDataDetails?.gender,
+        );
+        setGoalsData(temp);
       } else {
         dispatch(setCompleteProfileData([]));
+        setGoalsData([]);
       }
     } catch (error) {
       dispatch(setCompleteProfileData([]));
+      setGoalsData([]);
 
       console.log(error);
     }
   };
 
   const renderLabel = item => {
-    if (isFocus) {
-      return (
-        <Text style={[styles.label, isFocus && {color: '#707070'}]}>
-          {item}
-        </Text>
-      );
+    if (!isFocus) {
+      return <Text style={[styles.label, {color: 'black'}]}>{item}</Text>;
     }
     return null;
   };
+
   const handleFormSubmit = async (values, action) => {
     setForLoading(true);
+    AnalyticsConsole(`PROFILE_UPDATE_BUTTON`);
     try {
-      const data = await axios(`${NewAppapi.UpdateUserProfile}`, {
+      const dataItem = await axios(`${NewAppapi.UpdateUserProfile}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -164,22 +167,24 @@ const NewPersonalDetails = ({route, navigation}) => {
           token: getUserDataDetails.login_token,
           version: VersionNumber.appVersion,
           goal: values.goal,
-          injury: values.injury,
-          weight: values.name,
+          injury: getUserDataDetails?.injury,
+          weight: getUserDataDetails?.weight,
           target_weight: values.targetWeight,
-          equipment_type: values.equipment,
-          focusarea:
-            values.focuseAres.length > 0
-              ? values.focuseAres.join(',')
-              : getUserDataDetails.focus_area,
-          place: values.workPlace,
+
+          // focusarea:
+          //   values.focuseAres.length > 0
+          //     ? values.focuseAres.join(',')
+          //     : getUserDataDetails.focus_area,
+
           gender: values.gender,
+          experience: getUserDataDetails.experience,
+          workout_plans: values.workout_plans,
         },
       });
-    
-      if (data?.data?.msg == 'User Updated Successfully') {
+
+      if (dataItem.data.msg == 'User Updated Successfully') {
         showMessage({
-          message: data.data.msg,
+          message: 'Details updated successfully',
           floating: true,
           type: 'success',
           animationDuration: 750,
@@ -187,13 +192,13 @@ const NewPersonalDetails = ({route, navigation}) => {
         });
 
         setForLoading(false);
-        dispatch(setUserProfileData(data.data.profile));
-        dispatch(setCustomWorkoutData(data?.data.allworkouts));
+        dispatch(setUserProfileData(dataItem.data.profile));
+        // dispatch(setCustomWorkoutData(dataItem?.data.allworkouts));
       } else if (
-        data?.data?.msg == 'Please update the app to the latest version.'
+        dataItem?.data?.msg == 'Please update the app to the latest version.'
       ) {
         showMessage({
-          message: data?.data?.msg,
+          message: dataItem?.data?.msg,
           floating: true,
           type: 'danger',
           animationDuration: 750,
@@ -203,7 +208,7 @@ const NewPersonalDetails = ({route, navigation}) => {
         setForLoading(false);
       } else {
         showMessage({
-          message: data.data.msg,
+          message: dataItem.data.msg,
           floating: true,
           type: 'danger',
           animationDuration: 750,
@@ -229,13 +234,19 @@ const NewPersonalDetails = ({route, navigation}) => {
       <NewHeader header={'Details'} backButton />
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       {forLoading ? <ActivityLoader /> : ''}
+
       <Formik
         initialValues={{
           name: getUserDataDetails?.name,
           email: getUserDataDetails?.email,
           gender: getUserDataDetails?.gender,
+          experience: getUserDataDetails?.experience,
+          workout_plans:
+            getUserDataDetails?.workout_plans == 'AppCreated'
+              ? 'Workout Created by Us'
+              : 'Custom Workout',
           goal: getUserDataDetails?.goal_title,
-          injury: getUserDataDetails?.injury,
+          // injury: getUserDataDetails?.injury,
 
           targetWeight: getUserDataDetails?.target_weight,
           equipment: getUserDataDetails?.equipment,
@@ -333,156 +344,369 @@ const NewPersonalDetails = ({route, navigation}) => {
                       editable={false}
                     />
                   </View>
-
-                  <View
-                    style={{
-                      marginTop: DeviceHeigth * 0.02,
-
-                      alignItems: 'center',
-                    }}>
-                    {renderLabel('Fitness Goal')}
-
-                    <Dropdown
-                      style={[styles.dropdown]}
-                      placeholderStyle={styles.placeholderStyle}
-                      selectedTextStyle={styles.selectedTextStyle}
-                      data={values.gender == 'Female' ? fmaleGole : maleGole}
-                      labelField="label"
-                      valueField="label"
-                      placeholder={getUserDataDetails?.goal_title}
-                      value={values.goal}
-                      onFocus={() => setIsFocus(true)}
-                      onBlur={() => setIsFocus(false)}
-                      onChange={item => {
-                        setFieldValue('goal', item.label);
-                      }}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      marginTop: DeviceHeigth * 0.02,
-
-                      alignItems: 'center',
-                    }}>
-                    {renderLabel('Injuries In Body Part')}
-                    <Dropdown
-                      style={[styles.dropdown]}
-                      placeholderStyle={styles.placeholderStyle}
-                      selectedTextStyle={styles.selectedTextStyle}
-                      data={injury}
-                      labelField="injury_title"
-                      valueField="injury_title"
-                      placeholder={getUserDataDetails?.injury}
-                      value={values.injury}
-                      onFocus={() => setIsFocus(true)}
-                      onBlur={() => setIsFocus(false)}
-                      onChange={item => {
-                        setFieldValue('injury', item.injury_title);
-                      }}
-                    />
-                  </View>
-
                   <View
                     style={{
                       marginTop: DeviceHeigth * 0.02,
                       marginLeft: 10,
+                      marginBottom: 10,
                     }}>
                     <InputText
-                      errors={errors.targetWeight}
-                      touched={touched.targetWeight}
-                      value={values.targetWeight}
-                      onBlur={handleBlur('targetWeight')}
-                      onChangeText={handleChange('targetWeight')}
-                      right={
-                        <TextInput.Icon
-                          icon={() => (
-                            <TouchableOpacity onPress={() => {}}>
-                              <Image
-                                source={localImage.Down}
-                                tintColor={AppColor.BoldText}
-                                style={{width: 10, height: 10}}
-                                resizeMode="contain"
-                              />
-                            </TouchableOpacity>
-                          )}
-                          style={{marginTop: 14}}
+                      errors={errors.experience}
+                      touched={touched.experience}
+                      onBlur={handleBlur('experience')}
+                      value={values.experience}
+                      onChangeText={handleChange('experience')}
+                      label="Fitness Level"
+                      placeholder={getUserDataDetails?.experience}
+                      editable={false}
+                    />
+                  </View>
+                  {values.experience == 'Beginner' && (
+                    <>
+                      <View
+                        style={{
+                          marginTop: DeviceHeigth * 0.02,
+
+                          alignItems: 'center',
+                        }}>
+                        {renderLabel('Fitness Goal')}
+
+                        <Dropdown
+                          style={[styles.dropdown]}
+                          placeholderStyle={styles.placeholderStyle}
+                          itemTextStyle={{color: AppColor.BLACK}}
+                          selectedTextStyle={styles.selectedTextStyle}
+                          data={goalsData}
+                          labelField="goal_title"
+                          valueField="goal_title"
+                          placeholder={getUserDataDetails?.goal_title}
+                          value={values.goal}
+                          onFocus={() => setIsFocus(true)}
+                          onBlur={() => setIsFocus(false)}
+                          onChange={item => {
+                            setFieldValue('goal', item.goal_title);
+                          }}
                         />
-                      }
-                      label="Target Weight"
-                      placeholder="Target Weight"
-                    />
-                  </View>
-                  <View
-                    style={{
-                      marginTop: DeviceHeigth * 0.02,
+                      </View>
+                      {/* <View
+                        style={{
+                          marginTop: DeviceHeigth * 0.02,
 
-                      alignItems: 'center',
-                    }}>
-                    {renderLabel('Choose Your Type')}
+                          alignItems: 'center',
+                        }}>
+                        {renderLabel('Injuries In Body Part')}
+                        <Dropdown
+                          style={[styles.dropdown]}
+                          placeholderStyle={styles.placeholderStyle}
+                          selectedTextStyle={styles.selectedTextStyle}
+                          itemTextStyle={{color: AppColor.BLACK}}
+                          data={injury}
+                          labelField="injury_title"
+                          valueField="injury_title"
+                          placeholder={getUserDataDetails?.injury}
+                          value={values.injury}
+                          onFocus={() => setIsFocus(true)}
+                          onBlur={() => setIsFocus(false)}
+                          onChange={item => {
+                            setFieldValue('injury', item.injury_title);
+                          }}
+                        />
+                      </View> */}
 
-                    <Dropdown
-                      style={[styles.dropdown]}
-                      placeholderStyle={styles.placeholderStyle}
-                      selectedTextStyle={styles.selectedTextStyle}
-                      data={equipment}
-                      labelField="label"
-                      valueField="value"
-                      placeholder={getUserDataDetails?.equipment}
-                      value={values.equipment}
-                      onFocus={() => setIsFocus(true)}
-                      onBlur={() => setIsFocus(false)}
-                      onChange={item => {
-                        setFieldValue('equipment', item.value);
-                      }}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      marginTop: DeviceHeigth * 0.02,
+                      <View
+                        style={{
+                          marginTop: DeviceHeigth * 0.02,
+                          marginLeft: 10,
+                          paddingBottom: DeviceHeigth * 0.05,
+                        }}>
+                        <InputText
+                          errors={errors.targetWeight}
+                          touched={touched.targetWeight}
+                          value={values.targetWeight}
+                          onBlur={handleBlur('targetWeight')}
+                          onChangeText={handleChange('targetWeight')}
+                          label="Target Weight"
+                          placeholder="Target Weight"
+                        />
+                      </View>
+                      {/* <View
+                        style={{
+                          marginTop: DeviceHeigth * 0.02,
 
-                      alignItems: 'center',
-                    }}>
-                    {renderLabel('Focus Area')}
-                    <MultiSelect
-                      style={[styles.dropdown]}
-                      placeholderStyle={styles.placeholderStyle}
-                      selectedTextStyle={styles.selectedTextStyle}
-                      data={focusarea}
-                      labelField="label"
-                      valueField="value"
-                      placeholder={getUserDataDetails?.focusarea_title}
-                      value={values.focuseAres}
-                      onFocus={() => setIsFocus(true)}
-                      onBlur={() => setIsFocus(false)}
-                      onChange={item => {
-                        setFieldValue('focuseAres', item);
-                      }}
-                      selectedStyle={styles.selectedStyle}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      marginTop: DeviceHeigth * 0.02,
+                          alignItems: 'center',
+                        }}>
+                        {renderLabel('Choose Your Type')}
 
-                      alignItems: 'center',
-                    }}>
-                    {renderLabel('Comfort Place')}
-                    <Dropdown
-                      style={[styles.dropdown]}
-                      placeholderStyle={styles.placeholderStyle}
-                      selectedTextStyle={styles.selectedTextStyle}
-                      data={workoutarea}
-                      labelField="workoutarea_title"
-                      valueField="workoutarea_title"
-                      placeholder={getUserDataDetails?.workoutarea}
-                      value={values.workPlace}
-                      onFocus={() => setIsFocus(true)}
-                      onBlur={() => setIsFocus(false)}
-                      onChange={item => {
-                        setFieldValue('workPlace', item.workoutarea_title);
-                      }}
-                    />
-                  </View>
+                        <Dropdown
+                          style={[styles.dropdown]}
+                          placeholderStyle={styles.placeholderStyle}
+                          selectedTextStyle={styles.selectedTextStyle}
+                          itemTextStyle={{color: AppColor.BLACK}}
+                          data={equipment}
+                          labelField="label"
+                          valueField="value"
+                          placeholder={getUserDataDetails?.equipment}
+                          value={values.equipment}
+                          onFocus={() => setIsFocus(true)}
+                          onBlur={() => setIsFocus(false)}
+                          onChange={item => {
+                            setFieldValue('equipment', item.value);
+                          }}
+                        />
+                      </View> */}
+                      {/* <View
+                        style={{
+                          marginTop: DeviceHeigth * 0.02,
+
+                          alignItems: 'center',
+                        }}>
+                        {renderLabel('Focus Area')}
+                        <MultiSelect
+                          style={[styles.dropdown]}
+                          placeholderStyle={styles.placeholderStyle}
+                          selectedTextStyle={styles.selectedTextStyle}
+                          itemTextStyle={{color: AppColor.BLACK}}
+                          data={focusarea}
+                          labelField="label"
+                          valueField="value"
+                          placeholder={getUserDataDetails?.focusarea_title}
+                          value={values.focuseAres}
+                          onFocus={() => setIsFocus(true)}
+                          onBlur={() => setIsFocus(false)}
+                          onChange={item => {
+                            setFieldValue('focuseAres', item);
+                          }}
+                          selectedStyle={styles.selectedStyle}
+                        />
+                      </View> */}
+                      {/* <View
+                        style={{
+                          marginTop: DeviceHeigth * 0.02,
+
+                          alignItems: 'center',
+                        }}>
+                        {renderLabel('Comfort Place')}
+                        <Dropdown
+                          style={[styles.dropdown]}
+                          placeholderStyle={styles.placeholderStyle}
+                          selectedTextStyle={styles.selectedTextStyle}
+                          itemTextStyle={{color: AppColor.BLACK}}
+                          data={workoutarea}
+                          labelField="workoutarea_title"
+                          valueField="workoutarea_title"
+                          placeholder={getUserDataDetails?.workoutarea}
+                          value={values.workPlace}
+                          onFocus={() => setIsFocus(true)}
+                          onBlur={() => setIsFocus(false)}
+                          onChange={item => {
+                            setFieldValue('workPlace', item.workoutarea_title);
+                          }}
+                        />
+                      </View> */}
+                    </>
+                  )}
+                  {values.experience == 'Experienced' && (
+                    <View
+                      style={{
+                        marginTop: DeviceHeigth * 0.02,
+
+                        alignItems: 'center',
+                      }}>
+                      {renderLabel('Workout Plan')}
+
+                      <Dropdown
+                        style={[styles.dropdown]}
+                        placeholderStyle={styles.placeholderStyle}
+                        selectedTextStyle={styles.selectedTextStyle}
+                        itemTextStyle={{color: AppColor.BLACK}}
+                        data={workout_plans}
+                        labelField="label"
+                        valueField="label"
+                        placeholder={getUserDataDetails?.workout_plans}
+                        value={values.workout_plans}
+                        onFocus={() => setIsFocus(true)}
+                        onBlur={() => setIsFocus(false)}
+                        onChange={item => {
+                          setFieldValue('workout_plans', item.value);
+                        }}
+                      />
+                    </View>
+                  )}
+
+                  {values.workout_plans == 'AppCreated' &&
+                    values.experience == 'Experienced' && (
+                      <>
+                        <View
+                          style={{
+                            marginTop: DeviceHeigth * 0.02,
+
+                            alignItems: 'center',
+                          }}>
+                          {renderLabel('Fitness Goal')}
+
+                          <Dropdown
+                            style={[styles.dropdown]}
+                            placeholderStyle={styles.placeholderStyle}
+                            itemTextStyle={{color: AppColor.BLACK}}
+                            selectedTextStyle={styles.selectedTextStyle}
+                            data={goalsData}
+                            labelField="goal_title"
+                            valueField="goal_title"
+                            placeholder={
+                              getUserDataDetails?.goal_title == null
+                                ? 'Select Fitness Goal'
+                                : getUserDataDetails?.goal_title
+                            }
+                            value={values.goal}
+                            onFocus={() => setIsFocus(true)}
+                            onBlur={() => setIsFocus(false)}
+                            onChange={item => {
+                              setFieldValue('goal', item.goal_title);
+                            }}
+                          />
+                        </View>
+                        {/* <View
+                          style={{
+                            marginTop: DeviceHeigth * 0.02,
+
+                            alignItems: 'center',
+                          }}>
+                          {renderLabel('Injuries In Body Part')}
+                          <Dropdown
+                            style={[styles.dropdown]}
+                            placeholderStyle={styles.placeholderStyle}
+                            selectedTextStyle={styles.selectedTextStyle}
+                            itemTextStyle={{color: AppColor.BLACK}}
+                            data={injury}
+                            labelField="injury_title"
+                            valueField="injury_title"
+                            placeholder={
+                              getUserDataDetails?.injury == 'null'
+                                ? 'Select Injuries'
+                                : getUserDataDetails?.injury
+                            }
+                            value={values.injury}
+                            onFocus={() => setIsFocus(true)}
+                            onBlur={() => setIsFocus(false)}
+                            onChange={item => {
+                              setFieldValue('injury', item.injury_title);
+                            }}
+                          />
+                        </View> */}
+
+                        <View
+                          style={{
+                            marginTop: DeviceHeigth * 0.02,
+                            marginLeft: 10,
+                            paddingBottom: DeviceHeigth * 0.05,
+                          }}>
+                          <InputText
+                            errors={errors.targetWeight}
+                            touched={touched.targetWeight}
+                            value={
+                              values?.targetWeight == 'undefined'
+                                ? 0
+                                : values?.targetWeight
+                            }
+                            onBlur={handleBlur('targetWeight')}
+                            onChangeText={handleChange('targetWeight')}
+                            label="Target Weight"
+                            keyboardType="number-pad"
+                            placeholder="Target Weight"
+                          />
+                        </View>
+                        {/* <View
+                          style={{
+                            marginTop: DeviceHeigth * 0.02,
+
+                            alignItems: 'center',
+                          }}>
+                          {renderLabel('Choose Your Type')}
+
+                          <Dropdown
+                            style={[styles.dropdown]}
+                            placeholderStyle={styles.placeholderStyle}
+                            selectedTextStyle={styles.selectedTextStyle}
+                            itemTextStyle={{color: AppColor.BLACK}}
+                            data={equipment}
+                            labelField="label"
+                            valueField="value"
+                            placeholder={
+                              getUserDataDetails?.equipment == 'undefined'
+                                ? 'Choose Your Type'
+                                : getUserDataDetails?.equipment
+                            }
+                            value={values.equipment}
+                            onFocus={() => setIsFocus(true)}
+                            onBlur={() => setIsFocus(false)}
+                            onChange={item => {
+                              setFieldValue('equipment', item.value);
+                            }}
+                          />
+                        </View> */}
+
+                        {/* <View
+                          style={{
+                            marginTop: DeviceHeigth * 0.02,
+
+                            alignItems: 'center',
+                          }}>
+                          {renderLabel('Focus Area')}
+                          <MultiSelect
+                            style={[styles.dropdown]}
+                            placeholderStyle={styles.placeholderStyle}
+                            selectedTextStyle={styles.selectedTextStyle}
+                            itemTextStyle={{color: AppColor.BLACK}}
+                            data={focusarea}
+                            labelField="label"
+                            valueField="value"
+                            placeholder={
+                              getUserDataDetails?.focusarea_title == null
+                                ? 'Select Focus Area'
+                                : getUserDataDetails?.focusarea_title
+                            }
+                            value={values.focuseAres}
+                            onFocus={() => setIsFocus(true)}
+                            onBlur={() => setIsFocus(false)}
+                            onChange={item => {
+                              setFieldValue('focuseAres', item);
+                            }}
+                            selectedStyle={styles.selectedStyle}
+                          />
+                        </View> */}
+                        {/* <View
+                          style={{
+                            marginTop: DeviceHeigth * 0.02,
+
+                            alignItems: 'center',
+                          }}>
+                          {renderLabel('Comfort Place')}
+                          <Dropdown
+                            style={[styles.dropdown]}
+                            placeholderStyle={styles.placeholderStyle}
+                            selectedTextStyle={styles.selectedTextStyle}
+                            itemTextStyle={{color: AppColor.BLACK}}
+                            data={workoutarea}
+                            labelField="workoutarea_title"
+                            valueField="workoutarea_title"
+                            placeholder={
+                              getUserDataDetails?.workoutarea == 'null'
+                                ? 'Select Comfort Place'
+                                : getUserDataDetails?.workoutarea
+                            }
+                            value={values.workPlace}
+                            onFocus={() => setIsFocus(true)}
+                            onBlur={() => setIsFocus(false)}
+                            onChange={item => {
+                              setFieldValue(
+                                'workPlace',
+                                item.workoutarea_title,
+                              );
+                            }}
+                          />
+                        </View> */}
+                      </>
+                    )}
                 </KeyboardAvoidingView>
               </ScrollView>
             </View>
@@ -523,13 +747,15 @@ const styles = StyleSheet.create({
     top: -5,
     zIndex: 999,
     paddingHorizontal: 15,
-    fontSize: 14,
+    fontSize: 12,
   },
   placeholderStyle: {
     fontSize: 16,
+    color: AppColor.BLACK,
   },
   selectedTextStyle: {
     fontSize: 16,
+    color: AppColor.BLACK,
   },
   iconStyle: {
     width: 20,
@@ -541,6 +767,8 @@ const styles = StyleSheet.create({
   },
   selectedStyle: {
     borderRadius: 12,
+    borderColor: AppColor.BLACK,
+    marginHorizontal: DeviceWidth * 0.07,
   },
 });
 export default NewPersonalDetails;

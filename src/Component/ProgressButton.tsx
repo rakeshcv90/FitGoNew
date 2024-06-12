@@ -27,6 +27,7 @@ export type Props = TouchableWithoutFeedbackProps & {
   flex?: number;
   colors?: any;
   bC?: string
+  fillBack?: string | '#D9D9D9';
 };
 
 const ProgreesButton: FC<Props> = ({...props}) => {
@@ -74,7 +75,7 @@ const ProgreesButton: FC<Props> = ({...props}) => {
         </Text>
         <View
           style={{
-            backgroundColor: '#D9D9D9',
+            backgroundColor: props.fillBack ? props.fillBack : '#D9D9D9',
             height: props.h ? props.h : 50,
             width: props.fill,
             marginTop: -50,

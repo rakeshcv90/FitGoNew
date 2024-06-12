@@ -27,7 +27,7 @@ import Svg, {
   Text as SvgText,
 } from 'react-native-svg';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
-import Carousel from 'react-native-snap-carousel';
+
 import {showMessage} from 'react-native-flash-message';
 
 const GradientText = ({item}: any) => {
@@ -76,11 +76,10 @@ const positions = data.map(
 );
 const Age = ({route, navigation}: any) => {
   const {nextScreen} = route.params;
-  console.log('center, index', nextScreen);
   const translateLevel = useRef(new Animated.Value(0)).current;
 
-  const {defaultTheme, completeProfileData, getLaterButtonData} = useSelector(
-    (state: any) => state,
+  const getLaterButtonData = useSelector(
+    (state: any) => state.getLaterButtonData,
   );
   const dispatch = useDispatch();
 
@@ -100,7 +99,6 @@ const Age = ({route, navigation}: any) => {
     for (let index = 0; index < positions.length; index++) {
       const {start, end} = positions[index];
       if (center + 25 >= start && center - 25 <= end) {
-        // console.log(center, index);
         // setSelected(index);
       }
     }
@@ -109,7 +107,25 @@ const Age = ({route, navigation}: any) => {
   const toNextScreen = () => {
     if (selected.length == 0) {
       showMessage({
-        message: 'Please Enter your Age!!!',
+        message: 'Please enter your age',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+      return;
+    } else if (parseInt(selected) < 15) {
+      showMessage({
+        message: 'You are below 15 ',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+      return;
+    } else if (parseInt(selected) > 60) {
+      showMessage({
+        message: 'You are over age ',
         type: 'danger',
         animationDuration: 500,
         floating: true,
@@ -121,7 +137,7 @@ const Age = ({route, navigation}: any) => {
       age: selected,
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-    navigation.navigate('Equipment', {nextScreen: screen + 1});
+    navigation.navigate('PredictionScreen', {nextScreen: screen + 1});
   };
   return (
     <TouchableOpacity
@@ -129,28 +145,12 @@ const Age = ({route, navigation}: any) => {
       onPress={() => Keyboard.dismiss()}
       style={{
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        // marginTop: 50,
         backgroundColor: AppColor.WHITE,
       }}>
       <ProgressBar screen={screen} />
-      <Bulb
-        screen={'How old are you?'}
-        header={
-          'Knowing your age can help us for you based on different metabolic rates.'
-        }
-      />
-
-      {/* <View
-        style={{
-          // flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          alignSelf: 'center',
-          height: DeviceHeigth * 0.6,
-          // width: DeviceWidth,
-        }}>*/}
+      <View style={{marginTop:Platform.OS=='ios'?- DeviceHeigth * 0.06:- DeviceHeigth * 0.02,alignSelf:"center"}}>
+        <Bulb screen={'How old are you?'} />
+      </View>
       <View
         style={{
           width: DeviceWidth,
@@ -158,9 +158,7 @@ const Age = ({route, navigation}: any) => {
           justifyContent: 'center',
           alignItems: 'center',
           alignSelf: 'center',
-          // flex: 1
           flexDirection: 'row',
-          top: -DeviceHeigth * 0.1,
         }}>
         <TextInput
           keyboardType="number-pad"
@@ -178,7 +176,7 @@ const Age = ({route, navigation}: any) => {
           }}
           onFocus={setFocused}
           cursorColor={AppColor.RED}
-          placeholder="18"
+          placeholder="15"
           autoFocus
           placeholderTextColor={AppColor.GRAY2}
           style={{
@@ -201,61 +199,6 @@ const Age = ({route, navigation}: any) => {
           }}>
           years old
         </Text>
-        {/* <FlatList
-          ref={flatListRef}
-          data={data}
-          horizontal
-          onScroll={event => {
-            Vibration.vibrate(200);
-            const y = event.nativeEvent.contentOffset.x;
-            getActiveItem(y);
-          }}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}: any) => {
-            return (
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                }}>
-                {index == selected ? (
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      alignSelf: 'center',
-                      width: 100,
-                      height: 100,
-                      marginRight: 20,
-                      //   backgroundColor: 'blue',
-                    }}>
-                    <Icon
-                      name="arrow-drop-down"
-                      color={AppColor.RED}
-                      size={20}
-                    />
-                    <GradientText item={item} />
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        lineHeight: 16,
-                        fontFamily: 'Poppins',
-                        color: '#94989B',
-                        marginTop: 10,
-                      }}>
-                      years old
-                    </Text>
-                    <Icon name="arrow-drop-up" color={AppColor.RED} size={20} />
-                  </View>
-                ) : (
-                  <Text style={styles.text}>{item}</Text>
-                )}
-              </View>
-            );
-          }}
-        /> */}
-        {/* </View> */}
       </View>
       <View style={styles.buttons}>
         <TouchableOpacity

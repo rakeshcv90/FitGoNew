@@ -22,10 +22,11 @@ import axios from 'axios';
 import Loader from '../Component/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {showMessage} from 'react-native-flash-message';
-import { localImage } from './Image';
+import {localImage} from './Image';
 const FavWorkouts = () => {
   const [FavWorkout, setFavWorkout] = useState([]);
-  const {defaultTheme} = useSelector(state => state);
+  // const {defaultTheme} = useSelector(state => state);
+  const defaultTheme = useSelector(state => state.defaultTheme);
   const [isLoaded, setIsLoaded] = useState(false);
   const [update, setUpdate] = useState(0);
   const [isEmpty, setEmpty] = useState(false);
@@ -51,9 +52,7 @@ const FavWorkouts = () => {
           setUpdate(update + 1);
           setIsLoaded(true);
           setEmpty(false);
-     
         } else {
-     
           setEmpty(true);
           setIsLoaded(true);
         }
@@ -81,7 +80,7 @@ const FavWorkouts = () => {
             <>
               <View
                 style={{
-                  flex:1,
+                  flex: 1,
                   backgroundColor: defaultTheme ? '#000' : '#fff',
                 }}>
                 <FlatList
@@ -127,12 +126,17 @@ const FavWorkouts = () => {
                       ) : null}
                     </TouchableOpacity>
                   )}
+                  keyExtractor={(item, index) => index.toString()}
+                  initialNumToRender={10}
+                  maxToRenderPerBatch={10}
+                  updateCellsBatchingPeriod={100}
+                  removeClippedSubviews={true}
                 />
               </View>
             </>
           ) : (
             <>
-              <View   
+              <View
                 style={{
                   height: (DeviceHeigth * 90) / 100,
                   backgroundColor: defaultTheme ? '#000' : '#fff',
@@ -140,12 +144,12 @@ const FavWorkouts = () => {
                   alignItems: 'center',
                   flex: 1,
                 }}>
-                   <Text
+                <Text
                   style={{
                     color: defaultTheme ? '#FFF' : '#000',
                     fontSize: 20,
                     fontWeight: '500',
-                    marginVertical:15
+                    marginVertical: 15,
                   }}>
                   Nothing is added , Add Workouts
                 </Text>
@@ -153,10 +157,7 @@ const FavWorkouts = () => {
                   onPress={() => {
                     navigation.navigate('Workouts');
                   }}>
-                  <Image
-                    source={localImage.addIcon}
-                    style={styles.add}
-                  />
+                  <Image source={localImage.addIcon} style={styles.add} />
                 </TouchableOpacity>
               </View>
             </>
@@ -186,11 +187,11 @@ const styles = StyleSheet.create({
     width: (DeviceWidth * 70) / 100,
     justifyContent: 'space-between',
   },
-  add:{
-    width:DeviceWidth*15/100,
-    height:DeviceHeigth*5/100,
-    resizeMode:'contain',
-    tintColor:'#C8170D'
-  }
+  add: {
+    width: (DeviceWidth * 15) / 100,
+    height: (DeviceHeigth * 5) / 100,
+    resizeMode: 'contain',
+    tintColor: '#C8170D',
+  },
 });
 export default FavWorkouts;

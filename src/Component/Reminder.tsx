@@ -13,12 +13,62 @@ import notifee, {
   RepeatFrequency,
   TimestampTrigger,
   TriggerType,
+  
 } from '@notifee/react-native';
-import moment from 'moment';
+
+
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {AppColor} from './Color';
+import {showMessage} from 'react-native-flash-message';
+import messaging from '@react-native-firebase/messaging';
 
-const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
+export const AlarmNotification = async (time: any) => {
+  const trigger: TimestampTrigger = {
+    type: TriggerType.TIMESTAMP,
+    timestamp: time.getTime(), // fire at 11:10am (10 minutes before meeting)
+    repeatFrequency: RepeatFrequency.DAILY,
+  };
+  await notifee.createTriggerNotification(
+    {
+      title: 'Exercise Time',
+      body: `It's time to Exercise`,
+      android: {
+        channelId: 'Time',
+        importance: AndroidImportance.HIGH,
+        pressAction: {
+          id: 'default',
+        },
+        actions: [
+          {
+            title: 'Add +5',
+            pressAction: {
+              id: 'Plus_Five',
+            },
+          },
+          {
+            title: 'Stop',
+            pressAction: {
+              id: 'Stop',
+            },
+          },
+          // Add more actions as needed
+        ],
+      },
+      ios: {
+        categoryId: 'Alarm',
+        foregroundPresentationOptions: {
+          badge: true,
+          banner: true,
+          sound: false,
+        },
+      },
+      id: 'Timer',
+    },
+    trigger,
+  );
+  console.log(trigger.timestamp)
+};
+const Reminder = ({visible, setVisible, setAlarmIsEnabled, setNotificationTimer}: any) => {
   const typeData = ['AM', 'PM'];
   const hourData = Array(12)
     .fill(0)
@@ -27,8 +77,8 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
     .fill(0)
     .map((item: any, index, arr) => arr[index] + index);
 
-  const [hours, setHours] = useState('');
-  const [min, setMin] = useState('');
+  const [hours, setHours] = useState('1');
+  const [min, setMin] = useState('0');
   const [type, setType] = useState('AM');
 
   async function onCreateTriggerNotification() {
@@ -47,73 +97,26 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
     if (type === 'AM' && selectedHours === 12) {
       selectedHours = 0;
     }
+    
+    const currentTime = new Date(Date.now());
+    const selectedTime = new Date(Date.now());
+    selectedTime.setHours(selectedHours);
+    selectedTime.setMinutes(selectedMinutes);
+    try {
+      AlarmNotification(selectedTime)
+      setNotificationTimer(selectedTime)
+      setAlarmIsEnabled(true);
+      setVisible(false);
+    } catch (error) {
+      showMessage({
+        message: 'Time should be greater than Current Time',
+        type: 'success',
+        animationDuration: 500,
 
-    // Set the hours, minutes, and seconds of the date
-    // date.set({hours: selectedHours, minutes: selectedMinutes, seconds: 0});
-
-    // Now 'date' holds the updated date and time
-    // const tomorrow = moment()
-    //   .add(1, 'days')
-    //   .set({hours: 12, minutes: 24, seconds: 0});
-    // const trigger = {
-    //   type: TriggerType.TIMESTAMP,
-    //   timestamp: tomorrow.unix(), // fire in 3 hours
-    // };
-    const date = new Date(Date.now());
-    date.setHours(selectedHours);
-    date.setMinutes(selectedMinutes);
-    // date.setHours(selectedHours+5);
-    // date.setMinutes(selectedMinutes+30);
-
-    // Create a time-based trigger
-    const trigger: TimestampTrigger = {
-      type: TriggerType.TIMESTAMP,
-      timestamp: date.getTime(), // fire at 11:10am (10 minutes before meeting)
-      repeatFrequency: RepeatFrequency.DAILY,
-    };
-   
-
-    // Create a trigger notification
-    await notifee.createTriggerNotification(
-      {
-        title: 'Exercise Time',
-        body: `It's time to Exercise`,
-        android: {
-          channelId: 'temporary_channel',
-          importance: AndroidImportance.MIN,
-          pressAction: {
-            id: 'default',
-          },
-          actions: [
-            {
-              title: 'Action 1',
-              pressAction: {
-                id: 'action_1',
-              },
-            },
-            {
-              title: 'Action 2',
-              pressAction: {
-                id: 'action_2',
-              },
-            },
-            // Add more actions as needed
-          ],
-        },
-        ios: {
-          categoryId: 'Alarm',
-          foregroundPresentationOptions: {
-            badge: true,
-            banner: true,
-            sound: false,
-          },
-        },
-        id: 'Timer',
-      },
-      trigger,
-    );
-    setAlarmIsEnabled(true);
-    setVisible(false);
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+    }
   }
   return (
     <Modal
@@ -175,7 +178,7 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
                 setHours(itemValue);
               }}>
               {hourData.map((hr: any) => (
-                <Picker.Item label={hr} value={hr} />
+                <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
               ))}
             </Picker>
             <Picker
@@ -185,7 +188,7 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
                 setMin(itemValue);
               }}>
               {minData.map((hr: any) => (
-                <Picker.Item label={hr} value={hr} />
+                <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
               ))}
             </Picker>
             <Picker
@@ -195,7 +198,7 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
                 setType(itemValue);
               }}>
               {typeData.map((hr: any) => (
-                <Picker.Item label={hr} value={hr} />
+                <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
               ))}
             </Picker>
           </View>
@@ -208,7 +211,6 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled}: any) => {
             <TouchableOpacity
               onPress={() => {
                 setVisible(false);
-                setAlarmIsEnabled(false);
               }}>
               <Text
                 style={{

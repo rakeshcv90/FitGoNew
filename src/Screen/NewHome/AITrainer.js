@@ -21,7 +21,16 @@ import {showMessage} from 'react-native-flash-message';
 import AnimatedLottieView from 'lottie-react-native';
 import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
-import {SetAIMessageHistory} from '../../Component/ThemeRedux/Actions';
+import {
+  SetAIMessageHistory,
+  setSoundOnOff,
+} from '../../Component/ThemeRedux/Actions';
+import {Alert} from 'react-native';
+import {BannerAdd, MyRewardedAd} from '../../Component/BannerAdd';
+import moment from 'moment';
+import Tts from 'react-native-tts';
+import {useIsFocused} from '@react-navigation/native';
+import {bannerAdId} from '../../Component/AdsId';
 
 // const apiKey = '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';
 // const apiKey = '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';
@@ -30,18 +39,72 @@ const systemMessage = {
   content: `You are a Gym Traineer and you give response to uswho are  only related Gym Traineer, how to do Workouts,
    what diet have to take`,
 };
-const AITrainer = ({navigation}) => {
+const AITrainer = ({navigation, route}) => {
   const dispatch = useDispatch();
-  const {getAIMessageHistory} = useSelector(state => state);
+  const [ttsSound, setTtsSound] = useState(
+    `Hello! I am${route?.params?.item?.title} your personal fitness instructor. I am here to assist you in your fitness journey.
+    `,
+  );
+
+  let isFocuse = useIsFocused();
   const [searchText, setSearchText] = useState('');
   const flatListRef = useRef(null);
+  const [reward, setreward] = useState(0);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+  const getAIMessageHistory = useSelector(state => state.getAIMessageHistory);
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const [senderMessage, setsenderMessage] = useState([
     {
-      message: 'Hey there! I m your friendly chat bot here to assist you.',
+      message: `Hello! I am ${route?.params?.item?.title} your personal fitness instructor. I am here to assist you in your fitness journey.
+      `,
       sender: 'ChatGpt',
     },
   ]);
+  const [ttsStatus, setTtsStatus] = useState('initiliazing');
+  const [speechRate, setSpeechRate] = useState(0.5);
+  const [speechPitch, setSpeechPitch] = useState(1);
+  const getSoundOffOn = useSelector(state => state.getSoundOffOn);
+  useEffect(() => {
+    Tts.addEventListener('tts-start', _event => setTtsStatus('started'));
+    Tts.addEventListener('tts-finish', _event => setTtsStatus('finished'));
+    Tts.addEventListener('tts-cancel', _event => setTtsStatus('cancelled'));
+    Tts.setDefaultRate(speechRate);
+    Tts.setDefaultPitch(speechPitch);
+    Tts.getInitStatus().then(initTts);
+    // return () => {
+    //   Tts.removeEventListener(
+    //     'tts-start',
+    //     (_event) => setTtsStatus('started')
+    //   );
+    //   Tts.removeEventListener(
+    //     'tts-finish',
+    //     (_event) => setTtsStatus('finished'),
+    //   );
+    //   Tts.removeEventListener(
+    //     'tts-cancel',
+    //     (_event) => setTtsStatus('cancelled'),
+    //   );
+    // };
+  }, [getSoundOffOn]);
+  const initTts = async () => {
+    // if (Platform.OS == 'android') {
+    //   await Tts.setDefaultLanguage(route?.params?.item?.language);
+    //   await Tts.setDefaultVoice(route?.params?.item?.languageId);
+    // } else {
+    //   await Tts.setDefaultVoice(route?.params?.item?.languageId);
+    // }
 
+    readText();
+    setTtsStatus('initialized');
+  };
+
+  const readText = async () => {
+    if (getSoundOffOn) {
+      Tts.speak(ttsSound);
+    } else {
+      Tts.stop();
+    }
+  };
   useEffect(() => {
     flatListRef.current.scrollToEnd({animated: true});
   }, [senderMessage]);
@@ -66,9 +129,71 @@ const AITrainer = ({navigation}) => {
         icon: {icon: 'auto', position: 'left'},
       });
       return false;
-    } else {
+    } else if (reward == 1) {
       handleSend(searchText);
       setSearchText('');
+    } else {
+      // handleSend(searchText);
+      if (getPurchaseHistory.length > 0) {
+        if (
+          getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        ) {
+          handleSend(searchText);
+          setSearchText('');
+        } else {
+          if (reward == 1) {
+            handleSend(searchText);
+            setSearchText('');
+          } else {
+            Alert.alert(
+              'Questions Limit Reached!',
+              'Do you want to Continue Asking Questions? Watch Ads or Upgrade your Subscription',
+              [
+                {
+                  text: 'No',
+                  onPress: () => console.log('Cancel Pressed'),
+                  style: 'Yes',
+                },
+                {
+                  text: 'Yes',
+                  onPress: () => {
+                    MyRewardedAd(setreward).load();
+                  },
+                },
+              ],
+              {
+                cancelable: false,
+              },
+            );
+          }
+        }
+      } else {
+        if (reward == 1) {
+          handleSend(searchText);
+          setSearchText('');
+        } else {
+          Alert.alert(
+            'Questions Limit Reached!',
+            'Do you want to Continue Asking Questions? Watch Ads or Upgrade your Subscription',
+            [
+              {
+                text: 'No',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'Yes',
+              },
+              {
+                text: 'Yes',
+                onPress: () => {
+                  MyRewardedAd(setreward).load();
+                },
+              },
+            ],
+            {
+              cancelable: false,
+            },
+          );
+        }
+      }
     }
   };
   const handleSend = async data => {
@@ -153,6 +278,7 @@ const AITrainer = ({navigation}) => {
         ]),
       );
       setSearchText('');
+      setreward(0);
     } catch (error) {
       console.error(error);
     }
@@ -198,34 +324,52 @@ const AITrainer = ({navigation}) => {
     //   console.error('Error fetching data:', error);
     // }
   };
+  const bannerAdsDisplay = () => {
+    if (getPurchaseHistory.length > 0) {
+      if (
+        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+      ) {
+        return null;
+      } else {
+        return <BannerAdd bannerAdId={bannerAdId} />;
+      }
+    } else {
+      return <BannerAdd bannerAdId={bannerAdId} />;
+    }
+  };
   return (
     <View style={styles.container}>
-      <NewHeader header={'  Fitness Coach'} backButton={true} />
+      <NewHeader
+        header={'Fitness Coach' + ' ' + route?.params?.item?.title}
+        backButton={true}
+      />
 
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <TouchableOpacity
-        style={{
-          width: 25,
-          height: 25,
-          justifyContent: 'flex-end',
-          alignSelf: 'flex-end',
-          top: -DeviceHeigth * 0.065,
-          marginHorizontal: DeviceWidth * 0.03,
-        }}
-        onPress={() => {
-          navigation.navigate('AIMessageHistory');
-        }}>
-        <Image
-          resizeMode="contain"
-          source={localImage.ChatHistory}
+      {getAIMessageHistory?.length > 0 && (
+        <TouchableOpacity
           style={{
             width: 25,
             height: 25,
             justifyContent: 'flex-end',
             alignSelf: 'flex-end',
+            top: -DeviceHeigth * 0.065,
+            marginHorizontal: DeviceWidth * 0.03,
           }}
-        />
-      </TouchableOpacity>
+          onPress={() => {
+            navigation.navigate('AIMessageHistory');
+          }}>
+          <Image
+            resizeMode="contain"
+            source={localImage.ChatHistory}
+            style={{
+              width: 25,
+              height: 25,
+              justifyContent: 'flex-end',
+              alignSelf: 'flex-end',
+            }}
+          />
+        </TouchableOpacity>
+      )}
       <KeyboardAvoidingView
         behavior={Platform.OS == 'ios' ? 'padding' : undefined}
         contentContainerStyle={{flexGrow: 1}}
@@ -236,10 +380,10 @@ const AITrainer = ({navigation}) => {
           top:
             Platform.OS == 'android'
               ? DeviceHeigth * 0.09
-              : DeviceHeigth * 0.09,
+              : DeviceHeigth * 0.12,
         }}>
         <ScrollView
-          style={{flexGrow: 1}}
+          style={{flexGrow: 1, marginVertical: DeviceHeigth * 0.0}}
           ref={flatListRef}
           onContentSizeChange={() =>
             flatListRef.current.scrollToEnd({animated: true})
@@ -252,6 +396,9 @@ const AITrainer = ({navigation}) => {
             data={senderMessage}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item, index}) => {
+              if (item.sender == 'ChatGpt' && item?.message != 'test') {
+                setTtsSound(item.message);
+              }
               return (
                 <>
                   <View
@@ -288,7 +435,7 @@ const AITrainer = ({navigation}) => {
                                 marginHorizontal: 15,
                               }}
                               resizeMode="contain"
-                              source={localImage.Boot}
+                              source={route?.params?.item?.img}
                             />
                             <AnimatedLottieView
                               source={{
@@ -306,7 +453,7 @@ const AITrainer = ({navigation}) => {
                           <>
                             <Image
                               resizeMode="contain"
-                              source={localImage.Boot}
+                              source={route?.params?.item?.img}
                               style={{
                                 width: 35,
                                 height: 35,
@@ -320,8 +467,8 @@ const AITrainer = ({navigation}) => {
                                 width: 250,
                                 backgroundColor: '#fff',
                                 borderRadius: 16,
-                                borderWidth: 1,
-                                borderColor: '#f4c7c3',
+                                //borderWidth: 1,
+                                // borderColor: '#f4c7c3',
                                 shadowColor: '#000',
                                 shadowOffset: {
                                   width: 0,
@@ -351,6 +498,44 @@ const AITrainer = ({navigation}) => {
                                   }}>
                                   {item.message}
                                 </Text>
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    if (getSoundOffOn) {
+                                      dispatch(setSoundOnOff(false));
+                                    } else {
+                                      dispatch(setSoundOnOff(true));
+                                    }
+                                    setTtsSound(item.message);
+                                  }}
+                                  style={{
+                                    justifyContent: 'center',
+                                    alignSelf: 'flex-end',
+                                  }}>
+                                  {/* <AnimatedLottieView
+                                    source={require('../../Icon/Images/NewImage2/Sound.json')}
+                                    autoPlay
+                                    loop
+                                    style={{
+                                      width: 30,
+                                      height: 30,
+                                      marginBottom: -10,
+                                    }}
+                                  /> */}
+                                  <Image
+                                    style={{
+                                      width: 30,
+                                      height: 30,
+
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                    }}
+                                    source={
+                                      getSoundOffOn
+                                        ? require('../../Icon/Images/NewImage2/sound.png')
+                                        : require('../../Icon/Images/NewImage2/soundmute.png')
+                                    }
+                                  />
+                                </TouchableOpacity>
                               </View>
                             </View>
                           </>
@@ -388,10 +573,17 @@ const AITrainer = ({navigation}) => {
                           </View>
                           <Image
                             resizeMode="contain"
-                            source={localImage.User}
+                            // source={localImage.User}
+                            source={
+                              getUserDataDetails?.image_path == null
+                                ? localImage.User
+                                : {uri: getUserDataDetails?.image_path}
+                            }
                             style={{
                               width: 30,
                               height: 30,
+                              borderRadius: 30 / 2,
+                              marginHorizontal: 5,
                               justifyContent: 'flex-end',
                               alignSelf: 'flex-end',
                             }}
@@ -403,19 +595,23 @@ const AITrainer = ({navigation}) => {
                 </>
               );
             }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
           />
         </ScrollView>
 
         <View
           style={{
             width: '100%',
-            height: 80,
+            height: 50,
             alignSelf: 'center',
             backgroundColor: '#FCFCFC',
             borderTopLeftRadius: 16,
             borderTopRightRadius: 16,
             borderWidth: 1,
-
+            bottom: 0,
             flexDirection: 'row',
             alignItems: 'center',
             paddingLeft: 20,
@@ -435,15 +631,16 @@ const AITrainer = ({navigation}) => {
             }}>
             <Image
               style={{
-                width: 30,
-                height: 30,
-                marginHorizontal: -15,
+                width: 20,
+                height: 20,
+                marginHorizontal: -10,
               }}
               resizeMode="contain"
               source={localImage.Send}
             />
           </TouchableOpacity>
         </View>
+        {bannerAdsDisplay()}
       </KeyboardAvoidingView>
     </View>
   );
@@ -462,7 +659,8 @@ var styles = StyleSheet.create({
     lineHeight: 18,
     fontWeight: '600',
     fontFamily: 'Poppins',
-    color: 'rgba(80, 80, 80, 0.6)',
+    // backgroundColor:'red',
+    color: AppColor.BLACK,
   },
   messageContainer3: {
     flexDirection: 'row',

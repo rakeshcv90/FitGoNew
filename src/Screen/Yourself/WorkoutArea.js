@@ -20,6 +20,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {localImage} from '../../Component/Image';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 import { showMessage } from 'react-native-flash-message';
+import analytics from '@react-native-firebase/analytics';
 
 const WorkoutArea = ({route, navigation}) => {
   const {nextScreen} = route.params;
@@ -27,23 +28,24 @@ const WorkoutArea = ({route, navigation}) => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageView, setImageVIew] = useState([]);
   const dispatch = useDispatch();
-  const {getLaterButtonData, completeProfileData, getUserID} = useSelector(
-    state => state,
-  );
-
+  // const {getLaterButtonData, completeProfileData, getUserID} = useSelector(
+  //   state => state,
+  // );
+  const getLaterButtonData = useSelector(state => state.getLaterButtonData);
+  const completeProfileData = useSelector(state => state.completeProfileData);
+  const getUserID = useSelector(state => state.getUserID);
   useEffect(() => {
     setScreen(nextScreen);
   }, []);
   const toNextScreen = () => {
     const currentData = {
       workoutArea: imageView,
+      equipment:imageView=='At Gym'?'With Equipment':'Without Equipment'
     };
     dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
-    navigation.navigate('PredictionScreen', {nextScreen: screen + 1});
-    console.log('WorkoutArea Screen Data', [
-      ...getLaterButtonData,
-      currentData,
-    ]);
+  navigation.navigate('Weight', {nextScreen: screen + 1});
+    analytics().logEvent(`CV_FITME_WORKOUT_AREA_${imageView[0]?.replace(" ","_")}`)
+   
   };
 
   useEffect(() => {
@@ -131,8 +133,6 @@ const WorkoutArea = ({route, navigation}) => {
           justifyContent: 'center',
           alignItems: 'center',
           //position: 'absolute',
-          marginTop:
-             DeviceHeigth * 0.07,
         }}>
         <ProgressBar screen={screen} />
       </View>
@@ -140,12 +140,11 @@ const WorkoutArea = ({route, navigation}) => {
         style={{
           justifyContent: 'center',
           alignItems: 'center',
-          marginTop:-(Platform.OS=='android'?DeviceHeigth * 0.035:DeviceHeigth * 0.04)
+          marginTop:-(Platform.OS=='android'?DeviceHeigth * 0.03:DeviceHeigth * 0.065)
           
         }}>
         <Bulb
           screen={'What’s your comfort place to workout ?'}
-          header={'You can select any 2 options among below given options'}
         />
       </View>
       {/* <View
@@ -211,12 +210,12 @@ const WorkoutArea = ({route, navigation}) => {
                 activeOpacity={0.8}
                 onPress={() => {
                   setImageFocusArea(
-                    completeProfileData.workoutarea[3].workoutarea_title,
+                    completeProfileData?.workoutarea[3]?.workoutarea_title,
                   );
                 }}>
                 <Image
               source={{
-                uri: completeProfileData.workoutarea[3].workoutarea_image,
+                uri: completeProfileData?.workoutarea[3]?.workoutarea_image,
               }}
                   style={styles.Image23}
                   resizeMode="cover"
@@ -230,7 +229,7 @@ const WorkoutArea = ({route, navigation}) => {
                     marginVertical: 8,
                     lineHeight: 21,
                   }}>
-                  {completeProfileData.workoutarea[3].workoutarea_title}
+                  {completeProfileData?.workoutarea[3]?.workoutarea_title}
                 </Text>
               </TouchableOpacity>
             </Animated.View>

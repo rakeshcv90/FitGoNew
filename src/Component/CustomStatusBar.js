@@ -5,7 +5,8 @@ import { useSelector } from 'react-redux';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 const CustomStatusBar = () => {
     const StatusBar_Bar_Height=Platform.OS==='ios'?getStatusBarHeight():0;
-    const { defaultTheme } = useSelector(state => state)
+    // const { defaultTheme } = useSelector(state => state)
+    const defaultTheme = useSelector(state => state.defaultTheme);
   return (
     <SafeAreaView style={{
         width: DeviceWidth,

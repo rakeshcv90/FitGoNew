@@ -75,15 +75,15 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 android {
           ndkVersion rootProject.ext.ndkVersion
 
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdk rootProject.ext.compileSdk
 
     namespace "fitme.health.fitness.homeworkouts.equipment"
     defaultConfig {
         applicationId "fitme.health.fitness.homeworkouts.equipment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 8
-        versionName "1.8"
+        versionCode 18
+        versionName "1.18"
         missingDimensionStrategy "store", "play"
     }
      signingConfigs {
@@ -112,21 +112,19 @@ android {
 }
 
 dependencies {
-     // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
-
-    // Add the dependencies for the Crashlytics NDK and Analytics libraries
-    // When using the BoM, you don't specify versions in Firebase library dependencies
+   
+    implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
     implementation("com.google.firebase:firebase-crashlytics-ndk")
     // implementation("com.google.firebase:firebase-analytics")
-    // The version of react-native is set by the React Native Gradle Plugin
-    implementation project(':react-native-google-fit')
+    // implementation project(':react-native-google-fit')
     implementation("com.google.android.gms:play-services-fitness:21.1.0")
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
     implementation("com.facebook.react:react-android")
     implementation project(':react-native-iap')
     implementation project(':react-native-keep-awake')
     implementation project(':react-native-code-push')
+    implementation project(':react-native-in-app-review')
+//    implementation ("androidx.appcompat:appcompat:1.7.0-beta01")
     implementation 'com.facebook.android:facebook-android-sdk:latest.release'
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
