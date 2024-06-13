@@ -277,6 +277,7 @@ const Banners = ({type1, type2, onPress, navigation}) => {
                         ? DeviceWidth * 0.9
                         : DeviceWidth * 0.95,
                     borderRadius: 20,
+                    position:'absolute'
                   }}
                   ref={avatarRef}
                   autoRun
