@@ -53,6 +53,8 @@ import {
   ExerciseComponentWithEvent,
   ExerciseComponetWithoutEvents,
 } from './ExerciseComponent';
+import FitCoins from '../../Component/Utilities/FitCoins';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -83,6 +85,7 @@ const MyPlans = ({navigation}: any) => {
   const [WeekStatus, setWeekStatus] = useState([]);
   const [buttonClicked, setButtonClicked] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [myRankData, setMyRankData] = useState([]);
   const getFitmeMealAdsCount = useSelector(
     (state: any) => state.getFitmeMealAdsCount,
   );
@@ -109,7 +112,7 @@ const MyPlans = ({navigation}: any) => {
     initInterstitial();
     allWorkoutApi1();
     getAllExerciseData();
-
+    getLeaderboardDataAPI();
     getGraphData();
     Promise.all(WeekArray.map(item => getWeeklyAPI(item))).finally(() =>
       dispatch(setWeeklyPlansData(All_Weeks_Data)),
@@ -122,7 +125,7 @@ const MyPlans = ({navigation}: any) => {
       if (enteredCurrentEvent) {
         getEarnedCoins();
       }
-    }, []),
+    }, [,navigation]),
   );
   const getAllExerciseData = async () => {
     try {
@@ -187,8 +190,10 @@ const MyPlans = ({navigation}: any) => {
   }, [isAlarmEnabled]);
   useFocusEffect(
     useCallback(() => {
-      WeeklyStatusAPI();
-    }, [selectedDay]),
+      if (!enteredCurrentEvent) {
+        WeeklyStatusAPI();
+      }
+    }, [selectedDay, navigation]),
   );
   // getCoinsdetails
   const getEarnedCoins = async () => {
@@ -403,7 +408,7 @@ const MyPlans = ({navigation}: any) => {
           },
         ),
       ).finally(() => {
-        console.log('enteredCurrentEvent', enteredCurrentEvent);
+        // console.log('enteredCurrentEvent', enteredCurrentEvent);
         enteredCurrentEvent
           ? RewardsbeforeNextScreen(selectedDay)
           : beforeNextScreen(selectedDay);
@@ -576,6 +581,26 @@ const MyPlans = ({navigation}: any) => {
         floating: true,
         icon: {icon: 'auto', position: 'left'},
       });
+    }
+  };
+  //getLeaderBoardPoints
+  const getLeaderboardDataAPI = async () => {
+    try {
+      const result = await axios({
+        // url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${appVersion}`,
+        url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=1.18`,
+      });
+      if (result.data) {
+        const myRank = result.data?.data?.findIndex(
+          item => item?.id == getUserDataDetails?.id,
+        );
+        setMyRankData(result.data?.data[myRank]);
+        // console.log('RANK DATA', myRankData);
+      }
+      setRefresh(false);
+    } catch (error) {
+      console.log(error);
+      setRefresh(false);
     }
   };
   const toNextScreen = async (selectedDay: any) => {
@@ -810,7 +835,10 @@ const MyPlans = ({navigation}: any) => {
         header={'Weekly Plan'}
         SearchButton={false}
         backButton={false}
+        extraView={enteredCurrentEvent ? true : false}
+        coins={myRankData?.fit_coins ?? '--'}
       />
+
       <View
         style={{
           flex: 1,

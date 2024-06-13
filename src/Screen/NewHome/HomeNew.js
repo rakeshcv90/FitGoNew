@@ -229,8 +229,8 @@ const HomeNew = ({navigation}) => {
     if (getOfferAgreement?.location == 'India') {
       if (enteredCurrentEvent && enteredUpcomingEvent) {
         // show coin
-        setBannertype1('upcoming_challenge');
-        setBannerType2('ongoing_challenge');
+        setBannertype1('ongoing_challenge');
+        setBannerType2('joined_challenge');
       } else if (enteredCurrentEvent && !enteredUpcomingEvent) {
         //show coin
         setBannertype1('ongoing_challenge');
@@ -1152,7 +1152,7 @@ const HomeNew = ({navigation}) => {
     }
   };
   useEffect(() => {
-    console.log(getUserDataDetails)
+    console.log(getUserDataDetails);
     if (getUserDataDetails.name == null && getUserDataDetails.email == null) {
       setOpenEditModal(true);
       setDatatype('both');
@@ -1226,7 +1226,7 @@ const HomeNew = ({navigation}) => {
           {enteredCurrentEvent && (
             <FitCoins
               onPress={() => {
-                AnalyticsConsole('LB')
+                AnalyticsConsole('LB');
                 const today = moment().day();
                 if (today == 0 || today == 6) {
                   navigation.navigate('Winner');
@@ -1238,11 +1238,13 @@ const HomeNew = ({navigation}) => {
             />
           )}
         </View>
+
         <Banners
           type1={BannerType1}
           type2={Bannertype2}
           navigation={navigation}
         />
+
         {currentChallenge?.length > 0 && (
           <View style={{width: '95%', alignSelf: 'center', marginVertical: 10}}>
             <Text

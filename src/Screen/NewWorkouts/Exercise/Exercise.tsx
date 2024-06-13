@@ -637,15 +637,18 @@ const Exercise = ({navigation, route}: any) => {
                 style={{
                   fontWeight: '600',
                   fontSize: 32,
-                  color:AppColor.RED1,
+                  color: AppColor.RED1,
                 }}>
                 Keep Going!
               </Text>
-              <Text  style={{
+              <Text
+                style={{
                   fontWeight: '600',
                   fontSize: 32,
-                  color:AppColor.RED1,
-                }}>Don't Give Up!</Text>
+                  color: AppColor.RED1,
+                }}>
+                Don't Give Up!
+              </Text>
             </View>
             <Text
               style={{

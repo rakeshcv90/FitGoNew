@@ -96,6 +96,11 @@ export const ExerciseComponetWithoutEvents = ({
               justifyContent: 'center',
               alignItems: 'center',
               paddingVertical: 5,
+              borderWidth:1,
+              borderColor:AppColor.RED,
+              borderRadius:15,
+              // alignSelf:'center',
+              marginTop:DeviceHeigth*0.05
             }}>
             <AnimatedLottieView
               source={require('../../Icon/Images/RedTick.json')}
@@ -165,7 +170,7 @@ export const ExerciseComponetWithoutEvents = ({
                   fontWeight: '700',
                   color: AppColor.RED1,
                   lineHeight: 30,
-                  left: -20,
+               
                 }}>
                 {getWeeklyPlansData[day]?.title}
               </Text>
@@ -285,6 +290,10 @@ export const ExerciseComponentWithEvent = ({
               justifyContent: 'center',
               alignItems: 'center',
               paddingVertical: 5,
+              borderColor:AppColor.RED,
+              borderRadius:15,
+              alignSelf:'center',
+              marginTop:DeviceHeigth*0.05
             }}>
             <AnimatedLottieView
               source={require('../../Icon/Images/RedTick.json')}
@@ -354,7 +363,6 @@ export const ExerciseComponentWithEvent = ({
                   fontWeight: '700',
                   color: AppColor.RED1,
                   lineHeight: 30,
-                  left: -20,
                 }}>
                 {getWeeklyPlansData[day]?.title}
               </Text>
