@@ -156,7 +156,6 @@ const HomeNew = ({navigation}) => {
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const [BannerType1, setBannertype1] = useState('');
   const [Bannertype2, setBannerType2] = useState('');
-  const [BannerType, setBannertype] = useState('');
   const [openEditModal, setOpenEditModal] = useState(false);
   const [dataType, setDatatype] = useState('');
   const enteredUpcomingEvent = useSelector(
@@ -255,7 +254,7 @@ const HomeNew = ({navigation}) => {
           setBannertype1('new_join');
         });
     }
-  }, []);
+  }, [BannerType1, Bannertype2, getOfferAgreement]);
   //banner api
   const bannerApi = async () => {
     try {

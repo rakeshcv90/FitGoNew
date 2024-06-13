@@ -178,7 +178,7 @@ const RewardModal = ({visible, navigation}) => {
               ButtonWidth={DeviceWidth * 0.6}
               onPress={() => {
                 dispatch(setRewardModal(false));
-                navigation.navigate('NewSubscription');
+                navigation.navigate('NewSubscription',{upgrade: false});
               }}
             />
           </View>

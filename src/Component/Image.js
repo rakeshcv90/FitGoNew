@@ -194,6 +194,7 @@ export const localImage = {
   MediumPlan:require('../Icon/Images/InAppRewards/MediumPlan.png'),
   PremiumPlan:require('../Icon/Images/InAppRewards/PremiumPlan.png'),
   PlanBenifits:require('../Icon/Images/InAppRewards/PlanBenifits.png'),
+  NameUpdateModal:require('../Icon/Images/InAppRewards/NameUpdateModal.png'),
   Reward_icon:require('../Icon/Images/InAppRewards/Reward_icon.png'),
   No_location:require('../Icon/Images/InAppRewards/No_location.png')
 };

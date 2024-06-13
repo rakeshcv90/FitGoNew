@@ -451,12 +451,12 @@ const Winner = ({navigation}: any) => {
                 AnalyticsConsole(`TRA_WIN`);
                 if (getPurchaseHistory) {
                   getPurchaseHistory?.plan_value == 30
-                    ? navigation?.navigate('NewSubscription')
+                    ? navigation?.navigate('NewSubscription',{upgrade: true})
                     : getPurchaseHistory?.plan_value != 30 &&
                       getPurchaseHistory?.used_plan <=
                         getPurchaseHistory?.allow_usage &&
                       navigation?.navigate('UpcomingEvent');
-                } else navigation?.navigate('NewSubscription');
+                } else navigation?.navigate('NewSubscription',{upgrade: true});
               }}
               style={{
                 width: DeviceWidth * 0.9,
