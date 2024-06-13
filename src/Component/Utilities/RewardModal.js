@@ -164,7 +164,7 @@ const RewardModal = ({visible, navigation}) => {
               dispatch(setRewardModal(false));
             }}
           />
-          <View style={{marginVertical: 30}}>
+          <View style={{marginVertical: 30,marginHorizontal: 20}}>
             <Text style={styles.txt1}>
               <Text style={{color: AppColor.RED}}>
                 {'Earn While You Burn\n'}

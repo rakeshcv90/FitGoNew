@@ -1135,7 +1135,7 @@ const HomeNew = ({navigation}) => {
     try {
       const result = await axios({
         // url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${appVersion}`,
-        url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=1.18`,
+        url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
       if (result.data) {
         const myRank = result.data?.data?.findIndex(

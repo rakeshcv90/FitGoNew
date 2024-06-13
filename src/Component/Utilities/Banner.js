@@ -28,7 +28,7 @@ import NameUpdateModal from './NameUpdateModal';
 const Banners = ({type1, type2, onPress, navigation}) => {
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
   const getPurchaseHistory = useSelector(state => state?.getPurchaseHistory);
-  const planType = useSelector(state => state.planType);
+  const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const getBanners = useSelector(state => state?.getBanners);
   const [loading, setLoading] = useState(true);
   const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
@@ -46,21 +46,26 @@ const Banners = ({type1, type2, onPress, navigation}) => {
   const handleStart = () => {
     if (getUserDataDetails?.email != null) {
       setLoaded(false);
-      locationPermission()
-        .then(result => {
-          if (result == 'blocked') {
-            showPermissionAlert();
-          } else if (result === 'denied') {
-            StoreAgreementApi('');
-          } else if (result) {
-            StoreAgreementApi(result);
-          } else if (!result) {
-            StoreAgreementApi('');
-          }
-        })
-        .catch(err => {
-          console.log('location Error', err);
-        });
+      if (getOfferAgreement?.location == 'India') {
+        setLoaded(true);
+        navigation.navigate('NewSubscription', {upgrade: false});
+      } else {
+        locationPermission()
+          .then(result => {
+            if (result == 'blocked') {
+              showPermissionAlert();
+            } else if (result === 'denied') {
+              StoreAgreementApi('');
+            } else if (result) {
+              StoreAgreementApi(result);
+            } else if (!result) {
+              StoreAgreementApi('');
+            }
+          })
+          .catch(err => {
+            console.log('location Error', err);
+          });
+      }
     } else {
       if (
         getUserDataDetails?.social_type != null &&
@@ -142,7 +147,7 @@ const Banners = ({type1, type2, onPress, navigation}) => {
       } else {
         dispatch(setOfferAgreement(ApiCall?.data));
         if (ApiCall?.data?.location == 'India') {
-          if (planType == -1) {
+          if (getPurchaseHistory?.plan == null) {
             navigation.navigate('NewSubscription', {upgrade: false});
           } else {
             navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
@@ -226,13 +231,16 @@ const Banners = ({type1, type2, onPress, navigation}) => {
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
       });
-    } else if (type1 == 'joined_challenge' ||(type2 == 'joined_challenge' && index == 1)) {
+    } else if (
+      type1 == 'joined_challenge' ||
+      (type2 == 'joined_challenge' && index == 1)
+    ) {
       navigation.navigate('UpcomingEvent', {eventType: 'current'});
     } else if (type1 == 'ongoing_challenge' && index == 0) {
       navigation.navigate('MyPlans');
     } else if (type2 == 'upcoming_challenge' && index == 1) {
       navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
-    } 
+    }
     // if (type1 == 'joined_challenge' && type2 == 'ongoing_challenge') {
     //   index == 0
     //     ? navigation.navigate('UpcomingEvent', {eventType: 'current'})
@@ -277,7 +285,7 @@ const Banners = ({type1, type2, onPress, navigation}) => {
                         ? DeviceWidth * 0.9
                         : DeviceWidth * 0.95,
                     borderRadius: 20,
-                    position:'absolute'
+                    position: 'absolute',
                   }}
                   ref={avatarRef}
                   autoRun

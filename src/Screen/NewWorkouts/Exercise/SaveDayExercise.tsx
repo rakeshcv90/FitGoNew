@@ -62,24 +62,22 @@ const SaveDayExercise = ({navigation, route}: any) => {
       setWorkooutName('');
     }
   };
-  useEffect(() => {
-    if (type == 'day') {
-      for (const d in data?.days) {
-        if (d.split('day_')[1] == day) {
-          action = data?.days[d]?.exercises.length;
-          fire = data?.days[d]?.total_calories;
-          clock = data?.days[d]?.total_rest;
-        }
+  if (type == 'day') {
+    for (const d in data?.days) {
+      if (d.split('day_')[1] == day) {
+        action = data?.days[d]?.exercises.length;
+        fire = data?.days[d]?.total_calories;
+        clock = data?.days[d]?.total_rest;
       }
-    } else {
-      allExercise?.map((item: any) => {
-        action = allExercise?.length;
-        fire = item?.exercise_calories;
-        clock = item?.exercise_rest?.split(' ')[0];
-      });
-      if (type == 'weekly') getWeeklyAPI();
     }
-  }, []);
+  } else {
+    allExercise?.map((item: any) => {
+      action = allExercise?.length;
+      fire = item?.exercise_calories;
+      clock = item?.exercise_rest?.split(' ')[0];
+    });
+    if (type == 'weekly') getWeeklyAPI();
+  }
   const TESTAPI = async () => {
     try {
       const data = await axios(`${NewAppapi.POST_API_FOR_COIN_CALCULATION}`, {

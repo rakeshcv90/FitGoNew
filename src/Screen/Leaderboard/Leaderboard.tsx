@@ -18,7 +18,7 @@ import {localImage} from '../../Component/Image';
 import FitText from '../../Component/Utilities/FitText';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
-import {appVersion} from 'react-native-version-number';
+import VersionNumber from 'react-native-version-number';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import AnimatedLottieView from 'lottie-react-native';
 import FastImage from 'react-native-fast-image';
@@ -49,7 +49,7 @@ const Leaderboard = ({navigation, route}: any) => {
     try {
       const result = await axios({
         // url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${appVersion}`,
-        url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=1.18`,
+        url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
       if (result.data) {
         const top5 = result.data?.data?.filter((item: any) => item?.rank <= 5);

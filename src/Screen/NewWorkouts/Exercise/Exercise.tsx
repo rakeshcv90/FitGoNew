@@ -477,7 +477,7 @@ const Exercise = ({navigation, route}: any) => {
         : `-${day + 1}`,
     );
     payload.append('user_id', getUserDataDetails?.id);
-    payload.append('version', '1.18');
+    payload.append('version', VersionNumber.appVersion);
     next && payload.append('next_status', 1);
     previous && payload.append('prev_status', 1);
     skip && payload.append('skip_status', 1);

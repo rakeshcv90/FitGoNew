@@ -58,12 +58,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
     setLoading(true);
     const data = {
       user_id: getUserDataDetails.id,
-      plan:
-        getPurchaseHistory?.plan_value == 30
-          ? 'noob'
-          : getPurchaseHistory?.plan_value == 69
-          ? 'pro'
-          : 'legend',
+      plan: getPurchaseHistory?.plan,
       transaction_id: getPurchaseHistory?.transaction_id,
       platform: Platform.OS,
       product_id: getPurchaseHistory?.product_id,
@@ -413,7 +408,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
             fontWeight="600"
           />
 
-          {planType != -1 &&
+          {getPurchaseHistory?.plan != null &&
           getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage &&
           eventType == 'upcoming' &&
           getPurchaseHistory?.upcoming_day_status != 1 ? (
@@ -636,7 +631,9 @@ const UpcomingEvent = ({navigation, route}: any) => {
             borderTopWidth: 0.5,
           }}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('NewSubscription',{upgrade: true})}
+            onPress={() =>
+              navigation.navigate('NewSubscription', {upgrade: true})
+            }
             style={{
               width: DeviceWidth * 0.9,
               justifyContent: 'center',

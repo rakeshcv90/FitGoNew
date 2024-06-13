@@ -17,12 +17,16 @@ import * as Yup from 'yup';
 import {TextInput} from 'react-native-paper';
 import axios from 'axios';
 import ActivityLoader from '../ActivityLoader';
-import {setCompleteProfileData} from '../ThemeRedux/Actions';
-import {useDispatch} from 'react-redux';
+import {
+  setCompleteProfileData,
+  setUserProfileData,
+} from '../ThemeRedux/Actions';
+import {useDispatch, useSelector} from 'react-redux';
 import {BlurView} from '@react-native-community/blur';
 import {appVersion} from 'react-native-version-number';
 import {AnalyticsConsole} from '../AnalyticsConsole';
 import FitIcon from './FitIcon';
+import {showMessage} from 'react-native-flash-message';
 const validationSchemaBoth = Yup.object().shape({
   name: Yup.string()
     .required('Full Name must contain at least 3 characters')
@@ -52,27 +56,44 @@ const NameUpdateModal = ({
 }: any) => {
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
-  const ProfileDataAPI = async () => {
+  const getUserDataDetails = useSelector((state: any) => state.getUserDataDetails)
+  const getProfileData = async () => {
     try {
-      const res = await axios({
-        url: NewAppapi.Get_COMPLETE_PROFILE,
-        method: 'get',
+      const data = await axios(`${NewAppapi.UserProfile}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          id: getUserDataDetails?.id,
+          version: appVersion,
+        },
       });
 
-      if (res?.data) {
-        dispatch(setCompleteProfileData(res.data));
-        setVisible(false);
+      if (data?.data?.profile) {
+        dispatch(setUserProfileData(data.data.profile));
         setOpenEditModal(false);
+        setVisible(false);
+      } else if (
+        data?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: data?.data?.msg,
+          floating: true,
+          duration: 500,
+          type: 'danger',
+        });
+        setOpenEditModal(false);
+        setVisible(false);
       } else {
-        dispatch(setCompleteProfileData([]));
+        dispatch(setUserProfileData([]));
         setOpenEditModal(false);
         setVisible(false);
       }
     } catch (error) {
-      dispatch(setCompleteProfileData([]));
+      console.log('User Profile Error123', error);
       setOpenEditModal(false);
       setVisible(false);
-      console.log(error);
     }
   };
   const UpdateAPI = async (values: any) => {
@@ -92,7 +113,7 @@ const NameUpdateModal = ({
         },
       });
       console.log('COMPLETE', res.data, payload);
-      ProfileDataAPI();
+      getProfileData();
     } catch (error) {
       setVisible(false);
       setOpenEditModal(false);
@@ -101,24 +122,15 @@ const NameUpdateModal = ({
   };
   return (
     <Modal transparent visible={openEditModal}>
-      <BlurView
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        blurType="light"
-        blurAmount={1}
-        reducedTransparencyFallbackColor="white"
-      >
-      <View
-        style={[
-          styles.content,
-          // {
-          //   bottom: DeviceHeigth / 4,
-          // },
-        ]}>
-        <View style={styles.View1}>
+      <View style={[styles.content]}>
+        <View
+          style={[
+            styles.View1,
+            {
+              height:
+                dataType == 'both' ? DeviceHeigth * 0.7 : DeviceHeigth * 0.55,
+            },
+          ]}>
           <View
             style={{
               alignSelf: 'flex-end',
@@ -142,11 +154,11 @@ const NameUpdateModal = ({
           />
           <FitText type="Heading" value="OOPS!!!" fontWeight="700" errorType />
           <FitText
-            type="SubHeading"
+            type="Heading"
             value={`Looks like some details are missing in your registered profile. Please enter the details below:`}
             textAlign="center"
             fontSize={14}
-            fontWeight="500"
+            fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
             w={DeviceWidth * 0.8}
             lineHeight={18}
             marginVertical={10}
@@ -175,7 +187,7 @@ const NameUpdateModal = ({
               <>
                 {(dataType == 'both' || dataType == 'name') && (
                   <View style={{justifyContent: 'flex-start'}}>
-                    <FitText type="normal" value="Name" />
+                    <FitText type="SubHeading" value="Name" />
                     <TextInput
                       value={values.name}
                       onBlur={handleBlur('name')}
@@ -207,7 +219,7 @@ const NameUpdateModal = ({
                 )}
                 {(dataType == 'both' || dataType == 'email') && (
                   <View style={{justifyContent: 'flex-start', marginTop: 20}}>
-                    <FitText type="normal" value="Email" />
+                    <FitText type="SubHeading" value="Email" />
                     <TextInput
                       value={values.email}
                       onBlur={handleBlur('email')}
@@ -260,7 +272,6 @@ const NameUpdateModal = ({
           </Formik>
         </View>
       </View>
-      </BlurView>
       <ActivityLoader visible={visible} />
     </Modal>
   );
@@ -300,7 +311,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // alignSelf: 'center',
+    backgroundColor: `rgba(0,0,0,0.4)`,
   },
   //view
   View1: {
@@ -310,7 +321,6 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     borderWidth: 1,
-    height: DeviceHeigth * 0.8,
     borderColor: 'lightgrey',
     ...Platform.select({
       ios: {
