@@ -47,14 +47,13 @@ const NewSubscription = ({navigation, route}: any) => {
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
+  const order = ['Noob', 'Pro', 'Premium'];
   // Sorting the subscriptions by title (Basic, Pro, Premium)
   const sortedSubscriptions: any = PLATFORM_IOS
     ? getInAppPurchase.sort((a: any, b: any) => {
-        const order = ['Basic Plan', 'Pro plan', 'Premium Plan'];
         return order.indexOf(a.title) - order.indexOf(b.title);
       })
     : getInAppPurchase.sort((a: any, b: any) => {
-        const order = ['Monthly', 'Month', 'Premium'];
         return order.indexOf(a.name) - order.indexOf(b.name);
       });
   const [selected, setSelected] = useState<any>(sortedSubscriptions[2]);
@@ -337,7 +336,7 @@ const NewSubscription = ({navigation, route}: any) => {
   };
   const fetchPurchaseHistoryIOS = async (item: any, startDate: any) => {
     const price: string = findKeyInObject(selected, 'localizedPrice');
-    const normalizedPrice = price.replace(/\s/g, '');
+    const planName = price.replace(/\s/g, '');
     let data = {
       user_id: getUserDataDetails.id,
       transaction_id: item.original_transaction_id,
@@ -346,10 +345,10 @@ const NewSubscription = ({navigation, route}: any) => {
           ? 'noob'
           : item.auto_renew_product_id == 'fitme_pro'
           ? 'pro'
-          : 'legend',
+          : 'premium',
       platform: Platform.OS,
       product_id: selected?.productId,
-      plan_value: parseInt(normalizedPrice.split('₹')[1]),
+      plan_value: parseInt(planName.split('₹')[1]),
     };
     PlanPurchasetoBackendAPI(data);
   };
@@ -379,7 +378,7 @@ const NewSubscription = ({navigation, route}: any) => {
           ? 'noob'
           : jsonObject.productId == 'a_monthly'
           ? 'pro'
-          : 'legend',
+          : 'premium',
       transaction_id: jsonObject.orderId,
       platform: Platform.OS,
       product_id: jsonObject?.productId,
@@ -414,16 +413,16 @@ const NewSubscription = ({navigation, route}: any) => {
         PurchaseDetails();
         setForLoading(false);
         setTimeout(() => {
-          navigation.navigate('UpcomingEvent');
-        }, 2000);
+          navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+        }, 2500);
       } else if (
         res.data.message == 'Plan upgraded and new event created successfully'
       ) {
         PurchaseDetails();
         setForLoading(false);
         setTimeout(() => {
-          navigation.navigate('UpcomingEvent');
-        }, 2000);
+          navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+        }, 2500);
       } else {
         setForLoading(false);
         showMessage({
@@ -456,6 +455,7 @@ const NewSubscription = ({navigation, route}: any) => {
           setPlanType,
         );
       } else {
+        console.log(result.data);
         dispatch(setPurchaseHistory(result.data.data));
         upgrade
           ? setCurrentSelected(2)
@@ -480,6 +480,10 @@ const NewSubscription = ({navigation, route}: any) => {
   };
   const RenderItem = ({item, index}: any) => {
     // const {item, index} = route.params;
+    const planCap: string = findKeyInObject(
+      item,
+      PLATFORM_IOS ? 'title' : 'name',
+    );
     const price: string = findKeyInObject(
       item,
       PLATFORM_IOS ? 'localizedPrice' : 'priceAmountMicros',
@@ -487,9 +491,11 @@ const NewSubscription = ({navigation, route}: any) => {
     const normalizedPrice = PLATFORM_IOS
       ? price.replace(/\s/g, '')
       : `₹${(parseInt(price) / 1000000).toString()}`;
-    const color = normalizedPrice.includes('₹30')
+
+    const planName = planCap.toLowerCase();
+    const color = planName.includes('noob')
       ? AppColor.NEW_SUBS_BLUE
-      : normalizedPrice.includes('₹69')
+      : planName.includes('pro')
       ? AppColor.NEW_SUBS_GREEN
       : AppColor.NEW_SUBS_ORANGE;
     const CheckIcon = () => (
@@ -509,14 +515,7 @@ const NewSubscription = ({navigation, route}: any) => {
       </Text>
     );
     // !PLATFORM_IOS &&
-    //   console.log(
-    //     'normalizedPrice',
-    //     normalizedPrice.includes(
-    //       PLATFORM_IOS
-    //         ? `${getPurchaseHistory?.plan_value}.00`
-    //         : getPurchaseHistory?.plan_value,
-    //     ),
-    //   );
+    // console.log('planName', planName,getPurchaseHistory?.plan);
     return (
       <View
         style={{
@@ -529,8 +528,8 @@ const NewSubscription = ({navigation, route}: any) => {
           justifyContent: 'center',
           alignItems: 'center',
           height: DeviceHeigth * 0.65,
-          // !normalizedPrice.includes('₹30') &&
-          // !normalizedPrice.includes('₹69') &&
+          // !planName.includes('noob') &&
+          // !planName.includes('pro') &&
           // !PLATFORM_IOS &&
           // getPurchaseHistory?.plan_value == null
           //   ? DeviceHeigth * 0.65
@@ -538,12 +537,8 @@ const NewSubscription = ({navigation, route}: any) => {
           width: DeviceWidth * 0.88,
           alignSelf: 'center',
         }}>
-        {getPurchaseHistory?.plan_value != null &&
-          normalizedPrice.includes(
-            PLATFORM_IOS
-              ? `${getPurchaseHistory?.plan_value}.00`
-              : getPurchaseHistory?.plan_value,
-          ) && (
+        {getPurchaseHistory?.plan != null &&
+          planName==getPurchaseHistory?.plan && (
             <View
               style={{
                 justifyContent: 'center',
@@ -581,9 +576,9 @@ const NewSubscription = ({navigation, route}: any) => {
             height: '40%',
           }}
         />
-        {!normalizedPrice.includes('₹30') &&
-          !normalizedPrice.includes('₹69') &&
-          getPurchaseHistory?.length == 0 && (
+        {!planName.includes('noob') &&
+          !planName.includes('pro') &&
+          getPurchaseHistory?.plan == null && (
             <Image
               source={localImage.RecommendFitme}
               resizeMode="contain"
@@ -596,9 +591,9 @@ const NewSubscription = ({navigation, route}: any) => {
           fontSize={18}
           lineHeight={24}
           value={
-            normalizedPrice.includes('₹30')
+            planName.includes('noob')
               ? 'Basic plan'
-              : normalizedPrice.includes('₹69')
+              : planName.includes('pro')
               ? 'Medium plan'
               : 'Premium plan'
           }
@@ -614,9 +609,9 @@ const NewSubscription = ({navigation, route}: any) => {
           <FitText
             type="Heading"
             value={
-              normalizedPrice.includes('₹30')
+              planName.includes('noob')
                 ? '₹99'
-                : normalizedPrice.includes('₹69')
+                : planName.includes('pro')
                 ? '₹199'
                 : '₹399'
             }
@@ -635,8 +630,8 @@ const NewSubscription = ({navigation, route}: any) => {
             marginVertical={5}
           />
         </View>
-        {!normalizedPrice.includes('₹30') &&
-          !normalizedPrice.includes('₹69') &&
+        {!planName.includes('noob') &&
+          !planName.includes('pro') &&
           !PLATFORM_IOS &&
           getPurchaseHistory?.plan_value == null && (
             <View
@@ -656,8 +651,8 @@ const NewSubscription = ({navigation, route}: any) => {
               />
             </View>
           )}
-        {!normalizedPrice.includes('₹30') &&
-          !normalizedPrice.includes('₹69') &&
+        {!planName.includes('noob') &&
+          !planName.includes('pro') &&
           !PLATFORM_IOS && <Line />}
         <View
           style={[
@@ -687,9 +682,9 @@ const NewSubscription = ({navigation, route}: any) => {
           <FitText
             type="normal"
             value={
-              normalizedPrice.includes('₹30')
+              planName.includes('noob')
                 ? '1 event/month'
-                : normalizedPrice.includes('₹69')
+                : planName.includes('pro')
                 ? '2 event/month'
                 : '3 event/month'
             }
@@ -710,9 +705,9 @@ const NewSubscription = ({navigation, route}: any) => {
           <FitText
             type="normal"
             value={
-              normalizedPrice.includes('₹30')
+              planName.includes('noob')
                 ? 'With Ads'
-                : normalizedPrice.includes('₹69')
+                : planName.includes('pro')
                 ? 'Fewer Ads'
                 : 'No Ads'
             }
@@ -721,19 +716,19 @@ const NewSubscription = ({navigation, route}: any) => {
             marginVertical={3}
           />
         </View>
-        {(normalizedPrice.includes('₹30') || normalizedPrice.includes('₹69')) &&
+        {(planName.includes('noob') || planName.includes('pro')) &&
           getPurchaseHistory?.plan_value == null && (
             <View style={{height: 50, width: '100%'}} />
           )}
         <GradientButton
           text={
-            price.includes(getPurchaseHistory?.plan_value)
+            planName.includes(getPurchaseHistory?.plan)
               ? 'Purchased'
               : 'Proceed'
           }
           h={50}
           colors={
-            normalizedPrice.includes('₹30') || normalizedPrice.includes('₹69')
+            planName.includes('noob') || planName.includes('pro')
               ? [AppColor.WHITE, AppColor.WHITE]
               : [color, color]
           }
@@ -741,14 +736,13 @@ const NewSubscription = ({navigation, route}: any) => {
             styles.buttonText,
             {
               color:
-                normalizedPrice.includes('₹30') ||
-                normalizedPrice.includes('₹69')
+                planName.includes('noob') || planName.includes('pro')
                   ? color
                   : AppColor.WHITE,
             },
           ]}
           bC={
-            normalizedPrice.includes('₹30') || normalizedPrice.includes('₹69')
+            planName.includes('noob') || planName.includes('pro')
               ? color
               : AppColor.WHITE
           }
@@ -759,10 +753,10 @@ const NewSubscription = ({navigation, route}: any) => {
           onPress={() => {
             setSelected(item);
             handlePurchase(item);
-            AnalyticsConsole(`Pur_${normalizedPrice}_PLAN`);
+            AnalyticsConsole(`Pur_${planName.substring(1)}_PLAN`);
           }}
           // opacity={price.includes(getPurchaseHistory?.plan_value) ? 0.8 : 1}
-          disabled={price.includes(getPurchaseHistory?.plan_value)}
+          disabled={planName.includes(getPurchaseHistory?.plan)}
         />
       </View>
     );
@@ -1154,7 +1148,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
     borderRadius: 50,
     marginVertical: 20,
-    width: DeviceWidth * 0.9,
+    width: DeviceWidth * 0.85,
     alignSelf: 'center',
     shadowColor: '#121212B2',
     ...Platform.select({

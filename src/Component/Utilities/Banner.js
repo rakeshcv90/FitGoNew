@@ -23,6 +23,7 @@ import FastImage from 'react-native-fast-image';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {AppColor} from '../Color';
 import ActivityLoader from '../ActivityLoader';
+import NameUpdateModal from './NameUpdateModal';
 const Banners = ({type1, type2, onPress, navigation}) => {
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
   const getPurchaseHistory = useSelector(state => state?.getPurchaseHistory);
@@ -32,6 +33,9 @@ const Banners = ({type1, type2, onPress, navigation}) => {
   const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
   const avatarRef = React.createRef();
   const [loaded, setLoaded] = useState(true);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [dataType, setDatatype] = useState('');
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (Object.keys(getBanners).length == 0) {
@@ -57,14 +61,36 @@ const Banners = ({type1, type2, onPress, navigation}) => {
           console.log('location Error', err);
         });
     } else {
-      navigation.navigate('LogSignUp', {screen: 'Sign Up'});
-      showMessage({
-        message: 'You need to login/Signup first',
-        floating: true,
-        duration: 500,
-        type: 'danger',
-        icon: {icon: 'auto', position: 'left'},
-      });
+      if (
+        getUserDataDetails?.social_type != null &&
+        getUserDataDetails?.signup_type != null
+      ) {
+        if (
+          getUserDataDetails.name == null &&
+          getUserDataDetails.email == null
+        ) {
+          setOpenEditModal(true);
+          setDatatype('both');
+        } else {
+          if (getUserDataDetails.name == null) {
+            setOpenEditModal(true);
+            setDatatype('name');
+          }
+          if (getUserDataDetails.email == null) {
+            setOpenEditModal(true);
+            setDatatype('email');
+          }
+        }
+      } else {
+        navigation.navigate('LogSignUp', {screen: 'Sign Up'});
+        showMessage({
+          message: 'You need to login/Signup first',
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
+      }
     }
   };
   // apis for start function
@@ -116,7 +142,7 @@ const Banners = ({type1, type2, onPress, navigation}) => {
         dispatch(setOfferAgreement(ApiCall?.data));
         if (ApiCall?.data?.location == 'India') {
           if (planType == -1) {
-            navigation.navigate('NewSubscription',{upgrade: false});
+            navigation.navigate('NewSubscription', {upgrade: false});
           } else {
             navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
           }
@@ -270,6 +296,12 @@ const Banners = ({type1, type2, onPress, navigation}) => {
       ) : getBanners[type2] ? (
         <Box imageSource={[getBanners[type2]]} />
       ) : null}
+      <NameUpdateModal
+        dataType={dataType}
+        openEditModal={openEditModal}
+        setOpenEditModal={setOpenEditModal}
+        user_id={getUserDataDetails?.id}
+      />
     </View>
   );
 };

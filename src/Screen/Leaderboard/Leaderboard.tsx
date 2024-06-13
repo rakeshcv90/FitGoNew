@@ -21,6 +21,7 @@ import axios from 'axios';
 import {appVersion} from 'react-native-version-number';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import AnimatedLottieView from 'lottie-react-native';
+import FastImage from 'react-native-fast-image';
 
 type TypeData = {
   name: string;
@@ -99,17 +100,20 @@ const Leaderboard = ({navigation, route}: any) => {
                 }}
               />
             )}
-            <FitText
-              type="Heading"
-              value={item?.rank}
-              color={AppColor.NEW_DARK_RED}
-            />
+            <View style={{width: '12%', marginLeft: 5}}>
+              <FitText
+                type="Heading"
+                value={item?.rank}
+                color={AppColor.NEW_DARK_RED}
+                fontSize={14}
+              />
+            </View>
             {item?.image_path == null ? (
               <View
                 style={[
                   styles.row,
                   {
-                    width: '50%',
+                    width: '52%',
                     marginHorizontal: 20,
                   },
                 ]}>
@@ -145,10 +149,20 @@ const Leaderboard = ({navigation, route}: any) => {
                 style={[
                   styles.row,
                   {
-                    width: '50%',
+                    width: '52%',
                     marginHorizontal: 20,
                   },
                 ]}>
+                <FastImage
+                  style={styles.mainImage}
+                  source={{
+                    uri: item?.image_path,
+                    headers: {Authorization: 'someAuthToken'},
+                    priority: FastImage.priority.high,
+                  }}
+                  resizeMode={FastImage.resizeMode.contain}
+                  defaultSource={localImage.NOWORKOUT}
+                />
                 <Image
                   source={{uri: item?.image_path}}
                   style={styles.mainImage}
@@ -164,16 +178,16 @@ const Leaderboard = ({navigation, route}: any) => {
               </View>
             )}
             <View style={styles.coinView}>
-              <Image
-                source={localImage.Coin}
-                style={styles.coinImage}
-                resizeMode="contain"
-              />
               <LinearGradient
                 colors={['#FFB400B2', '#F38029']}
-                start={{x: 1, y: 1}}
-                end={{x: 0, y: 1}}
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 1}}
                 style={styles.coinGradient}>
+                <Image
+                  source={localImage.Coin}
+                  style={styles.coinImage}
+                  resizeMode="contain"
+                />
                 <FitText
                   type="SubHeading"
                   value={`${item?.fit_coins}`}
@@ -282,14 +296,19 @@ const Leaderboard = ({navigation, route}: any) => {
                   lineHeight={40}
                 />
               ) : (
-                <Image
-                  source={{uri: mainData[0]?.image_path}}
+                <FastImage
                   style={{
                     width: 60,
                     height: 60,
                     borderRadius: 30,
                   }}
-                  resizeMode="contain"
+                  source={{
+                    uri: mainData[0]?.image_path,
+                    headers: {Authorization: 'someAuthToken'},
+                    priority: FastImage.priority.high,
+                  }}
+                  resizeMode={FastImage.resizeMode.contain}
+                  defaultSource={localImage.NOWORKOUT}
                 />
               )}
             </ImageBackground>
@@ -306,20 +325,24 @@ const Leaderboard = ({navigation, route}: any) => {
             />
           </ImageBackground>
           <FlatList data={mainData} renderItem={renderItem} />
-          <Image
-            source={localImage.Top5Boundary}
-            resizeMode="contain"
-            style={{
-              width: DeviceWidth * 0.9,
-              alignSelf: 'center',
-              marginVertical: (DeviceWidth * 0.1) / 2,
-            }}
-          />
-          <FlatList
-            data={otherData}
-            renderItem={renderItem}
-            showsVerticalScrollIndicator={false}
-          />
+          {otherData.length > 0 && (
+            <>
+              <Image
+                source={localImage.Top5Boundary}
+                resizeMode="contain"
+                style={{
+                  width: DeviceWidth * 0.9,
+                  alignSelf: 'center',
+                  marginVertical: (DeviceWidth * 0.1) / 2,
+                }}
+              />
+              <FlatList
+                data={otherData}
+                renderItem={renderItem}
+                showsVerticalScrollIndicator={false}
+              />
+            </>
+          )}
         </ScrollView>
       )}
     </SafeAreaView>
@@ -348,26 +371,26 @@ const styles = StyleSheet.create({
   coinView: {
     width: DeviceWidth * 0.2,
     overflow: 'visible',
-    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
   coinGradient: {
+    flexDirection: 'row',
     width: DeviceWidth * 0.15,
-    borderRadius: 20,
-    justifyContent: 'center',
+    borderRadius: 5,
+    justifyContent: 'space-between',
     alignItems: 'center',
-    zIndex: -1,
-    paddingVertical: 2,
-    paddingLeft: 10,
-    marginRight: DeviceWidth * 0.05,
+    // zIndex: -1,
+    padding: 5,
+    // paddingVertical: 2,
+    // marginRight: DeviceWidth * 0.05,
   },
   coinImage: {
-    height: 30,
-    width: 30,
-    marginRight: 10,
-    right: -DeviceWidth * 0.08,
-    zIndex: 1,
+    height: 25,
+    width: 25,
+    // marginRight: 10,
+    // right: -DeviceWidth * 0.08,
+    // zIndex: 1,
   },
   mainImage: {
     borderWidth: 0.5,

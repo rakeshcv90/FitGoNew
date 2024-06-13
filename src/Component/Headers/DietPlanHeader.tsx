@@ -56,7 +56,7 @@ const DietPlanHeader: FC<Props> = ({
     <View
       style={[
         style.container,
-        shadow && style.shadow,
+        !shadow && style.shadow,
         {
           height: h
             ? h
