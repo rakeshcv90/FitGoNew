@@ -35,6 +35,7 @@ import {EnteringEventFunction} from './EnteringEventFunction';
 import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 
 const UpcomingEvent = ({navigation, route}: any) => {
   const {eventType} = route?.params;
@@ -58,12 +59,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
     setLoading(true);
     const data = {
       user_id: getUserDataDetails.id,
-      plan:
-        getPurchaseHistory?.plan_value == 30
-          ? 'noob'
-          : getPurchaseHistory?.plan_value == 69
-          ? 'pro'
-          : 'legend',
+      plan: getPurchaseHistory?.plan,
       transaction_id: getPurchaseHistory?.transaction_id,
       platform: Platform.OS,
       product_id: getPurchaseHistory?.product_id,
@@ -391,7 +387,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
           <FitText
             type="SubHeading"
             value={
-              enteredUpcomingEvent
+              eventType == 'upcoming'
                 ? 'Gear Up for Your Next Challenge!'
                 : 'Your challenge will start on Monday'
             }
@@ -403,7 +399,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
           <FitText
             type="normal"
             value={
-              enteredUpcomingEvent
+              eventType == 'upcoming'
                 ? 'Every week is a new opportunity. Gear up for your next challenge!'
                 : `You can do the exercise using our App until the challenge begins.`
             }
@@ -413,7 +409,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
             fontWeight="600"
           />
 
-          {planType != -1 &&
+          {getPurchaseHistory?.plan != null &&
           getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage &&
           eventType == 'upcoming' &&
           getPurchaseHistory?.upcoming_day_status != 1 ? (
@@ -435,17 +431,19 @@ const UpcomingEvent = ({navigation, route}: any) => {
                 fontFamily={Fonts.MONTSERRAT_MEDIUM}
               />
             </TouchableOpacity>
-          ) : (
-            <FitText
-              type="normal"
-              value="You've reached your limit to join the challenge. Upgrade your plan to join the new challenge"
-              textAlign="center"
-              color="#333333"
-              fontFamily={Fonts.MONTSERRAT_MEDIUM}
-              fontWeight="600"
-              marginVertical={10}
-            />
-          )}
+          ) : getPurchaseHistory?.upcoming_day_status != 1 ? (
+            getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage ? (
+              <FitText
+                type="normal"
+                value="You've reached your limit to join the challenge. Upgrade your plan to join the new challenge"
+                textAlign="center"
+                color="#333333"
+                fontFamily={Fonts.MONTSERRAT_MEDIUM}
+                fontWeight="600"
+                marginVertical={10}
+              />
+            ) : null
+          ) : null}
         </ShadowCard>
         {getPurchaseHistory?.plan_value != null && (
           <>
@@ -636,7 +634,9 @@ const UpcomingEvent = ({navigation, route}: any) => {
             borderTopWidth: 0.5,
           }}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('NewSubscription',{upgrade: true})}
+            onPress={() =>
+              navigation.navigate('NewSubscription', {upgrade: true})
+            }
             style={{
               width: DeviceWidth * 0.9,
               justifyContent: 'center',

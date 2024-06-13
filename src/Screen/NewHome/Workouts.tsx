@@ -41,6 +41,7 @@ import FastImage from 'react-native-fast-image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import FocusArea from '../FocusArea';
 import ActivityLoader from '../../Component/ActivityLoader';
+import { AddCountFunction } from '../../Component/Utilities/AddCountFunction';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
@@ -427,7 +428,7 @@ const Workouts = ({navigation}: any) => {
     bodyexercise = shuffleArray(bodyexercise);
 
     AnalyticsConsole(`${mydata?.title?.split(' ')[0]}_W_CATE`);
-    let checkAdsShow = checkMealAddCount();
+    let checkAdsShow = AddCountFunction();
     if (checkAdsShow == true) {
       showInterstitialAd();
       navigation.navigate('WorkoutCategories', {
@@ -448,7 +449,7 @@ const Workouts = ({navigation}: any) => {
           activeOpacity={0.8}
           onPress={() => {
             AnalyticsConsole(`D_Wrk_DAYS_FR_Wrk`);
-            let checkAdsShow = checkMealAddCount();
+            let checkAdsShow = AddCountFunction();
             if (checkAdsShow == true) {
               showInterstitialAd();
               navigation.navigate('WorkoutDays', {
@@ -576,7 +577,7 @@ const Workouts = ({navigation}: any) => {
     );
   };
   const getbodyPartWorkout = (data: any) => {
-    let checkAdsShow = checkMealAddCount();
+    let checkAdsShow = AddCountFunction();
     AnalyticsConsole(`${data?.bodypart_title}_FR_Wrk`);
 
     if (data?.title == 'Upper Body') {
@@ -937,7 +938,7 @@ const Workouts = ({navigation}: any) => {
                         activeOpacity={0.8}
                         onPress={() => {
                           AnalyticsConsole(`CustomWrk_FR_WRK`);
-                          let checkAdsShow = checkMealAddCount();
+                          let checkAdsShow = AddCountFunction();
                           if (checkAdsShow == true) {
                             showInterstitialAd();
                             navigation.navigate('CustomWorkout', {

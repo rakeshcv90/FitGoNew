@@ -14,20 +14,11 @@ import moment from 'moment';
 
 export const BannerAdd = ({bannerAdId}) => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
-  const planType = useSelector(state => state.planType);
-  // console.log(planType);
+  const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
   return (
     <>
-      {planType < 69 && planType == -1 ? (
-        <BannerAd
-          unitId={bannerAdId}
-          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-          requestOptions={{
-            requestNonPersonalizedAdsOnly: true,
-          }}
-        />
-      ) : (
-        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD') && (
+      {getPurchaseHistory?.plan != null ? 
+        getPurchaseHistory?.plan != 'noob' && isValid ? null : (
           <BannerAd
             unitId={bannerAdId}
             size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
@@ -35,7 +26,14 @@ export const BannerAdd = ({bannerAdId}) => {
               requestNonPersonalizedAdsOnly: true,
             }}
           />
-        )
+      ) : (
+        <BannerAd
+          unitId={bannerAdId}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+        />
       )}
     </>
   );

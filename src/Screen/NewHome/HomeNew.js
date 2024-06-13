@@ -82,6 +82,7 @@ import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import {handleStart} from '../../Component/Utilities/Bannerfunctions';
 import FitCoins from '../../Component/Utilities/FitCoins';
 import NameUpdateModal from '../../Component/Utilities/NameUpdateModal';
+import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -157,8 +158,6 @@ const HomeNew = ({navigation}) => {
   const [BannerType1, setBannertype1] = useState('');
   const [Bannertype2, setBannerType2] = useState('');
   const [BannerType, setBannertype] = useState('');
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [dataType, setDatatype] = useState('');
   const enteredUpcomingEvent = useSelector(
     state => state?.enteredUpcomingEvent,
   );
@@ -550,7 +549,7 @@ const HomeNew = ({navigation}) => {
             console.log('Location permission granted IOS');
             setLocationP(false);
             analytics().logEvent(`CV_FITME_CLICKED_ON_GYM_LISTING_SCREEN`);
-            let checkAdsShow = checkMealAddCount();
+            let checkAdsShow = AddCountFunction();
             if (checkAdsShow == true) {
               showInterstitialAd();
               navigationRef.navigate('GymListing');
@@ -571,7 +570,7 @@ const HomeNew = ({navigation}) => {
             console.log('Location permission granted Android');
             analytics().logEvent(`CV_FITME_CLICKED_ON_GYM_LISTING_SCREEN`);
             setLocationP(false);
-            let checkAdsShow = checkMealAddCount();
+            let checkAdsShow = AddCountFunction();
             if (checkAdsShow == true) {
               showInterstitialAd();
               navigationRef.navigate('GymListing');
@@ -748,7 +747,7 @@ const HomeNew = ({navigation}) => {
       activeOpacity={0.8}
       onPress={() => {
         AnalyticsConsole(`MediDetails`);
-        let checkAdsShow = checkMealAddCount();
+        let checkAdsShow = AddCountFunction();
         if (checkAdsShow == true) {
           showInterstitialAd();
           navigation.navigate('MeditationDetails', {item: title});
@@ -827,7 +826,7 @@ const HomeNew = ({navigation}) => {
           style={[styles.listItem2]}
           onPress={() => {
             AnalyticsConsole(`AI_TRAINER_BUTTON`);
-            let checkAdsShow = checkMealAddCount();
+            let checkAdsShow = AddCountFunction();
             if (checkAdsShow == true) {
               showInterstitialAd();
               navigation.navigate('AITrainer', {item: item});
@@ -1151,32 +1150,9 @@ const HomeNew = ({navigation}) => {
       setRefresh(false);
     }
   };
-  useEffect(() => {
-    console.log(getUserDataDetails)
-    if (getUserDataDetails.name == null && getUserDataDetails.email == null) {
-      setOpenEditModal(true);
-      setDatatype('both');
-    } else {
-      if (getUserDataDetails.name == null) {
-        setOpenEditModal(true);
-        setDatatype('name');
-      }
-      if (getUserDataDetails.email == null) {
-        setOpenEditModal(true);
-        setDatatype('email');
-      }
-    }
-  }, [openEditModal, dataType]);
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <NameUpdateModal
-        dataType={dataType}
-        openEditModal={openEditModal}
-        setOpenEditModal={setOpenEditModal}
-        user_id={getUserDataDetails?.id}
-      />
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
@@ -1226,7 +1202,7 @@ const HomeNew = ({navigation}) => {
           {enteredCurrentEvent && (
             <FitCoins
               onPress={() => {
-                AnalyticsConsole('LB')
+                AnalyticsConsole('LB');
                 const today = moment().day();
                 if (today == 0 || today == 6) {
                   navigation.navigate('Winner');
@@ -1663,7 +1639,7 @@ const HomeNew = ({navigation}) => {
               activeOpacity={0.8}
               onPress={() => {
                 AnalyticsConsole(`CustomWrk_FR_Home`);
-                let checkAdsShow = checkMealAddCount();
+                let checkAdsShow = AddCountFunction();
                 if (checkAdsShow == true) {
                   showInterstitialAd();
                   navigation.navigate('CustomWorkout');
@@ -1751,7 +1727,7 @@ const HomeNew = ({navigation}) => {
             <TouchableOpacity
               onPress={() => {
                 analytics().logEvent('CV_FITME_CLICKED_ON_MEDITATION');
-                let checkAdsShow = checkMealAddCount();
+                let checkAdsShow = AddCountFunction();
                 if (checkAdsShow == true) {
                   showInterstitialAd();
                   navigation.navigate('MeditationDetails', {
@@ -2024,7 +2000,7 @@ const HomeNew = ({navigation}) => {
               activeOpacity={0.8}
               onPress={() => {
                 AnalyticsConsole(`MEALS_BUTTON`);
-                let checkAdsShow = checkMealAddCount();
+                let checkAdsShow = AddCountFunction();
                 if (checkAdsShow == true) {
                   showInterstitialAd();
                   navigation.navigate('Meals');
@@ -2083,7 +2059,7 @@ const HomeNew = ({navigation}) => {
               activeOpacity={0.8}
               onPress={() => {
                 AnalyticsConsole(`STORE_BUTTON`);
-                let checkAdsShow = checkMealAddCount();
+                let checkAdsShow = AddCountFunction();
                 if (checkAdsShow == true) {
                   showInterstitialAd();
                   navigation.navigate('Store');

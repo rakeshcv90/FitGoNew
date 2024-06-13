@@ -48,6 +48,7 @@ import CircularProgress, {
   ProgressRef,
 } from 'react-native-circular-progress-indicator';
 import {setScreenAwake} from '../../../Component/ThemeRedux/Actions';
+import { AddCountFunction } from '../../../Component/Utilities/AddCountFunction';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -329,7 +330,7 @@ const Exercise = ({navigation, route}: any) => {
                 : enteredCurrentEvent
                 ? postCurrentRewardsExerciseAPI(number)
                 : postCurrentExerciseAPI(number);
-              let checkAdsShow = checkMealAddCount();
+              let checkAdsShow = AddCountFunction();
               if (checkAdsShow == true) {
                 showInterstitialAd();
                 navigation.navigate('SaveDayExercise', {
@@ -594,7 +595,6 @@ const Exercise = ({navigation, route}: any) => {
       console.error(error, 'PostSINGLExerciseAPIERror');
     }
   };
-
   const PauseModal = useMemo(() => {
     return ({back}: any) => {
       return (

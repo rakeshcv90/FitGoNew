@@ -31,7 +31,7 @@ import HomeNew from '../Screen/NewHome/HomeNew';
 import Profile from '../Screen/NewHome/Profile';
 import {ClipPath, Defs, Path, Polygon, Rect, Svg} from 'react-native-svg';
 import NewProfile from '../Screen/NewProfile';
-import { AnalyticsConsole } from '../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../Component/AnalyticsConsole';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
 const Tabs = createBottomTabNavigator();
 
@@ -59,22 +59,23 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
 
         const isFocused = state.index === index;
 
+        const isValid =
+          getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
+        const count = getPurchaseHistory?.plan == 'noob' ? 3 : 6;
+
         const onPress = () => {
-          AnalyticsConsole(`${route.name}_TAB`)
+          AnalyticsConsole(`${route.name}_TAB`);
           const event = navigation.emit({
             type: 'tabPress',
             target: route.key,
           });
           if (!isFocused && !event.defaultPrevented) {
-            if (getPurchaseHistory.length > 0) {
-              if (
-                getPurchaseHistory[0]?.plan_end_date >=
-                moment().format('YYYY-MM-DD')
-              ) {
+            if (getPurchaseHistory.plan != null) {
+              if (getPurchaseHistory?.plan == 'premium' && isValid) {
                 navigation.navigate(route.name);
                 Dispatch(setFitmeAdsCount(0));
               } else {
-                if (getFitmeAdsCount < 2) {
+                if (getFitmeAdsCount < count) {
                   Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
                   navigation.navigate(route.name);
                 } else {
@@ -84,7 +85,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                 }
               }
             } else {
-              if (getFitmeAdsCount < 2) {
+              if (getFitmeAdsCount < count) {
                 Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
                 navigation.navigate(route.name);
               } else {
@@ -279,18 +280,18 @@ const BottomTab = () => {
       </Tabs.Navigator>
       {/* {getPurchaseStatusData()} */}
       <View
-          style={{
-            marginTop:
-              Platform.OS == 'ios'
-                ? DeviceHeigth == 667
-                  ? -DeviceHeigth * 0.01
-                  : DeviceHeigth >= 1024
-                  ? 0
-                  : DeviceHeigth * 0.0
-                : 0,
-          }}>
-          <BannerAdd bannerAdId={bannerAdId} />
-        </View>
+        style={{
+          marginTop:
+            Platform.OS == 'ios'
+              ? DeviceHeigth == 667
+                ? -DeviceHeigth * 0.01
+                : DeviceHeigth >= 1024
+                ? 0
+                : DeviceHeigth * 0.0
+              : 0,
+        }}>
+        <BannerAdd bannerAdId={bannerAdId} />
+      </View>
     </>
   );
 };

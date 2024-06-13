@@ -53,6 +53,7 @@ import {
   ExerciseComponentWithEvent,
   ExerciseComponetWithoutEvents,
 } from './ExerciseComponent';
+import { AddCountFunction } from '../../Component/Utilities/AddCountFunction';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -433,7 +434,7 @@ const MyPlans = ({navigation}: any) => {
         setDownloade(0);
         setButtonClicked(false);
         setVisible(false);
-        let checkAdsShow = checkMealAddCount();
+        let checkAdsShow = AddCountFunction();
 
         if (checkAdsShow == true) {
           showInterstitialAd();
@@ -513,7 +514,7 @@ const MyPlans = ({navigation}: any) => {
         setDownloade(0);
         setButtonClicked(false);
         setVisible(false);
-        // let checkAdsShow = checkMealAddCount();
+        // let checkAdsShow = AddCountFunction();
 
         // if (checkAdsShow == true) {
         //   showInterstitialAd();
@@ -607,7 +608,7 @@ const MyPlans = ({navigation}: any) => {
         setButtonClicked(false);
         setVisible(false);
         setDownloade(0);
-        let checkAdsShow = checkMealAddCount();
+        let checkAdsShow = AddCountFunction();
         if (checkAdsShow == true) {
           showInterstitialAd();
           analytics().logEvent(

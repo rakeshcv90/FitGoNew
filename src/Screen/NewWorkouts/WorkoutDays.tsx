@@ -41,6 +41,7 @@ import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
 import FastImage from 'react-native-fast-image';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
+import { AddCountFunction } from '../../Component/Utilities/AddCountFunction';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -560,7 +561,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           activeOpacity={1}
           onPress={() => {
             analytics().logEvent(`CV_FITME_CLICKED_ON_DAY_${index}_EXERCISES`);
-            let checkAdsShow = checkMealAddCount();
+            let checkAdsShow = AddCountFunction();
             if (checkAdsShow == true) {
               showInterstitialAd();
               index - 1 == 0
@@ -810,9 +811,10 @@ const WorkoutDays = ({navigation, route}: any) => {
     }
   };
   const getNativeAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
+    if (getPurchaseHistory?.plan != null) {
       if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        getPurchaseHistory?.plan == 'premium' &&
+        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
       ) {
         return null;
       } else {

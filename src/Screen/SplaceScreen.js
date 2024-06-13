@@ -232,13 +232,11 @@ const SplaceScreen = ({navigation}) => {
       navigation.replace('LetsStart');
     }
   };
+  const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
   if (loaded) {
     setLoaded(false);
-    if (planType != -1) {
-      if (
-        planType >= 149 &&
-        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
-      ) {
+    if (getPurchaseHistory?.plan != null) {
+      if (getPurchaseHistory?.plan == 'premium' && isValid) {
         loadScreen();
       } else {
         loaded.show();

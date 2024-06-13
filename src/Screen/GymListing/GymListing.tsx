@@ -27,7 +27,7 @@ import {bannerAdId} from '../../Component/AdsId';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
 import NativeAddTest from '../../Component/NativeAddTest';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
 type Coordinates = {
   latitude: number;
@@ -50,7 +50,7 @@ const GymListing = ({navigation}: any) => {
     }, []),
   );
   const getCurrentLocation = () => {
-    setLoader(true)
+    setLoader(true);
     Geolocation.getCurrentPosition(
       position => {
         const pos = position.coords;
@@ -62,7 +62,7 @@ const GymListing = ({navigation}: any) => {
         GetGymsAPI(pos);
       },
       error => {
-        setLoader(false)
+        setLoader(false);
         console.log('err Coord', error.code, error);
       },
       {enableHighAccuracy: false, maximumAge: 0},
@@ -270,7 +270,7 @@ const GymListing = ({navigation}: any) => {
   // };
   const getAdsDisplay = (item, index) => {
     if (gymsData?.length >= 1) {
-      if (index == 0&&gymsData?.length>1) {
+      if (index == 0 && gymsData?.length > 1) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0) {
         return getNativeAdsDisplay();
@@ -278,9 +278,10 @@ const GymListing = ({navigation}: any) => {
     }
   };
   const getNativeAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
+    if (getPurchaseHistory?.plan != null) {
       if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        getPurchaseHistory?.plan == 'premium' &&
+        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
       ) {
         return null;
       } else {
@@ -360,7 +361,7 @@ const GymListing = ({navigation}: any) => {
         )}
       </View>
       {/* {bannerAdsDisplay()} */}
-          <BannerAdd bannerAdId={bannerAdId} />
+      <BannerAdd bannerAdId={bannerAdId} />
     </View>
   );
 };
