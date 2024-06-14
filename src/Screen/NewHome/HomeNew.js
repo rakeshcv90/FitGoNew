@@ -81,7 +81,6 @@ import {checkLocationPermission} from '../Terms&Country/LocationPermission';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import {handleStart} from '../../Component/Utilities/Bannerfunctions';
 import FitCoins from '../../Component/Utilities/FitCoins';
-import NameUpdateModal from '../../Component/Utilities/NameUpdateModal';
 
 const GradientText = ({item}) => {
   const gradientColors = ['#D01818', '#941000'];
@@ -254,14 +253,11 @@ const HomeNew = ({navigation}) => {
           setBannertype1('new_join');
         });
     }
-    console.log(BannerType1,Bannertype2,getOfferAgreement,enteredCurrentEvent,enteredUpcomingEvent)
   }, [
-    BannerType1,
-    Bannertype2,
-    getOfferAgreement,
-    getPurchaseHistory,
     enteredCurrentEvent,
     enteredUpcomingEvent,
+    getOfferAgreement,
+    getPurchaseHistory,
   ]);
   //banner api
   const bannerApi = async () => {
@@ -1159,7 +1155,6 @@ const HomeNew = ({navigation}) => {
     }
   };
   useEffect(() => {
-    console.log(getUserDataDetails);
     if (getUserDataDetails.name == null && getUserDataDetails.email == null) {
       setOpenEditModal(true);
       setDatatype('both');

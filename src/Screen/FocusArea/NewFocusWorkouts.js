@@ -127,20 +127,20 @@ const NewFocusWorkouts = ({route, navigation}) => {
   ];
   useEffect(() => {
     // delay for smooth animation
-   setTimeout(()=>{
-    if (route?.params?.focusedPart == 'Upper Body' && getUprBodyCount == 0) {
-      refStandard.current.open();
-    } else if (
-      route?.params?.focusedPart == 'Lower Body' &&
-      getLowerBodyCount == 0
-    ) {
-      refStandard.current.open();
-    } else if (route?.params?.focusedPart == 'Core' && getCoreCount == 0) {
-      refStandard.current.open();
-    } else {
-      refStandard.current.close();
-    }
-   },1000)
+    setTimeout(() => {
+      if (route?.params?.focusedPart == 'Upper Body' && getUprBodyCount == 0) {
+        refStandard.current.open();
+      } else if (
+        route?.params?.focusedPart == 'Lower Body' &&
+        getLowerBodyCount == 0
+      ) {
+        refStandard.current.open();
+      } else if (route?.params?.focusedPart == 'Core' && getCoreCount == 0) {
+        refStandard.current.open();
+      } else {
+        refStandard.current.close();
+      }
+    }, 1000);
   }, [route]);
   // automatic filter when user comes to this screen
   useEffect(() => {
@@ -478,7 +478,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                               textAlign: 'center',
                               fontFamily: Fonts.MONTSERRAT_MEDIUM,
                             }}>
-                            Exercise x {item?.exCount}
+                            Exercise x {item.exCount}
                           </Text>
                         </View>
                         <Icon
@@ -587,7 +587,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
           })
           .progress((received, total) => {
             setDownloadProgress((received / total) * 100);
-            console.log(downloadProgress * 100);
           })
           .then(res => {
             StoringData[data?.exercise_title] = res.path();
@@ -666,136 +665,141 @@ const NewFocusWorkouts = ({route, navigation}) => {
           source={require('../../Icon/Images/NewImage2/filter.png')}
         />
         <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-        <View>
-          <FlatList
-            data={filterList}
-            contentContainerStyle={{paddingBottom: DeviceHeigth * 0.25}}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({item, index}) => {
-              return (
-                <>
-                  <TouchableOpacity
-                    style={{
-                      width: '100%',
-                      marginVertical: 10,
-                      paddingHorizontal: 20,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}
-                    onPress={() => {
-                      setVisible(true);
-                      setitem(item);
-                    }}>
-                    <FastImage
-                      fallback={true}
-                      style={{
-                        width: 75,
-                        height: 75,
-                        justifyContent: 'center',
-                        alignSelf: 'center',
-                        borderRadius: 5,
-                        borderWidth: 1,
-                        borderColor: '#D9D9D9',
-                      }}
-                      source={{
-                        uri: item?.exercise_image_link,
-                        headers: {Authorization: 'someAuthToken'},
-                        priority: FastImage.priority.high,
-                      }}
-                      resizeMode={FastImage.resizeMode.contain}
-                      defaultSource={localImage.NOWORKOUT}
-                    />
-                    <View
-                      style={{marginHorizontal: 16, width: DeviceWidth * 0.48}}>
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          fontSize: 16,
-                          fontWeight: '600',
-                          lineHeight: 24,
-                          fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                          color: '#1E1E1E',
-                        }}>
-                        {item?.exercise_title}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontWeight: '400',
-                          lineHeight: 24,
-                          opacity: 0.7,
-                          fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                          color: '#1E1E1E',
-                        }}>
-                        {item?.exercise_rest}
-                      </Text>
-                    </View>
+        <>
+          <View>
+            <FlatList
+              data={filterList}
+              contentContainerStyle={{paddingBottom: DeviceHeigth * 0.25}}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item, index}) => {
+                return (
+                  <>
                     <TouchableOpacity
-                      style={{right: -25, padding: 2}}
-                      onPress={() => {
-                        setSelectedIndex(index);
-                        handleIconPress(item, index);
-                      }}>
-                      <CircularProgressBase
-                        value={selectedIndex == index ? downloadProgress : 0}
-                        radius={16}
-                        activeStrokeColor={AppColor.RED}
-                        inActiveStrokeColor={AppColor.GRAY1}
-                        activeStrokeWidth={3}
-                        inActiveStrokeWidth={3}
-                        maxValue={100}>
-                        <Icons
-                          name={'play'}
-                          size={30}
-                          opacity={0.6}
-                          color={'#333333'}
-                        />
-                      </CircularProgressBase>
-                    </TouchableOpacity>
-                  </TouchableOpacity>
-                  {index !== exerciseData.length - 1 && (
-                    <View
                       style={{
                         width: '100%',
-                        height: 1,
-
+                        marginVertical: 10,
+                        paddingHorizontal: 20,
+                        flexDirection: 'row',
                         alignItems: 'center',
-                        backgroundColor: '#33333314',
                       }}
-                    />
-                  )}
-                </>
-              );
+                      onPress={() => {
+                        setVisible(true);
+                        setitem(item);
+                      }}>
+                      <FastImage
+                        fallback={true}
+                        style={{
+                          width: 75,
+                          height: 75,
+                          justifyContent: 'center',
+                          alignSelf: 'center',
+                          borderRadius: 5,
+                          borderWidth: 1,
+                          borderColor: '#D9D9D9',
+                        }}
+                        source={{
+                          uri: item?.exercise_image_link,
+                          headers: {Authorization: 'someAuthToken'},
+                          priority: FastImage.priority.high,
+                        }}
+                        resizeMode={FastImage.resizeMode.contain}
+                        defaultSource={localImage.NOWORKOUT}
+                      />
+                      <View
+                        style={{
+                          marginHorizontal: 16,
+                          width: DeviceWidth * 0.48,
+                        }}>
+                        <Text
+                          numberOfLines={1}
+                          style={{
+                            fontSize: 16,
+                            fontWeight: '600',
+                            lineHeight: 24,
+                            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                            color: '#1E1E1E',
+                          }}>
+                          {item?.exercise_title}
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            fontWeight: '400',
+                            lineHeight: 24,
+                            opacity: 0.7,
+                            fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                            color: '#1E1E1E',
+                          }}>
+                          {item?.exercise_rest}
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        style={{right: -25, padding: 2}}
+                        onPress={() => {
+                          setSelectedIndex(index);
+                          handleIconPress(item, index);
+                        }}>
+                        <CircularProgressBase
+                          value={selectedIndex == index ? downloadProgress : 0}
+                          radius={16}
+                          activeStrokeColor={AppColor.RED}
+                          inActiveStrokeColor={AppColor.GRAY1}
+                          activeStrokeWidth={3}
+                          inActiveStrokeWidth={3}
+                          maxValue={100}>
+                          <Icons
+                            name={'play'}
+                            size={30}
+                            opacity={0.6}
+                            color={'#333333'}
+                          />
+                        </CircularProgressBase>
+                      </TouchableOpacity>
+                    </TouchableOpacity>
+                    {index !== exerciseData.length - 1 && (
+                      <View
+                        style={{
+                          width: '100%',
+                          height: 1,
+
+                          alignItems: 'center',
+                          backgroundColor: '#33333314',
+                        }}
+                      />
+                    )}
+                  </>
+                );
+              }}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
+            />
+          </View>
+          <GradientButton
+            // flex={0.01}
+            text={downloaded ? `Downloading` : 'Start All'}
+            h={50}
+            colors={['#A93737', '#A93737']}
+            textStyle={styles.buttonText}
+            alignSelf
+            bR={6}
+            normalAnimation={downloaded > 0}
+            normalFill={`${100 - downloaded}%`}
+            bottm={5}
+            position={'absolute'}
+            onPress={() => {
+              Start(filterList);
             }}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
-            updateCellsBatchingPeriod={100}
-            removeClippedSubviews={true}
           />
-        </View>
-        <GradientButton
-          // flex={0.01}
-          text={downloaded ? `Downloading` : 'Start All'}
-          h={50}
-          colors={['#A93737', '#A93737']}
-          textStyle={styles.buttonText}
-          alignSelf
-          bR={6}
-          normalAnimation={downloaded > 0}
-          normalFill={`${100 - downloaded}%`}
-          bottm={5}
-          position={'absolute'}
-          onPress={() => {
-            Start(filterList);
-          }}
-        />
-        <BottomSheet />
+          <BottomSheet />
+        </>
         <WorkoutsDescription data={item} open={visible} setOpen={setVisible} />
       </View>
       {/* {bannerAdsDisplay()} */}
-          <BannerAdd bannerAdId={bannerAdId} />
+      <BannerAdd bannerAdId={bannerAdId} />
     </>
   );
 };
