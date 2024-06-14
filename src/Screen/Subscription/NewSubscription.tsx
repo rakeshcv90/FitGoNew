@@ -423,6 +423,15 @@ const NewSubscription = ({navigation, route}: any) => {
         setTimeout(() => {
           navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
         }, 2500);
+      } else if (
+        res.data.message ==
+        'Plan upgraded and existing subscription updated successfully'
+      ) {
+        PurchaseDetails();
+        setForLoading(false);
+        setTimeout(() => {
+          navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+        }, 2500);
       } else {
         setForLoading(false);
         showMessage({
@@ -538,7 +547,7 @@ const NewSubscription = ({navigation, route}: any) => {
           alignSelf: 'center',
         }}>
         {getPurchaseHistory?.plan != null &&
-          planName==getPurchaseHistory?.plan && (
+          planName == getPurchaseHistory?.plan && (
             <View
               style={{
                 justifyContent: 'center',

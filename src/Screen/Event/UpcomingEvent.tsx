@@ -43,7 +43,6 @@ const UpcomingEvent = ({navigation, route}: any) => {
   const enteredUpcomingEvent = useSelector(
     (state: any) => state.enteredUpcomingEvent,
   );
-  const planType = useSelector((state: any) => state.planType);
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
@@ -430,17 +429,19 @@ const UpcomingEvent = ({navigation, route}: any) => {
                 fontFamily={Fonts.MONTSERRAT_MEDIUM}
               />
             </TouchableOpacity>
-          ) : (
-            <FitText
-              type="normal"
-              value="You've reached your limit to join the challenge. Upgrade your plan to join the new challenge"
-              textAlign="center"
-              color="#333333"
-              fontFamily={Fonts.MONTSERRAT_MEDIUM}
-              fontWeight="600"
-              marginVertical={10}
-            />
-          )}
+          ) : getPurchaseHistory?.upcoming_day_status != 1 ? (
+            getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage ? (
+              <FitText
+                type="normal"
+                value="You've reached your limit to join the challenge. Upgrade your plan to join the new challenge"
+                textAlign="center"
+                color="#333333"
+                fontFamily={Fonts.MONTSERRAT_MEDIUM}
+                fontWeight="600"
+                marginVertical={10}
+              />
+            ) : null
+          ) : null}
         </ShadowCard>
         {getPurchaseHistory?.plan_value != null && (
           <>
@@ -626,30 +627,35 @@ const UpcomingEvent = ({navigation, route}: any) => {
             backgroundColor: AppColor.WHITE,
             justifyContent: 'center',
             alignItems: 'center',
-            height: DeviceWidth / 3,
+            height:
+              getPurchaseHistory?.plan != 'premium'
+                ? DeviceWidth / 3
+                : DeviceWidth / 6,
             borderTopColor: '#00000024',
             borderTopWidth: 0.5,
           }}>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('NewSubscription', {upgrade: true})
-            }
-            style={{
-              width: DeviceWidth * 0.9,
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: 5,
-              borderWidth: 1,
-              borderColor: AppColor.NEW_DARK_RED,
-              paddingVertical: 10,
-            }}>
-            <FitText
-              type="normal"
-              value="Upgrade Plan"
-              color={AppColor.NEW_DARK_RED}
-              fontFamily={Fonts.MONTSERRAT_MEDIUM}
-            />
-          </TouchableOpacity>
+          {getPurchaseHistory?.plan != 'premium' && (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('NewSubscription', {upgrade: true})
+              }
+              style={{
+                width: DeviceWidth * 0.9,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 5,
+                borderWidth: 1,
+                borderColor: AppColor.NEW_DARK_RED,
+                paddingVertical: 10,
+              }}>
+              <FitText
+                type="normal"
+                value="Upgrade Plan"
+                color={AppColor.NEW_DARK_RED}
+                fontFamily={Fonts.MONTSERRAT_MEDIUM}
+              />
+            </TouchableOpacity>
+          )}
           <FitText
             type="normal"
             value="Cancel Plan"
