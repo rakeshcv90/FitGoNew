@@ -51,10 +51,10 @@ export const ExerciseComponetWithoutEvents = ({
           <FlatList
             data={dayObject?.exercises}
             showsVerticalScrollIndicator={false}
+            contentContainerStyle={{paddingBottom: DeviceHeigth * 0.42}}
             style={{
               width: DeviceWidth * 0.9,
               alignSelf: 'center',
-              marginBottom: DeviceHeigth * 0.4,
             }}
             renderItem={({item, index}) => (
               <View key={index}>
@@ -96,11 +96,11 @@ export const ExerciseComponetWithoutEvents = ({
               justifyContent: 'center',
               alignItems: 'center',
               paddingVertical: 5,
-              borderWidth:1,
-              borderColor:AppColor.RED,
-              borderRadius:15,
+              borderWidth: 1,
+              borderColor: AppColor.RED,
+              borderRadius: 15,
               // alignSelf:'center',
-              marginTop:DeviceHeigth*0.05
+              marginTop: DeviceHeigth * 0.05,
             }}>
             <AnimatedLottieView
               source={require('../../Icon/Images/RedTick.json')}
@@ -170,7 +170,6 @@ export const ExerciseComponetWithoutEvents = ({
                   fontWeight: '700',
                   color: AppColor.RED1,
                   lineHeight: 30,
-               
                 }}>
                 {getWeeklyPlansData[day]?.title}
               </Text>
@@ -190,11 +189,10 @@ export const ExerciseComponentWithEvent = ({
   WeekArray,
   getWeeklyPlansData,
   selectedDay,
+  currentDay,
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
-  const sameDay = day == moment().format('dddd');
-  console.log(dayWiseCoins[day]);
   return (
     <View style={styles.View1}>
       {dayWiseCoins[day] == null || dayWiseCoins[day] < 0 ? (
@@ -221,12 +219,12 @@ export const ExerciseComponentWithEvent = ({
                   day: day,
                 })
               }>
-              {day == moment().format('dddd') ? (
+              {day == WeekArray[currentDay] ? (
                 <Image source={localImage.EditPen} style={styles.edit} />
               ) : null}
             </TouchableOpacity>
           </View>
-          {day == moment().format('dddd') ? (
+          {day == WeekArray[currentDay] ? (
             <NewButton title={'Start'} onPress={onPress} />
           ) : null}
           <Text
@@ -245,10 +243,11 @@ export const ExerciseComponentWithEvent = ({
           <FlatList
             data={dayObject?.exercises}
             showsVerticalScrollIndicator={false}
+            contentContainerStyle={{paddingBottom: DeviceHeigth * 0.42}}
             style={{
               width: DeviceWidth * 0.9,
               alignSelf: 'center',
-              marginBottom: DeviceHeigth * 0.35,
+              // marginBottom: DeviceHeigth * 0.35,
             }}
             renderItem={({item, index}) => (
               <View key={index}>
@@ -290,10 +289,10 @@ export const ExerciseComponentWithEvent = ({
               justifyContent: 'center',
               alignItems: 'center',
               paddingVertical: 5,
-              borderColor:AppColor.RED,
-              borderRadius:15,
-              alignSelf:'center',
-              marginTop:DeviceHeigth*0.05
+              borderColor: AppColor.RED,
+              borderRadius: 15,
+              alignSelf: 'center',
+              marginTop: DeviceHeigth * 0.05,
             }}>
             <AnimatedLottieView
               source={require('../../Icon/Images/RedTick.json')}

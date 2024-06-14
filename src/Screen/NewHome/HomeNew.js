@@ -254,7 +254,12 @@ const HomeNew = ({navigation}) => {
           setBannertype1('new_join');
         });
     }
-  }, [BannerType1, Bannertype2, getOfferAgreement]);
+  }, [
+    enteredCurrentEvent,
+    enteredUpcomingEvent,
+    getOfferAgreement,
+    getPurchaseHistory,
+  ]);
   //banner api
   const bannerApi = async () => {
     try {
@@ -1151,7 +1156,6 @@ const HomeNew = ({navigation}) => {
     }
   };
   useEffect(() => {
-    console.log(getUserDataDetails);
     if (getUserDataDetails.name == null && getUserDataDetails.email == null) {
       setOpenEditModal(true);
       setDatatype('both');
@@ -1170,12 +1174,12 @@ const HomeNew = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <NameUpdateModal
+      {/* <NameUpdateModal
         dataType={dataType}
         openEditModal={openEditModal}
         setOpenEditModal={setOpenEditModal}
         user_id={getUserDataDetails?.id}
-      />
+      /> */}
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}

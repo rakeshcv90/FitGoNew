@@ -124,8 +124,9 @@ const MyPlans = ({navigation}: any) => {
     React.useCallback(() => {
       if (enteredCurrentEvent) {
         getEarnedCoins();
+        console.log(WeekArray[selectedDay] !== 'Saturday');
       }
-    }, [,navigation]),
+    }, [navigation]),
   );
   const getAllExerciseData = async () => {
     try {
@@ -199,7 +200,9 @@ const MyPlans = ({navigation}: any) => {
   const getEarnedCoins = async () => {
     try {
       const response = await axios(
-        `${NewAppapi.GET_COINS}?user_id=${getUserDataDetails?.id}&day=${WeekArrayWithEvent[selectedDay]}`,
+        `${NewAppapi.GET_COINS}?user_id=${getUserDataDetails?.id}&day=${
+          WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]
+        }`,
       );
       if (
         response?.data?.msg == 'Please update the app to the latest version.'
@@ -872,39 +875,6 @@ const MyPlans = ({navigation}: any) => {
             Get Fit{' '}
           </Text>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            width: DeviceWidth * 0.9,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            alignSelf: 'center',
-            marginBottom: DeviceWidth * 0.05,
-          }}>
-          {enteredCurrentEvent
-            ? WeekArrayWithEvent.map((item: any, index: number) => (
-                <WeekTabWithEvents
-                  day={item}
-                  dayIndex={index}
-                  selectedDay={selectedDay}
-                  setSelectedDay={setSelectedDay}
-                  WeekStatus={WeekStatus}
-                  WeekArray={WeekArrayWithEvent}
-                  dayObject={getWeeklyPlansData}
-                  dayWiseCoins={coins}
-                />
-              ))
-            : WeekArray.map((item: any, index: number) => (
-                <WeekTabWithoutEvent
-                  day={item}
-                  dayIndex={index}
-                  selectedDay={selectedDay}
-                  setSelectedDay={setSelectedDay}
-                  WeekStatus={WeekStatus}
-                  WeekArray={WeekArray}
-                />
-              ))}
-        </View>
 
         {loader ? (
           <View
@@ -920,31 +890,80 @@ const MyPlans = ({navigation}: any) => {
         ) : getWeeklyPlansData[WeekArray[selectedDay]] &&
           getWeeklyPlansData[WeekArray[selectedDay]]?.exercises &&
           getWeeklyPlansData[WeekArray[selectedDay]]?.exercises?.length > 0 ? (
-          enteredCurrentEvent ? (
-            <ExerciseComponentWithEvent
-              dayObject={
-                getEditedDayExercise &&
-                getEditedDayExercise[WeekArrayWithEvent[selectedDay]]
-                  ? getEditedDayExercise[WeekArrayWithEvent[selectedDay]]
-                  : getWeeklyPlansData[WeekArrayWithEvent[selectedDay]]
-              }
-              day={WeekArrayWithEvent[selectedDay]}
-              onPress={handleStart}
-              navigation={navigation}
-              WeekArray={WeekArrayWithEvent}
-              dayWiseCoins={coins}
-              getWeeklyPlansData={getWeeklyPlansData}
-              selectedDay={selectedDay}
-            />
+          enteredCurrentEvent &&
+          WeekArray[selectedDay] !== 'Saturday' &&
+          WeekArray[selectedDay] !== 'Sunday' ? (
+            <>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: DeviceWidth * 0.9,
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                  marginBottom: DeviceWidth * 0.05,
+                }}>
+                {WeekArrayWithEvent.map((item: any, index: number) => (
+                  <WeekTabWithEvents
+                    day={item}
+                    dayIndex={index}
+                    selectedDay={selectedDay}
+                    setSelectedDay={setSelectedDay}
+                    WeekStatus={WeekStatus}
+                    WeekArray={WeekArrayWithEvent}
+                    dayObject={getWeeklyPlansData}
+                    dayWiseCoins={coins}
+                  />
+                ))}
+              </View>
+              <ExerciseComponentWithEvent
+                dayObject={
+                  getEditedDayExercise &&
+                  getEditedDayExercise[WeekArrayWithEvent[selectedDay]]
+                    ? getEditedDayExercise[WeekArrayWithEvent[selectedDay]]
+                    : getWeeklyPlansData[WeekArrayWithEvent[selectedDay]]
+                }
+                day={WeekArrayWithEvent[selectedDay]}
+                onPress={handleStart}
+                navigation={navigation}
+                WeekArray={WeekArrayWithEvent}
+                dayWiseCoins={coins}
+                getWeeklyPlansData={getWeeklyPlansData}
+                selectedDay={selectedDay}
+                currentDay={getPurchaseHistory?.currentDay - 1}
+              />
+            </>
           ) : (
-            <ExerciseComponetWithoutEvents
-              dayObject={getWeeklyPlansData[WeekArray[selectedDay]]}
-              day={WeekArray[selectedDay]}
-              onPress={handleStart}
-              WeekStatus={WeekStatus}
-              WeekArray={WeekArray}
-              getWeeklyPlansData={getWeeklyPlansData}
-            />
+            <>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: DeviceWidth * 0.9,
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                  marginBottom: DeviceWidth * 0.05,
+                }}>
+                {WeekArray.map((item: any, index: number) => (
+                  <WeekTabWithoutEvent
+                    day={item}
+                    dayIndex={index}
+                    selectedDay={selectedDay}
+                    setSelectedDay={setSelectedDay}
+                    WeekStatus={WeekStatus}
+                    WeekArray={WeekArray}
+                  />
+                ))}
+              </View>
+              <ExerciseComponetWithoutEvents
+                dayObject={getWeeklyPlansData[WeekArray[selectedDay]]}
+                day={WeekArray[selectedDay]}
+                onPress={handleStart}
+                WeekStatus={WeekStatus}
+                WeekArray={WeekArray}
+                getWeeklyPlansData={getWeeklyPlansData}
+              />
+            </>
           )
         ) : (
           emptyComponent()
