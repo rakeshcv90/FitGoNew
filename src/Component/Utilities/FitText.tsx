@@ -17,7 +17,7 @@ type Props = TextProps & {
   lineHeight?: number;
   marginVertical?: number;
   fontStyle?: 'normal' | 'italic';
-  w?: string;
+  w?: string | any;
   textDecorationLine?: 'line-through'
 };
 

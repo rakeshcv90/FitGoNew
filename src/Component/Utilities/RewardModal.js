@@ -145,16 +145,12 @@ const RewardModal = ({visible, navigation}) => {
         <View style={styles.View1}>
           <View
             style={{
+              justifyContent: 'center',
+              alignItems: 'center',
               flexDirection: 'row',
-              justifyContent: 'space-between',
             }}>
             <Image
-              source={localImage.Modal_img}
-              style={styles.img1}
-              resizeMode="stretch"
-            />
-            <Image
-              source={localImage.ModalCoin}
+              source={localImage.Reward_icon}
               style={[styles.img2]}
               resizeMode="contain"
             />
@@ -182,7 +178,7 @@ const RewardModal = ({visible, navigation}) => {
               ButtonWidth={DeviceWidth * 0.6}
               onPress={() => {
                 dispatch(setRewardModal(false));
-                navigation.navigate('NewSubscription');
+                navigation.navigate('NewSubscription',{upgrade: false});
               }}
             />
           </View>
@@ -215,7 +211,7 @@ const styles = StyleSheet.create({
   img2: {
     height: DeviceHeigth * 0.2,
     width: DeviceWidth * 0.45,
-    right: DeviceWidth * 0.04,
+    // right: DeviceWidth * 0.04,
   },
   //texts
   txt1: {

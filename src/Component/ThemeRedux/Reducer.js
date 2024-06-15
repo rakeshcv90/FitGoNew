@@ -309,11 +309,16 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         getEditedDayExercise: action.payload,
       };
-      case types.AGREEMENT_CONTENT:
-        return{
-          ...state,
-          getAgreementContent:action.payload
-        }
+    case types.AGREEMENT_CONTENT:
+      return {
+        ...state,
+        getAgreementContent: action.payload,
+      };
+    case types.EXERCISECOUNT:
+      return {
+        ...state,
+        getExerciseCount: action.payload,
+      };
     default:
       return state;
   }

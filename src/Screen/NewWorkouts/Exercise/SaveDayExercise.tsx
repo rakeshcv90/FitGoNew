@@ -1,5 +1,5 @@
 import {Image, Platform, StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AppColor, Fonts} from '../../../Component/Color';
 import {localImage} from '../../../Component/Image';
@@ -81,7 +81,6 @@ const SaveDayExercise = ({navigation, route}: any) => {
     });
     if (type == 'weekly') getWeeklyAPI();
   }
-
   const TESTAPI = async () => {
     try {
       const data = await axios(`${NewAppapi.POST_API_FOR_COIN_CALCULATION}`, {

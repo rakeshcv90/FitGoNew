@@ -242,54 +242,59 @@ const OfferTerms = ({navigation, route}: any) => {
                 style={{
                   marginRight: 16,
                 }}>
-                <Modal
-                  transparent
-                  visible={opened}
-                  style={{backgroundColor: 'red'}}>
-                  <View
-                    style={{
-                      // width: DeviceWidth * 0.3,
-                      backgroundColor: 'lightgrey',
-                      justifyContent: 'flex-end',
-                      alignSelf: 'flex-end',
-                      top: DeviceHeigth * 0.1,
-                      marginRight: 16,
-                      paddingHorizontal: 10,
-                      paddingVertical: 8,
-                    }}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <RadioButton
-                        value="English"
-                        status={
-                          language === 'English' ? 'checked' : 'unchecked'
-                        }
-                        onPress={() => {
-                          setLanguage('English');
-                          handleRadioButton('term_condition_english');
-                          setTimeout(() => {
-                            setOpened(!opened);
-                          }, 250);
-                        }}
-                        color={AppColor.RED}
-                      />
-                      <Text style={{color: AppColor.BLACK}}>English</Text>
+                <Modal transparent visible={opened}>
+                  <TouchableOpacity
+                    style={{flex: 1}}
+                    onPress={() => setOpened(false)}>
+                    <View
+                      style={{
+                        // width: DeviceWidth * 0.3,
+                        backgroundColor: 'lightgrey',
+                        justifyContent: 'flex-end',
+                        alignSelf: 'flex-end',
+                        top: DeviceHeigth * 0.1,
+                        marginRight: 16,
+                        paddingHorizontal: 10,
+                        paddingVertical: 8,
+                      }}>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <RadioButton
+                          value="English"
+                          status={
+                            language === 'English' ? 'checked' : 'unchecked'
+                          }
+                          onPress={() => {
+                            setLanguage('English');
+                            handleRadioButton('term_condition_english');
+                            setTimeout(() => {
+                              setOpened(!opened);
+                            }, 250);
+                          }}
+                          color={AppColor.RED}
+                        />
+                        <Text style={{color: AppColor.BLACK}}>English</Text>
+                      </View>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <RadioButton
+                          value="Hindi"
+                          status={
+                            language === 'Hindi' ? 'checked' : 'unchecked'
+                          }
+                          onPress={() => {
+                            setLanguage('Hindi');
+                            handleRadioButton('term_condition_hindi');
+                            setTimeout(() => {
+                              setOpened(!opened);
+                            }, 250);
+                          }}
+                          color={AppColor.RED}
+                        />
+                        <Text style={{color: AppColor.BLACK}}>Hindi</Text>
+                      </View>
                     </View>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <RadioButton
-                        value="Hindi"
-                        status={language === 'Hindi' ? 'checked' : 'unchecked'}
-                        onPress={() => {
-                          setLanguage('Hindi');
-                          handleRadioButton('term_condition_hindi');
-                          setTimeout(() => {
-                            setOpened(!opened);
-                          }, 250);
-                        }}
-                        color={AppColor.RED}
-                      />
-                      <Text style={{color: AppColor.BLACK}}>Hindi</Text>
-                    </View>
-                  </View>
+                  </TouchableOpacity>
                 </Modal>
               </View>
             )}

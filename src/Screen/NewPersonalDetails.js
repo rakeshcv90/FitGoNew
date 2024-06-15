@@ -229,7 +229,7 @@ const NewPersonalDetails = ({route, navigation}) => {
           workout_plans: values.workout_plans,
         },
       });
-      console.log('ZXvcvxcvcxvcx', dataItem.data);
+
       if (dataItem.data.msg == 'User Updated Successfully') {
         showMessage({
           message: 'Details updated successfully',
@@ -256,7 +256,7 @@ const NewPersonalDetails = ({route, navigation}) => {
         setForLoading(false);
       } else {
         showMessage({
-          message: dataItem.data.msg,
+          message: dataItem.data.msg??"helloo",
           floating: true,
           type: 'danger',
           animationDuration: 750,

@@ -89,7 +89,6 @@ import {checkLocationPermission} from '../Terms&Country/LocationPermission';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import {handleStart} from '../../Component/Utilities/Bannerfunctions';
 import FitCoins from '../../Component/Utilities/FitCoins';
-import NameUpdateModal from '../../Component/Utilities/NameUpdateModal';
 
 const HomeNew = ({navigation}) => {
   const dispatch = useDispatch();
@@ -128,7 +127,6 @@ const HomeNew = ({navigation}) => {
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const [BannerType1, setBannertype1] = useState('');
   const [Bannertype2, setBannerType2] = useState('');
-  const [BannerType, setBannertype] = useState('');
   const [openEditModal, setOpenEditModal] = useState(false);
   const [dataType, setDatatype] = useState('');
   const enteredUpcomingEvent = useSelector(
@@ -201,8 +199,8 @@ const HomeNew = ({navigation}) => {
     if (getOfferAgreement?.location == 'India') {
       if (enteredCurrentEvent && enteredUpcomingEvent) {
         // show coin
-        setBannertype1('upcoming_challenge');
-        setBannerType2('ongoing_challenge');
+        setBannertype1('ongoing_challenge');
+        setBannerType2('joined_challenge');
       } else if (enteredCurrentEvent && !enteredUpcomingEvent) {
         //show coin
         setBannertype1('ongoing_challenge');
@@ -227,7 +225,12 @@ const HomeNew = ({navigation}) => {
           setBannertype1('new_join');
         });
     }
-  }, []);
+  }, [
+    enteredCurrentEvent,
+    enteredUpcomingEvent,
+    getOfferAgreement,
+    getPurchaseHistory,
+  ]);
   //banner api
   // const bannerApi = async () => {
   //   try {
@@ -1218,7 +1221,7 @@ const HomeNew = ({navigation}) => {
     try {
       const result = await axios({
         // url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${appVersion}`,
-        url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=1.18`,
+        url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
       if (result.data) {
         const myRank = result.data?.data?.findIndex(
@@ -1234,7 +1237,7 @@ const HomeNew = ({navigation}) => {
     }
   };
   useEffect(() => {
-    console.log(getUserDataDetails);
+    console.log(getUserDataDetails)
     if (getUserDataDetails.name == null && getUserDataDetails.email == null) {
       setOpenEditModal(true);
       setDatatype('both');
@@ -1253,12 +1256,6 @@ const HomeNew = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      {/* <NameUpdateModal
-        dataType={dataType}
-        openEditModal={openEditModal}
-        setOpenEditModal={setOpenEditModal}
-        user_id={getUserDataDetails?.id}
-      /> */}
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
@@ -1322,11 +1319,13 @@ const HomeNew = ({navigation}) => {
             />
           )}
         </View>
+
         <Banners
           type1={BannerType1}
           type2={Bannertype2}
           navigation={navigation}
         />
+
         {currentChallenge?.length > 0 && (
           <View style={{width: '95%', alignSelf: 'center', marginVertical: 10}}>
             <Text

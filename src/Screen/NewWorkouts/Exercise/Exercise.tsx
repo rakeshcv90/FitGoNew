@@ -104,9 +104,9 @@ const Exercise = ({navigation, route}: any) => {
   const [timer, setTimer] = useState(10);
   const [timerS, setTimerS] = useState(10);
   const [restStart, setRestStart] = useState(false);
-  const [skip, setSkip] = useState(false);
-  const [next, setNext] = useState(false);
-  const [previous, setPrevious] = useState(false);
+  const [skip, setSkip] = useState(0);
+  const [next, setNext] = useState(0);
+  const [previous, setPrevious] = useState(0);
   const [randomCount, setRandomCount] = useState(0);
   const [skipCount, setSkipCount] = useState(0);
   const ProgressRef = useRef<ProgressRef>(null);
@@ -467,20 +467,13 @@ const Exercise = ({navigation, route}: any) => {
     const payload = new FormData();
     payload.append('id', trackerData[index]?.id);
 
-    payload.append('day', type == 'day' ? day : WeekArray[day]);
-    payload.append(
-      'workout_id',
-      type == 'day'
-        ? data?.workout_id == undefined
-          ? data?.custom_workout_id
-          : data?.workout_id
-        : `-${day + 1}`,
-    );
+    payload.append('day', WeekArray[day]);
+    payload.append('workout_id', `-${day + 1}`);
     payload.append('user_id', getUserDataDetails?.id);
-    payload.append('version', '1.18');
-    next && payload.append('next_status', 1);
-    previous && payload.append('prev_status', 1);
-    skip && payload.append('skip_status', 1);
+    payload.append('version', VersionNumber.appVersion);
+    next>0 && payload.append('next_status', next);
+    previous>0 && payload.append('prev_status', previous);
+    skip>0 && payload.append('skip_status', skip);
 
     try {
       const res = await axios({
@@ -506,9 +499,9 @@ const Exercise = ({navigation, route}: any) => {
         setRestStart(true);
         setPlayW(0);
       }
-      setSkip(false);
-      setNext(false);
-      setPrevious(false);
+      setSkip(0);
+      setNext(0);
+      setPrevious(0);
     } catch (error) {
       console.error(error?.response, 'PostREWARDSAPIERror');
     }
@@ -637,15 +630,18 @@ const Exercise = ({navigation, route}: any) => {
                 style={{
                   fontWeight: '600',
                   fontSize: 32,
-                  color:AppColor.RED1,
+                  color: AppColor.RED1,
                 }}>
                 Keep Going!
               </Text>
-              <Text  style={{
+              <Text
+                style={{
                   fontWeight: '600',
                   fontSize: 32,
-                  color:AppColor.RED1,
-                }}>Don't Give Up!</Text>
+                  color: AppColor.RED1,
+                }}>
+                Don't Give Up!
+              </Text>
             </View>
             <Text
               style={{
@@ -898,7 +894,7 @@ const Exercise = ({navigation, route}: any) => {
                 />
                 <TouchableOpacity
                   onPress={() => {
-                    setSkip(true);
+                    setSkip(skip + 1);
                     clearInterval(seperateTimerRef.current);
                     setTimerS(0);
                   }}
@@ -1079,7 +1075,7 @@ const Exercise = ({navigation, route}: any) => {
                 />
                 <TouchableOpacity
                   onPress={() => {
-                    setSkip(false);
+                    setSkip(skip+1);
                     clearInterval(restTimerRef.current);
                     setTimer(0);
                   }}
@@ -1206,26 +1202,28 @@ const Exercise = ({navigation, route}: any) => {
                   resizeMode="contain"
                 />
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  setRestStart(false);
-                  setVisible(true);
-                }}
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: restStart ? 50 : 25,
-                  width: restStart ? 50 : 25,
-                  height: restStart ? 50 : 25,
-                  backgroundColor: restStart ? 'transparent' : '#3333331A',
-                  marginVertical: 5,
-                }}>
-                <Image
-                  source={localImage.Exercise_List}
-                  style={{width: 15, height: 15}}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
+              {!enteredCurrentEvent && (
+                <TouchableOpacity
+                  onPress={() => {
+                    setRestStart(false);
+                    setVisible(true);
+                  }}
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: restStart ? 50 : 25,
+                    width: restStart ? 50 : 25,
+                    height: restStart ? 50 : 25,
+                    backgroundColor: restStart ? 'transparent' : '#3333331A',
+                    marginVertical: 5,
+                  }}>
+                  <Image
+                    source={localImage.Exercise_List}
+                    style={{width: 15, height: 15}}
+                    resizeMode="contain"
+                  />
+                </TouchableOpacity>
+              )}
             </View>
             <View
               style={{
@@ -1355,7 +1353,7 @@ const Exercise = ({navigation, route}: any) => {
               }}
               nextDisabled={number == allExercise?.length - 1}
               next={() => {
-                setNext(true);
+                setNext(next + 1);
                 setPause(!pause);
                 // setDefaultPre(0);
                 setPlayW(prevTimer => 0);
@@ -1382,7 +1380,7 @@ const Exercise = ({navigation, route}: any) => {
               backDisabled={number == 0}
               back={() => {
                 if (number == 0) return;
-                setPrevious(true);
+                setPrevious(previous + 1);
                 setPlayW(prevTimer => 0);
                 setPause(false);
                 clearInterval(playTimerRef.current);

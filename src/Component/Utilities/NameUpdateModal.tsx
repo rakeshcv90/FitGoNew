@@ -29,6 +29,7 @@ import {BlurView} from '@react-native-community/blur';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {AnalyticsConsole} from '../AnalyticsConsole';
 import {showMessage} from 'react-native-flash-message';
+import FitIcon from './FitIcon';
 const validationSchemaBoth = Yup.object().shape({
   name: Yup.string()
     .required('Full Name must contain at least 3 characters')
@@ -90,8 +91,18 @@ const NameUpdateModal = ({
         dispatch(setStoreData(responseData?.data?.types));
         dispatch(setCompleteProfileData(responseData?.data?.additional_data));
         setVisible(false);
-        setOpenEditModal(false);
       }
+      // } else if (
+      //   responseData?.data?.msg == 'Please update the app to the latest version.'
+      // ) {
+      //   showMessage({
+      //     message: responseData?.data?.msg,
+      //     floating: true,
+      //     duration: 500,
+      //     type: 'danger',
+      //   });
+      //   setOpenEditModal(false);
+      // }
     } catch (error) {
       console.log('all_in_one_api_error', error);
       dispatch(Setmealdata([]));
@@ -128,31 +139,47 @@ const NameUpdateModal = ({
   };
   return (
     <Modal transparent visible={openEditModal}>
-      <BlurView
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        blurType="light"
-        blurAmount={1}
-        reducedTransparencyFallbackColor="white"
-      />
-      <View
-        style={[
-          styles.content,
-          {
-            bottom: DeviceHeigth / 3,
-          },
-        ]}>
-        <View style={styles.View1}>
-          <FitText
-            type="SubHeading"
-            value={`Please provide your ${
-              dataType == 'both' ? 'Name and Email' : 'Name'
-            }`}
+      <View style={[styles.content]}>
+        <View
+          style={[
+            styles.View1,
+            {
+              height:
+                dataType == 'both' ? DeviceHeigth * 0.7 : DeviceHeigth * 0.55,
+            },
+          ]}>
+          <View
+            style={{
+              alignSelf: 'flex-end',
+            }}>
+            <FitIcon
+              name="close"
+              size={20}
+              type="MaterialCommunityIcons"
+              onPress={() => setOpenEditModal(false)}
+            />
+          </View>
+          <Image
+            source={localImage.NameUpdateModal}
+            style={{
+              width: DeviceWidth / 3,
+              marginTop: -DeviceWidth * 0.05,
+              marginBottom: 10,
+              height: DeviceWidth / 3,
+            }}
+            resizeMode="contain"
           />
-
+          <FitText type="Heading" value="OOPS!!!" fontWeight="700" errorType />
+          <FitText
+            type="Heading"
+            value={`Looks like some details are missing in your registered profile. Please enter the details below:`}
+            textAlign="center"
+            fontSize={14}
+            fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+            w={DeviceWidth * 0.8}
+            lineHeight={18}
+            marginVertical={10}
+          />
           <Formik
             initialValues={{
               email: '',
@@ -176,12 +203,13 @@ const NameUpdateModal = ({
             }) => (
               <>
                 {(dataType == 'both' || dataType == 'name') && (
-                  <>
+                  <View style={{justifyContent: 'flex-start'}}>
+                    <FitText type="SubHeading" value="Name" />
                     <TextInput
                       value={values.name}
                       onBlur={handleBlur('name')}
                       onChangeText={handleChange('name')}
-                      underlineColor="grey"
+                      underlineColor="white"
                       mode="flat"
                       activeUnderlineColor={AppColor.RED}
                       outlineColor={AppColor.WHITE}
@@ -189,22 +217,26 @@ const NameUpdateModal = ({
                       placeholder="Write your Name"
                       placeholderTextColor={AppColor.GRAY2}
                       style={{
-                        width: DeviceWidth * 0.65,
+                        width: DeviceWidth * 0.8,
                         fontSize: 18,
                         fontWeight: '600',
                         fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                         color: AppColor.BLACK,
                         backgroundColor: AppColor.WHITE,
-                        textAlign: 'center',
+                        marginVertical: 5,
+                        borderRadius: 5,
+                        borderWidth: 1,
+                        borderColor: 'grey',
                       }}
                     />
                     {errors.name && touched.name && (
                       <FitText type="normal" errorType value={values.name} />
                     )}
-                  </>
+                  </View>
                 )}
                 {(dataType == 'both' || dataType == 'email') && (
-                  <>
+                  <View style={{justifyContent: 'flex-start', marginTop: 20}}>
+                    <FitText type="SubHeading" value="Email" />
                     <TextInput
                       value={values.email}
                       onBlur={handleBlur('email')}
@@ -214,34 +246,37 @@ const NameUpdateModal = ({
                       activeUnderlineColor={AppColor.RED}
                       outlineColor={AppColor.WHITE}
                       activeOutlineColor={AppColor.RED}
-                      placeholder="Write your Name"
+                      placeholder="Write your Email"
                       placeholderTextColor={AppColor.GRAY2}
                       style={{
-                        width: DeviceWidth * 0.65,
+                        width: DeviceWidth * 0.8,
                         fontSize: 18,
                         fontWeight: '600',
                         fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                         color: AppColor.BLACK,
                         backgroundColor: AppColor.WHITE,
-                        textAlign: 'center',
+                        marginVertical: 5,
+                        borderRadius: 5,
+                        borderWidth: 1,
+                        borderColor: 'grey',
                       }}
                     />
                     {errors.email && touched.email && (
                       <FitText type="normal" errorType value={values.email} />
                     )}
-                  </>
+                  </View>
                 )}
                 <TouchableOpacity
                   onPress={handleSubmit}
                   style={{
-                    width: DeviceWidth * 0.3,
+                    width: DeviceWidth * 0.6,
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: AppColor.NEW_DARK_RED,
-                    padding: 5,
+                    padding: 10,
                     position: 'absolute',
                     bottom: 20,
-                    borderRadius: 10,
+                    borderRadius: 5,
                   }}>
                   <FitText
                     type="SubHeading"
@@ -263,15 +298,6 @@ export default NameUpdateModal;
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-  },
-  //view
-  View1: {
-    backgroundColor: AppColor.WHITE,
-    borderRadius: 10,
-    width: DeviceWidth * 0.9,
-    padding: 10,
-    alignItems: 'center',
-    height: DeviceHeigth / 4,
   },
   //img
   img1: {
@@ -299,11 +325,20 @@ const styles = StyleSheet.create({
     // Semi-transparent background
   },
   content: {
-    // flex: 1,
-    position: 'relative',
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'center',
+    backgroundColor: `rgba(0,0,0,0.4)`,
+  },
+  //view
+  View1: {
+    backgroundColor: AppColor.WHITE,
+    borderRadius: 10,
+    width: DeviceWidth * 0.9,
+    padding: 10,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'lightgrey',
     ...Platform.select({
       ios: {
         shadowColor: '#000000',

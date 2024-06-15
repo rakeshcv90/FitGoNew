@@ -47,7 +47,6 @@ const UpcomingEvent = ({navigation, route}: any) => {
   const enteredUpcomingEvent = useSelector(
     (state: any) => state.enteredUpcomingEvent,
   );
-  const planType = useSelector((state: any) => state.planType);
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
@@ -62,12 +61,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
     setLoading(true);
     const data = {
       user_id: getUserDataDetails.id,
-      plan:
-        getPurchaseHistory?.plan_value == 30
-          ? 'noob'
-          : getPurchaseHistory?.plan_value == 69
-          ? 'pro'
-          : 'legend',
+      plan: getPurchaseHistory?.plan,
       transaction_id: getPurchaseHistory?.transaction_id,
       platform: Platform.OS,
       product_id: getPurchaseHistory?.product_id,
@@ -294,7 +288,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <DietPlanHeader
-        header={enteredUpcomingEvent ? 'Upcoming Challenge' : 'My Challenge'}
+        header={eventType == 'upcoming' ? 'Upcoming Challenge' : 'My Challenge'}
         h={DeviceWidth * 0.15}
         paddingTop={
           Platform.OS == 'android' ? DeviceHeigth * 0.02 : DeviceHeigth * 0.025
@@ -438,7 +432,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
             </Svg>
             <View style={{marginLeft: 10}}>
               <FitText type="normal" value="Winnning price" />
-              <FitText type="Heading" value="1,000/-" />
+              <FitText type="Heading" value="₹1,000/-" />
             </View>
           </LinearGradient>
           <FitText
@@ -466,29 +460,41 @@ const UpcomingEvent = ({navigation, route}: any) => {
             fontWeight="600"
           />
 
-          {planType != -1 &&
-            getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage &&
-            eventType == 'upcoming' &&
-            getPurchaseHistory?.upcoming_day_status != 1 && (
-              <TouchableOpacity
-                onPress={PlanPurchasetoBackendAPI}
-                style={{
-                  width: DeviceWidth * 0.4,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 5,
-                  backgroundColor: AppColor.NEW_DARK_RED,
-                  paddingVertical: 10,
-                  marginVertical: 20,
-                }}>
-                <FitText
-                  type="normal"
-                  value="Join Now"
-                  color={AppColor.WHITE}
-                  fontFamily={Fonts.MONTSERRAT_MEDIUM}
-                />
-              </TouchableOpacity>
-            )}
+          {getPurchaseHistory?.plan != null &&
+          getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage &&
+          eventType == 'upcoming' &&
+          getPurchaseHistory?.upcoming_day_status != 1 ? (
+            <TouchableOpacity
+              onPress={PlanPurchasetoBackendAPI}
+              style={{
+                width: DeviceWidth * 0.4,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 5,
+                backgroundColor: AppColor.NEW_DARK_RED,
+                paddingVertical: 10,
+                marginVertical: 20,
+              }}>
+              <FitText
+                type="normal"
+                value="Join Now"
+                color={AppColor.WHITE}
+                fontFamily={Fonts.MONTSERRAT_MEDIUM}
+              />
+            </TouchableOpacity>
+          ) : getPurchaseHistory?.upcoming_day_status != 1 ? (
+            getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage ? (
+              <FitText
+                type="normal"
+                value="You've reached your limit to join the challenge. Upgrade your plan to join the new challenge"
+                textAlign="center"
+                color="#333333"
+                fontFamily={Fonts.MONTSERRAT_MEDIUM}
+                fontWeight="600"
+                marginVertical={10}
+              />
+            ) : null
+          ) : null}
         </ShadowCard>
         {getPurchaseHistory?.plan_value != null && (
           <>
@@ -534,7 +540,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
                 }}>
                 <FitText
                   type="Heading"
-                  value={`${getPurchaseHistory?.plan_value}/month`}
+                  value={`₹${getPurchaseHistory?.plan_value}/month`}
                   fontSize={28}
                   lineHeight={34}
                   marginVertical={5}
@@ -674,28 +680,35 @@ const UpcomingEvent = ({navigation, route}: any) => {
             backgroundColor: AppColor.WHITE,
             justifyContent: 'center',
             alignItems: 'center',
-            height: DeviceWidth / 3,
+            height:
+              getPurchaseHistory?.plan != 'premium'
+                ? DeviceWidth / 3
+                : DeviceWidth / 6,
             borderTopColor: '#00000024',
             borderTopWidth: 0.5,
           }}>
-          <TouchableOpacity
-            onPress={() => setOpenChange(true)}
-            style={{
-              width: DeviceWidth * 0.9,
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: 5,
-              borderWidth: 1,
-              borderColor: AppColor.NEW_DARK_RED,
-              paddingVertical: 10,
-            }}>
-            <FitText
-              type="normal"
-              value="Change Plan"
-              color={AppColor.NEW_DARK_RED}
-              fontFamily={Fonts.MONTSERRAT_MEDIUM}
-            />
-          </TouchableOpacity>
+          {getPurchaseHistory?.plan != 'premium' && (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('NewSubscription', {upgrade: true})
+              }
+              style={{
+                width: DeviceWidth * 0.9,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 5,
+                borderWidth: 1,
+                borderColor: AppColor.NEW_DARK_RED,
+                paddingVertical: 10,
+              }}>
+              <FitText
+                type="normal"
+                value="Upgrade Plan"
+                color={AppColor.NEW_DARK_RED}
+                fontFamily={Fonts.MONTSERRAT_MEDIUM}
+              />
+            </TouchableOpacity>
+          )}
           <FitText
             type="normal"
             value="Cancel Plan"

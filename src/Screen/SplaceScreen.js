@@ -51,7 +51,7 @@ const SplaceScreen = ({navigation}) => {
 
   const showIntro = useSelector(state => state.showIntro);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
-  const getUserID = useSelector(state => state.getUserID);
+  const planType = useSelector(state => state.planType);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [loaded, setLoaded] = useState(false);
   const [ApiDataloaded, setApiDataLoaded] = useState(false);
@@ -259,7 +259,7 @@ const SplaceScreen = ({navigation}) => {
         );
       }
     } catch (error) {
-      console.log(error);
+      console.log('PURCHASEHIS SPL ERR', error);
       dispatch(setPurchaseHistory([]));
     }
   };

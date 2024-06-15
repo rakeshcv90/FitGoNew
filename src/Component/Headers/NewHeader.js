@@ -14,13 +14,24 @@ import {CommonActions, useNavigation} from '@react-navigation/native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {useDispatch, useSelector} from 'react-redux';
 
-import { setExperience } from '../ThemeRedux/Actions';
-import { navigationRef } from '../../../App';
+import {setExperience} from '../ThemeRedux/Actions';
+import {navigationRef} from '../../../App';
+import {extractFont} from 'react-native-svg/lib/typescript/lib/extract/extractText';
+import FitCoins from '../Utilities/FitCoins';
+import {AnalyticsConsole} from '../AnalyticsConsole';
+import moment from 'moment';
 
-const NewHeader = ({header, backButton, SearchButton,onPress}) => {
+const NewHeader = ({
+  header,
+  backButton,
+  SearchButton,
+  onPress,
+  extraView,
+  coins,
+}) => {
   const navigation = useNavigation();
-const getExperience=useSelector(state=>state.getExperience)
-const dispatch=useDispatch()
+  const getExperience = useSelector(state => state.getExperience);
+  const dispatch = useDispatch();
   return (
     <SafeAreaView
       style={[
@@ -41,22 +52,20 @@ const dispatch=useDispatch()
         <View style={{width: 20}}></View>
       ) : (
         <TouchableOpacity
-        style={{left:0}}
+          style={{left: 0}}
           onPress={() => {
-      
-          if(getExperience==true){
-            dispatch(setExperience(false))
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes:[{name:'BottomTab'}]
-              })
-            );
-           // navigationRef.current.navigate('BottomTab',{screen:'Home'})
-          }
-          else{
-           navigation.goBack()
-          }
+            if (getExperience == true) {
+              dispatch(setExperience(false));
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{name: 'BottomTab'}],
+                }),
+              );
+              // navigationRef.current.navigate('BottomTab',{screen:'Home'})
+            } else {
+              navigation.goBack();
+            }
           }}>
           <Icons
             name={'chevron-left'}
@@ -81,7 +90,24 @@ const dispatch=useDispatch()
         {header}
       </Text>
       {!SearchButton ? (
-        <View style={{width: 25}}></View>
+        extraView ? (
+          <View style={{right: DeviceWidth * 0.13, top: -3}}>
+            <FitCoins
+              onPress={() => {
+                AnalyticsConsole('LB');
+                const today = moment().day();
+                if (today == 0 || today == 6) {
+                  navigation.navigate('Winner');
+                } else {
+                  navigation.navigate('Leaderboard');
+                }
+              }}
+              coins={coins}
+            />
+          </View>
+        ) : (
+          <View style={{width: 25}}></View>
+        )
       ) : (
         <TouchableOpacity onPress={onPress}>
           <Icons name={'magnify'} size={25} color={AppColor.INPUTTEXTCOLOR} />
@@ -96,6 +122,7 @@ const style = StyleSheet.create({
     backgroundColor: '#fff',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
   },
   headerstyle: {
     fontWeight: '600',
