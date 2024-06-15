@@ -34,6 +34,7 @@ import {
   setCurrentWorkoutData,
   setCustomWorkoutData,
   setOfferAgreement,
+  setPurchaseHistory,
   setTempLogin,
   setUserProfileData,
 } from '../../Component/ThemeRedux/Actions';
@@ -160,7 +161,7 @@ const LoadData = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-        getUserID != 0 && getProfileData(getUserID);
+        getUserID != 0 && getUserDetailData(getUserID); //getProfileData(getUserID);
         getUserID != 0
           ? getCustomWorkout(getUserID)
           : customFreeWorkoutDataApi(deviceID);
@@ -227,7 +228,7 @@ const LoadData = ({navigation}) => {
       if (res.data?.workout) {
         setActiveNext(true);
         dispatch(setCustomWorkoutData(res.data));
-        Meal_List();
+
         // currentWorkoutDataApi(res.data?.workout[0]);
       } else if (
         res?.data?.msg == 'Please update the app to the latest version.'
@@ -249,69 +250,74 @@ const LoadData = ({navigation}) => {
       setActiveNext(true);
     }
   };
-  const Meal_List = async () => {
+
+  // const getProfileData = async user_id => {
+  //   try {
+  //     const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         id: user_id,
+  //         version: VersionNumber.appVersion,
+  //       },
+  //     });
+  //     console.log('Load Data Proile ', data?.data?.profile);
+  //     if (data?.data?.profile) {
+  //       dispatch(setUserProfileData(data.data.profile));
+  //      // getAgreementStatus();
+  //     } else if (
+  //       data?.data?.msg == 'Please update the app to the latest version.'
+  //     ) {
+  //       showMessage({
+  //         message: data?.data?.msg,
+  //         floating: true,
+  //         duration: 500,
+  //         type: 'danger',
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //     } else {
+  //       dispatch(setUserProfileData([]));
+  //      // getAgreementStatus();
+  //     }
+  //   } catch (error) {
+  //     console.log('User Profile Error', error);
+  //   }
+  // };
+
+  const getUserDetailData = async userId => {
     try {
-      const data = await axios(`${NewAppapi.Meal_Categorie}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          version: VersionNumber.appVersion,
-        },
-      });
-      if (data?.data?.msg == 'Please update the app to the latest version.') {
+      const responseData = await axios.get(
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
+      );
+
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
+      ) {
         showMessage({
-          message: data?.data?.msg,
+          message: responseData?.data?.msg,
           type: 'danger',
           animationDuration: 500,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      } else if (data.data.diets.length > 0) {
-        dispatch(Setmealdata(data.data.diets));
       } else {
-        dispatch(Setmealdata([]));
+        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
+        dispatch(setOfferAgreement(responseData?.data?.additional_data));
+        dispatch(setUserProfileData(responseData?.data?.profile));
+        setLoadData(100);
       }
     } catch (error) {
-      dispatch(Setmealdata([]));
-      console.log('Meal List Error', error);
+      console.log('GET-USER-DATA', error);
+      dispatch(setPurchaseHistory([]));
+      dispatch(setUserProfileData([]));
+      dispatch(setCustomWorkoutData([]));
+      setLoadData(100);
     }
   };
-  const getProfileData = async user_id => {
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          id: user_id,
-          version: VersionNumber.appVersion,
-        },
-      });
-      console.log('Load Data Proile ', data?.data?.profile);
-      if (data?.data?.profile) {
-        dispatch(setUserProfileData(data.data.profile));
-        getAgreementStatus();
-      } else if (
-        data?.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: data?.data?.msg,
-          floating: true,
-          duration: 500,
-          type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        dispatch(setUserProfileData([]));
-        getAgreementStatus();
-      }
-    } catch (error) {
-      console.log('User Profile Error', error);
-    }
-  };
+
   const renderItem1 = ({item, index}) => {
     const translateX = translationX.interpolate({
       inputRange: [0, 1],
@@ -330,29 +336,29 @@ const LoadData = ({navigation}) => {
       </Animated.View>
     );
   };
-  const getAgreementStatus = async () => {
-    try {
-      const ApiCall = await axios(NewAppapi.GET_AGR_STATUS, {
-        method: 'POST',
-        data: {
-          user_id: getUserID != 0 ? getUserID : null,
-          version: VersionNumber.appVersion,
-        },
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      if (ApiCall?.data) {
-        setLoadData(100);
-        dispatch(setOfferAgreement(ApiCall?.data));
-      } else {
-        setLoadData(100);
-      }
-    } catch (error) {
-      console.log(error);
-      setLoadData(100);
-    }
-  };
+  // const getAgreementStatus = async () => {
+  //   try {
+  //     const ApiCall = await axios(NewAppapi.GET_AGR_STATUS, {
+  //       method: 'POST',
+  //       data: {
+  //         user_id: getUserID != 0 ? getUserID : null,
+  //         version: VersionNumber.appVersion,
+  //       },
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //     });
+  //     if (ApiCall?.data) {
+
+  //       dispatch(setOfferAgreement(ApiCall?.data));
+  //     } else {
+  //       setLoadData(100);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setLoadData(100);
+  //   }
+  // };
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -395,7 +401,7 @@ const LoadData = ({navigation}) => {
             marginTop: 10,
             fontSize: 20,
             fontWeight: '600',
-            fontFamily:Fonts.MONTSERRAT_MEDIUM
+            fontFamily: Fonts.MONTSERRAT_MEDIUM,
           },
         ]}>
         have achieved their fitness goals
@@ -461,12 +467,11 @@ const LoadData = ({navigation}) => {
         {activeNext && (
           <TouchableOpacity
             onPress={() => {
-              if(getUserDataDetails?.email){
+              if (getUserDataDetails?.email) {
                 navigation.navigate('OfferTerms');
-              }else{
-                navigation.navigate('BottomTab')
+              } else {
+                navigation.navigate('BottomTab');
               }
-             
             }}>
             <LinearGradient
               start={{x: 0, y: 1}}

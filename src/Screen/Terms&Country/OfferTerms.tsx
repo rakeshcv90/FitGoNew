@@ -31,7 +31,11 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import {RadioButton} from 'react-native-paper';
 import {
   setAgreementContent,
+  setBanners,
   setChallengesData,
+  setCompleteProfileData,
+  Setmealdata,
+  setStoreData,
 } from '../../Component/ThemeRedux/Actions';
 import {useSelector, useDispatch} from 'react-redux';
 const radioData = [
@@ -62,37 +66,77 @@ const OfferTerms = ({navigation, route}: any) => {
   useEffect(() => {
     setContent(getAgreementContent['term_condition_english']);
     if (Object.keys(getAgreementContent).length == 0) {
-      getAgreementContentApi();
+      getUserAllInData();
     }
   }, []);
-  const getAgreementContentApi = async () => {
-    setLoaded(false);
+  // const getAgreementContentApi = async () => {
+  //   setLoaded(false);
+  //   try {
+  //     const ApiCall = await axios(
+  //       `${NewAppapi.GET_AGREEMENT}?version=${VersionNumber.appVersion}`,
+  //       {
+  //         method: 'GET',
+  //       },
+  //     );
+
+  //     if (
+  //       ApiCall?.data?.msg == 'Please update the app to the latest version.'
+  //     ) {
+  //       setLoaded(true);
+  //       showMessage({
+  //         message: ApiCall?.data?.msg,
+  //         floating: true,
+  //         duration: 500,
+  //         type: 'danger',
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //     } else {
+  //       setLoaded(true);
+  //       dispatch(setAgreementContent(ApiCall?.data?.data[0]));
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setLoaded(true);
+  //   }
+  // };
+  const getUserAllInData = async () => {
     try {
-      const ApiCall = await axios(
-        `${NewAppapi.GET_AGREEMENT}?version=${VersionNumber.appVersion}`,
-        {
-          method: 'GET',
-        },
+      const responseData = await axios.get(
+        `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
       );
 
       if (
-        ApiCall?.data?.msg == 'Please update the app to the latest version.'
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
       ) {
-        setLoaded(true);
         showMessage({
-          message: ApiCall?.data?.msg,
-          floating: true,
-          duration: 500,
+          message: responseData?.data?.msg,
           type: 'danger',
+          animationDuration: 500,
+          floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
+      } else if (responseData?.data?.msg == 'version is required') {
+        console.log('version error', responseData?.data?.msg);
       } else {
-        setLoaded(true);
-        dispatch(setAgreementContent(ApiCall?.data?.data[0]));
+        const objects = {};
+        responseData.data.data.forEach((item:any) => {
+          objects[item?.type] = item?.image;
+        });
+
+        dispatch(setBanners(objects));
+        dispatch(setAgreementContent(responseData?.data?.terms[0]));
+        dispatch(Setmealdata(responseData?.data?.diets));
+        dispatch(setStoreData(responseData?.data?.types));
+        dispatch(setCompleteProfileData(responseData?.data?.additional_data));
+       
       }
     } catch (error) {
-      console.log(error);
-      setLoaded(true);
+      console.log('all_in_one_api_error', error);
+      dispatch(Setmealdata([]));
+      dispatch(setCompleteProfileData([]));
+      dispatch(setStoreData([]));
+     
     }
   };
   const handleRadioButton = (param: any) => {
@@ -109,7 +153,7 @@ const OfferTerms = ({navigation, route}: any) => {
           />
         </TouchableOpacity>
         <View>
-          <Text style={styles.policyText}>By continuing you accept our</Text>
+          <Text style={styles.policyText}>By continuing you accept our terms and conditions</Text>
         </View>
       </View>
     );

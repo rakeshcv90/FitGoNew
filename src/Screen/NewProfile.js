@@ -252,38 +252,75 @@ const NewProfile = ({navigation}) => {
     const [userAvatar, setUserAvatar] = useState(null);
     const {getProfile_imgData} = useSelector(state => state);
     const [userPhoto, setUserPhoto] = useState('');
-    const getProfileData = async user_id => {
-      try {
-        const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          data: {
-            id: user_id,
-            version: VersionNumber.appVersion,
-          },
-        });
+    // const getProfileData = async user_id => {
+    //   try {
+    //     const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'multipart/form-data',
+    //       },
+    //       data: {
+    //         id: user_id,
+    //         version: VersionNumber.appVersion,
+    //       },
+    //     });
 
-        if (data?.data?.profile) {
-          dispatch(setUserProfileData(data.data.profile));
-        } else if (
-          data?.data?.msg == 'Please update the app to the latest version.'
+    //     if (data?.data?.profile) {
+    //       dispatch(setUserProfileData(data.data.profile));
+    //     } else if (
+    //       data?.data?.msg == 'Please update the app to the latest version.'
+    //     ) {
+    //       showMessage({
+    //         message: data?.data?.msg,
+    //         floating: true,
+    //         duration: 500,
+    //         type: 'danger',
+    //         icon: {icon: 'auto', position: 'left'},
+    //       });
+    //     } else {
+    //       dispatch(setUserProfileData([]));
+    //     }
+    //   } catch (error) {
+    //     console.log('User Profile Error', error);
+    //   }
+    // };
+    const getUserDetailData = async userId => {
+      const currrentdata = [
+        {
+          gender: gender,
+        },
+        {
+          experience: experience,
+        },
+        {workout_plans: 'CustomCreated'},
+      ];
+
+      try {
+        const responseData = await axios.get(
+          `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
+        );
+
+        if (
+          responseData?.data?.msg ==
+          'Please update the app to the latest version.'
         ) {
           showMessage({
-            message: data?.data?.msg,
-            floating: true,
-            duration: 500,
+            message: responseData?.data?.msg,
             type: 'danger',
+            animationDuration: 500,
+            floating: true,
             icon: {icon: 'auto', position: 'left'},
           });
         } else {
-          dispatch(setUserProfileData([]));
+          dispatch(setUserProfileData(responseData?.data?.profile));
         }
       } catch (error) {
-        console.log('User Profile Error', error);
+        console.log('GET-USER-DATA', error);
+
+        dispatch(setUserProfileData([]));
       }
     };
+
     const UploadImage = async selectedImage => {
       try {
         let payload = new FormData();
@@ -313,7 +350,8 @@ const NewProfile = ({navigation}) => {
             floating: true,
             icon: {icon: 'auto', position: 'left'},
           });
-          getProfileData(getUserDataDetails?.id);
+         // getProfileData(getUserDataDetails?.id);
+          getUserDetailData(getUserDataDetails?.id)
           setImguploaded(true);
           if (IsimgUploaded == true) {
             setUpadteScreenVisibilty(false);

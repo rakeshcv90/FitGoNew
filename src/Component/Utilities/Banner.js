@@ -12,7 +12,7 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../Config';
 import {locationPermission} from '../../Screen/Terms&Country/LocationPermission';
 import axios from 'axios';
 import {showMessage} from 'react-native-flash-message';
-import {setBanners, setOfferAgreement} from '../ThemeRedux/Actions';
+import {Setmealdata, setAgreementContent, setBanners, setCompleteProfileData, setOfferAgreement, setStoreData} from '../ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {openSettings} from 'react-native-permissions';
@@ -35,7 +35,8 @@ const Banners = ({type1, type2, onPress, navigation}) => {
   const dispatch = useDispatch();
   useEffect(() => {
     if (Object.keys(getBanners).length == 0) {
-      bannerApi();
+      //bannerApi();
+      getUserAllInData()
     }
   }, []);
   const handleStart = () => {
@@ -151,39 +152,45 @@ const Banners = ({type1, type2, onPress, navigation}) => {
       {cancelable: false},
     );
   };
-  // banner Api
-  const bannerApi = async () => {
+ 
+  const getUserAllInData = async () => {
     try {
-      const response = await axios(
-        `${NewAppapi.EVENT_BANNERS}?version=${VersionNumber.appVersion}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        },
+      const responseData = await axios.get(
+        `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
       );
+
       if (
-        response?.data?.msg == 'Please update the app to the latest version.'
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
       ) {
         showMessage({
-          message: response?.data?.msg,
+          message: responseData?.data?.msg,
           type: 'danger',
           animationDuration: 500,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      } else if (response?.data?.msg == 'version is required') {
-        console.log('version error', response?.data?.msg);
+      } else if (responseData?.data?.msg == 'version is required') {
+        console.log('version error', responseData?.data?.msg);
       } else {
         const objects = {};
-        response.data.data.forEach(item => {
-          objects[item.type] = item.image;
+        responseData.data.data.forEach(item => {
+          objects[item?.type] = item?.image;
         });
+
         dispatch(setBanners(objects));
+        dispatch(setAgreementContent(responseData?.data?.terms[0]));
+        dispatch(Setmealdata(responseData?.data?.diets));
+        dispatch(setStoreData(responseData?.data?.types));
+        dispatch(setCompleteProfileData(responseData?.data?.additional_data));
+       
       }
     } catch (error) {
-      console.log('BannerApiError', error);
+      console.log('all_in_one_api_error', error);
+      dispatch(Setmealdata([]));
+      dispatch(setCompleteProfileData([]));
+      dispatch(setStoreData([]));
+     
     }
   };
   console.log(type1, type2);

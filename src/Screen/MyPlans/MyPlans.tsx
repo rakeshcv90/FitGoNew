@@ -27,15 +27,19 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   setAllExercise,
   setAllWorkoutData,
+  setChallengesData,
   setCurrentSelectedDay,
+  setCustomWorkoutData,
   setEditedExercise,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
   setFitmeMealAdsCount,
   setHomeGraphData,
   setIsAlarmEnabled,
+  setOfferAgreement,
   setPlanType,
   setPurchaseHistory,
+  setUserProfileData,
   setVideoLocation,
   setWeeklyPlansData,
 } from '../../Component/ThemeRedux/Actions';
@@ -108,14 +112,15 @@ const MyPlans = ({navigation}: any) => {
   useEffect(() => {
     initInterstitial();
     allWorkoutApi1();
-    getAllExerciseData();
-
+    //getAllExerciseData();
+    getAllChallangeAndAllExerciseData()
     getGraphData();
     Promise.all(WeekArray.map(item => getWeeklyAPI(item))).finally(() =>
       dispatch(setWeeklyPlansData(All_Weeks_Data)),
     );
     checkMealAddCount();
-    PurchaseDetails();
+    // PurchaseDetails();
+    getUserDetailData();
   }, []);
   useFocusEffect(
     React.useCallback(() => {
@@ -144,30 +149,104 @@ const MyPlans = ({navigation}: any) => {
       console.log('All-EXCERSIE-ERROR', error);
     }
   };
-  const PurchaseDetails = async () => {
-    try {
-      setRefresh(true);
-      const result = await axios(
-        `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
-      );
-      setRefresh(false);
-      if (result.data?.message == 'Not any subscription') {
-        dispatch(setPurchaseHistory([]));
-      } else {
-        dispatch(setPurchaseHistory(result.data.data));
-        EnteringEventFunction(
-          dispatch,
-          result.data?.data,
-          setEnteredCurrentEvent,
-          setEnteredUpcomingEvent,
-          setPlanType,
+  const getAllChallangeAndAllExerciseData = async () => {
+    let responseData = 0;
+    if (Object.keys(getUserDataDetails).length > 0) {
+      try {
+        responseData = await axios.get(
+          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
         );
+        dispatch(setChallengesData(responseData.data.challenge_data));
+        dispatch(setAllExercise(responseData.data.data));
+      } catch (error) {
+        console.log('GET-USER-Challange and AllExerciseData DATA', error);
+        dispatch(setChallengesData([]));
+        dispatch(setAllExercise([]));
+      }
+    } else {
+      try {
+        responseData = await axios.get(
+          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
+        );
+        dispatch(setChallengesData(responseData.data.challenge_data));
+        dispatch(setAllExercise(responseData.data.data));
+      } catch (error) {
+        dispatch(setChallengesData([]));
+        dispatch(setAllExercise([]));
+
+        console.log('GET-USER-Challange and AllExerciseData DATA', error);
+      }
+    }
+  };
+  // const PurchaseDetails = async () => {
+  //   try {
+  //     setRefresh(true);
+  //     const result = await axios(
+  //       `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
+  //     );
+  //     setRefresh(false);
+  //     if (result.data?.message == 'Not any subscription') {
+  //       dispatch(setPurchaseHistory([]));
+  //     } else {
+  //       dispatch(setPurchaseHistory(result.data.data));
+  //       EnteringEventFunction(
+  //         dispatch,
+  //         result.data?.data,
+  //         setEnteredCurrentEvent,
+  //         setEnteredUpcomingEvent,
+  //         setPlanType,
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setRefresh(false);
+  //   }
+  // };
+  const getUserDetailData = async () => {
+    try {
+      const responseData = await axios.get(
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+      );
+
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
+        dispatch(setOfferAgreement(responseData?.data?.additional_data));
+        dispatch(setUserProfileData(responseData?.data?.profile));
+        setRefresh(false);
+        if (responseData?.data.event_details == 'Not any subscription') {
+          dispatch(setPurchaseHistory([]));
+        } else {
+          setRefresh(false);
+          dispatch(setPurchaseHistory(responseData?.data.event_details));
+          EnteringEventFunction(
+            dispatch,
+            responseData?.data.event_details,
+            setEnteredCurrentEvent,
+            setEnteredUpcomingEvent,
+            setPlanType,
+          );
+        }
       }
     } catch (error) {
-      console.log(error);
+      console.log('GET-USER-DATA', error);
+      dispatch(setPurchaseHistory([]));
+      dispatch(setUserProfileData([]));
+      dispatch(setCustomWorkoutData([]));
       setRefresh(false);
     }
   };
+
   useEffect(() => {
     if (!isAlarmEnabled) {
       notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));

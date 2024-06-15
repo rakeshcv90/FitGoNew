@@ -1176,7 +1176,11 @@ const Exercise = ({navigation, route}: any) => {
                   // alignSelf: restStart ? 'flex-end' : 'auto',
                 }}>
                 <Image
-                  source={getSoundOffOn ? localImage.BULB : localImage.BELL}
+                  source={
+                    getSoundOffOn
+                      ? require('../../../Icon/Images/NewImage2/sound.png')
+                      : require('../../../Icon/Images/NewImage2/soundmute.png')
+                  }
                   style={{width: 27, height: 27}}
                   resizeMode="contain"
                 />

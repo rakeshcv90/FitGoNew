@@ -50,17 +50,25 @@ import AnimatedLottieView from 'lottie-react-native';
 import {navigationRef} from '../../../App';
 import {showMessage} from 'react-native-flash-message';
 import {
+  Setmealdata,
+  setAgreementContent,
+  setAllExercise,
   setAllWorkoutData,
   setBanners,
   setChallengesData,
+  setCompleteProfileData,
+  setCustomWorkoutData,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
   setFitmeMealAdsCount,
   setIsAlarmEnabled,
+  setOfferAgreement,
   setPlanType,
   setPurchaseHistory,
   setRewardModal,
   setStepCounterOnOff,
+  setStoreData,
+  setUserProfileData,
   setWorkoutTimeCal,
 } from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
@@ -83,42 +91,6 @@ import {handleStart} from '../../Component/Utilities/Bannerfunctions';
 import FitCoins from '../../Component/Utilities/FitCoins';
 import NameUpdateModal from '../../Component/Utilities/NameUpdateModal';
 
-const GradientText = ({item}) => {
-  const gradientColors = ['#D01818', '#941000'];
-
-  return (
-    <View
-      style={{
-        marginTop: Platform.OS == 'android' ? 10 : 0,
-        //marginLeft: DeviceWidth * 0.03,
-        justifyContent: 'flex-start',
-
-        alignItems: 'flex-start',
-        alignSelf: 'center',
-      }}>
-      <Svg
-        height="40"
-        style={{padding: 10, width: DeviceWidth * 0.7, borderWidth: 1}}>
-        <SvgGrad id="grad" x1="0" y1="0" x2="100%" y2="0">
-          <Stop offset="0" stopColor={gradientColors[0]} />
-          <Stop offset="1" stopColor={gradientColors[1]} />
-        </SvgGrad>
-        <SvgText
-          // fontFamily="Montserrat-SemiBold"
-          lineHeight={20}
-          width={50}
-          fontWeight={'700'}
-          fontSize={20}
-          numberOfLines={1}
-          fill="url(#grad)"
-          x="0"
-          y="20">
-          {item}
-        </SvgText>
-      </Svg>
-    </View>
-  );
-};
 const HomeNew = ({navigation}) => {
   const dispatch = useDispatch();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
@@ -257,39 +229,77 @@ const HomeNew = ({navigation}) => {
     }
   }, []);
   //banner api
-  const bannerApi = async () => {
+  // const bannerApi = async () => {
+  //   try {
+  //     const response = await axios(
+  //       `${NewAppapi.EVENT_BANNERS}?version=${VersionNumber.appVersion}`,
+  //       {
+  //         method: 'GET',
+  //         headers: {
+  //           'Content-Type': 'multipart/form-data',
+  //         },
+  //       },
+  //     );
+
+  //     if (
+  //       response?.data?.msg == 'Please update the app to the latest version.'
+  //     ) {
+  //       showMessage({
+  //         message: response?.data?.msg,
+  //         type: 'danger',
+  //         animationDuration: 500,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //     } else if (response?.data?.msg == 'version is required') {
+  //       console.log('version error', response?.data?.msg);
+  //     } else {
+  //       const objects = {};
+  //       response.data.data.forEach(item => {
+  //         objects[item.type] = item.image;
+  //       });
+  //       dispatch(setBanners(objects));
+  //     }
+  //   } catch (error) {
+  //     console.log('BannerApiError', error);
+  //   }
+  // };
+  const getUserAllInData = async () => {
     try {
-      const response = await axios(
-        `${NewAppapi.EVENT_BANNERS}?version=${VersionNumber.appVersion}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        },
+      const responseData = await axios.get(
+        `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
       );
 
       if (
-        response?.data?.msg == 'Please update the app to the latest version.'
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
       ) {
         showMessage({
-          message: response?.data?.msg,
+          message: responseData?.data?.msg,
           type: 'danger',
           animationDuration: 500,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      } else if (response?.data?.msg == 'version is required') {
-        console.log('version error', response?.data?.msg);
+      } else if (responseData?.data?.msg == 'version is required') {
+        console.log('version error', responseData?.data?.msg);
       } else {
         const objects = {};
-        response.data.data.forEach(item => {
-          objects[item.type] = item.image;
+        responseData.data.data.forEach(item => {
+          objects[item?.type] = item?.image;
         });
+
         dispatch(setBanners(objects));
+        dispatch(setAgreementContent(responseData?.data?.terms[0]));
+        dispatch(Setmealdata(responseData?.data?.diets));
+        dispatch(setStoreData(responseData?.data?.types));
+        dispatch(setCompleteProfileData(responseData?.data?.additional_data));
       }
     } catch (error) {
-      console.log('BannerApiError', error);
+      console.log('all_in_one_api_error', error);
+      dispatch(Setmealdata([]));
+      dispatch(setCompleteProfileData([]));
+      dispatch(setStoreData([]));
     }
   };
   useEffect(() => {
@@ -297,37 +307,80 @@ const HomeNew = ({navigation}) => {
       getLeaderboardDataAPI();
       allWorkoutApi();
       initInterstitial();
-      ChallengesDataAPI();
+      // ChallengesDataAPI();
+      getAllChallangeAndAllExerciseData()
       getWorkoutStatus();
-      PurchaseDetails();
+      //  PurchaseDetails();
+      getUserDetailData();
       setTimeout(() => {
         ActivityPermission();
       }, 2000);
     }
   }, [isFocused]);
-  const PurchaseDetails = async () => {
+  // const PurchaseDetails = async () => {
+  //   try {
+  //     setRefresh(true);
+  //     const result = await axios(
+  //       `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
+  //     );
+  //     setRefresh(false);
+  //     if (result.data?.message == 'Not any subscription') {
+  //       dispatch(setPurchaseHistory([]));
+  //     } else {
+  //       dispatch(setPurchaseHistory(result.data.data));
+  //       // dispatch(setEvent(true));
+  //       EnteringEventFunction(
+  //         dispatch,
+  //         result.data?.data,
+  //         setEnteredCurrentEvent,
+  //         setEnteredUpcomingEvent,
+  //         setPlanType,
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setRefresh(false);
+  //   }
+  // };
+  const getUserDetailData = async () => {
     try {
-      setRefresh(true);
-      const result = await axios(
-        `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
+      const responseData = await axios.get(
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
       );
-      setRefresh(false);
-      if (result.data?.message == 'Not any subscription') {
-        dispatch(setPurchaseHistory([]));
+
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
-        dispatch(setPurchaseHistory(result.data.data));
-        // dispatch(setEvent(true));
-        EnteringEventFunction(
-          dispatch,
-          result.data?.data,
-          setEnteredCurrentEvent,
-          setEnteredUpcomingEvent,
-          setPlanType,
-        );
+        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
+        dispatch(setOfferAgreement(responseData?.data?.additional_data));
+        dispatch(setUserProfileData(responseData?.data?.profile));
+        if (responseData?.data.event_details == 'Not any subscription') {
+          dispatch(setPurchaseHistory([]));
+        } else {
+          dispatch(setPurchaseHistory(responseData?.data.event_details));
+          EnteringEventFunction(
+            dispatch,
+            responseData?.data.event_details,
+            setEnteredCurrentEvent,
+            setEnteredUpcomingEvent,
+            setPlanType,
+          );
+        }
       }
     } catch (error) {
-      console.log(error);
-      setRefresh(false);
+      console.log('GET-USER-DATA', error);
+      dispatch(setPurchaseHistory([]));
+      dispatch(setUserProfileData([]));
+      dispatch(setCustomWorkoutData([]));
     }
   };
   const checkMealAddCount = () => {
@@ -356,27 +409,56 @@ const HomeNew = ({navigation}) => {
       }
     }
   };
-  const ChallengesDataAPI = async () => {
-    try {
-      const res = await axios({
-        url:
-          NewAppapi.GET_CHALLENGES_DATA +
-          '?version=' +
-          VersionNumber.appVersion +
-          '&user_id=' +
-          getUserDataDetails?.id,
-      });
-      if (res.data?.msg != 'version  is required') {
-        dispatch(setChallengesData(res.data));
-        const challenge = res.data?.filter(item => item?.status == 'active');
-        // console.log('challenge', challenge);
-        setCurrentChallenge(challenge);
-        getCurrentDayAPI(challenge);
-      } else {
+  // const ChallengesDataAPI = async () => {
+  //   try {
+  //     const res = await axios({
+  //       url:
+  //         NewAppapi.GET_CHALLENGES_DATA +
+  //         '?version=' +
+  //         VersionNumber.appVersion +
+  //         '&user_id=' +
+  //         getUserDataDetails?.id,
+  //     });
+  //     if (res.data?.msg != 'version  is required') {
+  //       dispatch(setChallengesData(res.data));
+  //       const challenge = res.data?.filter(item => item?.status == 'active');
+  //       // console.log('challenge', challenge);
+  //       setCurrentChallenge(challenge);
+  //       getCurrentDayAPI(challenge);
+  //     } else {
+  //       dispatch(setChallengesData([]));
+  //     }
+  //   } catch (error) {
+  //     console.error(error, 'ChallengesDataAPI ERRR');
+  //   }
+  // };
+  const getAllChallangeAndAllExerciseData = async () => {
+    let responseData = 0;
+    if (Object.keys(getUserDataDetails).length > 0) {
+      try {
+        responseData = await axios.get(
+          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+        );
+        dispatch(setChallengesData(responseData.data.challenge_data));
+        dispatch(setAllExercise(responseData.data.data));
+      } catch (error) {
+        console.log('GET-USER-Challange and AllExerciseData DATA', error);
         dispatch(setChallengesData([]));
+        dispatch(setAllExercise([]));
       }
-    } catch (error) {
-      console.error(error, 'ChallengesDataAPI ERRR');
+    } else {
+      try {
+        responseData = await axios.get(
+          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
+        );
+        dispatch(setChallengesData(responseData.data.challenge_data));
+        dispatch(setAllExercise(responseData.data.data));
+      } catch (error) {
+        dispatch(setChallengesData([]));
+        dispatch(setAllExercise([]));
+
+        console.log('GET-USER-Challange and AllExerciseData DATA', error);
+      }
     }
   };
   const getCurrentDayAPI = async challenge => {
@@ -1152,7 +1234,7 @@ const HomeNew = ({navigation}) => {
     }
   };
   useEffect(() => {
-    console.log(getUserDataDetails)
+    console.log(getUserDataDetails);
     if (getUserDataDetails.name == null && getUserDataDetails.email == null) {
       setOpenEditModal(true);
       setDatatype('both');
@@ -1171,12 +1253,12 @@ const HomeNew = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <NameUpdateModal
+      {/* <NameUpdateModal
         dataType={dataType}
         openEditModal={openEditModal}
         setOpenEditModal={setOpenEditModal}
         user_id={getUserDataDetails?.id}
-      />
+      /> */}
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
@@ -1188,8 +1270,10 @@ const HomeNew = ({navigation}) => {
           <RefreshControl
             refreshing={refresh}
             onRefresh={() => {
-              ChallengesDataAPI();
-              bannerApi();
+              //ChallengesDataAPI();
+              getAllChallangeAndAllExerciseData()
+              // bannerApi();
+              getUserAllInData();
               getLeaderboardDataAPI();
             }}
             colors={[AppColor.RED, AppColor.WHITE]}
@@ -1226,7 +1310,7 @@ const HomeNew = ({navigation}) => {
           {enteredCurrentEvent && (
             <FitCoins
               onPress={() => {
-                AnalyticsConsole('LB')
+                AnalyticsConsole('LB');
                 const today = moment().day();
                 if (today == 0 || today == 6) {
                   navigation.navigate('Winner');

@@ -113,4 +113,7 @@ export const NewAppapi = {
   POST_UPDATE_EMAIL_NAME: NewApi + 'update_name_email',
   GET_LEADERBOARD: NewApi + 'leader_board', //Done App Version
   POST_API_FOR_COIN_CALCULATION: NewApi + 'add_coins', //Done App Version
+  GET_ALL_IN_ONE: NewApi + 'all_in_one',
+  ALL_USER_DETAILS: NewApi + 'all_user_data',
+  ALL_USER_WITH_CONDITION: NewApi + 'all_user_with_condition',
 };

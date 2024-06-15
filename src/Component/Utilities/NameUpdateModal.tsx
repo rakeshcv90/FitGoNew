@@ -17,11 +17,18 @@ import * as Yup from 'yup';
 import {TextInput} from 'react-native-paper';
 import axios from 'axios';
 import ActivityLoader from '../ActivityLoader';
-import {setCompleteProfileData} from '../ThemeRedux/Actions';
+import {
+  Setmealdata,
+  setAgreementContent,
+  setBanners,
+  setCompleteProfileData,
+  setStoreData,
+} from '../ThemeRedux/Actions';
 import {useDispatch} from 'react-redux';
 import {BlurView} from '@react-native-community/blur';
-import {appVersion} from 'react-native-version-number';
-import { AnalyticsConsole } from '../AnalyticsConsole';
+import VersionNumber, {appVersion} from 'react-native-version-number';
+import {AnalyticsConsole} from '../AnalyticsConsole';
+import {showMessage} from 'react-native-flash-message';
 const validationSchemaBoth = Yup.object().shape({
   name: Yup.string()
     .required('Full Name must contain at least 3 characters')
@@ -51,31 +58,51 @@ const NameUpdateModal = ({
 }: any) => {
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
-  const ProfileDataAPI = async () => {
-    try {
-      const res = await axios({
-        url: NewAppapi.Get_COMPLETE_PROFILE,
-        method: 'get',
-      });
 
-      if (res?.data) {
-        dispatch(setCompleteProfileData(res.data));
-        setVisible(false);
-        setOpenEditModal(false);
+  const getUserAllInData = async () => {
+    try {
+      const responseData = await axios.get(
+        `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
+      );
+
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (responseData?.data?.msg == 'version is required') {
+        console.log('version error', responseData?.data?.msg);
       } else {
-        dispatch(setCompleteProfileData([]));
-        setOpenEditModal(false);
+        const objects = {};
+        responseData.data.data.forEach((item: any) => {
+          objects[item?.type] = item?.image;
+        });
+
+        dispatch(setBanners(objects));
+        dispatch(setAgreementContent(responseData?.data?.terms[0]));
+        dispatch(Setmealdata(responseData?.data?.diets));
+        dispatch(setStoreData(responseData?.data?.types));
+        dispatch(setCompleteProfileData(responseData?.data?.additional_data));
         setVisible(false);
+        setOpenEditModal(false);
       }
     } catch (error) {
+      console.log('all_in_one_api_error', error);
+      dispatch(Setmealdata([]));
       dispatch(setCompleteProfileData([]));
-      setOpenEditModal(false);
+      dispatch(setStoreData([]));
       setVisible(false);
-      console.log(error);
+      setOpenEditModal(false);
     }
   };
   const UpdateAPI = async (values: any) => {
-    AnalyticsConsole(`UP_${dataType}_Popup`)
+    AnalyticsConsole(`UP_${dataType}_Popup`);
     const payload = new FormData();
     values.name != '' && payload.append('name', values.name);
     payload.append('user_id', user_id);
@@ -91,7 +118,8 @@ const NameUpdateModal = ({
         },
       });
       console.log('COMPLETE', res.data, payload);
-      ProfileDataAPI();
+      // ProfileDataAPI();
+      getUserAllInData();
     } catch (error) {
       setVisible(false);
       setOpenEditModal(false);

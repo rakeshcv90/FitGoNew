@@ -129,7 +129,7 @@ const CountryLocation = ({navigation, route}) => {
   };
   return (
     <View style={styles.Container}>
-      <DietPlanHeader header="" shadow />
+      {/* <DietPlanHeader header="" shadow /> */}
       {loaded ? null : <ActivityLoader />}
       <View style={styles.view1}>
         <Image
@@ -158,13 +158,13 @@ const CountryLocation = ({navigation, route}) => {
           image={localImage.location_icon}
           onPress={() => getCountry()}
         />
-        <Text
+        {/* <Text
           style={styles.txt3}
           onPress={() => {
             StoreAgreementApi('');
           }}>
           Skip
-        </Text>
+        </Text> */}
       </View>
     </View>
   );

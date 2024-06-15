@@ -182,10 +182,12 @@ const Workouts = ({navigation}: any) => {
   useEffect(() => {
     if (isFocused) {
       initInterstitial();
-      getAllExerciseData();
-      ChallengesDataAPI();
+      // getAllExerciseData();
+      // ChallengesDataAPI();
+      getAllChallangeAndAllExerciseData();
       // getCustomeWorkoutTimeDetails();
-      getCustomWorkout();
+      // getCustomWorkout();
+      getUserDetailData();
       getWorkoutStatus();
       setCurrentCategories(
         getUserDataDetails?.gender == 'Female' ? FemaleCategory : MaleCategory,
@@ -238,50 +240,82 @@ const Workouts = ({navigation}: any) => {
   //   }
   // }, [isFocused]);
 
-  const getAllExerciseData = async () => {
-    try {
-      const exerciseData = await axios.get(
-        `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
-      );
+  // const getAllExerciseData = async () => {
+  //   try {
+  //     const exerciseData = await axios.get(
+  //       `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
+  //     );
 
-      if (
-        exerciseData?.data?.msg == 'Please update the app to the latest version'
-      ) {
+  //     if (
+  //       exerciseData?.data?.msg == 'Please update the app to the latest version'
+  //     ) {
+  //       setIsLoaded(true);
+  //       dispatch(setAllExercise([]));
+  //     } else if (exerciseData?.data?.length > 0) {
+  //       setIsLoaded(true);
+  //       dispatch(setAllExercise(exerciseData?.data));
+  //     } else {
+  //       setIsLoaded(true);
+  //       dispatch(setAllExercise([]));
+  //     }
+  //   } catch (error) {
+  //     setIsLoaded(true);
+  //     dispatch(setAllExercise([]));
+  //     console.log('All-EXCERSIE-ERROR', error);
+  //   }
+  // };
+  // const ChallengesDataAPI = async () => {
+  //   try {
+  //     const res = await axios({
+  //       url:
+  //         NewAppapi.GET_CHALLENGES_DATA +
+  //         '?version=' +
+  //         VersionNumber.appVersion +
+  //         '&user_id=' +
+  //         getUserDataDetails?.id,
+  //     });
+  //     if (res.data?.msg != 'version  is required') {
+  //       dispatch(setChallengesData(res.data));
+  //     } else {
+  //       dispatch(setChallengesData([]));
+  //     }
+  //   } catch (error) {
+  //     console.error(error, 'ChallengesDataAPI ERRR');
+  //   }
+  // };
+  const getAllChallangeAndAllExerciseData = async () => {
+    let responseData = 0;
+    if (Object.keys(getUserDataDetails).length > 0) {
+      try {
+        responseData = await axios.get(
+          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+        );
         setIsLoaded(true);
-        dispatch(setAllExercise([]));
-      } else if (exerciseData?.data?.length > 0) {
+        dispatch(setChallengesData(responseData.data.challenge_data));
+        dispatch(setAllExercise(responseData.data.data));
+      } catch (error) {
         setIsLoaded(true);
-        dispatch(setAllExercise(exerciseData?.data));
-      } else {
-        setIsLoaded(true);
-        dispatch(setAllExercise([]));
-      }
-    } catch (error) {
-      setIsLoaded(true);
-      dispatch(setAllExercise([]));
-      console.log('All-EXCERSIE-ERROR', error);
-    }
-  };
-  const ChallengesDataAPI = async () => {
-    try {
-      const res = await axios({
-        url:
-          NewAppapi.GET_CHALLENGES_DATA +
-          '?version=' +
-          VersionNumber.appVersion +
-          '&user_id=' +
-          getUserDataDetails?.id,
-      });
-      if (res.data?.msg != 'version  is required') {
-        dispatch(setChallengesData(res.data));
-      } else {
+        console.log('GET-USER-Challange and AllExerciseData DATA', error);
         dispatch(setChallengesData([]));
+        dispatch(setAllExercise([]));
       }
-    } catch (error) {
-      console.error(error, 'ChallengesDataAPI ERRR');
+    } else {
+      try {
+        responseData = await axios.get(
+          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
+        );
+        setIsLoaded(true);
+        dispatch(setChallengesData(responseData.data.challenge_data));
+        dispatch(setAllExercise(responseData.data.data));
+      } catch (error) {
+        setIsLoaded(true);
+        dispatch(setChallengesData([]));
+        dispatch(setAllExercise([]));
+
+        console.log('GET-USER-Challange and AllExerciseData DATA', error);
+      }
     }
   };
-
   const getWorkoutStatus = async () => {
     try {
       const exerciseStatus = await axios.get(
@@ -301,30 +335,57 @@ const Workouts = ({navigation}: any) => {
       console.log('Workout-Status', error);
     }
   };
-  const getCustomWorkout = async () => {
+  // const getCustomWorkout = async () => {
+  //   try {
+  //     const data = await axios.get(
+  //       `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${getUserDataDetails?.id}`,
+  //     );
+
+  //     if (data?.data?.msg != 'data not found.') {
+  //       dispatch(setCustomWorkoutData(data?.data?.data));
+  //     } else {
+  //       dispatch(setCustomWorkoutData([]));
+  //     }
+  //   } catch (error) {
+  //     showMessage({
+  //       message: 'Something went wrong please try again',
+  //       type: 'danger',
+  //       animationDuration: 500,
+  //       floating: true,
+  //       icon: {icon: 'auto', position: 'left'},
+  //     });
+  //     console.log('Custom Workout Error', error);
+  //     dispatch(setCustomWorkoutData([]));
+  //   }
+  // };
+  const getUserDetailData = async () => {
     try {
-      const data = await axios.get(
-        `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${getUserDataDetails?.id}`,
+      const responseData = await axios.get(
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
       );
 
-      if (data?.data?.msg != 'data not found.') {
-        dispatch(setCustomWorkoutData(data?.data?.data));
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
-        dispatch(setCustomWorkoutData([]));
+        setIsLoaded(true);
+        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
       }
     } catch (error) {
-      showMessage({
-        message: 'Something went wrong please try again',
-        type: 'danger',
-        animationDuration: 500,
-        floating: true,
-        icon: {icon: 'auto', position: 'left'},
-      });
-      console.log('Custom Workout Error', error);
+      setIsLoaded(true);
+      console.log('GET-USER-DATA', error);
+
       dispatch(setCustomWorkoutData([]));
     }
   };
-
   const renderItem = useMemo(() => {
     return ({item, index}: any) => (
       <>
@@ -496,8 +557,8 @@ const Workouts = ({navigation}: any) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   zIndex: 1,
-                  marginRight: DeviceWidth*0.07,
-                  top:-10
+                  marginRight: DeviceWidth * 0.07,
+                  top: -10,
                 }}
                 resizeMode="contain">
                 <Text
@@ -776,10 +837,12 @@ const Workouts = ({navigation}: any) => {
             <RefreshControl
               refreshing={refresh}
               onRefresh={() => {
-                getAllExerciseData();
-                ChallengesDataAPI();
+                //getAllExerciseData();
+                // ChallengesDataAPI();
+                getAllChallangeAndAllExerciseData();
                 // workoutStatusApi();
-                getCustomWorkout();
+                //  getCustomWorkout();
+                getUserDetailData();
               }}
               colors={[AppColor.RED, AppColor.WHITE]}
             />
@@ -987,14 +1050,14 @@ const Workouts = ({navigation}: any) => {
 
                                 fontWeight: '500',
                                 fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                              }}>{`A balanced diet is a healthy life`}</Text>
+                              }}>{`Create your custom plans`}</Text>
                           </View>
                           <Image
                             source={localImage.NewWorkout}
                             style={{
                               width: DeviceWidth * 0.3,
                               height: 70,
-                              left:-15
+                              left: -15,
                               //backgroundColor: 'red',
                             }}
                             resizeMode="contain"

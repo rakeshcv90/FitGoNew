@@ -36,7 +36,12 @@ import {StatusBar} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
 import {useDispatch, useSelector} from 'react-redux';
 import ActivityLoader from '../Component/ActivityLoader';
-import {setUserId, setUserProfileData} from '../Component/ThemeRedux/Actions';
+import {
+  setCustomWorkoutData,
+  setOfferAgreement,
+  setUserId,
+  setUserProfileData,
+} from '../Component/ThemeRedux/Actions';
 import {LoginManager, Profile} from 'react-native-fbsdk-next';
 import AnimatedLottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -206,7 +211,8 @@ const Signup = ({navigation}) => {
         setForLoading(false);
 
         dispatch(setUserId(data.data?.id));
-        getProfileData(data.data?.id);
+        // getProfileData(data.data?.id);
+        getUserDetailData(data.data?.id);
         // navigationRef.navigate('Yourself');
       } else if (
         data.data.msg == 'User registered via social login' &&
@@ -215,7 +221,8 @@ const Signup = ({navigation}) => {
         setForLoading(false);
 
         // dispatch(setUserId(data.data?.id));
-        getProfileData(data.data?.id);
+        // getProfileData(data.data?.id);
+        getUserDetailData(data.data?.id);
         navigationRef.navigate('Yourself');
       } else if (
         data.data.msg == 'User already exists' &&
@@ -229,7 +236,8 @@ const Signup = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-        getProfileData1(data.data?.id);
+        // getProfileData1(data.data?.id);
+        getUserDetailData1(data.data?.id, data.data.profile_compl_status);
       } else if (
         data.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -245,7 +253,8 @@ const Signup = ({navigation}) => {
         setForLoading(false);
 
         dispatch(setUserId(data.data?.id));
-        getProfileData(data.data?.id);
+        // getProfileData(data.data?.id);
+        getUserDetailData(data.data?.id);
         // navigationRef.navigate('Yourself');
       }
     } catch (error) {
@@ -266,10 +275,10 @@ const Signup = ({navigation}) => {
           name: value.name,
           email: value.email,
           password: value.password,
-          signup_type: 'form',
+          signuptype: 'form',
           social_id: 0,
           social_token: 0,
-          social_type: '',
+          socialtype: 'form',
           deviceid: deviceId,
           version: appVersion,
           devicetoken: getFcmToken,
@@ -305,7 +314,7 @@ const Signup = ({navigation}) => {
       } else if (
         data.data?.msg == 'User already registered with deviceID and active'
       ) {
-        console.log(data.data)
+        console.log(data.data);
         setForLoading(false);
         showMessage({
           message: `It looks like your device ID is already registered with us using your ${data.data?.email}. Please log in with your existing credentials.`,
@@ -360,7 +369,8 @@ const Signup = ({navigation}) => {
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
-        getProfileData(data.data?.id);
+        //getProfileData(data.data?.id);
+        getUserDetailData(data.data?.id);
         dispatch(setUserId(data.data?.id));
         // navigationRef.navigate('Yourself');
         await GoogleSignin.signOut();
@@ -369,7 +379,8 @@ const Signup = ({navigation}) => {
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
-        getProfileData(data.data?.id);
+        // getProfileData(data.data?.id);
+        getUserDetailData(data.data?.id);
         dispatch(setUserId(data.data?.id));
         // navigationRef.navigate('Yourself');
         await GoogleSignin.signOut();
@@ -388,7 +399,8 @@ const Signup = ({navigation}) => {
         //   icon: {icon: 'auto', position: 'left'},
         // });
 
-        getProfileData1(data.data?.id);
+        // getProfileData1(data.data?.id);
+        getUserDetailData1(data.data?.id, data.data.profile_compl_status);
         await GoogleSignin.signOut();
       } else if (
         data.data?.msg == 'Please update the app to the latest version.'
@@ -419,7 +431,8 @@ const Signup = ({navigation}) => {
         setForLoading(false);
 
         dispatch(setUserId(data.data?.id));
-        getProfileData(data.data?.id);
+        // getProfileData(data.data?.id);
+        getUserDetailData(data.data?.id);
         // navigationRef.navigate('Yourself');
         await GoogleSignin.signOut();
       }
@@ -471,7 +484,8 @@ const Signup = ({navigation}) => {
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
-        getProfileData(data.data?.id);
+        // getProfileData(data.data?.id);
+        getUserDetailData(data.data?.id);
         dispatch(setUserId(data.data?.id));
         // navigationRef.navigate('Yourself');
       } else if (
@@ -481,7 +495,8 @@ const Signup = ({navigation}) => {
         setForLoading(false);
 
         dispatch(setUserId(data.data?.id));
-        getProfileData(data.data?.id);
+        //getProfileData(data.data?.id);
+        getUserDetailData(data.data?.id);
         // navigationRef.navigate('Yourself');
       } else if (
         data.data.msg == 'User already exists' &&
@@ -495,7 +510,8 @@ const Signup = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-        getProfileData1(data.data?.id);
+        // getProfileData1(data.data?.id);
+        getUserDetailData1(data.data?.id, data.data.profile_compl_status);
       } else if (
         data.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -524,7 +540,8 @@ const Signup = ({navigation}) => {
         setForLoading(false);
 
         dispatch(setUserId(data.data?.id));
-        getProfileData(data.data?.id);
+        //getProfileData(data.data?.id);
+        getUserDetailData(data.data?.id);
         // navigationRef.navigate('Yourself');
       }
     } catch (error) {
@@ -602,14 +619,14 @@ const Signup = ({navigation}) => {
 
       if (!txt1 || !txt2 || !txt3 || !txt4) {
         showMessage({
-          message: 'Please enter the otp',
+          message: 'Please enter the OTP',
 
           floating: true,
           type: 'danger',
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-        // setForLoading(true);
+        setForLoading(true);
 
         try {
           const OtpMsg = await axios(`${NewApi}${NewAppapi.OTPVerification}`, {
@@ -636,7 +653,11 @@ const Signup = ({navigation}) => {
               icon: {icon: 'auto', position: 'left'},
             });
 
-            getProfileData1(OtpMsg.data?.id);
+            // getProfileData1(OtpMsg.data?.id);
+            getUserDetailData1(
+              OtpMsg.data?.id,
+              OtpMsg?.data?.profile_compl_status,
+            );
             dispatch(setUserId(OtpMsg.data?.id));
             setVerifyVisible(false);
             setTxt1('');
@@ -656,7 +677,8 @@ const Signup = ({navigation}) => {
               icon: {icon: 'auto', position: 'left'},
             });
 
-            getProfileData(OtpMsg.data?.id);
+            //getProfileData(OtpMsg.data?.id);
+            getUserDetailData(OtpMsg.data?.id);
             dispatch(setUserId(OtpMsg.data?.id));
             setVerifyVisible(false);
             setTxt1('');
@@ -742,9 +764,20 @@ const Signup = ({navigation}) => {
                       fontWeight: '600',
                       fontFamily: 'Poppins',
                       marginTop: 10,
-                      marginBottom: 5,
+                      marginBottom: 2,
                     }}>
-                    {'Verify your account by entering verification code'}
+                    {'Please verify your email by entering verification OTP'}
+                  </Text>
+                  <Text
+                    style={{
+                      color: '#1E1E1E',
+                      fontSize: 12,
+                      fontWeight: '600',
+                      fontFamily: 'Poppins',
+
+                      marginBottom: 7,
+                    }}>
+                    {'we have sent to your email'}
                   </Text>
                   <Text
                     style={{
@@ -824,7 +857,7 @@ const Signup = ({navigation}) => {
                       maxLength={1}
                       outlineStyle={{borderRadius: 10}}
                       outlineColor={AppColor.BORDERCOLOR}
-                      activeOutlineColor="#C8170D"
+                      activeOutlineColor="#E3E3E3"
                       value={txt3}
                       onChangeText={txt => {
                         if (txt.length >= 1) {
@@ -846,7 +879,7 @@ const Signup = ({navigation}) => {
                       maxLength={1}
                       outlineStyle={{borderRadius: 10}}
                       outlineColor={AppColor.BORDERCOLOR}
-                      activeOutlineColor="#C8170D"
+                      activeOutlineColor="#E3E3E3"
                       value={txt4}
                       onChangeText={txt => {
                         if (txt.length >= 1) {
@@ -918,7 +951,7 @@ const Signup = ({navigation}) => {
                             fontSize: 15,
                             fontFamily: 'Poppins-SemiBold',
                           }}>
-                          Verify Code
+                          Verify OTP
                         </Text>
                       </LinearGradient>
                     </TouchableOpacity>
@@ -1003,6 +1036,80 @@ const Signup = ({navigation}) => {
     } catch (error) {
       console.log('User Profile Error', error);
       setForLoading(false);
+    }
+  };
+
+  const getUserDetailData = async (userId, status) => {
+    try {
+      const responseData = await axios.get(
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
+      );
+      setForLoading(false);
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
+        dispatch(setOfferAgreement(responseData?.data?.additional_data));
+        dispatch(setUserProfileData(responseData?.data?.profile));
+        navigationRef.navigate('Yourself');
+      }
+    } catch (error) {
+      console.log('GET-USER-DATA', error);
+      dispatch(setPurchaseHistory([]));
+      dispatch(setUserProfileData([]));
+      dispatch(setCustomWorkoutData([]));
+      navigationRef.navigate('Yourself');
+      setForLoading(false);
+    }
+  };
+  const getUserDetailData1 = async (userId, status) => {
+    try {
+      const responseData = await axios.get(
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
+      );
+
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
+        dispatch(setOfferAgreement(responseData?.data?.additional_data));
+        dispatch(setUserProfileData(responseData?.data?.profile));
+        console.log('sdfdsfdsfsdfdsf', status);
+        if (status == 1) {
+          if (
+            responseData?.data?.additional_data?.term_condition == 'Accepted'
+          ) {
+            navigation.replace('BottomTab');
+          } else {
+            navigation.replace('OfferTerms');
+          }
+        } else {
+          navigationRef.navigate('Yourself');
+        }
+      }
+    } catch (error) {
+      console.log('GET-USER-DATA', error);
+      dispatch(setPurchaseHistory([]));
+      dispatch(setUserProfileData([]));
+      dispatch(setCustomWorkoutData([]));
     }
   };
   const LoginCancelModal = () => {
@@ -1449,7 +1556,7 @@ var styles = StyleSheet.create({
     lineHeight: 15,
     fontWeight: '400',
     textDecorationLine: 'underline',
-    fontFamily:Fonts.MONTSERRAT_SEMIBOLD
+    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
   },
   LoginText3: {
     fontSize: 16,

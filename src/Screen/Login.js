@@ -36,7 +36,10 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Setmealdata,
   setCustomWorkoutData,
+  setEnteredCurrentEvent,
+  setEnteredUpcomingEvent,
   setOfferAgreement,
+  setPlanType,
   setPurchaseHistory,
   setUserId,
   setUserProfileData,
@@ -61,6 +64,7 @@ import {Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNFetchBlob from 'rn-fetch-blob';
 import AppUpdateComponent from '../Component/AppUpdateComponent';
+import {EnteringEventFunction} from './Event/EnteringEventFunction';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -80,7 +84,7 @@ const Login = ({navigation}) => {
   const [IsVerifyVisible, setVerifyVisible] = useState(false);
   const [appVersion, setAppVersion] = useState(0);
   const [cancelLogin, setCancelLogin] = useState(false);
-  const getOfferAgreement=useSelector(state=>state?.getOfferAgreement)
+  const getOfferAgreement = useSelector(state => state?.getOfferAgreement);
   const getFcmToken = useSelector(state => state.getFcmToken);
   useEffect(() => {
     requestPermissionforNotification(dispatch);
@@ -143,18 +147,16 @@ const Login = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         setForLoading(false);
-        getProfileData(data.data.id, data.data.profile_status);
-        getCustomWorkout(data.data.id);
-        Meal_List(data.data.login_token);
-        PurchaseDetails(data.data.id, data.data.login_token);
+        // getProfileData(data?.data?.id, data?.data?.profile_status);
+        getUserDetailData(data?.data?.id, data?.data?.profile_status);
+
         await GoogleSignin.signOut();
       } else if (
         data.data.msg ==
         'User does not exist with provided Google social credentials'
       ) {
         showMessage({
-          message:
-            'This email id is not registered. Sign Up to continue',
+          message: 'This email id is not registered. Sign Up to continue',
           type: 'danger',
           animationDuration: 1000,
           floating: true,
@@ -185,8 +187,9 @@ const Login = ({navigation}) => {
         dispatch(setCustomWorkoutData([]));
         setForLoading(false);
         // setModalVisible(true);
-        getProfileData(data.data.id, data.data.profile_status);
-        Meal_List(data.data.login_token);
+        //getProfileData(data.data.id, data.data.profile_status);
+        getUserDetailData(data?.data?.id, data?.data?.profile_status);
+
         await GoogleSignin.signOut();
       }
     } catch (error) {
@@ -246,10 +249,8 @@ const Login = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         setForLoading(false);
-        getProfileData(data.data.id, data.data.profile_status);
-        getCustomWorkout(data.data.id);
-        Meal_List(data.data.login_token);
-        PurchaseDetails(data.data.id, data.data.login_token);
+        // getProfileData(data.data.id, data.data.profile_status);
+        getUserDetailData(data?.data?.id, data?.data?.profile_status);
       } else if (
         data.data.msg ==
         'User does not exist with provided Facebook social credentials'
@@ -277,8 +278,8 @@ const Login = ({navigation}) => {
         setForLoading(false);
         // setModalVisible(true);
         dispatch(setCustomWorkoutData([]));
-        getProfileData(data.data.id, data.data.profile_status);
-        Meal_List(data.data.login_token);
+        // getProfileData(data.data.id, data.data.profile_status);
+        getUserDetailData(data?.data?.id, data?.data?.profile_status);
       }
     } catch (error) {
       setForLoading(false);
@@ -333,18 +334,16 @@ const Login = ({navigation}) => {
         });
         setForLoading(false);
         dispatch(setUserId(data.data?.id));
-        getProfileData(data.data.id, data.data.profile_status);
-        getCustomWorkout(data.data.id);
-        Meal_List(data.data.login_token);
-        PurchaseDetails(data.data.id, data.data.login_token);
+        //getProfileData(data.data.id, data.data.profile_status);
+        getUserDetailData(data?.data?.id, data?.data?.profile_status);
       } else if (
         data.data?.msg ==
         'User does not exist with provided Apple social credentials'
       ) {
         setForLoading(false);
         dispatch(setUserId(data.data?.id));
-        getProfileData(data.data.id, data.data.profile_status);
-        Meal_List(data.data.login_token);
+        // getProfileData(data.data.id, data.data.profile_status);
+        getUserDetailData(data?.data?.id, data?.data?.profile_status);
       } else if (
         data.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -360,8 +359,8 @@ const Login = ({navigation}) => {
       } else {
         setForLoading(false);
 
-        getProfileData(data.data.id, data.data.profile_status);
-        Meal_List(data.data.login_token);
+        //getProfileData(data.data.id, data.data.profile_status);
+        getUserDetailData(data?.data?.id, data?.data?.profile_status);
       }
     } catch (error) {
       setForLoading(false);
@@ -426,10 +425,8 @@ const Login = ({navigation}) => {
           });
           setEmail('');
           setPassword('');
-          getProfileData(data.data.id, data.data.profile_status);
-          getCustomWorkout(data.data.id);
-          Meal_List(data.data.login_token);
-          PurchaseDetails(data.data.id, data.data.login_token);
+          // getProfileData(data.data.id, data.data.profile_status);
+          getUserDetailData(data?.data?.id, data?.data?.profile_status);
         } else if (
           data.data.msg == 'Login successful' &&
           data.data.profile_status == 0
@@ -437,10 +434,10 @@ const Login = ({navigation}) => {
           setForLoading(false);
           setEmail('');
           setPassword('');
-          getProfileData(data.data.id, data.data.profile_status);
-          Meal_List(data.data.login_token);
+          // getProfileData(data.data.id, data.data.profile_status);
+          getUserDetailData(data?.data?.id, data?.data?.profile_status);
+
           dispatch(setCustomWorkoutData([]));
-          PurchaseDetails(data.data.id, data.data.login_token);
         } else if (
           data?.data?.msg == 'Please update the app to the latest version.'
         ) {
@@ -472,127 +469,196 @@ const Login = ({navigation}) => {
       }
     }
   };
-  const getProfileData = async (user_id, status) => {
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          id: user_id,
-          version: appVersion,
-        },
-      });
+  // const getProfileData = async (user_id, status) => {
+  //   try {
+  //     const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         id: user_id,
+  //         version: appVersion,
+  //       },
+  //     });
 
-      setForLoading(false);
-      if (data?.data?.profile) {
-        setForLoading(false);
-        dispatch(setUserProfileData(data.data.profile));
-        await AsyncStorage.setItem('userID', `${user_id}`);
-        // status == 1
-        //   ? navigation.navigate('BottomTab')
-        //   : navigationRef.navigate('Yourself');
-        if (status == 1 ) {
-          getOffertermsStatus(user_id)
-        }
-         else {
-          showMessage({
-            message: 'Please complete your Profile Details',
-            type: 'success',
-            animationDuration: 500,
-            floating: true,
-            icon: {icon: 'auto', position: 'left'},
-          });
-          navigationRef.navigate('Yourself');
-        }
-      } else if (
-        data?.data?.msg == 'Please update the app to the latest version.'
+  //     setForLoading(false);
+  //     if (data?.data?.profile) {
+  //       setForLoading(false);
+  //       dispatch(setUserProfileData(data.data.profile));
+  //       await AsyncStorage.setItem('userID', `${user_id}`);
+  //       // status == 1
+  //       //   ? navigation.navigate('BottomTab')
+  //       //   : navigationRef.navigate('Yourself');
+  //       if (status == 1) {
+  //         getOffertermsStatus(user_id);
+  //       } else {
+  //         showMessage({
+  //           message: 'Please complete your Profile Details',
+  //           type: 'success',
+  //           animationDuration: 500,
+  //           floating: true,
+  //           icon: {icon: 'auto', position: 'left'},
+  //         });
+  //         navigationRef.navigate('Yourself');
+  //       }
+  //     } else if (
+  //       data?.data?.msg == 'Please update the app to the latest version.'
+  //     ) {
+  //       showMessage({
+  //         message: data?.data?.msg,
+  //         floating: true,
+  //         duration: 500,
+  //         type: 'danger',
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //     } else {
+  //       setForLoading(false);
+  //       dispatch(setUserProfileData([]));
+  //       // status == 1
+  //       //   ? navigation.navigate('BottomTab')
+  //       //   : navigationRef.navigate('Yourself');
+  //       if (status == 1) {
+  //         getOffertermsStatus(user_id);
+  //       } else {
+  //         showMessage({
+  //           message: 'Please complete your Profile Details',
+  //           type: 'success',
+  //           animationDuration: 500,
+  //           floating: true,
+  //           icon: {icon: 'auto', position: 'left'},
+  //         });
+  //         navigationRef.navigate('Yourself');
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log('User Profile Error', error);
+  //     if (status == 1) {
+  //       getOffertermsStatus(user_id);
+  //     } else {
+  //       showMessage({
+  //         message: 'Please complete your Profile Details',
+  //         type: 'success',
+  //         animationDuration: 500,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       navigationRef.navigate('Yourself');
+  //     }
+  //     // status == 1
+  //     //   ? navigation.navigate('BottomTab')
+  //     //   : navigationRef.navigate('Yourself');
+  //     setForLoading(false);
+  //   }
+  // };
+  // // getOfferAgreement status
+  // const getOffertermsStatus = async id => {
+  //   try {
+  //     const ApiCall = await axios(NewAppapi.GET_AGR_STATUS, {
+  //       method: 'POST',
+  //       data: {
+  //         user_id: id,
+  //         version: VersionNumber.appVersion,
+  //       },
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //     });
+  //     if (
+  //       ApiCall?.data?.msg == 'Please update the app to the latest version.'
+  //     ) {
+  //       showMessage({
+  //         message: ApiCall?.data?.msg,
+  //         floating: true,
+  //         duration: 500,
+  //         type: 'danger',
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       // setApiDataLoaded(true);
+  //     } else {
+  //       if (ApiCall?.data?.term_conditon) {
+  //         navigation.replace('BottomTab');
+  //       } else {
+  //         navigation.replace('OfferTerms');
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     // setApiDataLoaded(true);
+  //   }
+  // };
+  const getUserDetailData = async (userId, status) => {
+    try {
+      const responseData = await axios.get(
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
+      );
+
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
       ) {
         showMessage({
-          message: data?.data?.msg,
-          floating: true,
-          duration: 500,
+          message: responseData?.data?.msg,
           type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        setForLoading(false);
-        dispatch(setUserProfileData([]));
-        // status == 1
-        //   ? navigation.navigate('BottomTab')
-        //   : navigationRef.navigate('Yourself');
-        if (status == 1) {
-getOffertermsStatus(user_id)
-        }
-        else {
-          showMessage({
-            message: 'Please complete your Profile Details',
-            type: 'success',
-            animationDuration: 500,
-            floating: true,
-            icon: {icon: 'auto', position: 'left'},
-          });
-          navigationRef.navigate('Yourself');
-        }
-      }
-    } catch (error) {
-      console.log('User Profile Error', error);
-      if (status == 1) {
-        getOffertermsStatus(user_id)
-                }
-      else {
-        showMessage({
-          message: 'Please complete your Profile Details',
-          type: 'success',
           animationDuration: 500,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-        navigationRef.navigate('Yourself');
-      }
-      // status == 1
-      //   ? navigation.navigate('BottomTab')
-      //   : navigationRef.navigate('Yourself');
-      setForLoading(false);
-    }
-  };
-  // getOfferAgreement status
-  const getOffertermsStatus = async (id) => {
-    try {
-      const ApiCall = await axios(NewAppapi.GET_AGR_STATUS, {
-        method: 'POST',
-        data: {
-          user_id: id,
-          version: VersionNumber.appVersion,
-        },
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      if (
-        ApiCall?.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: ApiCall?.data?.msg,
-          floating: true,
-          duration: 500,
-          type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
-        });
-        // setApiDataLoaded(true);
-      } else  {
-       if(ApiCall?.data?.term_conditon){
-        navigation.replace('BottomTab');
-       }else{
-        navigation.replace('OfferTerms');
-       }
+      } else {
+        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
+        dispatch(setOfferAgreement(responseData?.data?.additional_data));
+        dispatch(setUserProfileData(responseData?.data?.profile));
+
+        if (responseData?.data.event_details == 'Not any subscription') {
+          dispatch(setPurchaseHistory([]));
+          EnteringEventFunction(
+            dispatch,
+            [],
+            setEnteredCurrentEvent,
+            setEnteredUpcomingEvent,
+            setPlanType,
+          );
+        } else {
+          dispatch(setPurchaseHistory(responseData?.data.event_details));
+          EnteringEventFunction(
+            dispatch,
+            responseData?.data.event_details,
+            setEnteredCurrentEvent,
+            setEnteredUpcomingEvent,
+            setPlanType,
+          );
+        }
+        setForLoading(false);
+
+        if (status == 1) {
+          if (
+            responseData?.data?.additional_data?.term_condition == 'Accepted'
+          ) {
+            navigation.replace('BottomTab');
+          } else {
+            navigation.replace('OfferTerms');
+          }
+        } else {
+          navigationRef.navigate('Yourself');
+        }
       }
     } catch (error) {
-      console.log(error);
-      // setApiDataLoaded(true);
+      console.log('GET-USER-DATA', error);
+      dispatch(setPurchaseHistory([]));
+      dispatch(setUserProfileData([]));
+      dispatch(setCustomWorkoutData([]));
+      if (status == 1) {
+        if (responseData?.data?.additional_data?.term_condition == 'Accepted') {
+          navigation.replace('BottomTab');
+        } else {
+          navigation.replace('OfferTerms');
+        }
+      } else {
+        navigationRef.navigate('Yourself');
+      }
     }
   };
+
   const CompleateProfileModal = () => {
     return (
       <Modal
@@ -629,14 +695,13 @@ getOffertermsStatus(user_id)
                   padding: 10,
                 }}
                 onPress={() => {
-                  if(getOfferAgreement?.term_conditons){
+                  if (getOfferAgreement?.term_conditons) {
                     navigationRef.navigate('BottomTab');
                     setModalVisible(false);
-                  }else{
+                  } else {
                     navigationRef.navigate('OfferTerms');
                     setModalVisible(false);
                   }
-                
                 }}>
                 <Text style={styles.textStyle}>Cancel</Text>
               </TouchableOpacity>
@@ -673,119 +738,6 @@ getOffertermsStatus(user_id)
     );
   };
 
-  const getCustomWorkout = async user_id => {
-    try {
-      const data = await axios.get(
-        `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${user_id}`,
-      );
-
-      if (data?.data?.msg != 'data not found.') {
-        setForLoading(false);
-        dispatch(setCustomWorkoutData(data?.data?.data));
-      } else {
-        setForLoading(false);
-        dispatch(setCustomWorkoutData([]));
-      }
-    } catch (error) {
-      console.log('Custom Workout Error', error);
-      dispatch(setCustomWorkoutData([]));
-      setForLoading(false);
-    }
-  };
-  const Meal_List = async () => {
-    try {
-      const data = await axios(`${NewAppapi.Meal_Categorie}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          version: VersionNumber.appVersion,
-        },
-      });
-      if (data?.data?.msg == 'Please update the app to the latest version.') {
-        showMessage({
-          message: data?.data?.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else if (data.data.diets.length > 0) {
-        data.data?.diets?.map((item, index) => downloadVideos(item, index));
-        dispatch(Setmealdata(data.data.diets));
-      } else {
-        dispatch(Setmealdata([]));
-      }
-      // if (data.data.diets.length > 0) {
-      //   dispatch(Setmealdata(data.data.diets));
-      // } else {
-      //   dispatch(Setmealdata([]));
-      // }
-    } catch (error) {
-      dispatch(Setmealdata([]));
-      console.log('Meal List Error', error);
-    }
-  };
-
-  const sanitizeFileName = fileName => {
-    fileName = fileName.replace(/\s+/g, '_');
-    return fileName;
-  };
-  let StoringData = {};
-  const downloadVideos = async (data, index) => {
-    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
-      data?.diet_title,
-    )}.jpg`;
-    try {
-      const videoExists = await RNFetchBlob.fs.exists(filePath);
-      if (videoExists) {
-        StoringData[data?.diet_title] = filePath;
-      } else {
-        await RNFetchBlob.config({
-          fileCache: true,
-          path: filePath,
-          appendExt: '.jpg',
-        })
-          .fetch('GET', data?.diet_image, {
-            'Content-Type': 'application/jpg',
-          })
-          .then(res => {
-            StoringData[data?.diet_title] = res.path();
-            console.log('Image downloaded successfully!', index, res.path());
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }
-    } catch (error) {
-      console.log('ERRRR', error);
-    }
-    dispatch(setVideoLocation(StoringData));
-  };
-  const PurchaseDetails = async (id, login_token) => {
-    try {
-      const res = await axios(`${NewAppapi.TransctionsDetails}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          id: id,
-          token: login_token,
-        },
-      });
-
-      if (res.data.data.length > 0) {
-        dispatch(setPurchaseHistory(res.data.data));
-      } else {
-        dispatch(setPurchaseHistory([]));
-      }
-    } catch (error) {
-      dispatch(setPurchaseHistory([]));
-      console.log('Purchase List Error', error);
-    }
-  };
   const ModalView = () => {
     const [forLoading, setForLoading] = useState(false);
     const handleForgotPassword = async value => {
@@ -1044,15 +996,15 @@ getOffertermsStatus(user_id)
             </Text>
 
             <TouchableOpacity
-            style={{
-              backgroundColor: AppColor.NEW_DARK_RED,
-              width: '50%',
-              paddingVertical: 10,
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: 5,
-              marginTop: 10
-            }}
+              style={{
+                backgroundColor: AppColor.NEW_DARK_RED,
+                width: '50%',
+                paddingVertical: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 5,
+                marginTop: 10,
+              }}
               onPress={() => {
                 setCancelLogin(false);
               }}>
@@ -1062,7 +1014,7 @@ getOffertermsStatus(user_id)
                   fontWeight: '500',
                   color: AppColor.WHITE,
                   fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                  lineHeight: 20
+                  lineHeight: 20,
                 }}>
                 OK
               </Text>

@@ -1,42 +1,21 @@
-import {
-  StyleSheet,
-  Text,
-  SafeAreaView,
-  View,
-  TouchableOpacity,
-  Image,
-  Platform,
-  FlatList,
-} from 'react-native';
+import {StyleSheet, Text, SafeAreaView} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  DeviceHeigth,
-  DeviceWidth,
-  NewApi,
-  NewAppapi,
-} from '../../Component/Config';
-import LinearGradient from 'react-native-linear-gradient';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {localImage} from '../../Component/Image';
-import Gender from './Gender';
+import {DeviceWidth, NewApi, NewAppapi} from '../../Component/Config';
+import VersionNumber, {appVersion} from 'react-native-version-number';
 import {showMessage} from 'react-native-flash-message';
-import Level from './Level';
-import {Picker} from '@react-native-picker/picker';
-import Focus from './Focus';
-import Toggle from '../../Component/Toggle';
-import {AppColor} from '../../Component/Color';
+
 import {
+  Setmealdata,
+  setAgreementContent,
+  setBanners,
   setCompleteProfileData,
-  setCustomWorkoutData,
   setProgressBarCounter,
+  setStoreData,
 } from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
-import ActivityLoader from '../../Component/ActivityLoader';
 
 import AnimatedLottieView from 'lottie-react-native';
-import Button from '../../Component/Button';
-import ProgressBar from './ProgressBar';
 
 const imgData = Array(60)
   .fill(16)
@@ -65,7 +44,7 @@ const Index = ({navigation, route}: any) => {
   const [selectedWeight, setSelectedWeight] = useState('');
   const [selectedAge, setSelectedAge] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const getTempLogin = useSelector(state => state?.getTempLogin);
+  const getTempLogin = useSelector(state => state.getTempLogin);
   const [isRouteDataAvailable, setIsrouteDataAvailable] = useState(false);
   console.log('temp-->', getTempLogin);
   useEffect(() => {
@@ -78,7 +57,7 @@ const Index = ({navigation, route}: any) => {
   }, [route?.params?.id]);
   useEffect(() => {
     ProfileDataAPI();
-    console.log('temp-->', getTempLogin);
+
     if (getTempLogin) {
       dispatch(setProgressBarCounter(7));
     }
@@ -138,6 +117,56 @@ const Index = ({navigation, route}: any) => {
     }
   };
 
+  const getUserAllInData = async () => {
+    try {
+      const responseData = await axios.get(
+        `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
+      );
+
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (responseData?.data?.msg == 'version is required') {
+        console.log('version error', responseData?.data?.msg);
+      } else {
+        const objects = {};
+        responseData.data.data.forEach((item:any) => {
+          objects[item?.type] = item?.image;
+        });
+
+        dispatch(setBanners(objects));
+        dispatch(setAgreementContent(responseData?.data?.terms[0]));
+        dispatch(Setmealdata(responseData?.data?.diets));
+        dispatch(setStoreData(responseData?.data?.types));
+        dispatch(setCompleteProfileData(responseData?.data?.additional_data));
+        setTimeout(() => {
+          navigation.replace(getTempLogin ? 'Name' : 'Gender', {
+            data: responseData?.data?.additional_data?.goal,
+            nextScreen: screen,
+          });
+        }, 3000);
+      }
+    } catch (error) {
+      console.log('all_in_one_api_error', error);
+      dispatch(Setmealdata([]));
+      dispatch(setCompleteProfileData([]));
+      dispatch(setStoreData([]));
+      setTimeout(() => {
+        navigation.navigate(getTempLogin ? 'Name' : 'Gender', {
+          data: [],
+          nextScreen: screen,
+        });
+      }, 3000);
+    }
+  };
   return (
     <SafeAreaView
       style={{

@@ -58,7 +58,7 @@ const Store = ({navigation}) => {
   const dispatch = useDispatch();
   useFocusEffect(
     React.useCallback(() => {
-      getCaterogy();
+   //   getCaterogy();
       setcategory(getStoreData);
       getProductList(productsId);
     }, [productsId]),
@@ -83,28 +83,28 @@ const Store = ({navigation}) => {
     require('../../Icon/Images/product_1631791758.jpg'),
   ];
 
-  const getCaterogy = async () => {
-    setForLoading(true);
-    try {
-      const favDiet = await axios.get(
-        `${NewAppapi.Get_Product_Catogery}?token=${getUserDataDetails.login_token}`,
-      );
+  // const getCaterogy = async () => {
+  //   setForLoading(true);
+  //   try {
+  //     const favDiet = await axios.get(
+  //       `${NewAppapi.Get_Product_Catogery}?token=${getUserDataDetails.login_token}`,
+  //     );
 
-      if (favDiet.data.status != 'Invalid token') {
-        setcategory([]);
-        setForLoading(false);
-      } else {
-        setcategory(favDiet.data.data);
-        // setFilteredCategories(favDiet.data.data);
+  //     if (favDiet.data.status != 'Invalid token') {
+  //       setcategory([]);
+  //       setForLoading(false);
+  //     } else {
+  //       setcategory(favDiet.data.data);
+  //       // setFilteredCategories(favDiet.data.data);
 
-        setForLoading(false);
-      }
-    } catch (error) {
-      setcategory([]);
-      console.log('Product Category Error', error);
-      setForLoading(false);
-    }
-  };
+  //       setForLoading(false);
+  //     }
+  //   } catch (error) {
+  //     setcategory([]);
+  //     console.log('Product Category Error', error);
+  //     setForLoading(false);
+  //   }
+  // };
   const emptyComponent = () => {
     return (
       <View

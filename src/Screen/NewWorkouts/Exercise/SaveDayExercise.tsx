@@ -9,7 +9,10 @@ import GradientButton from '../../../Component/GradientButton';
 import analytics from '@react-native-firebase/analytics';
 import {ReviewApp} from '../../../Component/ReviewApp';
 import axios from 'axios';
-import {setChallengesData} from '../../../Component/ThemeRedux/Actions';
+import {
+  setAllExercise,
+  setChallengesData,
+} from '../../../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import moment from 'moment';
@@ -123,7 +126,37 @@ const SaveDayExercise = ({navigation, route}: any) => {
       navigation.navigate('WorkoutDays', {data, challenge});
     }
   };
+  const getAllChallangeAndAllExerciseData = async () => {
+    let responseData = 0;
+    if (Object.keys(getUserDataDetails).length > 0) {
+      try {
+        responseData = await axios.get(
+          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+        );
+        dispatch(setChallengesData(responseData.data.challenge_data));
+        dispatch(setAllExercise(responseData.data.data));
+        navigation.navigate('WorkoutDays', {data, challenge});
+      } catch (error) {
+        console.log('GET-USER-Challange and AllExerciseData DATA', error);
+        dispatch(setChallengesData([]));
+        dispatch(setAllExercise([]));
+        navigation.navigate('WorkoutDays', {data, challenge});
+      }
+    } else {
+      try {
+        responseData = await axios.get(
+          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
+        );
+        dispatch(setChallengesData(responseData.data.challenge_data));
+        dispatch(setAllExercise(responseData.data.data));
+      } catch (error) {
+        dispatch(setChallengesData([]));
+        dispatch(setAllExercise([]));
 
+        console.log('GET-USER-Challange and AllExerciseData DATA', error);
+      }
+    }
+  };
   let categoryExercise: Array<any> = [];
 
   const onPresh = () => {
@@ -138,7 +171,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
       type == 'custom'
         ? navigation.navigate('CustomWorkoutDetails', {item: data})
         : challenge
-        ? ChallengesDataAPI()
+        ? getAllChallangeAndAllExerciseData()//ChallengesDataAPI()
         : type == 'focus'
         ? navigation.navigate('WorkoutCategories', {
             categoryExercise,
