@@ -91,6 +91,7 @@ const NameUpdateModal = ({
         dispatch(setStoreData(responseData?.data?.types));
         dispatch(setCompleteProfileData(responseData?.data?.additional_data));
         setVisible(false);
+        setOpenEditModal(false);
       }
       // } else if (
       //   responseData?.data?.msg == 'Please update the app to the latest version.'
@@ -101,7 +102,6 @@ const NameUpdateModal = ({
       //     duration: 500,
       //     type: 'danger',
       //   });
-      //   setOpenEditModal(false);
       // }
     } catch (error) {
       console.log('all_in_one_api_error', error);
