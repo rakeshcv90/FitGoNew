@@ -325,7 +325,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
               fontWeight="600"
               fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
             />
-            {eventType == 'upcoming' && (
+            {eventType == 'current' && (
               <View
                 style={{
                   justifyContent: 'space-between',
@@ -348,7 +348,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
                     getPurchaseHistory?.upcoming_day_status == 1
                       ? `${moment(dayLeft).diff(
                           moment()
-                            .day(getPurchaseHistory?.currentDay)
+                            .day(getPurchaseHistory?.currentDay-6)
                             .format('YYYY-MM-DD'),
                           'days',
                         )} days left`

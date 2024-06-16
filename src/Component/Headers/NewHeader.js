@@ -102,7 +102,7 @@ const NewHeader = ({
                   navigation.navigate('Leaderboard');
                 }
               }}
-              coins={coins}
+              coins={coins<0?0:coins}
             />
           </View>
         ) : (

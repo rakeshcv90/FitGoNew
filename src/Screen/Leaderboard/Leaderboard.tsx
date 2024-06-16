@@ -190,7 +190,7 @@ const Leaderboard = ({navigation, route}: any) => {
                 />
                 <FitText
                   type="SubHeading"
-                  value={`${item?.fit_coins}`}
+                  value={`${item?.fit_coins < 0 ? 0 : item?.fit_coins}`}
                   color={AppColor.WHITE}
                   fontSize={14}
                 />
@@ -319,7 +319,9 @@ const Leaderboard = ({navigation, route}: any) => {
             />
             <FitText
               type="Heading"
-              value={`${mainData[0]?.fit_coins} coins`}
+              value={`${
+                mainData[0]?.fit_coins < 0 ? 0 : mainData[0]?.fit_coins
+              } coins`}
               color="#F38029"
               fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
             />

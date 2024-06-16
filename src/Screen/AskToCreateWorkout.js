@@ -163,6 +163,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
           type: 'danger',
           icon: {icon: 'auto', position: 'left'},
         });
+        setLoader(false);
       } else {
         // getProfileData(getUserID);
 
@@ -267,6 +268,17 @@ const AskToCreateWorkout = ({route, navigation}) => {
         dispatch(setUserProfileData(responseData?.data?.profile));
         dispatch(setLaterButtonData(currrentdata));
         dispatch(setExperience(true));
+        if (getUserDataDetails.email != null) {
+          navigation.navigate('OfferTerms', {
+            routeName: 'Exprience',
+            CustomCreated: true,
+          });
+
+          dispatch(setCustomWorkoutData([]));
+          navigation.navigate('OfferTerms', {CustomCreated: true});
+        } else {
+          navigation.navigate('CustomWorkout', {routeName: 'Exprience'});
+        }
         if (responseData?.data.event_details == 'Not any subscription') {
           dispatch(setPurchaseHistory([]));
           EnteringEventFunction(

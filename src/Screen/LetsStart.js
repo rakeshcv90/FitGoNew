@@ -463,7 +463,7 @@ const LetsStart = ({navigation}) => {
                   alignSelf: 'center',
                 },
               ]}>
-              Or{' '}
+              Or {deviceId}
             </Text>
             <Text
               style={[

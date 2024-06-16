@@ -311,7 +311,7 @@ const HomeNew = ({navigation}) => {
       allWorkoutApi();
       initInterstitial();
       // ChallengesDataAPI();
-      getAllChallangeAndAllExerciseData()
+      getAllChallangeAndAllExerciseData();
       getWorkoutStatus();
       //  PurchaseDetails();
       getUserDetailData();
@@ -1237,7 +1237,7 @@ const HomeNew = ({navigation}) => {
     }
   };
   useEffect(() => {
-    console.log(getUserDataDetails)
+    console.log(getUserDataDetails);
     if (getUserDataDetails.name == null && getUserDataDetails.email == null) {
       setOpenEditModal(true);
       setDatatype('both');
@@ -1268,7 +1268,7 @@ const HomeNew = ({navigation}) => {
             refreshing={refresh}
             onRefresh={() => {
               //ChallengesDataAPI();
-              getAllChallangeAndAllExerciseData()
+              getAllChallangeAndAllExerciseData();
               // bannerApi();
               getUserAllInData();
               getLeaderboardDataAPI();
@@ -1315,7 +1315,7 @@ const HomeNew = ({navigation}) => {
                   navigation.navigate('Leaderboard');
                 }
               }}
-              coins={myRankData?.fit_coins}
+              coins={myRankData?.fit_coins < 0 ? 0 : myRankData?.fit_coins}
             />
           )}
         </View>
