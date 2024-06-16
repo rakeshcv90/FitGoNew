@@ -433,7 +433,7 @@ const LetsStart = ({navigation}) => {
               styles.LoginText2,
               {fontSize: 15, marginVertical: DeviceHeigth * 0.015},
             ]}>
-            Or
+            Or {deviceId}
           </Text>
           <Text style={[styles.LoginText2, {fontSize: 13}]}>
             Already have an account?{' '}
@@ -463,7 +463,7 @@ const LetsStart = ({navigation}) => {
                   alignSelf: 'center',
                 },
               ]}>
-              Or {deviceId}
+              Or
             </Text>
             <Text
               style={[
