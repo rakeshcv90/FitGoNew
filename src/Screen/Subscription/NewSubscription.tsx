@@ -335,8 +335,6 @@ const NewSubscription = ({navigation, route}: any) => {
     }
   };
   const fetchPurchaseHistoryIOS = async (item: any, startDate: any) => {
-    const price: string = findKeyInObject(selected, 'localizedPrice');
-    const planName = price.replace(/\s/g, '');
     let data = {
       user_id: getUserDataDetails.id,
       transaction_id: item.original_transaction_id,
@@ -347,8 +345,13 @@ const NewSubscription = ({navigation, route}: any) => {
           ? 'pro'
           : 'premium',
       platform: Platform.OS,
-      product_id: selected?.productId,
-      plan_value: parseInt(planName.split('₹')[1]),
+      product_id: item.auto_renew_product_id,
+      plan_value:
+        item.auto_renew_product_id == 'fitme_noob'
+          ? 30
+          : item.auto_renew_product_id == 'fitme_pro'
+          ? 69
+          : 149,
     };
     PlanPurchasetoBackendAPI(data);
   };
@@ -793,6 +796,13 @@ const NewSubscription = ({navigation, route}: any) => {
           message: `You have ${
             getPurchaseHistory?.allow_usage - getPurchaseHistory?.used_plan
           } limit left. Please use them before Purchase new Plan`,
+          type: 'danger',
+          floating: true,
+          duration: 2000,
+        });
+      } else if (getPurchaseHistory?.upcoming_day_status == 1) {
+        showMessage({
+          message: `Please wait for your current challenge to start to upgrade your plan and take part in the new challenges.`,
           type: 'danger',
           floating: true,
           duration: 2000,

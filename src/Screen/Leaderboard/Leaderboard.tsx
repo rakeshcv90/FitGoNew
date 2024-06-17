@@ -163,12 +163,6 @@ const Leaderboard = ({navigation, route}: any) => {
                   resizeMode={FastImage.resizeMode.contain}
                   defaultSource={localImage.NOWORKOUT}
                 />
-                <Image
-                  source={{uri: item?.image_path}}
-                  style={styles.mainImage}
-                  resizeMode="contain"
-                />
-
                 <FitText
                   type="SubHeading"
                   value={item?.name}
@@ -298,16 +292,16 @@ const Leaderboard = ({navigation, route}: any) => {
               ) : (
                 <FastImage
                   style={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: 30,
+                    width: 67,
+                    height: 67,
+                    borderRadius: 70,
                   }}
                   source={{
                     uri: mainData[0]?.image_path,
                     headers: {Authorization: 'someAuthToken'},
                     priority: FastImage.priority.high,
                   }}
-                  resizeMode={FastImage.resizeMode.contain}
+                  resizeMode={FastImage.resizeMode.cover}
                   defaultSource={localImage.NOWORKOUT}
                 />
               )}

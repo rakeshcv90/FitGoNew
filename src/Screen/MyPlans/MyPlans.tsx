@@ -55,7 +55,7 @@ import {
 } from './ExerciseComponent';
 import FitCoins from '../../Component/Utilities/FitCoins';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
-import { AddCountFunction } from '../../Component/Utilities/AddCountFunction';
+import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -839,7 +839,7 @@ const MyPlans = ({navigation}: any) => {
         header={'Weekly Plan'}
         SearchButton={false}
         backButton={false}
-        extraView={enteredCurrentEvent ? true : false}
+        extraView={false}
         coins={myRankData?.fit_coins ?? '--'}
       />
 

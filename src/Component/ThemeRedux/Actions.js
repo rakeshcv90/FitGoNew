@@ -346,3 +346,15 @@ export const setAgreementContent = data => {
     payload: data,
   };
 };
+export const setWinnerAnnounced = data => {
+  return {
+    type: types.WINNER_ANNOUNCED,
+    payload: data,
+  };
+};
+export const setFitCoins = data => {
+  return {
+    type: types.FIT_COINS,
+    payload: data,
+  };
+};

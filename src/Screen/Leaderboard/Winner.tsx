@@ -3,6 +3,7 @@ import {
   ImageBackground,
   Linking,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -17,7 +18,7 @@ import {useSelector} from 'react-redux';
 import {localImage} from '../../Component/Image';
 import FitText from '../../Component/Utilities/FitText';
 import AnimatedLottieView from 'lottie-react-native';
-import {appVersion} from 'react-native-version-number';
+import VersionNumber from 'react-native-version-number';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
 type TypeData = {
@@ -50,10 +51,9 @@ const Winner = ({navigation}: any) => {
   const getLeaderboardDataAPI = async () => {
     try {
       const result = await axios({
-        url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${appVersion}`,
+        url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
       if (result.data) {
-        // if (result.data?.data[0]?.id == 243) {
         if (result.data?.data[0]?.id == getUserDataDetails?.id) {
           setUserWinner(true);
           setWinnerData(result.data?.data[0]);
@@ -65,7 +65,7 @@ const Winner = ({navigation}: any) => {
           setWinnerData(result.data?.data[0]);
           setUserData(result.data?.data[userIndex]);
         }
-        console.log('winnerData', userData?.name);
+        console.log('winnerData', result.data?.data);
       }
       setLoader(false);
       setRefresh(false);
@@ -83,11 +83,11 @@ const Winner = ({navigation}: any) => {
           styles.Rank,
           {
             position: 'relative',
-            bottom: bottom
+            top: bottom
               ? bottom
-              : PLATFORM_IOS
-              ? -DeviceWidth * 0.07
-              : -DeviceWidth * 0.08,
+              : userWinner
+              ? DeviceHeigth * 0.046
+              : DeviceHeigth * 0.068,
           },
         ]}>
         <Text
@@ -118,7 +118,7 @@ const Winner = ({navigation}: any) => {
           style={{
             borderRadius: 10,
             width: '100%',
-            height: '120%',
+            height: '110%',
             position: 'absolute',
             top: -DeviceWidth * 0.15,
           }}
@@ -130,7 +130,7 @@ const Winner = ({navigation}: any) => {
             width: '50%',
             height: '50%',
             position: 'absolute',
-            top: -20,
+            marginVertical: DeviceHeigth * 0.05,
           }}
           resizeMode="contain"
         />
@@ -138,6 +138,12 @@ const Winner = ({navigation}: any) => {
           style={{
             alignItems: 'center',
             justifyContent: 'center',
+            width: '29%',
+            height: '29%',
+            top: DeviceHeigth * 0.09,
+            position: 'relative',
+            borderRadius: 100,
+            left: 3,
           }}>
           {winnerData?.image_path == null ? (
             <Text
@@ -154,12 +160,17 @@ const Winner = ({navigation}: any) => {
           ) : (
             <Image
               source={{uri: winnerData?.image_path}}
-              style={{width: '35%', height: '35%'}}
-              resizeMode="contain"
+              style={{
+                width: '100%',
+                height: '100%',
+                borderRadius: 100,
+                alignSelf: 'center',
+              }}
+              resizeMode="cover"
             />
           )}
         </View>
-        <Rank number={1} />
+        <Rank number={1} bottom={DeviceHeigth * 0.075}  />
         <View style={styles.row}>
           {userWinner ? (
             <AnimatedLottieView
@@ -186,6 +197,7 @@ const Winner = ({navigation}: any) => {
               width: '50%',
               justifyContent: 'center',
               alignItems: 'center',
+              marginTop: DeviceHeigth * 0.06,
             }}>
             <FitText
               type="SubHeading"
@@ -266,7 +278,7 @@ const Winner = ({navigation}: any) => {
         backgroundColor: !userWinner ? AppColor.WHITE : AppColor.BLACK,
       }}>
       <DietPlanHeader
-        header="Champions & Contenders"
+        header="Winner of the Week"
         h={DeviceWidth * 0.15}
         paddingTop={PLATFORM_IOS ? DeviceHeigth * 0.025 : DeviceHeigth * 0.02}
         shadow
@@ -274,21 +286,16 @@ const Winner = ({navigation}: any) => {
       {userWinner ? (
         <View style={styles.container}>
           <View style={styles.box}>
+            <WinnerBox />
             <View
               style={{
                 width: '100%',
                 padding: 10,
                 height: 'auto',
                 alignItems: 'center',
+                top: -DeviceHeigth * 0.05,
               }}>
-              <WinnerBox />
-              <View
-                style={[
-                  styles.row,
-                  {
-                    top: -10,
-                  },
-                ]}>
+              <View style={[styles.row, {}]}>
                 <Image
                   source={localImage.WorlCup}
                   style={{width: 20, height: 20, marginRight: 5}}
@@ -341,7 +348,7 @@ const Winner = ({navigation}: any) => {
                   backgroundColor: AppColor.NEW_DARK_RED,
                   paddingVertical: 10,
                   position: 'relative',
-                  top: PLATFORM_IOS ? 30 : 20,
+                  marginVertical: PLATFORM_IOS ? 30 : 10,
                 }}>
                 <FitText
                   type="normal"
@@ -354,19 +361,136 @@ const Winner = ({navigation}: any) => {
           </View>
         </View>
       ) : (
-        <View
-          style={[
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{flex: 1}}
+          contentContainerStyle={[
             styles.container,
             {
               backgroundColor: AppColor.WHITE,
               marginHorizontal: 0,
+              flexGrow: 1,
             },
           ]}>
           <View
             style={{
-              marginTop: PLATFORM_IOS ? DeviceWidth * 0.1 : DeviceWidth * 0.2,
+              width: DeviceWidth,
+              padding: 10,
+              height: DeviceHeigth * 0.4,
+              alignItems: 'center',
             }}>
-            <WinnerBox />
+            <Image
+              source={localImage.WinnerBackground}
+              style={{
+                borderRadius: 10,
+                width: '100%',
+                height: '100%',
+                position: 'absolute',
+                top: DeviceWidth * 0.05,
+              }}
+              resizeMode="cover"
+            />
+            <Image
+              source={localImage.Winner}
+              style={{
+                width: '50%',
+                height: '50%',
+                position: 'absolute',
+                marginVertical: DeviceHeigth * 0.02,
+              }}
+              resizeMode="contain"
+            />
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: DeviceHeigth * 0.12,
+                height: DeviceHeigth * 0.12,
+                borderRadius: DeviceHeigth * 0.11,
+                backgroundColor: AppColor.WHITE,
+                overflow: 'hidden',
+                top: DeviceHeigth * 0.048,
+                left: 2,
+              }}>
+              {winnerData?.image_path == null ? (
+                <Text
+                  style={{
+                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                    fontSize: 32,
+                    lineHeight: 40,
+                    position: 'relative',
+                    top: PLATFORM_IOS ? DeviceWidth * 0.05 : DeviceWidth * 0.06,
+                    color: AppColor.BLACK,
+                  }}>
+                  {winnerData?.name.substring(0, 1)}
+                </Text>
+              ) : (
+                <Image
+                  source={{uri: winnerData?.image_path}}
+                  style={{
+                    alignSelf: 'center',
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  resizeMode="cover"
+                />
+              )}
+            </View>
+            <Rank number={1} bottom={DeviceHeigth * 0.032} />
+            <View
+              style={{
+                width: '50%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: DeviceHeigth * 0.07,
+              }}>
+              <FitText
+                type="SubHeading"
+                value={winnerData?.name}
+                color={AppColor.WHITE}
+                fontFamily={Fonts.MONTSERRAT_BOLD}
+              />
+              <View style={styles.row}>
+                <View
+                  style={{
+                    width: DeviceWidth * 0.1,
+                    height: 0.5,
+                    backgroundColor: AppColor.WHITE,
+                    marginRight: 5,
+                  }}
+                />
+                <FitText
+                  type="SubHeading"
+                  value="WINNER"
+                  color={AppColor.WHITE}
+                  fontFamily={Fonts.MONTSERRAT_REGULAR}
+                  fontWeight="400"
+                />
+                <View
+                  style={{
+                    width: DeviceWidth * 0.1,
+                    height: 0.5,
+                    backgroundColor: AppColor.WHITE,
+                    marginLeft: 5,
+                  }}
+                />
+              </View>
+              <FitText type="SubHeading" value="₹1,000 Rupee" color="#F0A42C" />
+
+              <View
+                style={{
+                  width: DeviceWidth * 0.5,
+                  height: 0.5,
+                  backgroundColor: AppColor.WHITE,
+                  marginVertical: 5,
+                }}
+              />
+              <FitText
+                type="SubHeading"
+                value={`Total: ${winnerData?.fit_coins} coins`}
+                color="#fff"
+              />
+            </View>
           </View>
           <View
             style={{
@@ -374,8 +498,9 @@ const Winner = ({navigation}: any) => {
               borderRadius: 10,
               //   justifyContent: 'center',
               alignItems: 'center',
-              height: DeviceHeigth * 0.35,
+              height: DeviceHeigth * 0.4,
               overflow: 'hidden',
+              marginTop: DeviceWidth * 0.05,
             }}>
             <Image
               source={localImage.LoserBackground}
@@ -387,7 +512,7 @@ const Winner = ({navigation}: any) => {
                 borderRadius: 5,
                 alignSelf: 'center',
                 padding: 10,
-                marginVertical: 10,
+                marginVertical: 12,
               }}>
               <FitText
                 type="normal"
@@ -425,10 +550,7 @@ const Winner = ({navigation}: any) => {
                 />
               )}
             </View>
-            <Rank
-              number={userData?.fit_coins}
-              bottom={PLATFORM_IOS ? DeviceWidth * 0.04 : DeviceWidth * 0.04}
-            />
+            <Rank number={userData?.fit_coins} bottom={-DeviceHeigth * 0.02} />
 
             <FitText
               type="SubHeading"
@@ -437,26 +559,27 @@ const Winner = ({navigation}: any) => {
               fontFamily={Fonts.MONTSERRAT_BOLD}
               marginVertical={-3}
             />
-            <FitText
-              type="normal"
-              value={`👍 Don’t lose hope! "Losing a challenge today means winning a stronger you 
-              Tomorrow!
+            <View style={{marginHorizontal: 10}}>
+              <FitText
+                type="normal"
+                value={`👍 Don’t lose hope! "Losing a challenge today means winning a stronger you Tomorrow!
               `}
-              color={AppColor.WHITE}
-              fontWeight="400"
-              marginVertical={2}
-            />
+                color={AppColor.WHITE}
+                fontWeight="400"
+                marginVertical={2}
+              />
+            </View>
             <TouchableOpacity
               onPress={() => {
                 AnalyticsConsole(`TRA_WIN`);
                 if (getPurchaseHistory) {
                   getPurchaseHistory?.plan_value == 30
-                    ? navigation?.navigate('NewSubscription',{upgrade: true})
+                    ? navigation?.navigate('NewSubscription', {upgrade: true})
                     : getPurchaseHistory?.plan_value != 30 &&
                       getPurchaseHistory?.used_plan <=
                         getPurchaseHistory?.allow_usage &&
                       navigation?.navigate('UpcomingEvent');
-                } else navigation?.navigate('NewSubscription',{upgrade: true});
+                } else navigation?.navigate('NewSubscription', {upgrade: true});
               }}
               style={{
                 width: DeviceWidth * 0.9,
@@ -478,7 +601,7 @@ const Winner = ({navigation}: any) => {
               />
             </TouchableOpacity>
           </View>
-        </View>
+        </ScrollView>
       )}
     </SafeAreaView>
   );

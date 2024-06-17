@@ -31,7 +31,9 @@ const SaveDayExercise = ({navigation, route}: any) => {
   const enteredCurrentEvent = useSelector(
     (state: any) => state.enteredCurrentEvent,
   );
-  let fire, clock, action;
+  let fire = 0,
+    clock = 0,
+    action;
   const [workoutName, setWorkooutName] = useState('');
   const dispatch = useDispatch();
   const getUserDataDetails = useSelector(
@@ -73,8 +75,8 @@ const SaveDayExercise = ({navigation, route}: any) => {
   } else {
     allExercise?.map((item: any) => {
       action = allExercise?.length;
-      fire = item?.exercise_calories;
-      clock = item?.exercise_rest?.split(' ')[0];
+      fire = fire + parseInt(item?.exercise_calories);
+      clock = clock + parseInt(item?.exercise_rest?.split(' ')[0]);
     });
     if (type == 'weekly') getWeeklyAPI();
   }
@@ -211,7 +213,9 @@ const SaveDayExercise = ({navigation, route}: any) => {
         You completed your{' '}
         {type != 'weekly'
           ? data?.workout_title == undefined
-            ? data?.title
+            ? data?.title == undefined
+              ? data?.workout_name + ' Exercise'
+              : data?.title
             : data?.workout_title + ' Exercise'
           : workoutName + ' Exercises'}
       </Text>

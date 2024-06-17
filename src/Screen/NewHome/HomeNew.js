@@ -55,12 +55,14 @@ import {
   setChallengesData,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
+  setFitCoins,
   setFitmeMealAdsCount,
   setIsAlarmEnabled,
   setPlanType,
   setPurchaseHistory,
   setRewardModal,
   setStepCounterOnOff,
+  setWinnerAnnounced,
   setWorkoutTimeCal,
 } from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
@@ -123,7 +125,8 @@ const HomeNew = ({navigation}) => {
   const dispatch = useDispatch();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const allWorkoutData = useSelector(state => state.allWorkoutData);
-  const getChallengesData = useSelector(state => state.getChallengesData);
+  const winnerAnnounced = useSelector(state => state.winnerAnnounced);
+  const fitCoins = useSelector(state => state.fitCoins);
   const [progressHight, setProgressHight] = useState('0%');
   const [day, setDay] = useState(0);
   const [currentChallenge, setCurrentChallenge] = useState([]);
@@ -1140,7 +1143,6 @@ const HomeNew = ({navigation}) => {
   const getLeaderboardDataAPI = async () => {
     try {
       const result = await axios({
-        // url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${appVersion}`,
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
       if (result.data) {
@@ -1148,6 +1150,12 @@ const HomeNew = ({navigation}) => {
           item => item?.id == getUserDataDetails?.id,
         );
         setMyRankData(result.data?.data[myRank]);
+        dispatch(setFitCoins(result.data?.data[myRank]?.fit_coins));
+        dispatch(
+          setWinnerAnnounced(
+            result.data?.winner_announced == true ? true : false,
+          ),
+        );
         // console.log('RANK DATA', myRankData);
       }
       setRefresh(false);
@@ -1156,23 +1164,6 @@ const HomeNew = ({navigation}) => {
       setRefresh(false);
     }
   };
-  useEffect(() => {
-    console.log(getUserDataDetails)
-    if (getUserDataDetails.name == null && getUserDataDetails.email == null) {
-      setOpenEditModal(true);
-      setDatatype('both');
-    } else {
-      if (getUserDataDetails.name == null) {
-        setOpenEditModal(true);
-        setDatatype('name');
-      }
-      if (getUserDataDetails.email == null) {
-        setOpenEditModal(true);
-        setDatatype('email');
-      }
-    }
-  }, [openEditModal, dataType]);
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -1226,14 +1217,13 @@ const HomeNew = ({navigation}) => {
             <FitCoins
               onPress={() => {
                 AnalyticsConsole('LB');
-                const today = moment().day();
-                if (today == 0 || today == 6) {
+                if (winnerAnnounced) {
                   navigation.navigate('Winner');
                 } else {
                   navigation.navigate('Leaderboard');
                 }
               }}
-              coins={myRankData?.fit_coins}
+              coins={fitCoins > 0 ? fitCoins : 0}
             />
           )}
         </View>
@@ -1356,6 +1346,7 @@ const HomeNew = ({navigation}) => {
                         fontWeight: '600',
                         lineHeight: 20,
                         color: AppColor.SUBHEADING,
+                        marginRight: DeviceHeigth >= 1024 ? 14 : 0,
                       }}>
                       {`${day}/${currentChallenge[0]?.total_days} Days`}
                     </Text>
@@ -1372,7 +1363,7 @@ const HomeNew = ({navigation}) => {
               </View>
               <TouchableOpacity
                 onPress={() => {
-                  AnalyticsConsole(`D_Wrk_DAYS_BUTTON_FR_Home`);
+                  AnalyticsConsole(`D_Wrk_DAYS_FR_Home`);
                   navigation.navigate('WorkoutDays', {
                     data: currentChallenge[0],
                     challenge: true,

@@ -57,6 +57,8 @@ const intialState = {
   getRewardModalStatus: false,
   planType: -1,
   getAgreementContent: {},
+  fitCoins: 0,
+  winnerAnnounced: false
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -318,6 +320,16 @@ const ThemeReducer = (state = intialState, action) => {
       return {
         ...state,
         getExerciseCount: action.payload,
+      };
+    case types.FIT_COINS:
+      return {
+        ...state,
+        fitCoins: action.payload,
+      };
+    case types.WINNER_ANNOUNCED:
+      return {
+        ...state,
+        winnerAnnounced: action.payload,
       };
     default:
       return state;

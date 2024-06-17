@@ -233,13 +233,12 @@ const CreateWorkout = ({navigation, route}) => {
       },
     [selectedItems, bodyPart],
   );
-  const planType = useSelector(state => state.planType);
   const getAdsDisplay = (index, item) => {
     if (filteredCategories.length > 1) {
-      if (planType < 69 && index == 0) {
-        return <NativeAddTest type="image" media={false} />;
+      if (getPurchaseHistory?.plan == 'noob' && index == 0) {
+        return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0 && filteredCategories.length > 8) {
-        return <NativeAddTest type="image" media={false} />;
+        return getNativeAdsDisplay();
       } else {
       }
     }
