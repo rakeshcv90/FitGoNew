@@ -13,8 +13,12 @@ import {AppColor} from '../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../Component/Config';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  Setmealdata,
+  setAgreementContent,
+  setBanners,
   setCompleteProfileData,
   setCustomWorkoutData,
+  setStoreData,
   setUserProfileData,
 } from '../Component/ThemeRedux/Actions';
 import {StatusBar} from 'react-native';
@@ -53,7 +57,8 @@ const NewPersonalDetails = ({route, navigation}) => {
   const completeProfileData = useSelector(state => state.completeProfileData);
 
   useEffect(() => {
-    ProfileDataAPI();
+    // ProfileDataAPI();
+    getUserAllInData();
   }, []);
   const data = [
     {label: 'Male', value: 'Male'},
@@ -120,31 +125,74 @@ const NewPersonalDetails = ({route, navigation}) => {
     {label: 'Workout Created by Us', value: 'AppCreated'},
     {label: 'Custom Workout', value: 'CustomCreated'},
   ];
-  const ProfileDataAPI = async () => {
-    try {
-      const res = await axios({
-        url: NewAppapi.Get_COMPLETE_PROFILE,
-        method: 'get',
-      });
+  // const ProfileDataAPI = async () => {
+  //   try {
+  //     const res = await axios({
+  //       url: NewAppapi.Get_COMPLETE_PROFILE,
+  //       method: 'get',
+  //     });
 
-      if (res.data) {
-        dispatch(setCompleteProfileData(res.data));
-        const temp = res.data?.goal?.filter(
+  //     if (res.data) {
+  //       dispatch(setCompleteProfileData(res.data));
+  //       const temp = res.data?.goal?.filter(
+  //         item => item?.goal_gender == getUserDataDetails?.gender,
+  //       );
+  //       setGoalsData(temp);
+  //     } else {
+  //       dispatch(setCompleteProfileData([]));
+  //       setGoalsData([]);
+  //     }
+  //   } catch (error) {
+  //     dispatch(setCompleteProfileData([]));
+  //     setGoalsData([]);
+
+  //     console.log(error);
+  //   }
+  // };
+
+  const getUserAllInData = async () => {
+    try {
+      const responseData = await axios.get(
+        `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
+      );
+
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (responseData?.data?.msg == 'version is required') {
+        console.log('version error', responseData?.data?.msg);
+      } else {
+        const objects = {};
+        responseData.data.data.forEach(item => {
+          objects[item?.type] = item?.image;
+        });
+
+        dispatch(setBanners(objects));
+        dispatch(setAgreementContent(responseData?.data?.terms[0]));
+        dispatch(Setmealdata(responseData?.data?.diets));
+        dispatch(setStoreData(responseData?.data?.types));
+        dispatch(setCompleteProfileData(responseData?.data?.additional_data));
+        const temp = responseData?.data?.additional_data?.goal?.filter(
           item => item?.goal_gender == getUserDataDetails?.gender,
         );
         setGoalsData(temp);
-      } else {
-        dispatch(setCompleteProfileData([]));
-        setGoalsData([]);
       }
     } catch (error) {
+      console.log('all_in_one_api_error', error);
+      dispatch(Setmealdata([]));
       dispatch(setCompleteProfileData([]));
+      dispatch(setStoreData([]));
       setGoalsData([]);
-
-      console.log(error);
     }
   };
-
   const renderLabel = item => {
     if (!isFocus) {
       return <Text style={[styles.label, {color: 'black'}]}>{item}</Text>;
@@ -181,7 +229,7 @@ const NewPersonalDetails = ({route, navigation}) => {
           workout_plans: values.workout_plans,
         },
       });
-console.log(getUserDataDetails.login_token,values.name)
+
       if (dataItem.data.msg == 'User Updated Successfully') {
         showMessage({
           message: 'Details updated successfully',

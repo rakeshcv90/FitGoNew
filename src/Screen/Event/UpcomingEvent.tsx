@@ -26,19 +26,24 @@ import {ShadowStyle} from '../../Component/Utilities/ShadowStyle';
 import {localImage} from '../../Component/Image';
 import axios from 'axios';
 import {
+  setCustomWorkoutData,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
+  setOfferAgreement,
   setPlanType,
   setPurchaseHistory,
+  setUserProfileData,
 } from '../../Component/ThemeRedux/Actions';
 import {EnteringEventFunction} from './EnteringEventFunction';
 import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import VersionNumber, {appVersion} from 'react-native-version-number';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 
 const UpcomingEvent = ({navigation, route}: any) => {
   const {eventType} = route?.params;
+
   // let eventType = 'upcoming';
   const dispatch = useDispatch();
   const enteredUpcomingEvent = useSelector(
@@ -74,7 +79,8 @@ const UpcomingEvent = ({navigation, route}: any) => {
       });
 
       if (res.data.message == 'Event created successfully') {
-        PurchaseDetails();
+      //  PurchaseDetails();
+        getUserDetailData();
       } else {
         setLoading(false);
         showMessage({
@@ -89,34 +95,82 @@ const UpcomingEvent = ({navigation, route}: any) => {
       console.log('Purchase Store Data Error', error, data);
     }
   };
-  const PurchaseDetails = async () => {
+  // const PurchaseDetails = async () => {
+  //   try {
+  //     const result = await axios(
+  //       `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
+  //       // `${NewAppapi.EVENT_SUBSCRIPTION_GET}/7996`,
+  //     );
+  //     console.log(result.data);
+  //     if (result.data?.message == 'Not any subscription') {
+  //       setLoading(false);
+  //       setRefresh(false);
+  //       dispatch(setPurchaseHistory([]));
+  //     } else {
+  //       setRefresh(false);
+  //       dispatch(setPurchaseHistory(result.data.data));
+  //       EnteringEventFunction(
+  //         dispatch,
+  //         result.data?.data,
+  //         setEnteredCurrentEvent,
+  //         setEnteredUpcomingEvent,
+  //         setPlanType,
+  //       );
+  //       setLoading(false);
+  //     }
+  //   } catch (error) {
+  //     setRefresh(false);
+  //     setLoading(false);
+  //     console.log(error);
+  //     dispatch(setPurchaseHistory([]));
+  //   }
+  // };
+  const getUserDetailData = async () => {
     try {
-      const result = await axios(
-        `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
-        // `${NewAppapi.EVENT_SUBSCRIPTION_GET}/7996`,
+      const responseData = await axios.get(
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
       );
-      console.log(result.data);
-      if (result.data?.message == 'Not any subscription') {
-        setLoading(false);
-        setRefresh(false);
-        dispatch(setPurchaseHistory([]));
+
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
-        setRefresh(false);
-        dispatch(setPurchaseHistory(result.data.data));
-        EnteringEventFunction(
-          dispatch,
-          result.data?.data,
-          setEnteredCurrentEvent,
-          setEnteredUpcomingEvent,
-          setPlanType,
-        );
-        setLoading(false);
+        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
+        dispatch(setOfferAgreement(responseData?.data?.additional_data));
+        dispatch(setUserProfileData(responseData?.data?.profile));
+        if (responseData?.data.event_details == 'Not any subscription') {
+          setLoading(false);
+          setRefresh(false);
+          dispatch(setPurchaseHistory([]));
+        } else {
+          setRefresh(false);
+          dispatch(setPurchaseHistory(responseData?.data.event_details));
+          EnteringEventFunction(
+            dispatch,
+            responseData?.data.event_details,
+            setEnteredCurrentEvent,
+            setEnteredUpcomingEvent,
+            setPlanType,
+          );
+          setLoading(false);
+        }
       }
     } catch (error) {
+      console.log('GET-USER-DATA', error);
+      dispatch(setPurchaseHistory([]));
+      dispatch(setUserProfileData([]));
+      dispatch(setCustomWorkoutData([]));
       setRefresh(false);
       setLoading(false);
       console.log(error);
-      dispatch(setPurchaseHistory([]));
     }
   };
 
@@ -248,7 +302,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
         refreshControl={
           <RefreshControl
             refreshing={refresh}
-            onRefresh={PurchaseDetails}
+            onRefresh={getUserDetailData}
             colors={[AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED]}
           />
         }>
@@ -295,7 +349,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
                     getPurchaseHistory?.upcoming_day_status == 1
                       ? `${moment(dayLeft).diff(
                           moment()
-                            .day(getPurchaseHistory?.currentDay)
+                            .day(getPurchaseHistory?.currentDay-6)
                             .format('YYYY-MM-DD'),
                           'days',
                         )} days left`

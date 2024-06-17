@@ -18,15 +18,18 @@ import {TextInput} from 'react-native-paper';
 import axios from 'axios';
 import ActivityLoader from '../ActivityLoader';
 import {
+  Setmealdata,
+  setAgreementContent,
+  setBanners,
   setCompleteProfileData,
-  setUserProfileData,
+  setStoreData,
 } from '../ThemeRedux/Actions';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {BlurView} from '@react-native-community/blur';
-import {appVersion} from 'react-native-version-number';
+import VersionNumber, {appVersion} from 'react-native-version-number';
 import {AnalyticsConsole} from '../AnalyticsConsole';
-import FitIcon from './FitIcon';
 import {showMessage} from 'react-native-flash-message';
+import FitIcon from './FitIcon';
 const validationSchemaBoth = Yup.object().shape({
   name: Yup.string()
     .required('Full Name must contain at least 3 characters')
@@ -56,44 +59,57 @@ const NameUpdateModal = ({
 }: any) => {
   const [visible, setVisible] = useState(false);
   const dispatch = useDispatch();
-  const getUserDataDetails = useSelector((state: any) => state.getUserDataDetails)
-  const getProfileData = async () => {
-    try {
-      const data = await axios(`${NewAppapi.UserProfile}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          id: getUserDataDetails?.id,
-          version: appVersion,
-        },
-      });
 
-      if (data?.data?.profile) {
-        dispatch(setUserProfileData(data.data.profile));
-        setOpenEditModal(false);
-        setVisible(false);
-      } else if (
-        data?.data?.msg == 'Please update the app to the latest version.'
+  const getUserAllInData = async () => {
+    try {
+      const responseData = await axios.get(
+        `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
+      );
+
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
       ) {
         showMessage({
-          message: data?.data?.msg,
-          floating: true,
-          duration: 500,
+          message: responseData?.data?.msg,
           type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
         });
-        setOpenEditModal(false);
-        setVisible(false);
+      } else if (responseData?.data?.msg == 'version is required') {
+        console.log('version error', responseData?.data?.msg);
       } else {
-        dispatch(setUserProfileData([]));
-        setOpenEditModal(false);
+        const objects = {};
+        responseData.data.data.forEach((item: any) => {
+          objects[item?.type] = item?.image;
+        });
+
+        dispatch(setBanners(objects));
+        dispatch(setAgreementContent(responseData?.data?.terms[0]));
+        dispatch(Setmealdata(responseData?.data?.diets));
+        dispatch(setStoreData(responseData?.data?.types));
+        dispatch(setCompleteProfileData(responseData?.data?.additional_data));
         setVisible(false);
+        setOpenEditModal(false);
       }
+      // } else if (
+      //   responseData?.data?.msg == 'Please update the app to the latest version.'
+      // ) {
+      //   showMessage({
+      //     message: responseData?.data?.msg,
+      //     floating: true,
+      //     duration: 500,
+      //     type: 'danger',
+      //   });
+      // }
     } catch (error) {
-      console.log('User Profile Error123', error);
-      setOpenEditModal(false);
+      console.log('all_in_one_api_error', error);
+      dispatch(Setmealdata([]));
+      dispatch(setCompleteProfileData([]));
+      dispatch(setStoreData([]));
       setVisible(false);
+      setOpenEditModal(false);
     }
   };
   const UpdateAPI = async (values: any) => {
@@ -113,7 +129,8 @@ const NameUpdateModal = ({
         },
       });
       console.log('COMPLETE', res.data, payload);
-      getProfileData();
+      // ProfileDataAPI();
+      getUserAllInData();
     } catch (error) {
       setVisible(false);
       setOpenEditModal(false);

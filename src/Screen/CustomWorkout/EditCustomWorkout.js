@@ -159,7 +159,7 @@ const EditCustomWorkout = ({navigation, route}) => {
                     {item?.exercise_title}
                   </Text>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text
+                    <Text
                       style={{
                         fontSize: 12,
                         fontWeight: '700',
@@ -182,7 +182,6 @@ const EditCustomWorkout = ({navigation, route}) => {
                         {item?.exercise_rest}
                       </Text>
                     </Text>
-                    
                   </View>
                 </View>
               </View>
@@ -253,7 +252,7 @@ const EditCustomWorkout = ({navigation, route}) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-  
+
       if (res?.data?.msg == 'data updated successfully') {
         showMessage({
           message: 'Workout updated successfully.',
@@ -263,6 +262,7 @@ const EditCustomWorkout = ({navigation, route}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         getCustomWorkout();
+        getUserDetailData();
       } else {
         setForLoading(false);
         showMessage({
@@ -312,6 +312,34 @@ const EditCustomWorkout = ({navigation, route}) => {
       dispatch(setCustomWorkoutData([]));
     }
   };
+  const getUserDetailData = async () => {
+    try {
+      const responseData = await axios.get(
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+      );
+
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        setForLoading(false);
+        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
+        navigation.navigate('CustomWorkout');
+      }
+    } catch (error) {
+      console.log('GET-USER-DATA', error);
+      setForLoading(false);
+      dispatch(setCustomWorkoutData([]));
+    }
+  };
   const updateFilteredCategories = test => {
     const filteredItems = workoutList.filter(item =>
       item.exercise_title.toLowerCase().includes(test.toLowerCase()),
@@ -329,11 +357,11 @@ const EditCustomWorkout = ({navigation, route}) => {
       {forLoading ? <ActivityLoader /> : ''}
       <View style={styles.container}>
         <View style={{width: '95%', alignSelf: 'center'}}>
-        <Animated.View
+          <Animated.View
             style={[
               {
                 top: -10,
-                width: DeviceWidth ,
+                width: DeviceWidth,
                 height: 50,
                 zIndex: 1,
 
@@ -388,7 +416,6 @@ const EditCustomWorkout = ({navigation, route}) => {
                   alignItems: 'center',
                 }}>
                 Choose Your Exercise
-
               </Text>
             </View>
           )}
@@ -466,7 +493,7 @@ const EditCustomWorkout = ({navigation, route}) => {
             <Text style={styles.button}>{'Update Workout '}</Text>
 
             <Text style={[styles.button, {marginHorizontal: -5}]}>
-             ({selectedItems?.length}) {' '}
+              ({selectedItems?.length}){' '}
             </Text>
           </TouchableOpacity>
         </LinearGradient>

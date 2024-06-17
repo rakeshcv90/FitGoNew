@@ -405,7 +405,8 @@ const CustomWorkoutDetails = ({navigation, route}) => {
       );
 
       if (response?.data?.msg == 'data deleted successfully') {
-        getCustomWorkout();
+       // getCustomWorkout();
+        getUserDetailData()
         showMessage({
           message: 'Workout deleted successfully.',
           type: 'success',
@@ -460,6 +461,34 @@ const CustomWorkoutDetails = ({navigation, route}) => {
         icon: {icon: 'auto', position: 'left'},
       });
       console.log('Custom Workout Error', error);
+      dispatch(setCustomWorkoutData([]));
+    }
+  };
+  const getUserDetailData = async () => {
+    try {
+      const responseData = await axios.get(
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+      );
+
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        setForLoading(false);
+        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.log('GET-USER-DATA', error);
+      setForLoading(false);
       dispatch(setCustomWorkoutData([]));
     }
   };

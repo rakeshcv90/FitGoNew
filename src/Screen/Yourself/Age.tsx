@@ -116,7 +116,7 @@ const Age = ({route, navigation}: any) => {
       return;
     } else if (parseInt(selected) < 15) {
       showMessage({
-        message: 'You are below 15 ',
+        message: 'You cannot continue as you are below 15 years of age',
         type: 'danger',
         animationDuration: 500,
         floating: true,
@@ -125,7 +125,7 @@ const Age = ({route, navigation}: any) => {
       return;
     } else if (parseInt(selected) > 60) {
       showMessage({
-        message: 'You are over age ',
+        message: 'You cannot continue as you are over 60 years of age',
         type: 'danger',
         animationDuration: 500,
         floating: true,

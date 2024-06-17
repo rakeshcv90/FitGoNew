@@ -85,6 +85,9 @@ android {
         versionCode 18
         versionName "1.18"
         missingDimensionStrategy "store", "play"
+        def date = new Date();
+        def newName = date.format('MMM-dd-yyyy')
+        setProperty("archivesBaseName","my_app"+versionName+"_"+newName)
     }
      signingConfigs {
          release {

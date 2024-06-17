@@ -21,7 +21,12 @@ import {requestPermissionforNotification} from '../Component/Helper/PushNotifica
 import ActivityLoader from '../Component/ActivityLoader';
 import axios from 'axios';
 import {
+  setCustomWorkoutData,
+  setEnteredCurrentEvent,
+  setEnteredUpcomingEvent,
   setOfferAgreement,
+  setPlanType,
+  setPurchaseHistory,
   setTempLogin,
   setUserId,
   setUserProfileData,
@@ -31,6 +36,7 @@ import {BannerAdd} from '../Component/BannerAdd';
 import {bannerAdId} from '../Component/AdsId';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {VictoryLegend} from 'victory-native';
+import {EnteringEventFunction} from './Event/EnteringEventFunction';
 
 const LetsStart = ({navigation}) => {
   const dispatch = useDispatch();
@@ -64,8 +70,9 @@ const LetsStart = ({navigation}) => {
           platform: Platform.OS,
         },
       });
-      console.log('DFdssdfsdfdsf', data?.data);
+
       setForLoading(false);
+
       if (
         data?.data?.msg == 'User already registered' &&
         data?.data?.profile_compl_status == 1
@@ -89,7 +96,8 @@ const LetsStart = ({navigation}) => {
       ) {
         dispatch(setTempLogin(data?.data?.temp));
 
-        getProfileData(data.data?.id);
+        //getProfileData(data.data?.id);
+        getUserDetailData(data.data?.id);
         await AsyncStorage.setItem('userID', `${data.data?.id}`);
         dispatch(setUserId(data.data?.id));
       } else if (
@@ -97,7 +105,8 @@ const LetsStart = ({navigation}) => {
         data?.data?.profile_compl_status == 0
       ) {
         dispatch(setTempLogin(data?.data?.temp));
-        getProfileData(data.data?.id);
+        // getProfileData(data.data?.id);
+        getUserDetailData(data.data?.id);
         await AsyncStorage.setItem('userID', `${data.data?.id}`);
         dispatch(setUserId(data.data?.id));
       } else if (
@@ -105,7 +114,8 @@ const LetsStart = ({navigation}) => {
         data?.data?.profile_compl_status == 1
       ) {
         setForLoading(false);
-        getProfileData1(data.data?.id);
+        //getProfileData1(data.data?.id);
+        getUserDetailData1(data.data?.id);
 
         await AsyncStorage.setItem('userID', `${data.data?.id}`);
         dispatch(setUserId(data.data?.id));
@@ -126,120 +136,208 @@ const LetsStart = ({navigation}) => {
       console.log('Device Signup Error', error);
     }
   };
-  const getProfileData = async user_id => {
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          id: user_id,
-          version: VersionNumber.appVersion,
-        },
-      });
+  // const getProfileData = async user_id => {
+  //   try {
+  //     const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         id: user_id,
+  //         version: VersionNumber.appVersion,
+  //       },
+  //     });
 
-      if (data?.data?.profile) {
-        setForLoading(false);
-        dispatch(setUserProfileData(data.data.profile));
-        navigation.navigate('Yourself');
-      } else if (
-        data?.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: data?.data?.msg,
-          floating: true,
-          duration: 500,
-          type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setForLoading(false);
-      } else {
-        setForLoading(false);
-        dispatch(setUserProfileData([]));
-        navigation.navigate('Yourself');
-      }
-    } catch (error) {
-      console.log('User Profile Error', error);
-      setForLoading(false);
-    }
-  };
-  const getProfileData1 = async user_id => {
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          id: user_id,
-          version: VersionNumber.appVersion,
-        },
-      });
+  //     if (data?.data?.profile) {
+  //       setForLoading(false);
+  //       dispatch(setUserProfileData(data.data.profile));
+  //       navigation.navigate('Yourself');
+  //     } else if (
+  //       data?.data?.msg == 'Please update the app to the latest version.'
+  //     ) {
+  //       showMessage({
+  //         message: data?.data?.msg,
+  //         floating: true,
+  //         duration: 500,
+  //         type: 'danger',
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       setForLoading(false);
+  //     } else {
+  //       setForLoading(false);
+  //       dispatch(setUserProfileData([]));
+  //       navigation.navigate('Yourself');
+  //     }
+  //   } catch (error) {
+  //     console.log('User Profile Error', error);
+  //     setForLoading(false);
+  //   }
+  // };
+  // const getProfileData1 = async user_id => {
+  //   try {
+  //     const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         id: user_id,
+  //         version: VersionNumber.appVersion,
+  //       },
+  //     });
 
-      if (data?.data?.profile) {
-        setForLoading(false);
-        dispatch(setUserProfileData(data.data.profile));
-        getOffertermsStatus(user_id);
-      } else if (
-        data?.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: data?.data?.msg,
-          floating: true,
-          duration: 500,
-          type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setForLoading(false);
-      } else {
-        setForLoading(false);
-        dispatch(setUserProfileData([]));
-        navigation.replace('BottomTab');
-      }
-    } catch (error) {
-      console.log('User Profile Error', error);
-      setForLoading(false);
-    }
-  };
-  //
-  const getOffertermsStatus = async id => {
+  //     if (data?.data?.profile) {
+  //       setForLoading(false);
+  //       dispatch(setUserProfileData(data.data.profile));
+  //       getOffertermsStatus(user_id);
+  //     } else if (
+  //       data?.data?.msg == 'Please update the app to the latest version.'
+  //     ) {
+  //       showMessage({
+  //         message: data?.data?.msg,
+  //         floating: true,
+  //         duration: 500,
+  //         type: 'danger',
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       setForLoading(false);
+  //     } else {
+  //       setForLoading(false);
+  //       dispatch(setUserProfileData([]));
+  //       navigation.replace('BottomTab');
+  //     }
+  //   } catch (error) {
+  //     console.log('User Profile Error', error);
+  //     setForLoading(false);
+  //   }
+  // };
+  // //
+  // const getOffertermsStatus = async id => {
+  //   try {
+  //     const ApiCall = await axios(NewAppapi.GET_AGR_STATUS, {
+  //       method: 'POST',
+  //       data: {
+  //         user_id: id,
+  //         version: VersionNumber.appVersion,
+  //       },
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //     });
+  //     if (
+  //       ApiCall?.data?.msg == 'Please update the app to the latest version.'
+  //     ) {
+  //       showMessage({
+  //         message: ApiCall?.data?.msg,
+  //         floating: true,
+  //         duration: 500,
+  //         type: 'danger',
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       setForLoading(false);
+  //     } else {
+  //       if (ApiCall?.data?.term_conditon == 'Accepted') {
+  //         navigation.replace('BottomTab'); //
+  //         dispatch(setOfferAgreement(ApiCall?.data));
+  //         setForLoading(false);
+  //       } else {
+  //         navigation.replace('OfferTerms'); //
+  //         dispatch(setOfferAgreement(ApiCall?.data));
+  //         setForLoading(false);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setForLoading(false);
+  //   }
+  // };
+  const getUserDetailData = async userId => {
     try {
-      const ApiCall = await axios(NewAppapi.GET_AGR_STATUS, {
-        method: 'POST',
-        data: {
-          user_id: id,
-          version: VersionNumber.appVersion,
-        },
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const responseData = await axios.get(
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
+      );
+
       if (
-        ApiCall?.data?.msg == 'Please update the app to the latest version.'
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
       ) {
         showMessage({
-          message: ApiCall?.data?.msg,
-          floating: true,
-          duration: 500,
+          message: responseData?.data?.msg,
           type: 'danger',
+          animationDuration: 500,
+          floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-        setForLoading(false);
       } else {
-        if (ApiCall?.data?.term_conditon == 'Accepted') {
+        dispatch(setOfferAgreement(responseData?.data?.additional_data));
+        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
+        dispatch(setUserProfileData(responseData?.data?.profile));
+        if (responseData?.data.event_details == 'Not any subscription') {
+          dispatch(setPurchaseHistory([]));
+          EnteringEventFunction(
+            dispatch,
+            [],
+            setEnteredCurrentEvent,
+            setEnteredUpcomingEvent,
+            setPlanType,
+          );
+        } else {
+          dispatch(setPurchaseHistory(responseData?.data.event_details));
+          EnteringEventFunction(
+            dispatch,
+            responseData?.data.event_details,
+            setEnteredCurrentEvent,
+            setEnteredUpcomingEvent,
+            setPlanType,
+          );
+        }
+        navigation.navigate('Yourself');
+      }
+    } catch (error) {
+      console.log('GET-USER-DATA', error);
+      navigation.navigate('Yourself');
+      dispatch(setUserProfileData([]));
+    }
+  };
+  const getUserDetailData1 = async userId => {
+    try {
+      const responseData = await axios.get(
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
+      );
+
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
+        dispatch(setUserProfileData(responseData?.data?.profile));
+        console.log('GAGAGAGAGAGA', responseData?.data?.additional_data);
+        if (responseData?.data?.additional_data?.term_condition == 'Accepted') {
           navigation.replace('BottomTab'); //
-          dispatch(setOfferAgreement(ApiCall?.data));
-          setForLoading(false);
+          dispatch(setOfferAgreement(responseData?.data?.additional_data));
+        } else if (
+          responseData?.data?.additional_data?.term_condition == null
+        ) {
+          navigation.replace('BottomTab'); //
+          dispatch(setOfferAgreement(responseData?.data?.additional_data));
         } else {
           navigation.replace('OfferTerms'); //
-          dispatch(setOfferAgreement(ApiCall?.data));
-          setForLoading(false);
+          dispatch(setOfferAgreement(responseData?.data?.additional_data));
         }
       }
     } catch (error) {
-      console.log(error);
-      setForLoading(false);
+      console.log('GET-USER-DATA', error);
+
+      dispatch(setUserProfileData([]));
     }
   };
   return (
@@ -335,7 +433,7 @@ const LetsStart = ({navigation}) => {
               styles.LoginText2,
               {fontSize: 15, marginVertical: DeviceHeigth * 0.015},
             ]}>
-            Or
+            Or {deviceId}
           </Text>
           <Text style={[styles.LoginText2, {fontSize: 13}]}>
             Already have an account?{' '}
@@ -365,7 +463,7 @@ const LetsStart = ({navigation}) => {
                   alignSelf: 'center',
                 },
               ]}>
-              Or{' '}
+              Or
             </Text>
             <Text
               style={[

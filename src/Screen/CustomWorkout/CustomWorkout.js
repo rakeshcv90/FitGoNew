@@ -24,7 +24,10 @@ import {PERMISSIONS, request} from 'react-native-permissions';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useIsFocused} from '@react-navigation/native';
 import VersionNumber from 'react-native-version-number';
-import {setAllExercise} from '../../Component/ThemeRedux/Actions';
+import {
+  setAllExercise,
+  setChallengesData,
+} from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {BannerAdd} from '../../Component/BannerAdd';
@@ -51,7 +54,8 @@ const CustomWorkout = ({navigation}) => {
 
   useEffect(() => {
     if (isFocused) {
-      getAllExerciseData();
+      // getAllExerciseData();
+      getAllChallangeAndAllExerciseData();
     }
   }, [isFocused]);
   const askPermissionForLibrary = async permission => {
@@ -281,7 +285,7 @@ const CustomWorkout = ({navigation}) => {
               lineHeight: 26,
               fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
             }}>
-            Nothing here yet!
+            No workout created yet !
           </Text>
         </View>
         <View
@@ -448,24 +452,53 @@ const CustomWorkout = ({navigation}) => {
     }
   };
 
-  const getAllExerciseData = async () => {
-    try {
-      const exerciseData = await axios.get(
-        `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
-      );
+  // const getAllExerciseData = async () => {
+  //   try {
+  //     const exerciseData = await axios.get(
+  //       `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
+  //     );
 
-      if (
-        exerciseData?.data?.msg == 'Please update the app to the latest version'
-      ) {
-        dispatch(setAllExercise([]));
-      } else if (exerciseData?.data?.length > 0) {
-        dispatch(setAllExercise(exerciseData?.data));
-      } else {
+  //     if (
+  //       exerciseData?.data?.msg == 'Please update the app to the latest version'
+  //     ) {
+  //       dispatch(setAllExercise([]));
+  //     } else if (exerciseData?.data?.length > 0) {
+  //       dispatch(setAllExercise(exerciseData?.data));
+  //     } else {
+  //       dispatch(setAllExercise([]));
+  //     }
+  //   } catch (error) {
+  //     dispatch(setAllExercise([]));
+  //     console.log('All-EXCERSIE-ERROR', error);
+  //   }
+  // };
+  const getAllChallangeAndAllExerciseData = async () => {
+    let responseData = 0;
+    if (Object.keys(getUserDataDetails).length > 0) {
+      try {
+        responseData = await axios.get(
+          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+        );
+        dispatch(setChallengesData(responseData.data.challenge_data));
+        dispatch(setAllExercise(responseData.data.data));
+      } catch (error) {
+        console.log('GET-USER-Challange and AllExerciseData DATA', error);
+        dispatch(setChallengesData([]));
         dispatch(setAllExercise([]));
       }
-    } catch (error) {
-      dispatch(setAllExercise([]));
-      console.log('All-EXCERSIE-ERROR', error);
+    } else {
+      try {
+        responseData = await axios.get(
+          `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
+        );
+        dispatch(setChallengesData(responseData.data.challenge_data));
+        dispatch(setAllExercise(responseData.data.data));
+      } catch (error) {
+        dispatch(setChallengesData([]));
+        dispatch(setAllExercise([]));
+
+        console.log('GET-USER-Challange and AllExerciseData DATA', error);
+      }
     }
   };
   // const bannerAdsDisplay = () => {

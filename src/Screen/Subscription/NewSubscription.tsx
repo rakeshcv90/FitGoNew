@@ -26,10 +26,13 @@ import * as RNIap from 'react-native-iap';
 import moment from 'moment';
 import axios from 'axios';
 import {
+  setCustomWorkoutData,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
+  setOfferAgreement,
   setPlanType,
   setPurchaseHistory,
+  setUserProfileData,
 } from '../../Component/ThemeRedux/Actions';
 import {useIsFocused} from '@react-navigation/native';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
@@ -37,10 +40,12 @@ import Carousel from 'react-native-snap-carousel';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
+import VersionNumber, {appVersion} from 'react-native-version-number';
 const NewSubscription = ({navigation, route}: any) => {
   const {upgrade} = route.params;
   const dispatch = useDispatch();
   const getInAppPurchase = useSelector((state: any) => state.getInAppPurchase);
+
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
   );
@@ -83,7 +88,8 @@ const NewSubscription = ({navigation, route}: any) => {
 
   useEffect(() => {
     if (isFocused) {
-      PurchaseDetails();
+     // PurchaseDetails();
+      getUserDetailData()
     }
   }, [isFocused]);
   useEffect(() => {
@@ -413,7 +419,8 @@ const NewSubscription = ({navigation, route}: any) => {
       });
       console.log(res.data);
       if (res.data.message == 'Event created successfully') {
-        PurchaseDetails();
+       // PurchaseDetails();
+        getUserDetailData()
         setForLoading(false);
         setTimeout(() => {
           navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
@@ -421,7 +428,8 @@ const NewSubscription = ({navigation, route}: any) => {
       } else if (
         res.data.message == 'Plan upgraded and new event created successfully'
       ) {
-        PurchaseDetails();
+      //  PurchaseDetails();
+        getUserDetailData()
         setForLoading(false);
         setTimeout(() => {
           navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
@@ -490,6 +498,71 @@ const NewSubscription = ({navigation, route}: any) => {
       dispatch(setPurchaseHistory([]));
     }
   };
+
+  const getUserDetailData = async () => {
+    try {
+      const responseData = await axios.get(
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
+      );
+
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
+        dispatch(setOfferAgreement(responseData?.data?.additional_data));
+        dispatch(setUserProfileData(responseData?.data?.profile));
+        setRefresh(false);
+        if (responseData?.data.event_details == 'Not any subscription') {
+          dispatch(setPurchaseHistory([]));
+          setCurrentSelected(2);
+          EnteringEventFunction(
+            dispatch,
+            [],
+            setEnteredCurrentEvent,
+            setEnteredUpcomingEvent,
+            setPlanType,
+          );
+        } else {
+          EnteringEventFunction(
+            dispatch,
+            responseData?.data.event_details,
+            setEnteredCurrentEvent,
+            setEnteredUpcomingEvent,
+            setPlanType,
+          );
+          dispatch(setPurchaseHistory(responseData?.data.event_details));
+          responseData?.data?.event_details.plan_value == 30
+            ? setCurrentSelected(0)
+            : responseData?.data?.event_details?.plan_value == 69
+            ? setCurrentSelected(1)
+            : setCurrentSelected(2);
+          EnteringEventFunction(
+            dispatch,
+            responseData?.data.event_details,
+            setEnteredCurrentEvent,
+            setEnteredUpcomingEvent,
+            setPlanType,
+          );
+        }
+      }
+    } catch (error) {
+      console.log('GET-USER-DATA', error);
+      dispatch(setPurchaseHistory([]));
+      dispatch(setUserProfileData([]));
+      dispatch(setCustomWorkoutData([]));
+      setRefresh(false);
+    }
+  };
+
   const RenderItem = ({item, index}: any) => {
     // const {item, index} = route.params;
     const planCap: string = findKeyInObject(
@@ -732,6 +805,7 @@ const NewSubscription = ({navigation, route}: any) => {
           getPurchaseHistory?.plan_value == null && (
             <View style={{height: 50, width: '100%'}} />
           )}
+        {/* {console.log("zxcdcxzc",item)} */}
         <GradientButton
           text={
             planName.includes(getPurchaseHistory?.plan)
@@ -765,6 +839,7 @@ const NewSubscription = ({navigation, route}: any) => {
           onPress={() => {
             setSelected(item);
             handlePurchase(item);
+            // AnalyticsConsole(`Pur_${item.name}_PLAN`);
             AnalyticsConsole(`Pur_${planName.substring(1)}_PLAN`);
           }}
           // opacity={price.includes(getPurchaseHistory?.plan_value) ? 0.8 : 1}
@@ -832,7 +907,7 @@ const NewSubscription = ({navigation, route}: any) => {
           Platform.OS == 'android' ? DeviceHeigth * 0.02 : DeviceHeigth * 0.025
         }
         h={Platform.OS == 'ios' ? DeviceWidth * 0.15 : DeviceWidth * 0.15}
-        shadow
+        // shadow
       />
       <View style={{flex: 1, marginHorizontal: 20, marginTop: 10}}>
         <ScrollView
@@ -840,7 +915,7 @@ const NewSubscription = ({navigation, route}: any) => {
           refreshControl={
             <RefreshControl
               refreshing={refresh}
-              onRefresh={PurchaseDetails}
+              onRefresh={getUserDetailData}
               colors={[AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED]}
             />
           }>

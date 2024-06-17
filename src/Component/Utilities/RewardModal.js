@@ -154,19 +154,19 @@ const RewardModal = ({visible, navigation}) => {
               style={[styles.img2]}
               resizeMode="contain"
             />
+            <Icon
+              name="close"
+              size={30}
+              color={AppColor.BLACK}
+              style={{margin: 16}}
+              onPress={() => {
+                dispatch(setRewardModal(false));
+              }}
+            />
           </View>
-          <Icon
-            name="close"
-            size={30}
-            color={AppColor.BLACK}
-            style={{margin: 16, position: 'absolute', right: 8}}
-            onPress={() => {
-              dispatch(setRewardModal(false));
-            }}
-          />
-          <View style={{marginVertical: 30,marginHorizontal: 20}}>
-            <Text style={styles.txt1}>
-              <Text style={{color: AppColor.RED}}>
+          <View style={{marginVertical: 30}}>
+            <Text style={[styles.txt1, {fontSize: 15,lineHeight:20}]}>
+              <Text style={{color: AppColor.RED, fontSize: 20,lineHeight:40}}>
                 {'Earn While You Burn\n'}
               </Text>
               Join the fitness challenge today for a healthier you and a
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   //texts
   txt1: {
     color: AppColor.BLACK,
-    fontSize: 22,
+    fontSize: 20,
     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
     textAlign: 'center',
     marginBottom: 20,
