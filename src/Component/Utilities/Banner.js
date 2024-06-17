@@ -23,11 +23,12 @@ import FastImage from 'react-native-fast-image';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import {AppColor} from '../Color';
 import ActivityLoader from '../ActivityLoader';
+import {FlatList} from 'react-native-gesture-handler';
 import NameUpdateModal from './NameUpdateModal';
 const Banners = ({type1, type2, onPress, navigation}) => {
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
   const getPurchaseHistory = useSelector(state => state?.getPurchaseHistory);
-  const planType = useSelector(state => state.planType);
+  const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const getBanners = useSelector(state => state?.getBanners);
   const [loading, setLoading] = useState(true);
   const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
@@ -45,21 +46,26 @@ const Banners = ({type1, type2, onPress, navigation}) => {
   const handleStart = () => {
     if (getUserDataDetails?.email != null) {
       setLoaded(false);
-      locationPermission()
-        .then(result => {
-          if (result == 'blocked') {
-            showPermissionAlert();
-          } else if (result === 'denied') {
-            StoreAgreementApi('');
-          } else if (result) {
-            StoreAgreementApi(result);
-          } else if (!result) {
-            StoreAgreementApi('');
-          }
-        })
-        .catch(err => {
-          console.log('location Error', err);
-        });
+      if (getOfferAgreement?.location == 'India') {
+        setLoaded(true);
+        navigation.navigate('NewSubscription', {upgrade: false});
+      } else {
+        locationPermission()
+          .then(result => {
+            if (result == 'blocked') {
+              showPermissionAlert();
+            } else if (result === 'denied') {
+              StoreAgreementApi('');
+            } else if (result) {
+              StoreAgreementApi(result);
+            } else if (!result) {
+              StoreAgreementApi('');
+            }
+          })
+          .catch(err => {
+            console.log('location Error', err);
+          });
+      }
     } else {
       if (
         getUserDataDetails?.social_type != null &&
@@ -141,7 +147,7 @@ const Banners = ({type1, type2, onPress, navigation}) => {
       } else {
         dispatch(setOfferAgreement(ApiCall?.data));
         if (ApiCall?.data?.location == 'India') {
-          if (planType == -1) {
+          if (getPurchaseHistory?.plan == null) {
             navigation.navigate('NewSubscription', {upgrade: false});
           } else {
             navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
@@ -212,7 +218,7 @@ const Banners = ({type1, type2, onPress, navigation}) => {
       console.log('BannerApiError', error);
     }
   };
-  console.log(type1, type2);
+
   const handleEventClicks = index => {
     if (type1 == 'new_join') {
       handleStart();
@@ -225,9 +231,12 @@ const Banners = ({type1, type2, onPress, navigation}) => {
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
       });
-    } else if (type1 == 'joined_challenge' && index == 0) {
+    } else if (
+      type1 == 'joined_challenge' ||
+      (type2 == 'joined_challenge' && index == 1)
+    ) {
       navigation.navigate('UpcomingEvent', {eventType: 'current'});
-    } else if (type2 == 'ongoing_challenge') {
+    } else if (type1 == 'ongoing_challenge' && index == 0) {
       navigation.navigate('MyPlans');
     } else if (type2 == 'upcoming_challenge' && index == 1) {
       navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
@@ -246,54 +255,61 @@ const Banners = ({type1, type2, onPress, navigation}) => {
   };
   const Box = ({imageSource}) => {
     return (
-      <View>
+      <View style={{justifyContent: 'center', width: DeviceWidth * 0.95}}>
         {loaded ? null : <ActivityLoader />}
-        <SliderBox
-          ImageComponent={FastImage}
-          images={[...imageSource]}
-          sliderBoxHeight={DeviceHeigth * 0.18}
-          onCurrentImagePressed={index => {
-            handleEventClicks(index);
-          }}
-          dotColor={AppColor.RED}
-          inactiveDotColor="#90A4AE"
-          paginationBoxVerticalPadding={20}
-          autoplay
-          circleLoop
-          autoplayInterval={2500}
-          resizeMethod={'resize'}
-          resizeMode={'stretch'}
-          paginationBoxStyle={{
-            position: 'absolute',
-            bottom: 0,
-            padding: 0,
-            alignItems: 'center',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            paddingVertical: 10,
-          }}
-          dotStyle={{
-            width: 10,
-            height: 10,
-            borderRadius: 5,
-            marginHorizontal: 0,
-            padding: 0,
-            margin: 0,
-            backgroundColor: 'rgba(128, 128, 128, 0.92)',
-          }}
-          ImageComponentStyle={{borderRadius: 15, width: DeviceWidth * 0.95}}
-          imageLoadingColor={AppColor.RED}
+        <FlatList
+          data={imageSource}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          renderItem={({item, index}) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => handleEventClicks(index)}
+              style={{
+                height: DeviceHeigth * 0.18,
+                width:
+                  imageSource?.length > 1
+                    ? DeviceWidth * 0.9
+                    : DeviceWidth * 0.95,
+                alignSelf: 'center',
+                marginRight: 15,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              {loading && (
+                <ShimmerPlaceholder
+                  style={{
+                    height: DeviceHeigth * 0.18,
+                    width:
+                      imageSource?.length > 1
+                        ? DeviceWidth * 0.9
+                        : DeviceWidth * 0.95,
+                    borderRadius: 20,
+                    position: 'absolute',
+                  }}
+                  ref={avatarRef}
+                  autoRun
+                />
+              )}
+              <Image
+                style={{width: '100%', height: '100%', borderRadius: 20}}
+                resizeMode="stretch"
+                source={{uri: item}}
+                onLoad={() => setLoading(false)}
+              />
+            </TouchableOpacity>
+          )}
         />
       </View>
     );
   };
   return (
-    <View style={{marginVertical: 15}}>
-      {getBanners[type1] && getBanners[type2] ? (
+    <View style={{marginVertical: 15, marginLeft: 10}}>
+      {getBanners && getBanners[type1] && getBanners[type2] ? (
         <Box imageSource={[getBanners[type1], getBanners[type2]]} />
-      ) : getBanners[type1] ? (
+      ) : getBanners && getBanners[type1] ? (
         <Box imageSource={[getBanners[type1]]} />
-      ) : getBanners[type2] ? (
+      ) : getBanners && getBanners[type2] ? (
         <Box imageSource={[getBanners[type2]]} />
       ) : null}
       <NameUpdateModal

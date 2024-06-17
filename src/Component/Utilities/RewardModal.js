@@ -145,30 +145,26 @@ const RewardModal = ({visible, navigation}) => {
         <View style={styles.View1}>
           <View
             style={{
+              justifyContent: 'center',
+              alignItems: 'center',
               flexDirection: 'row',
-              justifyContent: 'space-between',
             }}>
             <Image
-              source={localImage.Modal_img}
-              style={styles.img1}
-              resizeMode="stretch"
-            />
-            <Image
-              source={localImage.ModalCoin}
+              source={localImage.Reward_icon}
               style={[styles.img2]}
               resizeMode="contain"
             />
-            <Icon
-              name="close"
-              size={30}
-              color={AppColor.BLACK}
-              style={{margin: 16}}
-              onPress={() => {
-                dispatch(setRewardModal(false));
-              }}
-            />
           </View>
-          <View style={{marginVertical: 30}}>
+          <Icon
+            name="close"
+            size={30}
+            color={AppColor.BLACK}
+            style={{margin: 16, position: 'absolute', right: 8}}
+            onPress={() => {
+              dispatch(setRewardModal(false));
+            }}
+          />
+          <View style={{marginVertical: 30,marginHorizontal: 20}}>
             <Text style={styles.txt1}>
               <Text style={{color: AppColor.RED}}>
                 {'Earn While You Burn\n'}
@@ -215,7 +211,7 @@ const styles = StyleSheet.create({
   img2: {
     height: DeviceHeigth * 0.2,
     width: DeviceWidth * 0.45,
-    right: DeviceWidth * 0.04,
+    // right: DeviceWidth * 0.04,
   },
   //texts
   txt1: {

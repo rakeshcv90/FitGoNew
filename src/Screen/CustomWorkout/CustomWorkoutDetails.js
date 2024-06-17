@@ -34,7 +34,7 @@ import {bannerAdId} from '../../Component/AdsId';
 import GradientButton from '../../Component/GradientButton';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -360,13 +360,13 @@ const CustomWorkoutDetails = ({navigation, route}) => {
     return (
       <View>
         {status_data[0]?.exercise_status == 'completed' && (
-        <AnimatedLottieView
-          source={require('../../Icon/Images/NewImage/compleate.json')}
-          speed={0.5}
-          autoPlay
-          resizeMode="cover"
-          style={{width: 50, height: 50, right: 5}}
-        />
+          <AnimatedLottieView
+            source={require('../../Icon/Images/NewImage/compleate.json')}
+            speed={0.5}
+            autoPlay
+            resizeMode="cover"
+            style={{width: 50, height: 50, right: 5}}
+          />
         )}
       </View>
     );
@@ -486,102 +486,104 @@ const CustomWorkoutDetails = ({navigation, route}) => {
       />
       {forLoading ? <ActivityLoader /> : ''}
       <View style={styles.container}>
-        <View
-          style={{
-            width: '95%',
-            borderRadius: 10,
-            backgroundColor: '#FDFDFD',
-            marginVertical: 8,
-            flexDirection: 'row',
-            alignSelf: 'center',
-            justifyContent: 'space-between',
-            paddingHorizontal: 20,
-            padding: 5,
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Image
-              // source={{uri: data.workout_image_link}}
-              source={
-                data?.image == '' ? localImage.NOWORKOUT : {uri: data?.image}
-              }
-              style={{
-                width: 70,
-                height: 70,
-                justifyContent: 'center',
-                alignSelf: 'center',
-                borderRadius: 10,
-
-                marginHorizontal: -7,
-              }}
-              resizeMode="cover"
-            />
-            <View
-              style={{
-                marginHorizontal: 25,
-                justifyContent: 'center',
-                width: DeviceWidth * 0.5,
-              }}>
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontSize: 17,
-                  fontWeight: '600',
-                  color: '#202020',
-                  lineHeight: 25,
-                  fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                }}>
-                {data?.workout_name}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontWeight: '600',
-                  color: '#202020',
-                  lineHeight: 30,
-
-                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                }}>
-                {data?.total_exercises}
-                {' Exercises'}
-              </Text>
-            </View>
-          </View>
-          <TouchableOpacity
-            onPress={() => {
-              setIsMenuOpen(true);
-            }}>
-            <Icons name="dots-vertical" size={30} color={'#000'} />
-          </TouchableOpacity>
-        </View>
-        <View style={{width: '95%', alignSelf: 'center', top: -20}}>
-          <Text
+        <View style={{width: '98%', alignSelf: 'center'}}>
+          <View
             style={{
-              color: AppColor.BLACK,
-              fontFamily: 'Montserrat-SemiBold',
-              fontWeight: '700',
-              lineHeight: 20,
-              fontSize: 20,
-              top: 15,
-              marginVertical: 15,
-              alignItems: 'center',
+              width: '100%',
+              borderRadius: 10,
+              backgroundColor: '#FDFDFD',
+              marginVertical: 8,
+              flexDirection: 'row',
+              alignSelf: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: 20,
+              padding: 5,
             }}>
-            Exercises
-          </Text>
-        </View>
-        <View style={{paddingBottom: 10, flex: 1}}>
-          <FlatList
-            data={data?.exercise_data}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={renderItem}
-            ListEmptyComponent={emptyComponent}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
-            updateCellsBatchingPeriod={100}
-            removeClippedSubviews={true}
-          />
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Image
+                // source={{uri: data.workout_image_link}}
+                source={
+                  data?.image == '' ? localImage.NOWORKOUT : {uri: data?.image}
+                }
+                style={{
+                  width: 70,
+                  height: 70,
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                  borderRadius: 10,
+
+                  marginHorizontal: -7,
+                }}
+                resizeMode="cover"
+              />
+              <View
+                style={{
+                  marginHorizontal: 25,
+                  justifyContent: 'center',
+                  width: DeviceWidth * 0.5,
+                }}>
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    fontSize: 17,
+                    fontWeight: '600',
+                    color: '#202020',
+                    lineHeight: 25,
+                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                  }}>
+                  {data?.workout_name}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontWeight: '600',
+                    color: '#202020',
+                    lineHeight: 30,
+
+                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                  }}>
+                  {data?.total_exercises}
+                  {' Exercises'}
+                </Text>
+              </View>
+            </View>
+            <TouchableOpacity
+              onPress={() => {
+                setIsMenuOpen(true);
+              }}>
+              <Icons name="dots-vertical" size={30} color={'#000'} />
+            </TouchableOpacity>
+          </View>
+          <View style={{width: '95%', alignSelf: 'center', top: -20}}>
+            <Text
+              style={{
+                color: AppColor.BLACK,
+                fontFamily: 'Montserrat-SemiBold',
+                fontWeight: '700',
+                lineHeight: 20,
+                fontSize: 20,
+                top: 15,
+                marginVertical: 15,
+                alignItems: 'center',
+              }}>
+              Exercises
+            </Text>
+          </View>
+          <View style={{paddingBottom: 10}}>
+            <FlatList
+              data={data?.exercise_data}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={renderItem}
+              ListEmptyComponent={emptyComponent}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
+            />
+          </View>
         </View>
         {data?.exercise_data.length > 0 && (
-          <View style={{alignSelf: 'flex-end'}}>
+          <View style={{position: 'absolute', bottom: 0, right: 0}}>
             <GradientButton
               // play={false}
               // oneDay
@@ -692,7 +694,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
         </BlurView>
       </Modal>
       {/* {bannerAdsDisplay()} */}
-          <BannerAdd bannerAdId={bannerAdId} />
+      <BannerAdd bannerAdId={bannerAdId} />
     </>
   );
 };

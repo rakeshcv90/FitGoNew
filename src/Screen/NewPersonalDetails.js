@@ -154,7 +154,7 @@ const NewPersonalDetails = ({route, navigation}) => {
 
   const handleFormSubmit = async (values, action) => {
     setForLoading(true);
-    AnalyticsConsole(`PROFILE_UPDATE_BUTTON`);
+    // AnalyticsConsole(`PROFILE_UPDATE_BUTTON`);
     try {
       const dataItem = await axios(`${NewAppapi.UpdateUserProfile}`, {
         method: 'POST',
@@ -181,7 +181,7 @@ const NewPersonalDetails = ({route, navigation}) => {
           workout_plans: values.workout_plans,
         },
       });
-
+console.log(getUserDataDetails.login_token,values.name)
       if (dataItem.data.msg == 'User Updated Successfully') {
         showMessage({
           message: 'Details updated successfully',
@@ -208,7 +208,7 @@ const NewPersonalDetails = ({route, navigation}) => {
         setForLoading(false);
       } else {
         showMessage({
-          message: dataItem.data.msg,
+          message: dataItem.data.msg??"helloo",
           floating: true,
           type: 'danger',
           animationDuration: 750,

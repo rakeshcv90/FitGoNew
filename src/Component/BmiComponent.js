@@ -268,7 +268,7 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
             }}
           />
           <View
-            style={[styles.View3, {marginVertical: 20, alignItems: 'center'}]}>
+            style={[styles.View3, {marginTop: 20, alignItems: 'center'}]}>
             <Text
               style={[styles.txt3, {color: AppColor.RED}]}
               onPress={() => setModalVisible(false)}>
@@ -360,6 +360,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: AppColor.BLACK,
     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    fontWeight:'600'
   },
   txt2: {
     color: AppColor.BLACK,

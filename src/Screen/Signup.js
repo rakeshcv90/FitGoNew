@@ -66,6 +66,7 @@ const Signup = ({navigation}) => {
   const [cancelLogin, setCancelLogin] = useState(false);
   const isFocused = useIsFocused();
   const getFcmToken = useSelector(state => state.getFcmToken);
+  const getOfferAgreement = useSelector(state => state.getOfferAgreement);
 
   useEffect(() => {
     requestPermissionforNotification(dispatch);
@@ -998,7 +999,11 @@ const Signup = ({navigation}) => {
       } else {
         setForLoading(false);
         dispatch(setUserProfileData([]));
-        navigationRef.navigate('BottomTab');
+        if (getOfferAgreement?.term_condition) {
+          navigationRef.navigate('BottomTab');
+        } else {
+          navigationRef.navigate('OfferTerms');
+        }
       }
     } catch (error) {
       console.log('User Profile Error', error);
@@ -1449,6 +1454,7 @@ var styles = StyleSheet.create({
     lineHeight: 15,
     fontWeight: '400',
     textDecorationLine: 'underline',
+    fontFamily:Fonts.MONTSERRAT_SEMIBOLD
   },
   LoginText3: {
     fontSize: 16,

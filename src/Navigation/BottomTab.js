@@ -148,7 +148,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                   styles.tabButton,
                   {
                     marginVertical: 10,
-                    paddingHorizontal: 5,
+                    paddingHorizontal: 4,
                   },
                 ]}>
                 <Image

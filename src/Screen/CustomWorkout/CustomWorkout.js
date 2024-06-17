@@ -15,11 +15,9 @@ import NewHeader from '../../Component/Headers/NewHeader';
 import {useSelector, useDispatch} from 'react-redux';
 import {TouchableOpacity} from 'react-native';
 import {AppColor, Fonts} from '../../Component/Color';
-
 import LinearGradient from 'react-native-linear-gradient';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
-
 import {TextInput} from 'react-native-paper';
 import {showMessage} from 'react-native-flash-message';
 import {PERMISSIONS, request} from 'react-native-permissions';
@@ -113,7 +111,7 @@ const CustomWorkout = ({navigation}) => {
                 navigation.navigate('CustomWorkoutDetails', {item: item});
               }}
               style={{
-                width: '97%',
+                width: '100%',
                 borderRadius: 10,
                 backgroundColor: AppColor.WHITE,
                 marginVertical: 8,
@@ -202,7 +200,7 @@ const CustomWorkout = ({navigation}) => {
               <Image
                 source={localImage.Next}
                 resizeMode="contain"
-                style={{width: 30, height: 30}}
+                style={{width: 30, height: 30, right: -3}}
               />
             </TouchableOpacity>
             {getAdsDisplay(index, item)}
@@ -671,6 +669,8 @@ const styles = StyleSheet.create({
 
   meditionBox: {
     backgroundColor: 'white',
+    width: '92%',
+    alignSelf: 'center',
   },
   buttonStyle: {
     width: 180,
