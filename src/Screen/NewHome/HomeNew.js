@@ -1193,19 +1193,19 @@ const HomeNew = ({navigation}) => {
 
               HandleSave();
             }}>
-            <LinearGradient
-              colors={[AppColor.RED1, AppColor.RED1, AppColor.RED]}
-              start={{x: 0, y: 1}}
-              end={{x: 1, y: 0}}
+            <View
+        
               style={{
                 width: DeviceWidth * 0.3,
                 height: DeviceHeigth * 0.04,
-                borderRadius: 12,
+                borderRadius: 6,
                 justifyContent: 'center',
                 alignItems: 'center',
+                backgroundColor: AppColor.NEW_DARK_RED,
               }}>
               <Text style={[styles.title, {color: AppColor.WHITE}]}>Save</Text>
-            </LinearGradient>
+            </View>
+   
           </TouchableOpacity>
         </View>
       </Modal>
@@ -1298,10 +1298,10 @@ const HomeNew = ({navigation}) => {
             }}>
             {getTimeOfDayMessage() +
               ', ' +
-              (Object.keys(getUserDataDetails).length > 0
-                ? getUserDataDetails.name == null
+              (Object.keys(getUserDataDetails)?.length > 0
+                ? getUserDataDetails?.name == null
                   ? 'Guest'
-                  : getUserDataDetails.name.split(' ')[0]
+                  : getUserDataDetails?.name.split(' ')[0]
                 : 'Guest')}
           </Text>
           {enteredCurrentEvent && (
@@ -2143,10 +2143,19 @@ const HomeNew = ({navigation}) => {
                   source={require('../../Icon/Images/NewImage2/diet.png')}
                   resizeMode="contain"
                   style={{
-                    width: DeviceHeigth >= 1024 ? 100 : 60,
-                    height: DeviceHeigth >= 1024 ? 250 : DeviceHeigth * 0.07,
-                    right: DeviceHeigth >= 1024 ? 0 : DeviceHeigth * 0.04,
-                    top: DeviceHeigth >= 1024 ? -40 : DeviceHeigth * 0.065,
+                    width: DeviceHeigth >= 1024 ? 80 : 60,
+                    height:
+                      DeviceHeigth >= 1024
+                        ? DeviceHeigth * 0.07
+                        : DeviceHeigth * 0.06,
+                    right:
+                      DeviceHeigth >= 1024
+                        ? DeviceHeigth * 0.03
+                        : DeviceHeigth * 0.05,
+                    top:
+                      DeviceHeigth >= 1024
+                        ? DeviceHeigth * 0.065
+                        : DeviceHeigth * 0.07,
                   }}
                 />
               </View>

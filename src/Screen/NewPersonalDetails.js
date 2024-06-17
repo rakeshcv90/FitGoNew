@@ -7,7 +7,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import NewHeader from '../Component/Headers/NewHeader';
 import {AppColor} from '../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../Component/Config';
@@ -38,6 +38,7 @@ import axios from 'axios';
 import ActivityLoader from '../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
 import {AnalyticsConsole} from '../Component/AnalyticsConsole';
+import NewInputText from '../Component/NewInputText';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -55,9 +56,8 @@ const NewPersonalDetails = ({route, navigation}) => {
   const getLaterButtonData = useSelector(state => state.getLaterButtonData);
   const [goalsData, setGoalsData] = useState([]);
   const completeProfileData = useSelector(state => state.completeProfileData);
-
+  const inputRef = useRef(null);
   useEffect(() => {
-    // ProfileDataAPI();
     getUserAllInData();
   }, []);
   const data = [
@@ -125,30 +125,6 @@ const NewPersonalDetails = ({route, navigation}) => {
     {label: 'Workout Created by Us', value: 'AppCreated'},
     {label: 'Custom Workout', value: 'CustomCreated'},
   ];
-  // const ProfileDataAPI = async () => {
-  //   try {
-  //     const res = await axios({
-  //       url: NewAppapi.Get_COMPLETE_PROFILE,
-  //       method: 'get',
-  //     });
-
-  //     if (res.data) {
-  //       dispatch(setCompleteProfileData(res.data));
-  //       const temp = res.data?.goal?.filter(
-  //         item => item?.goal_gender == getUserDataDetails?.gender,
-  //       );
-  //       setGoalsData(temp);
-  //     } else {
-  //       dispatch(setCompleteProfileData([]));
-  //       setGoalsData([]);
-  //     }
-  //   } catch (error) {
-  //     dispatch(setCompleteProfileData([]));
-  //     setGoalsData([]);
-
-  //     console.log(error);
-  //   }
-  // };
 
   const getUserAllInData = async () => {
     try {
@@ -256,7 +232,7 @@ const NewPersonalDetails = ({route, navigation}) => {
         setForLoading(false);
       } else {
         showMessage({
-          message: dataItem.data.msg??"helloo",
+          message: dataItem.data.msg ?? 'helloo',
           floating: true,
           type: 'danger',
           animationDuration: 750,
@@ -327,8 +303,10 @@ const NewPersonalDetails = ({route, navigation}) => {
                       paddingTop: 5,
                       marginLeft: 10,
                     }}>
-                    <InputText
+              
+                    {/* <InputText
                       errors={errors.name}
+                      ref={inputRef}
                       touched={touched.name}
                       value={values.name}
                       onBlur={handleBlur('name')}
@@ -338,11 +316,16 @@ const NewPersonalDetails = ({route, navigation}) => {
                           icon={() => (
                             <TouchableOpacity
                               onPress={() => {
-                                if (!isEditible) {
-                                  setEditable(true);
-                                } else {
-                                  setEditable(false);
-                                }
+                                setEditable(prev => {
+                                  const newEditableState = !prev;
+                                  // We need to defer the focus call until the state has updated
+                                  if (!prev) {
+                                    setTimeout(() => {
+                                      inputRef.current?.focus();
+                                    }, 0);
+                                  }
+                                  return newEditableState;
+                                });
                               }}>
                               <Image
                                 source={localImage.Pen_p}
@@ -358,6 +341,16 @@ const NewPersonalDetails = ({route, navigation}) => {
                       label="Full Name"
                       editable={isEditible}
                       placeholder="Full Name"
+                    /> */}
+                    <NewInputText
+                      errors={errors.name}
+                      touched={touched.name}
+                      value={values.name}
+                      onBlur={handleBlur('name')}
+                      onChangeText={handleChange('name')}
+                      colorText={false}
+                       placeholder="Full Name"
+                         label="Full Name"
                     />
                   </View>
                   <View

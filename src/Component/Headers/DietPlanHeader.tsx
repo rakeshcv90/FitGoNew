@@ -63,7 +63,7 @@ const DietPlanHeader: FC<Props> = ({
             : Platform.OS == 'ios'
             ? (DeviceHeigth * 13) / 100
             : (DeviceHeigth * 10) / 100,
-          left: 1,
+         // left: 1,
           paddingTop: paddingTop
             ? paddingTop
             : Platform.OS == 'android'
@@ -75,13 +75,13 @@ const DietPlanHeader: FC<Props> = ({
         <View style={{width: 20}}></View>
       ) : (
         <TouchableOpacity
-          style={{
-            left: left
-              ? left
-              : DeviceHeigth >= 1024
-              ? DeviceWidth * 0.045
-              : DeviceWidth * 0.04,
-          }}
+          // style={{
+          //   left: left
+          //     ? left
+          //     : DeviceHeigth >= 1024
+          //     ? DeviceWidth * 0.045
+          //     : DeviceWidth * 0.04,
+          // }}
           onPress={() => {
             if (backPressCheck && onPress) {
               onPress();
