@@ -12,7 +12,14 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../Config';
 import {locationPermission} from '../../Screen/Terms&Country/LocationPermission';
 import axios from 'axios';
 import {showMessage} from 'react-native-flash-message';
-import {Setmealdata, setAgreementContent, setBanners, setCompleteProfileData, setOfferAgreement, setStoreData} from '../ThemeRedux/Actions';
+import {
+  Setmealdata,
+  setAgreementContent,
+  setBanners,
+  setCompleteProfileData,
+  setOfferAgreement,
+  setStoreData,
+} from '../ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {openSettings} from 'react-native-permissions';
@@ -25,7 +32,15 @@ import {AppColor} from '../Color';
 import ActivityLoader from '../ActivityLoader';
 import {FlatList} from 'react-native-gesture-handler';
 import NameUpdateModal from './NameUpdateModal';
-const Banners = ({type1, type2, onPress, navigation}) => {
+import ThemeReducer from '../ThemeRedux/Reducer';
+const Banners = ({
+  type1,
+  type2,
+  onPress,
+  navigation,
+  locationP,
+  setLocationP,
+}) => {
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
   const getPurchaseHistory = useSelector(state => state?.getPurchaseHistory);
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
@@ -41,7 +56,7 @@ const Banners = ({type1, type2, onPress, navigation}) => {
   useEffect(() => {
     if (Object.keys(getBanners).length == 0) {
       //bannerApi();
-      getUserAllInData()
+      getUserAllInData();
     }
   }, []);
   const handleStart = () => {
@@ -54,17 +69,21 @@ const Banners = ({type1, type2, onPress, navigation}) => {
         locationPermission()
           .then(result => {
             if (result == 'blocked') {
-              showPermissionAlert();
+              setLocationP(true);
+              setLoaded(true)
             } else if (result === 'denied') {
-              StoreAgreementApi('');
+              setLocationP(true);
+              setLoaded(true)
             } else if (result) {
               StoreAgreementApi(result);
             } else if (!result) {
-              StoreAgreementApi('');
+              setLocationP(true);
+              setLoaded(true)
             }
           })
           .catch(err => {
             console.log('location Error', err);
+            setLoaded(true)
           });
       }
     } else {
@@ -184,7 +203,7 @@ const Banners = ({type1, type2, onPress, navigation}) => {
       {cancelable: false},
     );
   };
- 
+
   const getUserAllInData = async () => {
     try {
       const responseData = await axios.get(
@@ -215,14 +234,12 @@ const Banners = ({type1, type2, onPress, navigation}) => {
         dispatch(Setmealdata(responseData?.data?.diets));
         dispatch(setStoreData(responseData?.data?.types));
         dispatch(setCompleteProfileData(responseData?.data?.additional_data));
-       
       }
     } catch (error) {
       console.log('all_in_one_api_error', error);
       dispatch(Setmealdata([]));
       dispatch(setCompleteProfileData([]));
       dispatch(setStoreData([]));
-     
     }
   };
 

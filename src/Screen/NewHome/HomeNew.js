@@ -89,6 +89,7 @@ import {checkLocationPermission} from '../Terms&Country/LocationPermission';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import {handleStart} from '../../Component/Utilities/Bannerfunctions';
 import FitCoins from '../../Component/Utilities/FitCoins';
+import { LocationPermissionModal } from '../../Component/Utilities/LocationPermission';
 
 const HomeNew = ({navigation}) => {
   const dispatch = useDispatch();
@@ -133,6 +134,7 @@ const HomeNew = ({navigation}) => {
     state => state?.enteredUpcomingEvent,
   );
   const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
+  const [locationP1,setLocationP1]=useState(false)
   // const [backPressCount, setBackPressCount] = useState(0);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
 
@@ -1323,6 +1325,8 @@ const HomeNew = ({navigation}) => {
         <Banners
           type1={BannerType1}
           type2={Bannertype2}
+          locationP={locationP1}
+          setLocationP={setLocationP1}
           navigation={navigation}
         />
 
@@ -2216,6 +2220,7 @@ const HomeNew = ({navigation}) => {
       {modalVisible ? <UpdateGoalModal /> : null}
       <PermissionModal locationP={locationP} setLocationP={setLocationP} />
       <RewardModal visible={getRewardModalStatus} navigation={navigation} />
+      <LocationPermissionModal locationP={locationP1} setLocationP={setLocationP1}/>
     </SafeAreaView>
   );
 };

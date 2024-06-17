@@ -19,7 +19,6 @@ import {
   NewApi,
   NewAppapi,
 } from '../../Component/Config';
-import RadioButtons from '../../Component/Utilities/RadioButtons';
 import FitText from '../../Component/Utilities/FitText';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import VersionNumber from 'react-native-version-number';
@@ -38,6 +37,7 @@ import {
   setStoreData,
 } from '../../Component/ThemeRedux/Actions';
 import {useSelector, useDispatch} from 'react-redux';
+import {BlurView} from '@react-native-community/blur';
 const radioData = [
   {
     id: 1,
@@ -120,7 +120,7 @@ const OfferTerms = ({navigation, route}: any) => {
         console.log('version error', responseData?.data?.msg);
       } else {
         const objects = {};
-        responseData.data.data.forEach((item:any) => {
+        responseData.data.data.forEach((item: any) => {
           objects[item?.type] = item?.image;
         });
 
@@ -129,14 +129,12 @@ const OfferTerms = ({navigation, route}: any) => {
         dispatch(Setmealdata(responseData?.data?.diets));
         dispatch(setStoreData(responseData?.data?.types));
         dispatch(setCompleteProfileData(responseData?.data?.additional_data));
-       
       }
     } catch (error) {
       console.log('all_in_one_api_error', error);
       dispatch(Setmealdata([]));
       dispatch(setCompleteProfileData([]));
       dispatch(setStoreData([]));
-     
     }
   };
   const handleRadioButton = (param: any) => {
@@ -153,7 +151,9 @@ const OfferTerms = ({navigation, route}: any) => {
           />
         </TouchableOpacity>
         <View>
-          <Text style={styles.policyText}>By continuing you accept our terms and conditions</Text>
+          <Text style={styles.policyText}>
+            By continuing you accept our terms and conditions
+          </Text>
         </View>
       </View>
     );
@@ -243,58 +243,66 @@ const OfferTerms = ({navigation, route}: any) => {
                   marginRight: 16,
                 }}>
                 <Modal transparent visible={opened}>
-                  <TouchableOpacity
-                    style={{flex: 1}}
-                    onPress={() => setOpened(false)}>
-                    <View
-                      style={{
-                        // width: DeviceWidth * 0.3,
-                        backgroundColor: 'lightgrey',
-                        justifyContent: 'flex-end',
-                        alignSelf: 'flex-end',
-                        top: DeviceHeigth * 0.1,
-                        marginRight: 16,
-                        paddingHorizontal: 10,
-                        paddingVertical: 8,
-                      }}>
+                  <BlurView
+                    style={styles.modalContainer1}
+                    blurType="light"
+                    blurAmount={1}
+                    reducedTransparencyFallbackColor="white">
+                    <TouchableOpacity
+                      style={{}}
+                      onPress={() => setOpened(false)}>
                       <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <RadioButton
-                          value="English"
-                          status={
-                            language === 'English' ? 'checked' : 'unchecked'
-                          }
-                          onPress={() => {
-                            setLanguage('English');
-                            handleRadioButton('term_condition_english');
-                            setTimeout(() => {
-                              setOpened(!opened);
-                            }, 250);
-                          }}
-                          color={AppColor.RED}
-                        />
-                        <Text style={{color: AppColor.BLACK}}>English</Text>
+                        style={{
+                          // width: DeviceWidth * 0.3,
+                          backgroundColor: AppColor.BACKGROUNG,
+                          justifyContent: 'flex-end',
+                          alignSelf: 'flex-end',
+                          top: DeviceHeigth * 0.1,
+                          marginRight: 16,
+                          paddingHorizontal: 10,
+                          paddingVertical: 8,
+                          borderRadius: 12,
+                          // borderWidth: 1,
+                        }}>
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <RadioButton
+                            value="English"
+                            status={
+                              language === 'English' ? 'checked' : 'unchecked'
+                            }
+                            onPress={() => {
+                              setLanguage('English');
+                              handleRadioButton('term_condition_english');
+                              setTimeout(() => {
+                                setOpened(!opened);
+                              }, 250);
+                            }}
+                            color={AppColor.RED}
+                          />
+                          <Text style={{color: AppColor.BLACK}}>English</Text>
+                        </View>
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <RadioButton
+                            value="Hindi"
+                            status={
+                              language === 'Hindi' ? 'checked' : 'unchecked'
+                            }
+                            onPress={() => {
+                              setLanguage('Hindi');
+                              handleRadioButton('term_condition_hindi');
+                              setTimeout(() => {
+                                setOpened(!opened);
+                              }, 250);
+                            }}
+                            color={AppColor.RED}
+                          />
+                          <Text style={{color: AppColor.BLACK}}>Hindi</Text>
+                        </View>
                       </View>
-                      <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <RadioButton
-                          value="Hindi"
-                          status={
-                            language === 'Hindi' ? 'checked' : 'unchecked'
-                          }
-                          onPress={() => {
-                            setLanguage('Hindi');
-                            handleRadioButton('term_condition_hindi');
-                            setTimeout(() => {
-                              setOpened(!opened);
-                            }, 250);
-                          }}
-                          color={AppColor.RED}
-                        />
-                        <Text style={{color: AppColor.BLACK}}>Hindi</Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
+                    </TouchableOpacity>
+                  </BlurView>
                 </Modal>
               </View>
             )}
@@ -384,5 +392,12 @@ const styles = StyleSheet.create({
     paddingRight: DeviceWidth * 0.08,
     marginTop: DeviceHeigth * 0.02,
     marginBottom: DeviceWidth * 0.1,
+  },
+  modalContainer1: {
+    flex: 1,
+    backgroundColor: `rgba(0,0,0,0.2)`,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // Semi-transparent background
   },
 });

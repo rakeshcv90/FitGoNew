@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Alert} from 'react-native';
+import {View, Text, StyleSheet, Alert, Linking} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
 import NewHeader from '../../Component/Headers/NewHeader';
@@ -20,33 +20,36 @@ import {showMessage} from 'react-native-flash-message';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import FitText from '../../Component/Utilities/FitText';
 import {openSettings} from 'react-native-permissions';
+import { LocationPermissionModal} from '../../Component/Utilities/LocationPermission';
+
 const CountryLocation = ({navigation, route}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const [loaded, setLoaded] = useState(true);
   const routeName = route?.params?.routeName;
   const CustomCreated = route?.params?.CustomCreated;
+  const [locationP, setLocationP] = useState(false);
   const dispatch = useDispatch();
   const getCountry = async () => {
     setLoaded(false);
-      locationPermission()
-        .then(result => {
-          if (result == 'blocked') {
-            showPermissionAlert();
-          } else if (result === 'denied') {
-            StoreAgreementApi('');
-          } else if(result){
-            StoreAgreementApi(result);
-            dispatch(setRewardModal(true));
-          }else if(!result){
-            StoreAgreementApi('');
-          }
-        })
-        .catch(err => {
-          console.log('location Error', err);
-        });
+    locationPermission()
+      .then(result => {
+        if (result == 'blocked') {
+          setLocationP(true);
+        } else if (result === 'denied') {
+          setLocationP(true);
+        } else if (result) {
+          StoreAgreementApi(result);
+          dispatch(setRewardModal(true));
+        } else if (!result) {
+          setLocationP(true);
+        }
+      })
+      .catch(err => {
+        console.log('location Error', err);
+      });
   };
   const StoreAgreementApi = async country => {
-    setLoaded(false)
+    setLoaded(false);
     const payload = new FormData();
     payload.append('version', VersionNumber?.appVersion);
     payload.append('user_id', getUserDataDetails?.id);
@@ -91,7 +94,7 @@ const CountryLocation = ({navigation, route}) => {
         setLoaded(true);
       } else {
         dispatch(setOfferAgreement(ApiCall?.data));
-        
+
         setLoaded(true);
         if (CustomCreated) {
           navigation.navigate('CustomWorkout', {routeName: routeName});
@@ -127,6 +130,7 @@ const CountryLocation = ({navigation, route}) => {
       {cancelable: false},
     );
   };
+ 
   return (
     <View style={styles.Container}>
       {/* <DietPlanHeader header="" shadow /> */}
@@ -149,7 +153,11 @@ const CountryLocation = ({navigation, route}) => {
           value="We need your current location to provide"
           textAlign="center"
         />
-        <FitText type="SubHeading" value="you with better services" textAlign="center" />
+        <FitText
+          type="SubHeading"
+          value="you with better services"
+          textAlign="center"
+        />
       </View>
       <View style={styles.View2}>
         <NewButton
@@ -166,6 +174,7 @@ const CountryLocation = ({navigation, route}) => {
           Skip
         </Text> */}
       </View>
+      <LocationPermissionModal locationP={locationP} setLocationP={setLocationP} />
     </View>
   );
 };
@@ -214,5 +223,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     lineHeight: 24,
   },
+ 
 });
 export default CountryLocation;
