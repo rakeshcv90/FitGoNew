@@ -1003,11 +1003,11 @@ const MyPlans = ({navigation}: any) => {
           emptyComponent()
         )}
       </View>
-      {/* <DownloadingWorkout
+      <DownloadingWorkout
         hasAds={hasAds}
         downloaded={downloaded}
         buttonClicked={buttonClicked}
-      /> */}
+      />
     </SafeAreaView>
   );
 };

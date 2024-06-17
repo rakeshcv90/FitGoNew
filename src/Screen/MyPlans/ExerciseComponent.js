@@ -35,7 +35,7 @@ export const ExerciseComponetWithoutEvents = ({
               <Text style={styles.txt2}>{day ?? 'Monday'}</Text>
             </View>
           </View>
-          <NewButton title={'Start'} onPress={onPress} withAnimation download={download}/>
+          <NewButton title={'Start'} onPress={onPress} />
           <Text
             style={[
               styles.txt3,
@@ -227,7 +227,7 @@ export const ExerciseComponentWithEvent = ({
             </TouchableOpacity>
           </View>
           {day == WeekArray[currentDay] ? (
-            <NewButton title={'Start'} onPress={onPress} withAnimation download={download}/>
+            <NewButton title={'Start'} onPress={onPress} />
           ) : null}
           <Text
             style={[
