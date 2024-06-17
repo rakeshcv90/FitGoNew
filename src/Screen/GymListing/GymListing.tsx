@@ -269,8 +269,10 @@ const GymListing = ({navigation}: any) => {
   //   }
   // };
   const getAdsDisplay = (item, index) => {
+    const noOrNoobPlan =
+      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
     if (gymsData?.length >= 1) {
-      if (index == 0 && gymsData?.length > 1) {
+      if (noOrNoobPlan&& index == 0 && gymsData?.length > 1) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0) {
         return getNativeAdsDisplay();

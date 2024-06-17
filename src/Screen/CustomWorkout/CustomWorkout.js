@@ -210,8 +210,10 @@ const CustomWorkout = ({navigation}) => {
     [isLoading],
   );
   const getAdsDisplay = (index, item) => {
+    const noOrNoobPlan =
+      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
     if (customWorkoutData.length >= 1) {
-      if (index == 0 && customWorkoutData.length > 1) {
+      if (index == 0 && customWorkoutData.length > 1 && noOrNoobPlan) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0 && customWorkoutData.length > 8) {
         return getNativeAdsDisplay();

@@ -219,13 +219,12 @@ const UpcomingEvent = ({navigation, route}: any) => {
       </Modal>
     );
   };
-  // console.log("MOMENT",moment().day(getPurchaseHistory?.currentDay).format('dddd'))
-  console.log(
-    'mo',
-    getPurchaseHistory,
-    eventType,
-    // moment().day(getPurchaseHistory?.currentDay).format('YYYY-MM-DD'),
-  );
+  // console.log(
+  //   'mo',
+  //   getPurchaseHistory,
+  //   eventType,
+  //   // moment().day(getPurchaseHistory?.currentDay).format('YYYY-MM-DD'),
+  // );
 
   const dayLeft =
     getPurchaseHistory?.upcoming_day_status == 1 &&
@@ -273,7 +272,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
               fontWeight="600"
               fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
             />
-            {eventType == 'upcoming' && (
+            {eventType == 'current' && (
               <View
                 style={{
                   justifyContent: 'space-between',
@@ -557,7 +556,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
                 />
                 <FitText
                   type="normal"
-                  value="Winning price 1000/-"
+                  value="Winning price ₹1000/-"
                   color="#333333E5"
                   marginVertical={3}
                 />
@@ -657,12 +656,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
               />
             </TouchableOpacity>
           )}
-          <FitText
-            type="normal"
-            value="Cancel Plan"
-            color={AppColor.NEW_DARK_RED}
-            fontFamily={Fonts.MONTSERRAT_MEDIUM}
-            marginVertical={15}
+          <TouchableOpacity
             onPress={() => {
               AnalyticsConsole(`CanP_BTN`);
               PLATFORM_IOS
@@ -671,7 +665,19 @@ const UpcomingEvent = ({navigation, route}: any) => {
                     'https://play.google.com/store/account/subscriptions',
                   );
             }}
-          />
+            style={{
+              width: DeviceWidth * 0.9,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingVertical: 10,
+            }}>
+            <FitText
+              type="normal"
+              value="Cancel Plan"
+              color={AppColor.NEW_DARK_RED}
+              fontFamily={Fonts.MONTSERRAT_MEDIUM}
+            />
+          </TouchableOpacity>
         </View>
       )}
       <ChangeModal />

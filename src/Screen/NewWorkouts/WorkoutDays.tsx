@@ -41,7 +41,7 @@ import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
 import FastImage from 'react-native-fast-image';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
-import { AddCountFunction } from '../../Component/Utilities/AddCountFunction';
+import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -800,10 +800,11 @@ const WorkoutDays = ({navigation, route}: any) => {
       </>
     );
   };
-  const planType = useSelector((state: any) => state.planType);
+  const noOrNoobPlan =
+    getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
   const getAdsDisplay = (index: number, item: any) => {
     if (Object.values(data?.days).length >= 1) {
-      if (planType < 69 && index == 1) {
+      if (noOrNoobPlan && index == 1) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0 && Object.values(data?.days).length > 7) {
         return getNativeAdsDisplay();

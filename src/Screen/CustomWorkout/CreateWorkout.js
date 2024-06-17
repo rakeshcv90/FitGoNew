@@ -234,8 +234,10 @@ const CreateWorkout = ({navigation, route}) => {
     [selectedItems, bodyPart],
   );
   const getAdsDisplay = (index, item) => {
+    const noOrNoobPlan =
+      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
     if (filteredCategories.length > 1) {
-      if (getPurchaseHistory?.plan == 'noob' && index == 0) {
+      if (noOrNoobPlan && index == 0) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0 && filteredCategories.length > 8) {
         return getNativeAdsDisplay();

@@ -207,8 +207,10 @@ const NewFocusWorkouts = ({route, navigation}) => {
   //   }
   // };
   const getAdsDisplay = (item, index) => {
+    const noOrNoobPlan =
+      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
     if (execrise.length >= 1) {
-      if (index == 0 && execrise.length > 1) {
+      if (noOrNoobPlan&& index == 0 && execrise.length > 1) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0 && execrise.length > 8) {
         return getNativeAdsDisplay();
