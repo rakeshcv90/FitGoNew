@@ -304,6 +304,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
     );
     return (
       <>
+     
         <RBSheet
           ref={refStandard}
           // draggable
@@ -315,7 +316,12 @@ const NewFocusWorkouts = ({route, navigation}) => {
             container: {
               borderTopLeftRadius: 10,
               borderTopRightRadius: 10,
-              height: DeviceHeigth * 0.6,
+              height:
+                DeviceHeigth >= 1024
+                  ? DeviceHeigth * 0.45
+                  : DeviceHeigth >= 856
+                  ? DeviceHeigth * 0.55
+                  : DeviceHeigth * 0.6,
             },
             draggableIcon: {
               width: 80,
@@ -419,7 +425,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           // marginHorizontal: 10,
                           marginEnd: 20,
                           width: DeviceWidth / 2.4,
-                          height: 124,
+                          //height: 124,
                           justifyContent: 'space-between',
                           marginBottom: 20,
                           alignSelf: 'center',
@@ -646,6 +652,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
           SearchButton={
             route?.params?.focusedPart == 'Full Body' ? false : true
           }
+          shadow
           // backButton={true}
           // backPressCheck={true}
           // onPress={()=>{

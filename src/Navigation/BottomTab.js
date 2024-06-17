@@ -66,7 +66,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
             target: route.key,
           });
           if (!isFocused && !event.defaultPrevented) {
-            if (getPurchaseHistory.length > 0) {
+            if (getPurchaseHistory?.length > 0) {
               if (
                 getPurchaseHistory[0]?.plan_end_date >=
                 moment().format('YYYY-MM-DD')
