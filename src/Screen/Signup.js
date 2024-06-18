@@ -71,7 +71,6 @@ const Signup = ({navigation}) => {
   const [cancelLogin, setCancelLogin] = useState(false);
   const isFocused = useIsFocused();
   const getFcmToken = useSelector(state => state.getFcmToken);
-  const getOfferAgreement = useSelector(state => state.getOfferAgreement);
 
   useEffect(() => {
     requestPermissionforNotification(dispatch);
@@ -1032,11 +1031,7 @@ const Signup = ({navigation}) => {
       } else {
         setForLoading(false);
         dispatch(setUserProfileData([]));
-        if (getOfferAgreement?.term_condition) {
-          navigationRef.navigate('BottomTab');
-        } else {
-          navigationRef.navigate('OfferTerms');
-        }
+        navigationRef.navigate('BottomTab');
       }
     } catch (error) {
       console.log('User Profile Error', error);
@@ -1225,18 +1220,7 @@ const Signup = ({navigation}) => {
               repeat_password: '',
             }}
             onSubmit={(values, action) => {
-              if (checked) {
-                handleFormSubmit(values, action);
-              } else {
-                showMessage({
-                  message: 'Please Check Term & Condition',
-                  type: 'danger',
-                  animationDuration: 500,
-                  // statusBarHeight: StatusBar_Bar_Height+,
-                  floating: true,
-                  icon: {icon: 'auto', position: 'left'},
-                });
-              }
+              handleFormSubmit(values, action);
             }}
             validationSchema={validationSchema}>
             {({
@@ -1413,7 +1397,7 @@ const Signup = ({navigation}) => {
                     secureTextEntry={isVisiblepassword ? true : false}
                   />
                 </View>
-                <View
+                {/* <View
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -1470,7 +1454,7 @@ const Signup = ({navigation}) => {
                       </Text>{' '}
                     </Text>
                   </View>
-                </View>
+                </View> */}
                 <View style={{marginTop: DeviceHeigth * 0.05}}>
                   <Button buttonText={'Register'} onPresh={handleSubmit} />
                   {/* <Button

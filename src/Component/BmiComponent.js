@@ -268,13 +268,8 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
             }}
           />
           <View
-            style={[styles.View3, {marginTop: 20, alignItems: 'center'}]}>
-            <Text
-              style={[styles.txt3, {color: AppColor.RED}]}
-              onPress={() => setModalVisible(false)}>
-              Cancel
-            </Text>
-
+            style={[styles.View3, {marginTop: 20, alignItems: 'center',justifyContent:'flex-end'}]}>
+       
             <TouchableOpacity
               style={styles.button2}
               onPress={() => {

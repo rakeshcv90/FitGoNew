@@ -13,14 +13,13 @@ import notifee, {
   RepeatFrequency,
   TimestampTrigger,
   TriggerType,
-  
 } from '@notifee/react-native';
-
 
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {AppColor} from './Color';
 import {showMessage} from 'react-native-flash-message';
 import messaging from '@react-native-firebase/messaging';
+import {BlurView} from '@react-native-community/blur';
 
 export const AlarmNotification = async (time: any) => {
   const trigger: TimestampTrigger = {
@@ -66,9 +65,14 @@ export const AlarmNotification = async (time: any) => {
     },
     trigger,
   );
-  console.log(trigger.timestamp)
+  console.log(trigger.timestamp);
 };
-const Reminder = ({visible, setVisible, setAlarmIsEnabled, setNotificationTimer}: any) => {
+const Reminder = ({
+  visible,
+  setVisible,
+  setAlarmIsEnabled,
+  setNotificationTimer,
+}: any) => {
   const typeData = ['AM', 'PM'];
   const hourData = Array(12)
     .fill(0)
@@ -97,14 +101,14 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled, setNotificationTimer}
     if (type === 'AM' && selectedHours === 12) {
       selectedHours = 0;
     }
-    
+
     const currentTime = new Date(Date.now());
     const selectedTime = new Date(Date.now());
     selectedTime.setHours(selectedHours);
     selectedTime.setMinutes(selectedMinutes);
     try {
-      AlarmNotification(selectedTime)
-      setNotificationTimer(selectedTime)
+      AlarmNotification(selectedTime);
+      setNotificationTimer(selectedTime);
       setAlarmIsEnabled(true);
       setVisible(false);
     } catch (error) {
@@ -126,118 +130,133 @@ const Reminder = ({visible, setVisible, setAlarmIsEnabled, setNotificationTimer}
         setAlarmIsEnabled(false);
       }}
       transparent>
-      <View
+      <BlurView
         style={{
           flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <View
+
+          backgroundColor: 'rgba(0,0,0,.2)',
+        }}
+        blurType="light"
+        blurAmount={1}>
+        <TouchableOpacity
           style={{
-            width: DeviceWidth * 0.8,
-            height: DeviceHeigth * 0.3,
-            backgroundColor: AppColor.WHITE,
+            flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
-            borderRadius: 20,
-            ...Platform.select({
-              ios: {
-                shadowColor: 'rgba(0, 0, 0, 0.6)',
-                shadowOffset: {width: 0, height: 1},
-                shadowOpacity: 0.3,
-                // shadowRadius: 10,
-              },
-              android: {
-                elevation: 10,
-                shadowColor: 'rgba(0, 0, 0, 0.6)',
-                shadowOffset: {width: 5, height: 5},
-                shadowOpacity: 0.9,
-                // shadowRadius: 10,
-              },
-            }),
-          }}>
-          <Text
-            style={{
-              color: AppColor.LITELTEXTCOLOR,
-              fontSize: 16,
-              fontWeight: '700',
-              fontFamily: 'Poppins',
-              lineHeight: 25,
-            }}>
-            Schedule an Alarm
-          </Text>
+          }}
+          activeOpacity={1}
+          // onPress={() => {
+          //   setVisible(false);
+          //   setAlarmIsEnabled(false);
+          // }}
+        >
           <View
             style={{
-              flexDirection: 'row',
-              height: '70%',
+              width: DeviceWidth * 0.8,
+              height: DeviceHeigth * 0.3,
+              backgroundColor: AppColor.WHITE,
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 20,
+              ...Platform.select({
+                ios: {
+                  shadowColor: 'rgba(0, 0, 0, 0.6)',
+                  shadowOffset: {width: 0, height: 1},
+                  shadowOpacity: 0.3,
+                  // shadowRadius: 10,
+                },
+                android: {
+                  elevation: 10,
+                  shadowColor: 'rgba(0, 0, 0, 0.6)',
+                  shadowOffset: {width: 5, height: 5},
+                  shadowOpacity: 0.9,
+                  // shadowRadius: 10,
+                },
+              }),
             }}>
-            <Picker
-              style={{flex: 1}}
-              selectedValue={hours}
-              onValueChange={(itemValue: any, itemIndex) => {
-                setHours(itemValue);
+            <Text
+              style={{
+                color: AppColor.LITELTEXTCOLOR,
+                fontSize: 16,
+                fontWeight: '700',
+                fontFamily: 'Poppins',
+                lineHeight: 25,
               }}>
-              {hourData.map((hr: any) => (
-                <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
-              ))}
-            </Picker>
-            <Picker
-              style={{flex: 1}}
-              selectedValue={min}
-              onValueChange={(itemValue: any, itemIndex) => {
-                setMin(itemValue);
+              Schedule an Alarm
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                height: '70%',
               }}>
-              {minData.map((hr: any) => (
-                <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
-              ))}
-            </Picker>
-            <Picker
-              style={{flex: 1}}
-              selectedValue={type}
-              onValueChange={(itemValue: any, itemIndex) => {
-                setType(itemValue);
-              }}>
-              {typeData.map((hr: any) => (
-                <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
-              ))}
-            </Picker>
-          </View>
-          <View
-            style={{
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              width: '90%',
-            }}>
-            <TouchableOpacity
-              onPress={() => {
-                setVisible(false);
-              }}>
-              <Text
-                style={{
-                  color: '#8B8E96',
-                  fontSize: 16,
-                  fontWeight: '600',
-                  fontFamily: 'Poppins',
-                  lineHeight: 25,
+              <Picker
+                style={{flex: 1}}
+                selectedValue={hours}
+                onValueChange={(itemValue: any, itemIndex) => {
+                  setHours(itemValue);
                 }}>
-                Cancel
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={onCreateTriggerNotification}>
-              <Text
-                style={{
-                  color: '#ED4530',
-                  fontSize: 16,
-                  fontWeight: '600',
-                  fontFamily: 'Poppins',
-                  lineHeight: 25,
+                {hourData.map((hr: any) => (
+                  <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
+                ))}
+              </Picker>
+              <Picker
+                style={{flex: 1}}
+                selectedValue={min}
+                onValueChange={(itemValue: any, itemIndex) => {
+                  setMin(itemValue);
                 }}>
-                Set
-              </Text>
-            </TouchableOpacity>
+                {minData.map((hr: any) => (
+                  <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
+                ))}
+              </Picker>
+              <Picker
+                style={{flex: 1}}
+                selectedValue={type}
+                onValueChange={(itemValue: any, itemIndex) => {
+                  setType(itemValue);
+                }}>
+                {typeData.map((hr: any) => (
+                  <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
+                ))}
+              </Picker>
+            </View>
+            <View
+              style={{
+                justifyContent: 'space-between',
+                flexDirection: 'row',
+                width: '90%',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  setVisible(false);
+                }}>
+                <Text
+                  style={{
+                    color: '#8B8E96',
+                    fontSize: 16,
+                    fontWeight: '600',
+                    fontFamily: 'Poppins',
+                    lineHeight: 25,
+                  }}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={onCreateTriggerNotification}>
+                <Text
+                  style={{
+                    color: '#ED4530',
+                    fontSize: 16,
+                    fontWeight: '600',
+                    fontFamily: 'Poppins',
+                    lineHeight: 25,
+                  }}>
+                  Set
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </View>
+        </TouchableOpacity>
+      </BlurView>
     </Modal>
   );
 };

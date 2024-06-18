@@ -20,6 +20,8 @@ import FitText from '../../Component/Utilities/FitText';
 import AnimatedLottieView from 'lottie-react-native';
 import VersionNumber from 'react-native-version-number';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import ActivityLoader from '../../Component/ActivityLoader';
+import DeviceInfo from 'react-native-device-info';
 
 type TypeData = {
   name: string;
@@ -58,7 +60,7 @@ const Winner = ({navigation}: any) => {
           setUserWinner(true);
           setWinnerData(result.data?.data[0]);
         } else {
-          setUserWinner(false);
+          setUserWinner(true);
           const userIndex = result.data?.data?.findIndex(
             (item: TypeData) => item.id == getUserDataDetails?.id,
           );
@@ -134,7 +136,17 @@ const Winner = ({navigation}: any) => {
           }}
           resizeMode="contain"
         />
-        <View
+        <ImageBackground
+          source={localImage.PinkGradient}
+          tintColor={
+            winnerData?.image_path == null ? '' : AppColor.NEW_DARK_RED
+          }
+          imageStyle={{
+            width: '100%',
+            height: '105%',
+            borderRadius: 100,
+            top: -2,
+          }}
           style={{
             alignItems: 'center',
             justifyContent: 'center',
@@ -151,11 +163,13 @@ const Winner = ({navigation}: any) => {
                 fontFamily: Fonts.MONTSERRAT_MEDIUM,
                 fontSize: 32,
                 lineHeight: 40,
-                position: 'relative',
-                top: PLATFORM_IOS ? DeviceWidth * 0.05 : DeviceWidth * 0.06,
-                color: AppColor.BLACK,
+                color: AppColor.WHITE,
               }}>
-              {winnerData?.name.substring(0, 1)}
+              {winnerData?.name.split(' ') &&
+              winnerData.name.split(' ').length > 1
+                ? winnerData?.name.split(' ')[0].substring(0, 1) +
+                  winnerData?.name.split(' ')[1].substring(0, 1)
+                : winnerData?.name.substring(0, 1)}
             </Text>
           ) : (
             <Image
@@ -169,8 +183,8 @@ const Winner = ({navigation}: any) => {
               resizeMode="cover"
             />
           )}
-        </View>
-        <Rank number={1} bottom={DeviceHeigth * 0.075}  />
+        </ImageBackground>
+        <Rank number={1} bottom={DeviceHeigth * 0.075} />
         <View style={styles.row}>
           {userWinner ? (
             <AnimatedLottieView
@@ -270,7 +284,14 @@ const Winner = ({navigation}: any) => {
       </View>
     );
   };
-
+  const handleEmail = async () => {
+    AnalyticsConsole('W_GMAIL');
+    const supported = await Linking.canOpenURL('googlegmail://');
+    console.log(supported)
+    if (supported) Linking.openURL('googlegmail://');
+    else if (PLATFORM_IOS) Linking.openURL('mailto:');
+    else Linking.openURL('https://mail.google.com');
+  };
   return (
     <SafeAreaView
       style={{
@@ -336,10 +357,7 @@ const Winner = ({navigation}: any) => {
                 </Text>
               </Text>
               <TouchableOpacity
-                onPress={() => {
-                  AnalyticsConsole('W_GMAIL');
-                  Linking.openURL('googlegmail://');
-                }}
+                onPress={handleEmail}
                 style={{
                   width: DeviceWidth * 0.4,
                   justifyContent: 'center',
@@ -365,11 +383,14 @@ const Winner = ({navigation}: any) => {
           showsVerticalScrollIndicator={false}
           style={{flex: 1}}
           contentContainerStyle={[
-            styles.container,
+            // styles.container,
             {
               backgroundColor: AppColor.WHITE,
               marginHorizontal: 0,
               flexGrow: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingBottom: (DeviceHeigth * 0.1) / 2,
             },
           ]}>
           <View
@@ -386,7 +407,7 @@ const Winner = ({navigation}: any) => {
                 width: '100%',
                 height: '100%',
                 position: 'absolute',
-                top: DeviceWidth * 0.05,
+                top: DeviceWidth * 0.02,
               }}
               resizeMode="cover"
             />
@@ -400,7 +421,14 @@ const Winner = ({navigation}: any) => {
               }}
               resizeMode="contain"
             />
-            <View
+            <ImageBackground
+              source={localImage.RedGradient}
+              imageStyle={{
+                width: DeviceHeigth * 0.12,
+                height: DeviceHeigth * 0.12,
+                top: 1,
+                left: 1,
+              }}
               style={{
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -418,11 +446,13 @@ const Winner = ({navigation}: any) => {
                     fontFamily: Fonts.MONTSERRAT_MEDIUM,
                     fontSize: 32,
                     lineHeight: 40,
-                    position: 'relative',
-                    top: PLATFORM_IOS ? DeviceWidth * 0.05 : DeviceWidth * 0.06,
-                    color: AppColor.BLACK,
+                    color: AppColor.WHITE,
                   }}>
-                  {winnerData?.name.substring(0, 1)}
+                  {winnerData?.name.split(' ') &&
+                  winnerData.name.split(' ').length > 1
+                    ? winnerData?.name.split(' ')[0].substring(0, 1) +
+                      winnerData?.name.split(' ')[1].substring(0, 1)
+                    : winnerData?.name.substring(0, 1)}
                 </Text>
               ) : (
                 <Image
@@ -435,7 +465,7 @@ const Winner = ({navigation}: any) => {
                   resizeMode="cover"
                 />
               )}
-            </View>
+            </ImageBackground>
             <Rank number={1} bottom={DeviceHeigth * 0.032} />
             <View
               style={{
@@ -520,7 +550,10 @@ const Winner = ({navigation}: any) => {
                 color={AppColor.WHITE}
               />
             </View>
-            <View
+            <ImageBackground
+              source={localImage.PinkGradient}
+              tintColor={userData?.image_path == null ? '' : AppColor.WHITE}
+              imageStyle={{height: 88, width: 88, left: 1, top: 1}}
               style={{
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -538,9 +571,13 @@ const Winner = ({navigation}: any) => {
                     lineHeight: 40,
                     position: 'relative',
                     top: PLATFORM_IOS ? DeviceWidth * 0.01 : DeviceWidth * 0.01,
-                    color: AppColor.BLACK,
+                    color: AppColor.WHITE,
                   }}>
-                  {userData?.name.substring(0, 1)}
+                  {userData?.name.split(' ') &&
+                  userData.name.split(' ').length > 1
+                    ? userData?.name.split(' ')[0].substring(0, 1) +
+                      userData?.name.split(' ')[1].substring(0, 1)
+                    : userData?.name.substring(0, 1)}
                 </Text>
               ) : (
                 <Image
@@ -549,8 +586,8 @@ const Winner = ({navigation}: any) => {
                   resizeMode="cover"
                 />
               )}
-            </View>
-            <Rank number={userData?.fit_coins} bottom={-DeviceHeigth * 0.02} />
+            </ImageBackground>
+            <Rank number={userData?.rank} bottom={-DeviceHeigth * 0.02} />
 
             <FitText
               type="SubHeading"
@@ -562,7 +599,7 @@ const Winner = ({navigation}: any) => {
             <View style={{marginHorizontal: 10}}>
               <FitText
                 type="normal"
-                value={`👍 Don’t lose hope! "Losing a challenge today means winning a stronger you Tomorrow!
+                value={`Don’t lose hope! "Losing a challenge today means winning a stronger you Tomorrow!
               `}
                 color={AppColor.WHITE}
                 fontWeight="400"
@@ -603,6 +640,7 @@ const Winner = ({navigation}: any) => {
           </View>
         </ScrollView>
       )}
+      <ActivityLoader visible={loader} />
     </SafeAreaView>
   );
 };

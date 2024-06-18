@@ -552,8 +552,8 @@ const WorkoutDays = ({navigation, route}: any) => {
             styles.box,
             {
               opacity: !selected && item?.total_rest != 0 ? 0.9 : 1,
-              width:
-                DeviceHeigth < 1280 ? DeviceWidth * 0.85 : DeviceWidth * 0.89,
+              width: DeviceWidth * 0.95,
+              // DeviceHeigth < 1280 ? DeviceWidth * 0.85 : DeviceWidth * 0.89,
               height: DeviceHeigth * 0.085,
               marginTop: 6,
             },
@@ -627,8 +627,8 @@ const WorkoutDays = ({navigation, route}: any) => {
               styles.box,
               {
                 opacity: !selected && item?.total_rest != 0 ? 0.9 : 1,
-                width:
-                  DeviceHeigth < 1280 ? DeviceWidth * 0.85 : DeviceWidth * 0.89,
+                width: DeviceWidth * 0.95,
+                // DeviceHeigth < 1280 ? DeviceWidth * 0.85 : DeviceWidth * 0.89,
                 height: DeviceHeigth * 0.085,
               },
             ]}>
@@ -886,6 +886,7 @@ const WorkoutDays = ({navigation, route}: any) => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             // flexDirection: 'row',
+            paddingBottom: DeviceHeigth * 0.03,
             alignItems: 'center',
           }}>
           <View style={{top: 10}}>

@@ -101,23 +101,12 @@ const CreateWorkout = ({navigation, route}) => {
                 paddingHorizontal: 20,
                 padding: 5,
                 paddingVertical: 8,
-                // borderColor: '#D9D9D9',
-                borderColor: isSelected ? 'red' : AppColor.GRAY2,
-                borderWidth: 1,
+      
+             
+              
                 justifyContent: 'space-between',
                 backgroundColor: AppColor.WHITE,
-                shadowColor: 'grey',
-                ...Platform.select({
-                  ios: {
-                    //shadowColor: '#000000',
-                    shadowOffset: {width: 0, height: 2},
-                    shadowOpacity: 0.2,
-                    shadowRadius: 4,
-                  },
-                  android: {
-                    elevation: 0,
-                  },
-                }),
+               
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 {/* {isLoading && (
@@ -228,6 +217,17 @@ const CreateWorkout = ({navigation, route}) => {
                 resizeMode="contain"
               />
             </TouchableOpacity>
+            {index !== completeProfileData?.focusarea?.length - 1 && (
+              <View
+                style={{
+                  width: '100%',
+                  height: 1,
+
+                  alignItems: 'center',
+                  backgroundColor: '#33333314',
+                }}
+              />
+            )}
             {getAdsDisplay(index, item)}
           </>
         );
@@ -473,6 +473,7 @@ const CreateWorkout = ({navigation, route}) => {
         <View style={styles.shadow}>
           <DietPlanHeader
             header={route?.params?.workoutTitle}
+            shadow
             left={
               DeviceHeigth >= 1024 ? DeviceWidth * 0.045 : DeviceWidth * 0.02
             }

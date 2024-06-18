@@ -191,11 +191,11 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
           // onLoadStart={onLoadStart}
           // onLoad={() => setIsLoading(false)}
           style={{
-            height: DeviceWidth / 1.5,
+            height: DeviceWidth * 0.7,
             width: DeviceWidth * 0.95,
             alignSelf: 'center',
 
-            // marginTop: 10,
+            marginTop: 10,
             top: -DeviceHeigth * 0.07,
             zIndex: -1,
           }}

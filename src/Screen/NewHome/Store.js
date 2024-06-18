@@ -58,7 +58,7 @@ const Store = ({navigation}) => {
   const dispatch = useDispatch();
   useFocusEffect(
     React.useCallback(() => {
-   //   getCaterogy();
+      //   getCaterogy();
       setcategory(getStoreData);
       getProductList(productsId);
     }, [productsId]),
@@ -337,7 +337,13 @@ const Store = ({navigation}) => {
                           <LinearGradient
                             start={{x: 1, y: 0}}
                             end={{x: 0, y: 1}}
-                            colors={['#00000033', '#919EAB29']}
+                            // colors={['#00000033', '#919EAB29']}
+                            colors={[
+                              'transparent',
+                              'transparent',
+                              '#00000033',
+                              '#000',
+                            ]}
                             style={{
                               width: DeviceWidth * 0.7,
                               height: DeviceHeigth * 0.15,
@@ -347,7 +353,7 @@ const Store = ({navigation}) => {
                             <Text
                               style={{
                                 fontSize: 18,
-                                fontWeight: '500',
+                                fontWeight: '600',
                                 lineHeight: 20,
                                 fontFamily: Fonts.MONTSERRAT_BOLD,
                                 textAlign: 'center',
@@ -355,6 +361,7 @@ const Store = ({navigation}) => {
                                 alignSelf: 'flex-start',
                                 top: DeviceHeigth * 0.1,
                                 left: 20,
+                                color: '#fff',
                               }}>
                               {item.type_title}
                             </Text>
@@ -471,6 +478,7 @@ const Store = ({navigation}) => {
                     <>
                       <TouchableOpacity
                         style={styles.listItem3}
+                      activeOpacity={0.9}
                         onPress={() => {
                           analytics().logEvent(
                             `CV_FITME_CLICKED_ON_${'StoreProductList'}`,
@@ -482,12 +490,25 @@ const Store = ({navigation}) => {
                           style={{
                             width: DeviceWidth * 0.3,
                             height: DeviceWidth * 0.3,
-                            backgroundColor: '#F3F4F1',
-
+                            backgroundColor: '#fff',
                             justifyContent: 'center',
                             alignItems: 'center',
                             borderRadius: 10,
                             alignSelf: 'center',
+                            borderColor: '#fff',
+                            borderWidth: 1,
+                            shadowColor: 'grey',
+                            ...Platform.select({
+                              ios: {
+                                //shadowColor: '#000000',
+                                shadowOffset: {width: 0, height: 2},
+                                shadowOpacity: 0.2,
+                                shadowRadius: 4,
+                              },
+                              android: {
+                                elevation: 1,
+                              },
+                            }),
                           }}>
                           <Image
                             source={
@@ -535,9 +556,9 @@ const Store = ({navigation}) => {
         </ScrollView>
       </View>
       {/* {bannerAdsDisplay()} */}
-          <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
-            <BannerAdd bannerAdId={bannerAdId} />
-          </View>
+      <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
+        <BannerAdd bannerAdId={bannerAdId} />
+      </View>
     </>
   );
 };

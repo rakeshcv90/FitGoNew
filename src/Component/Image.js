@@ -184,6 +184,7 @@ export const localImage = {
   Rank1background:require('../Icon/Images/InAppRewards/Rank1background.png'),
   Coin:require('../Icon/Images/InAppRewards/Coin.png'),
   PinkGradient:require('../Icon/Images/InAppRewards/PinkGradient.png'),
+  RedGradient:require('../Icon/Images/InAppRewards/RedGradient.png'),
   BlueGradient:require('../Icon/Images/InAppRewards/BlueGradient.png'),
   Top5Boundary:require('../Icon/Images/InAppRewards/Top5Boundary.png'),
   Winner:require('../Icon/Images/InAppRewards/Winner.png'),
