@@ -106,7 +106,7 @@ notifee.createChannel({
   visibility: AndroidVisibility.PUBLIC,
   importance: AndroidImportance.HIGH,
   description: 'CHANNEL FOR NOTIFICATION',
-  sound: 'default',
+  sound: 'fitme_notification',
 });
 const DisplayNotification = async Notification => {
   console.log('NOTIFICATION', Notification.data?.type);
@@ -124,6 +124,7 @@ const DisplayNotification = async Notification => {
         android: {
           channelId: 'Fitme',
           largeIcon: 'ic_launcher',
+          sound: 'fitme_notification',
           style: {
             type: AndroidStyle.BIGPICTURE,
             picture:
@@ -134,6 +135,7 @@ const DisplayNotification = async Notification => {
         },
         ios: {
           categoryId: 'default',
+          sound: 'fitme_notification.wav',
           foregroundPresentationOptions: {
             badge: true,
             sound: true,
@@ -156,9 +158,11 @@ const DisplayNotification = async Notification => {
         android: {
           channelId: 'Fitme',
           largeIcon: 'ic_launcher',
+          sound: 'fitme_notification',
         },
         ios: {
           categoryId: 'default',
+          sound: 'fitme_notification.wav',
           foregroundPresentationOptions: {
             badge: true,
             sound: true,
@@ -262,7 +266,6 @@ AdManager.registerRepository({
 AdManager.subscribe('imageAd', 'onAdPreloadClicked', () => {
   console.log('click', 'imageAd');
 });
-
 
 AppRegistry.registerComponent(appName, () => AppRedux);
 TrackPlayer.registerPlaybackService(() => require('./src/service'));
