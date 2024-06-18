@@ -1,7 +1,7 @@
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/index';
+import Yourself from '../Screen/Yourself/Index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -45,7 +45,7 @@ import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {createStackNavigator} from '@react-navigation/stack';
-import Store from '../Screen/NewHome/Store';
+import StoreScreen from '../Screen/NewHome/StoreScreen';
 import FocuseWorkoutList from '../Screen/FocusArea/FocuseWorkoutList';
 import CustomWorkout from '../Screen/CustomWorkout/CustomWorkout';
 import CustomWorkoutDetails from '../Screen/CustomWorkout/CustomWorkoutDetails';
@@ -115,7 +115,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Meals" component={Meals} />
       <Stack.Screen name="MealDetails" component={MealDetails} />
       <Stack.Screen name="ProductsList" component={ProductsList} />
-      <Stack.Screen name="Store" component={Store} />
+      <Stack.Screen name="Store" component={StoreScreen} />
       <Stack.Screen name="MeditationDetails" component={MeditationDetails} />
       <Stack.Screen
         name="MeditationExerciseDetails"
