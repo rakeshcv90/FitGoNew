@@ -59,7 +59,7 @@ const SplaceScreen = ({navigation}) => {
   useEffect(() => {
     requestPermissionforNotification(dispatch);
     getUserAllInData();
-    getAllChallangeAndAllExerciseData();
+   // getAllChallangeAndAllExerciseData();
     getPlanData();
 
     // getProfileData(getUserDataDetails?.id),
@@ -187,22 +187,21 @@ const SplaceScreen = ({navigation}) => {
       navigation.replace('LetsStart');
     }
   };
-  // if (loaded) {
-  //   setLoaded(false);
-  //   if (getPurchaseHistory.length > 0) {
-  //     if (
-  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-  //     ) {
-  //        loadScreen();
-  //     } else {
-  //       loaded.show();
-  //       // loadScreen();
-  //     }
-  //   } else {
-  //     loaded.show();
-  //     // loadScreen();
-  //   }
-  // }
+  const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
+  if (loaded) {
+    setLoaded(false);
+    if (getPurchaseHistory?.plan != null) {
+      if (getPurchaseHistory?.plan == 'premium' && isValid) {
+        loadScreen();
+      } else {
+        loaded.show();
+        loadScreen();
+      }
+    } else {
+      loaded.show();
+      loadScreen();
+    }
+  }
   const getPlanData = () => {
     Platform.OS === 'ios'
       ? RNIap.initConnection()

@@ -60,6 +60,7 @@ import {
   setCustomWorkoutData,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
+  setFitCoins,
   setFitmeMealAdsCount,
   setIsAlarmEnabled,
   setOfferAgreement,
@@ -67,6 +68,7 @@ import {
   setPurchaseHistory,
   setRewardModal,
   setStepCounterOnOff,
+  setWinnerAnnounced,
   setStoreData,
   setUserProfileData,
   setWorkoutTimeCal,
@@ -89,12 +91,15 @@ import {checkLocationPermission} from '../Terms&Country/LocationPermission';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import {handleStart} from '../../Component/Utilities/Bannerfunctions';
 import FitCoins from '../../Component/Utilities/FitCoins';
+import { LocationPermissionModal } from '../../Component/Utilities/LocationPermission';
+import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 
 const HomeNew = ({navigation}) => {
   const dispatch = useDispatch();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const allWorkoutData = useSelector(state => state.allWorkoutData);
-  const getChallengesData = useSelector(state => state.getChallengesData);
+  const winnerAnnounced = useSelector(state => state.winnerAnnounced);
+  const fitCoins = useSelector(state => state.fitCoins);
   const [progressHight, setProgressHight] = useState('0%');
   const [day, setDay] = useState(0);
   const [currentChallenge, setCurrentChallenge] = useState([]);
@@ -127,12 +132,14 @@ const HomeNew = ({navigation}) => {
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const [BannerType1, setBannertype1] = useState('');
   const [Bannertype2, setBannerType2] = useState('');
+  const [BannerType, setBannertype] = useState('');
   const [openEditModal, setOpenEditModal] = useState(false);
   const [dataType, setDatatype] = useState('');
   const enteredUpcomingEvent = useSelector(
     state => state?.enteredUpcomingEvent,
   );
   const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
+  const [locationP1,setLocationP1]=useState(false)
   // const [backPressCount, setBackPressCount] = useState(0);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
 
@@ -635,7 +642,7 @@ const HomeNew = ({navigation}) => {
             console.log('Location permission granted IOS');
             setLocationP(false);
             analytics().logEvent(`CV_FITME_CLICKED_ON_GYM_LISTING_SCREEN`);
-            let checkAdsShow = checkMealAddCount();
+            let checkAdsShow = AddCountFunction();
             if (checkAdsShow == true) {
               showInterstitialAd();
               navigationRef.navigate('GymListing');
@@ -656,7 +663,7 @@ const HomeNew = ({navigation}) => {
             console.log('Location permission granted Android');
             analytics().logEvent(`CV_FITME_CLICKED_ON_GYM_LISTING_SCREEN`);
             setLocationP(false);
-            let checkAdsShow = checkMealAddCount();
+            let checkAdsShow = AddCountFunction();
             if (checkAdsShow == true) {
               showInterstitialAd();
               navigationRef.navigate('GymListing');
@@ -833,7 +840,7 @@ const HomeNew = ({navigation}) => {
       activeOpacity={0.8}
       onPress={() => {
         AnalyticsConsole(`MediDetails`);
-        let checkAdsShow = checkMealAddCount();
+        let checkAdsShow = AddCountFunction();
         if (checkAdsShow == true) {
           showInterstitialAd();
           navigation.navigate('MeditationDetails', {item: title});
@@ -912,7 +919,7 @@ const HomeNew = ({navigation}) => {
           style={[styles.listItem2]}
           onPress={() => {
             AnalyticsConsole(`AI_TRAINER_BUTTON`);
-            let checkAdsShow = checkMealAddCount();
+            let checkAdsShow = AddCountFunction();
             if (checkAdsShow == true) {
               showInterstitialAd();
               navigation.navigate('AITrainer', {item: item});
@@ -1220,7 +1227,6 @@ const HomeNew = ({navigation}) => {
   const getLeaderboardDataAPI = async () => {
     try {
       const result = await axios({
-        // url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${appVersion}`,
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
       if (result.data) {
@@ -1228,6 +1234,12 @@ const HomeNew = ({navigation}) => {
           item => item?.id == getUserDataDetails?.id,
         );
         setMyRankData(result.data?.data[myRank]);
+        dispatch(setFitCoins(result.data?.data[myRank]?.fit_coins));
+        dispatch(
+          setWinnerAnnounced(
+            result.data?.winner_announced == true ? true : false,
+          ),
+        );
         // console.log('RANK DATA', myRankData);
       }
       setRefresh(false);
@@ -1236,23 +1248,6 @@ const HomeNew = ({navigation}) => {
       setRefresh(false);
     }
   };
-  useEffect(() => {
-    console.log(getUserDataDetails);
-    if (getUserDataDetails.name == null && getUserDataDetails.email == null) {
-      setOpenEditModal(true);
-      setDatatype('both');
-    } else {
-      if (getUserDataDetails.name == null) {
-        setOpenEditModal(true);
-        setDatatype('name');
-      }
-      if (getUserDataDetails.email == null) {
-        setOpenEditModal(true);
-        setDatatype('email');
-      }
-    }
-  }, [openEditModal, dataType]);
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -1308,14 +1303,13 @@ const HomeNew = ({navigation}) => {
             <FitCoins
               onPress={() => {
                 AnalyticsConsole('LB');
-                const today = moment().day();
-                if (today == 0 || today == 6) {
+                if (winnerAnnounced) {
                   navigation.navigate('Winner');
                 } else {
                   navigation.navigate('Leaderboard');
                 }
               }}
-              coins={myRankData?.fit_coins < 0 ? 0 : myRankData?.fit_coins}
+              coins={fitCoins > 0 ? fitCoins : 0}
             />
           )}
         </View>
@@ -1323,6 +1317,8 @@ const HomeNew = ({navigation}) => {
         <Banners
           type1={BannerType1}
           type2={Bannertype2}
+          locationP={locationP1}
+          setLocationP={setLocationP1}
           navigation={navigation}
         />
 
@@ -1438,6 +1434,7 @@ const HomeNew = ({navigation}) => {
                         fontWeight: '600',
                         lineHeight: 20,
                         color: AppColor.SUBHEADING,
+                        marginRight: DeviceHeigth >= 1024 ? 14 : 0,
                       }}>
                       {`${day}/${currentChallenge[0]?.total_days} Days`}
                     </Text>
@@ -1454,7 +1451,7 @@ const HomeNew = ({navigation}) => {
               </View>
               <TouchableOpacity
                 onPress={() => {
-                  AnalyticsConsole(`D_Wrk_DAYS_BUTTON_FR_Home`);
+                  AnalyticsConsole(`D_Wrk_DAYS_FR_Home`);
                   navigation.navigate('WorkoutDays', {
                     data: currentChallenge[0],
                     challenge: true,
@@ -1746,7 +1743,7 @@ const HomeNew = ({navigation}) => {
               activeOpacity={0.8}
               onPress={() => {
                 AnalyticsConsole(`CustomWrk_FR_Home`);
-                let checkAdsShow = checkMealAddCount();
+                let checkAdsShow = AddCountFunction();
                 if (checkAdsShow == true) {
                   showInterstitialAd();
                   navigation.navigate('CustomWorkout');
@@ -1834,7 +1831,7 @@ const HomeNew = ({navigation}) => {
             <TouchableOpacity
               onPress={() => {
                 analytics().logEvent('CV_FITME_CLICKED_ON_MEDITATION');
-                let checkAdsShow = checkMealAddCount();
+                let checkAdsShow = AddCountFunction();
                 if (checkAdsShow == true) {
                   showInterstitialAd();
                   navigation.navigate('MeditationDetails', {
@@ -2107,7 +2104,7 @@ const HomeNew = ({navigation}) => {
               activeOpacity={0.8}
               onPress={() => {
                 AnalyticsConsole(`MEALS_BUTTON`);
-                let checkAdsShow = checkMealAddCount();
+                let checkAdsShow = AddCountFunction();
                 if (checkAdsShow == true) {
                   showInterstitialAd();
                   navigation.navigate('Meals');
@@ -2175,7 +2172,7 @@ const HomeNew = ({navigation}) => {
               activeOpacity={0.8}
               onPress={() => {
                 AnalyticsConsole(`STORE_BUTTON`);
-                let checkAdsShow = checkMealAddCount();
+                let checkAdsShow = AddCountFunction();
                 if (checkAdsShow == true) {
                   showInterstitialAd();
                   navigation.navigate('Store');
@@ -2225,6 +2222,7 @@ const HomeNew = ({navigation}) => {
       {modalVisible ? <UpdateGoalModal /> : null}
       <PermissionModal locationP={locationP} setLocationP={setLocationP} />
       <RewardModal visible={getRewardModalStatus} navigation={navigation} />
+      <LocationPermissionModal locationP={locationP1} setLocationP={setLocationP1}/>
     </SafeAreaView>
   );
 };

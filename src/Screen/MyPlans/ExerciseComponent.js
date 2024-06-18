@@ -14,6 +14,7 @@ export const ExerciseComponetWithoutEvents = ({
   onPress,
   WeekStatus,
   getWeeklyPlansData,
+  download
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
@@ -190,6 +191,7 @@ export const ExerciseComponentWithEvent = ({
   getWeeklyPlansData,
   selectedDay,
   currentDay,
+  download
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
@@ -293,6 +295,9 @@ export const ExerciseComponentWithEvent = ({
               borderRadius: 15,
               alignSelf: 'center',
               marginTop: DeviceHeigth * 0.05,
+              borderWidth: 1,
+              borderColor: AppColor.RED,
+              borderRadius: 15,
             }}>
             <AnimatedLottieView
               source={require('../../Icon/Images/RedTick.json')}

@@ -39,6 +39,8 @@ import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import VersionNumber, {appVersion} from 'react-native-version-number';
+import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
+
 const UpcomingEvent = ({navigation, route}: any) => {
   const {eventType} = route?.params;
 
@@ -271,13 +273,12 @@ const UpcomingEvent = ({navigation, route}: any) => {
       </Modal>
     );
   };
-  // console.log("MOMENT",moment().day(getPurchaseHistory?.currentDay).format('dddd'))
-  console.log(
-    'mo',
-    getPurchaseHistory,
-    eventType,
-    // moment().day(getPurchaseHistory?.currentDay).format('YYYY-MM-DD'),
-  );
+  // console.log(
+  //   'mo',
+  //   getPurchaseHistory,
+  //   eventType,
+  //   // moment().day(getPurchaseHistory?.currentDay).format('YYYY-MM-DD'),
+  // );
 
   const dayLeft =
     getPurchaseHistory?.upcoming_day_status == 1 &&
@@ -438,7 +439,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
           <FitText
             type="SubHeading"
             value={
-              enteredUpcomingEvent
+              eventType == 'upcoming'
                 ? 'Gear Up for Your Next Challenge!'
                 : 'Your challenge will start on Monday'
             }
@@ -450,7 +451,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
           <FitText
             type="normal"
             value={
-              enteredUpcomingEvent
+              eventType == 'upcoming'
                 ? 'Every week is a new opportunity. Gear up for your next challenge!'
                 : `You can do the exercise using our App until the challenge begins.`
             }
@@ -609,7 +610,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
                 />
                 <FitText
                   type="normal"
-                  value="Winning price 1000/-"
+                  value="Winning price ₹1000/-"
                   color="#333333E5"
                   marginVertical={3}
                 />
@@ -709,12 +710,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
               />
             </TouchableOpacity>
           )}
-          <FitText
-            type="normal"
-            value="Cancel Plan"
-            color={AppColor.NEW_DARK_RED}
-            fontFamily={Fonts.MONTSERRAT_MEDIUM}
-            marginVertical={15}
+          <TouchableOpacity
             onPress={() => {
               AnalyticsConsole(`CanP_BTN`);
               PLATFORM_IOS
@@ -723,7 +719,19 @@ const UpcomingEvent = ({navigation, route}: any) => {
                     'https://play.google.com/store/account/subscriptions',
                   );
             }}
-          />
+            style={{
+              width: DeviceWidth * 0.9,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingVertical: 10,
+            }}>
+            <FitText
+              type="normal"
+              value="Cancel Plan"
+              color={AppColor.NEW_DARK_RED}
+              fontFamily={Fonts.MONTSERRAT_MEDIUM}
+            />
+          </TouchableOpacity>
         </View>
       )}
       <ChangeModal />

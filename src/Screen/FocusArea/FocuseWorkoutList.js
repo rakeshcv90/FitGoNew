@@ -20,7 +20,7 @@ import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
 import FastImage from 'react-native-fast-image';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -308,7 +308,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
                         width: 55,
                       }}
                       onPress={() => {
-                        AnalyticsConsole('LIKE_Wrk_FR_Focus')
+                        AnalyticsConsole('LIKE_Wrk_FR_Focus');
                         const current = likeData?.findIndex(
                           it => it == item?.workout_id,
                         );
@@ -371,7 +371,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
         );
       },
 
-    [likeData, updateLikeID, action, isLoading,getCustttomeTimeCal],
+    [likeData, updateLikeID, action, isLoading, getCustttomeTimeCal],
   );
   const convertLike = number => {
     if (number == undefined || number == null) {
@@ -423,7 +423,6 @@ const FocuseWorkoutList = ({navigation, route}) => {
         'Please update the app to the latest version'
       ) {
       } else if (exerciseStatus?.data.length > 0) {
-     
         dispatch(setWorkoutTimeCal(exerciseStatus?.data));
       } else {
         dispatch(setWorkoutTimeCal([]));
@@ -527,8 +526,10 @@ const FocuseWorkoutList = ({navigation, route}) => {
   //   }
   // };
   const getAdsDisplay = (item, index) => {
+    const noOrNoobPlan =
+      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
     if (execrise.length >= 1) {
-      if (index == 0 && execrise.length > 1) {
+      if (noOrNoobPlan && index == 0 && execrise.length > 1) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0 && execrise.length > 8) {
         return getNativeAdsDisplay();
@@ -536,9 +537,10 @@ const FocuseWorkoutList = ({navigation, route}) => {
     }
   };
   const getNativeAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
+    if (getPurchaseHistory?.plan != null) {
       if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        getPurchaseHistory?.plan == 'premium' &&
+        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
       ) {
         return null;
       } else {
@@ -591,7 +593,7 @@ const FocuseWorkoutList = ({navigation, route}) => {
         </View>
       </View>
       {/* {bannerAdsDisplay()} */}
-          <BannerAdd bannerAdId={bannerAdId} />
+      <BannerAdd bannerAdId={bannerAdId} />
     </>
   );
 };

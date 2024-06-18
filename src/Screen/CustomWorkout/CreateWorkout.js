@@ -234,21 +234,23 @@ const CreateWorkout = ({navigation, route}) => {
       },
     [selectedItems, bodyPart],
   );
-  const planType = useSelector(state => state.planType);
   const getAdsDisplay = (index, item) => {
+    const noOrNoobPlan =
+      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
     if (filteredCategories.length > 1) {
-      if (planType < 69 && index == 0) {
-        return <NativeAddTest type="image" media={false} />;
+      if (noOrNoobPlan && index == 0) {
+        return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0 && filteredCategories.length > 8) {
-        return <NativeAddTest type="image" media={false} />;
+        return getNativeAdsDisplay();
       } else {
       }
     }
   };
   const getNativeAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
+    if (getPurchaseHistory?.plan != null) {
       if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        getPurchaseHistory?.plan == 'premium' &&
+        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
       ) {
         return null;
       } else {

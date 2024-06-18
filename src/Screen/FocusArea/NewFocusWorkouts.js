@@ -207,8 +207,10 @@ const NewFocusWorkouts = ({route, navigation}) => {
   //   }
   // };
   const getAdsDisplay = (item, index) => {
+    const noOrNoobPlan =
+      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
     if (execrise.length >= 1) {
-      if (index == 0 && execrise.length > 1) {
+      if (noOrNoobPlan&& index == 0 && execrise.length > 1) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0 && execrise.length > 8) {
         return getNativeAdsDisplay();
@@ -216,9 +218,10 @@ const NewFocusWorkouts = ({route, navigation}) => {
     }
   };
   const getNativeAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
+    if (getPurchaseHistory?.plan != null) {
       if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        getPurchaseHistory?.plan == 'premium' &&
+        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
       ) {
         return null;
       } else {

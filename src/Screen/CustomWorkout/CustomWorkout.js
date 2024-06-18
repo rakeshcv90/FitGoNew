@@ -198,8 +198,10 @@ const CustomWorkout = ({navigation}) => {
     [customWorkoutData],
   );
   const getAdsDisplay = (index, item) => {
+    const noOrNoobPlan =
+      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
     if (customWorkoutData.length >= 1) {
-      if (index == 0 && customWorkoutData.length > 1) {
+      if (index == 0 && customWorkoutData.length > 1 && noOrNoobPlan) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0 && customWorkoutData.length > 8) {
         return getNativeAdsDisplay();
@@ -207,9 +209,10 @@ const CustomWorkout = ({navigation}) => {
     }
   };
   const getNativeAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
+    if (getPurchaseHistory?.plan != null) {
       if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        getPurchaseHistory?.plan == 'premium' &&
+        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
       ) {
         return null;
       } else {

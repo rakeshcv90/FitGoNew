@@ -686,7 +686,9 @@ const AllWorkouts = ({navigation, route}: any) => {
     }
   };
   const getAdsDisplay = (index:number, item:any) => {
-    if (allWorkoutData.length > 1) {
+    const noOrNoobPlan =
+      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
+    if (noOrNoobPlan&& allWorkoutData.length > 1) {
       if (index == 0) {
         return getNativeAdsDisplay();
       }
