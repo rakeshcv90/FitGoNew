@@ -58,7 +58,9 @@ const intialState = {
   planType: -1,
   getAgreementContent: {},
   fitCoins: 0,
-  winnerAnnounced: false
+  winnerAnnounced: false,
+  getBanners: {},
+  getEditedDayExercise: {} 
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {

@@ -59,7 +59,7 @@ const SplaceScreen = ({navigation}) => {
   useEffect(() => {
     requestPermissionforNotification(dispatch);
     getUserAllInData();
-    getAllChallangeAndAllExerciseData();
+   // getAllChallangeAndAllExerciseData();
     getPlanData();
 
     // getProfileData(getUserDataDetails?.id),
