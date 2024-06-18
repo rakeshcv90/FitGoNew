@@ -176,134 +176,156 @@ const NewMonthlyAchievement = () => {
             </View>
           </View>
         ) : (
-          <View style={styles.card}>
-            <Text
-              style={{
-                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                color: AppColor.BLACK,
-                fontSize: 16,
-              }}>
-              BMI (kg/m²)
-            </Text>
-            <Text
-              style={{
-                color: AppColor.RED,
-                fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                fontSize: 17,
-              }}
-              onPress={() => {
-                setModalVisible(true);
-              }}>
-              Check
-            </Text>
+          <View>
+            <View style={styles.View4}>
+              <Text
+                style={[
+                  styles.txt1,
+                  {fontFamily: Fonts.MONTSERRAT_BOLD, fontSize: 19},
+                ]}>
+                BMI
+              </Text>
+            </View>
+            <View style={styles.card}>
+              <Text
+                style={{
+                  fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                  color: AppColor.BLACK,
+                  fontSize: 16,
+                }}>
+                BMI (kg/m²)
+              </Text>
+              <Text
+                style={{
+                  color: AppColor.RED,
+                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                  fontSize: 17,
+                }}
+                onPress={() => {
+                  setModalVisible(true);
+                }}>
+                Check
+              </Text>
+            </View>
           </View>
         )}
-        <View style={[styles.card, {flexDirection: 'column'}]}>
-          <Calendar
-            onDayPress={day => {
-              AnalyticsConsole(`${day.dateString.replaceAll('-', '_')}`);
-              setDate(day.dateString);
-              DateWiseData(day.dateString);
-              setIsLoaded(false);
-            }}
-            allowSelectionOutOfRange={false}
-            markingType="period"
-            enableSwipeMonths
-            hideExtraDays={true}
-            hideDayNames={false}
-            markedDates={{
-              [getDate]: {
-                startingDay: true,
-                color: AppColor.RED,
-                endingDay: true,
-                textColor: AppColor.WHITE,
-              },
-            }}
-            style={[
-              styles.calender,
-              {
-                width: DeviceWidth * 0.85,
-                backgroundColor: AppColor.WHITE,
-              },
-            ]}
-            theme={theme}
-          />
-          <View
-            style={{
-              borderWidth: 0.4,
-              height: 0,
-              marginTop: 15,
-              borderColor: AppColor.GRAY2,
-              marginHorizontal: -20,
-            }}
-          />
-          <View style={{marginVertical: 20, marginHorizontal: -20}}>
-            {ApiData.length == 0 ? (
-              isLoaded ? (
-                <EmptyComponent />
+        <View>
+          <View style={[styles.View4,{marginVertical:5}]}>
+            <Text
+              style={[
+                styles.txt1,
+                {fontFamily: Fonts.MONTSERRAT_BOLD, fontSize: 19},
+              ]}>
+              Achievement
+            </Text>
+          </View>
+          <View style={[styles.card, {flexDirection: 'column'}]}>
+            <Calendar
+              onDayPress={day => {
+                AnalyticsConsole(`${day.dateString.replaceAll('-', '_')}`);
+                setDate(day.dateString);
+                DateWiseData(day.dateString);
+                setIsLoaded(false);
+              }}
+              allowSelectionOutOfRange={false}
+              markingType="period"
+              enableSwipeMonths
+              hideExtraDays={true}
+              hideDayNames={false}
+              markedDates={{
+                [getDate]: {
+                  startingDay: true,
+                  color: AppColor.RED,
+                  endingDay: true,
+                  textColor: AppColor.WHITE,
+                },
+              }}
+              style={[
+                styles.calender,
+                {
+                  width: DeviceWidth * 0.85,
+                  backgroundColor: AppColor.WHITE,
+                },
+              ]}
+              theme={theme}
+            />
+            <View
+              style={{
+                borderWidth: 0.4,
+                height: 0,
+                marginTop: 15,
+                borderColor: AppColor.GRAY2,
+                marginHorizontal: -20,
+              }}
+            />
+            <View style={{marginVertical: 20, marginHorizontal: -20}}>
+              {ApiData.length == 0 ? (
+                isLoaded ? (
+                  <EmptyComponent />
+                ) : (
+                  <Loader />
+                )
+              ) : isLoaded ? (
+                <>
+                  <FlatList
+                    data={ApiData}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={(value, index) => {
+                      return (
+                        <View>
+                          <View
+                            style={{
+                              // width: 90,
+                              borderColor: AppColor.GRAY1,
+                              borderRadius: 6,
+                              marginHorizontal: 10,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              backgroundColor: AppColor.WHITE,
+                              borderWidth: 1,
+                            }}>
+                            <Image
+                              source={{uri: value.item.exercise_image_link}}
+                              style={{
+                                height: 70,
+                                width: 70,
+                              }}
+                              resizeMode="contain"
+                            />
+                            <Text
+                              numberOfLines={1}
+                              style={{
+                                textAlign: 'center',
+                                width: 100,
+                                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                                color: AppColor.BoldText,
+                                fontSize: 12,
+                                backgroundColor: AppColor.LIGHTGREY2,
+                                padding: 10,
+                                borderBottomRightRadius: 6,
+                                borderBottomLeftRadius: 6,
+                              }}>
+                              {value.item.exercise_title}
+                            </Text>
+                          </View>
+                        </View>
+                      );
+                    }}
+                    initialNumToRender={10}
+                    maxToRenderPerBatch={10}
+                    updateCellsBatchingPeriod={100}
+                    removeClippedSubviews={true}
+                    keyExtractor={(item, index) => index.toString()}
+                  />
+                  <View style={{marginTop: 20, marginHorizontal: 10}}>
+                    <CaloriesActionReport arr={CalroiesActionArr} />
+                  </View>
+                </>
               ) : (
                 <Loader />
-              )
-            ) : isLoaded ? (
-              <>
-                <FlatList
-                  data={ApiData}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  renderItem={(value, index) => {
-                    return (
-                      <View>
-                        <View
-                          style={{
-                            // width: 90,
-                            borderColor: AppColor.GRAY1,
-                            borderRadius: 6,
-                            marginHorizontal: 10,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: AppColor.WHITE,
-                            borderWidth: 1,
-                          }}>
-                          <Image
-                            source={{uri: value.item.exercise_image_link}}
-                            style={{
-                              height: 70,
-                              width: 70,
-                            }}
-                            resizeMode="contain"
-                          />
-                          <Text
-                            numberOfLines={1}
-                            style={{
-                              textAlign: 'center',
-                              width: 100,
-                              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                              color: AppColor.BoldText,
-                              fontSize: 12,
-                              backgroundColor: AppColor.LIGHTGREY2,
-                              padding: 10,
-                              borderBottomRightRadius: 6,
-                              borderBottomLeftRadius: 6,
-                            }}>
-                            {value.item.exercise_title}
-                          </Text>
-                        </View>
-                      </View>
-                    );
-                  }}
-                  initialNumToRender={10}
-                  maxToRenderPerBatch={10}
-                  updateCellsBatchingPeriod={100}
-                  removeClippedSubviews={true}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-                <View style={{marginTop: 20, marginHorizontal: 10}}>
-                  <CaloriesActionReport arr={CalroiesActionArr} />
-                </View>
-              </>
-            ) : (
-              <Loader />
-            )}
+              )}
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -330,6 +352,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginVertical: 10,
     alignSelf: 'center',
+    shadowColor: 'grey',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -338,7 +361,7 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
       },
       android: {
-        elevation: 5,
+        elevation: 3,
       },
     }),
   },
@@ -365,6 +388,7 @@ const styles = StyleSheet.create({
     width: DeviceWidth * 0.9,
     alignSelf: 'center',
     flexDirection: 'row',
+
     justifyContent: 'space-between',
   },
   View5: {

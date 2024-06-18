@@ -432,9 +432,11 @@ const Workouts = ({navigation}: any) => {
             }}>
             <Image
               source={item?.image}
+              defaultSource={localImage.NOWORKOUT}
               style={{
                 width: 30,
                 height: 30,
+            
                 justifyContent: 'center',
                 alignSelf: 'center',
                 borderRadius: 16,
@@ -850,13 +852,17 @@ const Workouts = ({navigation}: any) => {
           }
           renderItem={({item, index}: any) => {
             return (
-              <View style={{width: '100%'}}>
+              <View
+                style={{
+                  width: '100%',
+                  //backgroundColor:'red'
+                }}>
                 {index == 0 && (
                   <>
                     <View
                       style={{
                         flexDirection: 'row',
-                        width: '90%',
+                        width: '92%',
                         alignSelf: 'center',
 
                         justifyContent: 'space-between',
@@ -874,7 +880,7 @@ const Workouts = ({navigation}: any) => {
                         Body Type
                       </Text>
                     </View>
-                    <View style={styles.meditionBox}>
+                    <View style={[styles.meditionBox,]}>
                       <FlatList
                         data={focuseArea}
                         horizontal
@@ -886,7 +892,7 @@ const Workouts = ({navigation}: any) => {
                           return (
                             <>
                               <TouchableOpacity
-                                activeOpacity={0.8}
+                                activeOpacity={0.5}
                                 onPress={() => {
                                   getbodyPartWorkout(item);
                                 }}
@@ -931,10 +937,12 @@ const Workouts = ({navigation}: any) => {
                                   <Image
                                     source={item.image}
                                     // onLoad={() => setImageLoad(false)}
+                                    defaultSource={localImage.NOWORKOUT}
                                     style={{
                                       width: '100%',
                                       height: '100%',
                                       justifyContent: 'center',
+                                      borderRadius: 40,
                                       alignSelf: 'center',
                                     }}
                                     resizeMode="contain"
@@ -948,7 +956,7 @@ const Workouts = ({navigation}: any) => {
                                     fontWeight: '500',
                                     lineHeight: 30,
                                     top: -8,
-                                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                                   }}>
                                   {item.title}
                                 </Text>
@@ -968,7 +976,7 @@ const Workouts = ({navigation}: any) => {
                   <>
                     <View
                       style={{
-                        width: '90%',
+                        width: '92%',
                         alignSelf: 'center',
                         // marginVertical: DeviceHeigth * 0.02,
                       }}>
@@ -985,12 +993,13 @@ const Workouts = ({navigation}: any) => {
                         Personalized Workouts
                       </Text>
                     </View>
+                   
                     <LinearGradient
                       start={{x: 1, y: 0}}
                       end={{x: 0, y: 1}}
                       colors={['#379CBE', '#81CAF1', '#81CAF1']}
                       style={{
-                        width: '90%',
+                        width: '92%',
 
                         borderRadius: 20,
                         marginVertical: 15,
@@ -1023,7 +1032,7 @@ const Workouts = ({navigation}: any) => {
                           style={{
                             flexDirection: 'row',
                             alignItems: 'center',
-                            justifyContent: 'space-evenly',
+                            justifyContent: 'space-between',
                           }}>
                           <View
                             style={{
@@ -1042,7 +1051,7 @@ const Workouts = ({navigation}: any) => {
                                 fontWeight: '600',
                                 fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                               }}>
-                              Custom Workout
+                              Your workouts
                             </Text>
                             <Text
                               style={{
@@ -1058,7 +1067,6 @@ const Workouts = ({navigation}: any) => {
                             style={{
                               width: DeviceWidth * 0.3,
                               height: 70,
-                              left: -15,
                               //backgroundColor: 'red',
                             }}
                             resizeMode="contain"
@@ -1073,7 +1081,7 @@ const Workouts = ({navigation}: any) => {
                     <View
                       style={{
                         flexDirection: 'row',
-                        width: '90%',
+                        width: '92%',
                         alignSelf: 'center',
                         marginVertical: DeviceHeigth * 0.0,
                         justifyContent: 'space-between',
@@ -1134,7 +1142,7 @@ const Workouts = ({navigation}: any) => {
                     <View
                       style={{
                         flexDirection: 'row',
-                        width: '90%',
+                        width: '92%',
                         alignSelf: 'center',
                         marginVertical: DeviceHeigth * 0.02,
                         justifyContent: 'space-between',
@@ -1201,6 +1209,7 @@ const styles = StyleSheet.create({
   },
   meditionBox: {
     backgroundColor: 'white',
+  
     //top: DeviceHeigth * 0.015,
   },
 });

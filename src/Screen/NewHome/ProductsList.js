@@ -174,10 +174,24 @@ const ProductsList = ({route}) => {
                       style={{
                         width: DeviceWidth * 0.45,
                         height: DeviceWidth * 0.4,
-                        backgroundColor: '#F3F4F1',
+                        backgroundColor: '#fff',
                         alignItems: 'center',
                         justifyContent: 'center',
                         borderRadius: 10,
+                        borderColor: '#fff',
+                        borderWidth: 1,
+                        shadowColor: 'grey',
+                        ...Platform.select({
+                          ios: {
+                            //shadowColor: '#000000',
+                            shadowOffset: {width: 0, height: 2},
+                            shadowOpacity: 0.2,
+                            shadowRadius: 4,
+                          },
+                          android: {
+                            elevation: 2,
+                          },
+                        }),
                       }}>
                       <Image
                         source={
@@ -205,7 +219,7 @@ const ProductsList = ({route}) => {
                       <Text
                         numberOfLines={1}
                         style={{
-                          fontSize: 18,
+                          fontSize: 15,
 
                           fontFamily: Fonts.MONTSERRAT_REGULAR,
                           fontWeight: '700',
@@ -230,9 +244,9 @@ const ProductsList = ({route}) => {
         </View>
       </View>
       {/* {bannerAdsDisplay()} */}
-          <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
-            <BannerAdd bannerAdId={bannerAdId} />
-          </View>
+      <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>
+        <BannerAdd bannerAdId={bannerAdId} />
+      </View>
     </>
   );
 };

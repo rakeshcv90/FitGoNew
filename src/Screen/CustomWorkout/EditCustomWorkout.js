@@ -90,7 +90,7 @@ const EditCustomWorkout = ({navigation, route}) => {
 
   const renderItem1 = useMemo(
     () =>
-      ({item}) => {
+      ({item, index}) => {
         const isSelected = selectedItems?.includes(item?.exercise_id);
 
         return (
@@ -101,7 +101,7 @@ const EditCustomWorkout = ({navigation, route}) => {
                 selectedExercise(item?.exercise_id);
               }}
               style={{
-                width: '95%',
+                width: '100%',
                 borderRadius: 10,
                 backgroundColor: '#FDFDFD',
                 marginVertical: 8,
@@ -109,24 +109,10 @@ const EditCustomWorkout = ({navigation, route}) => {
                 alignSelf: 'center',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                paddingHorizontal: 20,
+                // paddingHorizontal: 20,
                 padding: 5,
-                // borderColor: '#D9D9D9',
-                borderColor: isSelected ? 'red' : AppColor.GRAY2,
-                borderWidth: 1,
+
                 justifyContent: 'space-between',
-                shadowColor: 'rgba(0, 0, 0, 1)',
-                ...Platform.select({
-                  ios: {
-                    shadowColor: '#000000',
-                    shadowOffset: {width: 0, height: 2},
-                    shadowOpacity: 0.1,
-                    shadowRadius: 4,
-                  },
-                  android: {
-                    elevation: 4,
-                  },
-                }),
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <Image
@@ -136,8 +122,11 @@ const EditCustomWorkout = ({navigation, route}) => {
                     height: 80,
                     justifyContent: 'center',
                     alignSelf: 'center',
-                    // backgroundColor:'red',
-                    marginHorizontal: -7,
+
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    borderColor: '#D9D9D9',
+                    //marginHorizontal: -7,
                   }}
                   resizeMode="contain"
                 />
@@ -191,6 +180,17 @@ const EditCustomWorkout = ({navigation, route}) => {
                 resizeMode="contain"
               />
             </TouchableOpacity>
+            {index !== filteredCategories.length - 1 && (
+              <View
+                style={{
+                  width: '100%',
+                  height: 1,
+
+                  alignItems: 'center',
+                  backgroundColor: '#33333314',
+                }}
+              />
+            )}
           </>
         );
       },
@@ -446,6 +446,8 @@ const EditCustomWorkout = ({navigation, route}) => {
             ]}>
             <FlatList
               data={filteredCategories}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
               keyExtractor={(item, index) => index.toString()}
               renderItem={renderItem1}
               ListEmptyComponent={emptyComponent}

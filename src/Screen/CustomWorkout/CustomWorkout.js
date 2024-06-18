@@ -35,6 +35,7 @@ import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
 import moment from 'moment';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import FastImage from 'react-native-fast-image';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -43,11 +44,11 @@ const CustomWorkout = ({navigation}) => {
   const dispatch = useDispatch();
   // const routeName = route?.params?.routeName;
   const customWorkoutData = useSelector(state => state.customWorkoutData);
-  const getExperience = useSelector(state => state.getExperience);
+
   const [isCustomWorkout, setIsCustomWorkout] = useState(false);
   const [text, setText] = React.useState('');
   const [getWorkoutAvt, setWorkoutAvt] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+
   const isFocused = useIsFocused();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
@@ -107,111 +108,94 @@ const CustomWorkout = ({navigation}) => {
     () =>
       ({index, item}) => {
         return (
+      
           <>
             <TouchableOpacity
-              activeOpacity={0.8}
+              style={{
+                width: '98%',
+                marginVertical: 10,
+               // paddingHorizontal: 20,
+                flexDirection: 'row',
+                alignItems: 'center',
+                alignSelf:'center',
+                justifyContent:'space-between'
+              }}
               onPress={() => {
                 AnalyticsConsole(`OPEN_Custom_Wrk`);
                 navigation.navigate('CustomWorkoutDetails', {item: item});
-              }}
-              style={{
-                width: '100%',
-                borderRadius: 10,
-                backgroundColor: AppColor.WHITE,
-                marginVertical: 8,
-                flexDirection: 'row',
-                alignSelf: 'center',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingHorizontal: 12,
-                padding: 5,
-                borderColor: '#fff',
-                borderWidth: 1,
-                shadowColor: 'grey',
-                ...Platform.select({
-                  ios: {
-                    //shadowColor: '#000000',
-                    shadowOffset: {width: 0, height: 2},
-                    shadowOpacity: 0.2,
-                    shadowRadius: 4,
-                  },
-                  android: {
-                    elevation: 3,
-                  },
-                }),
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                {isLoading && (
-                  <ShimmerPlaceholder
-                    style={styles.loader}
-                    ref={avatarRef}
-                    autoRun
-                  />
-                )}
-
-                <Image
-                  // source={{uri: item.workout_image_link}}
-                  source={
-                    item?.image == ''
-                      ? localImage.NOWORKOUT
-                      : {uri: item?.image}
-                  }
-                  onLoad={() => setIsLoading(false)}
+              <FastImage
+                fallback={true}
+                style={{
+                  width: 70,
+                  height: 70,
+                  justifyContent: 'center',
+                  alignSelf: 'center',
+                  borderRadius: 5,
+                  borderWidth: 1,
+                  borderColor: '#D9D9D9',
+                }}
+                source={{
+                  uri: item?.image,
+                  headers: {Authorization: 'someAuthToken'},
+                  priority: FastImage.priority.high,
+                }}
+                resizeMode={FastImage.resizeMode.contain}
+                defaultSource={localImage.NOWORKOUT}
+              />
+              <View
+                style={{
+                 marginHorizontal: 16,
+                  width: DeviceWidth * 0.48,
+                }}>
+                <Text
+                  numberOfLines={1}
                   style={{
-                    width: 70,
-                    height: 70,
-                    justifyContent: 'center',
-                    alignSelf: 'center',
-                    // backgroundColor:'red',
-                    borderRadius: 10,
-                    //borderWidth:1,
-                    //overflow:'hidden',
-                    marginHorizontal: -7,
-                  }}
-                  resizeMode="cover"
-                />
-                <View
-                  style={{
-                    marginHorizontal: 25,
-                    justifyContent: 'center',
-                    width: DeviceWidth * 0.52,
+                    fontSize: 16,
+                    fontWeight: '600',
+                    lineHeight: 24,
+                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                    color: '#1E1E1E',
                   }}>
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      fontSize: 17,
-                      fontWeight: '600',
-                      color: '#202020',
-                      lineHeight: 25,
-                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    }}>
-                    {item?.workout_name}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      fontWeight: '600',
-                      color: '#202020',
-                      lineHeight: 30,
-
-                      fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                    }}>
-                    {item?.total_exercises}
-                    {' Exercises'}
-                  </Text>
-                </View>
-              </View>
+                  {item?.workout_name}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '400',
+                    lineHeight: 24,
+                    opacity: 0.7,
+                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                    color: '#1E1E1E',
+                  }}>
+                  {item?.total_exercises}
+                  {' Exercises'}
+                </Text>
+              </View></View>
               <Image
                 source={localImage.Next}
                 resizeMode="contain"
                 style={{width: 30, height: 30, right: -3}}
               />
             </TouchableOpacity>
+            
+            {index !== customWorkoutData.length - 1 && (
+              <View
+                style={{
+                  width: '100%',
+                  height: 1,
+
+                  alignItems: 'center',
+                  backgroundColor: '#33333314',
+                }}
+              />
+            )}
             {getAdsDisplay(index, item)}
           </>
         );
       },
-    [isLoading],
+    [customWorkoutData],
   );
   const getAdsDisplay = (index, item) => {
     const noOrNoobPlan =
@@ -356,61 +340,6 @@ const CustomWorkout = ({navigation}) => {
           </LinearGradient>
         </View>
       </View>
-      // <View
-      //   style={{
-      //     flex: 1,
-      //     justifyContent: 'center',
-      //     alignItems: 'center',
-
-      //   }}>
-      //   <Image
-      //     source={localImage.Createworkout}
-      //     resizeMode="contain"
-      //     style={{
-      //       width: DeviceWidth * 0.7,
-      //       height: DeviceHeigth * 0.4,
-      //       marginTop: DeviceHeigth * 0.1,
-      //     }}
-      //   />
-
-      //   <LinearGradient
-      //     start={{x: 0, y: 1}}
-      //     end={{x: 1, y: 0}}
-      //     // colors={['#941000', '#D01818']}
-      //     colors={['#D01818', '#941000']}
-      //     style={{
-      //       width: 180,
-      //       height: 40,
-      //       borderRadius: 30,
-      //       justifyContent: 'center',
-      //       alignItems: 'center',
-      //       marginBottom: 100,
-      //       top:
-      //         Platform.OS == 'android' ? -40 : DeviceHeigth >= 1024 ? 30 : -40,
-      //     }}>
-      //     <TouchableOpacity
-      //       style={{
-      //         width: 180,
-      //         height: 40,
-
-      //         borderRadius: 30,
-      //         justifyContent: 'center',
-      //         alignItems: 'center',
-      //         flexDirection: 'row',
-      //       }}
-      //       activeOpacity={0.5}
-      //       onPress={() => {
-      //         setIsCustomWorkout(!isCustomWorkout);
-      //       }}>
-      //       <Image
-      //         source={localImage.Plus}
-      //         style={{width: 20, height: 20}}
-      //         tintColor={AppColor.WHITE}
-      //       />
-      //       <Text style={styles.button}>{'Create Workout'}</Text>
-      //     </TouchableOpacity>
-      //   </LinearGradient>
-      // </View>
     );
   };
 
@@ -452,26 +381,6 @@ const CustomWorkout = ({navigation}) => {
     }
   };
 
-  // const getAllExerciseData = async () => {
-  //   try {
-  //     const exerciseData = await axios.get(
-  //       `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
-  //     );
-
-  //     if (
-  //       exerciseData?.data?.msg == 'Please update the app to the latest version'
-  //     ) {
-  //       dispatch(setAllExercise([]));
-  //     } else if (exerciseData?.data?.length > 0) {
-  //       dispatch(setAllExercise(exerciseData?.data));
-  //     } else {
-  //       dispatch(setAllExercise([]));
-  //     }
-  //   } catch (error) {
-  //     dispatch(setAllExercise([]));
-  //     console.log('All-EXCERSIE-ERROR', error);
-  //   }
-  // };
   const getAllChallangeAndAllExerciseData = async () => {
     let responseData = 0;
     if (Object.keys(getUserDataDetails).length > 0) {
@@ -501,19 +410,7 @@ const CustomWorkout = ({navigation}) => {
       }
     }
   };
-  // const bannerAdsDisplay = () => {
-  //   if (getPurchaseHistory.length > 0) {
-  //     if (
-  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-  //     ) {
-  //       return null;
-  //     } else {
-  //       return <BannerAdd bannerAdId={bannerAdId} />;
-  //     }
-  //   } else {
-  //     return <BannerAdd bannerAdId={bannerAdId} />;
-  //   }
-  // };
+
   return (
     <>
       <NewHeader
@@ -584,18 +481,6 @@ const CustomWorkout = ({navigation}) => {
               paddingVertical: 20,
               borderRadius: 10,
             }}>
-            {/* <Text
-              style={{
-                color: AppColor.HEADERTEXTCOLOR,
-                fontFamily: Fonts.MONTSERRAT_BOLD,
-                fontWeight: '600',
-                lineHeight: 30,
-                fontSize: 18,
-                alignItems: 'center',
-                justifyContent: 'flex-start',
-              }}>
-              Workout For Beginners
-            </Text> */}
             <TouchableOpacity
               style={styles.imageView}
               onPress={() => {
@@ -704,7 +589,8 @@ const styles = StyleSheet.create({
 
   meditionBox: {
     backgroundColor: 'white',
-    width: '92%',
+    width: '96%',
+
     alignSelf: 'center',
   },
   buttonStyle: {

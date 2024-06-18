@@ -207,7 +207,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
 
   const renderItem = useMemo(
     () =>
-      ({item}) => {
+      ({item, index}) => {
         return (
           <>
             <TouchableOpacity
@@ -228,21 +228,6 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                 paddingHorizontal: 20,
                 padding: 5,
                 borderColor: '#D9D9D9',
-
-                borderWidth: 1,
-
-                shadowColor: 'grey',
-                ...Platform.select({
-                  ios: {
-                    //shadowColor: '#000000',
-                    shadowOffset: {width: 0, height: 2},
-                    shadowOpacity: 0.2,
-                    shadowRadius: 4,
-                  },
-                  android: {
-                    elevation: 3,
-                  },
-                }),
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View
@@ -255,30 +240,6 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                     marginHorizontal: -12,
                     // alignItems: 'center',
                   }}>
-                  {/* {isLoading && (
-                    <ShimmerPlaceholder
-                      style={styles.loader}
-                      ref={avatarRef}
-                      autoRun
-                    />
-                  )} */}
-                  {/* <Image
-                    //  source={{uri: item?.exercise_image_link}}
-                    source={
-                      item?.exercise_image_link != null
-                        ? {uri: item?.exercise_image_link}
-                        : localImage.NOWORKOUT
-                    }
-                    onLoad={() => setIsLoading(false)}
-                    style={{
-                      width: 60,
-                      height: 60,
-                      justifyContent: 'center',
-                      alignSelf: 'center',
-                      // backgroundColor:'red',
-                    }}
-                    resizeMode="contain"
-                  /> */}
                   <FastImage
                     fallback={true}
                     // onError={onError}
@@ -344,8 +305,21 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                   </View>
                 </View>
               </View>
+
               {getExerciseStatus(item?.exercise_id, trackerData)}
+              
             </TouchableOpacity>
+            {index !== data?.exercise_data.length - 1 && (
+                <View
+                  style={{
+                    width: '100%',
+                    height: 1,
+
+                    alignItems: 'center',
+                    backgroundColor: '#33333314',
+                  }}
+                />
+              )}
           </>
         );
       },
@@ -405,8 +379,8 @@ const CustomWorkoutDetails = ({navigation, route}) => {
       );
 
       if (response?.data?.msg == 'data deleted successfully') {
-       // getCustomWorkout();
-        getUserDetailData()
+        // getCustomWorkout();
+        getUserDetailData();
         showMessage({
           message: 'Workout deleted successfully.',
           type: 'success',
