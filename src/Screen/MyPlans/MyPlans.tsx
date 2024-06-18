@@ -33,6 +33,7 @@ import {
   setEditedExercise,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
+  setFitCoins,
   setFitmeMealAdsCount,
   setHomeGraphData,
   setIsAlarmEnabled,
@@ -42,6 +43,7 @@ import {
   setUserProfileData,
   setVideoLocation,
   setWeeklyPlansData,
+  setWinnerAnnounced,
 } from '../../Component/ThemeRedux/Actions';
 import RNFetchBlob from 'rn-fetch-blob';
 import {showMessage} from 'react-native-flash-message';
@@ -60,6 +62,7 @@ import {
 import FitCoins from '../../Component/Utilities/FitCoins';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
+import ActivityLoader from '../../Component/ActivityLoader';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -90,6 +93,8 @@ const MyPlans = ({navigation}: any) => {
   const [buttonClicked, setButtonClicked] = useState(false);
   const [visible, setVisible] = useState(false);
   const [myRankData, setMyRankData] = useState([]);
+  const [downlodedVideoSent, setDownloadedVideoSent] = useState(false);
+  const [fetchCoins, setFetchCoins] = useState(false);
   const getFitmeMealAdsCount = useSelector(
     (state: any) => state.getFitmeMealAdsCount,
   );
@@ -109,6 +114,7 @@ const MyPlans = ({navigation}: any) => {
   const getEditedDayExercise = useSelector(
     (state: any) => state.getEditedDayExercise,
   );
+  const fitCoins = useSelector((state: any) => state.fitCoins);
   const isAlarmEnabled = useSelector((state: any) => state.isAlarmEnabled);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -126,7 +132,8 @@ const MyPlans = ({navigation}: any) => {
     React.useCallback(() => {
       if (enteredCurrentEvent) {
         getEarnedCoins();
-      }else{
+        getLeaderboardDataAPI();
+      } else {
         WeeklyStatusAPI();
       }
     }, [navigation]),
@@ -221,7 +228,7 @@ const MyPlans = ({navigation}: any) => {
       dispatch(setIsAlarmEnabled(true));
     }
   }, [isAlarmEnabled]);
- 
+
   // getCoinsdetails
   const getEarnedCoins = async () => {
     try {
@@ -392,6 +399,7 @@ const MyPlans = ({navigation}: any) => {
         setButtonClicked(true);
         downloadCounter++;
         setDownloade((downloadCounter / len) * 100);
+        console.log('downloaddd----->', downloadCounter);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -408,7 +416,6 @@ const MyPlans = ({navigation}: any) => {
             StoringData[data?.exercise_title] = res.path();
             downloadCounter++;
             setDownloade((downloadCounter / len) * 100);
-            console.log(downloadCounter);
           })
           .catch(err => {
             console.log(err);
@@ -443,7 +450,6 @@ const MyPlans = ({navigation}: any) => {
           },
         ),
       ).finally(() => {
-
         enteredCurrentEvent
           ? RewardsbeforeNextScreen(selectedDay)
           : beforeNextScreen(selectedDay);
@@ -453,6 +459,7 @@ const MyPlans = ({navigation}: any) => {
 
   const beforeNextScreen = async (selectedDay: any) => {
     downloadCounter = 0;
+    setDownloadedVideoSent(true);
     for (const item of getWeeklyPlansData[WeekArray[selectedDay]]?.exercises) {
       datas.push({
         user_id: getUserDataDetails?.id,
@@ -473,6 +480,7 @@ const MyPlans = ({navigation}: any) => {
         setDownloade(0);
         setButtonClicked(false);
         setVisible(false);
+        setDownloadedVideoSent(false);
         let checkAdsShow = AddCountFunction();
 
         if (checkAdsShow == true) {
@@ -517,6 +525,7 @@ const MyPlans = ({navigation}: any) => {
       setDownloade(0);
       setButtonClicked(false);
       setVisible(false);
+      setDownloadedVideoSent(false);
       showMessage({
         message: 'Error, Please try again later',
         type: 'danger',
@@ -528,6 +537,7 @@ const MyPlans = ({navigation}: any) => {
   };
   const RewardsbeforeNextScreen = async (selectedDay: any) => {
     downloadCounter = 0;
+    setDownloadedVideoSent(true);
     for (const item of getWeeklyPlansData[WeekArray[selectedDay]]?.exercises) {
       datas.push({
         user_id: getUserDataDetails?.id,
@@ -537,7 +547,7 @@ const MyPlans = ({navigation}: any) => {
         fit_coins: getWeeklyPlansData[WeekArray[selectedDay]]?.total_coins,
       });
     }
-    console.log('REWARDS BEFORE NEXT', datas);
+    // console.log('REWARDS BEFORE NEXT', datas);
     try {
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EVENT_EXERCISE,
@@ -553,6 +563,7 @@ const MyPlans = ({navigation}: any) => {
         setDownloade(0);
         setButtonClicked(false);
         setVisible(false);
+        setDownloadedVideoSent(false);
         // let checkAdsShow = AddCountFunction();
 
         // if (checkAdsShow == true) {
@@ -591,6 +602,7 @@ const MyPlans = ({navigation}: any) => {
         // }
       } else {
         // console.log("ALREADY EXIST",res.data)
+        setDownloadedVideoSent(false);
         navigation.navigate('Exercise', {
           allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
           currentExercise:
@@ -620,22 +632,31 @@ const MyPlans = ({navigation}: any) => {
   };
   //getLeaderBoardPoints
   const getLeaderboardDataAPI = async () => {
+    setFetchCoins(true);
     try {
       const result = await axios({
-        // url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${appVersion}`,
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
       if (result.data) {
         const myRank = result.data?.data?.findIndex(
           item => item?.id == getUserDataDetails?.id,
         );
+        setFetchCoins(false);
         setMyRankData(result.data?.data[myRank]);
+        dispatch(setFitCoins(result.data?.data[myRank]?.fit_coins));
+        dispatch(
+          setWinnerAnnounced(
+            result.data?.winner_announced == true ? true : false,
+          ),
+        );
         // console.log('RANK DATA', myRankData);
       }
       setRefresh(false);
+      setFetchCoins(false);
     } catch (error) {
       console.log(error);
       setRefresh(false);
+      setFetchCoins(false);
     }
   };
   const toNextScreen = async (selectedDay: any) => {
@@ -654,7 +675,7 @@ const MyPlans = ({navigation}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-
+      setDownloadedVideoSent(false);
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -667,6 +688,7 @@ const MyPlans = ({navigation}: any) => {
         setButtonClicked(false);
         setVisible(false);
         setDownloade(0);
+
         let checkAdsShow = AddCountFunction();
         if (checkAdsShow == true) {
           showInterstitialAd();
@@ -708,6 +730,7 @@ const MyPlans = ({navigation}: any) => {
       setDownloade(0);
       setButtonClicked(false);
       setVisible(false);
+      setDownloadedVideoSent(false);
       console.error(error, 'PostDaysAPIERror');
       showMessage({
         message: 'Error, Please try again later',
@@ -858,7 +881,6 @@ const MyPlans = ({navigation}: any) => {
       }
     }
   };
-  // console.log('exercise---->', getEditedDayExercise[WeekArray[selectedDay]]);
   return (
     <SafeAreaView
       style={{
@@ -870,8 +892,10 @@ const MyPlans = ({navigation}: any) => {
         header={'Weekly Plan'}
         SearchButton={false}
         backButton={false}
-        // extraView={enteredCurrentEvent ? true : false}
-        // coins={myRankData?.fit_coins ?? '--'}
+        extraView={true}
+        enteredCurrentEvent={enteredCurrentEvent}
+        coins={fitCoins > 0 ? fitCoins : 0}
+        coinsLoaded={fetchCoins}
       />
 
       <View
@@ -1003,11 +1027,12 @@ const MyPlans = ({navigation}: any) => {
           emptyComponent()
         )}
       </View>
-      <DownloadingWorkout
+      {downlodedVideoSent ? <ActivityLoader /> : null}
+      {/* <DownloadingWorkout
         hasAds={hasAds}
         downloaded={downloaded}
         buttonClicked={buttonClicked}
-      />
+      /> */}
     </SafeAreaView>
   );
 };

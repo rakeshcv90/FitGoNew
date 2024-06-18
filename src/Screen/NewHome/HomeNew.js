@@ -91,7 +91,7 @@ import {checkLocationPermission} from '../Terms&Country/LocationPermission';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import {handleStart} from '../../Component/Utilities/Bannerfunctions';
 import FitCoins from '../../Component/Utilities/FitCoins';
-import { LocationPermissionModal } from '../../Component/Utilities/LocationPermission';
+import {LocationPermissionModal} from '../../Component/Utilities/LocationPermission';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 
 const HomeNew = ({navigation}) => {
@@ -132,14 +132,11 @@ const HomeNew = ({navigation}) => {
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const [BannerType1, setBannertype1] = useState('');
   const [Bannertype2, setBannerType2] = useState('');
-  const [BannerType, setBannertype] = useState('');
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [dataType, setDatatype] = useState('');
   const enteredUpcomingEvent = useSelector(
     state => state?.enteredUpcomingEvent,
   );
   const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
-  const [locationP1,setLocationP1]=useState(false)
+  const [locationP1, setLocationP1] = useState(false);
   // const [backPressCount, setBackPressCount] = useState(0);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
 
@@ -215,7 +212,7 @@ const HomeNew = ({navigation}) => {
       } else if (!enteredCurrentEvent && enteredUpcomingEvent) {
         setBannertype1('joined_challenge');
       } else {
-        setBannertype1('new_join');
+        setBannertype1('upcoming_challenge');
       }
     } else if (getOfferAgreement?.location != 'India') {
       checkLocationPermission()
@@ -1299,7 +1296,7 @@ const HomeNew = ({navigation}) => {
                   : getUserDataDetails.name.split(' ')[0]
                 : 'Guest')}
           </Text>
-          {enteredCurrentEvent && (
+          {enteredCurrentEvent ? (
             <FitCoins
               onPress={() => {
                 AnalyticsConsole('LB');
@@ -1311,6 +1308,19 @@ const HomeNew = ({navigation}) => {
               }}
               coins={fitCoins > 0 ? fitCoins : 0}
             />
+          ) : !getOfferAgreement?.location ? (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('OfferTerms', {type: 'homeScreen'});
+              }}>
+              <Image
+                source={localImage.RTermsLogo}
+                style={{height: 35, width: 35}}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          ) : (
+            <></>
           )}
         </View>
 
@@ -2213,7 +2223,10 @@ const HomeNew = ({navigation}) => {
       {modalVisible ? <UpdateGoalModal /> : null}
       <PermissionModal locationP={locationP} setLocationP={setLocationP} />
       <RewardModal visible={getRewardModalStatus} navigation={navigation} />
-      <LocationPermissionModal locationP={locationP1} setLocationP={setLocationP1}/>
+      <LocationPermissionModal
+        locationP={locationP1}
+        setLocationP={setLocationP1}
+      />
     </SafeAreaView>
   );
 };

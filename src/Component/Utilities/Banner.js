@@ -6,7 +6,7 @@ import {
   Alert,
   StyleSheet,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../Config';
 import {locationPermission} from '../../Screen/Terms&Country/LocationPermission';
@@ -70,20 +70,20 @@ const Banners = ({
           .then(result => {
             if (result == 'blocked') {
               setLocationP(true);
-              setLoaded(true)
+              setLoaded(true);
             } else if (result === 'denied') {
               setLocationP(true);
-              setLoaded(true)
+              setLoaded(true);
             } else if (result) {
               StoreAgreementApi(result);
             } else if (!result) {
               setLocationP(true);
-              setLoaded(true)
+              setLoaded(true);
             }
           })
           .catch(err => {
             console.log('location Error', err);
-            setLoaded(true)
+            setLoaded(true);
           });
       }
     } else {
@@ -255,6 +255,8 @@ const Banners = ({
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
       });
+    } else if (type1 == 'upcoming_challenge') {
+      navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
     } else if (
       type1 == 'joined_challenge' ||
       (type2 == 'joined_challenge' && index == 1)
@@ -265,67 +267,62 @@ const Banners = ({
     } else if (type2 == 'upcoming_challenge' && index == 1) {
       navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
     }
-    // if (type1 == 'joined_challenge' && type2 == 'ongoing_challenge') {
-    //   index == 0
-    //     ? navigation.navigate('UpcomingEvent', {eventType: 'current'})
-    //     : navigation.navigate('MyPlans');
-    // } else if (type1 == 'joined_challenge' && type2 == 'upcoming_challenge') {
-    //   index == 0
-    //     ? navigation.navigate('MyPlans')
-    //     : navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
-    // } else if (type1 == 'joined_challenge') {
-    //   navigation.navigate('UpcomingEvent', {eventType: 'current'});
-    // }
   };
+
   const Box = ({imageSource}) => {
-    return (
-      <View style={{justifyContent: 'center', width: DeviceWidth * 0.95}}>
-        {loaded ? null : <ActivityLoader />}
-        <FlatList
-          data={imageSource}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index}) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => handleEventClicks(index)}
-              style={{
-                height: DeviceHeigth * 0.18,
-                width:
-                  imageSource?.length > 1
-                    ? DeviceWidth * 0.9
-                    : DeviceWidth * 0.95,
-                alignSelf: 'center',
-                marginRight: 15,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              {loading && (
-                <ShimmerPlaceholder
-                  style={{
-                    height: DeviceHeigth * 0.18,
-                    width:
-                      imageSource?.length > 1
-                        ? DeviceWidth * 0.9
-                        : DeviceWidth * 0.95,
-                    borderRadius: 20,
-                    position: 'absolute',
-                  }}
-                  ref={avatarRef}
-                  autoRun
-                />
-              )}
-              <Image
-                style={{width: '100%', height: '100%', borderRadius: 20}}
-                resizeMode="stretch"
-                source={{uri: item}}
-                onLoad={() => setLoading(false)}
-              />
-            </TouchableOpacity>
-          )}
+    const renderItem = ({item, index}) => (
+      <TouchableOpacity
+        key={index}
+        onPress={() => handleEventClicks(index)}
+        style={{
+          height: DeviceHeigth * 0.18,
+          width:
+            imageSource?.length > 1 ? DeviceWidth * 0.9 : DeviceWidth * 0.95,
+          alignSelf: 'center',
+          marginRight: 15,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        {loading && (
+          <ShimmerPlaceholder
+            style={{
+              height: DeviceHeigth * 0.18,
+              width:
+                imageSource?.length > 1
+                  ? DeviceWidth * 0.9
+                  : DeviceWidth * 0.95,
+              borderRadius: 20,
+              position: 'absolute',
+            }}
+            ref={avatarRef}
+            autoRun
+          />
+        )}
+        <Image
+          style={{width: '100%', height: '100%', borderRadius: 20}}
+          resizeMode="stretch"
+          source={{uri: item}}
+          onLoad={() => setLoading(false)}
         />
-      </View>
+      </TouchableOpacity>
     );
+
+    const memoizedComponent = useMemo(
+      () => (
+        <View style={{justifyContent: 'center', width: DeviceWidth * 0.95}}>
+          {loaded ? null : <ActivityLoader />}
+          <FlatList
+            data={imageSource}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            renderItem={renderItem}
+          />
+        </View>
+      ),
+      [imageSource, loaded],
+    );
+
+    return memoizedComponent;
   };
   return (
     <View style={{marginVertical: 15, marginLeft: 10}}>
