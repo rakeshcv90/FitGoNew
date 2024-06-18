@@ -180,30 +180,6 @@ const Banners = ({
       setLoaded(true);
     }
   };
-  const showPermissionAlert = () => {
-    Alert.alert(
-      'Permission Required',
-      'To use the rewards feature, please enable location access in settings',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-          onPress: () => {
-            StoreAgreementApi('');
-          },
-        },
-        {
-          text: 'Open settings',
-          onPress: () => {
-            openSettings();
-            setLoaded(true);
-          },
-        },
-      ],
-      {cancelable: false},
-    );
-  };
-
   const getUserAllInData = async () => {
     try {
       const responseData = await axios.get(
@@ -321,7 +297,6 @@ const Banners = ({
       ),
       [imageSource, loaded],
     );
-
     return memoizedComponent;
   };
   return (
