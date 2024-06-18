@@ -43,7 +43,7 @@ import App from '../../../App';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
-const Store = ({navigation}) => {
+const StoreScreen = ({navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getStoreData = useSelector(state => state.getStoreData);
   const [listData, setListData] = useState([]);
@@ -596,4 +596,4 @@ var styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
-export default Store;
+export default StoreScreen;

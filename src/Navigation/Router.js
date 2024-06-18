@@ -45,7 +45,7 @@ import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {createStackNavigator} from '@react-navigation/stack';
-import Store from '../Screen/NewHome/Store';
+import StoreScreen from '../Screen/NewHome/StoreScreen';
 import FocuseWorkoutList from '../Screen/FocusArea/FocuseWorkoutList';
 import CustomWorkout from '../Screen/CustomWorkout/CustomWorkout';
 import CustomWorkoutDetails from '../Screen/CustomWorkout/CustomWorkoutDetails';
@@ -115,7 +115,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Meals" component={Meals} />
       <Stack.Screen name="MealDetails" component={MealDetails} />
       <Stack.Screen name="ProductsList" component={ProductsList} />
-      <Stack.Screen name="Store" component={Store} />
+      <Stack.Screen name="Store" component={StoreScreen} />
       <Stack.Screen name="MeditationDetails" component={MeditationDetails} />
       <Stack.Screen
         name="MeditationExerciseDetails"
