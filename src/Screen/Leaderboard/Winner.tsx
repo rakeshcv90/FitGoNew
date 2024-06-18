@@ -60,7 +60,7 @@ const Winner = ({navigation}: any) => {
           setUserWinner(true);
           setWinnerData(result.data?.data[0]);
         } else {
-          setUserWinner(true);
+          //setUserWinner(true);
           const userIndex = result.data?.data?.findIndex(
             (item: TypeData) => item.id == getUserDataDetails?.id,
           );
@@ -164,6 +164,7 @@ const Winner = ({navigation}: any) => {
                 fontSize: 32,
                 lineHeight: 40,
                 color: AppColor.WHITE,
+                textTransform:'uppercase'
               }}>
               {winnerData?.name.split(' ') &&
               winnerData.name.split(' ').length > 1
@@ -447,6 +448,7 @@ const Winner = ({navigation}: any) => {
                     fontSize: 32,
                     lineHeight: 40,
                     color: AppColor.WHITE,
+                    textTransform:'uppercase'
                   }}>
                   {winnerData?.name.split(' ') &&
                   winnerData.name.split(' ').length > 1
@@ -572,6 +574,7 @@ const Winner = ({navigation}: any) => {
                     position: 'relative',
                     top: PLATFORM_IOS ? DeviceWidth * 0.01 : DeviceWidth * 0.01,
                     color: AppColor.WHITE,
+                    textTransform:'uppercase'
                   }}>
                   {userData?.name.split(' ') &&
                   userData.name.split(' ').length > 1

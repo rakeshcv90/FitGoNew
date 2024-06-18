@@ -35,6 +35,7 @@ const NewHeader = ({
   const navigation = useNavigation();
   const getExperience = useSelector(state => state.getExperience);
   const dispatch = useDispatch();
+  const winnerAnnounced = useSelector(state => state.winnerAnnounced);
   return (
     <SafeAreaView
       style={[
