@@ -192,21 +192,15 @@ const SplaceScreen = ({navigation}) => {
     setLoaded(false);
     if (getPurchaseHistory?.plan != null) {
       if (getPurchaseHistory?.plan == 'premium' && isValid) {
-        setTimeout(() => {
-          loadScreen();
-        }, 6000);
-      } else {
         loadScreen();
-        setTimeout(() => {
-          loaded.show();
+      } else {
+        loaded.show();
           loadScreen();
-        }, 6000);
+        
       }
     } else {
-      setTimeout(() => {
-        loaded.show();
-        loadScreen();
-      }, 6000);
+      loaded.show();
+      loadScreen();
     }
   }
   const getPlanData = () => {

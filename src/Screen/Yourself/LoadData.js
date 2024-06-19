@@ -92,15 +92,9 @@ const LoadData = ({navigation}) => {
   ];
   const [activeNext, setActiveNext] = useState(false);
 
-  const {
-    currentWorkoutData,
-    completeProfileData,
-    getLaterButtonData,
-    mindSetData,
-    mindsetConsent,
-    getUserDataDetails,
-    getUserID,
-  } = useSelector(state => state);
+  const getLaterButtonData = useSelector(state => state.getLaterButtonData);
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  const getUserID = useSelector(state => state.getUserID);
 
   const translationX = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();

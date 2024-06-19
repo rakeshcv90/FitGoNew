@@ -301,11 +301,8 @@ const CustomWorkout = ({navigation}) => {
             }}>
             on your preferences.
           </Text>
-          <LinearGradient
-            start={{x: 0, y: 1}}
-            end={{x: 1, y: 0}}
-            // colors={['#941000', '#D01818']}
-            colors={['#D01818', '#941000']}
+          <View
+       
             style={{
               width: 180,
               height: 40,
@@ -314,6 +311,7 @@ const CustomWorkout = ({navigation}) => {
               alignItems: 'center',
               marginBottom: 100,
               top: DeviceHeigth * 0.05,
+              backgroundColor: '#A93737',
               //  Platform.OS == 'android' ? -40 : DeviceHeigth >= 1024 ? 30 : -40,
             }}>
             <TouchableOpacity
@@ -337,7 +335,7 @@ const CustomWorkout = ({navigation}) => {
               />
               <Text style={styles.button}>{'Create Workout'}</Text>
             </TouchableOpacity>
-          </LinearGradient>
+          </View>
         </View>
       </View>
     );
@@ -440,18 +438,14 @@ const CustomWorkout = ({navigation}) => {
             onPress={() => {
               setIsCustomWorkout(true);
             }}>
-            <LinearGradient
-              start={{x: 0, y: 1}}
-              end={{x: 1, y: 0}}
-              colors={['#D01818', '#941000']}
-              style={styles.buttonStyle}>
+            
               <Image
                 source={localImage.Plus}
                 style={{width: 20, height: 20}}
                 tintColor={AppColor.WHITE}
               />
               <Text style={styles.button}>{'Create Workout'}</Text>
-            </LinearGradient>
+        
           </TouchableOpacity>
         )}
       </View>
@@ -603,6 +597,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     bottom: DeviceHeigth * 0.015,
     right: 10,
+    backgroundColor: '#A93737',
   },
   button: {
     fontSize: 15,
