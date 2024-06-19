@@ -112,8 +112,8 @@ const NewProfile = ({navigation}) => {
     },
     {
       id: 2,
-      txt: 'Subscription',
-      img: localImage.Planning,
+      txt: 'My Details',
+      img: localImage.NewPrfile,
     },
   ];
   const handleCardDataPress = id => {
@@ -124,6 +124,15 @@ const NewProfile = ({navigation}) => {
       AnalyticsConsole(`SUBSCRIPTION_BUTTON`);
       navigation.navigate('NewSubscription',{upgrade: false});
     } else if (id == 3) {
+      AnalyticsConsole(`PERSO_DETAILS_BUTTON`);
+      navigation.navigate('NewPersonalDetails');
+    }
+  };
+  const handleCardDataPress1 = id => {
+    if (id == 1) {
+      AnalyticsConsole(`REMINDER_BUTTON`);
+      setVisible(true);
+    } else if (id == 2) {
       AnalyticsConsole(`PERSO_DETAILS_BUTTON`);
       navigation.navigate('NewPersonalDetails');
     }
@@ -909,7 +918,7 @@ const NewProfile = ({navigation}) => {
               <TouchableOpacity
                 key={i}
                 style={{justifyContent: 'center', alignItems: 'center'}}
-                onPress={() => handleCardDataPress(v.id)}>
+                onPress={() => handleCardDataPress1(v.id)}>
                 <Image
                   source={v.img}
                   style={{height: 35, width: 35}}

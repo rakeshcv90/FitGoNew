@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Platform,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import React from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Config';
@@ -28,10 +29,13 @@ const NewHeader = ({
   onPress,
   extraView,
   coins,
+  enteredCurrentEvent,
+  coinsLoaded,
 }) => {
   const navigation = useNavigation();
   const getExperience = useSelector(state => state.getExperience);
   const dispatch = useDispatch();
+  const winnerAnnounced = useSelector(state => state.winnerAnnounced);
   return (
     <SafeAreaView
       style={[
@@ -91,20 +95,27 @@ const NewHeader = ({
       </Text>
       {!SearchButton ? (
         extraView ? (
-          <View style={{right: DeviceWidth * 0.13, top: -3}}>
-            <FitCoins
-              onPress={() => {
-                AnalyticsConsole('LB');
-                const today = moment().day();
-                if (today == 0 || today == 6) {
-                  navigation.navigate('Winner');
-                } else {
-                  navigation.navigate('Leaderboard');
-                }
-              }}
-              coins={coins<0?0:coins}
-            />
-          </View>
+          enteredCurrentEvent ? (
+            <View style={{right: DeviceWidth * 0.13, top: -3}}>
+              {!coinsLoaded ? (
+                <FitCoins
+                  onPress={() => {
+                    AnalyticsConsole('LB');
+                    if (winnerAnnounced) {
+                      navigation.navigate('Winner');
+                    } else {
+                      navigation.navigate('Leaderboard');
+                    }
+                  }}
+                  coins={coins}
+                />
+              ) : (
+                <ActivityIndicator size={25} color={AppColor.YELLOW} />
+              )}
+            </View>
+          ) : (
+            <View style={{width: 25}}></View>
+          )
         ) : (
           <View style={{width: 25}}></View>
         )

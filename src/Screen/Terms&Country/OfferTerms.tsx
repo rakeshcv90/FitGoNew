@@ -38,6 +38,7 @@ import {
 } from '../../Component/ThemeRedux/Actions';
 import {useSelector, useDispatch} from 'react-redux';
 import {BlurView} from '@react-native-community/blur';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const radioData = [
   {
     id: 1,
@@ -59,8 +60,8 @@ const OfferTerms = ({navigation, route}: any) => {
     (state: any) => state.getAgreementContent,
   );
   const [modalVisible, setModalVisible] = useState(true);
-  const routeName = route?.params?.routeName;
   const CustomCreated = route?.params?.CustomCreated;
+  const screenType = route?.params?.type;
   const {width: windowWidth} = useWindowDimensions();
   const contentWidth = windowWidth;
   useEffect(() => {
@@ -197,6 +198,18 @@ const OfferTerms = ({navigation, route}: any) => {
           }),
         }}>
         {loaded ? null : <ActivityLoader />}
+        {screenType ? (
+          <Icon
+            name="arrow-left"
+            color={AppColor.BLACK}
+            size={25}
+            style={{marginLeft: 14}}
+            onPress={()=>navigation.goBack()}
+            
+          />
+        ) : (
+          <></>
+        )}
         <View
           style={{
             marginTop: 10,
@@ -324,17 +337,23 @@ const OfferTerms = ({navigation, route}: any) => {
             />
           </View>
 
-          <View style={styles.HLine} />
-          <CheckBox />
-          <View style={{marginBottom: 15}}>
-            <NewButton
-              pV={14}
-              title={'I Agree'}
-              disabled={!checked}
-              opacity={checked ? 1 : 0.7}
-              onPress={() => handleAgreement()}
-            />
-          </View>
+          {!screenType ? (
+            <>
+              <View style={styles.HLine} />
+              <CheckBox />
+              <View style={{marginBottom: 15}}>
+                <NewButton
+                  pV={14}
+                  title={'I Agree'}
+                  disabled={!checked}
+                  opacity={checked ? 1 : 0.7}
+                  onPress={() => handleAgreement()}
+                />
+              </View>
+            </>
+          ) : (
+            <></>
+          )}
         </ScrollView>
       </View>
     </SafeAreaView>

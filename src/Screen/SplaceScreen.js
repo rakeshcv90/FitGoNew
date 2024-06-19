@@ -59,7 +59,7 @@ const SplaceScreen = ({navigation}) => {
   useEffect(() => {
     requestPermissionforNotification(dispatch);
     getUserAllInData();
-   // getAllChallangeAndAllExerciseData();
+    // getAllChallangeAndAllExerciseData();
     getPlanData();
 
     // getProfileData(getUserDataDetails?.id),
@@ -192,14 +192,21 @@ const SplaceScreen = ({navigation}) => {
     setLoaded(false);
     if (getPurchaseHistory?.plan != null) {
       if (getPurchaseHistory?.plan == 'premium' && isValid) {
-        loadScreen();
+        setTimeout(() => {
+          loadScreen();
+        }, 6000);
       } else {
-        loaded.show();
         loadScreen();
+        setTimeout(() => {
+          loaded.show();
+          loadScreen();
+        }, 6000);
       }
     } else {
-      loaded.show();
-      loadScreen();
+      setTimeout(() => {
+        loaded.show();
+        loadScreen();
+      }, 6000);
     }
   }
   const getPlanData = () => {
@@ -454,12 +461,12 @@ const SplaceScreen = ({navigation}) => {
         );
         dispatch(setChallengesData(responseData.data.challenge_data));
         dispatch(setAllExercise(responseData.data.data));
-        loadScreen();
+        //loadScreen();
       } catch (error) {
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
         dispatch(setChallengesData([]));
         dispatch(setAllExercise([]));
-        loadScreen();
+        // loadScreen();
       }
     } else {
       try {
@@ -468,11 +475,11 @@ const SplaceScreen = ({navigation}) => {
         );
         dispatch(setChallengesData(responseData.data.challenge_data));
         dispatch(setAllExercise(responseData.data.data));
-        loadScreen();
+        //loadScreen();
       } catch (error) {
         dispatch(setChallengesData([]));
         dispatch(setAllExercise([]));
-        loadScreen();
+        //  loadScreen();
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
       }
     }

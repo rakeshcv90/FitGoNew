@@ -243,7 +243,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
           width: DeviceWidth * 0.9,
           textAlign: 'center',
         }}>
-        You completed your{' '}
+        You have completed your{' '}
         {type != 'weekly'
           ? data?.workout_title == undefined
             ? data?.title == undefined

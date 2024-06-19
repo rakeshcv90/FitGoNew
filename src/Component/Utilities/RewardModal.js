@@ -143,31 +143,35 @@ const RewardModal = ({visible, navigation}) => {
     <Modal transparent visible={visible}>
       <View style={{backgroundColor: `rgba(0,0,0,0.4)`, flex: 1}}>
         <View style={styles.View1}>
-        <Icon
-              name="close"
-              size={25}
-              color={AppColor.BLACK}
-              style={{margin: 16,position:'absolute',right:0}}
-              onPress={() => {
-                dispatch(setRewardModal(false));
-              }}
-            />
+          <Icon
+            name="close"
+            size={25}
+            color={AppColor.BLACK}
+            style={{margin: 16, position: 'absolute', right: 0}}
+            onPress={() => {
+              dispatch(setRewardModal(false));
+            }}
+          />
           <View
             style={{
               justifyContent: 'center',
               alignItems: 'center',
-             marginVertical:5
+              marginVertical: 5,
             }}>
             <Image
               source={localImage.Reward_icon}
               style={[styles.img2]}
               resizeMode="contain"
             />
-            
           </View>
-          <View style={{marginVertical: 30}}>
-            <Text style={[styles.txt1, {fontSize: 15,lineHeight:20}]}>
-              <Text style={{color: AppColor.RED, fontSize: 20,lineHeight:40}}>
+          <View
+            style={{
+              marginVertical: 30,
+              width: DeviceWidth * 0.85,
+              alignSelf: 'center',
+            }}>
+            <Text style={[styles.txt1, {fontSize: 15, lineHeight: 20}]}>
+              <Text style={{color: AppColor.RED, fontSize: 20, lineHeight: 40}}>
                 {'Earn While You Burn\n'}
               </Text>
               Join the fitness challenge today for a healthier you and a
@@ -179,7 +183,7 @@ const RewardModal = ({visible, navigation}) => {
               ButtonWidth={DeviceWidth * 0.6}
               onPress={() => {
                 dispatch(setRewardModal(false));
-                navigation.navigate('NewSubscription',{upgrade: false});
+                navigation.navigate('NewSubscription', {upgrade: false});
               }}
             />
           </View>

@@ -790,7 +790,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
           </View>
           <GradientButton
             // flex={0.01}
-            text={downloaded ? `Downloading` : 'Start All'}
+            text={downloaded ? `Downloading` : 'Start All Exercises'}
             h={50}
             colors={['#A93737', '#A93737']}
             textStyle={styles.buttonText}

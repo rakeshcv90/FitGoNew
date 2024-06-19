@@ -124,7 +124,7 @@ const Weight = ({route, navigation}: any) => {
                   ? -DeviceHeigth * 0.06
                   : -DeviceHeigth * 0.02,
             }}>
-            <Bulb screen={'What’s your Current weight?'} />
+            <Bulb screen={'What’s your current weight?'} />
           </View>
           <View style={{marginTop: 20}} />
           <Toggle

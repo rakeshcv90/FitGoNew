@@ -273,12 +273,12 @@ const UpcomingEvent = ({navigation, route}: any) => {
       </Modal>
     );
   };
-  // console.log(
-  //   'mo',
-  //   getPurchaseHistory,
-  //   eventType,
-  //   // moment().day(getPurchaseHistory?.currentDay).format('YYYY-MM-DD'),
-  // );
+  console.log(
+    'mo',
+    getPurchaseHistory,
+    eventType,
+    // moment().day(getPurchaseHistory?.currentDay).format('YYYY-MM-DD'),
+  );
 
   const dayLeft =
     getPurchaseHistory?.upcoming_day_status == 1 &&
@@ -349,7 +349,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
                     getPurchaseHistory?.upcoming_day_status == 1
                       ? `${moment(dayLeft).diff(
                           moment()
-                            .day(getPurchaseHistory?.currentDay-6)
+                            .day(getPurchaseHistory?.currentDay)
                             .format('YYYY-MM-DD'),
                           'days',
                         )} days left`
@@ -484,7 +484,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
               />
             </TouchableOpacity>
           ) : getPurchaseHistory?.upcoming_day_status != 1 ? (
-            getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage ? (
+            getPurchaseHistory?.used_plan == getPurchaseHistory?.allow_usage ? (
               <FitText
                 type="normal"
                 value="You've reached your limit to join the challenge. Upgrade your plan to join the new challenge"

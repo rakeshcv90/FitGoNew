@@ -990,7 +990,7 @@ const Workouts = ({navigation}: any) => {
                           alignItems: 'center',
                           justifyContent: 'flex-start',
                         }}>
-                        Personalized Workouts
+                        Custom Made
                       </Text>
                     </View>
                    

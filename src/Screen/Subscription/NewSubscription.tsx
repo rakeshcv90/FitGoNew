@@ -371,6 +371,7 @@ const NewSubscription = ({navigation, route}: any) => {
       });
 
       fetchPurchaseHistoryAndroid(purchase[0].dataAndroid);
+
     } catch (error) {
       console.log('Failed to purchase Android product', error);
     }
@@ -423,7 +424,7 @@ const NewSubscription = ({navigation, route}: any) => {
         getUserDetailData()
         setForLoading(false);
         setTimeout(() => {
-          navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+          navigation.navigate('UpcomingEvent', {eventType: 'current'});
         }, 2500);
       } else if (
         res.data.message == 'Plan upgraded and new event created successfully'
@@ -432,7 +433,7 @@ const NewSubscription = ({navigation, route}: any) => {
         getUserDetailData()
         setForLoading(false);
         setTimeout(() => {
-          navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+          navigation.navigate('UpcomingEvent', {eventType: 'current'});
         }, 2500);
       } else if (
         res.data.message ==

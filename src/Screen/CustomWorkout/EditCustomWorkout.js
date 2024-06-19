@@ -13,7 +13,8 @@ import NewHeader from '../../Component/Headers/NewHeader';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
 import {useDispatch, useSelector} from 'react-redux';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+//import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icons from 'react-native-vector-icons/FontAwesome5';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -28,6 +29,7 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
 import {setCustomWorkoutData} from '../../Component/ThemeRedux/Actions';
 import VersionNumber from 'react-native-version-number';
+import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 
 const EditCustomWorkout = ({navigation, route}) => {
   const data = route?.params?.item;
@@ -349,15 +351,20 @@ const EditCustomWorkout = ({navigation, route}) => {
   };
   return (
     <>
-      <NewHeader
-        header={'Custom Workout'}
+      {/* <NewHeader
+        header={'Edit Custom Workout'}
         SearchButton={false}
         backButton={true}
+      /> */}
+      <DietPlanHeader
+        header={'Edit Custom Workout'}
+        shadow
+        left={DeviceHeigth >= 1024 ? DeviceWidth * 0.045 : DeviceWidth * 0.02}
       />
       {forLoading ? <ActivityLoader /> : ''}
       <View style={styles.container}>
         <View style={{width: '95%', alignSelf: 'center'}}>
-          <Animated.View
+          {/* <Animated.View
             style={[
               {
                 top: -10,
@@ -403,8 +410,8 @@ const EditCustomWorkout = ({navigation, route}) => {
                 source={value == 0 ? localImage.Search : localImage.Cross}
               />
             </TouchableOpacity>
-          </Animated.View>
-          {value == 0 && (
+          </Animated.View> */}
+          {/* {value == 0 && (
             <View style={{top: -DeviceHeigth * 0.06}}>
               <Text
                 style={{
@@ -418,8 +425,8 @@ const EditCustomWorkout = ({navigation, route}) => {
                 Choose Your Exercise
               </Text>
             </View>
-          )}
-          <View
+          )} */}
+          {/* <View
             style={{
               top: value == 1 ? 20 : -25,
             }}>
@@ -438,11 +445,94 @@ const EditCustomWorkout = ({navigation, route}) => {
               }}
               renderItem={renderItem}
             />
+          </View> */}
+          <View
+            style={{
+              width: '90%',
+              height: 50,
+              alignSelf: 'center',
+              backgroundColor: '#F3F5F5',
+              borderRadius: 6,
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingLeft: 10,
+              top: -DeviceWidth * 0.05,
+            }}>
+            <Icons name="search" size={18} color={'#333333E5'} />
+            <TextInput
+              placeholder="Search Exercise"
+              placeholderTextColor="#33333380"
+              value={searchQuery}
+              onChangeText={text => {
+                setSearchQuery(text);
+                updateFilteredCategories(text);
+              }}
+              style={styles.inputText}
+            />
+          </View>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignSelf: 'center',
+              width: '100%',
+              alignSelf: 'center',
+            }}>
+            <FlatList
+              data={completeProfileData?.focusarea}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item, index}) => (
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  style={[
+                    styles.listView,
+                    {
+                      backgroundColor:
+                        bodyPart == item.bodypart_title ? '#A937371A' : '#fff',
+                      borderWidth: bodyPart != item.bodypart_title ? 1 : 0,
+                      borderColor:
+                        bodyPart != item.bodypart_title
+                          ? '#33333333'
+                          : '#A937371A',
+                      marginLeft: index == 0 ? DeviceWidth * 0.06 : 0,
+                      marginRight:
+                        index == completeProfileData?.focusarea?.length - 1
+                          ? DeviceWidth * 0.06
+                          : 5,
+                    },
+                  ]}
+                  onPress={() => {
+                    setBodyPart(item.bodypart_title);
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontWeight: '500',
+                      lineHeight: 16,
+                      textAlign: 'center',
+                      color:
+                        bodyPart != item.bodypart_title
+                          ? '#333333E5'
+                          : '#A93737',
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                    }}>
+                    {item.bodypart_title}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              showsVerticalScrollIndicator={false}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
+            />
           </View>
           <View
             style={[
               styles.meditionBox,
-              {paddingBottom: 300, top: value == 1 ? DeviceHeigth * 0.05 : 0},
+              {paddingBottom: 300, top:DeviceHeigth*0.03},
             ]}>
             <FlatList
               data={filteredCategories}
@@ -553,6 +643,27 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     backgroundColor: 'transparent',
     //lineHeight: 25,
+  },
+  inputText: {
+    paddingLeft: 15,
+    paddingRight: 15,
+    width: '90%',
+    height: 50,
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: '600',
+    fontFamily: 'Montserrat',
+    color: '#000',
+  },
+  listView: {
+    paddingLeft: 15,
+    paddingRight: 15,
+    height: 30,
+
+    borderRadius: 25,
+    marginHorizontal: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 export default EditCustomWorkout;

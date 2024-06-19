@@ -197,5 +197,7 @@ export const localImage = {
   PlanBenifits:require('../Icon/Images/InAppRewards/PlanBenifits.png'),
   NameUpdateModal:require('../Icon/Images/InAppRewards/NameUpdateModal.png'),
   Reward_icon:require('../Icon/Images/InAppRewards/Reward_icon.png'),
-  No_location:require('../Icon/Images/InAppRewards/No_location.png')
+  No_location:require('../Icon/Images/InAppRewards/No_location.png'),
+  RTermsLogo:require('../Icon/Images/InAppRewards/RTermslogo.png'),
+  SplaceLottie:require('../Icon/Images/InAppRewards/SplaceScreen.json')
 };

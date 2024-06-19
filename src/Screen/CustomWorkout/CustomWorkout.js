@@ -269,7 +269,7 @@ const CustomWorkout = ({navigation}) => {
               lineHeight: 26,
               fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
             }}>
-            No workout created yet !
+            No workout created yet!
           </Text>
         </View>
         <View
@@ -516,7 +516,7 @@ const CustomWorkout = ({navigation}) => {
                 lineHeight: 24,
                 fontWeight: '700',
               }}>
-              Enter workout name
+              Enter Workout Name
             </Text>
             <TextInput
               value={text}
@@ -524,7 +524,7 @@ const CustomWorkout = ({navigation}) => {
               underlineColor="#20202099"
               activeUnderlineColor="#20202099"
               outlineStyle={{borderRadius: 15}}
-              placeholder="Eg: Monday chest day"
+              placeholder="Eg: Monday, chest day"
               isFocused={true}
               style={{
                 marginVertical: 10,

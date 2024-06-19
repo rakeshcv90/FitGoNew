@@ -14,7 +14,9 @@ export const ExerciseComponetWithoutEvents = ({
   onPress,
   WeekStatus,
   getWeeklyPlansData,
-  download
+  download,
+  isClicked,
+  setIsClicked,
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
@@ -35,7 +37,14 @@ export const ExerciseComponetWithoutEvents = ({
               <Text style={styles.txt2}>{day ?? 'Monday'}</Text>
             </View>
           </View>
-          <NewButton title={'Start'} onPress={onPress} />
+          <NewButton
+            title={'Start'}
+            onPress={onPress}
+            withAnimation
+            download={download}
+            isClicked={isClicked}
+            setIsClicked={setIsClicked}
+          />
           <Text
             style={[
               styles.txt3,
@@ -100,8 +109,9 @@ export const ExerciseComponetWithoutEvents = ({
               borderWidth: 1,
               borderColor: AppColor.RED,
               borderRadius: 15,
-              // alignSelf:'center',
+              alignSelf:'center',
               marginTop: DeviceHeigth * 0.05,
+              width: DeviceWidth * 0.9,
             }}>
             <AnimatedLottieView
               source={require('../../Icon/Images/RedTick.json')}
@@ -191,7 +201,7 @@ export const ExerciseComponentWithEvent = ({
   getWeeklyPlansData,
   selectedDay,
   currentDay,
-  download
+  download,
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
@@ -227,7 +237,12 @@ export const ExerciseComponentWithEvent = ({
             </TouchableOpacity>
           </View>
           {day == WeekArray[currentDay] ? (
-            <NewButton title={'Start'} onPress={onPress} />
+            <NewButton
+              title={'Start'}
+              onPress={onPress}
+              withAnimation
+              download={download}
+            />
           ) : null}
           <Text
             style={[
@@ -298,6 +313,7 @@ export const ExerciseComponentWithEvent = ({
               borderWidth: 1,
               borderColor: AppColor.RED,
               borderRadius: 15,
+              width: DeviceWidth * 0.9,
             }}>
             <AnimatedLottieView
               source={require('../../Icon/Images/RedTick.json')}

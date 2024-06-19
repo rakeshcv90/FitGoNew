@@ -91,7 +91,7 @@ import {checkLocationPermission} from '../Terms&Country/LocationPermission';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import {handleStart} from '../../Component/Utilities/Bannerfunctions';
 import FitCoins from '../../Component/Utilities/FitCoins';
-import { LocationPermissionModal } from '../../Component/Utilities/LocationPermission';
+import {LocationPermissionModal} from '../../Component/Utilities/LocationPermission';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 
 const HomeNew = ({navigation}) => {
@@ -132,17 +132,14 @@ const HomeNew = ({navigation}) => {
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const [BannerType1, setBannertype1] = useState('');
   const [Bannertype2, setBannerType2] = useState('');
-  const [BannerType, setBannertype] = useState('');
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [dataType, setDatatype] = useState('');
   const enteredUpcomingEvent = useSelector(
     state => state?.enteredUpcomingEvent,
   );
   const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
-  const [locationP1,setLocationP1]=useState(false)
+  const [locationP1, setLocationP1] = useState(false);
   // const [backPressCount, setBackPressCount] = useState(0);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
-
+  const planType = useSelector(state => state?.planType);
   const colors = [
     {color1: '#E3287A', color2: '#EE7CBA'},
     {color1: '#5A76F4', color2: '#61DFF6'},
@@ -1201,7 +1198,6 @@ const HomeNew = ({navigation}) => {
               HandleSave();
             }}>
             <View
-        
               style={{
                 width: DeviceWidth * 0.3,
                 height: DeviceHeigth * 0.04,
@@ -1212,7 +1208,6 @@ const HomeNew = ({navigation}) => {
               }}>
               <Text style={[styles.title, {color: AppColor.WHITE}]}>Save</Text>
             </View>
-   
           </TouchableOpacity>
         </View>
       </Modal>
@@ -1299,7 +1294,7 @@ const HomeNew = ({navigation}) => {
                   : getUserDataDetails?.name.split(' ')[0]
                 : 'Guest')}
           </Text>
-          {enteredCurrentEvent && (
+          {enteredCurrentEvent ? (
             <FitCoins
               onPress={() => {
                 AnalyticsConsole('LB');
@@ -1311,6 +1306,19 @@ const HomeNew = ({navigation}) => {
               }}
               coins={fitCoins > 0 ? fitCoins : 0}
             />
+          ) : planType == -1 ? (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('OfferTerms', {type: 'homeScreen'});
+              }}>
+              <Image
+                source={localImage.RTermsLogo}
+                style={{height: 35, width: 35}}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          ) : (
+            <></>
           )}
         </View>
 
@@ -1923,7 +1931,7 @@ const HomeNew = ({navigation}) => {
               alignItems: 'center',
               justifyContent: 'flex-start',
             }}>
-            Nearby Gyms
+            Gym Directory
           </Text>
         </View>
         <LinearGradient
@@ -2222,7 +2230,10 @@ const HomeNew = ({navigation}) => {
       {modalVisible ? <UpdateGoalModal /> : null}
       <PermissionModal locationP={locationP} setLocationP={setLocationP} />
       <RewardModal visible={getRewardModalStatus} navigation={navigation} />
-      <LocationPermissionModal locationP={locationP1} setLocationP={setLocationP1}/>
+      <LocationPermissionModal
+        locationP={locationP1}
+        setLocationP={setLocationP1}
+      />
     </SafeAreaView>
   );
 };

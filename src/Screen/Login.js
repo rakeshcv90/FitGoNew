@@ -381,7 +381,7 @@ const Login = ({navigation}) => {
       });
     } else if (reg.test(email) === false) {
       showMessage({
-        message: 'Please Enter Valid Emaid Id',
+        message: 'Please Enter valid emaid id',
         floating: true,
         duration: 500,
         type: 'danger',

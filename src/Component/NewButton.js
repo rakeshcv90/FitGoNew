@@ -30,26 +30,16 @@ const NewButton = ({
   withAnimation,
   download,
 }) => {
-  const progressAnimation = useRef(new Animated.Value(0)).current;
   const [isClicked, setIsClicked] = useState(false);
   const handlePress = () => {
     onPress && onPress();
     setIsClicked(true);
-    Animated.timing(progressAnimation, {
-      toValue: 1,
-      duration: 2000,
-      useNativeDriver: false,
-    }).start(() => {
-      setIsClicked(false);
-    });
   };
-  // not used for now
-  const progressBarWidth = progressAnimation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0%', '100%'],
-    extrapolate: 'clamp', // Ensure the width doesn't go beyond the defined range
-  });
-
+  useEffect(() => {
+    if (download == 100) {
+      setIsClicked(false);
+    }
+  }, [download]);
   return (
     <TouchableOpacity
       style={[
@@ -92,7 +82,7 @@ const NewButton = ({
           />
         )}
         <Text style={[styles.titleText, {color: titleColor ?? AppColor.WHITE}]}>
-          {title ?? 'Title'}
+          {withAnimation?isClicked ? 'Downloading...' : title ?? 'Title':title ?? 'Title'}
         </Text>
       </View>
     </TouchableOpacity>
