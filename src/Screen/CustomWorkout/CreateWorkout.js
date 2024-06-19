@@ -320,7 +320,7 @@ const CreateWorkout = ({navigation, route}) => {
     // console.log("user_Id",getUserID,getUserDataDetails?.id)
     if (selectedItems.length <= 0) {
       showMessage({
-        message: 'Please Select Exercise ',
+        message: 'Please select exercise ',
         type: 'danger',
         animationDuration: 500,
         floating: true,

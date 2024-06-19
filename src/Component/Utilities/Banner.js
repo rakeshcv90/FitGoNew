@@ -64,7 +64,11 @@ const Banners = ({
       setLoaded(false);
       if (getOfferAgreement?.location == 'India') {
         setLoaded(true);
-        navigation.navigate('NewSubscription', {upgrade: false});
+        if (getPurchaseHistory?.plan == null) {
+          navigation.navigate('NewSubscription', {upgrade: false});
+        } else {
+          navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+        }
       } else {
         locationPermission()
           .then(result => {
@@ -231,8 +235,6 @@ const Banners = ({
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
       });
-    } else if (type1 == 'upcoming_challenge') {
-      navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
     } else if (
       type1 == 'joined_challenge' ||
       (type2 == 'joined_challenge' && index == 1)

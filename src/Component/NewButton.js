@@ -82,7 +82,7 @@ const NewButton = ({
           />
         )}
         <Text style={[styles.titleText, {color: titleColor ?? AppColor.WHITE}]}>
-          {isClicked ? 'Downloading...' : title ?? 'Title'}
+          {withAnimation?isClicked ? 'Downloading...' : title ?? 'Title':title ?? 'Title'}
         </Text>
       </View>
     </TouchableOpacity>

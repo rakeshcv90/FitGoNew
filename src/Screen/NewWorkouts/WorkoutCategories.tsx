@@ -51,6 +51,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import WorkoutsDescription from './WorkoutsDescription';
 import {TextInput} from 'react-native-paper';
+import {showMessage} from 'react-native-flash-message';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 interface BoxProps {
@@ -126,7 +127,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
         StoringData[data?.exercise_title] = filePath;
         downloadCounter++;
         setDownloade((downloadCounter / len) * 100);
-        setDownloadProgress(100)
+        setDownloadProgress(100);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -535,7 +536,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                   ? `Downloading`
                   : switchButton
                   ? `Start Exercise  (${itemsLength})`
-                  : 'Start All'
+                  : 'Start All Exercises'
               }
               h={50}
               colors={[AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED]}
@@ -550,7 +551,17 @@ const WorkoutCategories = ({navigation, route}: any) => {
                   const finalExercises = exercise.filter((item: any) =>
                     selectedExercise.includes(item?.exercise_id),
                   );
-                  Start(finalExercises);
+                  if (finalExercises?.length > 0) {
+                    Start(finalExercises);
+                  } else {
+                    showMessage({
+                      message: 'Please select an exercise',
+                      type: 'danger',
+                      animationDuration: 500,
+                      floating: true,
+                      icon: {icon: 'auto', position: 'left'},
+                    });
+                  }
                 } else Start(exercise);
               }}
             />

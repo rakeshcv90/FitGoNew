@@ -1039,7 +1039,7 @@ const Signup = ({navigation}) => {
     }
   };
 
-  const getUserDetailData = async (userId, status) => {
+  const getUserDetailData = async (userId) => {
     try {
       const responseData = await axios.get(
         `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
@@ -1281,7 +1281,7 @@ const Signup = ({navigation}) => {
                       />
                     }
                     label="Email"
-                    placeholder="Enter Email id"
+                    placeholder="Enter Email Id"
                   />
                 </View>
                 <View

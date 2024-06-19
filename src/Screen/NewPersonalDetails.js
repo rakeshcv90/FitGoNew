@@ -208,7 +208,7 @@ const NewPersonalDetails = ({route, navigation}) => {
 
       if (dataItem.data.msg == 'User Updated Successfully') {
         showMessage({
-          message: 'Details updated successfully',
+          message: 'Details updated successfully.',
           floating: true,
           type: 'success',
           animationDuration: 750,

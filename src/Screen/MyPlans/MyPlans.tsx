@@ -853,7 +853,7 @@ const MyPlans = ({navigation}: any) => {
     );
   };
   const checkMealAddCount = () => {
-    if (getPurchaseHistory.length > 0) {
+    if (getPurchaseHistory?.length > 0) {
       if (
         getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
       ) {

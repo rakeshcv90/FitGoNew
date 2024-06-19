@@ -139,7 +139,7 @@ const HomeNew = ({navigation}) => {
   const [locationP1, setLocationP1] = useState(false);
   // const [backPressCount, setBackPressCount] = useState(0);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
-
+  const planType = useSelector(state => state?.planType);
   const colors = [
     {color1: '#E3287A', color2: '#EE7CBA'},
     {color1: '#5A76F4', color2: '#61DFF6'},
@@ -212,7 +212,7 @@ const HomeNew = ({navigation}) => {
       } else if (!enteredCurrentEvent && enteredUpcomingEvent) {
         setBannertype1('joined_challenge');
       } else {
-        setBannertype1('upcoming_challenge');
+        setBannertype1('new_join');
       }
     } else if (getOfferAgreement?.location != 'India') {
       checkLocationPermission()
@@ -1198,7 +1198,6 @@ const HomeNew = ({navigation}) => {
               HandleSave();
             }}>
             <View
-        
               style={{
                 width: DeviceWidth * 0.3,
                 height: DeviceHeigth * 0.04,
@@ -1209,7 +1208,6 @@ const HomeNew = ({navigation}) => {
               }}>
               <Text style={[styles.title, {color: AppColor.WHITE}]}>Save</Text>
             </View>
-   
           </TouchableOpacity>
         </View>
       </Modal>
@@ -1308,7 +1306,7 @@ const HomeNew = ({navigation}) => {
               }}
               coins={fitCoins > 0 ? fitCoins : 0}
             />
-          ) : !getOfferAgreement?.location ? (
+          ) : planType == -1 ? (
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('OfferTerms', {type: 'homeScreen'});
@@ -1933,7 +1931,7 @@ const HomeNew = ({navigation}) => {
               alignItems: 'center',
               justifyContent: 'flex-start',
             }}>
-            Nearby Gyms
+            Gym Directory
           </Text>
         </View>
         <LinearGradient
