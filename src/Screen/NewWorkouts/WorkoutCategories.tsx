@@ -7,6 +7,7 @@ import {
   Platform,
   BackHandler,
   SafeAreaView,
+  TextInput
 } from 'react-native';
 import React, {
   FC,
@@ -23,6 +24,7 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import AnimatedLottieView from 'lottie-react-native';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icons1 from 'react-native-vector-icons/FontAwesome5';
 import Font from 'react-native-vector-icons/FontAwesome5';
 import Fontasio from 'react-native-vector-icons/Fontisto';
 import {useSelector, useDispatch} from 'react-redux';
@@ -50,7 +52,7 @@ import GradientButton from '../../Component/GradientButton';
 import RNFetchBlob from 'rn-fetch-blob';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import WorkoutsDescription from './WorkoutsDescription';
-import {TextInput} from 'react-native-paper';
+
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 interface BoxProps {
@@ -126,7 +128,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
         StoringData[data?.exercise_title] = filePath;
         downloadCounter++;
         setDownloade((downloadCounter / len) * 100);
-        setDownloadProgress(100)
+        setDownloadProgress(100);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -464,7 +466,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
         key={CategoryDetails?.id}
       />
       <View style={styles.container}>
-        <View
+        {/* <View
           style={{
             marginVertical: (DeviceWidth * 0.1) / 8,
             justifyContent: 'center',
@@ -496,6 +498,33 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 width: DeviceWidth * 0.9,
               },
             ]}
+          />
+        </View> */}
+        <View
+          style={{
+            width: '90%',
+            height: 50,
+            alignSelf: 'center',
+            backgroundColor: '#F3F5F5',
+            borderRadius: 6,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingLeft: 10,
+            // top: -DeviceWidth * 0.05,
+            marginVertical: (DeviceWidth * 0.1) / 8,
+            justifyContent: 'center',
+          
+          }}>
+          <Icons1 name="search" size={18} color={'#333333E5'} />
+          <TextInput
+            placeholder="Search Exercise"
+            placeholderTextColor="#33333380"
+            value={searchValue}
+            onChangeText={text => {
+              setSearchValue(text);
+              searchFunction(text);
+            }}
+            style={styles.inputText}
           />
         </View>
         <View style={{height: (DeviceWidth * 0.1) / 4}} />
@@ -636,6 +665,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 25 / 2,
     borderWidth: 1,
+  },
+  inputText: {
+    paddingLeft: 15,
+    paddingRight: 15,
+    width: '90%',
+    height: 50,
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: '600',
+    fontFamily: 'Montserrat',
+    color: '#000',
   },
 });
 export default WorkoutCategories;

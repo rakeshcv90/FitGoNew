@@ -8,11 +8,9 @@ import LinearGradient from 'react-native-linear-gradient';
 const Button = ({buttonText, onPresh}) => {
   return (
     <View activeOpacity={0.5} onPress={onPresh}>
-      <LinearGradient
-        start={{x: 0, y: 1}}
-        end={{x: 1, y: 0}}
-       // colors={['#941000', '#D01818']}
-        colors={['#D01818', '#941000']}
+      <View
+        // colors={['#941000', '#D01818']}
+
         style={styles.buttonStyle}>
         <TouchableOpacity
           style={styles.buttonStyle}
@@ -20,16 +18,16 @@ const Button = ({buttonText, onPresh}) => {
           onPress={onPresh}>
           <Text style={styles.button}>{buttonText}</Text>
         </TouchableOpacity>
-      </LinearGradient>
+      </View>
     </View>
   );
 };
 const styles = StyleSheet.create({
   buttonStyle: {
-    // backgroundColor: AppColor.RED,
+    backgroundColor: '#A93737',
     width: DeviceWidth * 0.9,
     height: DeviceHeigth * 0.07,
-    borderRadius: 30,
+    borderRadius: 6,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
@@ -44,7 +42,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     backgroundColor: 'transparent',
     lineHeight: 24,
-    
   },
 });
 

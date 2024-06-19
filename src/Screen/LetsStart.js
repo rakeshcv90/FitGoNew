@@ -397,18 +397,17 @@ const LetsStart = ({navigation}) => {
             marginTop: DeviceHeigth * 0.04,
             // top: DeviceHeigth > 808 ? DeviceHeigth * 0.18 : DeviceHeigth * 0.2,
           }}>
-          <LinearGradient
-            start={{x: 0, y: 1}}
-            end={{x: 1, y: 0}}
-            colors={['#D01818', '#941000']}
+          <View
+        
             style={{
-              width: '85%',
+              width: '70%',
               height: 50,
               backgroundColor: 'red,',
               alignSelf: 'center',
               borderRadius: 30,
               alignItems: 'center',
-              // top: -DeviceHeigth * 0.04,
+              borderRadius:6,
+             backgroundColor:'#A93737',
               justifyContent: 'center',
             }}>
             <TouchableOpacity
@@ -427,7 +426,7 @@ const LetsStart = ({navigation}) => {
               }}>
               <Text style={styles.button}>Get Started</Text>
             </TouchableOpacity>
-          </LinearGradient>
+          </View>
           <Text
             style={[
               styles.LoginText2,
@@ -479,7 +478,7 @@ const LetsStart = ({navigation}) => {
               onPress={() => {
                 navigation.navigate('LogSignUp', {screen: 'Sign Up'});
               }}>
-              Sign Up
+              {' '}Sign Up
             </Text>
           </Text>
 

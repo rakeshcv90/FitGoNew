@@ -6,7 +6,7 @@ import {AppColor, Fonts} from '../../Component/Color';
 import NewButton from '../../Component/NewButton';
 import {FlatList} from 'react-native';
 import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
-import moment from 'moment';
+import moment, {weekdays} from 'moment';
 import AnimatedLottieView from 'lottie-react-native';
 export const ExerciseComponetWithoutEvents = ({
   dayObject,
@@ -109,7 +109,7 @@ export const ExerciseComponetWithoutEvents = ({
               borderWidth: 1,
               borderColor: AppColor.RED,
               borderRadius: 15,
-              alignSelf:'center',
+              alignSelf: 'center',
               marginTop: DeviceHeigth * 0.05,
               width: DeviceWidth * 0.9,
             }}>
@@ -364,9 +364,16 @@ export const ExerciseComponentWithEvent = ({
                 marginVertical: DeviceWidth * 0.05,
               }}>
               <Image
-                source={{
-                  uri: getWeeklyPlansData[WeekArray[selectedDay]]?.image,
-                }}
+                // source={{
+                //   uri: getWeeklyPlansData[WeekArray[selectedDay]]?.image,
+                // }}
+                source={
+                  getWeeklyPlansData[WeekArray[selectedDay]]?.image == null
+                    ? localImage.NOWORKOUT
+                    : {
+                        uri: getWeeklyPlansData[WeekArray[selectedDay]]?.image,
+                      }
+                }
                 // onLoad={() => setIsLoading(false)}
                 style={{
                   height: 40,
@@ -376,6 +383,7 @@ export const ExerciseComponentWithEvent = ({
                 }}
                 resizeMode="contain"
               />
+              {console.log('Zxcvxvdsfdsd', getWeeklyPlansData[day]?.title)}
               <Text
                 style={{
                   fontFamily: Fonts.MONTSERRAT_BOLD,
@@ -384,7 +392,7 @@ export const ExerciseComponentWithEvent = ({
                   color: AppColor.RED1,
                   lineHeight: 30,
                 }}>
-                {getWeeklyPlansData[day]?.title}
+                {getWeeklyPlansData[day]?.title!=null?getWeeklyPlansData[day]?.title:'Commpleted'}
               </Text>
             </View>
           </View>

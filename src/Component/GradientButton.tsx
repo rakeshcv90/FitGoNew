@@ -77,7 +77,7 @@ const GradientButton: FC<Props> = ({...props}) => {
       <LinearGradient
         start={{x: 1, y: 0}}
         end={{x: 0, y: 1}}
-        colors={props.colors ? props.colors : ['#941000', '#D5191A']}
+        colors={props.colors ? props.colors : ['#A93737', '#A93737']}
         style={[
           styles.nextButton,
           {

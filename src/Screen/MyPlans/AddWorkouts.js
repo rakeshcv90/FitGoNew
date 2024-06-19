@@ -24,7 +24,7 @@ import {setEditedExercise} from '../../Component/ThemeRedux/Actions';
 const AddWorkouts = ({route, navigation}) => {
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredCategories, setFilteredCategories] = useState([]);
+
   const getAllExercise = useSelector(state => state?.getAllExercise);
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
   const [disabled, setDisabled] = useState(true);
@@ -33,6 +33,7 @@ const AddWorkouts = ({route, navigation}) => {
   const [loaded, setLoaded] = useState(true);
   const day = route?.params?.day;
   let ExerciseIds = tempList.map(item => item?.exercise_id);
+  const [filteredCategories, setFilteredCategories] = useState(getAllExercise);
   const updateFilteredCategories = test => {
     const filteredItems = getAllExercise?.filter(item =>
       item.exercise_title.toLowerCase().includes(test.toLowerCase()),
@@ -40,7 +41,6 @@ const AddWorkouts = ({route, navigation}) => {
     setFilteredCategories(filteredItems);
   };
   //
-  console.log('responselenght', ExerciseIds);
 
   const handleItems = obj => {
     setDisabled(false);
@@ -145,7 +145,7 @@ const AddWorkouts = ({route, navigation}) => {
   };
   return (
     <View style={styles.Container}>
-      <DietPlanHeader header="Add workouts" />
+      <DietPlanHeader header="Add workouts" shadow />
       <View style={styles.View1}>
         <Icons name="search" size={18} color={'#333333E5'} />
         <TextInput
@@ -162,9 +162,13 @@ const AddWorkouts = ({route, navigation}) => {
       <View style={styles.border} />
       {loaded ? null : <ActivityLoader />}
       <FlatList
-        data={
-          filteredCategories?.length > 0 ? filteredCategories : getAllExercise
-        }
+        // data={filteredCategories}
+        data={[
+          ...filteredCategories.filter(item => ExerciseIds.includes(item.exercise_id)),
+          ...filteredCategories.filter(
+            item => !ExerciseIds.includes(item.exercise_id),
+          ),
+        ]}
         showsVerticalScrollIndicator={false}
         style={{
           marginBottom: DeviceHeigth * 0.02,
@@ -196,14 +200,18 @@ const AddWorkouts = ({route, navigation}) => {
                   />
                 </View>
                 <View style={{marginLeft: 15, width: DeviceWidth * 0.55}}>
-                  <Text style={[styles.txt3]}>{item?.exercise_title}</Text>
+                <View style={{width:200}}>
+                <Text numberOfLines={1} style={[styles.txt3]}>{item?.exercise_title}</Text>
+                </View>
+                  
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  {console.log("fjfjfjf",item)}
                     <Text style={styles.txt2}>
-                      {'Set : ' + item?.exercise_sets}
+                      {'Time : ' + item?.exercise_rest}
                     </Text>
-                    <Text style={[styles.txt2, {marginLeft: 10}]}>
+                    {/* <Text style={[styles.txt2, {marginLeft: 10}]}>
                       {'Reps : 12-15'}
-                    </Text>
+                    </Text> */}
                   </View>
                 </View>
               </View>
@@ -227,6 +235,22 @@ const AddWorkouts = ({route, navigation}) => {
                 />
               </View>
             </TouchableOpacity>
+            {index !==
+              (filteredCategories?.length > 0
+                ? filteredCategories
+                : getAllExercise
+              ).length -
+                1 && (
+              <View
+                style={{
+                  width: '100%',
+                  height: 1,
+
+                  alignItems: 'center',
+                  backgroundColor: '#33333314',
+                }}
+              />
+            )}
           </View>
         )}
       />
@@ -280,8 +304,7 @@ const styles = StyleSheet.create({
   },
   border: {
     height: 0,
-    borderWidth: 0.5,
-    borderColor: AppColor.GRAY2,
+
     marginVertical: 15,
   },
   inputText: {
@@ -319,19 +342,19 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: 'space-between',
     backgroundColor: AppColor.WHITE,
-    ...Platform.select({
-      android: {
-        elevation: 5,
-        shadowOpacity: 0.1,
-        shadowColor: 'grey',
-      },
-      ios: {
-        shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-      },
-    }),
+    // ...Platform.select({
+    //   android: {
+    //     elevation: 5,
+    //     shadowOpacity: 0.1,
+    //     shadowColor: 'grey',
+    //   },
+    //   ios: {
+    //     shadowColor: '#000000',
+    //     shadowOffset: {width: 0, height: 2},
+    //     shadowOpacity: 0.2,
+    //     shadowRadius: 4,
+    //   },
+    // }),
   },
 });
 export default AddWorkouts;
