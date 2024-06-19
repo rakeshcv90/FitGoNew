@@ -21,6 +21,10 @@ import {extractFont} from 'react-native-svg/lib/typescript/lib/extract/extractTe
 import FitCoins from '../Utilities/FitCoins';
 import {AnalyticsConsole} from '../AnalyticsConsole';
 import moment from 'moment';
+import ShimmerPlaceholder, {
+  createShimmerPlaceholder,
+} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
 
 const NewHeader = ({
   header,
@@ -36,6 +40,8 @@ const NewHeader = ({
   const getExperience = useSelector(state => state.getExperience);
   const dispatch = useDispatch();
   const winnerAnnounced = useSelector(state => state.winnerAnnounced);
+  const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+  const avatarRef = React.createRef();
   return (
     <SafeAreaView
       style={[
@@ -96,7 +102,7 @@ const NewHeader = ({
       {!SearchButton ? (
         extraView ? (
           enteredCurrentEvent ? (
-            <View style={{right: DeviceWidth * 0.13, top: -3}}>
+            <View style={{top: -3}}>
               {!coinsLoaded ? (
                 <FitCoins
                   onPress={() => {
@@ -110,7 +116,20 @@ const NewHeader = ({
                   coins={coins}
                 />
               ) : (
-                <ActivityIndicator size={25} color={AppColor.YELLOW} />
+                <ShimmerPlaceholder
+                  style={{
+                    height: DeviceHeigth * 0.04,
+                    width: DeviceWidth * 0.2,
+        
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    borderRadius: 20,
+                    position:'absolute',
+                    right:16,
+                  }}
+                  ref={avatarRef}
+                  autoRun
+                />
               )}
             </View>
           ) : (

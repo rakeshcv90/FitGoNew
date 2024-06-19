@@ -63,7 +63,7 @@ const NewSubscription = ({navigation, route}: any) => {
       });
   const [selected, setSelected] = useState<any>(sortedSubscriptions[2]);
   const [loading, setForLoading] = useState(false);
-  const [currentSelected, setCurrentSelected] = useState(0);
+  const [currentSelected, setCurrentSelected] = useState(2);
   const [refresh, setRefresh] = useState(false);
   const isFocused = useIsFocused();
   const findKeyInObject = (obj: any, keyToFind: string): any => {
@@ -88,8 +88,23 @@ const NewSubscription = ({navigation, route}: any) => {
 
   useEffect(() => {
     if (isFocused) {
-     // PurchaseDetails();
-      getUserDetailData()
+      // PurchaseDetails();
+      const selected =
+        getPurchaseHistory?.plan != null
+          ? getPurchaseHistory?.plan == 'noob'
+            ? 0
+            : getPurchaseHistory?.plan == 'pro'
+            ? 1
+            : 2
+          : 2;
+      setCurrentSelected(selected);
+      EnteringEventFunction(
+        dispatch,
+        getPurchaseHistory,
+        setEnteredCurrentEvent,
+        setEnteredUpcomingEvent,
+        setPlanType,
+      );
     }
   }, [isFocused]);
   useEffect(() => {
@@ -371,7 +386,6 @@ const NewSubscription = ({navigation, route}: any) => {
       });
 
       fetchPurchaseHistoryAndroid(purchase[0].dataAndroid);
-
     } catch (error) {
       console.log('Failed to purchase Android product', error);
     }
@@ -420,8 +434,8 @@ const NewSubscription = ({navigation, route}: any) => {
       });
       console.log(res.data);
       if (res.data.message == 'Event created successfully') {
-       // PurchaseDetails();
-        getUserDetailData()
+        // PurchaseDetails();
+        getUserDetailData();
         setForLoading(false);
         setTimeout(() => {
           navigation.navigate('UpcomingEvent', {eventType: 'current'});
@@ -429,8 +443,8 @@ const NewSubscription = ({navigation, route}: any) => {
       } else if (
         res.data.message == 'Plan upgraded and new event created successfully'
       ) {
-      //  PurchaseDetails();
-        getUserDetailData()
+        //  PurchaseDetails();
+        getUserDetailData();
         setForLoading(false);
         setTimeout(() => {
           navigation.navigate('UpcomingEvent', {eventType: 'current'});
@@ -480,9 +494,9 @@ const NewSubscription = ({navigation, route}: any) => {
         dispatch(setPurchaseHistory(result.data.data));
         upgrade
           ? setCurrentSelected(2)
-          : result.data.data?.plan_value == 30
+          : result.data.data?.plan == 'noob'
           ? setCurrentSelected(0)
-          : result.data.data?.plan_value == 69
+          : result.data.data?.plan == 'pro'
           ? setCurrentSelected(1)
           : setCurrentSelected(2);
         EnteringEventFunction(
@@ -541,9 +555,9 @@ const NewSubscription = ({navigation, route}: any) => {
             setPlanType,
           );
           dispatch(setPurchaseHistory(responseData?.data.event_details));
-          responseData?.data?.event_details.plan_value == 30
+          responseData?.data?.event_details.plan == 'noob'
             ? setCurrentSelected(0)
-            : responseData?.data?.event_details?.plan_value == 69
+            : responseData?.data?.event_details?.plan == 'pro'
             ? setCurrentSelected(1)
             : setCurrentSelected(2);
           EnteringEventFunction(
@@ -1070,7 +1084,7 @@ const NewSubscription = ({navigation, route}: any) => {
                 ? `You can cancel your subscription anytime from Google Play Store. On Cancellation Payment is Non-Refundable, but you still access the features of subscription period. We recommend you to review the terms of use before proceeding with any online transaction.`
                 : `Payment is Non-Refundable. We recommend you to review the terms of use before proceeding with any online transaction`} */}
               Payment is Non-Refundable. We recommended you to review the terms
-              of use before proceeding with online transation
+              of use before proceeding with online transaction
             </Text>
           </View>
           <View

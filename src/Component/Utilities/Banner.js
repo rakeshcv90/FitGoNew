@@ -114,7 +114,7 @@ const Banners = ({
       } else {
         navigation.navigate('LogSignUp', {screen: 'Sign Up'});
         showMessage({
-          message: 'You need to login/Signup first',
+          message: 'You need to logIn/SignUp first',
           floating: true,
           duration: 500,
           type: 'danger',
@@ -229,13 +229,13 @@ const Banners = ({
     } else if (type1 == 'coming_soon') {
       showMessage({
         message:
-          'This feature will be soon available in your country,Stay tuned!',
+          'This feature will be soon available in your country, stay tuned!',
         floating: true,
         duration: 500,
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
       });
-    } else if (
+     } else if (
       type1 == 'joined_challenge' ||
       (type2 == 'joined_challenge' && index == 1)
     ) {

@@ -136,6 +136,8 @@ const AskToCreateWorkout = ({route, navigation}) => {
       payload.append('workout_plans', 'CustomCreated');
       if (name) {
         payload.append('name', name);
+      } else {
+        payload.append('name', getUserDataDetails?.name);
       }
       payload.append(
         'injury',

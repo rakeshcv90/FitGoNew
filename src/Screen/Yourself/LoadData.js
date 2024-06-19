@@ -143,6 +143,8 @@ const LoadData = ({navigation}) => {
       payload.append('version', VersionNumber.appVersion);
       if (getTempLogin) {
         payload.append('name', mergedObject?.name);
+      } else {
+        payload.append('name', getUserDataDetails?.name);
       }
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',

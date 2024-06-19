@@ -140,6 +140,7 @@ const HomeNew = ({navigation}) => {
   // const [backPressCount, setBackPressCount] = useState(0);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const planType = useSelector(state => state?.planType);
+  const [showRewardModal, setShowRewardModal] = useState(false);
   const colors = [
     {color1: '#E3287A', color2: '#EE7CBA'},
     {color1: '#5A76F4', color2: '#61DFF6'},
@@ -198,6 +199,15 @@ const HomeNew = ({navigation}) => {
           : 'com-apple.voice.compact.en-AU.Karen',
     },
   ];
+  useEffect(() => {
+    // Set a timeout to show the modal after 3 seconds
+    const timer = setTimeout(() => {
+      setShowRewardModal(true);
+    }, 3000);
+
+    // Clear the timeout if the component unmounts or the effect is re-run
+    return () => clearTimeout(timer);
+  }, []);
   // banners
   useEffect(() => {
     if (getOfferAgreement?.location == 'India') {
@@ -1295,18 +1305,20 @@ const HomeNew = ({navigation}) => {
                 : 'Guest')}
           </Text>
           {enteredCurrentEvent ? (
-            <FitCoins
-              onPress={() => {
-                AnalyticsConsole('LB');
-                if (winnerAnnounced) {
-                  navigation.navigate('Winner');
-                } else {
-                  navigation.navigate('Leaderboard');
-                }
-              }}
-              coins={fitCoins > 0 ? fitCoins : 0}
-            />
-          ) : planType == -1 ? (
+            <View style={{top: -15, right: -12}}>
+              <FitCoins
+                onPress={() => {
+                  AnalyticsConsole('LB');
+                  if (winnerAnnounced) {
+                    navigation.navigate('Winner');
+                  } else {
+                    navigation.navigate('Leaderboard');
+                  }
+                }}
+                coins={fitCoins > 0 ? fitCoins : 0}
+              />
+            </View>
+          ) : !enteredCurrentEvent && !enteredUpcomingEvent ? (
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('OfferTerms', {type: 'homeScreen'});
@@ -2229,7 +2241,9 @@ const HomeNew = ({navigation}) => {
       </ScrollView>
       {modalVisible ? <UpdateGoalModal /> : null}
       <PermissionModal locationP={locationP} setLocationP={setLocationP} />
-      <RewardModal visible={getRewardModalStatus} navigation={navigation} />
+      {/* {showRewardModal && getRewardModalStatus && (
+        <RewardModal visible={true} navigation={navigation} />
+      )} */}
       <LocationPermissionModal
         locationP={locationP1}
         setLocationP={setLocationP1}

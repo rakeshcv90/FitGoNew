@@ -109,7 +109,7 @@ export const ExerciseComponetWithoutEvents = ({
               borderWidth: 1,
               borderColor: AppColor.RED,
               borderRadius: 15,
-              alignSelf:'center',
+              alignSelf: 'center',
               marginTop: DeviceHeigth * 0.05,
               width: DeviceWidth * 0.9,
             }}>
@@ -205,6 +205,7 @@ export const ExerciseComponentWithEvent = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
+  console.log('dayObject', dayObject);
   return (
     <View style={styles.View1}>
       {dayWiseCoins[day] == null || dayWiseCoins[day] < 0 ? (
@@ -229,6 +230,8 @@ export const ExerciseComponentWithEvent = ({
                 navigation.navigate('AddWorkouts', {
                   dayExercises: dayObject?.exercises,
                   day: day,
+                  image: dayObject?.image,
+                  title: dayObject?.title,
                 })
               }>
               {day == WeekArray[currentDay] ? (

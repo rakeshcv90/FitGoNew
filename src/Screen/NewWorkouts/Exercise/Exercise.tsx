@@ -48,7 +48,8 @@ import CircularProgress, {
   ProgressRef,
 } from 'react-native-circular-progress-indicator';
 import {setScreenAwake} from '../../../Component/ThemeRedux/Actions';
-import { AddCountFunction } from '../../../Component/Utilities/AddCountFunction';
+import {AddCountFunction} from '../../../Component/Utilities/AddCountFunction';
+import NativeAddTest from '../../../Component/NativeAddTest';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -136,6 +137,7 @@ const Exercise = ({navigation, route}: any) => {
     parseInt(currentData?.exercise_rest.split(' ')[0]),
   );
   const [isRunning, setIsRunning] = useState(false);
+  const [quitLoader, setQuitLoader] = useState(false);
   const playbackState = usePlaybackState();
 
   const setupPlayer = async () => {
@@ -445,7 +447,7 @@ const Exercise = ({navigation, route}: any) => {
     payload.append('workout_id', `-${day + 1}`);
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
-
+    setQuitLoader(true);
     try {
       const res = await axios({
         url:
@@ -459,7 +461,9 @@ const Exercise = ({navigation, route}: any) => {
           '&current_date=' +
           moment().format('YYYY-MM-DD'),
       });
+      setQuitLoader(false);
     } catch (error) {
+      setQuitLoader(false);
       console.log('DELE TRACK ERRR', error);
     }
     navigationRef.current.goBack();
@@ -472,9 +476,9 @@ const Exercise = ({navigation, route}: any) => {
     payload.append('workout_id', `-${day + 1}`);
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
-    next>0 && payload.append('next_status', next);
-    previous>0 && payload.append('prev_status', previous);
-    skip>0 && payload.append('skip_status', skip);
+    next > 0 && payload.append('next_status', next);
+    previous > 0 && payload.append('prev_status', previous);
+    skip > 0 && payload.append('skip_status', skip);
 
     try {
       const res = await axios({
@@ -589,7 +593,7 @@ const Exercise = ({navigation, route}: any) => {
     }
   };
   const PauseModal = useMemo(() => {
-    return ({back}: any) => {
+    return ({back, quitLoader}: any) => {
       return (
         <Modal
           visible={back}
@@ -599,33 +603,19 @@ const Exercise = ({navigation, route}: any) => {
             style={{
               flex: 1,
               backgroundColor: AppColor.WHITE,
-
-              justifyContent: 'flex-end',
+              justifyContent: 'center',
               alignItems: 'center',
-              marginBottom: 20,
+              // marginTop: DeviceHeigth * 0.05
             }}>
+            <NativeAddTest media={true} type="video" />
             <View
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
+                // marginTop: DeviceHeigth * 0.05
                 // paddingLeft: DeviceWidth / 2,
+              
               }}>
-              {/* <GradientText
-                text={'Keep Going!'}
-                fontWeight={'700'}
-                fontSize={32}
-                width={DeviceWidth}
-                x={30}
-                alignSelf
-              />
-              <GradientText
-                alignSelf
-                width={DeviceWidth}
-                text={`Don't Give Up!`}
-                fontWeight={'700'}
-                fontSize={32}
-                x={-2}
-              /> */}
               <Text
                 style={{
                   fontWeight: '600',
@@ -649,7 +639,7 @@ const Exercise = ({navigation, route}: any) => {
                 fontWeight: '500',
                 fontFamily: 'Poppins',
                 lineHeight: 30,
-                marginTop: 20,
+                marginTop: 5,
                 color: AppColor.BLACK,
               }}>
               {`You have finished `}
@@ -664,7 +654,7 @@ const Exercise = ({navigation, route}: any) => {
               </Text>
               {' left '}
             </Text>
-            <View style={{marginTop: 30}}>
+            <View style={{marginTop: 12}}>
               <ProgreesButton
                 text="Resume"
                 h={55}
@@ -706,16 +696,23 @@ const Exercise = ({navigation, route}: any) => {
                     ? navigationRef.current.goBack()
                     : deleteTrackExercise();
                 }}>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontFamily: 'Poppins',
-                    lineHeight: 30,
-                    color: AppColor.BLACK,
-                    fontWeight: '700',
-                  }}>
-                  Quit
-                </Text>
+                {quitLoader ? (
+                  <ActivityIndicator
+                    animating={quitLoader}
+                    color={AppColor.NEW_DARK_RED}
+                  />
+                ) : (
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontFamily: 'Poppins',
+                      lineHeight: 30,
+                      color: AppColor.BLACK,
+                      fontWeight: '700',
+                    }}>
+                    Quit
+                  </Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -1075,7 +1072,7 @@ const Exercise = ({navigation, route}: any) => {
                 />
                 <TouchableOpacity
                   onPress={() => {
-                    setSkip(skip+1);
+                    setSkip(skip + 1);
                     clearInterval(restTimerRef.current);
                     setTimer(0);
                   }}
@@ -1202,7 +1199,7 @@ const Exercise = ({navigation, route}: any) => {
                   resizeMode="contain"
                 />
               </TouchableOpacity>
-              {!enteredCurrentEvent && (
+              {enteredCurrentEvent && type == 'weekly' ? null : (
                 <TouchableOpacity
                   onPress={() => {
                     setRestStart(false);
@@ -1420,7 +1417,7 @@ const Exercise = ({navigation, route}: any) => {
         handleExerciseChange={handleExerciseChange}
         setNumber={setNumber}
       />
-      <PauseModal back={back} />
+      <PauseModal back={back} quitLoader={quitLoader} />
 
       <WorkoutsDescription open={open} setOpen={setOpen} data={currentData} />
     </SafeAreaView>

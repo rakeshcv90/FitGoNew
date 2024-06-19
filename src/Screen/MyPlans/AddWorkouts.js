@@ -29,6 +29,8 @@ const AddWorkouts = ({route, navigation}) => {
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
   const [disabled, setDisabled] = useState(true);
   const dayExercises = route?.params?.dayExercises;
+  const image = route?.params?.image;
+  const title = route?.params?.title;
   const [tempList, setTempList] = useState(dayExercises);
   const [loaded, setLoaded] = useState(true);
   const day = route?.params?.day;
@@ -40,8 +42,6 @@ const AddWorkouts = ({route, navigation}) => {
     setFilteredCategories(filteredItems);
   };
   //
-  console.log('responselenght', ExerciseIds);
-
   const handleItems = obj => {
     setDisabled(false);
     if (ExerciseIds.includes(obj?.exercise_id)) {
@@ -61,6 +61,8 @@ const AddWorkouts = ({route, navigation}) => {
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
     payload.append('day', day);
+    payload.append('image', image);
+    payload.append('title', title);
     for (let i = 0; i < ExerciseIds?.length; i++) {
       payload.append('exercise_id[]', ExerciseIds[i]); // to send data in array format
     }
