@@ -12,7 +12,7 @@ import {StyleSheet} from 'react-native';
 import {AppColor} from '../../Component/Color';
 import {StatusBar} from 'react-native';
 import NewHeader from '../../Component/Headers/NewHeader';
-
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {TextInput} from 'react-native';
@@ -339,12 +339,58 @@ const AITrainer = ({navigation, route}) => {
   // };
   return (
     <View style={styles.container}>
-      <NewHeader
-        header={'Fitness Coach' + ' ' + route?.params?.item?.title}
-        backButton={true}
-      />
-
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
+      <View
+        style={[
+          {
+            width: DeviceWidth,
+            backgroundColor: '#fff',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            height:
+              Platform.OS == 'ios'
+                ? (DeviceHeigth * 13) / 100
+                : (DeviceHeigth * 10) / 100,
+            left: 1,
+            paddingTop:
+              Platform.OS == 'android'
+                ? DeviceHeigth * 0.03
+                : DeviceHeigth * 0.01,
+          },
+        ]}>
+        <TouchableOpacity
+          style={{left: 0}}
+          onPress={() => {
+            Tts.stop();
+            navigation.goBack();
+          }}>
+          <Icons
+            name={'chevron-left'}
+            size={25}
+            color={AppColor.INPUTTEXTCOLOR}
+          />
+        </TouchableOpacity>
+
+        <Text
+          style={[
+            styles.headerstyle,
+            {
+              color: AppColor.INPUTTEXTCOLOR,
+              fontFamily: 'Montserrat-SemiBold',
+              fontWeight: '700',
+
+              width: DeviceWidth * 0.8,
+              textAlign: 'center',
+            },
+          ]}>
+          {'Fitness Coach' + ' ' + route?.params?.item?.title}
+        </Text>
+
+        <View onPress={() => {}}>
+          {/* <Icons name={'magnify'} size={25} color={AppColor.INPUTTEXTCOLOR} /> */}
+        </View>
+      </View>
       {getAIMessageHistory?.length > 0 && (
         <TouchableOpacity
           style={{
@@ -641,7 +687,7 @@ const AITrainer = ({navigation, route}) => {
           </TouchableOpacity>
         </View>
         {/* {bannerAdsDisplay()} */}
-          <BannerAdd bannerAdId={bannerAdId} />
+        <BannerAdd bannerAdId={bannerAdId} />
       </KeyboardAvoidingView>
     </View>
   );

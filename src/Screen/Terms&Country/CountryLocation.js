@@ -36,13 +36,16 @@ const CountryLocation = ({navigation, route}) => {
       .then(result => {
         if (result == 'blocked') {
           setLocationP(true);
+          setLoaded(true)
         } else if (result === 'denied') {
           setLocationP(true);
+          setLoaded(true)
         } else if (result) {
           StoreAgreementApi(result);
           dispatch(setRewardModal(true));
         } else if (!result) {
           setLocationP(true);
+          setLoaded(true)
         }
       })
       .catch(err => {
@@ -100,7 +103,7 @@ const CountryLocation = ({navigation, route}) => {
         if (CustomCreated) {
           navigation.navigate('CustomWorkout', {routeName: routeName});
         } else {
-          navigation.navigate('BottomTab',{screen:'MyPlans'});
+          navigation.navigate('BottomTab',{screen:'Home'});
         }
       }
     } catch (error) {

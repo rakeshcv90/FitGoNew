@@ -92,7 +92,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
       }
     } catch (error) {
       setLoading(false);
-      console.log('Purchase Store Data Error', error, data);
+      console.log('Purchase Store Data Error', error.response, data);
     }
   };
   // const PurchaseDetails = async () => {

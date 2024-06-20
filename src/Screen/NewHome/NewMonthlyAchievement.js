@@ -28,7 +28,8 @@ import {
   BMImodal,
   CaloriesActionReport,
 } from '../../Component/BmiComponent';
-const NewMonthlyAchievement = () => {
+import { useFocusEffect } from '@react-navigation/native';
+const NewMonthlyAchievement = ({navigation}) => {
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
   const getBmi = useSelector(state => state.getBmi);
@@ -37,9 +38,9 @@ const NewMonthlyAchievement = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
-  useEffect(() => {
+  useFocusEffect(() => {
     DateWiseData(moment.utc().format('YYYY-MM-DD')); // to get the datewise data
-  }, []);
+  }, [navigation]);
   const DateWiseData = async Date1 => {
     const payload = new FormData();
     payload.append('user_id', getUserDataDetails?.id);

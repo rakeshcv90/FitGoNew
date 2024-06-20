@@ -15,7 +15,7 @@ import {
   ToastAndroid,
   TextInput,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
 import {AppColor, Fonts} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
@@ -126,9 +126,6 @@ const HomeNew = ({navigation}) => {
   const [distance, setDistance] = useState(0);
   const [myRankData, setMyRankData] = useState([]);
   const distanceRef = useRef(distance);
-  const getRewardModalStatus = useSelector(
-    state => state?.getRewardModalStatus,
-  );
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const [BannerType1, setBannertype1] = useState('');
   const [Bannertype2, setBannerType2] = useState('');
@@ -141,6 +138,7 @@ const HomeNew = ({navigation}) => {
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const planType = useSelector(state => state?.planType);
   const [showRewardModal, setShowRewardModal] = useState(false);
+  const getRewardModalStatus=useSelector(state=>state?.getRewardModalStatus)
   const colors = [
     {color1: '#E3287A', color2: '#EE7CBA'},
     {color1: '#5A76F4', color2: '#61DFF6'},
@@ -200,23 +198,21 @@ const HomeNew = ({navigation}) => {
     },
   ];
   useEffect(() => {
-    // Set a timeout to show the modal after 3 seconds
     const timer = setTimeout(() => {
-      setShowRewardModal(true);
+      setShowRewardModal(getRewardModalStatus);
     }, 3000);
-
-    // Clear the timeout if the component unmounts or the effect is re-run
     return () => clearTimeout(timer);
   }, []);
   // banners
   useEffect(() => {
-    if (getOfferAgreement?.location == 'India') {
+    handleBannerType();
+  }, [handleBannerType]);
+  const handleBannerType = useCallback(() => {
+    if (getOfferAgreement?.location === 'India') {
       if (enteredCurrentEvent && enteredUpcomingEvent) {
-        // show coin
         setBannertype1('ongoing_challenge');
         setBannerType2('joined_challenge');
       } else if (enteredCurrentEvent && !enteredUpcomingEvent) {
-        //show coin
         setBannertype1('ongoing_challenge');
         setBannerType2('upcoming_challenge');
       } else if (!enteredCurrentEvent && enteredUpcomingEvent) {
@@ -224,14 +220,14 @@ const HomeNew = ({navigation}) => {
       } else {
         setBannertype1('new_join');
       }
-    } else if (getOfferAgreement?.location != 'India') {
+    } else if (getOfferAgreement?.location !== 'India') {
       checkLocationPermission()
         .then(result => {
           if (!getOfferAgreement?.location) {
             setBannertype1('new_join');
-          } else if (result == 'granted') {
+          } else if (result === 'granted') {
             setBannertype1('coming_soon');
-          } else if (result == 'blocked' || result == 'denied') {
+          } else if (result === 'blocked' || result === 'denied') {
             setBannertype1('new_join');
           }
         })
@@ -240,47 +236,12 @@ const HomeNew = ({navigation}) => {
         });
     }
   }, [
+    getOfferAgreement?.location,
     enteredCurrentEvent,
     enteredUpcomingEvent,
-    getOfferAgreement,
-    getPurchaseHistory,
+    setBannertype1,
+    setBannerType2,
   ]);
-  //banner api
-  // const bannerApi = async () => {
-  //   try {
-  //     const response = await axios(
-  //       `${NewAppapi.EVENT_BANNERS}?version=${VersionNumber.appVersion}`,
-  //       {
-  //         method: 'GET',
-  //         headers: {
-  //           'Content-Type': 'multipart/form-data',
-  //         },
-  //       },
-  //     );
-
-  //     if (
-  //       response?.data?.msg == 'Please update the app to the latest version.'
-  //     ) {
-  //       showMessage({
-  //         message: response?.data?.msg,
-  //         type: 'danger',
-  //         animationDuration: 500,
-  //         floating: true,
-  //         icon: {icon: 'auto', position: 'left'},
-  //       });
-  //     } else if (response?.data?.msg == 'version is required') {
-  //       console.log('version error', response?.data?.msg);
-  //     } else {
-  //       const objects = {};
-  //       response.data.data.forEach(item => {
-  //         objects[item.type] = item.image;
-  //       });
-  //       dispatch(setBanners(objects));
-  //     }
-  //   } catch (error) {
-  //     console.log('BannerApiError', error);
-  //   }
-  // };
   const getUserAllInData = async () => {
     try {
       const responseData = await axios.get(
@@ -1295,6 +1256,7 @@ const HomeNew = ({navigation}) => {
               color: AppColor.RED,
               fontSize: 20,
               fontFamily: Fonts.MONTSERRAT_BOLD,
+              width: DeviceWidth * 0.7,
             }}>
             {getTimeOfDayMessage() +
               ', ' +
@@ -2241,9 +2203,7 @@ const HomeNew = ({navigation}) => {
       </ScrollView>
       {modalVisible ? <UpdateGoalModal /> : null}
       <PermissionModal locationP={locationP} setLocationP={setLocationP} />
-      {/* {showRewardModal && getRewardModalStatus && (
-        <RewardModal visible={true} navigation={navigation} />
-      )} */}
+      {/* <RewardModal navigation={navigation} visible={showRewardModal}/> */}
       <LocationPermissionModal
         locationP={locationP1}
         setLocationP={setLocationP1}

@@ -35,6 +35,7 @@ import GradientButton from '../../Component/GradientButton';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -46,6 +47,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
   const [forLoading, setForLoading] = useState(false);
   const [trackerData, setTrackerData] = useState([]);
   const [downloaded, setDownloade] = useState(false);
+  const [backBlock, setBackBlock] = useState(false);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
 
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
@@ -163,6 +165,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
         });
 
         if (res.data) {
+          setBackBlock(false);
           if (
             res.data?.msg ==
             'Exercise Status for All Users Inserted Successfully'
@@ -238,7 +241,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                     borderWidth: 0.5,
                     borderColor: 'lightgrey',
                     marginHorizontal: -12,
-                   justifyContent:'center'
+                    justifyContent: 'center',
                   }}>
                   <FastImage
                     fallback={true}
@@ -307,19 +310,18 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               </View>
 
               {getExerciseStatus(item?.exercise_id, trackerData)}
-              
             </TouchableOpacity>
             {index !== data?.exercise_data.length - 1 && (
-                <View
-                  style={{
-                    width: '100%',
-                    height: 1,
+              <View
+                style={{
+                  width: '100%',
+                  height: 1,
 
-                    alignItems: 'center',
-                    backgroundColor: '#33333314',
-                  }}
-                />
-              )}
+                  alignItems: 'center',
+                  backgroundColor: '#33333314',
+                }}
+              />
+            )}
           </>
         );
       },
@@ -428,7 +430,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
     } catch (error) {
       setForLoading(false);
       showMessage({
-        message: 'Something went wrong pleasr try again',
+        message: 'Something went wrong please try again',
         type: 'danger',
         animationDuration: 500,
         floating: true,
@@ -481,11 +483,25 @@ const CustomWorkoutDetails = ({navigation, route}) => {
   // };
   return (
     <>
-      <NewHeader
+      <DietPlanHeader
         //header={route?.params?.item?.workout_name}
         header={'Custom Workout'}
         SearchButton={false}
-        backButton={true}
+        backPressCheck={backBlock}
+        onPress={() => {
+          if (backBlock) {
+            showMessage({
+              message:
+                'Please wait, downloading in progress. Do not press back.',
+              type: 'info',
+              animationDuration: 500,
+              floating: true,
+              icon: {icon: 'auto', position: 'left'},
+            });
+          } else {
+            navigation?.goBack();
+          }
+        }}
       />
       {forLoading ? <ActivityLoader /> : ''}
       <View style={styles.container}>
@@ -583,7 +599,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               maxToRenderPerBatch={10}
               updateCellsBatchingPeriod={100}
               removeClippedSubviews={true}
-            /> 
+            />
           </View>
         </View>
         {data?.exercise_data.length > 0 && (
@@ -616,6 +632,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               // fillBack="#EB1900"
               // fill={downloaded > 0 ? `${100 / downloaded}%` : '0%'}
               onPress={() => {
+                setBackBlock(true);
                 postCurrentDayAPI();
               }}
             />

@@ -141,7 +141,7 @@ const CustomWorkout = ({navigation}) => {
                   headers: {Authorization: 'someAuthToken'},
                   priority: FastImage.priority.high,
                 }}
-                resizeMode={FastImage.resizeMode.contain}
+                resizeMode={FastImage.resizeMode.cover}
                 defaultSource={localImage.NOWORKOUT}
               />
               <View
@@ -590,7 +590,7 @@ const styles = StyleSheet.create({
   buttonStyle: {
     width: 180,
     height: 40,
-    borderRadius: 30,
+    borderRadius: 7,
     justifyContent: 'center',
     flexDirection: 'row',
     position: 'absolute',
