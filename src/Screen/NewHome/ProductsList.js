@@ -199,6 +199,7 @@ const ProductsList = ({route}) => {
                             ? localImage.Noimage
                             : {uri: item.product_image_link}
                         }
+                        defaultSource={localImage?.NOWORKOUT}
                         style={{
                           width: DeviceWidth * 0.4,
                           height: DeviceWidth * 0.35,

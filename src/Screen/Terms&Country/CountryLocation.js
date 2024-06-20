@@ -21,6 +21,7 @@ import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import FitText from '../../Component/Utilities/FitText';
 import {openSettings} from 'react-native-permissions';
 import { LocationPermissionModal} from '../../Component/Utilities/LocationPermission';
+import { Screen } from 'react-native-screens';
 
 const CountryLocation = ({navigation, route}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
@@ -35,13 +36,16 @@ const CountryLocation = ({navigation, route}) => {
       .then(result => {
         if (result == 'blocked') {
           setLocationP(true);
+          setLoaded(true)
         } else if (result === 'denied') {
           setLocationP(true);
+          setLoaded(true)
         } else if (result) {
           StoreAgreementApi(result);
           dispatch(setRewardModal(true));
         } else if (!result) {
           setLocationP(true);
+          setLoaded(true)
         }
       })
       .catch(err => {
@@ -99,7 +103,7 @@ const CountryLocation = ({navigation, route}) => {
         if (CustomCreated) {
           navigation.navigate('CustomWorkout', {routeName: routeName});
         } else {
-          navigation.navigate('BottomTab');
+          navigation.navigate('BottomTab',{screen:'Home'});
         }
       }
     } catch (error) {
@@ -107,30 +111,6 @@ const CountryLocation = ({navigation, route}) => {
       setLoaded(true);
     }
   };
-  const showPermissionAlert = () => {
-    Alert.alert(
-      'Permission Required',
-      'To use the rewards feature, please enable location access in settings',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-          onPress: () => {
-            StoreAgreementApi('');
-          },
-        },
-        {
-          text: 'Open settings',
-          onPress: () => {
-            openSettings;
-            setLoaded(false);
-          },
-        },
-      ],
-      {cancelable: false},
-    );
-  };
- 
   return (
     <View style={styles.Container}>
       {/* <DietPlanHeader header="" shadow /> */}
@@ -166,13 +146,6 @@ const CountryLocation = ({navigation, route}) => {
           image={localImage.location_icon}
           onPress={() => getCountry()}
         />
-        {/* <Text
-          style={styles.txt3}
-          onPress={() => {
-            StoreAgreementApi('');
-          }}>
-          Skip
-        </Text> */}
       </View>
       <LocationPermissionModal locationP={locationP} setLocationP={setLocationP} />
     </View>

@@ -186,34 +186,15 @@ const PredictionScreen = ({navigation, route}: any) => {
           }
         />
         {weightHistory.length != 0 && zeroData.length != 0 && (
-          // <View></View>
           <CustomBarChart
             data={weightHistory}
             barWidth={15}
             barColor={'transparent'}
             barSpacing={DeviceWidth * 0.08}
           />
-          // <Graph
-          //   resultData={weightHistory}
-          //   zeroData={zeroData}
-          //   home={true}
-          //   currentW={currentWeight}
-          //   targetW={TargetWeight}
-          // />
         )}
       </View>
-      {/* <Image
-        source={{
-          uri: 'https://imagedelivery.net/PG2LvcyKPE1-GURD0XmG5A/25357fb6-c174-4a3d-995c-77641d9ea900/public',
-        }}
-        style={[
-          styles.Image,
-          {
-            alignSelf: currentWeight < TargetWeight ? 'flex-start' : 'flex-end',
-          },
-        ]}
-        resizeMode="contain"
-      /> */}
+
       <View
         style={{
           marginTop: 30,
@@ -223,7 +204,13 @@ const PredictionScreen = ({navigation, route}: any) => {
         <Text style={[styles.t, {fontFamily: Fonts.MONTSERRAT_SEMIBOLD}]}>
           You can do it!
         </Text>
-        <Text style={[styles.t, {fontSize: 16,fontFamily:Fonts.MONTSERRAT_SEMIBOLD}]}>Keep going</Text>
+        <Text
+          style={[
+            styles.t,
+            {fontSize: 16, fontFamily: Fonts.MONTSERRAT_SEMIBOLD},
+          ]}>
+          Keep going
+        </Text>
       </View>
       <View style={styles.buttons}>
         <TouchableOpacity

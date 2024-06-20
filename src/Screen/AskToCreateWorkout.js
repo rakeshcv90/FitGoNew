@@ -136,6 +136,8 @@ const AskToCreateWorkout = ({route, navigation}) => {
       payload.append('workout_plans', 'CustomCreated');
       if (name) {
         payload.append('name', name);
+      } else {
+        payload.append('name', getUserDataDetails?.name);
       }
       payload.append(
         'injury',
@@ -273,11 +275,12 @@ const AskToCreateWorkout = ({route, navigation}) => {
             routeName: 'Exprience',
             CustomCreated: true,
           });
-
+setLoader(false)
           dispatch(setCustomWorkoutData([]));
           navigation.navigate('OfferTerms', {CustomCreated: true});
         } else {
           navigation.navigate('CustomWorkout', {routeName: 'Exprience'});
+          setLoader(false)
         }
         if (responseData?.data.event_details == 'Not any subscription') {
           dispatch(setPurchaseHistory([]));
@@ -288,6 +291,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
             setEnteredUpcomingEvent,
             setPlanType,
           );
+          setLoader(false)
         } else {
           dispatch(setPurchaseHistory(responseData?.data.event_details));
           EnteringEventFunction(
@@ -297,6 +301,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
             setEnteredUpcomingEvent,
             setPlanType,
           );
+          setLoader(false)
         }
         //ChallengesDataAPI();
         getAllChallangeAndAllExerciseData();
@@ -367,6 +372,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
         );
         dispatch(setChallengesData(responseData.data.challenge_data));
         dispatch(setAllExercise(responseData.data.data));
+        setLoader(false)
       } catch (error) {
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
         dispatch(setChallengesData([]));
@@ -385,6 +391,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
 
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
       }
+      setLoader(false)
     }
   };
   return (

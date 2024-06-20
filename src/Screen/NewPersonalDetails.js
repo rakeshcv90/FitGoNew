@@ -232,7 +232,7 @@ const NewPersonalDetails = ({route, navigation}) => {
         setForLoading(false);
       } else {
         showMessage({
-          message: dataItem.data.msg ?? 'helloo',
+          message: dataItem?.data?.msg,
           floating: true,
           type: 'danger',
           animationDuration: 750,

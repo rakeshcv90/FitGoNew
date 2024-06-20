@@ -99,6 +99,8 @@ const SaveDayExercise = ({navigation, route}: any) => {
       if (data?.data?.msg == 'coin added successfully') {
         navigation.navigate('MyPlans');
         console.log('TEST API DATA', data.data);
+      }else{
+        navigation.navigate('MyPlans');
       }
     } catch (error) {
       navigation.navigate('MyPlans');
@@ -162,7 +164,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
 
   const onPresh = () => {
     AnalyticsConsole(`SBA_Exer_Com`);
-    if (enteredCurrentEvent) TESTAPI();
+    if (enteredCurrentEvent && type == 'weekly') TESTAPI();
     else {
       if (type == 'focus') {
         categoryExercise = getAllExercise?.filter((item: any) =>
@@ -172,7 +174,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
       type == 'custom'
         ? navigation.navigate('CustomWorkoutDetails', {item: data})
         : challenge
-        ? getAllChallangeAndAllExerciseData()//ChallengesDataAPI()
+        ? getAllChallangeAndAllExerciseData() //ChallengesDataAPI()
         : type == 'focus'
         ? navigation.navigate('WorkoutCategories', {
             categoryExercise,

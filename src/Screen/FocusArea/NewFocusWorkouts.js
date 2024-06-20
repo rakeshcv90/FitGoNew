@@ -7,6 +7,7 @@ import {
   FlatList,
   Image,
   TextInput,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
@@ -20,7 +21,6 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Iconss from 'react-native-vector-icons/FontAwesome5';
 import FastImage from 'react-native-fast-image';
 import {localImage} from '../../Component/Image';
 import Button from '../../Component/Button';
@@ -51,7 +51,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const exerciseData = route?.params?.focusExercises;
   const searchCriteria = route?.params?.searchCriteria;
   const searchCriteriaRedux = route?.params?.searchCriteriaRedux;
-  const isFocused = useIsFocused();
   const refStandard = useRef();
   const [filterList, setFilterList] = useState(exerciseData);
   const [downloadProgress, setDownloadProgress] = useState(0);
@@ -64,6 +63,8 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const [item, setitem] = useState();
   const [downloaded, setDownloade] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchFilterList, setSearchFilterList] = useState([]);
   const dispatch = useDispatch();
   const uperBody = [
     {
@@ -193,6 +194,12 @@ const NewFocusWorkouts = ({route, navigation}) => {
       dispatch(setCoreCount(1));
     }
   };
+  const updateFilteredCategories = text => {
+    const filteredItems = filterList.filter(item =>
+      item.exercise_title.toLowerCase().includes(text.toLowerCase()),
+    );
+    setSearchFilterList(filteredItems);
+  };
   // const bannerAdsDisplay = () => {
   //   if (getPurchaseHistory.length > 0) {
   //     if (
@@ -210,7 +217,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
     const noOrNoobPlan =
       getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
     if (execrise.length >= 1) {
-      if (noOrNoobPlan&& index == 0 && execrise.length > 1) {
+      if (noOrNoobPlan && index == 0 && execrise.length > 1) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0 && execrise.length > 8) {
         return getNativeAdsDisplay();
@@ -307,7 +314,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
     );
     return (
       <>
-     
         <RBSheet
           ref={refStandard}
           // draggable
@@ -320,11 +326,18 @@ const NewFocusWorkouts = ({route, navigation}) => {
               borderTopLeftRadius: 10,
               borderTopRightRadius: 10,
               height:
-                DeviceHeigth >= 1024
-                  ? DeviceHeigth * 0.45
+                route?.params?.focusedPart == 'Upper Body' ||
+                route?.params?.focusedPart == 'Lower Body'
+                  ? DeviceHeigth >= 1024
+                    ? DeviceHeigth * 0.45
+                    : DeviceHeigth >= 856
+                    ? DeviceHeigth * 0.55
+                    : DeviceHeigth * 0.58
+                  : DeviceHeigth >= 1024
+                  ? DeviceHeigth * 0.25
                   : DeviceHeigth >= 856
-                  ? DeviceHeigth * 0.55
-                  : DeviceHeigth * 0.6,
+                  ? DeviceHeigth * 0.3
+                  : DeviceHeigth * 0.42,
             },
             draggableIcon: {
               width: 80,
@@ -457,6 +470,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           <Image
                             source={item.ima}
                             // onLoad={() => setImageLoad(false)}
+                            defaultSource={localImage?.NOWORKOUT}
                             style={{
                               width: 50,
                               height: 60,
@@ -675,10 +689,36 @@ const NewFocusWorkouts = ({route, navigation}) => {
           source={require('../../Icon/Images/NewImage2/filter.png')}
         />
         <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
+        <View
+          style={{
+            width: '90%',
+            height: 50,
+            alignSelf: 'center',
+            backgroundColor: '#F3F5F5',
+            borderRadius: 6,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingLeft: 10,
+            top: -DeviceWidth * 0.05,
+          }}>
+          <Icons name="magnify" size={20} color={'#33333380'} />
+          <TextInput
+            placeholder="Search Exercise"
+            placeholderTextColor="#33333380"
+            value={searchQuery}
+            onChangeText={text => {
+              setSearchQuery(text);
+              updateFilteredCategories(text);
+            }}
+            style={styles.inputText}
+          />
+        </View>
         <>
           <View>
             <FlatList
-              data={filterList}
+              data={
+                searchFilterList?.length > 0 ? searchFilterList : filterList
+              }
               contentContainerStyle={{paddingBottom: DeviceHeigth * 0.25}}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
@@ -857,5 +897,36 @@ const styles = StyleSheet.create({
     zIndex: 1,
     color: AppColor.WHITE,
   },
+  inputText: {
+    paddingLeft: 15,
+    paddingRight: 15,
+    width: '90%',
+    height: 50,
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: '600',
+    fontFamily: 'Montserrat',
+    color: '#000',
+  },
+  shadow: {
+    marginBottom: 10,
+    shadowColor: 'grey',
+    ...Platform.select({
+      ios: {
+        //shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  // searchBar: {
+  //   backgroundColor: '#FDFDFD',
+  //   borderWidth: 0.5,
+  //   borderColor: '#e7e7e7',
+  // },
 });
 export default NewFocusWorkouts;

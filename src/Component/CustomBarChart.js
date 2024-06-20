@@ -24,7 +24,7 @@ const CustomBarChart = ({data, barColor, barWidth, barSpacing}) => {
         borderBottomWidth: 1,
         alignSelf: 'center',
         marginTop: 40,
-        height: DeviceHeigth * 0.28,
+        height: DeviceHeigth * 0.29,
         alignItems: 'center',
       }}>
       <Svg style={styles.svg}>
@@ -68,7 +68,8 @@ const CustomBarChart = ({data, barColor, barWidth, barSpacing}) => {
                 style={{
                   width: barSpacing+barWidth,
                   height: 200,
-                  borderRadius: 5,
+                  borderTopLeftRadius: 5,
+                  borderTopRightRadius: 5,
                 }}
               />
             </Animated.View>

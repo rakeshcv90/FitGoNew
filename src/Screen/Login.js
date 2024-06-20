@@ -156,7 +156,7 @@ const Login = ({navigation}) => {
         'User does not exist with provided Google social credentials'
       ) {
         showMessage({
-          message: 'This email id is not registered. Sign Up to continue',
+          message: 'This email id is not registered. SignUp to continue.',
           type: 'danger',
           animationDuration: 1000,
           floating: true,
@@ -256,7 +256,7 @@ const Login = ({navigation}) => {
         'User does not exist with provided Facebook social credentials'
       ) {
         showMessage({
-          message: 'You are not registered,You need to Signup first',
+          message: 'You are not registered. You need to SignUp first.',
           type: 'danger',
           animationDuration: 500,
           floating: true,
@@ -758,7 +758,7 @@ const Login = ({navigation}) => {
         if (data?.data[0]?.msg == 'Mail sent') {
           setForLoading(false);
           showMessage({
-            message: 'Reset Password link sent!',
+            message: 'Reset password link sent!',
             type: 'success',
             animationDuration: 500,
 

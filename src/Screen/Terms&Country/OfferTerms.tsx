@@ -204,8 +204,7 @@ const OfferTerms = ({navigation, route}: any) => {
             color={AppColor.BLACK}
             size={25}
             style={{marginLeft: 14}}
-            onPress={()=>navigation.goBack()}
-            
+            onPress={() => navigation.navigate('BottomTab', {screen: 'Home'})}
           />
         ) : (
           <></>
@@ -248,7 +247,11 @@ const OfferTerms = ({navigation, route}: any) => {
                 fontWeight="500"
                 fontSize={12}
               />
-              <AntDesign name={opened ? 'caretdown' : 'caretup'} size={10} />
+              <AntDesign
+                name={opened ? 'caretdown' : 'caretup'}
+                size={10}
+                color={AppColor.BLACK}
+              />
             </View>
             {opened && (
               <View

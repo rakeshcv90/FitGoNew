@@ -313,6 +313,7 @@ const StoreScreen = ({navigation}) => {
                               ? localImage.Noimage
                               : {uri: item.type_image_link}
                           }
+                          defaultSource={localImage?.NOWORKOUT}
                           style={{
                             width: DeviceWidth * 0.7,
                             height: DeviceHeigth * 0.15,
@@ -516,6 +517,7 @@ const StoreScreen = ({navigation}) => {
                                 ? localImage.Noimage
                                 : {uri: item.product_image_link}
                             }
+                            defaultSource={localImage?.NOWORKOUT}
                             style={{
                               height: '90%',
                               width: 100,
