@@ -187,12 +187,52 @@ const SplaceScreen = ({navigation}) => {
       navigation.replace('LetsStart');
     }
   };
+  //check cancel subscription
+  const checkCancel = async () => {
+    try {
+      const purchases = await RNIap.getAvailablePurchases();
+      if (purchases?.length == 0) {
+        cancelSubscription();
+      } else {
+        const activeSubs = purchases.filter(item => {
+          if (item?.autoRenewingAndroid == true) {
+          } else {
+            cancelSubscription();
+          }
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const cancelSubscription = async () => {
+    try {
+      const data = await axios(
+        `${NewAppapi.CANCEL_SUBSCRIPTION}?user_id=${getUserDataDetails?.id}&status=delete`,
+      );
+      if (data.data?.msg == 'plan deleted successfully') {
+        console.log(data.data, 'CANCELLED');
+        dispatch(setPurchaseHistory([]));
+        EnteringEventFunction(
+          dispatch,
+          [],
+          setEnteredCurrentEvent,
+          setEnteredUpcomingEvent,
+          setPlanType,
+        );
+      }
+    } catch (error) {
+      console.log('User Profile Error123', error);
+    }
+  };
   const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
   if (loaded) {
     setLoaded(false);
     if (getPurchaseHistory?.plan != null) {
       if (getPurchaseHistory?.plan == 'premium' && isValid) {
         loadScreen();
+        Platform.OS == 'android' && checkCancel();
       } else {
         loaded.show();
           loadScreen();

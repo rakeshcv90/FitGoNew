@@ -457,6 +457,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           <Image
                             source={item.ima}
                             // onLoad={() => setImageLoad(false)}
+                            defaultSource={localImage?.NOWORKOUT}
                             style={{
                               width: 50,
                               height: 60,

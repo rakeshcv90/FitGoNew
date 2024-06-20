@@ -29,6 +29,7 @@ export const ExerciseComponetWithoutEvents = ({
               source={{uri: dayObject?.image}}
               style={styles.img}
               resizeMode="contain"
+              defaultSource={localImage?.NOWORKOUT}
             />
             <View style={styles.View3}>
               <Text style={styles.txt1}>

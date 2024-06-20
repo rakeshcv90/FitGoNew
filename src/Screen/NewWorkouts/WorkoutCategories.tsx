@@ -7,6 +7,7 @@ import {
   Platform,
   BackHandler,
   SafeAreaView,
+  TextInput
 } from 'react-native';
 import React, {
   FC,
@@ -51,7 +52,6 @@ import GradientButton from '../../Component/GradientButton';
 import RNFetchBlob from 'rn-fetch-blob';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import WorkoutsDescription from './WorkoutsDescription';
-import {TextInput} from 'react-native-paper';
 import {showMessage} from 'react-native-flash-message';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);

@@ -238,7 +238,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                     borderWidth: 0.5,
                     borderColor: 'lightgrey',
                     marginHorizontal: -12,
-                    // alignItems: 'center',
+                   justifyContent:'center'
                   }}>
                   <FastImage
                     fallback={true}
@@ -508,6 +508,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                 source={
                   data?.image == '' ? localImage.NOWORKOUT : {uri: data?.image}
                 }
+                defaultSource={localImage.NOWORKOUT}
                 style={{
                   width: 70,
                   height: 70,
@@ -582,7 +583,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               maxToRenderPerBatch={10}
               updateCellsBatchingPeriod={100}
               removeClippedSubviews={true}
-            />
+            /> 
           </View>
         </View>
         {data?.exercise_data.length > 0 && (

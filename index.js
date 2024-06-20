@@ -106,7 +106,7 @@ notifee.createChannel({
   visibility: AndroidVisibility.PUBLIC,
   importance: AndroidImportance.HIGH,
   description: 'CHANNEL FOR NOTIFICATION',
-  sound: 'default',
+  sound: 'fitme_notification',
 });
 const DisplayNotification = async Notification => {
   console.log('NOTIFICATION', Notification.data?.type);
@@ -124,6 +124,7 @@ const DisplayNotification = async Notification => {
         android: {
           channelId: 'Fitme',
           largeIcon: 'ic_launcher',
+          sound: 'fitme_notification',
           style: {
             type: AndroidStyle.BIGPICTURE,
             picture:
@@ -156,6 +157,7 @@ const DisplayNotification = async Notification => {
         android: {
           channelId: 'Fitme',
           largeIcon: 'ic_launcher',
+          sound: 'fitme_notification',
         },
         ios: {
           categoryId: 'default',

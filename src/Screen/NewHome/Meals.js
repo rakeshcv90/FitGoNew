@@ -545,6 +545,7 @@ const Meals = ({navigation}) => {
           <Image
             source={{uri: item?.diet_image}}
             resizeMode="cover"
+            defaultSource={localImage?.NOWORKOUT}
             style={{
               width: 200,
               height: 150,
@@ -727,6 +728,7 @@ const Meals = ({navigation}) => {
                                 uri: item.diet_image,
                               }
                         }
+                        defaultSource={localImage?.NOWORKOUT}
                         style={{
                           height: 70,
                           width: 70,

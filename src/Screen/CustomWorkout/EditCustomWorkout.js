@@ -98,9 +98,10 @@ const EditCustomWorkout = ({navigation, route}) => {
 
                 justifyContent: 'space-between',
               }}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{flexDirection: 'row', alignItems: 'center',justifyContent:'center'}}>
                 <Image
                   source={{uri: item.exercise_image_link}}
+                  defaultSource={localImage.NOWORKOUT}
                   style={{
                     width: 80,
                     height: 80,

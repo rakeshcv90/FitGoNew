@@ -116,5 +116,6 @@ export const NewAppapi = {
   GET_ALL_IN_ONE: NewApi + 'all_in_one',
   ALL_USER_DETAILS: NewApi + 'all_user_data',
   ALL_USER_WITH_CONDITION: NewApi + 'all_user_with_condition',
-  NEW_WEEKDAY_EXERCISE_API:NewApi+'get_all_weekday_exercise'
+  NEW_WEEKDAY_EXERCISE_API: NewApi + 'get_all_weekday_exercise',
+  CANCEL_SUBSCRIPTION: NewApi + 'delete_data',
 };
