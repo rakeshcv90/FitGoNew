@@ -87,12 +87,12 @@ const AITrainer = ({navigation, route}) => {
     // };
   }, [getSoundOffOn]);
   const initTts = async () => {
-    // if (Platform.OS == 'android') {
-    //   await Tts.setDefaultLanguage(route?.params?.item?.language);
-    //   await Tts.setDefaultVoice(route?.params?.item?.languageId);
-    // } else {
-    //   await Tts.setDefaultVoice(route?.params?.item?.languageId);
-    // }
+    if (Platform.OS == 'android') {
+      await Tts.setDefaultLanguage(route?.params?.item?.language);
+      await Tts.setDefaultVoice(route?.params?.item?.languageId);
+    } else {
+      await Tts.setDefaultVoice(route?.params?.item?.languageId);
+    }
 
     readText();
     setTtsStatus('initialized');

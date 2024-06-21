@@ -89,7 +89,20 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+     <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+         <Stack.Screen
+        name="IntroductionScreen1"
+        component={IntroductionScreen1}
+      />
+      <Stack.Screen
+        name="IntroductionScreen2"
+        component={IntroductionScreen2}
+      />
+      <Stack.Screen
+        name="IntroductionScreen3"
+        component={IntroductionScreen3}
+      />
+     
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Name" component={Name} />
@@ -138,18 +151,7 @@ export const LoginStack = () => {
       <Stack.Screen name="WorkoutArea" component={WorkoutArea} /> */}
       {/* <Stack.Screen name="Edit_Profile" component={NewEditProfile} /> */}
       {/* <Stack.Screen name="Scale" component={Scale} /> */}
-      {/* <Stack.Screen
-        name="IntroductionScreen1"
-        component={IntroductionScreen1}
-      />
-      <Stack.Screen
-        name="IntroductionScreen2"
-        component={IntroductionScreen2}
-      />
-      <Stack.Screen
-        name="IntroductionScreen3"
-        component={IntroductionScreen3}
-      /> */}
+ 
       <Stack.Screen
         name="NewMonthlyAchievement"
         component={NewMonthlyAchievement}

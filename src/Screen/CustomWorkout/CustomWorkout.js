@@ -141,7 +141,7 @@ const CustomWorkout = ({navigation}) => {
                   headers: {Authorization: 'someAuthToken'},
                   priority: FastImage.priority.high,
                 }}
-                resizeMode={FastImage.resizeMode.contain}
+                resizeMode={FastImage.resizeMode.cover}
                 defaultSource={localImage.NOWORKOUT}
               />
               <View

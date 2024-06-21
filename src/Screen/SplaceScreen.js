@@ -1,5 +1,5 @@
 import {StyleSheet, Image, StatusBar, Platform, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Appapi, DeviceWidth, NewApi, NewAppapi} from '../Component/Config';
 import {localImage} from '../Component/Image';
 import {useDispatch, useSelector} from 'react-redux';
@@ -59,98 +59,19 @@ const SplaceScreen = ({navigation}) => {
   useEffect(() => {
     requestPermissionforNotification(dispatch);
     getUserAllInData();
-    // getAllChallangeAndAllExerciseData();
     getPlanData();
 
-    // getProfileData(getUserDataDetails?.id),
-    // getCustomWorkout();
-    // getOffertermsStatus();
-    // PurchaseDetails();
     dispatch(setFitmeAdsCount(0));
     initInterstitial();
-    // getAllExerciseData();
-    // ChallengesDataAPI();
   }, []);
-
-  const getOffertermsStatus = async () => {
-    try {
-      const ApiCall = await axios(NewAppapi.GET_AGR_STATUS, {
-        method: 'POST',
-        data: {
-          user_id: getUserDataDetails?.id,
-          version: VersionNumber.appVersion,
-        },
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      if (
-        ApiCall?.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: ApiCall?.data?.msg,
-          floating: true,
-          duration: 500,
-          type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setApiDataLoaded(true);
-      } else if (ApiCall?.data?.message == 'user not found') {
-        // console.log('heloo',ApiCall.data)
-
-        setApiDataLoaded(true);
-      } else {
-        console.log('MSDMMMSMSM', ApiCall?.data);
-        dispatch(setOfferAgreement(ApiCall?.data));
-      }
-    } catch (error) {
-      console.log(error);
-      setApiDataLoaded(true);
+  useEffect(() => {
+    if (Object.keys(getUserDataDetails).length > 0) {
+      getUserDetailData(getUserDataDetails?.id);
+    } else {
+      DisplayAds(getOfferAgreement);
     }
-  };
+  }, [loaded]);
 
-  const ChallengesDataAPI = async () => {
-    try {
-      const res = await axios({
-        url:
-          NewAppapi.GET_CHALLENGES_DATA +
-          '?version=' +
-          VersionNumber.appVersion,
-      });
-      if (res.data?.msg != 'version  is required') {
-        dispatch(setChallengesData(res.data));
-      } else {
-        dispatch(setChallengesData([]));
-      }
-    } catch (error) {
-      console.error(error, 'ChallengesDataAPI ERRR');
-    }
-  };
-  const getAllExerciseData = async () => {
-    try {
-      const exerciseData = await axios.get(
-        `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}`,
-      );
-
-      if (
-        exerciseData?.data?.msg == 'Please update the app to the latest version'
-      ) {
-        dispatch(setAllExercise([]));
-      } else if (exerciseData?.data?.length > 0) {
-        // console.log(' getStoreVideoLoc',exerciseData.data?.length)
-        Promise.all(
-          exerciseData.data?.map((item, index) =>
-            downloadVideos(item, index, exerciseData.data?.length),
-          ),
-        );
-      } else {
-        dispatch(setAllExercise([]));
-      }
-    } catch (error) {
-      dispatch(setAllExercise([]));
-      console.log('All-EXCERSIE-ERROR', error);
-    }
-  };
   const initInterstitial = async () => {
     const interstitialAd = InterstitialAd.createForAdRequest(
       interstitialAdId,
@@ -163,28 +84,23 @@ const SplaceScreen = ({navigation}) => {
     interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {});
     interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
     interstitialAd.addAdEventListener(AdEventType.ERROR, () => {
-      // loadScreen();
+      loadScreen();
     });
   };
-  const loadScreen = () => {
-    if (
-      getUserDataDetails?.id &&
-      getUserDataDetails?.profile_compl_status == 1
-    ) {
-      if (getOfferAgreement?.term_conditon) {
-        navigation.replace('BottomTab');
-      } else {
-        if (
-          !getUserDataDetails?.id &&
-          getOfferAgreement?.term_conditon != 'Accepted'
-        ) {
-          navigation.replace('OfferTerms');
-        } else {
+  const loadScreen = agreement => {
+    if (showIntro) {
+      if (getUserDataDetails?.id) {
+        console.log('zxdfdsfds', getOfferAgreement);
+        if (agreement?.term_condition == 'Accepted') {
           navigation.replace('BottomTab');
+        } else {
+          navigation.replace('OfferTerms');
         }
+      } else {
+        navigation.replace('LogSignUp');
       }
     } else {
-      navigation.replace('LetsStart');
+      navigation.replace('IntroductionScreen1');
     }
   };
   //check cancel subscription
@@ -227,22 +143,27 @@ const SplaceScreen = ({navigation}) => {
     }
   };
   const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
-  if (loaded) {
-    setLoaded(false);
-    if (getPurchaseHistory?.plan != null) {
-      if (getPurchaseHistory?.plan == 'premium' && isValid) {
-        loadScreen();
-        Platform.OS == 'android' && checkCancel();
+
+  const DisplayAds = agremment => {
+    console.log('Display  ADs Caal');
+    if (loaded) {
+      setLoaded(false);
+
+      if (getPurchaseHistory?.plan != null) {
+        if (getPurchaseHistory?.plan == 'premium' && isValid) {
+          loadScreen(agremment);
+          Platform.OS == 'android' && checkCancel();
+        } else {
+          loaded.show();
+          loadScreen(agremment);
+        }
       } else {
         loaded.show();
-          loadScreen();
-        
+        loadScreen(agremment);
       }
-    } else {
-      loaded.show();
-      loadScreen();
     }
-  }
+  };
+
   const getPlanData = () => {
     Platform.OS === 'ios'
       ? RNIap.initConnection()
@@ -304,94 +225,6 @@ const SplaceScreen = ({navigation}) => {
     }
   };
 
-  const getProfileData = async user_id => {
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          id: user_id,
-          version: VersionNumber.appVersion,
-        },
-      });
-
-      if (data?.data?.profile) {
-        dispatch(setUserProfileData(data.data.profile));
-      } else if (
-        data?.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: data?.data?.msg,
-          floating: true,
-          duration: 500,
-          type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        dispatch(setUserProfileData([]));
-      }
-    } catch (error) {
-      console.log('User Profile Error123', error);
-    }
-  };
-
-  const sanitizeFileName = fileName => {
-    fileName = fileName.replace(/\s+/g, '_');
-    return fileName;
-  };
-  let StoringData = {};
-  const downloadVideos = async (data, index, len) => {
-    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
-      data?.exercise_title,
-    )}.jpg`;
-    try {
-      const videoExists = await RNFetchBlob.fs.exists(filePath);
-      if (videoExists) {
-        StoringData[data?.exercise_title + 'Image'] = filePath;
-        // setDownloade(true);
-      } else {
-        await RNFetchBlob.config({
-          fileCache: true,
-          // IOSBackgroundTask: true, // Add this for iOS background downloads
-          path: filePath,
-          appendExt: '.jpg',
-        })
-          .fetch('GET', data?.exercise_image_link, {
-            'Content-Type': 'image/jpg',
-            // key: 'Config.REACT_APP_API_KEY',
-          })
-          .then(res => {
-            StoringData[data?.exercise_title + 'Image'] = res.path();
-            // setDownloade(true);
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }
-    } catch (error) {
-      console.log('ERRRR', error);
-    }
-    dispatch(setVideoLocation(StoringData));
-  };
-  const getCustomWorkout = async () => {
-    try {
-      const data = await axios.get(
-        `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${getUserDataDetails.id}`,
-      );
-
-      if (data?.data?.msg != 'data not found.') {
-        dispatch(setCustomWorkoutData(data?.data?.data));
-      } else {
-        dispatch(setCustomWorkoutData([]));
-      }
-    } catch (error) {
-      console.log('Custom Workout Error', error);
-      dispatch(setCustomWorkoutData([]));
-    }
-  };
-
   const getUserAllInData = async () => {
     try {
       const responseData = await axios.get(
@@ -423,17 +256,12 @@ const SplaceScreen = ({navigation}) => {
         dispatch(setStoreData(responseData?.data?.types));
         dispatch(setCompleteProfileData(responseData?.data?.additional_data));
         getAllChallangeAndAllExerciseData();
-        Object.keys(getUserDataDetails).length > 0 &&
-          getUserDetailData(getUserDataDetails?.id);
       }
     } catch (error) {
       console.log('all_in_one_api_error', error);
       dispatch(Setmealdata([]));
       dispatch(setCompleteProfileData([]));
       dispatch(setStoreData([]));
-
-      Object.keys(getUserDataDetails).length > 0 &&
-        getUserDetailData(getUserDataDetails?.id);
       getAllChallangeAndAllExerciseData();
     }
   };
@@ -458,6 +286,7 @@ const SplaceScreen = ({navigation}) => {
       } else {
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
+        DisplayAds(responseData?.data?.additional_data);
         dispatch(setUserProfileData(responseData?.data?.profile));
         if (responseData?.data.event_details == 'Not any subscription') {
           dispatch(setPurchaseHistory([]));
@@ -484,6 +313,7 @@ const SplaceScreen = ({navigation}) => {
       dispatch(setPurchaseHistory([]));
       dispatch(setUserProfileData([]));
       dispatch(setCustomWorkoutData([]));
+      DisplayAds((response = null));
     }
   };
   const getAllChallangeAndAllExerciseData = async () => {
@@ -495,12 +325,10 @@ const SplaceScreen = ({navigation}) => {
         );
         dispatch(setChallengesData(responseData.data.challenge_data));
         dispatch(setAllExercise(responseData.data.data));
-        //loadScreen();
       } catch (error) {
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
         dispatch(setChallengesData([]));
         dispatch(setAllExercise([]));
-        // loadScreen();
       }
     } else {
       try {
@@ -509,7 +337,6 @@ const SplaceScreen = ({navigation}) => {
         );
         dispatch(setChallengesData(responseData.data.challenge_data));
         dispatch(setAllExercise(responseData.data.data));
-        //loadScreen();
       } catch (error) {
         dispatch(setChallengesData([]));
         dispatch(setAllExercise([]));

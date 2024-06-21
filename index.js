@@ -135,6 +135,7 @@ const DisplayNotification = async Notification => {
         },
         ios: {
           categoryId: 'default',
+          sound: 'fitme_notification.wav',
           foregroundPresentationOptions: {
             badge: true,
             sound: true,
@@ -161,6 +162,7 @@ const DisplayNotification = async Notification => {
         },
         ios: {
           categoryId: 'default',
+          sound: 'fitme_notification.wav',
           foregroundPresentationOptions: {
             badge: true,
             sound: true,

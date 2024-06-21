@@ -97,11 +97,12 @@ const CountryLocation = ({navigation, route}) => {
         dispatch(setOfferAgreement(ApiCall?.data));
 
         setLoaded(true);
-        if (CustomCreated) {
-          navigation.navigate('CustomWorkout', {routeName: routeName});
-        } else {
-          navigation.navigate('BottomTab',{screen:'MyPlans'});
-        }
+        navigation.navigate('BottomTab');
+        // if (CustomCreated) {
+        //   navigation.navigate('CustomWorkout', {routeName: routeName});
+        // } else {
+        
+        // }
       }
     } catch (error) {
       console.log(error);
