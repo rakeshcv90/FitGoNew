@@ -33,6 +33,7 @@ type Props = {
   left?: number;
   h?: number;
   paddingTop?: number;
+  introType?:boolean;
 };
 
 const DietPlanHeader: FC<Props> = ({
@@ -48,6 +49,7 @@ const DietPlanHeader: FC<Props> = ({
   left,
   h,
   paddingTop,
+  introType,
 }) => {
   const navigation = useNavigation();
   const getExperience = useSelector((state: any) => state.getExperience);
@@ -63,7 +65,7 @@ const DietPlanHeader: FC<Props> = ({
             : Platform.OS == 'ios'
             ? (DeviceHeigth * 13) / 100
             : (DeviceHeigth * 10) / 100,
-         // left: 1,
+          // left: 1,
           paddingTop: paddingTop
             ? paddingTop
             : Platform.OS == 'android'
@@ -95,6 +97,8 @@ const DietPlanHeader: FC<Props> = ({
                   }),
                 );
                 // navigationRef.current.navigate('BottomTab',{screen:'Home'})
+              } else if (introType) {
+                navigation.navigate('BottomTab', {screen: 'Home'});
               } else {
                 navigation.goBack();
               }

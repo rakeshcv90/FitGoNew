@@ -61,7 +61,7 @@ export const WeekTabWithoutEvent = ({
             textTransform: 'capitalize',
           },
         ]}>
-        {day.substring(0, 3)}
+        {day == 'Thursday' ? day.substring(0, 2) : day.substring(0, 1)}
       </Text>
       {dayIndex == selectedDay ? (
         <View
@@ -116,7 +116,7 @@ export const WeekTabWithEvents = ({
   dayWiseCoins,
   selectedDay,
 }) => {
-  const sameDay = day == WeekArray[selectedDay]; 
+  const sameDay = day == WeekArray[selectedDay];
   return (
     <View style={{alignItems: 'center'}}>
       <Text style={[styles.labelStyle]}>{day.substring(0, 3)}</Text>

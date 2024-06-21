@@ -170,7 +170,7 @@ export const localImage = {
   FemaleNew: require('../Icon/Images/NewImage2/FemaleNew.png'),
   Alert: require('../Icon/Images/NewImage2/Alert.png'),
   location_icon: require('../Icon/Images/NewImage2/location_searching.png'),
-  location_ping: require('../Icon/Images/NewImage2/locationPing.png'),
+  location_ping: require('../Icon/Images/InAppRewards/locationPing.png'),
   ModalCoin: require('../Icon/Images/NewImage2/ModalCoin.png'),
   Modal_img: require('../Icon/Images/NewImage2/Modal_img.png'),
   RecommendFitme:require('../Icon/Images/InAppRewards/RecommendFitme.png'),
@@ -199,5 +199,7 @@ export const localImage = {
   Reward_icon:require('../Icon/Images/InAppRewards/Reward_icon.png'),
   No_location:require('../Icon/Images/InAppRewards/No_location.png'),
   RTermsLogo:require('../Icon/Images/InAppRewards/RTermslogo.png'),
-  SplaceLottie:require('../Icon/Images/InAppRewards/SplaceScreen.json')
+  SplaceLottie:require('../Icon/Images/InAppRewards/SplaceScreen.json'),
+  RewardInfo:require('../Icon/Images/InAppRewards/info.json'),
+  Thumbnail:require('../Icon/Images/InAppRewards/Thumbnail.jpg')
 };

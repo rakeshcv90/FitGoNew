@@ -36,6 +36,7 @@ import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
+import NewButton from '../../Component/NewButton';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -48,6 +49,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
   const [trackerData, setTrackerData] = useState([]);
   const [downloaded, setDownloade] = useState(false);
   const [backBlock, setBackBlock] = useState(false);
+  const [VideoDownload, setVideoDownload] = useState(0);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
 
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
@@ -65,6 +67,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
     return fileName;
   };
   let StoringData = {};
+  let downloadCounter = 0;
   const downloadVideos = async (data, index, len) => {
     const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
       data?.exercise_title,
@@ -74,7 +77,8 @@ const CustomWorkoutDetails = ({navigation, route}) => {
       if (videoExists) {
         StoringData[data?.exercise_title] = filePath;
         setDownloade(true);
-        console.log('Downloaded Items is', filePath);
+        downloadCounter++;
+        setVideoDownload((downloadCounter / len) * 100);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -89,7 +93,8 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           .then(res => {
             StoringData[data?.exercise_title] = res.path();
             setDownloade(true);
-            console.log('Downloadeding Items is', res.path());
+            downloadCounter++;
+            setVideoDownload((downloadCounter / len) * 100);
           })
           .catch(err => {
             console.log(err);
@@ -603,40 +608,56 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           </View>
         </View>
         {data?.exercise_data.length > 0 && (
-          <View style={{position: 'absolute', bottom: 0, right: 0}}>
-            <GradientButton
-              // play={false}
-              // oneDay
-              flex={0.01}
-              w={DeviceWidth * 0.4}
-              text={downloaded ? `Downloading` : `Start Workout`}
-              h={DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1}
-              textStyle={{
-                fontSize: DeviceHeigth >= 1024 ? 20 : 16,
-                fontFamily: 'Montserrat-SemiBold',
-                lineHeight: 30,
-                fontWeight: '700',
-                zIndex: 1,
-                color: AppColor.WHITE,
-              }}
-              alignSelf
-              bR={
-                DeviceHeigth >= 1024
-                  ? (DeviceWidth * 0.08) / 2
-                  : (DeviceHeigth * 0.1) / 2
-              }
-              // mB={80}
-              bottm={30}
-              mR={20}
-              weeklyAnimation={downloaded}
-              // fillBack="#EB1900"
-              // fill={downloaded > 0 ? `${100 / downloaded}%` : '0%'}
-              onPress={() => {
-                setBackBlock(true);
-                postCurrentDayAPI();
-              }}
-            />
-          </View>
+          // <View style={{position: 'absolute', bottom: 0, right: 0}}>
+          //   <GradientButton
+          //     // play={false}
+          //     // oneDay
+          //     flex={0.01}
+          //     w={DeviceWidth * 0.4}
+          //     text={downloaded ? `Downloading` : `Start Workout`}
+          //     h={DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1}
+          //     textStyle={{
+          //       fontSize: DeviceHeigth >= 1024 ? 20 : 16,
+          //       fontFamily: 'Montserrat-SemiBold',
+          //       lineHeight: 30,
+          //       fontWeight: '700',
+          //       zIndex: 1,
+          //       color: AppColor.WHITE,
+          //     }}
+          //     alignSelf
+          //     bR={
+          //       DeviceHeigth >= 1024
+          //         ? (DeviceWidth * 0.08) / 2
+          //         : (DeviceHeigth * 0.1) / 2
+          //     }
+          //     // mB={80}
+          //     bottm={30}
+          //     mR={20}
+          //     weeklyAnimation={downloaded}
+          //     // fillBack="#EB1900"
+          //     // fill={downloaded > 0 ? `${100 / downloaded}%` : '0%'}
+          //     onPress={() => {
+          //       setBackBlock(true);
+          //       postCurrentDayAPI();
+          //     }}
+          //   />
+          // </View>
+          <NewButton
+            position={'absolute'}
+            title={'Start Workout'}
+            bottom={20}
+            pV={10}
+            pH={10}
+            ButtonWidth={DeviceWidth * 0.4}
+            bR={20}
+            right={16}
+            withAnimation
+            download={VideoDownload}
+            onPress={() => {
+              setBackBlock(true);
+              postCurrentDayAPI();
+            }}
+          />
         )}
       </View>
       <Modal

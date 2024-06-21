@@ -74,6 +74,7 @@ import UpcomingEvent from '../Screen/Event/UpcomingEvent';
 import AddWorkouts from '../Screen/MyPlans/AddWorkouts';
 import Leaderboard from '../Screen/Leaderboard/Leaderboard';
 import Winner from '../Screen/Leaderboard/Winner';
+import IntroVideo from '../Screen/Introduction/IntroVideo';
 
 const Stack = createStackNavigator();
 
@@ -124,6 +125,7 @@ export const LoginStack = () => {
       <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="AITrainer" component={AITrainer} />
       <Stack.Screen name="AIMessageHistory" component={AIMessageHistory} />
+      <Stack.Screen name="IntroVideo" component={IntroVideo}/>
       {/* <Stack.Screen name="Equipment" component={Equipment} /> */}
       {/* <Stack.Screen name="Focus" component={Focus} /> */}
       {/* <Stack.Screen name="Level" component={Level} /> */}

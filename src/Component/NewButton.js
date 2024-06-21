@@ -29,6 +29,11 @@ const NewButton = ({
   mV,
   withAnimation,
   download,
+  position,
+  bottom,
+  top,
+  right,
+  left,
 }) => {
   const [isClicked, setIsClicked] = useState(false);
   const handlePress = () => {
@@ -57,6 +62,11 @@ const NewButton = ({
             : buttonColor ?? AppColor.RED,
           marginVertical: mV ?? 0,
           overflow: 'hidden', // Ensure contents don't overflow during animation
+          position: position ?? 'relative',
+          bottom: bottom ?? undefined,
+          top: top ?? undefined,
+          left: left ?? undefined,
+          right: right ?? undefined,
         },
       ]}
       onPress={handlePress} // Call handlePress
@@ -82,7 +92,11 @@ const NewButton = ({
           />
         )}
         <Text style={[styles.titleText, {color: titleColor ?? AppColor.WHITE}]}>
-          {withAnimation?isClicked ? 'Downloading...' : title ?? 'Title':title ?? 'Title'}
+          {withAnimation
+            ? isClicked
+              ? 'Downloading...'
+              : title ?? 'Title'
+            : title ?? 'Title'}
         </Text>
       </View>
     </TouchableOpacity>

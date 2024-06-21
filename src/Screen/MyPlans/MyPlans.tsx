@@ -401,7 +401,6 @@ const MyPlans = ({navigation}: any) => {
         setButtonClicked(true);
         downloadCounter++;
         setDownloade((downloadCounter / len) * 100);
-        console.log('downloaddd----->', downloadCounter);
       } else {
         await RNFetchBlob.config({
           fileCache: true,

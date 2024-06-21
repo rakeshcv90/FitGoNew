@@ -39,6 +39,7 @@ import {
 import RNFetchBlob from 'rn-fetch-blob';
 import GradientButton from '../../Component/GradientButton';
 import {getActiveTrackIndex} from 'react-native-track-player/lib/src/trackPlayer';
+import NewButton from '../../Component/NewButton';
 
 const NewFocusWorkouts = ({route, navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
@@ -828,7 +829,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
               removeClippedSubviews={true}
             />
           </View>
-          <GradientButton
+          {/* <GradientButton
             // flex={0.01}
             text={downloaded ? `Downloading` : 'Start All Exercises'}
             h={50}
@@ -843,6 +844,14 @@ const NewFocusWorkouts = ({route, navigation}) => {
             onPress={() => {
               Start(filterList);
             }}
+          /> */}
+          <NewButton
+            position={'absolute'}
+            bottom={10}
+            title={'Start All Exercises'}
+            withAnimation
+            download={downloaded}
+            onPress={() => Start(filterList)}
           />
           <BottomSheet />
         </>
