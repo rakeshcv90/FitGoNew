@@ -1157,27 +1157,70 @@ const Login = ({navigation}) => {
             style={{
               marginTop: DeviceHeigth * 0.03,
               alignSelf: 'center',
-
-              marginLeft: -5,
+              flexDirection: 'row',
+              alignSelf: 'center',
+              alignItems: 'center',
             }}>
+            <View style={{width: 120, height: 1, backgroundColor: 'black'}} />
+
             <Text
-              style={[styles.forgotText, {fontSize: 12, fontWeight: '400'}]}>
-              Or Continue With
+              style={[
+                styles.forgotText,
+                {fontSize: 12, fontWeight: '400', marginHorizontal: 20},
+              ]}>
+              Or
             </Text>
+            <View style={{width: 120, height: 1, backgroundColor: 'black'}} />
           </View>
         </KeyboardAvoidingView>
-        <View style={{marginTop: DeviceHeigth * 0.02, paddingBottom: 10}}>
+        <View
+          style={{
+            marginTop: DeviceHeigth * 0.05,
+            paddingBottom: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
           {Platform.OS == 'android' && (
-            <Button2 onGooglePress={GoogleSignup} onFBPress={FacebookLogin} />
+            <TouchableOpacity
+              onPress={() => {
+                FacebookLogin();
+              }}>
+              <Image
+                source={localImage.FACEBOOK}
+                style={{width: DeviceWidth * 0.15, height: DeviceHeigth * 0.05}}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
           )}
           {Platform.OS == 'ios' && (
-            <Button2 onGooglePress={GoogleSignup} onApplePress={onApplePress} />
+            <TouchableOpacity
+              onPress={() => {
+                onApplePress();
+              }}>
+              <Image
+                source={localImage.AppleLogo}
+                style={{width: DeviceWidth * 0.15, height: DeviceHeigth * 0.05}}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
           )}
+
+          <TouchableOpacity
+            onPress={() => {
+              GoogleSignup();
+            }}>
+            <Image
+              source={localImage.GOOGLE}
+              style={{width: DeviceWidth * 0.15, height: DeviceHeigth * 0.05}}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
         </View>
       </ScrollView>
       <CompleateProfileModal />
       <LoginCancelModal />
-      {/* `<AppUpdateComponent visible={true}/>` */}
+
       <ModalView />
     </SafeAreaView>
   );

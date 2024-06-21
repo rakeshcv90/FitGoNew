@@ -200,6 +200,9 @@ export const localImage = {
   No_location:require('../Icon/Images/InAppRewards/No_location.png'),
   RTermsLogo:require('../Icon/Images/InAppRewards/RTermslogo.png'),
   SplaceLottie:require('../Icon/Images/InAppRewards/SplaceScreen.json'),
+  Intro1:require('../Icon/Images/NewImage2/intro1.png'),
+  Intro2:require('../Icon/Images/NewImage2/intro2.png'),
+  Intro3:require('../Icon/Images/NewImage2/intro3.png'),
   RewardInfo:require('../Icon/Images/InAppRewards/info.json'),
   Thumbnail:require('../Icon/Images/InAppRewards/Thumbnail.jpg')
 };
