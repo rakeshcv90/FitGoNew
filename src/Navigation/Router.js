@@ -74,6 +74,7 @@ import UpcomingEvent from '../Screen/Event/UpcomingEvent';
 import AddWorkouts from '../Screen/MyPlans/AddWorkouts';
 import Leaderboard from '../Screen/Leaderboard/Leaderboard';
 import Winner from '../Screen/Leaderboard/Winner';
+import IntroVideo from '../Screen/Introduction/IntroVideo';
 
 const Stack = createStackNavigator();
 
@@ -89,7 +90,20 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+     <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+         <Stack.Screen
+        name="IntroductionScreen1"
+        component={IntroductionScreen1}
+      />
+      <Stack.Screen
+        name="IntroductionScreen2"
+        component={IntroductionScreen2}
+      />
+      <Stack.Screen
+        name="IntroductionScreen3"
+        component={IntroductionScreen3}
+      />
+     
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Name" component={Name} />
@@ -124,6 +138,7 @@ export const LoginStack = () => {
       <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="AITrainer" component={AITrainer} />
       <Stack.Screen name="AIMessageHistory" component={AIMessageHistory} />
+      <Stack.Screen name="IntroVideo" component={IntroVideo}/>
       {/* <Stack.Screen name="Equipment" component={Equipment} /> */}
       {/* <Stack.Screen name="Focus" component={Focus} /> */}
       {/* <Stack.Screen name="Level" component={Level} /> */}
@@ -138,18 +153,7 @@ export const LoginStack = () => {
       <Stack.Screen name="WorkoutArea" component={WorkoutArea} /> */}
       {/* <Stack.Screen name="Edit_Profile" component={NewEditProfile} /> */}
       {/* <Stack.Screen name="Scale" component={Scale} /> */}
-      {/* <Stack.Screen
-        name="IntroductionScreen1"
-        component={IntroductionScreen1}
-      />
-      <Stack.Screen
-        name="IntroductionScreen2"
-        component={IntroductionScreen2}
-      />
-      <Stack.Screen
-        name="IntroductionScreen3"
-        component={IntroductionScreen3}
-      /> */}
+ 
       <Stack.Screen
         name="NewMonthlyAchievement"
         component={NewMonthlyAchievement}

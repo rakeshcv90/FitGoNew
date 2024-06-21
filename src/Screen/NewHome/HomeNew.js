@@ -138,7 +138,9 @@ const HomeNew = ({navigation}) => {
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
   const planType = useSelector(state => state?.planType);
   const [showRewardModal, setShowRewardModal] = useState(false);
-  const getRewardModalStatus=useSelector(state=>state?.getRewardModalStatus)
+  const getRewardModalStatus = useSelector(
+    state => state?.getRewardModalStatus,
+  );
   const colors = [
     {color1: '#E3287A', color2: '#EE7CBA'},
     {color1: '#5A76F4', color2: '#61DFF6'},
@@ -1240,25 +1242,14 @@ const HomeNew = ({navigation}) => {
         style={styles.container}
         nestedScrollEnabled>
         <View style={styles.profileView}>
-          {/* <GradientText
-            item={
-              getTimeOfDayMessage() +
-              ', ' +
-              (Object.keys(getUserDataDetails).length > 0
-                ? getUserDataDetails.name == null
-                  ? 'Guest'
-                  : getUserDataDetails.name.split(' ')[0]
-                : 'Guest')
-            }
-          /> */}
           <Text
             style={{
               color: AppColor.RED,
               fontSize: 20,
               fontFamily: Fonts.MONTSERRAT_BOLD,
-              width: DeviceWidth * 0.7,
+              width: DeviceWidth * 0.5,
             }}>
-            {getTimeOfDayMessage() +
+            {'Hi' +
               ', ' +
               (Object.keys(getUserDataDetails)?.length > 0
                 ? getUserDataDetails?.name == null
@@ -1267,32 +1258,65 @@ const HomeNew = ({navigation}) => {
                 : 'Guest')}
           </Text>
           {enteredCurrentEvent ? (
-            <View style={{top: -15, right: -12}}>
-              <FitCoins
-                onPress={() => {
-                  AnalyticsConsole('LB');
-                  if (winnerAnnounced) {
-                    navigation.navigate('Winner');
-                  } else {
-                    navigation.navigate('Leaderboard');
-                  }
+            <View style={{flexDirection: 'row'}}>
+              <TouchableOpacity
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  right:8
                 }}
-                coins={fitCoins > 0 ? fitCoins : 0}
-              />
+                onPress={() => {
+                  navigation.navigate('IntroVideo');
+                }}>
+                <AnimatedLottieView
+                  source={localImage.RewardInfo}
+                  speed={1}
+                  autoPlay
+                  loop
+                  resizeMode="cover"
+                  style={{
+                    width: DeviceWidth * 0.1,
+                    height: DeviceHeigth * 0.07,
+               
+                  }}
+                />
+              </TouchableOpacity>
+
+              <View style={{alignSelf: 'center'}}>
+                <FitCoins
+                  onPress={() => {
+                    AnalyticsConsole('LB');
+                    if (winnerAnnounced) {
+                      navigation.navigate('Winner');
+                    } else {
+                      navigation.navigate('Leaderboard');
+                    }
+                  }}
+                  coins={fitCoins > 0 ? fitCoins : 0}
+                />
+              </View>
             </View>
-          ) : !enteredCurrentEvent && !enteredUpcomingEvent ? (
+          ) : (
             <TouchableOpacity
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
               onPress={() => {
-                navigation.navigate('OfferTerms', {type: 'homeScreen'});
+                navigation.navigate('IntroVideo');
               }}>
-              <Image
-                source={localImage.RTermsLogo}
-                style={{height: 35, width: 35}}
-                resizeMode="contain"
+              <AnimatedLottieView
+                source={localImage.RewardInfo}
+                speed={1}
+                autoPlay
+                loop
+                resizeMode="cover"
+                style={{
+                  width: DeviceWidth * 0.15,
+                  height: DeviceHeigth * 0.05,
+                }}
               />
             </TouchableOpacity>
-          ) : (
-            <></>
           )}
         </View>
 
@@ -2219,8 +2243,9 @@ var styles = StyleSheet.create({
   },
   profileView: {
     alignSelf: 'center',
-    marginVertical: 8,
+    marginVertical: 6,
     flexDirection: 'row',
+    marginHorizontal: 30,
     justifyContent: 'space-between',
     alignItems: 'center',
     width: DeviceWidth * 0.95,

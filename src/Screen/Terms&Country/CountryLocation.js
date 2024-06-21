@@ -20,8 +20,8 @@ import {showMessage} from 'react-native-flash-message';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import FitText from '../../Component/Utilities/FitText';
 import {openSettings} from 'react-native-permissions';
-import { LocationPermissionModal} from '../../Component/Utilities/LocationPermission';
-import { Screen } from 'react-native-screens';
+import {LocationPermissionModal} from '../../Component/Utilities/LocationPermission';
+import {Screen} from 'react-native-screens';
 
 const CountryLocation = ({navigation, route}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
@@ -36,16 +36,16 @@ const CountryLocation = ({navigation, route}) => {
       .then(result => {
         if (result == 'blocked') {
           setLocationP(true);
-          setLoaded(true)
+          setLoaded(true);
         } else if (result === 'denied') {
           setLocationP(true);
-          setLoaded(true)
+          setLoaded(true);
         } else if (result) {
           StoreAgreementApi(result);
           dispatch(setRewardModal(true));
         } else if (!result) {
           setLocationP(true);
-          setLoaded(true)
+          setLoaded(true);
         }
       })
       .catch(err => {
@@ -100,11 +100,12 @@ const CountryLocation = ({navigation, route}) => {
         dispatch(setOfferAgreement(ApiCall?.data));
 
         setLoaded(true);
-        if (CustomCreated) {
-          navigation.navigate('CustomWorkout', {routeName: routeName});
-        } else {
-          navigation.navigate('BottomTab',{screen:'Home'});
-        }
+        navigation.navigate('BottomTab');
+        // if (CustomCreated) {
+        //   navigation.navigate('CustomWorkout', {routeName: routeName});
+        // } else {
+        
+        // }
       }
     } catch (error) {
       console.log(error);
@@ -118,7 +119,7 @@ const CountryLocation = ({navigation, route}) => {
       <View style={styles.view1}>
         <Image
           source={localImage.location_ping}
-          style={{height: 90, width: 90, marginBottom: 15}}
+          style={{height: 100, width: 100, marginBottom: 15}}
           resizeMode="contain"
         />
         <FitText
@@ -147,7 +148,10 @@ const CountryLocation = ({navigation, route}) => {
           onPress={() => getCountry()}
         />
       </View>
-      <LocationPermissionModal locationP={locationP} setLocationP={setLocationP} />
+      <LocationPermissionModal
+        locationP={locationP}
+        setLocationP={setLocationP}
+      />
     </View>
   );
 };
@@ -196,6 +200,5 @@ const styles = StyleSheet.create({
     marginTop: 8,
     lineHeight: 24,
   },
- 
 });
 export default CountryLocation;

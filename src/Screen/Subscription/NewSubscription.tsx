@@ -39,10 +39,14 @@ import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import Carousel from 'react-native-snap-carousel';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
-
+import TrackPlayer, {
+  Capability,
+  usePlaybackState,
+} from 'react-native-track-player';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 const NewSubscription = ({navigation, route}: any) => {
   const {upgrade} = route.params;
+  const introType = route?.params?.introType;
   const dispatch = useDispatch();
   const getInAppPurchase = useSelector((state: any) => state.getInAppPurchase);
 
@@ -66,6 +70,7 @@ const NewSubscription = ({navigation, route}: any) => {
   const [currentSelected, setCurrentSelected] = useState(2);
   const [refresh, setRefresh] = useState(false);
   const isFocused = useIsFocused();
+  const playbackState = usePlaybackState();
   const findKeyInObject = (obj: any, keyToFind: string): any => {
     if (typeof obj !== 'object' || obj === null) {
       return null;
@@ -86,8 +91,16 @@ const NewSubscription = ({navigation, route}: any) => {
     return null;
   };
 
+  const songs = [
+    {
+      id: 1,
+      url: require('../../Icon/Images/Subs_sound.wav'),
+    },
+  ];
+
   useEffect(() => {
     if (isFocused) {
+      setupPlayer();
       // PurchaseDetails();
       const selected =
         getPurchaseHistory?.plan != null
@@ -153,7 +166,26 @@ const NewSubscription = ({navigation, route}: any) => {
       }
     };
   }, []);
-
+  //sound
+  const setupPlayer = async () => {
+    try {
+      await TrackPlayer.add(songs);
+      await TrackPlayer.updateOptions({
+        capabilities: [Capability.Play, Capability.Pause],
+        compactCapabilities: [Capability.Play, Capability.Pause],
+      });
+    } catch (error) {
+      console.log('Music Player Error', error);
+    }
+  };
+  const StartAudio = async (playbackState: any) => {
+    // console.log('playbackState', playbackState);
+    await TrackPlayer.play();
+  };
+  const PauseAudio = async (playbackState: any) => {
+    // console.log('PauseState', playbackState);
+    await TrackPlayer.reset();
+  };
   const restorePurchase = async () => {
     setForLoading(true);
     try {
@@ -432,11 +464,13 @@ const NewSubscription = ({navigation, route}: any) => {
         },
         data,
       });
-      console.log(res.data);
+      // console.log(res.data);
+      StartAudio(playbackState);
       if (res.data.message == 'Event created successfully') {
         // PurchaseDetails();
         getUserDetailData();
         setForLoading(false);
+        PauseAudio(playbackState);
         setTimeout(() => {
           navigation.navigate('UpcomingEvent', {eventType: 'current'});
         }, 2500);
@@ -444,8 +478,10 @@ const NewSubscription = ({navigation, route}: any) => {
         res.data.message == 'Plan upgraded and new event created successfully'
       ) {
         //  PurchaseDetails();
+
         getUserDetailData();
         setForLoading(false);
+        PauseAudio(playbackState);
         setTimeout(() => {
           navigation.navigate('UpcomingEvent', {eventType: 'current'});
         }, 2500);
@@ -455,6 +491,7 @@ const NewSubscription = ({navigation, route}: any) => {
       ) {
         PurchaseDetails();
         setForLoading(false);
+        PauseAudio(playbackState);
         setTimeout(() => {
           navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
         }, 2500);
@@ -672,8 +709,8 @@ const NewSubscription = ({navigation, route}: any) => {
           }
           resizeMode="contain"
           style={{
-            width: '50%',
-            height: '40%',
+            width: '40%',
+            height: '30%',
           }}
         />
         {!planName.includes('noob') &&
@@ -788,6 +825,23 @@ const NewSubscription = ({navigation, route}: any) => {
                 ? '2 event/month'
                 : '3 event/month'
             }
+            color="#333333E5"
+            fontFamily={Fonts.MONTSERRAT_MEDIUM}
+            marginVertical={3}
+          />
+        </View>
+        <Line />
+        <View
+          style={[
+            styles.row,
+            {
+              width: '90%',
+            },
+          ]}>
+          <CheckIcon />
+          <FitText
+            type="normal"
+            value="Unlocked 150+ Exercises"
             color="#333333E5"
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
             marginVertical={3}
@@ -923,6 +977,7 @@ const NewSubscription = ({navigation, route}: any) => {
         }
         h={Platform.OS == 'ios' ? DeviceWidth * 0.15 : DeviceWidth * 0.15}
         // shadow
+        introType={introType ?? false}
       />
       <View style={{flex: 1, marginHorizontal: 20, marginTop: 10}}>
         <ScrollView
@@ -944,7 +999,7 @@ const NewSubscription = ({navigation, route}: any) => {
             <FitText
               value="Challenge Packages"
               type="Heading"
-              fontSize={16}
+              fontSize={15}
               lineHeight={24}
             />
             <TouchableOpacity
@@ -964,7 +1019,7 @@ const NewSubscription = ({navigation, route}: any) => {
                   color: '#333333',
                   textDecorationLine: 'underline',
                 }}>
-                {PLATFORM_IOS ? 'Restore Purchase' : 'Manage Subscription'}
+                {PLATFORM_IOS ? 'Restore Plan' : 'Manage Plan'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -1267,7 +1322,7 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
       },
       android: {
-        elevation: 10,
+        elevation: 5,
       },
     }),
   },

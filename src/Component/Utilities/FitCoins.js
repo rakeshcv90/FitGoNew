@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 12,
-    position: 'absolute',
-    right: 16,
+    // position: 'absolute',
+    // right: 16,
     paddingVertical: 5,
     ...Platform.select({
       android: {

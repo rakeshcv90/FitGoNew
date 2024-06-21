@@ -1039,7 +1039,7 @@ const Signup = ({navigation}) => {
     }
   };
 
-  const getUserDetailData = async (userId) => {
+  const getUserDetailData = async userId => {
     try {
       const responseData = await axios.get(
         `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
@@ -1132,7 +1132,7 @@ const Signup = ({navigation}) => {
           <View
             style={{
               width: DeviceWidth * 0.8,
-              height: DeviceHeigth * 0.3,
+              height: DeviceHeigth * 0.32,
               backgroundColor: 'white',
               borderRadius: 8,
               padding: 20,
@@ -1469,23 +1469,70 @@ const Signup = ({navigation}) => {
           </Formik>
           {IsVerifyVisible ? <ModalView /> : ''}
         </KeyboardAvoidingView>
+
         <View
           style={{
             marginTop: DeviceHeigth * 0.03,
             alignSelf: 'center',
-            marginRight: -DeviceWidth * 0.01,
+            flexDirection: 'row',
+            alignSelf: 'center',
+            alignItems: 'center',
           }}>
-          <Text style={[styles.forgotText, {fontSize: 12, fontWeight: '400'}]}>
-            Or Continue With
-          </Text>
-        </View>
+          <View style={{width: 120, height: 1, backgroundColor: 'black'}} />
 
-        <View style={{marginTop: DeviceHeigth * 0.02, paddingBottom: 10}}>
-          <Button2
-            onGooglePress={GoogleSignup}
-            onApplePress={onApplePress}
-            onFBPress={FacebookSignup}
-          />
+          <Text
+            style={[
+              styles.forgotText,
+              {fontSize: 12, fontWeight: '400', marginHorizontal: 20},
+            ]}>
+            Or
+          </Text>
+          <View style={{width: 120, height: 1, backgroundColor: 'black'}} />
+        </View>
+        <View
+          style={{
+            marginTop: DeviceHeigth * 0.05,
+            paddingBottom: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingBottom: 10,
+          }}>
+          {Platform.OS == 'android' && (
+            <TouchableOpacity
+              onPress={() => {
+                FacebookSignup();
+              }}>
+              <Image
+                source={localImage.FACEBOOK}
+                style={{width: DeviceWidth * 0.15, height: DeviceHeigth * 0.05}}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          )}
+          {Platform.OS == 'ios' && (
+            <TouchableOpacity
+              onPress={() => {
+                onApplePress();
+              }}>
+              <Image
+                source={localImage.AppleLogo}
+                style={{width: DeviceWidth * 0.15, height: DeviceHeigth * 0.05}}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          )}
+
+          <TouchableOpacity
+            onPress={() => {
+              GoogleSignup();
+            }}>
+            <Image
+              source={localImage.GOOGLE}
+              style={{width: DeviceWidth * 0.15, height: DeviceHeigth * 0.05}}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
         </View>
       </ScrollView>
 

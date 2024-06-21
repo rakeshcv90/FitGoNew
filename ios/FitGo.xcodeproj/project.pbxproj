@@ -22,6 +22,8 @@
 		2A216FF82B593B6A0064CD70 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A216FF62B593B6A0064CD70 /* Launch Screen.storyboard */; };
 		2A7862412B9B39F500CA8F52 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A7862402B9B39F500CA8F52 /* StoreKit.framework */; };
 		2AAC3EDF2B4530CD007908D0 /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAC3EDE2B4530CD007908D0 /* dummy.swift */; };
+		2AB4A85E2C24329600F7CD92 /* fitme_notification.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2AB4A85D2C24329600F7CD92 /* fitme_notification.wav */; };
+		2AB4A85F2C24329600F7CD92 /* fitme_notification.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2AB4A85D2C24329600F7CD92 /* fitme_notification.wav */; };
 		2D9A138EC8CC4A51960DA558 /* Montserrat-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CDD9DBAC6EFE45EDA51E94CE /* Montserrat-MediumItalic.ttf */; };
 		4C426F652AF209950063F75E /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C426F642AF209950063F75E /* BootSplash.storyboard */; };
 		4CF7BFBF2AC13D4B00F8EF48 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 4CF7BFBE2AC13D4B00F8EF48 /* Fonts */; };
@@ -87,6 +89,7 @@
 		2A7862402B9B39F500CA8F52 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		2AAC3EDD2B4530CD007908D0 /* FitGo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FitGo-Bridging-Header.h"; sourceTree = "<group>"; };
 		2AAC3EDE2B4530CD007908D0 /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
+		2AB4A85D2C24329600F7CD92 /* fitme_notification.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = fitme_notification.wav; sourceTree = "<group>"; };
 		2B4095CC67EC4DFDA5C7D1D2 /* Montserrat-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-SemiBoldItalic.ttf"; path = "../assets/fonts/Montserrat-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		395C5D581A2E222812791E4D /* Pods-FitGo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FitGo.release.xcconfig"; path = "Target Support Files/Pods-FitGo/Pods-FitGo.release.xcconfig"; sourceTree = "<group>"; };
 		3DBAA78B4FA844C8B903172F /* Montserrat-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Black.ttf"; path = "../assets/fonts/Montserrat-Black.ttf"; sourceTree = "<group>"; };
@@ -191,7 +194,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				18ACB49D2C218C96001B8CA3 /* fitme_notification.wav */,
+				2AB4A85D2C24329600F7CD92 /* fitme_notification.wav */,
 				186A6F312B1DA2D00005DC45 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* FitGo */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -347,7 +350,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A216FF82B593B6A0064CD70 /* Launch Screen.storyboard in Resources */,
-				18ACB49F2C218C96001B8CA3 /* fitme_notification.wav in Resources */,
+				2AB4A85F2C24329600F7CD92 /* fitme_notification.wav in Resources */,
 				186A6F332B1DA2D00005DC45 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -369,7 +372,7 @@
 				8744BED836B0493EA601900B /* Montserrat-ExtraBoldItalic.ttf in Resources */,
 				E2D6756EE36B412D88EAB6F3 /* Montserrat-ExtraLight.ttf in Resources */,
 				C7CB753997914EA3A20B1340 /* Montserrat-ExtraLightItalic.ttf in Resources */,
-				18ACB49E2C218C96001B8CA3 /* fitme_notification.wav in Resources */,
+				2AB4A85E2C24329600F7CD92 /* fitme_notification.wav in Resources */,
 				51AF87E1D3CF41FD986DD4C6 /* Montserrat-Italic.ttf in Resources */,
 				94EEDFFC1B1D451C949F8F94 /* Montserrat-Light.ttf in Resources */,
 				6384C98EDD8145B9AE732BF2 /* Montserrat-LightItalic.ttf in Resources */,
