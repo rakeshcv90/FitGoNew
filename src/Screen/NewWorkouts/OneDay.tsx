@@ -50,6 +50,8 @@ import {MyRewardedAd} from '../../Component/BannerAdd';
 import RNFetchBlob from 'rn-fetch-blob';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import FastImage from 'react-native-fast-image';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount, challenge} = route.params;
   const [exerciseData, setExerciseData] = useState([]);
@@ -285,7 +287,9 @@ const OneDay = ({navigation, route}: any) => {
         style={styles.box}
         activeOpacity={0.9}
         onPress={() => {
-          analytics().logEvent(`CV_FITME_${item?.exercise_title?.split(' ')[0]}_FR_Day`);
+          analytics().logEvent(
+            `CV_FITME_${item?.exercise_title?.split(' ')[0]}_FR_Day`,
+          );
           setOpen(false);
           setCurrentExercise(item);
           setVisible(true);
@@ -312,32 +316,11 @@ const OneDay = ({navigation, route}: any) => {
                 },
               }),
             }}>
-            {/* <Image
-              source={{
-                uri:
-                  getStoreVideoLoc[item?.exercise_title + 'Image'] != undefined
-                    ? 'file://' +
-                      getStoreVideoLoc[item?.exercise_title + 'Image']
-                    : item.exercise_image_link != ''
-                    ? item.exercise_image
-                    : item.exercise_image_link,
-              }}
-            
-              style={{height: 75, width: 75, alignSelf: 'center'}}
-              resizeMode="contain"
-            /> */}
             <FastImage
               fallback={true}
-              // onError={onError}
-              // onLoadEnd={onLoadEnd}
-              // onLoadStart={onLoadStart}
-
               style={{height: 75, width: 75, alignSelf: 'center'}}
               source={{
                 uri:
-                  // getStoreVideoLoc[item?.exercise_title + 'Image'] != undefined
-                  //   ? 'file://' +
-                  //     getStoreVideoLoc[item?.exercise_title + 'Image']
                   item.exercise_image_link != ''
                     ? item.exercise_image
                     : item.exercise_image_link,
@@ -392,93 +375,6 @@ const OneDay = ({navigation, route}: any) => {
           />
         </View>
       </TouchableOpacity>
-      // <TouchableOpacity
-      //   activeOpacity={1}
-      //   onPress={() => {
-      //     setOpen(false);
-      //     setCurrentExercise(item);
-      //     setVisible(true);
-      //   }}
-      //   style={[
-      //     styles.box,
-      //     {
-      //       // backgroundColor:'red',
-      //       height: DeviceHeigth * 0.1,
-      //       marginVertical:
-      //         Platform.OS == 'android'
-      //           ? DeviceHeigth * 0.005
-      //           : DeviceHeigth > 667
-      //           ? 5
-      //           : DeviceHeigth * 0.019,
-      //     },
-      //   ]}>
-      //   <View
-      //     style={{
-      //       flexDirection: 'row',
-      //       justifyContent: 'center',
-      //       alignItems: 'center',
-      //     }}>
-      //     <View
-      //       style={{
-      //         height: 80,
-      //         width: 80,
-      //         backgroundColor: AppColor.WHITE,
-      //         justifyContent: 'center',
-      //         alignItems: 'center',
-      //         marginLeft: DeviceWidth * 0.07,
-      //         borderRadius: 10,
-      //         ...Platform.select({
-      //           ios: {
-      //             shadowColor: AppColor.BLACK,
-      //             shadowOffset: {width: 1, height: 1},
-      //             shadowOpacity: 0.3,
-      //             shadowRadius: 2,
-      //           },
-      //           android: {
-      //             elevation: 5,
-      //           },
-      //         }),
-      //       }}>
-      //       <Image
-      //         source={{uri: item?.exercise_image}}
-      //         style={{height: 75, width: 75, alignSelf: 'center'}}
-      //         resizeMode="contain"
-      //       />
-      //     </View>
-      //     {trackerData[index - 1]?.exercise_status == 'completed' && (
-      //       <Image
-      //         source={localImage.Complete}
-      //         style={{
-      //           height: 40,
-      //           width: 40,
-      //           marginLeft: -DeviceWidth * 0.1,
-      //           marginTop: -DeviceWidth * 0.09,
-      //         }}
-      //         resizeMode="contain"
-      //       />
-      //     )}
-      //     <View
-      //       style={{
-      //         flexDirection: 'row',
-      //         justifyContent: 'space-evenly',
-      //         alignItems: 'center',
-      //         marginHorizontal: 10,
-      //         width: '65%',
-      //       }}>
-      //       <View>
-      //         <Text style={[styles.small, {fontSize: 14}]}>
-      //           {item?.exercise_title}
-      //         </Text>
-      //         <Text style={styles.small}>{item?.exercise_rest}</Text>
-      //       </View>
-      //       <Icons
-      //         name={'chevron-right'}
-      //         size={25}
-      //         color={AppColor.INPUTTEXTCOLOR}
-      //       />
-      //     </View>
-      //   </View>
-      // </TouchableOpacity>
     );
   };
   const Box2 = () => {
@@ -740,11 +636,11 @@ const OneDay = ({navigation, route}: any) => {
           navigation.goBack();
         }}
         style={{
-          marginTop: DeviceHeigth * 0.03,
+          marginTop: DeviceHeigth * 0.02,
         }}>
-        <Icons
-          name={'chevron-left'}
-          size={30}
+        <AntDesign
+          name={'arrowleft'}
+          size={25}
           color={AppColor.INPUTTEXTCOLOR}
         />
       </TouchableOpacity>
@@ -761,6 +657,7 @@ const OneDay = ({navigation, route}: any) => {
           height: DeviceWidth * 0.5,
           width: DeviceWidth,
           alignSelf: 'center',
+          marginTop: DeviceHeigth * 0.02,
         }}
         resizeMode="contain"
       />

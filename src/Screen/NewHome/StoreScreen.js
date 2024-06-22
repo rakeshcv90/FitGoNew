@@ -188,24 +188,13 @@ const StoreScreen = ({navigation}) => {
               width: '95%',
               height: 50,
               alignSelf: 'center',
-              backgroundColor: '#FCFCFC',
+              backgroundColor: '#F3F5F5',
               borderRadius: 6,
               flexDirection: 'row',
               alignItems: 'center',
               paddingLeft: 10,
               top: 5,
-              shadowColor: 'rgba(0, 0, 0, 1)',
-              ...Platform.select({
-                ios: {
-                  shadowColor: '#000000',
-                  shadowOffset: {width: 0, height: 2},
-                  shadowOpacity: 0.1,
-                  shadowRadius: 4,
-                },
-                android: {
-                  elevation: 5,
-                },
-              }),
+          
             }}>
             <Icons name="search" size={25} color={'rgba(80, 80, 80, 0.6)'} />
             <TextInput

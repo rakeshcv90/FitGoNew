@@ -337,7 +337,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                   : DeviceHeigth >= 1024
                   ? DeviceHeigth * 0.25
                   : DeviceHeigth >= 856
-                  ? DeviceHeigth * 0.3
+                  ? DeviceHeigth * 0.4
                   : DeviceHeigth * 0.42,
             },
             draggableIcon: {
@@ -787,7 +787,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         </Text>
                       </View>
                       <TouchableOpacity
-                        style={{right: -25, padding: 2}}
+                        style={{right: -15, padding: 2}}
                         onPress={() => {
                           setSelectedIndex(index);
                           handleIconPress(item, index);

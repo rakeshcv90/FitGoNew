@@ -91,7 +91,7 @@ const IntroductionScreen1 = ({navigation}) => {
           }}>
           Why just get fit when you can also earn rewards? Participate in our
           fitness challenge, stay committed, and watch as your hard work turns
-          into tangible rewards. It's time to make your pocket as healthy as
+          into amazing rewards. It's time to make your pocket as healthy as
           your body!
         </Text>
       </View>

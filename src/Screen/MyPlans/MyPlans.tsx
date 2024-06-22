@@ -130,8 +130,6 @@ const MyPlans = ({navigation}: any) => {
   }, []);
   useFocusEffect(
     React.useCallback(() => {
-      console.log('foxec screen')
-      console.log(enteredCurrentEvent)
       if (enteredCurrentEvent) {
         getEarnedCoins();
         getLeaderboardDataAPI();

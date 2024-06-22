@@ -1,6 +1,12 @@
 import {StyleSheet, Image, StatusBar, Platform, View} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {Appapi, DeviceWidth, NewApi, NewAppapi} from '../Component/Config';
+import {
+  Appapi,
+  DeviceHeigth,
+  DeviceWidth,
+  NewApi,
+  NewAppapi,
+} from '../Component/Config';
 import {localImage} from '../Component/Image';
 import {useDispatch, useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
@@ -40,6 +46,7 @@ import {interstitialAdId} from '../Component/AdsId';
 import {LogOut} from '../Component/LogOut';
 import RNFetchBlob from 'rn-fetch-blob';
 import {EnteringEventFunction} from './Event/EnteringEventFunction';
+import AnimatedLottieView from 'lottie-react-native';
 
 const products = Platform.select({
   ios: ['fitme_noob', 'fitme_pro', 'fitme_legend'],
@@ -154,12 +161,17 @@ const SplaceScreen = ({navigation}) => {
           loadScreen(agremment);
           Platform.OS == 'android' && checkCancel();
         } else {
-          loaded.show();
-          loadScreen(agremment);
+          setTimeout(() => {
+            loaded.show();
+            loadScreen(agremment);
+          }, 6000);
         }
       } else {
-        loaded.show();
-        loadScreen(agremment);
+        setTimeout(() => {
+          loaded.show();
+          loadScreen(agremment);
+        }, 6000);
+       
       }
     }
   };
@@ -346,36 +358,87 @@ const SplaceScreen = ({navigation}) => {
     }
   };
   return (
-    <>
-      {/* {closed ? (
-        <View style={{flex: 1, backgroundColor: 'black'}}>
-          <StatusBar backgroundColor={'transparent'} translucent />
-        </View>
-      ) : ( */}
+    <View style={styels.container}>
       <LinearGradient
-        style={styels.container}
         start={{x: 0, y: 0}}
-        end={{x: 0.5, y: 0.5}}
-        colors={['#D01818', '#941000']}>
-        <StatusBar backgroundColor={'transparent'} translucent />
-        <Image
-          source={localImage.SplashText}
-          style={styels.Textlogo}
-          resizeMode="contain"
-        />
+        end={{x: 0, y: 1}}
+        colors={['#ec119a', 'transparent', 'transparent']}
+        style={{
+          width: '100%',
+
+          height: '100%',
+          justifyContent: 'center',
+          alignSelf: 'center',
+        }}>
+        <View
+          style={{
+            width: '100%',
+            height: '40%',
+
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingTop: 50,
+          }}>
+          <Image
+            source={localImage.SplashText}
+            style={styels.Textlogo}
+            resizeMode="contain"
+          />
+          {/* <AnimatedLottieView
+          source={localImage.Splace3}
+          speed={1}
+          autoPlay
+          loop
+          resizeMode="cover"
+          style={{
+            width: '100%',
+            height: DeviceHeigth * 0.45,
+            height: DeviceHeigth * 0.4,
+            position: 'absolute',
+            bottom: 0, // Adjust this value based on the height of the second animation
+          }}
+        /> */}
+        </View>
+        <View
+          style={{width: '100%', height: '60%', zIndex: 1, overflow: 'hidden'}}>
+          <AnimatedLottieView
+            source={localImage.Splace1}
+            speed={1}
+            autoPlay
+            loop
+            resizeMode="cover"
+            style={{
+              width: '100%',
+              height: DeviceHeigth * 0.45,
+              height: DeviceHeigth * 0.4,
+              position: 'absolute',
+              bottom: 0, // Adjust this value based on the height of the second animation
+            }}
+          />
+          <AnimatedLottieView
+            source={localImage.Splace2}
+            speed={1}
+            autoPlay
+            loop
+            resizeMode="contain"
+            style={{
+              width: DeviceWidth,
+              height: DeviceHeigth * 0.45,
+              position: 'absolute',
+              bottom: 0,
+            }}
+          />
+        </View>
       </LinearGradient>
-      {/* )} */}
-    </>
+    </View>
   );
 };
 const styels = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   Textlogo: {
-    width: DeviceWidth * 0.4,
+    width: DeviceWidth * 0.6,
   },
 });
 export default SplaceScreen;

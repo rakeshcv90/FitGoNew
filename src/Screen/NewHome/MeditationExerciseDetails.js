@@ -29,6 +29,8 @@ import {useSelector} from 'react-redux';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import moment from 'moment';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
 
 const MeditationExerciseDetails = ({navigation, route}) => {
   let isFocused = useIsFocused();
@@ -115,11 +117,11 @@ const MeditationExerciseDetails = ({navigation, route}) => {
             TrackPlayer.reset();
             navigation.goBack();
           }}>
-          <Icons
-            name={'chevron-left'}
-            size={25}
-            color={AppColor.INPUTTEXTCOLOR}
-          />
+          <AntDesign
+              name={'arrowleft'}
+              size={25}
+              color={AppColor.INPUTTEXTCOLOR}
+            />
         </TouchableOpacity>
         <StatusBar
           barStyle={'dark-content'}

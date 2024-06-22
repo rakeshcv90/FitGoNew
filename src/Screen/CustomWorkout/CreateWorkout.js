@@ -101,12 +101,9 @@ const CreateWorkout = ({navigation, route}) => {
                 paddingHorizontal: 20,
                 padding: 5,
                 paddingVertical: 8,
-      
-             
-              
+
                 justifyContent: 'space-between',
                 backgroundColor: AppColor.WHITE,
-               
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 {/* {isLoading && (
@@ -129,17 +126,19 @@ const CreateWorkout = ({navigation, route}) => {
                     borderWidth: 0.5,
                     borderColor: 'lightgrey',
                     marginLeft: -12,
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     //backgroundColor:"red"
                   }}>
                   {/* <Image
-                    onLoad={() => setIsLoading(false)}
-                    // source={{uri: item.exercise_image_link}}
-                    source={{
-                      uri: getStoreVideoLoc[item?.exercise_title + 'Image']
-                        ? 'file://' +
-                          getStoreVideoLoc[item?.exercise_title + 'Image']
-                        : item.exercise_image_link,
-                    }}
+                   // onLoad={() => setIsLoading(false)}
+                    source={localImage.NOWORKOUT}
+                    // source={{
+                    //   uri: getStoreVideoLoc[item?.exercise_title + 'Image']
+                    //     ? 'file://' +
+                    //       getStoreVideoLoc[item?.exercise_title + 'Image']
+                    //     : item.exercise_image_link,
+                    // }}
                     style={{
                       width: 60,
                       height: 60,
@@ -430,12 +429,12 @@ const CreateWorkout = ({navigation, route}) => {
         });
       } else {
         showMessage({
-                  message: 'Workout created successfully.',
-                  type: 'success',
-                  animationDuration: 500,
-                  floating: true,
-                  icon: {icon: 'auto', position: 'left'},
-                });
+          message: 'Workout created successfully.',
+          type: 'success',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         setForLoading(false);
         navigation.goBack();

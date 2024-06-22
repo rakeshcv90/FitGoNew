@@ -16,7 +16,7 @@ import {SliderBox} from 'react-native-image-slider-box';
 import FastImage from 'react-native-fast-image';
 import Icons from 'react-native-vector-icons/FontAwesome5';
 import {FlatList} from 'react-native';
-import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import { useIsFocused} from '@react-navigation/native';
 import axios from 'axios';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {localImage} from '../../Component/Image';
@@ -78,7 +78,6 @@ const ProductsList = ({route}) => {
     const filteredItems = productList.filter(item =>
       item.product_title.toLowerCase().includes(test.toLowerCase()),
     );
-
     setFilteredCategories(filteredItems);
   };
 
@@ -118,24 +117,13 @@ const ProductsList = ({route}) => {
             width: '95%',
             height: 50,
             alignSelf: 'center',
-            backgroundColor: '#FCFCFC',
+            backgroundColor: '#F3F5F5',
             borderRadius: 6,
             flexDirection: 'row',
             alignItems: 'center',
             paddingLeft: 10,
             top: -DeviceHeigth * 0.02,
-            shadowColor: 'rgba(0, 0, 0, 1)',
-            ...Platform.select({
-              ios: {
-                shadowColor: '#000000',
-                shadowOffset: {width: 0, height: 2},
-                shadowOpacity: 0.1,
-                shadowRadius: 4,
-              },
-              android: {
-                elevation: 5,
-              },
-            }),
+            
           }}>
           <Icons name="search" size={25} color={'rgba(80, 80, 80, 0.6)'} />
           <TextInput
