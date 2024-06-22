@@ -87,7 +87,7 @@ const IntroductionScreen3 = ({navigation}) => {
             marginTop: 16,
           }}>
           Complete the challenge by the end of the week and receive exciting
-          rewards. Whether you’re a beginner or a fitness enthusiast, our
+          rewards. Whether you’re a beginner or a fitness legend, our
           challenges are designed to keep you motivated and rewarded. Don’t miss
           out! Every Monday, a new challenge begins.
         </Text>

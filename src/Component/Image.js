@@ -204,5 +204,8 @@ export const localImage = {
   Intro2:require('../Icon/Images/NewImage2/intro2.png'),
   Intro3:require('../Icon/Images/NewImage2/intro3.png'),
   RewardInfo:require('../Icon/Images/InAppRewards/info.json'),
-  Thumbnail:require('../Icon/Images/InAppRewards/Thumbnail.jpg')
+  Thumbnail:require('../Icon/Images/InAppRewards/Thumbnail.jpg'),
+  Splace1:require('../Icon/Images/InAppRewards/Splace1.json'),
+  Splace2:require('../Icon/Images/InAppRewards/Splaace2.json'),
+  Splace3:require('../Icon/Images/InAppRewards/Splac3.json'),
 };

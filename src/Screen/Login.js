@@ -1181,7 +1181,7 @@ const Login = ({navigation}) => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          {Platform.OS == 'android' && (
+          {/* {Platform.OS == 'android' && (
             <TouchableOpacity
               onPress={() => {
                 FacebookLogin();
@@ -1192,7 +1192,7 @@ const Login = ({navigation}) => {
                 resizeMode="contain"
               />
             </TouchableOpacity>
-          )}
+          )} */}
           {Platform.OS == 'ios' && (
             <TouchableOpacity
               onPress={() => {
@@ -1216,11 +1216,12 @@ const Login = ({navigation}) => {
               resizeMode="contain"
             />
           </TouchableOpacity>
+
         </View>
       </ScrollView>
       <CompleateProfileModal />
       <LoginCancelModal />
-
+   
       <ModalView />
     </SafeAreaView>
   );
