@@ -1,4 +1,4 @@
-import {ImageBackground, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {ImageBackground, Platform, StatusBar, StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import Video from 'react-native-video';
 import {AppColor, Fonts} from '../../Component/Color';
@@ -33,7 +33,7 @@ const IntroVideo = ({navigation}: any) => {
       <Video
         // source={{uri: getStoreVideoLoc['Fitmerewardvideo']}}
         source={{
-          uri: 'https://res.cloudinary.com/drfp9prvm/video/upload/v1718962742/Fitme_reward_video_2_1_izz2sz.mp4',
+          uri: 'https://res.cloudinary.com/drfp9prvm/video/upload/v1718971902/IMG_179656959_rgraiy_cdg5hs.mp4',
         }}
         onReadyForDisplay={() => {
           setVideoLoaded(true);
@@ -76,7 +76,7 @@ const IntroVideo = ({navigation}: any) => {
             textDecorationLine: 'underline',
             color: AppColor.WHITE,
             position: 'absolute',
-            top: 10,
+            top:Platform.OS=='ios'?40:10,
             right: 16,
           }}>
           Skip

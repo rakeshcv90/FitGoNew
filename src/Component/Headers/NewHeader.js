@@ -118,14 +118,13 @@ const NewHeader = ({
               ) : (
                 <ShimmerPlaceholder
                   style={{
+                    
                     height: DeviceHeigth * 0.04,
                     width: DeviceWidth * 0.2,
         
                     justifyContent: 'center',
                     alignSelf: 'center',
-                    borderRadius: 20,
-                    position:'absolute',
-                    right:16,
+                    borderRadius: 20,   
                   }}
                   ref={avatarRef}
                   autoRun

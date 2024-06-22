@@ -1273,7 +1273,7 @@ const HomeNew = ({navigation}) => {
                   speed={1}
                   autoPlay
                   loop
-                  resizeMode="cover"
+                  resizeMode={DeviceHeigth>=1024?"contain":"cover"}
                   style={{
                     width: DeviceWidth * 0.1,
                     height: DeviceHeigth * 0.07,
@@ -1310,7 +1310,7 @@ const HomeNew = ({navigation}) => {
                 speed={1}
                 autoPlay
                 loop
-                resizeMode="cover"
+                resizeMode={DeviceHeigth>=1024?"contain":"cover"}
                 style={{
                   width: DeviceWidth * 0.15,
                   height: DeviceHeigth * 0.05,

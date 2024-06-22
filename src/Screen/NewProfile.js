@@ -42,6 +42,7 @@ import KeepAwake from 'react-native-keep-awake';
 
 import {
   setIsAlarmEnabled,
+  setProfileImg_Data,
   setScreenAwake,
   setSoundOnOff,
   setUserProfileData,
@@ -85,12 +86,13 @@ const NewProfile = ({navigation}) => {
       KeepAwake.deactivate();
     }
   }, [getScreenAwake]);
+  
   const CardData = [
     {
       id: 1,
       txt: 'Daily Reminder',
       img: localImage.Bell,
-      txt1: moment(notificationTimer).format('LT'),
+      txt1: moment(notificationTimer).format('LT')=='Invalid date'?'1:00 AM':moment(notificationTimer).format('LT'),
     },
     {
       id: 2,
@@ -108,7 +110,7 @@ const NewProfile = ({navigation}) => {
       id: 1,
       txt: 'Reminder',
       img: localImage.Bell,
-      txt1: moment(notificationTimer).format('LT'),
+      txt1: moment(notificationTimer).format('LT')=='Invalid date'?'1:00 AM':moment(notificationTimer).format('LT'),
     },
     {
       id: 2,
@@ -293,17 +295,8 @@ const NewProfile = ({navigation}) => {
     //     console.log('User Profile Error', error);
     //   }
     // };
-    const getUserDetailData = async userId => {
-      const currrentdata = [
-        {
-          gender: gender,
-        },
-        {
-          experience: experience,
-        },
-        {workout_plans: 'CustomCreated'},
-      ];
-
+    const getUserDetailDataApi = async userId => {
+       console.log('Hello Api called--->',)
       try {
         const responseData = await axios.get(
           `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
@@ -322,6 +315,7 @@ const NewProfile = ({navigation}) => {
           });
         } else {
           dispatch(setUserProfileData(responseData?.data?.profile));
+          console.log('userdata',responseData?.data?.profile)
         }
       } catch (error) {
         console.log('GET-USER-DATA', error);
@@ -360,7 +354,8 @@ const NewProfile = ({navigation}) => {
             icon: {icon: 'auto', position: 'left'},
           });
          // getProfileData(getUserDataDetails?.id);
-          getUserDetailData(getUserDataDetails?.id)
+          // getUserDetailDataApi(getUserDataDetails?.id)
+          console.log("----data",getUserDataDetails.image_path)
           setImguploaded(true);
           if (IsimgUploaded == true) {
             setUpadteScreenVisibilty(false);
@@ -387,10 +382,14 @@ const NewProfile = ({navigation}) => {
             maxWidth: 500,
             maxHeight: 400,
           });
-          setUserAvatar(resultCamera.assets[0]);
+          
           if (resultCamera) {
+            setUserAvatar(resultCamera.assets[0]);
             setModalImageUploaded(true);
             // dispatch(setProfileImg_Data(resultCamera.assets[0]))
+            // getUserDetailDataApi(getUserDataDetails?.id)
+            console.log('image--->',resultCamera.assets[0])
+
           }
         } catch (error) {
           console.log('CameraimageError', error);
@@ -581,9 +580,14 @@ const NewProfile = ({navigation}) => {
                         margin: 5,
                       }}
                       onPress={() => {
-                        AnalyticsConsole(`UPLOAD_IMAGE_BUTTON`);
+                        AnalyticsConsole(`UPLOAD_IMAGE`);
                         setImguploaded(false);
-                        UploadImage(userAvatar);
+                        UploadImage(userAvatar).then(()=>{
+                          getUserDetailDataApi(getUserDataDetails?.id)
+                        }).catch((err)=>{
+                          console.log('some error',err)
+                        });
+                      
                       }}>
                       <Text style={[styles.cameraText]}>Upload Image</Text>
                     </TouchableOpacity>
@@ -601,7 +605,6 @@ const NewProfile = ({navigation}) => {
                       onPress={() => {
                         showMessage({
                           message: 'Please insert an Image first',
-                          statusBarHeight: getStatusBarHeight(),
                           floating: true,
                           type: 'danger',
                           animationDuration: 750,
@@ -661,6 +664,7 @@ const NewProfile = ({navigation}) => {
         setModalVisible(false);
       }
     };
+    console.log("------>",getUserDataDetails?.image_path)
     return (
       <Modal
         animationType="fade"
