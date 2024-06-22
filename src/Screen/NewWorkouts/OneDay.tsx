@@ -58,7 +58,7 @@ const OneDay = ({navigation, route}: any) => {
   const [currentExercise, setCurrentExercise] = useState([]);
   const [trackerData, setTrackerData] = useState([]);
   const [open, setOpen] = useState(true);
-  const [downloaded, setDownloade] = useState(false);
+  const [downloaded, setDownloade] = useState(0);
   const [visible, setVisible] = useState(false);
   const [reward, setreward] = useState(0);
   const avatarRef = React.createRef();
@@ -79,7 +79,7 @@ const OneDay = ({navigation, route}: any) => {
   const dispatch = useDispatch();
   let isFocuse = useIsFocused();
   let simerData = [1, 2, 3, 4, 5];
-
+  let downloadCounter = 0;
   useEffect(() => {
     if (isFocuse) {
       allWorkoutApi();
@@ -141,7 +141,8 @@ const OneDay = ({navigation, route}: any) => {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
         StoringData[data?.exercise_title] = filePath;
-        setDownloade(true);
+        downloadCounter++;
+        setDownloade((downloadCounter / len) * 100);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -155,7 +156,8 @@ const OneDay = ({navigation, route}: any) => {
           })
           .then(res => {
             StoringData[data?.exercise_title] = res.path();
-            setDownloade(true);
+            downloadCounter++;
+            setDownloade((downloadCounter / len) * 100);
           })
           .catch(err => {
             console.log(err);
@@ -221,6 +223,7 @@ const OneDay = ({navigation, route}: any) => {
         user_exercise_id: exercise?.exercise_id,
       });
     }
+    setDownloade(5);
     Promise.all(
       exerciseData.map((item: any, index: number) =>
         downloadVideos(item, index, exerciseData.length),
@@ -241,7 +244,7 @@ const OneDay = ({navigation, route}: any) => {
           ) {
             console.log(res.data);
             setOpen(false);
-            setDownloade(false);
+            setDownloade(0);
             navigation.navigate('Exercise', {
               allExercise: exerciseData,
               currentExercise:
@@ -258,7 +261,7 @@ const OneDay = ({navigation, route}: any) => {
           } else {
             console.log(trackerData);
             setOpen(false);
-            setDownloade(false);
+            setDownloade(0);
             navigation.navigate('Exercise', {
               allExercise: exerciseData,
               currentExercise:
@@ -632,8 +635,19 @@ const OneDay = ({navigation, route}: any) => {
       }}>
       <TouchableOpacity
         onPress={() => {
-          setOpen(false);
-          navigation.goBack();
+          if (downloaded > 0) {
+            showMessage({
+              message:
+                'Please wait, downloading in progress. Do not press back.',
+              type: 'info',
+              animationDuration: 500,
+              floating: true,
+              icon: {icon: 'auto', position: 'left'},
+            });
+          } else {
+            navigation.goBack();
+            setOpen(false);
+          }
         }}
         style={{
           marginTop: DeviceHeigth * 0.02,
@@ -722,7 +736,7 @@ const OneDay = ({navigation, route}: any) => {
           // oneDay
           flex={0.01}
           text={downloaded ? `Downloading` : `Start Day ${day}`}
-          h={80}
+          h={60}
           textStyle={{
             fontSize: 20,
             fontFamily: 'Montserrat-SemiBold',
@@ -731,11 +745,14 @@ const OneDay = ({navigation, route}: any) => {
             zIndex: 1,
             color: AppColor.WHITE,
           }}
-          alignSelf
-          bR={40}
           // mB={80}
           bottm={40}
-          weeklyAnimation={downloaded}
+          // weeklyAnimation={downloaded}
+          colors={[AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED]}
+          alignSelf
+          bR={6}
+          normalAnimation={downloaded > 0}
+          normalFill={`${100 - downloaded}%`}
           // fillBack="#EB1900"
           // fill={downloaded > 0 ? `${100 / downloaded}%` : '0%'}
           onPress={() => {

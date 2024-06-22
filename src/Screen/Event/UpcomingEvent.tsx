@@ -291,6 +291,8 @@ const UpcomingEvent = ({navigation, route}: any) => {
       <DietPlanHeader
         header={eventType == 'upcoming' ? 'Upcoming Challenge' : 'My Challenge'}
         h={DeviceWidth * 0.15}
+        onPress={() => navigation?.navigate('BottomTab')}
+        backPressCheck
         paddingTop={
           Platform.OS == 'android' ? DeviceHeigth * 0.02 : DeviceHeigth * 0.025
         }

@@ -49,8 +49,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import {showMessage} from 'react-native-flash-message';
 import {useFocusEffect} from '@react-navigation/native';
 import AnimatedLottieView from 'lottie-react-native';
-import {AlarmNotification} from '../../Component/Reminder';
-import notifee from '@notifee/react-native';
+
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import analytics from '@react-native-firebase/analytics';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
@@ -115,7 +114,7 @@ const MyPlans = ({navigation}: any) => {
     (state: any) => state.getEditedDayExercise,
   );
   const fitCoins = useSelector((state: any) => state.fitCoins);
-  const isAlarmEnabled = useSelector((state: any) => state.isAlarmEnabled);
+ 
   const dispatch = useDispatch();
   useEffect(() => {
     initInterstitial();
@@ -212,22 +211,7 @@ const MyPlans = ({navigation}: any) => {
     }
   };
 
-  useEffect(() => {
-    if (!isAlarmEnabled) {
-      notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));
-      const currenTime = new Date();
-      currenTime.setHours(7);
-      currenTime.setMinutes(0);
-      AlarmNotification(currenTime)
-        .then(res => console.log('ALARM SET', res))
-        .catch(errr => {
-          console.log('Alarm error', errr);
-          currenTime.setDate(currenTime.getDate() + 1);
-          AlarmNotification(currenTime);
-        });
-      dispatch(setIsAlarmEnabled(true));
-    }
-  }, [isAlarmEnabled]);
+
 
   // getCoinsdetails
   const getEarnedCoins = async () => {

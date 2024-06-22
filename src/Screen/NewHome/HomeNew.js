@@ -93,6 +93,8 @@ import {handleStart} from '../../Component/Utilities/Bannerfunctions';
 import FitCoins from '../../Component/Utilities/FitCoins';
 import {LocationPermissionModal} from '../../Component/Utilities/LocationPermission';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
+import {AlarmNotification} from '../../Component/Reminder';
+import notifee from '@notifee/react-native';
 
 const HomeNew = ({navigation}) => {
   const dispatch = useDispatch();
@@ -141,6 +143,7 @@ const HomeNew = ({navigation}) => {
   const getRewardModalStatus = useSelector(
     state => state?.getRewardModalStatus,
   );
+  const isAlarmEnabled = useSelector(state => state.isAlarmEnabled);
   const colors = [
     {color1: '#E3287A', color2: '#EE7CBA'},
     {color1: '#5A76F4', color2: '#61DFF6'},
@@ -209,6 +212,22 @@ const HomeNew = ({navigation}) => {
   useEffect(() => {
     handleBannerType();
   }, []);
+  useEffect(() => {
+    if (!isAlarmEnabled) {
+      notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));
+      const currenTime = new Date();
+      currenTime.setHours(7);
+      currenTime.setMinutes(0);
+      AlarmNotification(currenTime)
+        .then(res => console.log('ALARM SET', res))
+        .catch(errr => {
+          console.log('Alarm error', errr);
+          currenTime.setDate(currenTime.getDate() + 1);
+          AlarmNotification(currenTime);
+        });
+      dispatch(setIsAlarmEnabled(true));
+    }
+  }, [isAlarmEnabled]);3
   const handleBannerType = () => {
     if (getOfferAgreement?.location === 'India') {
       if (enteredCurrentEvent && enteredUpcomingEvent) {
