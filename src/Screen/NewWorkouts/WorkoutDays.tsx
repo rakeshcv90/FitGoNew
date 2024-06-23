@@ -903,7 +903,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                     item={item}
                     percent={
                       challenge
-                        ? selected != 0 && index < selected - 1
+                        ? selected != 0 && index < selected 
                         : selected != 0 && index < selected
                     }
                     selected={

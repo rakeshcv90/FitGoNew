@@ -1498,7 +1498,7 @@ const Signup = ({navigation}) => {
             justifyContent: 'center',
             paddingBottom: 10,
           }}>
-          {Platform.OS == 'android' && (
+          {/* {Platform.OS == 'android' && (
             <TouchableOpacity
               onPress={() => {
                 FacebookSignup();
@@ -1509,7 +1509,7 @@ const Signup = ({navigation}) => {
                 resizeMode="contain"
               />
             </TouchableOpacity>
-          )}
+          )} */}
           {Platform.OS == 'ios' && (
             <TouchableOpacity
               onPress={() => {

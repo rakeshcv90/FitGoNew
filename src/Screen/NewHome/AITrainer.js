@@ -31,7 +31,7 @@ import moment from 'moment';
 import Tts from 'react-native-tts';
 import {useIsFocused} from '@react-navigation/native';
 import {bannerAdId} from '../../Component/AdsId';
-
+import AntDesign from 'react-native-vector-icons/AntDesign';
 // const apiKey = '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';
 // const apiKey = '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';
 const systemMessage = {
@@ -360,16 +360,16 @@ const AITrainer = ({navigation, route}) => {
           },
         ]}>
         <TouchableOpacity
-          style={{left: 0}}
+          style={{left: 10}}
           onPress={() => {
             Tts.stop();
             navigation.goBack();
           }}>
-          <Icons
-            name={'chevron-left'}
-            size={25}
-            color={AppColor.INPUTTEXTCOLOR}
-          />
+         <AntDesign
+              name={'arrowleft'}
+              size={25}
+              color={AppColor.INPUTTEXTCOLOR}
+            />
         </TouchableOpacity>
 
         <Text

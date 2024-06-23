@@ -40,6 +40,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import GradientButton from '../../Component/GradientButton';
 import {getActiveTrackIndex} from 'react-native-track-player/lib/src/trackPlayer';
 import NewButton from '../../Component/NewButton';
+import {showMessage} from 'react-native-flash-message';
 
 const NewFocusWorkouts = ({route, navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
@@ -153,26 +154,59 @@ const NewFocusWorkouts = ({route, navigation}) => {
     }
   }, []);
   // filter logic
+  // const filterExercises = (exercises, filterCriteria) => {
+  //   let modifiedFilter = [...filterCriteria];
+  //   if (filterCriteria.length === 0) {
+  //     setFilterList(exercises);
+  //   } else if (filterCriteria.includes('Arms')) {
+  //     // replacing Arms with Biceps triceps and forearms
+  //     modifiedFilter.pop('Arms');
+  //     modifiedFilter.push(...['Biceps', 'Triceps', 'Forearms']);
+  //     setFilterList(
+  //       exercises.filter(exercise =>
+  //         modifiedFilter.includes(exercise.exercise_bodypart),
+  //       ),
+  //     );
+  //   } else {
+  //     setFilterList(
+  //       exercises.filter(exercise =>
+  //         filterCriteria.includes(exercise.exercise_bodypart),
+  //       ),
+  //     );
+  //   }
+  //   const focusedPart = route?.params?.focusedPart;
+  //   if (focusedPart === 'Upper Body') {
+  //     dispatch(setUprBdyOpt(filterCriteria));
+  //   } else if (focusedPart === 'Lower Body') {
+  //     dispatch(setLowerBodyFilOpt(filterCriteria));
+  //   } else if (focusedPart === 'Core') {
+  //     dispatch(setCoreFilOpt(filterCriteria));
+  //   } else {
+  //     return searchCriteria;
+  //   }
+  //   refStandard.current.close();
+  // };
   const filterExercises = (exercises, filterCriteria) => {
-    let modifiedFilter = [...filterCriteria];
+    let modifiedFilter = [...filterCriteria]; // Create a copy of filterCriteria
     if (filterCriteria.length === 0) {
-      setFilterList(exercises);
-    } else if (filterCriteria.includes('Arms')) {
-      // replacing Arms with Biceps triceps and forearms
-      modifiedFilter.pop('Arms');
-      modifiedFilter.push(...['Biceps', 'Triceps', 'Forearms']);
+      setFilterList(exercises); // Set filter list to all exercises if no criteria
+    } else {
+      if (modifiedFilter.includes('Arms')) {
+        modifiedFilter = modifiedFilter.filter(item => item !== 'Arms'); // Remove 'Arms'
+        modifiedFilter.push('Biceps', 'Triceps', 'Forearms'); // Add 'Biceps', 'Triceps', 'Forearms'
+      }
+      // Check if 'Shoulders' is being added and remove 'Arms' if necessary
+      if (modifiedFilter.includes('Shoulders')) {
+        modifiedFilter = modifiedFilter.filter(item => item !== 'Arms');
+      }
+
       setFilterList(
         exercises.filter(exercise =>
           modifiedFilter.includes(exercise.exercise_bodypart),
         ),
       );
-    } else {
-      setFilterList(
-        exercises.filter(exercise =>
-          filterCriteria.includes(exercise.exercise_bodypart),
-        ),
-      );
     }
+
     const focusedPart = route?.params?.focusedPart;
     if (focusedPart === 'Upper Body') {
       dispatch(setUprBdyOpt(filterCriteria));
@@ -333,11 +367,13 @@ const NewFocusWorkouts = ({route, navigation}) => {
                     ? DeviceHeigth * 0.45
                     : DeviceHeigth >= 856
                     ? DeviceHeigth * 0.55
+                    : DeviceHeigth <= 667
+                    ? DeviceHeigth * 0.7
                     : DeviceHeigth * 0.58
                   : DeviceHeigth >= 1024
                   ? DeviceHeigth * 0.25
                   : DeviceHeigth >= 856
-                  ? DeviceHeigth * 0.3
+                  ? DeviceHeigth * 0.4
                   : DeviceHeigth * 0.42,
             },
             draggableIcon: {
@@ -647,6 +683,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
     });
   };
   const handleIconPress = (item, index) => {
+    setDownloade(5);
     downloadVideos(item, index, 1).finally(() => {
       setDownloade(0);
       setDownloadProgress(0);
@@ -671,11 +708,21 @@ const NewFocusWorkouts = ({route, navigation}) => {
             route?.params?.focusedPart == 'Full Body' ? false : true
           }
           shadow
-          // backButton={true}
-          // backPressCheck={true}
-          // onPress={()=>{
-
-          // }}
+          backPressCheck={true}
+          onPress={() => {
+            if (downloaded > 0) {
+              showMessage({
+                message:
+                  'Please wait, downloading in progress. Do not press back.',
+                type: 'info',
+                animationDuration: 500,
+                floating: true,
+                icon: {icon: 'auto', position: 'left'},
+              });
+            } else {
+              navigation?.goBack();
+            }
+          }}
           onPressImage={() => {
             if (route?.params?.focusedPart == 'Upper Body') {
               refStandard.current.open();
@@ -787,10 +834,14 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         </Text>
                       </View>
                       <TouchableOpacity
-                        style={{right: -25, padding: 2}}
+                        style={{right: -15, padding: 2}}
+                        disabled={downloadProgress > 0}
                         onPress={() => {
-                          setSelectedIndex(index);
-                          handleIconPress(item, index);
+                          if (downloadProgress > 0) {
+                          } else {
+                            setSelectedIndex(index);
+                            handleIconPress(item, index);
+                          }
                         }}>
                         <CircularProgressBase
                           value={selectedIndex == index ? downloadProgress : 0}

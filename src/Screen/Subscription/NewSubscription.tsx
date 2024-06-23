@@ -801,7 +801,7 @@ const NewSubscription = ({navigation, route}: any) => {
           <CheckIcon />
           <FitText
             type="normal"
-            value="Winning price 1000/-"
+            value="Winning price ₹1000/-"
             color="#333333E5"
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
             marginVertical={3}

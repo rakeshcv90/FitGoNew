@@ -248,7 +248,7 @@ const OfferTerms = ({navigation, route}: any) => {
                 fontSize={12}
               />
               <AntDesign
-                name={opened ? 'caretdown' : 'caretup'}
+                name={opened ? 'caretup' : 'caretdown'}
                 size={10}
                 color={AppColor.BLACK}
               />

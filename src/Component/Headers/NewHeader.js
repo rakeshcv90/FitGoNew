@@ -14,7 +14,7 @@ import {AppColor} from '../Color';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {useDispatch, useSelector} from 'react-redux';
-
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import {setExperience} from '../ThemeRedux/Actions';
 import {navigationRef} from '../../../App';
 import {extractFont} from 'react-native-svg/lib/typescript/lib/extract/extractText';
@@ -59,10 +59,10 @@ const NewHeader = ({
         },
       ]}>
       {!backButton ? (
-        <View style={{width: 20}}></View>
+        <View style={{width: 20,}}></View>
       ) : (
         <TouchableOpacity
-          style={{left: 0}}
+          style={{left:10,zIndex:1,}}
           onPress={() => {
             if (getExperience == true) {
               dispatch(setExperience(false));
@@ -77,11 +77,11 @@ const NewHeader = ({
               navigation.goBack();
             }
           }}>
-          <Icons
-            name={'chevron-left'}
-            size={25}
-            color={AppColor.INPUTTEXTCOLOR}
-          />
+          <AntDesign
+              name={'arrowleft'}
+              size={25}
+              color={AppColor.INPUTTEXTCOLOR}
+            />
         </TouchableOpacity>
       )}
 
@@ -118,14 +118,13 @@ const NewHeader = ({
               ) : (
                 <ShimmerPlaceholder
                   style={{
+                    
                     height: DeviceHeigth * 0.04,
                     width: DeviceWidth * 0.2,
         
                     justifyContent: 'center',
                     alignSelf: 'center',
-                    borderRadius: 20,
-                    position:'absolute',
-                    right:16,
+                    borderRadius: 20,   
                   }}
                   ref={avatarRef}
                   autoRun

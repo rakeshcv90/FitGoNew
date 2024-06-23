@@ -29,6 +29,7 @@ import {
   CaloriesActionReport,
 } from '../../Component/BmiComponent';
 import { useFocusEffect } from '@react-navigation/native';
+import { red } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 const NewMonthlyAchievement = ({navigation}) => {
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
@@ -39,6 +40,7 @@ const NewMonthlyAchievement = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
   useFocusEffect(() => {
+    console.log('apicall')
     DateWiseData(moment.utc().format('YYYY-MM-DD')); // to get the datewise data
   }, [navigation]);
   const DateWiseData = async Date1 => {
@@ -65,6 +67,7 @@ const NewMonthlyAchievement = ({navigation}) => {
       } else if (res) {
         setIsLoaded(true);
         setApiData(res.data.data);
+        console.log('apicall',res.data)
         const Calories = res?.data?.data?.map(value =>
           parseInt(value?.exercise_calories),
         );

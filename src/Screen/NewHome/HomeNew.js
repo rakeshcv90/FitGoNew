@@ -93,6 +93,8 @@ import {handleStart} from '../../Component/Utilities/Bannerfunctions';
 import FitCoins from '../../Component/Utilities/FitCoins';
 import {LocationPermissionModal} from '../../Component/Utilities/LocationPermission';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
+import {AlarmNotification} from '../../Component/Reminder';
+import notifee from '@notifee/react-native';
 
 const HomeNew = ({navigation}) => {
   const dispatch = useDispatch();
@@ -141,6 +143,7 @@ const HomeNew = ({navigation}) => {
   const getRewardModalStatus = useSelector(
     state => state?.getRewardModalStatus,
   );
+  const isAlarmEnabled = useSelector(state => state.isAlarmEnabled);
   const colors = [
     {color1: '#E3287A', color2: '#EE7CBA'},
     {color1: '#5A76F4', color2: '#61DFF6'},
@@ -208,8 +211,24 @@ const HomeNew = ({navigation}) => {
   // banners
   useEffect(() => {
     handleBannerType();
-  }, [handleBannerType]);
-  const handleBannerType = useCallback(() => {
+  }, []);
+  useEffect(() => {
+    if (!isAlarmEnabled) {
+      notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));
+      const currenTime = new Date();
+      currenTime.setHours(7);
+      currenTime.setMinutes(0);
+      AlarmNotification(currenTime)
+        .then(res => console.log('ALARM SET', res))
+        .catch(errr => {
+          console.log('Alarm error', errr);
+          currenTime.setDate(currenTime.getDate() + 1);
+          AlarmNotification(currenTime);
+        });
+      dispatch(setIsAlarmEnabled(true));
+    }
+  }, [isAlarmEnabled]);3
+  const handleBannerType = () => {
     if (getOfferAgreement?.location === 'India') {
       if (enteredCurrentEvent && enteredUpcomingEvent) {
         setBannertype1('ongoing_challenge');
@@ -237,13 +256,7 @@ const HomeNew = ({navigation}) => {
           setBannertype1('new_join');
         });
     }
-  }, [
-    getOfferAgreement?.location,
-    enteredCurrentEvent,
-    enteredUpcomingEvent,
-    setBannertype1,
-    setBannerType2,
-  ]);
+  };
   const getUserAllInData = async () => {
     try {
       const responseData = await axios.get(
@@ -420,6 +433,10 @@ const HomeNew = ({navigation}) => {
           `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
         );
         dispatch(setChallengesData(responseData.data.challenge_data));
+        const challenge = responseData?.data?.challenge_data?.filter(item => item?.status == 'active');
+        // console.log('challenge', challenge);
+        setCurrentChallenge(challenge);
+        getCurrentDayAPI(challenge)
         dispatch(setAllExercise(responseData.data.data));
       } catch (error) {
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
@@ -1263,7 +1280,7 @@ const HomeNew = ({navigation}) => {
                 style={{
                   justifyContent: 'center',
                   alignItems: 'center',
-                  right:8
+                  right: 8,
                 }}
                 onPress={() => {
                   navigation.navigate('IntroVideo');
@@ -1273,11 +1290,10 @@ const HomeNew = ({navigation}) => {
                   speed={1}
                   autoPlay
                   loop
-                  resizeMode="cover"
+                  resizeMode={DeviceHeigth>=1024?"contain":"cover"}
                   style={{
                     width: DeviceWidth * 0.1,
                     height: DeviceHeigth * 0.07,
-               
                   }}
                 />
               </TouchableOpacity>
@@ -1310,7 +1326,7 @@ const HomeNew = ({navigation}) => {
                 speed={1}
                 autoPlay
                 loop
-                resizeMode="cover"
+                resizeMode={DeviceHeigth>=1024?"contain":"cover"}
                 style={{
                   width: DeviceWidth * 0.15,
                   height: DeviceHeigth * 0.05,
@@ -2154,7 +2170,7 @@ const HomeNew = ({navigation}) => {
                     right:
                       DeviceHeigth >= 1024
                         ? DeviceHeigth * 0.03
-                        : DeviceHeigth * 0.05,
+                        : DeviceHeigth * 0.06,
                     top:
                       DeviceHeigth >= 1024
                         ? DeviceHeigth * 0.065
@@ -2216,7 +2232,7 @@ const HomeNew = ({navigation}) => {
                   style={{
                     width: DeviceHeigth >= 1024 ? 100 : 70,
                     height: DeviceHeigth >= 1024 ? 250 : 80,
-                    right: DeviceHeigth >= 1024 ? 0 : 60,
+                    right: DeviceHeigth >= 1024 ? 0 : DeviceHeigth * 0.08,
                     top: DeviceHeigth >= 1024 ? -10 : 50,
                   }}
                 />

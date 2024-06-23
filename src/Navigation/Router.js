@@ -75,6 +75,7 @@ import AddWorkouts from '../Screen/MyPlans/AddWorkouts';
 import Leaderboard from '../Screen/Leaderboard/Leaderboard';
 import Winner from '../Screen/Leaderboard/Winner';
 import IntroVideo from '../Screen/Introduction/IntroVideo';
+import SplaceNew from '../SplaceNew';
 
 const Stack = createStackNavigator();
 
@@ -90,6 +91,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
+      {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
          <Stack.Screen
         name="IntroductionScreen1"

@@ -41,7 +41,7 @@ import FastImage from 'react-native-fast-image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import FocusArea from '../FocusArea';
 import ActivityLoader from '../../Component/ActivityLoader';
-import { AddCountFunction } from '../../Component/Utilities/AddCountFunction';
+import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
@@ -436,7 +436,7 @@ const Workouts = ({navigation}: any) => {
               style={{
                 width: 30,
                 height: 30,
-            
+
                 justifyContent: 'center',
                 alignSelf: 'center',
                 borderRadius: 16,
@@ -583,7 +583,7 @@ const Workouts = ({navigation}: any) => {
                       ? DeviceHeigth * 0.14
                       : DeviceHeigth >= 812
                       ? DeviceHeigth * 0.1
-                      : DeviceHeigth * 0.05,
+                      : DeviceHeigth * 0.1,
                   marginHorizontal: 10,
                   zIndex: 1,
                 }}>
@@ -880,7 +880,7 @@ const Workouts = ({navigation}: any) => {
                         Body Type
                       </Text>
                     </View>
-                    <View style={[styles.meditionBox,]}>
+                    <View style={[styles.meditionBox]}>
                       <FlatList
                         data={focuseArea}
                         horizontal
@@ -993,7 +993,7 @@ const Workouts = ({navigation}: any) => {
                         Custom Made
                       </Text>
                     </View>
-                   
+
                     <LinearGradient
                       start={{x: 1, y: 0}}
                       end={{x: 0, y: 1}}
@@ -1209,7 +1209,7 @@ const styles = StyleSheet.create({
   },
   meditionBox: {
     backgroundColor: 'white',
-  
+
     //top: DeviceHeigth * 0.015,
   },
 });

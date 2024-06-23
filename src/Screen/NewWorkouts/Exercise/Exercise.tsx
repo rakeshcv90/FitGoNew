@@ -1199,7 +1199,7 @@ const Exercise = ({navigation, route}: any) => {
                   resizeMode="contain"
                 />
               </TouchableOpacity>
-              {enteredCurrentEvent && type == 'weekly' ? null : (
+              {enteredCurrentEvent && type == 'weekly' ? null :allExercise?.length > 1 && (
                 <TouchableOpacity
                   onPress={() => {
                     setRestStart(false);

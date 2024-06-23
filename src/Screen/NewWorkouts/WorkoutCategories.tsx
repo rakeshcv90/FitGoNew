@@ -19,7 +19,7 @@ import React, {
   useState,
 } from 'react';
 import {StyleSheet} from 'react-native';
-import {AppColor, Fonts} from '../../Component/Color';
+import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import AnimatedLottieView from 'lottie-react-native';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
@@ -143,13 +143,13 @@ const WorkoutCategories = ({navigation, route}: any) => {
           .progress((received, total) => {
             const progress = (received / total) * 100;
             downloadProgressRef.current = progress;
-
-            if (!progressUpdateTimeout) {
-              progressUpdateTimeout = setTimeout(() => {
-                setDownloadProgress(downloadProgressRef.current);
-                progressUpdateTimeout = null;
-              }, 1000); // Update state every second
-            }
+            setDownloadProgress(progress);
+            // if (!progressUpdateTimeout) {
+            //   progressUpdateTimeout = setTimeout(() => {
+            //     setDownloadProgress(downloadProgressRef.current);
+            //     progressUpdateTimeout = null;
+            //   }, 1000); // Update state every second
+            // }
           })
           .then(res => {
             StoringData[data?.exercise_title] = res.path();
@@ -283,10 +283,18 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 </View>
               </View>
               <TouchableOpacity
+               disabled={downloadProgress > 0}
+                // onPress={() => {
+                //   handleIconPress(item, index);
+                //   console.log('index--->', index);
+                // }}
                 onPress={() => {
-                  handleIconPress(item, index);
-                  console.log('index--->', index);
-                }}>
+                  if (downloadProgress > 0) {
+                  } else {
+                    handleIconPress(item, index);
+                  }
+                }}
+                >
                 {switchButton ? (
                   <View
                     style={[
@@ -426,12 +434,14 @@ const WorkoutCategories = ({navigation, route}: any) => {
   };
 
   const Start = (exercise: Array<any>) => {
+    setDownloade(5);
     Promise.all(
       exercise?.map((item: any, index: number) => {
         return downloadVideos(item, index, exercise?.length);
       }),
     ).finally(() => {
       setDownloade(0);
+      setDownloadProgress(0);
       navigation.navigate('Exercise', {
         allExercise: exercise,
         currentExercise: exercise[0],
@@ -456,11 +466,30 @@ const WorkoutCategories = ({navigation, route}: any) => {
             : CategoryDetails?.bodypart_title
         }
         workoutCat={switchButton}
-        backPressCheck={switchButton}
+        // backPressCheck={switchButton}
+        backPressCheck={true}
+        // onPress={() => {
+        //   setSelectedExercise([]);
+        //   setSwitchButton(false);
+        //   setItemsLength(0);
+        // }}
         onPress={() => {
-          setSelectedExercise([]);
-          setSwitchButton(false);
-          setItemsLength(0);
+          if (downloaded > 0 || downloadProgress > 0) {
+            showMessage({
+              message:
+                'Please wait, downloading in progress. Do not press back.',
+              type: 'info',
+              animationDuration: 500,
+              floating: true,
+              icon: {icon: 'auto', position: 'left'},
+            });
+          } else if (switchButton) {
+            setSelectedExercise([]);
+            setSwitchButton(false);
+            setItemsLength(0);
+          } else {
+            navigation?.goBack();
+          }
         }}
         h={Platform.OS == 'ios' ? DeviceWidth * 0.2 : DeviceWidth * 0.15}
         key={CategoryDetails?.id}
@@ -560,7 +589,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
             <GradientButton
               // flex={0.01}
               text={
-                downloaded
+                downloaded>0
                   ? `Downloading`
                   : switchButton
                   ? `Start Exercise  (${itemsLength})`
@@ -573,7 +602,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
               bR={6}
               normalAnimation={downloaded > 0}
               normalFill={`${100 - downloaded}%`}
-              bottm={switchButton ? 0 : -5}
+              // bottm={switchButton ? 0 : -5}
+              bottm={switchButton ? 0 : PLATFORM_IOS ? 10 : -5}
               onPress={() => {
                 if (switchButton) {
                   const finalExercises = exercise.filter((item: any) =>
@@ -602,6 +632,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 textStyle={[styles.buttonText, {color: AppColor.NEW_DARK_RED}]}
                 bC="#A93737"
                 alignSelf
+                bottm={PLATFORM_IOS ? 5 : 0}
                 bR={6}
                 // bottm={5}
                 onPress={() => setSwitchButton(true)}

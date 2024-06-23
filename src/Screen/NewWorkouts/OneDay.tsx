@@ -50,13 +50,15 @@ import {MyRewardedAd} from '../../Component/BannerAdd';
 import RNFetchBlob from 'rn-fetch-blob';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import FastImage from 'react-native-fast-image';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount, challenge} = route.params;
   const [exerciseData, setExerciseData] = useState([]);
   const [currentExercise, setCurrentExercise] = useState([]);
   const [trackerData, setTrackerData] = useState([]);
   const [open, setOpen] = useState(true);
-  const [downloaded, setDownloade] = useState(false);
+  const [downloaded, setDownloade] = useState(0);
   const [visible, setVisible] = useState(false);
   const [reward, setreward] = useState(0);
   const avatarRef = React.createRef();
@@ -77,7 +79,7 @@ const OneDay = ({navigation, route}: any) => {
   const dispatch = useDispatch();
   let isFocuse = useIsFocused();
   let simerData = [1, 2, 3, 4, 5];
-
+  let downloadCounter = 0;
   useEffect(() => {
     if (isFocuse) {
       allWorkoutApi();
@@ -139,7 +141,8 @@ const OneDay = ({navigation, route}: any) => {
       const videoExists = await RNFetchBlob.fs.exists(filePath);
       if (videoExists) {
         StoringData[data?.exercise_title] = filePath;
-        setDownloade(true);
+        downloadCounter++;
+        setDownloade((downloadCounter / len) * 100);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -153,7 +156,8 @@ const OneDay = ({navigation, route}: any) => {
           })
           .then(res => {
             StoringData[data?.exercise_title] = res.path();
-            setDownloade(true);
+            downloadCounter++;
+            setDownloade((downloadCounter / len) * 100);
           })
           .catch(err => {
             console.log(err);
@@ -219,6 +223,7 @@ const OneDay = ({navigation, route}: any) => {
         user_exercise_id: exercise?.exercise_id,
       });
     }
+    setDownloade(5);
     Promise.all(
       exerciseData.map((item: any, index: number) =>
         downloadVideos(item, index, exerciseData.length),
@@ -239,7 +244,7 @@ const OneDay = ({navigation, route}: any) => {
           ) {
             console.log(res.data);
             setOpen(false);
-            setDownloade(false);
+            setDownloade(0);
             navigation.navigate('Exercise', {
               allExercise: exerciseData,
               currentExercise:
@@ -256,7 +261,7 @@ const OneDay = ({navigation, route}: any) => {
           } else {
             console.log(trackerData);
             setOpen(false);
-            setDownloade(false);
+            setDownloade(0);
             navigation.navigate('Exercise', {
               allExercise: exerciseData,
               currentExercise:
@@ -285,7 +290,9 @@ const OneDay = ({navigation, route}: any) => {
         style={styles.box}
         activeOpacity={0.9}
         onPress={() => {
-          analytics().logEvent(`CV_FITME_${item?.exercise_title?.split(' ')[0]}_FR_Day`);
+          analytics().logEvent(
+            `CV_FITME_${item?.exercise_title?.split(' ')[0]}_FR_Day`,
+          );
           setOpen(false);
           setCurrentExercise(item);
           setVisible(true);
@@ -312,32 +319,11 @@ const OneDay = ({navigation, route}: any) => {
                 },
               }),
             }}>
-            {/* <Image
-              source={{
-                uri:
-                  getStoreVideoLoc[item?.exercise_title + 'Image'] != undefined
-                    ? 'file://' +
-                      getStoreVideoLoc[item?.exercise_title + 'Image']
-                    : item.exercise_image_link != ''
-                    ? item.exercise_image
-                    : item.exercise_image_link,
-              }}
-            
-              style={{height: 75, width: 75, alignSelf: 'center'}}
-              resizeMode="contain"
-            /> */}
             <FastImage
               fallback={true}
-              // onError={onError}
-              // onLoadEnd={onLoadEnd}
-              // onLoadStart={onLoadStart}
-
               style={{height: 75, width: 75, alignSelf: 'center'}}
               source={{
                 uri:
-                  // getStoreVideoLoc[item?.exercise_title + 'Image'] != undefined
-                  //   ? 'file://' +
-                  //     getStoreVideoLoc[item?.exercise_title + 'Image']
                   item.exercise_image_link != ''
                     ? item.exercise_image
                     : item.exercise_image_link,
@@ -392,93 +378,6 @@ const OneDay = ({navigation, route}: any) => {
           />
         </View>
       </TouchableOpacity>
-      // <TouchableOpacity
-      //   activeOpacity={1}
-      //   onPress={() => {
-      //     setOpen(false);
-      //     setCurrentExercise(item);
-      //     setVisible(true);
-      //   }}
-      //   style={[
-      //     styles.box,
-      //     {
-      //       // backgroundColor:'red',
-      //       height: DeviceHeigth * 0.1,
-      //       marginVertical:
-      //         Platform.OS == 'android'
-      //           ? DeviceHeigth * 0.005
-      //           : DeviceHeigth > 667
-      //           ? 5
-      //           : DeviceHeigth * 0.019,
-      //     },
-      //   ]}>
-      //   <View
-      //     style={{
-      //       flexDirection: 'row',
-      //       justifyContent: 'center',
-      //       alignItems: 'center',
-      //     }}>
-      //     <View
-      //       style={{
-      //         height: 80,
-      //         width: 80,
-      //         backgroundColor: AppColor.WHITE,
-      //         justifyContent: 'center',
-      //         alignItems: 'center',
-      //         marginLeft: DeviceWidth * 0.07,
-      //         borderRadius: 10,
-      //         ...Platform.select({
-      //           ios: {
-      //             shadowColor: AppColor.BLACK,
-      //             shadowOffset: {width: 1, height: 1},
-      //             shadowOpacity: 0.3,
-      //             shadowRadius: 2,
-      //           },
-      //           android: {
-      //             elevation: 5,
-      //           },
-      //         }),
-      //       }}>
-      //       <Image
-      //         source={{uri: item?.exercise_image}}
-      //         style={{height: 75, width: 75, alignSelf: 'center'}}
-      //         resizeMode="contain"
-      //       />
-      //     </View>
-      //     {trackerData[index - 1]?.exercise_status == 'completed' && (
-      //       <Image
-      //         source={localImage.Complete}
-      //         style={{
-      //           height: 40,
-      //           width: 40,
-      //           marginLeft: -DeviceWidth * 0.1,
-      //           marginTop: -DeviceWidth * 0.09,
-      //         }}
-      //         resizeMode="contain"
-      //       />
-      //     )}
-      //     <View
-      //       style={{
-      //         flexDirection: 'row',
-      //         justifyContent: 'space-evenly',
-      //         alignItems: 'center',
-      //         marginHorizontal: 10,
-      //         width: '65%',
-      //       }}>
-      //       <View>
-      //         <Text style={[styles.small, {fontSize: 14}]}>
-      //           {item?.exercise_title}
-      //         </Text>
-      //         <Text style={styles.small}>{item?.exercise_rest}</Text>
-      //       </View>
-      //       <Icons
-      //         name={'chevron-right'}
-      //         size={25}
-      //         color={AppColor.INPUTTEXTCOLOR}
-      //       />
-      //     </View>
-      //   </View>
-      // </TouchableOpacity>
     );
   };
   const Box2 = () => {
@@ -736,15 +635,26 @@ const OneDay = ({navigation, route}: any) => {
       }}>
       <TouchableOpacity
         onPress={() => {
-          setOpen(false);
-          navigation.goBack();
+          if (downloaded > 0) {
+            showMessage({
+              message:
+                'Please wait, downloading in progress. Do not press back.',
+              type: 'info',
+              animationDuration: 500,
+              floating: true,
+              icon: {icon: 'auto', position: 'left'},
+            });
+          } else {
+            navigation.goBack();
+            setOpen(false);
+          }
         }}
         style={{
-          marginTop: DeviceHeigth * 0.03,
+          marginTop: DeviceHeigth * 0.02,
         }}>
-        <Icons
-          name={'chevron-left'}
-          size={30}
+        <AntDesign
+          name={'arrowleft'}
+          size={25}
           color={AppColor.INPUTTEXTCOLOR}
         />
       </TouchableOpacity>
@@ -761,6 +671,7 @@ const OneDay = ({navigation, route}: any) => {
           height: DeviceWidth * 0.5,
           width: DeviceWidth,
           alignSelf: 'center',
+          marginTop: DeviceHeigth * 0.02,
         }}
         resizeMode="contain"
       />
@@ -825,7 +736,7 @@ const OneDay = ({navigation, route}: any) => {
           // oneDay
           flex={0.01}
           text={downloaded ? `Downloading` : `Start Day ${day}`}
-          h={80}
+          h={60}
           textStyle={{
             fontSize: 20,
             fontFamily: 'Montserrat-SemiBold',
@@ -834,11 +745,14 @@ const OneDay = ({navigation, route}: any) => {
             zIndex: 1,
             color: AppColor.WHITE,
           }}
-          alignSelf
-          bR={40}
           // mB={80}
           bottm={40}
-          weeklyAnimation={downloaded}
+          // weeklyAnimation={downloaded}
+          colors={[AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED]}
+          alignSelf
+          bR={6}
+          normalAnimation={downloaded > 0}
+          normalFill={`${100 - downloaded}%`}
           // fillBack="#EB1900"
           // fill={downloaded > 0 ? `${100 / downloaded}%` : '0%'}
           onPress={() => {
