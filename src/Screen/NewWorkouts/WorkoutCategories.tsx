@@ -7,7 +7,8 @@ import {
   Platform,
   BackHandler,
   SafeAreaView,
-  TextInput
+  TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import React, {
   FC,
@@ -116,9 +117,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
     downloadCounter = 0,
     progressUpdateTimeout = null;
   const downloadVideos = async (data: any, index: number, len: number) => {
-    if (len == 1) {
-      setSelectedIndex(index);
-    }
     const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
       data?.exercise_title,
     )}.mp4`;
@@ -193,8 +191,12 @@ const WorkoutCategories = ({navigation, route}: any) => {
     if (switchButton) {
       handleItems(item, selectedExercise, setSelectedExercise);
     } else {
-      AnalyticsConsole(`${item?.exercise_title?.split(' ')[0]}_DESC`);
-      setVisible(true);
+      if (!visible) {
+        AnalyticsConsole(`${item?.exercise_title?.split(' ')[0]}_DESC`);
+        setVisible(true);
+      } else {
+        console.log(item);
+      }
     }
   };
 
@@ -205,6 +207,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
       downloadVideos(item, index, 1).finally(() => {
         setDownloade(0);
         setDownloadProgress(0);
+        setSelectedIndex(-1);
         navigation.navigate('Exercise', {
           allExercise: [item],
           currentExercise: item,
@@ -283,18 +286,15 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 </View>
               </View>
               <TouchableOpacity
-               disabled={downloadProgress > 0}
-                // onPress={() => {
-                //   handleIconPress(item, index);
-                //   console.log('index--->', index);
-                // }}
+                disabled={isItemDownload}
                 onPress={() => {
-                  if (downloadProgress > 0) {
+                  if (isItemDownload || downloadProgress > 0) {
                   } else {
+                    setSelectedIndex(index);
+                    setDownloadProgress(5);
                     handleIconPress(item, index);
                   }
-                }}
-                >
+                }}>
                 {switchButton ? (
                   <View
                     style={[
@@ -310,6 +310,12 @@ const WorkoutCategories = ({navigation, route}: any) => {
                     ]}>
                     {isSelected && <Font name="check" color="white" />}
                   </View>
+                ) : isItemDownload && downloadProgress <= 5 ? (
+                  <ActivityIndicator
+                    color={AppColor.NEW_DARK_RED}
+                    animating={isItemDownload && downloadProgress <= 5}
+                    size={30}
+                  />
                 ) : (
                   <CircularProgressBase
                     value={isItemDownload ? downloadProgress : 0}
@@ -332,7 +338,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
           </View>
         );
       },
-    [selectedExercise, switchButton],
+    [selectedExercise, switchButton, selectedIndex, downloadProgress],
   );
 
   const handleBackPress = useCallback(() => {
@@ -542,7 +548,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
             // top: -DeviceWidth * 0.05,
             marginVertical: (DeviceWidth * 0.1) / 8,
             justifyContent: 'center',
-          
           }}>
           <Icons1 name="search" size={18} color={'#333333E5'} />
           <TextInput
@@ -589,7 +594,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
             <GradientButton
               // flex={0.01}
               text={
-                downloaded>0
+                downloaded > 0
                   ? `Downloading`
                   : switchButton
                   ? `Start Exercise  (${itemsLength})`

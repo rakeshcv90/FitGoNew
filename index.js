@@ -267,6 +267,5 @@ AdManager.subscribe('imageAd', 'onAdPreloadClicked', () => {
   console.log('click', 'imageAd');
 });
 
-
 AppRegistry.registerComponent(appName, () => AppRedux);
 TrackPlayer.registerPlaybackService(() => require('./src/service'));

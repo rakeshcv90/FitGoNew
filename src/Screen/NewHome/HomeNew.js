@@ -226,7 +226,7 @@ const HomeNew = ({navigation}) => {
   }, [isAlarmEnabled]);
   // banners
   useFocusEffect(
-     useCallback(() => {
+    useCallback(() => {
       const handleBannerType = async () => {
         if (getOfferAgreement?.location === 'India') {
           if (enteredCurrentEvent && enteredUpcomingEvent) {
@@ -256,13 +256,11 @@ const HomeNew = ({navigation}) => {
           }
         }
       };
-      handleBannerType(); 
-      return () => {
-        
-      };
-    }, [getOfferAgreement, enteredCurrentEvent, enteredUpcomingEvent])
+      handleBannerType();
+      return () => {};
+    }, [getOfferAgreement, enteredCurrentEvent, enteredUpcomingEvent]),
   );
-  
+
   const getUserAllInData = async () => {
     try {
       const responseData = await axios.get(
@@ -300,7 +298,7 @@ const HomeNew = ({navigation}) => {
       dispatch(setCompleteProfileData([]));
       dispatch(setStoreData([]));
     }
-  }
+  };
   useEffect(() => {
     if (isFocused) {
       getLeaderboardDataAPI();
@@ -681,7 +679,7 @@ const HomeNew = ({navigation}) => {
         <View style={styles.modalContainer}>
           <View
             style={{
-              height: DeviceWidth,
+              height: DeviceHeigth * 0.5,
               width: DeviceWidth * 0.8,
               backgroundColor: AppColor.WHITE,
               borderRadius: 10,
@@ -728,11 +726,11 @@ const HomeNew = ({navigation}) => {
                 color: AppColor.HEADERTEXTCOLOR,
                 fontWeight: '600',
                 fontFamily: Fonts.MONTSERRAT_REGULAR,
-                lineHeight: 20,
+                lineHeight: 24,
                 textAlign: 'center',
                 marginHorizontal: DeviceWidth * 0.1,
               }}>
-              Please allow us to access your location services
+              {`Please allow required permissions to use the app. Go to App->Permissions and enable all Permissions.`}
             </Text>
             <GradientButton
               text="Enable Location Services"
@@ -744,7 +742,7 @@ const HomeNew = ({navigation}) => {
               }}
               // flex={0.3}
               w={DeviceWidth * 0.7}
-              mB={-DeviceWidth * 0.1}
+              mB={-DeviceWidth * 0.05}
               alignSelf
             />
             <GradientButton
@@ -1291,7 +1289,7 @@ const HomeNew = ({navigation}) => {
                   right: 8,
                 }}
                 onPress={() => {
-                  navigation.navigate('IntroVideo',{type:'home'});
+                  navigation.navigate('IntroVideo', {type: 'home'});
                 }}>
                 <AnimatedLottieView
                   source={localImage.RewardInfo}
@@ -2235,14 +2233,20 @@ const HomeNew = ({navigation}) => {
                 </Text>
               </View>
               <View style={{}}>
-              {console.log("Xccdsfds",DeviceHeigth)}
                 <Image
                   source={require('../../Icon/Images/NewImage2/store.png')}
                   resizeMode="contain"
                   style={{
                     width: DeviceHeigth >= 1024 ? 100 : 70,
                     height: DeviceHeigth >= 1024 ? 250 : 80,
-                    right: DeviceHeigth >= 1024 ? 0 : DeviceHeigth >=812?DeviceHeigth * 0.06:DeviceHeigth * 0.07,
+                    right:
+                      DeviceHeigth >= 1024
+                        ? 0
+                        : DeviceHeigth >= 812
+                        ? DeviceHeigth * 0.06
+                        : DeviceHeigth <= 780
+                        ? DeviceHeigth * 0.05
+                        : DeviceHeigth * 0.07,
                     top: DeviceHeigth >= 1024 ? -10 : 50,
                   }}
                 />

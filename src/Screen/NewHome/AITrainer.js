@@ -356,7 +356,7 @@ const AITrainer = ({navigation, route}) => {
             paddingTop:
               Platform.OS == 'android'
                 ? DeviceHeigth * 0.03
-                : DeviceHeigth * 0.01,
+                : DeviceHeigth * 0.06,
           },
         ]}>
         <TouchableOpacity

@@ -224,14 +224,16 @@ const OfferTerms = ({navigation, route}: any) => {
               textTransform="uppercase"
               fontWeight="500"
               letterSpacing={0.2}
+              fontSize={14}
             />
-            <FitText value="In-App Cash Rewards" type="Heading" />
+            <FitText value="In-App Cash Rewards" type="Heading" fontSize={22} />
           </View>
           <TouchableOpacity
             onPress={() => setOpened(!opened)}
             activeOpacity={1}
             style={{
               width: DeviceWidth * 0.22,
+              marginRight: 10,
             }}>
             <View
               style={{

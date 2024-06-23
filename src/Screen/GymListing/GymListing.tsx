@@ -341,6 +341,7 @@ const GymListing = ({navigation}: any) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   marginTop: DeviceHeigth * 0.15,
+                  marginHorizontal: 20
                 }}>
                 <Image
                   source={require('../../Icon/Images/NewImage2/NoLocation.png')}
@@ -354,7 +355,7 @@ const GymListing = ({navigation}: any) => {
                 <Text
                   style={styles.heading}
                   onPress={() => Linking.openSettings()}>
-                  Currently, No Gyms available{'\n'} for your location
+                  Oops, There are no certified gyms available in your location at this time.
                 </Text>
               </View>
             }

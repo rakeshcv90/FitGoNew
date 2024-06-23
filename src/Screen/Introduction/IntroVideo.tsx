@@ -1,6 +1,5 @@
 import {
   ImageBackground,
-  Platform,
   StatusBar,
   StyleSheet,
   Text,
@@ -9,17 +8,28 @@ import {
 import React, {useState} from 'react';
 import Video from 'react-native-video';
 import {AppColor, Fonts} from '../../Component/Color';
-import {DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {useSelector} from 'react-redux';
 import {ActivityIndicator} from 'react-native-paper';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {localImage} from '../../Component/Image';
+import LinearGradient from 'react-native-linear-gradient';
 
 const IntroVideo = ({navigation, route}: any) => {
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const [videoLoaded, setVideoLoaded] = useState(false);
   return (
-    <View style={{flex: 1}}>
+    <LinearGradient
+      colors={['#FF5C31', '#FFA100', '#FFA100']}
+      start={{
+        x: 1,
+        y: 1,
+      }}
+      end={{
+        x: 1,
+        y: 1,
+      }}
+      style={{flex: 1}}>
       <StatusBar barStyle={'light-content'} backgroundColor={'#ed471a'} />
       {!videoLoaded && (
         <ImageBackground
@@ -53,25 +63,26 @@ const IntroVideo = ({navigation, route}: any) => {
         controls={false}
         paused={false}
         repeat={false}
-        style={{flex: 1}}
-        onEnd={() => {
-          if (route.params.type == 'homme') {
-            navigation.navigate('BottomTab', {
-              screen: 'Home',
-            });
-          } else {
-            navigation.navigate('LogSignUp', {screen: 'Log In'});
-          }
+        style={{
+          width: DeviceWidth,
+          height: DeviceHeigth,
+          alignSelf: 'center',
+          bottom: -DeviceWidth * 0.2,
+          position: 'absolute',
         }}
-        resizeMode="stretch"
+        onEnd={() =>
+          navigation.navigate('BottomTab', {
+            screen: 'Home',
+          })
+        }
+        muted
+        resizeMode="contain"
         onError={() => {
-          if (route.params.type == 'homme') {
+          setTimeout(() => {
             navigation.navigate('BottomTab', {
               screen: 'Home',
             });
-          } else {
-            navigation.navigate('LogSignUp', {screen: 'Log In'});
-          }
+          }, 3000);
         }}
         // fullscreen
       />
@@ -93,13 +104,13 @@ const IntroVideo = ({navigation, route}: any) => {
             textDecorationLine: 'underline',
             color: AppColor.WHITE,
             position: 'absolute',
-            top: Platform.OS == 'ios' ? 40 : 10,
+            top: DeviceHeigth*0.1,
             right: 16,
           }}>
           Skip
         </Text>
       )}
-    </View>
+    </LinearGradient>
   );
 };
 

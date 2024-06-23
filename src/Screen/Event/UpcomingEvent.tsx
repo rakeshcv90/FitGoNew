@@ -485,7 +485,8 @@ const UpcomingEvent = ({navigation, route}: any) => {
                 fontFamily={Fonts.MONTSERRAT_MEDIUM}
               />
             </TouchableOpacity>
-          ) : getPurchaseHistory?.upcoming_day_status != 1 ? (
+          ) : getPurchaseHistory?.plan != null &&
+            getPurchaseHistory?.upcoming_day_status != 1 ? (
             getPurchaseHistory?.used_plan == getPurchaseHistory?.allow_usage ? (
               <FitText
                 type="normal"
@@ -501,7 +502,12 @@ const UpcomingEvent = ({navigation, route}: any) => {
         </ShadowCard>
         {getPurchaseHistory?.plan_value != null && (
           <>
-            <FitText value="Your Plan" type="SubHeading" />
+            <FitText
+              value="Your Plan"
+              type="SubHeading"
+              fontFamily={Fonts.MONTSERRAT_BOLD}
+              fontSize={18}
+            />
             <ShadowCard
               shadow
               mV={DeviceHeigth * 0.02}
