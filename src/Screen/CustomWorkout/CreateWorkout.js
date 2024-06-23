@@ -479,7 +479,7 @@ const CreateWorkout = ({navigation, route}) => {
           />
           <View
             style={{
-              width: '90%',
+              width: '95%',
               height: 50,
               alignSelf: 'center',
               backgroundColor: '#F3F5F5',
@@ -511,6 +511,7 @@ const CreateWorkout = ({navigation, route}) => {
               justifyContent: 'center',
               alignSelf: 'center',
               width: '100%',
+              left: -10,
               alignSelf: 'center',
             }}>
             {/* <Dropdown
@@ -596,14 +597,12 @@ const CreateWorkout = ({navigation, route}) => {
             removeClippedSubviews={true}
           />
         </View>
-        <LinearGradient
-          start={{x: 0, y: 1}}
-          end={{x: 1, y: 0}}
-          // colors={['#941000', '#D01818']}
-          colors={['#D01818', '#941000']}
+        <View
           style={{
-            width: 180,
+            paddingLeft: 20,
+            paddingRight: 20,
             height: 45,
+            backgroundColor: '#A93737',
             borderRadius: 30,
             justifyContent: 'center',
             alignItems: 'center',
@@ -613,7 +612,7 @@ const CreateWorkout = ({navigation, route}) => {
           }}>
           <TouchableOpacity
             style={{
-              width: 180,
+              //width: 180,
               height: 40,
 
               borderRadius: 30,
@@ -636,7 +635,7 @@ const CreateWorkout = ({navigation, route}) => {
               ({selectedItems?.length})
             </Text>
           </TouchableOpacity>
-        </LinearGradient>
+        </View>
       </View>
       {/* {bannerAdsDisplay()} */}
       <BannerAdd bannerAdId={bannerAdId} />
@@ -729,17 +728,17 @@ const styles = StyleSheet.create({
   shadow: {
     marginBottom: 10,
     shadowColor: 'grey',
-    ...Platform.select({
-      ios: {
-        //shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
+    // ...Platform.select({
+    //   ios: {
+    //     //shadowColor: '#000000',
+    //     shadowOffset: {width: 0, height: 2},
+    //     shadowOpacity: 0.2,
+    //     shadowRadius: 4,
+    //   },
+    //   android: {
+    //     elevation: 2,
+    //   },
+    // }),
   },
 });
 export default CreateWorkout;

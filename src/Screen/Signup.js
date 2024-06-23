@@ -1491,6 +1491,16 @@ const Signup = ({navigation}) => {
         </View>
         <View
           style={{
+            marginTop: DeviceHeigth * 0.03,
+            alignSelf: 'center',
+            marginRight: -DeviceWidth * 0.01,
+          }}></View>
+
+        <View style={{marginTop: DeviceHeigth * 0.0, paddingBottom: 10}}>
+          <Button2 onGooglePress={GoogleSignup} onApplePress={onApplePress} />
+        </View>
+        {/* <View
+          style={{
             marginTop: DeviceHeigth * 0.05,
             paddingBottom: 10,
             flexDirection: 'row',
@@ -1498,18 +1508,7 @@ const Signup = ({navigation}) => {
             justifyContent: 'center',
             paddingBottom: 10,
           }}>
-          {/* {Platform.OS == 'android' && (
-            <TouchableOpacity
-              onPress={() => {
-                FacebookSignup();
-              }}>
-              <Image
-                source={localImage.FACEBOOK}
-                style={{width: DeviceWidth * 0.15, height: DeviceHeigth * 0.05}}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          )} */}
+  
           {Platform.OS == 'ios' && (
             <TouchableOpacity
               onPress={() => {
@@ -1533,7 +1532,7 @@ const Signup = ({navigation}) => {
               resizeMode="contain"
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
       </ScrollView>
 
       <LoginCancelModal />

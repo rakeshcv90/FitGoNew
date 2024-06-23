@@ -15,6 +15,7 @@ import FitIcon from '../../Component/Utilities/FitIcon';
 import {localImage} from '../../Component/Image';
 import {setShowIntro} from '../../Component/ThemeRedux/Actions';
 import {useDispatch} from 'react-redux';
+import AnimatedLottieView from 'lottie-react-native';
 const IntroductionScreen1 = ({navigation}) => {
   const dispatch = useDispatch();
   return (
@@ -23,37 +24,68 @@ const IntroductionScreen1 = ({navigation}) => {
       <View
         style={{
           width: '100%',
-          height: '55%',
-          opacity:1,
+          height: '50%',
+          opacity: 1,
           backgroundColor: '#f2c4c4',
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-      
-        <TouchableOpacity
-          onPress={() => {
-            dispatch(setShowIntro(true));
-            navigation.navigate('LogSignUp', {screen: 'Log In'});
-          }}
+        <View
           style={{
-            justifyContent: 'flex-end',
-            width: 50,
             height: 30,
-            alignSelf: 'flex-end',
+            width: '90%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+
+            zIndex: 1,
+            top: Platform.OS == 'ios' && DeviceHeigth <= 1024 ? 30 : 0,
           }}>
-          <Text
-            style={{
-              textDecorationLine: 'underline',
-              color: '#A93737',
-              textAlign: 'center',
-              fontWeight: '600',
-              lineHeight: 20,
-              fontSize: 14,
-              top:Platform.OS=='ios'&&DeviceHeigth<=1024?30:0
+          <TouchableOpacity
+            onPress={() => {
+              dispatch(setShowIntro(true));
+              navigation.navigate('LogSignUp', {screen: 'Log In'});
             }}>
-            Skip
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={{
+                textDecorationLine: 'underline',
+                color: '#A93737',
+                textAlign: 'center',
+                fontWeight: '600',
+                lineHeight: 20,
+                fontSize: 14,
+              }}>
+              Skip
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+
+              zIndex: 1,
+              overflow: 'hidden',
+              width: DeviceWidth * 0.08,
+              height: DeviceHeigth * 0.05,
+            }}
+            onPress={() => {
+              navigation.navigate('IntroVideo',{type:'intro'});
+            }}>
+            <AnimatedLottieView
+              source={localImage.RewardInfo}
+              speed={1}
+              autoPlay
+              loop
+              resizeMode={DeviceHeigth >= 1024 ? 'contain' : 'cover'}
+              style={{
+                width: DeviceWidth * 0.08,
+                height: DeviceHeigth * 0.05,
+
+                // top: Platform.OS == 'ios' && DeviceHeigth <= 1024 ? 40 : 0,
+              }}
+            />
+          </TouchableOpacity>
+        </View>
 
         <Image
           source={localImage.Intro1}
@@ -62,7 +94,7 @@ const IntroductionScreen1 = ({navigation}) => {
       </View>
       <View
         style={{
-          height: '35%',
+          height: '40%',
           backgroundColor: '#fff',
           paddingLeft: 10,
           paddingTop: 24,
@@ -86,13 +118,13 @@ const IntroductionScreen1 = ({navigation}) => {
             lineHeight: 25,
             fontWeight: '500',
             color: '#000',
-            opacity:0.8,
+            opacity: 0.8,
             marginTop: 16,
           }}>
           Why just get fit when you can also earn rewards? Participate in our
           fitness challenge, stay committed, and watch as your hard work turns
-          into amazing rewards. It's time to make your pocket as healthy as
-          your body!
+          into amazing rewards. It's time to make your pocket as healthy as your
+          body!
         </Text>
       </View>
       <View
@@ -106,7 +138,7 @@ const IntroductionScreen1 = ({navigation}) => {
         <CircularProgressWithChild
           value={33}
           activeStrokeColor={AppColor.RED}
-          radius={DeviceHeigth>=1024?40:28}
+          radius={DeviceHeigth >= 1024 ? 40 : 28}
           initialValue={33}
           maxValue={100}
           clockwise={false}
@@ -120,8 +152,10 @@ const IntroductionScreen1 = ({navigation}) => {
             }}
             style={{
               backgroundColor: '#A93737',
-              width:DeviceHeigth>=1024? DeviceWidth * 0.08: DeviceWidth * 0.1,
-              height: DeviceHeigth>=1024? DeviceWidth * 0.08: DeviceWidth * 0.1,
+              width:
+                DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1,
+              height:
+                DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1,
               borderRadius: 100,
               margin: 5,
 

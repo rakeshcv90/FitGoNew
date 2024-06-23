@@ -137,7 +137,7 @@ var styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
   },
   TextContainer: {
-    marginTop: DeviceHeigth * 0.03,
+    marginTop: DeviceHeigth * 0.06,
     marginHorizontal: DeviceHeigth * 0.03,
     justifyContent: 'center',
     alignItems: 'center',

@@ -989,17 +989,17 @@ const NewProfile = ({navigation}) => {
                       AnalyticsConsole(`SOUND_ON_OFF`);
                       if (text == true) {
                         showMessage({
-                          message: 'Sound unmuted',
-                          type: 'success',
+                          message: 'Sound muted',
+                          type: 'danger',
                           animationDuration: 500,
                           floating: true,
                           icon: {icon: 'auto', position: 'left'},
                         });
                       } else {
                         showMessage({
-                          message: 'Sound muted',
+                          message: 'Sound unmuted ',
                           animationDuration: 500,
-                          type: 'danger',
+                          type: 'success',
                           floating: true,
                           icon: {icon: 'auto', position: 'left'},
                         });

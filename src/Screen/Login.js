@@ -1173,7 +1173,7 @@ const Login = ({navigation}) => {
             <View style={{width: 120, height: 1, backgroundColor: 'black'}} />
           </View>
         </KeyboardAvoidingView>
-        <View
+        {/* <View
           style={{
             marginTop: DeviceHeigth * 0.05,
             paddingBottom: 10,
@@ -1181,18 +1181,7 @@ const Login = ({navigation}) => {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          {/* {Platform.OS == 'android' && (
-            <TouchableOpacity
-              onPress={() => {
-                FacebookLogin();
-              }}>
-              <Image
-                source={localImage.FACEBOOK}
-                style={{width: DeviceWidth * 0.15, height: DeviceHeigth * 0.05}}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          )} */}
+      
           {Platform.OS == 'ios' && (
             <TouchableOpacity
               onPress={() => {
@@ -1217,6 +1206,14 @@ const Login = ({navigation}) => {
             />
           </TouchableOpacity>
 
+        </View> */}
+        <View style={{marginTop: DeviceHeigth * 0.02, paddingBottom: 10}}>
+          {Platform.OS == 'android' && (
+            <Button2 onGooglePress={GoogleSignup} onFBPress={FacebookLogin} />
+          )}
+          {Platform.OS == 'ios' && (
+            <Button2 onGooglePress={GoogleSignup} onApplePress={onApplePress} />
+          )}
         </View>
       </ScrollView>
       <CompleateProfileModal />

@@ -573,6 +573,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               </View>
             </View>
             <TouchableOpacity
+            style={{top:10}}
               onPress={() => {
                 setIsMenuOpen(true);
               }}>
