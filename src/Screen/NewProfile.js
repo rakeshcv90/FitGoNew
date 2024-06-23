@@ -919,19 +919,20 @@ const NewProfile = ({navigation}) => {
                     value={getSoundOffOn}
                     onValueChange={text => {
                       AnalyticsConsole(`SOUND_ON_OFF`);
+                     
                       if (text == true) {
                         showMessage({
-                          message: 'Sound muted',
-                          type: 'danger',
+                          message: 'Sound unmuted',
+                          type: 'success',
                           animationDuration: 500,
                           floating: true,
                           icon: {icon: 'auto', position: 'left'},
                         });
                       } else {
                         showMessage({
-                          message: 'Sound unmuted ',
+                          message: 'Sound muted',
                           animationDuration: 500,
-                          type: 'success',
+                          type: 'danger',
                           floating: true,
                           icon: {icon: 'auto', position: 'left'},
                         });

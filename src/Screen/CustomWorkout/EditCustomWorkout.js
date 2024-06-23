@@ -98,7 +98,12 @@ const EditCustomWorkout = ({navigation, route}) => {
 
                 justifyContent: 'space-between',
               }}>
-              <View style={{flexDirection: 'row', alignItems: 'center',justifyContent:'center'}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
                 <Image
                   source={{uri: item.exercise_image_link}}
                   defaultSource={localImage.NOWORKOUT}
@@ -179,7 +184,7 @@ const EditCustomWorkout = ({navigation, route}) => {
           </>
         );
       },
-    [selectedItems,filteredCategories],
+    [selectedItems, filteredCategories],
   );
   const emptyComponent = () => {
     return (
@@ -344,7 +349,7 @@ const EditCustomWorkout = ({navigation, route}) => {
         <View style={{width: '95%', alignSelf: 'center'}}>
           <View
             style={{
-              width: '90%',
+              width: '95%',
               height: 50,
               alignSelf: 'center',
               backgroundColor: '#F3F5F5',
@@ -392,7 +397,7 @@ const EditCustomWorkout = ({navigation, route}) => {
                         bodyPart != item.bodypart_title
                           ? '#33333333'
                           : '#A937371A',
-                      marginLeft: index == 0 ? DeviceWidth * 0.06 : 0,
+                      marginLeft: index == 0 ? DeviceWidth * 0.0 : 0,
                       marginRight:
                         index == completeProfileData?.focusarea?.length - 1
                           ? DeviceWidth * 0.06
@@ -452,19 +457,17 @@ const EditCustomWorkout = ({navigation, route}) => {
             />
           </View>
         </View>
-        <LinearGradient
-          start={{x: 0, y: 1}}
-          end={{x: 1, y: 0}}
-          // colors={['#941000', '#D01818']}
-          colors={['#A93737', '#A93737']}
+        <View
+       
           style={{
-            width: DeviceWidth * 0.55,
+        paddingLeft:15,paddingRight:15,
             height: 40,
             borderRadius: 30,
             justifyContent: 'center',
             alignItems: 'center',
             position: 'absolute',
             alignSelf: 'center',
+            backgroundColor: '#A93737',
             bottom: Platform.OS == 'ios' ? 35 : 10,
           }}>
           <TouchableOpacity
@@ -492,7 +495,7 @@ const EditCustomWorkout = ({navigation, route}) => {
               ({selectedItems?.length}){' '}
             </Text>
           </TouchableOpacity>
-        </LinearGradient>
+        </View>
       </View>
     </>
   );
