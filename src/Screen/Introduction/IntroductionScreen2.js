@@ -17,6 +17,7 @@ import FitIcon from '../../Component/Utilities/FitIcon';
 import {localImage} from '../../Component/Image';
 import {useDispatch} from 'react-redux';
 import {setShowIntro} from '../../Component/ThemeRedux/Actions';
+import AnimatedLottieView from 'lottie-react-native';
 const IntroductionScreen2 = ({navigation}) => {
   const dispatch = useDispatch();
   return (
@@ -25,35 +26,68 @@ const IntroductionScreen2 = ({navigation}) => {
       <View
         style={{
           width: '100%',
-          height: '55%',
+          height: '50%',
           backgroundColor: '#f2c4c4',
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <TouchableOpacity
-          onPress={() => {
-            dispatch(setShowIntro(true));
-            navigation.navigate('LogSignUp', {screen: 'Log In'});
-          }}
+       
+        <View
           style={{
-            justifyContent: 'flex-end',
-            width: 50,
             height: 30,
-            alignSelf: 'flex-end',
+            width: '90%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+
+            zIndex: 1,
+            top: Platform.OS == 'ios' && DeviceHeigth <= 1024 ? 30 : 0,
           }}>
-          <Text
-            style={{
-              textDecorationLine: 'underline',
-              color: '#A93737',
-              textAlign: 'center',
-              fontWeight: '600',
-              lineHeight: 20,
-              fontSize: 14,
-              top:Platform.OS=='ios'&&DeviceHeigth<=1024?30:0
+          <TouchableOpacity
+            onPress={() => {
+              dispatch(setShowIntro(true));
+              navigation.navigate('LogSignUp', {screen: 'Log In'});
             }}>
-            Skip
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={{
+                textDecorationLine: 'underline',
+                color: '#A93737',
+                textAlign: 'center',
+                fontWeight: '600',
+                lineHeight: 20,
+                fontSize: 14,
+              }}>
+              Skip
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+
+              zIndex: 1,
+              overflow: 'hidden',
+              width: DeviceWidth * 0.08,
+              height: DeviceHeigth * 0.05,
+            }}
+            onPress={() => {
+              navigation.navigate('IntroVideo',{type:'intro'});
+            }}>
+            <AnimatedLottieView
+              source={localImage.RewardInfo}
+              speed={1}
+              autoPlay
+              loop
+              resizeMode={DeviceHeigth >= 1024 ? 'contain' : 'cover'}
+              style={{
+                width: DeviceWidth * 0.08,
+                height: DeviceHeigth * 0.05,
+
+                // top: Platform.OS == 'ios' && DeviceHeigth <= 1024 ? 40 : 0,
+              }}
+            />
+          </TouchableOpacity>
+        </View>
         <Image
           source={localImage.Intro2}
           resizeMode="contain"
@@ -61,7 +95,7 @@ const IntroductionScreen2 = ({navigation}) => {
       </View>
       <View
         style={{
-          height: '35%',
+          height: '40%',
           backgroundColor: '#fff',
           paddingLeft: 10,
           paddingTop: 30,

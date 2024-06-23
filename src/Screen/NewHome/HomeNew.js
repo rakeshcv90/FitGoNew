@@ -1291,7 +1291,7 @@ const HomeNew = ({navigation}) => {
                   right: 8,
                 }}
                 onPress={() => {
-                  navigation.navigate('IntroVideo');
+                  navigation.navigate('IntroVideo',{type:'home'});
                 }}>
                 <AnimatedLottieView
                   source={localImage.RewardInfo}
@@ -2068,6 +2068,7 @@ const HomeNew = ({navigation}) => {
           <FlatList
             data={fitnessInstructor}
             horizontal
+            contentContainerStyle={{paddingRight: DeviceHeigth * 0.05}}
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
             pagingEnabled
@@ -2234,13 +2235,14 @@ const HomeNew = ({navigation}) => {
                 </Text>
               </View>
               <View style={{}}>
+              {console.log("Xccdsfds",DeviceHeigth)}
                 <Image
                   source={require('../../Icon/Images/NewImage2/store.png')}
                   resizeMode="contain"
                   style={{
                     width: DeviceHeigth >= 1024 ? 100 : 70,
                     height: DeviceHeigth >= 1024 ? 250 : 80,
-                    right: DeviceHeigth >= 1024 ? 0 : DeviceHeigth * 0.08,
+                    right: DeviceHeigth >= 1024 ? 0 : DeviceHeigth >=812?DeviceHeigth * 0.06:DeviceHeigth * 0.07,
                     top: DeviceHeigth >= 1024 ? -10 : 50,
                   }}
                 />

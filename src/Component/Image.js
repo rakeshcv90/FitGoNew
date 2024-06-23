@@ -5,6 +5,7 @@ export const localImage = {
   EYE1: require('../Icon/Images/NewImage/eye1.png'),
   FACEBOOK: require('../Icon/Images/NewImage/facebook.png'),
   GOOGLE: require('../Icon/Images/NewImage/google.png'),
+  GOOGLE1: require('../Icon/Images/NewImage/google1.png'),
   PROFILE: require('../Icon/Images/NewImage/Profile.png'),
   GENDER: require('../Icon/Images/NewImage/Gender.png'),
   PathChargeLevel: require('../Icon/Images/NewImage/PathChargeLevel.png'),

@@ -253,7 +253,7 @@ const Banners = ({
         key={index}
         onPress={() => handleEventClicks(index)}
         style={{
-          height: DeviceHeigth * 0.18,
+          height: DeviceHeigth * 0.15,
           width:
             imageSource?.length > 1 ? DeviceWidth * 0.9 : DeviceWidth * 0.95,
           alignSelf: 'center',
@@ -264,7 +264,7 @@ const Banners = ({
         {loading && (
           <ShimmerPlaceholder
             style={{
-              height: DeviceHeigth * 0.18,
+              height: DeviceHeigth * 0.15,
               width:
                 imageSource?.length > 1
                   ? DeviceWidth * 0.9

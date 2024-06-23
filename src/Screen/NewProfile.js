@@ -86,13 +86,16 @@ const NewProfile = ({navigation}) => {
       KeepAwake.deactivate();
     }
   }, [getScreenAwake]);
-  
+
   const CardData = [
     {
       id: 1,
       txt: 'Daily Reminder',
       img: localImage.Bell,
-      txt1: moment(notificationTimer).format('LT')=='Invalid date'?'1:00 AM':moment(notificationTimer).format('LT'),
+      txt1:
+        moment(notificationTimer).format('LT') == 'Invalid date'
+          ? '1:00 AM'
+          : moment(notificationTimer).format('LT'),
     },
     {
       id: 2,
@@ -110,7 +113,10 @@ const NewProfile = ({navigation}) => {
       id: 1,
       txt: 'Reminder',
       img: localImage.Bell,
-      txt1: moment(notificationTimer).format('LT')=='Invalid date'?'1:00 AM':moment(notificationTimer).format('LT'),
+      txt1:
+        moment(notificationTimer).format('LT') == 'Invalid date'
+          ? '1:00 AM'
+          : moment(notificationTimer).format('LT'),
     },
     {
       id: 2,
@@ -124,7 +130,7 @@ const NewProfile = ({navigation}) => {
       setVisible(true);
     } else if (id == 2) {
       AnalyticsConsole(`SUBSCRIPTION_BUTTON`);
-      navigation.navigate('NewSubscription',{upgrade: false});
+      navigation.navigate('NewSubscription', {upgrade: false});
     } else if (id == 3) {
       AnalyticsConsole(`PERSO_DETAILS_BUTTON`);
       navigation.navigate('NewPersonalDetails');
@@ -296,7 +302,7 @@ const NewProfile = ({navigation}) => {
     //   }
     // };
     const getUserDetailDataApi = async userId => {
-       console.log('Hello Api called--->',)
+      console.log('Hello Api called--->');
       try {
         const responseData = await axios.get(
           `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
@@ -315,7 +321,7 @@ const NewProfile = ({navigation}) => {
           });
         } else {
           dispatch(setUserProfileData(responseData?.data?.profile));
-          console.log('userdata',responseData?.data?.profile)
+          console.log('userdata', responseData?.data?.profile);
         }
       } catch (error) {
         console.log('GET-USER-DATA', error);
@@ -353,9 +359,9 @@ const NewProfile = ({navigation}) => {
             floating: true,
             icon: {icon: 'auto', position: 'left'},
           });
-         // getProfileData(getUserDataDetails?.id);
+          // getProfileData(getUserDataDetails?.id);
           // getUserDetailDataApi(getUserDataDetails?.id)
-          console.log("----data",getUserDataDetails.image_path)
+          console.log('----data', getUserDataDetails.image_path);
           setImguploaded(true);
           if (IsimgUploaded == true) {
             setUpadteScreenVisibilty(false);
@@ -382,14 +388,13 @@ const NewProfile = ({navigation}) => {
             maxWidth: 500,
             maxHeight: 400,
           });
-          
+
           if (resultCamera) {
             setUserAvatar(resultCamera.assets[0]);
             setModalImageUploaded(true);
             // dispatch(setProfileImg_Data(resultCamera.assets[0]))
             // getUserDetailDataApi(getUserDataDetails?.id)
-            console.log('image--->',resultCamera.assets[0])
-
+            console.log('image--->', resultCamera.assets[0]);
           }
         } catch (error) {
           console.log('CameraimageError', error);
@@ -582,12 +587,13 @@ const NewProfile = ({navigation}) => {
                       onPress={() => {
                         AnalyticsConsole(`UPLOAD_IMAGE`);
                         setImguploaded(false);
-                        UploadImage(userAvatar).then(()=>{
-                          getUserDetailDataApi(getUserDataDetails?.id)
-                        }).catch((err)=>{
-                          console.log('some error',err)
-                        });
-                      
+                        UploadImage(userAvatar)
+                          .then(() => {
+                            getUserDetailDataApi(getUserDataDetails?.id);
+                          })
+                          .catch(err => {
+                            console.log('some error', err);
+                          });
                       }}>
                       <Text style={[styles.cameraText]}>Upload Image</Text>
                     </TouchableOpacity>
@@ -664,7 +670,7 @@ const NewProfile = ({navigation}) => {
         setModalVisible(false);
       }
     };
-    console.log("------>",getUserDataDetails?.image_path)
+    console.log('------>', getUserDataDetails?.image_path);
     return (
       <Modal
         animationType="fade"
@@ -754,127 +760,53 @@ const NewProfile = ({navigation}) => {
   return (
     <View style={styles.Container}>
       <NewHeader header={'Profile'} />
-      {getUserDataDetails.email != null ? (
-        <>
-          <View style={styles.ProfileContainer}>
-            <View style={[styles.profileView, {}]}>
-              <Image
-                source={
-                  getUserDataDetails.image_path == null
-                    ? localImage.avt
-                    : {uri: getUserDataDetails.image_path}
-                }
-                style={styles.img}
-                onLoad={() => setIsLoading(false)}
-                resizeMode="cover"
-              />
-              <TouchableOpacity
-                style={styles.pen}
-                onPress={() => setUpadteScreenVisibilty(true)}
-                activeOpacity={0.5}>
-                <Image
-                  source={localImage.NewPen}
-                  style={{height: 17, width: 15}}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={{marginLeft: 15}}>
-              <Text
-                style={{
-                  fontFamily: Fonts.MONTSERRAT_BOLD,
-                  color: AppColor.BLACK,
-                  fontSize: 20,
-                }}>
-                {getUserDataDetails?.name == null
-                  ? 'Guest'
-                  : getUserDataDetails?.name}
-              </Text>
-              <Text
-                style={{
-                  fontFamily: Fonts.MONTSERRAT_REGULAR,
-                  color: AppColor.BLACK,
-                  fontSize: 14,
-                  fontWeight: '500',
-                }}>
-                {getUserDataDetails?.email == null
-                  ? 'guest@gmail.com'
-                  : getUserDataDetails?.email}
-              </Text>
-            </View>
-          </View>
-        </>
-      ) : (
-        <>
-          <View style={{width: DeviceWidth * 0.95, paddingHorizontal: 10}}>
-            <Text
-              style={{
-                fontSize: 17,
-                fontFamily: Fonts.MONTSERRAT_BOLD,
-                color: AppColor.BLACK,
-              }}>
-              Create Profile
-            </Text>
-            <Text
-              style={{
-                fontSize: 13,
-                fontFamily: Fonts.MONTSERRAT_REGULAR,
-                marginVertical: 10,
-                color: AppColor.BLACK,
-              }}>
-              Sign Up or Log In to Save your progress.
-            </Text>
-            <View style={{flexDirection: 'row', top: 5}}>
-              <TouchableOpacity
-                onPress={() => {
-                  // navigation.navigate('LogSignUp');
-                  navigation.navigate('LogSignUp', {screen: 'Sign Up'});
-                }}
-                style={{
-                  width: 100,
-                  height: 40,
-                  backgroundColor: AppColor.RED,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 50,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                    color: AppColor.WHITE,
-                    fontWeight: '600',
-                  }}>
-                  Sign up
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  // navigation.navigate('LogSignUp');
-                  navigation.navigate('LogSignUp', {screen: 'Log In'});
-                }}
-                style={{
-                  width: 100,
-                  height: 40,
-                  // backgroundColor: 'red',
-                  marginHorizontal: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontFamily: Fonts.MONTSERRAT_REGULAR,
-                    color: AppColor.RED,
-                    fontWeight: '600',
-                  }}>
-                  Log in
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </>
-      )}
+      <View style={styles.ProfileContainer}>
+        <View style={[styles.profileView, {}]}>
+          <Image
+            source={
+              getUserDataDetails.image_path == null
+                ? localImage.avt
+                : {uri: getUserDataDetails.image_path}
+            }
+            style={styles.img}
+            onLoad={() => setIsLoading(false)}
+            resizeMode="cover"
+          />
+          <TouchableOpacity
+            style={styles.pen}
+            onPress={() => setUpadteScreenVisibilty(true)}
+            activeOpacity={0.5}>
+            <Image
+              source={localImage.NewPen}
+              style={{height: 17, width: 15}}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={{marginLeft: 15}}>
+          <Text
+            style={{
+              fontFamily: Fonts.MONTSERRAT_BOLD,
+              color: AppColor.BLACK,
+              fontSize: 20,
+            }}>
+            {getUserDataDetails?.name == null
+              ? 'Guest'
+              : getUserDataDetails?.name}
+          </Text>
+          <Text
+            style={{
+              fontFamily: Fonts.MONTSERRAT_REGULAR,
+              color: AppColor.BLACK,
+              fontSize: 14,
+              fontWeight: '500',
+            }}>
+            {getUserDataDetails?.email == null
+              ? 'guest@gmail.com'
+              : getUserDataDetails?.email}
+          </Text>
+        </View>
+      </View>
       <View style={styles.card}>
         {getUserDataDetails.email != null
           ? CardData?.map((v, i) => {
@@ -989,17 +921,17 @@ const NewProfile = ({navigation}) => {
                       AnalyticsConsole(`SOUND_ON_OFF`);
                       if (text == true) {
                         showMessage({
-                          message: 'Sound unmuted',
-                          type: 'success',
+                          message: 'Sound muted',
+                          type: 'danger',
                           animationDuration: 500,
                           floating: true,
                           icon: {icon: 'auto', position: 'left'},
                         });
                       } else {
                         showMessage({
-                          message: 'Sound muted',
+                          message: 'Sound unmuted ',
                           animationDuration: 500,
-                          type: 'danger',
+                          type: 'success',
                           floating: true,
                           icon: {icon: 'auto', position: 'left'},
                         });
