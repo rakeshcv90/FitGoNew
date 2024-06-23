@@ -11,13 +11,13 @@ const FitCoins = ({coins, onPress}) => {
       <TouchableOpacity onPress={onPress} style={styles.button}>
         <Image
           source={localImage.Trophy}
-          style={{height: 25, width: 25, marginRight: 5}}
+          style={{height: 20, width: 20, marginRight: 3}}
           resizeMode="contain"
         />
         <Text style={styles.txt}>{coins}</Text>
         <Image
           source={localImage.FitCoin}
-          style={{height: 18, width: 18}}
+          style={{height: 17, width: 17}}
           resizeMode="contain"
         />
       </TouchableOpacity>
@@ -32,10 +32,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 12,
+    paddingHorizontal: 8,
     // position: 'absolute',
     // right: 16,
-    paddingVertical: 5,
+    paddingVertical: 4,
     ...Platform.select({
       android: {
         elevation: 5,
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   },
   txt: {
     color: AppColor.WHITE,
-    fontSize: 18,
+    fontSize: 14,
     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
     marginRight: 3,
   },

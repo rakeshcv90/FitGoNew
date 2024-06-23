@@ -193,6 +193,7 @@ const MyPlans = ({navigation}: any) => {
         } else {
           setRefresh(false);
           dispatch(setPurchaseHistory(responseData?.data.event_details));
+          console.log('helloo--->',responseData?.data.event_details)
           EnteringEventFunction(
             dispatch,
             responseData?.data.event_details,

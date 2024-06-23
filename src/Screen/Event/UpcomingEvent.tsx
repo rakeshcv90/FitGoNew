@@ -79,12 +79,38 @@ const UpcomingEvent = ({navigation, route}: any) => {
       });
 
       if (res.data.message == 'Event created successfully') {
-      //  PurchaseDetails();
+        //  PurchaseDetails();
         getUserDetailData();
+      } else if (
+        res.data.message == 'Plan upgraded and new event created successfully'
+      ) {
+        //  PurchaseDetails();
+        getUserDetailData();
+      } else if (
+        res.data.message ==
+        'Plan upgraded and existing subscription updated successfully'
+      ) {
+        getUserDetailData();
+      } else if (
+        res.data.message == 'Subscription usage updated successfully'
+      ) {
+        getUserDetailData();
+      } else if (
+        res.data.message ==
+        'You have reached the maximum usage for your current subscription. Please upgrade to a higher plan.'
+      ) {
+        setLoading(false);
+        showMessage({
+          message:
+            'You have reached the maximum usage for your current subscription. Please upgrade to a higher plan.',
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+        });
       } else {
         setLoading(false);
         showMessage({
-          message: 'Some Issue In Puchase Data!',
+          message: 'Some Issue In Purchase Data!',
           type: 'danger',
           animationDuration: 500,
           floating: true,
@@ -92,7 +118,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
       }
     } catch (error) {
       setLoading(false);
-      console.log('Purchase Store Data Error', error.response, data);
+      // console.log('Purchase Store Data Error', error.response, data);
     }
   };
   // const PurchaseDetails = async () => {

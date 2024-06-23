@@ -1325,7 +1325,7 @@ const HomeNew = ({navigation}) => {
                 alignItems: 'center',
               }}
               onPress={() => {
-                navigation.navigate('IntroVideo');
+                navigation.navigate('IntroVideo',{type:'home'});
               }}>
               <AnimatedLottieView
                 source={localImage.RewardInfo}

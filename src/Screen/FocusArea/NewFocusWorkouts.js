@@ -469,6 +469,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => {
+                  
                   return (
                     <>
                       <TouchableOpacity
@@ -496,7 +497,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           style={{
                             width: 25,
                             height: 25,
-
                             top: 15,
                             left: 10,
                           }}
@@ -890,7 +890,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         style={{
                           width: '100%',
                           height: 1,
-
                           alignItems: 'center',
                           backgroundColor: '#33333314',
                         }}
@@ -905,22 +904,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
               removeClippedSubviews={true}
             />
           </View>
-          {/* <GradientButton
-            // flex={0.01}
-            text={downloaded ? `Downloading` : 'Start All Exercises'}
-            h={50}
-            colors={['#A93737', '#A93737']}
-            textStyle={styles.buttonText}
-            alignSelf
-            bR={6}
-            normalAnimation={downloaded > 0}
-            normalFill={`${100 - downloaded}%`}
-            bottm={5}
-            position={'absolute'}
-            onPress={() => {
-              Start(filterList);
-            }}
-          /> */}
           <NewButton
             position={'absolute'}
             bottom={10}

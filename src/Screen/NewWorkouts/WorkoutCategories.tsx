@@ -65,7 +65,7 @@ interface BoxProps {
   switchButton: boolean;
 }
 const WorkoutCategories = ({navigation, route}: any) => {
-  const [data, setData] = useState([]);
+  const [item, setItem] = useState();
   const {categoryExercise, CategoryDetails} = route?.params;
   const [searchValue, setSearchValue] = useState('');
   const [exercise, setExercise] = useState([]);
@@ -95,6 +95,9 @@ const WorkoutCategories = ({navigation, route}: any) => {
   useEffect(() => {
     setExercise(categoryExercise);
     setFilteredExercise(categoryExercise);
+    setDownloadProgress(0);
+    setDownloade(0);
+    setSelectedIndex(-1);
   }, []);
 
   function onLoadEnd() {
@@ -188,6 +191,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
   );
 
   const handlePress = (item: any) => {
+    setItem(item);
     if (switchButton) {
       handleItems(item, selectedExercise, setSelectedExercise);
     } else {
@@ -277,7 +281,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
                     lineHeight: 24,
                   }}>
                   {item?.exercise_title}
-                  {/* {item?.exercise_id} */}
                 </Text>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={[styles.small, {textTransform: 'capitalize'}]}>
@@ -330,11 +333,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 )}
               </TouchableOpacity>
             </TouchableOpacity>
-            <WorkoutsDescription
-              data={item}
-              open={visible}
-              setOpen={setVisible}
-            />
           </View>
         );
       },
@@ -501,40 +499,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
         key={CategoryDetails?.id}
       />
       <View style={styles.container}>
-        {/* <View
-          style={{
-            marginVertical: (DeviceWidth * 0.1) / 8,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <TextInput
-            value={searchValue}
-            placeholder="Search Exercise"
-            left={
-              <TextInput.Icon
-                icon={() => <Fontasio name="search" size={15} />}
-              />
-            }
-            underlineStyle={{
-              borderColor: '#F3F5F5',
-              borderWidth: 1,
-              borderRadius: 10,
-            }}
-            onChangeText={text => {
-              setSearchValue(text);
-              searchFunction(text);
-            }}
-            style={[
-              styles.small,
-              {
-                color: '#33333380',
-                fontSize: 14,
-                backgroundColor: '#F3F5F5',
-                width: DeviceWidth * 0.9,
-              },
-            ]}
-          />
-        </View> */}
         <View
           style={{
             width: '90%',
@@ -614,7 +578,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                   const finalExercises = exercise.filter((item: any) =>
                     selectedExercise.includes(item?.exercise_id),
                   );
-                  if (finalExercises?.length > 0) {
+                  if (finalExercises?.length > 0 && selectedIndex == -1) {
                     Start(finalExercises);
                   } else {
                     showMessage({
@@ -640,12 +604,19 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 bottm={PLATFORM_IOS ? 5 : 0}
                 bR={6}
                 // bottm={5}
-                onPress={() => setSwitchButton(true)}
+                disabled={downloadProgress > 0}
+                onPress={() => {
+                  if (downloadProgress == 0) {
+                    setSelectedIndex(-1);
+                    setSwitchButton(true);
+                  }
+                }}
               />
             )}
           </View>
         )}
       </View>
+      <WorkoutsDescription data={item} open={visible} setOpen={setVisible} />
       {/* {bannerAdsDisplay()} */}
     </SafeAreaView>
   );

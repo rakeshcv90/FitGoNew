@@ -498,7 +498,7 @@ const NewSubscription = ({navigation, route}: any) => {
       } else {
         setForLoading(false);
         showMessage({
-          message: 'Some Issue In Puchase Data!',
+          message: 'Some Issue In Purchase Data!',
           type: 'danger',
           animationDuration: 500,
           floating: true,
@@ -621,10 +621,13 @@ const NewSubscription = ({navigation, route}: any) => {
       item,
       PLATFORM_IOS ? 'title' : 'name',
     );
+    const temp =
+      item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList;
     const price: string =
       index == 2
-        ? item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList[1]
-            ?.priceAmountMicros
+        ? temp?.length == 1
+          ? temp[0]?.priceAmountMicros
+          : temp[1]?.priceAmountMicros
         : findKeyInObject(
             item,
             PLATFORM_IOS ? 'localizedPrice' : 'priceAmountMicros',

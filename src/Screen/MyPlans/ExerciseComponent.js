@@ -206,7 +206,7 @@ export const ExerciseComponentWithEvent = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
-  console.log('dayObject', dayObject);
+  // console.log('dayObject', dayObject,currentDay);
   return (
     <View style={styles.View1}>
       {dayWiseCoins[day] == null || dayWiseCoins[day] < 0 ? (

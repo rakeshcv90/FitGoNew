@@ -413,14 +413,9 @@ const Exercise = ({navigation, route}: any) => {
         setBack(true);
       }
     });
-    const unsubscribe1 = BackHandler.addEventListener(
-      'hardwareBackPress',
-      handleBackPress,
-    );
-
+   
     return () => {
       unsubscribe;
-      unsubscribe1.remove();
     };
   }, [navigation]);
   const handleBackPress = () => {

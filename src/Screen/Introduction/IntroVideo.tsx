@@ -1,10 +1,4 @@
-import {
-  ImageBackground,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {ImageBackground, StatusBar, StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import Video from 'react-native-video';
 import {AppColor, Fonts} from '../../Component/Color';
@@ -70,18 +64,25 @@ const IntroVideo = ({navigation, route}: any) => {
           bottom: -DeviceWidth * 0.2,
           position: 'absolute',
         }}
-        onEnd={() =>
-          navigation.navigate('BottomTab', {
-            screen: 'Home',
-          })
-        }
-        muted
-        resizeMode="contain"
-        onError={() => {
-          setTimeout(() => {
+        onEnd={() => {
+          if (route?.params?.type == 'home') {
             navigation.navigate('BottomTab', {
               screen: 'Home',
             });
+          } else {
+            navigation.navigate('LogSignUp', {screen: 'Log In'});
+          }
+        }}
+        resizeMode="contain"
+        onError={() => {
+          setTimeout(() => {
+            if (route?.params?.type == 'home') {
+              navigation.navigate('BottomTab', {
+                screen: 'Home',
+              });
+            } else {
+              navigation.navigate('LogSignUp', {screen: 'Log In'});
+            }
           }, 3000);
         }}
         // fullscreen
@@ -89,7 +90,7 @@ const IntroVideo = ({navigation, route}: any) => {
       {videoLoaded && (
         <Text
           onPress={() => {
-            if (route.params.type == 'homme') {
+            if (route?.params?.type == 'home') {
               navigation.navigate('BottomTab', {
                 screen: 'Home',
               });
@@ -104,7 +105,7 @@ const IntroVideo = ({navigation, route}: any) => {
             textDecorationLine: 'underline',
             color: AppColor.WHITE,
             position: 'absolute',
-            top: DeviceHeigth*0.1,
+            top: DeviceHeigth * 0.1,
             right: 16,
           }}>
           Skip
