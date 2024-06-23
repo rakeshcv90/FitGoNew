@@ -208,10 +208,6 @@ const HomeNew = ({navigation}) => {
     }, 3000);
     return () => clearTimeout(timer);
   }, []);
-  // banners
-  useEffect(() => {
-    handleBannerType();
-  }, []);
   useEffect(() => {
     if (!isAlarmEnabled) {
       notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));
@@ -227,36 +223,46 @@ const HomeNew = ({navigation}) => {
         });
       dispatch(setIsAlarmEnabled(true));
     }
-  }, [isAlarmEnabled]);3
-  const handleBannerType = () => {
-    if (getOfferAgreement?.location === 'India') {
-      if (enteredCurrentEvent && enteredUpcomingEvent) {
-        setBannertype1('ongoing_challenge');
-        setBannerType2('joined_challenge');
-      } else if (enteredCurrentEvent && !enteredUpcomingEvent) {
-        setBannertype1('ongoing_challenge');
-        setBannerType2('upcoming_challenge');
-      } else if (!enteredCurrentEvent && enteredUpcomingEvent) {
-        setBannertype1('joined_challenge');
-      } else {
-        setBannertype1('new_join');
-      }
-    } else if (getOfferAgreement?.location !== 'India') {
-      checkLocationPermission()
-        .then(result => {
-          if (!getOfferAgreement?.location) {
-            setBannertype1('new_join');
-          } else if (result === 'granted') {
-            setBannertype1('coming_soon');
-          } else if (result === 'blocked' || result === 'denied') {
+  }, [isAlarmEnabled]);
+  // banners
+  useFocusEffect(
+     useCallback(() => {
+      const handleBannerType = async () => {
+        if (getOfferAgreement?.location === 'India') {
+          if (enteredCurrentEvent && enteredUpcomingEvent) {
+            setBannertype1('ongoing_challenge');
+            setBannerType2('joined_challenge');
+          } else if (enteredCurrentEvent && !enteredUpcomingEvent) {
+            setBannertype1('ongoing_challenge');
+            setBannerType2('upcoming_challenge');
+          } else if (!enteredCurrentEvent && enteredUpcomingEvent) {
+            setBannertype1('joined_challenge');
+          } else {
             setBannertype1('new_join');
           }
-        })
-        .catch(err => {
-          setBannertype1('new_join');
-        });
-    }
-  };
+        } else {
+          try {
+            const result = await checkLocationPermission();
+            if (!getOfferAgreement?.location) {
+              setBannertype1('new_join');
+            } else if (result === 'granted') {
+              setBannertype1('coming_soon');
+            } else if (result === 'blocked' || result === 'denied') {
+              setBannertype1('new_join');
+            }
+          } catch (err) {
+            console.error('Error checking location permission:', err);
+            setBannertype1('new_join');
+          }
+        }
+      };
+      handleBannerType(); 
+      return () => {
+        
+      };
+    }, [getOfferAgreement, enteredCurrentEvent, enteredUpcomingEvent])
+  );
+  
   const getUserAllInData = async () => {
     try {
       const responseData = await axios.get(
@@ -294,7 +300,7 @@ const HomeNew = ({navigation}) => {
       dispatch(setCompleteProfileData([]));
       dispatch(setStoreData([]));
     }
-  };
+  }
   useEffect(() => {
     if (isFocused) {
       getLeaderboardDataAPI();
@@ -433,10 +439,12 @@ const HomeNew = ({navigation}) => {
           `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
         );
         dispatch(setChallengesData(responseData.data.challenge_data));
-        const challenge = responseData?.data?.challenge_data?.filter(item => item?.status == 'active');
+        const challenge = responseData?.data?.challenge_data?.filter(
+          item => item?.status == 'active',
+        );
         // console.log('challenge', challenge);
         setCurrentChallenge(challenge);
-        getCurrentDayAPI(challenge)
+        getCurrentDayAPI(challenge);
         dispatch(setAllExercise(responseData.data.data));
       } catch (error) {
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
@@ -1290,7 +1298,7 @@ const HomeNew = ({navigation}) => {
                   speed={1}
                   autoPlay
                   loop
-                  resizeMode={DeviceHeigth>=1024?"contain":"cover"}
+                  resizeMode={DeviceHeigth >= 1024 ? 'contain' : 'cover'}
                   style={{
                     width: DeviceWidth * 0.1,
                     height: DeviceHeigth * 0.07,
@@ -1326,7 +1334,7 @@ const HomeNew = ({navigation}) => {
                 speed={1}
                 autoPlay
                 loop
-                resizeMode={DeviceHeigth>=1024?"contain":"cover"}
+                resizeMode={DeviceHeigth >= 1024 ? 'contain' : 'cover'}
                 style={{
                   width: DeviceWidth * 0.15,
                   height: DeviceHeigth * 0.05,

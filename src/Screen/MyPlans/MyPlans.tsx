@@ -135,7 +135,7 @@ const MyPlans = ({navigation}: any) => {
       } else {
         WeeklyStatusAPI();
       }
-    }, [navigation]),
+    }, []),
   );
   const getAllChallangeAndAllExerciseData = async () => {
     let responseData = 0;
