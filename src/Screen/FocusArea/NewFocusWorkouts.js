@@ -8,6 +8,7 @@ import {
   Image,
   TextInput,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
@@ -683,10 +684,10 @@ const NewFocusWorkouts = ({route, navigation}) => {
     });
   };
   const handleIconPress = (item, index) => {
-    setDownloade(5);
     downloadVideos(item, index, 1).finally(() => {
       setDownloade(0);
       setDownloadProgress(0);
+      setSelectedIndex(-1);
       navigation.navigate('Exercise', {
         allExercise: [item],
         currentExercise: item,
@@ -783,8 +784,12 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         alignItems: 'center',
                       }}
                       onPress={() => {
-                        setVisible(true);
-                        setitem(item);
+                        if (!visible) {
+                          setVisible(true);
+                          setitem(item);
+                        } else {
+                          console.log(item);
+                        }
                       }}>
                       <FastImage
                         fallback={true}
@@ -833,32 +838,51 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           {item?.exercise_rest}
                         </Text>
                       </View>
-                      <TouchableOpacity
-                        style={{right: -15, padding: 2}}
-                        disabled={downloadProgress > 0}
-                        onPress={() => {
-                          if (downloadProgress > 0) {
-                          } else {
-                            setSelectedIndex(index);
-                            handleIconPress(item, index);
+                      {selectedIndex == index && downloadProgress <= 5 ? (
+                        <ActivityIndicator
+                          color={AppColor.NEW_DARK_RED}
+                          animating={
+                            selectedIndex == index && downloadProgress < 5
                           }
-                        }}>
-                        <CircularProgressBase
-                          value={selectedIndex == index ? downloadProgress : 0}
-                          radius={16}
-                          activeStrokeColor={AppColor.RED}
-                          inActiveStrokeColor={AppColor.GRAY1}
-                          activeStrokeWidth={3}
-                          inActiveStrokeWidth={3}
-                          maxValue={100}>
-                          <Icons
-                            name={'play'}
-                            size={30}
-                            opacity={0.6}
-                            color={'#333333'}
-                          />
-                        </CircularProgressBase>
-                      </TouchableOpacity>
+                          size={30}
+                          style={{right: -15, padding: 2}}
+                        />
+                      ) : (
+                        <TouchableOpacity
+                          style={{right: -15, padding: 2}}
+                          disabled={
+                            selectedIndex == index
+                          }
+                          onPress={() => {
+                            if (
+                              selectedIndex == index
+                            ) {
+                            } else {
+                              setSelectedIndex(index);
+                              setDownloade(5);
+                              console.log(selectedIndex,index,downloadProgress)
+                              handleIconPress(item, index);
+                            }
+                          }}>
+                          <CircularProgressBase
+                            value={
+                              selectedIndex == index ? downloadProgress : 0
+                            }
+                            radius={16}
+                            activeStrokeColor={AppColor.RED}
+                            inActiveStrokeColor={AppColor.GRAY1}
+                            activeStrokeWidth={3}
+                            inActiveStrokeWidth={3}
+                            maxValue={100}>
+                            <Icons
+                              name={'play'}
+                              size={30}
+                              opacity={0.6}
+                              color={'#333333'}
+                            />
+                          </CircularProgressBase>
+                        </TouchableOpacity>
+                      )}
                     </TouchableOpacity>
                     {index !== exerciseData.length - 1 && (
                       <View

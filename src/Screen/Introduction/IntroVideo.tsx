@@ -1,19 +1,36 @@
-import {ImageBackground, Platform, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {
+  ImageBackground,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import Video from 'react-native-video';
 import {AppColor, Fonts} from '../../Component/Color';
-import {DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {useSelector} from 'react-redux';
 import {ActivityIndicator} from 'react-native-paper';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {localImage} from '../../Component/Image';
+import LinearGradient from 'react-native-linear-gradient';
 
 const IntroVideo = ({navigation}: any) => {
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const [videoLoaded, setVideoLoaded] = useState(false);
   return (
-    <View style={{flex: 1}}>
-      <StatusBar barStyle={'light-content'} backgroundColor={'#ed471a'}/>
+    <LinearGradient
+      colors={['#FF5C31', '#FFA100', '#FFA100']}
+      start={{
+        x: 1,
+        y: 1,
+      }}
+      end={{
+        x: 1,
+        y: 1,
+      }}
+      style={{flex: 1}}>
+      <StatusBar barStyle={'light-content'} backgroundColor={'#ed471a'} />
       {!videoLoaded && (
         <ImageBackground
           source={localImage.Thumbnail}
@@ -23,8 +40,7 @@ const IntroVideo = ({navigation}: any) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}
-          resizeMode='stretch'
-          >
+          resizeMode="stretch">
           <View style={{height: 100, width: 100}}>
             <ActivityIndicator size={40} color={AppColor.BLACK} />
           </View>
@@ -47,19 +63,27 @@ const IntroVideo = ({navigation}: any) => {
         controls={false}
         paused={false}
         repeat={false}
-        
-        style={{flex: 1}}
+        style={{
+          width: DeviceWidth,
+          height: DeviceHeigth,
+          alignSelf: 'center',
+          bottom: -DeviceWidth * 0.2,
+          position: 'absolute',
+        }}
         onEnd={() =>
           navigation.navigate('BottomTab', {
             screen: 'Home',
           })
         }
-        resizeMode="stretch"
-        onError={() =>
-          navigation.navigate('BottomTab', {
-            screen: 'Home',
-          })
-        }
+        muted
+        resizeMode="contain"
+        onError={() => {
+          setTimeout(() => {
+            navigation.navigate('BottomTab', {
+              screen: 'Home',
+            });
+          }, 3000);
+        }}
         // fullscreen
       />
       {videoLoaded && (
@@ -76,13 +100,13 @@ const IntroVideo = ({navigation}: any) => {
             textDecorationLine: 'underline',
             color: AppColor.WHITE,
             position: 'absolute',
-            top:Platform.OS=='ios'?40:10,
+            top: DeviceHeigth*0.1,
             right: 16,
           }}>
           Skip
         </Text>
       )}
-    </View>
+    </LinearGradient>
   );
 };
 

@@ -136,13 +136,13 @@ const Workouts = ({navigation}: any) => {
     },
     {
       id: 232,
-      title: 'Sweat &shine',
+      title: 'Sweat & Shine',
       image: require('../../Icon/Images/WorkoutCategories/sweat.png'),
       category: 'Chest/Back/Fourarms/Biceps/Triceps',
     },
     {
       id: 233,
-      title: 'Tummy toners',
+      title: 'Tummy Toners',
       image: require('../../Icon/Images/WorkoutCategories/Tummy_Toning.png'),
       category: 'Abs/Back/Legs/Cardio',
     },

@@ -621,10 +621,14 @@ const NewSubscription = ({navigation, route}: any) => {
       item,
       PLATFORM_IOS ? 'title' : 'name',
     );
-    const price: string = findKeyInObject(
-      item,
-      PLATFORM_IOS ? 'localizedPrice' : 'priceAmountMicros',
-    );
+    const price: string =
+      index == 2
+        ? item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList[1]
+            ?.priceAmountMicros
+        : findKeyInObject(
+            item,
+            PLATFORM_IOS ? 'localizedPrice' : 'priceAmountMicros',
+          );
     const normalizedPrice = PLATFORM_IOS
       ? price.replace(/\s/g, '')
       : `₹${(parseInt(price) / 1000000).toString()}`;
@@ -651,8 +655,6 @@ const NewSubscription = ({navigation, route}: any) => {
         {Array(80).fill('- ')}
       </Text>
     );
-    // !PLATFORM_IOS &&
-    // console.log('planName', planName,getPurchaseHistory?.plan);
     return (
       <View
         style={{
@@ -1172,78 +1174,6 @@ const NewSubscription = ({navigation, route}: any) => {
               </Text>{' '}
             </Text>
           </View>
-          {/* <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <TouchableOpacity
-              style={{marginRight: 5}}
-              onPress={() => setCurrentSelected(0)}>
-              <View
-                style={{
-                  borderTopLeftRadius: 10,
-                  borderTopRightRadius: 10,
-                  borderBottomLeftRadius: currentSelected == 0 ? 0 : 10,
-                  borderBottomRightRadius: currentSelected == 0 ? 0 : 10,
-                  height: 100,
-                  backgroundColor: 'red',
-                  width: DeviceWidth / 4,
-                }}
-              />
-              <View
-                style={{
-                  backgroundColor: currentSelected == 0 ? 'red' : 'white',
-                  width: DeviceWidth / 4,
-                  height: 10,
-                }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={{}} onPress={() => setCurrentSelected(1)}>
-              <View
-                style={{
-                  borderTopLeftRadius: 10,
-                  borderTopRightRadius: 10,
-                  borderBottomLeftRadius: currentSelected == 1 ? 0 : 10,
-                  borderBottomRightRadius: currentSelected == 1 ? 0 : 10,
-                  height: 100,
-                  backgroundColor: 'blue',
-                  width: DeviceWidth / 4,
-                }}
-              />
-              <View
-                style={{
-                  backgroundColor: currentSelected == 1 ? 'blue' : 'white',
-                  width: DeviceWidth / 4,
-                  height: 10,
-                }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{marginRight: 5}}
-              onPress={() => setCurrentSelected(2)}>
-              <View
-                style={{
-                  borderTopLeftRadius: 10,
-                  borderTopRightRadius: 10,
-                  borderBottomLeftRadius: currentSelected == 2 ? 0 : 10,
-                  borderBottomRightRadius: currentSelected == 2 ? 0 : 10,
-                  height: 100,
-                  backgroundColor: 'green',
-                  width: DeviceWidth / 4,
-                }}
-              />
-              <View
-                style={{
-                  backgroundColor: currentSelected == 2 ? 'green' : 'white',
-                  width: DeviceWidth / 4,
-                  height: 10,
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-          <Test /> */}
         </ScrollView>
       </View>
       {loading && <ActivityLoader visible={loading} />}

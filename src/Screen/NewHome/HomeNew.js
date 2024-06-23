@@ -673,7 +673,7 @@ const HomeNew = ({navigation}) => {
         <View style={styles.modalContainer}>
           <View
             style={{
-              height: DeviceWidth,
+              height: DeviceHeigth * 0.5,
               width: DeviceWidth * 0.8,
               backgroundColor: AppColor.WHITE,
               borderRadius: 10,
@@ -720,11 +720,11 @@ const HomeNew = ({navigation}) => {
                 color: AppColor.HEADERTEXTCOLOR,
                 fontWeight: '600',
                 fontFamily: Fonts.MONTSERRAT_REGULAR,
-                lineHeight: 20,
+                lineHeight: 24,
                 textAlign: 'center',
                 marginHorizontal: DeviceWidth * 0.1,
               }}>
-              Please allow us to access your location services
+              {`Please allow required permissions to use the app. Go to App->Permissions and enable all Permissions.`}
             </Text>
             <GradientButton
               text="Enable Location Services"
@@ -736,7 +736,7 @@ const HomeNew = ({navigation}) => {
               }}
               // flex={0.3}
               w={DeviceWidth * 0.7}
-              mB={-DeviceWidth * 0.1}
+              mB={-DeviceWidth * 0.05}
               alignSelf
             />
             <GradientButton
