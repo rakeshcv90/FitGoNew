@@ -2053,16 +2053,23 @@ const HomeNew = ({navigation}) => {
           </Text>
         </View>
         <View
-          style={{
-            width: '100%',
-            alignSelf: 'center',
-            backgroundColor: 'white',
-            top:
+          // style={{
+          //   // width: '100%',
+          //   // alignSelf: 'center',
+          //   // backgroundColor: 'white',
+          //   // top:
+          //   //   Platform.OS == 'android'
+          //   //     ? DeviceHeigth * 0.03
+          //   //     : DeviceHeigth * 0.06,
+          //   // alignItems: 'center',
+          // }}
+          style={[styles.meditionBox,{
+                      top:
               Platform.OS == 'android'
                 ? DeviceHeigth * 0.03
-                : DeviceHeigth * 0.06,
-            alignItems: 'center',
-          }}>
+               : DeviceHeigth * 0.06,
+          }]}
+          >
           <FlatList
             data={fitnessInstructor}
             horizontal

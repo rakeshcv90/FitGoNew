@@ -2,7 +2,7 @@ import {View, Text, TouchableOpacity, Image, Platform} from 'react-native';
 import React from 'react';
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {StyleSheet} from 'react-native';
-import {AppColor, PLATFORM_IOS} from './Color';
+import {AppColor, Fonts, PLATFORM_IOS} from './Color';
 import LinearGradient from 'react-native-linear-gradient';
 import {localImage} from './Image';
 
@@ -16,14 +16,16 @@ const Button2 = ({buttonText, onFBPress, onGooglePress, onApplePress}) => {
       }}>
       {Platform.OS == 'android' ? (
         <TouchableOpacity
-          style={[styles.buttonStyle, ]}
+          style={[styles.buttonStyle, {flexDirection:'row'}]}
           activeOpacity={0.5}
           onPress={onGooglePress}>
+
           <Image
             source={localImage.GOOGLE}
-            style={{width: DeviceWidth * 0.4, height: DeviceHeigth * 0.035}}
+            style={{width: DeviceWidth * 0.12, height: DeviceHeigth * 0.035,left:-5}}
             resizeMode="contain"
           />
+          <Text style={{fontSize:16,fontWeight:'600',fontFamily:Fonts.MONTSERRAT_SEMIBOLD}}>Continue With Google</Text>
         </TouchableOpacity>
       ) : (
         <View
