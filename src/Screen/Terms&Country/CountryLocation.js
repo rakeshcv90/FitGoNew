@@ -12,7 +12,7 @@ import VersionNumber from 'react-native-version-number';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   setOfferAgreement,
-  setRewardModal,
+
 } from '../../Component/ThemeRedux/Actions';
 import {Image} from 'react-native';
 import ActivityLoader from '../../Component/ActivityLoader';
@@ -42,7 +42,7 @@ const CountryLocation = ({navigation, route}) => {
           setLoaded(true);
         } else if (result) {
           StoreAgreementApi(result);
-          dispatch(setRewardModal(true));
+          
         } else if (!result) {
           setLocationP(true);
           setLoaded(true);

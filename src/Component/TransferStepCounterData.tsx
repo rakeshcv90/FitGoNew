@@ -172,7 +172,7 @@ const PedometerNotificationAPI = async (
         // version: 1.1,
       },
     });
-    console.log('RETURN OF API', totalSteps, res.data);
+   
     if (res?.data?.msg == 'Please update the app to the latest version.') {
     } else {
       TotalCalPostAPI(user_id);

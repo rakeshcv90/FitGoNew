@@ -66,7 +66,7 @@ import {
   setOfferAgreement,
   setPlanType,
   setPurchaseHistory,
-  setRewardModal,
+
   setStepCounterOnOff,
   setWinnerAnnounced,
   setStoreData,
@@ -143,6 +143,7 @@ const HomeNew = ({navigation}) => {
   const getRewardModalStatus = useSelector(
     state => state?.getRewardModalStatus,
   );
+  console.log("ZXCXZxczxc123",getRewardModalStatus)
   const isAlarmEnabled = useSelector(state => state.isAlarmEnabled);
   const colors = [
     {color1: '#E3287A', color2: '#EE7CBA'},
@@ -159,7 +160,7 @@ const HomeNew = ({navigation}) => {
       languageId:
         Platform.OS == 'android'
           ? 'hi-in-x-hia-local'
-          : 'com-apple.voice.compact.el-GR.Melina',
+          : 'com.apple.ttsbundle.Moira-compact',
     },
     {
       id: 2,
@@ -169,7 +170,7 @@ const HomeNew = ({navigation}) => {
       languageId:
         Platform.OS == 'android'
           ? 'en-us-x-iol-local'
-          : 'com-apple.voice.compact.en-IN.Rishi',
+          : 'com.apple.ttsbundle.Daniel-compact',
     },
     {
       id: 3,
@@ -179,7 +180,7 @@ const HomeNew = ({navigation}) => {
       languageId:
         Platform.OS == 'android'
           ? 'en-us-x-iol-local'
-          : 'com-apple.voice.compact.en-IN.Rishi',
+          : 'com.apple.ttsbundle.siri_male_de-DE_compact',
     },
     {
       id: 4,
@@ -189,7 +190,7 @@ const HomeNew = ({navigation}) => {
       languageId:
         Platform.OS == 'android'
           ? 'en-in-x-ene-network'
-          : 'com-apple.speech.synthesis.voice.Ralph',
+          : 'com.apple.ttsbundle.siri_male_fr-FR_compact',
     },
     {
       id: 5,
@@ -199,7 +200,7 @@ const HomeNew = ({navigation}) => {
       languageId:
         Platform.OS == 'android'
           ? 'es-us-x-sfb-local'
-          : 'com-apple.voice.compact.en-AU.Karen',
+          : 'com.apple.ttsbundle.Karen-compact',
     },
   ];
   useEffect(() => {
@@ -208,6 +209,7 @@ const HomeNew = ({navigation}) => {
     }, 3000);
     return () => clearTimeout(timer);
   }, []);
+
   useEffect(() => {
     if (!isAlarmEnabled) {
       notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));
@@ -2264,7 +2266,8 @@ const HomeNew = ({navigation}) => {
       </ScrollView>
       {modalVisible ? <UpdateGoalModal /> : null}
       <PermissionModal locationP={locationP} setLocationP={setLocationP} />
-      {/* <RewardModal navigation={navigation} visible={showRewardModal}/> */}
+
+      <RewardModal navigation={navigation} visible={getRewardModalStatus}/>
       <LocationPermissionModal
         locationP={locationP1}
         setLocationP={setLocationP1}

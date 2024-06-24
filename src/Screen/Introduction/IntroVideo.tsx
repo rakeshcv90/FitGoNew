@@ -15,17 +15,19 @@ const IntroVideo = ({navigation, route}: any) => {
   return (
     <LinearGradient
       colors={['#FF5C31', '#FFA100', '#FFA100']}
-      start={{
-        x: 1,
-        y: 1,
-      }}
-      end={{
-        x: 1,
-        y: 1,
-      }}
+      // start={{
+      //   x: 1,
+      //   y: 1,
+      // }}
+      // end={{
+      //   x: 1,
+      //   y: 0,
+      // }}
+      start={{x: 1, y: 0}}
+      end={{x: 0, y: 1}}
       style={{flex: 1}}>
       <StatusBar barStyle={'light-content'} backgroundColor={'#ed471a'} />
-      {!videoLoaded && (
+      {/* {!videoLoaded && (
         <ImageBackground
           source={localImage.Thumbnail}
           style={{
@@ -110,7 +112,7 @@ const IntroVideo = ({navigation, route}: any) => {
           }}>
           Skip
         </Text>
-      )}
+      )} */}
     </LinearGradient>
   );
 };

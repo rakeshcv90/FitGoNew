@@ -27,6 +27,8 @@ import {
   DeleteWeeklyDataAPIStart,
   StepcountNoticationStart,
 } from './src/Component/TransferStepCounterData';
+import {setRewardModal} from './src/Component/ThemeRedux/Actions';
+import { OpenRewardModal } from './src/Component/utils';
 
 notifee.createChannel({
   id: 'Time',
@@ -109,7 +111,7 @@ notifee.createChannel({
   sound: 'fitme_notification',
 });
 const DisplayNotification = async Notification => {
-  console.log('NOTIFICATION', Notification.data?.type);
+
   const cleanedTitle = removeHtmlTags(Notification?.data?.message);
   try {
     if (
@@ -176,15 +178,22 @@ const DisplayNotification = async Notification => {
   }
   if (Notification.data?.type == 'delete_notification') {
     DeleteWeeklyDataAPIStart();
+  }else if (Notification.data?.type == 'event_monday') {
+    console.log('Kill NOTIFUCATION', Notification.data?.type );
+    store.dispatch(setRewardModal(true));
   } else {
+    console.log('dfsdfsdfds', Notification.data);
     StepcountNoticationStart();
   }
 };
 messaging().getInitialNotification(async remoteMessage => {
   // DisplayNotification(remoteMessage);
-  console.log('Kill NOTIFUCATION', remoteMessage);
+  
   if (remoteMessage.data?.type == 'delete_notification') {
     DeleteWeeklyDataAPIStart();
+  } else if (remoteMessage.data?.type == 'event_monday') {
+    console.log('Kill NOTIFUCATION', remoteMessage.data?.type );
+   store.dispatch(setRewardModal(true));
   } else {
     StepcountNoticationStart();
   }

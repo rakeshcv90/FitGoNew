@@ -102,14 +102,14 @@ const NewFocusWorkouts = ({route, navigation}) => {
       ima: require('../../Icon/Images/NewImage2/calves.png'),
       exCount: getExerciseCount?.exCount1 ?? 0,
     },
+    // {
+    //   id: 2,
+    //   title: 'Quads',
+    //   ima: require('../../Icon/Images/NewImage2/quards.png'),
+    //   exCount: getExerciseCount?.exCount2 ?? 0,
+    // },
     {
       id: 2,
-      title: 'Quads',
-      ima: require('../../Icon/Images/NewImage2/quards.png'),
-      exCount: getExerciseCount?.exCount2 ?? 0,
-    },
-    {
-      id: 3,
       title: 'Calves',
       ima: require('../../Icon/Images/NewImage2/calves.png'),
       exCount: getExerciseCount?.exCount3 ?? 0,
@@ -362,8 +362,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
               borderTopLeftRadius: 10,
               borderTopRightRadius: 10,
               height:
-                route?.params?.focusedPart == 'Upper Body' ||
-                route?.params?.focusedPart == 'Lower Body'
+                route?.params?.focusedPart == 'Upper Body'
                   ? DeviceHeigth >= 1024
                     ? DeviceHeigth * 0.45
                     : DeviceHeigth >= 856
@@ -406,7 +405,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
               <TouchableOpacity
                 activeOpacity={0.7}
                 onPress={() => {
-                  handleFilterVisibilty()
+                  handleFilterVisibilty();
                   refStandard.current.close();
                   setFilterCriteria(
                     determineFilterCriteria(
@@ -469,7 +468,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => {
-                  
                   return (
                     <>
                       <TouchableOpacity
@@ -851,17 +849,17 @@ const NewFocusWorkouts = ({route, navigation}) => {
                       ) : (
                         <TouchableOpacity
                           style={{right: -15, padding: 2}}
-                          disabled={
-                            selectedIndex == index
-                          }
+                          disabled={selectedIndex == index}
                           onPress={() => {
-                            if (
-                              selectedIndex == index
-                            ) {
+                            if (selectedIndex == index) {
                             } else {
                               setSelectedIndex(index);
                               setDownloade(5);
-                              console.log(selectedIndex,index,downloadProgress)
+                              console.log(
+                                selectedIndex,
+                                index,
+                                downloadProgress,
+                              );
                               handleIconPress(item, index);
                             }
                           }}>
