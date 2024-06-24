@@ -21,7 +21,6 @@ import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import FitText from '../../Component/Utilities/FitText';
 import {openSettings} from 'react-native-permissions';
 import {LocationPermissionModal} from '../../Component/Utilities/LocationPermission';
-import {Screen} from 'react-native-screens';
 
 const CountryLocation = ({navigation, route}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);

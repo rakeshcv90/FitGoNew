@@ -196,8 +196,8 @@ const DisplayNotification = async Notification => {
   }
   if (Notification.data?.type == 'delete_notification') {
     DeleteWeeklyDataAPIStart();
-  } else if (remoteMessage.data?.type == 'event_saturday') {
-    console.log('FORE NOTIFUCATION', remoteMessage.data?.type);
+  } else if (Notification.data?.type == 'event_saturday') {
+    console.log('FORE NOTIFUCATION', Notification.data?.type);
     getLeaderboardDataAPI();
   } else if (Notification.data?.type == 'event_monday') {
     console.log('FORE NOTIFUCATION', Notification.data?.type);

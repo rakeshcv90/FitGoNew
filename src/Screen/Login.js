@@ -1212,7 +1212,7 @@ const Login = ({navigation}) => {
               </TouchableOpacity>
             </>
           )}
-          {Platform.OS == 'android' &&<View style={{top:-20}}><Button2 onGooglePress={GoogleSignup} /></View> }
+          {Platform.OS == 'android' &&<View style={{top:-10}}><Button2 onGooglePress={GoogleSignup} /></View> }
         </View>
         {/* <View style={{marginTop: DeviceHeigth * 0.02, paddingBottom: 10}}>
        

@@ -289,17 +289,11 @@ const WorkoutCategories = ({navigation, route}: any) => {
                   </Text>
                 </View>
               </View>
-              <TouchableOpacity
-                disabled={isItemDownload}
-                onPress={() => {
-                  if (isItemDownload || downloadProgress > 0) {
-                  } else {
-                    setSelectedIndex(index);
-                    setDownloadProgress(5);
+              {switchButton ? (
+                <TouchableOpacity
+                  onPress={() => {
                     handleIconPress(item, index);
-                  }
-                }}>
-                {switchButton ? (
+                  }}>
                   <View
                     style={[
                       styles.boxIconView,
@@ -314,25 +308,38 @@ const WorkoutCategories = ({navigation, route}: any) => {
                     ]}>
                     {isSelected && <Font name="check" color="white" />}
                   </View>
-                ) : isItemDownload && downloadProgress <= 5 ? (
-                  <ActivityIndicator
-                    color={AppColor.NEW_DARK_RED}
-                    animating={isItemDownload && downloadProgress <= 5}
-                    size={30}
-                  />
-                ) : (
-                  <CircularProgressBase
-                    value={isItemDownload ? downloadProgress : 0}
-                    radius={14}
-                    activeStrokeColor={AppColor.RED}
-                    inActiveStrokeColor="#33333399"
-                    activeStrokeWidth={2}
-                    inActiveStrokeWidth={2}
-                    maxValue={100}>
-                    <Icons name={'play'} size={25} color={'#33333399'} />
-                  </CircularProgressBase>
-                )}
-              </TouchableOpacity>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  disabled={isItemDownload}
+                  onPress={() => {
+                    if (isItemDownload || downloadProgress > 0) {
+                    } else {
+                      setSelectedIndex(index);
+                      setDownloadProgress(5);
+                      handleIconPress(item, index);
+                    }
+                  }}>
+                  {isItemDownload && downloadProgress <= 5 ? (
+                    <ActivityIndicator
+                      color={AppColor.NEW_DARK_RED}
+                      animating={isItemDownload && downloadProgress <= 5}
+                      size={30}
+                    />
+                  ) : (
+                    <CircularProgressBase
+                      value={isItemDownload ? downloadProgress : 0}
+                      radius={14}
+                      activeStrokeColor={AppColor.RED}
+                      inActiveStrokeColor="#33333399"
+                      activeStrokeWidth={2}
+                      inActiveStrokeWidth={2}
+                      maxValue={100}>
+                      <Icons name={'play'} size={25} color={'#33333399'} />
+                    </CircularProgressBase>
+                  )}
+                </TouchableOpacity>
+              )}
             </TouchableOpacity>
           </View>
         );
@@ -607,7 +614,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 // bottm={5}
                 disabled={downloadProgress > 0}
                 onPress={() => {
-                  setDownloadProgress(0)
+                  setDownloadProgress(0);
                   if (downloadProgress == 0) {
                     setSelectedIndex(-1);
                     setSwitchButton(true);

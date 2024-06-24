@@ -209,4 +209,5 @@ export const localImage = {
   Splace1:require('../Icon/Images/InAppRewards/Splace1.json'),
   Splace2:require('../Icon/Images/InAppRewards/Splaace2.json'),
   Splace3:require('../Icon/Images/InAppRewards/Splac3.json'),
+  IntroJSON:require('../Icon/Images/InAppRewards/IntroJSON.json'),
 };

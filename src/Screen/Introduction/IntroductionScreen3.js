@@ -70,7 +70,7 @@ const IntroductionScreen3 = ({navigation}) => {
               navigation.navigate('IntroVideo',{type:'intro'});
             }}>
             <AnimatedLottieView
-              source={localImage.RewardInfo}
+              source={localImage.IntroJSON}
               speed={1}
               autoPlay
               loop

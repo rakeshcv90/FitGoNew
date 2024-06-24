@@ -1,7 +1,7 @@
 import {ImageBackground, StatusBar, StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import Video from 'react-native-video';
-import {AppColor, Fonts} from '../../Component/Color';
+import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {useSelector} from 'react-redux';
 import {ActivityIndicator} from 'react-native-paper';
@@ -14,7 +14,7 @@ const IntroVideo = ({navigation, route}: any) => {
   const [videoLoaded, setVideoLoaded] = useState(false);
   return (
     <LinearGradient
-      colors={['#FF5C31', '#FFA100', '#FFA100']}
+      colors={['#FF5C31', '#FF5C31', '#FF5C31', '#FFA100', '#FFA100']}
       // start={{
       //   x: 1,
       //   y: 1,
@@ -27,7 +27,7 @@ const IntroVideo = ({navigation, route}: any) => {
       end={{x: 0, y: 1}}
       style={{flex: 1}}>
       <StatusBar barStyle={'light-content'} backgroundColor={'#ed471a'} />
-      {/* {!videoLoaded && (
+      {!videoLoaded && (
         <ImageBackground
           source={localImage.Thumbnail}
           style={{
@@ -45,7 +45,7 @@ const IntroVideo = ({navigation, route}: any) => {
       <Video
         // source={{uri: getStoreVideoLoc['Fitmerewardvideo']}}
         source={{
-          uri: 'https://res.cloudinary.com/drfp9prvm/video/upload/v1718971902/IMG_179656959_rgraiy_cdg5hs.mp4',
+          uri: 'https://res.cloudinary.com/drfp9prvm/video/upload/v1719222788/IMG_179656959_rgraiy_1_kdecgs.mp4',
         }}
         onReadyForDisplay={() => {
           setVideoLoaded(true);
@@ -107,12 +107,12 @@ const IntroVideo = ({navigation, route}: any) => {
             textDecorationLine: 'underline',
             color: AppColor.WHITE,
             position: 'absolute',
-            top: DeviceHeigth * 0.1,
+            top: PLATFORM_IOS ? DeviceHeigth * 0.1 : DeviceHeigth * 0.03,
             right: 16,
           }}>
           Skip
         </Text>
-      )} */}
+      )}
     </LinearGradient>
   );
 };

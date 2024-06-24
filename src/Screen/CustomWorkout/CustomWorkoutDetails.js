@@ -573,7 +573,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               </View>
             </View>
             <TouchableOpacity
-            style={{top:10}}
+              style={{top: 10}}
               onPress={() => {
                 setIsMenuOpen(true);
               }}>
@@ -605,6 +605,8 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               maxToRenderPerBatch={10}
               updateCellsBatchingPeriod={100}
               removeClippedSubviews={true}
+              contentContainerStyle={{paddingBottom: DeviceHeigth * 0.35}}
+              showsVerticalScrollIndicator={false}
             />
           </View>
         </View>

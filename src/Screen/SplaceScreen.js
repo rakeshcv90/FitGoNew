@@ -171,7 +171,6 @@ const SplaceScreen = ({navigation}) => {
           loaded.show();
           loadScreen(agremment);
         }, 6000);
-       
       }
     }
   };
@@ -359,6 +358,7 @@ const SplaceScreen = ({navigation}) => {
   };
   return (
     <View style={styels.container}>
+      <StatusBar backgroundColor="#ec119a" barStyle={'light-content'} />
       <LinearGradient
         start={{x: 0, y: 0}}
         end={{x: 0, y: 1}}

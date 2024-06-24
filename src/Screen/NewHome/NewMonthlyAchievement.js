@@ -39,10 +39,9 @@ const NewMonthlyAchievement = ({navigation}) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
-  useFocusEffect(() => {
-    console.log('apicall')
+  useEffect(() => {
     DateWiseData(moment.utc().format('YYYY-MM-DD')); // to get the datewise data
-  }, [navigation]);
+  }, []);
   const DateWiseData = async Date1 => {
     const payload = new FormData();
     payload.append('user_id', getUserDataDetails?.id);
