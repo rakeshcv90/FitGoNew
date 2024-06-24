@@ -98,7 +98,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
     setDownloadProgress(0);
     setDownloade(0);
     setSelectedIndex(-1);
-  }, []);
+  }, [isFocused]);
 
   function onLoadEnd() {
     setIsLoading(false);

@@ -679,11 +679,12 @@ const HomeNew = ({navigation}) => {
         <View style={styles.modalContainer}>
           <View
             style={{
-              height: DeviceHeigth * 0.5,
+              // height: DeviceHeigth * 0.5,
               width: DeviceWidth * 0.8,
               backgroundColor: AppColor.WHITE,
               borderRadius: 10,
               padding: 10,
+              paddingBottom: 20,
               alignItems: 'center',
               shadowColor: 'rgba(0, 0, 0, 1)',
               ...Platform.select({
@@ -705,7 +706,7 @@ const HomeNew = ({navigation}) => {
                 fontWeight: '700',
                 fontFamily: Fonts.MONTSERRAT_MEDIUM,
                 lineHeight: 30,
-                marginTop: DeviceWidth * 0.05,
+                // marginTop: DeviceWidth * 0.05,
               }}>
               Enable Your Location
             </Text>
@@ -732,27 +733,42 @@ const HomeNew = ({navigation}) => {
               }}>
               {`Please allow required permissions to use the app. Go to App->Permissions and enable all Permissions.`}
             </Text>
-            <GradientButton
-              text="Enable Location Services"
-              onPress={() => {
-                Linking.openSettings().finally(() => {
-                  setLocationP(false);
-                  locationP();
-                });
-              }}
-              // flex={0.3}
-              w={DeviceWidth * 0.7}
-              mB={-DeviceWidth * 0.05}
-              alignSelf
-            />
-            <GradientButton
-              text="Do Not Allow"
-              flex={0}
-              w={DeviceWidth * 0.7}
-              alignSelf
-              onPress={() => setLocationP(false)}
-              colors={['#ADA4A5', '#ADA4A5']}
-            />
+            <View
+              style={{
+                height: 50,
+                width: '100%',
+                // backgroundColor: 'pink',
+                marginVertical: 20,
+              }}>
+              <GradientButton
+                text="Enable Location Services"
+                onPress={() => {
+                  Linking.openSettings().finally(() => {
+                    setLocationP(false);
+                    locationP();
+                  });
+                }}
+                // flex={0.3}
+                w={DeviceWidth * 0.7}
+                mB={-DeviceWidth * 0.05}
+                alignSelf
+              />
+            </View>
+            <View
+              style={{
+                height: 50,
+                width: '100%',
+                // backgroundColor: 'green',
+              }}>
+              <GradientButton
+                text="Do Not Allow"
+                flex={0}
+                w={DeviceWidth * 0.7}
+                alignSelf
+                onPress={() => setLocationP(false)}
+                colors={['#ADA4A5', '#ADA4A5']}
+              />
+            </View>
           </View>
         </View>
       </Modal>

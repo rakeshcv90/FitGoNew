@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {AppColor, Fonts} from '../../Component/Color';
+import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import {Image} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import RenderHTML from 'react-native-render-html';
@@ -102,7 +102,7 @@ const WorkoutsDescription = ({data, open, setOpen}: any) => {
             justifyContent: 'space-between',
             paddingLeft: 10,
             paddingRight: 10,
-            marginTop: DeviceHeigth * 0.03,
+            marginTop: PLATFORM_IOS ? DeviceHeigth * 0.06 : DeviceHeigth * 0.03,
           }}>
           <TouchableOpacity
             onPress={() => setOpen(false)}

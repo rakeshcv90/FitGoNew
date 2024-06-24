@@ -33,6 +33,7 @@ import {ClipPath, Defs, Path, Polygon, Rect, Svg} from 'react-native-svg';
 import NewProfile from '../Screen/NewProfile';
 import {AnalyticsConsole} from '../Component/AnalyticsConsole';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
+import {showMessage} from 'react-native-flash-message';
 const Tabs = createBottomTabNavigator();
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
@@ -62,18 +63,49 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
         const isValid =
           getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
         const count = getPurchaseHistory?.plan == 'noob' ? 3 : 6;
-
+        const Sat = getPurchaseHistory?.currentDay == 6;
+        const Sun = getPurchaseHistory?.currentDay == 7;
         const onPress = () => {
           AnalyticsConsole(`${route.name}_TAB`);
-          const event = navigation.emit({
-            type: 'tabPress',
-            target: route.key,
-          });
-          if (!isFocused && !event.defaultPrevented) {
-            if (getPurchaseHistory.plan != null) {
-              if (getPurchaseHistory?.plan == 'premium' && isValid) {
-                navigation.navigate(route.name);
-                Dispatch(setFitmeAdsCount(0));
+          if (route.key?.includes('MyPlans') && Sat) {
+            showMessage({
+              message:
+                'Your event has ended. You can resume your weekly plan normally from Monday. If you join another fitness challenge, it will start from the upcoming Monday.',
+              type: 'danger',
+              animationDuration: 500,
+              duration: 5000,
+              floating: true,
+            });
+          } else if (route.key?.includes('MyPlans') && Sat) {
+            showMessage({
+              message:
+                'Your event has ended. You can resume your weekly plan normally from Monday. If you join another fitness challenge, it will start from the upcoming Monday.',
+              type: 'danger',
+              animationDuration: 500,
+              duration: 5000,
+              floating: true,
+            });
+          } else if (route.key?.includes('MyPlans') && Sun) {
+            console.log(moment(getPurchaseHistory?.currentDay));
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+            });
+            if (!isFocused && !event.defaultPrevented) {
+              if (getPurchaseHistory.plan != null) {
+                if (getPurchaseHistory?.plan == 'premium' && isValid) {
+                  navigation.navigate(route.name);
+                  Dispatch(setFitmeAdsCount(0));
+                } else {
+                  if (getFitmeAdsCount < count) {
+                    Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+                    navigation.navigate(route.name);
+                  } else {
+                    showInterstitialAd();
+                    Dispatch(setFitmeAdsCount(0));
+                    navigation.navigate(route.name);
+                  }
+                }
               } else {
                 if (getFitmeAdsCount < count) {
                   Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
@@ -84,14 +116,36 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                   navigation.navigate(route.name);
                 }
               }
-            } else {
-              if (getFitmeAdsCount < count) {
-                Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-                navigation.navigate(route.name);
+            }
+          } else {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+            });
+            if (!isFocused && !event.defaultPrevented) {
+              if (getPurchaseHistory.plan != null) {
+                if (getPurchaseHistory?.plan == 'premium' && isValid) {
+                  navigation.navigate(route.name);
+                  Dispatch(setFitmeAdsCount(0));
+                } else {
+                  if (getFitmeAdsCount < count) {
+                    Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+                    navigation.navigate(route.name);
+                  } else {
+                    showInterstitialAd();
+                    Dispatch(setFitmeAdsCount(0));
+                    navigation.navigate(route.name);
+                  }
+                }
               } else {
-                showInterstitialAd();
-                Dispatch(setFitmeAdsCount(0));
-                navigation.navigate(route.name);
+                if (getFitmeAdsCount < count) {
+                  Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+                  navigation.navigate(route.name);
+                } else {
+                  showInterstitialAd();
+                  Dispatch(setFitmeAdsCount(0));
+                  navigation.navigate(route.name);
+                }
               }
             }
           }

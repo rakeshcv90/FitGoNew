@@ -154,6 +154,14 @@ const NewFocusWorkouts = ({route, navigation}) => {
       filterExercises(exerciseData, searchCriteriaRedux);
     }
   }, []);
+
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    setDownloadProgress(0);
+    setDownloade(0);
+    setSelectedIndex(-1);
+  }, [isFocused]);
+
   // filter logic
   // const filterExercises = (exercises, filterCriteria) => {
   //   let modifiedFilter = [...filterCriteria];
@@ -353,6 +361,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
         <RBSheet
           ref={refStandard}
           // draggable
+          closeOnPressMask={false}
           customModalProps={{
             animationType: 'slide',
             statusBarTranslucent: true,
@@ -469,7 +478,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({item, index}) => {
-                  
                   return (
                     <>
                       <TouchableOpacity
@@ -843,7 +851,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         <ActivityIndicator
                           color={AppColor.NEW_DARK_RED}
                           animating={
-                            selectedIndex == index && downloadProgress < 5
+                            selectedIndex == index && downloadProgress <= 5
                           }
                           size={30}
                           style={{right: -15, padding: 2}}
@@ -851,17 +859,15 @@ const NewFocusWorkouts = ({route, navigation}) => {
                       ) : (
                         <TouchableOpacity
                           style={{right: -15, padding: 2}}
-                          disabled={
-                            selectedIndex == index
-                          }
+                          disabled={selectedIndex == index}
                           onPress={() => {
                             if (
-                              selectedIndex == index
+                              selectedIndex == index ||
+                              downloadProgress > 0
                             ) {
                             } else {
                               setSelectedIndex(index);
-                              setDownloade(5);
-                              console.log(selectedIndex,index,downloadProgress)
+                              setDownloadProgress(5);
                               handleIconPress(item, index);
                             }
                           }}>
@@ -910,7 +916,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
             title={'Start Workouts'}
             withAnimation
             download={downloaded}
-            onPress={() => Start(filterList)}
+            onPress={() => {
+              if (selectedIndex == -1) Start(filterList);
+            }}
           />
           <BottomSheet />
         </>

@@ -224,6 +224,8 @@ const Banners = ({
   };
 
   const handleEventClicks = index => {
+    const Sat = getPurchaseHistory?.currentDay == 6;
+    const Sun = getPurchaseHistory?.currentDay == 7;
     if (type1 == 'new_join') {
       handleStart();
     } else if (type1 == 'coming_soon') {
@@ -235,13 +237,22 @@ const Banners = ({
         type: 'danger',
         icon: {icon: 'auto', position: 'left'},
       });
-     } else if (
+    } else if (
       type1 == 'joined_challenge' ||
       (type2 == 'joined_challenge' && index == 1)
     ) {
       navigation.navigate('UpcomingEvent', {eventType: 'current'});
     } else if (type1 == 'ongoing_challenge' && index == 0) {
-      navigation.navigate('MyPlans');
+      Sat || Sun
+        ? showMessage({
+            message:
+              'Your event has ended. You can resume your weekly plan normally from Monday. If you join another fitness challenge, it will start from the upcoming Monday.',
+            type: 'danger',
+            animationDuration: 500,
+            duration: 5000,
+            floating: true,
+          })
+        : navigation.navigate('MyPlans');
     } else if (type2 == 'upcoming_challenge' && index == 1) {
       navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
     }

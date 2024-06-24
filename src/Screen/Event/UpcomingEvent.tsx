@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import ShadowCard from '../../Component/Utilities/ShadowCard';
@@ -40,10 +40,21 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
+import TrackPlayer, {
+  Capability,
+  usePlaybackState,
+} from 'react-native-track-player';
 
 const UpcomingEvent = ({navigation, route}: any) => {
   const {eventType} = route?.params;
+  const playbackState = usePlaybackState();
 
+  const songs = [
+    {
+      id: 1,
+      url: require('../../Icon/Images/Subs_sound.wav'),
+    },
+  ];
   // let eventType = 'upcoming';
   const dispatch = useDispatch();
   const enteredUpcomingEvent = useSelector(
@@ -77,23 +88,25 @@ const UpcomingEvent = ({navigation, route}: any) => {
         },
         data,
       });
-
+      StartAudio(playbackState);
       if (res.data.message == 'Event created successfully') {
-        //  PurchaseDetails();
+        PauseAudio(playbackState);
         getUserDetailData();
       } else if (
         res.data.message == 'Plan upgraded and new event created successfully'
       ) {
-        //  PurchaseDetails();
+        PauseAudio(playbackState);
         getUserDetailData();
       } else if (
         res.data.message ==
         'Plan upgraded and existing subscription updated successfully'
       ) {
+        PauseAudio(playbackState);
         getUserDetailData();
       } else if (
         res.data.message == 'Subscription usage updated successfully'
       ) {
+        PauseAudio(playbackState);
         getUserDetailData();
       } else if (
         res.data.message ==
@@ -120,6 +133,28 @@ const UpcomingEvent = ({navigation, route}: any) => {
       setLoading(false);
       // console.log('Purchase Store Data Error', error.response, data);
     }
+  };
+  useEffect(() => {
+    setupPlayer();
+  }, []);
+  const setupPlayer = async () => {
+    try {
+      await TrackPlayer.add(songs);
+      await TrackPlayer.updateOptions({
+        capabilities: [Capability.Play, Capability.Pause],
+        compactCapabilities: [Capability.Play, Capability.Pause],
+      });
+    } catch (error) {
+      console.log('Music Player Error', error);
+    }
+  };
+  const StartAudio = async (playbackState: any) => {
+    // console.log('playbackState', playbackState);
+    await TrackPlayer.play();
+  };
+  const PauseAudio = async (playbackState: any) => {
+    // console.log('PauseState', playbackState);
+    await TrackPlayer.reset();
   };
   // const PurchaseDetails = async () => {
   //   try {
