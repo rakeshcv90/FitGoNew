@@ -244,7 +244,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
             <TouchableOpacity
               key={index}
               onPress={() => {
-                handlePress(item);
+                if (isItemDownload || downloadProgress > 0) {
+                } else handlePress(item);
               }}
               activeOpacity={switchButton ? 0.8 : 1}
               style={styles.boxContainer}>
@@ -606,6 +607,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 // bottm={5}
                 disabled={downloadProgress > 0}
                 onPress={() => {
+                  setDownloadProgress(0)
                   if (downloadProgress == 0) {
                     setSelectedIndex(-1);
                     setSwitchButton(true);

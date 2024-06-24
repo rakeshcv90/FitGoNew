@@ -198,94 +198,94 @@ const Login = ({navigation}) => {
       await GoogleSignin.signOut();
     }
   };
-  const FacebookLogin = () => {
-    analytics().logEvent('CV_FITME_FACEBOOK_LOGIN');
-    LoginManager.logInWithPermissions(['public_profile', 'email']).then(
-      function (result) {
-        if (result.isCancelled) {
-          setCancelLogin(true);
-        } else {
-          const currentProfile = Profile.getCurrentProfile().then(function (
-            currentProfile,
-          ) {
-            if (currentProfile) {
-              socialFacebookLogiIn(currentProfile);
-            }
-          });
-        }
-      },
-      function (error) {
-        alert('Login failed with error: ' + error);
-      },
-    );
-  };
-  const socialFacebookLogiIn = async value => {
-    setForLoading(true);
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.login}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          name: value.name,
-          email: value.email,
-          signuptype: 'social',
-          socialid: value.userID,
-          socialtoken: '',
-          socialtype: 'facebook',
-          version: appVersion,
-          devicetoken: getFcmToken,
-          platform: Platform.OS,
-        },
-      });
-      if (data.data.profile_status == 1) {
-        showMessage({
-          message: data.data.msg,
-          type: 'success',
-          animationDuration: 500,
+  // const FacebookLogin = () => {
+  //   analytics().logEvent('CV_FITME_FACEBOOK_LOGIN');
+  //   LoginManager.logInWithPermissions(['public_profile', 'email']).then(
+  //     function (result) {
+  //       if (result.isCancelled) {
+  //         setCancelLogin(true);
+  //       } else {
+  //         const currentProfile = Profile.getCurrentProfile().then(function (
+  //           currentProfile,
+  //         ) {
+  //           if (currentProfile) {
+  //             socialFacebookLogiIn(currentProfile);
+  //           }
+  //         });
+  //       }
+  //     },
+  //     function (error) {
+  //       alert('Login failed with error: ' + error);
+  //     },
+  //   );
+  // };
+  // const socialFacebookLogiIn = async value => {
+  //   setForLoading(true);
+  //   try {
+  //     const data = await axios(`${NewApi}${NewAppapi.login}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         name: value.name,
+  //         email: value.email,
+  //         signuptype: 'social',
+  //         socialid: value.userID,
+  //         socialtoken: '',
+  //         socialtype: 'facebook',
+  //         version: appVersion,
+  //         devicetoken: getFcmToken,
+  //         platform: Platform.OS,
+  //       },
+  //     });
+  //     if (data.data.profile_status == 1) {
+  //       showMessage({
+  //         message: data.data.msg,
+  //         type: 'success',
+  //         animationDuration: 500,
 
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setForLoading(false);
-        // getProfileData(data.data.id, data.data.profile_status);
-        getUserDetailData(data?.data?.id, data?.data?.profile_status);
-      } else if (
-        data.data.msg ==
-        'User does not exist with provided Facebook social credentials'
-      ) {
-        showMessage({
-          message: 'You are not registered. You need to SignUp first.',
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setForLoading(false);
-      } else if (
-        data.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        setForLoading(false);
-        showMessage({
-          message: data.data.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        setForLoading(false);
-        // setModalVisible(true);
-        dispatch(setCustomWorkoutData([]));
-        // getProfileData(data.data.id, data.data.profile_status);
-        getUserDetailData(data?.data?.id, data?.data?.profile_status);
-      }
-    } catch (error) {
-      setForLoading(false);
-      console.log('Facebook Signup Error', error);
-    }
-  };
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       setForLoading(false);
+  //       // getProfileData(data.data.id, data.data.profile_status);
+  //       getUserDetailData(data?.data?.id, data?.data?.profile_status);
+  //     } else if (
+  //       data.data.msg ==
+  //       'User does not exist with provided Facebook social credentials'
+  //     ) {
+  //       showMessage({
+  //         message: 'You are not registered. You need to SignUp first.',
+  //         type: 'danger',
+  //         animationDuration: 500,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       setForLoading(false);
+  //     } else if (
+  //       data.data?.msg == 'Please update the app to the latest version.'
+  //     ) {
+  //       setForLoading(false);
+  //       showMessage({
+  //         message: data.data.msg,
+  //         type: 'danger',
+  //         animationDuration: 500,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //     } else {
+  //       setForLoading(false);
+  //       // setModalVisible(true);
+  //       dispatch(setCustomWorkoutData([]));
+  //       // getProfileData(data.data.id, data.data.profile_status);
+  //       getUserDetailData(data?.data?.id, data?.data?.profile_status);
+  //     }
+  //   } catch (error) {
+  //     setForLoading(false);
+  //     console.log('Facebook Signup Error', error);
+  //   }
+  // };
   const onApplePress = async () => {
     analytics().logEvent('CV_FITME_APPLE_LOGIN');
     await appleAuth
@@ -1173,52 +1173,57 @@ const Login = ({navigation}) => {
             <View style={{width: 120, height: 1, backgroundColor: 'black'}} />
           </View>
         </KeyboardAvoidingView>
-        {/* <View
+        <View
           style={{
-            marginTop: DeviceHeigth * 0.05,
+          marginTop: DeviceHeigth * 0.03,
             paddingBottom: 10,
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-      
           {Platform.OS == 'ios' && (
-            <TouchableOpacity
-              onPress={() => {
-                onApplePress();
-              }}>
-              <Image
-                source={localImage.AppleLogo}
-                style={{width: DeviceWidth * 0.15, height: DeviceHeigth * 0.05}}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
+            <>
+              <TouchableOpacity
+                onPress={() => {
+                  GoogleSignup();
+                }}>
+                <Image
+                  source={localImage.GOOGLE}
+                  style={{
+                    width: DeviceWidth * 0.15,
+                    height: DeviceHeigth * 0.05,
+                  }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  onApplePress();
+                }}>
+                <Image
+                  source={localImage.AppleLogo}
+                  style={{
+                    width: DeviceWidth * 0.15,
+                    height: DeviceHeigth * 0.05,
+                    marginLeft:30
+                  }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </>
           )}
-
-          <TouchableOpacity
-            onPress={() => {
-              GoogleSignup();
-            }}>
-            <Image
-              source={localImage.GOOGLE}
-              style={{width: DeviceWidth * 0.15, height: DeviceHeigth * 0.05}}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-
-        </View> */}
-        <View style={{marginTop: DeviceHeigth * 0.02, paddingBottom: 10}}>
-          {Platform.OS == 'android' && (
-            <Button2 onGooglePress={GoogleSignup} onFBPress={FacebookLogin} />
-          )}
+          {Platform.OS == 'android' &&<View style={{top:-20}}><Button2 onGooglePress={GoogleSignup} /></View> }
+        </View>
+        {/* <View style={{marginTop: DeviceHeigth * 0.02, paddingBottom: 10}}>
+       
           {Platform.OS == 'ios' && (
             <Button2 onGooglePress={GoogleSignup} onApplePress={onApplePress} />
           )}
-        </View>
+        </View> */}
       </ScrollView>
       <CompleateProfileModal />
       <LoginCancelModal />
-   
+
       <ModalView />
     </SafeAreaView>
   );

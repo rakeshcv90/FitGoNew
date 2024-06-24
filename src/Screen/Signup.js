@@ -1492,47 +1492,48 @@ const Signup = ({navigation}) => {
         <View
           style={{
             marginTop: DeviceHeigth * 0.03,
-            alignSelf: 'center',
-            marginRight: -DeviceWidth * 0.01,
-          }}></View>
-
-        <View style={{marginTop: DeviceHeigth * 0.0, paddingBottom: 10}}>
-          <Button2 onGooglePress={GoogleSignup} onApplePress={onApplePress} />
-        </View>
-        {/* <View
-          style={{
-            marginTop: DeviceHeigth * 0.05,
             paddingBottom: 10,
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
-            paddingBottom: 10,
           }}>
-  
           {Platform.OS == 'ios' && (
-            <TouchableOpacity
-              onPress={() => {
-                onApplePress();
-              }}>
-              <Image
-                source={localImage.AppleLogo}
-                style={{width: DeviceWidth * 0.15, height: DeviceHeigth * 0.05}}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
+            <>
+              <TouchableOpacity
+                onPress={() => {
+                  GoogleSignup();
+                }}>
+                <Image
+                  source={localImage.GOOGLE}
+                  style={{
+                    width: DeviceWidth * 0.15,
+                    height: DeviceHeigth * 0.05,
+                  }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  onApplePress();
+                }}>
+                <Image
+                  source={localImage.AppleLogo}
+                  style={{
+                    width: DeviceWidth * 0.15,
+                    height: DeviceHeigth * 0.05,
+                    marginLeft:30
+                  }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </>
           )}
-
-          <TouchableOpacity
-            onPress={() => {
-              GoogleSignup();
-            }}>
-            <Image
-              source={localImage.GOOGLE}
-              style={{width: DeviceWidth * 0.15, height: DeviceHeigth * 0.05}}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </View> */}
+        </View>
+        {Platform.OS == 'android' && (
+          <View style={{top: -20}}>
+            <Button2 onGooglePress={GoogleSignup} />
+          </View>
+        )}
       </ScrollView>
 
       <LoginCancelModal />

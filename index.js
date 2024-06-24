@@ -27,6 +27,15 @@ import {
   DeleteWeeklyDataAPIStart,
   StepcountNoticationStart,
 } from './src/Component/TransferStepCounterData';
+import {
+  setFitCoins,
+  setRewardModal,
+  setWinnerAnnounced,
+} from './src/Component/ThemeRedux/Actions';
+import {OpenRewardModal} from './src/Component/utils';
+import {NewAppapi} from './src/Component/Config';
+import axios from 'axios';
+import VersionNumber, {appVersion} from 'react-native-version-number';
 
 notifee.createChannel({
   id: 'Time',
@@ -41,6 +50,12 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('BACKGROUND NOTIFUCATION', remoteMessage);
   if (remoteMessage.data?.type == 'delete_notification') {
     DeleteWeeklyDataAPIStart();
+  } else if (remoteMessage.data?.type == 'event_saturday') {
+    console.log('FORE NOTIFUCATION', remoteMessage.data?.type);
+    getLeaderboardDataAPI();
+  } else if (remoteMessage.data?.type == 'event_monday') {
+    console.log('FORE NOTIFUCATION', remoteMessage.data?.type);
+    store.dispatch(setRewardModal(true));
   } else {
     StepcountNoticationStart();
   }
@@ -56,6 +71,12 @@ const TriggerButtons = async (detail, type) => {
   console.log('TRI', type);
   if (notification.data?.type == 'delete_notification') {
     DeleteWeeklyDataAPIStart();
+  } else if (remoteMessage.data?.type == 'event_saturday') {
+    console.log('FORE NOTIFUCATION', remoteMessage.data?.type);
+    getLeaderboardDataAPI();
+  } else if (notification.data?.type == 'event_monday') {
+    console.log('FORE NOTIFUCATION', notification.data?.type);
+    store.dispatch(setRewardModal(true));
   } else {
     StepcountNoticationStart();
   }
@@ -109,7 +130,6 @@ notifee.createChannel({
   sound: 'fitme_notification',
 });
 const DisplayNotification = async Notification => {
-  console.log('NOTIFICATION', Notification.data?.type);
   const cleanedTitle = removeHtmlTags(Notification?.data?.message);
   try {
     if (
@@ -176,15 +196,51 @@ const DisplayNotification = async Notification => {
   }
   if (Notification.data?.type == 'delete_notification') {
     DeleteWeeklyDataAPIStart();
+  } else if (remoteMessage.data?.type == 'event_saturday') {
+    console.log('FORE NOTIFUCATION', remoteMessage.data?.type);
+    getLeaderboardDataAPI();
+  } else if (Notification.data?.type == 'event_monday') {
+    console.log('FORE NOTIFUCATION', Notification.data?.type);
+    store.dispatch(setRewardModal(true));
   } else {
+    console.log('dfsdfsdfds', Notification.data);
     StepcountNoticationStart();
+  }
+};
+
+const getLeaderboardDataAPI = async () => {
+  const getUserDataDetails = store.getState().getUserDataDetails;
+  try {
+    const result = await axios({
+      url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
+    });
+    if (result.data) {
+      const myRank = result.data?.data?.findIndex(
+        item => item?.id == getUserDataDetails?.id,
+      );
+      store.dispatch(setFitCoins(result.data?.data[myRank]?.fit_coins));
+      store.dispatch(
+        setWinnerAnnounced(
+          result.data?.winner_announced == true ? true : false,
+        ),
+      );
+      // console.log('RANK DATA', myRankData);
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
 messaging().getInitialNotification(async remoteMessage => {
   // DisplayNotification(remoteMessage);
-  console.log('Kill NOTIFUCATION', remoteMessage);
+
   if (remoteMessage.data?.type == 'delete_notification') {
     DeleteWeeklyDataAPIStart();
+  } else if (remoteMessage.data?.type == 'event_saturday') {
+    console.log('FORE NOTIFUCATION', remoteMessage.data?.type);
+    getLeaderboardDataAPI();
+  } else if (remoteMessage.data?.type == 'event_monday') {
+    console.log('Kill NOTIFUCATION', remoteMessage.data?.type);
+    store.dispatch(setRewardModal(true));
   } else {
     StepcountNoticationStart();
   }
@@ -194,6 +250,7 @@ const AppRedux = () => {
   LogBox.ignoreAllLogs();
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
+      console.log('BACKRERE', remoteMessage.data);
       DisplayNotification(remoteMessage);
     });
     return unsubscribe;

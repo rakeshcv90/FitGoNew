@@ -12,7 +12,7 @@ import {StyleSheet} from 'react-native';
 import {AppColor} from '../../Component/Color';
 import {StatusBar} from 'react-native';
 import NewHeader from '../../Component/Headers/NewHeader';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {TextInput} from 'react-native';
@@ -365,11 +365,11 @@ const AITrainer = ({navigation, route}) => {
             Tts.stop();
             navigation.goBack();
           }}>
-         <AntDesign
-              name={'arrowleft'}
-              size={25}
-              color={AppColor.INPUTTEXTCOLOR}
-            />
+          <AntDesign
+            name={'arrowleft'}
+            size={25}
+            color={AppColor.INPUTTEXTCOLOR}
+          />
         </TouchableOpacity>
 
         <Text

@@ -60,7 +60,7 @@ const intialState = {
   fitCoins: 0,
   winnerAnnounced: false,
   getBanners: {},
-  getEditedDayExercise: {} 
+  getEditedDayExercise: {},
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {

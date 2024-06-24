@@ -16,42 +16,55 @@ const Button2 = ({buttonText, onFBPress, onGooglePress, onApplePress}) => {
       }}>
       {Platform.OS == 'android' ? (
         <TouchableOpacity
-          style={[styles.buttonStyle, {flexDirection:'row'}]}
+          style={[styles.buttonStyle, {flexDirection: 'row'}]}
           activeOpacity={0.5}
           onPress={onGooglePress}>
-
           <Image
             source={localImage.GOOGLE}
-            style={{width: DeviceWidth * 0.12, height: DeviceHeigth * 0.035,left:-5}}
+            style={{
+              width: DeviceWidth * 0.12,
+              height: DeviceHeigth * 0.035,
+              left: -5,
+            }}
             resizeMode="contain"
           />
-          <Text style={{fontSize:16,fontWeight:'600',fontFamily:Fonts.MONTSERRAT_SEMIBOLD}}>Continue With Google</Text>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: '600',
+              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+              color: '#000',
+            }}>
+            Continue With Google
+          </Text>
         </TouchableOpacity>
       ) : (
         <View
           style={{
             flexDirection: 'row',
-            justifyContent: 'space-between',
-          
+            justifyContent: 'space-around',
           }}>
           <TouchableOpacity
-           onPress={onApplePress}
-            style={[styles.buttonStyle, ]}
-            activeOpacity={0.5}
-           >
+            onPress={onApplePress}
+            // style={[styles.buttonStyle]}
+            activeOpacity={0.5}>
             <Image
               source={localImage.AppleLogo}
-              style={{width: DeviceWidth * 0.4, height: DeviceHeigth * 0.035}}
+              style={{width: DeviceWidth * 0.12, height: DeviceHeigth * 0.035}}
               resizeMode="contain"
             />
           </TouchableOpacity>
+  
           <TouchableOpacity
-            style={[styles.buttonStyle,{marginLeft:10} ]}
+            //style={[styles.buttonStyle, {flexDirection: 'row'}]}
             activeOpacity={0.5}
             onPress={onGooglePress}>
             <Image
-              source={localImage.GOOGLE1}
-              style={{width: DeviceWidth * 0.4, height: DeviceHeigth * 0.035}}
+              source={localImage.GOOGLE}
+              style={{
+                width: DeviceWidth * 0.12,
+                height: DeviceHeigth * 0.035,
+              }}
               resizeMode="contain"
             />
           </TouchableOpacity>
@@ -103,7 +116,7 @@ const styles = StyleSheet.create({
     height: DeviceHeigth * 0.07,
     borderRadius: 10,
     justifyContent: 'center',
-   alignItems: 'center',
+    alignItems: 'center',
     alignSelf: 'center',
   },
 });
