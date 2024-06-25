@@ -581,6 +581,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
               normalFill={`${100 - downloaded}%`}
               // bottm={switchButton ? 0 : -5}
               bottm={switchButton ? 0 : PLATFORM_IOS ? 10 : -5}
+              disabled={downloadProgress > 0}
               onPress={() => {
                 if (switchButton) {
                   const finalExercises = exercise.filter((item: any) =>
