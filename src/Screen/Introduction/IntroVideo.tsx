@@ -73,7 +73,7 @@ const IntroVideo = ({navigation, route}: any) => {
               screen: 'Home',
             });
           } else {
-            navigation.navigate('LogSignUp', {screen: 'Log In'});
+            navigation.goBack();
           }
         }}
         resizeMode="contain"
@@ -85,7 +85,7 @@ const IntroVideo = ({navigation, route}: any) => {
                 screen: 'Home',
               });
             } else {
-              navigation.navigate('LogSignUp', {screen: 'Log In'});
+              navigation.goBack();
             }
           }, 3000);
         }}
@@ -100,7 +100,7 @@ const IntroVideo = ({navigation, route}: any) => {
                 screen: 'Home',
               });
             } else {
-              navigation.navigate('LogSignUp', {screen: 'Log In'});
+              navigation.goBack();
             }
           }}
           style={{

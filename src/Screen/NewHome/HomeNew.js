@@ -1311,7 +1311,18 @@ const HomeNew = ({navigation}) => {
             </TouchableOpacity>
           )}
         </View>
-
+        <Text
+          style={{
+            color: AppColor.HEADERTEXTCOLOR,
+            fontFamily: Fonts.MONTSERRAT_BOLD,
+            fontWeight: '600',
+            lineHeight: 21,
+            fontSize: 18,
+            width: '95%',
+            alignSelf: 'center',
+          }}>
+          Reward Zone
+        </Text>
         <Banners
           type1={BannerType1}
           type2={Bannertype2}
@@ -1563,7 +1574,9 @@ const HomeNew = ({navigation}) => {
                             fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                           },
                         ]}>
-                        {Platform.OS == 'ios' ? steps?.toFixed(0) : stepsRef.current}
+                        {Platform.OS == 'ios'
+                          ? steps?.toFixed(0)
+                          : stepsRef.current}
                         <Text
                           style={[
                             styles.monetText,

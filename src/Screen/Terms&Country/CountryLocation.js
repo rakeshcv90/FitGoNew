@@ -132,7 +132,7 @@ const CountryLocation = ({navigation, route}) => {
       <View style={styles.view1}>
         <Image
           source={localImage.location_ping}
-          style={{height: 100, width: 100, marginBottom: 15}}
+          style={{height: 250, width: 250, marginBottom: 15}}
           resizeMode="contain"
         />
         <FitText

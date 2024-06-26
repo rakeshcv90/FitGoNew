@@ -608,9 +608,10 @@ const NewSubscription = ({navigation, route}: any) => {
       item,
       PLATFORM_IOS ? 'title' : 'name',
     );
-    const temp = Platform.OS == 'ios'
-      ? []
-      : item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList;
+    const temp =
+      Platform.OS == 'ios'
+        ? []
+        : item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList;
     const price: string =
       index == 2 && Platform.OS == 'android'
         ? temp?.length == 1
@@ -664,7 +665,7 @@ const NewSubscription = ({navigation, route}: any) => {
           // getPurchaseHistory?.plan_value == null
           //   ? DeviceHeigth * 0.65
           //   : DeviceHeigth * 0.55,
-          width: DeviceWidth * 0.88,
+          width:'95%',
           alignSelf: 'center',
         }}>
         {getPurchaseHistory?.plan != null &&
@@ -969,8 +970,7 @@ const NewSubscription = ({navigation, route}: any) => {
           Platform.OS == 'android' ? DeviceHeigth * 0.02 : DeviceHeigth * 0.025
         }
         h={Platform.OS == 'ios' ? DeviceWidth * 0.15 : DeviceWidth * 0.15}
-        // shadow
-      
+        shadow
       />
       <View style={{flex: 1, marginHorizontal: 20, marginTop: 10}}>
         <ScrollView
@@ -1020,8 +1020,12 @@ const NewSubscription = ({navigation, route}: any) => {
             <Carousel
               data={sortedSubscriptions}
               keyExtractor={(_, index) => index.toString()}
-              itemWidth={DeviceWidth * 0.9}
-              sliderWidth={DeviceWidth * 0.9}
+              itemWidth={
+                DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9
+              }
+              sliderWidth={
+                DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9
+              }
               onBeforeSnapToItem={index => setCurrentSelected(index)}
               enableSnap
               activeSlideAlignment="start"
@@ -1032,7 +1036,16 @@ const NewSubscription = ({navigation, route}: any) => {
             />
           )}
 
-          <View style={styles.tabContainer}>
+          <View
+            style={[
+              styles.tabContainer,
+              {
+                height:
+                  DeviceHeigth >= 1024
+                    ? DeviceHeigth * 0.05
+                    : DeviceHeigth * 0.05,
+              },
+            ]}>
             {sortedSubscriptions?.map((item: any, index: number) => {
               return (
                 // <View style={{flex: 1,justifyContent: 'center',alignItems: 'center',}}>
@@ -1047,7 +1060,10 @@ const NewSubscription = ({navigation, route}: any) => {
                       style={[
                         styles.tabButton,
                         {
-                          height: DeviceWidth * 0.15,
+                          height:
+                            DeviceHeigth >= 1024
+                              ? DeviceHeigth * 0.05
+                              : DeviceHeigth * 0.05,
                           backgroundColor:
                             index == 0
                               ? AppColor.NEW_SUBS_BLUE
@@ -1083,7 +1099,7 @@ const NewSubscription = ({navigation, route}: any) => {
                         styles.tabButton,
                         {
                           marginVertical: 10,
-                          paddingHorizontal: 5,
+                          // paddingHorizontal: 5,
                         },
                       ]}>
                       <Text
@@ -1233,7 +1249,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
     borderRadius: 50,
     marginVertical: 20,
-    width: DeviceWidth * 0.85,
+    width: DeviceWidth * 0.88,
     alignSelf: 'center',
     shadowColor: '#121212B2',
     ...Platform.select({
