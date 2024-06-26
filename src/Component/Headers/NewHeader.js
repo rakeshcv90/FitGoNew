@@ -119,7 +119,7 @@ const NewHeader = ({
                 <ShimmerPlaceholder
                   style={{
                     
-                    height: DeviceHeigth * 0.04,
+                    height: DeviceHeigth * 0.03,
                     width: DeviceWidth * 0.2,
         
                     justifyContent: 'center',

@@ -344,7 +344,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
           </View>
         );
       },
-    [selectedExercise, switchButton, selectedIndex, downloadProgress],
+    [selectedExercise, switchButton, selectedIndex],
   );
 
   const handleBackPress = useCallback(() => {

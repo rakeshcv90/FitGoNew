@@ -108,7 +108,7 @@ const Login = ({navigation}) => {
       socialLogiIn(user, idToken);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        setCancelLogin(true);
+        // setCancelLogin(true);
       } else if (error.code === statusCodes.IN_PROGRESS) {
         // alert('Signin in progress');
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
@@ -311,7 +311,10 @@ const Login = ({navigation}) => {
           'Content-Type': 'multipart/form-data',
         },
         data: {
-          name: res.fullName.givenName + res.fullName.familyName,
+          name:
+            res.fullName.givenName == null || res.fullName.familyName == null
+              ? 'Guest'
+              : res.fullName.givenName + res.fullName.familyName,
           email: res.email,
           signuptype: 'social',
           socialid: res.user,

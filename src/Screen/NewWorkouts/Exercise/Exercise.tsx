@@ -607,6 +607,7 @@ const Exercise = ({navigation, route}: any) => {
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
+                paddingTop: DeviceWidth * 0.2
                 // marginTop: DeviceHeigth * 0.05
                 // paddingLeft: DeviceWidth / 2,
               
@@ -659,7 +660,7 @@ const Exercise = ({navigation, route}: any) => {
                 onPress={() => setBack(false)}
                 bW={1}
               />
-              <ProgreesButton
+              {/* <ProgreesButton
                 onPress={() => {
                   setPlayW(0);
                   setBack(false);
@@ -681,7 +682,7 @@ const Exercise = ({navigation, route}: any) => {
                 }}
                 bC="white"
                 bW={1}
-              />
+              /> */}
               <TouchableOpacity
                 style={{alignSelf: 'center', marginTop: 20}}
                 onPress={() => {

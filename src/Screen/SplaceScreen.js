@@ -322,7 +322,14 @@ const SplaceScreen = ({navigation}) => {
     } catch (error) {
       console.log('GET-USER-DATA', error);
       dispatch(setPurchaseHistory([]));
-      dispatch(setUserProfileData([]));
+      EnteringEventFunction(
+        dispatch,
+        [],
+        setEnteredCurrentEvent,
+        setEnteredUpcomingEvent,
+        setPlanType,
+      );
+     // dispatch(setUserProfileData([]));
       dispatch(setCustomWorkoutData([]));
       DisplayAds((response = null));
     }

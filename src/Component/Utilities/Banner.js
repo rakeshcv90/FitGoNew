@@ -92,34 +92,24 @@ const Banners = ({
       }
     } else {
       if (
-        getUserDataDetails?.social_type != null &&
-        getUserDataDetails?.signup_type != null
+        (getUserDataDetails.name?.toUpperCase() == 'GUEST' ||
+          getUserDataDetails.name == null) &&
+        getUserDataDetails.email == null
       ) {
+        setOpenEditModal(true);
+        setDatatype('both');
+      } else {
         if (
-          getUserDataDetails.name == null &&
-          getUserDataDetails.email == null
+          getUserDataDetails.name?.toUpperCase() == 'GUEST' ||
+          getUserDataDetails.name == null
         ) {
           setOpenEditModal(true);
-          setDatatype('both');
-        } else {
-          if (getUserDataDetails.name == null) {
-            setOpenEditModal(true);
-            setDatatype('name');
-          }
-          if (getUserDataDetails.email == null) {
-            setOpenEditModal(true);
-            setDatatype('email');
-          }
+          setDatatype('name');
         }
-      } else {
-        navigation.navigate('LogSignUp', {screen: 'Sign Up'});
-        showMessage({
-          message: 'You need to logIn/SignUp first',
-          floating: true,
-          duration: 500,
-          type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
-        });
+        if (getUserDataDetails.email == null) {
+          setOpenEditModal(true);
+          setDatatype('email');
+        }
       }
     }
   };

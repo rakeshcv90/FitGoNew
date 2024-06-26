@@ -73,15 +73,6 @@ const StoreScreen = ({navigation}) => {
     //filteredItems.clear()
     setForLoading(false);
   };
-  const data = [
-    require('../../Icon/Images/product_1631791758.jpg'),
-    require('../../Icon/Images/product_1631792207.jpg'),
-    require('../../Icon/Images/product_1631791758.jpg'),
-    require('../../Icon/Images/product_1631811803.jpg'),
-    require('../../Icon/Images/product_1631468947.jpg'),
-
-    require('../../Icon/Images/product_1631791758.jpg'),
-  ];
 
   // const getCaterogy = async () => {
   //   setForLoading(true);
@@ -177,12 +168,12 @@ const StoreScreen = ({navigation}) => {
       <View style={styles.container}>
         <NewHeader header={'Store'} SearchButton={false} backButton={true} />
         <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-        <ScrollView
+        {/* <ScrollView
           keyboardDismissMode="interactive"
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{flexGrow: 1}}
           style={{top: -DeviceHeigth * 0.025}}
-          keyboardShouldPersistTaps="handled">
+          keyboardShouldPersistTaps="handled"> */}
           <View
             style={{
               width: '95%',
@@ -194,7 +185,6 @@ const StoreScreen = ({navigation}) => {
               alignItems: 'center',
               paddingLeft: 10,
               top: 5,
-          
             }}>
             <Icons name="search" size={25} color={'rgba(80, 80, 80, 0.6)'} />
             <TextInput
@@ -208,7 +198,7 @@ const StoreScreen = ({navigation}) => {
               style={styles.inputText}
             />
           </View>
-
+          {/* 
           <View
             style={{
               width: '95%',
@@ -216,7 +206,6 @@ const StoreScreen = ({navigation}) => {
               borderRadius: 10,
               alignSelf: 'center',
               alignItems: 'center',
-              marginVertical: 20,
             }}>
             <SliderBox
               ImageComponent={FastImage}
@@ -253,15 +242,13 @@ const StoreScreen = ({navigation}) => {
               ImageComponentStyle={{borderRadius: 15, width: '95%'}}
               imageLoadingColor="#2196F3"
             />
-          </View>
+          </View> */}
           <View
             style={{
               width: '95%',
-
+              marginVertical: 20,
               borderRadius: 10,
               alignSelf: 'center',
-              // alignItems: 'center',
-              top: DeviceHeigth * 0.0,
             }}>
             <Text
               style={{
@@ -391,7 +378,7 @@ const StoreScreen = ({navigation}) => {
               Our Products
             </Text>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => {
                 analytics().logEvent(
                   `CV_FITME_CLICKED_ON_${'StoreProductList'}`,
@@ -409,7 +396,7 @@ const StoreScreen = ({navigation}) => {
                 }}>
                 View All
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <View
             style={{
@@ -458,9 +445,10 @@ const StoreScreen = ({navigation}) => {
               />
             ) : (
               <FlatList
-                data={productList.slice(0, 6)}
+                data={productList}
                 numColumns={3}
                 showsVerticalScrollIndicator={false}
+                contentContainerStyle={{paddingBottom: DeviceHeigth * 0.5}}
                 renderItem={({item, index}) => {
                   setListData(productList);
 
@@ -468,7 +456,7 @@ const StoreScreen = ({navigation}) => {
                     <>
                       <TouchableOpacity
                         style={styles.listItem3}
-                      activeOpacity={0.9}
+                        activeOpacity={0.9}
                         onPress={() => {
                           analytics().logEvent(
                             `CV_FITME_CLICKED_ON_${'StoreProductList'}`,
@@ -544,7 +532,6 @@ const StoreScreen = ({navigation}) => {
             )}
             {/* <View style={{height: DeviceHeigth * 0.025}} /> */}
           </View>
-        </ScrollView>
       </View>
       {/* {bannerAdsDisplay()} */}
       <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>

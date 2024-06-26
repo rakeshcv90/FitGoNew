@@ -66,7 +66,6 @@ import {
   setOfferAgreement,
   setPlanType,
   setPurchaseHistory,
-
   setStepCounterOnOff,
   setWinnerAnnounced,
   setStoreData,
@@ -376,8 +375,8 @@ const HomeNew = ({navigation}) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      dispatch(setPurchaseHistory([]));
-      dispatch(setUserProfileData([]));
+      // dispatch(setPurchaseHistory([]));
+     // dispatch(setUserProfileData([]));
       dispatch(setCustomWorkoutData([]));
     }
   };

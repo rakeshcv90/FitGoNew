@@ -226,8 +226,8 @@ const UpcomingEvent = ({navigation, route}: any) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      dispatch(setPurchaseHistory([]));
-      dispatch(setUserProfileData([]));
+      // dispatch(setPurchaseHistory([]));
+     // dispatch(setUserProfileData([]));
       dispatch(setCustomWorkoutData([]));
       setRefresh(false);
       setLoading(false);

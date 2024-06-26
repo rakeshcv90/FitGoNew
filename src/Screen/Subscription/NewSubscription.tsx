@@ -608,8 +608,8 @@ const NewSubscription = ({navigation, route}: any) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      dispatch(setPurchaseHistory([]));
-      dispatch(setUserProfileData([]));
+      // dispatch(setPurchaseHistory([]));
+      //dispatch(setUserProfileData([]));
       dispatch(setCustomWorkoutData([]));
       setRefresh(false);
     }
@@ -621,10 +621,11 @@ const NewSubscription = ({navigation, route}: any) => {
       item,
       PLATFORM_IOS ? 'title' : 'name',
     );
-    const temp =
-      item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList;
+    const temp = Platform.OS == 'ios'
+      ? []
+      : item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList;
     const price: string =
-      index == 2
+      index == 2 && Platform.OS == 'android'
         ? temp?.length == 1
           ? temp[0]?.priceAmountMicros
           : temp[1]?.priceAmountMicros

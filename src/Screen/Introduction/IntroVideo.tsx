@@ -12,6 +12,7 @@ import LinearGradient from 'react-native-linear-gradient';
 const IntroVideo = ({navigation, route}: any) => {
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [stop, setStop] = useState(false);
   return (
     <LinearGradient
       colors={['#FF5C31', '#FF5C31', '#FF5C31', '#FFA100', '#FFA100']}
@@ -43,7 +44,6 @@ const IntroVideo = ({navigation, route}: any) => {
         </ImageBackground>
       )}
       <Video
-        // source={{uri: getStoreVideoLoc['Fitmerewardvideo']}}
         source={{
           uri: 'https://res.cloudinary.com/drfp9prvm/video/upload/v1719222788/IMG_179656959_rgraiy_1_kdecgs.mp4',
         }}
@@ -57,7 +57,7 @@ const IntroVideo = ({navigation, route}: any) => {
           console.log('zero');
         }}
         controls={false}
-        paused={false}
+        paused={PLATFORM_IOS ? stop : false}
         repeat={false}
         style={{
           width: DeviceWidth,
@@ -67,6 +67,7 @@ const IntroVideo = ({navigation, route}: any) => {
           position: 'absolute',
         }}
         onEnd={() => {
+          setStop(true)
           if (route?.params?.type == 'home') {
             navigation.navigate('BottomTab', {
               screen: 'Home',
@@ -78,6 +79,7 @@ const IntroVideo = ({navigation, route}: any) => {
         resizeMode="contain"
         onError={() => {
           setTimeout(() => {
+            setStop(true)
             if (route?.params?.type == 'home') {
               navigation.navigate('BottomTab', {
                 screen: 'Home',
@@ -92,6 +94,7 @@ const IntroVideo = ({navigation, route}: any) => {
       {videoLoaded && (
         <Text
           onPress={() => {
+            setStop(true)
             if (route?.params?.type == 'home') {
               navigation.navigate('BottomTab', {
                 screen: 'Home',

@@ -134,7 +134,7 @@ const Signup = ({navigation}) => {
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // alert('Cancel');
-        setCancelLogin(true);
+        //setCancelLogin(true);
       } else if (error.code === statusCodes.IN_PROGRESS) {
         alert('Signin in progress');
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
@@ -149,7 +149,7 @@ const Signup = ({navigation}) => {
       function (result) {
         if (result.isCancelled) {
           // alert('Cancel');
-          setCancelLogin(true);
+         // setCancelLogin(true);
         } else {
           const currentProfile = Profile.getCurrentProfile().then(function (
             currentProfile,
@@ -1069,6 +1069,13 @@ const Signup = ({navigation}) => {
       dispatch(setCustomWorkoutData([]));
       navigationRef.navigate('Yourself');
       setForLoading(false);
+      EnteringEventFunction(
+        dispatch,
+        [],
+        setEnteredCurrentEvent,
+        setEnteredUpcomingEvent,
+        setPlanType,
+      );
     }
   };
   const getUserDetailData1 = async (userId, status) => {
@@ -1110,6 +1117,13 @@ const Signup = ({navigation}) => {
       dispatch(setPurchaseHistory([]));
       dispatch(setUserProfileData([]));
       dispatch(setCustomWorkoutData([]));
+      EnteringEventFunction(
+        dispatch,
+        [],
+        setEnteredCurrentEvent,
+        setEnteredUpcomingEvent,
+        setPlanType,
+      );
     }
   };
   const LoginCancelModal = () => {

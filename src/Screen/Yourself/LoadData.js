@@ -135,11 +135,11 @@ const LoadData = ({navigation}) => {
       payload.append('workout_plans', mergedObject?.workout_plans);
       payload.append('equipment', mergedObject?.equipment);
       payload.append('version', VersionNumber.appVersion);
-      if (getTempLogin) {
-        payload.append('name', mergedObject?.name);
-      } else {
-        payload.append('name', getUserDataDetails?.name);
-      }
+      // if (getTempLogin) {
+      //   payload.append('name', mergedObject?.name);
+      // } else {
+        // }
+          payload.append('name', getUserDataDetails?.name);
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {
@@ -307,8 +307,8 @@ const LoadData = ({navigation}) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      dispatch(setPurchaseHistory([]));
-      dispatch(setUserProfileData([]));
+      // dispatch(setPurchaseHistory([]));
+     // dispatch(setUserProfileData([]));
       dispatch(setCustomWorkoutData([]));
       setLoadData(100);
     }
