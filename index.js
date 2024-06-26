@@ -68,7 +68,7 @@ const TriggerButtons = async (detail, type) => {
 
   if (notification.data?.type == 'delete_notification') {
     DeleteWeeklyDataAPIStart();
-  } else if (remoteMessage.data?.type == 'event_saturday') {
+  } else if (notification.data?.type == 'event_saturday') {
     getLeaderboardDataAPI();
   } else if (notification.data?.type == 'event_monday') {
     store.dispatch(setRewardModal(true));

@@ -104,7 +104,7 @@ const Index = ({navigation, route}: any) => {
             nextScreen: screen,
           });
         }, 3000);
-      }
+    }
     } catch (error) {
       dispatch(setCompleteProfileData([]));
       setTimeout(() => {
