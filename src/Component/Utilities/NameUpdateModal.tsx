@@ -1,5 +1,6 @@
 import {
   Image,
+  KeyboardAvoidingView,
   Modal,
   Platform,
   StyleSheet,
@@ -22,7 +23,14 @@ import {
   setAgreementContent,
   setBanners,
   setCompleteProfileData,
+  setCustomWorkoutData,
+  setEnteredCurrentEvent,
+  setEnteredUpcomingEvent,
+  setOfferAgreement,
+  setPlanType,
+  setPurchaseHistory,
   setStoreData,
+  setUserProfileData,
 } from '../ThemeRedux/Actions';
 import {useDispatch} from 'react-redux';
 import {BlurView} from '@react-native-community/blur';
@@ -30,6 +38,7 @@ import VersionNumber, {appVersion} from 'react-native-version-number';
 import {AnalyticsConsole} from '../AnalyticsConsole';
 import {showMessage} from 'react-native-flash-message';
 import FitIcon from './FitIcon';
+import {EnteringEventFunction} from '../../Screen/Event/EnteringEventFunction';
 const validationSchemaBoth = Yup.object().shape({
   name: Yup.string()
     .required('Full Name must contain at least 3 characters')
@@ -78,7 +87,13 @@ const NameUpdateModal = ({
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (responseData?.data?.msg == 'version is required') {
-        console.log('version error', responseData?.data?.msg);
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         const objects = {};
         responseData.data.data.forEach((item: any) => {
@@ -112,13 +127,77 @@ const NameUpdateModal = ({
       setOpenEditModal(false);
     }
   };
+
+  const getUserDetailData = async () => {
+    try {
+      const responseData = await axios.get(
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${user_id}`,
+      );
+
+      getUserAllInData();
+      if (
+        responseData?.data?.msg ==
+        'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        showMessage({
+          message: 'Details updated successfully',
+          type: 'success',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
+        dispatch(setOfferAgreement(responseData?.data?.additional_data));
+        dispatch(setUserProfileData(responseData?.data?.profile));
+        if (responseData?.data.event_details == 'Not any subscription') {
+          dispatch(setPurchaseHistory([]));
+          EnteringEventFunction(
+            dispatch,
+            [],
+            setEnteredCurrentEvent,
+            setEnteredUpcomingEvent,
+            setPlanType,
+          );
+        } else {
+          dispatch(setPurchaseHistory(responseData?.data.event_details));
+          EnteringEventFunction(
+            dispatch,
+            responseData?.data.event_details,
+            setEnteredCurrentEvent,
+            setEnteredUpcomingEvent,
+            setPlanType,
+          );
+        }
+      }
+    } catch (error) {
+      console.log('GET-USER-DATA', error);
+      dispatch(setPurchaseHistory([]));
+      EnteringEventFunction(
+        dispatch,
+        [],
+        setEnteredCurrentEvent,
+        setEnteredUpcomingEvent,
+        setPlanType,
+      );
+      // dispatch(setUserProfileData([]));
+      dispatch(setCustomWorkoutData([]));
+      getUserAllInData();
+    }
+  };
   const UpdateAPI = async (values: any) => {
     AnalyticsConsole(`UP_${dataType}_Popup`);
     const payload = new FormData();
     values.name != '' && payload.append('name', values.name);
     payload.append('user_id', user_id);
     values.email != '' && payload.append('email', values.email);
-    // payload.append('version', '1.18');
     try {
       setVisible(true);
       const res = await axios(NewAppapi.POST_UPDATE_EMAIL_NAME, {
@@ -128,18 +207,28 @@ const NameUpdateModal = ({
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('COMPLETE', res.data, payload);
-      // ProfileDataAPI();
-      getUserAllInData();
+      console.log('PAYLOAD', payload, res.data);
+      if (res.data?.msg != 'user not exist') {
+        getUserDetailData();
+      }
     } catch (error) {
       setVisible(false);
       setOpenEditModal(false);
       console.log('ErrrrPOST NAME UPDATE', error);
+      showMessage({
+        message: 'Please try again later',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
     }
   };
   return (
     <Modal transparent visible={openEditModal}>
-      <View style={[styles.content]}>
+      <KeyboardAvoidingView
+        style={[styles.content]}
+        behavior={Platform.OS === 'ios' ? 'position' : 'height'}>
         <View
           style={[
             styles.View1,
@@ -169,7 +258,12 @@ const NameUpdateModal = ({
             }}
             resizeMode="contain"
           />
-          <FitText type="Heading" value="OOPS!!!" fontWeight="700" errorType />
+          <FitText
+            type="Heading"
+            value="OOPS!!!"
+            fontWeight="700"
+            color="#f0013b"
+          />
           <FitText
             type="Heading"
             value={`Looks like some details are missing in your registered profile. Please enter the details below:`}
@@ -272,7 +366,7 @@ const NameUpdateModal = ({
                     width: DeviceWidth * 0.6,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: AppColor.NEW_DARK_RED,
+                    backgroundColor: '#f0013b',
                     padding: 10,
                     position: 'absolute',
                     bottom: 20,
@@ -288,7 +382,7 @@ const NameUpdateModal = ({
             )}
           </Formik>
         </View>
-      </View>
+      </KeyboardAvoidingView>
       <ActivityLoader visible={visible} />
     </Modal>
   );

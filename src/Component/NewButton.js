@@ -58,8 +58,8 @@ const NewButton = ({
           backgroundColor: withAnimation
             ? isClicked
               ? 'darkgrey'
-              : buttonColor ?? AppColor.RED
-            : buttonColor ?? AppColor.RED,
+              : buttonColor ?? '#f0013b'
+            : buttonColor ?? '#f0013b',
           marginVertical: mV ?? 0,
           overflow: 'hidden', // Ensure contents don't overflow during animation
           position: position ?? 'relative',
@@ -77,7 +77,7 @@ const NewButton = ({
             styles.buttonFill,
             {
               width: `${download}%`,
-              backgroundColor: AppColor.RED, // Change fill color to RED
+              backgroundColor: '#f0013b' // Change fill color to RED
             },
           ]}
         />
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     bottom: 0,
-    backgroundColor: AppColor.RED,
+    backgroundColor: '#f0013b'
   },
   contentContainer: {
     flexDirection: 'row',

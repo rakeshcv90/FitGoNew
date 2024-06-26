@@ -590,7 +590,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 style={{
                   width: 150,
                   height: 50,
-                  backgroundColor: AppColor.NEW_DARK_RED,
+                  backgroundColor: AppColor.RED,
                   borderRadius: 6,
                   alignSelf: 'flex-end',
                   justifyContent: 'center',
@@ -795,8 +795,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         if (!visible) {
                           setVisible(true);
                           setitem(item);
-                        } else {
-                          console.log(item);
                         }
                       }}>
                       <FastImage
@@ -880,11 +878,15 @@ const NewFocusWorkouts = ({route, navigation}) => {
                             activeStrokeWidth={3}
                             inActiveStrokeWidth={3}
                             maxValue={100}>
-                            <Icons
-                              name={'play'}
-                              size={30}
-                              opacity={0.6}
-                              color={'#333333'}
+                            <Image
+                              source={localImage.ExercisePlay}
+                              tintColor={selectedIndex != index && '#565656'}
+                              resizeMode="contain"
+                              style={{
+                                width: 12,
+                                height: 12,
+                                alignSelf: 'center',
+                              }}
                             />
                           </CircularProgressBase>
                         </TouchableOpacity>

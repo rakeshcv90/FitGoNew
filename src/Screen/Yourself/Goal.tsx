@@ -166,7 +166,7 @@ const Goal = ({navigation, route}: any) => {
             <LinearGradient
               start={{x: 0, y: 1}}
               end={{x: 1, y: 0}}
-              colors={['#941000', '#D5191A']}
+              colors={[AppColor.RED,AppColor.RED]}
               style={[styles.nextButton]}>
               <Icons name="chevron-right" size={25} color={'#fff'} />
             </LinearGradient>

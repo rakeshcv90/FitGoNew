@@ -128,10 +128,7 @@ const AddWorkouts = ({route, navigation}) => {
       } else {
         setLoaded(true);
         dispatch(setEditedExercise({[day]: response?.data}));
-        console.log(
-          'responselenght',
-          response.data.exercises.map(id => id.exercise_id),
-        );
+   
         navigation.navigate('BottomTab');
       }
     } catch (error) {

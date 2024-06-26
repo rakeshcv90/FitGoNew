@@ -25,27 +25,7 @@ const TermaAndCondition = ({route}) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const {defaultTheme} = useSelector(state => state);
   const [Terms, setTerms] = useState([]);
-  // useEffect(() => {
-  //   getData();
-  // }, []);
-  // const getData = async () => {
-  //   try {
-  //     const data = await axios(
-  //       `https://fitme.cvinfotech.in/json/data_strings.php`,
-  //       {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'Multipart/form-data',
-  //         },
-  //       },
-  //     );
 
-  //     setTerms(data.data);
-  //     setIsLoaded(true);
-  //   } catch (error) {
-  //     console.log('eroror', error);
-  //   }
-  // };
 
     return (
       <View
@@ -78,53 +58,7 @@ const TermaAndCondition = ({route}) => {
           }}
           style={{flex: 1}}
         />
-        {/* <View style={{flex: 1, marginHorizontal: 8}}>
-          <FlatList
-            data={Terms}
-            showsVerticalScrollIndicator={false}
-            renderItem={elements => {
-              return (
-                <View>
-                  <HTMLRender
-                    source={{html: elements.item.st_termsofservice}}
-                    tagsStyles={
-                      (customStyle = {
-                        p: {
-                          color: defaultTheme ? '#fff' : '#000',
-                        },
-                        strong: {
-                          color: '#C8170D',
-                          fontSize: 20,
-                        },
-                      })
-                    }
-                    contentWidth={width}
-                  />
-                  <HTMLRender
-                    source={{html: elements.item.st_privacypolicy}}
-                    tagsStyles={
-                      (customStyle = {
-                        p: {
-                          color: defaultTheme ? '#fff' : '#000',
-                        },
-                        strong: {
-                          color: '#C8170D',
-                          fontSize: 20,
-                        },
-                      })
-                    }
-                    contentWidth={width}
-                  />
-                </View>
-              );
-            }}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
-            updateCellsBatchingPeriod={100}
-            removeClippedSubviews={true}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View> */}
+       
       </View>
     );
 

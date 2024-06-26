@@ -101,7 +101,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
       setLoader(false);
       if (data?.data?.msg == 'coin added successfully') {
         navigation.navigate('MyPlans');
-        console.log('TEST API DATA', data.data);
+      
       } else {
         navigation.navigate('MyPlans');
       }
@@ -235,7 +235,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
         }}>
         <Text
           style={{
-            color: AppColor.RED1,
+            color: '#f0013b',
             fontSize: 28,
             lineHeight: 40,
             fontWeight: '600',

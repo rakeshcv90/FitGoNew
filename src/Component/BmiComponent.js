@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 10,
-    backgroundColor: AppColor.RED,
+    backgroundColor: '#f0013b',
     borderRadius: 6,
   },
   modalContent: {

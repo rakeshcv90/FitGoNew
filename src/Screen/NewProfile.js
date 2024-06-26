@@ -269,40 +269,8 @@ const NewProfile = ({navigation}) => {
     const [userAvatar, setUserAvatar] = useState(null);
     const {getProfile_imgData} = useSelector(state => state);
     const [userPhoto, setUserPhoto] = useState('');
-    // const getProfileData = async user_id => {
-    //   try {
-    //     const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'multipart/form-data',
-    //       },
-    //       data: {
-    //         id: user_id,
-    //         version: VersionNumber.appVersion,
-    //       },
-    //     });
 
-    //     if (data?.data?.profile) {
-    //       dispatch(setUserProfileData(data.data.profile));
-    //     } else if (
-    //       data?.data?.msg == 'Please update the app to the latest version.'
-    //     ) {
-    //       showMessage({
-    //         message: data?.data?.msg,
-    //         floating: true,
-    //         duration: 500,
-    //         type: 'danger',
-    //         icon: {icon: 'auto', position: 'left'},
-    //       });
-    //     } else {
-    //       dispatch(setUserProfileData([]));
-    //     }
-    //   } catch (error) {
-    //     console.log('User Profile Error', error);
-    //   }
-    // };
     const getUserDetailDataApi = async userId => {
-      console.log('Hello Api called--->');
       try {
         const responseData = await axios.get(
           `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
@@ -321,7 +289,6 @@ const NewProfile = ({navigation}) => {
           });
         } else {
           dispatch(setUserProfileData(responseData?.data?.profile));
-          console.log('userdata', responseData?.data?.profile);
         }
       } catch (error) {
         console.log('GET-USER-DATA', error);
@@ -359,9 +326,7 @@ const NewProfile = ({navigation}) => {
             floating: true,
             icon: {icon: 'auto', position: 'left'},
           });
-          // getProfileData(getUserDataDetails?.id);
-          // getUserDetailDataApi(getUserDataDetails?.id)
-          console.log('----data', getUserDataDetails.image_path);
+
           setImguploaded(true);
           if (IsimgUploaded == true) {
             setUpadteScreenVisibilty(false);
@@ -392,9 +357,6 @@ const NewProfile = ({navigation}) => {
           if (resultCamera) {
             setUserAvatar(resultCamera.assets[0]);
             setModalImageUploaded(true);
-            // dispatch(setProfileImg_Data(resultCamera.assets[0]))
-            // getUserDetailDataApi(getUserDataDetails?.id)
-            console.log('image--->', resultCamera.assets[0]);
           }
         } catch (error) {
           console.log('CameraimageError', error);
@@ -670,7 +632,7 @@ const NewProfile = ({navigation}) => {
         setModalVisible(false);
       }
     };
-    console.log('------>', getUserDataDetails?.image_path);
+
     return (
       <Modal
         animationType="fade"
@@ -877,7 +839,7 @@ const NewProfile = ({navigation}) => {
                       fontFamily: Fonts.MONTSERRAT_REGULAR,
                       fontWeight: '500',
                       marginTop: 6,
-                      color: AppColor.RED1,
+                      color: '#f0013b',
                     }}>
                     {v.txt1}
                   </Text>
@@ -919,7 +881,7 @@ const NewProfile = ({navigation}) => {
                     value={getSoundOffOn}
                     onValueChange={text => {
                       AnalyticsConsole(`SOUND_ON_OFF`);
-                     
+
                       if (text == true) {
                         showMessage({
                           message: 'Sound unmuted',
@@ -952,10 +914,10 @@ const NewProfile = ({navigation}) => {
                     switchBorderRadius={30}
                     backgroundActive={'#FFE3E3'}
                     backgroundInactive={AppColor.GRAY2}
-                    circleActiveColor={AppColor.RED}
+                    circleActiveColor={'#f0013b'}
                     circleInActiveColor={AppColor.WHITE}
                     changeValueImmediately={true}
-                    outerCircleStyle={{color: AppColor.RED}}
+                    outerCircleStyle={{color: '#f0013b'}}
                   />
                 ) : (
                   <Switch
@@ -994,10 +956,10 @@ const NewProfile = ({navigation}) => {
                     switchBorderRadius={30}
                     backgroundActive={'#FFE3E3'}
                     backgroundInactive={AppColor.GRAY2}
-                    circleActiveColor={AppColor.RED}
+                    circleActiveColor={'#f0013b'}
                     circleInActiveColor={AppColor.WHITE}
                     changeValueImmediately={true}
-                    outerCircleStyle={{color: AppColor.RED}}
+                    outerCircleStyle={{color: '#f0013b'}}
                   />
                 )}
               </View>
@@ -1016,41 +978,23 @@ const NewProfile = ({navigation}) => {
           </Text>
         </View>
         <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
-          {getUserDataDetails.email != null
-            ? ListData.slice(2).map((v, i) => (
-                <TouchableOpacity
-                  key={i}
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginVertical: 10,
-                  }}
-                  onPress={() => HandleButtons(v.id, v.txt)}>
-                  <Image
-                    source={v.img}
-                    style={{height: 35, width: 35}}
-                    resizeMode="contain"
-                  />
-                  <Text style={styles.ListText}>{v.txt}</Text>
-                </TouchableOpacity>
-              ))
-            : ListData1.slice(2).map((v, i) => (
-                <TouchableOpacity
-                  key={i}
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginVertical: 10,
-                  }}
-                  onPress={() => HandleButtons(v.id, v.txt)}>
-                  <Image
-                    source={v.img}
-                    style={{height: 35, width: 35}}
-                    resizeMode="contain"
-                  />
-                  <Text style={styles.ListText}>{v.txt}</Text>
-                </TouchableOpacity>
-              ))}
+          {ListData.slice(2).map((v, i) => (
+            <TouchableOpacity
+              key={i}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginVertical: 10,
+              }}
+              onPress={() => HandleButtons(v.id, v.txt)}>
+              <Image
+                source={v.img}
+                style={{height: 35, width: 35}}
+                resizeMode="contain"
+              />
+              <Text style={styles.ListText}>{v.txt}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
         <Reminder
           visible={visible}

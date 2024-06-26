@@ -35,11 +35,7 @@ const WorkoutDetail = ({navigation, route}) => {
 
       if (!ttsStatus.isInitialized) {
         try {
-          // await Tts.setDefaultVoice(
-          //   Platform.OS == 'android'
-          //     ? 'en-GB-default'
-          //     : 'com.apple.voice.compact.en-IN.Rishi',
-          // );
+   
           await Tts.setDefaultLanguage('en-IN');
           await Tts.setDucking(true);
           await Tts.setIgnoreSilentSwitch('ignore');
@@ -48,7 +44,7 @@ const WorkoutDetail = ({navigation, route}) => {
           console.log('VoicessError', error);
         }
       }
-      // Register tts-progress event listener outside the conditional block
+     
       Tts.addEventListener('tts-progress', event => {});
     };
 

@@ -51,10 +51,10 @@ const IntroVideo = ({navigation, route}: any) => {
           setVideoLoaded(true);
         }}
         onLoad={() => {
-          console.log('first');
+         
         }}
         onLoadStart={() => {
-          console.log('zero');
+   
         }}
         controls={false}
         paused={PLATFORM_IOS ? stop : false}

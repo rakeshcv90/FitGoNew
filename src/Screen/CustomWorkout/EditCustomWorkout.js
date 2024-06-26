@@ -168,6 +168,7 @@ const EditCustomWorkout = ({navigation, route}) => {
                 source={isSelected ? localImage.Minus : localImage.Plus}
                 style={{width: 20, height: 20}}
                 resizeMode="contain"
+                tintColor={'#f0013b'}
               />
             </TouchableOpacity>
             {index !== filteredCategories.length - 1 && (
@@ -416,7 +417,7 @@ const EditCustomWorkout = ({navigation, route}) => {
                       color:
                         bodyPart != item.bodypart_title
                           ? '#333333E5'
-                          : '#A93737',
+                          : '#f0013b',
                       fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     }}>
                     {item.bodypart_title}
@@ -458,16 +459,16 @@ const EditCustomWorkout = ({navigation, route}) => {
           </View>
         </View>
         <View
-       
           style={{
-        paddingLeft:15,paddingRight:15,
+            paddingLeft: 15,
+            paddingRight: 15,
             height: 40,
             borderRadius: 30,
             justifyContent: 'center',
             alignItems: 'center',
             position: 'absolute',
             alignSelf: 'center',
-            backgroundColor: '#A93737',
+            backgroundColor: '#f0013b',
             bottom: Platform.OS == 'ios' ? 35 : 10,
           }}>
           <TouchableOpacity

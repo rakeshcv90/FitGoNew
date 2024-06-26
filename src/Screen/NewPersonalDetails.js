@@ -144,7 +144,13 @@ const NewPersonalDetails = ({route, navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (responseData?.data?.msg == 'version is required') {
-        console.log('version error', responseData?.data?.msg);
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         const objects = {};
         responseData.data.data.forEach(item => {

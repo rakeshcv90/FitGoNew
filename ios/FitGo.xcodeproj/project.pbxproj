@@ -166,6 +166,7 @@
 				2AAC3EDE2B4530CD007908D0 /* dummy.swift */,
 				2AAC3EDD2B4530CD007908D0 /* FitGo-Bridging-Header.h */,
 				2A216FF62B593B6A0064CD70 /* Launch Screen.storyboard */,
+				832341AE1AAA6A7D00B99B32 /* Libraries */,
 			);
 			name = FitGo;
 			sourceTree = "<group>";
@@ -194,7 +195,6 @@
 				2AB4A85D2C24329600F7CD92 /* fitme_notification.wav */,
 				186A6F312B1DA2D00005DC45 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* FitGo */,
-				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* FitGoTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,

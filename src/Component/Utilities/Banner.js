@@ -60,7 +60,7 @@ const Banners = ({
     }
   }, []);
   const handleStart = () => {
-    if (getUserDataDetails?.email != null) {
+    if (getUserDataDetails?.email != null && getUserDataDetails?.name != null) {
       setLoaded(false);
       if (getOfferAgreement?.location == 'India') {
         setLoaded(true);
@@ -192,7 +192,6 @@ const Banners = ({
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (responseData?.data?.msg == 'version is required') {
-        console.log('version error', responseData?.data?.msg);
       } else {
         const objects = {};
         responseData.data.data.forEach(item => {

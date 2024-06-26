@@ -109,11 +109,11 @@ const WorkoutDays = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('data------>', res.data);
+
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
         const result: any = analyzeExerciseData(res.data?.user_details);
-        console.log('------>', result, selected);
+
         if (result.two.length == 0) {
           let day = parseInt(result.one[result.one.length - 1]);
           for (const item of Object.entries(data?.days)) {
@@ -242,7 +242,6 @@ const WorkoutDays = ({navigation, route}: any) => {
       if (videoExists) {
         StoringData[data?.exercise_title] = filePath;
         setDownloade(100 / (len - index));
-        console.log('videoExists', videoExists, 100 / (len - index), filePath);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -257,12 +256,6 @@ const WorkoutDays = ({navigation, route}: any) => {
           .then(res => {
             StoringData[data?.exercise_title] = res.path();
             setDownloade(100 / (len - index));
-            console.log(
-              'File downloaded successfully!',
-              res.path(),
-              100 / (len - index),
-            );
-            // Linking.openURL(`file://${fileDest}`);
           })
           .catch(err => {
             console.log(err);
@@ -698,7 +691,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                         fontFamily: Fonts.MONTSERRAT_MEDIUM,
                         fontSize: 32,
                         lineHeight: 40,
-                        color: selectedIndex ? AppColor.RED : '#333333B2',
+                        color: selectedIndex ? '#f0013b' : '#333333B2',
                         borderRadius: 5,
                         borderColor: '#d9d9d9',
                         borderWidth: 1,
@@ -784,7 +777,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                   size={25}
                   color={
                     percent && item?.total_rest != 0
-                      ? '#D5191A'
+                      ? '#f0013b'
                       : !selectedIndex && item?.total_rest != 0
                       ? '#33333380'
                       : AppColor.BLACK
@@ -903,7 +896,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                     item={item}
                     percent={
                       challenge
-                        ? selected != 0 && index < selected 
+                        ? selected != 0 && index < selected
                         : selected != 0 && index < selected
                     }
                     selected={

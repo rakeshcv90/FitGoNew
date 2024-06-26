@@ -54,7 +54,7 @@ const GymListing = ({navigation}: any) => {
     Geolocation.getCurrentPosition(
       position => {
         const pos = position.coords;
-        console.log('pos', pos);
+     
         setCoords({
           latitude: pos.latitude,
           longitude: pos.longitude,
@@ -112,8 +112,7 @@ const GymListing = ({navigation}: any) => {
           ? 'http://maps.apple.com/?daddr='
           : 'google.navigation:q=';
       var url = scheme + `${location.latitude},${location.longitude}`;
-      // var url = scheme + `${location.latitude},${location.longitude}`+ "?q=" +location.center_name;
-      // console.log(url);
+  
       await Linking.openURL(url);
     } catch (error) {
       console.log('OPEN APP ERRR', error);

@@ -118,7 +118,7 @@ const PredictionScreen = ({navigation, route}: any) => {
         const weight15 =
           ((Result_Number_Of_Days - i) * Av_Cal_Per_2_Workout) / Av_Cal_Per_KG;
         const decWeight = currentWeight + weight15;
-        console.log(weight15, decWeight);
+      
         const formattedDate = currentDate.format('YYYY-MM-DD');
 
         weightHistoryArray.push({
@@ -235,7 +235,7 @@ const PredictionScreen = ({navigation, route}: any) => {
           <LinearGradient
             start={{x: 0, y: 1}}
             end={{x: 1, y: 0}}
-            colors={['#941000', '#D5191A']}
+            colors={[AppColor.RED,AppColor.RED]}
             style={[styles.nextButton]}>
             <Icons name="chevron-right" size={25} color={'#fff'} />
           </LinearGradient>

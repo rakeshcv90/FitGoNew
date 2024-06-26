@@ -155,7 +155,7 @@ const Signup = ({navigation}) => {
             currentProfile,
           ) {
             if (currentProfile) {
-              //  console.log("Face Book Data ",currentProfile)
+           
               socialFacebookLogiIn(currentProfile);
             }
           });
@@ -314,7 +314,7 @@ const Signup = ({navigation}) => {
       } else if (
         data.data?.msg == 'User already registered with deviceID and active'
       ) {
-        console.log(data.data);
+       
         setForLoading(false);
         showMessage({
           message: `It looks like your device ID is already registered with us using your ${data.data?.email}. Please log in with your existing credentials.`,

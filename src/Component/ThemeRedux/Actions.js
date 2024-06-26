@@ -358,3 +358,9 @@ export const setFitCoins = data => {
     payload: data,
   };
 };
+export const setHindiLanuage = data => {
+  return {
+    type: types.HINDI_LANGUAGE,
+    payload: data,
+  };
+};

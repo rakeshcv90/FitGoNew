@@ -17,7 +17,7 @@ export const BannerAdd = ({bannerAdId}) => {
   const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
   return (
     <>
-      {getPurchaseHistory?.plan != null ? 
+      {getPurchaseHistory?.plan != null ? (
         getPurchaseHistory?.plan != 'noob' && isValid ? null : (
           <BannerAd
             unitId={bannerAdId}
@@ -26,6 +26,7 @@ export const BannerAdd = ({bannerAdId}) => {
               requestNonPersonalizedAdsOnly: true,
             }}
           />
+        )
       ) : (
         <BannerAd
           unitId={bannerAdId}
@@ -94,9 +95,7 @@ export const NewInterstitialAd = setClosed => {
   const showInterstitialAd = async () => {
     if (adStatus.current?._loaded) {
       adStatus.current.show();
-      console.log('Add loade ddscdsdsvdv');
     } else {
-      console.log('ADD NOT SHOWN', adStatus);
       setClosed(true);
     }
   };
@@ -123,7 +122,6 @@ export const MyInterstitialAd = () => {
   const showInterstitialAd = async () => {
     if (adStatus.current?._loaded) {
       adStatus.current.show();
-      console.log('Add loade ddscdsdsvdv');
     } else {
     }
   };

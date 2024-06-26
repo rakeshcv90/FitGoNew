@@ -46,7 +46,7 @@ const Index = ({navigation, route}: any) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const getTempLogin = useSelector(state => state.getTempLogin);
   const [isRouteDataAvailable, setIsrouteDataAvailable] = useState(false);
-  console.log('temp-->', getTempLogin);
+ 
   useEffect(() => {
     if (route?.params?.id == undefined) {
       setScreen(1);
@@ -135,7 +135,7 @@ const Index = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (responseData?.data?.msg == 'version is required') {
-        console.log('version error', responseData?.data?.msg);
+   
       } else {
         const objects = {};
         responseData.data.data.forEach((item:any) => {

@@ -25,10 +25,12 @@ const Experience = ({route, navigation}) => {
   const [screen, setScreen] = useState(nextScreen);
   const dispatch = useDispatch();
   const getLaterButtonData = useSelector(state => state.getLaterButtonData);
-  const getProgressBarCounter=useSelector(state=>state?.getProgressBarCounter)
+  const getProgressBarCounter = useSelector(
+    state => state?.getProgressBarCounter,
+  );
   const [selectedB, setSelectedB] = useState(0);
   const [selected, setSelected] = useState();
-  console.log(route.params);
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       startAnimation();
@@ -86,7 +88,7 @@ const Experience = ({route, navigation}) => {
       if (name) {
         params.name = name;
       }
-      dispatch(setProgressBarCounter(getProgressBarCounter+1));
+      dispatch(setProgressBarCounter(getProgressBarCounter + 1));
       navigation.navigate('AskToCreateWorkout', params);
     } else {
       const params = {
@@ -144,7 +146,7 @@ const Experience = ({route, navigation}) => {
             <LinearGradient
               start={{x: 0, y: 1}}
               end={{x: 1, y: 0}}
-              colors={['#941000', '#D5191A']}
+              colors={[AppColor.RED,AppColor.RED]}
               style={[styles.nextButton]}>
               <Icons name="chevron-right" size={25} color={'#fff'} />
             </LinearGradient>

@@ -125,7 +125,7 @@ const LoadData = ({navigation}) => {
       const payload = new FormData();
       payload.append('deviceid', deviceID);
       payload.append('devicetoken', getFcmToken);
-      payload.append('id', getUserID != 0 ? getUserID : null);
+      payload.append('id', getUserDataDetails?.id != null ? getUserDataDetails?.id : getUserID);
       payload.append('gender', mergedObject?.gender);
       payload.append('goal', mergedObject?.goal);
       payload.append('weight', mergedObject?.currentWeight);
@@ -140,12 +140,13 @@ const LoadData = ({navigation}) => {
       // } else {
         // }
           payload.append('name', getUserDataDetails?.name);
+          console.log("PAYLOASD",payload)
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        data: payload,
+         data: payload,
       });
 
       if (data?.data?.msg == 'Please update the app to the latest version.') {
@@ -247,40 +248,6 @@ const LoadData = ({navigation}) => {
     }
   };
 
-  // const getProfileData = async user_id => {
-  //   try {
-  //     const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       data: {
-  //         id: user_id,
-  //         version: VersionNumber.appVersion,
-  //       },
-  //     });
-  //     console.log('Load Data Proile ', data?.data?.profile);
-  //     if (data?.data?.profile) {
-  //       dispatch(setUserProfileData(data.data.profile));
-  //      // getAgreementStatus();
-  //     } else if (
-  //       data?.data?.msg == 'Please update the app to the latest version.'
-  //     ) {
-  //       showMessage({
-  //         message: data?.data?.msg,
-  //         floating: true,
-  //         duration: 500,
-  //         type: 'danger',
-  //         icon: {icon: 'auto', position: 'left'},
-  //       });
-  //     } else {
-  //       dispatch(setUserProfileData([]));
-  //      // getAgreementStatus();
-  //     }
-  //   } catch (error) {
-  //     console.log('User Profile Error', error);
-  //   }
-  // };
 
   const getUserDetailData = async userId => {
     try {
@@ -300,6 +267,7 @@ const LoadData = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
+        console.log("WORKINGGGG",responseData.data)
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         dispatch(setUserProfileData(responseData?.data?.profile));
@@ -332,29 +300,7 @@ const LoadData = ({navigation}) => {
       </Animated.View>
     );
   };
-  // const getAgreementStatus = async () => {
-  //   try {
-  //     const ApiCall = await axios(NewAppapi.GET_AGR_STATUS, {
-  //       method: 'POST',
-  //       data: {
-  //         user_id: getUserID != 0 ? getUserID : null,
-  //         version: VersionNumber.appVersion,
-  //       },
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     });
-  //     if (ApiCall?.data) {
 
-  //       dispatch(setOfferAgreement(ApiCall?.data));
-  //     } else {
-  //       setLoadData(100);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     setLoadData(100);
-  //   }
-  // };
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -368,9 +314,9 @@ const LoadData = ({navigation}) => {
         <CircularProgress
           value={loadData}
           radius={70}
-          progressValueColor={'rgb(197, 23, 20)'}
+          progressValueColor={AppColor.RED}
           inActiveStrokeColor={AppColor.GRAY2}
-          activeStrokeColor={'rgb(197, 23, 20)'}
+          activeStrokeColor={AppColor.RED}
           inActiveStrokeOpacity={0.3}
           maxValue={100}
           valueSuffix={'%'}
@@ -463,16 +409,16 @@ const LoadData = ({navigation}) => {
         {activeNext && (
           <TouchableOpacity
             onPress={() => {
-              if (getUserDataDetails?.email) {
-                navigation.navigate('OfferTerms');
-              } else {
-                navigation.navigate('BottomTab');
-              }
+              // if (getUserDataDetails?.email) {
+              //   navigation.navigate('OfferTerms');
+              // } else {
+              // }
+              navigation.navigate('OfferTerms');
             }}>
             <LinearGradient
               start={{x: 0, y: 1}}
               end={{x: 1, y: 0}}
-              colors={['#941000', '#D5191A']}
+              colors={[AppColor.RED,AppColor.RED]}
               style={[styles.nextButton]}>
               <Icons name="chevron-right" size={25} color={'#fff'} />
             </LinearGradient>
@@ -510,7 +456,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     lineHeight: 35,
     fontFamily: 'Poppins',
-    color: 'rgb(197, 23, 20)',
+    color: AppColor.RED,
     top: DeviceHeigth * 0.03,
   },
   buttons: {

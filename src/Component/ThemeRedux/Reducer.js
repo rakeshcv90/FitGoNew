@@ -61,6 +61,7 @@ const intialState = {
   winnerAnnounced: false,
   getBanners: {},
   getEditedDayExercise: {},
+  hindiLanguage: false
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -332,6 +333,11 @@ const ThemeReducer = (state = intialState, action) => {
       return {
         ...state,
         winnerAnnounced: action.payload,
+      };
+    case types.HINDI_LANGUAGE:
+      return {
+        ...state,
+        hindiLanguage: action.payload,
       };
     default:
       return state;

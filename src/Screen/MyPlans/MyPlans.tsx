@@ -114,7 +114,7 @@ const MyPlans = ({navigation}: any) => {
     (state: any) => state.getEditedDayExercise,
   );
   const fitCoins = useSelector((state: any) => state.fitCoins);
- 
+
   const dispatch = useDispatch();
   useEffect(() => {
     initInterstitial();
@@ -193,7 +193,6 @@ const MyPlans = ({navigation}: any) => {
         } else {
           setRefresh(false);
           dispatch(setPurchaseHistory(responseData?.data.event_details));
-          console.log('helloo--->',responseData?.data.event_details)
           EnteringEventFunction(
             dispatch,
             responseData?.data.event_details,
@@ -211,8 +210,6 @@ const MyPlans = ({navigation}: any) => {
       setRefresh(false);
     }
   };
-
-
 
   // getCoinsdetails
   const getEarnedCoins = async () => {
@@ -232,10 +229,7 @@ const MyPlans = ({navigation}: any) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      } else if (response?.data?.error) {
-        console.log('inavlid day--->', response?.data?.error);
       } else {
-        console.log('repeat----->');
         setCoins(response?.data?.responses);
       }
     } catch (error) {
@@ -475,8 +469,6 @@ const MyPlans = ({navigation}: any) => {
           navigation.navigate('Exercise', {
             allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
             currentExercise:
-              // trainingCount != -1
-              //   ? exerciseData[trainingCount]
               getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
             data: [],
             day: selectedDay,
@@ -491,8 +483,6 @@ const MyPlans = ({navigation}: any) => {
           navigation.navigate('Exercise', {
             allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
             currentExercise:
-              // trainingCount != -1
-              //   ? exerciseData[trainingCount]
               getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
             data: [],
             day: selectedDay,
@@ -531,7 +521,7 @@ const MyPlans = ({navigation}: any) => {
         fit_coins: getWeeklyPlansData[WeekArray[selectedDay]]?.total_coins,
       });
     }
-    // console.log('REWARDS BEFORE NEXT', datas);
+
     try {
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EVENT_EXERCISE,
@@ -548,34 +538,10 @@ const MyPlans = ({navigation}: any) => {
         setButtonClicked(false);
         setVisible(false);
         setDownloadedVideoSent(false);
-        // let checkAdsShow = AddCountFunction();
 
-        // if (checkAdsShow == true) {
-        //   showInterstitialAd();
-        //   analytics().logEvent(
-        //     `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
-        //   );
-        //   navigation.navigate('Exercise', {
-        //     allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
-        //     currentExercise:
-        //       // trainingCount != -1
-        //       //   ? exerciseData[trainingCount]
-        //       getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
-        //     data: [],
-        //     day: selectedDay,
-        //     exerciseNumber: 0,
-        //     trackerData: res?.data?.inserted_data,
-        //     type: 'weekly',
-        //   });
-        // } else {
-        //   analytics().logEvent(
-        //     `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
-        //   );
         navigation.navigate('Exercise', {
           allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
           currentExercise:
-            // trainingCount != -1
-            //   ? exerciseData[trainingCount]
             getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
           data: [],
           day: selectedDay,
@@ -585,13 +551,10 @@ const MyPlans = ({navigation}: any) => {
         });
         // }
       } else {
-        // console.log("ALREADY EXIST",res.data)
         setDownloadedVideoSent(false);
         navigation.navigate('Exercise', {
           allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
           currentExercise:
-            // trainingCount != -1
-            //   ? exerciseData[trainingCount]
             getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
           data: [],
           day: selectedDay,
@@ -633,7 +596,6 @@ const MyPlans = ({navigation}: any) => {
             result.data?.winner_announced == true ? true : false,
           ),
         );
-        // console.log('RANK DATA', myRankData);
       }
       setRefresh(false);
       setFetchCoins(false);

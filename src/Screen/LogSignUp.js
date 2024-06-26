@@ -82,10 +82,10 @@ const LogSignUp = ({navigation}) => {
                 end={{x: 1, y: 0}}
                 colors={
                   // isFocused ? ['#941000', '#D01818'] : ['#D9D9D9', '#D9D9D9']
-                  isFocused ? [AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED] : ['#D9D9D9', '#D9D9D9']
+                  isFocused ? ['#f0013b', '#f0013b'] : ['#D9D9D9', '#D9D9D9']
                 }
                 style={{
-                  borderRadius: isFocused ? 30 : 30,
+                  borderRadius: isFocused ? 8 : 8,
                   justifyContent: 'center',
                   //width: DeviceHeigth * 0.13,
                   height: DeviceHeigth * 0.043,
@@ -178,7 +178,7 @@ var styles = StyleSheet.create({
     width: DeviceHeigth * 0.2,
     height: DeviceHeigth * 0.045,
     alignSelf: 'center',
-    borderRadius: 30,
+    borderRadius: 8,
     overflow: 'hidden',
     backgroundColor: AppColor.GRAY2,
   },

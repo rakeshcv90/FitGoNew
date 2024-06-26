@@ -63,19 +63,13 @@ const WeekArray = Array(7)
 const songs = [
   {
     id: 1,
-    // title: 'song 1',
-    // artist: 'XYZ',
-    // artwork: localImage.Play3,
+
     url: require('../../../Icon/Images/Exercise_Timer.wav'),
-    // url: route.params.item.exercise_mindset_audio,
   },
   {
     id: 2,
-    // title: 'song 1',
-    // artist: 'XYZ',
-    // artwork: localImage.Play3,
+
     url: require('../../../Icon/Images/Exercise_Start.mp3'),
-    // url: route.params.item.exercise_mindset_audio,
   },
 ];
 const Exercise = ({navigation, route}: any) => {
@@ -89,7 +83,7 @@ const Exercise = ({navigation, route}: any) => {
     type,
     challenge,
   } = route.params;
-  // console.log(Tts.voices().then(voices => console.log(voices)))
+
   const VideoRef = useRef();
   const [visible, setVisible] = useState(false);
   const [playW, setPlayW] = useState(0);
@@ -188,7 +182,6 @@ const Exercise = ({navigation, route}: any) => {
         await Tts.setDucking(true);
         await Tts.setIgnoreSilentSwitch('ignore');
         await Tts.addEventListener('tts-finish', event => {
-          // console.log('event',event)
           Tts.stop();
         });
         setTtsInitialized(true);
@@ -198,11 +191,9 @@ const Exercise = ({navigation, route}: any) => {
     initTts();
   }, []);
   const StartAudio = async (playbackState: any) => {
-    // console.log('playbackState', playbackState);
     await TrackPlayer.play();
   };
   const PauseAudio = async (playbackState: any) => {
-    // console.log('PauseState', playbackState);
     await TrackPlayer.reset();
   };
   const SPEAK = (words: string) => {
@@ -250,13 +241,11 @@ const Exercise = ({navigation, route}: any) => {
               setSeconds(
                 parseInt(allExercise[index + 1]?.exercise_rest.split(' ')[0]),
               );
-              // setPre(15);
-              // console.log('VIDEO LOCATIONS', getStoreVideoLoc);
-              // if (number != 0) {
+           
               setCurrentData(allExercise[index + 1]);
               setNumber(number + 1);
               handleExerciseChange(allExercise[index + 1]?.exercise_title);
-              // setRandomCount(randomCount + 1);
+           
 
               setTimer(10);
               setDemoW(0);
@@ -413,7 +402,7 @@ const Exercise = ({navigation, route}: any) => {
         setBack(true);
       }
     });
-   
+
     return () => {
       unsubscribe;
     };
@@ -429,7 +418,7 @@ const Exercise = ({navigation, route}: any) => {
   const handleExerciseChange = (exerciseName: string) => {
     if (getStoreVideoLoc.hasOwnProperty(exerciseName)) {
       setCurrentVideo(getStoreVideoLoc[exerciseName]);
-      // console.log('CURRENT', getStoreVideoLoc[exerciseName]);
+    
     } else {
       setCurrentVideo('');
       console.error(`Exercise "${exerciseName}" video not found.`);
@@ -493,7 +482,7 @@ const Exercise = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data) {
-        // console.log(res.data, payload, 'Rewards Exercise');
+   
         setCompleted(completed + 1);
         setCurrentData(allExercise[index]);
         setRestStart(true);
@@ -540,7 +529,7 @@ const Exercise = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data) {
-        // console.log(res.data, payload, 'Exercise');
+    
         setCompleted(completed + 1);
         setCurrentData(allExercise[index]);
         setRestStart(true);
@@ -577,7 +566,7 @@ const Exercise = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data) {
-        // console.log(res.data, payload, 'SINGLE');
+      
         setCompleted(completed + 1);
         setCurrentData(allExercise[index]);
         setRestStart(true);
@@ -610,13 +599,12 @@ const Exercise = ({navigation, route}: any) => {
                 paddingTop: DeviceWidth * 0.2
                 // marginTop: DeviceHeigth * 0.05
                 // paddingLeft: DeviceWidth / 2,
-              
               }}>
               <Text
                 style={{
                   fontWeight: '600',
                   fontSize: 32,
-                  color: AppColor.RED1,
+                  color: '#f0013b',
                 }}>
                 Keep Going!
               </Text>
@@ -624,7 +612,7 @@ const Exercise = ({navigation, route}: any) => {
                 style={{
                   fontWeight: '600',
                   fontSize: 32,
-                  color: AppColor.RED1,
+                  color: '#f0013b',
                 }}>
                 Don't Give Up!
               </Text>
@@ -639,13 +627,13 @@ const Exercise = ({navigation, route}: any) => {
                 color: AppColor.BLACK,
               }}>
               {`You have finished `}
-              <Text style={{color: AppColor.RED}}>
+              <Text style={{color: '#f0013b',}}>
                 {((number / parseInt(allExercise?.length)) * 100).toFixed(0) +
                   '%'}
               </Text>
               {'\n'}
               {' only '}
-              <Text style={{color: AppColor.RED}}>
+              <Text style={{color: '#f0013b',}}>
                 {parseInt(allExercise?.length) - number + ' Exercises'}
               </Text>
               {' left '}
@@ -672,7 +660,7 @@ const Exercise = ({navigation, route}: any) => {
                 h={55}
                 bR={30}
                 flex={-1}
-                colors={['#F3F3F3', '#F3F3F3']}
+                colors={['#F3F3F3', '#F3F3F3']} 
                 textStyle={{
                   fontSize: 20,
                   fontFamily: 'Poppins',
@@ -871,9 +859,9 @@ const Exercise = ({navigation, route}: any) => {
                 <CircularProgress
                   value={timerS}
                   radius={40}
-                  progressValueColor="#A93737"
+                  progressValueColor='#f0013b'
                   inActiveStrokeColor={'#FCECF0'}
-                  activeStrokeColor="#A93737"
+                  activeStrokeColor='#f0013b'
                   // inActiveStrokeOpacity={0.3}
                   maxValue={10}
                   titleColor={'black'}
@@ -1052,9 +1040,9 @@ const Exercise = ({navigation, route}: any) => {
                   initialValue={10}
                   startInPausedState={true}
                   radius={40}
-                  progressValueColor="#A93737"
+                  progressValueColor="#f0013b"
                   inActiveStrokeColor={'#FCECF0'}
-                  activeStrokeColor="#A93737"
+                  activeStrokeColor='#f0013b'
                   // inActiveStrokeOpacity={0.3}
                   maxValue={10}
                   titleColor={'black'}
@@ -1195,28 +1183,32 @@ const Exercise = ({navigation, route}: any) => {
                   resizeMode="contain"
                 />
               </TouchableOpacity>
-              {enteredCurrentEvent && type == 'weekly' ? null :allExercise?.length > 1 && (
-                <TouchableOpacity
-                  onPress={() => {
-                    setRestStart(false);
-                    setVisible(true);
-                  }}
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: restStart ? 50 : 25,
-                    width: restStart ? 50 : 25,
-                    height: restStart ? 50 : 25,
-                    backgroundColor: restStart ? 'transparent' : '#3333331A',
-                    marginVertical: 5,
-                  }}>
-                  <Image
-                    source={localImage.Exercise_List}
-                    style={{width: 15, height: 15}}
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
-              )}
+              {enteredCurrentEvent && type == 'weekly'
+                ? null
+                : allExercise?.length > 1 && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setRestStart(false);
+                        setVisible(true);
+                      }}
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: restStart ? 50 : 25,
+                        width: restStart ? 50 : 25,
+                        height: restStart ? 50 : 25,
+                        backgroundColor: restStart
+                          ? 'transparent'
+                          : '#3333331A',
+                        marginVertical: 5,
+                      }}>
+                      <Image
+                        source={localImage.Exercise_List}
+                        style={{width: 15, height: 15}}
+                        resizeMode="contain"
+                      />
+                    </TouchableOpacity>
+                  )}
             </View>
             <View
               style={{
@@ -1395,7 +1387,7 @@ const Exercise = ({navigation, route}: any) => {
             INDEX={completed}
             time={currentData?.exercise_rest == 1 ? 60 : 1}
             w={restStart ? '100%' : `${100}%`}
-            color={restStart ? AppColor.WHITE : AppColor.RED}
+            color={restStart ? AppColor.WHITE : '#f0013b'}
           />
         </>
       )}

@@ -325,7 +325,7 @@ const Login = ({navigation}) => {
           platform: Platform.OS,
         },
       });
-
+console.log("RESPONSE",res,data.data)
       if (data.data?.profile_status == 1) {
         showMessage({
           message: data.data.msg,
@@ -1178,7 +1178,7 @@ const Login = ({navigation}) => {
         </KeyboardAvoidingView>
         <View
           style={{
-          marginTop: DeviceHeigth * 0.03,
+            marginTop: DeviceHeigth * 0.03,
             paddingBottom: 10,
             flexDirection: 'row',
             alignItems: 'center',
@@ -1208,14 +1208,18 @@ const Login = ({navigation}) => {
                   style={{
                     width: DeviceWidth * 0.15,
                     height: DeviceHeigth * 0.05,
-                    marginLeft:30
+                    marginLeft: 30,
                   }}
                   resizeMode="contain"
                 />
               </TouchableOpacity>
             </>
           )}
-          {Platform.OS == 'android' &&<View style={{top:-10}}><Button2 onGooglePress={GoogleSignup} /></View> }
+          {Platform.OS == 'android' && (
+            <View style={{top: -10}}>
+              <Button2 onGooglePress={GoogleSignup} />
+            </View>
+          )}
         </View>
         {/* <View style={{marginTop: DeviceHeigth * 0.02, paddingBottom: 10}}>
        

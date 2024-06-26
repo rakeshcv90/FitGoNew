@@ -49,7 +49,7 @@ const getCurrentLocation = () => {
         geocoder
           .geocodePosition(Coords)
           .then(res => {
-            console.log('getCoutnry', res);
+         
             const country = res[0].country;
             resolve(country);
           })

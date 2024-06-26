@@ -79,7 +79,7 @@ const Weight = ({route, navigation}: any) => {
       targetWeight: weight,
       type: toggle,
     };
-    console.log("sdsdfsdfsdfsdf",selected,weight)
+
     if (mergedObject.goal_name == 'Lose weight' && selected < weight) {
       showMessage({
         message:
@@ -172,7 +172,7 @@ const Weight = ({route, navigation}: any) => {
             <LinearGradient
               start={{x: 0, y: 1}}
               end={{x: 1, y: 0}}
-              colors={[AppColor.RED1, AppColor.RED]}
+              colors={[AppColor.RED, AppColor.RED]}
               style={[styles.nextButton]}>
               <Icons name="chevron-right" size={25} color={'#fff'} />
             </LinearGradient>
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     position: 'absolute',
-    bottom: DeviceHeigth * 0.13,
+    bottom: DeviceHeigth * 0.03,
     width: DeviceWidth * 0.9,
     alignSelf: 'center',
   },

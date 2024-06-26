@@ -298,12 +298,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
                     style={[
                       styles.boxIconView,
                       {
-                        backgroundColor: isSelected
-                          ? AppColor.NEW_DARK_RED
-                          : 'white',
-                        borderColor: isSelected
-                          ? AppColor.NEW_DARK_RED
-                          : '#33333399',
+                        backgroundColor: isSelected ? '#f0013b' : 'white',
+                        borderColor: isSelected ? '#f0013b' : '#33333399',
                       },
                     ]}>
                     {isSelected && <Font name="check" color="white" />}
@@ -335,7 +331,16 @@ const WorkoutCategories = ({navigation, route}: any) => {
                       activeStrokeWidth={2}
                       inActiveStrokeWidth={2}
                       maxValue={100}>
-                      <Icons name={'play'} size={25} color={'#33333399'} />
+                      <Image
+                        source={localImage.ExercisePlay}
+                        tintColor={selectedIndex != index ? '#565656' : ''}
+                        resizeMode="contain"
+                        style={{
+                          width: 12,
+                          height: 12,
+                          alignSelf: 'center',
+                        }}
+                      />
                     </CircularProgressBase>
                   )}
                 </TouchableOpacity>
@@ -478,13 +483,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
             : CategoryDetails?.bodypart_title
         }
         workoutCat={switchButton}
-        // backPressCheck={switchButton}
         backPressCheck={true}
-        // onPress={() => {
-        //   setSelectedExercise([]);
-        //   setSwitchButton(false);
-        //   setItemsLength(0);
-        // }}
+        shadow
         onPress={() => {
           if (downloaded > 0 || downloadProgress > 0) {
             showMessage({
@@ -573,7 +573,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                   : 'Start All Exercises'
               }
               h={50}
-              colors={[AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED]}
+              colors={['#f0013b', '#f0013b']}
               textStyle={styles.buttonText}
               alignSelf
               bR={6}
@@ -607,8 +607,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 text={`Select Exercise`}
                 h={50}
                 colors={[AppColor.WHITE, AppColor.WHITE]}
-                textStyle={[styles.buttonText, {color: AppColor.NEW_DARK_RED}]}
-                bC="#A93737"
+                textStyle={[styles.buttonText, {color: '#f0013b'}]}
+                bC="#f0013b"
                 alignSelf
                 bottm={PLATFORM_IOS ? 5 : 0}
                 bR={6}

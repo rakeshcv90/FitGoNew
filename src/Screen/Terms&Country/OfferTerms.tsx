@@ -70,36 +70,7 @@ const OfferTerms = ({navigation, route}: any) => {
       getUserAllInData();
     }
   }, []);
-  // const getAgreementContentApi = async () => {
-  //   setLoaded(false);
-  //   try {
-  //     const ApiCall = await axios(
-  //       `${NewAppapi.GET_AGREEMENT}?version=${VersionNumber.appVersion}`,
-  //       {
-  //         method: 'GET',
-  //       },
-  //     );
 
-  //     if (
-  //       ApiCall?.data?.msg == 'Please update the app to the latest version.'
-  //     ) {
-  //       setLoaded(true);
-  //       showMessage({
-  //         message: ApiCall?.data?.msg,
-  //         floating: true,
-  //         duration: 500,
-  //         type: 'danger',
-  //         icon: {icon: 'auto', position: 'left'},
-  //       });
-  //     } else {
-  //       setLoaded(true);
-  //       dispatch(setAgreementContent(ApiCall?.data?.data[0]));
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     setLoaded(true);
-  //   }
-  // };
   const getUserAllInData = async () => {
     try {
       const responseData = await axios.get(
@@ -118,7 +89,6 @@ const OfferTerms = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (responseData?.data?.msg == 'version is required') {
-        console.log('version error', responseData?.data?.msg);
       } else {
         const objects = {};
         responseData.data.data.forEach((item: any) => {
@@ -148,7 +118,7 @@ const OfferTerms = ({navigation, route}: any) => {
           <Icons
             name={checked ? 'checkbox-marked' : 'checkbox-blank-outline'}
             size={28}
-            color={checked ? '#A93737' : '#333333'}
+            color={checked ? AppColor.RED : '#333333'}
           />
         </TouchableOpacity>
         <View>
@@ -420,8 +390,5 @@ const styles = StyleSheet.create({
   modalContainer1: {
     flex: 1,
     backgroundColor: `rgba(0,0,0,0.2)`,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // Semi-transparent background
   },
 });

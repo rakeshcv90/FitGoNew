@@ -1216,7 +1216,7 @@ const HomeNew = ({navigation}) => {
                 borderRadius: 6,
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: AppColor.NEW_DARK_RED,
+                backgroundColor: '#f0013b' 
               }}>
               <Text style={[styles.title, {color: AppColor.WHITE}]}>Save</Text>
             </View>
@@ -1283,7 +1283,7 @@ const HomeNew = ({navigation}) => {
         <View style={styles.profileView}>
           <Text
             style={{
-              color: AppColor.RED,
+              color: '#f0013b',
               fontSize: 20,
               fontFamily: Fonts.MONTSERRAT_BOLD,
               width: DeviceWidth * 0.5,
@@ -1501,7 +1501,8 @@ const HomeNew = ({navigation}) => {
                     challenge: true,
                   });
                 }}
-                style={{width: '10%', alignItems: 'center', top: 20}}>
+                style={{width: '10%', alignItems: 'center', top: 20}}
+                >
                 <Image
                   source={require('../../Icon/Images/NewImage2/play.png')}
                   style={{
@@ -1608,7 +1609,7 @@ const HomeNew = ({navigation}) => {
                             fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                           },
                         ]}>
-                        {Platform.OS == 'ios' ? steps : stepsRef.current}
+                        {Platform.OS == 'ios' ? steps?.toFixed(0) : stepsRef.current}
                         <Text
                           style={[
                             styles.monetText,
@@ -1699,7 +1700,7 @@ const HomeNew = ({navigation}) => {
                         ]}
                         start={{x: 0, y: 1}}
                         end={{x: 1, y: 0}}
-                        colors={['#941000', '#D5191A']}
+                        colors={['#f0013b', '#f0013b']}
                       />
                       <Image
                         source={localImage.Step1}

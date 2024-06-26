@@ -97,7 +97,6 @@ const SplaceScreen = ({navigation}) => {
   const loadScreen = agreement => {
     if (showIntro) {
       if (getUserDataDetails?.id) {
-        console.log('zxdfdsfds', getOfferAgreement);
         if (agreement?.term_condition == 'Accepted') {
           navigation.replace('BottomTab');
         } else {
@@ -135,7 +134,6 @@ const SplaceScreen = ({navigation}) => {
         `${NewAppapi.CANCEL_SUBSCRIPTION}?user_id=${getUserDataDetails?.id}&status=delete`,
       );
       if (data.data?.msg == 'plan deleted successfully') {
-        console.log(data.data, 'CANCELLED');
         dispatch(setPurchaseHistory([]));
         EnteringEventFunction(
           dispatch,
@@ -152,7 +150,7 @@ const SplaceScreen = ({navigation}) => {
   const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
 
   const DisplayAds = agremment => {
-    console.log('Display  ADs Caal');
+   
     if (loaded) {
       setLoaded(false);
 
@@ -254,7 +252,13 @@ const SplaceScreen = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (responseData?.data?.msg == 'version is required') {
-        console.log('version error', responseData?.data?.msg);
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         const objects = {};
         responseData.data.data.forEach(item => {

@@ -131,7 +131,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
       }
     } catch (error) {
       setLoading(false);
-      // console.log('Purchase Store Data Error', error.response, data);
+   
     }
   };
   useEffect(() => {
@@ -149,43 +149,14 @@ const UpcomingEvent = ({navigation, route}: any) => {
     }
   };
   const StartAudio = async (playbackState: any) => {
-    // console.log('playbackState', playbackState);
+   
     await TrackPlayer.play();
   };
   const PauseAudio = async (playbackState: any) => {
-    // console.log('PauseState', playbackState);
+   
     await TrackPlayer.reset();
   };
-  // const PurchaseDetails = async () => {
-  //   try {
-  //     const result = await axios(
-  //       `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
-  //       // `${NewAppapi.EVENT_SUBSCRIPTION_GET}/7996`,
-  //     );
-  //     console.log(result.data);
-  //     if (result.data?.message == 'Not any subscription') {
-  //       setLoading(false);
-  //       setRefresh(false);
-  //       dispatch(setPurchaseHistory([]));
-  //     } else {
-  //       setRefresh(false);
-  //       dispatch(setPurchaseHistory(result.data.data));
-  //       EnteringEventFunction(
-  //         dispatch,
-  //         result.data?.data,
-  //         setEnteredCurrentEvent,
-  //         setEnteredUpcomingEvent,
-  //         setPlanType,
-  //       );
-  //       setLoading(false);
-  //     }
-  //   } catch (error) {
-  //     setRefresh(false);
-  //     setLoading(false);
-  //     console.log(error);
-  //     dispatch(setPurchaseHistory([]));
-  //   }
-  // };
+ 
   const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(
