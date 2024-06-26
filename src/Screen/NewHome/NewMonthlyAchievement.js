@@ -40,7 +40,7 @@ const NewMonthlyAchievement = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch();
   useFocusEffect(() => {
-    console.log('apicall')
+   
     DateWiseData(moment.utc().format('YYYY-MM-DD')); // to get the datewise data
   }, [navigation]);
   const DateWiseData = async Date1 => {
@@ -109,15 +109,15 @@ const NewMonthlyAchievement = ({navigation}) => {
   const theme = useMemo(() => {
     return {
       calendarBackground: AppColor.WHITE,
-      selectedDayBackgroundColor: AppColor.RED,
+      selectedDayBackgroundColor: '#f0013b',
       selectedDayTextColor: AppColor.WHITE,
       todayTextColor: AppColor.BLACK,
-      arrowColor: AppColor.RED,
-      monthTextColor: AppColor.RED,
-      indicatorColor: AppColor.RED,
+      arrowColor: '#f0013b',
+      monthTextColor: '#f0013b',
+      indicatorColor: '#f0013b',
       textMonthFontSize: 17,
-      textDayFontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-      textMonthFontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+      textDayFontFamily: Fonts.MONTSERRAT_BOLD,
+      textMonthFontFamily: Fonts.MONTSERRAT_BOLD,
       dayTextColor: AppColor.BLACK,
     };
   }, []);
@@ -201,7 +201,7 @@ const NewMonthlyAchievement = ({navigation}) => {
               </Text>
               <Text
                 style={{
-                  color: AppColor.RED,
+                  color: '#f0013b',
                   fontFamily: Fonts.MONTSERRAT_MEDIUM,
                   fontSize: 17,
                 }}
@@ -239,7 +239,7 @@ const NewMonthlyAchievement = ({navigation}) => {
               markedDates={{
                 [getDate]: {
                   startingDay: true,
-                  color: AppColor.RED,
+                  color: '#f0013b',
                   endingDay: true,
                   textColor: AppColor.WHITE,
                 },

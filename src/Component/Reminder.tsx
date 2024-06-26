@@ -65,7 +65,6 @@ export const AlarmNotification = async (time: any) => {
     },
     trigger,
   );
-  console.log(trigger.timestamp);
 };
 const Reminder = ({
   visible,

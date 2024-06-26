@@ -137,7 +137,7 @@ const IntroductionScreen1 = ({navigation}) => {
         }}>
         <CircularProgressWithChild
           value={33}
-          activeStrokeColor={AppColor.RED}
+          activeStrokeColor={'#f0013b'}
           radius={DeviceHeigth >= 1024 ? 40 : 28}
           initialValue={33}
           maxValue={100}
@@ -151,7 +151,7 @@ const IntroductionScreen1 = ({navigation}) => {
               navigation.navigate('IntroductionScreen2');
             }}
             style={{
-              backgroundColor: '#A93737',
+              backgroundColor: '#f0013b',
               width:
                 DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1,
               height:

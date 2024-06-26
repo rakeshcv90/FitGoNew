@@ -15,8 +15,6 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		186A6F322B1DA2D00005DC45 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 186A6F312B1DA2D00005DC45 /* GoogleService-Info.plist */; };
 		186A6F332B1DA2D00005DC45 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 186A6F312B1DA2D00005DC45 /* GoogleService-Info.plist */; };
-		18ACB49E2C218C96001B8CA3 /* fitme_notification.wav in Resources */ = {isa = PBXBuildFile; fileRef = 18ACB49D2C218C96001B8CA3 /* fitme_notification.wav */; };
-		18ACB49F2C218C96001B8CA3 /* fitme_notification.wav in Resources */ = {isa = PBXBuildFile; fileRef = 18ACB49D2C218C96001B8CA3 /* fitme_notification.wav */; };
 		28272472D35C408FAC4ABEC9 /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1DE8D01FE55F4B03AA60D32B /* Montserrat-Bold.ttf */; };
 		2A216FF72B593B6A0064CD70 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A216FF62B593B6A0064CD70 /* Launch Screen.storyboard */; };
 		2A216FF82B593B6A0064CD70 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A216FF62B593B6A0064CD70 /* Launch Screen.storyboard */; };
@@ -80,7 +78,6 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = FitGo/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = FitGo/main.m; sourceTree = "<group>"; };
 		186A6F312B1DA2D00005DC45 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		18ACB49D2C218C96001B8CA3 /* fitme_notification.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = fitme_notification.wav; sourceTree = "<group>"; };
 		1D7604ACC2AA470BA5198074 /* Montserrat-ExtraLightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraLightItalic.ttf"; path = "../assets/fonts/Montserrat-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		1DE8D01FE55F4B03AA60D32B /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Bold.ttf"; path = "../assets/fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		24B810C0B89F4E699E5D6849 /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Medium.ttf"; path = "../assets/fonts/Montserrat-Medium.ttf"; sourceTree = "<group>"; };
@@ -169,6 +166,7 @@
 				2AAC3EDE2B4530CD007908D0 /* dummy.swift */,
 				2AAC3EDD2B4530CD007908D0 /* FitGo-Bridging-Header.h */,
 				2A216FF62B593B6A0064CD70 /* Launch Screen.storyboard */,
+				832341AE1AAA6A7D00B99B32 /* Libraries */,
 			);
 			name = FitGo;
 			sourceTree = "<group>";
@@ -197,7 +195,6 @@
 				2AB4A85D2C24329600F7CD92 /* fitme_notification.wav */,
 				186A6F312B1DA2D00005DC45 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* FitGo */,
-				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* FitGoTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,

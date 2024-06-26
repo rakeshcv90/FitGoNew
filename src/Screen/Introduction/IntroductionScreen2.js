@@ -140,7 +140,7 @@ const IntroductionScreen2 = ({navigation}) => {
         }}>
         <CircularProgressWithChild
           value={100}
-          activeStrokeColor={AppColor.RED}
+          activeStrokeColor={'#f0013b'}
           radius={DeviceHeigth >= 1024 ? 40 : 28}
           initialValue={100}
           maxValue={100}
@@ -168,13 +168,13 @@ const IntroductionScreen2 = ({navigation}) => {
               name="arrowleft"
               size={25}
               type="AntDesign"
-              color="#A93737"
+              color="#f0013b"
             />
           </TouchableOpacity>
         </CircularProgressWithChild>
         <CircularProgressWithChild
           value={66}
-          activeStrokeColor={AppColor.RED}
+          activeStrokeColor={'#f0013b'}
           radius={DeviceHeigth >= 1024 ? 40 : 28}
           initialValue={30}
           maxValue={100}
@@ -188,7 +188,7 @@ const IntroductionScreen2 = ({navigation}) => {
               navigation.navigate('IntroductionScreen3');
             }}
             style={{
-              backgroundColor: '#A93737',
+              backgroundColor: '#f0013b',
               width:
                 DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1,
               height:

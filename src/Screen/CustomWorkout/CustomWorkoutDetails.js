@@ -609,40 +609,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           </View>
         </View>
         {data?.exercise_data.length > 0 && (
-          // <View style={{position: 'absolute', bottom: 0, right: 0}}>
-          //   <GradientButton
-          //     // play={false}
-          //     // oneDay
-          //     flex={0.01}
-          //     w={DeviceWidth * 0.4}
-          //     text={downloaded ? `Downloading` : `Start Workout`}
-          //     h={DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1}
-          //     textStyle={{
-          //       fontSize: DeviceHeigth >= 1024 ? 20 : 16,
-          //       fontFamily: 'Montserrat-SemiBold',
-          //       lineHeight: 30,
-          //       fontWeight: '700',
-          //       zIndex: 1,
-          //       color: AppColor.WHITE,
-          //     }}
-          //     alignSelf
-          //     bR={
-          //       DeviceHeigth >= 1024
-          //         ? (DeviceWidth * 0.08) / 2
-          //         : (DeviceHeigth * 0.1) / 2
-          //     }
-          //     // mB={80}
-          //     bottm={30}
-          //     mR={20}
-          //     weeklyAnimation={downloaded}
-          //     // fillBack="#EB1900"
-          //     // fill={downloaded > 0 ? `${100 / downloaded}%` : '0%'}
-          //     onPress={() => {
-          //       setBackBlock(true);
-          //       postCurrentDayAPI();
-          //     }}
-          //   />
-          // </View>
+    
           <NewButton
             position={'absolute'}
             title={'Start Workout'}
@@ -718,14 +685,14 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                   marginHorizontal: 20,
                   alignItems: 'center',
                 }}>
-                <Icons name="delete" size={20} color={'#D5191A'} />
+                <Icons name="delete" size={20} color={'#f0013b'} />
                 <Text
                   style={{
                     fontWeight: '600',
                     fontSize: 14,
                     lineHeight: 18,
                     marginHorizontal: 10,
-                    color: '#D5191A',
+                    color: '#f0013b',
                     textAlign: 'center',
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                   }}>

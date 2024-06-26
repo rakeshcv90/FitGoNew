@@ -82,7 +82,7 @@ const LogSignUp = ({navigation}) => {
                 end={{x: 1, y: 0}}
                 colors={
                   // isFocused ? ['#941000', '#D01818'] : ['#D9D9D9', '#D9D9D9']
-                  isFocused ? ['#D01818', '#941000'] : ['#D9D9D9', '#D9D9D9']
+                  isFocused ? ['#f0013b', '#f0013b'] : ['#D9D9D9', '#D9D9D9']
                 }
                 style={{
                   borderRadius: isFocused ? 30 : 30,

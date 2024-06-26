@@ -187,30 +187,16 @@ const Subscription = ({navigation}) => {
       console.log('Receipt Error', error);
     }
   };
-  // const validateAndroid = async receipt => {
-  //   try {
-  //     const response = await RNIap.validateReceiptAndroid({
-  //       packageName: receipt.packageName,
-  //       productId: receipt.productId,
-  //       productToken: receipt.purchaseToken,
-  //       accessToken: '456f3be6f242b51399d565d417b3ab81f9d13d08',
-  //       isSub: true,
-  //     });
 
-  //   } catch (error) {
-  //     console.log('Receipt Error Android', error);
-  //   }
-  // };
   const purchaseItems = async items => {
     setForLoading(true);
     try {
       const purchase = await RNIap.requestSubscription({
         sku: items.productId,
       });
-      // setForLoading(false);
-      // console.log("dshdhdhdhdhd",purchase)
+    
       if (purchase) {
-        // setPlan(purchase);
+       
         validateIOS(purchase.transactionReceipt);
       } else {
         setForLoading(false);

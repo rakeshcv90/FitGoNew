@@ -29,7 +29,7 @@ const PercentageBar = ({
         />
 
         <LinearGradient
-          colors={['#D01818', '#941000']}
+          colors={['#f0013b', '#f0013b']}
           style={{
             width: percentage > 10 ? `${percentage}%` : '10%',
             height: getheight,

@@ -681,6 +681,7 @@ const AITrainer = ({navigation, route}) => {
                 height: 20,
                 marginHorizontal: -10,
               }}
+             tintColor={'#f0013b'} 
               resizeMode="contain"
               source={localImage.Send}
             />

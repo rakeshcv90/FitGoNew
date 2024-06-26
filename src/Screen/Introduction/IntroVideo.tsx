@@ -15,19 +15,11 @@ const IntroVideo = ({navigation, route}: any) => {
   return (
     <LinearGradient
       colors={['#FF5C31', '#FFA100', '#FFA100']}
-      // start={{
-      //   x: 1,
-      //   y: 1,
-      // }}
-      // end={{
-      //   x: 1,
-      //   y: 0,
-      // }}
       start={{x: 1, y: 0}}
       end={{x: 0, y: 1}}
       style={{flex: 1}}>
       <StatusBar barStyle={'light-content'} backgroundColor={'#ed471a'} />
-      {/* {!videoLoaded && (
+      {!videoLoaded && (
         <ImageBackground
           source={localImage.Thumbnail}
           style={{
@@ -43,7 +35,6 @@ const IntroVideo = ({navigation, route}: any) => {
         </ImageBackground>
       )}
       <Video
-        // source={{uri: getStoreVideoLoc['Fitmerewardvideo']}}
         source={{
           uri: 'https://res.cloudinary.com/drfp9prvm/video/upload/v1718971902/IMG_179656959_rgraiy_cdg5hs.mp4',
         }}
@@ -51,10 +42,10 @@ const IntroVideo = ({navigation, route}: any) => {
           setVideoLoaded(true);
         }}
         onLoad={() => {
-          console.log('first');
+         
         }}
         onLoadStart={() => {
-          console.log('zero');
+   
         }}
         controls={false}
         paused={false}
@@ -112,7 +103,7 @@ const IntroVideo = ({navigation, route}: any) => {
           }}>
           Skip
         </Text>
-      )} */}
+      )}
     </LinearGradient>
   );
 };

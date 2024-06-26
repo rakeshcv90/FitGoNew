@@ -179,11 +179,9 @@ const NewSubscription = ({navigation, route}: any) => {
     }
   };
   const StartAudio = async (playbackState: any) => {
-    // console.log('playbackState', playbackState);
     await TrackPlayer.play();
   };
   const PauseAudio = async (playbackState: any) => {
-    // console.log('PauseState', playbackState);
     await TrackPlayer.reset();
   };
   const restorePurchase = async () => {
@@ -321,10 +319,8 @@ const NewSubscription = ({navigation, route}: any) => {
       const purchase: any = await RNIap.requestSubscription({
         sku: items.productId,
       });
-      // setForLoading(false);
-      // console.log("dshdhdhdhdhd",purchase)
+
       if (purchase) {
-        // setPlan(purchase);
         validateIOS(purchase.transactionReceipt);
       } else {
         setForLoading(false);
@@ -348,9 +344,6 @@ const NewSubscription = ({navigation, route}: any) => {
     }
   };
   const validateIOS = async (receipt: any) => {
-    // const purchases = await RNIap.getAvailablePurchases();
-    // const latestPurchase = purchases[purchases.length - 1];
-
     const receiptBody = {
       'receipt-data': receipt,
       password: '3a00ec90f8b745678daf489417956f40',
@@ -445,12 +438,7 @@ const NewSubscription = ({navigation, route}: any) => {
           ? 69
           : 149,
     };
-    console.log(
-      'POST',
-      postData,
-      // selected?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList[0],
-      // price,
-    );
+
     PlanPurchasetoBackendAPI(postData);
   };
 
@@ -929,7 +917,7 @@ const NewSubscription = ({navigation, route}: any) => {
           item,
           PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
         );
-        // console.log('price', price);
+
         return price.includes(getPurchaseHistory?.plan_value);
       });
       if (currentSelected < index) {

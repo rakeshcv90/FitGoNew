@@ -67,7 +67,7 @@ const Winner = ({navigation}: any) => {
           setWinnerData(result.data?.data[0]);
           setUserData(result.data?.data[userIndex]);
         }
-        console.log('winnerData', result.data?.data);
+     
       }
       setLoader(false);
       setRefresh(false);
@@ -288,7 +288,7 @@ const Winner = ({navigation}: any) => {
   const handleEmail = async () => {
     AnalyticsConsole('W_GMAIL');
     const supported = await Linking.canOpenURL('googlegmail://');
-    console.log(supported)
+  
     if (supported) Linking.openURL('googlegmail://');
     else if (PLATFORM_IOS) Linking.openURL('mailto:');
     else Linking.openURL('https://mail.google.com');

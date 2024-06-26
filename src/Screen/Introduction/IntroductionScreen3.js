@@ -137,7 +137,7 @@ const IntroductionScreen3 = ({navigation}) => {
         }}>
         <CircularProgressWithChild
           value={100}
-          activeStrokeColor={AppColor.RED}
+          activeStrokeColor={'#f0013b'}
           radius={DeviceHeigth>=1024?40:28}
           initialValue={100}
           maxValue={100}
@@ -164,13 +164,13 @@ const IntroductionScreen3 = ({navigation}) => {
               name="arrowleft"
               size={25}
               type="AntDesign"
-              color="#A93737"
+              color="#f0013b"
             />
           </TouchableOpacity>
         </CircularProgressWithChild>
         <CircularProgressWithChild
           value={100}
-          activeStrokeColor={AppColor.RED}
+          activeStrokeColor={'#f0013b'}
           radius={DeviceHeigth>=1024?40:28}
           initialValue={70}
           maxValue={100}
@@ -184,7 +184,7 @@ const IntroductionScreen3 = ({navigation}) => {
               navigation.navigate('LogSignUp', {screen: 'Log In'});
             }}
             style={{
-              backgroundColor: '#A93737',
+              backgroundColor: '#f0013b',
               width:DeviceHeigth>=1024? DeviceWidth * 0.08: DeviceWidth * 0.1,
               height: DeviceHeigth>=1024? DeviceWidth * 0.08: DeviceWidth * 0.1,
               borderRadius: 100,

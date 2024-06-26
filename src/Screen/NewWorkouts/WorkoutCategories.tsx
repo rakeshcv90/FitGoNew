@@ -305,10 +305,10 @@ const WorkoutCategories = ({navigation, route}: any) => {
                       styles.boxIconView,
                       {
                         backgroundColor: isSelected
-                          ? AppColor.NEW_DARK_RED
+                          ? '#f0013b'
                           : 'white',
                         borderColor: isSelected
-                          ? AppColor.NEW_DARK_RED
+                          ? '#f0013b'
                           : '#33333399',
                       },
                     ]}>
@@ -316,7 +316,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                   </View>
                 ) : isItemDownload && downloadProgress <= 5 ? (
                   <ActivityIndicator
-                    color={AppColor.NEW_DARK_RED}
+                    color={'#f0013b'}
                     animating={isItemDownload && downloadProgress <= 5}
                     size={30}
                   />
@@ -324,7 +324,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                   <CircularProgressBase
                     value={isItemDownload ? downloadProgress : 0}
                     radius={14}
-                    activeStrokeColor={AppColor.RED}
+                    activeStrokeColor={'#f0013b'}
                     inActiveStrokeColor="#33333399"
                     activeStrokeWidth={2}
                     inActiveStrokeWidth={2}
@@ -566,7 +566,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                   : 'Start All Exercises'
               }
               h={50}
-              colors={[AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED]}
+              colors={['#f0013b', '#f0013b']}
               textStyle={styles.buttonText}
               alignSelf
               bR={6}
@@ -599,8 +599,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 text={`Select Exercise`}
                 h={50}
                 colors={[AppColor.WHITE, AppColor.WHITE]}
-                textStyle={[styles.buttonText, {color: AppColor.NEW_DARK_RED}]}
-                bC="#A93737"
+                textStyle={[styles.buttonText, {color:"#f0013b"}]}
+                bC="#f0013b"
                 alignSelf
                 bottm={PLATFORM_IOS ? 5 : 0}
                 bR={6}

@@ -795,9 +795,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         if (!visible) {
                           setVisible(true);
                           setitem(item);
-                        } else {
-                          console.log(item);
-                        }
+                        } 
                       }}>
                       <FastImage
                         fallback={true}

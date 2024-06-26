@@ -201,7 +201,7 @@ const Workouts = ({navigation}: any) => {
       id: 238,
       title: 'Upper Body',
       image: require('../../Icon/Images/NewImage2/uperBody.png'),
-      //extr information for diff navigation screen
+   
       searchCriteria: ['Chest', 'Back', 'Shoulders', 'Arms'],
       searchCriteriaRedux: getUperBodyFilOption,
     },
@@ -216,7 +216,7 @@ const Workouts = ({navigation}: any) => {
       id: 240,
       title: 'Full Body',
       image: require('../../Icon/Images/NewImage2/fullBody.png'),
-      //
+
       searchCriteria: [],
       searchCriteriaRedux: [],
     },
@@ -224,66 +224,12 @@ const Workouts = ({navigation}: any) => {
       id: 241,
       title: 'Core',
       image: require('../../Icon/Images/NewImage2/core.png'),
-      //
+
       searchCriteria: ['Abs', 'Cardio'],
       searchCriteriaRedux: getCoreFiltOpt,
     },
   ];
 
-  // useEffect(() => {
-  //   if (isFocused) {
-  //     initInterstitial();
-  //     // allWorkoutApi();
-  //     ChallengesDataAPI();
-  //     getAllExerciseData();
-  //     getCustomWorkout();
-  //     getWorkoutStatus();
-  //   }
-  // }, [isFocused]);
-
-  // const getAllExerciseData = async () => {
-  //   try {
-  //     const exerciseData = await axios.get(
-  //       `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
-  //     );
-
-  //     if (
-  //       exerciseData?.data?.msg == 'Please update the app to the latest version'
-  //     ) {
-  //       setIsLoaded(true);
-  //       dispatch(setAllExercise([]));
-  //     } else if (exerciseData?.data?.length > 0) {
-  //       setIsLoaded(true);
-  //       dispatch(setAllExercise(exerciseData?.data));
-  //     } else {
-  //       setIsLoaded(true);
-  //       dispatch(setAllExercise([]));
-  //     }
-  //   } catch (error) {
-  //     setIsLoaded(true);
-  //     dispatch(setAllExercise([]));
-  //     console.log('All-EXCERSIE-ERROR', error);
-  //   }
-  // };
-  // const ChallengesDataAPI = async () => {
-  //   try {
-  //     const res = await axios({
-  //       url:
-  //         NewAppapi.GET_CHALLENGES_DATA +
-  //         '?version=' +
-  //         VersionNumber.appVersion +
-  //         '&user_id=' +
-  //         getUserDataDetails?.id,
-  //     });
-  //     if (res.data?.msg != 'version  is required') {
-  //       dispatch(setChallengesData(res.data));
-  //     } else {
-  //       dispatch(setChallengesData([]));
-  //     }
-  //   } catch (error) {
-  //     console.error(error, 'ChallengesDataAPI ERRR');
-  //   }
-  // };
   const getAllChallangeAndAllExerciseData = async () => {
     let responseData = 0;
     if (Object.keys(getUserDataDetails).length > 0) {
@@ -292,8 +238,8 @@ const Workouts = ({navigation}: any) => {
           `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
         );
         setIsLoaded(true);
-        dispatch(setChallengesData(responseData.data.challenge_data));
-        dispatch(setAllExercise(responseData.data.data));
+        dispatch(setChallengesData(responseData?.data?.challenge_data));
+        dispatch(setAllExercise(responseData?.data?.data));
       } catch (error) {
         setIsLoaded(true);
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
@@ -306,8 +252,8 @@ const Workouts = ({navigation}: any) => {
           `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
         );
         setIsLoaded(true);
-        dispatch(setChallengesData(responseData.data.challenge_data));
-        dispatch(setAllExercise(responseData.data.data));
+        dispatch(setChallengesData(responseData?.data?.challenge_data));
+        dispatch(setAllExercise(responseData?.data?.data));
       } catch (error) {
         setIsLoaded(true);
         dispatch(setChallengesData([]));
@@ -336,29 +282,7 @@ const Workouts = ({navigation}: any) => {
       console.log('Workout-Status', error);
     }
   };
-  // const getCustomWorkout = async () => {
-  //   try {
-  //     const data = await axios.get(
-  //       `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${getUserDataDetails?.id}`,
-  //     );
 
-  //     if (data?.data?.msg != 'data not found.') {
-  //       dispatch(setCustomWorkoutData(data?.data?.data));
-  //     } else {
-  //       dispatch(setCustomWorkoutData([]));
-  //     }
-  //   } catch (error) {
-  //     showMessage({
-  //       message: 'Something went wrong please try again',
-  //       type: 'danger',
-  //       animationDuration: 500,
-  //       floating: true,
-  //       icon: {icon: 'auto', position: 'left'},
-  //     });
-  //     console.log('Custom Workout Error', error);
-  //     dispatch(setCustomWorkoutData([]));
-  //   }
-  // };
   const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(
@@ -553,6 +477,7 @@ const Workouts = ({navigation}: any) => {
               }}>
               <ImageBackground
                 source={localImage.CalenderNew}
+                tintColor={'#f0013b'}
                 style={{
                   width: 60,
                   height: 110,
@@ -583,7 +508,7 @@ const Workouts = ({navigation}: any) => {
                       ? DeviceHeigth * 0.14
                       : DeviceHeigth >= 812
                       ? DeviceHeigth * 0.1
-                      : DeviceHeigth * 0.1,
+                      : DeviceHeigth * 0.07,
                   marginHorizontal: 10,
                   zIndex: 1,
                 }}>

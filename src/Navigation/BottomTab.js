@@ -34,6 +34,7 @@ import NewProfile from '../Screen/NewProfile';
 import {AnalyticsConsole} from '../Component/AnalyticsConsole';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
 import {showMessage} from 'react-native-flash-message';
+import AnimatedLottieView from 'lottie-react-native';
 const Tabs = createBottomTabNavigator();
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
@@ -43,10 +44,26 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
   const Dispatch = useDispatch();
   const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
+  const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
 
   useEffect(() => {
     initInterstitial();
   }, []);
+  function NotificationBadge() {
+    return (
+      <View style={styles.badgeContainer}>
+        <AnimatedLottieView
+          source={require('../Icon/Images/InAppRewards/EventTick.json')}
+          speed={2}
+          autoPlay
+          loop
+          resizeMode="contain"
+          style={styles.lottie}
+        />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.tabContainer}>
       {state.routes.map((route, index) => {
@@ -86,7 +103,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
               floating: true,
             });
           } else if (route.key?.includes('MyPlans') && Sun) {
-            console.log(moment(getPurchaseHistory?.currentDay));
+           
             const event = navigation.emit({
               type: 'tabPress',
               target: route.key,
@@ -173,6 +190,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                   }>
                   <Image
                     source={localImage[route.name + 'Red']}
+                   // tintColor={'#f0013b'}
                     resizeMode="contain"
                     style={{
                       width: 30,
@@ -213,6 +231,9 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                     height: 30,
                   }}
                 />
+                {enteredCurrentEvent && label == 'MyPlans' && (
+                  <NotificationBadge />
+                )}
                 <Text
                   style={{
                     color: '#121212B2',
@@ -236,49 +257,6 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
 };
 
 const BottomTab = () => {
-  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
-
-  // const getPurchaseStatusData = () => {
-  //   if (getPurchaseHistory.length > 0) {
-  //     if (
-  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-  //     ) {
-  //       return null;
-  //     } else {
-  //       return (
-  //         <View
-  //           style={{
-  //             marginTop:
-  //               Platform.OS == 'ios'
-  //                 ? DeviceHeigth == 667
-  //                   ? -DeviceHeigth * 0.01
-  //                   : DeviceHeigth >= 1024
-  //                   ? 0
-  //                   : DeviceHeigth * 0.0
-  //                 : 0,
-  //           }}>
-  //           <BannerAdd bannerAdId={bannerAdId} />
-  //         </View>
-  //       );
-  //     }
-  //   } else {
-  //     return (
-  //       <View
-  //         style={{
-  //           marginTop:
-  //             Platform.OS == 'ios'
-  //               ? DeviceHeigth == 667
-  //                 ? -DeviceHeigth * 0.01
-  //                 : DeviceHeigth >= 1024
-  //                 ? 0
-  //                 : DeviceHeigth * 0.0
-  //               : 0,
-  //         }}>
-  //         <BannerAdd bannerAdId={bannerAdId} />
-  //       </View>
-  //     );
-  //   }
-  // };
   return (
     <>
       <Tabs.Navigator
@@ -313,12 +291,15 @@ const BottomTab = () => {
         <Tabs.Screen
           name="MyPlans"
           component={MyPlans}
+          // options={{
+          //   tabBarIcon: () => <NotificationBadge />,
+          // }}
           options={{tabBarShowLabel: false}}
         />
         <Tabs.Screen
           name="Workout"
           component={Workouts}
-          options={{tabBarShowLabel: false}}
+          options={{tabBarShowLabel: true}}
         />
         <Tabs.Screen
           name="Reports"
@@ -362,20 +343,9 @@ const styles = StyleSheet.create({
         ? DeviceHeigth * 0.06
         : DeviceHeigth * 0.09,
     backgroundColor: 'white',
-    // zIndex: 1,
+
     borderTopWidth: 0.5,
     borderTopColor: 'rgba(0, 0, 0, 0.12)',
-    // shadowColor: '#121212B2',
-    // ...Platform.select({
-    //   ios: {
-    //     shadowOffset: {width: 1, height: 2},
-    //     shadowOpacity: 0.5,
-    //     shadowRadius: 8,
-    //   },
-    //   android: {
-    //     elevation: 10,
-    //   },
-    // }),
   },
   tabButton: {
     flex: 1,
@@ -413,6 +383,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -40,
     left: 0,
+  },
+  badgeContainer: {
+    position: 'absolute',
+    top: DeviceHeigth <= 667 ? -12 : DeviceHeigth <= 844 ? -13 :DeviceHeigth>=1024?-13:-13,
+    right: DeviceHeigth <= 844?15:DeviceHeigth>=1024?DeviceHeigth*0.054:12,
+    width: 25,
+    height: 25,
+  },
+  lottie: {
+    width: 25,
+    height: 25,
   },
 });
 

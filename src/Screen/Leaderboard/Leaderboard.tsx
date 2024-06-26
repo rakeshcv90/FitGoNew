@@ -48,7 +48,6 @@ const Leaderboard = ({navigation, route}: any) => {
   const getLeaderboardDataAPI = async () => {
     try {
       const result = await axios({
-        // url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${appVersion}`,
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
       if (result.data) {
@@ -56,7 +55,7 @@ const Leaderboard = ({navigation, route}: any) => {
         const after5 = result.data?.data?.filter((item: any) => item?.rank > 5);
         setMainData(top5);
         setOtherData(after5);
-        // console.log(result.data);
+
         const myRank = result.data?.data?.findIndex(
           (item: TypeData) => item?.id == getUserDataDetails?.id,
         );

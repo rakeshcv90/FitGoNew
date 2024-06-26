@@ -242,7 +242,7 @@ const OneDay = ({navigation, route}: any) => {
             res.data?.msg ==
             'Exercise Status for All Users Inserted Successfully'
           ) {
-            console.log(res.data);
+     
             setOpen(false);
             setDownloade(0);
             navigation.navigate('Exercise', {
@@ -259,7 +259,7 @@ const OneDay = ({navigation, route}: any) => {
               challenge,
             });
           } else {
-            console.log(trackerData);
+      
             setOpen(false);
             setDownloade(0);
             navigation.navigate('Exercise', {
@@ -748,7 +748,7 @@ const OneDay = ({navigation, route}: any) => {
           // mB={80}
           bottm={40}
           // weeklyAnimation={downloaded}
-          colors={[AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED]}
+          colors={['#f0013b', '#f0013b']}
           alignSelf
           bR={6}
           normalAnimation={downloaded > 0}

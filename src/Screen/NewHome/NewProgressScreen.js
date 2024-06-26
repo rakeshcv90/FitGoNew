@@ -535,9 +535,7 @@ const NewProgressScreen = ({navigation}) => {
                   bezier
                   segments={4}
                   renderDotContent={renderCustomPoint}
-                  // onDataPointClick={data =>
-                  //   console.log('PointData=====>', data.value)
-                  // }
+             
                   withShadow={false}
                   yAxisInterval={10}
                   fromZero={true}

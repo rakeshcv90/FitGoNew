@@ -78,7 +78,14 @@ const NameUpdateModal = ({
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (responseData?.data?.msg == 'version is required') {
-        console.log('version error', responseData?.data?.msg);
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+       
       } else {
         const objects = {};
         responseData.data.data.forEach((item: any) => {
@@ -128,7 +135,7 @@ const NameUpdateModal = ({
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('COMPLETE', res.data, payload);
+
       // ProfileDataAPI();
       getUserAllInData();
     } catch (error) {
@@ -169,7 +176,7 @@ const NameUpdateModal = ({
             }}
             resizeMode="contain"
           />
-          <FitText type="Heading" value="OOPS!!!" fontWeight="700" errorType />
+          <FitText type="Heading" value="OOPS!!!" fontWeight="700" color='#f0013b' />
           <FitText
             type="Heading"
             value={`Looks like some details are missing in your registered profile. Please enter the details below:`}
@@ -272,7 +279,7 @@ const NameUpdateModal = ({
                     width: DeviceWidth * 0.6,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: AppColor.NEW_DARK_RED,
+                    backgroundColor: '#f0013b',
                     padding: 10,
                     position: 'absolute',
                     bottom: 20,

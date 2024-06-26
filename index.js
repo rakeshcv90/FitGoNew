@@ -47,14 +47,11 @@ notifee.createChannel({
   description: 'CHANNEL FOR NOTIFICATION',
 });
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('BACKGROUND NOTIFUCATION', remoteMessage);
   if (remoteMessage.data?.type == 'delete_notification') {
     DeleteWeeklyDataAPIStart();
   } else if (remoteMessage.data?.type == 'event_saturday') {
-    console.log('FORE NOTIFUCATION', remoteMessage.data?.type);
     getLeaderboardDataAPI();
   } else if (remoteMessage.data?.type == 'event_monday') {
-    console.log('FORE NOTIFUCATION', remoteMessage.data?.type);
     store.dispatch(setRewardModal(true));
   } else {
     StepcountNoticationStart();
@@ -68,14 +65,12 @@ notifee.onForegroundEvent(async ({type, detail}) => {
 });
 const TriggerButtons = async (detail, type) => {
   const {notification, pressAction} = detail;
-  console.log('TRI', type);
+
   if (notification.data?.type == 'delete_notification') {
     DeleteWeeklyDataAPIStart();
   } else if (remoteMessage.data?.type == 'event_saturday') {
-    console.log('FORE NOTIFUCATION', remoteMessage.data?.type);
     getLeaderboardDataAPI();
   } else if (notification.data?.type == 'event_monday') {
-    console.log('FORE NOTIFUCATION', notification.data?.type);
     store.dispatch(setRewardModal(true));
   } else {
     StepcountNoticationStart();
@@ -197,13 +192,10 @@ const DisplayNotification = async Notification => {
   if (Notification.data?.type == 'delete_notification') {
     DeleteWeeklyDataAPIStart();
   } else if (remoteMessage.data?.type == 'event_saturday') {
-    console.log('FORE NOTIFUCATION', remoteMessage.data?.type);
     getLeaderboardDataAPI();
   } else if (Notification.data?.type == 'event_monday') {
-    console.log('FORE NOTIFUCATION', Notification.data?.type);
     store.dispatch(setRewardModal(true));
   } else {
-    console.log('dfsdfsdfds', Notification.data);
     StepcountNoticationStart();
   }
 };
@@ -224,7 +216,7 @@ const getLeaderboardDataAPI = async () => {
           result.data?.winner_announced == true ? true : false,
         ),
       );
-      // console.log('RANK DATA', myRankData);
+    
     }
   } catch (error) {
     console.log(error);
@@ -236,10 +228,8 @@ messaging().getInitialNotification(async remoteMessage => {
   if (remoteMessage.data?.type == 'delete_notification') {
     DeleteWeeklyDataAPIStart();
   } else if (remoteMessage.data?.type == 'event_saturday') {
-    console.log('FORE NOTIFUCATION', remoteMessage.data?.type);
     getLeaderboardDataAPI();
   } else if (remoteMessage.data?.type == 'event_monday') {
-    console.log('Kill NOTIFUCATION', remoteMessage.data?.type);
     store.dispatch(setRewardModal(true));
   } else {
     StepcountNoticationStart();
@@ -250,7 +240,6 @@ const AppRedux = () => {
   LogBox.ignoreAllLogs();
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('BACKRERE', remoteMessage.data);
       DisplayNotification(remoteMessage);
     });
     return unsubscribe;
@@ -317,11 +306,11 @@ AdManager.registerRepository({
   expirationPeriod: 3600000, // in milliseconds (optional)
   mediationEnabled: false,
 }).then(result => {
-  console.log('registered: ', result);
+
 });
 
 AdManager.subscribe('imageAd', 'onAdPreloadClicked', () => {
-  console.log('click', 'imageAd');
+
 });
 
 AppRegistry.registerComponent(appName, () => AppRedux);

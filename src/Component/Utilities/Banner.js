@@ -202,7 +202,7 @@ const Banners = ({
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (responseData?.data?.msg == 'version is required') {
-        console.log('version error', responseData?.data?.msg);
+    
       } else {
         const objects = {};
         responseData.data.data.forEach(item => {

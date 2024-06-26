@@ -247,40 +247,6 @@ const LoadData = ({navigation}) => {
     }
   };
 
-  // const getProfileData = async user_id => {
-  //   try {
-  //     const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       data: {
-  //         id: user_id,
-  //         version: VersionNumber.appVersion,
-  //       },
-  //     });
-  //     console.log('Load Data Proile ', data?.data?.profile);
-  //     if (data?.data?.profile) {
-  //       dispatch(setUserProfileData(data.data.profile));
-  //      // getAgreementStatus();
-  //     } else if (
-  //       data?.data?.msg == 'Please update the app to the latest version.'
-  //     ) {
-  //       showMessage({
-  //         message: data?.data?.msg,
-  //         floating: true,
-  //         duration: 500,
-  //         type: 'danger',
-  //         icon: {icon: 'auto', position: 'left'},
-  //       });
-  //     } else {
-  //       dispatch(setUserProfileData([]));
-  //      // getAgreementStatus();
-  //     }
-  //   } catch (error) {
-  //     console.log('User Profile Error', error);
-  //   }
-  // };
 
   const getUserDetailData = async userId => {
     try {
@@ -332,29 +298,7 @@ const LoadData = ({navigation}) => {
       </Animated.View>
     );
   };
-  // const getAgreementStatus = async () => {
-  //   try {
-  //     const ApiCall = await axios(NewAppapi.GET_AGR_STATUS, {
-  //       method: 'POST',
-  //       data: {
-  //         user_id: getUserID != 0 ? getUserID : null,
-  //         version: VersionNumber.appVersion,
-  //       },
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     });
-  //     if (ApiCall?.data) {
 
-  //       dispatch(setOfferAgreement(ApiCall?.data));
-  //     } else {
-  //       setLoadData(100);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     setLoadData(100);
-  //   }
-  // };
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />

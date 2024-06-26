@@ -79,7 +79,7 @@ const Weight = ({route, navigation}: any) => {
       targetWeight: weight,
       type: toggle,
     };
-    console.log("sdsdfsdfsdfsdf",selected,weight)
+
     if (mergedObject.goal_name == 'Lose weight' && selected < weight) {
       showMessage({
         message:
