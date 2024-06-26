@@ -71,6 +71,8 @@ import {
   setStoreData,
   setUserProfileData,
   setWorkoutTimeCal,
+  setRewardModal,
+  setRewardPopUp,
 } from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import {BlurView} from '@react-native-community/blur';
@@ -78,7 +80,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Slider} from '@miblanchard/react-native-slider';
 // import GoogleFit, {Scopes} from 'react-native-google-fit';
 import {setPedomterData} from '../../Component/ThemeRedux/Actions';
-import AppleHealthKit from 'react-native-health';
+import AppleHealthKit, {EventType} from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
 import GradientButton from '../../Component/GradientButton';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
@@ -142,7 +144,9 @@ const HomeNew = ({navigation}) => {
   const getRewardModalStatus = useSelector(
     state => state?.getRewardModalStatus,
   );
+  const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
   const isAlarmEnabled = useSelector(state => state.isAlarmEnabled);
+
   const colors = [
     {color1: '#E3287A', color2: '#EE7CBA'},
     {color1: '#5A76F4', color2: '#61DFF6'},
@@ -252,7 +256,7 @@ const HomeNew = ({navigation}) => {
             }
           } catch (err) {
             console.error('Error checking location permission:', err);
-            setBannertype1('new_join');
+            setBannertype1('coming_soon');
           }
         }
       };
@@ -260,7 +264,6 @@ const HomeNew = ({navigation}) => {
       return () => {};
     }, [getOfferAgreement, enteredCurrentEvent, enteredUpcomingEvent]),
   );
-
   const getUserAllInData = async () => {
     try {
       const responseData = await axios.get(
@@ -314,31 +317,6 @@ const HomeNew = ({navigation}) => {
       }, 2000);
     }
   }, [isFocused]);
-  // const PurchaseDetails = async () => {
-  //   try {
-  //     setRefresh(true);
-  //     const result = await axios(
-  //       `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
-  //     );
-  //     setRefresh(false);
-  //     if (result.data?.message == 'Not any subscription') {
-  //       dispatch(setPurchaseHistory([]));
-  //     } else {
-  //       dispatch(setPurchaseHistory(result.data.data));
-  //       // dispatch(setEvent(true));
-  //       EnteringEventFunction(
-  //         dispatch,
-  //         result.data?.data,
-  //         setEnteredCurrentEvent,
-  //         setEnteredUpcomingEvent,
-  //         setPlanType,
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     setRefresh(false);
-  //   }
-  // };
   const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(
@@ -406,29 +384,6 @@ const HomeNew = ({navigation}) => {
       }
     }
   };
-  // const ChallengesDataAPI = async () => {
-  //   try {
-  //     const res = await axios({
-  //       url:
-  //         NewAppapi.GET_CHALLENGES_DATA +
-  //         '?version=' +
-  //         VersionNumber.appVersion +
-  //         '&user_id=' +
-  //         getUserDataDetails?.id,
-  //     });
-  //     if (res.data?.msg != 'version  is required') {
-  //       dispatch(setChallengesData(res.data));
-  //       const challenge = res.data?.filter(item => item?.status == 'active');
-  //       // console.log('challenge', challenge);
-  //       setCurrentChallenge(challenge);
-  //       getCurrentDayAPI(challenge);
-  //     } else {
-  //       dispatch(setChallengesData([]));
-  //     }
-  //   } catch (error) {
-  //     console.error(error, 'ChallengesDataAPI ERRR');
-  //   }
-  // };
   const getAllChallangeAndAllExerciseData = async () => {
     let responseData = 0;
     if (Object.keys(getUserDataDetails).length > 0) {
@@ -774,7 +729,6 @@ const HomeNew = ({navigation}) => {
       </Modal>
     );
   };
-
   const getWorkoutStatus = async () => {
     try {
       const exerciseStatus = await axios.get(
@@ -1341,7 +1295,7 @@ const HomeNew = ({navigation}) => {
                 alignItems: 'center',
               }}
               onPress={() => {
-                navigation.navigate('IntroVideo',{type:'home'});
+                navigation.navigate('IntroVideo', {type: 'home'});
               }}>
               <AnimatedLottieView
                 source={localImage.RewardInfo}
@@ -2080,13 +2034,15 @@ const HomeNew = ({navigation}) => {
           //   //     : DeviceHeigth * 0.06,
           //   // alignItems: 'center',
           // }}
-          style={[styles.meditionBox,{
-                      top:
-              Platform.OS == 'android'
-                ? DeviceHeigth * 0.03
-               : DeviceHeigth * 0.06,
-          }]}
-          >
+          style={[
+            styles.meditionBox,
+            {
+              top:
+                Platform.OS == 'android'
+                  ? DeviceHeigth * 0.03
+                  : DeviceHeigth * 0.06,
+            },
+          ]}>
           <FlatList
             data={fitnessInstructor}
             horizontal
@@ -2281,8 +2237,58 @@ const HomeNew = ({navigation}) => {
       </ScrollView>
       {modalVisible ? <UpdateGoalModal /> : null}
       <PermissionModal locationP={locationP} setLocationP={setLocationP} />
-
-      <RewardModal navigation={navigation} visible={getRewardModalStatus}/>
+      <RewardModal
+        navigation={navigation}
+        visible={getRewardModalStatus}
+        imagesource={localImage.Reward_icon}
+        ButtonText={'Start now'}
+        txt1={'Challenge On!\n'}
+        txt2={
+          'Your fitness challenge has started! Begin now to collect FitCoins and win cash rewards!'
+        }
+        onCancel={() => {
+          dispatch(setRewardModal(false));
+        }}
+        onConfirm={() => {
+          dispatch(setRewardModal(false));
+          navigation.navigate('BottomTab', {
+            screen: 'MyPlans',
+          });
+        }}
+      />
+      {getOfferAgreement?.location == 'India' ? (
+        getPopUpFreuqency == 6 || getPopUpFreuqency % 5 == 0 ? (
+          <RewardModal
+            navigation={navigation}
+            visible={true}
+            imagesource={localImage.Reward_icon1}
+            txt1={'Earn While You Burn\n'}
+            txt2={
+              'Join the fitness challenge today for a healthier you and a wealthier wallet!'
+            }
+            ButtonText={'Get Started'}
+            onConfirm={() => {
+              if (getPurchaseHistory?.plan != null) {
+                if (
+                  getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
+                ) {
+                  navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+                  dispatch(setRewardPopUp(1));
+                } else {
+                  navigation.navigate('NewSubscription', {upgrade: false});
+                  dispatch(setRewardPopUp(1));
+                }
+              } else {
+                navigation.navigate('NewSubscription', {upgrade: false});
+                dispatch(setRewardPopUp(1));
+              }
+            }}
+            onCancel={() => {
+              dispatch(setRewardPopUp(1));
+            }}
+          />
+        ) : null
+      ) : null}
       <LocationPermissionModal
         locationP={locationP1}
         setLocationP={setLocationP1}

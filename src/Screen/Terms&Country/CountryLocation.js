@@ -10,10 +10,7 @@ import {locationPermission} from './LocationPermission';
 import axios from 'axios';
 import VersionNumber from 'react-native-version-number';
 import {useSelector, useDispatch} from 'react-redux';
-import {
-  setOfferAgreement,
-
-} from '../../Component/ThemeRedux/Actions';
+import {setOfferAgreement} from '../../Component/ThemeRedux/Actions';
 import {Image} from 'react-native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
@@ -41,15 +38,32 @@ const CountryLocation = ({navigation, route}) => {
           setLoaded(true);
         } else if (result) {
           StoreAgreementApi(result);
-          
-        } else if (!result) {
-          setLocationP(true);
+        } else if (result == null) {
+          // setLocationP(true);
           setLoaded(true);
+          showMessage({
+            message: 'Error while getting your location',
+            floating: true,
+            duration: 500,
+            type: 'danger',
+            icon: {icon: 'auto', position: 'left'},
+          });
+          navigation.navigate('BottomTab');
         }
       })
       .catch(err => {
         console.log('location Error', err);
+        setLoaded(true);
+        showMessage({
+          message: 'Error while getting your location',
+          floating: true,
+          duration: 500,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
       });
+      navigation.navigate('BottomTab');
+
   };
   const StoreAgreementApi = async country => {
     setLoaded(false);
@@ -103,7 +117,7 @@ const CountryLocation = ({navigation, route}) => {
         // if (CustomCreated) {
         //   navigation.navigate('CustomWorkout', {routeName: routeName});
         // } else {
-        
+
         // }
       }
     } catch (error) {

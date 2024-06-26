@@ -80,9 +80,25 @@ const Banners = ({
               setLoaded(true);
             } else if (result) {
               StoreAgreementApi(result);
-            } else if (!result) {
-              setLocationP(true);
+            } else if (result==null) {
+              // setLocationP(true);
               setLoaded(true);
+              showMessage({
+                message: 'Error while getting your location',
+                floating: true,
+                duration: 500,
+                type: 'danger',
+                icon: {icon: 'auto', position: 'left'},
+              });
+            }else{
+              setLoaded(true);
+              showMessage({
+                message: 'Error while getting your location',
+                floating: true,
+                duration: 500,
+                type: 'danger',
+                icon: {icon: 'auto', position: 'left'},
+              });
             }
           })
           .catch(err => {

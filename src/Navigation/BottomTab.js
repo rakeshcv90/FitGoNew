@@ -21,7 +21,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {AppColor, Fonts} from '../Component/Color';
-import {setFitmeAdsCount} from '../Component/ThemeRedux/Actions';
+import {
+  setFitmeAdsCount,
+  setRewardPopUp,
+} from '../Component/ThemeRedux/Actions';
 import MyPlans, {handleStart} from '../Screen/MyPlans/MyPlans';
 import GradientButton from '../Component/GradientButton';
 
@@ -45,7 +48,10 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
   const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
-
+  const enteredUpcomingEvent = useSelector(
+    state => state?.enteredUpcomingEvent,
+  );
+  const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
   useEffect(() => {
     initInterstitial();
   }, []);
@@ -84,6 +90,12 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
         const Sun = getPurchaseHistory?.currentDay == 7;
         const onPress = () => {
           AnalyticsConsole(`${route.name}_TAB`);
+          if (
+            (!enteredCurrentEvent && !enteredUpcomingEvent) ||
+            (!enteredUpcomingEvent && enteredCurrentEvent)
+          ) {
+            Dispatch(setRewardPopUp(getPopUpFreuqency + 1));
+          }
           if (route.key?.includes('MyPlans') && Sat) {
             showMessage({
               message:

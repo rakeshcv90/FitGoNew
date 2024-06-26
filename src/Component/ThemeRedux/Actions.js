@@ -364,3 +364,15 @@ export const setHindiLanuage = data => {
     payload: data,
   };
 };
+export const setRewardPopUp = data => {
+  return {
+    type: types.TRACK_REWARDPOPUP,
+    payload: data,
+  };
+};
+export const setPopUpSeen = data => {
+  return {
+    type: types.POPUPSEEN,
+    payload: data,
+  };
+};

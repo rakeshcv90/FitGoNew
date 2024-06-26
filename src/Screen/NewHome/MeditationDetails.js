@@ -20,10 +20,14 @@ import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import moment from 'moment';
 import NativeAddTest from '../../Component/NativeAddTest';
-import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
+import {
+  setRewardPopUp,
+  setVideoLocation,
+} from '../../Component/ThemeRedux/Actions';
 import RNFetchBlob from 'rn-fetch-blob';
-import { BannerAdd } from '../../Component/BannerAdd';
-import { bannerAdId } from '../../Component/AdsId';
+import {BannerAdd} from '../../Component/BannerAdd';
+import {bannerAdId} from '../../Component/AdsId';
+import RewardModal from '../../Component/Utilities/RewardModal';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -37,7 +41,12 @@ const MeditationDetails = ({navigation, route}) => {
   const [downloaded, setDownloade] = useState(0);
   const avatarRef = React.createRef();
   const allWorkoutData = useSelector(state => state.allWorkoutData);
-
+  const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
+  const enteredUpcomingEvent = useSelector(
+    state => state?.enteredUpcomingEvent,
+  );
+  const getOfferAgreement = useSelector(state => state?.getOfferAgreement);
+  const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
   const colors = [
     {color1: '#E2EFFF', color2: '#9CC2F5', color3: '#425B7B'},
     {color1: '#BFF0F5', color2: '#8DD9EA', color3: '#1F6979'},
@@ -46,6 +55,14 @@ const MeditationDetails = ({navigation, route}) => {
   ];
   const dispatch = useDispatch();
   useEffect(() => {
+    setTimeout(() => {
+      if (
+        (!enteredCurrentEvent && !enteredUpcomingEvent) ||
+        (!enteredUpcomingEvent && enteredCurrentEvent)
+      ) {
+        dispatch(setRewardPopUp(getPopUpFreuqency + 1));
+      }
+    }, 1000);
     if (isFocused) {
       if (route?.params?.item) {
         getCaterogy(
@@ -267,11 +284,11 @@ const MeditationDetails = ({navigation, route}) => {
   //       return null;
   //     } else {
   //       return <BannerAdd bannerAdId={bannerAdId} />
-    
+
   //     }
   //   } else {
   //     return   <BannerAdd bannerAdId={bannerAdId} />
- 
+
   //   }
   // };
   return (
@@ -602,10 +619,45 @@ const MeditationDetails = ({navigation, route}) => {
             />
           )}
         </View>
+        {getOfferAgreement?.location == 'India' ? (
+          getPopUpFreuqency == 5 || getPopUpFreuqency % 4 == 0 ? (
+            <RewardModal
+              navigation={navigation}
+              visible={true}
+              imagesource={localImage.Reward_icon1}
+              txt1={'Earn While You Burn\n'}
+              txt2={
+                'Join the fitness challenge today for a healthier you and a wealthier wallet!'
+              }
+              ButtonText={'Get Started'}
+              onConfirm={() => {
+                if (getPurchaseHistory?.plan != null) {
+                  if (
+                    getPurchaseHistory?.end_date >=
+                    moment().format('YYYY-MM-DD')
+                  ) {
+                    navigation.navigate('UpcomingEvent', {
+                      eventType: 'upcoming',
+                    });
+                    dispatch(setRewardPopUp(1));
+                  } else {
+                    navigation.navigate('NewSubscription', {upgrade: false});
+                    dispatch(setRewardPopUp(1));
+                  }
+                } else {
+                  navigation.navigate('NewSubscription', {upgrade: false});
+                  dispatch(setRewardPopUp(1));
+                }
+              }}
+              onCancel={() => {
+                dispatch(setRewardPopUp(1));
+              }}
+            />
+          ) : null
+        ) : null}
       </>
       {/* {bannerAdsDisplay()} */}
-          <BannerAdd bannerAdId={bannerAdId} />
-  
+      <BannerAdd bannerAdId={bannerAdId} />
     </View>
   );
 };

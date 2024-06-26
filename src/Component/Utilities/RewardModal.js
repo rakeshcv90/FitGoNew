@@ -5,25 +5,18 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../Config';
 import {Image} from 'react-native';
 import {localImage} from '../Image';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {BlurView} from '@react-native-community/blur';
 import NewButton from '../NewButton';
-import {
-  openSettings,
-  PERMISSIONS,
-  requestMultiple,
-  RESULTS,
-} from 'react-native-permissions';
-import axios from 'axios';
-import VersionNumber from 'react-native-version-number';
-import {useSelector, useDispatch} from 'react-redux';
-import {showMessage} from 'react-native-flash-message';
-
-import {locationPermission} from '../../Screen/Terms&Country/LocationPermission';
-import ActivityLoader from '../ActivityLoader';
-import { setRewardModal } from '../ThemeRedux/Actions';
-const RewardModal = ({visible, navigation}) => {
-  const dispatch = useDispatch();
-
+import {setRewardModal} from '../ThemeRedux/Actions';
+import { useDispatch } from 'react-redux';
+const RewardModal = ({
+  visible,
+  imagesource,
+  onCancel,
+  onConfirm,
+  txt1,
+  txt2,
+  ButtonText,
+}) => {
   return (
     <Modal transparent visible={visible}>
       <View style={{backgroundColor: `rgba(0,0,0,0.4)`, flex: 1}}>
@@ -32,21 +25,24 @@ const RewardModal = ({visible, navigation}) => {
             name="close"
             size={25}
             color={AppColor.BLACK}
-            style={{margin: 16, position: 'absolute', right: 0,zIndex:1,overflow:'hidden'}}
-            onPress={() => {
-             dispatch(setRewardModal(false))
-            
+            style={{
+              margin: 16,
+              position: 'absolute',
+              right: 0,
+              zIndex: 1,
+              overflow: 'hidden',
             }}
+            onPress={onCancel}
           />
           <View
             style={{
               justifyContent: 'center',
               alignItems: 'center',
               // marginVertical: ,
-              top:20
+              top: 20,
             }}>
             <Image
-              source={localImage.Reward_icon}
+              source={imagesource}
               style={[styles.img2]}
               resizeMode="contain"
             />
@@ -58,21 +54,16 @@ const RewardModal = ({visible, navigation}) => {
               alignSelf: 'center',
             }}>
             <Text style={[styles.txt1, {fontSize: 15, lineHeight: 20}]}>
-              <Text style={{color: AppColor.RED, fontSize: 20, lineHeight: 40}}>
-                {'Challenge On!\n'}
+              <Text style={{color: '#f0013b', fontSize: 20, lineHeight: 40}}>
+                {txt1}
               </Text>
-              Your fitness challenge has started! Begin now to collect FitCoins and win cash rewards!
+            {txt2}
             </Text>
             <NewButton
               pV={15}
-              title={'Start Now'}
+              title={ButtonText}
               ButtonWidth={DeviceWidth * 0.6}
-              onPress={() => {
-                dispatch(setRewardModal(false))
-                navigation.navigate('BottomTab', {
-              screen: 'MyPlans',
-            });
-              }}
+              onPress={onConfirm}
             />
           </View>
         </View>

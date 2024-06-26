@@ -61,6 +61,8 @@ const intialState = {
   winnerAnnounced: false,
   getBanners: {},
   getEditedDayExercise: {},
+  getPopUpFreuqency: 0,
+  getPopUpSeen: false,
   hindiLanguage: false
 };
 const ThemeReducer = (state = intialState, action) => {
@@ -333,6 +335,16 @@ const ThemeReducer = (state = intialState, action) => {
       return {
         ...state,
         winnerAnnounced: action.payload,
+      };
+    case types.TRACK_REWARDPOPUP:
+      return {
+        ...state,
+        getPopUpFreuqency: action.payload,
+      };
+    case types.POPUPSEEN:
+      return {
+        ...state,
+        getPopUpSeen: action.payload,
       };
     case types.HINDI_LANGUAGE:
       return {

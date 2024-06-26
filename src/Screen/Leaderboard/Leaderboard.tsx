@@ -240,6 +240,7 @@ const Leaderboard = ({navigation, route}: any) => {
           <ImageBackground
             source={localImage.Rank1background}
             imageStyle={{width: DeviceWidth, height: DeviceWidth / 2}}
+            
             style={{
               justifyContent: 'center',
               alignItems: 'center',
