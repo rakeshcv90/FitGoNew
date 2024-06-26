@@ -134,22 +134,8 @@ const AskToCreateWorkout = ({route, navigation}) => {
       payload.append('targetweight', mergedObject?.targetWeight);
       payload.append('experience', experience);
       payload.append('workout_plans', 'CustomCreated');
-      if (name) {
-        payload.append('name', name);
-      } else {
-        payload.append('name', getUserDataDetails?.name);
-      }
-      payload.append(
-        'injury',
-        mergedObject?.injury != null ? mergedObject?.injury?.join(',') : null,
-      );
-      payload.append('equipment', mergedObject?.equipment);
-      payload.append(
-        'workoutarea',
-        mergedObject?.workoutArea?.join(',') ?? null,
-      );
+      payload.append('name', getUserDataDetails?.name);
       payload.append('version', VersionNumber?.appVersion);
-
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {
@@ -177,15 +163,15 @@ const AskToCreateWorkout = ({route, navigation}) => {
     }
   };
   const getUserDetailData = async userId => {
-    const currrentdata = [
-      {
-        gender: gender,
-      },
-      {
-        experience: experience,
-      },
-      {workout_plans: 'CustomCreated'},
-    ];
+    // const currrentdata = [
+    //   {
+    //     gender: gender,
+    //   },
+    //   {
+    //     experience: experience,
+    //   },
+    //   {workout_plans: 'CustomCreated'},
+    // ];
 
     try {
       const responseData = await axios.get(
@@ -207,19 +193,19 @@ const AskToCreateWorkout = ({route, navigation}) => {
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         dispatch(setUserProfileData(responseData?.data?.profile));
-        dispatch(setLaterButtonData(currrentdata));
+        // dispatch(setLaterButtonData(currrentdata));
         dispatch(setExperience(true));
         if (getUserDataDetails.email != null) {
           navigation.navigate('OfferTerms', {
             routeName: 'Exprience',
             CustomCreated: true,
           });
-setLoader(false)
+          setLoader(false);
           dispatch(setCustomWorkoutData([]));
-          navigation.navigate('OfferTerms', {CustomCreated: true});
+        //  navigation.navigate('OfferTerms', {CustomCreated: true});
         } else {
           navigation.navigate('CustomWorkout', {routeName: 'Exprience'});
-          setLoader(false)
+          setLoader(false);
         }
         if (responseData?.data.event_details == 'Not any subscription') {
           dispatch(setPurchaseHistory([]));
@@ -230,7 +216,7 @@ setLoader(false)
             setEnteredUpcomingEvent,
             setPlanType,
           );
-          setLoader(false)
+          setLoader(false);
         } else {
           dispatch(setPurchaseHistory(responseData?.data.event_details));
           EnteringEventFunction(
@@ -240,22 +226,20 @@ setLoader(false)
             setEnteredUpcomingEvent,
             setPlanType,
           );
-          setLoader(false)
+          setLoader(false);
         }
         //ChallengesDataAPI();
         getAllChallangeAndAllExerciseData();
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-     // dispatch(setPurchaseHistory([]));
-     // dispatch(setUserProfileData([]));
+      // dispatch(setPurchaseHistory([]));
+      // dispatch(setUserProfileData([]));
       dispatch(setCustomWorkoutData([]));
 
       getAllChallangeAndAllExerciseData();
     }
   };
-
-  
 
   const getAllChallangeAndAllExerciseData = async () => {
     let responseData = 0;
@@ -266,7 +250,7 @@ setLoader(false)
         );
         dispatch(setChallengesData(responseData.data.challenge_data));
         dispatch(setAllExercise(responseData.data.data));
-        setLoader(false)
+        setLoader(false);
       } catch (error) {
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
         dispatch(setChallengesData([]));
@@ -285,7 +269,7 @@ setLoader(false)
 
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
       }
-      setLoader(false)
+      setLoader(false);
     }
   };
   return (

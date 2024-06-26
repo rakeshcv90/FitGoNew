@@ -72,7 +72,7 @@ const SplaceScreen = ({navigation}) => {
     initInterstitial();
   }, []);
   useEffect(() => {
-    if (Object.keys(getUserDataDetails).length > 0) {
+    if (getUserDataDetails.length > 0) {
       getUserDetailData(getUserDataDetails?.id);
     } else {
       DisplayAds(getOfferAgreement);

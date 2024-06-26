@@ -763,7 +763,7 @@ const NewPersonalDetails = ({route, navigation}) => {
 
                 justifyContent: 'center',
               }}>
-              <Button buttonText={'Register'} onPresh={handleSubmit} />
+              <Button buttonText={'Update Profile'} onPresh={handleSubmit} />
             </View>
           </>
         )}

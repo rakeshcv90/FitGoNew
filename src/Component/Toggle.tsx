@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import React, {FC, useEffect} from 'react';
-import {AppColor} from './Color';
+import {AppColor, Fonts} from './Color';
 import {useSelector} from 'react-redux';
 
 type Props = TouchableWithoutFeedbackProps & {
@@ -29,7 +29,7 @@ const Toggle: FC<Props> = ({...Props}) => {
         backgroundColor: Props.baseColor
           ? Props.baseColor
           : AppColor.SOCIALBUTTON,
-        borderRadius: 25,
+        borderRadius: 8,
         overflow: 'hidden',
         flexDirection: 'row',
       }}>
@@ -46,16 +46,16 @@ const Toggle: FC<Props> = ({...Props}) => {
                     ? Props.highlightColor
                     : Props.baseColor,
                 height: 35,
-                borderRadius: 25,
+                borderRadius: 8,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
               <Text
                 style={{
-                  color: !defaultTheme ? AppColor.WHITE : AppColor.BLACK,
+                  color:  Props.selected == item ? AppColor.WHITE : AppColor.BLACK,
                   fontWeight: '500',
-                  fontFamily: 'Verdana',
-                  fontSize: 12,
+                  fontFamily: Fonts.MONTSERRAT_BOLD,
+                  fontSize: 14,
                 }}>
                 {item}
               </Text>

@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     position: 'absolute',
-    bottom: DeviceHeigth * 0.03,
+    bottom: DeviceHeigth * 0.1,
     width: DeviceWidth * 0.9,
     alignSelf: 'center',
   },

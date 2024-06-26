@@ -159,94 +159,94 @@ const LoadData = ({navigation}) => {
         });
       } else {
         getUserID != 0 && getUserDetailData(getUserID); //getProfileData(getUserID);
-        getUserID != 0
-          ? getCustomWorkout(getUserID)
-          : customFreeWorkoutDataApi(deviceID);
-        dispatch(setTempLogin(false));
+        // getUserID != 0
+        //   ? getCustomWorkout(getUserID)
+        //   : customFreeWorkoutDataApi(deviceID);
+        // dispatch(setTempLogin(false));
       }
     } catch (error) {
       console.log('Whole Data Error', error);
     }
   };
 
-  const getCustomWorkout = async user_id => {
-    try {
-      const data = await axios(NewAppapi.Custom_WORKOUT_DATA, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          id: user_id,
-          version: VersionNumber.appVersion,
-        },
-      });
+  // const getCustomWorkout = async user_id => {
+  //   try {
+  //     const data = await axios(NewAppapi.Custom_WORKOUT_DATA, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         id: user_id,
+  //         version: VersionNumber.appVersion,
+  //       },
+  //     });
 
-      if (data.data.workout) {
-        dispatch(setCustomWorkoutData(data?.data));
-        setActiveNext(true);
-        // currentWorkoutDataApi(data.data?.workout[0]);
-      } else if (
-        data?.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: data.data.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        dispatch(setCustomWorkoutData([]));
-        setActiveNext(true);
-      }
-    } catch (error) {
-      console.log('Custom Workout Error', error);
-      dispatch(setCustomWorkoutData([]));
-      setActiveNext(true);
-    }
-  };
+  //     if (data.data.workout) {
+  //       dispatch(setCustomWorkoutData(data?.data));
+  //       setActiveNext(true);
+  //       // currentWorkoutDataApi(data.data?.workout[0]);
+  //     } else if (
+  //       data?.data?.msg == 'Please update the app to the latest version.'
+  //     ) {
+  //       showMessage({
+  //         message: data.data.msg,
+  //         type: 'danger',
+  //         animationDuration: 500,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //     } else {
+  //       dispatch(setCustomWorkoutData([]));
+  //       setActiveNext(true);
+  //     }
+  //   } catch (error) {
+  //     console.log('Custom Workout Error', error);
+  //     dispatch(setCustomWorkoutData([]));
+  //     setActiveNext(true);
+  //   }
+  // };
 
-  const customFreeWorkoutDataApi = async deviceID => {
-    try {
-      const payload = new FormData();
-      payload.append('deviceid', deviceID);
-      payload.append('version', VersionNumber.appVersion);
+  // const customFreeWorkoutDataApi = async deviceID => {
+  //   try {
+  //     const payload = new FormData();
+  //     payload.append('deviceid', deviceID);
+  //     payload.append('version', VersionNumber.appVersion);
 
-      const res = await axios({
-        url: NewAppapi.Free_WORKOUT_DATA,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: payload,
-      });
+  //     const res = await axios({
+  //       url: NewAppapi.Free_WORKOUT_DATA,
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: payload,
+  //     });
 
-      if (res.data?.workout) {
-        setActiveNext(true);
-        dispatch(setCustomWorkoutData(res.data));
+  //     if (res.data?.workout) {
+  //       setActiveNext(true);
+  //       dispatch(setCustomWorkoutData(res.data));
 
-        // currentWorkoutDataApi(res.data?.workout[0]);
-      } else if (
-        res?.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: res?.data?.msg,
-          floating: true,
-          duration: 500,
-          type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        dispatch(setCustomWorkoutData([]));
-        setActiveNext(true);
-      }
-    } catch (error) {
-      console.error(error?.response, 'customWorkoutDataApiError');
-      dispatch(setCustomWorkoutData([]));
-      setActiveNext(true);
-    }
-  };
+  //       // currentWorkoutDataApi(res.data?.workout[0]);
+  //     } else if (
+  //       res?.data?.msg == 'Please update the app to the latest version.'
+  //     ) {
+  //       showMessage({
+  //         message: res?.data?.msg,
+  //         floating: true,
+  //         duration: 500,
+  //         type: 'danger',
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //     } else {
+  //       dispatch(setCustomWorkoutData([]));
+  //       setActiveNext(true);
+  //     }
+  //   } catch (error) {
+  //     console.error(error?.response, 'customWorkoutDataApiError');
+  //     dispatch(setCustomWorkoutData([]));
+  //     setActiveNext(true);
+  //   }
+  // };
 
 
   const getUserDetailData = async userId => {
@@ -272,6 +272,7 @@ const LoadData = ({navigation}) => {
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         dispatch(setUserProfileData(responseData?.data?.profile));
         setLoadData(100);
+        setActiveNext(true);
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
@@ -279,6 +280,7 @@ const LoadData = ({navigation}) => {
      // dispatch(setUserProfileData([]));
       dispatch(setCustomWorkoutData([]));
       setLoadData(100);
+      setActiveNext(true);
     }
   };
 

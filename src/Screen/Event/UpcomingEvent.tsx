@@ -305,12 +305,6 @@ const UpcomingEvent = ({navigation, route}: any) => {
       </Modal>
     );
   };
-  console.log(
-    'mo',
-    getPurchaseHistory,
-    eventType,
-    // moment().day(getPurchaseHistory?.currentDay).format('YYYY-MM-DD'),
-  );
 
   const dayLeft =
     getPurchaseHistory?.upcoming_day_status == 1 &&
@@ -739,13 +733,13 @@ const UpcomingEvent = ({navigation, route}: any) => {
                 alignItems: 'center',
                 borderRadius: 5,
                 borderWidth: 1,
-                borderColor: AppColor.NEW_DARK_RED,
+                borderColor: AppColor.RED,
                 paddingVertical: 10,
               }}>
               <FitText
                 type="normal"
                 value="Upgrade Plan"
-                color={AppColor.NEW_DARK_RED}
+                color={AppColor.RED}
                 fontFamily={Fonts.MONTSERRAT_MEDIUM}
               />
             </TouchableOpacity>
@@ -768,7 +762,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
             <FitText
               type="normal"
               value="Cancel Plan"
-              color={AppColor.NEW_DARK_RED}
+              color={AppColor.RED}
               fontFamily={Fonts.MONTSERRAT_MEDIUM}
             />
           </TouchableOpacity>

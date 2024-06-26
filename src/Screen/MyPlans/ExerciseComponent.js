@@ -180,7 +180,7 @@ export const ExerciseComponetWithoutEvents = ({
                   fontFamily: Fonts.MONTSERRAT_BOLD,
                   fontSize: 16,
                   fontWeight: '700',
-                  color: AppColor.RED1,
+                  color: AppColor.RED,
                   lineHeight: 30,
                 }}>
                 {getWeeklyPlansData[day]?.title}

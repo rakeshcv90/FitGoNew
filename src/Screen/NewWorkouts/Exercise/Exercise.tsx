@@ -596,7 +596,7 @@ const Exercise = ({navigation, route}: any) => {
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                paddingTop: DeviceWidth * 0.2
+                paddingTop: DeviceWidth * 0.1
                 // marginTop: DeviceHeigth * 0.05
                 // paddingLeft: DeviceWidth / 2,
               }}>
@@ -648,31 +648,9 @@ const Exercise = ({navigation, route}: any) => {
                 onPress={() => setBack(false)}
                 bW={1}
               />
-              {/* <ProgreesButton
-                onPress={() => {
-                  setPlayW(0);
-                  setBack(false);
-                  setSeconds(
-                    parseInt(currentExercise?.exercise_rest.split(' ')[0]),
-                  );
-                }}
-                text="Restart this Exercise"
-                h={55}
-                bR={30}
-                flex={-1}
-                colors={['#F3F3F3', '#F3F3F3']} 
-                textStyle={{
-                  fontSize: 20,
-                  fontFamily: 'Poppins',
-                  lineHeight: 30,
-                  color: AppColor.BLACK,
-                  fontWeight: '700',
-                }}
-                bC="white"
-                bW={1}
-              /> */}
+             
               <TouchableOpacity
-                style={{alignSelf: 'center', marginTop: 20}}
+                style={{alignSelf: 'center', marginTop: 5}}
                 onPress={() => {
                   type == 'day'
                     ? navigationRef.current.goBack()

@@ -147,24 +147,24 @@ const Index = ({navigation, route}: any) => {
         dispatch(Setmealdata(responseData?.data?.diets));
         dispatch(setStoreData(responseData?.data?.types));
         dispatch(setCompleteProfileData(responseData?.data?.additional_data));
-        setTimeout(() => {
-          navigation.replace(getTempLogin ? 'Name' : 'Gender', {
-            data: responseData?.data?.additional_data?.goal,
-            nextScreen: screen,
-          });
-        }, 3000);
+        // setTimeout(() => {
+        //   navigation.replace(getTempLogin ? 'Name' : 'Gender', {
+        //     data: responseData?.data?.additional_data?.goal,
+        //     nextScreen: screen,
+        //   });
+        // }, 3000);
       }
     } catch (error) {
       console.log('all_in_one_api_error', error);
       dispatch(Setmealdata([]));
       dispatch(setCompleteProfileData([]));
       dispatch(setStoreData([]));
-      setTimeout(() => {
-        navigation.navigate(getTempLogin ? 'Name' : 'Gender', {
-          data: [],
-          nextScreen: screen,
-        });
-      }, 3000);
+      // setTimeout(() => {
+      //   navigation.navigate(getTempLogin ? 'Name' : 'Gender', {
+      //     data: [],
+      //     nextScreen: screen,
+      //   });
+      // }, 3000);
     }
   };
   return (
@@ -180,7 +180,7 @@ const Index = ({navigation, route}: any) => {
         // speed={5}
         autoPlay
         loop
-        style={{width: 300, height: 200}}
+        style={{width: 350, height: 250}}
       />
       <Text
         style={{
@@ -189,7 +189,7 @@ const Index = ({navigation, route}: any) => {
           fontFamily: 'Poppins',
           fontWeight: '700',
           lineHeight: 30,
-          marginTop: -50,
+          //marginTop: -50,
         }}>
         Tell us about yourself!
       </Text>
