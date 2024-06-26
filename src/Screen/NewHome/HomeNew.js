@@ -96,6 +96,8 @@ import {LocationPermissionModal} from '../../Component/Utilities/LocationPermiss
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import {AlarmNotification} from '../../Component/Reminder';
 import notifee from '@notifee/react-native';
+import VideoBanner from '../../Component/Utilities/VideoBanner';
+import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 
 const HomeNew = ({navigation}) => {
   const dispatch = useDispatch();
@@ -354,7 +356,7 @@ const HomeNew = ({navigation}) => {
     } catch (error) {
       console.log('GET-USER-DATA', error);
       // dispatch(setPurchaseHistory([]));
-     // dispatch(setUserProfileData([]));
+      // dispatch(setUserProfileData([]));
       dispatch(setCustomWorkoutData([]));
     }
   };
@@ -1170,7 +1172,7 @@ const HomeNew = ({navigation}) => {
                 borderRadius: 6,
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: '#f0013b' 
+                backgroundColor: '#f0013b',
               }}>
               <Text style={[styles.title, {color: AppColor.WHITE}]}>Save</Text>
             </View>
@@ -1251,67 +1253,21 @@ const HomeNew = ({navigation}) => {
                 : 'Guest')}
           </Text>
           {enteredCurrentEvent ? (
-            <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  right: 8,
-                }}
+            <View style={{alignSelf: 'center'}}>
+              <FitCoins
                 onPress={() => {
-                  navigation.navigate('IntroVideo', {type: 'home'});
-                }}>
-                <AnimatedLottieView
-                  source={localImage.RewardInfo}
-                  speed={1}
-                  autoPlay
-                  loop
-                  resizeMode={DeviceHeigth >= 1024 ? 'contain' : 'cover'}
-                  style={{
-                    width: DeviceWidth * 0.1,
-                    height: DeviceHeigth * 0.07,
-                  }}
-                />
-              </TouchableOpacity>
-
-              <View style={{alignSelf: 'center'}}>
-                <FitCoins
-                  onPress={() => {
-                    AnalyticsConsole('LB');
-                    if (winnerAnnounced) {
-                      navigation.navigate('Winner');
-                    } else {
-                      navigation.navigate('Leaderboard');
-                    }
-                  }}
-                  coins={fitCoins > 0 ? fitCoins : 0}
-                />
-              </View>
-            </View>
-          ) : (
-            <TouchableOpacity
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              onPress={() => {
-                navigation.navigate('IntroVideo', {type: 'home'});
-              }}>
-              <AnimatedLottieView
-                source={localImage.RewardInfo}
-                speed={1}
-                autoPlay
-                loop
-                resizeMode={DeviceHeigth >= 1024 ? 'contain' : 'cover'}
-                style={{
-                  width: DeviceWidth * 0.15,
-                  height: DeviceHeigth * 0.05,
+                  AnalyticsConsole('LB');
+                  if (winnerAnnounced) {
+                    navigation.navigate('Winner');
+                  } else {
+                    navigation.navigate('Leaderboard');
+                  }
                 }}
+                coins={fitCoins > 0 ? fitCoins : 0}
               />
-            </TouchableOpacity>
-          )}
+            </View>
+          ) : null}
         </View>
-
         <Banners
           type1={BannerType1}
           type2={Bannertype2}
@@ -1319,7 +1275,7 @@ const HomeNew = ({navigation}) => {
           setLocationP={setLocationP1}
           navigation={navigation}
         />
-
+        <VideoBanner />
         {currentChallenge?.length > 0 && (
           <View style={{width: '95%', alignSelf: 'center', marginVertical: 10}}>
             <Text
@@ -1455,8 +1411,7 @@ const HomeNew = ({navigation}) => {
                     challenge: true,
                   });
                 }}
-                style={{width: '10%', alignItems: 'center', top: 20}}
-                >
+                style={{width: '10%', alignItems: 'center', top: 20}}>
                 <Image
                   source={require('../../Icon/Images/NewImage2/play.png')}
                   style={{
@@ -1563,7 +1518,9 @@ const HomeNew = ({navigation}) => {
                             fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                           },
                         ]}>
-                        {Platform.OS == 'ios' ? steps?.toFixed(0) : stepsRef.current}
+                        {Platform.OS == 'ios'
+                          ? steps?.toFixed(0)
+                          : stepsRef.current}
                         <Text
                           style={[
                             styles.monetText,
@@ -2258,15 +2215,8 @@ const HomeNew = ({navigation}) => {
       />
       {getOfferAgreement?.location == 'India' ? (
         getPopUpFreuqency == 6 || getPopUpFreuqency % 5 == 0 ? (
-          <RewardModal
-            navigation={navigation}
+          <UpcomingEventModal
             visible={true}
-            imagesource={localImage.Reward_icon1}
-            txt1={'Earn While You Burn\n'}
-            txt2={
-              'Join the fitness challenge today for a healthier you and a wealthier wallet!'
-            }
-            ButtonText={'Get Started'}
             onConfirm={() => {
               if (getPurchaseHistory?.plan != null) {
                 if (

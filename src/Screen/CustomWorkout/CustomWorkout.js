@@ -39,6 +39,7 @@ import moment from 'moment';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import FastImage from 'react-native-fast-image';
 import RewardModal from '../../Component/Utilities/RewardModal';
+import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -588,15 +589,8 @@ const CustomWorkout = ({navigation}) => {
       <BannerAdd bannerAdId={bannerAdId} />
       {getOfferAgreement?.location == 'India' ? (
           getPopUpFreuqency == 5 || getPopUpFreuqency % 4 == 0 ? (
-          <RewardModal
-            navigation={navigation}
+            <UpcomingEventModal
             visible={true}
-            imagesource={localImage.Reward_icon1}
-            txt1={'Earn While You Burn\n'}
-            txt2={
-              'Join the fitness challenge today for a healthier you and a wealthier wallet!'
-            }
-            ButtonText={'Get Started'}
             onConfirm={() => {
               if (getPurchaseHistory?.plan != null) {
                 if (

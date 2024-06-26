@@ -34,6 +34,7 @@ const NewButton = ({
   top,
   right,
   left,
+  elevation,
 }) => {
   const [isClicked, setIsClicked] = useState(false);
   const handlePress = () => {
@@ -67,17 +68,18 @@ const NewButton = ({
           top: top ?? undefined,
           left: left ?? undefined,
           right: right ?? undefined,
+          ...elevation,
         },
       ]}
       onPress={handlePress} // Call handlePress
-      disabled={withAnimation?isClicked ? true : disabled:false}>
+      disabled={withAnimation ? (isClicked ? true : disabled) : false}>
       {withAnimation ? (
         <Animated.View
           style={[
             styles.buttonFill,
             {
               width: `${download}%`,
-              backgroundColor: '#f0013b' // Change fill color to RED
+              backgroundColor: '#f0013b', // Change fill color to RED
             },
           ]}
         />
@@ -116,7 +118,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     bottom: 0,
-    backgroundColor: '#f0013b'
+    backgroundColor: '#f0013b',
   },
   contentContainer: {
     flexDirection: 'row',

@@ -28,6 +28,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import RewardModal from '../../Component/Utilities/RewardModal';
+import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -621,38 +622,28 @@ const MeditationDetails = ({navigation, route}) => {
         </View>
         {getOfferAgreement?.location == 'India' ? (
           getPopUpFreuqency == 5 || getPopUpFreuqency % 4 == 0 ? (
-            <RewardModal
-              navigation={navigation}
-              visible={true}
-              imagesource={localImage.Reward_icon1}
-              txt1={'Earn While You Burn\n'}
-              txt2={
-                'Join the fitness challenge today for a healthier you and a wealthier wallet!'
-              }
-              ButtonText={'Get Started'}
-              onConfirm={() => {
-                if (getPurchaseHistory?.plan != null) {
-                  if (
-                    getPurchaseHistory?.end_date >=
-                    moment().format('YYYY-MM-DD')
-                  ) {
-                    navigation.navigate('UpcomingEvent', {
-                      eventType: 'upcoming',
-                    });
-                    dispatch(setRewardPopUp(1));
-                  } else {
-                    navigation.navigate('NewSubscription', {upgrade: false});
-                    dispatch(setRewardPopUp(1));
-                  }
+            <UpcomingEventModal
+            visible={true}
+            onConfirm={() => {
+              if (getPurchaseHistory?.plan != null) {
+                if (
+                  getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
+                ) {
+                  navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+                  dispatch(setRewardPopUp(1));
                 } else {
                   navigation.navigate('NewSubscription', {upgrade: false});
                   dispatch(setRewardPopUp(1));
                 }
-              }}
-              onCancel={() => {
+              } else {
+                navigation.navigate('NewSubscription', {upgrade: false});
                 dispatch(setRewardPopUp(1));
-              }}
-            />
+              }
+            }}
+            onCancel={() => {
+              dispatch(setRewardPopUp(1));
+            }}
+          />
           ) : null
         ) : null}
       </>
