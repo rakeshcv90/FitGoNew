@@ -763,7 +763,7 @@ PODS:
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
     - ReactCommon/turbomodule/core
-  - RNScreens (3.31.1):
+  - RNScreens (3.32.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
     - React-RCTImage
@@ -1204,7 +1204,7 @@ SPEC CHECKSUMS:
   RNNotifee: 8e2d3df3f0e9ce8f5d1fe4c967431138190b6175
   RNPermissions: 9484c40e06c62334eade99e1ce508db4f73d4687
   RNReanimated: 93610716991840cff571fd75e3b61e97ae0d7919
-  RNScreens: 93ae3be2f119d955620f9bbb39ad372adb53b7a9
+  RNScreens: 0bd9eec783bed1032e02a4db9976dae1664a5c7b
   RNSVG: ba3e7232f45e34b7b47e74472386cf4e1a676d0a
   RNVectorIcons: bfb663f3f7b37340cd90120151b720641523dc84
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
@@ -1217,4 +1217,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 3247c8640deab04938b9d647a2fc8e052fe23dec
 
-COCOAPODS: 1.13.0
+COCOAPODS: 1.14.3

@@ -27,6 +27,8 @@ import VersionNumber from 'react-native-version-number';
 import {
   setAllExercise,
   setChallengesData,
+  setPopUpSeen,
+  setRewardPopUp,
 } from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
@@ -36,6 +38,7 @@ import NativeAddTest from '../../Component/NativeAddTest';
 import moment from 'moment';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import FastImage from 'react-native-fast-image';
+import RewardModal from '../../Component/Utilities/RewardModal';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -52,9 +55,24 @@ const CustomWorkout = ({navigation}) => {
   const isFocused = useIsFocused();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
-
+  const getPopUpSeen = useSelector(state => state?.getPopUpSeen);
+  const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
+  const getOfferAgreement = useSelector(state => state?.getOfferAgreement);
+  const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
+  const enteredUpcomingEvent = useSelector(
+    state => state?.enteredUpcomingEvent,
+  );
   useEffect(() => {
     if (isFocused) {
+      setTimeout(() => {
+        if (
+          (!enteredCurrentEvent && !enteredUpcomingEvent) ||
+          (!enteredUpcomingEvent && enteredCurrentEvent)
+        ) {
+          dispatch(setRewardPopUp(getPopUpFreuqency + 1));
+        }
+      }, 1000);
+
       // getAllExerciseData();
       getAllChallangeAndAllExerciseData();
     }
@@ -108,78 +126,78 @@ const CustomWorkout = ({navigation}) => {
     () =>
       ({index, item}) => {
         return (
-      
           <>
             <TouchableOpacity
               style={{
                 width: '98%',
                 marginVertical: 10,
-               // paddingHorizontal: 20,
+                // paddingHorizontal: 20,
                 flexDirection: 'row',
                 alignItems: 'center',
-                alignSelf:'center',
-                justifyContent:'space-between'
+                alignSelf: 'center',
+                justifyContent: 'space-between',
               }}
               onPress={() => {
                 AnalyticsConsole(`OPEN_Custom_Wrk`);
                 navigation.navigate('CustomWorkoutDetails', {item: item});
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <FastImage
-                fallback={true}
-                style={{
-                  width: 70,
-                  height: 70,
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                  borderRadius: 5,
-                  borderWidth: 1,
-                  borderColor: '#D9D9D9',
-                }}
-                source={{
-                  uri: item?.image,
-                  headers: {Authorization: 'someAuthToken'},
-                  priority: FastImage.priority.high,
-                }}
-                resizeMode={FastImage.resizeMode.cover}
-                defaultSource={localImage.NOWORKOUT}
-              />
-              <View
-                style={{
-                 marginHorizontal: 16,
-                  width: DeviceWidth * 0.48,
-                }}>
-                <Text
-                  numberOfLines={1}
+                <FastImage
+                  fallback={true}
                   style={{
-                    fontSize: 16,
-                    fontWeight: '600',
-                    lineHeight: 24,
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    color: '#1E1E1E',
-                  }}>
-                  {item?.workout_name}
-                </Text>
-                <Text
+                    width: 70,
+                    height: 70,
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    borderColor: '#D9D9D9',
+                  }}
+                  source={{
+                    uri: item?.image,
+                    headers: {Authorization: 'someAuthToken'},
+                    priority: FastImage.priority.high,
+                  }}
+                  resizeMode={FastImage.resizeMode.cover}
+                  defaultSource={localImage.NOWORKOUT}
+                />
+                <View
                   style={{
-                    fontSize: 14,
-                    fontWeight: '400',
-                    lineHeight: 24,
-                    opacity: 0.7,
-                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                    color: '#1E1E1E',
+                    marginHorizontal: 16,
+                    width: DeviceWidth * 0.48,
                   }}>
-                  {item?.total_exercises}
-                  {' Exercises'}
-                </Text>
-              </View></View>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontSize: 16,
+                      fontWeight: '600',
+                      lineHeight: 24,
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      color: '#1E1E1E',
+                    }}>
+                    {item?.workout_name}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '400',
+                      lineHeight: 24,
+                      opacity: 0.7,
+                      fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                      color: '#1E1E1E',
+                    }}>
+                    {item?.total_exercises}
+                    {' Exercises'}
+                  </Text>
+                </View>
+              </View>
               <Image
                 source={localImage.Next}
                 resizeMode="contain"
                 style={{width: 30, height: 30, right: -3}}
               />
             </TouchableOpacity>
-            
+
             {index !== customWorkoutData.length - 1 && (
               <View
                 style={{
@@ -302,7 +320,6 @@ const CustomWorkout = ({navigation}) => {
             on your preferences.
           </Text>
           <View
-       
             style={{
               width: 180,
               height: 40,
@@ -438,14 +455,12 @@ const CustomWorkout = ({navigation}) => {
             onPress={() => {
               setIsCustomWorkout(true);
             }}>
-            
-              <Image
-                source={localImage.Plus}
-                style={{width: 20, height: 20}}
-                tintColor={AppColor.WHITE}
-              />
-              <Text style={styles.button}>{'Create Workout'}</Text>
-        
+            <Image
+              source={localImage.Plus}
+              style={{width: 20, height: 20}}
+              tintColor={AppColor.WHITE}
+            />
+            <Text style={styles.button}>{'Create Workout'}</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -571,6 +586,39 @@ const CustomWorkout = ({navigation}) => {
         {/* </BlurView> */}
       </Modal>
       <BannerAdd bannerAdId={bannerAdId} />
+      {getOfferAgreement?.location == 'India' ? (
+          getPopUpFreuqency == 5 || getPopUpFreuqency % 4 == 0 ? (
+          <RewardModal
+            navigation={navigation}
+            visible={true}
+            imagesource={localImage.Reward_icon1}
+            txt1={'Earn While You Burn\n'}
+            txt2={
+              'Join the fitness challenge today for a healthier you and a wealthier wallet!'
+            }
+            ButtonText={'Get Started'}
+            onConfirm={() => {
+              if (getPurchaseHistory?.plan != null) {
+                if (
+                  getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
+                ) {
+                  navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+                  dispatch(setRewardPopUp(1));
+                } else {
+                  navigation.navigate('NewSubscription', {upgrade: false});
+                  dispatch(setRewardPopUp(1));
+                }
+              } else {
+                navigation.navigate('NewSubscription', {upgrade: false});
+                dispatch(setRewardPopUp(1));
+              }
+            }}
+            onCancel={() => {
+              dispatch(setRewardPopUp(1));
+            }}
+          />
+        ) : null
+      ) : null}
       {/* {bannerAdsDisplay()} */}
     </>
   );

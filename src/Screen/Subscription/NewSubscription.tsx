@@ -46,7 +46,6 @@ import TrackPlayer, {
 import VersionNumber, {appVersion} from 'react-native-version-number';
 const NewSubscription = ({navigation, route}: any) => {
   const {upgrade} = route.params;
-  const introType = route?.params?.introType;
   const dispatch = useDispatch();
   const getInAppPurchase = useSelector((state: any) => state.getInAppPurchase);
 
@@ -982,7 +981,7 @@ const NewSubscription = ({navigation, route}: any) => {
         }
         h={Platform.OS == 'ios' ? DeviceWidth * 0.15 : DeviceWidth * 0.15}
         // shadow
-        introType={introType ?? false}
+      
       />
       <View style={{flex: 1, marginHorizontal: 20, marginTop: 10}}>
         <ScrollView

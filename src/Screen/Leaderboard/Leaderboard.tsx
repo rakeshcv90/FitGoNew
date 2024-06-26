@@ -160,7 +160,7 @@ const Leaderboard = ({navigation, route}: any) => {
                     headers: {Authorization: 'someAuthToken'},
                     priority: FastImage.priority.high,
                   }}
-                  resizeMode={FastImage.resizeMode.contain}
+                  resizeMode={FastImage.resizeMode.cover}
                   defaultSource={localImage.NOWORKOUT}
                 />
                 <FitText
@@ -241,6 +241,7 @@ const Leaderboard = ({navigation, route}: any) => {
           <ImageBackground
             source={localImage.Rank1background}
             imageStyle={{width: DeviceWidth, height: DeviceWidth / 2}}
+            
             style={{
               justifyContent: 'center',
               alignItems: 'center',
