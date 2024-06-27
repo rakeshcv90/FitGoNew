@@ -596,18 +596,22 @@ const CustomWorkout = ({navigation}) => {
                 if (
                   getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
                 ) {
+                  AnalyticsConsole('UP_D_B');
                   navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
                   dispatch(setRewardPopUp(1));
                 } else {
+                  AnalyticsConsole('PP_D_B');
                   navigation.navigate('NewSubscription', {upgrade: false});
                   dispatch(setRewardPopUp(1));
                 }
               } else {
+                AnalyticsConsole('PP_D_B');
                 navigation.navigate('NewSubscription', {upgrade: false});
                 dispatch(setRewardPopUp(1));
               }
             }}
             onCancel={() => {
+              AnalyticsConsole('JNC_D_B');
               dispatch(setRewardPopUp(1));
             }}
           />

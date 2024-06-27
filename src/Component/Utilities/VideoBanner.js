@@ -5,6 +5,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {AppColor, Fonts} from '../Color';
 import {localImage} from '../Image';
 import {useNavigation} from '@react-navigation/native';
+import { AnalyticsConsole } from '../AnalyticsConsole';
 
 const VideoBanner = () => {
   const navigation = useNavigation();
@@ -14,6 +15,7 @@ const VideoBanner = () => {
         style={styles.button}
         activeOpacity={0.4}
         onPress={() => {
+          AnalyticsConsole("IV_F_HB")
           navigation.navigate('IntroVideo', {type: 'home'});
         }}>
         <LinearGradient

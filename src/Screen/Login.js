@@ -1164,7 +1164,7 @@ console.log("RESPONSE",res,data.data)
               alignSelf: 'center',
               alignItems: 'center',
             }}>
-            <View style={{width: 120, height: 1, backgroundColor: 'black'}} />
+            <View style={{width: 90, height: 1, backgroundColor: 'black'}} />
 
             <Text
               style={[
@@ -1173,7 +1173,7 @@ console.log("RESPONSE",res,data.data)
               ]}>
               Or
             </Text>
-            <View style={{width: 120, height: 1, backgroundColor: 'black'}} />
+            <View style={{width: 90, height: 1, backgroundColor: 'black'}} />
           </View>
         </KeyboardAvoidingView>
         <View

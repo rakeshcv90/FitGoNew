@@ -92,7 +92,6 @@ const getCountryFromCoordinates = async (Coords, apikey) => {
       },
     );
     // Extract country from the response
-    console.log(Coords, apikey);
     const addressComponents = response.data.results[0].address_components;
     const countryComponent = addressComponents.find(component =>
       component.types.includes('country'),

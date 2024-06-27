@@ -461,6 +461,7 @@ const MyPlans = ({navigation}: any) => {
         setDownloadedVideoSent(false);
         let checkAdsShow = AddCountFunction();
 
+        AnalyticsConsole(`SE_ON_${getPurchaseHistory?.currentDay}`)
         if (checkAdsShow == true) {
           showInterstitialAd();
           analytics().logEvent(
@@ -531,6 +532,7 @@ const MyPlans = ({navigation}: any) => {
       setDownloade(0);
       setButtonClicked(false);
       setVisible(false);
+      AnalyticsConsole(`SEE_ON_${getPurchaseHistory?.currentDay}`)
       if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {

@@ -88,6 +88,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
         },
         data,
       });
+      AnalyticsConsole('JO_UP_EVENT')
       StartAudio(playbackState);
       if (res.data.message == 'Event created successfully') {
         PauseAudio(playbackState);

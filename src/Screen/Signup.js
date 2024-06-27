@@ -1492,7 +1492,7 @@ const Signup = ({navigation}) => {
             alignSelf: 'center',
             alignItems: 'center',
           }}>
-          <View style={{width: 120, height: 1, backgroundColor: 'black'}} />
+          <View style={{width: 90, height: 1, backgroundColor: 'black'}} />
 
           <Text
             style={[
@@ -1501,7 +1501,7 @@ const Signup = ({navigation}) => {
             ]}>
             Or
           </Text>
-          <View style={{width: 120, height: 1, backgroundColor: 'black'}} />
+          <View style={{width: 90, height: 1, backgroundColor: 'black'}} />
         </View>
         <View
           style={{

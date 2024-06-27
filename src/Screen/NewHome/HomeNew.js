@@ -1256,10 +1256,11 @@ const HomeNew = ({navigation}) => {
             <View style={{alignSelf: 'center'}}>
               <FitCoins
                 onPress={() => {
-                  AnalyticsConsole('LB');
                   if (winnerAnnounced) {
+                    AnalyticsConsole('W/L');
                     navigation.navigate('Winner');
                   } else {
+                    AnalyticsConsole('LB');
                     navigation.navigate('Leaderboard');
                   }
                 }}
@@ -1268,6 +1269,21 @@ const HomeNew = ({navigation}) => {
             </View>
           ) : null}
         </View>
+        <Text
+          style={{
+            color: AppColor.HEADERTEXTCOLOR,
+            fontFamily: Fonts.MONTSERRAT_BOLD,
+            fontWeight: '600',
+            lineHeight: 21,
+            fontSize: 18,
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            width: '95%',
+            alignSelf: 'center',
+            marginTop: 20,
+          }}>
+          Reward Zone
+        </Text>
         <Banners
           type1={BannerType1}
           type2={Bannertype2}
@@ -1411,14 +1427,14 @@ const HomeNew = ({navigation}) => {
                     challenge: true,
                   });
                 }}
-                style={{width: '10%', alignItems: 'center', top: 20}}>
+                style={{width: '10%', alignItems: 'center', top: 30}}>
                 <Image
                   source={require('../../Icon/Images/NewImage2/play.png')}
                   style={{
-                    width: 50,
-                    height: 50,
+                    width: 30,
+                    height: 30,
                     marginRight: 20,
-                    //alignContent: 'flex-end',
+                    // alignContent: 'flex-end',
                   }}
                   resizeMode="contain"
                 />
@@ -2204,9 +2220,11 @@ const HomeNew = ({navigation}) => {
           'Your fitness challenge has started! Begin now to collect FitCoins and win cash rewards!'
         }
         onCancel={() => {
+          AnalyticsConsole('CHS_CAN')
           dispatch(setRewardModal(false));
         }}
         onConfirm={() => {
+          AnalyticsConsole('CHS_OPEN')
           dispatch(setRewardModal(false));
           navigation.navigate('BottomTab', {
             screen: 'MyPlans',
@@ -2222,18 +2240,22 @@ const HomeNew = ({navigation}) => {
                 if (
                   getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
                 ) {
+                  AnalyticsConsole('UP_D_B');
                   navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
                   dispatch(setRewardPopUp(1));
                 } else {
+                  AnalyticsConsole('PP_D_B');
                   navigation.navigate('NewSubscription', {upgrade: false});
                   dispatch(setRewardPopUp(1));
                 }
               } else {
+                AnalyticsConsole('PP_D_B');
                 navigation.navigate('NewSubscription', {upgrade: false});
                 dispatch(setRewardPopUp(1));
               }
             }}
             onCancel={() => {
+              AnalyticsConsole('JNC_D_B');
               dispatch(setRewardPopUp(1));
             }}
           />

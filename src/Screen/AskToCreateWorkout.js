@@ -195,18 +195,18 @@ const AskToCreateWorkout = ({route, navigation}) => {
         dispatch(setUserProfileData(responseData?.data?.profile));
         // dispatch(setLaterButtonData(currrentdata));
         dispatch(setExperience(true));
-        if (getUserDataDetails.email != null) {
-          navigation.navigate('OfferTerms', {
-            routeName: 'Exprience',
-            CustomCreated: true,
-          });
-          setLoader(false);
-          dispatch(setCustomWorkoutData([]));
-        //  navigation.navigate('OfferTerms', {CustomCreated: true});
-        } else {
-          navigation.navigate('CustomWorkout', {routeName: 'Exprience'});
-          setLoader(false);
-        }
+        navigation.navigate('OfferTerms', {
+          routeName: 'Exprience',
+          CustomCreated: true,
+        });
+        // if (getUserDataDetails.email != null) {
+        //   setLoader(false);
+        //   dispatch(setCustomWorkoutData([]));
+        // //  navigation.navigate('OfferTerms', {CustomCreated: true});
+        // } else {
+        //   navigation.navigate('CustomWorkout', {routeName: 'Exprience'});
+        //   setLoader(false);
+        // }
         if (responseData?.data.event_details == 'Not any subscription') {
           dispatch(setPurchaseHistory([]));
           EnteringEventFunction(

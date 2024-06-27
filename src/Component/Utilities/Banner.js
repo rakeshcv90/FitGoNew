@@ -33,6 +33,7 @@ import ActivityLoader from '../ActivityLoader';
 import {FlatList} from 'react-native-gesture-handler';
 import NameUpdateModal from './NameUpdateModal';
 import ThemeReducer from '../ThemeRedux/Reducer';
+import { AnalyticsConsole } from '../AnalyticsConsole';
 const Banners = ({
   type1,
   type2,
@@ -65,8 +66,10 @@ const Banners = ({
       if (getOfferAgreement?.location == 'India') {
         setLoaded(true);
         if (getPurchaseHistory?.plan == null) {
+          AnalyticsConsole('PP_BANNER')
           navigation.navigate('NewSubscription', {upgrade: false});
         } else {
+          AnalyticsConsole('UP_BANNER')
           navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
         }
       } else {
@@ -112,17 +115,20 @@ const Banners = ({
           getUserDataDetails.name == null) &&
         getUserDataDetails.email == null
       ) {
+        AnalyticsConsole('BOTH_U_D')
         setOpenEditModal(true);
         setDatatype('both');
       } else {
         if (
           getUserDataDetails.name?.toUpperCase() == 'GUEST' ||
           getUserDataDetails.name == null
-        ) {
+          ) {
+          AnalyticsConsole('NAME_U_D')
           setOpenEditModal(true);
           setDatatype('name');
         }
         if (getUserDataDetails.email == null) {
+          AnalyticsConsole('EMAIL_U_D')
           setOpenEditModal(true);
           setDatatype('email');
         }
@@ -234,6 +240,7 @@ const Banners = ({
     if (type1 == 'new_join') {
       handleStart();
     } else if (type1 == 'coming_soon') {
+      AnalyticsConsole('CS_BANNER')
       showMessage({
         message:
           'This feature will be soon available in your country, stay tuned!',
@@ -246,8 +253,10 @@ const Banners = ({
       type1 == 'joined_challenge' ||
       (type2 == 'joined_challenge' && index == 1)
     ) {
+      AnalyticsConsole("JN_BANNER")
       navigation.navigate('UpcomingEvent', {eventType: 'current'});
     } else if (type1 == 'ongoing_challenge' && index == 0) {
+      AnalyticsConsole(Sat||Sun?`ON_B_CL_ON_${getPurchaseHistory?.currentDay}`:'ON_BANNER')
       Sat || Sun
         ? showMessage({
             message:
@@ -259,6 +268,7 @@ const Banners = ({
           })
         : navigation.navigate('MyPlans');
     } else if (type2 == 'upcoming_challenge' && index == 1) {
+      AnalyticsConsole('UP_BANNER')
       navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
     }
   };

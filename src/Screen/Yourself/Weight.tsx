@@ -90,8 +90,6 @@ const Weight = ({route, navigation}: any) => {
         icon: {icon: 'auto', position: 'left'},
       });
     } else if (weight != selected) {
-      {
-      }
       dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
       navigation.navigate('Age', {nextScreen: screen + 1});
     } else {
@@ -191,7 +189,7 @@ const Weight = ({route, navigation}: any) => {
           style={{
             justifyContent: 'center',
             alignItems: 'center',
-            marginTop: -15,
+            marginTop: -DeviceHeigth * 0.05,
           }}>
           <Bulb screen={'What’s your target weight?'} />
           <View style={{marginTop: 20}} />

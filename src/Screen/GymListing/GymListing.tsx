@@ -311,7 +311,7 @@ const GymListing = ({navigation}: any) => {
   return (
     <View style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <NewHeader header={'Near by Gyms'} SearchButton={false} backButton />
+      <NewHeader header={'Nearby Gyms'} SearchButton={false} backButton />
       <View
         style={{
           flex: 1,

@@ -8,6 +8,7 @@ import {FlatList} from 'react-native';
 import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
 import moment, {weekdays} from 'moment';
 import AnimatedLottieView from 'lottie-react-native';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 export const ExerciseComponetWithoutEvents = ({
   dayObject,
   day,
@@ -227,14 +228,15 @@ export const ExerciseComponentWithEvent = ({
             </View>
             <TouchableOpacity
               style={{}}
-              onPress={() =>
+              onPress={() => {
+                AnalyticsConsole(`O_EWS`)
                 navigation.navigate('AddWorkouts', {
                   dayExercises: dayObject?.exercises,
                   day: day,
                   image: dayObject?.image,
                   title: dayObject?.title,
-                })
-              }>
+                });
+              }}>
               {day == WeekArray[currentDay] ? (
                 <Image source={localImage.EditPen} style={styles.edit} />
               ) : null}

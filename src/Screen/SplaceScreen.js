@@ -97,7 +97,10 @@ const SplaceScreen = ({navigation}) => {
   const loadScreen = agreement => {
     if (showIntro) {
       if (getUserDataDetails?.id) {
-        if (agreement?.term_condition == 'Accepted') {
+        if(getUserDataDetails?.profile_compl_status == 0){
+          navigation.replace('Yourself');
+        }
+        else if (agreement?.term_condition == 'Accepted') {
           navigation.replace('BottomTab');
         } else {
           navigation.replace('OfferTerms');

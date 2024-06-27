@@ -45,6 +45,7 @@ notifee.createChannel({
   visibility: AndroidVisibility.PUBLIC,
   importance: AndroidImportance.HIGH,
   description: 'CHANNEL FOR NOTIFICATION',
+  sound: 'fitme_notification',
 });
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   if (remoteMessage.data?.type == 'delete_notification') {

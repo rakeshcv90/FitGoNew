@@ -19,6 +19,7 @@ import {
   setShowIntro,
 } from '../../Component/ThemeRedux/Actions';
 import AnimatedLottieView from 'lottie-react-native';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 
 const IntroductionScreen3 = ({navigation}) => {
   const dispatch = useDispatch();
@@ -56,8 +57,8 @@ const IntroductionScreen3 = ({navigation}) => {
               height: DeviceHeigth * 0.05,
             }}
             onPress={() => {
+              AnalyticsConsole(`LAN_C_TO_${hindiLanguage ? 'H' : 'E'}`);
               dispatch(setHindiLanuage(!hindiLanguage));
-              //navigation.navigate('IntroVideo', {type: 'intro'});
             }}>
             <Image
               source={localImage.TranslateIntro}
@@ -68,6 +69,7 @@ const IntroductionScreen3 = ({navigation}) => {
           <TouchableOpacity
           disabled={true}
             onPress={() => {
+              AnalyticsConsole('SKIP_IS');
               dispatch(setShowIntro(true));
               navigation.navigate('LogSignUp', {screen: 'Log In'});
             }}>
@@ -143,6 +145,7 @@ const IntroductionScreen3 = ({navigation}) => {
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
+            AnalyticsConsole("TO_IS2")
             navigation.goBack();
           }}
           style={{
@@ -165,7 +168,9 @@ const IntroductionScreen3 = ({navigation}) => {
           />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate('IntroVideo', {type: 'intro'})}>
+          onPress={() =>{
+            AnalyticsConsole('IV_F_IS')
+             navigation.navigate('IntroVideo', {type: 'intro'})}}>
           <AnimatedLottieView
             source={localImage.IntroJSON}
             speed={1}
@@ -189,6 +194,7 @@ const IntroductionScreen3 = ({navigation}) => {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => {
+              AnalyticsConsole("TO_IS3")
               dispatch(setShowIntro(true));
               navigation.navigate('LogSignUp', {screen: 'Log In'});
             }}

@@ -61,9 +61,8 @@ const CountryLocation = ({navigation, route}) => {
           type: 'danger',
           icon: {icon: 'auto', position: 'left'},
         });
+        navigation.navigate('BottomTab');
       });
-      navigation.navigate('BottomTab');
-
   };
   const StoreAgreementApi = async country => {
     setLoaded(false);

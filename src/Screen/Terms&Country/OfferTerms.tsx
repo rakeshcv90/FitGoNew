@@ -39,6 +39,7 @@ import {
 import {useSelector, useDispatch} from 'react-redux';
 import {BlurView} from '@react-native-community/blur';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 const radioData = [
   {
     id: 1,
@@ -130,6 +131,7 @@ const OfferTerms = ({navigation, route}: any) => {
     );
   };
   const handleAgreement = () => {
+    AnalyticsConsole('IAR_ACC')
     navigation.navigate('CountryLocation', {CustomCreated: CustomCreated});
   };
   // to check and uncheck the box automatically
@@ -155,17 +157,17 @@ const OfferTerms = ({navigation, route}: any) => {
         style={{
           backgroundColor: 'white',
           paddingVertical: (DeviceWidth * 0.1) / 2,
-          shadowColor: 'grey',
-          ...Platform.select({
-            ios: {
-              shadowOffset: {width: 1, height: 0},
-              shadowOpacity: 0.3,
-              shadowRadius: 2,
-            },
-            android: {
-              elevation: 4,
-            },
-          }),
+          // shadowColor: 'grey',
+          // ...Platform.select({
+          //   ios: {
+          //     shadowOffset: {width: 1, height: 0},
+          //     shadowOpacity: 0.3,
+          //     shadowRadius: 2,
+          //   },
+          //   android: {
+          //     elevation: 4,
+          //   },
+          // }),
         }}>
         {loaded ? null : <ActivityLoader />}
         {screenType ? (

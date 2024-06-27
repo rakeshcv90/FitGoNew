@@ -42,6 +42,7 @@ import GradientButton from '../../Component/GradientButton';
 import {getActiveTrackIndex} from 'react-native-track-player/lib/src/trackPlayer';
 import NewButton from '../../Component/NewButton';
 import {showMessage} from 'react-native-flash-message';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
 const NewFocusWorkouts = ({route, navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
@@ -414,6 +415,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
               <TouchableOpacity
                 activeOpacity={0.7}
                 onPress={() => {
+                  AnalyticsConsole('CL_BS_FW');
                   handleFilterVisibilty();
                   refStandard.current.close();
                   setFilterCriteria(
@@ -602,6 +604,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
                   filterCritera.length === 0 || !isFilterChanged ? true : false
                 }
                 onPress={() => {
+                  filterCritera.length === 0 || !isFilterChanged
+                    ? console.log('clicked')
+                    : AnalyticsConsole('RCL_BS_FW');
                   filterExercises(exerciseData, filterCritera);
                   handleFilterVisibilty();
                 }}>
@@ -673,6 +678,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
     dispatch(setVideoLocation(StoringData));
   };
   const Start = exercise => {
+    AnalyticsConsole('S_E_FW');
     Promise.all(
       exercise?.map((item, index) => {
         return downloadVideos(item, index, exercise?.length);
@@ -733,6 +739,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             }
           }}
           onPressImage={() => {
+            AnalyticsConsole("O_BS_FW")
             if (route?.params?.focusedPart == 'Upper Body') {
               refStandard.current.open();
             } else if (route?.params?.focusedPart == 'Lower Body') {

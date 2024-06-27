@@ -213,7 +213,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
 
                 <Text
                   style={{
-                    color: AppColor.NewRed,
+                    color: AppColor.RED,
                     fontFamily: 'Montserrat-Medium',
                     fontSize: 14,
                     lineHeight: 14.63,

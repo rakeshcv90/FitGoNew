@@ -196,7 +196,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
       handleItems(item, selectedExercise, setSelectedExercise);
     } else {
       if (!visible) {
-        AnalyticsConsole(`${item?.exercise_title?.split(' ')[0]}_DESC`);
         setVisible(true);
       } else {
         console.log(item);
@@ -208,6 +207,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
     if (switchButton) {
       handleItems(item, selectedExercise, setSelectedExercise);
     } else {
+      AnalyticsConsole('S_E_S_WC');
       downloadVideos(item, index, 1).finally(() => {
         setDownloade(0);
         setDownloadProgress(0);
@@ -496,6 +496,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
               icon: {icon: 'auto', position: 'left'},
             });
           } else if (switchButton) {
+            AnalyticsConsole("CL_SE_WC")
             setSelectedExercise([]);
             setSwitchButton(false);
             setItemsLength(0);
@@ -588,6 +589,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                     selectedExercise.includes(item?.exercise_id),
                   );
                   if (finalExercises?.length > 0 && selectedIndex == -1) {
+                    AnalyticsConsole('S_SE_WC');
                     Start(finalExercises);
                   } else {
                     showMessage({
@@ -598,7 +600,10 @@ const WorkoutCategories = ({navigation, route}: any) => {
                       icon: {icon: 'auto', position: 'left'},
                     });
                   }
-                } else Start(exercise);
+                } else {
+                  AnalyticsConsole('S_A_WC')
+                  Start(exercise);
+                }
               }}
             />
 

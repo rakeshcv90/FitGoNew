@@ -106,10 +106,11 @@ const NewHeader = ({
               {!coinsLoaded ? (
                 <FitCoins
                   onPress={() => {
-                    AnalyticsConsole('LB');
                     if (winnerAnnounced) {
+                      AnalyticsConsole('W/L');
                       navigation.navigate('Winner');
                     } else {
+                      AnalyticsConsole('LB');
                       navigation.navigate('Leaderboard');
                     }
                   }}
