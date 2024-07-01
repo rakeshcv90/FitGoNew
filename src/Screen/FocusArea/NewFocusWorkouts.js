@@ -163,39 +163,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
     setSelectedIndex(-1);
   }, [isFocused]);
 
-  // filter logic
-  // const filterExercises = (exercises, filterCriteria) => {
-  //   let modifiedFilter = [...filterCriteria];
-  //   if (filterCriteria.length === 0) {
-  //     setFilterList(exercises);
-  //   } else if (filterCriteria.includes('Arms')) {
-  //     // replacing Arms with Biceps triceps and forearms
-  //     modifiedFilter.pop('Arms');
-  //     modifiedFilter.push(...['Biceps', 'Triceps', 'Forearms']);
-  //     setFilterList(
-  //       exercises.filter(exercise =>
-  //         modifiedFilter.includes(exercise.exercise_bodypart),
-  //       ),
-  //     );
-  //   } else {
-  //     setFilterList(
-  //       exercises.filter(exercise =>
-  //         filterCriteria.includes(exercise.exercise_bodypart),
-  //       ),
-  //     );
-  //   }
-  //   const focusedPart = route?.params?.focusedPart;
-  //   if (focusedPart === 'Upper Body') {
-  //     dispatch(setUprBdyOpt(filterCriteria));
-  //   } else if (focusedPart === 'Lower Body') {
-  //     dispatch(setLowerBodyFilOpt(filterCriteria));
-  //   } else if (focusedPart === 'Core') {
-  //     dispatch(setCoreFilOpt(filterCriteria));
-  //   } else {
-  //     return searchCriteria;
-  //   }
-  //   refStandard.current.close();
-  // };
+
   const filterExercises = (exercises, filterCriteria) => {
     let modifiedFilter = [...filterCriteria]; // Create a copy of filterCriteria
     if (filterCriteria.length === 0) {
@@ -289,15 +257,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
         );
       }
     } else {
-      return (
-        <View
-          style={{
-            alignSelf: 'center',
-            alignItems: 'center',
-          }}>
-          <NativeAddTest type="image" media={false} />
-        </View>
-      );
+      
     }
   };
 

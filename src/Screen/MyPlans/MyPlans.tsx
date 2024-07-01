@@ -203,9 +203,7 @@ const MyPlans = ({navigation}: any) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      // dispatch(setPurchaseHistory([]));
-     // dispatch(setUserProfileData([]));
-      dispatch(setCustomWorkoutData([]));
+   
       setRefresh(false);
     }
   };

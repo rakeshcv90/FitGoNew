@@ -276,9 +276,7 @@ const LoadData = ({navigation}) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      // dispatch(setPurchaseHistory([]));
-     // dispatch(setUserProfileData([]));
-      dispatch(setCustomWorkoutData([]));
+   
       setLoadData(100);
       setActiveNext(true);
     }

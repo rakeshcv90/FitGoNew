@@ -307,8 +307,6 @@ const Workouts = ({navigation}: any) => {
     } catch (error) {
       setIsLoaded(true);
       console.log('GET-USER-DATA', error);
-
-      dispatch(setCustomWorkoutData([]));
     }
   };
   const renderItem = useMemo(() => {

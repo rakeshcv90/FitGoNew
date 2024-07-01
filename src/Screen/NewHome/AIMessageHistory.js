@@ -5,7 +5,7 @@ import {AppColor} from '../../Component/Color';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {StatusBar} from 'react-native';
 import {useSelector} from 'react-redux';
-import {DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
 
@@ -27,13 +27,14 @@ const AIMessageHistory = () => {
           flatListRef.current.scrollToEnd({animated: true})
         }
         onLayout={() => flatListRef.current.scrollToEnd({animated: true})}
-        contentContainerStyle={{paddingBottom: (DeviceWidth * 20) / 100}}
+      
         keyboardDismissMode="interactive"
         keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}>
         <FlatList
           data={senderMessage}
           keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={{paddingBottom: DeviceHeigth*0.05}}
           renderItem={({item, index}) => {
        
             return (

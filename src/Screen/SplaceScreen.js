@@ -73,7 +73,10 @@ const SplaceScreen = ({navigation}) => {
     initInterstitial();
   }, []);
   useEffect(() => {
-    if (getUserDataDetails.length > 0) {
+    if (
+      getUserDataDetails?.length > 0 ||
+      Object.keys(getUserDataDetails)?.length > 0
+    ) {
       getUserDetailData(getUserDataDetails?.id);
     } else {
       DisplayAds(getOfferAgreement);
@@ -98,13 +101,15 @@ const SplaceScreen = ({navigation}) => {
   const loadScreen = agreement => {
     if (showIntro) {
       if (getUserDataDetails?.id) {
-        if(getUserDataDetails?.profile_compl_status == 0){
-          navigation.replace('Yourself');
-        }
-        else if (agreement?.term_condition == 'Accepted') {
-          navigation.replace('BottomTab');
+     
+        if (getUserDataDetails?.profile_compl_status == 1) {
+          if (agreement?.term_condition == 'Accepted') {
+            navigation.replace('BottomTab');
+          } else {
+            navigation.replace('OfferTerms');
+          }
         } else {
-          navigation.replace('OfferTerms');
+          navigation.navigate('Yourself');
         }
       } else {
         navigation.replace('LogSignUp');
@@ -154,7 +159,6 @@ const SplaceScreen = ({navigation}) => {
   const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
 
   const DisplayAds = agremment => {
-   
     if (loaded) {
       setLoaded(false);
 
@@ -166,13 +170,13 @@ const SplaceScreen = ({navigation}) => {
           setTimeout(() => {
             loaded.show();
             loadScreen(agremment);
-          }, 6000);
+          }, 4000);
         }
       } else {
         setTimeout(() => {
           loaded.show();
           loadScreen(agremment);
-        }, 6000);
+        }, 4000);
       }
     }
   };
@@ -205,37 +209,6 @@ const SplaceScreen = ({navigation}) => {
                 dispatch(setInappPurchase(res));
               });
           });
-  };
-
-  const PurchaseDetails = async () => {
-    try {
-      const result = await axios(
-        `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
-      );
-
-      if (result.data?.message == 'Not any subscription') {
-        dispatch(setPurchaseHistory([]));
-        EnteringEventFunction(
-          dispatch,
-          [],
-          setEnteredCurrentEvent,
-          setEnteredUpcomingEvent,
-          setPlanType,
-        );
-      } else {
-        dispatch(setPurchaseHistory(result.data.data));
-        EnteringEventFunction(
-          dispatch,
-          result.data?.data,
-          setEnteredCurrentEvent,
-          setEnteredUpcomingEvent,
-          setPlanType,
-        );
-      }
-    } catch (error) {
-      console.log('PURCHASEHIS SPL ERR', error);
-      dispatch(setPurchaseHistory([]));
-    }
   };
 
   const getUserAllInData = async () => {
@@ -328,16 +301,7 @@ const SplaceScreen = ({navigation}) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      dispatch(setPurchaseHistory([]));
-      EnteringEventFunction(
-        dispatch,
-        [],
-        setEnteredCurrentEvent,
-        setEnteredUpcomingEvent,
-        setPlanType,
-      );
-     // dispatch(setUserProfileData([]));
-      dispatch(setCustomWorkoutData([]));
+   
       DisplayAds((response = null));
     }
   };

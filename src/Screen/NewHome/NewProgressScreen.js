@@ -474,7 +474,7 @@ const NewProgressScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <View style={styles.profileView}>
-          {Object.keys(getUserDataDetails)?.length > 0 && (
+          {Object.keys(getUserDataDetails)?.length > 0 ||getUserDataDetails?.length > 0&& (
             <>
               {isLoading && (
                 <ShimmerPlaceholder

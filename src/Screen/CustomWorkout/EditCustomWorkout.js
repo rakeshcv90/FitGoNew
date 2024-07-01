@@ -328,7 +328,7 @@ const EditCustomWorkout = ({navigation, route}) => {
     } catch (error) {
       console.log('GET-USER-DATA', error);
       setForLoading(false);
-      dispatch(setCustomWorkoutData([]));
+  
     }
   };
   const updateFilteredCategories = test => {

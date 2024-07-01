@@ -292,8 +292,6 @@ const NewProfile = ({navigation}) => {
         }
       } catch (error) {
         console.log('GET-USER-DATA', error);
-
-        dispatch(setUserProfileData([]));
       }
     };
 
