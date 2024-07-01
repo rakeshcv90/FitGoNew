@@ -50,6 +50,8 @@ const AskToCreateWorkout = ({route, navigation}) => {
   const [selected, setSelected] = useState();
   const [Loader, setLoader] = useState(false);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       startAnimation();
@@ -127,6 +129,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
       payload.append('deviceid', deviceID);
       payload.append('devicetoken', getFcmToken);
       payload.append('id', getUserID != 0 ? getUserID : null);
+      payload.append('id', getUserDataDetails?.id );
       payload.append('gender', gender);
       payload.append('goal', mergedObject?.goal);
       payload.append('fitnesslevel', mergedObject?.fitnesslevel); // static values change  it accordingly
@@ -153,31 +156,20 @@ const AskToCreateWorkout = ({route, navigation}) => {
         });
         setLoader(false);
       } else {
-        // getProfileData(getUserID);
-
-        getUserDetailData(getUserID);
+     
+        getUserDetailData()
         dispatch(setTempLogin(false));
       }
     } catch (error) {
       console.log('Whole Data Error', error);
     }
   };
-  const getUserDetailData = async userId => {
-    // const currrentdata = [
-    //   {
-    //     gender: gender,
-    //   },
-    //   {
-    //     experience: experience,
-    //   },
-    //   {workout_plans: 'CustomCreated'},
-    // ];
-
+  const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(
-        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
       );
-
+      console.log("ggggggggg44444",responseData?.data?.profile)
       if (
         responseData?.data?.msg ==
         'Please update the app to the latest version.'
@@ -192,21 +184,15 @@ const AskToCreateWorkout = ({route, navigation}) => {
       } else {
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
-        dispatch(setUserProfileData(responseData?.data?.profile));
+       dispatch(setUserProfileData(responseData?.data?.profile));
         // dispatch(setLaterButtonData(currrentdata));
+      
         dispatch(setExperience(true));
         navigation.navigate('OfferTerms', {
           routeName: 'Exprience',
           CustomCreated: true,
         });
-        // if (getUserDataDetails.email != null) {
-        //   setLoader(false);
-        //   dispatch(setCustomWorkoutData([]));
-        // //  navigation.navigate('OfferTerms', {CustomCreated: true});
-        // } else {
-        //   navigation.navigate('CustomWorkout', {routeName: 'Exprience'});
-        //   setLoader(false);
-        // }
+    
         if (responseData?.data.event_details == 'Not any subscription') {
           dispatch(setPurchaseHistory([]));
           EnteringEventFunction(
@@ -232,11 +218,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
         getAllChallangeAndAllExerciseData();
       }
     } catch (error) {
-      console.log('GET-USER-DATA', error);
-      // dispatch(setPurchaseHistory([]));
-      // dispatch(setUserProfileData([]));
-      dispatch(setCustomWorkoutData([]));
-
+      console.log('GET-USER-DATA', error)
       getAllChallangeAndAllExerciseData();
     }
   };

@@ -20,7 +20,7 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import {TextInput} from 'react-native-paper';
 import {showMessage} from 'react-native-flash-message';
-import {PERMISSIONS, request} from 'react-native-permissions';
+import {PERMISSIONS, openSettings, request} from 'react-native-permissions';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useIsFocused} from '@react-navigation/native';
 import VersionNumber from 'react-native-version-number';
@@ -81,7 +81,7 @@ const CustomWorkout = ({navigation}) => {
   const askPermissionForLibrary = async permission => {
     const resultLib = await request(permission);
 
-    if (resultLib == 'granted') {
+    if (resultLib == 'granted'||resultLib=='limited') {
       try {
         const resultLibrary = await launchImageLibrary({
           mediaType: 'photo',

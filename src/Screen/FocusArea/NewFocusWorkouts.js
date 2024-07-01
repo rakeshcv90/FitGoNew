@@ -163,39 +163,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
     setSelectedIndex(-1);
   }, [isFocused]);
 
-  // filter logic
-  // const filterExercises = (exercises, filterCriteria) => {
-  //   let modifiedFilter = [...filterCriteria];
-  //   if (filterCriteria.length === 0) {
-  //     setFilterList(exercises);
-  //   } else if (filterCriteria.includes('Arms')) {
-  //     // replacing Arms with Biceps triceps and forearms
-  //     modifiedFilter.pop('Arms');
-  //     modifiedFilter.push(...['Biceps', 'Triceps', 'Forearms']);
-  //     setFilterList(
-  //       exercises.filter(exercise =>
-  //         modifiedFilter.includes(exercise.exercise_bodypart),
-  //       ),
-  //     );
-  //   } else {
-  //     setFilterList(
-  //       exercises.filter(exercise =>
-  //         filterCriteria.includes(exercise.exercise_bodypart),
-  //       ),
-  //     );
-  //   }
-  //   const focusedPart = route?.params?.focusedPart;
-  //   if (focusedPart === 'Upper Body') {
-  //     dispatch(setUprBdyOpt(filterCriteria));
-  //   } else if (focusedPart === 'Lower Body') {
-  //     dispatch(setLowerBodyFilOpt(filterCriteria));
-  //   } else if (focusedPart === 'Core') {
-  //     dispatch(setCoreFilOpt(filterCriteria));
-  //   } else {
-  //     return searchCriteria;
-  //   }
-  //   refStandard.current.close();
-  // };
+
   const filterExercises = (exercises, filterCriteria) => {
     let modifiedFilter = [...filterCriteria]; // Create a copy of filterCriteria
     if (filterCriteria.length === 0) {
@@ -245,29 +213,28 @@ const NewFocusWorkouts = ({route, navigation}) => {
     );
     setSearchFilterList(filteredItems);
   };
-  // const bannerAdsDisplay = () => {
-  //   if (getPurchaseHistory.length > 0) {
-  //     if (
-  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-  //     ) {
-  //       return null;
-  //     } else {
-  //       return <BannerAdd bannerAdId={bannerAdId} />;
-  //     }
-  //   } else {
-  //     return <BannerAdd bannerAdId={bannerAdId} />;
-  //   }
-  // };
+
   const getAdsDisplay = (item, index) => {
-    const noOrNoobPlan =
-      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
-    if (execrise.length >= 1) {
-      if (noOrNoobPlan && index == 0 && execrise.length > 1) {
-        return getNativeAdsDisplay();
-      } else if ((index + 1) % 8 == 0 && execrise.length > 8) {
-        return getNativeAdsDisplay();
-      }
-    }
+      //  return getNativeAdsDisplay();
+      console.log("SDFsfdsfdsf",  getPurchaseHistory?.plan)
+       return (
+        <View
+          style={{
+            alignSelf: 'center',
+            alignItems: 'center',
+          }}>
+          <NativeAddTest type="image" media={false} />
+        </View>
+      );
+
+    // const noOrNoobPlan =
+    //   getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
+    // if (filterList.length >= 1) {
+    //   if (noOrNoobPlan && index == 0 && filterList.length > 1) {
+    //   } else if ((index + 1) % 8 == 0 && filterList.length > 8) {
+    //     return getNativeAdsDisplay();
+    //   }
+    // }
   };
   const getNativeAdsDisplay = () => {
     if (getPurchaseHistory?.plan != null) {
@@ -277,26 +244,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
       ) {
         return null;
       } else {
-        return (
-          <View
-            style={{
-              alignSelf: 'center',
-              alignItems: 'center',
-            }}>
-            <NativeAddTest type="image" media={false} />
-          </View>
-        );
       }
     } else {
-      return (
-        <View
-          style={{
-            alignSelf: 'center',
-            alignItems: 'center',
-          }}>
-          <NativeAddTest type="image" media={false} />
-        </View>
-      );
+      
     }
   };
 
@@ -909,6 +859,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         }}
                       />
                     )}
+                    {getAdsDisplay()}
                   </>
                 );
               }}

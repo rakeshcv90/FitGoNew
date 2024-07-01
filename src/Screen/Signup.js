@@ -149,13 +149,12 @@ const Signup = ({navigation}) => {
       function (result) {
         if (result.isCancelled) {
           // alert('Cancel');
-         // setCancelLogin(true);
+          // setCancelLogin(true);
         } else {
           const currentProfile = Profile.getCurrentProfile().then(function (
             currentProfile,
           ) {
             if (currentProfile) {
-           
               socialFacebookLogiIn(currentProfile);
             }
           });
@@ -203,7 +202,8 @@ const Signup = ({navigation}) => {
           deviceid: deviceId,
         },
       });
-
+      console.log('SDfdsfdsfdsfds', data?.data);
+      setForLoading(false);
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
@@ -249,13 +249,25 @@ const Signup = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
+      } else if (data?.data?.msg == 'registered with given these details') {
+        setForLoading(false);
+        showMessage({
+          message:
+            'Email id already registered with ' +
+            data.data.social_type +
+            ' Login',
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        await GoogleSignin.signOut();
       } else {
         setForLoading(false);
 
         dispatch(setUserId(data.data?.id));
-        // getProfileData(data.data?.id);
+
         getUserDetailData(data.data?.id);
-        // navigationRef.navigate('Yourself');
       }
     } catch (error) {
       setForLoading(false);
@@ -314,7 +326,6 @@ const Signup = ({navigation}) => {
       } else if (
         data.data?.msg == 'User already registered with deviceID and active'
       ) {
-       
         setForLoading(false);
         showMessage({
           message: `It looks like your device ID is already registered with us using your ${data.data?.email}. Please log in with your existing credentials.`,
@@ -364,25 +375,26 @@ const Signup = ({navigation}) => {
       });
 
       await GoogleSignin.signOut();
+      console.log('Xcvdvxcvxcvcxv', data.data);
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
-        //getProfileData(data.data?.id);
+
         getUserDetailData(data.data?.id);
         dispatch(setUserId(data.data?.id));
-        // navigationRef.navigate('Yourself');
+
         await GoogleSignin.signOut();
       } else if (
         data.data.msg == 'User registered via social login' &&
         data.data.profile_compl_status == 0
       ) {
         setForLoading(false);
-        // getProfileData(data.data?.id);
+
         getUserDetailData(data.data?.id);
         dispatch(setUserId(data.data?.id));
-        // navigationRef.navigate('Yourself');
+
         await GoogleSignin.signOut();
       } else if (
         data.data.msg == 'User already exists' &&
@@ -391,13 +403,13 @@ const Signup = ({navigation}) => {
         setForLoading(false);
 
         dispatch(setUserId(data.data?.id));
-        // showMessage({
-        //   message: data.data.msg,
-        //   floating: true,
-        //   animationDuration: 1000,
-        //   type: 'danger',
-        //   icon: {icon: 'auto', position: 'left'},
-        // });
+        showMessage({
+          message: data.data.msg,
+          floating: true,
+          animationDuration: 1000,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
 
         // getProfileData1(data.data?.id);
         getUserDetailData1(data.data?.id, data.data.profile_compl_status);
@@ -427,13 +439,36 @@ const Signup = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         await GoogleSignin.signOut();
+      } else if (
+        data?.data?.msg == 'registered with given these details' &&
+        data.data.social_type == 'Apple'
+      ) {
+        setForLoading(false);
+        showMessage({
+          message:
+            'Email id already registered with ' +
+            data.data.social_type +
+            ' Login',
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        await GoogleSignin.signOut();
+      } else if (
+        data?.data?.msg == 'registered with given these details' &&
+        data.data.social_type == 'google'
+      ) {
+        if (data.data.profile_compl_status == 1) {
+          getUserDetailData1(data.data?.id, data.data.profile_compl_status);
+          await GoogleSignin.signOut();
+        } else {
+          getUserDetailData(data.data?.id);
+          await GoogleSignin.signOut();
+        }
       } else {
         setForLoading(false);
 
-        dispatch(setUserId(data.data?.id));
-        // getProfileData(data.data?.id);
-        getUserDetailData(data.data?.id);
-        // navigationRef.navigate('Yourself');
         await GoogleSignin.signOut();
       }
     } catch (error) {
@@ -442,113 +477,113 @@ const Signup = ({navigation}) => {
       await GoogleSignin.signOut();
     }
   };
-  const socialFacebookLogiIn = async value => {
-    analytics().logEvent('CV_FITME_FACEBOOK_SIGNUP');
-    // setForLoading(true);
-    const data = {
-      name: value.name,
-      email: value.email,
-      signuptype: 'social',
-      socialid: value.userID,
-      socialtoken: '',
-      socialtype: 'facebook',
-      deviceid: deviceId,
-      version: appVersion,
-      devicetoken: getFcmToken,
-      platform: Platform.OS,
-    };
+  // const socialFacebookLogiIn = async value => {
+  //   analytics().logEvent('CV_FITME_FACEBOOK_SIGNUP');
+  //   // setForLoading(true);
+  //   const data = {
+  //     name: value.name,
+  //     email: value.email,
+  //     signuptype: 'social',
+  //     socialid: value.userID,
+  //     socialtoken: '',
+  //     socialtype: 'facebook',
+  //     deviceid: deviceId,
+  //     version: appVersion,
+  //     devicetoken: getFcmToken,
+  //     platform: Platform.OS,
+  //   };
 
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.signup}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          name: value.name,
-          email: value.email == undefined ? 'NULL' : value.email,
-          signuptype: 'social',
-          socialid: value.userID,
-          socialtoken: '',
-          socialtype: 'facebook',
-          // deviceid: deviceId,
-          version: appVersion,
-          devicetoken: getFcmToken,
-          platform: Platform.OS,
-        },
-      });
-      setForLoading(false);
+  //   try {
+  //     const data = await axios(`${NewApi}${NewAppapi.signup}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         name: value.name,
+  //         email: value.email == undefined ? 'NULL' : value.email,
+  //         signuptype: 'social',
+  //         socialid: value.userID,
+  //         socialtoken: '',
+  //         socialtype: 'facebook',
+  //         // deviceid: deviceId,
+  //         version: appVersion,
+  //         devicetoken: getFcmToken,
+  //         platform: Platform.OS,
+  //       },
+  //     });
+  //     setForLoading(false);
 
-      if (
-        data.data.msg == 'User already exists' &&
-        data.data.profile_compl_status == 0
-      ) {
-        setForLoading(false);
-        // getProfileData(data.data?.id);
-        getUserDetailData(data.data?.id);
-        dispatch(setUserId(data.data?.id));
-        // navigationRef.navigate('Yourself');
-      } else if (
-        data.data.msg == 'User registered via social login' &&
-        data.data.profile_compl_status == 0
-      ) {
-        setForLoading(false);
+  //     if (
+  //       data.data.msg == 'User already exists' &&
+  //       data.data.profile_compl_status == 0
+  //     ) {
+  //       setForLoading(false);
+  //       // getProfileData(data.data?.id);
+  //       getUserDetailData(data.data?.id);
+  //       dispatch(setUserId(data.data?.id));
+  //       // navigationRef.navigate('Yourself');
+  //     } else if (
+  //       data.data.msg == 'User registered via social login' &&
+  //       data.data.profile_compl_status == 0
+  //     ) {
+  //       setForLoading(false);
 
-        dispatch(setUserId(data.data?.id));
-        //getProfileData(data.data?.id);
-        getUserDetailData(data.data?.id);
-        // navigationRef.navigate('Yourself');
-      } else if (
-        data.data.msg == 'User already exists' &&
-        data.data.profile_compl_status == 1
-      ) {
-        setForLoading(false);
-        showMessage({
-          message: data.data.msg,
-          type: 'danger',
-          animationDuration: 1000,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        // getProfileData1(data.data?.id);
-        getUserDetailData1(data.data?.id, data.data.profile_compl_status);
-      } else if (
-        data.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        setForLoading(false);
-        showMessage({
-          message: data.data.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else if (
-        data.data?.msg == 'User already exists via other authentication'
-      ) {
-        setForLoading(false);
+  //       dispatch(setUserId(data.data?.id));
+  //       //getProfileData(data.data?.id);
+  //       getUserDetailData(data.data?.id);
+  //       // navigationRef.navigate('Yourself');
+  //     } else if (
+  //       data.data.msg == 'User already exists' &&
+  //       data.data.profile_compl_status == 1
+  //     ) {
+  //       setForLoading(false);
+  //       showMessage({
+  //         message: data.data.msg,
+  //         type: 'danger',
+  //         animationDuration: 1000,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       // getProfileData1(data.data?.id);
+  //       getUserDetailData1(data.data?.id, data.data.profile_compl_status);
+  //     } else if (
+  //       data.data?.msg == 'Please update the app to the latest version.'
+  //     ) {
+  //       setForLoading(false);
+  //       showMessage({
+  //         message: data.data.msg,
+  //         type: 'danger',
+  //         animationDuration: 500,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //     } else if (
+  //       data.data?.msg == 'User already exists via other authentication'
+  //     ) {
+  //       setForLoading(false);
 
-        showMessage({
-          message: data.data.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        await GoogleSignin.signOut();
-      } else {
-        setForLoading(false);
+  //       showMessage({
+  //         message: data.data.msg,
+  //         type: 'danger',
+  //         animationDuration: 500,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       await GoogleSignin.signOut();
+  //     } else {
+  //       setForLoading(false);
 
-        dispatch(setUserId(data.data?.id));
-        //getProfileData(data.data?.id);
-        getUserDetailData(data.data?.id);
-        // navigationRef.navigate('Yourself');
-      }
-    } catch (error) {
-      setForLoading(false);
-      console.log('FaceBook Signup Error', error?.response);
-    }
-  };
+  //       dispatch(setUserId(data.data?.id));
+  //       //getProfileData(data.data?.id);
+  //       getUserDetailData(data.data?.id);
+  //       // navigationRef.navigate('Yourself');
+  //     }
+  //   } catch (error) {
+  //     setForLoading(false);
+  //     console.log('FaceBook Signup Error', error?.response);
+  //   }
+  // };
   const ModalView = () => {
     const [forLoading, setForLoading] = useState(false);
     const t1 = useRef();
@@ -648,7 +683,7 @@ const Signup = ({navigation}) => {
             showMessage({
               message: 'Email verified successfully!',
               floating: true,
-              duration: 500,
+              animationDuration: 1000,
               type: 'success',
               icon: {icon: 'auto', position: 'left'},
             });
@@ -672,7 +707,7 @@ const Signup = ({navigation}) => {
             showMessage({
               message: 'Email verified successfully!',
               floating: true,
-              duration: 500,
+              animationDuration: 1000,
               type: 'success',
               icon: {icon: 'auto', position: 'left'},
             });
@@ -691,6 +726,7 @@ const Signup = ({navigation}) => {
               message: OtpMsg.data.msg,
               floating: true,
               type: 'danger',
+              animationDuration: 1000,
               icon: {icon: 'auto', position: 'left'},
             });
             setTxt1('');
@@ -964,82 +1000,9 @@ const Signup = ({navigation}) => {
       </View>
     );
   };
-  const getProfileData = async user_id => {
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          id: user_id,
-          version: appVersion,
-        },
-      });
-
-      if (data.data.profile) {
-        setForLoading(false);
-        dispatch(setUserProfileData(data.data.profile));
-        navigationRef.navigate('Yourself');
-      } else if (
-        data?.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: data?.data?.msg,
-          floating: true,
-          duration: 500,
-          type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        setForLoading(false);
-        dispatch(setUserProfileData([]));
-        navigationRef.navigate('Yourself');
-      }
-    } catch (error) {
-      console.log('User Profile Error', error);
-      setForLoading(false);
-    }
-  };
-  const getProfileData1 = async user_id => {
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          id: user_id,
-          version: appVersion,
-        },
-      });
-
-      if (data?.data?.profile) {
-        setForLoading(false);
-        dispatch(setUserProfileData(data.data.profile));
-        navigationRef.navigate('BottomTab');
-      } else if (
-        data?.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: data?.data?.msg,
-          floating: true,
-          duration: 500,
-          type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        setForLoading(false);
-        dispatch(setUserProfileData([]));
-        navigationRef.navigate('BottomTab');
-      }
-    } catch (error) {
-      console.log('User Profile Error', error);
-      setForLoading(false);
-    }
-  };
 
   const getUserDetailData = async userId => {
+    console.log('dsfsdfsdfsdf', userId);
     try {
       const responseData = await axios.get(
         `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
@@ -1052,7 +1015,7 @@ const Signup = ({navigation}) => {
         showMessage({
           message: responseData?.data?.msg,
           type: 'danger',
-          animationDuration: 500,
+          animationDuration: 1000,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
@@ -1064,18 +1027,6 @@ const Signup = ({navigation}) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      dispatch(setPurchaseHistory([]));
-      dispatch(setUserProfileData([]));
-      dispatch(setCustomWorkoutData([]));
-      navigationRef.navigate('Yourself');
-      setForLoading(false);
-      EnteringEventFunction(
-        dispatch,
-        [],
-        setEnteredCurrentEvent,
-        setEnteredUpcomingEvent,
-        setPlanType,
-      );
     }
   };
   const getUserDetailData1 = async (userId, status) => {
@@ -1091,7 +1042,7 @@ const Signup = ({navigation}) => {
         showMessage({
           message: responseData?.data?.msg,
           type: 'danger',
-          animationDuration: 500,
+          animationDuration: 1000,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
@@ -1099,7 +1050,7 @@ const Signup = ({navigation}) => {
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         dispatch(setUserProfileData(responseData?.data?.profile));
-        console.log('sdfdsfdsfsdfdsf', status);
+
         if (status == 1) {
           if (
             responseData?.data?.additional_data?.term_condition == 'Accepted'
@@ -1113,17 +1064,7 @@ const Signup = ({navigation}) => {
         }
       }
     } catch (error) {
-      console.log('GET-USER-DATA', error);
-      dispatch(setPurchaseHistory([]));
-      dispatch(setUserProfileData([]));
-      dispatch(setCustomWorkoutData([]));
-      EnteringEventFunction(
-        dispatch,
-        [],
-        setEnteredCurrentEvent,
-        setEnteredUpcomingEvent,
-        setPlanType,
-      );
+      console.log('GET-USER-DATA  Signup1', error);
     }
   };
   const LoginCancelModal = () => {
@@ -1535,7 +1476,7 @@ const Signup = ({navigation}) => {
                   style={{
                     width: DeviceWidth * 0.15,
                     height: DeviceHeigth * 0.05,
-                    marginLeft:30
+                    marginLeft: 30,
                   }}
                   resizeMode="contain"
                 />
@@ -1633,7 +1574,7 @@ var styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalContent: {
-    height: DeviceHeigth * 0.4,
+    //height: DeviceHeigth * 0.4,
     width: '100%',
     backgroundColor: 'white',
 
@@ -1657,7 +1598,7 @@ var styles = StyleSheet.create({
   },
   Verify: {
     //backgroundColor: 'red',
-    width: (DeviceWidth * 50) / 100,
+    // width: (DeviceWidth * 50) / 100,
     height: (DeviceHeigth * 4) / 100,
     borderRadius: 100,
     marginVertical: 10,

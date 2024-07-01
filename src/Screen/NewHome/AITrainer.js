@@ -46,7 +46,7 @@ const AITrainer = ({navigation, route}) => {
     `,
   );
 
-  let isFocuse = useIsFocused();
+
   const [searchText, setSearchText] = useState('');
   const flatListRef = useRef(null);
   const [reward, setreward] = useState(0);
@@ -71,20 +71,7 @@ const AITrainer = ({navigation, route}) => {
     Tts.setDefaultRate(speechRate);
     Tts.setDefaultPitch(speechPitch);
     Tts.getInitStatus().then(initTts);
-    // return () => {
-    //   Tts.removeEventListener(
-    //     'tts-start',
-    //     (_event) => setTtsStatus('started')
-    //   );
-    //   Tts.removeEventListener(
-    //     'tts-finish',
-    //     (_event) => setTtsStatus('finished'),
-    //   );
-    //   Tts.removeEventListener(
-    //     'tts-cancel',
-    //     (_event) => setTtsStatus('cancelled'),
-    //   );
-    // };
+
   }, [getSoundOffOn]);
   const initTts = async () => {
     if (Platform.OS == 'android') {
@@ -120,15 +107,7 @@ const AITrainer = ({navigation, route}) => {
         icon: {icon: 'auto', position: 'left'},
       });
       return false;
-    } else if (searchText.trim().length < 3) {
-      showMessage({
-        message: 'Please enter Proper Message',
-        type: 'danger',
-        animationDuration: 500,
-        floating: true,
-        icon: {icon: 'auto', position: 'left'},
-      });
-      return false;
+    
     } else if (reward == 1) {
       handleSend(searchText);
       setSearchText('');

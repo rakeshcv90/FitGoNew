@@ -137,6 +137,7 @@ const Login = ({navigation}) => {
           platform: Platform.OS,
         },
       });
+      console.log('zxcfdsfdsfdsfs', data.data);
       if (data.data.profile_status == 1) {
         showMessage({
           message: data.data.msg,
@@ -325,7 +326,8 @@ const Login = ({navigation}) => {
           platform: Platform.OS,
         },
       });
-console.log("RESPONSE",res,data.data)
+      
+      setForLoading(false);
       if (data.data?.profile_status == 1) {
         showMessage({
           message: data.data.msg,
@@ -359,6 +361,17 @@ console.log("RESPONSE",res,data.data)
         //   floating: true,
         //   icon: {icon: 'auto', position: 'left'},
         // });
+      } else if (data.data?.msg == 'email alrady registerd') {
+        showMessage({
+          message:
+            'Email id already registered with ' +
+            data.data.social_type +
+            ' Login',
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         setForLoading(false);
 
@@ -611,6 +624,7 @@ console.log("RESPONSE",res,data.data)
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         dispatch(setUserProfileData(responseData?.data?.profile));
+        console.log('SDfdsfdsfdsfds', responseData?.data?.profile);
 
         if (responseData?.data.event_details == 'Not any subscription') {
           dispatch(setPurchaseHistory([]));
@@ -647,9 +661,7 @@ console.log("RESPONSE",res,data.data)
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      dispatch(setPurchaseHistory([]));
-      dispatch(setUserProfileData([]));
-      dispatch(setCustomWorkoutData([]));
+
       if (status == 1) {
         if (responseData?.data?.additional_data?.term_condition == 'Accepted') {
           navigation.replace('BottomTab');
@@ -1164,7 +1176,7 @@ console.log("RESPONSE",res,data.data)
               alignSelf: 'center',
               alignItems: 'center',
             }}>
-            <View style={{width: 90, height: 1, backgroundColor: 'black'}} />
+            <View style={{width: 120, height: 1, backgroundColor: 'black'}} />
 
             <Text
               style={[
@@ -1173,7 +1185,7 @@ console.log("RESPONSE",res,data.data)
               ]}>
               Or
             </Text>
-            <View style={{width: 90, height: 1, backgroundColor: 'black'}} />
+            <View style={{width: 120, height: 1, backgroundColor: 'black'}} />
           </View>
         </KeyboardAvoidingView>
         <View

@@ -179,16 +179,7 @@ const NameUpdateModal = ({
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      dispatch(setPurchaseHistory([]));
-      EnteringEventFunction(
-        dispatch,
-        [],
-        setEnteredCurrentEvent,
-        setEnteredUpcomingEvent,
-        setPlanType,
-      );
-      // dispatch(setUserProfileData([]));
-      dispatch(setCustomWorkoutData([]));
+
       getUserAllInData();
     }
   };
@@ -198,6 +189,7 @@ const NameUpdateModal = ({
     values.name != '' && payload.append('name', values.name);
     payload.append('user_id', user_id);
     values.email != '' && payload.append('email', values.email);
+
     try {
       setVisible(true);
       const res = await axios(NewAppapi.POST_UPDATE_EMAIL_NAME, {
@@ -208,7 +200,25 @@ const NameUpdateModal = ({
         },
       });
       console.log('PAYLOAD', payload, res.data);
-      if (res.data?.msg != 'user not exist') {
+      if (res.data?.msg == 'user not exist') {
+        setVisible(false);
+        showMessage({
+          message: res.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else if (res.data?.msg == 'email alrady exist') {
+        setVisible(false);
+        showMessage({
+          message: res.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
         getUserDetailData();
       }
     } catch (error) {

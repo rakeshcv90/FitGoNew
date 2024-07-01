@@ -355,9 +355,7 @@ const HomeNew = ({navigation}) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      // dispatch(setPurchaseHistory([]));
-      // dispatch(setUserProfileData([]));
-      dispatch(setCustomWorkoutData([]));
+
     }
   };
   const checkMealAddCount = () => {
@@ -1246,7 +1244,7 @@ const HomeNew = ({navigation}) => {
             }}>
             {'Hi' +
               ', ' +
-              (Object.keys(getUserDataDetails)?.length > 0
+              (Object.keys(getUserDataDetails)?.length > 0||getUserDataDetails?.length > 0
                 ? getUserDataDetails?.name == null
                   ? 'Guest'
                   : getUserDataDetails?.name.split(' ')[0]
