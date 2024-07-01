@@ -63,7 +63,7 @@ export const ExerciseComponetWithoutEvents = ({
           <FlatList
             data={dayObject?.exercises}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: DeviceHeigth * 0.42}}
+            contentContainerStyle={{paddingBottom:DeviceHeigth<=667?DeviceHeigth*0.5: DeviceHeigth * 0.42}}
             style={{
               width: DeviceWidth * 0.9,
               alignSelf: 'center',
@@ -266,7 +266,7 @@ export const ExerciseComponentWithEvent = ({
           <FlatList
             data={dayObject?.exercises}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: DeviceHeigth * 0.42}}
+            contentContainerStyle={{paddingBottom:DeviceHeigth<=667?DeviceHeigth*0.5: DeviceHeigth * 0.42}}
             style={{
               width: DeviceWidth * 0.9,
               alignSelf: 'center',

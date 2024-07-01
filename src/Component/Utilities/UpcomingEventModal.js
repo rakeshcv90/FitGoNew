@@ -1,113 +1,73 @@
-import {View, Text, Modal, StyleSheet, Image} from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  Modal,
+  StyleSheet,
+  Image,
+  ImageBackground,
+} from 'react-native';
+import React, {useRef, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AppColor, Fonts} from '../Color';
 import {DeviceHeigth, DeviceWidth} from '../Config';
 import {localImage} from '../Image';
 import NewButton from '../NewButton';
-
+import ShimmerPlaceholder, {
+  createShimmerPlaceholder,
+} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+import { useSelector } from 'react-redux';
 const UpcomingEventModal = ({visible, onCancel, onConfirm}) => {
+  const [imageloaded, setImageLoaded] = useState(false);
+  const avatarRef = useRef();
+  const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+  const getDynamicPopUpvalues=useSelector(state=>state?.getDynamicPopUpvalues)
   return (
     <Modal transparent visible={visible}>
       <View style={{backgroundColor: `rgba(0,0,0,0.4)`, flex: 1}}>
         <View style={styles.View1}>
-          <Icon
-            name="close"
-            size={25}
-            color={AppColor.WHITE}
-            style={{
-              margin: 16,
-              position: 'absolute',
-              right: 0,
-              zIndex: 1,
-              overflow: 'hidden',
-            }}
-            onPress={onCancel}
-          />
-          <Image
-            source={localImage.cornerCircle}
-            style={{height: 60, width: 60}}
-          />
-          <View style={{alignSelf: 'center', top: -25}}>
-            <Image
-              source={localImage.earnText}
-              style={{height: DeviceHeigth * 0.09, width: DeviceWidth * 0.7}}
-              resizeMode="contain"
-            />
-          </View>
-          <View
-            style={{
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              alignItems: 'center',
-              alignSelf: 'center',
-              top: -25,
-            }}>
-            <Image
-              source={localImage.CoinsL}
-              style={{height: 65, width: 65, left: 20, top: -4}}
-              resizeMode="contain"
-            />
-            <Text
+          {!imageloaded && (
+            <ShimmerPlaceholder
               style={{
-                color: AppColor.WHITE,
-                fontFamily: Fonts.MONTSERRAT_BOLD,
-                fontSize: 20,
-                textAlign: 'center',
-                width: DeviceWidth * 0.65,
-              }}>
-              Join the challenge today and earn reward
-            </Text>
-            <Image
-              source={localImage.CoinsR}
-              style={{height: 65, width: 65, right: 20, top: -4}}
-              resizeMode="contain"
-            />
-          </View>
-          <View style={{top: -15}}>
-            <NewButton
-              buttonColor={AppColor.WHITE}
-              titleColor={'#FF005C'}
-              title={'EARN NOW'}
-              mV={8}
-              pH={10}
-              ButtonWidth={DeviceWidth * 0.4}
-              elevation={{
-                ...Platform.select({
-                  ios: {
-                    shadowColor: '#000',
-                    shadowOffset: {width: 5, height: 5},
-                    shadowOpacity: 1,
-                    shadowRadius: 8,
-                  },
-                  android: {
-                    elevation: 5,
-                  },
-                }),
+                width: DeviceWidth * 0.9,
+                height: DeviceHeigth * 0.65,
               }}
+              ref={avatarRef}
+              autoRun
+            />
+          )}
+          <ImageBackground
+            source={getDynamicPopUpvalues?.image?{
+              uri: getDynamicPopUpvalues?.image,
+            }:localImage.fullsizebanner}
+            onLoad={() => setImageLoaded(true)}
+            resizeMode='stretch'
+            style={{
+              height: '100%',
+              width: '100%',
+              justifyContent: 'space-between',
+            }}>
+            <Icon
+              name="close"
+              color={AppColor.WHITE}
+              size={25}
+              style={{alignSelf: 'flex-end', margin: 12}}
+              onPress={onCancel}
+            />
+            <NewButton
+              buttonColor={getDynamicPopUpvalues?.button_color??AppColor.WHITE}
+              title={getDynamicPopUpvalues?.button_text??"EARN NOW"}
+              titleColor={getDynamicPopUpvalues?.button_text_color??'#FF005C'}
+              pH={12}
+              pV={12}
+              bb
+              alignSelf={getDynamicPopUpvalues?.button_position??"flex-start"}
+              mV={getDynamicPopUpvalues?.margin_bottom}
+              left={getDynamicPopUpvalues?.margin_start}
+              right={getDynamicPopUpvalues?.margin_end}
               onPress={onConfirm}
             />
-          </View>
-          <Image
-            source={localImage.MadamG}
-            style={{
-              height: DeviceHeigth * 0.35,
-              width: '100%',
-              alignSelf: 'center',
-              justifyContent: 'flex-end',
-            }}
-            resizeMode="contain"
-          />
-          <Image
-            source={localImage.bottomCircle}
-            style={{
-              height: 60,
-              width: 60,
-              alignSelf: 'flex-end',
-              position: 'absolute',
-              bottom: 0,
-            }}
-          />
+          </ImageBackground>
         </View>
       </View>
     </Modal>
@@ -118,6 +78,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF005C',
     // height: 300,
     width: DeviceWidth * 0.9,
+    height: DeviceHeigth * 0.65,
     alignSelf: 'center',
     borderRadius: 8,
     top: DeviceHeigth / 8,

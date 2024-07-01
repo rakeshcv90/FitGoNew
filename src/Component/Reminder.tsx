@@ -55,10 +55,11 @@ export const AlarmNotification = async (time: any) => {
       },
       ios: {
         categoryId: 'Alarm',
+        sound: 'fitme_notification.wav',
         foregroundPresentationOptions: {
           badge: true,
           banner: true,
-          sound: false,
+          sound: true,
         },
       },
       id: 'Timer',

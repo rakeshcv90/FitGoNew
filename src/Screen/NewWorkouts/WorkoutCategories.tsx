@@ -236,6 +236,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
         downloadProgress,
       }) => {
         return (
+         <>
           <View
             style={{
               borderColor: '#33333314',
@@ -347,6 +348,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
               )}
             </TouchableOpacity>
           </View>
+          {getAdsDisplay(index,item)}
+          </>
         );
       },
     [selectedExercise, switchButton, selectedIndex],
@@ -391,28 +394,18 @@ const WorkoutCategories = ({navigation, route}: any) => {
       </View>
     );
   };
-  const bannerAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        return null;
-      } else {
-        return <BannerAdd bannerAdId={bannerAdId} />;
-      }
-    } else {
-      return <BannerAdd bannerAdId={bannerAdId} />;
-    }
-  };
-  const getAdsDisplay = (item: any, index: number) => {
-    if (exercise.length >= 1) {
-      if (index == 0 && exercise.length > 1) {
+  const getAdsDisplay = (index, item) => {
+    const noOrNoobPlan =
+      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
+    if (filteredExercise.length >= 1) {
+      if (index == 0 && filteredExercise.length > 1 && noOrNoobPlan) {
         return getNativeAdsDisplay();
-      } else if ((index + 1) % 8 == 0 && exercise.length > 8) {
+      } else if ((index + 1) % 8 == 0 && filteredExercise.length> 8) {
         return getNativeAdsDisplay();
       }
     }
   };
+
   const getNativeAdsDisplay = () => {
     if (getPurchaseHistory?.plan != null) {
       if (
@@ -443,6 +436,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
       );
     }
   };
+
   const searchFunction = (text: string) => {
     const searchArray = exercise.filter((item: any) =>
       item?.exercise_title.toLowerCase().includes(text.toLowerCase()),

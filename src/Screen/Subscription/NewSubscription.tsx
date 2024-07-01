@@ -1041,9 +1041,11 @@ const NewSubscription = ({navigation, route}: any) => {
               styles.tabContainer,
               {
                 height:
-                  DeviceHeigth >= 1024
-                    ? DeviceHeigth * 0.05
-                    : DeviceHeigth * 0.05,
+                DeviceHeigth >= 1024
+                  ? DeviceHeigth * 0.05
+                  : DeviceHeigth >= 667
+                  ? DeviceHeigth * 0.06
+                  : DeviceHeigth * 0.05,
               },
             ]}>
             {sortedSubscriptions?.map((item: any, index: number) => {
@@ -1061,9 +1063,11 @@ const NewSubscription = ({navigation, route}: any) => {
                         styles.tabButton,
                         {
                           height:
-                            DeviceHeigth >= 1024
-                              ? DeviceHeigth * 0.05
-                              : DeviceHeigth * 0.05,
+                          DeviceHeigth >= 1024
+                            ? DeviceHeigth * 0.05
+                            : DeviceHeigth >= 667
+                            ? DeviceHeigth * 0.06
+                            : DeviceHeigth * 0.05,
                           backgroundColor:
                             index == 0
                               ? AppColor.NEW_SUBS_BLUE

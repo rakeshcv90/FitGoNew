@@ -55,7 +55,7 @@ const CustomBarChart = ({data, barColor, barWidth, barSpacing}) => {
                 {
                   height: animatedValues[index]?.interpolate({
                     inputRange: [0, maxValue],
-                    outputRange: [0, 200],
+                    outputRange: [0, DeviceHeigth*0.25], // to make changes here
                   }),
                   backgroundColor: barColor,
                   width: barWidth + barSpacing,

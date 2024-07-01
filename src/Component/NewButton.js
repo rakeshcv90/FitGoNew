@@ -35,6 +35,8 @@ const NewButton = ({
   right,
   left,
   elevation,
+  bb,
+  alignSelf
 }) => {
   const [isClicked, setIsClicked] = useState(false);
   const handlePress = () => {
@@ -48,14 +50,16 @@ const NewButton = ({
   }, [download]);
   return (
     <TouchableOpacity
+    activeOpacity={0.2}
       style={[
         styles.buttonContainer,
         {
           paddingHorizontal: pH ?? 0,
+          alignSelf: alignSelf??'center',
           paddingVertical: pV ?? 18,
           borderRadius: bR ?? 8,
           opacity: opacity ?? 1,
-          width: ButtonWidth ?? DeviceWidth * 0.9,
+          width:!bb? ButtonWidth ?? DeviceWidth * 0.9:undefined,
           backgroundColor: withAnimation
             ? isClicked
               ? 'darkgrey'
@@ -109,7 +113,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'center',
     flexDirection: 'row',
     position: 'relative', // Ensure the absolute positioning of buttonFill works properly
   },

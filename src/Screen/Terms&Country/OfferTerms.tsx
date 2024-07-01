@@ -39,7 +39,7 @@ import {
 import {useSelector, useDispatch} from 'react-redux';
 import {BlurView} from '@react-native-community/blur';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 const radioData = [
   {
     id: 1,
@@ -131,8 +131,18 @@ const OfferTerms = ({navigation, route}: any) => {
     );
   };
   const handleAgreement = () => {
-    AnalyticsConsole('IAR_ACC')
-    navigation.navigate('CountryLocation', {CustomCreated: CustomCreated});
+    AnalyticsConsole('IAR_ACC');
+    if (!checked) {
+      showMessage({
+        message: 'Please agree the terms and conditons',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+    } else {
+      navigation.navigate('CountryLocation', {CustomCreated: CustomCreated});
+    }
   };
   // to check and uncheck the box automatically
   const handleScroll = event => {
@@ -237,10 +247,8 @@ const OfferTerms = ({navigation, route}: any) => {
                     style={styles.modalContainer1}
                     blurType="light"
                     blurAmount={1}
-                    reducedTransparencyFallbackColor="white">
-                    <TouchableOpacity
-                      style={{}}
-                      onPress={() => setOpened(false)}>
+                    reducedTransparencyFallbackColor="white" >
+                    <TouchableOpacity activeOpacity={1} style={{flex: 1,zIndex:-1}} onPress={()=>setOpened(false)} >
                       <View
                         style={{
                           // width: DeviceWidth * 0.3,
@@ -248,8 +256,8 @@ const OfferTerms = ({navigation, route}: any) => {
                           justifyContent: 'flex-end',
                           alignSelf: 'flex-end',
                           top: DeviceHeigth * 0.1,
-                          marginRight: 16,
-                          paddingHorizontal: 10,
+                          marginRight: 8,
+                          paddingHorizontal: 12,
                           paddingVertical: 8,
                           borderRadius: 12,
                           // borderWidth: 1,
@@ -269,8 +277,19 @@ const OfferTerms = ({navigation, route}: any) => {
                               }, 250);
                             }}
                             color={AppColor.RED}
+                            uncheckedColor="grey"
                           />
-                          <Text style={{color: AppColor.BLACK}}>English</Text>
+                          <Text
+                            style={{color: AppColor.BLACK}}
+                            onPress={() => {
+                              setLanguage('English');
+                              handleRadioButton('term_condition_english');
+                              setTimeout(() => {
+                                setOpened(!opened);
+                              }, 250);
+                            }}>
+                            English
+                          </Text>
                         </View>
                         <View
                           style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -287,8 +306,19 @@ const OfferTerms = ({navigation, route}: any) => {
                               }, 250);
                             }}
                             color={AppColor.RED}
+                            uncheckedColor="grey"
                           />
-                          <Text style={{color: AppColor.BLACK}}>Hindi</Text>
+                          <Text
+                            style={{color: AppColor.BLACK}}
+                            onPress={() => {
+                              setLanguage('Hindi');
+                              handleRadioButton('term_condition_hindi');
+                              setTimeout(() => {
+                                setOpened(!opened);
+                              }, 250);
+                            }}>
+                            Hindi
+                          </Text>
                         </View>
                       </View>
                     </TouchableOpacity>

@@ -376,3 +376,9 @@ export const setPopUpSeen = data => {
     payload: data,
   };
 };
+export const setDynamicPopupValues=data=>{
+  return{
+    type:types.DYNAMIC_EVENTPOPUP,
+    payload:data
+  }
+}

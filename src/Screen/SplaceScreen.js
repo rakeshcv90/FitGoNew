@@ -19,6 +19,7 @@ import {
   setChallengesData,
   setCompleteProfileData,
   setCustomWorkoutData,
+  setDynamicPopupValues,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
   setFitmeAdsCount,
@@ -242,7 +243,6 @@ const SplaceScreen = ({navigation}) => {
       const responseData = await axios.get(
         `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
       );
-
       if (
         responseData?.data?.msg ==
         'Please update the app to the latest version.'
@@ -267,7 +267,7 @@ const SplaceScreen = ({navigation}) => {
         responseData.data.data.forEach(item => {
           objects[item?.type] = item?.image;
         });
-
+        dispatch(setDynamicPopupValues(responseData?.data?.custom_dailog_data[0]))
         dispatch(setBanners(objects));
         dispatch(setAgreementContent(responseData?.data?.terms[0]));
         dispatch(Setmealdata(responseData?.data?.diets));

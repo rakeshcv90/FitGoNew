@@ -258,17 +258,18 @@ const NewFocusWorkouts = ({route, navigation}) => {
   //     return <BannerAdd bannerAdId={bannerAdId} />;
   //   }
   // };
-  const getAdsDisplay = (item, index) => {
+  const getAdsDisplay = (index, item) => {
     const noOrNoobPlan =
       getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
-    if (execrise.length >= 1) {
-      if (noOrNoobPlan && index == 0 && execrise.length > 1) {
+    if (filterList.length >= 1) {
+      if (index == 0 && filterList.length > 1 && noOrNoobPlan) {
         return getNativeAdsDisplay();
-      } else if ((index + 1) % 8 == 0 && execrise.length > 8) {
+      } else if ((index + 1) % 8 == 0 && filterList.length> 8) {
         return getNativeAdsDisplay();
       }
     }
   };
+
   const getNativeAdsDisplay = () => {
     if (getPurchaseHistory?.plan != null) {
       if (
@@ -481,6 +482,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 renderItem={({item, index}) => {
                   return (
                     <>
+                
                       <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
@@ -568,6 +570,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         />
                         <View />
                       </TouchableOpacity>
+                     
                     </>
                   );
                 }}
@@ -909,6 +912,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         }}
                       />
                     )}
+                     {getAdsDisplay(index,item)}
                   </>
                 );
               }}

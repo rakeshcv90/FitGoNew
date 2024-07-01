@@ -118,5 +118,6 @@ export const NewAppapi = {
   ALL_USER_WITH_CONDITION: NewApi + 'all_user_with_condition',
   NEW_WEEKDAY_EXERCISE_API: NewApi + 'get_all_weekday_exercise',
   CANCEL_SUBSCRIPTION: NewApi + 'delete_data',
- GET_APIKEY: NewApi+'get_apikeys'
+ GET_APIKEY: NewApi+'get_apikeys',
+ GET_DYNAMIC_POPUP:NewApi+'custom_dialog'
 };

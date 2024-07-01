@@ -114,7 +114,6 @@ const MyPlans = ({navigation}: any) => {
     (state: any) => state.getEditedDayExercise,
   );
   const fitCoins = useSelector((state: any) => state.fitCoins);
-
   const dispatch = useDispatch();
   useEffect(() => {
     initInterstitial();

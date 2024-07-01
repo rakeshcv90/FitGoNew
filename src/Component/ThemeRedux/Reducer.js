@@ -63,7 +63,8 @@ const intialState = {
   getEditedDayExercise: {},
   getPopUpFreuqency: 0,
   getPopUpSeen: false,
-  hindiLanguage: false
+  hindiLanguage: false,
+  getDynamicPopUpvalues:{}
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -351,6 +352,10 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         hindiLanguage: action.payload,
       };
+      case types.DYNAMIC_EVENTPOPUP:
+        return{
+          ...state,getDynamicPopUpvalues:action.payload
+        }
     default:
       return state;
   }

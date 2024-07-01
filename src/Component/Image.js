@@ -219,5 +219,6 @@ export const localImage = {
   cornerCircle: require('../Icon/Images/InAppRewards/cornerCircle.png'),
   earnText: require('../Icon/Images/InAppRewards/EarnText.png'),
   bottomCircle:require('../Icon/Images/InAppRewards/BottomCircle.png'),
-  VideoLogo:require('../Icon/Images/InAppRewards/Videologo.png')
+  VideoLogo:require('../Icon/Images/InAppRewards/Videologo.png'),
+  fullsizebanner:require('../Icon/Images/InAppRewards/fullsizeBanner.jpg')
 };
