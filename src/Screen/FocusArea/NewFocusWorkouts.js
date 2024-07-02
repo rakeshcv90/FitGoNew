@@ -163,7 +163,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
     setSelectedIndex(-1);
   }, [isFocused]);
 
-
   const filterExercises = (exercises, filterCriteria) => {
     let modifiedFilter = [...filterCriteria]; // Create a copy of filterCriteria
     if (filterCriteria.length === 0) {
@@ -213,32 +212,21 @@ const NewFocusWorkouts = ({route, navigation}) => {
     );
     setSearchFilterList(filteredItems);
   };
-  // const bannerAdsDisplay = () => {
-  //   if (getPurchaseHistory.length > 0) {
-  //     if (
-  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-  //     ) {
-  //       return null;
-  //     } else {
-  //       return <BannerAdd bannerAdId={bannerAdId} />;
-  //     }
-  //   } else {
-  //     return <BannerAdd bannerAdId={bannerAdId} />;
-  //   }
-  // };
+
   const getAdsDisplay = (index, item) => {
     const noOrNoobPlan =
       getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
     if (filterList.length >= 1) {
       if (index == 0 && filterList.length > 1 && noOrNoobPlan) {
         return getNativeAdsDisplay();
-      } else if ((index + 1) % 8 == 0 && filterList.length> 8) {
+      } else if ((index + 1) % 8 == 0 && filterList.length > 8) {
         return getNativeAdsDisplay();
       }
     }
   };
 
   const getNativeAdsDisplay = () => {
+
     if (getPurchaseHistory?.plan != null) {
       if (
         getPurchaseHistory?.plan == 'premium' &&
@@ -257,7 +245,15 @@ const NewFocusWorkouts = ({route, navigation}) => {
         );
       }
     } else {
-      
+      return (
+        <View
+          style={{
+            alignSelf: 'center',
+            alignItems: 'center',
+          }}>
+          <NativeAddTest type="image" media={false} />
+        </View>
+      );
     }
   };
 
@@ -442,7 +438,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 renderItem={({item, index}) => {
                   return (
                     <>
-                
                       <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
@@ -530,7 +525,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         />
                         <View />
                       </TouchableOpacity>
-                     
                     </>
                   );
                 }}
@@ -702,7 +696,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             }
           }}
           onPressImage={() => {
-            AnalyticsConsole("O_BS_FW")
+            AnalyticsConsole('O_BS_FW');
             if (route?.params?.focusedPart == 'Upper Body') {
               refStandard.current.open();
             } else if (route?.params?.focusedPart == 'Lower Body') {
@@ -872,7 +866,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                         }}
                       />
                     )}
-                     {getAdsDisplay(index,item)}
+                    {getAdsDisplay(index, item)}
                   </>
                 );
               }}

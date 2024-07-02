@@ -248,7 +248,7 @@ const OfferTerms = ({navigation, route}: any) => {
                     blurType="light"
                     blurAmount={1}
                     reducedTransparencyFallbackColor="white" >
-                    <TouchableOpacity activeOpacity={1} style={{flex: 1,zIndex:-1}} onPress={()=>setOpened(false)} >
+                    <TouchableOpacity activeOpacity={1} style={{flex: 1,}} onPress={()=>setOpened(false)} >
                       <View
                         style={{
                           // width: DeviceWidth * 0.3,
