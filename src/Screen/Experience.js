@@ -111,7 +111,11 @@ const Experience = ({route, navigation}) => {
       <View
         style={{
           marginTop:
-            Platform.OS == 'ios' ? -DeviceHeigth * 0.06 : -DeviceHeigth * 0.03,
+            Platform.OS == 'ios'
+              ? DeviceHeigth >= 1024 || DeviceHeigth <= 667
+                ? -DeviceHeigth * 0.03
+                : -DeviceHeigth * 0.06
+              : -DeviceHeigth * 0.03,
         }}>
         <Bulb screen={'Choose your fitness level'} />
       </View>

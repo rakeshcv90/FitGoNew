@@ -120,12 +120,13 @@ const LoadData = ({navigation}) => {
   }, []);
   const WholeData = async deviceID => {
     const mergedObject = Object.assign({}, ...getLaterButtonData);
-
+    const Id =
+      getUserDataDetails?.id != null ? getUserDataDetails?.id : getUserID;
     try {
       const payload = new FormData();
       payload.append('deviceid', deviceID);
       payload.append('devicetoken', getFcmToken);
-      payload.append('id', getUserDataDetails?.id != null ? getUserDataDetails?.id : getUserID);
+      payload.append('id', Id);
       payload.append('gender', mergedObject?.gender);
       payload.append('goal', mergedObject?.goal);
       payload.append('weight', mergedObject?.currentWeight);
@@ -138,15 +139,15 @@ const LoadData = ({navigation}) => {
       // if (getTempLogin) {
       //   payload.append('name', mergedObject?.name);
       // } else {
-        // }
-          payload.append('name', getUserDataDetails?.name);
-          console.log("PAYLOASD",payload)
+      // }
+      payload.append('name', getUserDataDetails?.name);
+      console.log('PAYLOASD', payload);
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-         data: payload,
+        data: payload,
       });
 
       if (data?.data?.msg == 'Please update the app to the latest version.') {
@@ -158,7 +159,7 @@ const LoadData = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-        getUserID != 0 && getUserDetailData(getUserID); //getProfileData(getUserID);
+        getUserDetailData(Id); //getProfileData(getUserID);
         // getUserID != 0
         //   ? getCustomWorkout(getUserID)
         //   : customFreeWorkoutDataApi(deviceID);
@@ -248,7 +249,6 @@ const LoadData = ({navigation}) => {
   //   }
   // };
 
-
   const getUserDetailData = async userId => {
     try {
       const responseData = await axios.get(
@@ -267,7 +267,7 @@ const LoadData = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-        console.log("WORKINGGGG",responseData.data)
+        console.log('WORKINGGGG', responseData.data);
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         dispatch(setUserProfileData(responseData?.data?.profile));
@@ -276,7 +276,7 @@ const LoadData = ({navigation}) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-   
+
       setLoadData(100);
       setActiveNext(true);
     }
@@ -307,7 +307,7 @@ const LoadData = ({navigation}) => {
       <View
         style={{
           height: DeviceHeigth * 0.2,
-          top: DeviceHeigth * 0.03,
+          top: DeviceHeigth <= 667 ? DeviceHeigth * 0.01 : DeviceHeigth * 0.03,
           alignSelf: 'center',
           backgroundColor: '#fff',
         }}>
@@ -418,7 +418,7 @@ const LoadData = ({navigation}) => {
             <LinearGradient
               start={{x: 0, y: 1}}
               end={{x: 1, y: 0}}
-              colors={[AppColor.RED,AppColor.RED]}
+              colors={[AppColor.RED, AppColor.RED]}
               style={[styles.nextButton]}>
               <Icons name="chevron-right" size={25} color={'#fff'} />
             </LinearGradient>

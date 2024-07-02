@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ccc',
     alignSelf: 'center',
     alignItems:'center',
-    justifyContent:'centert'
+    justifyContent:'center'
   },
   animatedContainer: {
     justifyContent: 'center',

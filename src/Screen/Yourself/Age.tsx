@@ -148,7 +148,16 @@ const Age = ({route, navigation}: any) => {
         backgroundColor: AppColor.WHITE,
       }}>
       <ProgressBar screen={screen} />
-      <View style={{marginTop:Platform.OS=='ios'?- DeviceHeigth * 0.06:- DeviceHeigth * 0.02,alignSelf:"center"}}>
+      <View
+        style={{
+          marginTop:
+            Platform.OS == 'ios'
+              ? DeviceHeigth >= 1024 || DeviceHeigth <= 667
+                ? -DeviceHeigth * 0.03
+                : -DeviceHeigth * 0.06
+              : -DeviceHeigth * 0.02,
+          alignSelf: 'center',
+        }}>
         <Bulb screen={'How old are you?'} />
       </View>
       <View

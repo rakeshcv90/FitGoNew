@@ -12,7 +12,7 @@ import {
 import React, {useEffect, useRef, useState} from 'react';
 import {Image} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
-import {AppColor} from '../../Component/Color';
+import {AppColor, PLATFORM_IOS} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import ProgressBar from './ProgressBar';
@@ -119,7 +119,9 @@ const Weight = ({route, navigation}: any) => {
             style={{
               marginTop:
                 Platform.OS == 'ios'
-                  ? -DeviceHeigth * 0.06
+                ? DeviceHeigth >= 1024 || DeviceHeigth <= 667
+                    ? -DeviceHeigth * 0.03
+                    : -DeviceHeigth * 0.06
                   : -DeviceHeigth * 0.02,
             }}>
             <Bulb screen={'What’s your current weight?'} />
@@ -185,27 +187,34 @@ const Weight = ({route, navigation}: any) => {
           position: 'absolute',
         }}>
         <ProgressBar screen={screen} />
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: -DeviceHeigth * 0.05,
-          }}>
-          <Bulb screen={'What’s your target weight?'} />
-          <View style={{marginTop: 20}} />
-          <Toggle
-            data={toggleH}
-            highlightColor={AppColor.RED}
-            baseColor={AppColor.SOCIALBUTTON}
-            selected={toggle}
-            setSelected={setToggle}
-          />
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View
+            style={{
+              marginTop:
+                Platform.OS == 'ios'
+                ? DeviceHeigth >= 1024 || DeviceHeigth <= 667
+                    ? -DeviceHeigth * 0.03
+                    : -DeviceHeigth * 0.06
+                  : -DeviceHeigth * 0.02,
+            }}>
+            <Bulb screen={'What’s your target weight?'} />
+          </View>
+          <View style={{marginTop: 30}}>
+            <Toggle
+              data={toggleH}
+              highlightColor={AppColor.RED}
+              baseColor={AppColor.SOCIALBUTTON}
+              selected={toggle}
+              setSelected={setToggle}
+            />
+          </View>
         </View>
         <View
           style={{
             justifyContent: 'center',
             alignItems: 'center',
             height: DeviceHeigth * 0.4,
+            marginTop: 50,
             // borderWidth: 1,
           }}>
           <View style={{marginTop: DeviceHeigth * 0.08}}>
@@ -291,7 +300,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     position: 'absolute',
-    bottom: DeviceHeigth <= 667 ? DeviceHeigth * 0.04 : DeviceHeigth * 0.1,
+    bottom:
+      DeviceHeigth <= 667
+        ? DeviceHeigth * 0.04
+        : DeviceHeigth >= 812 && PLATFORM_IOS
+        ? DeviceHeigth * 0.03
+        : DeviceHeigth * 0.1,
     width: DeviceWidth * 0.9,
     alignSelf: 'center',
   },

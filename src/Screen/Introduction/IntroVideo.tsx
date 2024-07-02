@@ -76,7 +76,7 @@ const IntroVideo = ({navigation, route}: any) => {
             navigation.goBack();
           }
         }}
-        resizeMode="contain"
+        resizeMode={DeviceHeigth>=1024 ? 'stretch': 'contain'}
         onError={() => {
           setTimeout(() => {
             setStop(true)

@@ -127,7 +127,11 @@ const Goal = ({navigation, route}: any) => {
       <View
         style={{
           marginTop:
-            Platform.OS == 'ios' ? -DeviceHeigth * 0.06 : -DeviceHeigth * 0.03,
+            Platform.OS == 'ios'
+              ? DeviceHeigth >= 1024 || DeviceHeigth <= 667
+                ? -DeviceHeigth * 0.03
+                : -DeviceHeigth * 0.06
+              : -DeviceHeigth * 0.03,
         }}>
         <Bulb screen={'What is your fitness goal?'} />
       </View>
