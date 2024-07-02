@@ -167,9 +167,9 @@ export const setWorkoutTimeCal = data => {
     payload: data,
   };
 };
-export const setProfileImg_Data = data => {
+export const setDownloadedImage = data => {
   return {
-    type: types.Profile_imgData,
+    type: types.POPUPIMAGE,
     payload: data,
   };
 };

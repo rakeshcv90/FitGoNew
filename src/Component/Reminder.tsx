@@ -153,7 +153,7 @@ const Reminder = ({
           <View
             style={{
               width: DeviceWidth * 0.8,
-              height: DeviceHeigth * 0.3,
+              height: DeviceHeigth * 0.45,
               backgroundColor: AppColor.WHITE,
               justifyContent: 'center',
               alignItems: 'center',
