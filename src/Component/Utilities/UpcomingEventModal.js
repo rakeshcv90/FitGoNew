@@ -16,12 +16,16 @@ import ShimmerPlaceholder, {
   createShimmerPlaceholder,
 } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 const UpcomingEventModal = ({visible, onCancel, onConfirm}) => {
   const [imageloaded, setImageLoaded] = useState(false);
   const avatarRef = useRef();
   const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-  const getDynamicPopUpvalues=useSelector(state=>state?.getDynamicPopUpvalues)
+  const getDynamicPopUpvalues = useSelector(
+    state => state?.getDynamicPopUpvalues,
+  );
+  const getDownloadedImage = useSelector(state => state?.getDownloadedImage);
+  console.log(getDownloadedImage.popupImage);
   return (
     <Modal transparent visible={visible}>
       <View style={{backgroundColor: `rgba(0,0,0,0.4)`, flex: 1}}>
@@ -37,34 +41,51 @@ const UpcomingEventModal = ({visible, onCancel, onConfirm}) => {
             />
           )}
           <ImageBackground
-            source={getDynamicPopUpvalues?.image?{
-              uri: getDynamicPopUpvalues?.image,
-            }:localImage.fullsizebanner}
+            source={
+              getDownloadedImage.popupImage
+                ? {uri: getDownloadedImage?.popupImage}
+                : localImage.fullsizebanner
+            }
             onLoad={() => setImageLoaded(true)}
-            resizeMode='stretch'
+            resizeMode="stretch"
             style={{
               height: '100%',
               width: '100%',
-              justifyContent: 'space-between',
+              justifyContent: getDownloadedImage.popupImage
+                ? 'space-between'
+                : 'center',
             }}>
             <Icon
               name="close"
               color={AppColor.WHITE}
               size={25}
-              style={{alignSelf: 'flex-end', margin: 12}}
+              style={{
+                alignSelf: 'flex-end',
+                margin: 12,
+                position: getDownloadedImage?.popupImage
+                  ? 'relative'
+                  : 'absolute',
+                top: 0,
+                right: 0,
+              }}
               onPress={onCancel}
             />
             <NewButton
-              buttonColor={getDynamicPopUpvalues?.button_color??AppColor.WHITE}
-              title={getDynamicPopUpvalues?.button_text??"EARN NOW"}
-              titleColor={getDynamicPopUpvalues?.button_text_color??'#FF005C'}
+              buttonColor={
+                getDynamicPopUpvalues?.button_color ?? AppColor.WHITE
+              }
+              title={getDynamicPopUpvalues?.button_text ?? 'EARN NOW'}
+              titleColor={getDynamicPopUpvalues?.button_text_color ?? '#FF005C'}
               pH={12}
               pV={12}
               bb
-              alignSelf={getDynamicPopUpvalues?.button_position??"flex-start"}
-              mV={getDynamicPopUpvalues?.margin_bottom}
-              left={getDynamicPopUpvalues?.margin_start}
-              right={getDynamicPopUpvalues?.margin_end}
+              bottom={
+                getDownloadedImage?.popupImage ? undefined : DeviceHeigth * 0.06
+              }
+              alignSelf={getDownloadedImage?.popupImage?getDynamicPopUpvalues?.button_position:undefined}
+              mV={getDownloadedImage?.popupImage?getDynamicPopUpvalues?.margin_bottom:undefined}
+              left={getDownloadedImage?.popupImage?getDynamicPopUpvalues?.margin_start:undefined}
+              right={getDownloadedImage?.popupImage?getDynamicPopUpvalues?.margin_end:undefined}
               onPress={onConfirm}
             />
           </ImageBackground>

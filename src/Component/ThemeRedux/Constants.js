@@ -27,7 +27,7 @@ export default {
   SOUND_ON_OFF:'SOUND_ON_OFF',
   BMI:'BMI',
   HOME_GRAPH_DATA:'HOME_GRAPH_DATA',
-  Profile_imgData:'Profile_imgData',
+  POPUPIMAGE:'POPUPIMAGE',
   Custome_Time_Cal:'Custome_Time_Cal',
   IS_STEP_COUNTER_ON:'IS_STEP_COUNTER_ON',
   SUBSCRIPTION_MODAL:'SUBSCRIPTION_MODAL',

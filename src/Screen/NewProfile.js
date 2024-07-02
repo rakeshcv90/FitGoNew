@@ -267,9 +267,6 @@ const NewProfile = ({navigation}) => {
     const [modalImageUploaded, setModalImageUploaded] = useState(false);
     const [IsimgUploaded, setImguploaded] = useState(true);
     const [userAvatar, setUserAvatar] = useState(null);
-    const {getProfile_imgData} = useSelector(state => state);
-    const [userPhoto, setUserPhoto] = useState('');
-
     const getUserDetailDataApi = async userId => {
       try {
         const responseData = await axios.get(

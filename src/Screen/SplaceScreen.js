@@ -19,6 +19,7 @@ import {
   setChallengesData,
   setCompleteProfileData,
   setCustomWorkoutData,
+  setDownloadedImage,
   setDynamicPopupValues,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
@@ -64,6 +65,7 @@ const SplaceScreen = ({navigation}) => {
   const [loaded, setLoaded] = useState(false);
   const [ApiDataloaded, setApiDataLoaded] = useState(false);
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
+
   useEffect(() => {
     requestPermissionforNotification(dispatch);
     getUserAllInData();
@@ -211,6 +213,7 @@ const SplaceScreen = ({navigation}) => {
           });
   };
 
+ 
   const getUserAllInData = async () => {
     try {
       const responseData = await axios.get(
@@ -237,10 +240,12 @@ const SplaceScreen = ({navigation}) => {
         });
       } else {
         const objects = {};
-        responseData.data.data.forEach(item => {
+        responseData?.data?.data?.forEach(item => {
           objects[item?.type] = item?.image;
         });
+        downloadImages(responseData?.data?.custom_dailog_data[0])
         dispatch(setDynamicPopupValues(responseData?.data?.custom_dailog_data[0]))
+       
         dispatch(setBanners(objects));
         dispatch(setAgreementContent(responseData?.data?.terms[0]));
         dispatch(Setmealdata(responseData?.data?.diets));
@@ -256,7 +261,46 @@ const SplaceScreen = ({navigation}) => {
       getAllChallangeAndAllExerciseData();
     }
   };
+// download image
 
+const sanitizeFileName = (fileName) => {
+  fileName = fileName.replace(/\s+/g,'_');
+  return fileName;
+};
+
+const StoringData = {};
+
+const downloadImages = async (data) => {
+ 
+  try {
+    const fileName = data?.image?.substring(data?.image?.lastIndexOf('/') + 1);
+    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(fileName)}`;
+    const imageExists = await RNFetchBlob.fs.exists(filePath);
+    if (imageExists) {
+      StoringData['popupImage'] = `file://${filePath}`;
+    } else {
+      await RNFetchBlob.config({
+        fileCache: true,
+        path: filePath,
+      })
+        .fetch('GET', data?.image, {
+          'Content-Type': 'image/png', // Correct content type for PNG images
+          // Add headers or other configurations if required
+        })
+        .then(res => {
+          StoringData['popupImage'] = `file://${res.path()}`;
+        })
+        .catch(err => {
+          console.log(err,"image Download error");
+          dispatch(setDownloadedImage({}))
+        });
+    }
+    dispatch(setDownloadedImage(StoringData))
+  } catch (error) {
+    console.log('ERRRR', error);
+    dispatch(setDownloadedImage({}))
+  }
+};
   const getUserDetailData = async userId => {
     try {
       const responseData = await axios.get(

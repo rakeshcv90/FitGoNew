@@ -28,7 +28,7 @@ const intialState = {
   getSoundOffOn: true,
   getBmi: {},
   getHomeGraphData: [],
-  getProfile_imgData: [],
+  getDownloadedImage: {},
   getCustttomeTimeCal: [],
   getStepCounterOnoff: false,
   getSubscriptionModal: false,
@@ -177,10 +177,10 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, getSoundOffOn: action.payload};
     case types.HOME_GRAPH_DATA:
       return {...state, getHomeGraphData: action.payload};
-    case types.Profile_imgData:
+    case types.POPUPIMAGE:
       return {
         ...state,
-        getProfile_imgData: action.payload,
+        getDownloadedImage: action.payload,
       };
     case types.IS_STEP_COUNTER_ON:
       return {
