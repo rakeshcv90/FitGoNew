@@ -190,7 +190,10 @@ const Signup = ({navigation}) => {
           'Content-Type': 'multipart/form-data',
         },
         data: {
-          name: res.fullName.givenName + res.fullName.familyName,
+          name: 
+          res.fullName.givenName == null || res.fullName.familyName == null
+            ? 'Guest'
+            : res.fullName.givenName + res.fullName.familyName,
           email: res.email,
           signuptype: 'social',
           socialid: res.user,

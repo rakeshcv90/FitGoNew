@@ -111,9 +111,9 @@ const NativeAddTest = ({media, type}) => {
               }}
             />
           )}
-          {error && (
+          {/* {error && (
             <Text style={{color: '#a9a9a9', fontSize: 17}}>loading</Text>
-          )}
+          )} */}
         </View>
 
         <View

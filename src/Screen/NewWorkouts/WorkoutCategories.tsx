@@ -348,7 +348,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 )}
               </TouchableOpacity>
             </View>
-            {getAdsDisplay(index, item)}
           </>
         );
       },
@@ -400,7 +399,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
     if (filteredExercise.length >= 1) {
       if (index == 0 && filteredExercise.length > 1 && noOrNoobPlan) {
         return getNativeAdsDisplay();
-      } else if ((index + 1) % 8 == 0 && filteredExercise.length > 8) {
+      } else if ((index + 1) % 9 == 0 && filteredExercise.length > 9) {
+        if(index+1 == filteredExercise.length) return null
         return getNativeAdsDisplay();
       }
     }
@@ -533,6 +533,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
           data={filteredExercise}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}: any) => (
+            <>
             <Box
               item={item}
               index={index}
@@ -541,6 +542,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
               isItemDownload={selectedIndex == index}
               downloadProgress={downloadProgress}
             />
+            {getAdsDisplay(index, item)}
+            </>
           )}
           ListEmptyComponent={emptyComponent}
           showsVerticalScrollIndicator={false}

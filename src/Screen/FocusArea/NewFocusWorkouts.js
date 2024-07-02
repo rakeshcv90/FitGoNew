@@ -219,14 +219,14 @@ const NewFocusWorkouts = ({route, navigation}) => {
     if (filterList.length >= 1) {
       if (index == 0 && filterList.length > 1 && noOrNoobPlan) {
         return getNativeAdsDisplay();
-      } else if ((index + 1) % 8 == 0 && filterList.length > 8) {
+      } else if ((index + 1) % 9 == 0 && filterList.length > 9) {
+        if (index + 1 == filterList.length) return null;
         return getNativeAdsDisplay();
       }
     }
   };
 
   const getNativeAdsDisplay = () => {
-
     if (getPurchaseHistory?.plan != null) {
       if (
         getPurchaseHistory?.plan == 'premium' &&
@@ -341,6 +341,8 @@ const NewFocusWorkouts = ({route, navigation}) => {
                   ? DeviceHeigth * 0.25
                   : DeviceHeigth >= 856
                   ? DeviceHeigth * 0.4
+                  : DeviceHeigth <= 667
+                  ? DeviceHeigth * 0.5
                   : DeviceHeigth * 0.42,
             },
             draggableIcon: {
@@ -740,7 +742,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
               data={
                 searchFilterList?.length > 0 ? searchFilterList : filterList
               }
-              contentContainerStyle={{paddingBottom: DeviceHeigth * 0.25}}
+              contentContainerStyle={{paddingBottom: DeviceHeigth * 0.3}}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               keyExtractor={(item, index) => index.toString()}
@@ -783,7 +785,10 @@ const NewFocusWorkouts = ({route, navigation}) => {
                       <View
                         style={{
                           marginHorizontal: 16,
-                          width: DeviceWidth * 0.48,
+                          width:
+                            DeviceHeigth >= 1024
+                              ? DeviceWidth * 0.7
+                              : DeviceWidth * 0.48,
                         }}>
                         <Text
                           numberOfLines={1}

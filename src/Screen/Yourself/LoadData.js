@@ -160,6 +160,7 @@ const LoadData = ({navigation}) => {
         });
       } else {
         getUserDetailData(Id); //getProfileData(getUserID);
+        // getUserDataDetails?.id != 0 && getUserDetailData(getUserDataDetails?.id); //getProfileData(getUserID);
         // getUserID != 0
         //   ? getCustomWorkout(getUserID)
         //   : customFreeWorkoutDataApi(deviceID);
