@@ -241,11 +241,10 @@ const Exercise = ({navigation, route}: any) => {
               setSeconds(
                 parseInt(allExercise[index + 1]?.exercise_rest.split(' ')[0]),
               );
-           
+
               setCurrentData(allExercise[index + 1]);
               setNumber(number + 1);
               handleExerciseChange(allExercise[index + 1]?.exercise_title);
-           
 
               setTimer(10);
               setDemoW(0);
@@ -418,7 +417,6 @@ const Exercise = ({navigation, route}: any) => {
   const handleExerciseChange = (exerciseName: string) => {
     if (getStoreVideoLoc.hasOwnProperty(exerciseName)) {
       setCurrentVideo(getStoreVideoLoc[exerciseName]);
-    
     } else {
       setCurrentVideo('');
       console.error(`Exercise "${exerciseName}" video not found.`);
@@ -482,7 +480,6 @@ const Exercise = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data) {
-   
         setCompleted(completed + 1);
         setCurrentData(allExercise[index]);
         setRestStart(true);
@@ -529,7 +526,6 @@ const Exercise = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data) {
-    
         setCompleted(completed + 1);
         setCurrentData(allExercise[index]);
         setRestStart(true);
@@ -566,7 +562,6 @@ const Exercise = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data) {
-      
         setCompleted(completed + 1);
         setCurrentData(allExercise[index]);
         setRestStart(true);
@@ -596,7 +591,7 @@ const Exercise = ({navigation, route}: any) => {
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                paddingTop: DeviceWidth * 0.1
+                paddingTop: DeviceWidth * 0.1,
                 // marginTop: DeviceHeigth * 0.05
                 // paddingLeft: DeviceWidth / 2,
               }}>
@@ -627,13 +622,13 @@ const Exercise = ({navigation, route}: any) => {
                 color: AppColor.BLACK,
               }}>
               {`You have finished `}
-              <Text style={{color: '#f0013b',}}>
+              <Text style={{color: '#f0013b'}}>
                 {((number / parseInt(allExercise?.length)) * 100).toFixed(0) +
                   '%'}
               </Text>
               {'\n'}
               {' only '}
-              <Text style={{color: '#f0013b',}}>
+              <Text style={{color: '#f0013b'}}>
                 {parseInt(allExercise?.length) - number + ' Exercises'}
               </Text>
               {' left '}
@@ -648,7 +643,7 @@ const Exercise = ({navigation, route}: any) => {
                 onPress={() => setBack(false)}
                 bW={1}
               />
-             
+
               <TouchableOpacity
                 style={{alignSelf: 'center', marginTop: 5}}
                 onPress={() => {
@@ -837,9 +832,9 @@ const Exercise = ({navigation, route}: any) => {
                 <CircularProgress
                   value={timerS}
                   radius={40}
-                  progressValueColor='#f0013b'
+                  progressValueColor="#f0013b"
                   inActiveStrokeColor={'#FCECF0'}
-                  activeStrokeColor='#f0013b'
+                  activeStrokeColor="#f0013b"
                   // inActiveStrokeOpacity={0.3}
                   maxValue={10}
                   titleColor={'black'}
@@ -1020,7 +1015,7 @@ const Exercise = ({navigation, route}: any) => {
                   radius={40}
                   progressValueColor="#f0013b"
                   inActiveStrokeColor={'#FCECF0'}
-                  activeStrokeColor='#f0013b'
+                  activeStrokeColor="#f0013b"
                   // inActiveStrokeOpacity={0.3}
                   maxValue={10}
                   titleColor={'black'}

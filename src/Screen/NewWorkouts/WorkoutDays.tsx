@@ -544,14 +544,15 @@ const WorkoutDays = ({navigation, route}: any) => {
           style={[
             styles.box,
             {
-              opacity: !selected && item?.total_rest != 0 ? 0.9 : 1,
+             opacity: !selected && item?.total_rest != 0 ? 0.9 : 1,
               width: DeviceWidth * 0.95,
               // DeviceHeigth < 1280 ? DeviceWidth * 0.85 : DeviceWidth * 0.89,
               height: DeviceHeigth * 0.085,
               marginTop: 6,
+        
             },
           ]}
-          activeOpacity={1}
+          activeOpacity={0.6}
           onPress={() => {
             analytics().logEvent(`CV_FITME_CLICKED_ON_DAY_${index}_EXERCISES`);
             let checkAdsShow = AddCountFunction();

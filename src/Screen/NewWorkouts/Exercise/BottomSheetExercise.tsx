@@ -32,57 +32,69 @@ const BottomSheetExercise = ({
   const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
   const Box = ({selected, item, index}: any) => {
     return (
-      <TouchableOpacity
-        key={index}
-        activeOpacity={1}
-        onPress={() => {
-          // setVisible(false);
-          // setCurrentData(item);
-          // if (currentExercise?.exercise_title == item?.exercise_title) {
-          //   showMessage({
-          //     message: 'Current Exercise',
-          //     type: 'info',
-          //     animationDuration: 500,
-          //     floating: true,
-          //     icon: {icon: 'auto', position: 'left'},
-          //   });
-          // } else {
-          setVisible(false);
-          setCurrentData(item);
-          setSeconds(parseInt(item?.exercise_rest.split(' ')[0]));
-          setPlayW(0);
-          setPause(false);
-          setRandomCount(index);
-          clearInterval(playTimerRef.current);
-          handleExerciseChange(item?.exercise_title);
-          setNumber(index - 1);
-          // }
-        }}
-        style={[
-          styles.box,
-          {
-            backgroundColor: AppColor.WHITE,
-            height: DeviceHeigth * 0.1,
-          },
-        ]}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
+      <>
+        <TouchableOpacity
+          style={styles.box}
+          onPress={() => {
+            // setVisible(false);
+            // setCurrentData(item);
+            // if (currentExercise?.exercise_title == item?.exercise_title) {
+            //   showMessage({
+            //     message: 'Current Exercise',
+            //     type: 'info',
+            //     animationDuration: 500,
+            //     floating: true,
+            //     icon: {icon: 'auto', position: 'left'},
+            //   });
+            // } else {
+            setVisible(false);
+            setCurrentData(item);
+            setSeconds(parseInt(item?.exercise_rest.split(' ')[0]));
+            setPlayW(0);
+            setPause(false);
+            setRandomCount(index);
+            clearInterval(playTimerRef.current);
+            handleExerciseChange(item?.exercise_title);
+            setNumber(index - 1);
+            // }
           }}>
-          <Image
-            source={{
-              uri:
-                getStoreVideoLoc[item?.exercise_title + 'Image'] != undefined
-                  ? 'file://' + getStoreVideoLoc[item?.exercise_title + 'Image']
-                  : item.exercise_image?.includes('https')
-                  ? item.exercise_image
-                  : item.exercise_image_link
-            }}
-            style={{height: 80, width: 60, marginLeft: DeviceWidth * 0.12}}
-            resizeMode="contain"
-          />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <View
+              style={{
+                height: 80,
+                width: 80,
+                backgroundColor: AppColor.WHITE,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 5,
+                borderWidth: 1,
+                borderColor: '#D9D9D9',
+              }}>
+              <Image
+                source={{
+                  uri:
+                    getStoreVideoLoc[item?.exercise_title + 'Image'] !=
+                    undefined
+                      ? 'file://' +
+                        getStoreVideoLoc[item?.exercise_title + 'Image']
+                      : item.exercise_image?.includes('https')
+                      ? item.exercise_image
+                      : item.exercise_image_link,
+                }}
+                style={{
+                  height: 70,
+                  width: 60,
+                  // marginLeft: DeviceWidth * 0.12,
+                }}
+                resizeMode="contain"
+              />
+            </View>
+          </View>
           <View
             style={{
               flexDirection: 'row',
@@ -103,8 +115,97 @@ const BottomSheetExercise = ({
               color={AppColor.INPUTTEXTCOLOR}
             />
           </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+        {index !== exerciseData.length  && (
+          <View
+            style={{
+              width: '100%',
+              height: 1,
+              alignItems: 'center',
+              backgroundColor: '#33333314',
+            }}
+          />
+        )}
+      </>
+      // <TouchableOpacity
+      //   key={index}
+      //   activeOpacity={1}
+      //   onPress={() => {
+      //     // setVisible(false);
+      //     // setCurrentData(item);
+      //     // if (currentExercise?.exercise_title == item?.exercise_title) {
+      //     //   showMessage({
+      //     //     message: 'Current Exercise',
+      //     //     type: 'info',
+      //     //     animationDuration: 500,
+      //     //     floating: true,
+      //     //     icon: {icon: 'auto', position: 'left'},
+      //     //   });
+      //     // } else {
+      //     setVisible(false);
+      //     setCurrentData(item);
+      //     setSeconds(parseInt(item?.exercise_rest.split(' ')[0]));
+      //     setPlayW(0);
+      //     setPause(false);
+      //     setRandomCount(index);
+      //     clearInterval(playTimerRef.current);
+      //     handleExerciseChange(item?.exercise_title);
+      //     setNumber(index - 1);
+      //     // }
+      //   }}
+      //   style={[
+      //     styles.box,
+      //     {
+      //       backgroundColor: AppColor.WHITE,
+      //       height: DeviceHeigth * 0.1,
+      //       marginVertical:20,
+      //     },
+      //   ]}>
+      //   <View
+      //     style={{
+      //       flexDirection: 'row',
+      //       justifyContent: 'center',
+      //       alignItems: 'center',
+      //     }}>
+      //     <Image
+      //       source={{
+      //         uri:
+      //           getStoreVideoLoc[item?.exercise_title + 'Image'] != undefined
+      //             ? 'file://' + getStoreVideoLoc[item?.exercise_title + 'Image']
+      //             : item.exercise_image?.includes('https')
+      //             ? item.exercise_image
+      //             : item.exercise_image_link,
+      //       }}
+      //       style={{
+      //         height: 80,
+      //         width: 60,
+      //         // marginLeft: DeviceWidth * 0.12,
+
+      //       }}
+      //       resizeMode="contain"
+      //     />
+      //     <View
+      //       style={{
+      //         flexDirection: 'row',
+      //         justifyContent: 'space-between',
+      //         alignItems: 'center',
+      //         marginHorizontal: 10,
+      //         width: '75%',
+      //       }}>
+      //       <View>
+      //         <Text style={[styles.small, {fontSize: 14}]}>
+      //           {item?.exercise_title}
+      //         </Text>
+      //         <Text style={styles.small}>{item?.exercise_rest}</Text>
+      //       </View>
+      //       <Icons
+      //         name={'chevron-right'}
+      //         size={25}
+      //         color={AppColor.INPUTTEXTCOLOR}
+      //       />
+      //     </View>
+      //   </View>
+      // </TouchableOpacity>
     );
   };
   return (
@@ -116,7 +217,7 @@ const BottomSheetExercise = ({
           backgroundColor: 'white',
           maxHeight: '65%',
           minHeight: '25%',
-          marginBottom: Platform.OS == 'ios' ? -DeviceHeigth * 0.05 : 0,
+         // marginBottom: Platform.OS == 'ios' ? 0 : 0,
         }}
         bottomSheetTitleStyle={{
           color: '#1E1E1E',
@@ -124,15 +225,15 @@ const BottomSheetExercise = ({
           fontFamily: 'Poppins',
           fontSize: 20,
           lineHeight: 30,
-          top:-7
+          top: -7,
         }}
         onBackdropPress={true}
         onRequestClose={() => setVisible(!isVisible)}
         bottomSheetVisible={isVisible}>
         <ScrollView
-        style={{
-          marginBottom: DeviceHeigth*0.07
-        }}
+          style={{
+            marginBottom: DeviceHeigth * 0.07,
+          }}
           showsVerticalScrollIndicator={false}>
           {exerciseData.map((item: any, index: number) => (
             <Box selected={-1} index={index + 1} item={item} />
@@ -160,14 +261,24 @@ const styles = StyleSheet.create({
     color: AppColor.LITELTEXTCOLOR,
     lineHeight: 30,
   },
+  // box: {
+  //   // flex: 1,
+  //   width: DeviceWidth * 0.95,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   padding: 0,
+  //   borderRadius: 15,
+  //  // marginLeft: -20,
+  //   // marginVertical: 5,
+  // },
   box: {
-    // flex: 1,
-    width: DeviceWidth * 0.95,
-    justifyContent: 'center',
+    width: '100%',
+    // padding: 10,
+    justifyContent: 'space-between',
+    alignSelf: 'center',
     alignItems: 'center',
-    padding: 0,
-    borderRadius: 15,
-    marginLeft: -20,
-    // marginVertical: 5,
+    marginVertical: 10,
+
+    flexDirection: 'row',
   },
 });
