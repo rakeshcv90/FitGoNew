@@ -670,38 +670,28 @@ const WorkoutDays = ({navigation, route}: any) => {
                   />
                 </View>
               ) : (
-                <>
-                  <View
-                    style={{
-                      height:
-                        DeviceHeigth >= 1024
-                          ? DeviceWidth * 0.18
-                          : DeviceWidth * 0.18,
-                      width:
-                        DeviceHeigth >= 1024
-                          ? DeviceWidth * 0.18
-                          : DeviceWidth * 0.18,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      // marginLeft: DeviceWidth * 0.12,
-                    }}>
-                    <Text
-                      style={{
-                        fontWeight: '700',
-                        fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                        fontSize: 32,
-                        lineHeight: 40,
-                        color: selectedIndex ? '#f0013b' : '#333333B2',
-                        borderRadius: 5,
-                        borderColor: '#d9d9d9',
-                        borderWidth: 1,
-                        padding: 5,
-                        paddingLeft: 7,
-                      }}>
-                      {index < 10 ? `0${index}` : index}
-                    </Text>
-                  </View>
-                </>
+                <Text
+                  style={{
+                    width:
+                      DeviceHeigth >= 1024
+                        ? DeviceWidth * 0.08
+                        : DeviceWidth * 0.14,
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 5,
+                    borderColor: '#d9d9d9',
+                    borderWidth: 1,
+                    padding: 5,
+                    fontWeight: '700',
+                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                    fontSize: 32,
+                    lineHeight: 40,
+                    color: selectedIndex ? '#f0013b' : '#333333B2',
+                  }}>
+                  {index < 10 ? `0${index}` : index}
+                </Text>
               )}
               <View
                 style={{

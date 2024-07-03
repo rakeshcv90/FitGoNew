@@ -40,6 +40,16 @@
 				<string>com.googleusercontent.apps.60298593797-1cq5dlnk96m56t9nbd26dlmutjl7ubks</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>fitme.cvinfotech.in</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fitme.cvinfotech.in</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
