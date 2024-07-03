@@ -22,7 +22,7 @@ const Button2 = ({buttonText, onFBPress, onGooglePress, onApplePress}) => {
           <Image
             source={localImage.GOOGLE}
             style={{
-              width: DeviceWidth * 0.12,
+              width: DeviceWidth * 0.05,
               height: DeviceHeigth * 0.035,
               left: -5,
             }}
