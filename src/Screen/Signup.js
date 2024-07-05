@@ -182,8 +182,8 @@ const Signup = ({navigation}) => {
       );
   };
   const appleSignUp = async res => {
-    console.log("sdcsdfsdfdf",res)
-   setForLoading(true);
+
+    setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
         method: 'POST',
@@ -253,7 +253,10 @@ const Signup = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      } else if (data?.data?.msg == 'registered with given these details'&& data.data.profile_compl_status == 1) {
+      } else if (
+        data?.data?.msg == 'registered with given these details' &&
+        data.data.profile_compl_status == 1
+      ) {
         setForLoading(false);
         showMessage({
           message:
@@ -304,7 +307,7 @@ const Signup = ({navigation}) => {
       });
 
       setForLoading(false);
-
+    
       if (data?.data?.status == 0) {
         setForLoading(false);
         showMessage({
@@ -351,7 +354,25 @@ const Signup = ({navigation}) => {
         // getProfileData1(data.data?.id);
         getUserDetailData1(data.data?.id, data.data.profile_compl_status);
         await GoogleSignin.signOut();
-      } else {
+      }else if (
+        data?.data?.msg == 'registered with given these details' &&
+        data.data.profile_compl_status == 1
+      ) {
+        setForLoading(false);
+        showMessage({
+          message:
+            'This Device already registered with ' +
+            data.data.social_type +
+            ' Login',
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        getUserDetailData1(data.data?.id, data.data.profile_compl_status);
+        await GoogleSignin.signOut();
+      } 
+      else {
         setForLoading(false);
 
         showMessage({
@@ -1019,7 +1040,7 @@ const Signup = ({navigation}) => {
   };
 
   const getUserDetailData = async userId => {
-    console.log('dsfsdfsdfsdf', userId);
+ 
     try {
       const responseData = await axios.get(
         `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
@@ -1574,8 +1595,8 @@ var styles = StyleSheet.create({
     fontWeight: '700',
   },
   OtpField: {
-    width: 50,
-    height: 55,
+    width: 55,
+   // height: 55,
     margin: 5,
     backgroundColor: '#F8F9F9',
     justifyContent: 'center',
