@@ -110,12 +110,13 @@ const LogSignUp = ({navigation}) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-    
+
       <View style={styles.TextContainer}>
         <Text style={styles.LoginText2}>{'Hey there,'}</Text>
         <Text style={styles.LoginText}>{showLogin}</Text>
       </View>
       <Tab.Navigator
+         initialRouteName="Sign Up"
         screenOptions={{
           activeTintColor: 'red',
           inactiveTintColor: 'gray',
@@ -125,8 +126,8 @@ const LogSignUp = ({navigation}) => {
           },
         }}
         tabBar={props => <MyTabBar {...props} />}>
-        <Tab.Screen name={'Log In'} component={Login} />
         <Tab.Screen name={'Sign Up'} component={Signup} />
+        <Tab.Screen name={'Log In'} component={Login} />
       </Tab.Navigator>
     </View>
   );

@@ -134,6 +134,11 @@
 		<string>Montserrat-SemiBoldItalic.ttf</string>
 		<string>Montserrat-Thin.ttf</string>
 		<string>Montserrat-ThinItalic.ttf</string>
+		<string>Helvetica-Bold.ttf</string>
+		<string>Helvetica-BoldOblique.ttf</string>
+		<string>Helvetica-Oblique.ttf</string>
+		<string>Helvetica.ttf</string>
+		<string>helvetica-light-587ebe5a59211.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
@@ -152,7 +157,7 @@
 	<key>UIRequiresFullScreen</key>
 	<true/>
 	<key>UIStatusBarStyle</key>
-	<string></string>
+	<string/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
