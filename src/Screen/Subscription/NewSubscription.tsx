@@ -656,7 +656,7 @@ const NewSubscription = ({navigation, route}: any) => {
           backgroundColor: AppColor.WHITE,
           justifyContent: 'center',
           alignItems: 'center',
-          height: DeviceHeigth * 0.65,
+          height:DeviceHeigth<=640 ? DeviceHeigth*0.8 : DeviceHeigth * 0.65,
           // !planName.includes('noob') &&
           // !planName.includes('pro') &&
           // !PLATFORM_IOS &&
@@ -1041,7 +1041,7 @@ const NewSubscription = ({navigation, route}: any) => {
                 height:
                 DeviceHeigth >= 1024
                   ? DeviceHeigth * 0.05
-                  : DeviceHeigth >= 667
+                  : DeviceHeigth >= 640
                   ? DeviceHeigth * 0.06
                   : DeviceHeigth * 0.05,
               },
@@ -1063,7 +1063,7 @@ const NewSubscription = ({navigation, route}: any) => {
                           height:
                           DeviceHeigth >= 1024
                             ? DeviceHeigth * 0.05
-                            : DeviceHeigth >= 667
+                            : DeviceHeigth >= 640
                             ? DeviceHeigth * 0.06
                             : DeviceHeigth * 0.05,
                           backgroundColor:
@@ -1101,6 +1101,12 @@ const NewSubscription = ({navigation, route}: any) => {
                         styles.tabButton,
                         {
                           marginVertical: 10,
+                          height:
+                          DeviceHeigth >= 1024
+                            ? DeviceHeigth * 0.05
+                            : DeviceHeigth >= 640
+                            ? DeviceHeigth * 0.06
+                            : DeviceHeigth * 0.05,
                           // paddingHorizontal: 5,
                         },
                       ]}>

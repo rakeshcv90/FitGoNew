@@ -115,7 +115,6 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
               floating: true,
             });
           } else if (route.key?.includes('MyPlans') && Sun) {
-           
             const event = navigation.emit({
               type: 'tabPress',
               target: route.key,
@@ -202,7 +201,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                   }>
                   <Image
                     source={localImage[route.name + 'Red']}
-                   // tintColor={'#f0013b'}
+                    // tintColor={'#f0013b'}
                     resizeMode="contain"
                     style={{
                       width: 30,
@@ -269,10 +268,11 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
 };
 
 const BottomTab = () => {
+  const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
   return (
     <>
       <Tabs.Navigator
-        initialRouteName="Home"
+        initialRouteName={enteredCurrentEvent ? 'MyPlans' : 'Home'}
         tabBar={props => <CustomTab {...props} />}
         screenOptions={{
           activeTintColor: '#D01818',
@@ -347,9 +347,7 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: 'row',
     height:
-      Platform.OS == 'android'
-        ? DeviceHeigth * 0.07
-        : DeviceHeigth == 667
+      DeviceHeigth >= 640
         ? DeviceHeigth * 0.09
         : DeviceHeigth >= 1024
         ? DeviceHeigth * 0.06
@@ -398,8 +396,20 @@ const styles = StyleSheet.create({
   },
   badgeContainer: {
     position: 'absolute',
-    top: DeviceHeigth <= 667 ? -12 : DeviceHeigth <= 844 ? -13 :DeviceHeigth>=1024?-13:-13,
-    right: DeviceHeigth <= 844?15:DeviceHeigth>=1024?DeviceHeigth*0.054:12,
+    top:
+      DeviceHeigth <= 667
+        ? -12
+        : DeviceHeigth <= 844
+        ? -13
+        : DeviceHeigth >= 1024
+        ? -13
+        : -13,
+    right:
+      DeviceHeigth <= 844
+        ? 15
+        : DeviceHeigth >= 1024
+        ? DeviceHeigth * 0.054
+        : 12,
     width: 25,
     height: 25,
   },

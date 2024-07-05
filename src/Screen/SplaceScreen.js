@@ -65,7 +65,13 @@ const SplaceScreen = ({navigation}) => {
   const [loaded, setLoaded] = useState(false);
   const [ApiDataloaded, setApiDataLoaded] = useState(false);
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
-
+  useEffect(() => {
+  
+      DeviceInfo.syncUniqueId().then(uniqueId => {
+        console.log(uniqueId)
+      
+      })
+  }, []);
   useEffect(() => {
     requestPermissionforNotification(dispatch);
     getUserAllInData();

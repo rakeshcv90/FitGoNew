@@ -279,7 +279,7 @@ const Banners = ({
         key={index}
         onPress={() => handleEventClicks(index)}
         style={{
-          height: DeviceHeigth * 0.2,
+          height:DeviceHeigth<=667?DeviceHeigth*0.25: DeviceHeigth * 0.2,
           width:
             imageSource?.length > 1 ? DeviceWidth * 0.9 : DeviceWidth * 0.95,
           alignSelf: 'center',

@@ -39,8 +39,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import {setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
-import App from '../../../App';
-
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const StoreScreen = ({navigation}) => {

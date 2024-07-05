@@ -859,9 +859,9 @@ const MyPlans = ({navigation}: any) => {
             width: DeviceWidth,
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginTop: -DeviceWidth * 0.05,
+            marginTop: DeviceWidth * 0.04,
           }}>
-          <Text
+          {/* <Text
             style={[
               styles.semiBold,
               {
@@ -874,7 +874,7 @@ const MyPlans = ({navigation}: any) => {
               },
             ]}>
             Get Fit{' '}
-          </Text>
+          </Text> */}
         </View>
 
         {loader ? (

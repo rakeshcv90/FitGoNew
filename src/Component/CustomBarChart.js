@@ -4,7 +4,6 @@ import Svg, {Line, Defs, Stop} from 'react-native-svg';
 import {DeviceHeigth, DeviceWidth} from './Config';
 import LinearGradient from 'react-native-linear-gradient';
 import { AppColor } from './Color';
-import App from '../../App';
 const CustomBarChart = ({data, barColor, barWidth, barSpacing}) => { 
   const animatedValues = useRef(data.map(() => new Animated.Value(0))).current;
 

@@ -61,8 +61,6 @@
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
 	</array>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
 	<key>MinimumOSVersion</key>
 	<string>14.0</string>
 	<key>NSAppTransportSecurity</key>
@@ -82,8 +80,6 @@
 	<string>Read and understand health data.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Share workout data with other apps.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>FitGo needs Location access to show Gyms on the basis of Current User's location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>FitGo needs Location access to show Gyms on the basis of Current User's location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -131,8 +127,6 @@
 		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
-	<key>UILaunchScreen</key>
-	<string>Launch Screen</string>
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>

@@ -129,17 +129,18 @@ const LoadData = ({navigation}) => {
       payload.append('id', Id);
       payload.append('gender', mergedObject?.gender);
       payload.append('goal', mergedObject?.goal);
-      payload.append('weight', mergedObject?.currentWeight);
-      payload.append('age', mergedObject?.age);
-      payload.append('targetweight', mergedObject?.targetWeight);
-      payload.append('experience', mergedObject?.experience);
-      payload.append('workout_plans', mergedObject?.workout_plans);
-      payload.append('equipment', mergedObject?.equipment);
+      // payload.append('weight', mergedObject?.currentWeight);
+      // payload.append('age', mergedObject?.age);
+      // payload.append('targetweight', mergedObject?.targetWeight);
+      // payload.append('experience', mergedObject?.experience);
+      // payload.append('workout_plans', mergedObject?.workout_plans);
+      // payload.append('equipment', mergedObject?.equipment);
       payload.append('version', VersionNumber.appVersion);
       // if (getTempLogin) {
       //   payload.append('name', mergedObject?.name);
       // } else {
       // }
+
       payload.append('name', getUserDataDetails?.name);
       console.log('PAYLOASD', payload);
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
@@ -149,7 +150,7 @@ const LoadData = ({navigation}) => {
         },
         data: payload,
       });
-
+       console.log("payload------>",payload)
       if (data?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: data?.data?.msg,
@@ -167,7 +168,7 @@ const LoadData = ({navigation}) => {
         // dispatch(setTempLogin(false));
       }
     } catch (error) {
-      console.log('Whole Data Error', error);
+      console.log('Whole Data Error----->', error.response);
     }
   };
 

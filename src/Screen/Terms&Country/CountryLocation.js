@@ -18,7 +18,7 @@ import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import FitText from '../../Component/Utilities/FitText';
 import {openSettings} from 'react-native-permissions';
 import {LocationPermissionModal} from '../../Component/Utilities/LocationPermission';
-
+import AndroidOpenSettings from 'react-native-android-open-settings';
 const CountryLocation = ({navigation, route}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const [loaded, setLoaded] = useState(true);
@@ -44,7 +44,7 @@ const CountryLocation = ({navigation, route}) => {
           showMessage({
             message: 'Error while getting your location',
             floating: true,
-            duration: 500,
+            duration: 1000,
             type: 'danger',
             icon: {icon: 'auto', position: 'left'},
           });
@@ -54,14 +54,33 @@ const CountryLocation = ({navigation, route}) => {
       .catch(err => {
         console.log('location Error', err);
         setLoaded(true);
-        showMessage({
-          message: 'Error while getting your location',
-          floating: true,
-          duration: 500,
-          type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
-        });
-        navigation.navigate('BottomTab');
+        if (err.message == 'No location provider available.') {
+          Alert.alert(
+            "Enable device's location service",
+            "Oops , it's look your location service is not enable. Please enable your location service to use the app and take the benefits from app features.",
+            [
+              {
+                text: 'Cancel',
+                style: 'cancel',
+              },
+              {
+                text: 'Enable location service',
+                onPress: () => AndroidOpenSettings.locationSourceSettings(),
+              },
+            ],
+          );
+        } else {
+          showMessage({
+            message: 'Error while getting your location',
+            floating: true,
+            duration: 1000,
+            type: 'danger',
+            icon: {icon: 'auto', position: 'left'},
+          });
+          setTimeout(() => {
+            navigation.navigate('BottomTab');
+          }, 500);
+        }
       });
   };
   const StoreAgreementApi = async country => {
