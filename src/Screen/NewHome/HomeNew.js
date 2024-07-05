@@ -14,6 +14,7 @@ import {
   BackHandler,
   ToastAndroid,
   TextInput,
+  ImageBackground,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
@@ -231,7 +232,7 @@ const HomeNew = ({navigation}) => {
     }
   }, [isAlarmEnabled]);
   // banners
-  useFocusEffect(
+  useEffect(
     useCallback(() => {
       const handleBannerType = async () => {
         if (getOfferAgreement?.location === 'India') {
@@ -355,7 +356,6 @@ const HomeNew = ({navigation}) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-
     }
   };
   const checkMealAddCount = () => {
@@ -1244,7 +1244,8 @@ const HomeNew = ({navigation}) => {
             }}>
             {'Hi' +
               ', ' +
-              (Object.keys(getUserDataDetails)?.length > 0||getUserDataDetails?.length > 0
+              (Object.keys(getUserDataDetails)?.length > 0 ||
+              getUserDataDetails?.length > 0
                 ? getUserDataDetails?.name == null
                   ? 'Guest'
                   : getUserDataDetails?.name.split(' ')[0]
@@ -2067,31 +2068,74 @@ const HomeNew = ({navigation}) => {
                 : DeviceHeigth * 0.08,
             alignSelf: 'center',
             flexDirection: 'row',
-
+            marginBottom: 30,
             justifyContent: 'space-between',
           }}>
-          <LinearGradient
-            start={{x: 1, y: 0}}
-            end={{x: 0, y: 0.5}}
-            colors={['#2B4E9F', '#0A94F3']}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              AnalyticsConsole(`MEALS_BUTTON`);
+              let checkAdsShow = AddCountFunction();
+              if (checkAdsShow == true) {
+                showInterstitialAd();
+                navigation.navigate('Meals');
+              } else {
+                navigation.navigate('Meals');
+              }
+            }}
             style={{
               width: '47%',
               height: DeviceHeigth * 0.15,
               padding: 10,
               borderRadius: 16,
             }}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {
-                AnalyticsConsole(`MEALS_BUTTON`);
-                let checkAdsShow = AddCountFunction();
-                if (checkAdsShow == true) {
-                  showInterstitialAd();
-                  navigation.navigate('Meals');
-                } else {
-                  navigation.navigate('Meals');
-                }
+            <ImageBackground
+              source={require('../../Icon/Images/NewImage2/diet.png')}
+              style={{
+                width: '100%',
+                height: DeviceHeigth * 0.15,
+                borderRadius: 20,
+                overflow: 'hidden',
               }}
+              resizeMode="cover">
+              <LinearGradient
+                start={{x: 1, y: 0}}
+                end={{x: 0, y: 1}}
+                colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0.5)']}
+                style={{
+                  width: '100%',
+                  height: DeviceHeigth * 0.15,
+                  borderRadius: 16,
+                  opacity: 0.9,
+                  padding: 10,
+                }}>
+                <View style={{position: 'absolute', bottom: 10, left: 10}}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      fontWeight: '700',
+                      lineHeight: 25,
+                      fontSize: 15,
+                    }}>
+                    Diet
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      fontWeight: '500',
+                      lineHeight: 15,
+                      fontSize: 12,
+                    }}>
+                    {'Achieve your goals faster with a balanced diet.'}
+                  </Text>
+                </View>
+              </LinearGradient>
+            </ImageBackground>
+            {/* <TouchableOpacity
+              activeOpacity={0.8}
+             
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View style={{zIndex: 1}}>
                 <Text
@@ -2136,74 +2180,74 @@ const HomeNew = ({navigation}) => {
                   }}
                 />
               </View>
-            </TouchableOpacity>
-          </LinearGradient>
-          <LinearGradient
-            start={{x: 1.2, y: 0}}
-            end={{x: 0, y: 0}}
-            colors={['#8172F3', '#6BD7E3']}
+            </TouchableOpacity> */}
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              AnalyticsConsole(`STORE_BUTTON`);
+              let checkAdsShow = AddCountFunction();
+              x;
+              if (checkAdsShow == true) {
+                showInterstitialAd();
+                navigation.navigate('Store');
+              } else {
+                navigation.navigate('Store');
+              }
+            }}
             style={{
               width: '47%',
               height: DeviceHeigth * 0.15,
               padding: 10,
               borderRadius: 16,
             }}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {
-                AnalyticsConsole(`STORE_BUTTON`);
-                let checkAdsShow = AddCountFunction();
-                if (checkAdsShow == true) {
-                  showInterstitialAd();
-                  navigation.navigate('Store');
-                } else {
-                  navigation.navigate('Store');
-                }
+            <ImageBackground
+              source={{
+                uri: 'https://res.cloudinary.com/drfp9prvm/image/upload/v1720116199/healthy-lifestyle-dumbbell-smart-watch-fruit_dh5ngj.jpg',
               }}
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <View>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontWeight: '700',
-                    lineHeight: 25,
-                    fontSize: 15,
-                  }}>
-                  Store
-                </Text>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontWeight: '500',
-                    lineHeight: 15,
-                    fontSize: 12,
-                  }}>
-                  {'Shop top-notch fitness products.'}
-                </Text>
-              </View>
-              <View style={{}}>
-                <Image
-                  source={require('../../Icon/Images/NewImage2/store.png')}
-                  resizeMode="contain"
-                  style={{
-                    width: DeviceHeigth >= 1024 ? 100 : 70,
-                    height: DeviceHeigth >= 1024 ? 250 : 80,
-                    right:
-                      DeviceHeigth >= 1024
-                        ? 0
-                        : DeviceHeigth >= 812
-                        ? DeviceHeigth * 0.06
-                        : DeviceHeigth <= 780
-                        ? DeviceHeigth * 0.05
-                        : DeviceHeigth * 0.07,
-                    top: DeviceHeigth >= 1024 ? -10 : 50,
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-          </LinearGradient>
+              style={{
+                width: '100%',
+                height: DeviceHeigth * 0.15,
+                borderRadius: 20,
+                overflow: 'hidden',
+              }}
+              resizeMode="cover">
+              <LinearGradient
+                start={{x: 1, y: 0}}
+                end={{x: 0, y: 1}}
+                colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0.5)']}
+                style={{
+                  width: '100%',
+                  height: DeviceHeigth * 0.15,
+                  borderRadius: 16,
+                  opacity: 0.9,
+                  padding: 10,
+                }}>
+                <View style={{position: 'absolute', bottom: 10, left: 10}}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      fontWeight: '700',
+                      lineHeight: 25,
+                      fontSize: 15,
+                    }}>
+                    Store
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      fontWeight: '500',
+                      lineHeight: 15,
+                      fontSize: 12,
+                    }}>
+                    {'Shop top-notch fitness products.'}
+                  </Text>
+                </View>
+              </LinearGradient>
+            </ImageBackground>
+          </TouchableOpacity>
         </View>
       </ScrollView>
       {modalVisible ? <UpdateGoalModal /> : null}
@@ -2218,11 +2262,11 @@ const HomeNew = ({navigation}) => {
           'Your fitness challenge has started! Begin now to collect FitCoins and win cash rewards!'
         }
         onCancel={() => {
-          AnalyticsConsole('CHS_CAN')
+          AnalyticsConsole('CHS_CAN');
           dispatch(setRewardModal(false));
         }}
         onConfirm={() => {
-          AnalyticsConsole('CHS_OPEN')
+          AnalyticsConsole('CHS_OPEN');
           dispatch(setRewardModal(false));
           navigation.navigate('BottomTab', {
             screen: 'MyPlans',

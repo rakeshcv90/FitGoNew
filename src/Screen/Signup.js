@@ -182,7 +182,8 @@ const Signup = ({navigation}) => {
       );
   };
   const appleSignUp = async res => {
-    setForLoading(true);
+    console.log("sdcsdfsdfdf",res)
+   setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
         method: 'POST',
@@ -190,10 +191,10 @@ const Signup = ({navigation}) => {
           'Content-Type': 'multipart/form-data',
         },
         data: {
-          name: 
-          res.fullName.givenName == null || res.fullName.familyName == null
-            ? 'Guest'
-            : res.fullName.givenName + res.fullName.familyName,
+          name:
+            res.fullName.givenName == null || res.fullName.familyName == null
+              ? 'Guest'
+              : res.fullName.givenName + res.fullName.familyName,
           email: res.email,
           signuptype: 'social',
           socialid: res.user,
@@ -252,7 +253,7 @@ const Signup = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      } else if (data?.data?.msg == 'registered with given these details') {
+      } else if (data?.data?.msg == 'registered with given these details'&& data.data.profile_compl_status == 1) {
         setForLoading(false);
         showMessage({
           message:
@@ -264,6 +265,7 @@ const Signup = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
+        getUserDetailData1(data.data?.id, data.data.profile_compl_status);
         await GoogleSignin.signOut();
       } else {
         setForLoading(false);
@@ -291,8 +293,8 @@ const Signup = ({navigation}) => {
           email: value.email,
           password: value.password,
           signuptype: 'form',
-          social_id: 0,
-          social_token: 0,
+          // social_id: 0,
+          // social_token: 0,
           socialtype: 'form',
           deviceid: deviceId,
           version: appVersion,
@@ -338,8 +340,20 @@ const Signup = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         //action.resetForm();
+      } else if (
+        data.data.msg == 'User already exists' &&
+        data.data.profile_compl_status == 1
+      ) {
+        setForLoading(false);
+
+        dispatch(setUserId(data.data?.id));
+
+        // getProfileData1(data.data?.id);
+        getUserDetailData1(data.data?.id, data.data.profile_compl_status);
+        await GoogleSignin.signOut();
       } else {
         setForLoading(false);
+
         showMessage({
           message: data.data.msg,
           floating: true,
@@ -378,7 +392,7 @@ const Signup = ({navigation}) => {
       });
 
       await GoogleSignin.signOut();
-      console.log('Xcvdvxcvxcvcxv', data.data);
+
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0

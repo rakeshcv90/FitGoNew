@@ -853,7 +853,7 @@ const MyPlans = ({navigation}: any) => {
                 : -DeviceWidth * 0.05
               : -DeviceWidth * 0.05,
         }}>
-        <View
+        {/* <View
           style={{
             flexDirection: 'row',
             width: DeviceWidth,
@@ -874,8 +874,8 @@ const MyPlans = ({navigation}: any) => {
               },
             ]}>
             Get Fit{' '}
-          </Text> */}
-        </View>
+          </Text>
+        </View> */}
 
         {loader ? (
           <View

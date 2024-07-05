@@ -757,6 +757,8 @@ const NewProfile = ({navigation}) => {
               color: AppColor.BLACK,
               fontSize: 14,
               fontWeight: '500',
+              maxWidth:DeviceWidth*0.65
+              
             }}>
             {getUserDataDetails?.email == null
               ? 'guest@gmail.com'

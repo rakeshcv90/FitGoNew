@@ -71,7 +71,7 @@ const IntroductionScreen2 = ({navigation, route}) => {
             onPress={() => {
               AnalyticsConsole('SKIP_IS');
               dispatch(setShowIntro(true));
-              navigation.navigate('LogSignUp', {screen: 'Log In'});
+              navigation.navigate('LogSignUp');
             }}>
             <Text
               style={{

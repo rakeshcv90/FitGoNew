@@ -271,7 +271,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 <View
                   style={{
                     marginHorizontal: 15,
-                    width: '65%',
+                    width:DeviceHeigth>=1024 ? '80%': '65%',
                     // backgroundColor: 'lightgreen',
                   }}>
                   <Text

@@ -71,7 +71,7 @@ const IntroductionScreen3 = ({navigation}) => {
             onPress={() => {
               AnalyticsConsole('SKIP_IS');
               dispatch(setShowIntro(true));
-              navigation.navigate('LogSignUp', {screen: 'Log In'});
+              navigation.navigate('LogSignUp');
             }}>
             {/* <Text
               style={{
@@ -196,7 +196,7 @@ const IntroductionScreen3 = ({navigation}) => {
             onPress={() => {
               AnalyticsConsole("TO_IS3")
               dispatch(setShowIntro(true));
-              navigation.navigate('LogSignUp', {screen: 'Log In'});
+              navigation.navigate('LogSignUp');
             }}
             style={{
               width:
