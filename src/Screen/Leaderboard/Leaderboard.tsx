@@ -382,8 +382,8 @@ const styles = StyleSheet.create({
     // marginRight: DeviceWidth * 0.05,
   },
   coinImage: {
-    height: 25,
-    width: 25,
+    height: 20,
+    width: 20,
     // marginRight: 10,
     // right: -DeviceWidth * 0.08,
     // zIndex: 1,

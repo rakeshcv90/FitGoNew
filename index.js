@@ -2,7 +2,7 @@
  * @format
  */
 import 'react-native-gesture-handler';
-import {AppRegistry} from 'react-native';
+import {AppRegistry, Linking} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
 import {Provider} from 'react-redux';
@@ -36,6 +36,7 @@ import {OpenRewardModal} from './src/Component/utils';
 import {NewAppapi} from './src/Component/Config';
 import axios from 'axios';
 import VersionNumber, {appVersion} from 'react-native-version-number';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 notifee.createChannel({
   id: 'Time',
@@ -218,7 +219,6 @@ const getLeaderboardDataAPI = async () => {
           result.data?.winner_announced == true ? true : false,
         ),
       );
-    
     }
   } catch (error) {
     console.log(error);
@@ -237,15 +237,32 @@ messaging().getInitialNotification(async remoteMessage => {
     StepcountNoticationStart();
   }
 });
+
+export const handleDeepLink = async ({url}) => {
+  const dynamicArray = url?.split('/');
+  const referralID = dynamicArray?.filter(
+    (item, i) => i == dynamicArray?.length - 1,
+  );
+  console.log('REFERALID', referralID);
+  await AsyncStorage.setItem('referalID', referralID?.toString());
+};
+
 const AppRedux = () => {
   LogBox.ignoreLogs(['new NativeEventEmitter']); // Ignore log notification by message
   LogBox.ignoreAllLogs();
   useEffect(() => {
+    Linking.addEventListener('url', handleDeepLink);
+    initialURL();
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       DisplayNotification(remoteMessage);
     });
     return unsubscribe;
   }, []);
+
+  const initialURL = async () => {
+    const initialURL = await Linking.getInitialURL();
+    if (initialURL) handleDeepLink({url: initialURL});
+  };
   // Register a global error handler
   try {
     analytics().setAnalyticsCollectionEnabled(true);
@@ -307,13 +324,9 @@ AdManager.registerRepository({
   },
   expirationPeriod: 3600000, // in milliseconds (optional)
   mediationEnabled: false,
-}).then(result => {
+}).then(result => {});
 
-});
-
-AdManager.subscribe('imageAd', 'onAdPreloadClicked', () => {
-
-});
+AdManager.subscribe('imageAd', 'onAdPreloadClicked', () => {});
 
 AppRegistry.registerComponent(appName, () => AppRedux);
 TrackPlayer.registerPlaybackService(() => require('./src/service'));

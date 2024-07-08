@@ -96,7 +96,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
           ) {
             Dispatch(setRewardPopUp(getPopUpFreuqency + 1));
           }
-          if (route.key?.includes('MyPlans') && Sat) {
+          if (enteredCurrentEvent && route.key?.includes('MyPlans') && Sat) {
             showMessage({
               message:
                 'Your event has ended. You can resume your weekly plan normally from Monday. If you join another fitness challenge, it will start from the upcoming Monday.',
@@ -105,7 +105,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
               duration: 5000,
               floating: true,
             });
-          } else if (route.key?.includes('MyPlans') && Sat) {
+          } else if (enteredCurrentEvent && route.key?.includes('MyPlans') && Sun) {
             showMessage({
               message:
                 'Your event has ended. You can resume your weekly plan normally from Monday. If you join another fitness challenge, it will start from the upcoming Monday.',
@@ -114,38 +114,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
               duration: 5000,
               floating: true,
             });
-          } else if (route.key?.includes('MyPlans') && Sun) {
-            const event = navigation.emit({
-              type: 'tabPress',
-              target: route.key,
-            });
-            if (!isFocused && !event.defaultPrevented) {
-              if (getPurchaseHistory.plan != null) {
-                if (getPurchaseHistory?.plan == 'premium' && isValid) {
-                  navigation.navigate(route.name);
-                  Dispatch(setFitmeAdsCount(0));
-                } else {
-                  if (getFitmeAdsCount < count) {
-                    Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-                    navigation.navigate(route.name);
-                  } else {
-                    showInterstitialAd();
-                    Dispatch(setFitmeAdsCount(0));
-                    navigation.navigate(route.name);
-                  }
-                }
-              } else {
-                if (getFitmeAdsCount < count) {
-                  Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-                  navigation.navigate(route.name);
-                } else {
-                  showInterstitialAd();
-                  Dispatch(setFitmeAdsCount(0));
-                  navigation.navigate(route.name);
-                }
-              }
-            }
-          } else {
+          }  else {
             const event = navigation.emit({
               type: 'tabPress',
               target: route.key,
