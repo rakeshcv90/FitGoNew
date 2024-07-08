@@ -22,18 +22,22 @@ import {useDispatch, useSelector} from 'react-redux';
 import AnimatedLottieView from 'lottie-react-native';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {IntroductionData} from './IntroductionScreenData';
+import {navigationRef} from '../../../App';
 
-const IntroScreen = ({slide, navigation, index}: any) => {
+const IntroScreen = ({slide, index}: any) => {
   const dispatch = useDispatch();
   const hindiLanguage = useSelector((state: any) => state.hindiLanguage);
-  const COLOR =
-    index + 1 == slide.id && slide.id == 2 ? AppColor.RED : AppColor.WHITE;
-  const TEXT_COLOR = slide.id == 2 ? '#333333CC' : AppColor.WHITE;
+  const COLOR = slide?.color == AppColor.WHITE ? AppColor.RED : AppColor.WHITE;
+  const TEXT_COLOR =
+    slide?.color == AppColor.WHITE ? '#333333CC' : AppColor.WHITE;
+
+  const buttons = IntroductionData.filter((_, i) => i != 3);
   return (
     <View
       style={{
         flex: 1,
-        backgroundColor: slide.id != 2 ? AppColor.RED : AppColor.WHITE,
+        backgroundColor: slide?.color,
+        display:slide?.id == 4 ? 'none': 'flex',
       }}>
       <StatusBar barStyle={'dark-content'} backgroundColor={AppColor.WHITE} />
       <View
@@ -47,7 +51,7 @@ const IntroScreen = ({slide, navigation, index}: any) => {
         <View
           style={{
             height: 30,
-            width: '95%',
+            width: '90%',
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -79,12 +83,12 @@ const IntroScreen = ({slide, navigation, index}: any) => {
             onPress={() => {
               AnalyticsConsole('SKIP_IS');
               dispatch(setShowIntro(true));
-              navigation.navigate('LogSignUp', {screen: 'Log In'});
+              navigationRef.navigate('LogSignUp', {screen: 'Log In'});
             }}>
             <Text
               style={{
                 textDecorationLine: 'underline',
-                color: AppColor.RED,
+                color: COLOR,
                 textAlign: 'center',
                 fontWeight: '600',
                 lineHeight: 20,
@@ -97,11 +101,13 @@ const IntroScreen = ({slide, navigation, index}: any) => {
 
         <Image
           source={
-            slide.id == 1
+            slide?.id == 1
               ? localImage.Intro1
-              : slide.id == 2
+              : slide?.id == 2
               ? localImage.Intro2
-              : localImage.Intro3
+              : slide?.id == 3
+              ? localImage.Intro3
+              : ''
           }
           resizeMode="contain"
           style={{
@@ -127,7 +133,7 @@ const IntroScreen = ({slide, navigation, index}: any) => {
             marginLeft: 10,
           }}>
           {hindiLanguage
-            ? slide.headingHindi?.split(',')[0]
+            ? slide?.headingHindi?.split(',')[0]
             : slide.headingEnglish?.split(',')[0]}
         </Text>
         <Text
@@ -173,7 +179,7 @@ const IntroScreen = ({slide, navigation, index}: any) => {
             width: '20%',
             marginLeft: 30,
           }}>
-          {IntroductionData.map((_, i) => {
+          {buttons.map((_, i) => {
             return (
               <View
                 style={{
@@ -183,8 +189,8 @@ const IntroScreen = ({slide, navigation, index}: any) => {
                         ? AppColor.WHITE
                         : '#848484'
                       : i == index
-                        ? AppColor.RED
-                        : '#B6002C',
+                      ? AppColor.RED
+                      : '#B6002C',
                   width: 15,
                   height: 15,
                   borderRadius: 15,
@@ -251,3 +257,72 @@ const IntroScreen = ({slide, navigation, index}: any) => {
 };
 
 export default IntroScreen;
+
+// import React from "react";
+// import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
+// import Svg, { RadialGradient, Defs, Rect, Stop } from "react-native-svg";
+
+// const { width, height } = Dimensions.get("screen");
+// const SIZE = width - 75;
+// const styles = StyleSheet.create({
+//   container: {
+//     ...StyleSheet.absoluteFillObject,
+//     padding: 75,
+//     paddingTop: 150,
+//     alignItems: "center",
+//   },
+//   image: {
+//     width: SIZE,
+//     height: SIZE,
+//   },
+//   title: {
+//     fontSize: 48,
+//     color: "white",
+//     textAlign: "center",
+//     marginBottom: 16,
+//     fontFamily: "SFProDisplay-Bold",
+//   },
+//   description: {
+//     fontSize: 18,
+//     color: "white",
+//     textAlign: "center",
+//     fontFamily: "SFProDisplay-Regular",
+//   },
+// });
+
+// export interface SlideProps {
+//   slide: {
+//     color: string;
+//     title: string;
+//     description: string;
+//     picture: ReturnType<typeof require>;
+//   };
+// }
+
+// const Slide = ({
+//   slide: { picture, color, title, description },
+// }: SlideProps) => {
+//   const lighterColor = 'grey';
+//   return (
+//     <>
+//       <Svg style={StyleSheet.absoluteFill}>
+//         <Defs>
+//           <RadialGradient id="gradient" cx="50%" cy="35%">
+//             <Stop offset="0%" stopColor={lighterColor} />
+//             <Stop offset="100%" stopColor={color} />
+//           </RadialGradient>
+//         </Defs>
+//         <Rect x={0} y={0} width={width} height={height} fill="url(#gradient)" />
+//       </Svg>
+//       <View style={styles.container}>
+//         <Image source={picture} style={styles.image} />
+//         <View>
+//           <Text style={styles.title}>{title}</Text>
+//           <Text style={styles.description}>{description}</Text>
+//         </View>
+//       </View>
+//     </>
+//   );
+// };
+
+// export default Slide;

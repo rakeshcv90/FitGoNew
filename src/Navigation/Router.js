@@ -75,6 +75,7 @@ import Leaderboard from '../Screen/Leaderboard/Leaderboard';
 import Winner from '../Screen/Leaderboard/Winner';
 import IntroVideo from '../Screen/Introduction/IntroVideo';
 import SplaceNew from '../SplaceNew';
+import LiquidSwipeIntro from '../Screen/Introduction/LiquidSwipeIntro';
 
 const Stack = createStackNavigator();
 
@@ -94,16 +95,16 @@ export const LoginStack = () => {
      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
          <Stack.Screen
         name="IntroductionScreen1"
-        component={IntroductionScreen1}
+        component={LiquidSwipeIntro}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="IntroductionScreen2"
         component={IntroductionScreen2}
       />
       <Stack.Screen
         name="IntroductionScreen3"
         component={IntroductionScreen3}
-      />
+      /> */}
      
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
