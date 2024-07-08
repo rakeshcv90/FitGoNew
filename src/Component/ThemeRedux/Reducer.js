@@ -28,7 +28,7 @@ const intialState = {
   getSoundOffOn: true,
   getBmi: {},
   getHomeGraphData: [],
-  getProfile_imgData: [],
+  getDownloadedImage: {},
   getCustttomeTimeCal: [],
   getStepCounterOnoff: false,
   getSubscriptionModal: false,
@@ -57,6 +57,14 @@ const intialState = {
   getRewardModalStatus: false,
   planType: -1,
   getAgreementContent: {},
+  fitCoins: 0,
+  winnerAnnounced: false,
+  getBanners: {},
+  getEditedDayExercise: {},
+  getPopUpFreuqency: 0,
+  getPopUpSeen: false,
+  hindiLanguage: false,
+  getDynamicPopUpvalues:{}
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -169,10 +177,10 @@ const ThemeReducer = (state = intialState, action) => {
       return {...state, getSoundOffOn: action.payload};
     case types.HOME_GRAPH_DATA:
       return {...state, getHomeGraphData: action.payload};
-    case types.Profile_imgData:
+    case types.POPUPIMAGE:
       return {
         ...state,
-        getProfile_imgData: action.payload,
+        getDownloadedImage: action.payload,
       };
     case types.IS_STEP_COUNTER_ON:
       return {
@@ -319,6 +327,35 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         getExerciseCount: action.payload,
       };
+    case types.FIT_COINS:
+      return {
+        ...state,
+        fitCoins: action.payload,
+      };
+    case types.WINNER_ANNOUNCED:
+      return {
+        ...state,
+        winnerAnnounced: action.payload,
+      };
+    case types.TRACK_REWARDPOPUP:
+      return {
+        ...state,
+        getPopUpFreuqency: action.payload,
+      };
+    case types.POPUPSEEN:
+      return {
+        ...state,
+        getPopUpSeen: action.payload,
+      };
+    case types.HINDI_LANGUAGE:
+      return {
+        ...state,
+        hindiLanguage: action.payload,
+      };
+      case types.DYNAMIC_EVENTPOPUP:
+        return{
+          ...state,getDynamicPopUpvalues:action.payload
+        }
     default:
       return state;
   }

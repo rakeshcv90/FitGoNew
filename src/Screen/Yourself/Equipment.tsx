@@ -19,7 +19,7 @@ import Bulb from './Bulb';
 import {setLaterButtonData} from '../../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useFocusEffect} from '@react-navigation/native';
+
 import analytics from '@react-native-firebase/analytics';
 const Equipment = ({route, navigation}: any) => {
   const [backbuttonVisiblity, setbackbuttonVisibility] = useState(true);

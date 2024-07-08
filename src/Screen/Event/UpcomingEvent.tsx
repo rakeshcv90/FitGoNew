@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import ShadowCard from '../../Component/Utilities/ShadowCard';
@@ -39,9 +39,22 @@ import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import VersionNumber, {appVersion} from 'react-native-version-number';
+import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
+import TrackPlayer, {
+  Capability,
+  usePlaybackState,
+} from 'react-native-track-player';
+
 const UpcomingEvent = ({navigation, route}: any) => {
   const {eventType} = route?.params;
+  const playbackState = usePlaybackState();
 
+  const songs = [
+    {
+      id: 1,
+      url: require('../../Icon/Images/Subs_sound.wav'),
+    },
+  ];
   // let eventType = 'upcoming';
   const dispatch = useDispatch();
   const enteredUpcomingEvent = useSelector(
@@ -75,14 +88,43 @@ const UpcomingEvent = ({navigation, route}: any) => {
         },
         data,
       });
-
+      AnalyticsConsole('JO_UP_EVENT')
+      StartAudio(playbackState);
       if (res.data.message == 'Event created successfully') {
-      //  PurchaseDetails();
+        PauseAudio(playbackState);
         getUserDetailData();
+      } else if (
+        res.data.message == 'Plan upgraded and new event created successfully'
+      ) {
+        PauseAudio(playbackState);
+        getUserDetailData();
+      } else if (
+        res.data.message ==
+        'Plan upgraded and existing subscription updated successfully'
+      ) {
+        PauseAudio(playbackState);
+        getUserDetailData();
+      } else if (
+        res.data.message == 'Subscription usage updated successfully'
+      ) {
+        PauseAudio(playbackState);
+        getUserDetailData();
+      } else if (
+        res.data.message ==
+        'You have reached the maximum usage for your current subscription. Please upgrade to a higher plan.'
+      ) {
+        setLoading(false);
+        showMessage({
+          message:
+            'You have reached the maximum usage for your current subscription. Please upgrade to a higher plan.',
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+        });
       } else {
         setLoading(false);
         showMessage({
-          message: 'Some Issue In Puchase Data!',
+          message: 'Some Issue In Purchase Data!',
           type: 'danger',
           animationDuration: 500,
           floating: true,
@@ -90,39 +132,32 @@ const UpcomingEvent = ({navigation, route}: any) => {
       }
     } catch (error) {
       setLoading(false);
-      console.log('Purchase Store Data Error', error, data);
+   
     }
   };
-  // const PurchaseDetails = async () => {
-  //   try {
-  //     const result = await axios(
-  //       `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
-  //       // `${NewAppapi.EVENT_SUBSCRIPTION_GET}/7996`,
-  //     );
-  //     console.log(result.data);
-  //     if (result.data?.message == 'Not any subscription') {
-  //       setLoading(false);
-  //       setRefresh(false);
-  //       dispatch(setPurchaseHistory([]));
-  //     } else {
-  //       setRefresh(false);
-  //       dispatch(setPurchaseHistory(result.data.data));
-  //       EnteringEventFunction(
-  //         dispatch,
-  //         result.data?.data,
-  //         setEnteredCurrentEvent,
-  //         setEnteredUpcomingEvent,
-  //         setPlanType,
-  //       );
-  //       setLoading(false);
-  //     }
-  //   } catch (error) {
-  //     setRefresh(false);
-  //     setLoading(false);
-  //     console.log(error);
-  //     dispatch(setPurchaseHistory([]));
-  //   }
-  // };
+  useEffect(() => {
+    setupPlayer();
+  }, []);
+  const setupPlayer = async () => {
+    try {
+      await TrackPlayer.add(songs);
+      await TrackPlayer.updateOptions({
+        capabilities: [Capability.Play, Capability.Pause],
+        compactCapabilities: [Capability.Play, Capability.Pause],
+      });
+    } catch (error) {
+      console.log('Music Player Error', error);
+    }
+  };
+  const StartAudio = async (playbackState: any) => {
+   
+    await TrackPlayer.play();
+  };
+  const PauseAudio = async (playbackState: any) => {
+   
+    await TrackPlayer.reset();
+  };
+ 
   const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(
@@ -163,9 +198,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      dispatch(setPurchaseHistory([]));
-      dispatch(setUserProfileData([]));
-      dispatch(setCustomWorkoutData([]));
+   
       setRefresh(false);
       setLoading(false);
       console.log(error);
@@ -271,13 +304,6 @@ const UpcomingEvent = ({navigation, route}: any) => {
       </Modal>
     );
   };
-  // console.log("MOMENT",moment().day(getPurchaseHistory?.currentDay).format('dddd'))
-  console.log(
-    'mo',
-    getPurchaseHistory,
-    eventType,
-    // moment().day(getPurchaseHistory?.currentDay).format('YYYY-MM-DD'),
-  );
 
   const dayLeft =
     getPurchaseHistory?.upcoming_day_status == 1 &&
@@ -290,6 +316,8 @@ const UpcomingEvent = ({navigation, route}: any) => {
       <DietPlanHeader
         header={eventType == 'upcoming' ? 'Upcoming Challenge' : 'My Challenge'}
         h={DeviceWidth * 0.15}
+        onPress={() => navigation?.navigate('BottomTab')}
+        backPressCheck
         paddingTop={
           Platform.OS == 'android' ? DeviceHeigth * 0.02 : DeviceHeigth * 0.025
         }
@@ -348,7 +376,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
                     getPurchaseHistory?.upcoming_day_status == 1
                       ? `${moment(dayLeft).diff(
                           moment()
-                            .day(getPurchaseHistory?.currentDay-6)
+                            .day(getPurchaseHistory?.currentDay)
                             .format('YYYY-MM-DD'),
                           'days',
                         )} days left`
@@ -438,7 +466,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
           <FitText
             type="SubHeading"
             value={
-              enteredUpcomingEvent
+              eventType == 'upcoming'
                 ? 'Gear Up for Your Next Challenge!'
                 : 'Your challenge will start on Monday'
             }
@@ -450,7 +478,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
           <FitText
             type="normal"
             value={
-              enteredUpcomingEvent
+              eventType == 'upcoming'
                 ? 'Every week is a new opportunity. Gear up for your next challenge!'
                 : `You can do the exercise using our App until the challenge begins.`
             }
@@ -482,8 +510,9 @@ const UpcomingEvent = ({navigation, route}: any) => {
                 fontFamily={Fonts.MONTSERRAT_MEDIUM}
               />
             </TouchableOpacity>
-          ) : getPurchaseHistory?.upcoming_day_status != 1 ? (
-            getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage ? (
+          ) : getPurchaseHistory?.plan != null &&
+            getPurchaseHistory?.upcoming_day_status != 1 ? (
+            getPurchaseHistory?.used_plan == getPurchaseHistory?.allow_usage ? (
               <FitText
                 type="normal"
                 value="You've reached your limit to join the challenge. Upgrade your plan to join the new challenge"
@@ -498,7 +527,12 @@ const UpcomingEvent = ({navigation, route}: any) => {
         </ShadowCard>
         {getPurchaseHistory?.plan_value != null && (
           <>
-            <FitText value="Your Plan" type="SubHeading" />
+            <FitText
+              value="Your Plan"
+              type="SubHeading"
+              fontFamily={Fonts.MONTSERRAT_BOLD}
+              fontSize={18}
+            />
             <ShadowCard
               shadow
               mV={DeviceHeigth * 0.02}
@@ -609,7 +643,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
                 />
                 <FitText
                   type="normal"
-                  value="Winning price 1000/-"
+                  value="Winning price ₹1000/-"
                   color="#333333E5"
                   marginVertical={3}
                 />
@@ -698,23 +732,18 @@ const UpcomingEvent = ({navigation, route}: any) => {
                 alignItems: 'center',
                 borderRadius: 5,
                 borderWidth: 1,
-                borderColor: AppColor.NEW_DARK_RED,
+                borderColor: AppColor.RED,
                 paddingVertical: 10,
               }}>
               <FitText
                 type="normal"
                 value="Upgrade Plan"
-                color={AppColor.NEW_DARK_RED}
+                color={AppColor.RED}
                 fontFamily={Fonts.MONTSERRAT_MEDIUM}
               />
             </TouchableOpacity>
           )}
-          <FitText
-            type="normal"
-            value="Cancel Plan"
-            color={AppColor.NEW_DARK_RED}
-            fontFamily={Fonts.MONTSERRAT_MEDIUM}
-            marginVertical={15}
+          <TouchableOpacity
             onPress={() => {
               AnalyticsConsole(`CanP_BTN`);
               PLATFORM_IOS
@@ -723,7 +752,19 @@ const UpcomingEvent = ({navigation, route}: any) => {
                     'https://play.google.com/store/account/subscriptions',
                   );
             }}
-          />
+            style={{
+              width: DeviceWidth * 0.9,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingVertical: 10,
+            }}>
+            <FitText
+              type="normal"
+              value="Cancel Plan"
+              color={AppColor.RED}
+              fontFamily={Fonts.MONTSERRAT_MEDIUM}
+            />
+          </TouchableOpacity>
         </View>
       )}
       <ChangeModal />

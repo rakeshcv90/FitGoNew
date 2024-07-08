@@ -17,8 +17,8 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import analytics from '@react-native-firebase/analytics';
 import {localImage} from '../../Component/Image';
 const Gender = ({route, navigation}) => {
-  const {data, nextScreen,name} = route?.params;
-const getUserDataDetails=useSelector(state=>state.getUserDataDetails)
+  const {data, nextScreen, name} = route?.params;
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const dispatch = useDispatch();
   const [screen, setScreen] = useState(nextScreen);
   const [selectedbutton, setSelectedButton] = useState('');
@@ -33,30 +33,32 @@ const getUserDataDetails=useSelector(state=>state.getUserDataDetails)
   };
 
   const toNextScreen = gender => {
-   
     setTimeout(() => {
       const params = {
-        nextScreen: screen + 1,
+        // nextScreen: screen + 1,
         data: data,
         gender: gender,
       };
-      
+
       if (name) {
         params.name = name;
       }
-     
-      navigation.navigate('Experience', params);
+      navigation.navigate('Goal', params);
     }, 500);
   };
 
   return (
     <View
       style={{flex: 1, backgroundColor: AppColor.WHITE, alignItems: 'center'}}>
-      <ProgressBar screen={screen} />
+      {/* <ProgressBar screen={screen} /> */}
       <View
         style={{
           marginTop:
-            Platform.OS === 'ios' ? -DeviceHeigth * 0.06 : -DeviceHeigth * 0.03,
+            Platform.OS === 'ios'
+              ? DeviceHeigth >= 1024 || DeviceHeigth <= 667
+                ? DeviceHeigth * 0.05
+                : DeviceHeigth * 0.08
+              : DeviceHeigth * 0.05,
         }}>
         <Bulb screen={'Select your gender'} />
       </View>
@@ -65,13 +67,22 @@ const getUserDataDetails=useSelector(state=>state.getUserDataDetails)
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
-          height: DeviceHeigth * 0.6,
+          // height: DeviceHeigth * 0.6,
           width: DeviceWidth,
+          alignSelf: 'center',
+          marginBottom:
+            Platform.OS === 'ios'
+              ? DeviceHeigth >= 1024 || DeviceHeigth <= 667
+                ? DeviceHeigth * 0.05
+                : DeviceHeigth * 0.08
+              : DeviceHeigth * 0.05,
+          flex: 1,
         }}>
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => handleImagePress('Male')}
           style={{
+            alignSelf: 'center',
             width: DeviceWidth / 2.35,
             backgroundColor: AppColor.BACKGROUNG,
             justifyContent: 'center',
@@ -92,9 +103,8 @@ const getUserDataDetails=useSelector(state=>state.getUserDataDetails)
               textAlign: 'center',
               fontSize: 18,
               fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-              color: selectedbutton=='Male'?AppColor.RED:AppColor.BLACK,
+              color: selectedbutton == 'Male' ? AppColor.RED : AppColor.BLACK,
               marginVertical: 20,
-
             }}>
             Male
           </Text>
@@ -123,7 +133,7 @@ const getUserDataDetails=useSelector(state=>state.getUserDataDetails)
               textAlign: 'center',
               fontSize: 18,
               fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-              color: selectedbutton=='Female'?AppColor.RED:AppColor.BLACK,
+              color: selectedbutton == 'Female' ? AppColor.RED : AppColor.BLACK,
               marginVertical: 20,
             }}>
             Female

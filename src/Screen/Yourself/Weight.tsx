@@ -12,7 +12,7 @@ import {
 import React, {useEffect, useRef, useState} from 'react';
 import {Image} from 'react-native';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
-import {AppColor} from '../../Component/Color';
+import {AppColor, PLATFORM_IOS} from '../../Component/Color';
 import {localImage} from '../../Component/Image';
 import LinearGradient from 'react-native-linear-gradient';
 import ProgressBar from './ProgressBar';
@@ -79,7 +79,7 @@ const Weight = ({route, navigation}: any) => {
       targetWeight: weight,
       type: toggle,
     };
-    console.log("sdsdfsdfsdfsdf",selected,weight)
+
     if (mergedObject.goal_name == 'Lose weight' && selected < weight) {
       showMessage({
         message:
@@ -90,8 +90,6 @@ const Weight = ({route, navigation}: any) => {
         icon: {icon: 'auto', position: 'left'},
       });
     } else if (weight != selected) {
-      {
-      }
       dispatch(setLaterButtonData([...getLaterButtonData, currentData]));
       navigation.navigate('Age', {nextScreen: screen + 1});
     } else {
@@ -121,38 +119,40 @@ const Weight = ({route, navigation}: any) => {
             style={{
               marginTop:
                 Platform.OS == 'ios'
-                  ? -DeviceHeigth * 0.06
+                ? DeviceHeigth >= 1024 || DeviceHeigth <= 667
+                    ? -DeviceHeigth * 0.03
+                    : -DeviceHeigth * 0.06
                   : -DeviceHeigth * 0.02,
             }}>
-            <Bulb screen={'What’s your Current weight?'} />
+            <Bulb screen={'What’s your current weight?'} />
           </View>
-          <View style={{marginTop: 20}} />
-          <Toggle
-            data={toggleH}
-            highlightColor={AppColor.RED}
-            baseColor={AppColor.SOCIALBUTTON}
-            selected={toggle}
-            setSelected={setToggle}
-          />
+          <View style={{marginTop: 20}}>
+            <Toggle
+              data={toggleH}
+              highlightColor={AppColor.RED}
+              baseColor={AppColor.SOCIALBUTTON}
+              selected={toggle}
+              setSelected={setToggle}
+            />
+          </View>
         </View>
         <View
           style={{
             justifyContent: 'center',
             alignItems: 'center',
             height: DeviceHeigth * 0.4,
+            marginTop: 50,
             // borderWidth: 1,
           }}>
-          <View style={{marginTop: DeviceHeigth * 0.08}}>
-            <CustomPicker
-              items={WeightArray}
-              onIndexChange={index => {
-                setSelected(WeightArray[index]);
-              }}
-              itemHeight={80}
-              toggle={toggle}
-              ActiveIndex={currentActiveIndex}
-            />
-          </View>
+          <CustomPicker
+            items={WeightArray}
+            onIndexChange={index => {
+              setSelected(WeightArray[index]);
+            }}
+            itemHeight={80}
+            toggle={toggle}
+            ActiveIndex={currentActiveIndex}
+          />
         </View>
         <View style={[styles.buttons]}>
           <TouchableOpacity
@@ -172,7 +172,7 @@ const Weight = ({route, navigation}: any) => {
             <LinearGradient
               start={{x: 0, y: 1}}
               end={{x: 1, y: 0}}
-              colors={[AppColor.RED1, AppColor.RED]}
+              colors={[AppColor.RED, AppColor.RED]}
               style={[styles.nextButton]}>
               <Icons name="chevron-right" size={25} color={'#fff'} />
             </LinearGradient>
@@ -187,27 +187,34 @@ const Weight = ({route, navigation}: any) => {
           position: 'absolute',
         }}>
         <ProgressBar screen={screen} />
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: -15,
-          }}>
-          <Bulb screen={'What’s your target weight?'} />
-          <View style={{marginTop: 20}} />
-          <Toggle
-            data={toggleH}
-            highlightColor={AppColor.RED}
-            baseColor={AppColor.SOCIALBUTTON}
-            selected={toggle}
-            setSelected={setToggle}
-          />
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View
+            style={{
+              marginTop:
+                Platform.OS == 'ios'
+                ? DeviceHeigth >= 1024 || DeviceHeigth <= 667
+                    ? -DeviceHeigth * 0.03
+                    : -DeviceHeigth * 0.06
+                  : -DeviceHeigth * 0.02,
+            }}>
+            <Bulb screen={'What’s your target weight?'} />
+          </View>
+          <View style={{marginTop: 30}}>
+            <Toggle
+              data={toggleH}
+              highlightColor={AppColor.RED}
+              baseColor={AppColor.SOCIALBUTTON}
+              selected={toggle}
+              setSelected={setToggle}
+            />
+          </View>
         </View>
         <View
           style={{
             justifyContent: 'center',
             alignItems: 'center',
             height: DeviceHeigth * 0.4,
+            marginTop: 50,
             // borderWidth: 1,
           }}>
           <View style={{marginTop: DeviceHeigth * 0.08}}>
@@ -293,7 +300,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     position: 'absolute',
-    bottom: DeviceHeigth * 0.13,
+    bottom:
+      DeviceHeigth <= 667
+        ? DeviceHeigth * 0.04
+        : DeviceHeigth >= 812 && PLATFORM_IOS
+        ? DeviceHeigth * 0.03
+        : DeviceHeigth * 0.1,
     width: DeviceWidth * 0.9,
     alignSelf: 'center',
   },

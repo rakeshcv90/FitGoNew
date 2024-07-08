@@ -2,97 +2,202 @@ import {
   View,
   Text,
   StyleSheet,
-  ImageBackground,
   TouchableOpacity,
-  Animated,
-  Platform,
+  StatusBar,
+  Image,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {DeviceWidth, DeviceHeigth} from '../../Component/Config';
-import {AppColor} from '../../Component/Color';
-import {IntroductionData} from './IntroductionScreenData';
-import IntroProgressBar from './NewIntroductionProgressBar';
+import {AppColor, Fonts} from '../../Component/Color';
+
+import {CircularProgressWithChild} from 'react-native-circular-progress-indicator';
+import FitIcon from '../../Component/Utilities/FitIcon';
+import {localImage} from '../../Component/Image';
+import {
+  setHindiLanuage,
+  setShowIntro,
+} from '../../Component/ThemeRedux/Actions';
+import {useDispatch, useSelector} from 'react-redux';
+import AnimatedLottieView from 'lottie-react-native';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 const IntroductionScreen1 = ({navigation}) => {
-  const translateY = useRef(new Animated.Value(-200)).current;
-  useEffect(() => {
-    showAnimation();
-    setTimeout(() => {
-      navigation.navigate("IntroductionScreen2")
-    }, 3000);
-  }, []);
-  const showAnimation = () => {
-    translateY.setValue(300);
-    Animated.timing(translateY, {
-      useNativeDriver: true,
-      toValue: -DeviceHeigth*7/100,
-      delay: 500,
-      duration: 1500,
-    }).start();
-  };
+  const dispatch = useDispatch();
+  const hindiLanguage = useSelector(state => state.hindiLanguage);
   return (
     <View style={styles.Container}>
-      <ImageBackground
-        source={{uri:IntroductionData[0].img}}
-        style={styles.ImgBackground}>
-        <View style={styles.LinearG}>
-          <Animated.View
-            style={[styles.TextView, {transform: [{translateY: translateY}]}]}>
-            <Text style={[styles.Texts, {fontSize: 25}]}>
-              {IntroductionData[0].text1}
+      <StatusBar barStyle={'dark-content'} backgroundColor={AppColor.WHITE} />
+      <View
+        style={{
+          width: '100%',
+          height: '50%',
+          opacity: 1,
+          backgroundColor: AppColor.WHITE,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <View
+          style={{
+            height: 30,
+            width: '95%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+
+            zIndex: 1,
+            top: Platform.OS == 'ios' && DeviceHeigth <= 1024 ? 15 : -5,
+          }}>
+          <TouchableOpacity
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+
+              zIndex: 1,
+              overflow: 'hidden',
+              width: DeviceWidth * 0.08,
+              height: DeviceHeigth * 0.05,
+            }}
+            onPress={() => {
+              AnalyticsConsole(`LAN_C_TO_${hindiLanguage ? 'H' : 'E'}`);
+              dispatch(setHindiLanuage(!hindiLanguage));
+            }}>
+            <Image
+              source={localImage.TranslateIntro}
+              resizeMode="contain"
+              style={{height: 30, width: 30}}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              AnalyticsConsole('SKIP_IS');
+              dispatch(setShowIntro(true));
+              navigation.navigate('LogSignUp');
+            }}>
+            <Text
+              style={{
+                textDecorationLine: 'underline',
+                color: AppColor.RED,
+                textAlign: 'center',
+                fontWeight: '600',
+                lineHeight: 20,
+                fontSize: 14,
+              }}>
+              Skip
             </Text>
-            <Text style={[styles.Texts, {fontSize: 33, marginBottom: 50}]}>
-              {IntroductionData[0].text2}
-            </Text>
-          </Animated.View>
-        <View style={{marginBottom:DeviceHeigth*0.03}}><IntroProgressBar INDEX={0}/></View>
+          </TouchableOpacity>
         </View>
-      </ImageBackground>
-      
+
+        <Image
+          source={localImage.Intro1}
+          resizeMode="contain"
+          style={{
+            width: '80%',
+            height: '80%',
+            // top: DeviceHeigth * 0.04,
+          }}></Image>
+      </View>
+      <View
+        style={{
+          height: '40%',
+          backgroundColor: '#fff',
+          paddingLeft: 20,
+          paddingTop: 24,
+          paddingRight: 20,
+        }}>
+        <Text
+          style={{
+            fontFamily: Fonts.MONTSERRAT_BOLD,
+            fontSize: 25,
+            lineHeight: 33,
+            fontWeight: '700',
+            color: AppColor.RED,
+          }}>
+          {hindiLanguage ? 'स्वस्थ बनो, धनवान बनो' : 'Get Healthy, Get Wealthy'}
+        </Text>
+
+        <Text
+          style={{
+            fontFamily: Fonts.MONTSERRAT_REGULAR,
+            fontSize: 16,
+            lineHeight: 25,
+            fontWeight: '500',
+            color: '#333333CC',
+            opacity: 0.8,
+            marginTop: 16,
+          }}>
+          {hindiLanguage
+            ? `अब सिर्फ फिट ही क्यों होना है? जब कि आप फिटनेस के साथ-साथ इनाम भी जीत सकते हैं। हमारे फिटनेस चैलेंज में भाग लें, प्रतिबद्ध रहें और देखें कि आपकी कड़ी मेहनत वास्तविक पुरस्कार में कैसे बदल जाती है। अब समय आ गया है कि आपकी जेबें भी आपके शरीर की तरह स्वस्थ रहें!`
+            : `Why just get fit when you can also earn rewards? Participate in our fitness challenge, stay committed, and watch as your hard work turns into amazing rewards. It's time to make your pocket as healthy as your body!`}
+        </Text>
+      </View>
+      <View
+        style={{
+          // alignSelf: 'flex-end',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          height: '10%',
+          backgroundColor: 'white',
+          paddingRight: 20,
+          flexDirection: 'row',
+        }}>
+        <View style={{width: 50, height: 50}} />
+        <TouchableOpacity
+          onPress={() =>{
+            AnalyticsConsole('IV_F_IS')
+             navigation.navigate('IntroVideo', {type: 'intro'})}}>
+          <AnimatedLottieView
+            source={localImage.IntroJSON}
+            speed={1}
+            autoPlay
+            loop
+            resizeMode="cover"
+            style={{
+              width: DeviceWidth * 0.3,
+              height: '100%',
+            }}
+          />
+        </TouchableOpacity>
+        <CircularProgressWithChild
+          value={33}
+          activeStrokeColor={'#f0013b'}
+          radius={DeviceHeigth >= 1024 ? 35 : 25}
+          initialValue={33}
+          maxValue={100}
+          // clockwise={false}
+          inActiveStrokeColor={AppColor.WHITE}
+          activeStrokeWidth={3}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              AnalyticsConsole("TO_IS2")
+              navigation.navigate('IntroductionScreen2');
+            }}
+            style={{
+              backgroundColor: AppColor.WHITE,
+              width:
+                DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1,
+              height:
+                DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1,
+              borderRadius: 100,
+              margin: 5,
+
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <FitIcon
+              name="arrowright"
+              size={25}
+              type="AntDesign"
+              color={AppColor.RED}
+            />
+          </TouchableOpacity>
+        </CircularProgressWithChild>
+      </View>
     </View>
   );
 };
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-  },
-  ImgBackground: {
-    width: DeviceWidth,
-    height: DeviceHeigth,
-    resizeMode: 'stretch',
-  },
-  LinearG: {
-    height: DeviceHeigth,
-    width: DeviceWidth,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    // position: 'absolute',
-    // bottom:Platform.OS=='ios'?-DeviceHeigth*0.00:DeviceHeigth*0.02
-  },
-  TextView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    // marginBottom: (DeviceHeigth * 20) / 100,
-  },
-  Texts: {
-    color: '#fff',
-  },
-  buttons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: (DeviceWidth * 85) / 100,
-    marginBottom: (DeviceHeigth * 5) / 100,
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  nextButton: {
-    backgroundColor: 'red',
-    width: 45,
-    height: 45,
-    borderRadius: 50 / 2,
-    overflow: 'hidden',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 export default IntroductionScreen1;

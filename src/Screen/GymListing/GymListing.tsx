@@ -27,7 +27,7 @@ import {bannerAdId} from '../../Component/AdsId';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
 import NativeAddTest from '../../Component/NativeAddTest';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
 type Coordinates = {
   latitude: number;
@@ -50,11 +50,11 @@ const GymListing = ({navigation}: any) => {
     }, []),
   );
   const getCurrentLocation = () => {
-    setLoader(true)
+    setLoader(true);
     Geolocation.getCurrentPosition(
       position => {
         const pos = position.coords;
-        console.log('pos', pos);
+     
         setCoords({
           latitude: pos.latitude,
           longitude: pos.longitude,
@@ -62,7 +62,7 @@ const GymListing = ({navigation}: any) => {
         GetGymsAPI(pos);
       },
       error => {
-        setLoader(false)
+        setLoader(false);
         console.log('err Coord', error.code, error);
       },
       {enableHighAccuracy: false, maximumAge: 0},
@@ -112,8 +112,7 @@ const GymListing = ({navigation}: any) => {
           ? 'http://maps.apple.com/?daddr='
           : 'google.navigation:q=';
       var url = scheme + `${location.latitude},${location.longitude}`;
-      // var url = scheme + `${location.latitude},${location.longitude}`+ "?q=" +location.center_name;
-      // console.log(url);
+  
       await Linking.openURL(url);
     } catch (error) {
       console.log('OPEN APP ERRR', error);
@@ -269,8 +268,10 @@ const GymListing = ({navigation}: any) => {
   //   }
   // };
   const getAdsDisplay = (item, index) => {
+    const noOrNoobPlan =
+      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
     if (gymsData?.length >= 1) {
-      if (index == 0&&gymsData?.length>1) {
+      if (noOrNoobPlan&& index == 0 && gymsData?.length > 1) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0) {
         return getNativeAdsDisplay();
@@ -278,9 +279,10 @@ const GymListing = ({navigation}: any) => {
     }
   };
   const getNativeAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
+    if (getPurchaseHistory?.plan != null) {
       if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        getPurchaseHistory?.plan == 'premium' &&
+        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
       ) {
         return null;
       } else {
@@ -309,7 +311,7 @@ const GymListing = ({navigation}: any) => {
   return (
     <View style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <NewHeader header={'Near by Gyms'} SearchButton={false} backButton />
+      <NewHeader header={'Nearby Gyms'} SearchButton={false} backButton />
       <View
         style={{
           flex: 1,
@@ -338,6 +340,7 @@ const GymListing = ({navigation}: any) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   marginTop: DeviceHeigth * 0.15,
+                  marginHorizontal: 20
                 }}>
                 <Image
                   source={require('../../Icon/Images/NewImage2/NoLocation.png')}
@@ -351,7 +354,7 @@ const GymListing = ({navigation}: any) => {
                 <Text
                   style={styles.heading}
                   onPress={() => Linking.openSettings()}>
-                  Currently, No Gyms available{'\n'} for your location
+                  Oops, There are no certified gyms available in your location at this time.
                 </Text>
               </View>
             }
@@ -360,7 +363,7 @@ const GymListing = ({navigation}: any) => {
         )}
       </View>
       {/* {bannerAdsDisplay()} */}
-          <BannerAdd bannerAdId={bannerAdId} />
+      <BannerAdd bannerAdId={bannerAdId} />
     </View>
   );
 };

@@ -2,63 +2,119 @@ import {View, Text, TouchableOpacity, Image, Platform} from 'react-native';
 import React from 'react';
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {StyleSheet} from 'react-native';
-import {AppColor} from './Color';
+import {AppColor, Fonts, PLATFORM_IOS} from './Color';
 import LinearGradient from 'react-native-linear-gradient';
 import {localImage} from './Image';
 
-const Button2 = ({buttonText, onFBPress, onGooglePress,onApplePress}) => {
+const Button2 = ({buttonText, onFBPress, onGooglePress, onApplePress}) => {
   return (
     <View
       style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center',
       }}>
       {Platform.OS == 'android' ? (
-        <>
+        <TouchableOpacity
+          style={[styles.buttonStyle, {flexDirection: 'row'}]}
+          activeOpacity={0.5}
+          onPress={onGooglePress}>
+          <Image
+            source={localImage.GOOGLE}
+            style={{
+              width: DeviceWidth * 0.05,
+              height: DeviceHeigth * 0.035,
+              left: -5,
+            }}
+            resizeMode="contain"
+          />
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: '600',
+              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+              color: '#000',
+            }}>
+            Continue With Google
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+          }}>
           <TouchableOpacity
-            style={[styles.buttonStyle, {marginLeft: DeviceWidth * 0.07}]}
-            activeOpacity={0.5}
-            onPress={onFBPress}>
+            onPress={onApplePress}
+            // style={[styles.buttonStyle]}
+            activeOpacity={0.5}>
             <Image
-              source={localImage.FACEBOOK}
-              style={{width: DeviceWidth * 0.4, height: DeviceHeigth * 0.035}}
+              source={localImage.AppleLogo}
+              style={{width: DeviceWidth * 0.12, height: DeviceHeigth * 0.035}}
               resizeMode="contain"
             />
           </TouchableOpacity>
-        </>
-      ) : (
-        <TouchableOpacity
-          style={[styles.buttonStyle, {marginLeft: DeviceWidth * 0.07}]}
-          activeOpacity={0.5}
-          onPress={onApplePress}>
-          <Image
-            source={localImage.AppleLogo}
-            style={{width: DeviceWidth * 0.4, height: DeviceHeigth * 0.035}}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
+  
+          <TouchableOpacity
+            //style={[styles.buttonStyle, {flexDirection: 'row'}]}
+            activeOpacity={0.5}
+            onPress={onGooglePress}>
+            <Image
+              source={localImage.GOOGLE}
+              style={{
+                width: DeviceWidth * 0.12,
+                height: DeviceHeigth * 0.035,
+              }}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </View>
       )}
-
-      <TouchableOpacity
-        style={[styles.buttonStyle, {marginRight: DeviceWidth * 0.07}]}
-        activeOpacity={0.5}
-        onPress={onGooglePress}>
-        <Image
-          source={localImage.GOOGLE}
-          style={{width: DeviceWidth * 0.4, height: DeviceHeigth * 0.035}}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
     </View>
+
+    // <View
+    //   style={{
+    //     flexDirection: 'row',
+    //     alignSelf: 'center',
+    //     justifyContent: Platform.OS == 'android' ? 'center' : 'space-between',
+    //     alignItems: 'center',
+    //   }}>
+    //   {Platform.OS == 'ios' && (
+    //     <>
+    //       <TouchableOpacity
+    //         style={[styles.buttonStyle]}
+    //         activeOpacity={0.5}
+    //         onPress={onApplePress}>
+    //         <Image
+    //           source={localImage.AppleLogo}
+    //           style={{width: DeviceWidth * 0.4, height: DeviceHeigth * 0.035}}
+    //           resizeMode="contain"
+    //         />
+    //       </TouchableOpacity>
+    //     </>
+    //   )}
+
+    //   <TouchableOpacity
+    //     style={[styles.buttonStyle, {marginRight: DeviceWidth * 0.07}]}
+    //     activeOpacity={0.5}
+    //     onPress={onGooglePress}>
+    //     <Image
+    //       source={localImage.GOOGLE}
+    //       style={{width: DeviceWidth * 0.4, height: DeviceHeigth * 0.035}}
+    //       resizeMode="contain"
+    //     />
+    //   </TouchableOpacity>
+    // </View>
   );
 };
 const styles = StyleSheet.create({
   buttonStyle: {
     backgroundColor: AppColor.SOCIALBUTTON,
-    width: DeviceWidth * 0.4,
+    // width: DeviceWidth * 0.4,
+    paddingRight: Platform.OS == 'android' ? 20 : 0,
+    paddingLeft: Platform.OS == 'android' ? 20 : 0,
     height: DeviceHeigth * 0.07,
-    borderRadius: 20,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',

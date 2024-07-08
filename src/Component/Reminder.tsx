@@ -55,17 +55,17 @@ export const AlarmNotification = async (time: any) => {
       },
       ios: {
         categoryId: 'Alarm',
+        sound: 'fitme_notification.wav',
         foregroundPresentationOptions: {
           badge: true,
           banner: true,
-          sound: false,
+          sound: true,
         },
       },
       id: 'Timer',
     },
     trigger,
   );
-  console.log(trigger.timestamp);
 };
 const Reminder = ({
   visible,
@@ -153,7 +153,7 @@ const Reminder = ({
           <View
             style={{
               width: DeviceWidth * 0.8,
-              height: DeviceHeigth * 0.3,
+              height: DeviceHeigth * 0.45,
               backgroundColor: AppColor.WHITE,
               justifyContent: 'center',
               alignItems: 'center',

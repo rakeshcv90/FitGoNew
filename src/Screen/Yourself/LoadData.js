@@ -92,15 +92,9 @@ const LoadData = ({navigation}) => {
   ];
   const [activeNext, setActiveNext] = useState(false);
 
-  const {
-    currentWorkoutData,
-    completeProfileData,
-    getLaterButtonData,
-    mindSetData,
-    mindsetConsent,
-    getUserDataDetails,
-    getUserID,
-  } = useSelector(state => state);
+  const getLaterButtonData = useSelector(state => state.getLaterButtonData);
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  const getUserID = useSelector(state => state.getUserID);
 
   const translationX = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
@@ -126,24 +120,29 @@ const LoadData = ({navigation}) => {
   }, []);
   const WholeData = async deviceID => {
     const mergedObject = Object.assign({}, ...getLaterButtonData);
-
+    const Id =
+      getUserDataDetails?.id != null ? getUserDataDetails?.id : getUserID;
     try {
       const payload = new FormData();
       payload.append('deviceid', deviceID);
       payload.append('devicetoken', getFcmToken);
-      payload.append('id', getUserID != 0 ? getUserID : null);
+      payload.append('id', Id);
       payload.append('gender', mergedObject?.gender);
       payload.append('goal', mergedObject?.goal);
-      payload.append('weight', mergedObject?.currentWeight);
-      payload.append('age', mergedObject?.age);
-      payload.append('targetweight', mergedObject?.targetWeight);
-      payload.append('experience', mergedObject?.experience);
-      payload.append('workout_plans', mergedObject?.workout_plans);
-      payload.append('equipment', mergedObject?.equipment);
+      // payload.append('weight', mergedObject?.currentWeight);
+      // payload.append('age', mergedObject?.age);
+      // payload.append('targetweight', mergedObject?.targetWeight);
+      // payload.append('experience', mergedObject?.experience);
+      // payload.append('workout_plans', mergedObject?.workout_plans);
+      // payload.append('equipment', mergedObject?.equipment);
       payload.append('version', VersionNumber.appVersion);
-      if (getTempLogin) {
-        payload.append('name', mergedObject?.name);
-      }
+      // if (getTempLogin) {
+      //   payload.append('name', mergedObject?.name);
+      // } else {
+      // }
+
+      payload.append('name', getUserDataDetails?.name);
+      console.log('PAYLOASD', payload);
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {
@@ -151,7 +150,7 @@ const LoadData = ({navigation}) => {
         },
         data: payload,
       });
-
+       console.log("payload------>",payload)
       if (data?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: data?.data?.msg,
@@ -161,99 +160,21 @@ const LoadData = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-        getUserID != 0 && getUserDetailData(getUserID); //getProfileData(getUserID);
-        getUserID != 0
-          ? getCustomWorkout(getUserID)
-          : customFreeWorkoutDataApi(deviceID);
-        dispatch(setTempLogin(false));
+        getUserDetailData(Id); //getProfileData(getUserID);
+        // getUserDataDetails?.id != 0 && getUserDetailData(getUserDataDetails?.id); //getProfileData(getUserID);
+        // getUserID != 0
+        //   ? getCustomWorkout(getUserID)
+        //   : customFreeWorkoutDataApi(deviceID);
+        // dispatch(setTempLogin(false));
       }
     } catch (error) {
-      console.log('Whole Data Error', error);
+      console.log('Whole Data Error----->', error.response);
     }
   };
 
-  const getCustomWorkout = async user_id => {
-    try {
-      const data = await axios(NewAppapi.Custom_WORKOUT_DATA, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          id: user_id,
-          version: VersionNumber.appVersion,
-        },
-      });
-
-      if (data.data.workout) {
-        dispatch(setCustomWorkoutData(data?.data));
-        setActiveNext(true);
-        // currentWorkoutDataApi(data.data?.workout[0]);
-      } else if (
-        data?.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: data.data.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        dispatch(setCustomWorkoutData([]));
-        setActiveNext(true);
-      }
-    } catch (error) {
-      console.log('Custom Workout Error', error);
-      dispatch(setCustomWorkoutData([]));
-      setActiveNext(true);
-    }
-  };
-
-  const customFreeWorkoutDataApi = async deviceID => {
-    try {
-      const payload = new FormData();
-      payload.append('deviceid', deviceID);
-      payload.append('version', VersionNumber.appVersion);
-
-      const res = await axios({
-        url: NewAppapi.Free_WORKOUT_DATA,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: payload,
-      });
-
-      if (res.data?.workout) {
-        setActiveNext(true);
-        dispatch(setCustomWorkoutData(res.data));
-
-        // currentWorkoutDataApi(res.data?.workout[0]);
-      } else if (
-        res?.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        showMessage({
-          message: res?.data?.msg,
-          floating: true,
-          duration: 500,
-          type: 'danger',
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        dispatch(setCustomWorkoutData([]));
-        setActiveNext(true);
-      }
-    } catch (error) {
-      console.error(error?.response, 'customWorkoutDataApiError');
-      dispatch(setCustomWorkoutData([]));
-      setActiveNext(true);
-    }
-  };
-
-  // const getProfileData = async user_id => {
+  // const getCustomWorkout = async user_id => {
   //   try {
-  //     const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
+  //     const data = await axios(NewAppapi.Custom_WORKOUT_DATA, {
   //       method: 'POST',
   //       headers: {
   //         'Content-Type': 'multipart/form-data',
@@ -263,26 +184,70 @@ const LoadData = ({navigation}) => {
   //         version: VersionNumber.appVersion,
   //       },
   //     });
-  //     console.log('Load Data Proile ', data?.data?.profile);
-  //     if (data?.data?.profile) {
-  //       dispatch(setUserProfileData(data.data.profile));
-  //      // getAgreementStatus();
+
+  //     if (data.data.workout) {
+  //       dispatch(setCustomWorkoutData(data?.data));
+  //       setActiveNext(true);
+  //       // currentWorkoutDataApi(data.data?.workout[0]);
   //     } else if (
   //       data?.data?.msg == 'Please update the app to the latest version.'
   //     ) {
   //       showMessage({
-  //         message: data?.data?.msg,
+  //         message: data.data.msg,
+  //         type: 'danger',
+  //         animationDuration: 500,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //     } else {
+  //       dispatch(setCustomWorkoutData([]));
+  //       setActiveNext(true);
+  //     }
+  //   } catch (error) {
+  //     console.log('Custom Workout Error', error);
+  //     dispatch(setCustomWorkoutData([]));
+  //     setActiveNext(true);
+  //   }
+  // };
+
+  // const customFreeWorkoutDataApi = async deviceID => {
+  //   try {
+  //     const payload = new FormData();
+  //     payload.append('deviceid', deviceID);
+  //     payload.append('version', VersionNumber.appVersion);
+
+  //     const res = await axios({
+  //       url: NewAppapi.Free_WORKOUT_DATA,
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: payload,
+  //     });
+
+  //     if (res.data?.workout) {
+  //       setActiveNext(true);
+  //       dispatch(setCustomWorkoutData(res.data));
+
+  //       // currentWorkoutDataApi(res.data?.workout[0]);
+  //     } else if (
+  //       res?.data?.msg == 'Please update the app to the latest version.'
+  //     ) {
+  //       showMessage({
+  //         message: res?.data?.msg,
   //         floating: true,
   //         duration: 500,
   //         type: 'danger',
   //         icon: {icon: 'auto', position: 'left'},
   //       });
   //     } else {
-  //       dispatch(setUserProfileData([]));
-  //      // getAgreementStatus();
+  //       dispatch(setCustomWorkoutData([]));
+  //       setActiveNext(true);
   //     }
   //   } catch (error) {
-  //     console.log('User Profile Error', error);
+  //     console.error(error?.response, 'customWorkoutDataApiError');
+  //     dispatch(setCustomWorkoutData([]));
+  //     setActiveNext(true);
   //   }
   // };
 
@@ -304,17 +269,18 @@ const LoadData = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
+        console.log('WORKINGGGG', responseData.data);
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         dispatch(setUserProfileData(responseData?.data?.profile));
         setLoadData(100);
+        setActiveNext(true);
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      dispatch(setPurchaseHistory([]));
-      dispatch(setUserProfileData([]));
-      dispatch(setCustomWorkoutData([]));
+
       setLoadData(100);
+      setActiveNext(true);
     }
   };
 
@@ -336,45 +302,23 @@ const LoadData = ({navigation}) => {
       </Animated.View>
     );
   };
-  // const getAgreementStatus = async () => {
-  //   try {
-  //     const ApiCall = await axios(NewAppapi.GET_AGR_STATUS, {
-  //       method: 'POST',
-  //       data: {
-  //         user_id: getUserID != 0 ? getUserID : null,
-  //         version: VersionNumber.appVersion,
-  //       },
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     });
-  //     if (ApiCall?.data) {
 
-  //       dispatch(setOfferAgreement(ApiCall?.data));
-  //     } else {
-  //       setLoadData(100);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     setLoadData(100);
-  //   }
-  // };
   return (
     <SafeAreaView style={styles.Container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <View
         style={{
           height: DeviceHeigth * 0.2,
-          top: DeviceHeigth * 0.03,
+          top: DeviceHeigth <= 667 ? DeviceHeigth * 0.01 : DeviceHeigth * 0.03,
           alignSelf: 'center',
           backgroundColor: '#fff',
         }}>
         <CircularProgress
           value={loadData}
           radius={70}
-          progressValueColor={'rgb(197, 23, 20)'}
+          progressValueColor={AppColor.RED}
           inActiveStrokeColor={AppColor.GRAY2}
-          activeStrokeColor={'rgb(197, 23, 20)'}
+          activeStrokeColor={AppColor.RED}
           inActiveStrokeOpacity={0.3}
           maxValue={100}
           valueSuffix={'%'}
@@ -467,16 +411,16 @@ const LoadData = ({navigation}) => {
         {activeNext && (
           <TouchableOpacity
             onPress={() => {
-              if (getUserDataDetails?.email) {
-                navigation.navigate('OfferTerms');
-              } else {
-                navigation.navigate('BottomTab');
-              }
+              // if (getUserDataDetails?.email) {
+              //   navigation.navigate('OfferTerms');
+              // } else {
+              // }
+              navigation.navigate('OfferTerms');
             }}>
             <LinearGradient
               start={{x: 0, y: 1}}
               end={{x: 1, y: 0}}
-              colors={['#941000', '#D5191A']}
+              colors={[AppColor.RED, AppColor.RED]}
               style={[styles.nextButton]}>
               <Icons name="chevron-right" size={25} color={'#fff'} />
             </LinearGradient>
@@ -514,7 +458,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     lineHeight: 35,
     fontFamily: 'Poppins',
-    color: 'rgb(197, 23, 20)',
+    color: AppColor.RED,
     top: DeviceHeigth * 0.03,
   },
   buttons: {

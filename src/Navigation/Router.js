@@ -13,7 +13,7 @@ import IntroductionScreen1 from '../Screen/Introduction/IntroductionScreen1';
 import IntroductionScreen2 from '../Screen/Introduction/IntroductionScreen2';
 import IntroductionScreen3 from '../Screen/Introduction/IntroductionScreen3';
 import LogSignUp from '../Screen/LogSignUp';
-import NewEditProfile from '../Component/NewEditProfile';
+// import NewEditProfile from '../Component/NewEditProfile';
 import NewPersonalDetails from '../Screen/NewPersonalDetails';
 
 import FocusArea from '../Screen/FocusArea';
@@ -34,7 +34,6 @@ import DayRewards from '../Screen/NewWorkouts/Exercise/DayRewards';
 import AllWorkouts from '../Screen/NewWorkouts/AllWorkouts';
 import Meals from '../Screen/NewHome/Meals';
 import MealDetails from '../Screen/NewHome/MealDetails';
-import ProductsList from '../Screen/NewHome/ProductsList';
 import MeditationDetails from '../Screen/NewHome/MeditationDetails';
 import MeditationExerciseDetails from '../Screen/NewHome/MeditationExerciseDetails';
 import AITrainer from '../Screen/NewHome/AITrainer';
@@ -45,7 +44,7 @@ import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
 // import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {createStackNavigator} from '@react-navigation/stack';
-import Store from '../Screen/NewHome/Store';
+import StoreScreen from '../Screen/NewHome/StoreScreen';
 import FocuseWorkoutList from '../Screen/FocusArea/FocuseWorkoutList';
 import CustomWorkout from '../Screen/CustomWorkout/CustomWorkout';
 import CustomWorkoutDetails from '../Screen/CustomWorkout/CustomWorkoutDetails';
@@ -74,6 +73,8 @@ import UpcomingEvent from '../Screen/Event/UpcomingEvent';
 import AddWorkouts from '../Screen/MyPlans/AddWorkouts';
 import Leaderboard from '../Screen/Leaderboard/Leaderboard';
 import Winner from '../Screen/Leaderboard/Winner';
+import IntroVideo from '../Screen/Introduction/IntroVideo';
+import SplaceNew from '../SplaceNew';
 
 const Stack = createStackNavigator();
 
@@ -89,9 +90,9 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
-
-      <Stack.Screen
+      {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
+     <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+         <Stack.Screen
         name="IntroductionScreen1"
         component={IntroductionScreen1}
       />
@@ -103,30 +104,21 @@ export const LoginStack = () => {
         name="IntroductionScreen3"
         component={IntroductionScreen3}
       />
+     
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Name" component={Name} />
-      <Stack.Screen name="Injury" component={Injury} />
       <Stack.Screen name="Experience" component={Experience} />
       <Stack.Screen name="AskToCreateWorkout" component={AskToCreateWorkout} />
-      <Stack.Screen name="FocusArea" component={FocusArea} />
-      <Stack.Screen name="WorkoutArea" component={WorkoutArea} />
       <Stack.Screen name="TermaAndCondition" component={TermaAndCondition} />
-      <Stack.Screen name="Edit_Profile" component={NewEditProfile} />
       <Stack.Screen name="NewPersonalDetails" component={NewPersonalDetails} />
-      <Stack.Screen name="Scale" component={Scale} />
       <Stack.Screen name="Gender" component={Gender} />
-      <Stack.Screen name="Equipment" component={Equipment} />
-      <Stack.Screen name="Focus" component={Focus} />
-      <Stack.Screen name="Level" component={Level} />
       <Stack.Screen name="Height" component={Height} />
       <Stack.Screen name="Weight" component={Weight} />
       <Stack.Screen name="Age" component={Age} />
       <Stack.Screen name="PredictionScreen" component={PredictionScreen} />
       <Stack.Screen name="LoadData" component={LoadData} />
       <Stack.Screen name="Goal" component={Goal} />
-      <Stack.Screen name="Profile" component={Profile} />
-      <Stack.Screen name="NewEditProfile" component={NewEditProfile} />
       <Stack.Screen name="WorkoutsDescription" component={WorkoutDescription} />
       <Stack.Screen name="CountryLocation" component={CountryLocation} />
       <Stack.Screen name="OfferTerms" component={OfferTerms} />
@@ -135,26 +127,37 @@ export const LoginStack = () => {
       <Stack.Screen name="Exercise" component={Exercise} />
       <Stack.Screen name="SaveDayExercise" component={SaveDayExercise} />
       <Stack.Screen name="DayRewards" component={DayRewards} />
-      <Stack.Screen name="AllWorkouts" component={AllWorkouts} />
       <Stack.Screen name="Meals" component={Meals} />
       <Stack.Screen name="MealDetails" component={MealDetails} />
-      <Stack.Screen name="ProductsList" component={ProductsList} />
-      <Stack.Screen name="Store" component={Store} />
+      <Stack.Screen name="Store" component={StoreScreen} />
       <Stack.Screen name="MeditationDetails" component={MeditationDetails} />
       <Stack.Screen
         name="MeditationExerciseDetails"
         component={MeditationExerciseDetails}
       />
-      <Stack.Screen name="Report" component={Report} />
       <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="AITrainer" component={AITrainer} />
       <Stack.Screen name="AIMessageHistory" component={AIMessageHistory} />
-      <Stack.Screen name="Subscription" component={Subscription} />
+      <Stack.Screen name="IntroVideo" component={IntroVideo}/>
+      {/* <Stack.Screen name="Equipment" component={Equipment} /> */}
+      {/* <Stack.Screen name="Focus" component={Focus} /> */}
+      {/* <Stack.Screen name="Level" component={Level} /> */}
+      {/* <Stack.Screen name="Profile" component={Profile} /> */}
+      {/* <Stack.Screen name="NewEditProfile" component={NewEditProfile} /> */}
+      {/* <Stack.Screen name="AllWorkouts" component={AllWorkouts} /> */}
+      {/* <Stack.Screen name="Report" component={Report} /> */}
+      {/* <Stack.Screen name="Subscription" component={Subscription} /> */}
+      {/* <Stack.Screen name="FocuseWorkoutList" component={FocuseWorkoutList} /> */}
+      {/* <Stack.Screen name="Injury" component={Injury} /> */}
+      {/* <Stack.Screen name="FocusArea" component={FocusArea} />
+      <Stack.Screen name="WorkoutArea" component={WorkoutArea} /> */}
+      {/* <Stack.Screen name="Edit_Profile" component={NewEditProfile} /> */}
+      {/* <Stack.Screen name="Scale" component={Scale} /> */}
+ 
       <Stack.Screen
         name="NewMonthlyAchievement"
         component={NewMonthlyAchievement}
       />
-      <Stack.Screen name="FocuseWorkoutList" component={FocuseWorkoutList} />
       <Stack.Screen name="CustomWorkout" component={CustomWorkout} />
       <Stack.Screen
         name="CustomWorkoutDetails"

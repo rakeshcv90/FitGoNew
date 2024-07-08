@@ -53,7 +53,7 @@ const LetsStart = ({navigation}) => {
       });
     }
   }, [isFocused]);
-  console.log(deviceId);
+
   const deviceIdRegister = async () => {
     analytics().logEvent('CV_FITME_GET_STARTED_BUTTON');
     setForLoading(true);
@@ -136,122 +136,7 @@ const LetsStart = ({navigation}) => {
       console.log('Device Signup Error', error);
     }
   };
-  // const getProfileData = async user_id => {
-  //   try {
-  //     const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       data: {
-  //         id: user_id,
-  //         version: VersionNumber.appVersion,
-  //       },
-  //     });
-
-  //     if (data?.data?.profile) {
-  //       setForLoading(false);
-  //       dispatch(setUserProfileData(data.data.profile));
-  //       navigation.navigate('Yourself');
-  //     } else if (
-  //       data?.data?.msg == 'Please update the app to the latest version.'
-  //     ) {
-  //       showMessage({
-  //         message: data?.data?.msg,
-  //         floating: true,
-  //         duration: 500,
-  //         type: 'danger',
-  //         icon: {icon: 'auto', position: 'left'},
-  //       });
-  //       setForLoading(false);
-  //     } else {
-  //       setForLoading(false);
-  //       dispatch(setUserProfileData([]));
-  //       navigation.navigate('Yourself');
-  //     }
-  //   } catch (error) {
-  //     console.log('User Profile Error', error);
-  //     setForLoading(false);
-  //   }
-  // };
-  // const getProfileData1 = async user_id => {
-  //   try {
-  //     const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       data: {
-  //         id: user_id,
-  //         version: VersionNumber.appVersion,
-  //       },
-  //     });
-
-  //     if (data?.data?.profile) {
-  //       setForLoading(false);
-  //       dispatch(setUserProfileData(data.data.profile));
-  //       getOffertermsStatus(user_id);
-  //     } else if (
-  //       data?.data?.msg == 'Please update the app to the latest version.'
-  //     ) {
-  //       showMessage({
-  //         message: data?.data?.msg,
-  //         floating: true,
-  //         duration: 500,
-  //         type: 'danger',
-  //         icon: {icon: 'auto', position: 'left'},
-  //       });
-  //       setForLoading(false);
-  //     } else {
-  //       setForLoading(false);
-  //       dispatch(setUserProfileData([]));
-  //       navigation.replace('BottomTab');
-  //     }
-  //   } catch (error) {
-  //     console.log('User Profile Error', error);
-  //     setForLoading(false);
-  //   }
-  // };
-  // //
-  // const getOffertermsStatus = async id => {
-  //   try {
-  //     const ApiCall = await axios(NewAppapi.GET_AGR_STATUS, {
-  //       method: 'POST',
-  //       data: {
-  //         user_id: id,
-  //         version: VersionNumber.appVersion,
-  //       },
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     });
-  //     if (
-  //       ApiCall?.data?.msg == 'Please update the app to the latest version.'
-  //     ) {
-  //       showMessage({
-  //         message: ApiCall?.data?.msg,
-  //         floating: true,
-  //         duration: 500,
-  //         type: 'danger',
-  //         icon: {icon: 'auto', position: 'left'},
-  //       });
-  //       setForLoading(false);
-  //     } else {
-  //       if (ApiCall?.data?.term_conditon == 'Accepted') {
-  //         navigation.replace('BottomTab'); //
-  //         dispatch(setOfferAgreement(ApiCall?.data));
-  //         setForLoading(false);
-  //       } else {
-  //         navigation.replace('OfferTerms'); //
-  //         dispatch(setOfferAgreement(ApiCall?.data));
-  //         setForLoading(false);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     setForLoading(false);
-  //   }
-  // };
+  
   const getUserDetailData = async userId => {
     try {
       const responseData = await axios.get(
@@ -320,7 +205,7 @@ const LetsStart = ({navigation}) => {
       } else {
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setUserProfileData(responseData?.data?.profile));
-        console.log('GAGAGAGAGAGA', responseData?.data?.additional_data);
+    
         if (responseData?.data?.additional_data?.term_condition == 'Accepted') {
           navigation.replace('BottomTab'); //
           dispatch(setOfferAgreement(responseData?.data?.additional_data));
@@ -397,18 +282,17 @@ const LetsStart = ({navigation}) => {
             marginTop: DeviceHeigth * 0.04,
             // top: DeviceHeigth > 808 ? DeviceHeigth * 0.18 : DeviceHeigth * 0.2,
           }}>
-          <LinearGradient
-            start={{x: 0, y: 1}}
-            end={{x: 1, y: 0}}
-            colors={['#D01818', '#941000']}
+          <View
+        
             style={{
-              width: '85%',
+              width: '70%',
               height: 50,
               backgroundColor: 'red,',
               alignSelf: 'center',
               borderRadius: 30,
               alignItems: 'center',
-              // top: -DeviceHeigth * 0.04,
+              borderRadius:6,
+             backgroundColor:'#A93737',
               justifyContent: 'center',
             }}>
             <TouchableOpacity
@@ -427,7 +311,7 @@ const LetsStart = ({navigation}) => {
               }}>
               <Text style={styles.button}>Get Started</Text>
             </TouchableOpacity>
-          </LinearGradient>
+          </View>
           <Text
             style={[
               styles.LoginText2,
@@ -479,7 +363,7 @@ const LetsStart = ({navigation}) => {
               onPress={() => {
                 navigation.navigate('LogSignUp', {screen: 'Sign Up'});
               }}>
-              Sign Up
+              {' '}Sign Up
             </Text>
           </Text>
 

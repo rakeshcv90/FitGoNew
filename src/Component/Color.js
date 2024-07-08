@@ -1,7 +1,7 @@
 import { Platform } from "react-native"
 
 export const AppColor={
-    RED:'#941000',
+    RED:'#f0013b',
     FBBUTTON:'#4267B2',
     LIGHTGREY2: '#f9f9f9',
     WHITE:'#ffffff',

@@ -29,6 +29,8 @@ import {useSelector} from 'react-redux';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import moment from 'moment';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+
 
 const MeditationExerciseDetails = ({navigation, route}) => {
   let isFocused = useIsFocused();
@@ -43,7 +45,6 @@ const MeditationExerciseDetails = ({navigation, route}) => {
       artwork: localImage.Play3,
       url: route.params.item.exercise_mindset_audio,
       // url: getStoreVideoLoc[route.params.item.id],
-    
     },
   ];
   useEffect(() => {
@@ -116,11 +117,11 @@ const MeditationExerciseDetails = ({navigation, route}) => {
             TrackPlayer.reset();
             navigation.goBack();
           }}>
-          <Icons
-            name={'chevron-left'}
-            size={25}
-            color={AppColor.INPUTTEXTCOLOR}
-          />
+          <AntDesign
+              name={'arrowleft'}
+              size={25}
+              color={AppColor.INPUTTEXTCOLOR}
+            />
         </TouchableOpacity>
         <StatusBar
           barStyle={'dark-content'}
@@ -229,10 +230,8 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                 resizeMode="contain"></Image> */}
             </TouchableOpacity>
 
-            <LinearGradient
-              start={{x: 0, y: 1}}
-              end={{x: 1, y: 0}}
-              colors={['#236FD0', '#0D2A4E']}
+            <TouchableOpacity
+              activeOpacity={0.4}
               style={{
                 width: 60,
                 height: 60,
@@ -240,15 +239,21 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                 alignItems: 'center',
                 alignSelf: 'center',
                 justifyContent: 'center',
+              }}
+              onPress={async () => {
+                togglePlayback(playbackState);
               }}>
-              <TouchableOpacity
+              <LinearGradient
+                start={{x: 0, y: 1}}
+                end={{x: 1, y: 0}}
+                colors={['#236FD0', '#0D2A4E']}
                 style={{
+                  width: 60,
+                  height: 60,
+                  borderRadius: 120 / 2,
                   alignItems: 'center',
                   alignSelf: 'center',
                   justifyContent: 'center',
-                }}
-                onPress={async () => {
-                  togglePlayback(playbackState);
                 }}>
                 <Image
                   source={
@@ -267,8 +272,8 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                     alignItems: 'center',
                   }}
                   resizeMode="contain"></Image>
-              </TouchableOpacity>
-            </LinearGradient>
+              </LinearGradient>
+            </TouchableOpacity>
 
             <TouchableOpacity
               style={{
@@ -297,7 +302,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
       </LinearGradient>
 
       {/* {bannerAdsDisplay()} */}
-          <BannerAdd bannerAdId={bannerAdId} />
+      <BannerAdd bannerAdId={bannerAdId} />
     </>
   );
 };

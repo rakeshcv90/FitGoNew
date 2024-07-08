@@ -50,6 +50,8 @@ const AskToCreateWorkout = ({route, navigation}) => {
   const [selected, setSelected] = useState();
   const [Loader, setLoader] = useState(false);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       startAnimation();
@@ -127,6 +129,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
       payload.append('deviceid', deviceID);
       payload.append('devicetoken', getFcmToken);
       payload.append('id', getUserID != 0 ? getUserID : null);
+      payload.append('id', getUserDataDetails?.id );
       payload.append('gender', gender);
       payload.append('goal', mergedObject?.goal);
       payload.append('fitnesslevel', mergedObject?.fitnesslevel); // static values change  it accordingly
@@ -134,20 +137,8 @@ const AskToCreateWorkout = ({route, navigation}) => {
       payload.append('targetweight', mergedObject?.targetWeight);
       payload.append('experience', experience);
       payload.append('workout_plans', 'CustomCreated');
-      if (name) {
-        payload.append('name', name);
-      }
-      payload.append(
-        'injury',
-        mergedObject?.injury != null ? mergedObject?.injury?.join(',') : null,
-      );
-      payload.append('equipment', mergedObject?.equipment);
-      payload.append(
-        'workoutarea',
-        mergedObject?.workoutArea?.join(',') ?? null,
-      );
+      payload.append('name', getUserDataDetails?.name);
       payload.append('version', VersionNumber?.appVersion);
-
       const data = await axios(`${NewAppapi.Post_COMPLETE_PROFILE}`, {
         method: 'POST',
         headers: {
@@ -165,92 +156,20 @@ const AskToCreateWorkout = ({route, navigation}) => {
         });
         setLoader(false);
       } else {
-        // getProfileData(getUserID);
-
-        getUserDetailData(getUserID);
+     
+        getUserDetailData()
         dispatch(setTempLogin(false));
       }
     } catch (error) {
       console.log('Whole Data Error', error);
     }
   };
-  // getuserDetail api
-  // const getProfileData = async user_id => {
-  //   const currrentdata = [
-  //     {
-  //       gender: gender,
-  //     },
-  //     {
-  //       experience: experience,
-  //     },
-  //     {workout_plans: 'CustomCreated'},
-  //   ];
-
-  //   try {
-  //     const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //       data: {
-  //         id: user_id,
-  //         version: VersionNumber.appVersion,
-  //       },
-  //     });
-
-  //     if (data?.data?.profile) {
-
-  //       dispatch(setUserProfileData(data?.data?.profile));
-  //       dispatch(setLaterButtonData(currrentdata));
-  //       dispatch(setExperience(true));
-  //       getCustomWorkout(getUserID);
-  //       ChallengesDataAPI();
-  //       setLoader(false);
-  //     } else if (
-  //       data?.data?.msg == 'Please update the app to the latest version.'
-  //     ) {
-  //       setLoader(false);
-  //       ChallengesDataAPI();
-  //       showMessage({
-  //         message: data?.data?.msg,
-  //         floating: true,
-  //         duration: 500,
-  //         type: 'danger',
-  //         icon: {icon: 'auto', position: 'left'},
-  //       });
-  //     } else {
-
-  //       dispatch(setUserProfileData([]));
-  //       dispatch(setLaterButtonData(currrentdata));
-  //       dispatch(setExperience(true));
-  //       ChallengesDataAPI();
-  //       getCustomWorkout(getUserID);
-
-  //       setLoader(false);
-  //     }
-  //   } catch (error) {
-  //     console.log('User Profile Error', error);
-  //     setLoader(false);
-  //     getCustomWorkout(getUserID);
-  //     ChallengesDataAPI();
-  //   }
-  // };
-  const getUserDetailData = async userId => {
-    const currrentdata = [
-      {
-        gender: gender,
-      },
-      {
-        experience: experience,
-      },
-      {workout_plans: 'CustomCreated'},
-    ];
-
+  const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(
-        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
+        `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
       );
-
+      console.log("ggggggggg44444",responseData?.data?.profile)
       if (
         responseData?.data?.msg ==
         'Please update the app to the latest version.'
@@ -265,20 +184,15 @@ const AskToCreateWorkout = ({route, navigation}) => {
       } else {
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
-        dispatch(setUserProfileData(responseData?.data?.profile));
-        dispatch(setLaterButtonData(currrentdata));
+       dispatch(setUserProfileData(responseData?.data?.profile));
+        // dispatch(setLaterButtonData(currrentdata));
+      
         dispatch(setExperience(true));
-        if (getUserDataDetails.email != null) {
-          navigation.navigate('OfferTerms', {
-            routeName: 'Exprience',
-            CustomCreated: true,
-          });
-
-          dispatch(setCustomWorkoutData([]));
-          navigation.navigate('OfferTerms', {CustomCreated: true});
-        } else {
-          navigation.navigate('CustomWorkout', {routeName: 'Exprience'});
-        }
+        navigation.navigate('OfferTerms', {
+          routeName: 'Exprience',
+          CustomCreated: true,
+        });
+    
         if (responseData?.data.event_details == 'Not any subscription') {
           dispatch(setPurchaseHistory([]));
           EnteringEventFunction(
@@ -288,6 +202,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
             setEnteredUpcomingEvent,
             setPlanType,
           );
+          setLoader(false);
         } else {
           dispatch(setPurchaseHistory(responseData?.data.event_details));
           EnteringEventFunction(
@@ -297,67 +212,17 @@ const AskToCreateWorkout = ({route, navigation}) => {
             setEnteredUpcomingEvent,
             setPlanType,
           );
+          setLoader(false);
         }
         //ChallengesDataAPI();
         getAllChallangeAndAllExerciseData();
       }
     } catch (error) {
-      console.log('GET-USER-DATA', error);
-      dispatch(setPurchaseHistory([]));
-      dispatch(setUserProfileData([]));
-      dispatch(setCustomWorkoutData([]));
-      //ChallengesDataAPI();
+      console.log('GET-USER-DATA', error)
       getAllChallangeAndAllExerciseData();
     }
   };
 
-  // const getCustomWorkout = async data => {
-  //   try {
-  //     const data = await axios.get(
-  //       `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${data}`,
-  //     );
-  //     if (getUserDataDetails.email != null) {
-  //       if (data?.data?.msg != 'data not found.') {
-  //         dispatch(setCustomWorkoutData(data?.data?.data));
-  //         navigation.navigate('OfferTerms', {
-  //           routeName: 'Exprience',
-  //           CustomCreated: true,
-  //         });
-  //       } else {
-  //         dispatch(setCustomWorkoutData([]));
-  //         navigation.navigate('OfferTerms', {CustomCreated: true});
-  //       }
-  //     } else {
-  //       navigation.navigate('CustomWorkout', {routeName: 'Exprience'});
-  //     }
-  //   } catch (error) {
-  //     console.log('Custom Workout Error', error);
-  //     dispatch(setCustomWorkoutData([]));
-  //     navigation.navigate('CustomWorkout', {
-  //       routeName: 'Exprience',
-  //       CustomCreated: true,
-  //     });
-  //   }
-  // };
-  const ChallengesDataAPI = async () => {
-    try {
-      const res = await axios({
-        url:
-          NewAppapi.GET_CHALLENGES_DATA +
-          '?version=' +
-          VersionNumber.appVersion +
-          '&user_id=' +
-          getUserID,
-      });
-      if (res.data?.msg != 'version  is required') {
-        dispatch(setChallengesData(res.data));
-      } else {
-        dispatch(setChallengesData([]));
-      }
-    } catch (error) {
-      console.error(error, 'ChallengesDataAPI ERRR');
-    }
-  };
   const getAllChallangeAndAllExerciseData = async () => {
     let responseData = 0;
     if (Object.keys(getUserDataDetails).length > 0) {
@@ -367,6 +232,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
         );
         dispatch(setChallengesData(responseData.data.challenge_data));
         dispatch(setAllExercise(responseData.data.data));
+        setLoader(false);
       } catch (error) {
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
         dispatch(setChallengesData([]));
@@ -385,6 +251,7 @@ const AskToCreateWorkout = ({route, navigation}) => {
 
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
       }
+      setLoader(false);
     }
   };
   return (
@@ -393,7 +260,11 @@ const AskToCreateWorkout = ({route, navigation}) => {
       <View
         style={{
           marginTop:
-            Platform.OS == 'ios' ? -DeviceHeigth * 0.06 : -DeviceHeigth * 0.03,
+          Platform.OS == 'ios'
+          ? DeviceHeigth >= 1024 || DeviceHeigth <= 667
+              ? -DeviceHeigth * 0.03
+              : -DeviceHeigth * 0.06
+            : -DeviceHeigth * 0.03,
         }}>
         <Bulb screen={'Select One Option'} />
       </View>

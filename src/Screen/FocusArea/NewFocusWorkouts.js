@@ -7,6 +7,9 @@ import {
   FlatList,
   Image,
   TextInput,
+  Platform,
+  ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
@@ -20,7 +23,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Iconss from 'react-native-vector-icons/FontAwesome5';
+
 import FastImage from 'react-native-fast-image';
 import {localImage} from '../../Component/Image';
 import Button from '../../Component/Button';
@@ -39,6 +42,10 @@ import {
 import RNFetchBlob from 'rn-fetch-blob';
 import GradientButton from '../../Component/GradientButton';
 import {getActiveTrackIndex} from 'react-native-track-player/lib/src/trackPlayer';
+import NewButton from '../../Component/NewButton';
+import {showMessage} from 'react-native-flash-message';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import NewButton2 from '../../Component/NewButton2';
 
 const NewFocusWorkouts = ({route, navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
@@ -51,7 +58,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const exerciseData = route?.params?.focusExercises;
   const searchCriteria = route?.params?.searchCriteria;
   const searchCriteriaRedux = route?.params?.searchCriteriaRedux;
-  const isFocused = useIsFocused();
   const refStandard = useRef();
   const [filterList, setFilterList] = useState(exerciseData);
   const [downloadProgress, setDownloadProgress] = useState(0);
@@ -64,6 +70,8 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const [item, setitem] = useState();
   const [downloaded, setDownloade] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchFilterList, setSearchFilterList] = useState([]);
   const dispatch = useDispatch();
   const uperBody = [
     {
@@ -98,14 +106,14 @@ const NewFocusWorkouts = ({route, navigation}) => {
       ima: require('../../Icon/Images/NewImage2/calves.png'),
       exCount: getExerciseCount?.exCount1 ?? 0,
     },
+    // {
+    //   id: 2,
+    //   title: 'Quads',
+    //   ima: require('../../Icon/Images/NewImage2/quards.png'),
+    //   exCount: getExerciseCount?.exCount2 ?? 0,
+    // },
     {
       id: 2,
-      title: 'Quads',
-      ima: require('../../Icon/Images/NewImage2/quards.png'),
-      exCount: getExerciseCount?.exCount2 ?? 0,
-    },
-    {
-      id: 3,
       title: 'Calves',
       ima: require('../../Icon/Images/NewImage2/calves.png'),
       exCount: getExerciseCount?.exCount3 ?? 0,
@@ -150,27 +158,35 @@ const NewFocusWorkouts = ({route, navigation}) => {
       filterExercises(exerciseData, searchCriteriaRedux);
     }
   }, []);
-  // filter logic
+
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    setDownloadProgress(0);
+    setDownloade(0);
+    setSelectedIndex(-1);
+  }, [isFocused]);
+
   const filterExercises = (exercises, filterCriteria) => {
-    let modifiedFilter = [...filterCriteria];
+    let modifiedFilter = [...filterCriteria]; // Create a copy of filterCriteria
     if (filterCriteria.length === 0) {
-      setFilterList(exercises);
-    } else if (filterCriteria.includes('Arms')) {
-      // replacing Arms with Biceps triceps and forearms
-      modifiedFilter.pop('Arms');
-      modifiedFilter.push(...['Biceps', 'Triceps', 'Forearms']);
+      setFilterList(exercises); // Set filter list to all exercises if no criteria
+    } else {
+      if (modifiedFilter.includes('Arms')) {
+        modifiedFilter = modifiedFilter.filter(item => item !== 'Arms'); // Remove 'Arms'
+        modifiedFilter.push('Biceps', 'Triceps', 'Forearms'); // Add 'Biceps', 'Triceps', 'Forearms'
+      }
+      // Check if 'Shoulders' is being added and remove 'Arms' if necessary
+      if (modifiedFilter.includes('Shoulders')) {
+        modifiedFilter = modifiedFilter.filter(item => item !== 'Arms');
+      }
+
       setFilterList(
         exercises.filter(exercise =>
           modifiedFilter.includes(exercise.exercise_bodypart),
         ),
       );
-    } else {
-      setFilterList(
-        exercises.filter(exercise =>
-          filterCriteria.includes(exercise.exercise_bodypart),
-        ),
-      );
     }
+
     const focusedPart = route?.params?.focusedPart;
     if (focusedPart === 'Upper Body') {
       dispatch(setUprBdyOpt(filterCriteria));
@@ -193,32 +209,31 @@ const NewFocusWorkouts = ({route, navigation}) => {
       dispatch(setCoreCount(1));
     }
   };
-  // const bannerAdsDisplay = () => {
-  //   if (getPurchaseHistory.length > 0) {
-  //     if (
-  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-  //     ) {
-  //       return null;
-  //     } else {
-  //       return <BannerAdd bannerAdId={bannerAdId} />;
-  //     }
-  //   } else {
-  //     return <BannerAdd bannerAdId={bannerAdId} />;
-  //   }
-  // };
-  const getAdsDisplay = (item, index) => {
-    if (execrise.length >= 1) {
-      if (index == 0 && execrise.length > 1) {
+  const updateFilteredCategories = text => {
+    const filteredItems = filterList.filter(item =>
+      item.exercise_title.toLowerCase().includes(text.toLowerCase()),
+    );
+    setSearchFilterList(filteredItems);
+  };
+
+  const getAdsDisplay = (index, item) => {
+    const noOrNoobPlan =
+      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
+    if (filterList.length >= 1) {
+      if (index == 0 && filterList.length > 1 && noOrNoobPlan) {
         return getNativeAdsDisplay();
-      } else if ((index + 1) % 8 == 0 && execrise.length > 8) {
+      } else if ((index + 1) % 9 == 0 && filterList.length > 9) {
+        if (index + 1 == filterList.length) return null;
         return getNativeAdsDisplay();
       }
     }
   };
+
   const getNativeAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
+    if (getPurchaseHistory?.plan != null) {
       if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        getPurchaseHistory?.plan == 'premium' &&
+        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
       ) {
         return null;
       } else {
@@ -304,10 +319,10 @@ const NewFocusWorkouts = ({route, navigation}) => {
     );
     return (
       <>
-     
         <RBSheet
           ref={refStandard}
           // draggable
+          closeOnPressMask={false}
           customModalProps={{
             animationType: 'slide',
             statusBarTranslucent: true,
@@ -317,17 +332,32 @@ const NewFocusWorkouts = ({route, navigation}) => {
               borderTopLeftRadius: 10,
               borderTopRightRadius: 10,
               height:
-                DeviceHeigth >= 1024
-                  ? DeviceHeigth * 0.45
+                route?.params?.focusedPart == 'Upper Body'
+                  ? DeviceHeigth >= 1024
+                    ? DeviceHeigth * 0.45
+                    : DeviceHeigth >= 856
+                    ? DeviceHeigth * 0.55
+                    : DeviceHeigth <= 667
+                    ? DeviceHeigth <= 625
+                      ? DeviceHeigth * 0.75
+                      : DeviceHeigth * 0.7
+                    : DeviceHeigth * 0.58
+                  : DeviceHeigth >= 1024
+                  ? DeviceHeigth * 0.32
                   : DeviceHeigth >= 856
-                  ? DeviceHeigth * 0.55
-                  : DeviceHeigth * 0.6,
+                  ? DeviceHeigth * 0.4
+                  : DeviceHeigth <= 667
+                  ? DeviceHeigth <= 625
+                    ? DeviceHeigth * 0.55
+                    : DeviceHeigth * 0.5
+                  : DeviceHeigth * 0.42,
             },
             draggableIcon: {
               width: 80,
             },
           }}>
           <View style={styles.listContainer}>
+            {console.log('ZXccvxvcx', DeviceHeigth)}
             <View
               style={{
                 flexDirection: 'row',
@@ -352,6 +382,8 @@ const NewFocusWorkouts = ({route, navigation}) => {
               <TouchableOpacity
                 activeOpacity={0.7}
                 onPress={() => {
+                  AnalyticsConsole('CL_BS_FW');
+                  handleFilterVisibilty();
                   refStandard.current.close();
                   setFilterCriteria(
                     determineFilterCriteria(
@@ -441,7 +473,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           style={{
                             width: 25,
                             height: 25,
-
                             top: 15,
                             left: 10,
                           }}
@@ -454,6 +485,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           <Image
                             source={item.ima}
                             // onLoad={() => setImageLoad(false)}
+                            defaultSource={localImage?.NOWORKOUT}
                             style={{
                               width: 50,
                               height: 60,
@@ -527,7 +559,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                 style={{
                   width: 150,
                   height: 50,
-                  backgroundColor: AppColor.NEW_DARK_RED,
+                  backgroundColor: AppColor.RED,
                   borderRadius: 6,
                   alignSelf: 'flex-end',
                   justifyContent: 'center',
@@ -539,6 +571,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
                   filterCritera.length === 0 || !isFilterChanged ? true : false
                 }
                 onPress={() => {
+                  filterCritera.length === 0 || !isFilterChanged
+                    ? console.log('clicked')
+                    : AnalyticsConsole('RCL_BS_FW');
                   filterExercises(exerciseData, filterCritera);
                   handleFilterVisibilty();
                 }}>
@@ -610,6 +645,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
     dispatch(setVideoLocation(StoringData));
   };
   const Start = exercise => {
+    AnalyticsConsole('S_E_FW');
     Promise.all(
       exercise?.map((item, index) => {
         return downloadVideos(item, index, exercise?.length);
@@ -632,6 +668,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
     downloadVideos(item, index, 1).finally(() => {
       setDownloade(0);
       setDownloadProgress(0);
+      setSelectedIndex(-1);
       navigation.navigate('Exercise', {
         allExercise: [item],
         currentExercise: item,
@@ -653,12 +690,23 @@ const NewFocusWorkouts = ({route, navigation}) => {
             route?.params?.focusedPart == 'Full Body' ? false : true
           }
           shadow
-          // backButton={true}
-          // backPressCheck={true}
-          // onPress={()=>{
-
-          // }}
+          backPressCheck={true}
+          onPress={() => {
+            if (downloaded > 0) {
+              showMessage({
+                message:
+                  'Please wait, downloading in progress. Do not press back.',
+                type: 'info',
+                animationDuration: 500,
+                floating: true,
+                icon: {icon: 'auto', position: 'left'},
+              });
+            } else {
+              navigation?.goBack();
+            }
+          }}
           onPressImage={() => {
+            AnalyticsConsole('O_BS_FW');
             if (route?.params?.focusedPart == 'Upper Body') {
               refStandard.current.open();
             } else if (route?.params?.focusedPart == 'Lower Body') {
@@ -672,81 +720,125 @@ const NewFocusWorkouts = ({route, navigation}) => {
           source={require('../../Icon/Images/NewImage2/filter.png')}
         />
         <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-        <>
-          <View>
-            <FlatList
-              data={filterList}
-              contentContainerStyle={{paddingBottom: DeviceHeigth * 0.25}}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({item, index}) => {
-                return (
-                  <>
-                    <TouchableOpacity
-                      style={{
-                        width: '100%',
-                        marginVertical: 10,
-                        paddingHorizontal: 20,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}
-                      onPress={() => {
+        <View
+          style={{
+            width: '90%',
+            height: 50,
+            alignSelf: 'center',
+            backgroundColor: '#F3F5F5',
+            borderRadius: 6,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingLeft: 10,
+            top: DeviceHeigth<=626?-DeviceWidth * 0.01:-DeviceWidth * 0.05,
+          }}>
+          <Icons name="magnify" size={20} color={'#33333380'} />
+          <TextInput
+            placeholder="Search Exercise"
+            placeholderTextColor="#33333380"
+            value={searchQuery}
+            onChangeText={text => {
+              setSearchQuery(text);
+              updateFilteredCategories(text);
+            }}
+            style={styles.inputText}
+          />
+        </View>
+
+        <View style={styles.contentContainer}>
+          <FlatList
+            data={searchFilterList?.length > 0 ? searchFilterList : filterList}
+            contentContainerStyle={{paddingBottom: DeviceHeigth * 0.1}}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item, index}) => {
+              return (
+                <>
+                  <TouchableOpacity
+                    style={{
+                      width: '100%',
+                      marginVertical: 10,
+                      paddingHorizontal: 20,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}
+                    onPress={() => {
+                      if (!visible) {
                         setVisible(true);
                         setitem(item);
+                      }
+                    }}>
+                    <FastImage
+                      fallback={true}
+                      style={{
+                        width: 75,
+                        height: 75,
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        borderRadius: 5,
+                        borderWidth: 1,
+                        borderColor: '#D9D9D9',
+                      }}
+                      source={{
+                        uri: item?.exercise_image_link,
+                        headers: {Authorization: 'someAuthToken'},
+                        priority: FastImage.priority.high,
+                      }}
+                      resizeMode={FastImage.resizeMode.contain}
+                      defaultSource={localImage.NOWORKOUT}
+                    />
+                    <View
+                      style={{
+                        marginHorizontal: 16,
+                        width:
+                          DeviceHeigth >= 1024
+                            ? DeviceWidth * 0.7
+                            : DeviceWidth * 0.48,
                       }}>
-                      <FastImage
-                        fallback={true}
+                      <Text
+                        numberOfLines={1}
                         style={{
-                          width: 75,
-                          height: 75,
-                          justifyContent: 'center',
-                          alignSelf: 'center',
-                          borderRadius: 5,
-                          borderWidth: 1,
-                          borderColor: '#D9D9D9',
-                        }}
-                        source={{
-                          uri: item?.exercise_image_link,
-                          headers: {Authorization: 'someAuthToken'},
-                          priority: FastImage.priority.high,
-                        }}
-                        resizeMode={FastImage.resizeMode.contain}
-                        defaultSource={localImage.NOWORKOUT}
-                      />
-                      <View
-                        style={{
-                          marginHorizontal: 16,
-                          width: DeviceWidth * 0.48,
+                          fontSize: 16,
+                          fontWeight: '600',
+                          lineHeight: 24,
+                          fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                          color: '#1E1E1E',
                         }}>
-                        <Text
-                          numberOfLines={1}
-                          style={{
-                            fontSize: 16,
-                            fontWeight: '600',
-                            lineHeight: 24,
-                            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                            color: '#1E1E1E',
-                          }}>
-                          {item?.exercise_title}
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 14,
-                            fontWeight: '400',
-                            lineHeight: 24,
-                            opacity: 0.7,
-                            fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                            color: '#1E1E1E',
-                          }}>
-                          {item?.exercise_rest}
-                        </Text>
-                      </View>
+                        {item?.exercise_title}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontWeight: '400',
+                          lineHeight: 24,
+                          opacity: 0.7,
+                          fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                          color: '#1E1E1E',
+                        }}>
+                        {item?.exercise_rest}
+                      </Text>
+                    </View>
+                    {selectedIndex == index && downloadProgress <= 5 ? (
+                      <ActivityIndicator
+                        color={AppColor.NEW_DARK_RED}
+                        animating={
+                          selectedIndex == index && downloadProgress <= 5
+                        }
+                        size={30}
+                        style={{right: -15, padding: 2}}
+                      />
+                    ) : (
                       <TouchableOpacity
-                        style={{right: -25, padding: 2}}
+                        style={{right: -15, padding: 2}}
+                        disabled={selectedIndex == index}
                         onPress={() => {
-                          setSelectedIndex(index);
-                          handleIconPress(item, index);
+                          if (selectedIndex == index || downloadProgress > 0) {
+                          } else {
+                            setSelectedIndex(index);
+                            setDownloadProgress(5);
+                            handleIconPress(item, index);
+                          }
                         }}>
                         <CircularProgressBase
                           value={selectedIndex == index ? downloadProgress : 0}
@@ -756,57 +848,67 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           activeStrokeWidth={3}
                           inActiveStrokeWidth={3}
                           maxValue={100}>
-                          <Icons
-                            name={'play'}
-                            size={30}
-                            opacity={0.6}
-                            color={'#333333'}
+                          <Image
+                            source={localImage.ExercisePlay}
+                            tintColor={selectedIndex != index && '#565656'}
+                            resizeMode="contain"
+                            style={{
+                              width: 12,
+                              height: 12,
+                              alignSelf: 'center',
+                            }}
                           />
                         </CircularProgressBase>
                       </TouchableOpacity>
-                    </TouchableOpacity>
-                    {index !== exerciseData.length - 1 && (
-                      <View
-                        style={{
-                          width: '100%',
-                          height: 1,
-
-                          alignItems: 'center',
-                          backgroundColor: '#33333314',
-                        }}
-                      />
                     )}
-                  </>
-                );
-              }}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              updateCellsBatchingPeriod={100}
-              removeClippedSubviews={true}
-            />
-          </View>
-          <GradientButton
-            // flex={0.01}
-            text={downloaded ? `Downloading` : 'Start All'}
-            h={50}
-            colors={['#A93737', '#A93737']}
-            textStyle={styles.buttonText}
-            alignSelf
-            bR={6}
-            normalAnimation={downloaded > 0}
-            normalFill={`${100 - downloaded}%`}
-            bottm={5}
-            position={'absolute'}
-            onPress={() => {
-              Start(filterList);
+                  </TouchableOpacity>
+                  {index !== exerciseData.length - 1 && (
+                    <View
+                      style={{
+                        width: '100%',
+                        height: 1,
+                        alignItems: 'center',
+                        backgroundColor: '#33333314',
+                      }}
+                    />
+                  )}
+                  {getAdsDisplay(index, item)}
+                </>
+              );
             }}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            updateCellsBatchingPeriod={100}
+            removeClippedSubviews={true}
           />
-          <BottomSheet />
-        </>
+        </View>
+        <NewButton
+          position={'absolute'}
+          bottom={10}
+          title={'Start Workouts'}
+          withAnimation
+          download={downloaded}
+          onPress={() => {
+            if (selectedIndex == -1) Start(filterList);
+          }}
+        />
+        {/* <NewButton2
+          withAnimation
+          position={'absolute'}
+          bottom={10}
+          download={downloaded}
+          onPress={() => {
+            if (selectedIndex == -1) Start(filterList);
+          }}
+        /> */}
+
+        <BottomSheet />
+
         <WorkoutsDescription data={item} open={visible} setOpen={setVisible} />
       </View>
-      {/* {bannerAdsDisplay()} */}
-      <BannerAdd bannerAdId={bannerAdId} />
+      <View style={styles.footer}>
+        <BannerAdd bannerAdId={bannerAdId} />
+      </View>
     </>
   );
 };
@@ -853,6 +955,61 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     zIndex: 1,
     color: AppColor.WHITE,
+  },
+  inputText: {
+    paddingLeft: 15,
+    paddingRight: 15,
+    width: '90%',
+    height: 50,
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: '600',
+    fontFamily: 'Montserrat',
+    color: '#000',
+  },
+  shadow: {
+    marginBottom: 10,
+    shadowColor: 'grey',
+    ...Platform.select({
+      ios: {
+        //shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  contentContainer: {
+    flex: 1, // pushes the footer to the end of the screen
+  },
+  footer: {justifyContent: 'center'},
+  box: {
+    width: 60,
+    height: 60,
+    borderRadius: 40,
+    backgroundColor: AppColor.RED,
+    borderColor: AppColor.RED,
+    borderWidth: 1,
+    marginVertical: DeviceHeigth * 0.015,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    padding: 7,
+    shadowColor: 'grey',
+    ...Platform.select({
+      ios: {
+        //shadowColor: '#000000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
 });
 export default NewFocusWorkouts;

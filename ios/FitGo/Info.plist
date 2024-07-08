@@ -40,6 +40,16 @@
 				<string>com.googleusercontent.apps.60298593797-1cq5dlnk96m56t9nbd26dlmutjl7ubks</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>fitme.cvinfotech.in</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fitme.cvinfotech.in</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
@@ -55,13 +65,12 @@
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>googlegmail</string>
 		<string>fbapi</string>
 		<string>fb-messenger-api</string>
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
 	</array>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
 	<key>MinimumOSVersion</key>
 	<string>14.0</string>
 	<key>NSAppTransportSecurity</key>
@@ -81,8 +90,6 @@
 	<string>Read and understand health data.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>Share workout data with other apps.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>FitGo needs Location access to show Gyms on the basis of Current User's location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>FitGo needs Location access to show Gyms on the basis of Current User's location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -123,6 +130,11 @@
 		<string>Montserrat-SemiBoldItalic.ttf</string>
 		<string>Montserrat-Thin.ttf</string>
 		<string>Montserrat-ThinItalic.ttf</string>
+		<string>Helvetica-Bold.ttf</string>
+		<string>Helvetica-BoldOblique.ttf</string>
+		<string>Helvetica-Oblique.ttf</string>
+		<string>Helvetica.ttf</string>
+		<string>helvetica-light-587ebe5a59211.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
@@ -130,8 +142,6 @@
 		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
-	<key>UILaunchScreen</key>
-	<string>Launch Screen</string>
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -141,7 +151,7 @@
 	<key>UIRequiresFullScreen</key>
 	<true/>
 	<key>UIStatusBarStyle</key>
-	<string></string>
+	<string/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

@@ -16,9 +16,9 @@ import NativeAdView, {
   TaglineView,
 } from 'react-native-admob-native-ads';
 import {MediaView} from './MediaView';
-import { adUnitIDs } from './AdsId';
+import {adUnitIDs} from './AdsId';
 import AnimatedLottieView from 'lottie-react-native';
-import { DeviceHeigth, DeviceWidth } from './Config';
+import {DeviceHeigth, DeviceWidth} from './Config';
 // import {adUnitIDs} from './utils';
 
 const NativeAddTest = ({media, type}) => {
@@ -32,21 +32,13 @@ const NativeAddTest = ({media, type}) => {
   const onAdFailedToLoad = event => {
     setError(true);
     setLoading(false);
-
-    // console.log('AD', 'FAILED', event.message);
   };
 
-  const onAdLoaded = () => {
-    console.log('AD', 'LOADED', 'Ad has loaded successfully');
-  };
+  const onAdLoaded = () => {};
 
-  const onAdClicked = () => {
-    console.log('AD', 'CLICK', 'User has clicked the Ad');
-  };
+  const onAdClicked = () => {};
 
-  const onAdImpression = () => {
-    console.log('AD', 'IMPRESSION', 'Ad impression recorded');
-  };
+  const onAdImpression = () => {};
 
   const onNativeAdLoaded = event => {
     setLoading(false);
@@ -57,17 +49,11 @@ const NativeAddTest = ({media, type}) => {
     setHeadlineData(event.headline.split(':'));
   };
 
-  const onAdLeftApplication = () => {
-    console.log('AD', 'LEFT', 'Ad left application');
-  };
+  const onAdLeftApplication = () => {};
 
   useEffect(() => {
     nativeAdRef.current?.loadAd();
-    // if (!loaded) {
 
-    // } else {
-    //   console.log('AD', 'LOADED ALREADY');
-    // }
   }, []);
 
   return (
@@ -102,24 +88,32 @@ const NativeAddTest = ({media, type}) => {
           style={{
             // width: '100%',
             // height: '100%',
-           // backgroundColor: '#f0f0f0',
+            // backgroundColor: '#f0f0f0',
             position: 'absolute',
             justifyContent: 'center',
             alignItems: 'center',
             opacity: !loading && !error && loaded ? 0 : 1,
             zIndex: !loading && !error && loaded ? 10 : 10,
           }}>
-          {!loading && <AnimatedLottieView
-          // source={{
-          //   uri: 'https://assets7.lottiefiles.com/packages/lf20_qgq2nqsy.json',
-          // }} // Replace with your animation file
-          source={require('../Icon/Images/NewImage2/Adloader.json')}
-          speed={2}
-          autoPlay
-          loop
-          style={{width: DeviceWidth *0.3, height: DeviceHeigth *0.09,top:-10}}
-        />}
-          {error && <Text style={{color: '#a9a9a9',fontSize:17}}>loading</Text>}
+          {!loading && (
+            <AnimatedLottieView
+              // source={{
+              //   uri: 'https://assets7.lottiefiles.com/packages/lf20_qgq2nqsy.json',
+              // }} // Replace with your animation file
+              source={require('../Icon/Images/NewImage2/Adloader.json')}
+              speed={2}
+              autoPlay
+              loop
+              style={{
+                width: DeviceWidth * 0.3,
+                height: DeviceHeigth * 0.09,
+                top: -10,
+              }}
+            />
+          )}
+          {/* {error && (
+            <Text style={{color: '#a9a9a9', fontSize: 17}}>loading</Text>
+          )} */}
         </View>
 
         <View

@@ -12,7 +12,7 @@ import {StyleSheet} from 'react-native';
 import {AppColor} from '../../Component/Color';
 import {StatusBar} from 'react-native';
 import NewHeader from '../../Component/Headers/NewHeader';
-
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import {TextInput} from 'react-native';
@@ -31,7 +31,7 @@ import moment from 'moment';
 import Tts from 'react-native-tts';
 import {useIsFocused} from '@react-navigation/native';
 import {bannerAdId} from '../../Component/AdsId';
-
+import AntDesign from 'react-native-vector-icons/AntDesign';
 // const apiKey = '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';
 // const apiKey = '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';
 const systemMessage = {
@@ -46,7 +46,7 @@ const AITrainer = ({navigation, route}) => {
     `,
   );
 
-  let isFocuse = useIsFocused();
+
   const [searchText, setSearchText] = useState('');
   const flatListRef = useRef(null);
   const [reward, setreward] = useState(0);
@@ -71,28 +71,15 @@ const AITrainer = ({navigation, route}) => {
     Tts.setDefaultRate(speechRate);
     Tts.setDefaultPitch(speechPitch);
     Tts.getInitStatus().then(initTts);
-    // return () => {
-    //   Tts.removeEventListener(
-    //     'tts-start',
-    //     (_event) => setTtsStatus('started')
-    //   );
-    //   Tts.removeEventListener(
-    //     'tts-finish',
-    //     (_event) => setTtsStatus('finished'),
-    //   );
-    //   Tts.removeEventListener(
-    //     'tts-cancel',
-    //     (_event) => setTtsStatus('cancelled'),
-    //   );
-    // };
+
   }, [getSoundOffOn]);
   const initTts = async () => {
-    // if (Platform.OS == 'android') {
-    //   await Tts.setDefaultLanguage(route?.params?.item?.language);
-    //   await Tts.setDefaultVoice(route?.params?.item?.languageId);
-    // } else {
-    //   await Tts.setDefaultVoice(route?.params?.item?.languageId);
-    // }
+    if (Platform.OS == 'android') {
+      await Tts.setDefaultLanguage(route?.params?.item?.language);
+      await Tts.setDefaultVoice(route?.params?.item?.languageId);
+    } else {
+      await Tts.setDefaultVoice(route?.params?.item?.languageId);
+    }
 
     readText();
     setTtsStatus('initialized');
@@ -120,15 +107,7 @@ const AITrainer = ({navigation, route}) => {
         icon: {icon: 'auto', position: 'left'},
       });
       return false;
-    } else if (searchText.trim().length < 3) {
-      showMessage({
-        message: 'Please enter Proper Message',
-        type: 'danger',
-        animationDuration: 500,
-        floating: true,
-        icon: {icon: 'auto', position: 'left'},
-      });
-      return false;
+    
     } else if (reward == 1) {
       handleSend(searchText);
       setSearchText('');
@@ -339,12 +318,58 @@ const AITrainer = ({navigation, route}) => {
   // };
   return (
     <View style={styles.container}>
-      <NewHeader
-        header={'Fitness Coach' + ' ' + route?.params?.item?.title}
-        backButton={true}
-      />
-
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
+      <View
+        style={[
+          {
+            width: DeviceWidth,
+            backgroundColor: '#fff',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            height:
+              Platform.OS == 'ios'
+                ? (DeviceHeigth * 13) / 100
+                : (DeviceHeigth * 10) / 100,
+            left: 1,
+            paddingTop:
+              Platform.OS == 'android'
+                ? DeviceHeigth * 0.03
+                : DeviceHeigth * 0.06,
+          },
+        ]}>
+        <TouchableOpacity
+          style={{left: 10}}
+          onPress={() => {
+            Tts.stop();
+            navigation.goBack();
+          }}>
+          <AntDesign
+            name={'arrowleft'}
+            size={25}
+            color={AppColor.INPUTTEXTCOLOR}
+          />
+        </TouchableOpacity>
+
+        <Text
+          style={[
+            styles.headerstyle,
+            {
+              color: AppColor.INPUTTEXTCOLOR,
+              fontFamily: 'Montserrat-SemiBold',
+              fontWeight: '700',
+
+              width: DeviceWidth * 0.8,
+              textAlign: 'center',
+            },
+          ]}>
+          {'Fitness Coach' + ' ' + route?.params?.item?.title}
+        </Text>
+
+        <View onPress={() => {}}>
+          {/* <Icons name={'magnify'} size={25} color={AppColor.INPUTTEXTCOLOR} /> */}
+        </View>
+      </View>
       {getAIMessageHistory?.length > 0 && (
         <TouchableOpacity
           style={{
@@ -635,13 +660,14 @@ const AITrainer = ({navigation, route}) => {
                 height: 20,
                 marginHorizontal: -10,
               }}
+             tintColor={'#f0013b'} 
               resizeMode="contain"
               source={localImage.Send}
             />
           </TouchableOpacity>
         </View>
         {/* {bannerAdsDisplay()} */}
-          <BannerAdd bannerAdId={bannerAdId} />
+        <BannerAdd bannerAdId={bannerAdId} />
       </KeyboardAvoidingView>
     </View>
   );

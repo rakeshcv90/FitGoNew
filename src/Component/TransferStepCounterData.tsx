@@ -23,7 +23,7 @@ export const StepCounterUpdateNotification = async () => {
     timestamp: CurrentTime.getTime(), // fire at 11:10am (10 minutes before meeting)
     repeatFrequency: RepeatFrequency.DAILY,
   };
-  console.log(trigger.timestamp);
+
   await notifee.createTriggerNotification(
     {
       title: 'Testing Time',
@@ -101,14 +101,14 @@ export const StepcountNoticationStart = async () => {
 const GoogleFitData = async () => {
   try {
     const dailySteps = await GoogleFit.getDailySteps();
-    console.log('Google Steps', dailySteps);
+  
     const totalSteps = dailySteps.reduce(
       (total: any, acc: any) => (total + acc.steps[0] ? acc.steps[0].value : 0),
       0,
     );
     const distance = ((totalSteps / 20) * 0.01).toFixed(2);
     const calories = ((totalSteps / 20) * 1).toFixed(1);
-    console.log('totalSteps', totalSteps);
+  
     PedometerNotificationAPI(totalSteps, distance, calories);
   } catch (error) {
     console.error('Error fetching total steps', error);
@@ -137,12 +137,12 @@ const AppleHealthKitData = async () => {
       if (available) {
         AppleHealthKit.getStepCount(options, (callbackError, results) => {
           if (callbackError) {
-            console.log('Error while getting the data');
+      
           }
           const totalSteps = results.value;
           const distance = ((results.value / 20) * 0.01).toFixed(2);
           const calories = ((results.value / 20) * 1).toFixed(1);
-          console.log(totalSteps);
+  
           PedometerNotificationAPI(totalSteps, distance, calories);
         });
       }
@@ -172,7 +172,7 @@ const PedometerNotificationAPI = async (
         // version: 1.1,
       },
     });
-    console.log('RETURN OF API', totalSteps, res.data);
+   
     if (res?.data?.msg == 'Please update the app to the latest version.') {
     } else {
       TotalCalPostAPI(user_id);
@@ -193,9 +193,7 @@ const TotalCalPostAPI = async (user_id: string) => {
         user_id: user_id,
       },
     });
-    if (data.data) {
-      console.log('TEST API DATA', data.data);
-    }
+ 
   } catch (error) {
     console.log('UCustomeCorkout details', error);
   }
@@ -215,8 +213,6 @@ export const DeleteWeeklyDataAPIStart = () => {
 
 const DeleteWeeklyDataAPI = async (day: number) => {
   const user_id = await AsyncStorage.getItem('userID');
-  // console.log(`-${day+1}`, WeekArray[day])
-  // if (day > 0) return;
   try {
     const res = await axios.get(
       NewAppapi.DELETE_WEEKLY_DATA +
@@ -229,9 +225,7 @@ const DeleteWeeklyDataAPI = async (day: number) => {
         '&version=' +
         VersionNumber.appVersion,
     );
-    if (res.data) {
-      console.log('DeleteWeeklyDataAPI data', res.data);
-    }
+  
   } catch (error) {
     console.log('DeleteWeeklyDataAPI Er ', error);
   }

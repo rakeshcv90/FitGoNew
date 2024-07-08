@@ -39,7 +39,10 @@ import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import Carousel from 'react-native-snap-carousel';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
-
+import TrackPlayer, {
+  Capability,
+  usePlaybackState,
+} from 'react-native-track-player';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 const NewSubscription = ({navigation, route}: any) => {
   const {upgrade} = route.params;
@@ -63,9 +66,10 @@ const NewSubscription = ({navigation, route}: any) => {
       });
   const [selected, setSelected] = useState<any>(sortedSubscriptions[2]);
   const [loading, setForLoading] = useState(false);
-  const [currentSelected, setCurrentSelected] = useState(0);
+  const [currentSelected, setCurrentSelected] = useState(2);
   const [refresh, setRefresh] = useState(false);
   const isFocused = useIsFocused();
+  const playbackState = usePlaybackState();
   const findKeyInObject = (obj: any, keyToFind: string): any => {
     if (typeof obj !== 'object' || obj === null) {
       return null;
@@ -86,10 +90,33 @@ const NewSubscription = ({navigation, route}: any) => {
     return null;
   };
 
+  const songs = [
+    {
+      id: 1,
+      url: require('../../Icon/Images/Subs_sound.wav'),
+    },
+  ];
+
   useEffect(() => {
     if (isFocused) {
-     // PurchaseDetails();
-      getUserDetailData()
+      setupPlayer();
+      // PurchaseDetails();
+      const selected =
+        getPurchaseHistory?.plan != null
+          ? getPurchaseHistory?.plan == 'noob'
+            ? 0
+            : getPurchaseHistory?.plan == 'pro'
+            ? 1
+            : 2
+          : 2;
+      setCurrentSelected(selected);
+      EnteringEventFunction(
+        dispatch,
+        getPurchaseHistory,
+        setEnteredCurrentEvent,
+        setEnteredUpcomingEvent,
+        setPlanType,
+      );
     }
   }, [isFocused]);
   useEffect(() => {
@@ -138,7 +165,24 @@ const NewSubscription = ({navigation, route}: any) => {
       }
     };
   }, []);
-
+  //sound
+  const setupPlayer = async () => {
+    try {
+      await TrackPlayer.add(songs);
+      await TrackPlayer.updateOptions({
+        capabilities: [Capability.Play, Capability.Pause],
+        compactCapabilities: [Capability.Play, Capability.Pause],
+      });
+    } catch (error) {
+      console.log('Music Player Error', error);
+    }
+  };
+  const StartAudio = async (playbackState: any) => {
+    await TrackPlayer.play();
+  };
+  const PauseAudio = async (playbackState: any) => {
+    await TrackPlayer.reset();
+  };
   const restorePurchase = async () => {
     setForLoading(true);
     try {
@@ -274,10 +318,8 @@ const NewSubscription = ({navigation, route}: any) => {
       const purchase: any = await RNIap.requestSubscription({
         sku: items.productId,
       });
-      // setForLoading(false);
-      // console.log("dshdhdhdhdhd",purchase)
+
       if (purchase) {
-        // setPlan(purchase);
         validateIOS(purchase.transactionReceipt);
       } else {
         setForLoading(false);
@@ -301,9 +343,6 @@ const NewSubscription = ({navigation, route}: any) => {
     }
   };
   const validateIOS = async (receipt: any) => {
-    // const purchases = await RNIap.getAvailablePurchases();
-    // const latestPurchase = purchases[purchases.length - 1];
-
     const receiptBody = {
       'receipt-data': receipt,
       password: '3a00ec90f8b745678daf489417956f40',
@@ -341,8 +380,6 @@ const NewSubscription = ({navigation, route}: any) => {
     }
   };
   const fetchPurchaseHistoryIOS = async (item: any, startDate: any) => {
-    const price: string = findKeyInObject(selected, 'localizedPrice');
-    const planName = price.replace(/\s/g, '');
     let data = {
       user_id: getUserDataDetails.id,
       transaction_id: item.original_transaction_id,
@@ -353,8 +390,13 @@ const NewSubscription = ({navigation, route}: any) => {
           ? 'pro'
           : 'premium',
       platform: Platform.OS,
-      product_id: selected?.productId,
-      plan_value: parseInt(planName.split('₹')[1]),
+      product_id: item.auto_renew_product_id,
+      plan_value:
+        item.auto_renew_product_id == 'fitme_noob'
+          ? 30
+          : item.auto_renew_product_id == 'fitme_pro'
+          ? 69
+          : 149,
     };
     PlanPurchasetoBackendAPI(data);
   };
@@ -395,12 +437,7 @@ const NewSubscription = ({navigation, route}: any) => {
           ? 69
           : 149,
     };
-    console.log(
-      'POST',
-      postData,
-      // selected?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList[0],
-      // price,
-    );
+
     PlanPurchasetoBackendAPI(postData);
   };
 
@@ -414,22 +451,26 @@ const NewSubscription = ({navigation, route}: any) => {
         },
         data,
       });
-      console.log(res.data);
+      // console.log(res.data);
+      StartAudio(playbackState);
       if (res.data.message == 'Event created successfully') {
-       // PurchaseDetails();
-        getUserDetailData()
+        // PurchaseDetails();
+        getUserDetailData();
         setForLoading(false);
+        PauseAudio(playbackState);
         setTimeout(() => {
-          navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+          navigation.navigate('UpcomingEvent', {eventType: 'current'});
         }, 2500);
       } else if (
         res.data.message == 'Plan upgraded and new event created successfully'
       ) {
-      //  PurchaseDetails();
-        getUserDetailData()
+        //  PurchaseDetails();
+
+        getUserDetailData();
         setForLoading(false);
+        PauseAudio(playbackState);
         setTimeout(() => {
-          navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+          navigation.navigate('UpcomingEvent', {eventType: 'current'});
         }, 2500);
       } else if (
         res.data.message ==
@@ -437,13 +478,14 @@ const NewSubscription = ({navigation, route}: any) => {
       ) {
         PurchaseDetails();
         setForLoading(false);
+        PauseAudio(playbackState);
         setTimeout(() => {
           navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
         }, 2500);
       } else {
         setForLoading(false);
         showMessage({
-          message: 'Some Issue In Puchase Data!',
+          message: 'Some Issue In Purchase Data!',
           type: 'danger',
           animationDuration: 500,
           floating: true,
@@ -476,9 +518,9 @@ const NewSubscription = ({navigation, route}: any) => {
         dispatch(setPurchaseHistory(result.data.data));
         upgrade
           ? setCurrentSelected(2)
-          : result.data.data?.plan_value == 30
+          : result.data.data?.plan == 'noob'
           ? setCurrentSelected(0)
-          : result.data.data?.plan_value == 69
+          : result.data.data?.plan == 'pro'
           ? setCurrentSelected(1)
           : setCurrentSelected(2);
         EnteringEventFunction(
@@ -537,9 +579,9 @@ const NewSubscription = ({navigation, route}: any) => {
             setPlanType,
           );
           dispatch(setPurchaseHistory(responseData?.data.event_details));
-          responseData?.data?.event_details.plan_value == 30
+          responseData?.data?.event_details.plan == 'noob'
             ? setCurrentSelected(0)
-            : responseData?.data?.event_details?.plan_value == 69
+            : responseData?.data?.event_details?.plan == 'pro'
             ? setCurrentSelected(1)
             : setCurrentSelected(2);
           EnteringEventFunction(
@@ -553,9 +595,7 @@ const NewSubscription = ({navigation, route}: any) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      dispatch(setPurchaseHistory([]));
-      dispatch(setUserProfileData([]));
-      dispatch(setCustomWorkoutData([]));
+      
       setRefresh(false);
     }
   };
@@ -566,10 +606,19 @@ const NewSubscription = ({navigation, route}: any) => {
       item,
       PLATFORM_IOS ? 'title' : 'name',
     );
-    const price: string = findKeyInObject(
-      item,
-      PLATFORM_IOS ? 'localizedPrice' : 'priceAmountMicros',
-    );
+    const temp =
+      Platform.OS == 'ios'
+        ? []
+        : item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList;
+    const price: string =
+      index == 2 && Platform.OS == 'android'
+        ? temp?.length == 1
+          ? temp[0]?.priceAmountMicros
+          : temp[1]?.priceAmountMicros
+        : findKeyInObject(
+            item,
+            PLATFORM_IOS ? 'localizedPrice' : 'priceAmountMicros',
+          );
     const normalizedPrice = PLATFORM_IOS
       ? price.replace(/\s/g, '')
       : `₹${(parseInt(price) / 1000000).toString()}`;
@@ -596,8 +645,6 @@ const NewSubscription = ({navigation, route}: any) => {
         {Array(80).fill('- ')}
       </Text>
     );
-    // !PLATFORM_IOS &&
-    // console.log('planName', planName,getPurchaseHistory?.plan);
     return (
       <View
         style={{
@@ -609,14 +656,14 @@ const NewSubscription = ({navigation, route}: any) => {
           backgroundColor: AppColor.WHITE,
           justifyContent: 'center',
           alignItems: 'center',
-          height: DeviceHeigth * 0.65,
+          height:DeviceHeigth<=640 ? DeviceHeigth*0.8 : DeviceHeigth * 0.65,
           // !planName.includes('noob') &&
           // !planName.includes('pro') &&
           // !PLATFORM_IOS &&
           // getPurchaseHistory?.plan_value == null
           //   ? DeviceHeigth * 0.65
           //   : DeviceHeigth * 0.55,
-          width: DeviceWidth * 0.88,
+          width:'95%',
           alignSelf: 'center',
         }}>
         {getPurchaseHistory?.plan != null &&
@@ -654,8 +701,8 @@ const NewSubscription = ({navigation, route}: any) => {
           }
           resizeMode="contain"
           style={{
-            width: '50%',
-            height: '40%',
+            width: '40%',
+            height: '30%',
           }}
         />
         {!planName.includes('noob') &&
@@ -746,7 +793,7 @@ const NewSubscription = ({navigation, route}: any) => {
           <CheckIcon />
           <FitText
             type="normal"
-            value="Winning price 1000/-"
+            value="Winning price ₹1000/-"
             color="#333333E5"
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
             marginVertical={3}
@@ -770,6 +817,23 @@ const NewSubscription = ({navigation, route}: any) => {
                 ? '2 event/month'
                 : '3 event/month'
             }
+            color="#333333E5"
+            fontFamily={Fonts.MONTSERRAT_MEDIUM}
+            marginVertical={3}
+          />
+        </View>
+        <Line />
+        <View
+          style={[
+            styles.row,
+            {
+              width: '90%',
+            },
+          ]}>
+          <CheckIcon />
+          <FitText
+            type="normal"
+            value="Unlocked 150+ Exercises"
             color="#333333E5"
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
             marginVertical={3}
@@ -852,7 +916,7 @@ const NewSubscription = ({navigation, route}: any) => {
           item,
           PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
         );
-        // console.log('price', price);
+
         return price.includes(getPurchaseHistory?.plan_value);
       });
       if (currentSelected < index) {
@@ -868,6 +932,13 @@ const NewSubscription = ({navigation, route}: any) => {
           message: `You have ${
             getPurchaseHistory?.allow_usage - getPurchaseHistory?.used_plan
           } limit left. Please use them before Purchase new Plan`,
+          type: 'danger',
+          floating: true,
+          duration: 2000,
+        });
+      } else if (getPurchaseHistory?.upcoming_day_status == 1) {
+        showMessage({
+          message: `Please wait for your current challenge to start to upgrade your plan and take part in the new challenges.`,
           type: 'danger',
           floating: true,
           duration: 2000,
@@ -897,7 +968,7 @@ const NewSubscription = ({navigation, route}: any) => {
           Platform.OS == 'android' ? DeviceHeigth * 0.02 : DeviceHeigth * 0.025
         }
         h={Platform.OS == 'ios' ? DeviceWidth * 0.15 : DeviceWidth * 0.15}
-        // shadow
+        shadow
       />
       <View style={{flex: 1, marginHorizontal: 20, marginTop: 10}}>
         <ScrollView
@@ -919,7 +990,7 @@ const NewSubscription = ({navigation, route}: any) => {
             <FitText
               value="Challenge Packages"
               type="Heading"
-              fontSize={16}
+              fontSize={15}
               lineHeight={24}
             />
             <TouchableOpacity
@@ -939,7 +1010,7 @@ const NewSubscription = ({navigation, route}: any) => {
                   color: '#333333',
                   textDecorationLine: 'underline',
                 }}>
-                {PLATFORM_IOS ? 'Restore Purchase' : 'Manage Subscription'}
+                {PLATFORM_IOS ? 'Restore Plan' : 'Manage Plan'}
               </Text>
             </TouchableOpacity>
           </View>
@@ -947,8 +1018,12 @@ const NewSubscription = ({navigation, route}: any) => {
             <Carousel
               data={sortedSubscriptions}
               keyExtractor={(_, index) => index.toString()}
-              itemWidth={DeviceWidth * 0.9}
-              sliderWidth={DeviceWidth * 0.9}
+              itemWidth={
+                DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9
+              }
+              sliderWidth={
+                DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9
+              }
               onBeforeSnapToItem={index => setCurrentSelected(index)}
               enableSnap
               activeSlideAlignment="start"
@@ -959,7 +1034,18 @@ const NewSubscription = ({navigation, route}: any) => {
             />
           )}
 
-          <View style={styles.tabContainer}>
+          <View
+            style={[
+              styles.tabContainer,
+              {
+                height:
+                DeviceHeigth >= 1024
+                  ? DeviceHeigth * 0.05
+                  : DeviceHeigth >= 640
+                  ? DeviceHeigth * 0.06
+                  : DeviceHeigth * 0.05,
+              },
+            ]}>
             {sortedSubscriptions?.map((item: any, index: number) => {
               return (
                 // <View style={{flex: 1,justifyContent: 'center',alignItems: 'center',}}>
@@ -974,7 +1060,12 @@ const NewSubscription = ({navigation, route}: any) => {
                       style={[
                         styles.tabButton,
                         {
-                          height: DeviceWidth * 0.15,
+                          height:
+                          DeviceHeigth >= 1024
+                            ? DeviceHeigth * 0.05
+                            : DeviceHeigth >= 640
+                            ? DeviceHeigth * 0.06
+                            : DeviceHeigth * 0.05,
                           backgroundColor:
                             index == 0
                               ? AppColor.NEW_SUBS_BLUE
@@ -1010,7 +1101,13 @@ const NewSubscription = ({navigation, route}: any) => {
                         styles.tabButton,
                         {
                           marginVertical: 10,
-                          paddingHorizontal: 5,
+                          height:
+                          DeviceHeigth >= 1024
+                            ? DeviceHeigth * 0.05
+                            : DeviceHeigth >= 640
+                            ? DeviceHeigth * 0.06
+                            : DeviceHeigth * 0.05,
+                          // paddingHorizontal: 5,
                         },
                       ]}>
                       <Text
@@ -1059,7 +1156,7 @@ const NewSubscription = ({navigation, route}: any) => {
                 ? `You can cancel your subscription anytime from Google Play Store. On Cancellation Payment is Non-Refundable, but you still access the features of subscription period. We recommend you to review the terms of use before proceeding with any online transaction.`
                 : `Payment is Non-Refundable. We recommend you to review the terms of use before proceeding with any online transaction`} */}
               Payment is Non-Refundable. We recommended you to review the terms
-              of use before proceeding with online transation
+              of use before proceeding with online transaction
             </Text>
           </View>
           <View
@@ -1092,78 +1189,6 @@ const NewSubscription = ({navigation, route}: any) => {
               </Text>{' '}
             </Text>
           </View>
-          {/* <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <TouchableOpacity
-              style={{marginRight: 5}}
-              onPress={() => setCurrentSelected(0)}>
-              <View
-                style={{
-                  borderTopLeftRadius: 10,
-                  borderTopRightRadius: 10,
-                  borderBottomLeftRadius: currentSelected == 0 ? 0 : 10,
-                  borderBottomRightRadius: currentSelected == 0 ? 0 : 10,
-                  height: 100,
-                  backgroundColor: 'red',
-                  width: DeviceWidth / 4,
-                }}
-              />
-              <View
-                style={{
-                  backgroundColor: currentSelected == 0 ? 'red' : 'white',
-                  width: DeviceWidth / 4,
-                  height: 10,
-                }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={{}} onPress={() => setCurrentSelected(1)}>
-              <View
-                style={{
-                  borderTopLeftRadius: 10,
-                  borderTopRightRadius: 10,
-                  borderBottomLeftRadius: currentSelected == 1 ? 0 : 10,
-                  borderBottomRightRadius: currentSelected == 1 ? 0 : 10,
-                  height: 100,
-                  backgroundColor: 'blue',
-                  width: DeviceWidth / 4,
-                }}
-              />
-              <View
-                style={{
-                  backgroundColor: currentSelected == 1 ? 'blue' : 'white',
-                  width: DeviceWidth / 4,
-                  height: 10,
-                }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{marginRight: 5}}
-              onPress={() => setCurrentSelected(2)}>
-              <View
-                style={{
-                  borderTopLeftRadius: 10,
-                  borderTopRightRadius: 10,
-                  borderBottomLeftRadius: currentSelected == 2 ? 0 : 10,
-                  borderBottomRightRadius: currentSelected == 2 ? 0 : 10,
-                  height: 100,
-                  backgroundColor: 'green',
-                  width: DeviceWidth / 4,
-                }}
-              />
-              <View
-                style={{
-                  backgroundColor: currentSelected == 2 ? 'green' : 'white',
-                  width: DeviceWidth / 4,
-                  height: 10,
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-          <Test /> */}
         </ScrollView>
       </View>
       {loading && <ActivityLoader visible={loading} />}
@@ -1232,7 +1257,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
     borderRadius: 50,
     marginVertical: 20,
-    width: DeviceWidth * 0.85,
+    width: DeviceWidth * 0.88,
     alignSelf: 'center',
     shadowColor: '#121212B2',
     ...Platform.select({
@@ -1242,7 +1267,7 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
       },
       android: {
-        elevation: 10,
+        elevation: 5,
       },
     }),
   },

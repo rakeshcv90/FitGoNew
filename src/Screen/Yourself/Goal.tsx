@@ -33,6 +33,7 @@ const Goal = ({navigation, route}: any) => {
     setScreen(nextScreen);
     const temp = data?.filter((item: any) => item?.goal_gender == gender);
     setGoalsData(temp);
+    console.log("tempp",temp)
   }, []);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -67,7 +68,7 @@ const Goal = ({navigation, route}: any) => {
       currentData.push({name: name });
     }
     dispatch(setLaterButtonData(currentData));
-    navigation.navigate('Weight', {nextScreen: screen + 1});
+    navigation.navigate('LoadData', {nextScreen: screen + 1});
   };
 
   const GoalData = [
@@ -122,12 +123,16 @@ const Goal = ({navigation, route}: any) => {
         alignItems: 'center',
         backgroundColor: AppColor.WHITE,
       }}>
-      <ProgressBar screen={screen} Type />
+      {/* <ProgressBar screen={screen} Type /> */}
 
       <View
         style={{
           marginTop:
-            Platform.OS == 'ios' ? -DeviceHeigth * 0.06 : -DeviceHeigth * 0.03,
+            Platform.OS == 'ios'
+              ? DeviceHeigth >= 1024 || DeviceHeigth <= 667
+                ? DeviceHeigth * 0.05
+                : DeviceHeigth * 0.08
+              : DeviceHeigth * 0.05,
         }}>
         <Bulb screen={'What is your fitness goal?'} />
       </View>
@@ -166,7 +171,7 @@ const Goal = ({navigation, route}: any) => {
             <LinearGradient
               start={{x: 0, y: 1}}
               end={{x: 1, y: 0}}
-              colors={['#941000', '#D5191A']}
+              colors={[AppColor.RED,AppColor.RED]}
               style={[styles.nextButton]}>
               <Icons name="chevron-right" size={25} color={'#fff'} />
             </LinearGradient>

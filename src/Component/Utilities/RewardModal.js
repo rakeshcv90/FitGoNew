@@ -5,182 +5,65 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../Config';
 import {Image} from 'react-native';
 import {localImage} from '../Image';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {BlurView} from '@react-native-community/blur';
 import NewButton from '../NewButton';
-import {
-  openSettings,
-  PERMISSIONS,
-  requestMultiple,
-  RESULTS,
-} from 'react-native-permissions';
-import axios from 'axios';
-import VersionNumber from 'react-native-version-number';
-import {useSelector, useDispatch} from 'react-redux';
-import {showMessage} from 'react-native-flash-message';
-import {setOfferAgreement, setRewardModal} from '../ThemeRedux/Actions';
-import {locationPermission} from '../../Screen/Terms&Country/LocationPermission';
-import ActivityLoader from '../ActivityLoader';
-const RewardModal = ({visible, navigation}) => {
-  const dispatch = useDispatch();
-  // const handleButton = () => {
-  //   setloaded(false);
-  //   getAgreementStatus().then(result => {
-  //     if (result == null) {
-  //       locationPermission().then(result => {
-  //         if (result == 'India') {
-  //           StoreAgreementApi(result); //
-  //         } else if (result == 'blocked') {
-  //           showPermissionAlert(); //
-  //           setloaded(true);
-  //         } else {
-  //           //
-  //           console.log('nothing'); //
-  //           setloaded(true);
-  //         }
-  //       });
-  //     } else if (result == 'India') {
-  //       setloaded(true); //
-  //       navigation.navigate('NewSubscription')
-  //       console.log('India');
-  //     } else {
-  //       setloaded(true);
-  //       console.log('anything'); //
-  //     }
-  //   });
-  // };
-  //
-  // const showPermissionAlert = () => {
-  //   Alert.alert(
-  //     'Permission Required',
-  //     'To use the rewards feature, please enable location access in settings',
-  //     [
-  //       {text: 'Cancel', style: 'cancel'},
-  //       {text: 'Open settings', onPress: openSettings},
-  //     ],
-  //     {cancelable: false},
-  //   );
-  // };
-  //
-  // const getAgreementStatus = async () => {
-  //   return new Promise((resolve, reject) => {
-  //     try {
-  //       const ApiCall = axios(NewAppapi.GET_AGR_STATUS, {
-  //         method: 'POST',
-  //         data: {
-  //           user_id: getUserDataDetails?.id,
-  //           version: VersionNumber?.appVersion,
-  //         },
-  //         headers: {
-  //           'Content-Type': 'multipart/form-data',
-  //         },
-  //       });
-
-  //       // Check if response is what you expect
-  //       ApiCall.then(response => {
-  //         if (
-  //           response?.data?.msg ===
-  //           'Please update the app to the latest version.'
-  //         ) {
-  //           showMessage({
-  //             message: response?.data?.msg,
-  //             floating: true,
-  //             duration: 500,
-  //             type: 'danger',
-  //             icon: {icon: 'auto', position: 'left'},
-  //           });
-  //           resolve('update Api version');
-  //         } else {
-  //           resolve(response?.data?.location);
-  //           dispatch(setOfferAgreement(response?.data));
-  //         }
-  //       }).catch(error => {
-  //         // Catch any errors during API call
-  //         reject(error);
-  //       });
-  //     } catch (error) {
-  //       reject(error);
-  //     }
-  //   });
-  // };
-  //
-  // const StoreAgreementApi = async country => {
-  //   const payload = new FormData();
-  //   payload.append('version', VersionNumber?.appVersion);
-  //   payload.append('user_id', getUserDataDetails?.id);
-  //   payload.append('country', country);
-  //   payload.append('term_conditons', 'Accepted');
-  //   try {
-  //     const Apicall = await axios(NewAppapi.STORE_USER_AGR_COUNTRY, {
-  //       method: 'POST',
-  //       data: payload,
-  //       headers: {'Content-Type': 'multipart/form-data'},
-  //     });
-  //     if( Apicall?.data){
-  //       setloaded(true);
-  //       dispatch(setRewardModal(false))
-  //       navigation.navigate('NewSubscription')
-  //     }
-
-  //    else if (
-  //       Apicall?.data?.msg == 'Please update the app to the latest version.' ||
-  //       Apicall?.data?.msg == 'user not found'
-  //     ) {
-  //       setloaded(true);
-  //       showMessage({
-  //         message: Apicall?.data?.msg,
-  //         floating: true,
-  //         duration: 500,
-  //         type: 'danger',
-  //         icon: {icon: 'auto', position: 'left'},
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     setloaded(true);
-  //   }
-  // };
+import {setRewardModal} from '../ThemeRedux/Actions';
+import { useDispatch } from 'react-redux';
+const RewardModal = ({
+  visible,
+  imagesource,
+  onCancel,
+  onConfirm,
+  txt1,
+  txt2,
+  ButtonText,
+}) => {
   return (
     <Modal transparent visible={visible}>
       <View style={{backgroundColor: `rgba(0,0,0,0.4)`, flex: 1}}>
         <View style={styles.View1}>
-        <Icon
-              name="close"
-              size={25}
-              color={AppColor.BLACK}
-              style={{margin: 16,position:'absolute',right:0}}
-              onPress={() => {
-                dispatch(setRewardModal(false));
-              }}
-            />
+          <Icon
+            name="close"
+            size={25}
+            color={AppColor.BLACK}
+            style={{
+              margin: 16,
+              position: 'absolute',
+              right: 0,
+              zIndex: 1,
+              overflow: 'hidden',
+            }}
+            onPress={onCancel}
+          />
           <View
             style={{
               justifyContent: 'center',
               alignItems: 'center',
-             marginVertical:5
+              // marginVertical: ,
+              top: 20,
             }}>
             <Image
-              source={localImage.Reward_icon}
+              source={imagesource}
               style={[styles.img2]}
               resizeMode="contain"
             />
-            
           </View>
-          <View style={{marginVertical: 30}}>
-            <Text style={[styles.txt1, {fontSize: 15,lineHeight:20}]}>
-              <Text style={{color: AppColor.RED, fontSize: 20,lineHeight:40}}>
-                {'Earn While You Burn\n'}
+          <View
+            style={{
+              marginVertical: 30,
+              width: DeviceWidth * 0.85,
+              alignSelf: 'center',
+            }}>
+            <Text style={[styles.txt1, {fontSize: 15, lineHeight: 20}]}>
+              <Text style={{color: '#f0013b', fontSize: 20, lineHeight: 40}}>
+                {txt1}
               </Text>
-              Join the fitness challenge today for a healthier you and a
-              wealthier wallet!
+            {txt2}
             </Text>
             <NewButton
               pV={15}
-              title={'Get Started'}
+              title={ButtonText}
               ButtonWidth={DeviceWidth * 0.6}
-              onPress={() => {
-                dispatch(setRewardModal(false));
-                navigation.navigate('NewSubscription',{upgrade: false});
-              }}
+              onPress={onConfirm}
             />
           </View>
         </View>

@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Platform,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import React from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Config';
@@ -13,13 +14,17 @@ import {AppColor} from '../Color';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {useDispatch, useSelector} from 'react-redux';
-
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import {setExperience} from '../ThemeRedux/Actions';
 import {navigationRef} from '../../../App';
 import {extractFont} from 'react-native-svg/lib/typescript/lib/extract/extractText';
 import FitCoins from '../Utilities/FitCoins';
 import {AnalyticsConsole} from '../AnalyticsConsole';
 import moment from 'moment';
+import ShimmerPlaceholder, {
+  createShimmerPlaceholder,
+} from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
 
 const NewHeader = ({
   header,
@@ -28,10 +33,15 @@ const NewHeader = ({
   onPress,
   extraView,
   coins,
+  enteredCurrentEvent,
+  coinsLoaded,
 }) => {
   const navigation = useNavigation();
   const getExperience = useSelector(state => state.getExperience);
   const dispatch = useDispatch();
+  const winnerAnnounced = useSelector(state => state.winnerAnnounced);
+  const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+  const avatarRef = React.createRef();
   return (
     <SafeAreaView
       style={[
@@ -49,10 +59,10 @@ const NewHeader = ({
         },
       ]}>
       {!backButton ? (
-        <View style={{width: 20}}></View>
+        <View style={{width: 20,}}></View>
       ) : (
         <TouchableOpacity
-          style={{left: 0}}
+          style={{left:10,zIndex:1,}}
           onPress={() => {
             if (getExperience == true) {
               dispatch(setExperience(false));
@@ -67,11 +77,11 @@ const NewHeader = ({
               navigation.goBack();
             }
           }}>
-          <Icons
-            name={'chevron-left'}
-            size={25}
-            color={AppColor.INPUTTEXTCOLOR}
-          />
+          <AntDesign
+              name={'arrowleft'}
+              size={25}
+              color={AppColor.INPUTTEXTCOLOR}
+            />
         </TouchableOpacity>
       )}
 
@@ -91,20 +101,40 @@ const NewHeader = ({
       </Text>
       {!SearchButton ? (
         extraView ? (
-          <View style={{right: DeviceWidth * 0.13, top: -3}}>
-            <FitCoins
-              onPress={() => {
-                AnalyticsConsole('LB');
-                const today = moment().day();
-                if (today == 0 || today == 6) {
-                  navigation.navigate('Winner');
-                } else {
-                  navigation.navigate('Leaderboard');
-                }
-              }}
-              coins={coins<0?0:coins}
-            />
-          </View>
+          enteredCurrentEvent ? (
+            <View style={{top: -3,right:DeviceWidth*0.13}}>
+              {!coinsLoaded ? (
+                <FitCoins
+                  onPress={() => {
+                    if (winnerAnnounced) {
+                      AnalyticsConsole('W/L');
+                      navigation.navigate('Winner');
+                    } else {
+                      AnalyticsConsole('LB');
+                      navigation.navigate('Leaderboard');
+                    }
+                  }}
+                  coins={coins}
+                />
+              ) : (
+                <ShimmerPlaceholder
+                  style={{
+                    
+                    height: DeviceHeigth * 0.03,
+                    width: DeviceWidth * 0.2,
+        
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    borderRadius: 20,   
+                  }}
+                  ref={avatarRef}
+                  autoRun
+                />
+              )}
+            </View>
+          ) : (
+            <View style={{width: 25}}></View>
+          )
         ) : (
           <View style={{width: 25}}></View>
         )

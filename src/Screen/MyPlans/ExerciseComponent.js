@@ -6,14 +6,18 @@ import {AppColor, Fonts} from '../../Component/Color';
 import NewButton from '../../Component/NewButton';
 import {FlatList} from 'react-native';
 import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
-import moment from 'moment';
+import moment, {weekdays} from 'moment';
 import AnimatedLottieView from 'lottie-react-native';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 export const ExerciseComponetWithoutEvents = ({
   dayObject,
   day,
   onPress,
   WeekStatus,
   getWeeklyPlansData,
+  download,
+  isClicked,
+  setIsClicked,
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
@@ -26,6 +30,7 @@ export const ExerciseComponetWithoutEvents = ({
               source={{uri: dayObject?.image}}
               style={styles.img}
               resizeMode="contain"
+              defaultSource={localImage?.NOWORKOUT}
             />
             <View style={styles.View3}>
               <Text style={styles.txt1}>
@@ -34,7 +39,14 @@ export const ExerciseComponetWithoutEvents = ({
               <Text style={styles.txt2}>{day ?? 'Monday'}</Text>
             </View>
           </View>
-          <NewButton title={'Start'} onPress={onPress} />
+          <NewButton
+            title={'Start'}
+            onPress={onPress}
+            withAnimation
+            download={download}
+            isClicked={isClicked}
+            setIsClicked={setIsClicked}
+          />
           <Text
             style={[
               styles.txt3,
@@ -51,7 +63,7 @@ export const ExerciseComponetWithoutEvents = ({
           <FlatList
             data={dayObject?.exercises}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: DeviceHeigth * 0.42}}
+            contentContainerStyle={{paddingBottom:DeviceHeigth<=667?DeviceHeigth*0.5: DeviceHeigth * 0.42}}
             style={{
               width: DeviceWidth * 0.9,
               alignSelf: 'center',
@@ -99,8 +111,9 @@ export const ExerciseComponetWithoutEvents = ({
               borderWidth: 1,
               borderColor: AppColor.RED,
               borderRadius: 15,
-              // alignSelf:'center',
+              alignSelf: 'center',
               marginTop: DeviceHeigth * 0.05,
+              width: DeviceWidth * 0.9,
             }}>
             <AnimatedLottieView
               source={require('../../Icon/Images/RedTick.json')}
@@ -168,7 +181,7 @@ export const ExerciseComponetWithoutEvents = ({
                   fontFamily: Fonts.MONTSERRAT_BOLD,
                   fontSize: 16,
                   fontWeight: '700',
-                  color: AppColor.RED1,
+                  color: AppColor.RED,
                   lineHeight: 30,
                 }}>
                 {getWeeklyPlansData[day]?.title}
@@ -190,9 +203,11 @@ export const ExerciseComponentWithEvent = ({
   getWeeklyPlansData,
   selectedDay,
   currentDay,
+  download,
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
+ 
   return (
     <View style={styles.View1}>
       {dayWiseCoins[day] == null || dayWiseCoins[day] < 0 ? (
@@ -213,19 +228,27 @@ export const ExerciseComponentWithEvent = ({
             </View>
             <TouchableOpacity
               style={{}}
-              onPress={() =>
+              onPress={() => {
+                AnalyticsConsole(`O_EWS`)
                 navigation.navigate('AddWorkouts', {
                   dayExercises: dayObject?.exercises,
                   day: day,
-                })
-              }>
+                  image: dayObject?.image,
+                  title: dayObject?.title,
+                });
+              }}>
               {day == WeekArray[currentDay] ? (
                 <Image source={localImage.EditPen} style={styles.edit} />
               ) : null}
             </TouchableOpacity>
           </View>
           {day == WeekArray[currentDay] ? (
-            <NewButton title={'Start'} onPress={onPress} />
+            <NewButton
+              title={'Start'}
+              onPress={onPress}
+              withAnimation
+              download={download}
+            />
           ) : null}
           <Text
             style={[
@@ -243,7 +266,7 @@ export const ExerciseComponentWithEvent = ({
           <FlatList
             data={dayObject?.exercises}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: DeviceHeigth * 0.42}}
+            contentContainerStyle={{paddingBottom:DeviceHeigth<=667?DeviceHeigth*0.5: DeviceHeigth * 0.42}}
             style={{
               width: DeviceWidth * 0.9,
               alignSelf: 'center',
@@ -293,6 +316,10 @@ export const ExerciseComponentWithEvent = ({
               borderRadius: 15,
               alignSelf: 'center',
               marginTop: DeviceHeigth * 0.05,
+              borderWidth: 1,
+              borderColor: AppColor.RED,
+              borderRadius: 15,
+              width: DeviceWidth * 0.9,
             }}>
             <AnimatedLottieView
               source={require('../../Icon/Images/RedTick.json')}
@@ -343,9 +370,16 @@ export const ExerciseComponentWithEvent = ({
                 marginVertical: DeviceWidth * 0.05,
               }}>
               <Image
-                source={{
-                  uri: getWeeklyPlansData[WeekArray[selectedDay]]?.image,
-                }}
+                // source={{
+                //   uri: getWeeklyPlansData[WeekArray[selectedDay]]?.image,
+                // }}
+                source={
+                  getWeeklyPlansData[WeekArray[selectedDay]]?.image == null
+                    ? localImage.NOWORKOUT
+                    : {
+                        uri: getWeeklyPlansData[WeekArray[selectedDay]]?.image,
+                      }
+                }
                 // onLoad={() => setIsLoading(false)}
                 style={{
                   height: 40,
@@ -355,6 +389,7 @@ export const ExerciseComponentWithEvent = ({
                 }}
                 resizeMode="contain"
               />
+              {console.log('Zxcvxvdsfdsd', getWeeklyPlansData[day]?.title)}
               <Text
                 style={{
                   fontFamily: Fonts.MONTSERRAT_BOLD,
@@ -363,7 +398,7 @@ export const ExerciseComponentWithEvent = ({
                   color: AppColor.RED1,
                   lineHeight: 30,
                 }}>
-                {getWeeklyPlansData[day]?.title}
+                {getWeeklyPlansData[day]?.title!=null?getWeeklyPlansData[day]?.title:'Commpleted'}
               </Text>
             </View>
           </View>

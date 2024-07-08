@@ -8,12 +8,13 @@ import {
   Platform,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
 import {useDispatch, useSelector} from 'react-redux';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+//import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icons from 'react-native-vector-icons/FontAwesome5';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -28,33 +29,23 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import AnimatedLottieView from 'lottie-react-native';
 import {setCustomWorkoutData} from '../../Component/ThemeRedux/Actions';
 import VersionNumber from 'react-native-version-number';
+import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 
 const EditCustomWorkout = ({navigation, route}) => {
   const data = route?.params?.item;
   const [searchQuery, setSearchQuery] = useState('');
   const dispatch = useDispatch();
-  const customWorkoutData = useSelector(state => state.customWorkoutData);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getAllExercise = useSelector(state => state.getAllExercise);
   const [workoutList, setWorkoutList] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [forLoading, setForLoading] = useState(false);
-  const [value, setValue] = useState(0);
-  const animation = useSharedValue(0);
   const completeProfileData = useSelector(state => state.completeProfileData);
   const [bodyPart, setBodyPart] = useState(
     completeProfileData?.focusarea[0].bodypart_title,
   );
   const [filteredCategories, setFilteredCategories] = useState([]);
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      width:
-        animation.value == 1
-          ? withTiming(DeviceWidth * 0.85, {duration: 500})
-          : withTiming(0, {duration: 500}),
-    };
-  });
   useEffect(() => {
     const datalist = getAllExercise?.filter(listdata => {
       if (bodyPart == 'Biceps') {
@@ -73,19 +64,12 @@ const EditCustomWorkout = ({navigation, route}) => {
   }, [bodyPart]);
   useEffect(() => {
     filterData(route?.params?.item);
-  }, []);
+  }, [filteredCategories]);
   const filterData = () => {
     const ExerciseIds = [];
 
     data.exercise_data.map(item => ExerciseIds.push(item.exercise_id));
     setSelectedItems(ExerciseIds);
-  };
-  const renderItem = item => {
-    return (
-      <View style={styles.item}>
-        <Text style={styles.textItem}>{item.bodypart_title}</Text>
-      </View>
-    );
   };
 
   const renderItem1 = useMemo(
@@ -114,9 +98,15 @@ const EditCustomWorkout = ({navigation, route}) => {
 
                 justifyContent: 'space-between',
               }}>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
                 <Image
                   source={{uri: item.exercise_image_link}}
+                  defaultSource={localImage.NOWORKOUT}
                   style={{
                     width: 80,
                     height: 80,
@@ -178,6 +168,7 @@ const EditCustomWorkout = ({navigation, route}) => {
                 source={isSelected ? localImage.Minus : localImage.Plus}
                 style={{width: 20, height: 20}}
                 resizeMode="contain"
+                tintColor={'#f0013b'}
               />
             </TouchableOpacity>
             {index !== filteredCategories.length - 1 && (
@@ -194,7 +185,7 @@ const EditCustomWorkout = ({navigation, route}) => {
           </>
         );
       },
-    [selectedItems],
+    [selectedItems, filteredCategories],
   );
   const emptyComponent = () => {
     return (
@@ -337,7 +328,7 @@ const EditCustomWorkout = ({navigation, route}) => {
     } catch (error) {
       console.log('GET-USER-DATA', error);
       setForLoading(false);
-      dispatch(setCustomWorkoutData([]));
+  
     }
   };
   const updateFilteredCategories = test => {
@@ -349,103 +340,112 @@ const EditCustomWorkout = ({navigation, route}) => {
   };
   return (
     <>
-      <NewHeader
-        header={'Custom Workout'}
-        SearchButton={false}
-        backButton={true}
+      <DietPlanHeader
+        header={'Edit Custom Workout'}
+        shadow
+        left={DeviceHeigth >= 1024 ? DeviceWidth * 0.045 : DeviceWidth * 0.02}
       />
       {forLoading ? <ActivityLoader /> : ''}
       <View style={styles.container}>
         <View style={{width: '95%', alignSelf: 'center'}}>
-          <Animated.View
-            style={[
-              {
-                top: -10,
-                width: DeviceWidth,
-                height: 50,
-                zIndex: 1,
-
-                paddingHorizontal: 20,
-                backgroundColor: value == 1 ? '#e7e7e7' : AppColor.WHITE,
-                alignSelf: 'flex-end',
-                flexDirection: 'row',
-                borderRadius: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: value == 1 ? 20 : 10,
-              },
-              animatedStyle,
-            ]}>
+          <View
+            style={{
+              width: '95%',
+              height: 50,
+              alignSelf: 'center',
+              backgroundColor: '#F3F5F5',
+              borderRadius: 6,
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingLeft: 10,
+              top: -DeviceWidth * 0.05,
+            }}>
+            <Icons name="search" size={18} color={'#333333E5'} />
             <TextInput
-              style={{width: '100%', color: 'black'}}
-              placeholder={'Search here......'}
-              placeholderTextColor={'gray'}
+              placeholder="Search Exercise"
+              placeholderTextColor="#33333380"
               value={searchQuery}
               onChangeText={text => {
                 setSearchQuery(text);
                 updateFilteredCategories(text);
               }}
+              style={styles.inputText}
             />
-            <TouchableOpacity
-              //style={{marginRight:10}}
-              onPress={() => {
-                setSearchQuery('');
-                if (animation.value == 1) {
-                  animation.value = 0;
-                  setValue(0);
-                } else {
-                  animation.value = 1;
-                  setValue(1);
-                }
-              }}>
-              <Image
-                style={{width: 15, height: 15}}
-                source={value == 0 ? localImage.Search : localImage.Cross}
-              />
-            </TouchableOpacity>
-          </Animated.View>
-          {value == 0 && (
-            <View style={{top: -DeviceHeigth * 0.06}}>
-              <Text
-                style={{
-                  color: '#202020',
-                  fontFamily: Fonts.MONTSERRAT_BOLD,
-                  fontWeight: '700',
-                  lineHeight: 30,
-                  fontSize: 18,
-                  alignItems: 'center',
-                }}>
-                Choose Your Exercise
-              </Text>
-            </View>
-          )}
+          </View>
           <View
             style={{
-              top: value == 1 ? 20 : -25,
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignSelf: 'center',
+              width: '100%',
+              alignSelf: 'center',
             }}>
-            <Dropdown
-              style={styles.dropdown}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
+            <FlatList
               data={completeProfileData?.focusarea}
-              maxHeight={300}
-              labelField="label"
-              valueField="value"
-              placeholder={bodyPart}
-              value={bodyPart}
-              onChange={item => {
-                setBodyPart(item.bodypart_title);
-              }}
-              renderItem={renderItem}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item, index}) => (
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  style={[
+                    styles.listView,
+                    {
+                      backgroundColor:
+                        bodyPart == item.bodypart_title ? '#A937371A' : '#fff',
+                      borderWidth: bodyPart != item.bodypart_title ? 1 : 0,
+                      borderColor:
+                        bodyPart != item.bodypart_title
+                          ? '#33333333'
+                          : '#A937371A',
+                      marginLeft: index == 0 ? DeviceWidth * 0.0 : 0,
+                      marginRight:
+                        index == completeProfileData?.focusarea?.length - 1
+                          ? DeviceWidth * 0.06
+                          : 5,
+                    },
+                  ]}
+                  onPress={() => {
+                    setBodyPart(item.bodypart_title);
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontWeight: '500',
+                      lineHeight: 16,
+                      textAlign: 'center',
+                      color:
+                        bodyPart != item.bodypart_title
+                          ? '#333333E5'
+                          : '#f0013b',
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                    }}>
+                    {item.bodypart_title}
+                  </Text>
+                </TouchableOpacity>
+              )}
+              showsVerticalScrollIndicator={false}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
           </View>
           <View
             style={[
               styles.meditionBox,
-              {paddingBottom: 300, top: value == 1 ? DeviceHeigth * 0.05 : 0},
+              {paddingBottom: 300, top: DeviceHeigth * 0.03},
             ]}>
             <FlatList
-              data={filteredCategories}
+              // data={filteredCategories}
+              data={[
+                ...filteredCategories.filter(item =>
+                  selectedItems.includes(item.exercise_id),
+                ),
+                ...filteredCategories.filter(
+                  item => !selectedItems.includes(item.exercise_id),
+                ),
+              ]}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               keyExtractor={(item, index) => index.toString()}
@@ -458,19 +458,17 @@ const EditCustomWorkout = ({navigation, route}) => {
             />
           </View>
         </View>
-        <LinearGradient
-          start={{x: 0, y: 1}}
-          end={{x: 1, y: 0}}
-          // colors={['#941000', '#D01818']}
-          colors={['#D01818', '#941000']}
+        <View
           style={{
-            width: DeviceWidth * 0.55,
+            paddingLeft: 15,
+            paddingRight: 15,
             height: 40,
             borderRadius: 30,
             justifyContent: 'center',
             alignItems: 'center',
             position: 'absolute',
             alignSelf: 'center',
+            backgroundColor: '#f0013b',
             bottom: Platform.OS == 'ios' ? 35 : 10,
           }}>
           <TouchableOpacity
@@ -498,7 +496,7 @@ const EditCustomWorkout = ({navigation, route}) => {
               ({selectedItems?.length}){' '}
             </Text>
           </TouchableOpacity>
-        </LinearGradient>
+        </View>
       </View>
     </>
   );
@@ -553,6 +551,27 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     backgroundColor: 'transparent',
     //lineHeight: 25,
+  },
+  inputText: {
+    paddingLeft: 15,
+    paddingRight: 15,
+    width: '90%',
+    height: 50,
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: '600',
+    fontFamily: 'Montserrat',
+    color: '#000',
+  },
+  listView: {
+    paddingLeft: 15,
+    paddingRight: 15,
+    height: 30,
+
+    borderRadius: 25,
+    marginHorizontal: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 export default EditCustomWorkout;

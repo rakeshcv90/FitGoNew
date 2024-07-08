@@ -144,7 +144,13 @@ const NewPersonalDetails = ({route, navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (responseData?.data?.msg == 'version is required') {
-        console.log('version error', responseData?.data?.msg);
+        showMessage({
+          message: responseData?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         const objects = {};
         responseData.data.data.forEach(item => {
@@ -208,7 +214,7 @@ const NewPersonalDetails = ({route, navigation}) => {
 
       if (dataItem.data.msg == 'User Updated Successfully') {
         showMessage({
-          message: 'Details updated successfully',
+          message: 'Details updated successfully.',
           floating: true,
           type: 'success',
           animationDuration: 750,
@@ -232,7 +238,7 @@ const NewPersonalDetails = ({route, navigation}) => {
         setForLoading(false);
       } else {
         showMessage({
-          message: dataItem.data.msg ?? 'helloo',
+          message: dataItem?.data?.msg,
           floating: true,
           type: 'danger',
           animationDuration: 750,
@@ -757,7 +763,7 @@ const NewPersonalDetails = ({route, navigation}) => {
 
                 justifyContent: 'center',
               }}>
-              <Button buttonText={'Register'} onPresh={handleSubmit} />
+              <Button buttonText={'Update Profile'} onPresh={handleSubmit} />
             </View>
           </>
         )}

@@ -21,7 +21,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {AppColor, Fonts} from '../Component/Color';
-import {setFitmeAdsCount} from '../Component/ThemeRedux/Actions';
+import {
+  setFitmeAdsCount,
+  setRewardPopUp,
+} from '../Component/ThemeRedux/Actions';
 import MyPlans, {handleStart} from '../Screen/MyPlans/MyPlans';
 import GradientButton from '../Component/GradientButton';
 
@@ -31,8 +34,10 @@ import HomeNew from '../Screen/NewHome/HomeNew';
 import Profile from '../Screen/NewHome/Profile';
 import {ClipPath, Defs, Path, Polygon, Rect, Svg} from 'react-native-svg';
 import NewProfile from '../Screen/NewProfile';
-import { AnalyticsConsole } from '../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../Component/AnalyticsConsole';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
+import {showMessage} from 'react-native-flash-message';
+import AnimatedLottieView from 'lottie-react-native';
 const Tabs = createBottomTabNavigator();
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
@@ -42,10 +47,29 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
   const Dispatch = useDispatch();
   const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
-
+  const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
+  const enteredUpcomingEvent = useSelector(
+    state => state?.enteredUpcomingEvent,
+  );
+  const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
   useEffect(() => {
     initInterstitial();
   }, []);
+  function NotificationBadge() {
+    return (
+      <View style={styles.badgeContainer}>
+        <AnimatedLottieView
+          source={require('../Icon/Images/InAppRewards/EventTick.json')}
+          speed={2}
+          autoPlay
+          loop
+          resizeMode="contain"
+          style={styles.lottie}
+        />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.tabContainer}>
       {state.routes.map((route, index) => {
@@ -59,22 +83,59 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
 
         const isFocused = state.index === index;
 
+        const isValid =
+          getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
+        const count = getPurchaseHistory?.plan == 'noob' ? 3 : 6;
+        const Sat = getPurchaseHistory?.currentDay == 6;
+        const Sun = getPurchaseHistory?.currentDay == 7;
         const onPress = () => {
-          AnalyticsConsole(`${route.name}_TAB`)
-          const event = navigation.emit({
-            type: 'tabPress',
-            target: route.key,
-          });
-          if (!isFocused && !event.defaultPrevented) {
-            if (getPurchaseHistory?.length > 0) {
-              if (
-                getPurchaseHistory[0]?.plan_end_date >=
-                moment().format('YYYY-MM-DD')
-              ) {
-                navigation.navigate(route.name);
-                Dispatch(setFitmeAdsCount(0));
+          AnalyticsConsole(`${route.name}_TAB`);
+          if (
+            (!enteredCurrentEvent && !enteredUpcomingEvent) ||
+            (!enteredUpcomingEvent && enteredCurrentEvent)
+          ) {
+            Dispatch(setRewardPopUp(getPopUpFreuqency + 1));
+          }
+          if (route.key?.includes('MyPlans') && Sat) {
+            showMessage({
+              message:
+                'Your event has ended. You can resume your weekly plan normally from Monday. If you join another fitness challenge, it will start from the upcoming Monday.',
+              type: 'danger',
+              animationDuration: 500,
+              duration: 5000,
+              floating: true,
+            });
+          } else if (route.key?.includes('MyPlans') && Sat) {
+            showMessage({
+              message:
+                'Your event has ended. You can resume your weekly plan normally from Monday. If you join another fitness challenge, it will start from the upcoming Monday.',
+              type: 'danger',
+              animationDuration: 500,
+              duration: 5000,
+              floating: true,
+            });
+          } else if (route.key?.includes('MyPlans') && Sun) {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+            });
+            if (!isFocused && !event.defaultPrevented) {
+              if (getPurchaseHistory.plan != null) {
+                if (getPurchaseHistory?.plan == 'premium' && isValid) {
+                  navigation.navigate(route.name);
+                  Dispatch(setFitmeAdsCount(0));
+                } else {
+                  if (getFitmeAdsCount < count) {
+                    Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+                    navigation.navigate(route.name);
+                  } else {
+                    showInterstitialAd();
+                    Dispatch(setFitmeAdsCount(0));
+                    navigation.navigate(route.name);
+                  }
+                }
               } else {
-                if (getFitmeAdsCount < 2) {
+                if (getFitmeAdsCount < count) {
                   Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
                   navigation.navigate(route.name);
                 } else {
@@ -83,14 +144,36 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                   navigation.navigate(route.name);
                 }
               }
-            } else {
-              if (getFitmeAdsCount < 2) {
-                Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-                navigation.navigate(route.name);
+            }
+          } else {
+            const event = navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+            });
+            if (!isFocused && !event.defaultPrevented) {
+              if (getPurchaseHistory.plan != null) {
+                if (getPurchaseHistory?.plan == 'premium' && isValid) {
+                  navigation.navigate(route.name);
+                  Dispatch(setFitmeAdsCount(0));
+                } else {
+                  if (getFitmeAdsCount < count) {
+                    Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+                    navigation.navigate(route.name);
+                  } else {
+                    showInterstitialAd();
+                    Dispatch(setFitmeAdsCount(0));
+                    navigation.navigate(route.name);
+                  }
+                }
               } else {
-                showInterstitialAd();
-                Dispatch(setFitmeAdsCount(0));
-                navigation.navigate(route.name);
+                if (getFitmeAdsCount < count) {
+                  Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+                  navigation.navigate(route.name);
+                } else {
+                  showInterstitialAd();
+                  Dispatch(setFitmeAdsCount(0));
+                  navigation.navigate(route.name);
+                }
               }
             }
           }
@@ -118,6 +201,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                   }>
                   <Image
                     source={localImage[route.name + 'Red']}
+                    // tintColor={'#f0013b'}
                     resizeMode="contain"
                     style={{
                       width: 30,
@@ -128,9 +212,9 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
 
                 <Text
                   style={{
-                    color: AppColor.NewRed,
+                    color: AppColor.RED,
                     fontFamily: 'Montserrat-Medium',
-                    fontSize: 14,
+                    fontSize: 12,
                     lineHeight: 14.63,
                     fontWeight: '600',
                     marginTop: 5,
@@ -158,11 +242,14 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                     height: 30,
                   }}
                 />
+                {enteredCurrentEvent && label == 'MyPlans' && (
+                  <NotificationBadge />
+                )}
                 <Text
                   style={{
                     color: '#121212B2',
                     opacity: 0.7,
-                    fontSize: 14,
+                    fontSize: 12,
                     lineHeight: 14.63,
                     fontWeight: '500',
                     fontFamily: 'Montserrat-Medium',
@@ -181,53 +268,11 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
 };
 
 const BottomTab = () => {
-  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
-
-  // const getPurchaseStatusData = () => {
-  //   if (getPurchaseHistory.length > 0) {
-  //     if (
-  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-  //     ) {
-  //       return null;
-  //     } else {
-  //       return (
-  //         <View
-  //           style={{
-  //             marginTop:
-  //               Platform.OS == 'ios'
-  //                 ? DeviceHeigth == 667
-  //                   ? -DeviceHeigth * 0.01
-  //                   : DeviceHeigth >= 1024
-  //                   ? 0
-  //                   : DeviceHeigth * 0.0
-  //                 : 0,
-  //           }}>
-  //           <BannerAdd bannerAdId={bannerAdId} />
-  //         </View>
-  //       );
-  //     }
-  //   } else {
-  //     return (
-  //       <View
-  //         style={{
-  //           marginTop:
-  //             Platform.OS == 'ios'
-  //               ? DeviceHeigth == 667
-  //                 ? -DeviceHeigth * 0.01
-  //                 : DeviceHeigth >= 1024
-  //                 ? 0
-  //                 : DeviceHeigth * 0.0
-  //               : 0,
-  //         }}>
-  //         <BannerAdd bannerAdId={bannerAdId} />
-  //       </View>
-  //     );
-  //   }
-  // };
+  const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
   return (
     <>
       <Tabs.Navigator
-        initialRouteName="MyPlans"
+        initialRouteName={enteredCurrentEvent ? 'MyPlans' : 'Home'}
         tabBar={props => <CustomTab {...props} />}
         screenOptions={{
           activeTintColor: '#D01818',
@@ -247,7 +292,7 @@ const BottomTab = () => {
             fontFamily: 'Poppins',
             fontWeight: '700',
             lineHeight: 70,
-            fontSize: 12,
+            fontSize: 10,
           },
         }}>
         <Tabs.Screen
@@ -258,12 +303,15 @@ const BottomTab = () => {
         <Tabs.Screen
           name="MyPlans"
           component={MyPlans}
+          // options={{
+          //   tabBarIcon: () => <NotificationBadge />,
+          // }}
           options={{tabBarShowLabel: false}}
         />
         <Tabs.Screen
           name="Workout"
           component={Workouts}
-          options={{tabBarShowLabel: false}}
+          options={{tabBarShowLabel: true}}
         />
         <Tabs.Screen
           name="Reports"
@@ -279,18 +327,18 @@ const BottomTab = () => {
       </Tabs.Navigator>
       {/* {getPurchaseStatusData()} */}
       <View
-          style={{
-            marginTop:
-              Platform.OS == 'ios'
-                ? DeviceHeigth == 667
-                  ? -DeviceHeigth * 0.01
-                  : DeviceHeigth >= 1024
-                  ? 0
-                  : DeviceHeigth * 0.0
-                : 0,
-          }}>
-          <BannerAdd bannerAdId={bannerAdId} />
-        </View>
+        style={{
+          marginTop:
+            Platform.OS == 'ios'
+              ? DeviceHeigth == 667
+                ? -DeviceHeigth * 0.01
+                : DeviceHeigth >= 1024
+                ? 0
+                : DeviceHeigth * 0.0
+              : 0,
+        }}>
+        <BannerAdd bannerAdId={bannerAdId} />
+      </View>
     </>
   );
 };
@@ -299,28 +347,15 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: 'row',
     height:
-      Platform.OS == 'android'
-        ? DeviceHeigth * 0.07
-        : DeviceHeigth == 667
+      DeviceHeigth >= 640
         ? DeviceHeigth * 0.09
         : DeviceHeigth >= 1024
         ? DeviceHeigth * 0.06
         : DeviceHeigth * 0.09,
     backgroundColor: 'white',
-    // zIndex: 1,
+
     borderTopWidth: 0.5,
     borderTopColor: 'rgba(0, 0, 0, 0.12)',
-    // shadowColor: '#121212B2',
-    // ...Platform.select({
-    //   ios: {
-    //     shadowOffset: {width: 1, height: 2},
-    //     shadowOpacity: 0.5,
-    //     shadowRadius: 8,
-    //   },
-    //   android: {
-    //     elevation: 10,
-    //   },
-    // }),
   },
   tabButton: {
     flex: 1,
@@ -358,6 +393,29 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -40,
     left: 0,
+  },
+  badgeContainer: {
+    position: 'absolute',
+    top:
+      DeviceHeigth <= 667
+        ? -12
+        : DeviceHeigth <= 844
+        ? -13
+        : DeviceHeigth >= 1024
+        ? -13
+        : -13,
+    right:
+      DeviceHeigth <= 844
+        ? 15
+        : DeviceHeigth >= 1024
+        ? DeviceHeigth * 0.054
+        : 12,
+    width: 25,
+    height: 25,
+  },
+  lottie: {
+    width: 25,
+    height: 25,
   },
 });
 

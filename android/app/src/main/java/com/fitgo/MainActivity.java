@@ -16,11 +16,11 @@ public class MainActivity extends ReactActivity {
   protected String getMainComponentName() {
     return "FitGo";
   }
-  // @Override
-  // protected void onCreate(Bundle savedInstanceState) {
-  //   super.onCreate(savedInstanceState);
-  //   HealthConnectPermissionDelegate.INSTANCE.setPermissionDelegate(this,getPackageName());
-  // }
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(null);
+    // HealthConnectPermissionDelegate.INSTANCE.setPermissionDelegate(this,getPackageName());
+  }
   /**
    * Returns the instance of the {@link ReactActivityDelegate}. Here we use a util class {@link
    * DefaultReactActivityDelegate} which allows you to easily enable Fabric and Concurrent React

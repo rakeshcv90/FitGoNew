@@ -474,7 +474,7 @@ const NewProgressScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <View style={styles.profileView}>
-          {Object.keys(getUserDataDetails)?.length > 0 && (
+          {Object.keys(getUserDataDetails)?.length > 0 ||getUserDataDetails?.length > 0&& (
             <>
               {isLoading && (
                 <ShimmerPlaceholder
@@ -535,9 +535,7 @@ const NewProgressScreen = ({navigation}) => {
                   bezier
                   segments={4}
                   renderDotContent={renderCustomPoint}
-                  // onDataPointClick={data =>
-                  //   console.log('PointData=====>', data.value)
-                  // }
+             
                   withShadow={false}
                   yAxisInterval={10}
                   fromZero={true}

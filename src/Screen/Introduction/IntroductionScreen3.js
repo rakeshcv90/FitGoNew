@@ -2,131 +2,222 @@ import {
   View,
   Text,
   StyleSheet,
-  ImageBackground,
   TouchableOpacity,
-  Animated,
-  Platform,
+  StatusBar,
+  Image,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import {DeviceWidth, DeviceHeigth} from '../../Component/Config';
-import {AppColor} from '../../Component/Color';
-import {IntroductionData} from './IntroductionScreenData';
-import LinearGradient from 'react-native-linear-gradient';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import IntroProgressBar from './NewIntroductionProgressBar';
-import {useDispatch, useSelector} from 'react-redux';
-import {setShowIntro} from '../../Component/ThemeRedux/Actions';
-import { RemoteMessage, requestPermissionforNotification } from '../../Component/Helper/PushNotification';
-const IntroductionScreen3 = ({navigation}) => {
-  useEffect(() => {
-    requestPermissionforNotification(dispatch);
-    // RemoteMessage();
-  }, []);
-  const TranslateY = useRef(new Animated.Value(0)).current;
-  const HideTextAnimation = () => {
-    TranslateY.setValue(0);
-    Animated.timing(TranslateY, {
-      useNativeDriver: true,
-      toValue: -DeviceHeigth,
-      delay: 0,
-      duration: 1500,
-    }).start();
-    setTimeout(() => {
-      HidePlayIcon();
-    }, 1000);
-  };
-  const dispatch = useDispatch();
-  const TranslateStartIcon = useRef(new Animated.Value(0)).current;
-  const HidePlayIcon = () => {
-    TranslateStartIcon.setValue(0);
-    Animated.timing(TranslateStartIcon, {
-      useNativeDriver: true,
-      toValue: DeviceWidth,
-      delay: 0,
-      duration: 1500,
-    }).start();
-    setTimeout(() => {
-      //navigation.replace('LogSignUp');
-      navigation.replace('LetsStart');
-    }, 500);
-  };
-  const translateX = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    showAnimation();
-  }, []);
-  const showAnimation = () => {
-    translateX.setValue(-DeviceWidth);
-    Animated.timing(translateX, {
-      useNativeDriver: true,
-      toValue: 1,
-      delay: 500,
-      duration: 1500,
-    }).start();
-  };
+import React from 'react';
 
+import {AppColor, Fonts} from '../../Component/Color';
+import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {CircularProgressWithChild} from 'react-native-circular-progress-indicator';
+import FitIcon from '../../Component/Utilities/FitIcon';
+import {localImage} from '../../Component/Image';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  setHindiLanuage,
+  setShowIntro,
+} from '../../Component/ThemeRedux/Actions';
+import AnimatedLottieView from 'lottie-react-native';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+
+const IntroductionScreen3 = ({navigation}) => {
+  const dispatch = useDispatch();
+  const hindiLanguage = useSelector(state => state.hindiLanguage);
   return (
     <View style={styles.Container}>
-      <ImageBackground
-        source={{uri: IntroductionData[2].img}}
-        style={styles.ImgBackground}>
-        <View style={styles.LinearG}>
-          <Animated.View
-            style={[styles.TextView, {transform: [{translateX: translateX}]}]}>
-            <Animated.View
-              style={[
-                styles.TextView1,
-                {transform: [{translateY: TranslateY}]},
-              ]}>
-              <Text style={[styles.Texts, {fontSize: 25}]}>
-                {IntroductionData[2].text1}
-              </Text>
-              <Text style={[styles.Texts, {fontSize: 33, marginBottom: 50}]}>
-                {IntroductionData[2].text2}
-              </Text>
-            </Animated.View>
-            <TouchableOpacity
-              activeOpacity={0.5}
+      <StatusBar barStyle={'dark-content'} backgroundColor={AppColor.WHITE} />
+      <View
+        style={{
+          width: '100%',
+          height: '50%',
+          backgroundColor: AppColor.WHITE,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <View
+          style={{
+            height: 30,
+            width: '95%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+
+            zIndex: 1,
+            top: Platform.OS == 'ios' && DeviceHeigth <= 1024 ? 15 : -5,
+          }}>
+          <TouchableOpacity
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+
+              zIndex: 1,
+              overflow: 'hidden',
+              width: DeviceWidth * 0.08,
+              height: DeviceHeigth * 0.05,
+            }}
+            onPress={() => {
+              AnalyticsConsole(`LAN_C_TO_${hindiLanguage ? 'H' : 'E'}`);
+              dispatch(setHindiLanuage(!hindiLanguage));
+            }}>
+            <Image
+              source={localImage.TranslateIntro}
+              resizeMode="contain"
+              style={{height: 30, width: 30}}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+          disabled={true}
+            onPress={() => {
+              AnalyticsConsole('SKIP_IS');
+              dispatch(setShowIntro(true));
+              navigation.navigate('LogSignUp');
+            }}>
+            {/* <Text
               style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              onPress={() => {
-                dispatch(setShowIntro(true));
-                // navigation.navigate('LogSignUp');
-                HideTextAnimation();
+                textDecorationLine: 'underline',
+                color: AppColor.WHITE,
+                textAlign: 'center',
+                fontWeight: '600',
+                lineHeight: 20,
+                fontSize: 14,
               }}>
-              <LinearGradient
-                start={{x: 0, y: 1}}
-                end={{x: 1, y: 0}}
-                colors={['#941000', '#D5191A']}
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                  flexDirection: 'row',
-                  height: 50,
-                  borderRadius: 50,
-                  width: DeviceWidth * 0.4,
-                }}>
-                <Text
-                  style={[styles.Texts, {fontSize: 20}]}>{`Start Now`}</Text>
-                <Animated.View
-                  style={[, {transform: [{translateX: TranslateStartIcon}]}]}>
-                  <Icons
-                    name="play"
-                    size={25}
-                    color={AppColor.WHITE}
-                    style={{marginLeft: 8}}
-                  />
-                </Animated.View>
-              </LinearGradient>
-            </TouchableOpacity>
-          </Animated.View>
-          <View style={{marginBottom: DeviceHeigth * 0.03}}>
-            <IntroProgressBar INDEX={2} />
-          </View>
+              Skip
+            </Text> */}
+          </TouchableOpacity>
         </View>
-      </ImageBackground>
+        <Image
+          source={localImage.Intro3}
+          resizeMode="contain"
+          style={{
+            width: '80%',
+            height: '80%',
+            // top: DeviceHeigth * 0.04,
+          }}></Image>
+      </View>
+      <View
+        style={{
+          width: '100%',
+          height: '40%',
+          backgroundColor: '#fff',
+          paddingLeft: 20,
+          paddingRight: 20,
+          paddingTop: 30,
+        }}>
+        <Text
+          style={{
+            fontFamily: Fonts.MONTSERRAT_BOLD,
+            fontSize: 25,
+            lineHeight: 33,
+            fontWeight: '700',
+            color: AppColor.RED,
+          }}>
+          {hindiLanguage ? 'साप्ताहिक पुरस्कार' : 'Weekly Rewards'}
+        </Text>
+
+        <Text
+          style={{
+            fontFamily: Fonts.MONTSERRAT_REGULAR,
+            fontSize: 16,
+            lineHeight: 25,
+            fontWeight: '500',
+            color: '#333333CC',
+            opacity: 0.8,
+            marginTop: 16,
+          }}>
+          {hindiLanguage
+            ? `सप्ताह के अंत तक चैलेंज पूरा करें और रोमांचक पुरस्कार प्राप्त करें। चाहे आप एक शुरुआती हों या फिटनेस प्रेमी, हमारे चैलेंज आपको प्रेरित और पुरस्कृत करने के लिए डिज़ाइन किए गए हैं। इसे न चूकें! हर सोमवार, एक नया चैलेंज शुरू होता है।
+`
+            : `Complete the challenge by the end of the week and receive exciting rewards. Whether you’re a beginner or a fitness legend, our challenges are designed to keep you motivated and rewarded. Don’t miss out! Every Monday, a new challenge begins.`}
+        </Text>
+      </View>
+
+      <View
+        style={{
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          height: '10%',
+          backgroundColor: '#fff',
+          paddingRight: 20,
+          paddingLeft: 20,
+          flexDirection: 'row',
+        }}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => {
+            AnalyticsConsole("TO_IS2")
+            navigation.goBack();
+          }}
+          style={{
+            // backgroundColor: AppColor.BLACK,
+            width:
+              DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1,
+            height:
+              DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1,
+            borderRadius: 100,
+            margin: 5,
+
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <FitIcon
+            name="arrowleft"
+            size={25}
+            type="AntDesign"
+            color="#f0013b"
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>{
+            AnalyticsConsole('IV_F_IS')
+             navigation.navigate('IntroVideo', {type: 'intro'})}}>
+          <AnimatedLottieView
+            source={localImage.IntroJSON}
+            speed={1}
+            autoPlay
+            loop
+            resizeMode="cover"
+            style={{
+              width: DeviceWidth * 0.3,
+              height: '100%',
+            }}
+          />
+        </TouchableOpacity>
+        <CircularProgressWithChild
+          value={100}
+          activeStrokeColor={'#f0013b'}
+          radius={DeviceHeigth >= 1024 ? 35 : 25}
+          initialValue={66}
+          maxValue={100}
+          inActiveStrokeColor={AppColor.WHITE}
+          activeStrokeWidth={3}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              AnalyticsConsole("TO_IS3")
+              dispatch(setShowIntro(true));
+              navigation.navigate('LogSignUp');
+            }}
+            style={{
+              width:
+                DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1,
+              height:
+                DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1,
+              borderRadius: 100,
+              margin: 5,
+
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <FitIcon
+              name="arrowright"
+              size={25}
+              type="AntDesign"
+              color={AppColor.RED}
+            />
+          </TouchableOpacity>
+        </CircularProgressWithChild>
+      </View>
     </View>
   );
 };
@@ -134,49 +225,6 @@ const styles = StyleSheet.create({
   Container: {
     flex: 1,
     backgroundColor: AppColor.WHITE,
-  },
-  ImgBackground: {
-    width: DeviceWidth,
-    height: DeviceHeigth,
-    resizeMode: 'stretch',
-  },
-  LinearG: {
-    height: DeviceHeigth,
-    width: DeviceWidth,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    // position: 'absolute',
-    // bottom:Platform.OS=='ios'?-DeviceHeigth*0.00:DeviceHeigth*0.02
-  },
-  TextView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: (DeviceHeigth * 10) / 100,
-  },
-  Texts: {
-    color: '#fff',
-  },
-  buttons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: (DeviceWidth * 85) / 100,
-    marginBottom: (DeviceHeigth * 5) / 100,
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  nextButton: {
-    backgroundColor: 'red',
-    width: 45,
-    height: 45,
-    borderRadius: 50 / 2,
-    overflow: 'hidden',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  TextView1: {
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
 export default IntroductionScreen3;

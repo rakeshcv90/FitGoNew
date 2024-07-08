@@ -82,11 +82,10 @@ const LogSignUp = ({navigation}) => {
                 end={{x: 1, y: 0}}
                 colors={
                   // isFocused ? ['#941000', '#D01818'] : ['#D9D9D9', '#D9D9D9']
-                  isFocused ? ['#D01818', '#941000'] : ['#D9D9D9', '#D9D9D9']
-                  
+                  isFocused ? ['#f0013b', '#f0013b'] : ['#D9D9D9', '#D9D9D9']
                 }
                 style={{
-                  borderRadius: isFocused ? 30 : 30,
+                  borderRadius: isFocused ? 8 : 8,
                   justifyContent: 'center',
                   //width: DeviceHeigth * 0.13,
                   height: DeviceHeigth * 0.043,
@@ -111,39 +110,13 @@ const LogSignUp = ({navigation}) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <TouchableOpacity
-      onPress={()=>{
-        navigation.goBack()
-   
-      }}
-        style={{
-          width: DeviceWidth * 0.13,
-          height: DeviceHeigth* 0.03,
-          justifyContent: 'center',
-          alignItems: 'center',
-          alignSelf: 'flex-start',
-          marginRight: 30,
-         // borderRadius: 30,
-          marginTop:Platform.OS=='ios'?DeviceHeigth*0.08:DeviceHeigth*0.03,
-          //borderWidth: 1.5,
-          //borderColor: 'red',
-        }}>
-        {/* <Text
-          style={{
-            fontSize: 12,
-            fontWeight: '500',
-            fontFamily: 'Verdana',
-            color: AppColor.BLACK,
-          }}>
-          Later
-        </Text> */}
-        <Icons  name={'chevron-left'}size={25} color={AppColor.INPUTTEXTCOLOR} />
-      </TouchableOpacity>
+
       <View style={styles.TextContainer}>
         <Text style={styles.LoginText2}>{'Hey there,'}</Text>
         <Text style={styles.LoginText}>{showLogin}</Text>
       </View>
       <Tab.Navigator
+         initialRouteName="Sign Up"
         screenOptions={{
           activeTintColor: 'red',
           inactiveTintColor: 'gray',
@@ -153,8 +126,8 @@ const LogSignUp = ({navigation}) => {
           },
         }}
         tabBar={props => <MyTabBar {...props} />}>
-        <Tab.Screen name={'Log In'} component={Login} />
         <Tab.Screen name={'Sign Up'} component={Signup} />
+        <Tab.Screen name={'Log In'} component={Login} />
       </Tab.Navigator>
     </View>
   );
@@ -165,7 +138,7 @@ var styles = StyleSheet.create({
     backgroundColor: AppColor.WHITE,
   },
   TextContainer: {
-    marginTop: DeviceHeigth * 0.03,
+    marginTop: DeviceHeigth * 0.06,
     marginHorizontal: DeviceHeigth * 0.03,
     justifyContent: 'center',
     alignItems: 'center',
@@ -203,10 +176,10 @@ var styles = StyleSheet.create({
   tabbar_part: {
     flexDirection: 'row',
     marginTop: 20,
-    width: DeviceHeigth * 0.20,
+    width: DeviceHeigth * 0.2,
     height: DeviceHeigth * 0.045,
     alignSelf: 'center',
-    borderRadius: 30,
+    borderRadius: 8,
     overflow: 'hidden',
     backgroundColor: AppColor.GRAY2,
   },

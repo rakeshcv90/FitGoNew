@@ -41,6 +41,7 @@ import {bannerAdId} from '../../Component/AdsId';
 import NativeAddTest from '../../Component/NativeAddTest';
 import FastImage from 'react-native-fast-image';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
+import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -108,11 +109,11 @@ const WorkoutDays = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('data------>', res.data);
+
       if (res.data?.msg != 'No data found') {
         // if(res.data?.user_details)
         const result: any = analyzeExerciseData(res.data?.user_details);
-        console.log('------>', result, selected);
+
         if (result.two.length == 0) {
           let day = parseInt(result.one[result.one.length - 1]);
           for (const item of Object.entries(data?.days)) {
@@ -241,7 +242,6 @@ const WorkoutDays = ({navigation, route}: any) => {
       if (videoExists) {
         StoringData[data?.exercise_title] = filePath;
         setDownloade(100 / (len - index));
-        console.log('videoExists', videoExists, 100 / (len - index), filePath);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -256,12 +256,6 @@ const WorkoutDays = ({navigation, route}: any) => {
           .then(res => {
             StoringData[data?.exercise_title] = res.path();
             setDownloade(100 / (len - index));
-            console.log(
-              'File downloaded successfully!',
-              res.path(),
-              100 / (len - index),
-            );
-            // Linking.openURL(`file://${fileDest}`);
           })
           .catch(err => {
             console.log(err);
@@ -550,17 +544,18 @@ const WorkoutDays = ({navigation, route}: any) => {
           style={[
             styles.box,
             {
-              opacity: !selected && item?.total_rest != 0 ? 0.9 : 1,
+             opacity: !selected && item?.total_rest != 0 ? 0.9 : 1,
               width: DeviceWidth * 0.95,
               // DeviceHeigth < 1280 ? DeviceWidth * 0.85 : DeviceWidth * 0.89,
               height: DeviceHeigth * 0.085,
               marginTop: 6,
+        
             },
           ]}
-          activeOpacity={1}
+          activeOpacity={0.6}
           onPress={() => {
             analytics().logEvent(`CV_FITME_CLICKED_ON_DAY_${index}_EXERCISES`);
-            let checkAdsShow = checkMealAddCount();
+            let checkAdsShow = AddCountFunction();
             if (checkAdsShow == true) {
               showInterstitialAd();
               index - 1 == 0
@@ -676,38 +671,28 @@ const WorkoutDays = ({navigation, route}: any) => {
                   />
                 </View>
               ) : (
-                <>
-                  <View
-                    style={{
-                      height:
-                        DeviceHeigth >= 1024
-                          ? DeviceWidth * 0.18
-                          : DeviceWidth * 0.18,
-                      width:
-                        DeviceHeigth >= 1024
-                          ? DeviceWidth * 0.18
-                          : DeviceWidth * 0.18,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      // marginLeft: DeviceWidth * 0.12,
-                    }}>
-                    <Text
-                      style={{
-                        fontWeight: '700',
-                        fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                        fontSize: 32,
-                        lineHeight: 40,
-                        color: selectedIndex ? AppColor.RED : '#333333B2',
-                        borderRadius: 5,
-                        borderColor: '#d9d9d9',
-                        borderWidth: 1,
-                        padding: 5,
-                        paddingLeft: 7,
-                      }}>
-                      {index < 10 ? `0${index}` : index}
-                    </Text>
-                  </View>
-                </>
+                <Text
+                  style={{
+                    width:
+                      DeviceHeigth >= 1024
+                        ? DeviceWidth * 0.08
+                        : DeviceWidth * 0.14,
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 5,
+                    borderColor: '#d9d9d9',
+                    borderWidth: 1,
+                    padding: 5,
+                    fontWeight: '700',
+                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                    fontSize: 32,
+                    lineHeight: 40,
+                    color: selectedIndex ? '#f0013b' : '#333333B2',
+                  }}>
+                  {index < 10 ? `0${index}` : index}
+                </Text>
               )}
               <View
                 style={{
@@ -783,7 +768,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                   size={25}
                   color={
                     percent && item?.total_rest != 0
-                      ? '#D5191A'
+                      ? '#f0013b'
                       : !selectedIndex && item?.total_rest != 0
                       ? '#33333380'
                       : AppColor.BLACK
@@ -799,20 +784,26 @@ const WorkoutDays = ({navigation, route}: any) => {
       </>
     );
   };
-  const planType = useSelector((state: any) => state.planType);
-  const getAdsDisplay = (index: number, item: any) => {
-    if (Object.values(data?.days).length >= 1) {
-      if (planType < 69 && index == 1) {
-        return getNativeAdsDisplay();
-      } else if ((index + 1) % 8 == 0 && Object.values(data?.days).length > 7) {
-        return getNativeAdsDisplay();
+  const noOrNoobPlan =
+    getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
+    const getAdsDisplay = (index: number, item: any) => {
+      const daysLength = Object.values(data?.days).length;
+      const isNotLastPosition = index < daysLength - 1;
+    
+      if (daysLength >= 1 && isNotLastPosition) {
+        if (noOrNoobPlan && index === 1) {
+          return getNativeAdsDisplay();
+        } else if ((index + 1) % 10 === 0 && daysLength > 10) {
+          if(index+1 == daysLength) return null
+          return getNativeAdsDisplay();
+        }
       }
-    }
-  };
+    };
   const getNativeAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
+    if (getPurchaseHistory?.plan != null) {
       if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        getPurchaseHistory?.plan == 'premium' &&
+        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
       ) {
         return null;
       } else {
@@ -900,7 +891,7 @@ const WorkoutDays = ({navigation, route}: any) => {
                     item={item}
                     percent={
                       challenge
-                        ? selected != 0 && index < selected - 1
+                        ? selected != 0 && index < selected
                         : selected != 0 && index < selected
                     }
                     selected={

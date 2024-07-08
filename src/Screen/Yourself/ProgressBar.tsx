@@ -41,7 +41,7 @@ const ProgressBar = ({screen}: any) => {
           marginTop: 5,
         }}>
         <LinearGradient
-          colors={[AppColor.RED1, AppColor.RED]}
+          colors={[AppColor.RED, AppColor.RED]}
           start={{x: 0, y: 1}}
           end={{x: 1, y: 0}}
           style={{

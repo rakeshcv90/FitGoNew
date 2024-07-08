@@ -42,6 +42,7 @@ import KeepAwake from 'react-native-keep-awake';
 
 import {
   setIsAlarmEnabled,
+  setProfileImg_Data,
   setScreenAwake,
   setSoundOnOff,
   setUserProfileData,
@@ -85,12 +86,16 @@ const NewProfile = ({navigation}) => {
       KeepAwake.deactivate();
     }
   }, [getScreenAwake]);
+
   const CardData = [
     {
       id: 1,
       txt: 'Daily Reminder',
       img: localImage.Bell,
-      txt1: moment(notificationTimer).format('LT'),
+      txt1:
+        moment(notificationTimer).format('LT') == 'Invalid date'
+          ? '1:00 AM'
+          : moment(notificationTimer).format('LT'),
     },
     {
       id: 2,
@@ -108,12 +113,15 @@ const NewProfile = ({navigation}) => {
       id: 1,
       txt: 'Reminder',
       img: localImage.Bell,
-      txt1: moment(notificationTimer).format('LT'),
+      txt1:
+        moment(notificationTimer).format('LT') == 'Invalid date'
+          ? '1:00 AM'
+          : moment(notificationTimer).format('LT'),
     },
     {
       id: 2,
-      txt: 'Subscription',
-      img: localImage.Planning,
+      txt: 'My Details',
+      img: localImage.NewPrfile,
     },
   ];
   const handleCardDataPress = id => {
@@ -122,8 +130,17 @@ const NewProfile = ({navigation}) => {
       setVisible(true);
     } else if (id == 2) {
       AnalyticsConsole(`SUBSCRIPTION_BUTTON`);
-      navigation.navigate('NewSubscription',{upgrade: false});
+      navigation.navigate('NewSubscription', {upgrade: false});
     } else if (id == 3) {
+      AnalyticsConsole(`PERSO_DETAILS_BUTTON`);
+      navigation.navigate('NewPersonalDetails');
+    }
+  };
+  const handleCardDataPress1 = id => {
+    if (id == 1) {
+      AnalyticsConsole(`REMINDER_BUTTON`);
+      setVisible(true);
+    } else if (id == 2) {
       AnalyticsConsole(`PERSO_DETAILS_BUTTON`);
       navigation.navigate('NewPersonalDetails');
     }
@@ -170,7 +187,7 @@ const NewProfile = ({navigation}) => {
   const ListData = [
     {
       id: 1,
-      txt: 'Mute Voice Assistant',
+      txt: 'Voice Assistant',
       img: localImage.NSounds,
     },
     {
@@ -250,51 +267,7 @@ const NewProfile = ({navigation}) => {
     const [modalImageUploaded, setModalImageUploaded] = useState(false);
     const [IsimgUploaded, setImguploaded] = useState(true);
     const [userAvatar, setUserAvatar] = useState(null);
-    const {getProfile_imgData} = useSelector(state => state);
-    const [userPhoto, setUserPhoto] = useState('');
-    // const getProfileData = async user_id => {
-    //   try {
-    //     const data = await axios(`${NewApi}${NewAppapi.UserProfile}`, {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'multipart/form-data',
-    //       },
-    //       data: {
-    //         id: user_id,
-    //         version: VersionNumber.appVersion,
-    //       },
-    //     });
-
-    //     if (data?.data?.profile) {
-    //       dispatch(setUserProfileData(data.data.profile));
-    //     } else if (
-    //       data?.data?.msg == 'Please update the app to the latest version.'
-    //     ) {
-    //       showMessage({
-    //         message: data?.data?.msg,
-    //         floating: true,
-    //         duration: 500,
-    //         type: 'danger',
-    //         icon: {icon: 'auto', position: 'left'},
-    //       });
-    //     } else {
-    //       dispatch(setUserProfileData([]));
-    //     }
-    //   } catch (error) {
-    //     console.log('User Profile Error', error);
-    //   }
-    // };
-    const getUserDetailData = async userId => {
-      const currrentdata = [
-        {
-          gender: gender,
-        },
-        {
-          experience: experience,
-        },
-        {workout_plans: 'CustomCreated'},
-      ];
-
+    const getUserDetailDataApi = async userId => {
       try {
         const responseData = await axios.get(
           `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
@@ -316,8 +289,6 @@ const NewProfile = ({navigation}) => {
         }
       } catch (error) {
         console.log('GET-USER-DATA', error);
-
-        dispatch(setUserProfileData([]));
       }
     };
 
@@ -350,8 +321,7 @@ const NewProfile = ({navigation}) => {
             floating: true,
             icon: {icon: 'auto', position: 'left'},
           });
-         // getProfileData(getUserDataDetails?.id);
-          getUserDetailData(getUserDataDetails?.id)
+
           setImguploaded(true);
           if (IsimgUploaded == true) {
             setUpadteScreenVisibilty(false);
@@ -378,10 +348,10 @@ const NewProfile = ({navigation}) => {
             maxWidth: 500,
             maxHeight: 400,
           });
-          setUserAvatar(resultCamera.assets[0]);
+
           if (resultCamera) {
+            setUserAvatar(resultCamera.assets[0]);
             setModalImageUploaded(true);
-            // dispatch(setProfileImg_Data(resultCamera.assets[0]))
           }
         } catch (error) {
           console.log('CameraimageError', error);
@@ -572,9 +542,15 @@ const NewProfile = ({navigation}) => {
                         margin: 5,
                       }}
                       onPress={() => {
-                        AnalyticsConsole(`UPLOAD_IMAGE_BUTTON`);
+                        AnalyticsConsole(`UPLOAD_IMAGE`);
                         setImguploaded(false);
-                        UploadImage(userAvatar);
+                        UploadImage(userAvatar)
+                          .then(() => {
+                            getUserDetailDataApi(getUserDataDetails?.id);
+                          })
+                          .catch(err => {
+                            console.log('some error', err);
+                          });
                       }}>
                       <Text style={[styles.cameraText]}>Upload Image</Text>
                     </TouchableOpacity>
@@ -592,7 +568,6 @@ const NewProfile = ({navigation}) => {
                       onPress={() => {
                         showMessage({
                           message: 'Please insert an Image first',
-                          statusBarHeight: getStatusBarHeight(),
                           floating: true,
                           type: 'danger',
                           animationDuration: 750,
@@ -652,6 +627,7 @@ const NewProfile = ({navigation}) => {
         setModalVisible(false);
       }
     };
+
     return (
       <Modal
         animationType="fade"
@@ -741,127 +717,55 @@ const NewProfile = ({navigation}) => {
   return (
     <View style={styles.Container}>
       <NewHeader header={'Profile'} />
-      {getUserDataDetails.email != null ? (
-        <>
-          <View style={styles.ProfileContainer}>
-            <View style={[styles.profileView, {}]}>
-              <Image
-                source={
-                  getUserDataDetails.image_path == null
-                    ? localImage.avt
-                    : {uri: getUserDataDetails.image_path}
-                }
-                style={styles.img}
-                onLoad={() => setIsLoading(false)}
-                resizeMode="cover"
-              />
-              <TouchableOpacity
-                style={styles.pen}
-                onPress={() => setUpadteScreenVisibilty(true)}
-                activeOpacity={0.5}>
-                <Image
-                  source={localImage.NewPen}
-                  style={{height: 17, width: 15}}
-                  resizeMode="contain"
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={{marginLeft: 15}}>
-              <Text
-                style={{
-                  fontFamily: Fonts.MONTSERRAT_BOLD,
-                  color: AppColor.BLACK,
-                  fontSize: 20,
-                }}>
-                {getUserDataDetails?.name == null
-                  ? 'Guest'
-                  : getUserDataDetails?.name}
-              </Text>
-              <Text
-                style={{
-                  fontFamily: Fonts.MONTSERRAT_REGULAR,
-                  color: AppColor.BLACK,
-                  fontSize: 14,
-                  fontWeight: '500',
-                }}>
-                {getUserDataDetails?.email == null
-                  ? 'guest@gmail.com'
-                  : getUserDataDetails?.email}
-              </Text>
-            </View>
-          </View>
-        </>
-      ) : (
-        <>
-          <View style={{width: DeviceWidth * 0.95, paddingHorizontal: 10}}>
-            <Text
-              style={{
-                fontSize: 17,
-                fontFamily: Fonts.MONTSERRAT_BOLD,
-                color: AppColor.BLACK,
-              }}>
-              Create Profile
-            </Text>
-            <Text
-              style={{
-                fontSize: 13,
-                fontFamily: Fonts.MONTSERRAT_REGULAR,
-                marginVertical: 10,
-                color: AppColor.BLACK,
-              }}>
-              Sign Up or Log In to Save your progress.
-            </Text>
-            <View style={{flexDirection: 'row', top: 5}}>
-              <TouchableOpacity
-                onPress={() => {
-                  // navigation.navigate('LogSignUp');
-                  navigation.navigate('LogSignUp', {screen: 'Sign Up'});
-                }}
-                style={{
-                  width: 100,
-                  height: 40,
-                  backgroundColor: AppColor.RED,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 50,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                    color: AppColor.WHITE,
-                    fontWeight: '600',
-                  }}>
-                  Sign up
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  // navigation.navigate('LogSignUp');
-                  navigation.navigate('LogSignUp', {screen: 'Log In'});
-                }}
-                style={{
-                  width: 100,
-                  height: 40,
-                  // backgroundColor: 'red',
-                  marginHorizontal: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontFamily: Fonts.MONTSERRAT_REGULAR,
-                    color: AppColor.RED,
-                    fontWeight: '600',
-                  }}>
-                  Log in
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </>
-      )}
+      <View style={styles.ProfileContainer}>
+        <View style={[styles.profileView, {}]}>
+          <Image
+            source={
+              getUserDataDetails.image_path == null
+                ? localImage.avt
+                : {uri: getUserDataDetails.image_path}
+            }
+            style={styles.img}
+            onLoad={() => setIsLoading(false)}
+            resizeMode="cover"
+          />
+          <TouchableOpacity
+            style={styles.pen}
+            onPress={() => setUpadteScreenVisibilty(true)}
+            activeOpacity={0.5}>
+            <Image
+              source={localImage.NewPen}
+              style={{height: 17, width: 15}}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={{marginLeft: 15}}>
+          <Text
+            style={{
+              fontFamily: Fonts.MONTSERRAT_BOLD,
+              color: AppColor.BLACK,
+              fontSize: 20,
+            }}>
+            {getUserDataDetails?.name == null
+              ? 'Guest'
+              : getUserDataDetails?.name}
+          </Text>
+          <Text
+            style={{
+              fontFamily: Fonts.MONTSERRAT_REGULAR,
+              color: AppColor.BLACK,
+              fontSize: 14,
+              fontWeight: '500',
+              maxWidth:DeviceWidth*0.65
+              
+            }}>
+            {getUserDataDetails?.email == null
+              ? 'guest@gmail.com'
+              : getUserDataDetails?.email}
+          </Text>
+        </View>
+      </View>
       <View style={styles.card}>
         {getUserDataDetails.email != null
           ? CardData?.map((v, i) => {
@@ -909,7 +813,7 @@ const NewProfile = ({navigation}) => {
               <TouchableOpacity
                 key={i}
                 style={{justifyContent: 'center', alignItems: 'center'}}
-                onPress={() => handleCardDataPress(v.id)}>
+                onPress={() => handleCardDataPress1(v.id)}>
                 <Image
                   source={v.img}
                   style={{height: 35, width: 35}}
@@ -932,7 +836,7 @@ const NewProfile = ({navigation}) => {
                       fontFamily: Fonts.MONTSERRAT_REGULAR,
                       fontWeight: '500',
                       marginTop: 6,
-                      color: AppColor.RED1,
+                      color: '#f0013b',
                     }}>
                     {v.txt1}
                   </Text>
@@ -974,6 +878,7 @@ const NewProfile = ({navigation}) => {
                     value={getSoundOffOn}
                     onValueChange={text => {
                       AnalyticsConsole(`SOUND_ON_OFF`);
+
                       if (text == true) {
                         showMessage({
                           message: 'Sound unmuted',
@@ -1006,10 +911,10 @@ const NewProfile = ({navigation}) => {
                     switchBorderRadius={30}
                     backgroundActive={'#FFE3E3'}
                     backgroundInactive={AppColor.GRAY2}
-                    circleActiveColor={AppColor.RED}
+                    circleActiveColor={'#f0013b'}
                     circleInActiveColor={AppColor.WHITE}
                     changeValueImmediately={true}
-                    outerCircleStyle={{color: AppColor.RED}}
+                    outerCircleStyle={{color: '#f0013b'}}
                   />
                 ) : (
                   <Switch
@@ -1048,10 +953,10 @@ const NewProfile = ({navigation}) => {
                     switchBorderRadius={30}
                     backgroundActive={'#FFE3E3'}
                     backgroundInactive={AppColor.GRAY2}
-                    circleActiveColor={AppColor.RED}
+                    circleActiveColor={'#f0013b'}
                     circleInActiveColor={AppColor.WHITE}
                     changeValueImmediately={true}
-                    outerCircleStyle={{color: AppColor.RED}}
+                    outerCircleStyle={{color: '#f0013b'}}
                   />
                 )}
               </View>
@@ -1070,41 +975,23 @@ const NewProfile = ({navigation}) => {
           </Text>
         </View>
         <View style={{width: DeviceWidth * 0.95, alignSelf: 'center'}}>
-          {getUserDataDetails.email != null
-            ? ListData.slice(2).map((v, i) => (
-                <TouchableOpacity
-                  key={i}
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginVertical: 10,
-                  }}
-                  onPress={() => HandleButtons(v.id, v.txt)}>
-                  <Image
-                    source={v.img}
-                    style={{height: 35, width: 35}}
-                    resizeMode="contain"
-                  />
-                  <Text style={styles.ListText}>{v.txt}</Text>
-                </TouchableOpacity>
-              ))
-            : ListData1.slice(2).map((v, i) => (
-                <TouchableOpacity
-                  key={i}
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginVertical: 10,
-                  }}
-                  onPress={() => HandleButtons(v.id, v.txt)}>
-                  <Image
-                    source={v.img}
-                    style={{height: 35, width: 35}}
-                    resizeMode="contain"
-                  />
-                  <Text style={styles.ListText}>{v.txt}</Text>
-                </TouchableOpacity>
-              ))}
+          {ListData.slice(2).map((v, i) => (
+            <TouchableOpacity
+              key={i}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginVertical: 10,
+              }}
+              onPress={() => HandleButtons(v.id, v.txt)}>
+              <Image
+                source={v.img}
+                style={{height: 35, width: 35}}
+                resizeMode="contain"
+              />
+              <Text style={styles.ListText}>{v.txt}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
         <Reminder
           visible={visible}

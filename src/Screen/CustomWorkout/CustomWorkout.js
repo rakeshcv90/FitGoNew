@@ -20,13 +20,15 @@ import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import {TextInput} from 'react-native-paper';
 import {showMessage} from 'react-native-flash-message';
-import {PERMISSIONS, request} from 'react-native-permissions';
+import {PERMISSIONS, openSettings, request} from 'react-native-permissions';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useIsFocused} from '@react-navigation/native';
 import VersionNumber from 'react-native-version-number';
 import {
   setAllExercise,
   setChallengesData,
+  setPopUpSeen,
+  setRewardPopUp,
 } from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
@@ -36,6 +38,8 @@ import NativeAddTest from '../../Component/NativeAddTest';
 import moment from 'moment';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import FastImage from 'react-native-fast-image';
+import RewardModal from '../../Component/Utilities/RewardModal';
+import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -52,9 +56,24 @@ const CustomWorkout = ({navigation}) => {
   const isFocused = useIsFocused();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
-
+  const getPopUpSeen = useSelector(state => state?.getPopUpSeen);
+  const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
+  const getOfferAgreement = useSelector(state => state?.getOfferAgreement);
+  const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
+  const enteredUpcomingEvent = useSelector(
+    state => state?.enteredUpcomingEvent,
+  );
   useEffect(() => {
     if (isFocused) {
+      setTimeout(() => {
+        if (
+          (!enteredCurrentEvent && !enteredUpcomingEvent) ||
+          (!enteredUpcomingEvent && enteredCurrentEvent)
+        ) {
+          dispatch(setRewardPopUp(getPopUpFreuqency + 1));
+        }
+      }, 1000);
+
       // getAllExerciseData();
       getAllChallangeAndAllExerciseData();
     }
@@ -62,7 +81,7 @@ const CustomWorkout = ({navigation}) => {
   const askPermissionForLibrary = async permission => {
     const resultLib = await request(permission);
 
-    if (resultLib == 'granted') {
+    if (resultLib == 'granted'||resultLib=='limited') {
       try {
         const resultLibrary = await launchImageLibrary({
           mediaType: 'photo',
@@ -108,78 +127,78 @@ const CustomWorkout = ({navigation}) => {
     () =>
       ({index, item}) => {
         return (
-      
           <>
             <TouchableOpacity
               style={{
                 width: '98%',
                 marginVertical: 10,
-               // paddingHorizontal: 20,
+                // paddingHorizontal: 20,
                 flexDirection: 'row',
                 alignItems: 'center',
-                alignSelf:'center',
-                justifyContent:'space-between'
+                alignSelf: 'center',
+                justifyContent: 'space-between',
               }}
               onPress={() => {
                 AnalyticsConsole(`OPEN_Custom_Wrk`);
                 navigation.navigate('CustomWorkoutDetails', {item: item});
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <FastImage
-                fallback={true}
-                style={{
-                  width: 70,
-                  height: 70,
-                  justifyContent: 'center',
-                  alignSelf: 'center',
-                  borderRadius: 5,
-                  borderWidth: 1,
-                  borderColor: '#D9D9D9',
-                }}
-                source={{
-                  uri: item?.image,
-                  headers: {Authorization: 'someAuthToken'},
-                  priority: FastImage.priority.high,
-                }}
-                resizeMode={FastImage.resizeMode.contain}
-                defaultSource={localImage.NOWORKOUT}
-              />
-              <View
-                style={{
-                 marginHorizontal: 16,
-                  width: DeviceWidth * 0.48,
-                }}>
-                <Text
-                  numberOfLines={1}
+                <FastImage
+                  fallback={true}
                   style={{
-                    fontSize: 16,
-                    fontWeight: '600',
-                    lineHeight: 24,
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    color: '#1E1E1E',
-                  }}>
-                  {item?.workout_name}
-                </Text>
-                <Text
+                    width: 70,
+                    height: 70,
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    borderColor: '#D9D9D9',
+                  }}
+                  source={{
+                    uri: item?.image,
+                    headers: {Authorization: 'someAuthToken'},
+                    priority: FastImage.priority.high,
+                  }}
+                  resizeMode={FastImage.resizeMode.cover}
+                  defaultSource={localImage.NOWORKOUT}
+                />
+                <View
                   style={{
-                    fontSize: 14,
-                    fontWeight: '400',
-                    lineHeight: 24,
-                    opacity: 0.7,
-                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                    color: '#1E1E1E',
+                    marginHorizontal: 16,
+                    width: DeviceWidth * 0.48,
                   }}>
-                  {item?.total_exercises}
-                  {' Exercises'}
-                </Text>
-              </View></View>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontSize: 16,
+                      fontWeight: '600',
+                      lineHeight: 24,
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      color: '#1E1E1E',
+                    }}>
+                    {item?.workout_name}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '400',
+                      lineHeight: 24,
+                      opacity: 0.7,
+                      fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                      color: '#1E1E1E',
+                    }}>
+                    {item?.total_exercises}
+                    {' Exercises'}
+                  </Text>
+                </View>
+              </View>
               <Image
                 source={localImage.Next}
                 resizeMode="contain"
                 style={{width: 30, height: 30, right: -3}}
               />
             </TouchableOpacity>
-            
+
             {index !== customWorkoutData.length - 1 && (
               <View
                 style={{
@@ -198,8 +217,10 @@ const CustomWorkout = ({navigation}) => {
     [customWorkoutData],
   );
   const getAdsDisplay = (index, item) => {
+    const noOrNoobPlan =
+      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
     if (customWorkoutData.length >= 1) {
-      if (index == 0 && customWorkoutData.length > 1) {
+      if (index == 0 && customWorkoutData.length > 1 && noOrNoobPlan) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0 && customWorkoutData.length > 8) {
         return getNativeAdsDisplay();
@@ -207,9 +228,10 @@ const CustomWorkout = ({navigation}) => {
     }
   };
   const getNativeAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
+    if (getPurchaseHistory?.plan != null) {
       if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        getPurchaseHistory?.plan == 'premium' &&
+        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
       ) {
         return null;
       } else {
@@ -266,7 +288,7 @@ const CustomWorkout = ({navigation}) => {
               lineHeight: 26,
               fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
             }}>
-            No workout created yet !
+            No workout created yet!
           </Text>
         </View>
         <View
@@ -298,11 +320,7 @@ const CustomWorkout = ({navigation}) => {
             }}>
             on your preferences.
           </Text>
-          <LinearGradient
-            start={{x: 0, y: 1}}
-            end={{x: 1, y: 0}}
-            // colors={['#941000', '#D01818']}
-            colors={['#D01818', '#941000']}
+          <View
             style={{
               width: 180,
               height: 40,
@@ -311,6 +329,7 @@ const CustomWorkout = ({navigation}) => {
               alignItems: 'center',
               marginBottom: 100,
               top: DeviceHeigth * 0.05,
+              backgroundColor: '#f0013b',
               //  Platform.OS == 'android' ? -40 : DeviceHeigth >= 1024 ? 30 : -40,
             }}>
             <TouchableOpacity
@@ -334,7 +353,7 @@ const CustomWorkout = ({navigation}) => {
               />
               <Text style={styles.button}>{'Create Workout'}</Text>
             </TouchableOpacity>
-          </LinearGradient>
+          </View>
         </View>
       </View>
     );
@@ -437,18 +456,12 @@ const CustomWorkout = ({navigation}) => {
             onPress={() => {
               setIsCustomWorkout(true);
             }}>
-            <LinearGradient
-              start={{x: 0, y: 1}}
-              end={{x: 1, y: 0}}
-              colors={['#D01818', '#941000']}
-              style={styles.buttonStyle}>
-              <Image
-                source={localImage.Plus}
-                style={{width: 20, height: 20}}
-                tintColor={AppColor.WHITE}
-              />
-              <Text style={styles.button}>{'Create Workout'}</Text>
-            </LinearGradient>
+            <Image
+              source={localImage.Plus}
+              style={{width: 20, height: 20}}
+              tintColor={AppColor.WHITE}
+            />
+            <Text style={styles.button}>{'Create Workout'}</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -513,7 +526,7 @@ const CustomWorkout = ({navigation}) => {
                 lineHeight: 24,
                 fontWeight: '700',
               }}>
-              Enter workout name
+              Enter Workout Name
             </Text>
             <TextInput
               value={text}
@@ -521,7 +534,7 @@ const CustomWorkout = ({navigation}) => {
               underlineColor="#20202099"
               activeUnderlineColor="#20202099"
               outlineStyle={{borderRadius: 15}}
-              placeholder="Eg: Monday chest day"
+              placeholder="Eg: Monday, chest day"
               isFocused={true}
               style={{
                 marginVertical: 10,
@@ -559,7 +572,7 @@ const CustomWorkout = ({navigation}) => {
                 <Text
                   style={{
                     marginHorizontal: 10,
-                    color: AppColor.RED1,
+                    color: '#f0013b',
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     fontSize: 16,
                     lineHeight: 30,
@@ -574,6 +587,36 @@ const CustomWorkout = ({navigation}) => {
         {/* </BlurView> */}
       </Modal>
       <BannerAdd bannerAdId={bannerAdId} />
+      {getOfferAgreement?.location == 'India' ? (
+          getPopUpFreuqency == 5 || getPopUpFreuqency % 4 == 0 ? (
+            <UpcomingEventModal
+            visible={true}
+            onConfirm={() => {
+              if (getPurchaseHistory?.plan != null) {
+                if (
+                  getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
+                ) {
+                  AnalyticsConsole('UP_D_B');
+                  navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+                  dispatch(setRewardPopUp(1));
+                } else {
+                  AnalyticsConsole('PP_D_B');
+                  navigation.navigate('NewSubscription', {upgrade: false});
+                  dispatch(setRewardPopUp(1));
+                }
+              } else {
+                AnalyticsConsole('PP_D_B');
+                navigation.navigate('NewSubscription', {upgrade: false});
+                dispatch(setRewardPopUp(1));
+              }
+            }}
+            onCancel={() => {
+              AnalyticsConsole('JNC_D_B');
+              dispatch(setRewardPopUp(1));
+            }}
+          />
+        ) : null
+      ) : null}
       {/* {bannerAdsDisplay()} */}
     </>
   );
@@ -593,13 +636,14 @@ const styles = StyleSheet.create({
   buttonStyle: {
     width: 180,
     height: 40,
-    borderRadius: 30,
+    borderRadius: 7,
     justifyContent: 'center',
     flexDirection: 'row',
     position: 'absolute',
     alignItems: 'center',
     bottom: DeviceHeigth * 0.015,
     right: 10,
+    backgroundColor: '#f0013b',
   },
   button: {
     fontSize: 15,

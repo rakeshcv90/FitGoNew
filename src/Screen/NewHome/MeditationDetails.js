@@ -20,10 +20,16 @@ import axios from 'axios';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import moment from 'moment';
 import NativeAddTest from '../../Component/NativeAddTest';
-import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
+import {
+  setRewardPopUp,
+  setVideoLocation,
+} from '../../Component/ThemeRedux/Actions';
 import RNFetchBlob from 'rn-fetch-blob';
-import { BannerAdd } from '../../Component/BannerAdd';
-import { bannerAdId } from '../../Component/AdsId';
+import {BannerAdd} from '../../Component/BannerAdd';
+import {bannerAdId} from '../../Component/AdsId';
+import RewardModal from '../../Component/Utilities/RewardModal';
+import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -37,7 +43,12 @@ const MeditationDetails = ({navigation, route}) => {
   const [downloaded, setDownloade] = useState(0);
   const avatarRef = React.createRef();
   const allWorkoutData = useSelector(state => state.allWorkoutData);
-
+  const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
+  const enteredUpcomingEvent = useSelector(
+    state => state?.enteredUpcomingEvent,
+  );
+  const getOfferAgreement = useSelector(state => state?.getOfferAgreement);
+  const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
   const colors = [
     {color1: '#E2EFFF', color2: '#9CC2F5', color3: '#425B7B'},
     {color1: '#BFF0F5', color2: '#8DD9EA', color3: '#1F6979'},
@@ -46,6 +57,14 @@ const MeditationDetails = ({navigation, route}) => {
   ];
   const dispatch = useDispatch();
   useEffect(() => {
+    setTimeout(() => {
+      if (
+        (!enteredCurrentEvent && !enteredUpcomingEvent) ||
+        (!enteredUpcomingEvent && enteredCurrentEvent)
+      ) {
+        dispatch(setRewardPopUp(getPopUpFreuqency + 1));
+      }
+    }, 1000);
     if (isFocused) {
       if (route?.params?.item) {
         getCaterogy(
@@ -217,9 +236,10 @@ const MeditationDetails = ({navigation, route}) => {
   };
 
   const getNativeAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
+    if (getPurchaseHistory?.plan != null) {
       if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        getPurchaseHistory?.plan == 'premium' &&
+        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
       ) {
         return null;
       } else {
@@ -266,11 +286,11 @@ const MeditationDetails = ({navigation, route}) => {
   //       return null;
   //     } else {
   //       return <BannerAdd bannerAdId={bannerAdId} />
-    
+
   //     }
   //   } else {
   //     return   <BannerAdd bannerAdId={bannerAdId} />
- 
+
   //   }
   // };
   return (
@@ -601,10 +621,39 @@ const MeditationDetails = ({navigation, route}) => {
             />
           )}
         </View>
+        {getOfferAgreement?.location == 'India' ? (
+          getPopUpFreuqency == 5 || getPopUpFreuqency % 4 == 0 ? (
+            <UpcomingEventModal
+            visible={true}
+            onConfirm={() => {
+              if (getPurchaseHistory?.plan != null) {
+                if (
+                  getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
+                ) {
+                  AnalyticsConsole('UP_D_B');
+                  navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+                  dispatch(setRewardPopUp(1));
+                } else {
+                  AnalyticsConsole('PP_D_B');
+                  navigation.navigate('NewSubscription', {upgrade: false});
+                  dispatch(setRewardPopUp(1));
+                }
+              } else {
+                AnalyticsConsole('PP_D_B');
+                navigation.navigate('NewSubscription', {upgrade: false});
+                dispatch(setRewardPopUp(1));
+              }
+            }}
+            onCancel={() => {
+              AnalyticsConsole('JNC_D_B');
+              dispatch(setRewardPopUp(1));
+            }}
+          />
+          ) : null
+        ) : null}
       </>
       {/* {bannerAdsDisplay()} */}
-          <BannerAdd bannerAdId={bannerAdId} />
-  
+      <BannerAdd bannerAdId={bannerAdId} />
     </View>
   );
 };

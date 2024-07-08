@@ -102,12 +102,15 @@ const styles = StyleSheet.create({
   indicatorHolder: {
     position: 'absolute',
     alignSelf: 'center',
+    justifyContent:'center'
   },
   indicator: {
     width: 120,
     height: 1,
     backgroundColor: '#ccc',
     alignSelf: 'center',
+    alignItems:'center',
+    justifyContent:'center'
   },
   animatedContainer: {
     justifyContent: 'center',

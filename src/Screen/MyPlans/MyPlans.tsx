@@ -33,6 +33,7 @@ import {
   setEditedExercise,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
+  setFitCoins,
   setFitmeMealAdsCount,
   setHomeGraphData,
   setIsAlarmEnabled,
@@ -42,13 +43,13 @@ import {
   setUserProfileData,
   setVideoLocation,
   setWeeklyPlansData,
+  setWinnerAnnounced,
 } from '../../Component/ThemeRedux/Actions';
 import RNFetchBlob from 'rn-fetch-blob';
 import {showMessage} from 'react-native-flash-message';
 import {useFocusEffect} from '@react-navigation/native';
 import AnimatedLottieView from 'lottie-react-native';
-import {AlarmNotification} from '../../Component/Reminder';
-import notifee from '@notifee/react-native';
+
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import analytics from '@react-native-firebase/analytics';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
@@ -59,6 +60,8 @@ import {
 } from './ExerciseComponent';
 import FitCoins from '../../Component/Utilities/FitCoins';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
+import ActivityLoader from '../../Component/ActivityLoader';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -78,7 +81,6 @@ const WeekArrayWithEvent = Array(5)
         .subtract(moment().isoWeekday() - 1, 'days')
         .format('dddd')),
   );
-const All_Weeks_Data = {};
 const MyPlans = ({navigation}: any) => {
   const [downloaded, setDownloade] = useState(0);
   const [coins, setCoins] = useState({});
@@ -90,6 +92,8 @@ const MyPlans = ({navigation}: any) => {
   const [buttonClicked, setButtonClicked] = useState(false);
   const [visible, setVisible] = useState(false);
   const [myRankData, setMyRankData] = useState([]);
+  const [downlodedVideoSent, setDownloadedVideoSent] = useState(false);
+  const [fetchCoins, setFetchCoins] = useState(false);
   const getFitmeMealAdsCount = useSelector(
     (state: any) => state.getFitmeMealAdsCount,
   );
@@ -109,18 +113,15 @@ const MyPlans = ({navigation}: any) => {
   const getEditedDayExercise = useSelector(
     (state: any) => state.getEditedDayExercise,
   );
-  const getStoreVideoLoc = useSelector((state: any) => state.getStoreVideoLoc);
-  const isAlarmEnabled = useSelector((state: any) => state.isAlarmEnabled);
+  const fitCoins = useSelector((state: any) => state.fitCoins);
   const dispatch = useDispatch();
   useEffect(() => {
     initInterstitial();
     allWorkoutApi1();
     //getAllExerciseData();
-    getAllChallangeAndAllExerciseData()
+    getAllChallangeAndAllExerciseData();
     getGraphData();
-    Promise.all(WeekArray.map(item => getWeeklyAPI(item))).finally(() =>
-      dispatch(setWeeklyPlansData(All_Weeks_Data)),
-    );
+    getWeeklyAPI();
     checkMealAddCount();
     // PurchaseDetails();
     getUserDetailData();
@@ -129,30 +130,12 @@ const MyPlans = ({navigation}: any) => {
     React.useCallback(() => {
       if (enteredCurrentEvent) {
         getEarnedCoins();
-        console.log(WeekArray[selectedDay] !== 'Saturday');
-      }
-    }, [navigation]),
-  );
-  const getAllExerciseData = async () => {
-    try {
-      const exerciseData = await axios.get(
-        `${NewAppapi.ALL_EXERCISE_DATA}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails.id}`,
-      );
-
-      if (
-        exerciseData?.data?.msg == 'Please update the app to the latest version'
-      ) {
-        dispatch(setAllExercise([]));
-      } else if (exerciseData?.data?.length > 0) {
-        dispatch(setAllExercise(exerciseData?.data));
+        getLeaderboardDataAPI();
       } else {
-        dispatch(setAllExercise([]));
+        WeeklyStatusAPI();
       }
-    } catch (error) {
-      dispatch(setAllExercise([]));
-      console.log('All-EXCERSIE-ERROR', error);
-    }
-  };
+    }, []),
+  );
   const getAllChallangeAndAllExerciseData = async () => {
     let responseData = 0;
     if (Object.keys(getUserDataDetails).length > 0) {
@@ -182,30 +165,6 @@ const MyPlans = ({navigation}: any) => {
       }
     }
   };
-  // const PurchaseDetails = async () => {
-  //   try {
-  //     setRefresh(true);
-  //     const result = await axios(
-  //       `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
-  //     );
-  //     setRefresh(false);
-  //     if (result.data?.message == 'Not any subscription') {
-  //       dispatch(setPurchaseHistory([]));
-  //     } else {
-  //       dispatch(setPurchaseHistory(result.data.data));
-  //       EnteringEventFunction(
-  //         dispatch,
-  //         result.data?.data,
-  //         setEnteredCurrentEvent,
-  //         setEnteredUpcomingEvent,
-  //         setPlanType,
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     setRefresh(false);
-  //   }
-  // };
   const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(
@@ -244,37 +203,11 @@ const MyPlans = ({navigation}: any) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      dispatch(setPurchaseHistory([]));
-      dispatch(setUserProfileData([]));
-      dispatch(setCustomWorkoutData([]));
+   
       setRefresh(false);
     }
   };
 
-  useEffect(() => {
-    if (!isAlarmEnabled) {
-      notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));
-      const currenTime = new Date();
-      currenTime.setHours(7);
-      currenTime.setMinutes(0);
-      //AlarmNotification(currenTime);
-      AlarmNotification(currenTime)
-        .then(res => console.log('ALARM SET', res))
-        .catch(errr => {
-          console.log('Alarm error', errr);
-          currenTime.setDate(currenTime.getDate() + 1);
-          AlarmNotification(currenTime);
-        });
-      dispatch(setIsAlarmEnabled(true));
-    }
-  }, [isAlarmEnabled]);
-  useFocusEffect(
-    useCallback(() => {
-      if (!enteredCurrentEvent) {
-        WeeklyStatusAPI();
-      }
-    }, [selectedDay, navigation]),
-  );
   // getCoinsdetails
   const getEarnedCoins = async () => {
     try {
@@ -293,10 +226,7 @@ const MyPlans = ({navigation}: any) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      } else if (response?.data?.error) {
-        console.log('inavlid day--->', response?.data?.error);
       } else {
-        console.log('repeat----->');
         setCoins(response?.data?.responses);
       }
     } catch (error) {
@@ -345,30 +275,36 @@ const MyPlans = ({navigation}: any) => {
       dispatch(setAllWorkoutData([]));
     }
   };
-  const getWeeklyAPI = async (day: string) => {
+  const getWeeklyAPI = async () => {
     setLoader(true);
     try {
-      const res = await axios({
-        url:
-          NewAppapi.GET_PLANS_EXERCISE +
-          '?version=' +
-          VersionNumber.appVersion +
-          '&day=' +
-          day +
-          '&user_id=' +
-          getUserDataDetails.id,
+      const res = await axios(`${NewAppapi.NEW_WEEKDAY_EXERCISE_API}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          version: VersionNumber.appVersion,
+          user_id: getUserDataDetails?.id,
+        },
       });
-      if (res.data?.msg != 'User not exist.') {
-        All_Weeks_Data[day] = res.data;
-        // setExerciseData();
-        // console.log('All_Weeks_Data', All_Weeks_Data);
+      if (res.data?.msg == 'User not exist.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setLoader(false);
       } else {
-        All_Weeks_Data[day] = [];
+        dispatch(setWeeklyPlansData(res?.data));
+        setLoader(false);
       }
       setLoader(false);
     } catch (error) {
       setLoader(false);
-      console.error(error, 'DaysAPIERror');
+      console.error(error.response, 'DaysAPIERror');
     }
   };
   const getGraphData = async () => {
@@ -455,7 +391,6 @@ const MyPlans = ({navigation}: any) => {
             StoringData[data?.exercise_title] = res.path();
             downloadCounter++;
             setDownloade((downloadCounter / len) * 100);
-            console.log(downloadCounter);
           })
           .catch(err => {
             console.log(err);
@@ -490,7 +425,6 @@ const MyPlans = ({navigation}: any) => {
           },
         ),
       ).finally(() => {
-        // console.log('enteredCurrentEvent', enteredCurrentEvent);
         enteredCurrentEvent
           ? RewardsbeforeNextScreen(selectedDay)
           : beforeNextScreen(selectedDay);
@@ -500,6 +434,7 @@ const MyPlans = ({navigation}: any) => {
 
   const beforeNextScreen = async (selectedDay: any) => {
     downloadCounter = 0;
+    setDownloadedVideoSent(true);
     for (const item of getWeeklyPlansData[WeekArray[selectedDay]]?.exercises) {
       datas.push({
         user_id: getUserDataDetails?.id,
@@ -520,8 +455,10 @@ const MyPlans = ({navigation}: any) => {
         setDownloade(0);
         setButtonClicked(false);
         setVisible(false);
-        let checkAdsShow = checkMealAddCount();
+        setDownloadedVideoSent(false);
+        let checkAdsShow = AddCountFunction();
 
+        AnalyticsConsole(`SE_ON_${getPurchaseHistory?.currentDay}`)
         if (checkAdsShow == true) {
           showInterstitialAd();
           analytics().logEvent(
@@ -530,8 +467,6 @@ const MyPlans = ({navigation}: any) => {
           navigation.navigate('Exercise', {
             allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
             currentExercise:
-              // trainingCount != -1
-              //   ? exerciseData[trainingCount]
               getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
             data: [],
             day: selectedDay,
@@ -546,8 +481,6 @@ const MyPlans = ({navigation}: any) => {
           navigation.navigate('Exercise', {
             allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
             currentExercise:
-              // trainingCount != -1
-              //   ? exerciseData[trainingCount]
               getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
             data: [],
             day: selectedDay,
@@ -564,6 +497,7 @@ const MyPlans = ({navigation}: any) => {
       setDownloade(0);
       setButtonClicked(false);
       setVisible(false);
+      setDownloadedVideoSent(false);
       showMessage({
         message: 'Error, Please try again later',
         type: 'danger',
@@ -575,6 +509,7 @@ const MyPlans = ({navigation}: any) => {
   };
   const RewardsbeforeNextScreen = async (selectedDay: any) => {
     downloadCounter = 0;
+    setDownloadedVideoSent(true);
     for (const item of getWeeklyPlansData[WeekArray[selectedDay]]?.exercises) {
       datas.push({
         user_id: getUserDataDetails?.id,
@@ -584,7 +519,7 @@ const MyPlans = ({navigation}: any) => {
         fit_coins: getWeeklyPlansData[WeekArray[selectedDay]]?.total_coins,
       });
     }
-    console.log('REWARDS BEFORE NEXT', datas);
+
     try {
       const res = await axios({
         url: NewAppapi.CURRENT_DAY_EVENT_EXERCISE,
@@ -594,40 +529,18 @@ const MyPlans = ({navigation}: any) => {
       setDownloade(0);
       setButtonClicked(false);
       setVisible(false);
+      AnalyticsConsole(`SEE_ON_${getPurchaseHistory?.currentDay}`)
       if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {
         setDownloade(0);
         setButtonClicked(false);
         setVisible(false);
-        // let checkAdsShow = checkMealAddCount();
+        setDownloadedVideoSent(false);
 
-        // if (checkAdsShow == true) {
-        //   showInterstitialAd();
-        //   analytics().logEvent(
-        //     `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
-        //   );
-        //   navigation.navigate('Exercise', {
-        //     allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
-        //     currentExercise:
-        //       // trainingCount != -1
-        //       //   ? exerciseData[trainingCount]
-        //       getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
-        //     data: [],
-        //     day: selectedDay,
-        //     exerciseNumber: 0,
-        //     trackerData: res?.data?.inserted_data,
-        //     type: 'weekly',
-        //   });
-        // } else {
-        //   analytics().logEvent(
-        //     `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
-        //   );
         navigation.navigate('Exercise', {
           allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
           currentExercise:
-            // trainingCount != -1
-            //   ? exerciseData[trainingCount]
             getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
           data: [],
           day: selectedDay,
@@ -637,12 +550,10 @@ const MyPlans = ({navigation}: any) => {
         });
         // }
       } else {
-        // console.log("ALREADY EXIST",res.data)
+        setDownloadedVideoSent(false);
         navigation.navigate('Exercise', {
           allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
           currentExercise:
-            // trainingCount != -1
-            //   ? exerciseData[trainingCount]
             getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
           data: [],
           day: selectedDay,
@@ -667,22 +578,30 @@ const MyPlans = ({navigation}: any) => {
   };
   //getLeaderBoardPoints
   const getLeaderboardDataAPI = async () => {
+    setFetchCoins(true);
     try {
       const result = await axios({
-        // url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${appVersion}`,
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
       if (result.data) {
         const myRank = result.data?.data?.findIndex(
           item => item?.id == getUserDataDetails?.id,
         );
+        setFetchCoins(false);
         setMyRankData(result.data?.data[myRank]);
-        // console.log('RANK DATA', myRankData);
+        dispatch(setFitCoins(result.data?.data[myRank]?.fit_coins));
+        dispatch(
+          setWinnerAnnounced(
+            result.data?.winner_announced == true ? true : false,
+          ),
+        );
       }
       setRefresh(false);
+      setFetchCoins(false);
     } catch (error) {
       console.log(error);
       setRefresh(false);
+      setFetchCoins(false);
     }
   };
   const toNextScreen = async (selectedDay: any) => {
@@ -701,7 +620,7 @@ const MyPlans = ({navigation}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-
+      setDownloadedVideoSent(false);
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -714,7 +633,8 @@ const MyPlans = ({navigation}: any) => {
         setButtonClicked(false);
         setVisible(false);
         setDownloade(0);
-        let checkAdsShow = checkMealAddCount();
+
+        let checkAdsShow = AddCountFunction();
         if (checkAdsShow == true) {
           showInterstitialAd();
           analytics().logEvent(
@@ -755,6 +675,7 @@ const MyPlans = ({navigation}: any) => {
       setDownloade(0);
       setButtonClicked(false);
       setVisible(false);
+      setDownloadedVideoSent(false);
       console.error(error, 'PostDaysAPIERror');
       showMessage({
         message: 'Error, Please try again later',
@@ -877,7 +798,7 @@ const MyPlans = ({navigation}: any) => {
     );
   };
   const checkMealAddCount = () => {
-    if (getPurchaseHistory.length > 0) {
+    if (getPurchaseHistory?.length > 0) {
       if (
         getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
       ) {
@@ -905,7 +826,6 @@ const MyPlans = ({navigation}: any) => {
       }
     }
   };
-  // console.log('exercise---->', getEditedDayExercise[WeekArray[selectedDay]]);
   return (
     <SafeAreaView
       style={{
@@ -917,8 +837,10 @@ const MyPlans = ({navigation}: any) => {
         header={'Weekly Plan'}
         SearchButton={false}
         backButton={false}
-        extraView={enteredCurrentEvent ? true : false}
-        coins={myRankData?.fit_coins ?? '--'}
+        extraView={true}
+        enteredCurrentEvent={enteredCurrentEvent}
+        coins={fitCoins > 0 ? fitCoins : 0}
+        coinsLoaded={fetchCoins}
       />
 
       <View
@@ -931,15 +853,15 @@ const MyPlans = ({navigation}: any) => {
                 : -DeviceWidth * 0.05
               : -DeviceWidth * 0.05,
         }}>
-        <View
+        {/* <View
           style={{
             flexDirection: 'row',
             width: DeviceWidth,
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginTop: -DeviceWidth * 0.05,
+            marginTop: DeviceWidth * 0.04,
           }}>
-          <Text
+          {/* <Text
             style={[
               styles.semiBold,
               {
@@ -953,7 +875,7 @@ const MyPlans = ({navigation}: any) => {
             ]}>
             Get Fit{' '}
           </Text>
-        </View>
+        </View> */}
 
         {loader ? (
           <View
@@ -1010,6 +932,7 @@ const MyPlans = ({navigation}: any) => {
                 getWeeklyPlansData={getWeeklyPlansData}
                 selectedDay={selectedDay}
                 currentDay={getPurchaseHistory?.currentDay - 1}
+                download={downloaded}
               />
             </>
           ) : (
@@ -1041,6 +964,7 @@ const MyPlans = ({navigation}: any) => {
                 WeekStatus={WeekStatus}
                 WeekArray={WeekArray}
                 getWeeklyPlansData={getWeeklyPlansData}
+                download={downloaded}
               />
             </>
           )
@@ -1048,11 +972,12 @@ const MyPlans = ({navigation}: any) => {
           emptyComponent()
         )}
       </View>
-      <DownloadingWorkout
+      {downlodedVideoSent ? <ActivityLoader /> : null}
+      {/* <DownloadingWorkout
         hasAds={hasAds}
         downloaded={downloaded}
         buttonClicked={buttonClicked}
-      />
+      /> */}
     </SafeAreaView>
   );
 };

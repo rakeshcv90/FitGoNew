@@ -28,7 +28,9 @@ import {
   BMImodal,
   CaloriesActionReport,
 } from '../../Component/BmiComponent';
-const NewMonthlyAchievement = () => {
+import { useFocusEffect } from '@react-navigation/native';
+import { red } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
+const NewMonthlyAchievement = ({navigation}) => {
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
   const getBmi = useSelector(state => state.getBmi);
@@ -64,6 +66,7 @@ const NewMonthlyAchievement = () => {
       } else if (res) {
         setIsLoaded(true);
         setApiData(res.data.data);
+        console.log('apicall',res.data)
         const Calories = res?.data?.data?.map(value =>
           parseInt(value?.exercise_calories),
         );
@@ -105,15 +108,15 @@ const NewMonthlyAchievement = () => {
   const theme = useMemo(() => {
     return {
       calendarBackground: AppColor.WHITE,
-      selectedDayBackgroundColor: AppColor.RED,
+      selectedDayBackgroundColor: '#f0013b',
       selectedDayTextColor: AppColor.WHITE,
       todayTextColor: AppColor.BLACK,
-      arrowColor: AppColor.RED,
-      monthTextColor: AppColor.RED,
-      indicatorColor: AppColor.RED,
+      arrowColor: '#f0013b',
+      monthTextColor: '#f0013b',
+      indicatorColor: '#f0013b',
       textMonthFontSize: 17,
-      textDayFontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-      textMonthFontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+      textDayFontFamily: Fonts.MONTSERRAT_BOLD,
+      textMonthFontFamily: Fonts.MONTSERRAT_BOLD,
       dayTextColor: AppColor.BLACK,
     };
   }, []);
@@ -197,7 +200,7 @@ const NewMonthlyAchievement = () => {
               </Text>
               <Text
                 style={{
-                  color: AppColor.RED,
+                  color: '#f0013b',
                   fontFamily: Fonts.MONTSERRAT_MEDIUM,
                   fontSize: 17,
                 }}
@@ -235,7 +238,7 @@ const NewMonthlyAchievement = () => {
               markedDates={{
                 [getDate]: {
                   startingDay: true,
-                  color: AppColor.RED,
+                  color: '#f0013b',
                   endingDay: true,
                   textColor: AppColor.WHITE,
                 },

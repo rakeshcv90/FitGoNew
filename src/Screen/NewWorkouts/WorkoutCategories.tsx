@@ -7,6 +7,8 @@ import {
   Platform,
   BackHandler,
   SafeAreaView,
+  TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import React, {
   FC,
@@ -18,11 +20,12 @@ import React, {
   useState,
 } from 'react';
 import {StyleSheet} from 'react-native';
-import {AppColor, Fonts} from '../../Component/Color';
+import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import AnimatedLottieView from 'lottie-react-native';
 import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icons1 from 'react-native-vector-icons/FontAwesome5';
 import Font from 'react-native-vector-icons/FontAwesome5';
 import Fontasio from 'react-native-vector-icons/Fontisto';
 import {useSelector, useDispatch} from 'react-redux';
@@ -50,7 +53,7 @@ import GradientButton from '../../Component/GradientButton';
 import RNFetchBlob from 'rn-fetch-blob';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import WorkoutsDescription from './WorkoutsDescription';
-import {TextInput} from 'react-native-paper';
+import {showMessage} from 'react-native-flash-message';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 interface BoxProps {
@@ -62,7 +65,7 @@ interface BoxProps {
   switchButton: boolean;
 }
 const WorkoutCategories = ({navigation, route}: any) => {
-  const [data, setData] = useState([]);
+  const [item, setItem] = useState();
   const {categoryExercise, CategoryDetails} = route?.params;
   const [searchValue, setSearchValue] = useState('');
   const [exercise, setExercise] = useState([]);
@@ -92,7 +95,10 @@ const WorkoutCategories = ({navigation, route}: any) => {
   useEffect(() => {
     setExercise(categoryExercise);
     setFilteredExercise(categoryExercise);
-  }, []);
+    setDownloadProgress(0);
+    setDownloade(0);
+    setSelectedIndex(-1);
+  }, [isFocused]);
 
   function onLoadEnd() {
     setIsLoading(false);
@@ -114,9 +120,6 @@ const WorkoutCategories = ({navigation, route}: any) => {
     downloadCounter = 0,
     progressUpdateTimeout = null;
   const downloadVideos = async (data: any, index: number, len: number) => {
-    if (len == 1) {
-      setSelectedIndex(index);
-    }
     const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
       data?.exercise_title,
     )}.mp4`;
@@ -126,7 +129,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
         StoringData[data?.exercise_title] = filePath;
         downloadCounter++;
         setDownloade((downloadCounter / len) * 100);
-        setDownloadProgress(100)
+        setDownloadProgress(100);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -141,13 +144,13 @@ const WorkoutCategories = ({navigation, route}: any) => {
           .progress((received, total) => {
             const progress = (received / total) * 100;
             downloadProgressRef.current = progress;
-
-            if (!progressUpdateTimeout) {
-              progressUpdateTimeout = setTimeout(() => {
-                setDownloadProgress(downloadProgressRef.current);
-                progressUpdateTimeout = null;
-              }, 1000); // Update state every second
-            }
+            setDownloadProgress(progress);
+            // if (!progressUpdateTimeout) {
+            //   progressUpdateTimeout = setTimeout(() => {
+            //     setDownloadProgress(downloadProgressRef.current);
+            //     progressUpdateTimeout = null;
+            //   }, 1000); // Update state every second
+            // }
           })
           .then(res => {
             StoringData[data?.exercise_title] = res.path();
@@ -188,11 +191,15 @@ const WorkoutCategories = ({navigation, route}: any) => {
   );
 
   const handlePress = (item: any) => {
+    setItem(item);
     if (switchButton) {
       handleItems(item, selectedExercise, setSelectedExercise);
     } else {
-      AnalyticsConsole(`${item?.exercise_title?.split(' ')[0]}_DESC`);
-      setVisible(true);
+      if (!visible) {
+        setVisible(true);
+      } else {
+        console.log(item);
+      }
     }
   };
 
@@ -200,9 +207,11 @@ const WorkoutCategories = ({navigation, route}: any) => {
     if (switchButton) {
       handleItems(item, selectedExercise, setSelectedExercise);
     } else {
+      AnalyticsConsole('S_E_S_WC');
       downloadVideos(item, index, 1).finally(() => {
         setDownloade(0);
         setDownloadProgress(0);
+        setSelectedIndex(-1);
         navigation.navigate('Exercise', {
           allExercise: [item],
           currentExercise: item,
@@ -227,102 +236,122 @@ const WorkoutCategories = ({navigation, route}: any) => {
         downloadProgress,
       }) => {
         return (
-          <View
-            style={{
-              borderColor: '#33333314',
-              borderBottomWidth: 1,
-            }}>
-            <TouchableOpacity
-              key={index}
-              onPress={() => {
-                handlePress(item);
-              }}
-              activeOpacity={switchButton ? 0.8 : 1}
-              style={styles.boxContainer}>
-              <View style={styles.boxImage}>
-                <FastImage
-                  // fallback={true}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    justifyContent: 'center',
-                    alignSelf: 'center',
-                  }}
-                  source={{
-                    uri: item?.exercise_image_link,
-                    headers: {Authorization: 'someAuthToken'},
-                    priority: FastImage.priority.high,
-                  }}
-                  resizeMode={FastImage.resizeMode.contain}
-                  defaultSource={localImage.NOWORKOUT}
-                />
-              </View>
-              <View
-                style={{
-                  marginHorizontal: 15,
-                  width: '65%',
-                  // backgroundColor: 'lightgreen',
-                }}>
-                <Text
-                  style={{
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontSize: 16,
-                    fontWeight: '600',
-                    color: AppColor.LITELTEXTCOLOR,
-                    lineHeight: 24,
-                  }}>
-                  {item?.exercise_title}
-                  {/* {item?.exercise_id} */}
-                </Text>
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Text style={[styles.small, {textTransform: 'capitalize'}]}>
-                    {item?.exercise_rest}
-                  </Text>
-                </View>
-              </View>
+          <>
+            <View
+              style={{
+                borderColor: '#33333314',
+                borderBottomWidth: 1,
+              }}>
               <TouchableOpacity
+                key={index}
                 onPress={() => {
-                  handleIconPress(item, index);
-                  console.log('index--->', index);
-                }}>
-                {switchButton ? (
-                  <View
-                    style={[
-                      styles.boxIconView,
-                      {
-                        backgroundColor: isSelected
-                          ? AppColor.NEW_DARK_RED
-                          : 'white',
-                        borderColor: isSelected
-                          ? AppColor.NEW_DARK_RED
-                          : '#33333399',
-                      },
-                    ]}>
-                    {isSelected && <Font name="check" color="white" />}
+                  if (isItemDownload || downloadProgress > 0) {
+                  } else handlePress(item);
+                }}
+                activeOpacity={switchButton ? 0.8 : 1}
+                style={styles.boxContainer}>
+                <View style={styles.boxImage}>
+                  <FastImage
+                    // fallback={true}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                    }}
+                    source={{
+                      uri: item?.exercise_image_link,
+                      headers: {Authorization: 'someAuthToken'},
+                      priority: FastImage.priority.high,
+                    }}
+                    resizeMode={FastImage.resizeMode.contain}
+                    defaultSource={localImage.NOWORKOUT}
+                  />
+                </View>
+                <View
+                  style={{
+                    marginHorizontal: 15,
+                    width:DeviceHeigth>=1024 ? '80%': '65%',
+                    // backgroundColor: 'lightgreen',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      fontSize: 16,
+                      fontWeight: '600',
+                      color: AppColor.LITELTEXTCOLOR,
+                      lineHeight: 24,
+                    }}>
+                    {item?.exercise_title}
+                  </Text>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Text style={[styles.small, {textTransform: 'capitalize'}]}>
+                      {item?.exercise_rest}
+                    </Text>
                   </View>
+                </View>
+                {switchButton ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleIconPress(item, index);
+                    }}>
+                    <View
+                      style={[
+                        styles.boxIconView,
+                        {
+                          backgroundColor: isSelected ? '#f0013b' : 'white',
+                          borderColor: isSelected ? '#f0013b' : '#33333399',
+                        },
+                      ]}>
+                      {isSelected && <Font name="check" color="white" />}
+                    </View>
+                  </TouchableOpacity>
                 ) : (
-                  <CircularProgressBase
-                    value={isItemDownload ? downloadProgress : 0}
-                    radius={14}
-                    activeStrokeColor={AppColor.RED}
-                    inActiveStrokeColor="#33333399"
-                    activeStrokeWidth={2}
-                    inActiveStrokeWidth={2}
-                    maxValue={100}>
-                    <Icons name={'play'} size={25} color={'#33333399'} />
-                  </CircularProgressBase>
+                  <TouchableOpacity
+                    disabled={isItemDownload}
+                    onPress={() => {
+                      if (isItemDownload || downloadProgress > 0) {
+                      } else {
+                        setSelectedIndex(index);
+                        setDownloadProgress(5);
+                        handleIconPress(item, index);
+                      }
+                    }}>
+                    {isItemDownload && downloadProgress <= 5 ? (
+                      <ActivityIndicator
+                        color={AppColor.NEW_DARK_RED}
+                        animating={isItemDownload && downloadProgress <= 5}
+                        size={30}
+                      />
+                    ) : (
+                      <CircularProgressBase
+                        value={isItemDownload ? downloadProgress : 0}
+                        radius={14}
+                        activeStrokeColor={AppColor.RED}
+                        inActiveStrokeColor="#33333399"
+                        activeStrokeWidth={2}
+                        inActiveStrokeWidth={2}
+                        maxValue={100}>
+                        <Image
+                          source={localImage.ExercisePlay}
+                          tintColor={selectedIndex != index ? '#565656' : ''}
+                          resizeMode="contain"
+                          style={{
+                            width: 12,
+                            height: 12,
+                            alignSelf: 'center',
+                          }}
+                        />
+                      </CircularProgressBase>
+                    )}
+                  </TouchableOpacity>
                 )}
               </TouchableOpacity>
-            </TouchableOpacity>
-            <WorkoutsDescription
-              data={item}
-              open={visible}
-              setOpen={setVisible}
-            />
-          </View>
+            </View>
+          </>
         );
       },
-    [selectedExercise, switchButton],
+    [selectedExercise, switchButton, selectedIndex],
   );
 
   const handleBackPress = useCallback(() => {
@@ -364,32 +393,24 @@ const WorkoutCategories = ({navigation, route}: any) => {
       </View>
     );
   };
-  const bannerAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
-      if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        return null;
-      } else {
-        return <BannerAdd bannerAdId={bannerAdId} />;
-      }
-    } else {
-      return <BannerAdd bannerAdId={bannerAdId} />;
-    }
-  };
-  const getAdsDisplay = (item: any, index: number) => {
-    if (exercise.length >= 1) {
-      if (index == 0 && exercise.length > 1) {
+  const getAdsDisplay = (index, item) => {
+    const noOrNoobPlan =
+      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
+    if (filteredExercise.length >= 1) {
+      if (index == 0 && filteredExercise.length > 1 && noOrNoobPlan) {
         return getNativeAdsDisplay();
-      } else if ((index + 1) % 8 == 0 && exercise.length > 8) {
+      } else if ((index + 1) % 9 == 0 && filteredExercise.length > 9) {
+        if(index+1 == filteredExercise.length) return null
         return getNativeAdsDisplay();
       }
     }
   };
+
   const getNativeAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
+    if (getPurchaseHistory?.plan != null) {
       if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        getPurchaseHistory?.plan == 'premium' &&
+        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
       ) {
         return null;
       } else {
@@ -415,6 +436,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
       );
     }
   };
+
   const searchFunction = (text: string) => {
     const searchArray = exercise.filter((item: any) =>
       item?.exercise_title.toLowerCase().includes(text.toLowerCase()),
@@ -423,12 +445,14 @@ const WorkoutCategories = ({navigation, route}: any) => {
   };
 
   const Start = (exercise: Array<any>) => {
+    setDownloade(5);
     Promise.all(
       exercise?.map((item: any, index: number) => {
         return downloadVideos(item, index, exercise?.length);
       }),
     ).finally(() => {
       setDownloade(0);
+      setDownloadProgress(0);
       navigation.navigate('Exercise', {
         allExercise: exercise,
         currentExercise: exercise[0],
@@ -453,11 +477,26 @@ const WorkoutCategories = ({navigation, route}: any) => {
             : CategoryDetails?.bodypart_title
         }
         workoutCat={switchButton}
-        backPressCheck={switchButton}
+        backPressCheck={true}
+        shadow
         onPress={() => {
-          setSelectedExercise([]);
-          setSwitchButton(false);
-          setItemsLength(0);
+          if (downloaded > 0 || downloadProgress > 0) {
+            showMessage({
+              message:
+                'Please wait, downloading in progress. Do not press back.',
+              type: 'info',
+              animationDuration: 500,
+              floating: true,
+              icon: {icon: 'auto', position: 'left'},
+            });
+          } else if (switchButton) {
+            AnalyticsConsole('CL_SE_WC');
+            setSelectedExercise([]);
+            setSwitchButton(false);
+            setItemsLength(0);
+          } else {
+            navigation?.goBack();
+          }
         }}
         h={Platform.OS == 'ios' ? DeviceWidth * 0.2 : DeviceWidth * 0.15}
         key={CategoryDetails?.id}
@@ -465,36 +504,28 @@ const WorkoutCategories = ({navigation, route}: any) => {
       <View style={styles.container}>
         <View
           style={{
+            width: '90%',
+            height: 50,
+            alignSelf: 'center',
+            backgroundColor: '#F3F5F5',
+            borderRadius: 6,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingLeft: 10,
+            // top: -DeviceWidth * 0.05,
             marginVertical: (DeviceWidth * 0.1) / 8,
             justifyContent: 'center',
-            alignItems: 'center',
           }}>
+          <Icons1 name="search" size={18} color={'#333333E5'} />
           <TextInput
-            value={searchValue}
             placeholder="Search Exercise"
-            left={
-              <TextInput.Icon
-                icon={() => <Fontasio name="search" size={15} />}
-              />
-            }
-            underlineStyle={{
-              borderColor: '#F3F5F5',
-              borderWidth: 1,
-              borderRadius: 10,
-            }}
+            placeholderTextColor="#33333380"
+            value={searchValue}
             onChangeText={text => {
               setSearchValue(text);
               searchFunction(text);
             }}
-            style={[
-              styles.small,
-              {
-                color: '#33333380',
-                fontSize: 14,
-                backgroundColor: '#F3F5F5',
-                width: DeviceWidth * 0.9,
-              },
-            ]}
+            style={styles.inputText}
           />
         </View>
         <View style={{height: (DeviceWidth * 0.1) / 4}} />
@@ -502,6 +533,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
           data={filteredExercise}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}: any) => (
+            <>
             <Box
               item={item}
               index={index}
@@ -510,6 +542,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
               isItemDownload={selectedIndex == index}
               downloadProgress={downloadProgress}
             />
+            {getAdsDisplay(index, item)}
+            </>
           )}
           ListEmptyComponent={emptyComponent}
           showsVerticalScrollIndicator={false}
@@ -530,27 +564,43 @@ const WorkoutCategories = ({navigation, route}: any) => {
             <GradientButton
               // flex={0.01}
               text={
-                downloaded
+                downloaded > 0
                   ? `Downloading`
                   : switchButton
                   ? `Start Exercise  (${itemsLength})`
-                  : 'Start All'
+                  : 'Start All Exercises'
               }
               h={50}
-              colors={[AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED]}
+              colors={['#f0013b', '#f0013b']}
               textStyle={styles.buttonText}
               alignSelf
               bR={6}
               normalAnimation={downloaded > 0}
               normalFill={`${100 - downloaded}%`}
-              bottm={switchButton ? 0 : -5}
+              // bottm={switchButton ? 0 : -5}
+              bottm={switchButton ? 0 : PLATFORM_IOS ? 10 : -5}
+              disabled={downloadProgress > 0}
               onPress={() => {
                 if (switchButton) {
                   const finalExercises = exercise.filter((item: any) =>
                     selectedExercise.includes(item?.exercise_id),
                   );
-                  Start(finalExercises);
-                } else Start(exercise);
+                  if (finalExercises?.length > 0 && selectedIndex == -1) {
+                    AnalyticsConsole('S_SE_WC');
+                    Start(finalExercises);
+                  } else {
+                    showMessage({
+                      message: 'Please select an exercise',
+                      type: 'danger',
+                      animationDuration: 500,
+                      floating: true,
+                      icon: {icon: 'auto', position: 'left'},
+                    });
+                  }
+                } else {
+                  AnalyticsConsole('S_A_WC');
+                  Start(exercise);
+                }
               }}
             />
 
@@ -559,17 +609,26 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 text={`Select Exercise`}
                 h={50}
                 colors={[AppColor.WHITE, AppColor.WHITE]}
-                textStyle={[styles.buttonText, {color: AppColor.NEW_DARK_RED}]}
-                bC="#A93737"
+                textStyle={[styles.buttonText, {color: '#f0013b'}]}
+                bC="#f0013b"
                 alignSelf
+                bottm={PLATFORM_IOS ? 5 : 0}
                 bR={6}
                 // bottm={5}
-                onPress={() => setSwitchButton(true)}
+                disabled={downloadProgress > 0}
+                onPress={() => {
+                  setDownloadProgress(0);
+                  if (downloadProgress == 0) {
+                    setSelectedIndex(-1);
+                    setSwitchButton(true);
+                  }
+                }}
               />
             )}
           </View>
         )}
       </View>
+      <WorkoutsDescription data={item} open={visible} setOpen={setVisible} />
       {/* {bannerAdsDisplay()} */}
     </SafeAreaView>
   );
@@ -635,6 +694,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 25 / 2,
     borderWidth: 1,
+  },
+  inputText: {
+    paddingLeft: 15,
+    paddingRight: 15,
+    width: '90%',
+    height: 50,
+    fontSize: 12,
+    lineHeight: 18,
+    fontWeight: '600',
+    fontFamily: 'Montserrat',
+    color: '#000',
   },
 });
 export default WorkoutCategories;

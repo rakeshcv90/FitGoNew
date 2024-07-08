@@ -283,7 +283,7 @@ const AllWorkouts = ({navigation, route}: any) => {
       });
       if (res.data) {
         setRefresh(false);
-        console.log(res.data, 'POST LIKE');
+   
         showMessage({
           message: res?.data?.msg,
           type: 'success',
@@ -313,13 +313,11 @@ const AllWorkouts = ({navigation, route}: any) => {
         },
       });
       if (res.data) {
-        // setRefresh(false);
-        console.log(res.data, 'POST LIKE');
-        // getAllLikeStatusAPI();
+        
         allWorkoutApi();
       }
     } catch (error) {
-      // setRefresh(false);
+   
       console.error(error, 'likeERRPost');
     }
   };
@@ -686,7 +684,9 @@ const AllWorkouts = ({navigation, route}: any) => {
     }
   };
   const getAdsDisplay = (index:number, item:any) => {
-    if (allWorkoutData.length > 1) {
+    const noOrNoobPlan =
+      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
+    if (noOrNoobPlan&& allWorkoutData.length > 1) {
       if (index == 0) {
         return getNativeAdsDisplay();
       }
@@ -698,7 +698,7 @@ const AllWorkouts = ({navigation, route}: any) => {
         // return null
       }
     }else{
-      console.log("SDfdsfds2222222")
+   
       // return null
     }
 

@@ -76,17 +76,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 11,
     ...Platform.select({
-      android:{
-        elevation:5,
-        shadowColor:'grey'
+      android: {
+        elevation: 5,
+        shadowColor: 'grey',
       },
       ios: {
-        shadowColor: '#000',
+        shadowColor: 'lightgray',
         shadowOffset: {width: 5, height: 5},
         shadowOpacity: 0.2,
-        shadowRadius: 8,
+        shadowRadius: 3,
       },
-    })
+    }),
   },
   txt: {
     paddingVertical: 14,

@@ -71,20 +71,20 @@ const App = () => {
     }
     alalyicsData();
   }, []);
-  const handleBackPress = () => {
-    // Do nothing to stop the hardware back press
-    return true;
-  };
+  // const handleBackPress = () => {
+  //   // Do nothing to stop the hardware back press
+  //   return true;
+  // };
 
-  useEffect(() => {
-    // Add an event listener to handle the hardware back press
-    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+  // useEffect(() => {
+  //   // Add an event listener to handle the hardware back press
+  //   BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
-    // Remove the event listener when the component is unmounted
-    return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
-    };
-  }, []);
+  //   // Remove the event listener when the component is unmounted
+  //   return () => {
+  //     BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+  //   };
+  // }, []);
   const StatusBar_Bar_Height = Platform.OS === 'ios' ? getStatusBarHeight() : 0;
   const dispatch = useDispatch();
 
@@ -162,132 +162,132 @@ const App = () => {
 
 
 
-  // useEffect(() => {
-  //   var updateDialogOptions = {
-  //     updateTitle: 'Optional Update',
-  //     optionalUpdateMessage:
-  //       'An update is available. Would you like to install it now?',
-  //     optionalIgnoreButtonLabel: 'Later',
-  //     optionalInstallButtonLabel: 'Update',
-  //     mandatoryUpdateMessage:
-  //       'A mandatory update is available. Please update to continue using the app.',
-  //     mandatoryContinueButtonLabel: 'Update Now',
-  //   };
-  //   codePush.sync(
-  //     {
-  //       updateDialog: updateDialogOptions,
-  //       installMode: codePush.InstallMode.IMMEDIATE,
-  //       //installMode: codePush.InstallMode.MANUAL,
-  //     },
+  useEffect(() => {
+    var updateDialogOptions = {
+      updateTitle: 'Optional Update',
+      optionalUpdateMessage:
+        'An update is available. Would you like to install it now?',
+      optionalIgnoreButtonLabel: 'Later',
+      optionalInstallButtonLabel: 'Update',
+      mandatoryUpdateMessage:
+        'A mandatory update is available. Please update to continue using the app.',
+      mandatoryContinueButtonLabel: 'Update Now',
+    };
+    codePush.sync(
+      {
+        updateDialog: updateDialogOptions,
+        installMode: codePush.InstallMode.IMMEDIATE,
+        //installMode: codePush.InstallMode.MANUAL,
+      },
 
-  //     codePushStatusDidChange,
-  //     codePushDownloadDidProgress,
-  //   );
-  // }, []);
-  // const codePushStatusDidChange = syncStatus => {
-  //   switch (syncStatus) {
-  //     case codePush.SyncStatus.CHECKING_FOR_UPDATE:
-  //       break;
-  //     case codePush.SyncStatus.DOWNLOADING_PACKAGE:
-  //       break;
-  //     case codePush.SyncStatus.AWAITING_USER_ACTION:
-  //       break;
-  //     case codePush.SyncStatus.INSTALLING_UPDATE:
-  //       LogOut(dispatch);
-  //       setProgress(false);
-  //       break;
-  //     case codePush.SyncStatus.UP_TO_DATE:
-  //       break;
-  //     case codePush.SyncStatus.UPDATE_IGNORED:
-  //       setProgress(false);
-  //       break;
-  //     case codePush.SyncStatus.UPDATE_INSTALLED:
-  //       LogOut(dispatch);
-  //       setProgress(false);
-  //       break;
-  //     case codePush.SyncStatus.UNKNOWN_ERROR:
-  //       console.log('An unknown error occurred');
-  //       setProgress(false);
-  //       break;
-  //   }
-  // };
-  // const codePushDownloadDidProgress = progress => {
-  //   setProgress(progress);
-  // };
-  // const showProgressView = () => {
-  //   return (
-  //     <Modal visible={true} transparent>
-  //       <View
-  //         style={{
-  //           flex: 1,
-  //           backgroundColor: 'rgba(0,0,0,0.8)',
-  //           justifyContent: 'center',
-  //           alignItems: 'center',
-  //         }}>
-  //         <View
-  //           style={{
-  //             backgroundColor: 'white',
-  //             borderRadius: 8,
-  //             padding: DeviceWidth * 0.05,
-  //           }}>
-  //           <Text
-  //             style={{
-  //               textAlign: 'center',
-  //               fontSize: 17,
-  //               fontFamily: 'Montserrat-Regular',
-  //               fontWeight: '700',
-  //               color: AppColor.BLACK,
-  //             }}>
-  //             Downloading......
-  //           </Text>
+      codePushStatusDidChange,
+      codePushDownloadDidProgress,
+    );
+  }, []);
+  const codePushStatusDidChange = syncStatus => {
+    switch (syncStatus) {
+      case codePush.SyncStatus.CHECKING_FOR_UPDATE:
+        break;
+      case codePush.SyncStatus.DOWNLOADING_PACKAGE:
+        break;
+      case codePush.SyncStatus.AWAITING_USER_ACTION:
+        break;
+      case codePush.SyncStatus.INSTALLING_UPDATE:
+        LogOut(dispatch);
+        setProgress(false);
+        break;
+      case codePush.SyncStatus.UP_TO_DATE:
+        break;
+      case codePush.SyncStatus.UPDATE_IGNORED:
+        setProgress(false);
+        break;
+      case codePush.SyncStatus.UPDATE_INSTALLED:
+        LogOut(dispatch);
+        setProgress(false);
+        break;
+      case codePush.SyncStatus.UNKNOWN_ERROR:
+        console.log('An unknown error occurred');
+        setProgress(false);
+        break;
+    }
+  };
+  const codePushDownloadDidProgress = progress => {
+    setProgress(progress);
+  };
+  const showProgressView = () => {
+    return (
+      <Modal visible={true} transparent>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              borderRadius: 8,
+              padding: DeviceWidth * 0.05,
+            }}>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 17,
+                fontFamily: 'Montserrat-Regular',
+                fontWeight: '700',
+                color: AppColor.BLACK,
+              }}>
+              Downloading......
+            </Text>
 
-  //           <View style={{alignItems: 'center'}}>
-  //             <View style={{marginVertical: 15}}>
-  //               <CircularProgress
-  //                 value={(
-  //                   (Number(progress?.receivedBytes) /
-  //                     Number(progress?.totalBytes)) *
-  //                   100
-  //                 ).toFixed(0)}
-  //                 radius={50}
-  //                 progressValueColor={'rgb(197, 23, 20)'}
-  //                 inActiveStrokeColor={AppColor.GRAY2}
-  //                 activeStrokeColor={'rgb(197, 23, 20)'}
-  //                 inActiveStrokeOpacity={0.3}
-  //                 maxValue={100}
-  //                 valueSuffix={'%'}
-  //                 titleColor={'black'}
-  //                 titleStyle={{
-  //                   textAlign: 'center',
-  //                   fontSize: 28,
-  //                   fontWeight: '700',
-  //                   lineHeight: 35,
-  //                   fontFamily: 'Montserrat-Regular',
+            <View style={{alignItems: 'center'}}>
+              <View style={{marginVertical: 15}}>
+                <CircularProgress
+                  value={(
+                    (Number(progress?.receivedBytes) /
+                      Number(progress?.totalBytes)) *
+                    100
+                  ).toFixed(0)}
+                  radius={50}
+                  progressValueColor={'rgb(197, 23, 20)'}
+                  inActiveStrokeColor={AppColor.GRAY2}
+                  activeStrokeColor={'rgb(197, 23, 20)'}
+                  inActiveStrokeOpacity={0.3}
+                  maxValue={100}
+                  valueSuffix={'%'}
+                  titleColor={'black'}
+                  titleStyle={{
+                    textAlign: 'center',
+                    fontSize: 28,
+                    fontWeight: '700',
+                    lineHeight: 35,
+                    fontFamily: 'Montserrat-Regular',
 
 
-  //                   color: 'rgb(0, 0, 0)',
-  //                 }}
-  //               />
-  //             </View>
-  //             <Text
-  //               style={{
-  //                 marginTop: 16,
-  //                 textAlign: 'center',
-  //                 fontSize: 15,
-  //                 fontFamily: 'Montserrat-Regular',
-  //                 fontWeight: '700',
-  //                 color: AppColor.BLACK,
-  //               }}>{`${(Number(progress?.receivedBytes) / 1048576).toFixed(
-  //               2,
-  //             )} MB /${(Number(progress?.totalBytes) / 1048576).toFixed(
-  //               2,
-  //             )} MB`}</Text>
-  //           </View>
-  //         </View>
-  //       </View>
-  //     </Modal>
-  //   );
-  // };
+                    color: 'rgb(0, 0, 0)',
+                  }}
+                />
+              </View>
+              <Text
+                style={{
+                  marginTop: 16,
+                  textAlign: 'center',
+                  fontSize: 15,
+                  fontFamily: 'Montserrat-Regular',
+                  fontWeight: '700',
+                  color: AppColor.BLACK,
+                }}>{`${(Number(progress?.receivedBytes) / 1048576).toFixed(
+                2,
+              )} MB /${(Number(progress?.totalBytes) / 1048576).toFixed(
+                2,
+              )} MB`}</Text>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
 
   return (
     <>
@@ -303,6 +303,7 @@ const App = () => {
           });
         }}>
         <LoginStack />
+        
       </NavigationContainer>
       <FlashMessage
         position="top"
@@ -331,7 +332,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
 });
-export default App;
+// export default App;
 
-//export default codePush(codePushOptions)(App);
+export default codePush(codePushOptions)(App);
 

@@ -4,7 +4,6 @@ import Svg, {Line, Defs, Stop} from 'react-native-svg';
 import {DeviceHeigth, DeviceWidth} from './Config';
 import LinearGradient from 'react-native-linear-gradient';
 import { AppColor } from './Color';
-import App from '../../App';
 const CustomBarChart = ({data, barColor, barWidth, barSpacing}) => { 
   const animatedValues = useRef(data.map(() => new Animated.Value(0))).current;
 
@@ -24,7 +23,7 @@ const CustomBarChart = ({data, barColor, barWidth, barSpacing}) => {
         borderBottomWidth: 1,
         alignSelf: 'center',
         marginTop: 40,
-        height: DeviceHeigth * 0.28,
+        height: DeviceHeigth * 0.29,
         alignItems: 'center',
       }}>
       <Svg style={styles.svg}>
@@ -55,7 +54,8 @@ const CustomBarChart = ({data, barColor, barWidth, barSpacing}) => {
                 {
                   height: animatedValues[index]?.interpolate({
                     inputRange: [0, maxValue],
-                    outputRange: [0, 200],
+                    outputRange: [0, 
+                      DeviceHeigth <= 667 ? DeviceHeigth * 0.25 : 200], // to make changes here
                   }),
                   backgroundColor: barColor,
                   width: barWidth + barSpacing,
@@ -68,7 +68,8 @@ const CustomBarChart = ({data, barColor, barWidth, barSpacing}) => {
                 style={{
                   width: barSpacing+barWidth,
                   height: 200,
-                  borderRadius: 5,
+                  borderTopLeftRadius: 5,
+                  borderTopRightRadius: 5,
                 }}
               />
             </Animated.View>

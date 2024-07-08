@@ -48,6 +48,8 @@ import CircularProgress, {
   ProgressRef,
 } from 'react-native-circular-progress-indicator';
 import {setScreenAwake} from '../../../Component/ThemeRedux/Actions';
+import {AddCountFunction} from '../../../Component/Utilities/AddCountFunction';
+import NativeAddTest from '../../../Component/NativeAddTest';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -61,19 +63,13 @@ const WeekArray = Array(7)
 const songs = [
   {
     id: 1,
-    // title: 'song 1',
-    // artist: 'XYZ',
-    // artwork: localImage.Play3,
+
     url: require('../../../Icon/Images/Exercise_Timer.wav'),
-    // url: route.params.item.exercise_mindset_audio,
   },
   {
     id: 2,
-    // title: 'song 1',
-    // artist: 'XYZ',
-    // artwork: localImage.Play3,
+
     url: require('../../../Icon/Images/Exercise_Start.mp3'),
-    // url: route.params.item.exercise_mindset_audio,
   },
 ];
 const Exercise = ({navigation, route}: any) => {
@@ -87,7 +83,7 @@ const Exercise = ({navigation, route}: any) => {
     type,
     challenge,
   } = route.params;
-  // console.log(Tts.voices().then(voices => console.log(voices)))
+
   const VideoRef = useRef();
   const [visible, setVisible] = useState(false);
   const [playW, setPlayW] = useState(0);
@@ -135,6 +131,7 @@ const Exercise = ({navigation, route}: any) => {
     parseInt(currentData?.exercise_rest.split(' ')[0]),
   );
   const [isRunning, setIsRunning] = useState(false);
+  const [quitLoader, setQuitLoader] = useState(false);
   const playbackState = usePlaybackState();
 
   const setupPlayer = async () => {
@@ -185,7 +182,6 @@ const Exercise = ({navigation, route}: any) => {
         await Tts.setDucking(true);
         await Tts.setIgnoreSilentSwitch('ignore');
         await Tts.addEventListener('tts-finish', event => {
-          // console.log('event',event)
           Tts.stop();
         });
         setTtsInitialized(true);
@@ -195,11 +191,9 @@ const Exercise = ({navigation, route}: any) => {
     initTts();
   }, []);
   const StartAudio = async (playbackState: any) => {
-    // console.log('playbackState', playbackState);
     await TrackPlayer.play();
   };
   const PauseAudio = async (playbackState: any) => {
-    // console.log('PauseState', playbackState);
     await TrackPlayer.reset();
   };
   const SPEAK = (words: string) => {
@@ -247,13 +241,10 @@ const Exercise = ({navigation, route}: any) => {
               setSeconds(
                 parseInt(allExercise[index + 1]?.exercise_rest.split(' ')[0]),
               );
-              // setPre(15);
-              // console.log('VIDEO LOCATIONS', getStoreVideoLoc);
-              // if (number != 0) {
+
               setCurrentData(allExercise[index + 1]);
               setNumber(number + 1);
               handleExerciseChange(allExercise[index + 1]?.exercise_title);
-              // setRandomCount(randomCount + 1);
 
               setTimer(10);
               setDemoW(0);
@@ -329,7 +320,7 @@ const Exercise = ({navigation, route}: any) => {
                 : enteredCurrentEvent
                 ? postCurrentRewardsExerciseAPI(number)
                 : postCurrentExerciseAPI(number);
-              let checkAdsShow = checkMealAddCount();
+              let checkAdsShow = AddCountFunction();
               if (checkAdsShow == true) {
                 showInterstitialAd();
                 navigation.navigate('SaveDayExercise', {
@@ -410,14 +401,9 @@ const Exercise = ({navigation, route}: any) => {
         setBack(true);
       }
     });
-    const unsubscribe1 = BackHandler.addEventListener(
-      'hardwareBackPress',
-      handleBackPress,
-    );
 
     return () => {
       unsubscribe;
-      unsubscribe1.remove();
     };
   }, [navigation]);
   const handleBackPress = () => {
@@ -431,7 +417,6 @@ const Exercise = ({navigation, route}: any) => {
   const handleExerciseChange = (exerciseName: string) => {
     if (getStoreVideoLoc.hasOwnProperty(exerciseName)) {
       setCurrentVideo(getStoreVideoLoc[exerciseName]);
-      // console.log('CURRENT', getStoreVideoLoc[exerciseName]);
     } else {
       setCurrentVideo('');
       console.error(`Exercise "${exerciseName}" video not found.`);
@@ -444,7 +429,7 @@ const Exercise = ({navigation, route}: any) => {
     payload.append('workout_id', `-${day + 1}`);
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
-
+    setQuitLoader(true);
     try {
       const res = await axios({
         url:
@@ -458,7 +443,9 @@ const Exercise = ({navigation, route}: any) => {
           '&current_date=' +
           moment().format('YYYY-MM-DD'),
       });
+      setQuitLoader(false);
     } catch (error) {
+      setQuitLoader(false);
       console.log('DELE TRACK ERRR', error);
     }
     navigationRef.current.goBack();
@@ -471,9 +458,9 @@ const Exercise = ({navigation, route}: any) => {
     payload.append('workout_id', `-${day + 1}`);
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
-    next>0 && payload.append('next_status', next);
-    previous>0 && payload.append('prev_status', previous);
-    skip>0 && payload.append('skip_status', skip);
+    next > 0 && payload.append('next_status', next);
+    previous > 0 && payload.append('prev_status', previous);
+    skip > 0 && payload.append('skip_status', skip);
 
     try {
       const res = await axios({
@@ -493,7 +480,6 @@ const Exercise = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data) {
-        // console.log(res.data, payload, 'Rewards Exercise');
         setCompleted(completed + 1);
         setCurrentData(allExercise[index]);
         setRestStart(true);
@@ -540,7 +526,6 @@ const Exercise = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data) {
-        // console.log(res.data, payload, 'Exercise');
         setCompleted(completed + 1);
         setCurrentData(allExercise[index]);
         setRestStart(true);
@@ -577,7 +562,6 @@ const Exercise = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (res.data) {
-        // console.log(res.data, payload, 'SINGLE');
         setCompleted(completed + 1);
         setCurrentData(allExercise[index]);
         setRestStart(true);
@@ -587,9 +571,8 @@ const Exercise = ({navigation, route}: any) => {
       console.error(error, 'PostSINGLExerciseAPIERror');
     }
   };
-
   const PauseModal = useMemo(() => {
-    return ({back}: any) => {
+    return ({back, quitLoader}: any) => {
       return (
         <Modal
           visible={back}
@@ -599,38 +582,24 @@ const Exercise = ({navigation, route}: any) => {
             style={{
               flex: 1,
               backgroundColor: AppColor.WHITE,
-
-              justifyContent: 'flex-end',
+              justifyContent: 'center',
               alignItems: 'center',
-              marginBottom: 20,
+              // marginTop: DeviceHeigth * 0.05
             }}>
+            <NativeAddTest media={true} type="video" />
             <View
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
+                paddingTop: DeviceWidth * 0.1,
+                // marginTop: DeviceHeigth * 0.05
                 // paddingLeft: DeviceWidth / 2,
               }}>
-              {/* <GradientText
-                text={'Keep Going!'}
-                fontWeight={'700'}
-                fontSize={32}
-                width={DeviceWidth}
-                x={30}
-                alignSelf
-              />
-              <GradientText
-                alignSelf
-                width={DeviceWidth}
-                text={`Don't Give Up!`}
-                fontWeight={'700'}
-                fontSize={32}
-                x={-2}
-              /> */}
               <Text
                 style={{
                   fontWeight: '600',
                   fontSize: 32,
-                  color: AppColor.RED1,
+                  color: '#f0013b',
                 }}>
                 Keep Going!
               </Text>
@@ -638,7 +607,7 @@ const Exercise = ({navigation, route}: any) => {
                 style={{
                   fontWeight: '600',
                   fontSize: 32,
-                  color: AppColor.RED1,
+                  color: '#f0013b',
                 }}>
                 Don't Give Up!
               </Text>
@@ -649,22 +618,22 @@ const Exercise = ({navigation, route}: any) => {
                 fontWeight: '500',
                 fontFamily: 'Poppins',
                 lineHeight: 30,
-                marginTop: 20,
+                marginTop: 5,
                 color: AppColor.BLACK,
               }}>
               {`You have finished `}
-              <Text style={{color: AppColor.RED}}>
+              <Text style={{color: '#f0013b'}}>
                 {((number / parseInt(allExercise?.length)) * 100).toFixed(0) +
                   '%'}
               </Text>
               {'\n'}
               {' only '}
-              <Text style={{color: AppColor.RED}}>
+              <Text style={{color: '#f0013b'}}>
                 {parseInt(allExercise?.length) - number + ' Exercises'}
               </Text>
               {' left '}
             </Text>
-            <View style={{marginTop: 30}}>
+            <View style={{marginTop: 12}}>
               <ProgreesButton
                 text="Resume"
                 h={55}
@@ -674,31 +643,9 @@ const Exercise = ({navigation, route}: any) => {
                 onPress={() => setBack(false)}
                 bW={1}
               />
-              <ProgreesButton
-                onPress={() => {
-                  setPlayW(0);
-                  setBack(false);
-                  setSeconds(
-                    parseInt(currentExercise?.exercise_rest.split(' ')[0]),
-                  );
-                }}
-                text="Restart this Exercise"
-                h={55}
-                bR={30}
-                flex={-1}
-                colors={['#F3F3F3', '#F3F3F3']}
-                textStyle={{
-                  fontSize: 20,
-                  fontFamily: 'Poppins',
-                  lineHeight: 30,
-                  color: AppColor.BLACK,
-                  fontWeight: '700',
-                }}
-                bC="white"
-                bW={1}
-              />
+
               <TouchableOpacity
-                style={{alignSelf: 'center', marginTop: 20}}
+                style={{alignSelf: 'center', marginTop: 5}}
                 onPress={() => {
                   type == 'day'
                     ? navigationRef.current.goBack()
@@ -706,16 +653,23 @@ const Exercise = ({navigation, route}: any) => {
                     ? navigationRef.current.goBack()
                     : deleteTrackExercise();
                 }}>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontFamily: 'Poppins',
-                    lineHeight: 30,
-                    color: AppColor.BLACK,
-                    fontWeight: '700',
-                  }}>
-                  Quit
-                </Text>
+                {quitLoader ? (
+                  <ActivityIndicator
+                    animating={quitLoader}
+                    color={AppColor.NEW_DARK_RED}
+                  />
+                ) : (
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontFamily: 'Poppins',
+                      lineHeight: 30,
+                      color: AppColor.BLACK,
+                      fontWeight: '700',
+                    }}>
+                    Quit
+                  </Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -842,6 +796,7 @@ const Exercise = ({navigation, route}: any) => {
                   fontWeight: '600',
                   fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                   lineHeight: 54,
+                  marginTop: DeviceHeigth <= 625 ? -10 : 0,
                   color: AppColor.LITELTEXTCOLOR,
                 }}>
                 Get Ready
@@ -853,6 +808,7 @@ const Exercise = ({navigation, route}: any) => {
                   lineHeight: 24,
                   fontFamily: Fonts.MONTSERRAT_MEDIUM,
                   fontWeight: '500',
+                  marginTop: DeviceHeigth <= 625 ? -5 : 0,
                 }}>
                 {allExercise[0]?.exercise_title}
               </Text>
@@ -864,7 +820,7 @@ const Exercise = ({navigation, route}: any) => {
                 alignItems: 'center',
                 width: DeviceWidth,
                 alignSelf: 'center',
-                marginTop: DeviceWidth * 0.1,
+                marginTop: DeviceHeigth <= 625 ? 5 : DeviceWidth * 0.1,
               }}>
               <View style={{width: DeviceWidth * 0.2}} />
               <View
@@ -872,15 +828,13 @@ const Exercise = ({navigation, route}: any) => {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  // alignSelf: 'center',
-                  // width: '50%',
                 }}>
                 <CircularProgress
                   value={timerS}
                   radius={40}
-                  progressValueColor="#A93737"
+                  progressValueColor="#f0013b"
                   inActiveStrokeColor={'#FCECF0'}
-                  activeStrokeColor="#A93737"
+                  activeStrokeColor="#f0013b"
                   // inActiveStrokeOpacity={0.3}
                   maxValue={10}
                   titleColor={'black'}
@@ -1059,9 +1013,9 @@ const Exercise = ({navigation, route}: any) => {
                   initialValue={10}
                   startInPausedState={true}
                   radius={40}
-                  progressValueColor="#A93737"
+                  progressValueColor="#f0013b"
                   inActiveStrokeColor={'#FCECF0'}
-                  activeStrokeColor="#A93737"
+                  activeStrokeColor="#f0013b"
                   // inActiveStrokeOpacity={0.3}
                   maxValue={10}
                   titleColor={'black'}
@@ -1075,7 +1029,7 @@ const Exercise = ({navigation, route}: any) => {
                 />
                 <TouchableOpacity
                   onPress={() => {
-                    setSkip(skip+1);
+                    setSkip(skip + 1);
                     clearInterval(restTimerRef.current);
                     setTimer(0);
                   }}
@@ -1202,28 +1156,32 @@ const Exercise = ({navigation, route}: any) => {
                   resizeMode="contain"
                 />
               </TouchableOpacity>
-              {!enteredCurrentEvent && (
-                <TouchableOpacity
-                  onPress={() => {
-                    setRestStart(false);
-                    setVisible(true);
-                  }}
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    borderRadius: restStart ? 50 : 25,
-                    width: restStart ? 50 : 25,
-                    height: restStart ? 50 : 25,
-                    backgroundColor: restStart ? 'transparent' : '#3333331A',
-                    marginVertical: 5,
-                  }}>
-                  <Image
-                    source={localImage.Exercise_List}
-                    style={{width: 15, height: 15}}
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
-              )}
+              {enteredCurrentEvent && type == 'weekly'
+                ? null
+                : allExercise?.length > 1 && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setRestStart(false);
+                        setVisible(true);
+                      }}
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: restStart ? 50 : 25,
+                        width: restStart ? 50 : 25,
+                        height: restStart ? 50 : 25,
+                        backgroundColor: restStart
+                          ? 'transparent'
+                          : '#3333331A',
+                        marginVertical: 5,
+                      }}>
+                      <Image
+                        source={localImage.Exercise_List}
+                        style={{width: 15, height: 15}}
+                        resizeMode="contain"
+                      />
+                    </TouchableOpacity>
+                  )}
             </View>
             <View
               style={{
@@ -1347,7 +1305,7 @@ const Exercise = ({navigation, route}: any) => {
               play={!pause}
               fill={100}
               h={80}
-              mB={DeviceHeigth * 0.02}
+              mB={DeviceHeigth * 0.05}
               playy={() => {
                 setPause(!pause);
               }}
@@ -1402,7 +1360,7 @@ const Exercise = ({navigation, route}: any) => {
             INDEX={completed}
             time={currentData?.exercise_rest == 1 ? 60 : 1}
             w={restStart ? '100%' : `${100}%`}
-            color={restStart ? AppColor.WHITE : AppColor.RED}
+            color={restStart ? AppColor.WHITE : '#f0013b'}
           />
         </>
       )}
@@ -1420,7 +1378,7 @@ const Exercise = ({navigation, route}: any) => {
         handleExerciseChange={handleExerciseChange}
         setNumber={setNumber}
       />
-      <PauseModal back={back} />
+      <PauseModal back={back} quitLoader={quitLoader} />
 
       <WorkoutsDescription open={open} setOpen={setOpen} data={currentData} />
     </SafeAreaView>

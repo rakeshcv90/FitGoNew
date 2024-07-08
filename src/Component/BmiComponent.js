@@ -140,7 +140,7 @@ const WeightHeight = ({
           style={{width: DeviceWidth * 0.5,}}
           underlineColor="transparent"
           mode="outlined"
-          keyboardType="number-pad"
+          keyboardType="decimal-pad"
           activeUnderlineColor="transparent"
           maxLength={4}
           outlineStyle={{borderRadius: 10}}
@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 10,
-    backgroundColor: AppColor.RED,
+    backgroundColor: '#f0013b',
     borderRadius: 6,
   },
   modalContent: {

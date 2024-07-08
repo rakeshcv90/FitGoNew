@@ -108,7 +108,7 @@ const Login = ({navigation}) => {
       socialLogiIn(user, idToken);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        setCancelLogin(true);
+        // setCancelLogin(true);
       } else if (error.code === statusCodes.IN_PROGRESS) {
         // alert('Signin in progress');
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
@@ -137,6 +137,7 @@ const Login = ({navigation}) => {
           platform: Platform.OS,
         },
       });
+      console.log('zxcfdsfdsfdsfs', data.data);
       if (data.data.profile_status == 1) {
         showMessage({
           message: data.data.msg,
@@ -156,7 +157,7 @@ const Login = ({navigation}) => {
         'User does not exist with provided Google social credentials'
       ) {
         showMessage({
-          message: 'This email id is not registered. Sign Up to continue',
+          message: 'This email id is not registered. SignUp to continue.',
           type: 'danger',
           animationDuration: 1000,
           floating: true,
@@ -198,94 +199,94 @@ const Login = ({navigation}) => {
       await GoogleSignin.signOut();
     }
   };
-  const FacebookLogin = () => {
-    analytics().logEvent('CV_FITME_FACEBOOK_LOGIN');
-    LoginManager.logInWithPermissions(['public_profile', 'email']).then(
-      function (result) {
-        if (result.isCancelled) {
-          setCancelLogin(true);
-        } else {
-          const currentProfile = Profile.getCurrentProfile().then(function (
-            currentProfile,
-          ) {
-            if (currentProfile) {
-              socialFacebookLogiIn(currentProfile);
-            }
-          });
-        }
-      },
-      function (error) {
-        alert('Login failed with error: ' + error);
-      },
-    );
-  };
-  const socialFacebookLogiIn = async value => {
-    setForLoading(true);
-    try {
-      const data = await axios(`${NewApi}${NewAppapi.login}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: {
-          name: value.name,
-          email: value.email,
-          signuptype: 'social',
-          socialid: value.userID,
-          socialtoken: '',
-          socialtype: 'facebook',
-          version: appVersion,
-          devicetoken: getFcmToken,
-          platform: Platform.OS,
-        },
-      });
-      if (data.data.profile_status == 1) {
-        showMessage({
-          message: data.data.msg,
-          type: 'success',
-          animationDuration: 500,
+  // const FacebookLogin = () => {
+  //   analytics().logEvent('CV_FITME_FACEBOOK_LOGIN');
+  //   LoginManager.logInWithPermissions(['public_profile', 'email']).then(
+  //     function (result) {
+  //       if (result.isCancelled) {
+  //         setCancelLogin(true);
+  //       } else {
+  //         const currentProfile = Profile.getCurrentProfile().then(function (
+  //           currentProfile,
+  //         ) {
+  //           if (currentProfile) {
+  //             socialFacebookLogiIn(currentProfile);
+  //           }
+  //         });
+  //       }
+  //     },
+  //     function (error) {
+  //       alert('Login failed with error: ' + error);
+  //     },
+  //   );
+  // };
+  // const socialFacebookLogiIn = async value => {
+  //   setForLoading(true);
+  //   try {
+  //     const data = await axios(`${NewApi}${NewAppapi.login}`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //       data: {
+  //         name: value.name,
+  //         email: value.email,
+  //         signuptype: 'social',
+  //         socialid: value.userID,
+  //         socialtoken: '',
+  //         socialtype: 'facebook',
+  //         version: appVersion,
+  //         devicetoken: getFcmToken,
+  //         platform: Platform.OS,
+  //       },
+  //     });
+  //     if (data.data.profile_status == 1) {
+  //       showMessage({
+  //         message: data.data.msg,
+  //         type: 'success',
+  //         animationDuration: 500,
 
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setForLoading(false);
-        // getProfileData(data.data.id, data.data.profile_status);
-        getUserDetailData(data?.data?.id, data?.data?.profile_status);
-      } else if (
-        data.data.msg ==
-        'User does not exist with provided Facebook social credentials'
-      ) {
-        showMessage({
-          message: 'You are not registered,You need to Signup first',
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-        setForLoading(false);
-      } else if (
-        data.data?.msg == 'Please update the app to the latest version.'
-      ) {
-        setForLoading(false);
-        showMessage({
-          message: data.data.msg,
-          type: 'danger',
-          animationDuration: 500,
-          floating: true,
-          icon: {icon: 'auto', position: 'left'},
-        });
-      } else {
-        setForLoading(false);
-        // setModalVisible(true);
-        dispatch(setCustomWorkoutData([]));
-        // getProfileData(data.data.id, data.data.profile_status);
-        getUserDetailData(data?.data?.id, data?.data?.profile_status);
-      }
-    } catch (error) {
-      setForLoading(false);
-      console.log('Facebook Signup Error', error);
-    }
-  };
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       setForLoading(false);
+  //       // getProfileData(data.data.id, data.data.profile_status);
+  //       getUserDetailData(data?.data?.id, data?.data?.profile_status);
+  //     } else if (
+  //       data.data.msg ==
+  //       'User does not exist with provided Facebook social credentials'
+  //     ) {
+  //       showMessage({
+  //         message: 'You are not registered. You need to SignUp first.',
+  //         type: 'danger',
+  //         animationDuration: 500,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //       setForLoading(false);
+  //     } else if (
+  //       data.data?.msg == 'Please update the app to the latest version.'
+  //     ) {
+  //       setForLoading(false);
+  //       showMessage({
+  //         message: data.data.msg,
+  //         type: 'danger',
+  //         animationDuration: 500,
+  //         floating: true,
+  //         icon: {icon: 'auto', position: 'left'},
+  //       });
+  //     } else {
+  //       setForLoading(false);
+  //       // setModalVisible(true);
+  //       dispatch(setCustomWorkoutData([]));
+  //       // getProfileData(data.data.id, data.data.profile_status);
+  //       getUserDetailData(data?.data?.id, data?.data?.profile_status);
+  //     }
+  //   } catch (error) {
+  //     setForLoading(false);
+  //     console.log('Facebook Signup Error', error);
+  //   }
+  // };
   const onApplePress = async () => {
     analytics().logEvent('CV_FITME_APPLE_LOGIN');
     await appleAuth
@@ -311,7 +312,10 @@ const Login = ({navigation}) => {
           'Content-Type': 'multipart/form-data',
         },
         data: {
-          name: res.fullName.givenName + res.fullName.familyName,
+          name:
+            res.fullName.givenName == null || res.fullName.familyName == null
+              ? 'Guest'
+              : res.fullName.givenName + res.fullName.familyName,
           email: res.email,
           signuptype: 'social',
           socialid: res.user,
@@ -322,7 +326,8 @@ const Login = ({navigation}) => {
           platform: Platform.OS,
         },
       });
-
+      
+      setForLoading(false);
       if (data.data?.profile_status == 1) {
         showMessage({
           message: data.data.msg,
@@ -356,6 +361,17 @@ const Login = ({navigation}) => {
         //   floating: true,
         //   icon: {icon: 'auto', position: 'left'},
         // });
+      } else if (data.data?.msg == 'email alrady registerd') {
+        showMessage({
+          message:
+            'Email id already registered with ' +
+            data.data.social_type +
+            ' Login',
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       } else {
         setForLoading(false);
 
@@ -381,7 +397,7 @@ const Login = ({navigation}) => {
       });
     } else if (reg.test(email) === false) {
       showMessage({
-        message: 'Please Enter Valid Emaid Id',
+        message: 'Please Enter valid emaid id',
         floating: true,
         duration: 500,
         type: 'danger',
@@ -608,6 +624,7 @@ const Login = ({navigation}) => {
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         dispatch(setUserProfileData(responseData?.data?.profile));
+        console.log('SDfdsfdsfdsfds', responseData?.data?.profile);
 
         if (responseData?.data.event_details == 'Not any subscription') {
           dispatch(setPurchaseHistory([]));
@@ -644,9 +661,7 @@ const Login = ({navigation}) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      dispatch(setPurchaseHistory([]));
-      dispatch(setUserProfileData([]));
-      dispatch(setCustomWorkoutData([]));
+
       if (status == 1) {
         if (responseData?.data?.additional_data?.term_condition == 'Accepted') {
           navigation.replace('BottomTab');
@@ -758,7 +773,7 @@ const Login = ({navigation}) => {
         if (data?.data[0]?.msg == 'Mail sent') {
           setForLoading(false);
           showMessage({
-            message: 'Reset Password link sent!',
+            message: 'Reset password link sent!',
             type: 'success',
             animationDuration: 500,
 
@@ -956,7 +971,7 @@ const Login = ({navigation}) => {
           <View
             style={{
               width: DeviceWidth * 0.8,
-              height: DeviceHeigth * 0.3,
+              // height: DeviceHeigth * 0.3,
               backgroundColor: 'white',
               borderRadius: 8,
               padding: 20,
@@ -1157,27 +1172,77 @@ const Login = ({navigation}) => {
             style={{
               marginTop: DeviceHeigth * 0.03,
               alignSelf: 'center',
-
-              marginLeft: -5,
+              flexDirection: 'row',
+              alignSelf: 'center',
+              alignItems: 'center',
             }}>
+            <View style={{width: 120, height: 1, backgroundColor: 'black'}} />
+
             <Text
-              style={[styles.forgotText, {fontSize: 12, fontWeight: '400'}]}>
-              Or Continue With
+              style={[
+                styles.forgotText,
+                {fontSize: 12, fontWeight: '400', marginHorizontal: 20},
+              ]}>
+              Or
             </Text>
+            <View style={{width: 120, height: 1, backgroundColor: 'black'}} />
           </View>
         </KeyboardAvoidingView>
-        <View style={{marginTop: DeviceHeigth * 0.02, paddingBottom: 10}}>
-          {Platform.OS == 'android' && (
-            <Button2 onGooglePress={GoogleSignup} onFBPress={FacebookLogin} />
+        <View
+          style={{
+            marginTop: DeviceHeigth * 0.03,
+            paddingBottom: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          {Platform.OS == 'ios' && (
+            <>
+              <TouchableOpacity
+                onPress={() => {
+                  GoogleSignup();
+                }}>
+                <Image
+                  source={localImage.GOOGLE}
+                  style={{
+                    width: DeviceWidth * 0.15,
+                    height: DeviceHeigth * 0.05,
+                  }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  onApplePress();
+                }}>
+                <Image
+                  source={localImage.AppleLogo}
+                  style={{
+                    width: DeviceWidth * 0.15,
+                    height: DeviceHeigth * 0.05,
+                    marginLeft: 30,
+                  }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </>
           )}
+          {Platform.OS == 'android' && (
+            <View style={{top: -10}}>
+              <Button2 onGooglePress={GoogleSignup} />
+            </View>
+          )}
+        </View>
+        {/* <View style={{marginTop: DeviceHeigth * 0.02, paddingBottom: 10}}>
+       
           {Platform.OS == 'ios' && (
             <Button2 onGooglePress={GoogleSignup} onApplePress={onApplePress} />
           )}
-        </View>
+        </View> */}
       </ScrollView>
       <CompleateProfileModal />
       <LoginCancelModal />
-      {/* `<AppUpdateComponent visible={true}/>` */}
+
       <ModalView />
     </SafeAreaView>
   );

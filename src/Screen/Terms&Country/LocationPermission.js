@@ -1,4 +1,5 @@
 import Geolocation from '@react-native-community/geolocation';
+import axios from 'axios';
 import {Alert} from 'react-native';
 import geocoder from 'react-native-geocoder-reborn';
 import {
@@ -10,7 +11,8 @@ import {
   checkMultiple,
   request,
 } from 'react-native-permissions';
-
+import {NewAppapi} from '../../Component/Config';
+import VersionNumber, {appVersion} from 'react-native-version-number';
 export const locationPermission = async () => {
   if (Platform.OS === 'ios') {
     const result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
@@ -41,29 +43,67 @@ const getCurrentLocation = () => {
   return new Promise((resolve, reject) => {
     Geolocation.getCurrentPosition(
       position => {
-        const pos = position.coords;
-        const Coords = {
-          lat: pos.latitude,
-          lng: pos.longitude,
+        const {latitude, longitude} = position?.coords;
+        const coords = {
+          lat: latitude,
+          lng: longitude,
         };
-        geocoder
-          .geocodePosition(Coords)
+        getApiKey()
           .then(res => {
-            console.log('getCoutnry', res);
-            const country = res[0].country;
-            resolve(country);
+            getCountryFromCoordinates(coords, res?.data[0]?.api_key)
+              .then(response => {
+                resolve(response);
+              })
+              .catch(err => {
+                console.log('coords error1',err)
+                reject(err)});
           })
           .catch(err => {
-            reject(err);
-          });
+            console.log('coords error',err)
+            reject(err)});
       },
       error => {
-        console.log('err Coord', error.code, error);
-        reject(error);
+        reject(error); // Call reject with the error object
+        console.log('coords error---->',error)
       },
-      {enableHighAccuracy: false, maximumAge: 0},
     );
   });
+};
+const getApiKey = async () => {
+  try {
+    const response = await axios.get(
+      `${NewAppapi.GET_APIKEY}?version=${VersionNumber.appVersion}`,
+    );
+    return response?.data;
+  } catch (error) {
+    console.log('something error-->', error);
+    return null;
+  }
+};
+const getCountryFromCoordinates = async (Coords, apikey) => {
+  try {
+    const response = await axios.get(
+      'https://maps.googleapis.com/maps/api/geocode/json',
+      {
+        params: {
+          latlng: `${Coords.lat},${Coords.lng}`,
+          key: apikey,
+        },
+      },
+    );
+    // Extract country from the response
+    const addressComponents = response.data.results[0].address_components;
+    const countryComponent = addressComponents.find(component =>
+      component.types.includes('country'),
+    );
+    const countryLongName = countryComponent
+      ? countryComponent.long_name
+      : null;
+    return countryLongName;
+  } catch (error) {
+    console.error('Error fetching country:', error);
+    return null;
+  }
 };
 export const checkLocationPermission = async () => {
   if (Platform.OS === 'ios') {

@@ -35,6 +35,8 @@ import GradientButton from '../../Component/GradientButton';
 import moment from 'moment';
 import FastImage from 'react-native-fast-image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
+import NewButton from '../../Component/NewButton';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -46,6 +48,8 @@ const CustomWorkoutDetails = ({navigation, route}) => {
   const [forLoading, setForLoading] = useState(false);
   const [trackerData, setTrackerData] = useState([]);
   const [downloaded, setDownloade] = useState(false);
+  const [backBlock, setBackBlock] = useState(false);
+  const [VideoDownload, setVideoDownload] = useState(0);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
 
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
@@ -63,6 +67,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
     return fileName;
   };
   let StoringData = {};
+  let downloadCounter = 0;
   const downloadVideos = async (data, index, len) => {
     const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
       data?.exercise_title,
@@ -72,7 +77,8 @@ const CustomWorkoutDetails = ({navigation, route}) => {
       if (videoExists) {
         StoringData[data?.exercise_title] = filePath;
         setDownloade(true);
-        console.log('Downloaded Items is', filePath);
+        downloadCounter++;
+        setVideoDownload((downloadCounter / len) * 100);
       } else {
         await RNFetchBlob.config({
           fileCache: true,
@@ -87,7 +93,8 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           .then(res => {
             StoringData[data?.exercise_title] = res.path();
             setDownloade(true);
-            console.log('Downloadeding Items is', res.path());
+            downloadCounter++;
+            setVideoDownload((downloadCounter / len) * 100);
           })
           .catch(err => {
             console.log(err);
@@ -163,6 +170,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
         });
 
         if (res.data) {
+          setBackBlock(false);
           if (
             res.data?.msg ==
             'Exercise Status for All Users Inserted Successfully'
@@ -238,7 +246,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                     borderWidth: 0.5,
                     borderColor: 'lightgrey',
                     marginHorizontal: -12,
-                    // alignItems: 'center',
+                    justifyContent: 'center',
                   }}>
                   <FastImage
                     fallback={true}
@@ -307,19 +315,18 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               </View>
 
               {getExerciseStatus(item?.exercise_id, trackerData)}
-              
             </TouchableOpacity>
             {index !== data?.exercise_data.length - 1 && (
-                <View
-                  style={{
-                    width: '100%',
-                    height: 1,
+              <View
+                style={{
+                  width: '100%',
+                  height: 1,
 
-                    alignItems: 'center',
-                    backgroundColor: '#33333314',
-                  }}
-                />
-              )}
+                  alignItems: 'center',
+                  backgroundColor: '#33333314',
+                }}
+              />
+            )}
           </>
         );
       },
@@ -428,7 +435,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
     } catch (error) {
       setForLoading(false);
       showMessage({
-        message: 'Something went wrong pleasr try again',
+        message: 'Something went wrong please try again',
         type: 'danger',
         animationDuration: 500,
         floating: true,
@@ -463,7 +470,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
     } catch (error) {
       console.log('GET-USER-DATA', error);
       setForLoading(false);
-      dispatch(setCustomWorkoutData([]));
+      
     }
   };
   // const bannerAdsDisplay = () => {
@@ -481,11 +488,25 @@ const CustomWorkoutDetails = ({navigation, route}) => {
   // };
   return (
     <>
-      <NewHeader
+      <DietPlanHeader
         //header={route?.params?.item?.workout_name}
         header={'Custom Workout'}
         SearchButton={false}
-        backButton={true}
+        backPressCheck={backBlock}
+        onPress={() => {
+          if (backBlock) {
+            showMessage({
+              message:
+                'Please wait, downloading in progress. Do not press back.',
+              type: 'info',
+              animationDuration: 500,
+              floating: true,
+              icon: {icon: 'auto', position: 'left'},
+            });
+          } else {
+            navigation?.goBack();
+          }
+        }}
       />
       {forLoading ? <ActivityLoader /> : ''}
       <View style={styles.container}>
@@ -508,6 +529,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                 source={
                   data?.image == '' ? localImage.NOWORKOUT : {uri: data?.image}
                 }
+                defaultSource={localImage.NOWORKOUT}
                 style={{
                   width: 70,
                   height: 70,
@@ -551,6 +573,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               </View>
             </View>
             <TouchableOpacity
+              style={{top: 10}}
               onPress={() => {
                 setIsMenuOpen(true);
               }}>
@@ -582,43 +605,29 @@ const CustomWorkoutDetails = ({navigation, route}) => {
               maxToRenderPerBatch={10}
               updateCellsBatchingPeriod={100}
               removeClippedSubviews={true}
+              contentContainerStyle={{paddingBottom: DeviceHeigth * 0.35}}
+              showsVerticalScrollIndicator={false}
             />
           </View>
         </View>
         {data?.exercise_data.length > 0 && (
-          <View style={{position: 'absolute', bottom: 0, right: 0}}>
-            <GradientButton
-              // play={false}
-              // oneDay
-              flex={0.01}
-              w={DeviceWidth * 0.4}
-              text={downloaded ? `Downloading` : `Start Workout`}
-              h={DeviceHeigth >= 1024 ? DeviceWidth * 0.08 : DeviceWidth * 0.1}
-              textStyle={{
-                fontSize: DeviceHeigth >= 1024 ? 20 : 16,
-                fontFamily: 'Montserrat-SemiBold',
-                lineHeight: 30,
-                fontWeight: '700',
-                zIndex: 1,
-                color: AppColor.WHITE,
-              }}
-              alignSelf
-              bR={
-                DeviceHeigth >= 1024
-                  ? (DeviceWidth * 0.08) / 2
-                  : (DeviceHeigth * 0.1) / 2
-              }
-              // mB={80}
-              bottm={30}
-              mR={20}
-              weeklyAnimation={downloaded}
-              // fillBack="#EB1900"
-              // fill={downloaded > 0 ? `${100 / downloaded}%` : '0%'}
-              onPress={() => {
-                postCurrentDayAPI();
-              }}
-            />
-          </View>
+    
+          <NewButton
+            position={'absolute'}
+            title={'Start Workout'}
+            bottom={20}
+            pV={10}
+            pH={10}
+            ButtonWidth={DeviceWidth * 0.4}
+            bR={20}
+            right={16}
+            withAnimation
+            download={VideoDownload}
+            onPress={() => {
+              setBackBlock(true);
+              postCurrentDayAPI();
+            }}
+          />
         )}
       </View>
       <Modal
@@ -678,14 +687,14 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                   marginHorizontal: 20,
                   alignItems: 'center',
                 }}>
-                <Icons name="delete" size={20} color={'#D5191A'} />
+                <Icons name="delete" size={20} color={'#f0013b'} />
                 <Text
                   style={{
                     fontWeight: '600',
                     fontSize: 14,
                     lineHeight: 18,
                     marginHorizontal: 10,
-                    color: '#D5191A',
+                    color: '#f0013b',
                     textAlign: 'center',
                     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                   }}>

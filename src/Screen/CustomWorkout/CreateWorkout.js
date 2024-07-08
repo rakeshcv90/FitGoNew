@@ -92,7 +92,7 @@ const CreateWorkout = ({navigation, route}) => {
               style={{
                 width: '90%',
                 borderRadius: 10,
-                // backgroundColor: '#FDFDFD',
+
                 marginVertical: 8,
                 flexDirection: 'row',
                 alignSelf: 'center',
@@ -101,26 +101,11 @@ const CreateWorkout = ({navigation, route}) => {
                 paddingHorizontal: 20,
                 padding: 5,
                 paddingVertical: 8,
-      
-             
-              
+
                 justifyContent: 'space-between',
                 backgroundColor: AppColor.WHITE,
-               
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                {/* {isLoading && (
-                  // <ActivityIndicator
-                  //   style={styles.loader}
-                  //   size="small"
-                  //   color="#0000ff"
-                  // />
-                  <ShimmerPlaceholder
-                    style={styles.loader}
-                    ref={avatarRef}
-                    autoRun
-                  />
-                )} */}
                 <View
                   style={{
                     height: 70,
@@ -129,35 +114,11 @@ const CreateWorkout = ({navigation, route}) => {
                     borderWidth: 0.5,
                     borderColor: 'lightgrey',
                     marginLeft: -12,
-                    //backgroundColor:"red"
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}>
-                  {/* <Image
-                    onLoad={() => setIsLoading(false)}
-                    // source={{uri: item.exercise_image_link}}
-                    source={{
-                      uri: getStoreVideoLoc[item?.exercise_title + 'Image']
-                        ? 'file://' +
-                          getStoreVideoLoc[item?.exercise_title + 'Image']
-                        : item.exercise_image_link,
-                    }}
-                    style={{
-                      width: 60,
-                      height: 60,
-                      justifyContent: 'center',
-                      alignSelf: 'center',
-                      // backgroundColor:'red',
-                      marginHorizontal: -7,
-                    }}
-                    resizeMode="contain"
-                  /> */}
                   <FastImage
                     fallback={true}
-                    // onLoad={() => setIsLoading(false)}
-
-                    // onError={onError}
-                    // onLoadEnd={onLoadEnd}
-                    // onLoadStart={onLoadStart}
-
                     style={{
                       width: 60,
                       height: 60,
@@ -215,6 +176,7 @@ const CreateWorkout = ({navigation, route}) => {
                 source={isSelected ? localImage.Minus : localImage.Plus}
                 style={{width: 20, height: 20}}
                 resizeMode="contain"
+                tintColor={'#f0013b'}
               />
             </TouchableOpacity>
             {index !== completeProfileData?.focusarea?.length - 1 && (
@@ -234,21 +196,23 @@ const CreateWorkout = ({navigation, route}) => {
       },
     [selectedItems, bodyPart],
   );
-  const planType = useSelector(state => state.planType);
   const getAdsDisplay = (index, item) => {
+    const noOrNoobPlan =
+      getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
     if (filteredCategories.length > 1) {
-      if (planType < 69 && index == 0) {
-        return <NativeAddTest type="image" media={false} />;
+      if (noOrNoobPlan && index == 0) {
+        return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0 && filteredCategories.length > 8) {
-        return <NativeAddTest type="image" media={false} />;
+        return getNativeAdsDisplay();
       } else {
       }
     }
   };
   const getNativeAdsDisplay = () => {
-    if (getPurchaseHistory.length > 0) {
+    if (getPurchaseHistory?.plan != null) {
       if (
-        getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+        getPurchaseHistory?.plan == 'premium' &&
+        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
       ) {
         return null;
       } else {
@@ -315,10 +279,10 @@ const CreateWorkout = ({navigation, route}) => {
   };
   const submitCustomExercise = async () => {
     AnalyticsConsole(`Custom_Wrk_BUTTON`);
-    // console.log("user_Id",getUserID,getUserDataDetails?.id)
+
     if (selectedItems.length <= 0) {
       showMessage({
-        message: 'Please Select Exercise ',
+        message: 'Please select exercise ',
         type: 'danger',
         animationDuration: 500,
         floating: true,
@@ -339,7 +303,7 @@ const CreateWorkout = ({navigation, route}) => {
         type: route?.params?.workoutImg?.type,
         uri: route?.params?.workoutImg?.uri,
       });
-      console.log('Payload--->', payload);
+
       try {
         const res = await axios(`${NewAppapi.USER_CUSTOM_WORKOUT}`, {
           data: payload,
@@ -350,18 +314,9 @@ const CreateWorkout = ({navigation, route}) => {
         });
 
         if (res.data.msg == 'data inserted successfully') {
-          //  getCustomWorkout();
           getUserDetailData();
         } else {
           setForLoading(false);
-
-          // showMessage({
-          //   message: 'Something went wrong pleasr try again',
-          //   type: 'danger',
-          //   animationDuration: 500,
-          //   floating: true,
-          //   icon: {icon: 'auto', position: 'left'},
-          // });
         }
       } catch (error) {
         setForLoading(false);
@@ -376,39 +331,7 @@ const CreateWorkout = ({navigation, route}) => {
       }
     }
   };
-  // const getCustomWorkout = async () => {
-  //   try {
-  //     const data = await axios.get(
-  //       `${NewAppapi.GET_USER_CUSTOM_WORKOUT}?user_id=${getUserDataDetails?.id}`,
-  //     );
 
-  //     if (data?.data?.msg != 'data not found.') {
-  //       setForLoading(false);
-  //       showMessage({
-  //         message: 'Workout created successfully.',
-  //         type: 'success',
-  //         animationDuration: 500,
-  //         floating: true,
-  //         icon: {icon: 'auto', position: 'left'},
-  //       });
-  //       dispatch(setCustomWorkoutData(data?.data?.data));
-  //       navigation.goBack();
-  //     } else {
-  //       dispatch(setCustomWorkoutData([]));
-  //     }
-  //   } catch (error) {
-  //     setForLoading(false);
-  //     showMessage({
-  //       message: 'Something went wrong pleasr try again',
-  //       type: 'danger',
-  //       animationDuration: 500,
-  //       floating: true,
-  //       icon: {icon: 'auto', position: 'left'},
-  //     });
-  //     console.log('Custom Workout Error', error);
-  //     dispatch(setCustomWorkoutData([]));
-  //   }
-  // };
   const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(
@@ -428,12 +351,12 @@ const CreateWorkout = ({navigation, route}) => {
         });
       } else {
         showMessage({
-                  message: 'Workout created successfully.',
-                  type: 'success',
-                  animationDuration: 500,
-                  floating: true,
-                  icon: {icon: 'auto', position: 'left'},
-                });
+          message: 'Workout created successfully.',
+          type: 'success',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         setForLoading(false);
         navigation.goBack();
@@ -441,7 +364,7 @@ const CreateWorkout = ({navigation, route}) => {
     } catch (error) {
       console.log('GET-USER-DATA', error);
       setForLoading(false);
-      dispatch(setCustomWorkoutData([]));
+   
     }
   };
   const updateFilteredCategories = test => {
@@ -451,19 +374,7 @@ const CreateWorkout = ({navigation, route}) => {
 
     setFilteredCategories(filteredItems);
   };
-  // const bannerAdsDisplay = () => {
-  //   if (getPurchaseHistory.length > 0) {
-  //     if (
-  //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-  //     ) {
-  //       return null;
-  //     } else {
-  //       return <BannerAdd bannerAdId={bannerAdId} />;
-  //     }
-  //   } else {
-  //     return <BannerAdd bannerAdId={bannerAdId} />;
-  //   }
-  // };
+
   return (
     <>
       {forLoading ? <ActivityLoader /> : ''}
@@ -478,7 +389,7 @@ const CreateWorkout = ({navigation, route}) => {
           />
           <View
             style={{
-              width: '90%',
+              width: '95%',
               height: 50,
               alignSelf: 'center',
               backgroundColor: '#F3F5F5',
@@ -510,24 +421,9 @@ const CreateWorkout = ({navigation, route}) => {
               justifyContent: 'center',
               alignSelf: 'center',
               width: '100%',
+              left: -10,
               alignSelf: 'center',
             }}>
-            {/* <Dropdown
-              style={styles.dropdown}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              data={completeProfileData?.focusarea}
-              maxHeight={300}
-              labelField="label"
-              valueField="value"
-              placeholder={bodyPart}
-              value={bodyPart}
-              onChange={item => {
-                setBodyPart(item.bodypart_title);
-              }}
-              renderItem={renderItem}
-            /> */}
-
             <FlatList
               data={completeProfileData?.focusarea}
               horizontal
@@ -565,7 +461,7 @@ const CreateWorkout = ({navigation, route}) => {
                       color:
                         bodyPart != item.bodypart_title
                           ? '#333333E5'
-                          : '#A93737',
+                          : '#f0013b',
                       fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                     }}>
                     {item.bodypart_title}
@@ -595,14 +491,12 @@ const CreateWorkout = ({navigation, route}) => {
             removeClippedSubviews={true}
           />
         </View>
-        <LinearGradient
-          start={{x: 0, y: 1}}
-          end={{x: 1, y: 0}}
-          // colors={['#941000', '#D01818']}
-          colors={['#D01818', '#941000']}
+        <View
           style={{
-            width: 180,
+            paddingLeft: 20,
+            paddingRight: 20,
             height: 45,
+            backgroundColor: '#f0013b',
             borderRadius: 30,
             justifyContent: 'center',
             alignItems: 'center',
@@ -612,7 +506,7 @@ const CreateWorkout = ({navigation, route}) => {
           }}>
           <TouchableOpacity
             style={{
-              width: 180,
+              //width: 180,
               height: 40,
 
               borderRadius: 30,
@@ -635,7 +529,7 @@ const CreateWorkout = ({navigation, route}) => {
               ({selectedItems?.length})
             </Text>
           </TouchableOpacity>
-        </LinearGradient>
+        </View>
       </View>
       {/* {bannerAdsDisplay()} */}
       <BannerAdd bannerAdId={bannerAdId} />
@@ -728,17 +622,6 @@ const styles = StyleSheet.create({
   shadow: {
     marginBottom: 10,
     shadowColor: 'grey',
-    ...Platform.select({
-      ios: {
-        //shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
   },
 });
 export default CreateWorkout;

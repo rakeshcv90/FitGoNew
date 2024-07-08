@@ -58,7 +58,7 @@ const FocuseAreaMale = ({selectedItems, setSelectedItems}) => {
   const setImageFocusArea = (itemId, item) => {
 
     const index = selectedItems.indexOf(itemId);
-    console.log("Set Selected Area", index)
+  
     const newSelectedItems = [...selectedItems];
     const newImageVIew = [...imageView];
     if (index === -1) {

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Dimensions, Text, TouchableOpacity} from 'react-native';
 import {NativeMediaView} from 'react-native-admob-native-ads';
 import { Logger } from './utils';
+import { DeviceHeigth } from './Config';
 
 
 export const MediaView = ({aspectRatio = 1.5}) => {
@@ -30,7 +31,8 @@ export const MediaView = ({aspectRatio = 1.5}) => {
       <NativeMediaView
         style={{
           width: '100%',
-          height: 250,
+          height: DeviceHeigth*0.32,
+          // marginTop:-20
           // backgroundColor: 'gray',
         }}
         onVideoPause={onVideoPause}

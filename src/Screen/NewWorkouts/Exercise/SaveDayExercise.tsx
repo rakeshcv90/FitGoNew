@@ -19,6 +19,7 @@ import moment from 'moment';
 import {BannerAdd} from '../../../Component/BannerAdd';
 import {bannerAdId} from '../../../Component/AdsId';
 import {AnalyticsConsole} from '../../../Component/AnalyticsConsole';
+import ActivityLoader from '../../../Component/ActivityLoader';
 const WeekArray = Array(7)
   .fill(0)
   .map(
@@ -30,11 +31,14 @@ const WeekArray = Array(7)
   );
 const SaveDayExercise = ({navigation, route}: any) => {
   const {data, day, allExercise, type, challenge} = route?.params;
+  const [loader, setLoader] = useState(false);
   const getAllExercise = useSelector((state: any) => state.getAllExercise);
   const enteredCurrentEvent = useSelector(
     (state: any) => state.enteredCurrentEvent,
   );
-  let fire, clock, action;
+  let fire = 0,
+    clock = 0,
+    action;
   const [workoutName, setWorkooutName] = useState('');
   const dispatch = useDispatch();
   const getUserDataDetails = useSelector(
@@ -76,12 +80,13 @@ const SaveDayExercise = ({navigation, route}: any) => {
   } else {
     allExercise?.map((item: any) => {
       action = allExercise?.length;
-      fire = item?.exercise_calories;
-      clock = item?.exercise_rest?.split(' ')[0];
+      fire = fire + parseInt(item?.exercise_calories);
+      clock = clock + parseInt(item?.exercise_rest?.split(' ')[0]);
     });
     if (type == 'weekly') getWeeklyAPI();
   }
   const TESTAPI = async () => {
+    setLoader(true);
     try {
       const data = await axios(`${NewAppapi.POST_API_FOR_COIN_CALCULATION}`, {
         method: 'POST',
@@ -93,12 +98,15 @@ const SaveDayExercise = ({navigation, route}: any) => {
           user_day: WeekArray[day],
         },
       });
-
+      setLoader(false);
       if (data?.data?.msg == 'coin added successfully') {
         navigation.navigate('MyPlans');
-        console.log('TEST API DATA', data.data);
+      
+      } else {
+        navigation.navigate('MyPlans');
       }
     } catch (error) {
+      setLoader(false);
       navigation.navigate('MyPlans');
       console.log('UCustomeCorkout details', error);
     }
@@ -126,16 +134,19 @@ const SaveDayExercise = ({navigation, route}: any) => {
     }
   };
   const getAllChallangeAndAllExerciseData = async () => {
+    setLoader(true);
     let responseData = 0;
     if (Object.keys(getUserDataDetails).length > 0) {
       try {
         responseData = await axios.get(
           `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
         );
+        setLoader(false);
         dispatch(setChallengesData(responseData.data.challenge_data));
         dispatch(setAllExercise(responseData.data.data));
         navigation.navigate('WorkoutDays', {data, challenge});
       } catch (error) {
+        setLoader(false);
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
         dispatch(setChallengesData([]));
         dispatch(setAllExercise([]));
@@ -146,12 +157,13 @@ const SaveDayExercise = ({navigation, route}: any) => {
         responseData = await axios.get(
           `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}`,
         );
+        setLoader(false);
         dispatch(setChallengesData(responseData.data.challenge_data));
         dispatch(setAllExercise(responseData.data.data));
       } catch (error) {
         dispatch(setChallengesData([]));
         dispatch(setAllExercise([]));
-
+        setLoader(false);
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
       }
     }
@@ -160,7 +172,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
 
   const onPresh = () => {
     AnalyticsConsole(`SBA_Exer_Com`);
-    if (enteredCurrentEvent) TESTAPI();
+    if (enteredCurrentEvent && type == 'weekly') TESTAPI();
     else {
       if (type == 'focus') {
         categoryExercise = getAllExercise?.filter((item: any) =>
@@ -170,7 +182,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
       type == 'custom'
         ? navigation.navigate('CustomWorkoutDetails', {item: data})
         : challenge
-        ? getAllChallangeAndAllExerciseData()//ChallengesDataAPI()
+        ? getAllChallangeAndAllExerciseData() //ChallengesDataAPI()
         : type == 'focus'
         ? navigation.navigate('WorkoutCategories', {
             categoryExercise,
@@ -209,6 +221,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
+      <ActivityLoader visible={loader} />
       <Image
         source={localImage.Congrats}
         style={{flex: 0.6, marginTop: DeviceHeigth * 0.02}}
@@ -222,7 +235,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
         }}>
         <Text
           style={{
-            color: AppColor.RED1,
+            color: '#f0013b',
             fontSize: 28,
             lineHeight: 40,
             fontWeight: '600',
@@ -241,10 +254,12 @@ const SaveDayExercise = ({navigation, route}: any) => {
           width: DeviceWidth * 0.9,
           textAlign: 'center',
         }}>
-        You completed your{' '}
+        You have completed your{' '}
         {type != 'weekly'
           ? data?.workout_title == undefined
-            ? data?.title
+            ? data?.title == undefined
+              ? data?.workout_name + ' Exercise'
+              : data?.title
             : data?.workout_title + ' Exercise'
           : workoutName + ' Exercises'}
       </Text>

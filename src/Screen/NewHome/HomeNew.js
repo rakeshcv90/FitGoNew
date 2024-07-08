@@ -14,8 +14,9 @@ import {
   BackHandler,
   ToastAndroid,
   TextInput,
+  ImageBackground,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native';
 import {AppColor, Fonts} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
@@ -60,16 +61,19 @@ import {
   setCustomWorkoutData,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
+  setFitCoins,
   setFitmeMealAdsCount,
   setIsAlarmEnabled,
   setOfferAgreement,
   setPlanType,
   setPurchaseHistory,
-  setRewardModal,
   setStepCounterOnOff,
+  setWinnerAnnounced,
   setStoreData,
   setUserProfileData,
   setWorkoutTimeCal,
+  setRewardModal,
+  setRewardPopUp,
 } from '../../Component/ThemeRedux/Actions';
 import axios from 'axios';
 import {BlurView} from '@react-native-community/blur';
@@ -77,7 +81,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Slider} from '@miblanchard/react-native-slider';
 // import GoogleFit, {Scopes} from 'react-native-google-fit';
 import {setPedomterData} from '../../Component/ThemeRedux/Actions';
-import AppleHealthKit from 'react-native-health';
+import AppleHealthKit, {EventType} from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
 import GradientButton from '../../Component/GradientButton';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
@@ -89,12 +93,19 @@ import {checkLocationPermission} from '../Terms&Country/LocationPermission';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import {handleStart} from '../../Component/Utilities/Bannerfunctions';
 import FitCoins from '../../Component/Utilities/FitCoins';
+import {LocationPermissionModal} from '../../Component/Utilities/LocationPermission';
+import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
+import {AlarmNotification} from '../../Component/Reminder';
+import notifee from '@notifee/react-native';
+import VideoBanner from '../../Component/Utilities/VideoBanner';
+import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 
 const HomeNew = ({navigation}) => {
   const dispatch = useDispatch();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const allWorkoutData = useSelector(state => state.allWorkoutData);
-  const getChallengesData = useSelector(state => state.getChallengesData);
+  const winnerAnnounced = useSelector(state => state.winnerAnnounced);
+  const fitCoins = useSelector(state => state.fitCoins);
   const [progressHight, setProgressHight] = useState('0%');
   const [day, setDay] = useState(0);
   const [currentChallenge, setCurrentChallenge] = useState([]);
@@ -121,20 +132,23 @@ const HomeNew = ({navigation}) => {
   const [distance, setDistance] = useState(0);
   const [myRankData, setMyRankData] = useState([]);
   const distanceRef = useRef(distance);
-  const getRewardModalStatus = useSelector(
-    state => state?.getRewardModalStatus,
-  );
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const [BannerType1, setBannertype1] = useState('');
   const [Bannertype2, setBannerType2] = useState('');
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [dataType, setDatatype] = useState('');
   const enteredUpcomingEvent = useSelector(
     state => state?.enteredUpcomingEvent,
   );
   const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
+  const [locationP1, setLocationP1] = useState(false);
   // const [backPressCount, setBackPressCount] = useState(0);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const planType = useSelector(state => state?.planType);
+  const [showRewardModal, setShowRewardModal] = useState(false);
+  const getRewardModalStatus = useSelector(
+    state => state?.getRewardModalStatus,
+  );
+  const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
+  const isAlarmEnabled = useSelector(state => state.isAlarmEnabled);
 
   const colors = [
     {color1: '#E3287A', color2: '#EE7CBA'},
@@ -151,7 +165,7 @@ const HomeNew = ({navigation}) => {
       languageId:
         Platform.OS == 'android'
           ? 'hi-in-x-hia-local'
-          : 'com-apple.voice.compact.el-GR.Melina',
+          : 'com.apple.ttsbundle.Moira-compact',
     },
     {
       id: 2,
@@ -161,7 +175,7 @@ const HomeNew = ({navigation}) => {
       languageId:
         Platform.OS == 'android'
           ? 'en-us-x-iol-local'
-          : 'com-apple.voice.compact.en-IN.Rishi',
+          : 'com.apple.ttsbundle.Daniel-compact',
     },
     {
       id: 3,
@@ -171,7 +185,7 @@ const HomeNew = ({navigation}) => {
       languageId:
         Platform.OS == 'android'
           ? 'en-us-x-iol-local'
-          : 'com-apple.voice.compact.en-IN.Rishi',
+          : 'com.apple.ttsbundle.siri_male_de-DE_compact',
     },
     {
       id: 4,
@@ -181,7 +195,7 @@ const HomeNew = ({navigation}) => {
       languageId:
         Platform.OS == 'android'
           ? 'en-in-x-ene-network'
-          : 'com-apple.speech.synthesis.voice.Ralph',
+          : 'com.apple.ttsbundle.siri_male_fr-FR_compact',
     },
     {
       id: 5,
@@ -191,82 +205,68 @@ const HomeNew = ({navigation}) => {
       languageId:
         Platform.OS == 'android'
           ? 'es-us-x-sfb-local'
-          : 'com-apple.voice.compact.en-AU.Karen',
+          : 'com.apple.ttsbundle.Karen-compact',
     },
   ];
-  // banners
   useEffect(() => {
-    if (getOfferAgreement?.location == 'India') {
-      if (enteredCurrentEvent && enteredUpcomingEvent) {
-        // show coin
-        setBannertype1('ongoing_challenge');
-        setBannerType2('joined_challenge');
-      } else if (enteredCurrentEvent && !enteredUpcomingEvent) {
-        //show coin
-        setBannertype1('ongoing_challenge');
-        setBannerType2('upcoming_challenge');
-      } else if (!enteredCurrentEvent && enteredUpcomingEvent) {
-        setBannertype1('joined_challenge');
-      } else {
-        setBannertype1('new_join');
-      }
-    } else if (getOfferAgreement?.location != 'India') {
-      checkLocationPermission()
-        .then(result => {
-          if (!getOfferAgreement?.location) {
-            setBannertype1('new_join');
-          } else if (result == 'granted') {
-            setBannertype1('coming_soon');
-          } else if (result == 'blocked' || result == 'denied') {
+    const timer = setTimeout(() => {
+      setShowRewardModal(getRewardModalStatus);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!isAlarmEnabled) {
+      notifee.getTriggerNotificationIds().then(res => console.log(res, 'ISDA'));
+      const currenTime = new Date();
+      currenTime.setHours(7);
+      currenTime.setMinutes(0);
+      AlarmNotification(currenTime)
+        .then(res => console.log('ALARM SET', res))
+        .catch(errr => {
+          console.log('Alarm error', errr);
+          currenTime.setDate(currenTime.getDate() + 1);
+          AlarmNotification(currenTime);
+        });
+      dispatch(setIsAlarmEnabled(true));
+    }
+  }, [isAlarmEnabled]);
+  // banners
+  useEffect(
+    useCallback(() => {
+      const handleBannerType = async () => {
+        if (getOfferAgreement?.location === 'India') {
+          if (enteredCurrentEvent && enteredUpcomingEvent) {
+            setBannertype1('ongoing_challenge');
+            setBannerType2('joined_challenge');
+          } else if (enteredCurrentEvent && !enteredUpcomingEvent) {
+            setBannertype1('ongoing_challenge');
+            setBannerType2('upcoming_challenge');
+          } else if (!enteredCurrentEvent && enteredUpcomingEvent) {
+            setBannertype1('joined_challenge');
+          } else {
             setBannertype1('new_join');
           }
-        })
-        .catch(err => {
-          setBannertype1('new_join');
-        });
-    }
-  }, [
-    enteredCurrentEvent,
-    enteredUpcomingEvent,
-    getOfferAgreement,
-    getPurchaseHistory,
-  ]);
-  //banner api
-  // const bannerApi = async () => {
-  //   try {
-  //     const response = await axios(
-  //       `${NewAppapi.EVENT_BANNERS}?version=${VersionNumber.appVersion}`,
-  //       {
-  //         method: 'GET',
-  //         headers: {
-  //           'Content-Type': 'multipart/form-data',
-  //         },
-  //       },
-  //     );
-
-  //     if (
-  //       response?.data?.msg == 'Please update the app to the latest version.'
-  //     ) {
-  //       showMessage({
-  //         message: response?.data?.msg,
-  //         type: 'danger',
-  //         animationDuration: 500,
-  //         floating: true,
-  //         icon: {icon: 'auto', position: 'left'},
-  //       });
-  //     } else if (response?.data?.msg == 'version is required') {
-  //       console.log('version error', response?.data?.msg);
-  //     } else {
-  //       const objects = {};
-  //       response.data.data.forEach(item => {
-  //         objects[item.type] = item.image;
-  //       });
-  //       dispatch(setBanners(objects));
-  //     }
-  //   } catch (error) {
-  //     console.log('BannerApiError', error);
-  //   }
-  // };
+        } else {
+          try {
+            const result = await checkLocationPermission();
+            if (!getOfferAgreement?.location) {
+              setBannertype1('new_join');
+            } else if (result === 'granted') {
+              setBannertype1('coming_soon');
+            } else if (result === 'blocked' || result === 'denied') {
+              setBannertype1('new_join');
+            }
+          } catch (err) {
+            console.error('Error checking location permission:', err);
+            setBannertype1('coming_soon');
+          }
+        }
+      };
+      handleBannerType();
+      return () => {};
+    }, [getOfferAgreement, enteredCurrentEvent, enteredUpcomingEvent]),
+  );
   const getUserAllInData = async () => {
     try {
       const responseData = await axios.get(
@@ -320,31 +320,6 @@ const HomeNew = ({navigation}) => {
       }, 2000);
     }
   }, [isFocused]);
-  // const PurchaseDetails = async () => {
-  //   try {
-  //     setRefresh(true);
-  //     const result = await axios(
-  //       `${NewAppapi.EVENT_SUBSCRIPTION_GET}/${getUserDataDetails?.id}`,
-  //     );
-  //     setRefresh(false);
-  //     if (result.data?.message == 'Not any subscription') {
-  //       dispatch(setPurchaseHistory([]));
-  //     } else {
-  //       dispatch(setPurchaseHistory(result.data.data));
-  //       // dispatch(setEvent(true));
-  //       EnteringEventFunction(
-  //         dispatch,
-  //         result.data?.data,
-  //         setEnteredCurrentEvent,
-  //         setEnteredUpcomingEvent,
-  //         setPlanType,
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     setRefresh(false);
-  //   }
-  // };
   const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(
@@ -381,9 +356,6 @@ const HomeNew = ({navigation}) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      dispatch(setPurchaseHistory([]));
-      dispatch(setUserProfileData([]));
-      dispatch(setCustomWorkoutData([]));
     }
   };
   const checkMealAddCount = () => {
@@ -412,29 +384,6 @@ const HomeNew = ({navigation}) => {
       }
     }
   };
-  // const ChallengesDataAPI = async () => {
-  //   try {
-  //     const res = await axios({
-  //       url:
-  //         NewAppapi.GET_CHALLENGES_DATA +
-  //         '?version=' +
-  //         VersionNumber.appVersion +
-  //         '&user_id=' +
-  //         getUserDataDetails?.id,
-  //     });
-  //     if (res.data?.msg != 'version  is required') {
-  //       dispatch(setChallengesData(res.data));
-  //       const challenge = res.data?.filter(item => item?.status == 'active');
-  //       // console.log('challenge', challenge);
-  //       setCurrentChallenge(challenge);
-  //       getCurrentDayAPI(challenge);
-  //     } else {
-  //       dispatch(setChallengesData([]));
-  //     }
-  //   } catch (error) {
-  //     console.error(error, 'ChallengesDataAPI ERRR');
-  //   }
-  // };
   const getAllChallangeAndAllExerciseData = async () => {
     let responseData = 0;
     if (Object.keys(getUserDataDetails).length > 0) {
@@ -443,6 +392,12 @@ const HomeNew = ({navigation}) => {
           `${NewAppapi.ALL_USER_WITH_CONDITION}?version=${VersionNumber.appVersion}&user_id=${getUserDataDetails?.id}`,
         );
         dispatch(setChallengesData(responseData.data.challenge_data));
+        const challenge = responseData?.data?.challenge_data?.filter(
+          item => item?.status == 'active',
+        );
+        // console.log('challenge', challenge);
+        setCurrentChallenge(challenge);
+        getCurrentDayAPI(challenge);
         dispatch(setAllExercise(responseData.data.data));
       } catch (error) {
         console.log('GET-USER-Challange and AllExerciseData DATA', error);
@@ -635,7 +590,7 @@ const HomeNew = ({navigation}) => {
             console.log('Location permission granted IOS');
             setLocationP(false);
             analytics().logEvent(`CV_FITME_CLICKED_ON_GYM_LISTING_SCREEN`);
-            let checkAdsShow = checkMealAddCount();
+            let checkAdsShow = AddCountFunction();
             if (checkAdsShow == true) {
               showInterstitialAd();
               navigationRef.navigate('GymListing');
@@ -656,7 +611,7 @@ const HomeNew = ({navigation}) => {
             console.log('Location permission granted Android');
             analytics().logEvent(`CV_FITME_CLICKED_ON_GYM_LISTING_SCREEN`);
             setLocationP(false);
-            let checkAdsShow = checkMealAddCount();
+            let checkAdsShow = AddCountFunction();
             if (checkAdsShow == true) {
               showInterstitialAd();
               navigationRef.navigate('GymListing');
@@ -679,11 +634,12 @@ const HomeNew = ({navigation}) => {
         <View style={styles.modalContainer}>
           <View
             style={{
-              height: DeviceWidth,
+              // height: DeviceHeigth * 0.5,
               width: DeviceWidth * 0.8,
               backgroundColor: AppColor.WHITE,
               borderRadius: 10,
               padding: 10,
+              paddingBottom: 20,
               alignItems: 'center',
               shadowColor: 'rgba(0, 0, 0, 1)',
               ...Platform.select({
@@ -705,7 +661,7 @@ const HomeNew = ({navigation}) => {
                 fontWeight: '700',
                 fontFamily: Fonts.MONTSERRAT_MEDIUM,
                 lineHeight: 30,
-                marginTop: DeviceWidth * 0.05,
+                // marginTop: DeviceWidth * 0.05,
               }}>
               Enable Your Location
             </Text>
@@ -726,39 +682,53 @@ const HomeNew = ({navigation}) => {
                 color: AppColor.HEADERTEXTCOLOR,
                 fontWeight: '600',
                 fontFamily: Fonts.MONTSERRAT_REGULAR,
-                lineHeight: 20,
+                lineHeight: 24,
                 textAlign: 'center',
                 marginHorizontal: DeviceWidth * 0.1,
               }}>
-              Please allow us to access your location services
+              {`Please allow required permissions to use the app. Go to App->Permissions and enable all Permissions.`}
             </Text>
-            <GradientButton
-              text="Enable Location Services"
-              onPress={() => {
-                Linking.openSettings().finally(() => {
-                  setLocationP(false);
-                  locationP();
-                });
-              }}
-              // flex={0.3}
-              w={DeviceWidth * 0.7}
-              mB={-DeviceWidth * 0.1}
-              alignSelf
-            />
-            <GradientButton
-              text="Do Not Allow"
-              flex={0}
-              w={DeviceWidth * 0.7}
-              alignSelf
-              onPress={() => setLocationP(false)}
-              colors={['#ADA4A5', '#ADA4A5']}
-            />
+            <View
+              style={{
+                height: 50,
+                width: '100%',
+                // backgroundColor: 'pink',
+                marginVertical: 20,
+              }}>
+              <GradientButton
+                text="Enable Location Services"
+                onPress={() => {
+                  Linking.openSettings().finally(() => {
+                    setLocationP(false);
+                    locationP();
+                  });
+                }}
+                // flex={0.3}
+                w={DeviceWidth * 0.7}
+                mB={-DeviceWidth * 0.05}
+                alignSelf
+              />
+            </View>
+            <View
+              style={{
+                height: 50,
+                width: '100%',
+                // backgroundColor: 'green',
+              }}>
+              <GradientButton
+                text="Do Not Allow"
+                flex={0}
+                w={DeviceWidth * 0.7}
+                alignSelf
+                onPress={() => setLocationP(false)}
+                colors={['#ADA4A5', '#ADA4A5']}
+              />
+            </View>
           </View>
         </View>
       </Modal>
     );
   };
-
   const getWorkoutStatus = async () => {
     try {
       const exerciseStatus = await axios.get(
@@ -833,7 +803,7 @@ const HomeNew = ({navigation}) => {
       activeOpacity={0.8}
       onPress={() => {
         AnalyticsConsole(`MediDetails`);
-        let checkAdsShow = checkMealAddCount();
+        let checkAdsShow = AddCountFunction();
         if (checkAdsShow == true) {
           showInterstitialAd();
           navigation.navigate('MeditationDetails', {item: title});
@@ -912,7 +882,7 @@ const HomeNew = ({navigation}) => {
           style={[styles.listItem2]}
           onPress={() => {
             AnalyticsConsole(`AI_TRAINER_BUTTON`);
-            let checkAdsShow = checkMealAddCount();
+            let checkAdsShow = AddCountFunction();
             if (checkAdsShow == true) {
               showInterstitialAd();
               navigation.navigate('AITrainer', {item: item});
@@ -1194,18 +1164,16 @@ const HomeNew = ({navigation}) => {
               HandleSave();
             }}>
             <View
-        
               style={{
                 width: DeviceWidth * 0.3,
                 height: DeviceHeigth * 0.04,
                 borderRadius: 6,
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: AppColor.NEW_DARK_RED,
+                backgroundColor: '#f0013b',
               }}>
               <Text style={[styles.title, {color: AppColor.WHITE}]}>Save</Text>
             </View>
-   
           </TouchableOpacity>
         </View>
       </Modal>
@@ -1220,7 +1188,6 @@ const HomeNew = ({navigation}) => {
   const getLeaderboardDataAPI = async () => {
     try {
       const result = await axios({
-        // url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${appVersion}`,
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
       if (result.data) {
@@ -1228,6 +1195,12 @@ const HomeNew = ({navigation}) => {
           item => item?.id == getUserDataDetails?.id,
         );
         setMyRankData(result.data?.data[myRank]);
+        dispatch(setFitCoins(result.data?.data[myRank]?.fit_coins));
+        dispatch(
+          setWinnerAnnounced(
+            result.data?.winner_announced == true ? true : false,
+          ),
+        );
         // console.log('RANK DATA', myRankData);
       }
       setRefresh(false);
@@ -1236,23 +1209,6 @@ const HomeNew = ({navigation}) => {
       setRefresh(false);
     }
   };
-  useEffect(() => {
-    console.log(getUserDataDetails);
-    if (getUserDataDetails.name == null && getUserDataDetails.email == null) {
-      setOpenEditModal(true);
-      setDatatype('both');
-    } else {
-      if (getUserDataDetails.name == null) {
-        setOpenEditModal(true);
-        setDatatype('name');
-      }
-      if (getUserDataDetails.email == null) {
-        setOpenEditModal(true);
-        setDatatype('email');
-      }
-    }
-  }, [openEditModal, dataType]);
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -1279,53 +1235,62 @@ const HomeNew = ({navigation}) => {
         style={styles.container}
         nestedScrollEnabled>
         <View style={styles.profileView}>
-          {/* <GradientText
-            item={
-              getTimeOfDayMessage() +
-              ', ' +
-              (Object.keys(getUserDataDetails).length > 0
-                ? getUserDataDetails.name == null
-                  ? 'Guest'
-                  : getUserDataDetails.name.split(' ')[0]
-                : 'Guest')
-            }
-          /> */}
           <Text
             style={{
-              color: AppColor.RED,
+              color: '#f0013b',
               fontSize: 20,
               fontFamily: Fonts.MONTSERRAT_BOLD,
+              width: DeviceWidth * 0.5,
             }}>
-            {getTimeOfDayMessage() +
+            {'Hi' +
               ', ' +
-              (Object.keys(getUserDataDetails)?.length > 0
+              (Object.keys(getUserDataDetails)?.length > 0 ||
+              getUserDataDetails?.length > 0
                 ? getUserDataDetails?.name == null
                   ? 'Guest'
                   : getUserDataDetails?.name.split(' ')[0]
                 : 'Guest')}
           </Text>
-          {enteredCurrentEvent && (
-            <FitCoins
-              onPress={() => {
-                AnalyticsConsole('LB');
-                const today = moment().day();
-                if (today == 0 || today == 6) {
-                  navigation.navigate('Winner');
-                } else {
-                  navigation.navigate('Leaderboard');
-                }
-              }}
-              coins={myRankData?.fit_coins < 0 ? 0 : myRankData?.fit_coins}
-            />
-          )}
+          {enteredCurrentEvent ? (
+            <View style={{alignSelf: 'center'}}>
+              <FitCoins
+                onPress={() => {
+                  if (winnerAnnounced) {
+                    AnalyticsConsole('W/L');
+                    navigation.navigate('Winner');
+                  } else {
+                    AnalyticsConsole('LB');
+                    navigation.navigate('Leaderboard');
+                  }
+                }}
+                coins={fitCoins > 0 ? fitCoins : 0}
+              />
+            </View>
+          ) : null}
         </View>
-
+        <Text
+          style={{
+            color: AppColor.HEADERTEXTCOLOR,
+            fontFamily: Fonts.MONTSERRAT_BOLD,
+            fontWeight: '600',
+            lineHeight: 21,
+            fontSize: 18,
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            width: '95%',
+            alignSelf: 'center',
+            marginTop: 20,
+          }}>
+          Reward Zone
+        </Text>
         <Banners
           type1={BannerType1}
           type2={Bannertype2}
+          locationP={locationP1}
+          setLocationP={setLocationP1}
           navigation={navigation}
         />
-
+        <VideoBanner />
         {currentChallenge?.length > 0 && (
           <View style={{width: '95%', alignSelf: 'center', marginVertical: 10}}>
             <Text
@@ -1438,6 +1403,7 @@ const HomeNew = ({navigation}) => {
                         fontWeight: '600',
                         lineHeight: 20,
                         color: AppColor.SUBHEADING,
+                        marginRight: DeviceHeigth >= 1024 ? 14 : 0,
                       }}>
                       {`${day}/${currentChallenge[0]?.total_days} Days`}
                     </Text>
@@ -1454,20 +1420,20 @@ const HomeNew = ({navigation}) => {
               </View>
               <TouchableOpacity
                 onPress={() => {
-                  AnalyticsConsole(`D_Wrk_DAYS_BUTTON_FR_Home`);
+                  AnalyticsConsole(`D_Wrk_DAYS_FR_Home`);
                   navigation.navigate('WorkoutDays', {
                     data: currentChallenge[0],
                     challenge: true,
                   });
                 }}
-                style={{width: '10%', alignItems: 'center', top: 20}}>
+                style={{width: '10%', alignItems: 'center', top: 30}}>
                 <Image
                   source={require('../../Icon/Images/NewImage2/play.png')}
                   style={{
-                    width: 50,
-                    height: 50,
+                    width: 30,
+                    height: 30,
                     marginRight: 20,
-                    //alignContent: 'flex-end',
+                    // alignContent: 'flex-end',
                   }}
                   resizeMode="contain"
                 />
@@ -1567,7 +1533,9 @@ const HomeNew = ({navigation}) => {
                             fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                           },
                         ]}>
-                        {Platform.OS == 'ios' ? steps : stepsRef.current}
+                        {Platform.OS == 'ios'
+                          ? steps?.toFixed(0)
+                          : stepsRef.current}
                         <Text
                           style={[
                             styles.monetText,
@@ -1658,7 +1626,7 @@ const HomeNew = ({navigation}) => {
                         ]}
                         start={{x: 0, y: 1}}
                         end={{x: 1, y: 0}}
-                        colors={['#941000', '#D5191A']}
+                        colors={['#f0013b', '#f0013b']}
                       />
                       <Image
                         source={localImage.Step1}
@@ -1746,7 +1714,7 @@ const HomeNew = ({navigation}) => {
               activeOpacity={0.8}
               onPress={() => {
                 AnalyticsConsole(`CustomWrk_FR_Home`);
-                let checkAdsShow = checkMealAddCount();
+                let checkAdsShow = AddCountFunction();
                 if (checkAdsShow == true) {
                   showInterstitialAd();
                   navigation.navigate('CustomWorkout');
@@ -1834,7 +1802,7 @@ const HomeNew = ({navigation}) => {
             <TouchableOpacity
               onPress={() => {
                 analytics().logEvent('CV_FITME_CLICKED_ON_MEDITATION');
-                let checkAdsShow = checkMealAddCount();
+                let checkAdsShow = AddCountFunction();
                 if (checkAdsShow == true) {
                   showInterstitialAd();
                   navigation.navigate('MeditationDetails', {
@@ -1926,7 +1894,7 @@ const HomeNew = ({navigation}) => {
               alignItems: 'center',
               justifyContent: 'flex-start',
             }}>
-            Nearby Gyms
+            Gym Directory
           </Text>
         </View>
         <LinearGradient
@@ -2028,19 +1996,29 @@ const HomeNew = ({navigation}) => {
           </Text>
         </View>
         <View
-          style={{
-            width: '100%',
-            alignSelf: 'center',
-            backgroundColor: 'white',
-            top:
-              Platform.OS == 'android'
-                ? DeviceHeigth * 0.03
-                : DeviceHeigth * 0.06,
-            alignItems: 'center',
-          }}>
+          // style={{
+          //   // width: '100%',
+          //   // alignSelf: 'center',
+          //   // backgroundColor: 'white',
+          //   // top:
+          //   //   Platform.OS == 'android'
+          //   //     ? DeviceHeigth * 0.03
+          //   //     : DeviceHeigth * 0.06,
+          //   // alignItems: 'center',
+          // }}
+          style={[
+            styles.meditionBox,
+            {
+              top:
+                Platform.OS == 'android'
+                  ? DeviceHeigth * 0.03
+                  : DeviceHeigth * 0.06,
+            },
+          ]}>
           <FlatList
             data={fitnessInstructor}
             horizontal
+            contentContainerStyle={{paddingRight: DeviceHeigth * 0.05}}
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
             pagingEnabled
@@ -2090,141 +2068,198 @@ const HomeNew = ({navigation}) => {
                 : DeviceHeigth * 0.08,
             alignSelf: 'center',
             flexDirection: 'row',
-
+            marginBottom: 30,
             justifyContent: 'space-between',
           }}>
-          <LinearGradient
-            start={{x: 1, y: 0}}
-            end={{x: 0, y: 0.5}}
-            colors={['#2B4E9F', '#0A94F3']}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              AnalyticsConsole(`MEALS_BUTTON`);
+              let checkAdsShow = AddCountFunction();
+              if (checkAdsShow == true) {
+                showInterstitialAd();
+                navigation.navigate('Meals');
+              } else {
+                navigation.navigate('Meals');
+              }
+            }}
+            style={{
+              width: '50%',
+              height: DeviceHeigth * 0.15,
+              padding: 10,
+              borderRadius: 16,
+            }}>
+            <ImageBackground
+              source={require('../../Icon/Images/NewImage2/diet.png')}
+              style={{
+                width: '100%',
+                height: DeviceHeigth * 0.15,
+                borderRadius: 20,
+                overflow: 'hidden',
+              }}
+              resizeMode="cover">
+              <LinearGradient
+                start={{x: 1, y: 0}}
+                end={{x: 0, y: 1}}
+                colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0.5)']}
+                style={{
+                  width: '100%',
+                  height: DeviceHeigth * 0.15,
+                  borderRadius: 16,
+                  opacity: 0.9,
+                  padding: 10,
+                }}>
+                <View style={{position: 'absolute', bottom: 10, left: 10}}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      fontWeight: '700',
+                      lineHeight: 25,
+                      fontSize: 15,
+                    }}>
+                    Diet
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      fontWeight: '500',
+                      lineHeight: 15,
+                      fontSize: 12,
+                    }}>
+                    {'Achieve your goals faster with a balanced diet.'}
+                  </Text>
+                </View>
+              </LinearGradient>
+            </ImageBackground>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              AnalyticsConsole(`STORE_BUTTON`);
+              let checkAdsShow = AddCountFunction();
+
+              if (checkAdsShow == true) {
+                showInterstitialAd();
+                navigation.navigate('Store');
+              } else {
+                navigation.navigate('Store');
+              }
+            }}
             style={{
               width: '47%',
               height: DeviceHeigth * 0.15,
               padding: 10,
               borderRadius: 16,
             }}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {
-                AnalyticsConsole(`MEALS_BUTTON`);
-                let checkAdsShow = checkMealAddCount();
-                if (checkAdsShow == true) {
-                  showInterstitialAd();
-                  navigation.navigate('Meals');
-                } else {
-                  navigation.navigate('Meals');
-                }
+            <ImageBackground
+              source={{
+                uri: 'https://res.cloudinary.com/drfp9prvm/image/upload/v1720116199/healthy-lifestyle-dumbbell-smart-watch-fruit_dh5ngj.jpg',
               }}
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <View style={{zIndex: 1}}>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontWeight: '700',
-                    lineHeight: 25,
-                    fontSize: 15,
-                  }}>
-                  Diet
-                </Text>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontWeight: '500',
-                    lineHeight: 15,
-                    fontSize: 12,
-                  }}>
-                  {'Achieve your goals faster with a balanced diet.'}
-                </Text>
-              </View>
-              <View style={{}}>
-                <Image
-                  source={require('../../Icon/Images/NewImage2/diet.png')}
-                  resizeMode="contain"
-                  style={{
-                    width: DeviceHeigth >= 1024 ? 80 : 60,
-                    height:
-                      DeviceHeigth >= 1024
-                        ? DeviceHeigth * 0.07
-                        : DeviceHeigth * 0.06,
-                    right:
-                      DeviceHeigth >= 1024
-                        ? DeviceHeigth * 0.03
-                        : DeviceHeigth * 0.05,
-                    top:
-                      DeviceHeigth >= 1024
-                        ? DeviceHeigth * 0.065
-                        : DeviceHeigth * 0.07,
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-          </LinearGradient>
-          <LinearGradient
-            start={{x: 1.2, y: 0}}
-            end={{x: 0, y: 0}}
-            colors={['#8172F3', '#6BD7E3']}
-            style={{
-              width: '47%',
-              height: DeviceHeigth * 0.15,
-              padding: 10,
-              borderRadius: 16,
-            }}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {
-                AnalyticsConsole(`STORE_BUTTON`);
-                let checkAdsShow = checkMealAddCount();
-                if (checkAdsShow == true) {
-                  showInterstitialAd();
-                  navigation.navigate('Store');
-                } else {
-                  navigation.navigate('Store');
-                }
+              style={{
+                width: '100%',
+                height: DeviceHeigth * 0.15,
+                borderRadius: 20,
+                overflow: 'hidden',
               }}
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <View>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontWeight: '700',
-                    lineHeight: 25,
-                    fontSize: 15,
-                  }}>
-                  Store
-                </Text>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontWeight: '500',
-                    lineHeight: 15,
-                    fontSize: 12,
-                  }}>
-                  {'Shop top-notch fitness products.'}
-                </Text>
-              </View>
-              <View style={{}}>
-                <Image
-                  source={require('../../Icon/Images/NewImage2/store.png')}
-                  resizeMode="contain"
-                  style={{
-                    width: DeviceHeigth >= 1024 ? 100 : 70,
-                    height: DeviceHeigth >= 1024 ? 250 : 80,
-                    right: DeviceHeigth >= 1024 ? 0 : 60,
-                    top: DeviceHeigth >= 1024 ? -10 : 50,
-                  }}
-                />
-              </View>
-            </TouchableOpacity>
-          </LinearGradient>
+              resizeMode="cover">
+              <LinearGradient
+                start={{x: 1, y: 0}}
+                end={{x: 0, y: 1}}
+                colors={['rgba(0,0,0,0.5)', 'rgba(0,0,0,0.5)']}
+                style={{
+                  width: '100%',
+                  height: DeviceHeigth * 0.15,
+                  borderRadius: 16,
+                  opacity: 0.9,
+                  padding: 10,
+                }}>
+                <View style={{position: 'absolute', bottom: 10, left: 10}}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      fontWeight: '700',
+                      lineHeight: 25,
+                      fontSize: 15,
+                    }}>
+                    Store
+                  </Text>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      fontWeight: '500',
+                      lineHeight: 15,
+                      fontSize: 12,
+                    }}>
+                    {'Shop top-notch fitness products.'}
+                  </Text>
+                </View>
+              </LinearGradient>
+            </ImageBackground>
+          </TouchableOpacity>
         </View>
       </ScrollView>
       {modalVisible ? <UpdateGoalModal /> : null}
       <PermissionModal locationP={locationP} setLocationP={setLocationP} />
-      <RewardModal visible={getRewardModalStatus} navigation={navigation} />
+      <RewardModal
+        navigation={navigation}
+        visible={getRewardModalStatus}
+        imagesource={localImage.Reward_icon}
+        ButtonText={'Start now'}
+        txt1={'Challenge On!\n'}
+        txt2={
+          'Your fitness challenge has started! Begin now to collect FitCoins and win cash rewards!'
+        }
+        onCancel={() => {
+          AnalyticsConsole('CHS_CAN');
+          dispatch(setRewardModal(false));
+        }}
+        onConfirm={() => {
+          AnalyticsConsole('CHS_OPEN');
+          dispatch(setRewardModal(false));
+          navigation.navigate('BottomTab', {
+            screen: 'MyPlans',
+          });
+        }}
+      />
+      {getOfferAgreement?.location == 'India' ? (
+        (getPopUpFreuqency == 6 || getPopUpFreuqency % 5 == 0) &&
+        !enteredUpcomingEvent ? (
+          <UpcomingEventModal
+            visible={true}
+            onConfirm={() => {
+              if (getPurchaseHistory?.plan != null) {
+                if (
+                  getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
+                ) {
+                  AnalyticsConsole('UP_D_B');
+                  navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+                  dispatch(setRewardPopUp(1));
+                } else {
+                  AnalyticsConsole('PP_D_B');
+                  navigation.navigate('NewSubscription', {upgrade: false});
+                  dispatch(setRewardPopUp(1));
+                }
+              } else {
+                AnalyticsConsole('PP_D_B');
+                navigation.navigate('NewSubscription', {upgrade: false});
+                dispatch(setRewardPopUp(1));
+              }
+            }}
+            onCancel={() => {
+              AnalyticsConsole('JNC_D_B');
+              dispatch(setRewardPopUp(1));
+            }}
+          />
+        ) : null
+      ) : null}
+      <LocationPermissionModal
+        locationP={locationP1}
+        setLocationP={setLocationP1}
+      />
     </SafeAreaView>
   );
 };
@@ -2236,8 +2271,9 @@ var styles = StyleSheet.create({
   },
   profileView: {
     alignSelf: 'center',
-    marginVertical: 8,
+    marginVertical: 6,
     flexDirection: 'row',
+    marginHorizontal: 30,
     justifyContent: 'space-between',
     alignItems: 'center',
     width: DeviceWidth * 0.95,

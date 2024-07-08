@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Alert} from 'react-native';
+import {View, Text, StyleSheet, Alert, Linking} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
 import NewHeader from '../../Component/Headers/NewHeader';
@@ -10,43 +10,81 @@ import {locationPermission} from './LocationPermission';
 import axios from 'axios';
 import VersionNumber from 'react-native-version-number';
 import {useSelector, useDispatch} from 'react-redux';
-import {
-  setOfferAgreement,
-  setRewardModal,
-} from '../../Component/ThemeRedux/Actions';
+import {setOfferAgreement} from '../../Component/ThemeRedux/Actions';
 import {Image} from 'react-native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {showMessage} from 'react-native-flash-message';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import FitText from '../../Component/Utilities/FitText';
 import {openSettings} from 'react-native-permissions';
+import {LocationPermissionModal} from '../../Component/Utilities/LocationPermission';
+import AndroidOpenSettings from 'react-native-android-open-settings';
 const CountryLocation = ({navigation, route}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const [loaded, setLoaded] = useState(true);
   const routeName = route?.params?.routeName;
   const CustomCreated = route?.params?.CustomCreated;
+  const [locationP, setLocationP] = useState(false);
   const dispatch = useDispatch();
   const getCountry = async () => {
     setLoaded(false);
-      locationPermission()
-        .then(result => {
-          if (result == 'blocked') {
-            showPermissionAlert();
-          } else if (result === 'denied') {
-            StoreAgreementApi('');
-          } else if(result){
-            StoreAgreementApi(result);
-            dispatch(setRewardModal(true));
-          }else if(!result){
-            StoreAgreementApi('');
-          }
-        })
-        .catch(err => {
-          console.log('location Error', err);
-        });
+    locationPermission()
+      .then(result => {
+        if (result == 'blocked') {
+          setLocationP(true);
+          setLoaded(true);
+        } else if (result === 'denied') {
+          setLocationP(true);
+          setLoaded(true);
+        } else if (result) {
+          StoreAgreementApi(result);
+        } else if (result == null) {
+          // setLocationP(true);
+          setLoaded(true);
+          showMessage({
+            message: 'Error while getting your location',
+            floating: true,
+            duration: 1000,
+            type: 'danger',
+            icon: {icon: 'auto', position: 'left'},
+          });
+          navigation.navigate('BottomTab');
+        }
+      })
+      .catch(err => {
+        console.log('location Error', err);
+        setLoaded(true);
+        if (err.message == 'No location provider available.') {
+          Alert.alert(
+            "Enable device's location service",
+            "Oops , it's look your location service is not enable. Please enable your location service to use the app and take the benefits from app features.",
+            [
+              {
+                text: 'Cancel',
+                style: 'cancel',
+              },
+              {
+                text: 'Enable location service',
+                onPress: () => AndroidOpenSettings.locationSourceSettings(),
+              },
+            ],
+          );
+        } else {
+          showMessage({
+            message: 'Error while getting your location',
+            floating: true,
+            duration: 1000,
+            type: 'danger',
+            icon: {icon: 'auto', position: 'left'},
+          });
+          setTimeout(() => {
+            navigation.navigate('BottomTab');
+          }, 500);
+        }
+      });
   };
   const StoreAgreementApi = async country => {
-    setLoaded(false)
+    setLoaded(false);
     const payload = new FormData();
     payload.append('version', VersionNumber?.appVersion);
     payload.append('user_id', getUserDataDetails?.id);
@@ -91,41 +129,19 @@ const CountryLocation = ({navigation, route}) => {
         setLoaded(true);
       } else {
         dispatch(setOfferAgreement(ApiCall?.data));
-        
+
         setLoaded(true);
-        if (CustomCreated) {
-          navigation.navigate('CustomWorkout', {routeName: routeName});
-        } else {
-          navigation.navigate('BottomTab');
-        }
+        navigation.navigate('BottomTab');
+        // if (CustomCreated) {
+        //   navigation.navigate('CustomWorkout', {routeName: routeName});
+        // } else {
+
+        // }
       }
     } catch (error) {
       console.log(error);
       setLoaded(true);
     }
-  };
-  const showPermissionAlert = () => {
-    Alert.alert(
-      'Permission Required',
-      'To use the rewards feature, please enable location access in settings',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-          onPress: () => {
-            StoreAgreementApi('');
-          },
-        },
-        {
-          text: 'Open settings',
-          onPress: () => {
-            openSettings;
-            setLoaded(false);
-          },
-        },
-      ],
-      {cancelable: false},
-    );
   };
   return (
     <View style={styles.Container}>
@@ -134,7 +150,7 @@ const CountryLocation = ({navigation, route}) => {
       <View style={styles.view1}>
         <Image
           source={localImage.location_ping}
-          style={{height: 90, width: 90, marginBottom: 15}}
+          style={{height: 250, width: 250, marginBottom: 15}}
           resizeMode="contain"
         />
         <FitText
@@ -149,7 +165,11 @@ const CountryLocation = ({navigation, route}) => {
           value="We need your current location to provide"
           textAlign="center"
         />
-        <FitText type="SubHeading" value="you with better services" textAlign="center" />
+        <FitText
+          type="SubHeading"
+          value="you with better services"
+          textAlign="center"
+        />
       </View>
       <View style={styles.View2}>
         <NewButton
@@ -158,14 +178,11 @@ const CountryLocation = ({navigation, route}) => {
           image={localImage.location_icon}
           onPress={() => getCountry()}
         />
-        {/* <Text
-          style={styles.txt3}
-          onPress={() => {
-            StoreAgreementApi('');
-          }}>
-          Skip
-        </Text> */}
       </View>
+      <LocationPermissionModal
+        locationP={locationP}
+        setLocationP={setLocationP}
+      />
     </View>
   );
 };

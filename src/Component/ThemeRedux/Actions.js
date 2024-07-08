@@ -167,9 +167,9 @@ export const setWorkoutTimeCal = data => {
     payload: data,
   };
 };
-export const setProfileImg_Data = data => {
+export const setDownloadedImage = data => {
   return {
-    type: types.Profile_imgData,
+    type: types.POPUPIMAGE,
     payload: data,
   };
 };
@@ -346,3 +346,39 @@ export const setAgreementContent = data => {
     payload: data,
   };
 };
+export const setWinnerAnnounced = data => {
+  return {
+    type: types.WINNER_ANNOUNCED,
+    payload: data,
+  };
+};
+export const setFitCoins = data => {
+  return {
+    type: types.FIT_COINS,
+    payload: data,
+  };
+};
+export const setHindiLanuage = data => {
+  return {
+    type: types.HINDI_LANGUAGE,
+    payload: data,
+  };
+};
+export const setRewardPopUp = data => {
+  return {
+    type: types.TRACK_REWARDPOPUP,
+    payload: data,
+  };
+};
+export const setPopUpSeen = data => {
+  return {
+    type: types.POPUPSEEN,
+    payload: data,
+  };
+};
+export const setDynamicPopupValues=data=>{
+  return{
+    type:types.DYNAMIC_EVENTPOPUP,
+    payload:data
+  }
+}

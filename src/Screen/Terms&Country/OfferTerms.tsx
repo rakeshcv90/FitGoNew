@@ -19,7 +19,6 @@ import {
   NewApi,
   NewAppapi,
 } from '../../Component/Config';
-import RadioButtons from '../../Component/Utilities/RadioButtons';
 import FitText from '../../Component/Utilities/FitText';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import VersionNumber from 'react-native-version-number';
@@ -38,6 +37,9 @@ import {
   setStoreData,
 } from '../../Component/ThemeRedux/Actions';
 import {useSelector, useDispatch} from 'react-redux';
+import {BlurView} from '@react-native-community/blur';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 const radioData = [
   {
     id: 1,
@@ -59,8 +61,8 @@ const OfferTerms = ({navigation, route}: any) => {
     (state: any) => state.getAgreementContent,
   );
   const [modalVisible, setModalVisible] = useState(true);
-  const routeName = route?.params?.routeName;
   const CustomCreated = route?.params?.CustomCreated;
+  const screenType = route?.params?.type;
   const {width: windowWidth} = useWindowDimensions();
   const contentWidth = windowWidth;
   useEffect(() => {
@@ -69,36 +71,7 @@ const OfferTerms = ({navigation, route}: any) => {
       getUserAllInData();
     }
   }, []);
-  // const getAgreementContentApi = async () => {
-  //   setLoaded(false);
-  //   try {
-  //     const ApiCall = await axios(
-  //       `${NewAppapi.GET_AGREEMENT}?version=${VersionNumber.appVersion}`,
-  //       {
-  //         method: 'GET',
-  //       },
-  //     );
 
-  //     if (
-  //       ApiCall?.data?.msg == 'Please update the app to the latest version.'
-  //     ) {
-  //       setLoaded(true);
-  //       showMessage({
-  //         message: ApiCall?.data?.msg,
-  //         floating: true,
-  //         duration: 500,
-  //         type: 'danger',
-  //         icon: {icon: 'auto', position: 'left'},
-  //       });
-  //     } else {
-  //       setLoaded(true);
-  //       dispatch(setAgreementContent(ApiCall?.data?.data[0]));
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     setLoaded(true);
-  //   }
-  // };
   const getUserAllInData = async () => {
     try {
       const responseData = await axios.get(
@@ -117,10 +90,9 @@ const OfferTerms = ({navigation, route}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (responseData?.data?.msg == 'version is required') {
-        console.log('version error', responseData?.data?.msg);
       } else {
         const objects = {};
-        responseData.data.data.forEach((item:any) => {
+        responseData.data.data.forEach((item: any) => {
           objects[item?.type] = item?.image;
         });
 
@@ -129,14 +101,12 @@ const OfferTerms = ({navigation, route}: any) => {
         dispatch(Setmealdata(responseData?.data?.diets));
         dispatch(setStoreData(responseData?.data?.types));
         dispatch(setCompleteProfileData(responseData?.data?.additional_data));
-       
       }
     } catch (error) {
       console.log('all_in_one_api_error', error);
       dispatch(Setmealdata([]));
       dispatch(setCompleteProfileData([]));
       dispatch(setStoreData([]));
-     
     }
   };
   const handleRadioButton = (param: any) => {
@@ -149,17 +119,30 @@ const OfferTerms = ({navigation, route}: any) => {
           <Icons
             name={checked ? 'checkbox-marked' : 'checkbox-blank-outline'}
             size={28}
-            color={checked ? '#A93737' : '#333333'}
+            color={checked ? AppColor.RED : '#333333'}
           />
         </TouchableOpacity>
         <View>
-          <Text style={styles.policyText}>By continuing you accept our terms and conditions</Text>
+          <Text style={styles.policyText}>
+            By continuing you accept our terms and conditions
+          </Text>
         </View>
       </View>
     );
   };
   const handleAgreement = () => {
-    navigation.navigate('CountryLocation', {CustomCreated: CustomCreated});
+    AnalyticsConsole('IAR_ACC');
+    if (!checked) {
+      showMessage({
+        message: 'Please agree the terms and conditons',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+    } else {
+      navigation.navigate('CountryLocation', {CustomCreated: CustomCreated});
+    }
   };
   // to check and uncheck the box automatically
   const handleScroll = event => {
@@ -184,19 +167,30 @@ const OfferTerms = ({navigation, route}: any) => {
         style={{
           backgroundColor: 'white',
           paddingVertical: (DeviceWidth * 0.1) / 2,
-          shadowColor: 'grey',
-          ...Platform.select({
-            ios: {
-              shadowOffset: {width: 1, height: 0},
-              shadowOpacity: 0.3,
-              shadowRadius: 2,
-            },
-            android: {
-              elevation: 4,
-            },
-          }),
+          // shadowColor: 'grey',
+          // ...Platform.select({
+          //   ios: {
+          //     shadowOffset: {width: 1, height: 0},
+          //     shadowOpacity: 0.3,
+          //     shadowRadius: 2,
+          //   },
+          //   android: {
+          //     elevation: 4,
+          //   },
+          // }),
         }}>
         {loaded ? null : <ActivityLoader />}
+        {screenType ? (
+          <Icon
+            name="arrow-left"
+            color={AppColor.BLACK}
+            size={25}
+            style={{marginLeft: 14}}
+            onPress={() => navigation.navigate('BottomTab', {screen: 'Home'})}
+          />
+        ) : (
+          <></>
+        )}
         <View
           style={{
             marginTop: 10,
@@ -212,14 +206,16 @@ const OfferTerms = ({navigation, route}: any) => {
               textTransform="uppercase"
               fontWeight="500"
               letterSpacing={0.2}
+              fontSize={14}
             />
-            <FitText value="In-App Cash Rewards" type="Heading" />
+            <FitText value="In-App Cash Rewards" type="Heading" fontSize={22} />
           </View>
           <TouchableOpacity
             onPress={() => setOpened(!opened)}
             activeOpacity={1}
             style={{
               width: DeviceWidth * 0.22,
+              marginRight: 10,
             }}>
             <View
               style={{
@@ -235,7 +231,11 @@ const OfferTerms = ({navigation, route}: any) => {
                 fontWeight="500"
                 fontSize={12}
               />
-              <AntDesign name={opened ? 'caretdown' : 'caretup'} size={10} />
+              <AntDesign
+                name={opened ? 'caretup' : 'caretdown'}
+                size={10}
+                color={AppColor.BLACK}
+              />
             </View>
             {opened && (
               <View
@@ -243,58 +243,86 @@ const OfferTerms = ({navigation, route}: any) => {
                   marginRight: 16,
                 }}>
                 <Modal transparent visible={opened}>
-                  <TouchableOpacity
-                    style={{flex: 1}}
-                    onPress={() => setOpened(false)}>
-                    <View
-                      style={{
-                        // width: DeviceWidth * 0.3,
-                        backgroundColor: 'lightgrey',
-                        justifyContent: 'flex-end',
-                        alignSelf: 'flex-end',
-                        top: DeviceHeigth * 0.1,
-                        marginRight: 16,
-                        paddingHorizontal: 10,
-                        paddingVertical: 8,
-                      }}>
+                  <BlurView
+                    style={styles.modalContainer1}
+                    blurType="light"
+                    blurAmount={1}
+                    reducedTransparencyFallbackColor="white" >
+                    <TouchableOpacity activeOpacity={1} style={{flex: 1,}} onPress={()=>setOpened(false)} >
                       <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <RadioButton
-                          value="English"
-                          status={
-                            language === 'English' ? 'checked' : 'unchecked'
-                          }
-                          onPress={() => {
-                            setLanguage('English');
-                            handleRadioButton('term_condition_english');
-                            setTimeout(() => {
-                              setOpened(!opened);
-                            }, 250);
-                          }}
-                          color={AppColor.RED}
-                        />
-                        <Text style={{color: AppColor.BLACK}}>English</Text>
+                        style={{
+                          // width: DeviceWidth * 0.3,
+                          backgroundColor: AppColor.BACKGROUNG,
+                          justifyContent: 'flex-end',
+                          alignSelf: 'flex-end',
+                          top: DeviceHeigth * 0.1,
+                          marginRight: 8,
+                          paddingHorizontal: 12,
+                          paddingVertical: 8,
+                          borderRadius: 12,
+                          // borderWidth: 1,
+                        }}>
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <RadioButton
+                            value="English"
+                            status={
+                              language === 'English' ? 'checked' : 'unchecked'
+                            }
+                            onPress={() => {
+                              setLanguage('English');
+                              handleRadioButton('term_condition_english');
+                              setTimeout(() => {
+                                setOpened(!opened);
+                              }, 250);
+                            }}
+                            color={AppColor.RED}
+                            uncheckedColor="grey"
+                          />
+                          <Text
+                            style={{color: AppColor.BLACK}}
+                            onPress={() => {
+                              setLanguage('English');
+                              handleRadioButton('term_condition_english');
+                              setTimeout(() => {
+                                setOpened(!opened);
+                              }, 250);
+                            }}>
+                            English
+                          </Text>
+                        </View>
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <RadioButton
+                            value="Hindi"
+                            status={
+                              language === 'Hindi' ? 'checked' : 'unchecked'
+                            }
+                            onPress={() => {
+                              setLanguage('Hindi');
+                              handleRadioButton('term_condition_hindi');
+                              setTimeout(() => {
+                                setOpened(!opened);
+                              }, 250);
+                            }}
+                            color={AppColor.RED}
+                            uncheckedColor="grey"
+                          />
+                          <Text
+                            style={{color: AppColor.BLACK}}
+                            onPress={() => {
+                              setLanguage('Hindi');
+                              handleRadioButton('term_condition_hindi');
+                              setTimeout(() => {
+                                setOpened(!opened);
+                              }, 250);
+                            }}>
+                            Hindi
+                          </Text>
+                        </View>
                       </View>
-                      <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <RadioButton
-                          value="Hindi"
-                          status={
-                            language === 'Hindi' ? 'checked' : 'unchecked'
-                          }
-                          onPress={() => {
-                            setLanguage('Hindi');
-                            handleRadioButton('term_condition_hindi');
-                            setTimeout(() => {
-                              setOpened(!opened);
-                            }, 250);
-                          }}
-                          color={AppColor.RED}
-                        />
-                        <Text style={{color: AppColor.BLACK}}>Hindi</Text>
-                      </View>
-                    </View>
-                  </TouchableOpacity>
+                    </TouchableOpacity>
+                  </BlurView>
                 </Modal>
               </View>
             )}
@@ -316,17 +344,23 @@ const OfferTerms = ({navigation, route}: any) => {
             />
           </View>
 
-          <View style={styles.HLine} />
-          <CheckBox />
-          <View style={{marginBottom: 15}}>
-            <NewButton
-              pV={14}
-              title={'I Agree'}
-              disabled={!checked}
-              opacity={checked ? 1 : 0.7}
-              onPress={() => handleAgreement()}
-            />
-          </View>
+          {!screenType ? (
+            <>
+              <View style={styles.HLine} />
+              <CheckBox />
+              <View style={{marginBottom: 15}}>
+                <NewButton
+                  pV={14}
+                  title={'I Agree'}
+                  disabled={!checked}
+                  opacity={checked ? 1 : 0.7}
+                  onPress={() => handleAgreement()}
+                />
+              </View>
+            </>
+          ) : (
+            <></>
+          )}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -384,5 +418,9 @@ const styles = StyleSheet.create({
     paddingRight: DeviceWidth * 0.08,
     marginTop: DeviceHeigth * 0.02,
     marginBottom: DeviceWidth * 0.1,
+  },
+  modalContainer1: {
+    flex: 1,
+    backgroundColor: `rgba(0,0,0,0.2)`,
   },
 });

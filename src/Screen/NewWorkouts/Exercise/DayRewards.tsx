@@ -101,7 +101,7 @@ const DayRewards = ({navigation, route}: any) => {
         res.data?.forEach((item: any) => {
           days.add(item.user_day);
         });
-        console.log('DAYS', days);
+   
         setDays([...days]);
       } else {
         setDays([]);

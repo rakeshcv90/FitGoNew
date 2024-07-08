@@ -48,7 +48,6 @@ const Leaderboard = ({navigation, route}: any) => {
   const getLeaderboardDataAPI = async () => {
     try {
       const result = await axios({
-        // url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${appVersion}`,
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
       if (result.data) {
@@ -56,7 +55,7 @@ const Leaderboard = ({navigation, route}: any) => {
         const after5 = result.data?.data?.filter((item: any) => item?.rank > 5);
         setMainData(top5);
         setOtherData(after5);
-        // console.log(result.data);
+
         const myRank = result.data?.data?.findIndex(
           (item: TypeData) => item?.id == getUserDataDetails?.id,
         );
@@ -160,15 +159,9 @@ const Leaderboard = ({navigation, route}: any) => {
                     headers: {Authorization: 'someAuthToken'},
                     priority: FastImage.priority.high,
                   }}
-                  resizeMode={FastImage.resizeMode.contain}
+                  resizeMode={FastImage.resizeMode.cover}
                   defaultSource={localImage.NOWORKOUT}
                 />
-                <Image
-                  source={{uri: item?.image_path}}
-                  style={styles.mainImage}
-                  resizeMode="contain"
-                />
-
                 <FitText
                   type="SubHeading"
                   value={item?.name}
@@ -247,6 +240,7 @@ const Leaderboard = ({navigation, route}: any) => {
           <ImageBackground
             source={localImage.Rank1background}
             imageStyle={{width: DeviceWidth, height: DeviceWidth / 2}}
+            
             style={{
               justifyContent: 'center',
               alignItems: 'center',
@@ -298,16 +292,16 @@ const Leaderboard = ({navigation, route}: any) => {
               ) : (
                 <FastImage
                   style={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: 30,
+                    width: 67,
+                    height: 67,
+                    borderRadius: 70,
                   }}
                   source={{
                     uri: mainData[0]?.image_path,
                     headers: {Authorization: 'someAuthToken'},
                     priority: FastImage.priority.high,
                   }}
-                  resizeMode={FastImage.resizeMode.contain}
+                  resizeMode={FastImage.resizeMode.cover}
                   defaultSource={localImage.NOWORKOUT}
                 />
               )}
