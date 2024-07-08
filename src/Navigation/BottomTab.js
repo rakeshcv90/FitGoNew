@@ -214,7 +214,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                   style={{
                     color: AppColor.RED,
                     fontFamily: 'Montserrat-Medium',
-                    fontSize: 14,
+                    fontSize: 12,
                     lineHeight: 14.63,
                     fontWeight: '600',
                     marginTop: 5,
@@ -249,7 +249,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                   style={{
                     color: '#121212B2',
                     opacity: 0.7,
-                    fontSize: 14,
+                    fontSize: 12,
                     lineHeight: 14.63,
                     fontWeight: '500',
                     fontFamily: 'Montserrat-Medium',
@@ -292,7 +292,7 @@ const BottomTab = () => {
             fontFamily: 'Poppins',
             fontWeight: '700',
             lineHeight: 70,
-            fontSize: 12,
+            fontSize: 10,
           },
         }}>
         <Tabs.Screen

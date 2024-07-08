@@ -338,14 +338,18 @@ const NewFocusWorkouts = ({route, navigation}) => {
                     : DeviceHeigth >= 856
                     ? DeviceHeigth * 0.55
                     : DeviceHeigth <= 667
-                    ? DeviceHeigth * 0.7
+                    ? DeviceHeigth <= 625
+                      ? DeviceHeigth * 0.75
+                      : DeviceHeigth * 0.7
                     : DeviceHeigth * 0.58
                   : DeviceHeigth >= 1024
                   ? DeviceHeigth * 0.32
                   : DeviceHeigth >= 856
                   ? DeviceHeigth * 0.4
                   : DeviceHeigth <= 667
-                  ? DeviceHeigth * 0.5
+                  ? DeviceHeigth <= 625
+                    ? DeviceHeigth * 0.55
+                    : DeviceHeigth * 0.5
                   : DeviceHeigth * 0.42,
             },
             draggableIcon: {
@@ -353,6 +357,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             },
           }}>
           <View style={styles.listContainer}>
+            {console.log('ZXccvxvcx', DeviceHeigth)}
             <View
               style={{
                 flexDirection: 'row',
@@ -725,7 +730,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             flexDirection: 'row',
             alignItems: 'center',
             paddingLeft: 10,
-            top: -DeviceWidth * 0.05,
+            top: DeviceHeigth<=626?-DeviceWidth * 0.01:-DeviceWidth * 0.05,
           }}>
           <Icons name="magnify" size={20} color={'#33333380'} />
           <TextInput
@@ -878,15 +883,15 @@ const NewFocusWorkouts = ({route, navigation}) => {
           />
         </View>
         <NewButton
-            position={'absolute'}
-            bottom={10}
-            title={'Start Workouts'}
-            withAnimation
-            download={downloaded}
-            onPress={() => {
-              if (selectedIndex == -1) Start(filterList);
-            }}
-          />
+          position={'absolute'}
+          bottom={10}
+          title={'Start Workouts'}
+          withAnimation
+          download={downloaded}
+          onPress={() => {
+            if (selectedIndex == -1) Start(filterList);
+          }}
+        />
         {/* <NewButton2
           withAnimation
           position={'absolute'}

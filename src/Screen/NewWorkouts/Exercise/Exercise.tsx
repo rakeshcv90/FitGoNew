@@ -796,6 +796,7 @@ const Exercise = ({navigation, route}: any) => {
                   fontWeight: '600',
                   fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
                   lineHeight: 54,
+                  marginTop: DeviceHeigth <= 625 ? -10 : 0,
                   color: AppColor.LITELTEXTCOLOR,
                 }}>
                 Get Ready
@@ -807,6 +808,7 @@ const Exercise = ({navigation, route}: any) => {
                   lineHeight: 24,
                   fontFamily: Fonts.MONTSERRAT_MEDIUM,
                   fontWeight: '500',
+                  marginTop: DeviceHeigth <= 625 ? -5 : 0,
                 }}>
                 {allExercise[0]?.exercise_title}
               </Text>
@@ -818,7 +820,7 @@ const Exercise = ({navigation, route}: any) => {
                 alignItems: 'center',
                 width: DeviceWidth,
                 alignSelf: 'center',
-                marginTop: DeviceWidth * 0.1,
+                marginTop: DeviceHeigth <= 625 ? 5 : DeviceWidth * 0.1,
               }}>
               <View style={{width: DeviceWidth * 0.2}} />
               <View
@@ -826,8 +828,6 @@ const Exercise = ({navigation, route}: any) => {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  // alignSelf: 'center',
-                  // width: '50%',
                 }}>
                 <CircularProgress
                   value={timerS}
@@ -1305,7 +1305,7 @@ const Exercise = ({navigation, route}: any) => {
               play={!pause}
               fill={100}
               h={80}
-              mB={DeviceHeigth * 0.02}
+              mB={DeviceHeigth * 0.05}
               playy={() => {
                 setPause(!pause);
               }}

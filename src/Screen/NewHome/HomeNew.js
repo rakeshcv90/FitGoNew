@@ -2084,7 +2084,7 @@ const HomeNew = ({navigation}) => {
               }
             }}
             style={{
-              width: '47%',
+              width: '50%',
               height: DeviceHeigth * 0.15,
               padding: 10,
               borderRadius: 16,
@@ -2133,61 +2133,13 @@ const HomeNew = ({navigation}) => {
                 </View>
               </LinearGradient>
             </ImageBackground>
-            {/* <TouchableOpacity
-              activeOpacity={0.8}
-             
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <View style={{zIndex: 1}}>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontWeight: '700',
-                    lineHeight: 25,
-                    fontSize: 15,
-                  }}>
-                  Diet
-                </Text>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                    fontWeight: '500',
-                    lineHeight: 15,
-                    fontSize: 12,
-                  }}>
-                  {'Achieve your goals faster with a balanced diet.'}
-                </Text>
-              </View>
-              <View style={{}}>
-                <Image
-                  source={require('../../Icon/Images/NewImage2/diet.png')}
-                  resizeMode="contain"
-                  style={{
-                    width: DeviceHeigth >= 1024 ? 80 : 60,
-                    height:
-                      DeviceHeigth >= 1024
-                        ? DeviceHeigth * 0.07
-                        : DeviceHeigth * 0.06,
-                    right:
-                      DeviceHeigth >= 1024
-                        ? DeviceHeigth * 0.03
-                        : DeviceHeigth * 0.06,
-                    top:
-                      DeviceHeigth >= 1024
-                        ? DeviceHeigth * 0.065
-                        : DeviceHeigth * 0.07,
-                  }}
-                />
-              </View>
-            </TouchableOpacity> */}
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => {
               AnalyticsConsole(`STORE_BUTTON`);
               let checkAdsShow = AddCountFunction();
-              x;
+
               if (checkAdsShow == true) {
                 showInterstitialAd();
                 navigation.navigate('Store');
@@ -2274,7 +2226,8 @@ const HomeNew = ({navigation}) => {
         }}
       />
       {getOfferAgreement?.location == 'India' ? (
-        getPopUpFreuqency == 6 || getPopUpFreuqency % 5 == 0 ? (
+        (getPopUpFreuqency == 6 || getPopUpFreuqency % 5 == 0) &&
+        !enteredUpcomingEvent ? (
           <UpcomingEventModal
             visible={true}
             onConfirm={() => {

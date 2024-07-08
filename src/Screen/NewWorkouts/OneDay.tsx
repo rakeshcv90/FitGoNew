@@ -815,7 +815,7 @@ const OneDay = ({navigation, route}: any) => {
               setOpen(false);
             }
           }}
-          style={{}}>
+          style={{marginTop:DeviceWidth*0.04}}>
           <AntDesign name={'arrowleft'} size={25} color={AppColor.WHITE} />
         </TouchableOpacity>
       </View>

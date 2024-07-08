@@ -486,7 +486,7 @@
 //   animatedContainer: {
 //     height: DeviceHeigth * 0.05,
 //     width: DeviceWidth,
-  
+
 //     justifyContent: 'center',
 //     alignItems: 'center',
 //     flexDirection: 'row',
@@ -504,6 +504,7 @@ import {
   Platform,
   Alert,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useMemo, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -532,7 +533,7 @@ import ActivityLoader from '../ActivityLoader';
 import {FlatList} from 'react-native-gesture-handler';
 import NameUpdateModal from './NameUpdateModal';
 import ThemeReducer from '../ThemeRedux/Reducer';
-import { AnalyticsConsole } from '../AnalyticsConsole';
+import {AnalyticsConsole} from '../AnalyticsConsole';
 const Banners = ({
   type1,
   type2,
@@ -565,10 +566,10 @@ const Banners = ({
       if (getOfferAgreement?.location == 'India') {
         setLoaded(true);
         if (getPurchaseHistory?.plan == null) {
-          AnalyticsConsole('PP_BANNER')
+          AnalyticsConsole('PP_BANNER');
           navigation.navigate('NewSubscription', {upgrade: false});
         } else {
-          AnalyticsConsole('UP_BANNER')
+          AnalyticsConsole('UP_BANNER');
           navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
         }
       } else {
@@ -582,7 +583,7 @@ const Banners = ({
               setLoaded(true);
             } else if (result) {
               StoreAgreementApi(result);
-            } else if (result==null) {
+            } else if (result == null) {
               // setLocationP(true);
               setLoaded(true);
               showMessage({
@@ -592,7 +593,7 @@ const Banners = ({
                 type: 'danger',
                 icon: {icon: 'auto', position: 'left'},
               });
-            }else{
+            } else {
               setLoaded(true);
               showMessage({
                 message: 'Error while getting your location',
@@ -614,20 +615,20 @@ const Banners = ({
           getUserDataDetails.name == null) &&
         getUserDataDetails.email == null
       ) {
-        AnalyticsConsole('BOTH_U_D')
+        AnalyticsConsole('BOTH_U_D');
         setOpenEditModal(true);
         setDatatype('both');
       } else {
         if (
           getUserDataDetails.name?.toUpperCase() == 'GUEST' ||
           getUserDataDetails.name == null
-          ) {
-          AnalyticsConsole('NAME_U_D')
+        ) {
+          AnalyticsConsole('NAME_U_D');
           setOpenEditModal(true);
           setDatatype('name');
         }
         if (getUserDataDetails.email == null) {
-          AnalyticsConsole('EMAIL_U_D')
+          AnalyticsConsole('EMAIL_U_D');
           setOpenEditModal(true);
           setDatatype('email');
         }
@@ -739,7 +740,7 @@ const Banners = ({
     if (type1 == 'new_join') {
       handleStart();
     } else if (type1 == 'coming_soon') {
-      AnalyticsConsole('CS_BANNER')
+      AnalyticsConsole('CS_BANNER');
       showMessage({
         message:
           'This feature will be soon available in your country, stay tuned!',
@@ -752,10 +753,14 @@ const Banners = ({
       type1 == 'joined_challenge' ||
       (type2 == 'joined_challenge' && index == 1)
     ) {
-      AnalyticsConsole("JN_BANNER")
+      AnalyticsConsole('JN_BANNER');
       navigation.navigate('UpcomingEvent', {eventType: 'current'});
     } else if (type1 == 'ongoing_challenge' && index == 0) {
-      AnalyticsConsole(Sat||Sun?`ON_B_CL_ON_${getPurchaseHistory?.currentDay}`:'ON_BANNER')
+      AnalyticsConsole(
+        Sat || Sun
+          ? `ON_B_CL_ON_${getPurchaseHistory?.currentDay}`
+          : 'ON_BANNER',
+      );
       Sat || Sun
         ? showMessage({
             message:
@@ -767,7 +772,7 @@ const Banners = ({
           })
         : navigation.navigate('MyPlans');
     } else if (type2 == 'upcoming_challenge' && index == 1) {
-      AnalyticsConsole('UP_BANNER')
+      AnalyticsConsole('UP_BANNER');
       navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
     }
   };
@@ -776,9 +781,11 @@ const Banners = ({
     const renderItem = ({item, index}) => (
       <TouchableOpacity
         key={index}
+        disabled={loading?true:false}
         onPress={() => handleEventClicks(index)}
         style={{
-          height:DeviceHeigth<=667?DeviceHeigth*0.25: DeviceHeigth * 0.2,
+          height:
+            DeviceHeigth <= 667 ? DeviceHeigth * 0.25 : DeviceHeigth * 0.2,
           width:
             imageSource?.length > 1 ? DeviceWidth * 0.9 : DeviceWidth * 0.95,
           alignSelf: 'center',
@@ -786,28 +793,26 @@ const Banners = ({
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        {/* {!loading && (
-          <ShimmerPlaceholder
+        {loading && (
+          <View
             style={{
-              // height: DeviceHeigth * 0.15,
-              // width:
-              //   imageSource?.length > 1
-              //     ? DeviceWidth * 0.9
-              //     : DeviceWidth * 0.95,
-              width: '100%', height: '100%',
+              width: '100%',
+              height: '100%',
               borderRadius: 20,
-              position: 'absolute',
-            }}
-            ref={avatarRef}
-            autoRun
-          />
-        )} */}
+              backgroundColor: 'lightgrey',
+              justifyContent: 'center',
+              position:'absolute'
+            }}>
+            <ActivityIndicator size={50} color={AppColor.RED} />
+          </View>
+        )}
         <Image
           style={{width: '100%', height: '100%', borderRadius: 20}}
           resizeMode="stretch"
           source={{uri: item}}
           onLoad={() => setLoading(false)}
-          defaultSource={localImage.testbanner}
+          // defaultSource={localImage.testbanner}
+        
         />
       </TouchableOpacity>
     );

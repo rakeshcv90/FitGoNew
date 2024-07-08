@@ -3,7 +3,7 @@ import React from 'react';
 import {AppColor, Fonts} from '../Color';
 import {Image} from 'react-native';
 import {localImage} from '../Image';
-import App from '../../../App';
+
 
 const FitCoins = ({coins, onPress}) => {
   return (
