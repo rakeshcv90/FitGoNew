@@ -1255,8 +1255,8 @@ const HomeNew = ({navigation}) => {
             <View style={{alignSelf: 'center'}}>
               <FitCoins
                 onPress={() => {
-                  if (winnerAnnounced) {
-                    AnalyticsConsole('W/L');
+                  if (winnerAnnounced) {5
+                    AnalyticsConsole('W_L');
                     navigation.navigate('Winner');
                   } else {
                     AnalyticsConsole('LB');
