@@ -853,30 +853,6 @@ const MyPlans = ({navigation}: any) => {
                 : -DeviceWidth * 0.05
               : -DeviceWidth * 0.05,
         }}>
-        {/* <View
-          style={{
-            flexDirection: 'row',
-            width: DeviceWidth,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginTop: DeviceWidth * 0.04,
-          }}>
-          {/* <Text
-            style={[
-              styles.semiBold,
-              {
-                marginLeft:
-                  DeviceHeigth >= 1024
-                    ? DeviceWidth * 0.03
-                    : DeviceWidth * 0.05,
-                width: DeviceWidth * 0.7,
-                marginBottom: DeviceWidth * 0.03,
-              },
-            ]}>
-            Get Fit{' '}
-          </Text>
-        </View> */}
-
         {loader ? (
           <View
             style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
@@ -973,11 +949,6 @@ const MyPlans = ({navigation}: any) => {
         )}
       </View>
       {downlodedVideoSent ? <ActivityLoader /> : null}
-      {/* <DownloadingWorkout
-        hasAds={hasAds}
-        downloaded={downloaded}
-        buttonClicked={buttonClicked}
-      /> */}
     </SafeAreaView>
   );
 };

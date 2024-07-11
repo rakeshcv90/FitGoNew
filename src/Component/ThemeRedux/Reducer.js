@@ -64,7 +64,8 @@ const intialState = {
   getPopUpFreuqency: 0,
   getPopUpSeen: false,
   hindiLanguage: false,
-  getDynamicPopUpvalues:{}
+  getDynamicPopUpvalues: {},
+  getRatingStatus: false,
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -352,10 +353,16 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         hindiLanguage: action.payload,
       };
-      case types.DYNAMIC_EVENTPOPUP:
-        return{
-          ...state,getDynamicPopUpvalues:action.payload
-        }
+    case types.DYNAMIC_EVENTPOPUP:
+      return {
+        ...state,
+        getDynamicPopUpvalues: action.payload,
+      };
+    case types.KEEP_RATING_TRACK:
+      return {
+        ...state,
+        getRatingStatus: action.payload,
+      };
     default:
       return state;
   }
