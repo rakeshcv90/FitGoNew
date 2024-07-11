@@ -218,7 +218,12 @@ export const localImage = {
   MadamG: require('../Icon/Images/InAppRewards/MadamG.png'),
   cornerCircle: require('../Icon/Images/InAppRewards/cornerCircle.png'),
   earnText: require('../Icon/Images/InAppRewards/EarnText.png'),
-  bottomCircle:require('../Icon/Images/InAppRewards/BottomCircle.png'),
-  VideoLogo:require('../Icon/Images/InAppRewards/Videologo.png'),
-  fullsizebanner:require('../Icon/Images/InAppRewards/fullsizeBanner.jpg')
+  bottomCircle: require('../Icon/Images/InAppRewards/BottomCircle.png'),
+  VideoLogo: require('../Icon/Images/InAppRewards/Videologo.png'),
+  fullsizebanner: require('../Icon/Images/InAppRewards/fullsizeBanner.jpg'),
+  Rating1: require('../Icon/Images/InAppRewards/Cry_image.png'),
+  Rating2: require('../Icon/Images/InAppRewards/Sad_image.png'),
+  Rating3: require('../Icon/Images/InAppRewards/Happy_image.png'),
+  Rating4: require('../Icon/Images/InAppRewards/Cool_image.png'),
+  Rating5: require('../Icon/Images/InAppRewards/Loveit_image.png'),
 };

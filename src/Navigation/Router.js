@@ -1,7 +1,7 @@
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/Index';
+import Yourself from '../Screen/Yourself/index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -75,6 +75,7 @@ import Leaderboard from '../Screen/Leaderboard/Leaderboard';
 import Winner from '../Screen/Leaderboard/Winner';
 import IntroVideo from '../Screen/Introduction/IntroVideo';
 import SplaceNew from '../SplaceNew';
+import RatingModal from '../Component/RatingModal';
 
 const Stack = createStackNavigator();
 
@@ -90,6 +91,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
+      {/* <Stack.Screen name="RatingModal" component={RatingModal}/> */}
       {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
          <Stack.Screen

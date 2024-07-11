@@ -48,7 +48,8 @@ export const AppColor={
     NEW_SUBS_ORANGE: '#FF7E1D',
     SUBS_GREEN: '#07B47E',
     YELLOW:'#FFB400',
-    ORANGE:'#F38029'
+    ORANGE:'#F38029',
+    RATING_COLOR:'#F4CB49'
   }
   export const Fonts = {
     MONTSERRAT_BOLD: 'Montserrat-Bold',

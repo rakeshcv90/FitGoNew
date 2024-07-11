@@ -382,3 +382,9 @@ export const setDynamicPopupValues=data=>{
     payload:data
   }
 }
+export const setRatingTrack=data=>{
+    return{
+      type:types.KEEP_RATING_TRACK,
+      payload:data
+    }
+}

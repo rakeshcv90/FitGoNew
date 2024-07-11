@@ -12,6 +12,7 @@ import axios from 'axios';
 import {
   setAllExercise,
   setChallengesData,
+  setRatingTrack,
 } from '../../../Component/ThemeRedux/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import VersionNumber, {appVersion} from 'react-native-version-number';
@@ -20,6 +21,7 @@ import {BannerAdd} from '../../../Component/BannerAdd';
 import {bannerAdId} from '../../../Component/AdsId';
 import {AnalyticsConsole} from '../../../Component/AnalyticsConsole';
 import ActivityLoader from '../../../Component/ActivityLoader';
+import RatingModal from '../../../Component/RatingModal';
 const WeekArray = Array(7)
   .fill(0)
   .map(
@@ -33,6 +35,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
   const {data, day, allExercise, type, challenge} = route?.params;
   const [loader, setLoader] = useState(false);
   const getAllExercise = useSelector((state: any) => state.getAllExercise);
+  const getRatingStatus = useSelector((state: any) => state?.getRatingStatus);
   const enteredCurrentEvent = useSelector(
     (state: any) => state.enteredCurrentEvent,
   );
@@ -101,7 +104,6 @@ const SaveDayExercise = ({navigation, route}: any) => {
       setLoader(false);
       if (data?.data?.msg == 'coin added successfully') {
         navigation.navigate('MyPlans');
-      
       } else {
         navigation.navigate('MyPlans');
       }
@@ -358,7 +360,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
         <GradientButton
           onPress={() => {
             // analytics().logEvent(`CV_FITME_COMPLETED_DAY_${day}_EXERCISES`);
-            ReviewApp(onPresh);
+            onPresh();
             // TESTAPI()
           }}
           text="Save and Continue"
@@ -372,6 +374,7 @@ const SaveDayExercise = ({navigation, route}: any) => {
         {/* {bannerAdsDisplay()} */}
         <BannerAdd bannerAdId={bannerAdId} />
       </View>
+      <RatingModal />
     </SafeAreaView>
   );
 };
