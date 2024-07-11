@@ -56,6 +56,7 @@ import {
 } from '../Component/Helper/PushNotification';
 import analytics from '@react-native-firebase/analytics';
 import {useIsFocused} from '@react-navigation/native';
+import ReferByScreen from './Referral/ReferByScreen';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 const Signup = ({navigation}) => {
@@ -71,6 +72,7 @@ const Signup = ({navigation}) => {
   const [cancelLogin, setCancelLogin] = useState(false);
   const isFocused = useIsFocused();
   const getFcmToken = useSelector(state => state.getFcmToken);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     requestPermissionforNotification(dispatch);
@@ -227,8 +229,9 @@ const Signup = ({navigation}) => {
         // dispatch(setUserId(data.data?.id));
         // getProfileData(data.data?.id);
         getUserDetailData(data.data?.id);
-        navigationRef.navigate('Yourself');
-      } else if (
+            //navigationRef.navigate('Yourself');
+            setVisible(true)
+          } else if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 1
       ) {
@@ -1061,7 +1064,8 @@ const Signup = ({navigation}) => {
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         dispatch(setUserProfileData(responseData?.data?.profile));
-        navigationRef.navigate('Yourself');
+        //navigationRef.navigate('Yourself');
+        setVisible(true)
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
@@ -1098,7 +1102,8 @@ const Signup = ({navigation}) => {
             navigation.replace('OfferTerms');
           }
         } else {
-          navigationRef.navigate('Yourself');
+          //navigationRef.navigate('Yourself');
+          setVisible(true)
         }
       }
     } catch (error) {
@@ -1529,6 +1534,7 @@ const Signup = ({navigation}) => {
         )}
       </ScrollView>
 
+      <ReferByScreen visible={visible} setVisible={setVisible} />
       <LoginCancelModal />
     </SafeAreaView>
   );

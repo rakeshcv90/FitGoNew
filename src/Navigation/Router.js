@@ -75,6 +75,7 @@ import Leaderboard from '../Screen/Leaderboard/Leaderboard';
 import Winner from '../Screen/Leaderboard/Winner';
 import IntroVideo from '../Screen/Introduction/IntroVideo';
 import SplaceNew from '../SplaceNew';
+import Referral from '../Screen/Referral/Referral';
 
 const Stack = createStackNavigator();
 
@@ -178,6 +179,7 @@ export const LoginStack = () => {
       <Stack.Screen name="AddWorkouts" component={AddWorkouts} />
       <Stack.Screen name="Leaderboard" component={Leaderboard} />
       <Stack.Screen name="Winner" component={Winner} />
+      <Stack.Screen name="Referral" component={Referral} />
     </Stack.Navigator>
   );
 };

@@ -220,5 +220,9 @@ export const localImage = {
   earnText: require('../Icon/Images/InAppRewards/EarnText.png'),
   bottomCircle:require('../Icon/Images/InAppRewards/BottomCircle.png'),
   VideoLogo:require('../Icon/Images/InAppRewards/Videologo.png'),
-  fullsizebanner:require('../Icon/Images/InAppRewards/fullsizeBanner.jpg')
+  fullsizebanner:require('../Icon/Images/InAppRewards/fullsizeBanner.jpg'),
+  Refer_banner:require('../Icon/Images/InAppRewards/Refer_banner.png'),
+  Referral_Coin_Banner:require('../Icon/Images/InAppRewards/Referral_Coin_Banner.png'),
+  Bronze:require('../Icon/Images/InAppRewards/Bronze.png'),
+  Silver:require('../Icon/Images/InAppRewards/Silver.png'),
 };

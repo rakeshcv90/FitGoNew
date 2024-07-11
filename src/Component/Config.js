@@ -119,5 +119,8 @@ export const NewAppapi = {
   NEW_WEEKDAY_EXERCISE_API: NewApi + 'get_all_weekday_exercise',
   CANCEL_SUBSCRIPTION: NewApi + 'delete_data',
  GET_APIKEY: NewApi+'get_apikeys',
- GET_DYNAMIC_POPUP:NewApi+'custom_dialog'
+ GET_DYNAMIC_POPUP:NewApi+'custom_dialog',
+ GENERATE_REFERRAL_CODE:NewApi+'generat_code',
+ SEND_REFERRAL_API:NewApi+'add_referral_coin',
+ GET_REF_RANK:NewApi+'user_rank',
 };
