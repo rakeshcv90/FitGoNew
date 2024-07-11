@@ -55,10 +55,14 @@ const Winner = ({navigation}: any) => {
       const result = await axios({
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
+      console.log("result---->",result.data)
       if (result.data) {
         if (result.data?.data[0]?.id == getUserDataDetails?.id) {
           setUserWinner(true);
           setWinnerData(result.data?.data[0]);
+        } else if (result.data?.data[1]?.id == getUserDataDetails?.id) {
+          setUserWinner(true);
+          setWinnerData(result.data?.data[1]);
         } else {
           //setUserWinner(true);
           const userIndex = result.data?.data?.findIndex(
@@ -67,7 +71,6 @@ const Winner = ({navigation}: any) => {
           setWinnerData(result.data?.data[0]);
           setUserData(result.data?.data[userIndex]);
         }
-     
       }
       setLoader(false);
       setRefresh(false);
@@ -164,7 +167,7 @@ const Winner = ({navigation}: any) => {
                 fontSize: 32,
                 lineHeight: 40,
                 color: AppColor.WHITE,
-                textTransform:'uppercase'
+                textTransform: 'uppercase',
               }}>
               {winnerData?.name.split(' ') &&
               winnerData.name.split(' ').length > 1
@@ -185,7 +188,7 @@ const Winner = ({navigation}: any) => {
             />
           )}
         </ImageBackground>
-        <Rank number={1} bottom={DeviceHeigth * 0.075} />
+        <Rank number={winnerData?.rank} bottom={DeviceHeigth * 0.075} />
         <View style={styles.row}>
           {userWinner ? (
             <AnimatedLottieView
@@ -288,7 +291,7 @@ const Winner = ({navigation}: any) => {
   const handleEmail = async () => {
     AnalyticsConsole('W_GMAIL');
     const supported = await Linking.canOpenURL('googlegmail://');
-  
+
     if (supported) Linking.openURL('googlegmail://');
     else if (PLATFORM_IOS) Linking.openURL('mailto:');
     else Linking.openURL('https://mail.google.com');
@@ -448,7 +451,7 @@ const Winner = ({navigation}: any) => {
                     fontSize: 32,
                     lineHeight: 40,
                     color: AppColor.WHITE,
-                    textTransform:'uppercase'
+                    textTransform: 'uppercase',
                   }}>
                   {winnerData?.name.split(' ') &&
                   winnerData.name.split(' ').length > 1
@@ -468,7 +471,7 @@ const Winner = ({navigation}: any) => {
                 />
               )}
             </ImageBackground>
-            <Rank number={1} bottom={DeviceHeigth * 0.032} />
+            <Rank number={winnerData?.rank} bottom={DeviceHeigth * 0.032} />
             <View
               style={{
                 width: '50%',
@@ -574,7 +577,7 @@ const Winner = ({navigation}: any) => {
                     position: 'relative',
                     top: PLATFORM_IOS ? DeviceWidth * 0.01 : DeviceWidth * 0.01,
                     color: AppColor.WHITE,
-                    textTransform:'uppercase'
+                    textTransform: 'uppercase',
                   }}>
                   {userData?.name.split(' ') &&
                   userData.name.split(' ').length > 1
@@ -613,12 +616,14 @@ const Winner = ({navigation}: any) => {
               onPress={() => {
                 AnalyticsConsole(`TRA_WIN`);
                 if (getPurchaseHistory) {
-                  getPurchaseHistory?.plan_value == 30
+                  getPurchaseHistory?.plan == 'noob'
                     ? navigation?.navigate('NewSubscription', {upgrade: true})
-                    : getPurchaseHistory?.plan_value != 30 &&
+                    : getPurchaseHistory?.plan != 'noob' &&
                       getPurchaseHistory?.used_plan <=
                         getPurchaseHistory?.allow_usage &&
-                      navigation?.navigate('UpcomingEvent');
+                      navigation?.navigate('UpcomingEvent', {
+                        eventType: 'upcoming',
+                      });
                 } else navigation?.navigate('NewSubscription', {upgrade: true});
               }}
               style={{
@@ -628,10 +633,11 @@ const Winner = ({navigation}: any) => {
                 borderRadius: 5,
                 borderColor: AppColor.NEW_DARK_RED,
                 backgroundColor: AppColor.WHITE,
-                borderWidth: 1,
-                paddingVertical: 12,
+
+                paddingVertical: 10,
+                // marginBottom:5,
                 position: 'relative',
-                top: PLATFORM_IOS ? 12 : 6,
+                top: PLATFORM_IOS ? 10 : 4,
               }}>
               <FitText
                 type="normal"

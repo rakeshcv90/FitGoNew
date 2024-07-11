@@ -99,25 +99,10 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
           if (route.key?.includes('MyPlans') && Sat && enteredCurrentEvent) {
             AnalyticsConsole('W_L');
             navigation.navigate('Winner');
-            // showMessage({
-            //   message:
-            //     'Your event has ended. You can resume your weekly plan normally from Monday. If you join another fitness challenge, it will start from the upcoming Monday.',
-            //   type: 'danger',
-            //   animationDuration: 500,
-            //   duration: 5000,
-            //   floating: true,
-            // });
+           
           } else if (route.key?.includes('MyPlans') && Sun && enteredCurrentEvent) {
             AnalyticsConsole('W_L');
             navigation.navigate('Winner');
-            // showMessage({
-            //   message:
-            //     'Your event has ended. You can resume your weekly plan normally from Monday. If you join another fitness challenge, it will start from the upcoming Monday.',
-            //   type: 'danger',
-            //   animationDuration: 500,
-            //   duration: 5000,
-            //   floating: true,
-            // });
           } else {
             const event = navigation.emit({
               type: 'tabPress',

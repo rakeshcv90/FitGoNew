@@ -14,7 +14,7 @@ import {Platform} from 'react-native';
 import {Linking} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {setRatingTrack} from './ThemeRedux/Actions';
-const RatingModal = ({}) => {
+const RatingModal = ({getVisibility,setModalVisibilty}) => {
   const [rating, setRating] = useState(3);
   const getRatingStatus=useSelector(state=>state?.getRatingStatus);
   const [visibiltity,setVisibility]=useState(getRatingStatus)
@@ -66,9 +66,11 @@ const RatingModal = ({}) => {
   };
   const openPlayStoreForRating = () => {
     const storeUrl = Platform.OS == 'ios' ? APP_STORE_LINK : PLAY_STORE_LINK;
-  
       Linking.openURL(storeUrl)
         .then(() => {
+          setModalVisibilty?
+          setModalVisibilty(false)
+          :
           dispatch(setRatingTrack(true));
           setVisibility(true);
           console.log('opnend', getRatingStatus,visibiltity);
@@ -77,9 +79,8 @@ const RatingModal = ({}) => {
           console.error('Error opening Play Store:', err);
         });
   };
-  console.log('heloo',)
   return (
-    <Modal transparent visible={!visibiltity}>
+    <Modal transparent visible={getVisibility?getVisibility:!visibiltity} animationType='slide'>
       <StatusBar
         barStyle={'dark-content'}
         backgroundColor={AppColor.RATING_COLOR}
@@ -91,8 +92,7 @@ const RatingModal = ({}) => {
           size={25}
           style={styles.Icon1}
           onPress={() => {
-            setVisibility(true); // if state is true means visibility will be disappeared temp.
-          
+           setModalVisibilty? setModalVisibilty(false): setVisibility(true); // if state is true means visibility will be disappeared temp.
           }}
         />
         <Text style={styles.txt1}>

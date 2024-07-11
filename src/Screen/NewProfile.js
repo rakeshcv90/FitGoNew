@@ -49,6 +49,7 @@ import {
 } from '../Component/ThemeRedux/Actions';
 import {LogOut} from '../Component/LogOut';
 import {AnalyticsConsole} from '../Component/AnalyticsConsole';
+import RatingModal from '../Component/RatingModal';
 const NewProfile = ({navigation}) => {
   useEffect(() => {
     notifee.getTriggerNotifications().then(res => {
@@ -74,7 +75,7 @@ const NewProfile = ({navigation}) => {
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const [notificationTimer, setNotificationTimer] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [ratingVisibilty,setRatingVisibilty]=useState(false);
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const setAlarmIsEnabled = data => {
     dispatch(setIsAlarmEnabled(data));
@@ -168,15 +169,16 @@ const NewProfile = ({navigation}) => {
       });
     } else if (id == 6) {
       AnalyticsConsole(`APP_RATING_BUTTON`);
-      if (Platform.OS == 'ios') {
-        Linking.openURL(
-          'https://apps.apple.com/us/app/fitme-health-and-fitness-app/id6470018217',
-        );
-      } else {
-        Linking.openURL(
-          'https://play.google.com/store/apps/details?id=fitme.health.fitness.homeworkouts.equipment&hl=en-IN&pli=1',
-        );
-      }
+      setRatingVisibilty(true);
+      // if (Platform.OS == 'ios') {
+      //   Linking.openURL(
+      //     'https://apps.apple.com/us/app/fitme-health-and-fitness-app/id6470018217',
+      //   );
+      // } else {
+      //   Linking.openURL(
+      //     'https://play.google.com/store/apps/details?id=fitme.health.fitness.homeworkouts.equipment&hl=en-IN&pli=1',
+      //   );
+      // }
     } else if (id == 7) {
       setModalVisible(true);
     } else if (id == 8) {
@@ -1001,6 +1003,7 @@ const NewProfile = ({navigation}) => {
         />
       </ScrollView>
       {UpdateScreenVisibility ? <UpdateProfileModal /> : null}
+      {ratingVisibilty?<RatingModal setModalVisibilty={setRatingVisibilty} getVisibility={ratingVisibilty} />:null}
       <DeleteAccount />
     </View>
   );
