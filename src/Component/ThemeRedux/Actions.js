@@ -388,3 +388,9 @@ export const setRatingTrack=data=>{
       payload:data
     }
 }
+export const setUpdateAvailable=data=>{
+  return{
+    type:types.UPDATE_AVAILABLE,
+    payload:data
+  }
+}

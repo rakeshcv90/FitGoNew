@@ -49,22 +49,25 @@ import {LogOut} from '../Component/LogOut';
 import RNFetchBlob from 'rn-fetch-blob';
 import {EnteringEventFunction} from './Event/EnteringEventFunction';
 import AnimatedLottieView from 'lottie-react-native';
-
+import codePush from 'react-native-code-push';
 const products = Platform.select({
   ios: ['fitme_noob', 'fitme_pro', 'fitme_legend'],
   android: ['fitme_monthly', 'a_monthly', 'fitme_legend'],
 });
 
-const SplaceScreen = ({navigation}) => {
+const SplaceScreen = ({navigation,route}) => {
   const dispatch = useDispatch();
 
+  // console.log("routeSpalce",route.params?.data)
   const showIntro = useSelector(state => state.showIntro);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  const getUpdateAvailable=useSelector(state=>state?.getUpdateAvailable)
   const planType = useSelector(state => state.planType);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [loaded, setLoaded] = useState(false);
   const [ApiDataloaded, setApiDataLoaded] = useState(false);
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
+console.log("get",getUpdateAvailable)
   useEffect(() => {
   
       DeviceInfo.syncUniqueId().then(uniqueId => {
@@ -90,7 +93,6 @@ const SplaceScreen = ({navigation}) => {
       DisplayAds(getOfferAgreement);
     }
   }, [loaded]);
-
   const initInterstitial = async () => {
     const interstitialAd = InterstitialAd.createForAdRequest(
       interstitialAdId,
@@ -176,13 +178,17 @@ const SplaceScreen = ({navigation}) => {
           Platform.OS == 'android' && checkCancel();
         } else {
           setTimeout(() => {
-            loaded.show();
+           if(getUpdateAvailable==false){
+            loaded.show()
+           }
             loadScreen(agremment);
           }, 4000);
         }
       } else {
         setTimeout(() => {
-          loaded.show();
+          if(getUpdateAvailable==false){
+            loaded.show()
+           }
           loadScreen(agremment);
         }, 4000);
       }

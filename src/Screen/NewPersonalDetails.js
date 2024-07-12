@@ -45,6 +45,9 @@ const validationSchema = Yup.object().shape({
     .required('Full Name is Required')
     .matches(/^[A-Za-z].*/, 'First Name must start with a character')
     .min(3, 'First Name must contain atleast 3 characters'),
+  email: Yup.string()
+    .matches(/^[\w.\-]+@[\w.\-]+\.\w{2,4}$/, 'Invalid Email Format')
+    .required('Email is Required'),
 });
 
 const NewPersonalDetails = ({route, navigation}) => {
@@ -200,7 +203,7 @@ const NewPersonalDetails = ({route, navigation}) => {
           injury: getUserDataDetails?.injury,
           weight: getUserDataDetails?.weight,
           target_weight: values.targetWeight,
-
+          email:values.email,
           // focusarea:
           //   values.focuseAres.length > 0
           //     ? values.focuseAres.join(',')
@@ -211,7 +214,7 @@ const NewPersonalDetails = ({route, navigation}) => {
           workout_plans: values.workout_plans,
         },
       });
-
+      console.log(values.email,"emaill")
       if (dataItem.data.msg == 'User Updated Successfully') {
         showMessage({
           message: 'Details updated successfully.',
@@ -309,7 +312,6 @@ const NewPersonalDetails = ({route, navigation}) => {
                       paddingTop: 5,
                       marginLeft: 10,
                     }}>
-              
                     {/* <InputText
                       errors={errors.name}
                       ref={inputRef}
@@ -355,8 +357,8 @@ const NewPersonalDetails = ({route, navigation}) => {
                       onBlur={handleBlur('name')}
                       onChangeText={handleChange('name')}
                       colorText={false}
-                       placeholder="Full Name"
-                         label="Full Name"
+                      placeholder="Full Name"
+                      label="Full Name"
                     />
                   </View>
                   <View
@@ -372,7 +374,7 @@ const NewPersonalDetails = ({route, navigation}) => {
                       onChangeText={handleChange('email')}
                       label="Email"
                       placeholder="Enter Email id"
-                      editable={false}
+                      editable={Platform.OS == 'ios' ? true : false}
                     />
                   </View>
                   <View

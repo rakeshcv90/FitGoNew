@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: AppColor.RATING_COLOR,
   },
-  Icon1: {alignSelf: 'flex-end', marginRight: 16, marginTop: 16},
+  Icon1: {alignSelf: 'flex-end', marginRight: 16, marginTop:Platform.OS=='android'?20:DeviceHeigth*0.06},
   txt1: {
     fontFamily: Fonts.MONTSERRAT_BOLD,
     fontSize: 20,

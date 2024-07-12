@@ -2148,7 +2148,7 @@ const HomeNew = ({navigation}) => {
               }
             }}
             style={{
-              width: '47%',
+              width: '50%',
               height: DeviceHeigth * 0.15,
               padding: 10,
               borderRadius: 16,

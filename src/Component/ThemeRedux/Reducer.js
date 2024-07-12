@@ -66,6 +66,7 @@ const intialState = {
   hindiLanguage: false,
   getDynamicPopUpvalues: {},
   getRatingStatus: false,
+  getUpdateAvailable:false,
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -363,6 +364,11 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         getRatingStatus: action.payload,
       };
+      case types.UPDATE_AVAILABLE:
+        return {
+          ...state,
+          getUpdateAvailable: action.payload,
+        };
     default:
       return state;
   }

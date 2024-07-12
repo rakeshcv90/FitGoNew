@@ -22,6 +22,7 @@ import VersionNumber from 'react-native-version-number';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import ActivityLoader from '../../Component/ActivityLoader';
 import DeviceInfo from 'react-native-device-info';
+import {openInbox} from 'react-native-email-link';
 
 type TypeData = {
   name: string;
@@ -55,7 +56,7 @@ const Winner = ({navigation}: any) => {
       const result = await axios({
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
-      console.log("result---->",result.data)
+      console.log('result---->', result.data);
       if (result.data) {
         if (result.data?.data[0]?.id == getUserDataDetails?.id) {
           setUserWinner(true);
@@ -290,11 +291,7 @@ const Winner = ({navigation}: any) => {
   };
   const handleEmail = async () => {
     AnalyticsConsole('W_GMAIL');
-    const supported = await Linking.canOpenURL('googlegmail://');
-
-    if (supported) Linking.openURL('googlegmail://');
-    else if (PLATFORM_IOS) Linking.openURL('mailto:');
-    else Linking.openURL('https://mail.google.com');
+    openInbox();
   };
   return (
     <SafeAreaView
@@ -619,11 +616,12 @@ const Winner = ({navigation}: any) => {
                   getPurchaseHistory?.plan == 'noob'
                     ? navigation?.navigate('NewSubscription', {upgrade: true})
                     : getPurchaseHistory?.plan != 'noob' &&
-                      getPurchaseHistory?.used_plan <=
-                        getPurchaseHistory?.allow_usage &&
-                      navigation?.navigate('UpcomingEvent', {
+                      getPurchaseHistory?.used_plan <
+                        getPurchaseHistory?.allow_usage
+                    ? navigation?.navigate('UpcomingEvent', {
                         eventType: 'upcoming',
-                      });
+                      })
+                    : navigation?.navigate('NewSubscription', {upgrade: true});
                 } else navigation?.navigate('NewSubscription', {upgrade: true});
               }}
               style={{

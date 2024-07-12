@@ -182,7 +182,6 @@ const Signup = ({navigation}) => {
       );
   };
   const appleSignUp = async res => {
-
     setForLoading(true);
     try {
       const data = await axios(`${NewApi}${NewAppapi.signup}`, {
@@ -195,7 +194,7 @@ const Signup = ({navigation}) => {
             res.fullName.givenName == null || res.fullName.familyName == null
               ? 'Guest'
               : res.fullName.givenName + res.fullName.familyName,
-          email: res.email,
+          email: res.email!=null?res?.email:res?.user?.slice(0,5)+'@fitme.com',
           signuptype: 'social',
           socialid: res.user,
           socialtoken: res.authorizationCode,
@@ -203,10 +202,10 @@ const Signup = ({navigation}) => {
           version: appVersion,
           devicetoken: getFcmToken,
           platform: Platform.OS,
-          deviceid: deviceId,
+          deviceid: res.user,
         },
       });
-      console.log('SDfdsfdsfdsfds', data?.data);
+      console.log("mnvjvjhjhvgjghk",data?.data,res.user)
       setForLoading(false);
       if (
         data.data.msg == 'User already exists' &&
@@ -241,7 +240,7 @@ const Signup = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         // getProfileData1(data.data?.id);
-        getUserDetailData1(data.data?.id, data.data.profile_compl_status);
+       // getUserDetailData1(data.data?.id, data.data.profile_compl_status);
       } else if (
         data.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -268,14 +267,25 @@ const Signup = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-        getUserDetailData1(data.data?.id, data.data.profile_compl_status);
+       // getUserDetailData1(data.data?.id, data.data.profile_compl_status);
         await GoogleSignin.signOut();
-      } else {
+      } 
+      else if (
+        data.data?.msg == 'User already exists via other authentication'
+      ) {
         setForLoading(false);
-
-        dispatch(setUserId(data.data?.id));
-
-        getUserDetailData(data.data?.id);
+        showMessage({
+          message: data.data.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      }
+      else {
+        setForLoading(false);
+        // dispatch(setUserId(data.data?.id));
+        // getUserDetailData(data.data?.id);
       }
     } catch (error) {
       setForLoading(false);
@@ -305,9 +315,9 @@ const Signup = ({navigation}) => {
           platform: Platform.OS,
         },
       });
-
+      
       setForLoading(false);
-    
+
       if (data?.data?.status == 0) {
         setForLoading(false);
         showMessage({
@@ -352,27 +362,31 @@ const Signup = ({navigation}) => {
         dispatch(setUserId(data.data?.id));
 
         // getProfileData1(data.data?.id);
-        getUserDetailData1(data.data?.id, data.data.profile_compl_status);
+        //  getUserDetailData1(data.data?.id, data.data.profile_compl_status);
+        showMessage({
+          message: data?.data?.msg,
+          floating: true,
+          duration: 3000,
+          type: 'danger',
+          icon: {icon: 'auto', position: 'left'},
+        });
         await GoogleSignin.signOut();
-      }else if (
+      } else if (
         data?.data?.msg == 'registered with given these details' &&
         data.data.profile_compl_status == 1
       ) {
         setForLoading(false);
         showMessage({
           message:
-            'This Device already registered with ' +
-            data.data.social_type +
-            ' Login',
+            'This Device already registered with '+ " "+ data.data.email ,
           type: 'danger',
           animationDuration: 500,
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-        getUserDetailData1(data.data?.id, data.data.profile_compl_status);
+        //getUserDetailData1(data.data?.id, data.data.profile_compl_status);
         await GoogleSignin.signOut();
-      } 
-      else {
+      } else {
         setForLoading(false);
 
         showMessage({
@@ -413,7 +427,7 @@ const Signup = ({navigation}) => {
       });
 
       await GoogleSignin.signOut();
-
+      console.log("helllooo---->",data.data)
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
@@ -450,7 +464,7 @@ const Signup = ({navigation}) => {
         });
 
         // getProfileData1(data.data?.id);
-        getUserDetailData1(data.data?.id, data.data.profile_compl_status);
+       // getUserDetailData1(data.data?.id, data.data.profile_compl_status);
         await GoogleSignin.signOut();
       } else if (
         data.data?.msg == 'Please update the app to the latest version.'
@@ -499,12 +513,43 @@ const Signup = ({navigation}) => {
       ) {
         if (data.data.profile_compl_status == 1) {
           getUserDetailData1(data.data?.id, data.data.profile_compl_status);
+          
           await GoogleSignin.signOut();
         } else {
-          getUserDetailData(data.data?.id);
+          // getUserDetailData(data.data?.id);
+          
           await GoogleSignin.signOut();
         }
-      } else {
+      }
+      else if (
+        data?.data?.msg == 'registered with given these details' &&
+        data.data.profile_compl_status == 1
+      ) {
+        setForLoading(false);
+        showMessage({
+          message:
+            'This Device already registered with '+ " "+ data.data.email ,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        //getUserDetailData1(data.data?.id, data.data.profile_compl_status);
+        await GoogleSignin.signOut();
+      } 
+       else if (
+        data.data?.msg == 'User already registered with deviceID and active'
+      ) {
+        setForLoading(false);
+        showMessage({
+          message: `It looks like your device ID is already registered with us using your ${data.data?.email}. Please log in with your existing credentials.`,
+          floating: true,
+          duration: 3000,
+          type: 'error',
+          icon: {icon: 'auto', position: 'left'},
+        });
+        //action.resetForm();
+      }else {
         setForLoading(false);
 
         await GoogleSignin.signOut();
@@ -1040,7 +1085,6 @@ const Signup = ({navigation}) => {
   };
 
   const getUserDetailData = async userId => {
- 
     try {
       const responseData = await axios.get(
         `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
@@ -1596,7 +1640,7 @@ var styles = StyleSheet.create({
   },
   OtpField: {
     width: 55,
-   // height: 55,
+    // height: 55,
     margin: 5,
     backgroundColor: '#F8F9F9',
     justifyContent: 'center',
