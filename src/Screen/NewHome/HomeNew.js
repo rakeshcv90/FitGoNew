@@ -2078,9 +2078,9 @@ const HomeNew = ({navigation}) => {
               let checkAdsShow = AddCountFunction();
               if (checkAdsShow == true) {
                 showInterstitialAd();
-                navigation.navigate('Meals');
+                navigation.navigate('DietPlatTabBar');
               } else {
-                navigation.navigate('Meals');
+                navigation.navigate('DietPlatTabBar');
               }
             }}
             style={{
@@ -2148,7 +2148,7 @@ const HomeNew = ({navigation}) => {
               }
             }}
             style={{
-              width: '47%',
+              width: '50%',
               height: DeviceHeigth * 0.15,
               padding: 10,
               borderRadius: 16,

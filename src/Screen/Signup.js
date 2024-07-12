@@ -206,7 +206,7 @@ const Signup = ({navigation}) => {
           deviceid: deviceId,
         },
       });
-      console.log('SDfdsfdsfdsfds', data?.data);
+   
       setForLoading(false);
       if (
         data.data.msg == 'User already exists' &&

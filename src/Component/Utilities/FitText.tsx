@@ -18,7 +18,9 @@ type Props = TextProps & {
   marginVertical?: number;
   fontStyle?: 'normal' | 'italic';
   w?: string | any;
-  textDecorationLine?: 'line-through'
+  textDecorationLine?: 'line-through'|'underline'
+  onPress?:Function,
+  numberOfLines?: number;
 };
 
 const FitText: FC<Props> = ({
@@ -37,7 +39,10 @@ const FitText: FC<Props> = ({
   marginVertical,
   fontStyle,
   w,
-  textDecorationLine
+  textDecorationLine,
+  onPress,
+  numberOfLines
+  
 }) => {
   const getTypeStyle = () => {
     switch (type) {
@@ -92,7 +97,7 @@ const FitText: FC<Props> = ({
   };
   return (
     <>
-      <Text style={[getTypeStyle(), customStyle]}>{value}</Text>
+      <Text numberOfLines={numberOfLines} onPress={onPress} style={[getTypeStyle(), customStyle]}>{value}</Text>
     </>
   );
 };

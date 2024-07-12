@@ -63,7 +63,7 @@ const MealDetails = ({route, navigation}) => {
           translucent={true}
           backgroundColor={'transparent'}
         />
-
+        {console.log('asdsadsadsafsdfds', route?.params?.item)}
         <ImageBackground
           translucent={true}
           style={{width: '100%', height: DeviceHeigth * 0.4}}
@@ -369,13 +369,11 @@ const MealDetails = ({route, navigation}) => {
             </View>
           </ScrollView>
         </View>
-
-        
       </View>
       {/* {bannerAdsDisplay()} */}
-          <View style={{marginBottom: DeviceHeigth <= 846 ? -1 : -10}}>
-            <BannerAdd bannerAdId={bannerAdId} />
-          </View>
+      <View style={{marginBottom: DeviceHeigth <= 846 ? -1 : -10}}>
+        <BannerAdd bannerAdId={bannerAdId} />
+      </View>
     </>
   );
 };

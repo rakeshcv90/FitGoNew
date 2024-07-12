@@ -76,6 +76,10 @@ import Winner from '../Screen/Leaderboard/Winner';
 import IntroVideo from '../Screen/Introduction/IntroVideo';
 import SplaceNew from '../SplaceNew';
 
+import DietPlatTabBar from './DietPlatTabBar';
+import CustomMealList from '../Screen/NewMeal/CustomMealList';
+import EditCustomMeal from '../Screen/NewMeal/EditCustomMeal';
+
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -90,9 +94,10 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
-     <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
-         <Stack.Screen
+   {/* <Stack.Screen name="DietPlatTabBar" component={DietPlatTabBar} />
+   <Stack.Screen name="CustomMealList" component={CustomMealList} /> */}
+      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
+      <Stack.Screen
         name="IntroductionScreen1"
         component={IntroductionScreen1}
       />
@@ -104,7 +109,7 @@ export const LoginStack = () => {
         name="IntroductionScreen3"
         component={IntroductionScreen3}
       />
-     
+
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Name" component={Name} />
@@ -138,22 +143,7 @@ export const LoginStack = () => {
       <Stack.Screen name="BottomTab" component={BottomTab} />
       <Stack.Screen name="AITrainer" component={AITrainer} />
       <Stack.Screen name="AIMessageHistory" component={AIMessageHistory} />
-      <Stack.Screen name="IntroVideo" component={IntroVideo}/>
-      {/* <Stack.Screen name="Equipment" component={Equipment} /> */}
-      {/* <Stack.Screen name="Focus" component={Focus} /> */}
-      {/* <Stack.Screen name="Level" component={Level} /> */}
-      {/* <Stack.Screen name="Profile" component={Profile} /> */}
-      {/* <Stack.Screen name="NewEditProfile" component={NewEditProfile} /> */}
-      {/* <Stack.Screen name="AllWorkouts" component={AllWorkouts} /> */}
-      {/* <Stack.Screen name="Report" component={Report} /> */}
-      {/* <Stack.Screen name="Subscription" component={Subscription} /> */}
-      {/* <Stack.Screen name="FocuseWorkoutList" component={FocuseWorkoutList} /> */}
-      {/* <Stack.Screen name="Injury" component={Injury} /> */}
-      {/* <Stack.Screen name="FocusArea" component={FocusArea} />
-      <Stack.Screen name="WorkoutArea" component={WorkoutArea} /> */}
-      {/* <Stack.Screen name="Edit_Profile" component={NewEditProfile} /> */}
-      {/* <Stack.Screen name="Scale" component={Scale} /> */}
- 
+      <Stack.Screen name="IntroVideo" component={IntroVideo} />
       <Stack.Screen
         name="NewMonthlyAchievement"
         component={NewMonthlyAchievement}
@@ -178,6 +168,9 @@ export const LoginStack = () => {
       <Stack.Screen name="AddWorkouts" component={AddWorkouts} />
       <Stack.Screen name="Leaderboard" component={Leaderboard} />
       <Stack.Screen name="Winner" component={Winner} />
+      <Stack.Screen name="DietPlatTabBar" component={DietPlatTabBar} />
+      <Stack.Screen name="CustomMealList" component={CustomMealList} />
+      <Stack.Screen name="EditCustomMeal" component={EditCustomMeal} />
     </Stack.Navigator>
   );
 };

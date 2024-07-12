@@ -18,6 +18,7 @@ import {
   setBanners,
   setChallengesData,
   setCompleteProfileData,
+  setCustomDietData,
   setCustomWorkoutData,
   setDownloadedImage,
   setDynamicPopupValues,
@@ -221,9 +222,11 @@ const SplaceScreen = ({navigation}) => {
 
  
   const getUserAllInData = async () => {
+    const url='https://fitme.cvinfotech.in/adserver/public/api/test_all_in_one'
     try {
       const responseData = await axios.get(
-        `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
+        `${url}?version=${VersionNumber.appVersion}`,
+       //${NewAppapi.GET_ALL_IN_ONE}
       );
       if (
         responseData?.data?.msg ==
@@ -329,6 +332,7 @@ const downloadImages = async (data) => {
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         DisplayAds(responseData?.data?.additional_data);
         dispatch(setUserProfileData(responseData?.data?.profile));
+        dispatch(setCustomDietData(responseData?.data?.diet_data))
         if (responseData?.data.event_details == 'Not any subscription') {
           dispatch(setPurchaseHistory([]));
           EnteringEventFunction(

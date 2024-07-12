@@ -389,7 +389,7 @@ export const ExerciseComponentWithEvent = ({
                 }}
                 resizeMode="contain"
               />
-              {console.log('Zxcvxvdsfdsd', getWeeklyPlansData[day]?.title)}
+           
               <Text
                 style={{
                   fontFamily: Fonts.MONTSERRAT_BOLD,

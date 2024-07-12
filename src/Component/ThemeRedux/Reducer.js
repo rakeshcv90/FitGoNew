@@ -64,7 +64,9 @@ const intialState = {
   getPopUpFreuqency: 0,
   getPopUpSeen: false,
   hindiLanguage: false,
-  getDynamicPopUpvalues:{}
+  getDynamicPopUpvalues: {},
+  getDietFilterData: -1,
+  getCustomDietData:[]
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -352,10 +354,21 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         hindiLanguage: action.payload,
       };
-      case types.DYNAMIC_EVENTPOPUP:
-        return{
-          ...state,getDynamicPopUpvalues:action.payload
-        }
+    case types.DYNAMIC_EVENTPOPUP:
+      return {
+        ...state,
+        getDynamicPopUpvalues: action.payload,
+      };
+    case types.DIET_TYPE_FILTER:
+      return {
+        ...state,
+        getDietFilterData: action.payload,
+      };
+      case types.CUSTOM_DIET_DATA:
+        return {
+          ...state,
+          getCustomDietData: action.payload,
+        };
     default:
       return state;
   }

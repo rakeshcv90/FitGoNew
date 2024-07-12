@@ -220,5 +220,6 @@ export const localImage = {
   earnText: require('../Icon/Images/InAppRewards/EarnText.png'),
   bottomCircle:require('../Icon/Images/InAppRewards/BottomCircle.png'),
   VideoLogo:require('../Icon/Images/InAppRewards/Videologo.png'),
-  fullsizebanner:require('../Icon/Images/InAppRewards/fullsizeBanner.jpg')
+  fullsizebanner:require('../Icon/Images/InAppRewards/fullsizeBanner.jpg'),
+  NoMeal:require('../Icon/Images/InAppRewards/NoMeal.png')
 };
