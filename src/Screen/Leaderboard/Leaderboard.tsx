@@ -22,6 +22,7 @@ import VersionNumber from 'react-native-version-number';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import AnimatedLottieView from 'lottie-react-native';
 import FastImage from 'react-native-fast-image';
+import ReferButton from '../../Component/Utilities/ReferButton';
 
 type TypeData = {
   name: string;
@@ -221,10 +222,18 @@ const Leaderboard = ({navigation, route}: any) => {
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <DietPlanHeader
         header="Leaderboard"
-        h={DeviceWidth * 0.15}
+        h={DeviceHeigth >= 1024 ? DeviceWidth * 0.15 : DeviceWidth * 0.2}
         paddingTop={PLATFORM_IOS ? DeviceHeigth * 0.025 : DeviceHeigth * 0.02}
         shadow
       />
+      <View
+        style={{
+          position: 'absolute',
+          top: PLATFORM_IOS ? DeviceHeigth * 0.025 : DeviceHeigth * 0.01,
+          right: 0,
+        }}>
+        <ReferButton />
+      </View>
       {loader ? (
         <LoaderLottie />
       ) : (
@@ -240,7 +249,6 @@ const Leaderboard = ({navigation, route}: any) => {
           <ImageBackground
             source={localImage.Rank1background}
             imageStyle={{width: DeviceWidth, height: DeviceWidth / 2}}
-            
             style={{
               justifyContent: 'center',
               alignItems: 'center',
