@@ -225,4 +225,5 @@ export const localImage = {
   Referral_Coin_Banner:require('../Icon/Images/InAppRewards/Referral_Coin_Banner.png'),
   Bronze:require('../Icon/Images/InAppRewards/Bronze.png'),
   Silver:require('../Icon/Images/InAppRewards/Silver.png'),
+  TickCircle:require('../Icon/Images/InAppRewards/TickCircle.png'),
 };
