@@ -74,8 +74,9 @@ import AddWorkouts from '../Screen/MyPlans/AddWorkouts';
 import Leaderboard from '../Screen/Leaderboard/Leaderboard';
 import Winner from '../Screen/Leaderboard/Winner';
 import IntroVideo from '../Screen/Introduction/IntroVideo';
-import SplaceNew from '../SplaceNew';
+
 import RatingModal from '../Component/RatingModal';
+import SplaceNew from '../Screen/SplaceNew';
 import StreakModal from '../Component/Utilities/StreakModal';
 import OfferGuidelines from '../Component/Utilities/OfferGuidelines';
 
@@ -93,7 +94,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name='OfferGuidelines' component={OfferGuidelines}/>
+      {/* <Stack.Screen name='OfferGuidelines' component={OfferGuidelines}/> */}
       {/* <Stack.Screen name="RatingModal" component={StreakModal}/> */}
       {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
       <Stack.Screen

@@ -66,7 +66,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
         compactCapabilities: [Capability.Play, Capability.Pause],
       });
     } catch (error) {
-      console.log('Music Player Error', error);
+      console.log('Music Player Error Meditation Exercise', error);
     }
   };
   const togglePlayback = async playbackState => {

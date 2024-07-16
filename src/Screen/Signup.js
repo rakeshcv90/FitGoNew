@@ -507,20 +507,21 @@ const Signup = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         await GoogleSignin.signOut();
-      } else if (
-        data?.data?.msg == 'registered with given these details' &&
-        data.data.social_type == 'google'
-      ) {
-        if (data.data.profile_compl_status == 1) {
-          getUserDetailData1(data.data?.id, data.data.profile_compl_status);
-          
-          await GoogleSignin.signOut();
-        } else {
-          // getUserDetailData(data.data?.id);
-          
-          await GoogleSignin.signOut();
-        }
       }
+      //  else if (
+      //   data?.data?.msg == 'registered with given these details' &&
+      //   data.data.social_type == 'google'
+      // ) {
+      //   if (data.data.profile_compl_status == 1) {
+      //     getUserDetailData1(data.data?.id, data.data.profile_compl_status);
+          
+      //     await GoogleSignin.signOut();
+      //   } else {
+      //      getUserDetailData(data.data?.id);
+          
+      //     await GoogleSignin.signOut();
+      //   }
+      // }
       else if (
         data?.data?.msg == 'registered with given these details' &&
         data.data.profile_compl_status == 1
