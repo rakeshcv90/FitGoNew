@@ -74,8 +74,9 @@ import AddWorkouts from '../Screen/MyPlans/AddWorkouts';
 import Leaderboard from '../Screen/Leaderboard/Leaderboard';
 import Winner from '../Screen/Leaderboard/Winner';
 import IntroVideo from '../Screen/Introduction/IntroVideo';
-import SplaceNew from '../SplaceNew';
+
 import RatingModal from '../Component/RatingModal';
+import SplaceNew from '../Screen/SplaceNew';
 
 const Stack = createStackNavigator();
 

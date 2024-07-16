@@ -142,7 +142,7 @@ const Exercise = ({navigation, route}: any) => {
         compactCapabilities: [Capability.Play, Capability.Pause],
       });
     } catch (error) {
-      console.log('Music Player Error', error);
+      console.log('Music Player Error Exercise' , error);
     }
   };
   useEffect(() => {

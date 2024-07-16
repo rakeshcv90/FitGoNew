@@ -553,7 +553,7 @@ const Banners = ({
   const [openEditModal, setOpenEditModal] = useState(false);
   const [dataType, setDatatype] = useState('');
   const dispatch = useDispatch();
-  console.log('helloo--->', getPurchaseHistory);
+
   useEffect(() => {
     if (Object.keys(getBanners).length == 0) {
       //bannerApi();
