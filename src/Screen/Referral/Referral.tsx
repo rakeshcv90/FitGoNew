@@ -19,17 +19,20 @@ import FitText from '../../Component/Utilities/FitText';
 import {RequestAPI} from '../../Component/Utilities/RequestAPI';
 import {useSelector} from 'react-redux';
 import Button from '../../Component/Button';
-import Share from 'react-native-share';
+import Share, {ShareOptions, ShareSingleOptions} from 'react-native-share';
 import {Circle, Line, Svg} from 'react-native-svg';
 import VersionNumber from 'react-native-version-number';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import ActivityLoader from '../../Component/ActivityLoader';
+import Clipboard from '@react-native-clipboard/clipboard';
+import {showMessage} from 'react-native-flash-message';
 
 const Referral = () => {
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
   );
   const [referralCode, setReferralCode] = useState('');
+  const [referralLink, setReferralLink] = useState('');
   const [refresh, setRefresh] = useState(false);
   const [loader, setLoader] = useState(false);
   const [referralData, setReferralData] = useState<any>({});
@@ -52,6 +55,7 @@ const Referral = () => {
           setReferralCode('');
         } else {
           setReferralCode(res?.data?.code);
+          setReferralLink(res.data?.link + '/' + res?.data?.code);
         }
       },
     );
@@ -78,11 +82,11 @@ const Referral = () => {
 
   const share = async () => {
     try {
-      const options = {
+      const options: ShareOptions = {
         message:
           'Download Fitme to earn 1000rs weekly use this referral code ' +
           referralCode,
-        url: 'https://fitme.cvinfotech.in/' + referralCode,
+        url: referralLink,
       };
       const result = await Share.open(options);
       if (result.success) {
@@ -91,6 +95,39 @@ const Referral = () => {
     } catch (err) {
       console.log(err);
     }
+  };
+  const shareWhatsApp = async () => {
+    try {
+      const options: ShareSingleOptions = {
+        title: 'Share via',
+        message:
+          'Download Fitme to earn 1000rs weekly use this referral code ' +
+          referralCode,
+        url: referralLink,
+        social: Share.Social.WHATSAPP,
+        // whatsAppNumber: '919999999999', // country code + phone number
+        // filename: 'test', // only for base64 file in Android
+      };
+      const result = await Share.shareSingle(options);
+      if (result.success) {
+        console.log(result);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const clipboard = () => {
+    Clipboard.setString(`link`);
+
+    showMessage({
+      message: 'Copy to Clipboard',
+      type: 'success',
+      animationDuration: 500,
+
+      floating: true,
+      icon: {icon: 'auto', position: 'left'},
+    });
   };
 
   const Medal = ({rank, text, image}: any) => (
@@ -489,7 +526,7 @@ const Referral = () => {
             alignItems: 'center',
             alignSelf: 'center',
           }}>
-          <TouchableOpacity style={styles.whatsapp}>
+          <TouchableOpacity style={styles.whatsapp} onPress={shareWhatsApp}>
             <FitIcon
               name="whatsapp"
               type="MaterialCommunityIcons"
@@ -549,6 +586,7 @@ const Referral = () => {
             type="AntDesign"
             size={20}
             color={AppColor.BLACK}
+            onPress={clipboard}
           />
         </View>
       </ScrollView>
@@ -584,8 +622,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     fontFamily: Fonts.MONTSERRAT_MEDIUM,
-    marginVertical: 5,
-    paddingRight: 10,
   },
   refBox: {
     borderWidth: 1,

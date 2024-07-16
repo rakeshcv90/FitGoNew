@@ -18,6 +18,7 @@ import NewButton from '../../Component/NewButton';
 import {RequestAPI} from '../../Component/Utilities/RequestAPI';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {navigationRef} from '../../../App';
+import {showMessage} from 'react-native-flash-message';
 
 interface Props {
   visible: boolean | false;
@@ -56,34 +57,60 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
       NewAppapi.SEND_REFERRAL_API,
       {
         referral_code: referralCode.toLowerCase(),
-        user_id: getUserDataDetails?.id
+        user_id: getUserDataDetails?.id,
       },
       (res: any) => {
         setLoader(false);
         setVisible(false);
-        if (res?.status == 200 && res?.data?.msg == 'Referral coin added') {
-          console.log('POST DATA', res?.data);
-          //   afterRefer()
+        console.log('POST DATA', res?.data);
+        if (res?.data?.msg == 'Referral coin added') {
+          showMessage({
+            message: 'Referral code applied successfully.',
+            type: 'success',
+            animationDuration: 1000,
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
+          navigationRef?.navigate('Yourself');
+        } else if (res?.data?.msg == 'Invalid referral code') {
+          showMessage({
+            message: 'Invalid referral code',
+            type: 'danger',
+            animationDuration: 1000,
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
+        } else if (res?.data?.msg == 'This code has already been used') {
+          showMessage({
+            message: 'This code has already been used',
+            type: 'danger',
+            animationDuration: 1000,
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
         } else if (
-          res?.status == 200 &&
-          res?.data?.msg == 'Invalid referral code'
-        ) {
-          console.log('POST DATA', res?.data);
-          //   afterRefer()
-        } else if (
-          res?.status == 200 &&
-          res?.data?.msg == 'This code has already been used'
-        ) {
-          console.log('POST DATA', res?.data);
-          //   afterRefer()
-        } else if (
-          res?.status == 200 &&
           res?.data?.msg == 'You are not able to use this referal code'
         ) {
-          console.log('POST DATA', res?.data);
-          //   afterRefer()
+          showMessage({
+            message: 'You cannot use this referral code.',
+            type: 'info',
+            animationDuration: 1000,
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
+          navigationRef?.navigate('Yourself');
+        } else if (
+          res?.data?.msg == 'you are not in current plan please try later.'
+        ) {
+          showMessage({
+            message: 'You cannot use this referral code.',
+            type: 'info',
+            animationDuration: 1000,
+            floating: true,
+            icon: {icon: 'auto', position: 'left'},
+          });
+          navigationRef?.navigate('Yourself');
         }
-        navigationRef?.navigate('Yourself');
       },
     );
   };
@@ -91,7 +118,10 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
   return (
     <Modal
       visible={visible}
-      onRequestClose={() => setVisible(false)}
+      onRequestClose={() => {
+        setVisible(false);
+        navigationRef?.navigate('Yourself');
+      }}
       animationType="slide"
       transparent>
       <KeyboardAvoidingView
@@ -135,7 +165,10 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
             <FitText
               type="Heading"
               value="X"
-              onPress={() => setVisible(false)}
+              onPress={() => {
+                setVisible(false);
+                navigationRef?.navigate('Yourself');
+              }}
             />
           </View>
           <View

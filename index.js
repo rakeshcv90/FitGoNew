@@ -3,7 +3,7 @@
  */
 import 'react-native-gesture-handler';
 import {AppRegistry, Linking} from 'react-native';
-import App from './App';
+import App, {navigationRef} from './App';
 import {name as appName} from './app.json';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
@@ -37,6 +37,7 @@ import {NewAppapi} from './src/Component/Config';
 import axios from 'axios';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {findKeyInObject} from './src/Component/Utilities/FindkeyinObject';
 
 notifee.createChannel({
   id: 'Time',
@@ -48,16 +49,30 @@ notifee.createChannel({
   description: 'CHANNEL FOR NOTIFICATION',
   sound: 'fitme_notification',
 });
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  if (remoteMessage.data?.type == 'delete_notification') {
+const NotificationType = data => {
+  const screenName = findKeyInObject(data, 'screen');
+  const Params = findKeyInObject(data, 'params');
+
+  if(screenName != null){
+    // if(Params != null){
+    //   navigationRef.current.navigate(screenName)
+    // }
+    
+    navigationRef.current.navigate(screenName)
+  }
+  if (data?.type == 'delete_notification') {
     DeleteWeeklyDataAPIStart();
-  } else if (remoteMessage.data?.type == 'event_saturday') {
+  } else if (data?.type == 'event_saturday') {
     getLeaderboardDataAPI();
-  } else if (remoteMessage.data?.type == 'event_monday') {
+  } else if (data?.type == 'event_monday') {
     store.dispatch(setRewardModal(true));
   } else {
     StepcountNoticationStart();
   }
+};
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('BACK', remoteMessage.data);
+  NotificationType(remoteMessage.data)
 });
 notifee.onBackgroundEvent(async ({type, detail}) => {
   TriggerButtons(detail, type);
@@ -67,16 +82,18 @@ notifee.onForegroundEvent(async ({type, detail}) => {
 });
 const TriggerButtons = async (detail, type) => {
   const {notification, pressAction} = detail;
+  NotificationType(notification?.data)
+  // navigationRef.current?.navigate(notification.data?.screen);
 
-  if (notification.data?.type == 'delete_notification') {
-    DeleteWeeklyDataAPIStart();
-  } else if (notification.data?.type == 'event_saturday') {
-    getLeaderboardDataAPI();
-  } else if (notification.data?.type == 'event_monday') {
-    store.dispatch(setRewardModal(true));
-  } else {
-    StepcountNoticationStart();
-  }
+  // if (notification.data?.type == 'delete_notification') {
+  //   DeleteWeeklyDataAPIStart();
+  // } else if (notification.data?.type == 'event_saturday') {
+  //   getLeaderboardDataAPI();
+  // } else if (notification.data?.type == 'event_monday') {
+  //   store.dispatch(setRewardModal(true));
+  // } else {
+  //   StepcountNoticationStart();
+  // }
   if (type === EventType.ACTION_PRESS && pressAction.id === 'Stop') {
     // Remove the notification
     await notifee.cancelDisplayedNotification(notification.id);
@@ -191,16 +208,17 @@ const DisplayNotification = async Notification => {
   } catch (error) {
     console.log('notifee Error', error);
   }
-  if (Notification.data?.type == 'delete_notification') {
-    DeleteWeeklyDataAPIStart();
-  } else if (Notification.data?.type == 'event_saturday') {
-    console.log('FORE NOTIFUCATION', Notification.data?.type);
-    getLeaderboardDataAPI();
-  } else if (Notification.data?.type == 'event_monday') {
-    store.dispatch(setRewardModal(true));
-  } else {
-    StepcountNoticationStart();
-  }
+  NotificationType(Notification?.data)
+  // if (Notification.data?.type == 'delete_notification') {
+  //   DeleteWeeklyDataAPIStart();
+  // } else if (Notification.data?.type == 'event_saturday') {
+  //   console.log('FORE NOTIFUCATION', Notification.data?.type);
+  //   getLeaderboardDataAPI();
+  // } else if (Notification.data?.type == 'event_monday') {
+  //   store.dispatch(setRewardModal(true));
+  // } else {
+  //   StepcountNoticationStart();
+  // }
 };
 
 const getLeaderboardDataAPI = async () => {
@@ -226,16 +244,18 @@ const getLeaderboardDataAPI = async () => {
 };
 messaging().getInitialNotification(async remoteMessage => {
   // DisplayNotification(remoteMessage);
-
-  if (remoteMessage.data?.type == 'delete_notification') {
-    DeleteWeeklyDataAPIStart();
-  } else if (remoteMessage.data?.type == 'event_saturday') {
-    getLeaderboardDataAPI();
-  } else if (remoteMessage.data?.type == 'event_monday') {
-    store.dispatch(setRewardModal(true));
-  } else {
-    StepcountNoticationStart();
-  }
+  console.log('Ini', remoteMessage.data);
+  NotificationType(remoteMessage?.data)
+  // navigationRef.current?.navigate(remoteMessage.data?.screen);
+  // if (remoteMessage.data?.type == 'delete_notification') {
+  //   DeleteWeeklyDataAPIStart();
+  // } else if (remoteMessage.data?.type == 'event_saturday') {
+  //   getLeaderboardDataAPI();
+  // } else if (remoteMessage.data?.type == 'event_monday') {
+  //   store.dispatch(setRewardModal(true));
+  // } else {
+  //   StepcountNoticationStart();
+  // }
 });
 
 export const handleDeepLink = async ({url}) => {
@@ -254,6 +274,8 @@ const AppRedux = () => {
     Linking.addEventListener('url', handleDeepLink);
     initialURL();
     const unsubscribe = messaging().onMessage(async remoteMessage => {
+      // console.log('ONM', remoteMessage.data?.screen);
+      // navigationRef.current?.navigate(remoteMessage.data?.screen);
       DisplayNotification(remoteMessage);
     });
     return unsubscribe;

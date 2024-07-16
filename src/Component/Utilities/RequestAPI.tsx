@@ -24,19 +24,23 @@ export const RequestAPI = {
         payload.append(item[0], item[1]),
       );
     }
-    const postHeader = {
-      'Content-type': 'multipart/form-data',
+    const headers = {
+      'Content-Type': 'multipart/form-data',
       Accept: 'application/json',
     };
     const getData = {
-      method,
-      params: data
-    }
+      method: 'GET',
+      params: data,
+    };
+    const postData = {
+      method: 'POST',
+      data: payload,
+    };
+    const init =
+      method == 'GET'
+        ? Object.assign({}, getData, {})
+        : Object.assign({}, postData, {headers});
     try {
-      const init =
-        method == 'GET'
-          ? Object.assign({}, getData, {})
-          : Object.assign({}, payload, {postHeader});
 
       const res = await axios({
         url,
@@ -44,18 +48,12 @@ export const RequestAPI = {
         timeout: 30000,
         withCredentials: true,
       });
-      // const res = await axios(url, {
-      //   method,
-      //   data: method == 'GET' ? {} : payload,
-      //   headers: method == 'GET' ? {} : postHeader,
-      //   params: method == 'GET' ? data : {},
-      // });
       // console.log("AXIOS",res.data)
       if (res.data) {
         callback(handleResponse(res, res.data));
       }
     } catch (error: any) {
-      // console.log("AXIOS_ERR",error?.response)
+      // console.log("AXIOS_ERR",error, init)
       callback(handleResponse(error, error?.response));
     }
   },
