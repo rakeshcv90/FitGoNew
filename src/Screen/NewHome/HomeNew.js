@@ -2231,22 +2231,38 @@ const HomeNew = ({navigation}) => {
           <UpcomingEventModal
             visible={true}
             onConfirm={() => {
-              if (getPurchaseHistory?.plan != null) {
-                if (
-                  getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
+              if (getPurchaseHistory) {
+                if (getPurchaseHistory.plan === 'noob') {
+                  navigation?.navigate('NewSubscription', {upgrade: true});
+                  showMessage({
+                    message:
+                      'Oops! You’ve used up all your chances to join the event. Upgrade your plan to join now, or wait to renew your plan.',
+                    type: 'info',
+                    animationDuration: 500,
+                    floating: true,
+                    icon: {icon: 'auto', position: 'left'},
+                  });
+                } else if (
+                  getPurchaseHistory.plan !== 'noob' &&
+                  getPurchaseHistory.used_plan <
+                    getPurchaseHistory.allow_usage
                 ) {
-                  AnalyticsConsole('UP_D_B');
-                  navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
-                  dispatch(setRewardPopUp(1));
+                  navigation?.navigate('UpcomingEvent', {
+                    eventType: 'upcoming',
+                  });
                 } else {
-                  AnalyticsConsole('PP_D_B');
-                  navigation.navigate('NewSubscription', {upgrade: false});
-                  dispatch(setRewardPopUp(1));
+                  navigation?.navigate('NewSubscription', {upgrade: true});
+                  showMessage({
+                    message:
+                      'Oops! You’ve used up all your chances to join the event. Upgrade your plan to join now, or wait to renew your plan. ',
+                    type: 'info',
+                    animationDuration: 500,
+                    floating: true,
+                    icon: {icon: 'auto', position: 'left'},
+                  });
                 }
               } else {
-                AnalyticsConsole('PP_D_B');
-                navigation.navigate('NewSubscription', {upgrade: false});
-                dispatch(setRewardPopUp(1));
+                navigation?.navigate('NewSubscription', {upgrade: true});
               }
             }}
             onCancel={() => {

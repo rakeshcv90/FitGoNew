@@ -67,7 +67,6 @@ const SplaceScreen = ({navigation,route}) => {
   const [loaded, setLoaded] = useState(false);
   const [ApiDataloaded, setApiDataLoaded] = useState(false);
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
-console.log("get",getUpdateAvailable)
   useEffect(() => {
   
       DeviceInfo.syncUniqueId().then(uniqueId => {

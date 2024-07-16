@@ -76,6 +76,8 @@ import Winner from '../Screen/Leaderboard/Winner';
 import IntroVideo from '../Screen/Introduction/IntroVideo';
 import SplaceNew from '../SplaceNew';
 import RatingModal from '../Component/RatingModal';
+import StreakModal from '../Component/Utilities/StreakModal';
+import OfferGuidelines from '../Component/Utilities/OfferGuidelines';
 
 const Stack = createStackNavigator();
 
@@ -91,7 +93,8 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      {/* <Stack.Screen name="RatingModal" component={RatingModal}/> */}
+      <Stack.Screen name='OfferGuidelines' component={OfferGuidelines}/>
+      {/* <Stack.Screen name="RatingModal" component={StreakModal}/> */}
       {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
       <Stack.Screen
         name="SplaceScreen"

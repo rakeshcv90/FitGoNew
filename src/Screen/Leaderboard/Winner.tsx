@@ -23,6 +23,7 @@ import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import ActivityLoader from '../../Component/ActivityLoader';
 import DeviceInfo from 'react-native-device-info';
 import {openInbox} from 'react-native-email-link';
+import {showMessage} from 'react-native-flash-message';
 
 type TypeData = {
   name: string;
@@ -56,7 +57,6 @@ const Winner = ({navigation}: any) => {
       const result = await axios({
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
-      console.log('result---->', result.data);
       if (result.data) {
         if (result.data?.data[0]?.id == getUserDataDetails?.id) {
           setUserWinner(true);
@@ -612,17 +612,50 @@ const Winner = ({navigation}: any) => {
             <TouchableOpacity
               onPress={() => {
                 AnalyticsConsole(`TRA_WIN`);
+                // if (getPurchaseHistory) {
+                //   getPurchaseHistory?.plan == 'noob'
+                //     ? navigation?.navigate('NewSubscription', {upgrade: true})
+                //     : getPurchaseHistory?.plan != 'noob' &&
+                //       getPurchaseHistory?.used_plan <
+                //         getPurchaseHistory?.allow_usage
+                //     ? navigation?.navigate('UpcomingEvent', {
+                //         eventType: 'upcoming',
+                //       })
+                //     : navigation?.navigate('NewSubscription', {upgrade: true});
+                // } else navigation?.navigate('NewSubscription', {upgrade: true});
                 if (getPurchaseHistory) {
-                  getPurchaseHistory?.plan == 'noob'
-                    ? navigation?.navigate('NewSubscription', {upgrade: true})
-                    : getPurchaseHistory?.plan != 'noob' &&
-                      getPurchaseHistory?.used_plan <
-                        getPurchaseHistory?.allow_usage
-                    ? navigation?.navigate('UpcomingEvent', {
-                        eventType: 'upcoming',
-                      })
-                    : navigation?.navigate('NewSubscription', {upgrade: true});
-                } else navigation?.navigate('NewSubscription', {upgrade: true});
+                  if (getPurchaseHistory.plan === 'noob') {
+                    navigation?.navigate('NewSubscription', {upgrade: true});
+                    showMessage({
+                      message:
+                        'Oops! You’ve used up all your chances to join the event. Upgrade your plan to join now, or wait to renew your plan.',
+                      type: 'info',
+                      animationDuration: 500,
+                      floating: true,
+                      icon: {icon: 'auto', position: 'left'},
+                    });
+                  } else if (
+                    getPurchaseHistory.plan !== 'noob' &&
+                    getPurchaseHistory.used_plan <
+                      getPurchaseHistory.allow_usage
+                  ) {
+                    navigation?.navigate('UpcomingEvent', {
+                      eventType: 'upcoming',
+                    });
+                  } else {
+                    navigation?.navigate('NewSubscription', {upgrade: true});
+                    showMessage({
+                      message:
+                        'Oops! You’ve used up all your chances to join the event. Upgrade your plan to join now, or wait to renew your plan. ',
+                      type: 'info',
+                      animationDuration: 500,
+                      floating: true,
+                      icon: {icon: 'auto', position: 'left'},
+                    });
+                  }
+                } else {
+                  navigation?.navigate('NewSubscription', {upgrade: true});
+                }
               }}
               style={{
                 width: DeviceWidth * 0.9,

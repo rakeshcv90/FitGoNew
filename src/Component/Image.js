@@ -226,4 +226,8 @@ export const localImage = {
   Rating3: require('../Icon/Images/InAppRewards/Happy_image.png'),
   Rating4: require('../Icon/Images/InAppRewards/Cool_image.png'),
   Rating5: require('../Icon/Images/InAppRewards/Loveit_image.png'),
+  StreakImg:require('../Icon/Images/InAppRewards/StreakImg.png'),
+  Streak:require('../Icon/Images/InAppRewards/streak.png'),
+  StreakBreak:require('../Icon/Images/InAppRewards/Streakbreak.png'),
+  Offer_Img:require('../Icon/Images/InAppRewards/Offer_ins.png')
 };
