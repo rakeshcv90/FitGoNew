@@ -1210,6 +1210,9 @@ const HomeNew = ({navigation}) => {
       setRefresh(false);
     }
   };
+
+  const Sat = getPurchaseHistory?.currentDay == 6;
+  const Sun = getPurchaseHistory?.currentDay == 7;
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -1274,6 +1277,8 @@ const HomeNew = ({navigation}) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
+            marginLeft: 10,
+            marginTop: 10,
           }}>
           <Text
             style={{
@@ -1285,11 +1290,10 @@ const HomeNew = ({navigation}) => {
               alignItems: 'center',
               justifyContent: 'flex-start',
               alignSelf: 'center',
-              marginTop: 20,
             }}>
             Reward Zone
           </Text>
-          <ReferButton />
+          {enteredCurrentEvent && (!Sat || !Sun) && <ReferButton />}
         </View>
         <Banners
           type1={BannerType1}
