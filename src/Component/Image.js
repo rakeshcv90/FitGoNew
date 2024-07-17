@@ -241,4 +241,10 @@ export const localImage = {
   danger:require('../Icon/Images/InAppRewards/danger.png'),
   success:require('../Icon/Images/InAppRewards/success.png'),
   greenStreak:require('../Icon/Images/InAppRewards/GreenStreak.png')
+  Offer_Img:require('../Icon/Images/InAppRewards/Offer_ins.png'),
+  Refer_banner:require('../Icon/Images/InAppRewards/Refer_banner.jpg'),
+  Referral_Coin_Banner:require('../Icon/Images/InAppRewards/Referral_Coin_Banner.png'),
+  Bronze:require('../Icon/Images/InAppRewards/Bronze.png'),
+  Silver:require('../Icon/Images/InAppRewards/Silver.png'),
+  TickCircle:require('../Icon/Images/InAppRewards/TickCircle.png'),
 };
