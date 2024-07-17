@@ -30,6 +30,7 @@ import {
 import {
   setFitCoins,
   setRewardModal,
+  setStreakStatus,
   setWinnerAnnounced,
 } from './src/Component/ThemeRedux/Actions';
 import {OpenRewardModal} from './src/Component/utils';
@@ -227,7 +228,9 @@ const getLeaderboardDataAPI = async () => {
     const result = await axios({
       url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
     });
+    store.dispatch(setStreakStatus([]))
     if (result.data) {
+
       const myRank = result.data?.data?.findIndex(
         item => item?.id == getUserDataDetails?.id,
       );

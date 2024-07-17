@@ -187,7 +187,7 @@ const Referral = () => {
                 }}>
                 {text}
               </Text>
-              <Medal rank={rank} text={true} image={image} />
+              <Medal rank={rank?.rank} text={true} image={image} />
             </View>
           ) : (
             <ImageBackground
@@ -199,7 +199,7 @@ const Referral = () => {
                 borderWidth: 1,
                 borderColor: '#3333334D',
               }}>
-              <Medal rank={rank} text={false} image={image} />
+              <Medal rank={rank?.rank} text={false} image={image} />
             </ImageBackground>
           )}
           <Text
@@ -225,11 +225,7 @@ const Referral = () => {
             />
             <FitText
               type="SubHeading"
-              value={
-                '+' +
-                (referralData?.event_register?.fit_coins -
-                  referralData?.current_rank?.fit_coins)
-              }
+              value={'+' + (rank2?.fit_coins - rank?.fit_coins)}
               marginHorizontal={5}
             />
             {getUserDataDetails?.image_path == null ? (
@@ -246,7 +242,7 @@ const Referral = () => {
                   }}>
                   {text}
                 </Text>
-                <Medal rank={rank} text={true} image={image} />
+                <Medal rank={rank2?.rank} text={true} image={image} />
               </View>
             ) : (
               <ImageBackground
@@ -258,7 +254,11 @@ const Referral = () => {
                   borderWidth: 1,
                   borderColor: '#3333334D',
                 }}>
-                <Medal rank={rank2} text={false} image={localImage.Bronze} />
+                <Medal
+                  rank={rank2?.rank}
+                  text={false}
+                  image={localImage.Bronze}
+                />
               </ImageBackground>
             )}
           </View>
@@ -288,7 +288,7 @@ const Referral = () => {
           <RefreshControl refreshing={refresh} onRefresh={getReferralRank} />
         }
         style={{flex: 1}}>
-        <View style={{width: '90%', alignSelf: 'center'}}>
+        <View style={{width: '95%', alignSelf: 'center'}}>
           <Image
             source={localImage.Refer_banner}
             resizeMode={DeviceHeigth >= 1024 ? 'stretch' : 'contain'}
@@ -309,36 +309,32 @@ const Referral = () => {
             color={AppColor.BLACK}
             fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
           />
-          <FitText
-            type="SubHeading"
-            value="Your rank"
-            fontSize={14}
-            // lineHeight={30}
-            // marginVertical={5}
-            color={AppColor.BLACK}
-            fontFamily={Fonts.MONTSERRAT_MEDIUM}
-          />
+          <Text
+            style={{
+              color: AppColor.BLACK,
+              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+              fontSize: 16,
+              marginVertical: DeviceHeigth >= 1024 ? 18 : 12,
+            }}>
+            Your rank
+          </Text>
           <ImageBackground
             source={localImage.Referral_Coin_Banner}
-            resizeMode={DeviceHeigth >= 1024 ? 'stretch' : 'cover'}
-            imageStyle={{
-              width:
-                DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9,
-              height:
-                DeviceHeigth >= 1024 ? DeviceHeigth * 0.2 : DeviceHeigth * 0.25,
-              alignSelf: 'center',
-            }}
+            resizeMode={DeviceHeigth >= 1024 ? 'stretch' : 'contain'}
             style={{
               height:
-                DeviceHeigth >= 1024 ? DeviceHeigth * 0.2 : DeviceHeigth * 0.25,
+                DeviceHeigth >= 1024 ? DeviceHeigth * 0.2 : DeviceHeigth * 0.2,
               width:
-                DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9,
+                DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.95,
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
               paddingHorizontal: 10,
               paddingBottom: 15,
-              backgroundColor: 'green',
+              marginBottom: 20,
+              alignSelf: 'center',
+              overflow: 'hidden',
+              // backgroundColor: 'green',
             }}>
             {getUserDataDetails?.image_path == null ? (
               <View
@@ -448,7 +444,28 @@ const Referral = () => {
               />
             </View>
           </ImageBackground>
-
+          <View
+            style={{
+              borderWidth: 1.5,
+              borderRadius: 10,
+              padding: 10,
+              marginBottom: DeviceHeigth >= 1024 ? 20 : 24,
+              borderColor: AppColor.GRAY1,
+              backgroundColor: AppColor.GRAY,
+            }}>
+            <Text
+              style={{
+                color: AppColor.BLACK,
+                fontFamily: Fonts.MONTSERRAT_MEDIUM,
+              }}>
+              <Text
+                style={{fontFamily: Fonts.MONTSERRAT_SEMIBOLD, fontSize: 15}}>
+                Note:{' '}
+              </Text>{' '}
+              You must be in the current event to receive referral benefits. New
+              events start every Monday and end on Friday.
+            </Text>
+          </View>
           {/* <FitText
           type="SubHeading"
           color={AppColor.HEADERTEXTCOLOR}
@@ -521,22 +538,24 @@ const Referral = () => {
                     fontSize={20}
                     fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
                   />
-                  <Text style={styles.line}>
-                    {'When your friend register only then you can earn ' +
-                      (referralData?.register_rank?.fit_coins -
-                        referralData?.current_rank?.fit_coins) +
-                      ' '}
+                  <View style={{flexDirection: 'row'}}>
+                    <Text style={styles.line}>
+                      {'When your friend register only then you can earn ' +
+                        (referralData?.register_rank?.fit_coins -
+                          referralData?.current_rank?.fit_coins) +
+                        ' '}
+                    </Text>
                     <Image
                       source={localImage.FitCoin}
                       style={{width: 20, height: 20, marginLeft: 5}}
                       resizeMode="contain"
                     />
-                  </Text>
+                  </View>
                 </View>
                 <UserImage
                   image={localImage.Silver}
-                  rank={referralData?.current_rank?.rank}
-                  rank2={referralData?.register_rank?.rank}
+                  rank={referralData?.current_rank}
+                  rank2={referralData?.register_rank}
                 />
               </View>
               <View
@@ -574,8 +593,8 @@ const Referral = () => {
                 </View>
                 <UserImage
                   image={localImage.Silver}
-                  rank={referralData?.current_rank?.rank}
-                  rank2={referralData?.event_register?.rank}
+                  rank={referralData?.current_rank}
+                  rank2={referralData?.event_register}
                 />
               </View>
             </View>

@@ -400,3 +400,9 @@ export const setStreakStatus=data=>{
     payload:data
   }
 }
+export const setStreakModalVisible=data=>{
+  return{
+    type:types.STREAK_MODAL_VISIBLE,
+    payload:data
+  }
+}

@@ -102,7 +102,7 @@ const NewHeader = ({
       {!SearchButton ? (
         extraView ? (
           enteredCurrentEvent ? (
-            <View style={{top: -3,right:DeviceWidth*0.13}}>
+            <View style={{top: -3,right:DeviceWidth*0.07}}>
               {!coinsLoaded ? (
                 <FitCoins
                   onPress={() => {

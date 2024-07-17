@@ -12,11 +12,17 @@ import {DeviceHeigth, DeviceWidth} from '../Config';
 import {AppColor, Fonts} from '../Color';
 import {localImage} from '../Image';
 import NewButton from '../NewButton';
-const StreakModal = ({streakDays, setVisible, WeekArray, missedDay}) => {
+import { useDispatch, useSelector } from 'react-redux';
+import { setStreakModalVisible } from '../ThemeRedux/Actions';
+const StreakModal = ({streakDays, setVisible, WeekArray, missedDay,visible}) => {
   const days = ['M', 'T', 'W', 'T', 'F'];
+  const getStreakModalVisible=useSelector(state=>state?.getStreakModalVisible)
   // const streakDays=[50,-5,-5,50,50];
+  console.log("visible------>,",getStreakModalVisible)
+ 
+  const dispatch=useDispatch()
   return (
-    <Modal transparent visible={true}>
+    <Modal transparent visible={getStreakModalVisible}>
       <View style={{backgroundColor: `rgba(0,0,0,0.4)`, flex: 1}}>
         <View style={styles.View1}>
           <Icon
@@ -29,7 +35,7 @@ const StreakModal = ({streakDays, setVisible, WeekArray, missedDay}) => {
               alignSelf: 'flex-end',
             }}
             onPress={() => {
-              setVisible(false);
+              dispatch(setStreakModalVisible(false))
             }}
           />
           <Text style={styles.txt1}>{missedDay ?? +'Days '} missed</Text>
@@ -94,7 +100,7 @@ const StreakModal = ({streakDays, setVisible, WeekArray, missedDay}) => {
             title={'Continue'}
             ButtonWidth={DeviceWidth * 0.6}
             mV={20}
-            onPress={()=>setVisible(false)}
+            onPress={()=>   dispatch(setStreakModalVisible(false))}
           />
         </View>
       </View>

@@ -68,6 +68,7 @@ const intialState = {
   getRatingStatus: false,
   getUpdateAvailable:false,
   getStreakStatus:[],
+  getStreakModalVisible:false
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -375,6 +376,11 @@ const ThemeReducer = (state = intialState, action) => {
             ...state,
             getStreakStatus: action.payload,
           };
+          case types.STREAK_MODAL_VISIBLE:
+            return {
+              ...state,
+              getStreakModalVisible: action.payload,
+            };
     default:
       return state;
   }

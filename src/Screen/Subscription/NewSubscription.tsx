@@ -443,7 +443,7 @@ const NewSubscription = ({navigation, route}: any) => {
         },
         data,
       });
-      // console.log(res.data);
+      console.log(res.data,"subssssss");
       StartAudio(playbackState);
       if (res.data.message == 'Event created successfully') {
         // PurchaseDetails();
