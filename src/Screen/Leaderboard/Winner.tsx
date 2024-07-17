@@ -22,6 +22,8 @@ import VersionNumber from 'react-native-version-number';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import ActivityLoader from '../../Component/ActivityLoader';
 import DeviceInfo from 'react-native-device-info';
+import {openInbox} from 'react-native-email-link';
+import {showMessage} from 'react-native-flash-message';
 
 type TypeData = {
   name: string;
@@ -59,6 +61,9 @@ const Winner = ({navigation}: any) => {
         if (result.data?.data[0]?.id == getUserDataDetails?.id) {
           setUserWinner(true);
           setWinnerData(result.data?.data[0]);
+        } else if (result.data?.data[1]?.id == getUserDataDetails?.id) {
+          setUserWinner(true);
+          setWinnerData(result.data?.data[1]);
         } else {
           //setUserWinner(true);
           const userIndex = result.data?.data?.findIndex(
@@ -67,7 +72,6 @@ const Winner = ({navigation}: any) => {
           setWinnerData(result.data?.data[0]);
           setUserData(result.data?.data[userIndex]);
         }
-     
       }
       setLoader(false);
       setRefresh(false);
@@ -164,7 +168,7 @@ const Winner = ({navigation}: any) => {
                 fontSize: 32,
                 lineHeight: 40,
                 color: AppColor.WHITE,
-                textTransform:'uppercase'
+                textTransform: 'uppercase',
               }}>
               {winnerData?.name.split(' ') &&
               winnerData.name.split(' ').length > 1
@@ -185,7 +189,7 @@ const Winner = ({navigation}: any) => {
             />
           )}
         </ImageBackground>
-        <Rank number={1} bottom={DeviceHeigth * 0.075} />
+        <Rank number={winnerData?.rank} bottom={DeviceHeigth * 0.075} />
         <View style={styles.row}>
           {userWinner ? (
             <AnimatedLottieView
@@ -287,11 +291,7 @@ const Winner = ({navigation}: any) => {
   };
   const handleEmail = async () => {
     AnalyticsConsole('W_GMAIL');
-    const supported = await Linking.canOpenURL('googlegmail://');
-  
-    if (supported) Linking.openURL('googlegmail://');
-    else if (PLATFORM_IOS) Linking.openURL('mailto:');
-    else Linking.openURL('https://mail.google.com');
+    openInbox();
   };
   return (
     <SafeAreaView
@@ -448,7 +448,7 @@ const Winner = ({navigation}: any) => {
                     fontSize: 32,
                     lineHeight: 40,
                     color: AppColor.WHITE,
-                    textTransform:'uppercase'
+                    textTransform: 'uppercase',
                   }}>
                   {winnerData?.name.split(' ') &&
                   winnerData.name.split(' ').length > 1
@@ -468,7 +468,7 @@ const Winner = ({navigation}: any) => {
                 />
               )}
             </ImageBackground>
-            <Rank number={1} bottom={DeviceHeigth * 0.032} />
+            <Rank number={winnerData?.rank} bottom={DeviceHeigth * 0.032} />
             <View
               style={{
                 width: '50%',
@@ -574,7 +574,7 @@ const Winner = ({navigation}: any) => {
                     position: 'relative',
                     top: PLATFORM_IOS ? DeviceWidth * 0.01 : DeviceWidth * 0.01,
                     color: AppColor.WHITE,
-                    textTransform:'uppercase'
+                    textTransform: 'uppercase',
                   }}>
                   {userData?.name.split(' ') &&
                   userData.name.split(' ').length > 1
@@ -612,14 +612,50 @@ const Winner = ({navigation}: any) => {
             <TouchableOpacity
               onPress={() => {
                 AnalyticsConsole(`TRA_WIN`);
+                // if (getPurchaseHistory) {
+                //   getPurchaseHistory?.plan == 'noob'
+                //     ? navigation?.navigate('NewSubscription', {upgrade: true})
+                //     : getPurchaseHistory?.plan != 'noob' &&
+                //       getPurchaseHistory?.used_plan <
+                //         getPurchaseHistory?.allow_usage
+                //     ? navigation?.navigate('UpcomingEvent', {
+                //         eventType: 'upcoming',
+                //       })
+                //     : navigation?.navigate('NewSubscription', {upgrade: true});
+                // } else navigation?.navigate('NewSubscription', {upgrade: true});
                 if (getPurchaseHistory) {
-                  getPurchaseHistory?.plan_value == 30
-                    ? navigation?.navigate('NewSubscription', {upgrade: true})
-                    : getPurchaseHistory?.plan_value != 30 &&
-                      getPurchaseHistory?.used_plan <=
-                        getPurchaseHistory?.allow_usage &&
-                      navigation?.navigate('UpcomingEvent');
-                } else navigation?.navigate('NewSubscription', {upgrade: true});
+                  if (getPurchaseHistory.plan === 'noob') {
+                    navigation?.navigate('NewSubscription', {upgrade: true});
+                    showMessage({
+                      message:
+                        'Oops! You’ve used up all your chances to join the event. Upgrade your plan to join now, or wait to renew your plan.',
+                      type: 'info',
+                      animationDuration: 500,
+                      floating: true,
+                      icon: {icon: 'auto', position: 'left'},
+                    });
+                  } else if (
+                    getPurchaseHistory.plan !== 'noob' &&
+                    getPurchaseHistory.used_plan <
+                      getPurchaseHistory.allow_usage
+                  ) {
+                    navigation?.navigate('UpcomingEvent', {
+                      eventType: 'upcoming',
+                    });
+                  } else {
+                    navigation?.navigate('NewSubscription', {upgrade: true});
+                    showMessage({
+                      message:
+                        'Oops! You’ve used up all your chances to join the event. Upgrade your plan to join now, or wait to renew your plan. ',
+                      type: 'info',
+                      animationDuration: 500,
+                      floating: true,
+                      icon: {icon: 'auto', position: 'left'},
+                    });
+                  }
+                } else {
+                  navigation?.navigate('NewSubscription', {upgrade: true});
+                }
               }}
               style={{
                 width: DeviceWidth * 0.9,
@@ -628,10 +664,11 @@ const Winner = ({navigation}: any) => {
                 borderRadius: 5,
                 borderColor: AppColor.NEW_DARK_RED,
                 backgroundColor: AppColor.WHITE,
-                borderWidth: 1,
-                paddingVertical: 12,
+
+                paddingVertical: 10,
+                // marginBottom:5,
                 position: 'relative',
-                top: PLATFORM_IOS ? 12 : 6,
+                top: PLATFORM_IOS ? 10 : 4,
               }}>
               <FitText
                 type="normal"

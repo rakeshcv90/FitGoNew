@@ -87,7 +87,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
           getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
         const count = getPurchaseHistory?.plan == 'noob' ? 3 : 6;
         const Sat = getPurchaseHistory?.currentDay == 6;
-        const Sun = getPurchaseHistory?.currentDay == 7;
+        const Sun = getPurchaseHistory?.currentDay == 0;
         const onPress = () => {
           AnalyticsConsole(`${route.name}_TAB`);
           if (
@@ -241,7 +241,7 @@ const BottomTab = () => {
   return (
     <>
       <Tabs.Navigator
-        initialRouteName={enteredCurrentEvent ? 'MyPlans' : 'Home'}
+        initialRouteName={'Home'}
         tabBar={props => <CustomTab {...props} />}
         screenOptions={{
           activeTintColor: '#D01818',

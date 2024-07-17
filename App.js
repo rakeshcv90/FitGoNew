@@ -38,6 +38,8 @@ import {AppColor} from './src/Component/Color';
 import {LogBox} from 'react-native';
 import {LogOut} from './src/Component/LogOut';
 import {MyInterstitialAd} from './src/Component/BannerAdd';
+import { setUpdateAvailable } from './src/Component/ThemeRedux/Actions';
+import { UpdateAvailable, UpdateAvailable1 } from './src/Component/Utilities/UpdateAvailable';
 export const navigationRef = createNavigationContainerRef();
 // also use before use code Push (appcenter login)
 // codepush release of ios , appcenter codepush release-react -a thefitnessandworkout-gmail.com/FitmeIos -d Production
@@ -52,10 +54,9 @@ LogBox.ignoreLogs([
 ]);
 const App = () => {
   //const [isConnected, setConnected] = useState(true);
-
   const [progress, setProgress] = useState(false);
-  const [isTrackPlayerInitialized, setIsTrackPlayerInitialized] =
-    useState(false);
+  const [isTrackPlayerInitialized, setIsTrackPlayerInitialized] =useState(false);
+  const [update,setUpdate]=useState(false);
     const isPlayerInitializedRef = useRef(false);
   useEffect(() => {
     requestPermissionforNotification(dispatch);
@@ -185,21 +186,26 @@ const App = () => {
     );
   }, []);
   const codePushStatusDidChange = syncStatus => {
+    
     switch (syncStatus) {
       case codePush.SyncStatus.CHECKING_FOR_UPDATE:
         break;
       case codePush.SyncStatus.DOWNLOADING_PACKAGE:
         break;
       case codePush.SyncStatus.AWAITING_USER_ACTION:
+        UpdateAvailable(dispatch)
         break;
       case codePush.SyncStatus.INSTALLING_UPDATE:
         LogOut(dispatch);
         setProgress(false);
         break;
       case codePush.SyncStatus.UP_TO_DATE:
+        console.log("not update available")
+        UpdateAvailable1(dispatch)
         break;
       case codePush.SyncStatus.UPDATE_IGNORED:
         setProgress(false);
+        UpdateAvailable1(dispatch)
         break;
       case codePush.SyncStatus.UPDATE_INSTALLED:
         LogOut(dispatch);
@@ -209,10 +215,14 @@ const App = () => {
         console.log('An unknown error occurred');
         setProgress(false);
         break;
+      default:
+          console.log('Statusbchbfhhdf:', status);
+          break;
     }
   };
   const codePushDownloadDidProgress = progress => {
     setProgress(progress);
+  //  UpdateAvailable(dispatch);
   };
   const showProgressView = () => {
     return (
@@ -302,7 +312,7 @@ const App = () => {
             CrashedScreenName: state.routes[state.index].name,
           });
         }}>
-        <LoginStack />
+        <LoginStack updateAvialable={"hello"}/>
         
       </NavigationContainer>
       <FlashMessage

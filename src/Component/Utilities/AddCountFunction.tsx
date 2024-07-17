@@ -29,11 +29,11 @@ export const AddCountFunction = () => {
       return false;
     } else {
       if (getPurchaseHistory?.plan == 'pro')
-        countAds(getFitmeMealAdsCount, dispatch, setFitmeMealAdsCount, 6);
+      return  countAds(getFitmeMealAdsCount, dispatch, setFitmeMealAdsCount, 6);
       else if (getPurchaseHistory?.plan == 'noob')
-        countAds(getFitmeMealAdsCount, dispatch, setFitmeMealAdsCount, 3);
+       return countAds(getFitmeMealAdsCount, dispatch, setFitmeMealAdsCount, 3);
     }
   } else {
-    countAds(getFitmeMealAdsCount, dispatch, setFitmeMealAdsCount, 3);
+   return countAds(getFitmeMealAdsCount, dispatch, setFitmeMealAdsCount, 3);
   }
 };

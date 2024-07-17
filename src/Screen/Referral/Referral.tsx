@@ -287,157 +287,169 @@ const Referral = () => {
         refreshControl={
           <RefreshControl refreshing={refresh} onRefresh={getReferralRank} />
         }
-        style={{flex: 1, marginHorizontal: 15}}>
-        <Image
-          source={localImage.Refer_banner}
-          resizeMode={DeviceHeigth >= 1024 ? 'stretch' : 'contain'}
-          style={{
-            width:
-              DeviceHeigth >= 1024 ? DeviceWidth * 0.98 : DeviceWidth * 0.9,
-            height: DeviceHeigth * 0.3,
-            alignSelf: 'center',
-          }}
-        />
-        <FitText
-          type="SubHeading"
-          value="Understand how referral works"
-          fontSize={20}
-          lineHeight={30}
-          color={AppColor.BLACK}
-          fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
-        />
-        <FitText
-          type="SubHeading"
-          value="Your rank"
-          fontSize={20}
-          lineHeight={30}
-          marginVertical={10}
-          color={AppColor.BLACK}
-          fontFamily={Fonts.MONTSERRAT_MEDIUM}
-        />
-        <ImageBackground
-          source={localImage.Referral_Coin_Banner}
-          resizeMode={DeviceHeigth >= 1024 ? 'stretch' : 'contain'}
-          imageStyle={{
-            width:
-              DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9,
-            // height:
-            //   DeviceHeigth >= 1024 ? DeviceHeigth * 0.2 : DeviceHeigth * 0.25,
-            alignSelf: 'center',
-          }}
-          style={{
-            height:
-              DeviceHeigth >= 1024 ? DeviceHeigth * 0.2 : DeviceHeigth * 0.2,
-            width:
-              DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingHorizontal: 10,
-            paddingBottom: 15,
-          }}>
-          {getUserDataDetails?.image_path == null ? (
-            <View
-              style={[
-                styles.textImage,
+        style={{flex: 1}}>
+        <View style={{width: '90%', alignSelf: 'center'}}>
+          <Image
+            source={localImage.Refer_banner}
+            resizeMode={DeviceHeigth >= 1024 ? 'stretch' : 'contain'}
+            style={{
+              width: '100%',
+              borderRadius: 10,
+              height: DeviceHeigth * 0.2,
+              alignSelf: 'center',
+              marginVertical: 10,
+            }}
+          />
+          <FitText
+            type="SubHeading"
+            value="Understand how referral works"
+            fontSize={16}
+            lineHeight={20}
+            marginVertical={5}
+            color={AppColor.BLACK}
+            fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+          />
+          <FitText
+            type="SubHeading"
+            value="Your rank"
+            fontSize={14}
+            // lineHeight={30}
+            // marginVertical={5}
+            color={AppColor.BLACK}
+            fontFamily={Fonts.MONTSERRAT_MEDIUM}
+          />
+          <ImageBackground
+            source={localImage.Referral_Coin_Banner}
+            resizeMode={DeviceHeigth >= 1024 ? 'stretch' : 'cover'}
+            imageStyle={{
+              width:
+                DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9,
+              height:
+                DeviceHeigth >= 1024 ? DeviceHeigth * 0.2 : DeviceHeigth * 0.25,
+              alignSelf: 'center',
+            }}
+            style={{
+              height:
+                DeviceHeigth >= 1024 ? DeviceHeigth * 0.2 : DeviceHeigth * 0.25,
+              width:
+                DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingHorizontal: 10,
+              paddingBottom: 15,
+              backgroundColor: 'green',
+            }}>
+            {getUserDataDetails?.image_path == null ? (
+              <View
+                style={[
+                  styles.textImage,
+                  {
+                    width: DeviceWidth * 0.13,
+                    height: DeviceWidth * 0.13,
+                    backgroundColor: AppColor.WHITE,
+                  },
+                ]}>
+                <Text
+                  style={{
+                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                    fontSize: 32,
+                    lineHeight: 40,
+                    position: 'relative',
+                    // top: PLATFORM_IOS ? DeviceWidth * 0.01 : DeviceWidth * 0.01,
+                    color: AppColor.RED,
+                    textTransform: 'uppercase',
+                  }}>
+                  {getUserDataDetails?.name.split(' ') &&
+                  getUserDataDetails.name.split(' ').length > 1
+                    ? getUserDataDetails?.name.split(' ')[0].substring(0, 1) +
+                      getUserDataDetails?.name.split(' ')[1].substring(0, 1)
+                    : getUserDataDetails?.name.substring(0, 1)}
+                </Text>
+              </View>
+            ) : (
+              <Image
+                source={{uri: getUserDataDetails?.image_path}}
+                style={{
+                  width: DeviceWidth * 0.13,
+                  height: DeviceWidth * 0.13,
+                  borderRadius: 100,
+                }}
+              />
+            )}
+            <ImageBackground
+              source={localImage.Silver}
+              imageStyle={
                 {
-                  width: DeviceWidth * 0.15,
-                  height: DeviceWidth * 0.15,
-                  backgroundColor: AppColor.WHITE,
-                },
-              ]}>
+                  // width: 70,
+                  // height: 20,
+                }
+              }
+              style={{
+                marginLeft:
+                  DeviceHeigth <= 640 ? -DeviceWidth * 0.1 : -DeviceWidth * 0.2,
+                width: DeviceWidth * 0.1,
+                height: DeviceWidth * 0.1,
+                alignItems: 'center',
+              }}
+              resizeMode="contain">
               <Text
                 style={{
-                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                  fontSize: 32,
-                  lineHeight: 40,
-                  position: 'relative',
-                  // top: PLATFORM_IOS ? DeviceWidth * 0.01 : DeviceWidth * 0.01,
-                  color: AppColor.RED,
-                  textTransform: 'uppercase',
+                  top:
+                    DeviceHeigth >= 1024
+                      ? DeviceWidth * 0.03
+                      : DeviceHeigth <= 640
+                      ? 2
+                      : 4,
+                  fontSize: DeviceHeigth >= 1024 ? 20 : 15,
+                  fontWeight: '700',
+                  fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                  color: '#5F5F5F',
                 }}>
-                {getUserDataDetails?.name.split(' ') &&
-                getUserDataDetails.name.split(' ').length > 1
-                  ? getUserDataDetails?.name.split(' ')[0].substring(0, 1) +
-                    getUserDataDetails?.name.split(' ')[1].substring(0, 1)
-                  : getUserDataDetails?.name.substring(0, 1)}
+                {referralData?.current_rank?.rank}
               </Text>
-            </View>
-          ) : (
-            <Image
-              source={{uri: getUserDataDetails?.image_path}}
+            </ImageBackground>
+            <View
               style={{
-                width: DeviceWidth * 0.15,
-                height: DeviceWidth * 0.15,
-                borderRadius: 100,
-              }}
-            />
-          )}
-          <ImageBackground
-            source={localImage.Silver}
-            imageStyle={
-              {
-                // width: 70,
-                // height: 20,
-              }
-            }
-            style={{
-              marginLeft: -20,
-              width: DeviceWidth * 0.15,
-              height: DeviceWidth * 0.15,
-              alignItems: 'center',
-            }}
-            resizeMode="contain">
-            <Text
-              style={{
-                top: DeviceHeigth >= 1024 ? DeviceWidth * 0.03 : 8,
-                fontSize: DeviceHeigth >= 1024 ? 30 : 20,
-                fontWeight: '700',
-                fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                marginLeft:
+                  DeviceHeigth <= 640 ? -DeviceWidth * 0.1 : -DeviceWidth * 0.2,
               }}>
-              {referralData?.current_rank?.rank}
-            </Text>
-          </ImageBackground>
-          <View
-            style={{
-              marginLeft: -20,
-            }}>
-            <FitText
-              type="SubHeading"
-              value={getUserDataDetails?.name}
-              color={AppColor.WHITE}
-              fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
-            />
-            <FitText
-              type="normal"
-              value={'Your Rank is '}
-              color={AppColor.WHITE}
-              fontFamily={Fonts.MONTSERRAT_REGULAR}
-              fontWeight="500">
               <FitText
-                type="normal"
-                value={referralData?.current_rank?.rank}
+                type="SubHeading"
+                value={getUserDataDetails?.name?.split(' ')[0]}
                 color={AppColor.WHITE}
                 fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
-                fontWeight="700"
               />
-            </FitText>
-          </View>
-          <View style={{alignItems: 'center'}}>
-            <Image
-              source={localImage.FitCoin}
-              style={{width: 40, height: 40}}
-              resizeMode="contain"
-            />
-            <FitText
-              type="SubHeading"
-              value={referralData?.current_rank?.fit_coins}
-              color={AppColor.WHITE}
-            />
-          </View>
-        </ImageBackground>
+              <FitText
+                type="normal"
+                value={'Your Rank is '}
+                color={AppColor.WHITE}
+                fontFamily={Fonts.MONTSERRAT_REGULAR}
+                fontWeight="500">
+                <FitText
+                  type="normal"
+                  value={referralData?.current_rank?.rank}
+                  color={AppColor.WHITE}
+                  fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+                  fontWeight="700"
+                />
+              </FitText>
+            </View>
+            <View style={{alignItems: 'center'}}>
+              <Image
+                source={localImage.FitCoin}
+                style={{width: 40, height: 40}}
+                resizeMode="contain"
+              />
+              <FitText
+                type="SubHeading"
+                value={referralData?.current_rank?.fit_coins}
+                color={AppColor.WHITE}
+              />
+            </View>
+          </ImageBackground>
 
-        {/* <FitText
+          {/* <FitText
           type="SubHeading"
           color={AppColor.HEADERTEXTCOLOR}
           value="Note"
@@ -455,186 +467,189 @@ const Referral = () => {
                 DeviceHeigth >= 1024 ? DeviceHeigth * 0.1 : DeviceHeigth * 0.1,
             },
           ]}></View> */}
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            // alignItems: 'center',
-          }}>
-          <View>
-            <View
-              style={{
-                borderRadius: 20,
-                width: 10,
-                height: 10,
-                backgroundColor: '#D9DBDC',
-                marginTop:
-                  DeviceHeigth >= 1024 ? (DeviceHeigth * 0.1) / 2.5 : 0,
-              }}
-            />
-            {Array.from({
-              length: DeviceHeigth >= 1024 ? 12 : DeviceHeigth <= 640 ? 8 : 9,
-            }).map(() => {
-              return <Text style={{color: '#D9DBDC', marginLeft: 3}}>|</Text>;
-            })}
-            <View
-              style={{
-                borderRadius: 20,
-                width: 10,
-                height: 10,
-                backgroundColor: '#D9DBDC',
-                // marginTop: DeviceHeigth >= 1024 ? (DeviceHeigth * 0.1) / 2 : 0,
-              }}
-            />
-          </View>
-          <View>
-            <View
-              style={{
-                left: DeviceHeigth >= 1024 ? 0 : DeviceHeigth <= 640 ? -5 : 10,
-                marginTop: DeviceHeigth >= 1024 ? 30 : -5,
-              }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              // alignItems: 'center',
+            }}>
+            <View>
               <View
                 style={{
-                  width:
-                    DeviceHeigth >= 1024
-                      ? DeviceWidth * 0.9
-                      : DeviceWidth * 0.9,
-                  marginBottom: 10,
-                }}>
-                <FitText
-                  type="SubHeading"
-                  color={AppColor.HEADERTEXTCOLOR}
-                  value="Only Register"
-                  fontSize={20}
-                  fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
-                />
-                <Text style={styles.line}>
-                  {'When your friend register only then you can earn ' +
-                    (referralData?.register_rank?.fit_coins -
-                      referralData?.current_rank?.fit_coins) +
-                    ' '}
-                  <Image
-                    source={localImage.FitCoin}
-                    style={{width: 20, height: 20, marginLeft: 5}}
-                    resizeMode="contain"
-                  />
-                </Text>
-              </View>
-              <UserImage
-                image={localImage.Silver}
-                rank={referralData?.current_rank?.rank}
-                rank2={referralData?.register_rank?.rank}
+                  borderRadius: 20,
+                  width: 10,
+                  height: 10,
+                  backgroundColor: '#D9DBDC',
+                  marginTop:
+                    DeviceHeigth >= 1024 ? (DeviceHeigth * 0.1) / 2.5 : 0,
+                }}
               />
-            </View>
-            <View
-              style={{
-                left: DeviceHeigth >= 1024 ? 0 : DeviceHeigth <= 640 ? -5 : 10,
-                marginTop: DeviceHeigth >= 1024 ? 40 : 0,
-              }}>
+              {Array.from({
+                length: DeviceHeigth >= 1024 ? 12 : DeviceHeigth <= 640 ? 8 : 9,
+              }).map(() => {
+                return <Text style={{color: '#D9DBDC', marginLeft: 3}}>|</Text>;
+              })}
               <View
                 style={{
-                  width:
-                    DeviceHeigth >= 1024
-                      ? DeviceWidth * 0.9
-                      : DeviceWidth * 0.9,
-                  marginBottom: 10,
-                }}>
-                <FitText
-                  type="SubHeading"
-                  color={AppColor.HEADERTEXTCOLOR}
-                  value="Join Event"
-                  fontSize={20}
-                  fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
-                />
-                <Text style={styles.line}>
-                  {'When friend register and join you’ll earn ' +
-                    (referralData?.event_register?.fit_coins -
-                      referralData?.current_rank?.fit_coins) +
-                    ' '}
-                  <Image
-                    source={localImage.FitCoin}
-                    style={{width: 20, height: 20}}
-                    resizeMode="contain"
-                  />
-                </Text>
-              </View>
-              <UserImage
-                image={localImage.Silver}
-                rank={referralData?.current_rank?.rank}
-                rank2={referralData?.event_register?.rank}
+                  borderRadius: 20,
+                  width: 10,
+                  height: 10,
+                  backgroundColor: '#D9DBDC',
+                  // marginTop: DeviceHeigth >= 1024 ? (DeviceHeigth * 0.1) / 2 : 0,
+                }}
               />
             </View>
+            <View>
+              <View
+                style={{
+                  left:
+                    DeviceHeigth >= 1024 ? 0 : DeviceHeigth <= 640 ? -5 : 10,
+                  marginTop: DeviceHeigth >= 1024 ? 30 : -5,
+                }}>
+                <View
+                  style={{
+                    width:
+                      DeviceHeigth >= 1024
+                        ? DeviceWidth * 0.9
+                        : DeviceWidth * 0.9,
+                    marginBottom: 10,
+                  }}>
+                  <FitText
+                    type="SubHeading"
+                    color={AppColor.HEADERTEXTCOLOR}
+                    value="Only Register"
+                    fontSize={20}
+                    fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+                  />
+                  <Text style={styles.line}>
+                    {'When your friend register only then you can earn ' +
+                      (referralData?.register_rank?.fit_coins -
+                        referralData?.current_rank?.fit_coins) +
+                      ' '}
+                    <Image
+                      source={localImage.FitCoin}
+                      style={{width: 20, height: 20, marginLeft: 5}}
+                      resizeMode="contain"
+                    />
+                  </Text>
+                </View>
+                <UserImage
+                  image={localImage.Silver}
+                  rank={referralData?.current_rank?.rank}
+                  rank2={referralData?.register_rank?.rank}
+                />
+              </View>
+              <View
+                style={{
+                  left:
+                    DeviceHeigth >= 1024 ? 0 : DeviceHeigth <= 640 ? -5 : 10,
+                  marginTop: DeviceHeigth >= 1024 ? 40 : 0,
+                }}>
+                <View
+                  style={{
+                    width:
+                      DeviceHeigth >= 1024
+                        ? DeviceWidth * 0.9
+                        : DeviceWidth * 0.9,
+                    marginBottom: 10,
+                  }}>
+                  <FitText
+                    type="SubHeading"
+                    color={AppColor.HEADERTEXTCOLOR}
+                    value="Join Event"
+                    fontSize={20}
+                    fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+                  />
+                  <Text style={styles.line}>
+                    {'When friend register and join you’ll earn ' +
+                      (referralData?.event_register?.fit_coins -
+                        referralData?.current_rank?.fit_coins) +
+                      ' '}
+                    <Image
+                      source={localImage.FitCoin}
+                      style={{width: 20, height: 20}}
+                      resizeMode="contain"
+                    />
+                  </Text>
+                </View>
+                <UserImage
+                  image={localImage.Silver}
+                  rank={referralData?.current_rank?.rank}
+                  rank2={referralData?.event_register?.rank}
+                />
+              </View>
+            </View>
           </View>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginVertical: 10,
-            alignItems: 'center',
-            alignSelf: 'center',
-          }}>
-          <TouchableOpacity style={styles.whatsapp} onPress={shareWhatsApp}>
-            <FitIcon
-              name="whatsapp"
-              type="MaterialCommunityIcons"
-              size={20}
-              color={AppColor.WHITE}
-            />
-            <FitText
-              type="SubHeading"
-              value={` Refer Via WhatsApp`}
-              color={AppColor.WHITE}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.share} onPress={share}>
-            <FitIcon
-              name="share-variant-outline"
-              type="MaterialCommunityIcons"
-              size={20}
-              color={AppColor.RED}
-            />
-          </TouchableOpacity>
-        </View>
-        <FitText
-          type="Heading"
-          color={AppColor.HEADERTEXTCOLOR}
-          value="Share you invite link"
-          fontSize={20}
-          fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
-          marginVertical={5}
-          marginHorizontal={10}
-        />
-        <FitText
-          type="SubHeading"
-          color="#333333B2"
-          value="Referral Code"
-          // fontSize={20}
-          fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
-          marginVertical={5}
-          marginHorizontal={10}
-        />
-        <View
-          style={[
-            styles.refBox,
-            {
-              width:
-                DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9,
-              paddingVertical: DeviceHeigth >= 1024 ? 20 : 10,
-            },
-          ]}>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginVertical: 10,
+              alignItems: 'center',
+              alignSelf: 'center',
+            }}>
+            <TouchableOpacity style={styles.whatsapp} onPress={shareWhatsApp}>
+              <FitIcon
+                name="whatsapp"
+                type="MaterialCommunityIcons"
+                size={20}
+                color={AppColor.WHITE}
+              />
+              <FitText
+                type="SubHeading"
+                value={` Refer Via WhatsApp`}
+                color={AppColor.WHITE}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.share} onPress={share}>
+              <FitIcon
+                name="share-variant-outline"
+                type="MaterialCommunityIcons"
+                size={20}
+                color={AppColor.RED}
+              />
+            </TouchableOpacity>
+          </View>
+          <FitText
+            type="Heading"
+            color={AppColor.HEADERTEXTCOLOR}
+            value="Share you invite link"
+            fontSize={20}
+            fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+            marginVertical={5}
+            marginHorizontal={10}
+          />
           <FitText
             type="SubHeading"
-            color={AppColor.BLACK}
-            value={referralCode}
-            textTransform="uppercase"
+            color="#333333B2"
+            value="Referral Code"
+            // fontSize={20}
+            fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+            marginVertical={5}
+            marginHorizontal={10}
           />
-          <FitIcon
-            name="link"
-            type="AntDesign"
-            size={20}
-            color={AppColor.BLACK}
-            onPress={clipboard}
-          />
+          <View
+            style={[
+              styles.refBox,
+              {
+                width:
+                  DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.9,
+                paddingVertical: DeviceHeigth >= 1024 ? 20 : 10,
+              },
+            ]}>
+            <FitText
+              type="SubHeading"
+              color={AppColor.BLACK}
+              value={referralCode}
+              textTransform="uppercase"
+            />
+            <FitIcon
+              name="link"
+              type="AntDesign"
+              size={20}
+              color={AppColor.BLACK}
+              onPress={clipboard}
+            />
+          </View>
         </View>
       </ScrollView>
       <ActivityLoader visible={loader} />

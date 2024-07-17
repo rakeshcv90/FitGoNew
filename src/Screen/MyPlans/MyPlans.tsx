@@ -62,6 +62,7 @@ import FitCoins from '../../Component/Utilities/FitCoins';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import ActivityLoader from '../../Component/ActivityLoader';
+import StreakModal from '../../Component/Utilities/StreakModal';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -136,6 +137,7 @@ const MyPlans = ({navigation}: any) => {
       }
     }, []),
   );
+
   const getAllChallangeAndAllExerciseData = async () => {
     let responseData = 0;
     if (Object.keys(getUserDataDetails).length > 0) {
@@ -203,7 +205,7 @@ const MyPlans = ({navigation}: any) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-   
+
       setRefresh(false);
     }
   };
@@ -227,6 +229,7 @@ const MyPlans = ({navigation}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
+        console.log('coins', response?.data?.responses);
         setCoins(response?.data?.responses);
       }
     } catch (error) {
@@ -458,7 +461,7 @@ const MyPlans = ({navigation}: any) => {
         setDownloadedVideoSent(false);
         let checkAdsShow = AddCountFunction();
 
-        AnalyticsConsole(`SE_ON_${getPurchaseHistory?.currentDay}`)
+        AnalyticsConsole(`SE_ON_${getPurchaseHistory?.currentDay}`);
         if (checkAdsShow == true) {
           showInterstitialAd();
           analytics().logEvent(
@@ -529,7 +532,7 @@ const MyPlans = ({navigation}: any) => {
       setDownloade(0);
       setButtonClicked(false);
       setVisible(false);
-      AnalyticsConsole(`SEE_ON_${getPurchaseHistory?.currentDay}`)
+      AnalyticsConsole(`SEE_ON_${getPurchaseHistory?.currentDay}`);
       if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {
@@ -853,30 +856,6 @@ const MyPlans = ({navigation}: any) => {
                 : -DeviceWidth * 0.05
               : -DeviceWidth * 0.05,
         }}>
-        {/* <View
-          style={{
-            flexDirection: 'row',
-            width: DeviceWidth,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginTop: DeviceWidth * 0.04,
-          }}>
-          {/* <Text
-            style={[
-              styles.semiBold,
-              {
-                marginLeft:
-                  DeviceHeigth >= 1024
-                    ? DeviceWidth * 0.03
-                    : DeviceWidth * 0.05,
-                width: DeviceWidth * 0.7,
-                marginBottom: DeviceWidth * 0.03,
-              },
-            ]}>
-            Get Fit{' '}
-          </Text>
-        </View> */}
-
         {loader ? (
           <View
             style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
@@ -973,11 +952,10 @@ const MyPlans = ({navigation}: any) => {
         )}
       </View>
       {downlodedVideoSent ? <ActivityLoader /> : null}
-      {/* <DownloadingWorkout
-        hasAds={hasAds}
-        downloaded={downloaded}
-        buttonClicked={buttonClicked}
-      /> */}
+      {WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1] !== 'Monday' &&
+        coins[WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]] < 0 && enteredCurrentEvent && (
+             <StreakModal streakDays={Object.values(coins)}/>
+        )}
     </SafeAreaView>
   );
 };

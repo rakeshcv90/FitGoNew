@@ -552,8 +552,8 @@ const Banners = ({
   const [loaded, setLoaded] = useState(true);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [dataType, setDatatype] = useState('');
-
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (Object.keys(getBanners).length == 0) {
       //bannerApi();
@@ -683,6 +683,13 @@ const Banners = ({
       } else {
         dispatch(setOfferAgreement(ApiCall?.data));
         if (ApiCall?.data?.location == 'India') {
+          if (Sat && enteredCurrentEvent) {
+            AnalyticsConsole('W_L');
+            navigation.navigate('Winner');
+          } else if (Sun && enteredCurrentEvent) {
+            AnalyticsConsole('W_L');
+            navigation.navigate('Winner');
+          }
           if (getPurchaseHistory?.plan == null) {
             navigation.navigate('NewSubscription', {upgrade: false});
           } else {
@@ -773,7 +780,16 @@ const Banners = ({
         : navigation.navigate('MyPlans');
     } else if (type2 == 'upcoming_challenge' && index == 1) {
       AnalyticsConsole('UP_BANNER');
-      navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
+      if (getPurchaseHistory) {
+        getPurchaseHistory?.plan == 'noob'
+          ? navigation?.navigate('NewSubscription', {upgrade: true})
+          : getPurchaseHistory?.plan != 'noob' &&
+            getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage
+          ? navigation?.navigate('UpcomingEvent', {
+              eventType: 'upcoming',
+            })
+          : navigation?.navigate('NewSubscription', {upgrade: true});
+      } else navigation?.navigate('NewSubscription', {upgrade: true});
     }
   };
 
@@ -781,7 +797,7 @@ const Banners = ({
     const renderItem = ({item, index}) => (
       <TouchableOpacity
         key={index}
-        disabled={loading?true:false}
+        disabled={loading ? true : false} // improvement
         onPress={() => handleEventClicks(index)}
         style={{
           height:
@@ -801,7 +817,7 @@ const Banners = ({
               borderRadius: 20,
               backgroundColor: 'lightgrey',
               justifyContent: 'center',
-              position:'absolute'
+              position: 'absolute',
             }}>
             <ActivityIndicator size={50} color={AppColor.RED} />
           </View>
@@ -812,7 +828,6 @@ const Banners = ({
           source={{uri: item}}
           onLoad={() => setLoading(false)}
           // defaultSource={localImage.testbanner}
-        
         />
       </TouchableOpacity>
     );
