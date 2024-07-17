@@ -13,8 +13,8 @@ const ReferButton = () => {
           backgroundColor: AppColor.RED,
           borderTopLeftRadius: 10,
           borderBottomLeftRadius: 10,
-        //   padding: 5,
-          paddingHorizontal: 10,
+          padding: 3,
+          paddingRight: 10,
           flexDirection: 'row',
           alignItems: 'center',
         }}>
@@ -25,15 +25,16 @@ const ReferButton = () => {
           loop
           resizeMode="contain"
           style={{
-            width: 50,
-            height: 50,
+            width: 30,
+            height: 30,
           }}
         />
         <FitText
           type="SubHeading"
-          value={`Refer & \nEarn`}
+          value={`Refer &\nEarn`}
           color={AppColor.WHITE}
-        //   lineHeight={20}
+          fontSize={11}
+          lineHeight={16}
         />
       </TouchableOpacity>
     );

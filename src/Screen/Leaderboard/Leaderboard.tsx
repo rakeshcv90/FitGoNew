@@ -229,7 +229,7 @@ const Leaderboard = ({navigation, route}: any) => {
       <View
         style={{
           position: 'absolute',
-          top: PLATFORM_IOS ? DeviceHeigth * 0.025 : DeviceHeigth * 0.01,
+          top: PLATFORM_IOS ? DeviceHeigth * 0.028 : DeviceHeigth * 0.012,
           right: 0,
         }}>
         <ReferButton />

@@ -154,7 +154,6 @@ const MyPlans = ({navigation}: any) => {
       WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]
     ]))
     }
-
   }, []);
   const getAllChallangeAndAllExerciseData = async () => {
     let responseData = 0;
