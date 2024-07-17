@@ -44,6 +44,7 @@ import TrackPlayer, {
   usePlaybackState,
 } from 'react-native-track-player';
 import VersionNumber, {appVersion} from 'react-native-version-number';
+import { findKeyInObject } from '../../Component/Utilities/FindkeyinObject';
 const NewSubscription = ({navigation, route}: any) => {
   const {upgrade} = route.params;
   const dispatch = useDispatch();
@@ -70,25 +71,6 @@ const NewSubscription = ({navigation, route}: any) => {
   const [refresh, setRefresh] = useState(false);
   const isFocused = useIsFocused();
   const playbackState = usePlaybackState();
-  const findKeyInObject = (obj: any, keyToFind: string): any => {
-    if (typeof obj !== 'object' || obj === null) {
-      return null;
-    }
-
-    if (obj.hasOwnProperty(keyToFind)) {
-      return obj[keyToFind];
-    }
-
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        const result = findKeyInObject(obj[key], keyToFind);
-        if (result !== null) {
-          return result;
-        }
-      }
-    }
-    return null;
-  };
 
   const songs = [
     {

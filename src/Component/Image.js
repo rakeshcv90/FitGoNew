@@ -229,5 +229,15 @@ export const localImage = {
   StreakImg:require('../Icon/Images/InAppRewards/StreakImg.png'),
   Streak:require('../Icon/Images/InAppRewards/streak.png'),
   StreakBreak:require('../Icon/Images/InAppRewards/Streakbreak.png'),
-  Offer_Img:require('../Icon/Images/InAppRewards/Offer_ins.png')
+  Offer_Img:require('../Icon/Images/InAppRewards/Offer_ins.png'),
+  Refer_banner:require('../Icon/Images/InAppRewards/Refer_banner.png'),
+  Referral_Coin_Banner:require('../Icon/Images/InAppRewards/Referral_Coin_Banner.png'),
+  Bronze:require('../Icon/Images/InAppRewards/Bronze.png'),
+  Silver:require('../Icon/Images/InAppRewards/Silver.png'),
+  RefferalOutline:require('../Icon/Images/InAppRewards/RefferalOutline.png'),
+  closeButton:require('../Icon/Images/InAppRewards/closeButton.png'),
+  RefferalCodeImg:require('../Icon/Images/InAppRewards/RefferalCode.png'),
+  warning:require('../Icon/Images/InAppRewards/warning.png'),
+  danger:require('../Icon/Images/InAppRewards/danger.png'),
+  success:require('../Icon/Images/InAppRewards/success.png')
 };

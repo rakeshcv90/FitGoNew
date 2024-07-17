@@ -99,6 +99,7 @@ import {AlarmNotification} from '../../Component/Reminder';
 import notifee from '@notifee/react-native';
 import VideoBanner from '../../Component/Utilities/VideoBanner';
 import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
+import ReferButton from '../../Component/Utilities/ReferButton';
 
 const HomeNew = ({navigation}) => {
   const dispatch = useDispatch();
@@ -1268,21 +1269,28 @@ const HomeNew = ({navigation}) => {
             </View>
           ) : null}
         </View>
-        <Text
+        <View
           style={{
-            color: AppColor.HEADERTEXTCOLOR,
-            fontFamily: Fonts.MONTSERRAT_BOLD,
-            fontWeight: '600',
-            lineHeight: 21,
-            fontSize: 18,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
             alignItems: 'center',
-            justifyContent: 'flex-start',
-            width: '95%',
-            alignSelf: 'center',
-            marginTop: 20,
           }}>
-          Reward Zone
-        </Text>
+          <Text
+            style={{
+              color: AppColor.HEADERTEXTCOLOR,
+              fontFamily: Fonts.MONTSERRAT_BOLD,
+              fontWeight: '600',
+              lineHeight: 21,
+              fontSize: 18,
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              alignSelf: 'center',
+              marginTop: 20,
+            }}>
+            Reward Zone
+          </Text>
+          <ReferButton />
+        </View>
         <Banners
           type1={BannerType1}
           type2={Bannertype2}
