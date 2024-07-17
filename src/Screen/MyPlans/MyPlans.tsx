@@ -16,13 +16,11 @@ import {
 import React, {useCallback, useEffect, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
 import NewHeader from '../../Component/Headers/NewHeader';
-import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import moment from 'moment';
 import VersionNumber from 'react-native-version-number';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
-import Timer from '../../Component/Timer';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   setAllExercise,
@@ -40,6 +38,7 @@ import {
   setOfferAgreement,
   setPlanType,
   setPurchaseHistory,
+  setStreakStatus,
   setUserProfileData,
   setVideoLocation,
   setWeeklyPlansData,
@@ -95,6 +94,8 @@ const MyPlans = ({navigation}: any) => {
   const [myRankData, setMyRankData] = useState([]);
   const [downlodedVideoSent, setDownloadedVideoSent] = useState(false);
   const [fetchCoins, setFetchCoins] = useState(false);
+  const [streakModalVisibility, setStreakModalVisibility] = useState(false);
+  const getStreakStatus = useSelector(state => state?.getStreakStatus);
   const getFitmeMealAdsCount = useSelector(
     (state: any) => state.getFitmeMealAdsCount,
   );
@@ -137,7 +138,24 @@ const MyPlans = ({navigation}: any) => {
       }
     }, []),
   );
+  //condition to check streak modal
+  useEffect(() => {
+    if (
+      WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1] !== 'Monday' &&
+      coins[WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]] < 0 &&
+      enteredCurrentEvent &&
+      !getStreakStatus?.includes(
+        WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2],
+      )
+    ) {
+      setStreakModalVisibility(true);
+     dispatch(setStreakStatus([
+      ...getStreakStatus,
+      WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]
+    ]))
+    }
 
+  }, []);
   const getAllChallangeAndAllExerciseData = async () => {
     let responseData = 0;
     if (Object.keys(getUserDataDetails).length > 0) {
@@ -953,8 +971,14 @@ const MyPlans = ({navigation}: any) => {
       </View>
       {downlodedVideoSent ? <ActivityLoader /> : null}
       {WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1] !== 'Monday' &&
-        coins[WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]] < 0 && enteredCurrentEvent && (
-             <StreakModal streakDays={Object.values(coins)}/>
+        coins[WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]] < 0 &&
+        enteredCurrentEvent && streakModalVisibility &&(
+          <StreakModal
+            streakDays={coins}
+            setVisible={setStreakModalVisibility}
+            WeekArray={WeekArrayWithEvent}
+            missedDay={WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]}
+          />
         )}
     </SafeAreaView>
   );

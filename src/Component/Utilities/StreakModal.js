@@ -12,9 +12,9 @@ import {DeviceHeigth, DeviceWidth} from '../Config';
 import {AppColor, Fonts} from '../Color';
 import {localImage} from '../Image';
 import NewButton from '../NewButton';
-const StreakModal = ({}) => {
+const StreakModal = ({streakDays, setVisible, WeekArray, missedDay}) => {
   const days = ['M', 'T', 'W', 'T', 'F'];
-  const streakDays=[50,-5,-5,50,50];
+  // const streakDays=[50,-5,-5,50,50];
   return (
     <Modal transparent visible={true}>
       <View style={{backgroundColor: `rgba(0,0,0,0.4)`, flex: 1}}>
@@ -28,9 +28,11 @@ const StreakModal = ({}) => {
               marginTop: 16,
               alignSelf: 'flex-end',
             }}
-            onPress={() => {}}
+            onPress={() => {
+              setVisible(false);
+            }}
           />
-          <Text style={styles.txt1}>Days missed</Text>
+          <Text style={styles.txt1}>{missedDay ?? +'Days '} missed</Text>
           <ImageBackground
             source={localImage.StreakImg}
             style={styles.img1}
@@ -45,7 +47,13 @@ const StreakModal = ({}) => {
             }}>
             {Array.from({length: 5}).map((v, i) => (
               <ImageBackground
-                source={streakDays[i]>0?localImage.Streak:localImage.StreakBreak}
+                source={
+                  streakDays[WeekArray[i]] > 0
+                    ? localImage.greenStreak
+                    : streakDays[WeekArray[i]] == null
+                    ? localImage.Streak
+                    : localImage.StreakBreak
+                }
                 style={styles.img2}
                 resizeMode="contain">
                 <Text
@@ -86,6 +94,7 @@ const StreakModal = ({}) => {
             title={'Continue'}
             ButtonWidth={DeviceWidth * 0.6}
             mV={20}
+            onPress={()=>setVisible(false)}
           />
         </View>
       </View>

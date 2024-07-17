@@ -239,5 +239,6 @@ export const localImage = {
   RefferalCodeImg:require('../Icon/Images/InAppRewards/RefferalCode.png'),
   warning:require('../Icon/Images/InAppRewards/warning.png'),
   danger:require('../Icon/Images/InAppRewards/danger.png'),
-  success:require('../Icon/Images/InAppRewards/success.png')
+  success:require('../Icon/Images/InAppRewards/success.png'),
+  greenStreak:require('../Icon/Images/InAppRewards/GreenStreak.png')
 };

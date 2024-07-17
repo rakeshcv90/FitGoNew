@@ -1578,7 +1578,7 @@ const Signup = ({navigation}) => {
           </View>
         )}
       </ScrollView>
-      <ReferByScreen visible={true} setVisible={setVisible} />
+      <ReferByScreen visible={visible} setVisible={setVisible} />
       <LoginCancelModal />
     </SafeAreaView>
   );

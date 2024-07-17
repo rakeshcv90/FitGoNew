@@ -67,6 +67,7 @@ const intialState = {
   getDynamicPopUpvalues: {},
   getRatingStatus: false,
   getUpdateAvailable:false,
+  getStreakStatus:[],
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -369,6 +370,11 @@ const ThemeReducer = (state = intialState, action) => {
           ...state,
           getUpdateAvailable: action.payload,
         };
+        case types.STREAK_MODAL:
+          return {
+            ...state,
+            getStreakStatus: action.payload,
+          };
     default:
       return state;
   }

@@ -42,7 +42,6 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
   useEffect(() => {
     getReferralCode();
   }, []);
-  console.log('DeivceWdt', DeviceHeigth);
   const getReferralCode = async () => {
     try {
       const code = await AsyncStorage.getItem('referalID');
@@ -83,7 +82,7 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
     try {
       const payload = new FormData();
       payload.append('referral_code', referralCode);
-      payload.append('user_id',getUserDataDetails?.id);
+      payload.append('user_id',10281);
       const res = await axios(NewAppapi.SEND_REFERRAL_API, {
         method: 'POST',
         data: payload,
@@ -132,6 +131,7 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
       ) {
         setText('Try Again');
         setCodeStatus('Incorrect code');
+        setVisible(false)
         shake();
         showMessage({
           message: 'You cannot use this referral code.',
@@ -153,6 +153,18 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         navigationRef?.navigate('Yourself');
+      }
+      else if (res?.data?.msg == 'user not exist') {
+        setCodeStatus('Incorrect code');
+        setText('Try Again');
+        shake();
+        showMessage({
+          message: 'Invalid referral code',
+          type: 'danger',
+          animationDuration: 1000,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
       }
     } catch (error) {
       console.log('error--->', err);
@@ -245,7 +257,7 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
                   activeOutlineColor="transparent"
                   underlineColor="transparent"
                   activeUnderlineColor="transparent"
-                  maxLength={6}
+                  maxLength={8}
                 />
               </Animated.View>
               <View

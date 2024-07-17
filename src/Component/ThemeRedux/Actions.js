@@ -394,3 +394,9 @@ export const setUpdateAvailable=data=>{
     payload:data
   }
 }
+export const setStreakStatus=data=>{
+  return{
+    type:types.STREAK_MODAL,
+    payload:data
+  }
+}
