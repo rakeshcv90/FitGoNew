@@ -80,6 +80,7 @@ import SplaceNew from '../Screen/SplaceNew';
 import StreakModal from '../Component/Utilities/StreakModal';
 import OfferGuidelines from '../Component/Utilities/OfferGuidelines';
 import Referral from '../Screen/Referral/Referral';
+import Breath from '../Screen/Breath/Breath';
 const Stack = createStackNavigator();
 
 const screenOptions = {
