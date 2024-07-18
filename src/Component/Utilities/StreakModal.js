@@ -22,7 +22,7 @@ const StreakModal = ({streakDays, setVisible, WeekArray, missedDay,visible}) => 
  
   const dispatch=useDispatch()
   return (
-    <Modal transparent visible={getStreakModalVisible}>
+    <Modal transparent visible={getStreakModalVisible} animationType='slide'>
       <View style={{backgroundColor: `rgba(0,0,0,0.4)`, flex: 1}}>
         <View style={styles.View1}>
           <Icon

@@ -95,7 +95,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-
+ {/* <Stack.Screen name="Breath" component={Breath} /> */}
       {/* <Stack.Screen name="RatingModal" component={StreakModal}/> */}
       {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
       <Stack.Screen
@@ -115,7 +115,6 @@ export const LoginStack = () => {
         name="IntroductionScreen3"
         component={IntroductionScreen3}
       />
-
       <Stack.Screen name="LogSignUp" component={LogSignUp} />
       <Stack.Screen name="Yourself" component={Yourself} />
       <Stack.Screen name="Name" component={Name} />
@@ -191,7 +190,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Leaderboard" component={Leaderboard} />
       <Stack.Screen name="Winner" component={Winner} />
       <Stack.Screen name="Referral" component={Referral} />
-      <Stack.Screen name="Breath" component={Breath} />
+      {/* <Stack.Screen name="Breath" component={Breath} /> */}
     </Stack.Navigator>
   );
 };

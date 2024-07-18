@@ -80,7 +80,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
         } else {
           setTimeout(()=>{
             Dispatch(setOpenAdsCount(0));
-          },9000)
+          },10000)
        
         }
       }

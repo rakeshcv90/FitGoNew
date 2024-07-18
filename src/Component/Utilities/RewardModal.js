@@ -18,7 +18,7 @@ const RewardModal = ({
   ButtonText,
 }) => {
   return (
-    <Modal transparent visible={visible}>
+    <Modal transparent visible={visible} animationType='slide'>
       <View style={{backgroundColor: `rgba(0,0,0,0.4)`, flex: 1}}>
         <View style={styles.View1}>
           <Icon
