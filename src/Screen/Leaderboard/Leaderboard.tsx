@@ -328,6 +328,21 @@ const Leaderboard = ({navigation, route}: any) => {
               fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
             />
           </ImageBackground>
+          <Text
+            style={{
+              color: AppColor.RED,
+              width: DeviceWidth * 0.9,
+              alignSelf: 'center',
+              textAlign: 'right',
+              fontFamily:Fonts.MONTSERRAT_SEMIBOLD,
+              marginBottom:5,
+              textDecorationLine:'underline'
+            
+            }}
+            onPress={()=>navigation.navigate('OfferGuidelines')}
+            >
+            How to earn?
+          </Text>
           <FlatList data={mainData} renderItem={renderItem} />
           {otherData.length > 0 && (
             <>

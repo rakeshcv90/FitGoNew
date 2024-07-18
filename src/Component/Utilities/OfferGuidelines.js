@@ -61,10 +61,10 @@ const styles = StyleSheet.create({
   },
   txt1: {
     color: AppColor.BLACK,
-    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    fontFamily: 'Helvetica-Bold',
     fontSize: 16,
-    marginLeft: 16,
-    marginBottom: 16,
+    marginLeft: 18,
+    marginBottom: 14,
   },
   img1: {
     width: '80%',

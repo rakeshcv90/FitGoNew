@@ -95,7 +95,6 @@ export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
 
-      {/* <Stack.Screen name='OfferGuidelines' component={OfferGuidelines}/> */}
       {/* <Stack.Screen name="RatingModal" component={StreakModal}/> */}
       {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
       <Stack.Screen
@@ -150,6 +149,7 @@ export const LoginStack = () => {
       <Stack.Screen name="AITrainer" component={AITrainer} />
       <Stack.Screen name="AIMessageHistory" component={AIMessageHistory} />
       <Stack.Screen name="IntroVideo" component={IntroVideo} />
+      <Stack.Screen name='OfferGuidelines' component={OfferGuidelines}/>
       {/* <Stack.Screen name="Equipment" component={Equipment} /> */}
       {/* <Stack.Screen name="Focus" component={Focus} /> */}
       {/* <Stack.Screen name="Level" component={Level} /> */}

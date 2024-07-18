@@ -167,10 +167,11 @@ const Referral = () => {
           style={[
             styles.boxGreen,
             {
-              width:
-                DeviceHeigth >= 1024 ? DeviceWidth * 0.9 : DeviceWidth * 0.82,
-              height:
-                DeviceHeigth >= 1024 ? DeviceHeigth * 0.1 : DeviceHeigth * 0.1,
+              width: DeviceHeigth >= 1024 ? DeviceWidth * 0.9 : '92%',
+              // paddingHorizontal: 18,
+              paddingVertical: DeviceHeigth>=1024?DeviceHeigth * 0.05:DeviceHeigth * 0.03,
+              paddingRight:DeviceWidth*0.08,
+              paddingLeft:20
             },
           ]}>
           {getUserDataDetails?.image_path == null ? (
@@ -279,7 +280,7 @@ const Referral = () => {
             ? (DeviceHeigth * 10) / 100
             : (DeviceHeigth * 7) / 100
         }
-        header=""
+        header="Refer & Earn"
         shadow
       />
       <ScrollView
@@ -305,7 +306,7 @@ const Referral = () => {
             value="Understand how referral works"
             fontSize={16}
             lineHeight={20}
-            marginVertical={5}
+            marginTop={20}
             color={AppColor.BLACK}
             fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
           />
@@ -314,7 +315,8 @@ const Referral = () => {
               color: AppColor.BLACK,
               fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
               fontSize: 16,
-              marginVertical: DeviceHeigth >= 1024 ? 18 : 12,
+              marginVertical: DeviceHeigth >= 1024 ? 18 : 10,
+        
             }}>
             Your rank
           </Text>
@@ -322,8 +324,8 @@ const Referral = () => {
             source={localImage.Referral_Coin_Banner}
             resizeMode={DeviceHeigth >= 1024 ? 'stretch' : 'contain'}
             style={{
-              height:
-                DeviceHeigth >= 1024 ? DeviceHeigth * 0.2 : DeviceHeigth * 0.2,
+              height: DeviceHeigth * 0.2,
+
               width:
                 DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.95,
               flexDirection: 'row',
@@ -415,6 +417,7 @@ const Referral = () => {
                 value={getUserDataDetails?.name?.split(' ')[0]}
                 color={AppColor.WHITE}
                 fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+               
               />
               <FitText
                 type="normal"
@@ -434,7 +437,7 @@ const Referral = () => {
             <View style={{alignItems: 'center'}}>
               <Image
                 source={localImage.FitCoin}
-                style={{width: 40, height: 40}}
+                style={{width: 30, height: 30}}
                 resizeMode="contain"
               />
               <FitText
@@ -452,6 +455,8 @@ const Referral = () => {
               marginBottom: DeviceHeigth >= 1024 ? 20 : 24,
               borderColor: AppColor.GRAY1,
               backgroundColor: AppColor.GRAY,
+              // marginTop:-10
+            
             }}>
             <Text
               style={{
@@ -484,7 +489,7 @@ const Referral = () => {
                 DeviceHeigth >= 1024 ? DeviceHeigth * 0.1 : DeviceHeigth * 0.1,
             },
           ]}></View> */}
-          <View
+          {/* <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
@@ -598,6 +603,95 @@ const Referral = () => {
                 />
               </View>
             </View>
+          </View> */}
+          <View
+            style={{
+              flexDirection: 'row',
+              width: DeviceWidth * 0.95,
+              alignSelf: 'center',
+              marginVertical: 16,
+            }}>
+            <View>
+              <View
+                style={{
+                  borderRadius: 20,
+                  width: 10,
+                  height: 10,
+                  backgroundColor: '#D9DBDC',
+                  marginRight: 10,
+                  marginTop:
+                    DeviceHeigth >= 1024 ? (DeviceHeigth * 0.1) / 2.5 : 0,
+                }}
+              />
+              {Array.from({
+                length: DeviceHeigth >= 1024 ? 12 : DeviceHeigth <= 640 ? 8 : 9,
+              }).map(() => {
+                return <Text style={{color: '#D9DBDC', marginLeft: 3}}>|</Text>;
+              })}
+              <View
+                style={{
+                  borderRadius: 20,
+                  width: 10,
+                  height: 10,
+                  backgroundColor: '#D9DBDC',
+                  // marginTop: DeviceHeigth >= 1024 ? (DeviceHeigth * 0.1) / 2 : 0,
+                }}
+              />
+            </View>
+            <View style={{width: '100%'}}>
+              <FitText
+                type="normal"
+                color={AppColor.HEADERTEXTCOLOR}
+                value="Only Register"
+                fontSize={16}
+                fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+                marginTop={-15}
+              />
+              <View style={{}}>
+                <Text style={styles.line}>
+                  {'When your friend register only then you can earn ' +
+                    (referralData?.register_rank?.fit_coins -
+                      referralData?.current_rank?.fit_coins) +
+                    ' '}
+                  <Image
+                    source={localImage.FitCoin}
+                    style={{width: 20, height: 20}}
+                    resizeMode="contain"
+                  />
+                </Text>
+                <UserImage
+                  image={localImage.Silver}
+                  rank={referralData?.current_rank}
+                  rank2={referralData?.register_rank}
+                />
+                <View style={{marginVertical: DeviceHeigth * 0.02}}>
+                  <FitText
+                    type="SubHeading"
+                    color={AppColor.HEADERTEXTCOLOR}
+                    value="Join Event"
+                    fontSize={16}
+                    fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+                  />
+
+                  <Text style={styles.line}>
+                    {'When friend register and join you’ll earn ' +
+                      (referralData?.event_register?.fit_coins -
+                        referralData?.current_rank?.fit_coins) +
+                      ' '}
+                    <Image
+                      source={localImage.FitCoin}
+                      style={{width: 20, height: 20}}
+                      resizeMode="contain"
+                    />
+                  </Text>
+                  <UserImage
+                    image={localImage.Silver}
+                    rank={referralData?.current_rank}
+                    rank2={referralData?.event_register}
+                  />
+                </View>
+              </View>
+            </View>
           </View>
           <View
             style={{
@@ -632,7 +726,7 @@ const Referral = () => {
             type="Heading"
             color={AppColor.HEADERTEXTCOLOR}
             value="Share you invite link"
-            fontSize={20}
+            fontSize={16}
             fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
             marginVertical={5}
             marginHorizontal={10}
@@ -692,11 +786,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 10,
+    // padding: 10,
     borderRadius: 10,
     marginVertical: 10,
-    paddingTop: 0,
-    top: -10,
+    // paddingTop: 0,
+    // top: -10,
   },
   line: {
     color: '#333333B2',

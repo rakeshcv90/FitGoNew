@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 14,
-    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+    fontFamily: 'Helvetica-Bold',
   },
   view1: {
     justifyContent: 'space-between',
@@ -104,11 +104,12 @@ const styles = StyleSheet.create({
   view2: {flexDirection: 'row', alignItems: 'center'},
   img1: {height: 25, width: 25},
   txt1: {
-    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontFamily: 'Helvetica',
     color: AppColor.BLACK,
+    fontWeight:''
   },
   txt2: {
-    fontFamily: Fonts.MONTSERRAT_BOLD,
+    fontFamily:'Helvetica-Bold' ,
     width: DeviceWidth * 0.1,
     textAlign: 'right',
   },

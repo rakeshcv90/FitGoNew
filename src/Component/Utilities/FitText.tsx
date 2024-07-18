@@ -22,6 +22,7 @@ type Props = TextProps & {
   textDecorationLine?: 'line-through';
   onPress?: Function;
   children?: ReactNode;
+  marginTop:number;
 };
 
 const FitText: FC<Props> = ({
@@ -43,7 +44,8 @@ const FitText: FC<Props> = ({
   textDecorationLine,
   onPress,
   children,
-  marginHorizontal
+  marginHorizontal,
+  marginTop
 }) => {
   const getTypeStyle = () => {
     switch (type) {
@@ -62,6 +64,7 @@ const FitText: FC<Props> = ({
           fontStyle,
           width: w ?? 'auto',
           textDecorationLine,
+          marginTop:marginTop??'undefined'
         };
       case 'SubHeading':
         return {
@@ -78,6 +81,7 @@ const FitText: FC<Props> = ({
           fontStyle,
           width: w ?? 'auto',
           textDecorationLine,
+          marginTop:marginTop??'undefined'
         };
       case 'normal':
         return {
@@ -94,6 +98,7 @@ const FitText: FC<Props> = ({
           fontStyle,
           width: w ?? 'auto',
           textDecorationLine,
+          marginTop:marginTop??'undefined'
         };
       default:
         return {};
