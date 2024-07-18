@@ -66,7 +66,8 @@ const intialState = {
   hindiLanguage: false,
   getDynamicPopUpvalues: {},
   getRatingStatus: false,
-  getUpdateAvailable:false,
+  getUpdateAvailable: false,
+  getOpenAdsCount: 0,
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -364,11 +365,16 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         getRatingStatus: action.payload,
       };
-      case types.UPDATE_AVAILABLE:
-        return {
-          ...state,
-          getUpdateAvailable: action.payload,
-        };
+    case types.UPDATE_AVAILABLE:
+      return {
+        ...state,
+        getUpdateAvailable: action.payload,
+      };
+    case types.OPEN_ADS_COUNT:
+      return {
+        ...state,
+        getOpenAdsCount: action.payload,
+      };
     default:
       return state;
   }

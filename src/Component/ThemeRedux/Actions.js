@@ -394,3 +394,9 @@ export const setUpdateAvailable=data=>{
     payload:data
   }
 }
+export const setOpenAdsCount=data=>{
+  return{
+    type:types.OPEN_ADS_COUNT,
+    payload:data
+  }
+}

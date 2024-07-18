@@ -79,6 +79,7 @@ import RatingModal from '../Component/RatingModal';
 import SplaceNew from '../Screen/SplaceNew';
 import StreakModal from '../Component/Utilities/StreakModal';
 import OfferGuidelines from '../Component/Utilities/OfferGuidelines';
+import Breath from '../Screen/Breath/Breath';
 
 const Stack = createStackNavigator();
 
@@ -94,6 +95,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
+     {/* <Stack.Screen name="Breath" component={Breath} /> */}
       {/* <Stack.Screen name='OfferGuidelines' component={OfferGuidelines}/> */}
       {/* <Stack.Screen name="RatingModal" component={StreakModal}/> */}
       {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
@@ -188,6 +190,7 @@ export const LoginStack = () => {
       <Stack.Screen name="AddWorkouts" component={AddWorkouts} />
       <Stack.Screen name="Leaderboard" component={Leaderboard} />
       <Stack.Screen name="Winner" component={Winner} />
+      <Stack.Screen name="Breath" component={Breath} />
     </Stack.Navigator>
   );
 };

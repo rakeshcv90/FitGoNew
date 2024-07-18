@@ -14,6 +14,7 @@ import {
   BackHandler,
   ToastAndroid,
   TextInput,
+  AppState,
   ImageBackground,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
@@ -85,7 +86,7 @@ import AppleHealthKit, {EventType} from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
 import GradientButton from '../../Component/GradientButton';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
-import {MyInterstitialAd} from '../../Component/BannerAdd';
+import {MyInterstitialAd, OpenAppAds} from '../../Component/BannerAdd';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import RewardModal from '../../Component/Utilities/RewardModal';
 import Banners from '../../Component/Utilities/Banner';
@@ -101,6 +102,8 @@ import VideoBanner from '../../Component/Utilities/VideoBanner';
 import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 
 const HomeNew = ({navigation}) => {
+  const adsStatus = useRef(true);
+
   const dispatch = useDispatch();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const allWorkoutData = useSelector(state => state.allWorkoutData);
@@ -108,6 +111,7 @@ const HomeNew = ({navigation}) => {
   const fitCoins = useSelector(state => state.fitCoins);
   const [progressHight, setProgressHight] = useState('0%');
   const [day, setDay] = useState(0);
+  const [appState, setAppState] = useState('background');
   const [currentChallenge, setCurrentChallenge] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const isFocused = useIsFocused();
@@ -142,6 +146,7 @@ const HomeNew = ({navigation}) => {
   const [locationP1, setLocationP1] = useState(false);
   // const [backPressCount, setBackPressCount] = useState(0);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const {initOpenApp, showOpenAppAd} = OpenAppAds();
   const planType = useSelector(state => state?.planType);
   const [showRewardModal, setShowRewardModal] = useState(false);
   const getRewardModalStatus = useSelector(
@@ -310,6 +315,7 @@ const HomeNew = ({navigation}) => {
       getLeaderboardDataAPI();
       allWorkoutApi();
       initInterstitial();
+      initOpenApp();
       // ChallengesDataAPI();
       getAllChallangeAndAllExerciseData();
       getWorkoutStatus();
@@ -320,6 +326,24 @@ const HomeNew = ({navigation}) => {
       }, 2000);
     }
   }, [isFocused]);
+  // useEffect(() => {
+  
+  //   AppState.addEventListener('change', state => {
+  //     //  setAppState(state)
+  
+  //     if (
+  //       state == 'active' &&
+  //       adsStatus.current == true 
+  //        &&  !AddCountFunction()
+  //     ) {
+  //       showOpenAppAd();
+
+
+      
+  //     }
+  //   });
+    
+  // }, []);
   const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(
@@ -2244,8 +2268,7 @@ const HomeNew = ({navigation}) => {
                   });
                 } else if (
                   getPurchaseHistory.plan !== 'noob' &&
-                  getPurchaseHistory.used_plan <
-                    getPurchaseHistory.allow_usage
+                  getPurchaseHistory.used_plan < getPurchaseHistory.allow_usage
                 ) {
                   navigation?.navigate('UpcomingEvent', {
                     eventType: 'upcoming',

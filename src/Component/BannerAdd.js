@@ -5,8 +5,9 @@ import {
   AdEventType,
   RewardedAd,
   RewardedAdEventType,
+  AppOpenAd,
 } from 'react-native-google-mobile-ads';
-import {interstitialAdId, rewardedAdId} from './AdsId';
+import {interstitialAdId, OPENAPP_ID, rewardedAdId} from './AdsId';
 import {View} from 'react-native';
 import {useState, useRef} from 'react';
 import {useSelector} from 'react-redux';
@@ -40,34 +41,6 @@ export const BannerAdd = ({bannerAdId}) => {
   );
 };
 
-// export const MyInterstitialAd = (resetFitmeCount) => {
-//   const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
-//     requestNonPersonalizedAdsOnly: true,
-//     keywords: ['fashion', 'clothing'],
-//   });
-//   const unsubscribe = interstitialAd.addAdEventListener(
-//     AdEventType.LOADED,
-//     () => {
-
-//       interstitialAd.show();
-//     },
-//   );
-
-//   const unsubscribe1 = interstitialAd.addAdEventListener(
-//     AdEventType.CLOSED,
-//     reward => {
-//       resetFitmeCount()
-//       //interstitialAd.load(); // Optional: Load a new ad for the next use
-//     },
-//   );
-//   const unsubscribe2 = interstitialAd.addAdEventListener(
-//     AdEventType.ERROR,
-//     reward => {
-//       //interstitialAd.load(); // Optional: Load a new ad for the next use
-//     },
-//   );
-//   return interstitialAd;
-// };
 export const NewInterstitialAd = setClosed => {
   // Created specially for Splash Screen by Sahil
   const adStatus = useRef(true);
@@ -128,26 +101,7 @@ export const MyInterstitialAd = () => {
 
   return {initInterstitial, showInterstitialAd};
 };
-// const interstitialAd = InterstitialAd.createForAdRequest(interstitialAdId, {
-//   requestNonPersonalizedAdsOnly: true,
-//   keywords: ['fashion', 'clothing'],
-// });
-// interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
-//   setAdsStatus(interstitialAd);
-// });
 
-// interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
-//   interstitialAd.load(); // Optional: Load a new ad for the next use
-// });
-// const unsubscribe2 = interstitialAd.addAdEventListener(
-//   AdEventType.ERROR,
-//   () => {
-//     //interstitialAd.load(); // Optional: Load a new ad for the next use
-//   },
-// );
-
-// const showAds
-//return interstitialAd;
 export const MyRewardedAd = setreward => {
   const rewarded = RewardedAd.createForAdRequest(rewardedAdId, {
     requestNonPersonalizedAdsOnly: true,
@@ -167,4 +121,34 @@ export const MyRewardedAd = setreward => {
   const faild = rewarded.addAdEventListener(AdEventType.ERROR, dada => {});
 
   return rewarded;
+};
+export const OpenAppAds = () => {
+  const adStatusRef = useRef(true);
+  const initOpenApp = async () => {
+    const OpenAds = AppOpenAd.createForAdRequest(OPENAPP_ID);
+    OpenAds.addAdEventListener(AdEventType.LOADED, () => {
+      adStatusRef.current = OpenAds;
+    });
+    OpenAds.addAdEventListener(AdEventType.CLOSED, () => {
+    
+      OpenAds.load();
+    });
+    OpenAds.addAdEventListener(AdEventType.CLICKED, () => {});
+    OpenAds.addAdEventListener(AdEventType.ERROR, error => {
+      console.log('Error loading app open ad');
+    });
+    OpenAds.addAdEventListener(AdEventType.OPENED, () => {});
+    OpenAds.load();
+  };
+  const showOpenAppAd = async () => {
+ 
+    if (adStatusRef.current?._loaded) {
+      adStatusRef.current.show();
+    } else {
+       console.log("ADD NOT SHOWN",adStatus)
+      /// setClosed(true)
+    }
+  };
+
+  return {initOpenApp, showOpenAppAd};
 };
