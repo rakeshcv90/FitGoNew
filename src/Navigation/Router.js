@@ -190,6 +190,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Leaderboard" component={Leaderboard} />
       <Stack.Screen name="Winner" component={Winner} />
       <Stack.Screen name="Referral" component={Referral} />
+      <Stack.Screen name="Breath" component={Breath} />
     </Stack.Navigator>
   );
 };

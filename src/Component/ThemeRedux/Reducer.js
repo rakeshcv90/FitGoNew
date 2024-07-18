@@ -68,7 +68,8 @@ const intialState = {
   getRatingStatus: false,
   getUpdateAvailable:false,
   getStreakStatus:[],
-  getStreakModalVisible:false
+  getStreakModalVisible:false,
+  getOpenAdsCount: 0,
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -366,11 +367,6 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         getRatingStatus: action.payload,
       };
-      case types.UPDATE_AVAILABLE:
-        return {
-          ...state,
-          getUpdateAvailable: action.payload,
-        };
         case types.STREAK_MODAL:
           return {
             ...state,
@@ -381,6 +377,16 @@ const ThemeReducer = (state = intialState, action) => {
               ...state,
               getStreakModalVisible: action.payload,
             };
+    case types.UPDATE_AVAILABLE:
+      return {
+        ...state,
+        getUpdateAvailable: action.payload,
+      };
+    case types.OPEN_ADS_COUNT:
+      return {
+        ...state,
+        getOpenAdsCount: action.payload,
+      };
     default:
       return state;
   }

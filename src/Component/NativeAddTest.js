@@ -19,6 +19,7 @@ import {MediaView} from './MediaView';
 import {adUnitIDs} from './AdsId';
 import AnimatedLottieView from 'lottie-react-native';
 import {DeviceHeigth, DeviceWidth} from './Config';
+import { AppColor } from './Color';
 // import {adUnitIDs} from './utils';
 
 const NativeAddTest = ({media, type}) => {
@@ -69,6 +70,7 @@ const NativeAddTest = ({media, type}) => {
       style={{
         width: '100%',
         alignSelf: 'center',
+        backgroundColor: '#f0f0f0',
       }}
       videoOptions={{
         customControlsRequested: true,
@@ -83,6 +85,7 @@ const NativeAddTest = ({media, type}) => {
         style={{
           width: '100%',
           alignItems: 'center',
+          backgroundColor: '#fff',
         }}>
         <View
           style={{
@@ -210,8 +213,8 @@ const NativeAddTest = ({media, type}) => {
                 : {},
             ]}
             buttonAndroidStyle={{
-              backgroundColor: '#FFA500',
-              borderRadius: 10,
+              backgroundColor: AppColor.RED,
+              borderRadius:8,
             }}
             allCaps
             textStyle={{

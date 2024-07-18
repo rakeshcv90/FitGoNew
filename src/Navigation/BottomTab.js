@@ -1,5 +1,6 @@
 import {
   Animated,
+  AppState,
   Image,
   Platform,
   StyleSheet,
@@ -14,7 +15,7 @@ import Workouts from '../Screen/NewHome/Workouts';
 import Trainer from '../Screen/NewHome/Trainer';
 import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
 import {View, Text} from 'react-native';
-import {BannerAdd, MyInterstitialAd} from '../Component/BannerAdd';
+import {BannerAdd, MyInterstitialAd, OpenAppAds} from '../Component/BannerAdd';
 import {bannerAdId} from '../Component/AdsId';
 import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import {useDispatch, useSelector} from 'react-redux';
@@ -23,6 +24,7 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 import {AppColor, Fonts} from '../Component/Color';
 import {
   setFitmeAdsCount,
+  setOpenAdsCount,
   setRewardPopUp,
 } from '../Component/ThemeRedux/Actions';
 import MyPlans, {handleStart} from '../Screen/MyPlans/MyPlans';
@@ -44,17 +46,47 @@ const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
 const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const {initOpenApp, showOpenAppAd} = OpenAppAds();
+  const adsStatus = useRef(true);
+  const [appState, setAppState] = useState('background');
+
   const Dispatch = useDispatch();
   const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
+  const getOpenAdsCount = useSelector(state => state.getOpenAdsCount);
   const enteredUpcomingEvent = useSelector(
     state => state?.enteredUpcomingEvent,
   );
   const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
   useEffect(() => {
     initInterstitial();
-  }, []);
+    initOpenApp();
+    console.log('ZXCSCSD', getOpenAdsCount);
+    AppState.addEventListener('change', state => {
+      // if (
+      //   state == 'active' &&
+      //   adsStatus.current == true &&
+      //   getOpenAdsCount < 6
+      // ) {
+
+      //   showOpenAppAd();
+      // }else{
+      //   Dispatch((0));
+      // }
+      if (state == 'active' && adsStatus.current == true) {
+        if (getOpenAdsCount < 6) {
+          showOpenAppAd();
+        } else {
+          setTimeout(()=>{
+            Dispatch(setOpenAdsCount(0));
+          },9000)
+       
+        }
+      }
+  
+    });
+  }, [getOpenAdsCount]);
   function NotificationBadge() {
     return (
       <View style={styles.badgeContainer}>
@@ -124,23 +156,28 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                 if (getPurchaseHistory?.plan == 'premium' && isValid) {
                   navigation.navigate(route.name);
                   Dispatch(setFitmeAdsCount(0));
+                  Dispatch(setOpenAdsCount(0));
                 } else {
                   if (getFitmeAdsCount < count) {
                     Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+                    Dispatch(setOpenAdsCount(getOpenAdsCount + 1));
                     navigation.navigate(route.name);
                   } else {
                     showInterstitialAd();
                     Dispatch(setFitmeAdsCount(0));
+                    Dispatch(setOpenAdsCount(0));
                     navigation.navigate(route.name);
                   }
                 }
               } else {
                 if (getFitmeAdsCount < count) {
                   Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+                  Dispatch(setOpenAdsCount(getOpenAdsCount + 1));
                   navigation.navigate(route.name);
                 } else {
                   showInterstitialAd();
                   Dispatch(setFitmeAdsCount(0));
+                  Dispatch(setOpenAdsCount(0));
                   navigation.navigate(route.name);
                 }
               }
