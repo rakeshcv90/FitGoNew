@@ -271,6 +271,9 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
                     setText('Apply Code');
                   }}
                   value={referralCode}
+                  autoFocus={true}
+                  cursorColor='black'
+                  autoCapitalize='characters'
                   placeholder="Enter code"
                   activeOutlineColor="transparent"
                   underlineColor="transparent"

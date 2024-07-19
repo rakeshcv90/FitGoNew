@@ -104,22 +104,38 @@ const Reminder = ({
 
     const currentTime = new Date(Date.now());
     const selectedTime = new Date(Date.now());
+
     selectedTime.setHours(selectedHours);
     selectedTime.setMinutes(selectedMinutes);
-    try {
-      AlarmNotification(selectedTime);
-      setNotificationTimer(selectedTime);
-      setAlarmIsEnabled(true);
-      setVisible(false);
-    } catch (error) {
+    const minimumTime = new Date(currentTime.getTime() + 2 * 60 * 1000); // 2 minutes in milliseconds
+    const minimumSelectedTime = new Date(selectedTime.getTime()); // 2 minutes in milliseconds
+    // Check if selected time is less than minimum time
+    if (minimumSelectedTime <= minimumTime) {
       showMessage({
-        message: 'Time should be greater than Current Time',
-        type: 'success',
+        message: 'Reminder time should be at more 2 minutes from Current time',
+        type: 'info', // You might want to change 'success' to 'error' for a clearer message
         animationDuration: 500,
-
         floating: true,
         icon: {icon: 'auto', position: 'left'},
       });
+      setVisible(false);
+    } else {
+      try {
+        AlarmNotification(selectedTime);
+        setNotificationTimer(selectedTime);
+        setAlarmIsEnabled(true);
+        setVisible(false);
+      } catch (error) {
+        showMessage({
+          message: 'Time should be greater than Current Time',
+          type: 'success',
+          animationDuration: 500,
+
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+        setVisible(false);
+      }
     }
   }
   return (
@@ -193,31 +209,49 @@ const Reminder = ({
               <Picker
                 style={{flex: 1}}
                 selectedValue={hours}
+                dropdownIconColor={AppColor.BLACK}
                 onValueChange={(itemValue: any, itemIndex) => {
                   setHours(itemValue);
                 }}>
                 {hourData.map((hr: any) => (
-                  <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
+                  <Picker.Item
+                    label={hr}
+                    value={hr}
+                    color={AppColor.BLACK}
+                    style={{backgroundColor: AppColor.WHITE}}
+                  />
                 ))}
               </Picker>
               <Picker
                 style={{flex: 1}}
                 selectedValue={min}
+                dropdownIconColor={AppColor.BLACK}
                 onValueChange={(itemValue: any, itemIndex) => {
                   setMin(itemValue);
                 }}>
                 {minData.map((hr: any) => (
-                  <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
+                  <Picker.Item
+                    label={hr}
+                    value={hr}
+                    color={AppColor.BLACK}
+                    style={{backgroundColor: AppColor.WHITE}}
+                  />
                 ))}
               </Picker>
               <Picker
                 style={{flex: 1}}
                 selectedValue={type}
+                dropdownIconColor={AppColor.BLACK}
                 onValueChange={(itemValue: any, itemIndex) => {
                   setType(itemValue);
                 }}>
                 {typeData.map((hr: any) => (
-                  <Picker.Item label={hr} value={hr} color={AppColor.BLACK} />
+                  <Picker.Item
+                    label={hr}
+                    value={hr}
+                    color={AppColor.BLACK}
+                    style={{backgroundColor: AppColor.WHITE}}
+                  />
                 ))}
               </Picker>
             </View>
