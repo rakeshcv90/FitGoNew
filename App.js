@@ -37,9 +37,13 @@ import {AppState} from 'react-native';
 import {AppColor} from './src/Component/Color';
 import {LogBox} from 'react-native';
 import {LogOut} from './src/Component/LogOut';
-import {MyInterstitialAd} from './src/Component/BannerAdd';
-import { setUpdateAvailable } from './src/Component/ThemeRedux/Actions';
-import { UpdateAvailable, UpdateAvailable1 } from './src/Component/Utilities/UpdateAvailable';
+
+import {setUpdateAvailable} from './src/Component/ThemeRedux/Actions';
+import {
+  UpdateAvailable,
+  UpdateAvailable1,
+} from './src/Component/Utilities/UpdateAvailable';
+
 export const navigationRef = createNavigationContainerRef();
 // also use before use code Push (appcenter login)
 // codepush release of ios , appcenter codepush release-react -a thefitnessandworkout-gmail.com/FitmeIos -d Production
@@ -52,12 +56,15 @@ LogBox.ignoreAllLogs(); //Ignore all log notifications
 LogBox.ignoreLogs([
   'Animated: `useNativeDriver` was not specified. This is a required option and must be explicitly set to `true` or `false`',
 ]);
+
 const App = () => {
   //const [isConnected, setConnected] = useState(true);
   const [progress, setProgress] = useState(false);
-  const [isTrackPlayerInitialized, setIsTrackPlayerInitialized] =useState(false);
-  const [update,setUpdate]=useState(false);
-    const isPlayerInitializedRef = useRef(false);
+  const [isTrackPlayerInitialized, setIsTrackPlayerInitialized] =
+    useState(false);
+  const [update, setUpdate] = useState(false);
+  const isPlayerInitializedRef = useRef(false);
+
   useEffect(() => {
     requestPermissionforNotification(dispatch);
     // RemoteMessage();
@@ -72,20 +79,7 @@ const App = () => {
     }
     alalyicsData();
   }, []);
-  // const handleBackPress = () => {
-  //   // Do nothing to stop the hardware back press
-  //   return true;
-  // };
 
-  // useEffect(() => {
-  //   // Add an event listener to handle the hardware back press
-  //   BackHandler.addEventListener('hardwareBackPress', handleBackPress);
-
-  //   // Remove the event listener when the component is unmounted
-  //   return () => {
-  //     BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
-  //   };
-  // }, []);
   const StatusBar_Bar_Height = Platform.OS === 'ios' ? getStatusBarHeight() : 0;
   const dispatch = useDispatch();
 
@@ -94,36 +88,7 @@ const App = () => {
       data: Platform.OS,
     });
   };
-  // useEffect(() => {
-  //   const subscription = NetInfo.addEventListener(state => {
-  //     if (state.isConnected) {
-  //       setConnected(true);
-  //     } else {
-  //       setConnected(false);
-  //     }
-  //   });
-  //   return () => {
-  //     subscription();
-  //   };
-  // }, []);
-  // useEffect(() => {
-  //   const initializeTrackPlayer = async () => {
-  //     try {
-  //       await TrackPlayer.setupPlayer();
-  //       setIsTrackPlayerInitialized(true);
-  //     } catch (error) {
-  //       console.error('Error initializing Track Player', error);
-  //     }
-  //   };
 
-  //   initializeTrackPlayer();
-
-
-  //   // Clean up function
-  //   return () => {
-  //     TrackPlayer.destroy();
-  //   };
-  // }, []);
   useEffect(() => {
     const initializeTrackPlayer = async () => {
       if (!isPlayerInitializedRef.current) {
@@ -137,13 +102,16 @@ const App = () => {
       }
     };
 
-    const handleAppStateChange = (nextAppState) => {
+    const handleAppStateChange = nextAppState => {
       if (nextAppState === 'active' && !isPlayerInitializedRef.current) {
         initializeTrackPlayer();
       }
     };
 
-    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
 
     // Initialize player if the app is already in the foreground when the component mounts
     if (AppState.currentState === 'active' && !isPlayerInitializedRef.current) {
@@ -159,9 +127,6 @@ const App = () => {
       }
     };
   }, []);
-
-
-
 
   useEffect(() => {
     var updateDialogOptions = {
@@ -186,26 +151,25 @@ const App = () => {
     );
   }, []);
   const codePushStatusDidChange = syncStatus => {
-    
     switch (syncStatus) {
       case codePush.SyncStatus.CHECKING_FOR_UPDATE:
         break;
       case codePush.SyncStatus.DOWNLOADING_PACKAGE:
         break;
       case codePush.SyncStatus.AWAITING_USER_ACTION:
-        UpdateAvailable(dispatch)
+        UpdateAvailable(dispatch);
         break;
       case codePush.SyncStatus.INSTALLING_UPDATE:
         LogOut(dispatch);
         setProgress(false);
         break;
       case codePush.SyncStatus.UP_TO_DATE:
-        console.log("not update available")
-        UpdateAvailable1(dispatch)
+        console.log('not update available');
+        UpdateAvailable1(dispatch);
         break;
       case codePush.SyncStatus.UPDATE_IGNORED:
         setProgress(false);
-        UpdateAvailable1(dispatch)
+        UpdateAvailable1(dispatch);
         break;
       case codePush.SyncStatus.UPDATE_INSTALLED:
         LogOut(dispatch);
@@ -216,13 +180,13 @@ const App = () => {
         setProgress(false);
         break;
       default:
-          console.log('Statusbchbfhhdf:', status);
-          break;
+        console.log('Statusbchbfhhdf:', status);
+        break;
     }
   };
   const codePushDownloadDidProgress = progress => {
     setProgress(progress);
-  //  UpdateAvailable(dispatch);
+    //  UpdateAvailable(dispatch);
   };
   const showProgressView = () => {
     return (
@@ -274,7 +238,6 @@ const App = () => {
                     lineHeight: 35,
                     fontFamily: 'Montserrat-Regular',
 
-
                     color: 'rgb(0, 0, 0)',
                   }}
                 />
@@ -312,8 +275,7 @@ const App = () => {
             CrashedScreenName: state.routes[state.index].name,
           });
         }}>
-        <LoginStack updateAvialable={"hello"}/>
-        
+        <LoginStack updateAvialable={'hello'} />
       </NavigationContainer>
       <FlashMessage
         position="top"
@@ -345,4 +307,3 @@ const styles = StyleSheet.create({
 // export default App;
 
 export default codePush(codePushOptions)(App);
-

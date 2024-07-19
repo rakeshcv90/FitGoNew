@@ -80,7 +80,8 @@ const RatingModal = ({getVisibility,setModalVisibilty}) => {
         });
   };
   return (
-    <Modal transparent visible={getVisibility?getVisibility:!visibiltity} animationType='slide'>
+    <Modal transparent visible={getVisibility?getVisibility:!visibiltity} animationType='slide'
+    >
       <StatusBar
         barStyle={'dark-content'}
         backgroundColor={AppColor.RATING_COLOR}

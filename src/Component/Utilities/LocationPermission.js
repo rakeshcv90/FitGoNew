@@ -10,6 +10,7 @@ export const LocationPermissionModal = ({locationP, setLocationP}) => {
     return (
       <Modal
         visible={locationP}
+        animationType="slide"
         onRequestClose={() => setLocationP(false)}
         transparent>
         <View style={styles.modalContainer}>

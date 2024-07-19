@@ -235,7 +235,7 @@ const NameUpdateModal = ({
     }
   };
   return (
-    <Modal transparent visible={openEditModal}>
+    <Modal transparent animationType="slide" visible={openEditModal}>
       <KeyboardAvoidingView
         style={[styles.content]}
         behavior={Platform.OS === 'ios' ? 'position' : 'height'}>

@@ -27,7 +27,7 @@ const UpcomingEventModal = ({visible, onCancel, onConfirm}) => {
   const getDownloadedImage = useSelector(state => state?.getDownloadedImage);
   console.log(getDownloadedImage.popupImage);
   return (
-    <Modal transparent visible={visible}>
+    <Modal transparent animationType="slide" visible={visible}>
       <View style={{backgroundColor: `rgba(0,0,0,0.4)`, flex: 1}}>
         <View style={styles.View1}>
           {!imageloaded && (

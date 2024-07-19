@@ -11,7 +11,7 @@ const AppUpdateComponent = ({visible}) => {
   const [modalVisibility, setModalVisibility] = useState(visible);
   return (
     <View style={styles.Container}>
-      <Modal animationType="fade" transparent={true} visible={modalVisibility}>
+      <Modal animationType="slide" transparent={true} visible={modalVisibility}>
         <BlurView
           style={styles.modalContainer}
           blurType="light"

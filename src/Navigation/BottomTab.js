@@ -46,10 +46,6 @@ const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
 const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
-  const {initOpenApp, showOpenAppAd} = OpenAppAds();
-  const adsStatus = useRef(true);
-  const [appState, setAppState] = useState('background');
-
   const Dispatch = useDispatch();
   const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
@@ -61,32 +57,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
   const getPopUpFreuqency = useSelector(state => state?.getPopUpFreuqency);
   useEffect(() => {
     initInterstitial();
-    initOpenApp();
-    console.log('ZXCSCSD', getOpenAdsCount);
-    AppState.addEventListener('change', state => {
-      // if (
-      //   state == 'active' &&
-      //   adsStatus.current == true &&
-      //   getOpenAdsCount < 6
-      // ) {
-
-      //   showOpenAppAd();
-      // }else{
-      //   Dispatch((0));
-      // }
-      if (state == 'active' && adsStatus.current == true) {
-        if (getOpenAdsCount < 6) {
-          showOpenAppAd();
-        } else {
-          setTimeout(()=>{
-            Dispatch(setOpenAdsCount(0));
-          },9000)
-       
-        }
-      }
-  
-    });
-  }, [getOpenAdsCount]);
+  }, []);
   function NotificationBadge() {
     return (
       <View style={styles.badgeContainer}>
@@ -137,7 +108,11 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
               duration: 5000,
               floating: true,
             });
-          } else if (enteredCurrentEvent && route.key?.includes('MyPlans') && Sun) {
+          } else if (
+            enteredCurrentEvent &&
+            route.key?.includes('MyPlans') &&
+            Sun
+          ) {
             showMessage({
               message:
                 'Your event has ended. You can resume your weekly plan normally from Monday. If you join another fitness challenge, it will start from the upcoming Monday.',
@@ -146,7 +121,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
               duration: 5000,
               floating: true,
             });
-          }  else {
+          } else {
             const event = navigation.emit({
               type: 'tabPress',
               target: route.key,

@@ -576,6 +576,7 @@ const Exercise = ({navigation, route}: any) => {
       return (
         <Modal
           visible={back}
+          animationType="slide"
           onRequestClose={() => setBack(false)}
           animationType="slide">
           <View

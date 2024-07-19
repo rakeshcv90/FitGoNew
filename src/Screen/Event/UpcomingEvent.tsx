@@ -207,7 +207,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
 
   const ChangeModal = () => {
     return (
-      <Modal visible={openChange} transparent>
+      <Modal visible={openChange} transparent animationType="slide">
         <View
           style={{
             flex: 1,

@@ -102,13 +102,14 @@
 //   },
 // });
 // export default Breath;
-import { View, Text, StyleSheet, StatusBar, Button } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, Button} from 'react-native';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import AnimatedLottieView from 'lottie-react-native';
 import { DeviceHeigth } from '../../Component/Config';
 import { Fonts } from '../../Component/Color';
 import { useFocusEffect } from '@react-navigation/native';
+
 
 const Breath = () => {
   const [timerId, setTimerId] = useState(null);
@@ -217,6 +218,7 @@ const Breath = () => {
           {play && timeLeft % 2 === 0 ?  'Breath Out': 'Breath In'}
         </Text>
         <Button onPress={startStopTimer} title={play ? "Stop Timer" : "Start Timer"} />
+   
       </View>
       <View style={{ flex: 1, backgroundColor: 'red' }}></View>
     </View>

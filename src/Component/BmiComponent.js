@@ -228,7 +228,7 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
 
   return (
     <Modal
-      animationType="fade"
+ animationType="slide"
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => setModalVisible(false)}>

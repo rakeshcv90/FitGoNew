@@ -81,6 +81,7 @@ import StreakModal from '../Component/Utilities/StreakModal';
 import OfferGuidelines from '../Component/Utilities/OfferGuidelines';
 import Referral from '../Screen/Referral/Referral';
 import Breath from '../Screen/Breath/Breath';
+
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -95,14 +96,10 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-
+      {/* <Stack.Screen name="Breath" component={Breath} /> */}
       {/* <Stack.Screen name="RatingModal" component={StreakModal}/> */}
       {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
-      <Stack.Screen
-        name="SplaceScreen"
-        component={SplaceScreen}
-
-      />
+      <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
         name="IntroductionScreen1"
         component={IntroductionScreen1}
@@ -150,7 +147,7 @@ export const LoginStack = () => {
       <Stack.Screen name="AITrainer" component={AITrainer} />
       <Stack.Screen name="AIMessageHistory" component={AIMessageHistory} />
       <Stack.Screen name="IntroVideo" component={IntroVideo} />
-      <Stack.Screen name='OfferGuidelines' component={OfferGuidelines}/>
+      <Stack.Screen name="OfferGuidelines" component={OfferGuidelines} />
       {/* <Stack.Screen name="Equipment" component={Equipment} /> */}
       {/* <Stack.Screen name="Focus" component={Focus} /> */}
       {/* <Stack.Screen name="Level" component={Level} /> */}
@@ -191,7 +188,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Leaderboard" component={Leaderboard} />
       <Stack.Screen name="Winner" component={Winner} />
       <Stack.Screen name="Referral" component={Referral} />
-      <Stack.Screen name="Breath" component={Breath} />
+      {/* <Stack.Screen name="Breath" component={Breath} /> */}
     </Stack.Navigator>
   );
 };
