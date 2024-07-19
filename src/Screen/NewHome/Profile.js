@@ -132,7 +132,7 @@ const Profile = () => {
     };
     return (
       <Modal
-        animationType="fade"
+       animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
@@ -510,7 +510,7 @@ const Profile = () => {
           position: 'absolute',
         }}>
         <Modal
-          animationType="slide"
+        animationType="slide"
           transparent={true}
           visible={true}
           onRequestClose={() => {

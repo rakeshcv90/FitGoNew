@@ -466,6 +466,7 @@ const CustomWorkout = ({navigation}) => {
         )}
       </View>
       <Modal
+      animationType="slide"
         visible={isCustomWorkout}
         transparent={true}
         onRequestClose={() => {

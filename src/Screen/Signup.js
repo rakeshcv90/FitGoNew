@@ -196,7 +196,10 @@ const Signup = ({navigation}) => {
             res.fullName.givenName == null || res.fullName.familyName == null
               ? 'Guest'
               : res.fullName.givenName + res.fullName.familyName,
-          email: res.email!=null?res?.email:res?.user?.slice(0,5)+'@fitme.com',
+          email:
+            res.email != null
+              ? res?.email
+              : res?.user?.slice(0, 5) + '@fitme.com',
           signuptype: 'social',
           socialid: res.user,
           socialtoken: res.authorizationCode,
@@ -207,7 +210,7 @@ const Signup = ({navigation}) => {
           deviceid: res.user,
         },
       });
-      console.log("mnvjvjhjhvgjghk",data?.data,res.user)
+      console.log('mnvjvjhjhvgjghk', data?.data, res.user);
       setForLoading(false);
       if (
         data.data.msg == 'User already exists' &&
@@ -228,9 +231,9 @@ const Signup = ({navigation}) => {
         // dispatch(setUserId(data.data?.id));
         // getProfileData(data.data?.id);
         getUserDetailData(data.data?.id);
-            //navigationRef.navigate('Yourself');
-            setVisible(true)
-          } else if (
+        //navigationRef.navigate('Yourself');
+        setVisible(true);
+      } else if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 1
       ) {
@@ -243,7 +246,7 @@ const Signup = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         // getProfileData1(data.data?.id);
-       // getUserDetailData1(data.data?.id, data.data.profile_compl_status);
+        // getUserDetailData1(data.data?.id, data.data.profile_compl_status);
       } else if (
         data.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -270,10 +273,9 @@ const Signup = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-       // getUserDetailData1(data.data?.id, data.data.profile_compl_status);
+        // getUserDetailData1(data.data?.id, data.data.profile_compl_status);
         await GoogleSignin.signOut();
-      } 
-      else if (
+      } else if (
         data.data?.msg == 'User already exists via other authentication'
       ) {
         setForLoading(false);
@@ -284,8 +286,7 @@ const Signup = ({navigation}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      }
-      else {
+      } else {
         setForLoading(false);
         // dispatch(setUserId(data.data?.id));
         // getUserDetailData(data.data?.id);
@@ -318,7 +319,7 @@ const Signup = ({navigation}) => {
           platform: Platform.OS,
         },
       });
-      
+
       setForLoading(false);
 
       if (data?.data?.status == 0) {
@@ -381,7 +382,7 @@ const Signup = ({navigation}) => {
         setForLoading(false);
         showMessage({
           message:
-            'This Device already registered with '+ " "+ data.data.email ,
+            'This Device already registered with ' + ' ' + data.data.email,
           type: 'danger',
           animationDuration: 500,
           floating: true,
@@ -430,7 +431,7 @@ const Signup = ({navigation}) => {
       });
 
       await GoogleSignin.signOut();
-      console.log("helllooo---->",data.data)
+      console.log('helllooo---->', data.data);
       if (
         data.data.msg == 'User already exists' &&
         data.data.profile_compl_status == 0
@@ -467,7 +468,7 @@ const Signup = ({navigation}) => {
         });
 
         // getProfileData1(data.data?.id);
-       // getUserDetailData1(data.data?.id, data.data.profile_compl_status);
+        // getUserDetailData1(data.data?.id, data.data.profile_compl_status);
         await GoogleSignin.signOut();
       } else if (
         data.data?.msg == 'Please update the app to the latest version.'
@@ -517,11 +518,11 @@ const Signup = ({navigation}) => {
       // ) {
       //   if (data.data.profile_compl_status == 1) {
       //     getUserDetailData1(data.data?.id, data.data.profile_compl_status);
-          
+
       //     await GoogleSignin.signOut();
       //   } else {
       //      getUserDetailData(data.data?.id);
-          
+
       //     await GoogleSignin.signOut();
       //   }
       // }
@@ -532,7 +533,7 @@ const Signup = ({navigation}) => {
         setForLoading(false);
         showMessage({
           message:
-            'This Device already registered with '+ " "+ data.data.email ,
+            'This Device already registered with ' + ' ' + data.data.email,
           type: 'danger',
           animationDuration: 500,
           floating: true,
@@ -540,8 +541,7 @@ const Signup = ({navigation}) => {
         });
         //getUserDetailData1(data.data?.id, data.data.profile_compl_status);
         await GoogleSignin.signOut();
-      } 
-       else if (
+      } else if (
         data.data?.msg == 'User already registered with deviceID and active'
       ) {
         setForLoading(false);
@@ -553,7 +553,7 @@ const Signup = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         //action.resetForm();
-      }else {
+      } else {
         setForLoading(false);
 
         await GoogleSignin.signOut();
@@ -1110,7 +1110,7 @@ const Signup = ({navigation}) => {
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         dispatch(setUserProfileData(responseData?.data?.profile));
         //navigationRef.navigate('Yourself');
-        setVisible(true)
+        setVisible(true);
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
@@ -1148,7 +1148,7 @@ const Signup = ({navigation}) => {
           }
         } else {
           //navigationRef.navigate('Yourself');
-          setVisible(true)
+          setVisible(true);
         }
       }
     } catch (error) {
@@ -1158,7 +1158,7 @@ const Signup = ({navigation}) => {
   const LoginCancelModal = () => {
     return (
       <Modal
-        animationType="fade"
+animationType="slide"
         transparent={true}
         visible={cancelLogin}
         onRequestClose={() => {

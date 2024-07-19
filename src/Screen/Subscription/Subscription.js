@@ -582,7 +582,7 @@ const Subscription = ({navigation}) => {
     const [showModal, setShowModal] = React.useState(visible);
 
     return (
-      <Modal transparent visible={showModal}>
+      <Modal transparent visible={showModal} animationType="slide">
         <View style={styles.modalBackGround}>
           <View style={styles.modalContainer}>
             <ImageBackground

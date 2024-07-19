@@ -125,6 +125,7 @@ const Reminder = ({
   return (
     <Modal
       visible={visible}
+      animationType="slide"
       onRequestClose={() => {
         setVisible(false);
         setAlarmIsEnabled(false);

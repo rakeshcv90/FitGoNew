@@ -653,6 +653,7 @@ const HomeNew = ({navigation}) => {
   const PermissionModal = ({locationP, setLocationP}) => {
     return (
       <Modal
+      animationType="slide"
         visible={locationP}
         onRequestClose={() => setLocationP(false)}
         transparent>
@@ -1098,7 +1099,7 @@ const HomeNew = ({navigation}) => {
     };
     return (
       <Modal
-        animationType="fade"
+        animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}>

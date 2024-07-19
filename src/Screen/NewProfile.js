@@ -632,7 +632,7 @@ const NewProfile = ({navigation}) => {
 
     return (
       <Modal
-        animationType="fade"
+      animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
