@@ -74,7 +74,7 @@ const UpcomingEventModal = ({visible, onCancel, onConfirm}) => {
                 getDynamicPopUpvalues?.button_color ?? AppColor.WHITE
               }
               title={getDynamicPopUpvalues?.button_text ?? 'EARN NOW'}
-              titleColor={getDynamicPopUpvalues?.button_text_color ?? '#FF005C'}
+              titleColor={getDynamicPopUpvalues?.button_text_color ?? AppColor.RED}
               pH={12}
               pV={12}
               bb

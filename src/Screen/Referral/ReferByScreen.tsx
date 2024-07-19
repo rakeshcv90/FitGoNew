@@ -82,7 +82,7 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
     try {
       const payload = new FormData();
       payload.append('referral_code', referralCode);
-      payload.append('user_id',10281);
+      payload.append('user_id',getUserDataDetails?.id);
       const res = await axios(NewAppapi.SEND_REFERRAL_API, {
         method: 'POST',
         data: payload,
@@ -91,7 +91,7 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
         }
       });
       setLoader(false);
-      setVisible(false);
+
       console.log('POST DATA', res.data);
       if (res?.data?.msg == 'Referral coin added') {
         setText('Apply Code');
@@ -103,7 +103,9 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
+        setVisible(false);
         navigationRef?.navigate('Yourself');
+        
       } else if (res?.data?.msg == 'Invalid referral code') {
         setCodeStatus('Incorrect code');
         setText('Try Again');
@@ -131,7 +133,6 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
       ) {
         setText('Try Again');
         setCodeStatus('Incorrect code');
-        setVisible(false)
         shake();
         showMessage({
           message: 'You cannot use this referral code.',
@@ -140,7 +141,7 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-        navigationRef?.navigate('Yourself');
+        // navigationRef?.navigate('Yourself');
       } else if (
         res?.data?.msg == 'you are not in current plan please try later.'
       ) {
@@ -152,7 +153,7 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-        navigationRef?.navigate('Yourself');
+        // navigationRef?.navigate('Yourself');
       }
       else if (res?.data?.msg == 'user not exist') {
         setCodeStatus('Incorrect code');
@@ -165,6 +166,20 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
+      }
+      else if (res.data?.msg == 'referral used') {
+        setCodeStatus('Code already used');
+        setText('Try Again');
+        shake();
+        showMessage({
+          message: 'You cannot use this referral code.',
+          type: 'danger',
+          animationDuration: 1000,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        setText('Try Again');
       }
     } catch (error) {
       console.log('error--->', err);
@@ -187,7 +202,10 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
           flex: 1,
           justifyContent: 'center',
         }}>
-        <TouchableOpacity onPress={() => setVisible(false)}>
+        <TouchableOpacity onPress={() => {
+            setVisible(false);
+            navigationRef.navigate('Yourself')
+          }}>
           <Image
             source={localImage.closeButton}
             style={{
@@ -257,7 +275,6 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
                   activeOutlineColor="transparent"
                   underlineColor="transparent"
                   activeUnderlineColor="transparent"
-                  maxLength={8}
                 />
               </Animated.View>
               <View

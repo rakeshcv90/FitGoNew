@@ -22,7 +22,7 @@ type Props = TextProps & {
   textDecorationLine?: 'line-through';
   onPress?: Function;
   children?: ReactNode;
-  marginTop:number;
+  marginTop?:number;
 };
 
 const FitText: FC<Props> = ({
