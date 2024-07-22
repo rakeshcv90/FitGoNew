@@ -26,7 +26,7 @@
         tools:node="remove" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <!-- <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND" /> -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- <uses-permission android:name="android.permission.health.READ_STEPS"/>
     <uses-permission android:name="android.permission.health.WRITE_STEPS"/> -->
@@ -94,13 +94,17 @@
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="https" />
-                <data android:host="fitme.cvinfotech.in"
-                    />
+                <data android:host="fitme.cvinfotech.in"/>
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.APP_EMAIL" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" />
+                <data android:host="com.google.android.gm"/>
             </intent-filter>
         </activity>
     <!-- For supported versions through Android 13, create an activity to show the rationale

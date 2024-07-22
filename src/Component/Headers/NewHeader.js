@@ -59,10 +59,10 @@ const NewHeader = ({
         },
       ]}>
       {!backButton ? (
-        <View style={{width: 20,}}></View>
+        <View style={{width: 20}}></View>
       ) : (
         <TouchableOpacity
-          style={{left:10,zIndex:1,}}
+          style={{left: 10, zIndex: 1}}
           onPress={() => {
             if (getExperience == true) {
               dispatch(setExperience(false));
@@ -78,10 +78,10 @@ const NewHeader = ({
             }
           }}>
           <AntDesign
-              name={'arrowleft'}
-              size={25}
-              color={AppColor.INPUTTEXTCOLOR}
-            />
+            name={'arrowleft'}
+            size={25}
+            color={AppColor.INPUTTEXTCOLOR}
+          />
         </TouchableOpacity>
       )}
 
@@ -102,7 +102,14 @@ const NewHeader = ({
       {!SearchButton ? (
         extraView ? (
           enteredCurrentEvent ? (
-            <View style={{top: -3,right:DeviceWidth*0.13}}>
+            <View
+              style={{
+                top: -3,
+                right:
+                  DeviceHeigth >= 1024
+                    ? DeviceWidth * 0.07
+                    : DeviceWidth * 0.09,
+              }}>
               {!coinsLoaded ? (
                 <FitCoins
                   onPress={() => {
@@ -119,13 +126,12 @@ const NewHeader = ({
               ) : (
                 <ShimmerPlaceholder
                   style={{
-                    
                     height: DeviceHeigth * 0.03,
                     width: DeviceWidth * 0.2,
-        
+
                     justifyContent: 'center',
                     alignSelf: 'center',
-                    borderRadius: 20,   
+                    borderRadius: 20,
                   }}
                   ref={avatarRef}
                   autoRun

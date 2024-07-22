@@ -66,6 +66,10 @@ const intialState = {
   hindiLanguage: false,
   getDynamicPopUpvalues: {},
   getRatingStatus: false,
+  getUpdateAvailable:false,
+  getStreakStatus:[],
+  getStreakModalVisible:false,
+  getOpenAdsCount: 0,
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -362,6 +366,26 @@ const ThemeReducer = (state = intialState, action) => {
       return {
         ...state,
         getRatingStatus: action.payload,
+      };
+        case types.STREAK_MODAL:
+          return {
+            ...state,
+            getStreakStatus: action.payload,
+          };
+          case types.STREAK_MODAL_VISIBLE:
+            return {
+              ...state,
+              getStreakModalVisible: action.payload,
+            };
+    case types.UPDATE_AVAILABLE:
+      return {
+        ...state,
+        getUpdateAvailable: action.payload,
+      };
+    case types.OPEN_ADS_COUNT:
+      return {
+        ...state,
+        getOpenAdsCount: action.payload,
       };
     default:
       return state;

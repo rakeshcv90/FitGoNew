@@ -77,7 +77,7 @@ export const NewAppapi = {
   DateWiseData: NewApi + 'selectDate_exercise', //Done App Version
   Delete_Account: NewApi + 'deleteAccount',
   Custome_Workout_Cal_Time: NewApi + 'exercise_total_calo',
-  loginApple: NewApi + 'user_login_test',
+  // loginApple: NewApi + 'user_login_test',
   GET_LIKE_WORKOUTS: NewApi + 'total_like_view',
   POST_LIKE_WORKOUT: NewApi + 'like_dislike',
   POST_WORKOUT_VIEWS: NewApi + 'workout_view_count',
@@ -101,6 +101,7 @@ export const NewAppapi = {
   GET_AGR_STATUS: NewApi + 'check_condition',
   GET_AGREEMENT: NewApi + 'get_termconditon_data',
   EVENT_SUBSCRIPTION_POST: NewApi + 'event',
+  // EVENT_SUBSCRIPTION_POST: NewApi + 'test_event',
   EVENT_SUBSCRIPTION_GET: NewApi + 'event_details',
   CURRENT_DAY_EVENT_EXERCISE: NewApi + 'user_event__exercise_status',
   POST_REWARDS_EXERCISE: NewApi + 'event_exercise_complete_status', //Done App Version
@@ -118,6 +119,10 @@ export const NewAppapi = {
   ALL_USER_WITH_CONDITION: NewApi + 'all_user_with_condition',
   NEW_WEEKDAY_EXERCISE_API: NewApi + 'get_all_weekday_exercise',
   CANCEL_SUBSCRIPTION: NewApi + 'delete_data',
- GET_APIKEY: NewApi+'get_apikeys',
- GET_DYNAMIC_POPUP:NewApi+'custom_dialog'
+  GET_APIKEY: NewApi + 'get_apikeys',
+  GET_DYNAMIC_POPUP: NewApi + 'custom_dialog',
+  GENERATE_REFERRAL_CODE: NewApi + 'generat_code',
+  SEND_REFERRAL_API: NewApi + 'add_referral_coin',
+  // SEND_REFERRAL_API: NewApi + 'test_add_referral_coin',
+  GET_REF_RANK: NewApi + 'user_rank',
 };

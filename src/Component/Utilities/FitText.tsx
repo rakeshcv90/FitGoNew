@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TextProps, TextStyle, View} from 'react-native';
-import React, {FC} from 'react';
+import React, {FC, ReactNode} from 'react';
 import {AppColor, Fonts} from '../Color';
 
 type Props = TextProps & {
@@ -16,9 +16,13 @@ type Props = TextProps & {
   fontSize?: number;
   lineHeight?: number;
   marginVertical?: number;
+  marginHorizontal?: number;
   fontStyle?: 'normal' | 'italic';
   w?: string | any;
-  textDecorationLine?: 'line-through'
+  textDecorationLine?: 'line-through';
+  onPress?: Function;
+  children?: ReactNode;
+  marginTop?:number;
 };
 
 const FitText: FC<Props> = ({
@@ -37,7 +41,11 @@ const FitText: FC<Props> = ({
   marginVertical,
   fontStyle,
   w,
-  textDecorationLine
+  textDecorationLine,
+  onPress,
+  children,
+  marginHorizontal,
+  marginTop
 }) => {
   const getTypeStyle = () => {
     switch (type) {
@@ -52,9 +60,11 @@ const FitText: FC<Props> = ({
           textTransform: textTransform || 'none',
           letterSpacing: letterSpacing || 0,
           marginVertical,
+          marginHorizontal,
           fontStyle,
-          width: w?? 'auto',
-          textDecorationLine
+          width: w ?? 'auto',
+          textDecorationLine,
+          marginTop:marginTop??'undefined'
         };
       case 'SubHeading':
         return {
@@ -67,9 +77,11 @@ const FitText: FC<Props> = ({
           textTransform: textTransform || 'none',
           letterSpacing: letterSpacing || 0,
           marginVertical,
+          marginHorizontal,
           fontStyle,
-          width: w?? 'auto',
-          textDecorationLine
+          width: w ?? 'auto',
+          textDecorationLine,
+          marginTop:marginTop??'undefined'
         };
       case 'normal':
         return {
@@ -77,14 +89,16 @@ const FitText: FC<Props> = ({
           fontSize: fontSize || 14,
           fontWeight: fontWeight || '600',
           lineHeight: lineHeight || 20,
-          color: color || (errorType ? AppColor.RED : '#333333'),
+          color: color || (errorType ? AppColor.RED : AppColor.HEADERTEXTCOLOR),
           textAlign: textAlign || 'auto',
           textTransform: textTransform || 'none',
           letterSpacing: letterSpacing || 0,
           marginVertical,
+          marginHorizontal,
           fontStyle,
-          width: w?? 'auto',
-          textDecorationLine
+          width: w ?? 'auto',
+          textDecorationLine,
+          marginTop:marginTop??'undefined'
         };
       default:
         return {};
@@ -92,7 +106,10 @@ const FitText: FC<Props> = ({
   };
   return (
     <>
-      <Text style={[getTypeStyle(), customStyle]}>{value}</Text>
+      <Text onPress={onPress} style={[getTypeStyle(), customStyle]}>
+        {value}
+        {children}
+      </Text>
     </>
   );
 };

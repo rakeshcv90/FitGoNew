@@ -142,7 +142,7 @@ const Exercise = ({navigation, route}: any) => {
         compactCapabilities: [Capability.Play, Capability.Pause],
       });
     } catch (error) {
-      console.log('Music Player Error', error);
+      console.log('Music Player Error Exercise' , error);
     }
   };
   useEffect(() => {
@@ -576,6 +576,7 @@ const Exercise = ({navigation, route}: any) => {
       return (
         <Modal
           visible={back}
+          animationType="slide"
           onRequestClose={() => setBack(false)}
           animationType="slide">
           <View

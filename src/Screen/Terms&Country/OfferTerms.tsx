@@ -242,7 +242,7 @@ const OfferTerms = ({navigation, route}: any) => {
                 style={{
                   marginRight: 16,
                 }}>
-                <Modal transparent visible={opened}>
+                <Modal transparent visible={opened} animationType="slide">
                   <BlurView
                     style={styles.modalContainer1}
                     blurType="light"

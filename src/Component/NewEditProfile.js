@@ -108,7 +108,7 @@ const [Name,setName]=useState("")
           position: 'absolute',
         }}>
         <Modal
-          animationType="slide"
+        animationType="slide"
           transparent={true}
           visible={true}
           onRequestClose={() => {

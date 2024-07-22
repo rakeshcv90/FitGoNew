@@ -326,7 +326,7 @@ const Login = ({navigation}) => {
           platform: Platform.OS,
         },
       });
-      
+
       setForLoading(false);
       if (data.data?.profile_status == 1) {
         showMessage({
@@ -677,7 +677,7 @@ const Login = ({navigation}) => {
   const CompleateProfileModal = () => {
     return (
       <Modal
-        animationType="fade"
+        animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {

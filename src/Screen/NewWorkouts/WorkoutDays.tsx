@@ -282,6 +282,7 @@ const WorkoutDays = ({navigation, route}: any) => {
     return (
       <Modal
         transparent
+        animationType="slide"
         visible={getSubscriptionModal}
         onRequestClose={() => {
           dispatch(setSubscriptiomModal(false));

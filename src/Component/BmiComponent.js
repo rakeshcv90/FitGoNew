@@ -15,6 +15,7 @@ import {useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {AnalyticsConsole} from './AnalyticsConsole';
 import {setBmi} from './ThemeRedux/Actions';
+import {showMessage} from 'react-native-flash-message';
 export const BmiMeter = ({getBmi}) => {
   return (
     <>
@@ -93,7 +94,7 @@ export const BmiMeter = ({getBmi}) => {
         <Text
           style={{
             color: AppColor.BLACK,
-            fontFamily:Fonts.MONTSERRAT_SEMIBOLD,
+            fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
             textAlign: 'center',
             width: 85,
             marginLeft:
@@ -130,27 +131,98 @@ const WeightHeight = ({
   setValue,
   setHeightType,
   setWeightType,
+  heightInch,
+  setHeightInch,
 }) => {
   const [selectedItem, setSelectedItem] = useState(0);
   return (
     <View style={styles.View2}>
       <Text style={styles.txt2}>{heading}</Text>
       <View style={styles.View3}>
-        <TextInput
-          style={{width: DeviceWidth * 0.5,}}
-          underlineColor="transparent"
-          mode="outlined"
-          keyboardType="decimal-pad"
-          activeUnderlineColor="transparent"
-          maxLength={4}
-          outlineStyle={{borderRadius: 10}}
-          outlineColor={AppColor.BORDERCOLOR}
-          activeOutlineColor="#C8170D"
-          value={value}
-          onChangeText={txt => {
-            setValue(txt);
-          }}
-        />
+        {heading == 'Height' && selectedItem == 0 ? (
+          <>
+            <TextInput
+              style={{width: DeviceWidth * 0.24}}
+              underlineColor="transparent"
+              placeholder="ft"
+              placeholderTextColor={AppColor.GRAY2}
+              mode="outlined"
+              keyboardType="decimal-pad"
+              activeUnderlineColor="transparent"
+              maxLength={1}
+              outlineStyle={{borderRadius: 10}}
+              outlineColor={AppColor.BORDERCOLOR}
+              activeOutlineColor="#C8170D"
+              value={value}
+              onChangeText={txt => {
+                if(txt<4 && txt !=''){
+                  setValue('');
+                  showMessage({
+                    message: "Height can't be less than 4 ft.",
+                    type: 'info',
+                    animationDuration: 500,
+                    floating: true,
+                    icon: {icon: 'auto', position: 'left'},
+                  });
+                }else{
+                  setValue(txt);
+                }
+              }}
+            />
+            <TextInput
+              style={{width: DeviceWidth * 0.24}}
+              underlineColor="transparent"
+              mode="outlined"
+              keyboardType="decimal-pad"
+              activeUnderlineColor="transparent"
+              placeholder="inch"
+              placeholderTextColor={AppColor.GRAY2}
+              maxLength={2}
+              outlineStyle={{borderRadius: 10}}
+              outlineColor={AppColor.BORDERCOLOR}
+              activeOutlineColor="#C8170D"
+              value={heightInch}
+              onChangeText={txt => {
+                if (txt > 12 ) {
+                  setHeightInch('');
+                  showMessage({
+                    message: 'Please enter number between 0 and 12',
+                    type: 'info',
+                    animationDuration: 500,
+                    floating: true,
+                    icon: {icon: 'auto', position: 'left'},
+                  });
+                } else {
+                  setHeightInch(txt);
+                }
+              }}
+            />
+          </>
+        ) : (
+          <TextInput
+            style={{width: DeviceWidth * 0.5}}
+            underlineColor="transparent"
+            mode="outlined"
+            keyboardType="decimal-pad"
+            placeholder={
+              heading == 'Weight' && selectedItem == 0
+                ? 'kg'
+                : heading == 'Weight' && selectedItem == 1
+                ? 'lbs'
+                : 'cm'
+            }
+            placeholderTextColor={AppColor.GRAY2}
+            activeUnderlineColor="transparent"
+            maxLength={3}
+            outlineStyle={{borderRadius: 10}}
+            outlineColor={AppColor.BORDERCOLOR}
+            activeOutlineColor="#C8170D"
+            value={value}
+            onChangeText={txt => {
+              setValue(txt);
+            }}
+          />
+        )}
         {arr.map((v, i) => (
           <View key={i}>
             <TouchableOpacity
@@ -190,15 +262,26 @@ const WeightHeight = ({
 export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
   const [weight, setWeight] = useState('');
   const [height, setHeight] = useState('');
+  const [heightInch, setHeightInch] = useState('');
   const [heightType, setHeightType] = useState('ft');
   const [weightType, setWeightType] = useState('kg');
+  let newHeight = height + '.' + heightInch;
+  console.log(newHeight, height);
   const HandleSubmitBMI = () => {
+    console.log( weight === '' ||
+    newHeight === '' ||
+    height === '' ||
+    isNaN(weight) ||
+    isNaN(height) ||
+    weight < 10 )
     if (
       weight === '' ||
+      newHeight === '' ||
       height === '' ||
       isNaN(weight) ||
       isNaN(height) ||
-      weight < 10
+      weight < 10 ||
+      weight > 300
     ) {
       Alert.alert('Please enter valid height and weight', '', [
         {
@@ -206,15 +289,17 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
           onPress: () => {},
         },
       ]);
-    } else {
+    }
+     else {
       AnalyticsConsole(`Submit_BMI_BUTTON`);
       const BMI =
         (weightType == 'kg' ? weight : weight / 2.2) /
-        (heightType == 'ft' ? height * 0.3048 : height / 100) ** 2;
+        (heightType == 'ft' ? newHeight * 0.3048 : height / 100) ** 2;
       dispatch(
         setBmi({
           Bmi: BMI.toFixed(2),
-          userHeight: height + heightType,
+          userHeight:
+            heightType == 'ft' ? newHeight + heightType : height + heightType,
           userWeight: weight + weightType,
         }),
       );
@@ -222,13 +307,14 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
       setHeight('');
       setWeight('');
       setHeightType('ft');
-      setWeightType('kg')
+      setWeightType('kg');
+      setHeightInch('');
     }
   };
 
   return (
     <Modal
-      animationType="fade"
+      animationType="slide"
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => setModalVisible(false)}>
@@ -257,6 +343,8 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
             heading={'Height'}
             value={height}
             setValue={setHeight}
+            setHeightInch={setHeightInch}
+            heightInch={heightInch}
             setHeightType={setHeightType}
           />
           <View
@@ -268,8 +356,10 @@ export const BMImodal = ({setModalVisible, modalVisible, dispatch}) => {
             }}
           />
           <View
-            style={[styles.View3, {marginTop: 20, alignItems: 'center',justifyContent:'flex-end'}]}>
-       
+            style={[
+              styles.View3,
+              {marginTop: 20, alignItems: 'center', justifyContent: 'flex-end'},
+            ]}>
             <TouchableOpacity
               style={styles.button2}
               onPress={() => {
@@ -355,7 +445,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: AppColor.BLACK,
     fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-    fontWeight:'600'
+    fontWeight: '600',
   },
   txt2: {
     color: AppColor.BLACK,
@@ -409,7 +499,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: `rgba(0,0,0,0.5)`,
+    backgroundColor: `rgba(0,0,0,0.3)`,
     // Semi-transparent background
   },
 });

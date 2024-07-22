@@ -25,9 +25,8 @@ const UpcomingEventModal = ({visible, onCancel, onConfirm}) => {
     state => state?.getDynamicPopUpvalues,
   );
   const getDownloadedImage = useSelector(state => state?.getDownloadedImage);
-  console.log(getDownloadedImage.popupImage);
   return (
-    <Modal transparent visible={visible}>
+    <Modal transparent visible={visible} animationType='slide'>
       <View style={{backgroundColor: `rgba(0,0,0,0.4)`, flex: 1}}>
         <View style={styles.View1}>
           {!imageloaded && (
@@ -75,7 +74,7 @@ const UpcomingEventModal = ({visible, onCancel, onConfirm}) => {
                 getDynamicPopUpvalues?.button_color ?? AppColor.WHITE
               }
               title={getDynamicPopUpvalues?.button_text ?? 'EARN NOW'}
-              titleColor={getDynamicPopUpvalues?.button_text_color ?? '#FF005C'}
+              titleColor={getDynamicPopUpvalues?.button_text_color ?? AppColor.RED}
               pH={12}
               pV={12}
               bb

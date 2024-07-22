@@ -1,5 +1,6 @@
 import {
   Animated,
+  AppState,
   Image,
   Platform,
   StyleSheet,
@@ -14,7 +15,7 @@ import Workouts from '../Screen/NewHome/Workouts';
 import Trainer from '../Screen/NewHome/Trainer';
 import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
 import {View, Text} from 'react-native';
-import {BannerAdd, MyInterstitialAd} from '../Component/BannerAdd';
+import {BannerAdd, MyInterstitialAd, OpenAppAds} from '../Component/BannerAdd';
 import {bannerAdId} from '../Component/AdsId';
 import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import {useDispatch, useSelector} from 'react-redux';
@@ -23,6 +24,7 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 import {AppColor, Fonts} from '../Component/Color';
 import {
   setFitmeAdsCount,
+  setOpenAdsCount,
   setRewardPopUp,
 } from '../Component/ThemeRedux/Actions';
 import MyPlans, {handleStart} from '../Screen/MyPlans/MyPlans';
@@ -48,6 +50,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
   const getFitmeAdsCount = useSelector(state => state.getFitmeAdsCount);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
+  const getOpenAdsCount = useSelector(state => state.getOpenAdsCount);
   const enteredUpcomingEvent = useSelector(
     state => state?.enteredUpcomingEvent,
   );
@@ -87,7 +90,7 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
           getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
         const count = getPurchaseHistory?.plan == 'noob' ? 3 : 6;
         const Sat = getPurchaseHistory?.currentDay == 6;
-        const Sun = getPurchaseHistory?.currentDay == 7;
+        const Sun = getPurchaseHistory?.currentDay == 0;
         const onPress = () => {
           AnalyticsConsole(`${route.name}_TAB`);
           if (
@@ -96,28 +99,28 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
           ) {
             Dispatch(setRewardPopUp(getPopUpFreuqency + 1));
           }
-          if (route.key?.includes('MyPlans') && Sat && enteredCurrentEvent) {
-            AnalyticsConsole('W_L');
-            navigation.navigate('Winner');
-            // showMessage({
-            //   message:
-            //     'Your event has ended. You can resume your weekly plan normally from Monday. If you join another fitness challenge, it will start from the upcoming Monday.',
-            //   type: 'danger',
-            //   animationDuration: 500,
-            //   duration: 5000,
-            //   floating: true,
-            // });
-          } else if (route.key?.includes('MyPlans') && Sun && enteredCurrentEvent) {
-            AnalyticsConsole('W_L');
-            navigation.navigate('Winner');
-            // showMessage({
-            //   message:
-            //     'Your event has ended. You can resume your weekly plan normally from Monday. If you join another fitness challenge, it will start from the upcoming Monday.',
-            //   type: 'danger',
-            //   animationDuration: 500,
-            //   duration: 5000,
-            //   floating: true,
-            // });
+          if (enteredCurrentEvent && route.key?.includes('MyPlans') && Sat) {
+            showMessage({
+              message:
+                'Your event has ended. You can resume your weekly plan normally from Monday. If you join another fitness challenge, it will start from the upcoming Monday.',
+              type: 'danger',
+              animationDuration: 500,
+              duration: 5000,
+              floating: true,
+            });
+          } else if (
+            enteredCurrentEvent &&
+            route.key?.includes('MyPlans') &&
+            Sun
+          ) {
+            showMessage({
+              message:
+                'Your event has ended. You can resume your weekly plan normally from Monday. If you join another fitness challenge, it will start from the upcoming Monday.',
+              type: 'danger',
+              animationDuration: 500,
+              duration: 5000,
+              floating: true,
+            });
           } else {
             const event = navigation.emit({
               type: 'tabPress',
@@ -128,23 +131,28 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
                 if (getPurchaseHistory?.plan == 'premium' && isValid) {
                   navigation.navigate(route.name);
                   Dispatch(setFitmeAdsCount(0));
+                  Dispatch(setOpenAdsCount(0));
                 } else {
                   if (getFitmeAdsCount < count) {
                     Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+                    Dispatch(setOpenAdsCount(getOpenAdsCount + 1));
                     navigation.navigate(route.name);
                   } else {
                     showInterstitialAd();
                     Dispatch(setFitmeAdsCount(0));
+                    Dispatch(setOpenAdsCount(0));
                     navigation.navigate(route.name);
                   }
                 }
               } else {
                 if (getFitmeAdsCount < count) {
                   Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+                  Dispatch(setOpenAdsCount(getOpenAdsCount + 1));
                   navigation.navigate(route.name);
                 } else {
                   showInterstitialAd();
                   Dispatch(setFitmeAdsCount(0));
+                  Dispatch(setOpenAdsCount(0));
                   navigation.navigate(route.name);
                 }
               }
@@ -245,7 +253,7 @@ const BottomTab = () => {
   return (
     <>
       <Tabs.Navigator
-        initialRouteName={enteredCurrentEvent ? 'MyPlans' : 'Home'}
+        initialRouteName={'Home'}
         tabBar={props => <CustomTab {...props} />}
         screenOptions={{
           activeTintColor: '#D01818',

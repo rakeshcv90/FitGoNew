@@ -14,6 +14,7 @@ import {
   BackHandler,
   ToastAndroid,
   TextInput,
+  AppState,
   ImageBackground,
 } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
@@ -85,7 +86,7 @@ import AppleHealthKit, {EventType} from 'react-native-health';
 import {NativeEventEmitter, NativeModules} from 'react-native';
 import GradientButton from '../../Component/GradientButton';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
-import {MyInterstitialAd} from '../../Component/BannerAdd';
+import {MyInterstitialAd, OpenAppAds} from '../../Component/BannerAdd';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import RewardModal from '../../Component/Utilities/RewardModal';
 import Banners from '../../Component/Utilities/Banner';
@@ -99,8 +100,11 @@ import {AlarmNotification} from '../../Component/Reminder';
 import notifee from '@notifee/react-native';
 import VideoBanner from '../../Component/Utilities/VideoBanner';
 import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
+import ReferButton from '../../Component/Utilities/ReferButton';
 
 const HomeNew = ({navigation}) => {
+  const adsStatus = useRef(true);
+
   const dispatch = useDispatch();
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const allWorkoutData = useSelector(state => state.allWorkoutData);
@@ -108,6 +112,7 @@ const HomeNew = ({navigation}) => {
   const fitCoins = useSelector(state => state.fitCoins);
   const [progressHight, setProgressHight] = useState('0%');
   const [day, setDay] = useState(0);
+  const [appState, setAppState] = useState('background');
   const [currentChallenge, setCurrentChallenge] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const isFocused = useIsFocused();
@@ -142,6 +147,7 @@ const HomeNew = ({navigation}) => {
   const [locationP1, setLocationP1] = useState(false);
   // const [backPressCount, setBackPressCount] = useState(0);
   const {initInterstitial, showInterstitialAd} = MyInterstitialAd();
+  const {initOpenApp, showOpenAppAd} = OpenAppAds();
   const planType = useSelector(state => state?.planType);
   const [showRewardModal, setShowRewardModal] = useState(false);
   const getRewardModalStatus = useSelector(
@@ -310,6 +316,7 @@ const HomeNew = ({navigation}) => {
       getLeaderboardDataAPI();
       allWorkoutApi();
       initInterstitial();
+      initOpenApp();
       // ChallengesDataAPI();
       getAllChallangeAndAllExerciseData();
       getWorkoutStatus();
@@ -320,6 +327,24 @@ const HomeNew = ({navigation}) => {
       }, 2000);
     }
   }, [isFocused]);
+  // useEffect(() => {
+  
+  //   AppState.addEventListener('change', state => {
+  //     //  setAppState(state)
+  
+  //     if (
+  //       state == 'active' &&
+  //       adsStatus.current == true 
+  //        &&  !AddCountFunction()
+  //     ) {
+  //       showOpenAppAd();
+
+
+      
+  //     }
+  //   });
+    
+  // }, []);
   const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(
@@ -628,6 +653,7 @@ const HomeNew = ({navigation}) => {
   const PermissionModal = ({locationP, setLocationP}) => {
     return (
       <Modal
+      animationType="slide"
         visible={locationP}
         onRequestClose={() => setLocationP(false)}
         transparent>
@@ -1073,7 +1099,7 @@ const HomeNew = ({navigation}) => {
     };
     return (
       <Modal
-        animationType="fade"
+        animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={closeModal}>
@@ -1209,6 +1235,9 @@ const HomeNew = ({navigation}) => {
       setRefresh(false);
     }
   };
+
+  const Sat = getPurchaseHistory?.currentDay == 6;
+  const Sun = getPurchaseHistory?.currentDay == 7;
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
@@ -1268,21 +1297,29 @@ const HomeNew = ({navigation}) => {
             </View>
           ) : null}
         </View>
-        <Text
+        <View
           style={{
-            color: AppColor.HEADERTEXTCOLOR,
-            fontFamily: Fonts.MONTSERRAT_BOLD,
-            fontWeight: '600',
-            lineHeight: 21,
-            fontSize: 18,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
             alignItems: 'center',
-            justifyContent: 'flex-start',
-            width: '95%',
-            alignSelf: 'center',
-            marginTop: 20,
+            marginLeft: 10,
+            marginTop: 10,
           }}>
-          Reward Zone
-        </Text>
+          <Text
+            style={{
+              color: AppColor.HEADERTEXTCOLOR,
+              fontFamily: Fonts.MONTSERRAT_BOLD,
+              fontWeight: '600',
+              lineHeight: 21,
+              fontSize: 18,
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              alignSelf: 'center',
+            }}>
+            Reward Zone
+          </Text>
+          {enteredCurrentEvent && (!Sat || !Sun) && <ReferButton />}
+        </View>
         <Banners
           type1={BannerType1}
           type2={Bannertype2}
@@ -2148,7 +2185,7 @@ const HomeNew = ({navigation}) => {
               }
             }}
             style={{
-              width: '47%',
+              width: '50%',
               height: DeviceHeigth * 0.15,
               padding: 10,
               borderRadius: 16,
@@ -2231,22 +2268,37 @@ const HomeNew = ({navigation}) => {
           <UpcomingEventModal
             visible={true}
             onConfirm={() => {
-              if (getPurchaseHistory?.plan != null) {
-                if (
-                  getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
+              if (getPurchaseHistory) {
+                if (getPurchaseHistory.plan === 'noob') {
+                  navigation?.navigate('NewSubscription', {upgrade: true});
+                  showMessage({
+                    message:
+                      'Oops! You’ve used up all your chances to join the event. Upgrade your plan to join now, or wait to renew your plan.',
+                    type: 'info',
+                    animationDuration: 500,
+                    floating: true,
+                    icon: {icon: 'auto', position: 'left'},
+                  });
+                } else if (
+                  getPurchaseHistory.plan !== 'noob' &&
+                  getPurchaseHistory.used_plan < getPurchaseHistory.allow_usage
                 ) {
-                  AnalyticsConsole('UP_D_B');
-                  navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
-                  dispatch(setRewardPopUp(1));
+                  navigation?.navigate('UpcomingEvent', {
+                    eventType: 'upcoming',
+                  });
                 } else {
-                  AnalyticsConsole('PP_D_B');
-                  navigation.navigate('NewSubscription', {upgrade: false});
-                  dispatch(setRewardPopUp(1));
+                  navigation?.navigate('NewSubscription', {upgrade: true});
+                  showMessage({
+                    message:
+                      'Oops! You’ve used up all your chances to join the event. Upgrade your plan to join now, or wait to renew your plan. ',
+                    type: 'info',
+                    animationDuration: 500,
+                    floating: true,
+                    icon: {icon: 'auto', position: 'left'},
+                  });
                 }
               } else {
-                AnalyticsConsole('PP_D_B');
-                navigation.navigate('NewSubscription', {upgrade: false});
-                dispatch(setRewardPopUp(1));
+                navigation?.navigate('NewSubscription', {upgrade: true});
               }
             }}
             onCancel={() => {

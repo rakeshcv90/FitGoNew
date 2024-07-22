@@ -76,7 +76,7 @@ const NewButton = ({
         },
       ]}
       onPress={handlePress} // Call handlePress
-      disabled={withAnimation ? (isClicked ? true : disabled) : false}>
+      disabled={withAnimation ? (isClicked ? true : disabled) : disabled}>
       {withAnimation ? (
         <Animated.View
           style={[

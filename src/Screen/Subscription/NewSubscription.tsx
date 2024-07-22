@@ -44,6 +44,7 @@ import TrackPlayer, {
   usePlaybackState,
 } from 'react-native-track-player';
 import VersionNumber, {appVersion} from 'react-native-version-number';
+import { findKeyInObject } from '../../Component/Utilities/FindkeyinObject';
 const NewSubscription = ({navigation, route}: any) => {
   const {upgrade} = route.params;
   const dispatch = useDispatch();
@@ -70,25 +71,6 @@ const NewSubscription = ({navigation, route}: any) => {
   const [refresh, setRefresh] = useState(false);
   const isFocused = useIsFocused();
   const playbackState = usePlaybackState();
-  const findKeyInObject = (obj: any, keyToFind: string): any => {
-    if (typeof obj !== 'object' || obj === null) {
-      return null;
-    }
-
-    if (obj.hasOwnProperty(keyToFind)) {
-      return obj[keyToFind];
-    }
-
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        const result = findKeyInObject(obj[key], keyToFind);
-        if (result !== null) {
-          return result;
-        }
-      }
-    }
-    return null;
-  };
 
   const songs = [
     {
@@ -174,7 +156,7 @@ const NewSubscription = ({navigation, route}: any) => {
         compactCapabilities: [Capability.Play, Capability.Pause],
       });
     } catch (error) {
-      console.log('Music Player Error', error);
+      console.log('Music Player Error Subscription', error);
     }
   };
   const StartAudio = async (playbackState: any) => {
@@ -349,16 +331,25 @@ const NewSubscription = ({navigation, route}: any) => {
     };
 
     try {
-      const result = await axios(
-        'https://sandbox.itunes.apple.com/verifyReceipt',
-        {
+      let result:any = 0;
+      if (__DEV__) {
+        result = await axios('https://sandbox.itunes.apple.com/verifyReceipt', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           data: receiptBody,
-        },
-      );
+        });
+      } else {
+        result = await axios('https://buy.itunes.apple.com/verifyReceipt', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          data: receiptBody,
+        });
+      }
+
 
       if (result.data) {
         const renewalHistory = result.data?.pending_renewal_info;
@@ -377,6 +368,7 @@ const NewSubscription = ({navigation, route}: any) => {
       }
     } catch (error) {
       console.log('Receipt Error', error);
+      setForLoading(false);
     }
   };
   const fetchPurchaseHistoryIOS = async (item: any, startDate: any) => {
@@ -451,7 +443,7 @@ const NewSubscription = ({navigation, route}: any) => {
         },
         data,
       });
-      // console.log(res.data);
+      console.log(res.data,"subssssss");
       StartAudio(playbackState);
       if (res.data.message == 'Event created successfully') {
         // PurchaseDetails();
@@ -595,7 +587,7 @@ const NewSubscription = ({navigation, route}: any) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-      
+
       setRefresh(false);
     }
   };
@@ -656,14 +648,15 @@ const NewSubscription = ({navigation, route}: any) => {
           backgroundColor: AppColor.WHITE,
           justifyContent: 'center',
           alignItems: 'center',
-          height:DeviceHeigth<=640 ? DeviceHeigth*0.8 : DeviceHeigth * 0.65,
+          height:
+            DeviceHeigth <= 640 ? DeviceHeigth * 0.8 : DeviceHeigth * 0.65,
           // !planName.includes('noob') &&
           // !planName.includes('pro') &&
           // !PLATFORM_IOS &&
           // getPurchaseHistory?.plan_value == null
           //   ? DeviceHeigth * 0.65
           //   : DeviceHeigth * 0.55,
-          width:'95%',
+          width: '95%',
           alignSelf: 'center',
         }}>
         {getPurchaseHistory?.plan != null &&
@@ -1039,11 +1032,11 @@ const NewSubscription = ({navigation, route}: any) => {
               styles.tabContainer,
               {
                 height:
-                DeviceHeigth >= 1024
-                  ? DeviceHeigth * 0.05
-                  : DeviceHeigth >= 640
-                  ? DeviceHeigth * 0.06
-                  : DeviceHeigth * 0.05,
+                  DeviceHeigth >= 1024
+                    ? DeviceHeigth * 0.05
+                    : DeviceHeigth >= 640
+                    ? DeviceHeigth * 0.06
+                    : DeviceHeigth * 0.05,
               },
             ]}>
             {sortedSubscriptions?.map((item: any, index: number) => {
@@ -1061,11 +1054,11 @@ const NewSubscription = ({navigation, route}: any) => {
                         styles.tabButton,
                         {
                           height:
-                          DeviceHeigth >= 1024
-                            ? DeviceHeigth * 0.05
-                            : DeviceHeigth >= 640
-                            ? DeviceHeigth * 0.06
-                            : DeviceHeigth * 0.05,
+                            DeviceHeigth >= 1024
+                              ? DeviceHeigth * 0.05
+                              : DeviceHeigth >= 640
+                              ? DeviceHeigth * 0.06
+                              : DeviceHeigth * 0.05,
                           backgroundColor:
                             index == 0
                               ? AppColor.NEW_SUBS_BLUE
@@ -1102,11 +1095,11 @@ const NewSubscription = ({navigation, route}: any) => {
                         {
                           marginVertical: 10,
                           height:
-                          DeviceHeigth >= 1024
-                            ? DeviceHeigth * 0.05
-                            : DeviceHeigth >= 640
-                            ? DeviceHeigth * 0.06
-                            : DeviceHeigth * 0.05,
+                            DeviceHeigth >= 1024
+                              ? DeviceHeigth * 0.05
+                              : DeviceHeigth >= 640
+                              ? DeviceHeigth * 0.06
+                              : DeviceHeigth * 0.05,
                           // paddingHorizontal: 5,
                         },
                       ]}>
