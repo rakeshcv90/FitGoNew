@@ -104,6 +104,8 @@
 	<string>Share workout data with other apps.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>FitGo needs Location access to show Gyms on the basis of Current User's location</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+     <string>We need your location to provide you with personalized content and to improve your user experience.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string> FitGo needs library access for user's profile photo</string>
 	<key>UIAppFonts</key>

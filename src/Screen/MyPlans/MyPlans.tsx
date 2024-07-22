@@ -116,8 +116,12 @@ const MyPlans = ({navigation}: any) => {
   const getEditedDayExercise = useSelector(
     (state: any) => state.getEditedDayExercise,
   );
-  const getStreakModalVisible=useSelector(state=>state?.getStreakModalVisible)
+  const getStreakModalVisible = useSelector(
+    state => state?.getStreakModalVisible,
+  );
   const fitCoins = useSelector((state: any) => state.fitCoins);
+  const Sat = getPurchaseHistory?.currentDay == 6;
+  const Sun = getPurchaseHistory?.currentDay == 0;
   const dispatch = useDispatch();
   useEffect(() => {
     initInterstitial();
@@ -151,13 +155,14 @@ const MyPlans = ({navigation}: any) => {
       )
     ) {
       dispatch(setStreakModalVisible(true));
-      dispatch(setStreakStatus([
-      ...getStreakStatus,
-      WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]
-    
-    ]))
+      dispatch(
+        setStreakStatus([
+          ...getStreakStatus,
+          WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2],
+        ]),
+      );
     }
-  }, [getStreakModalVisible,coins]);
+  }, [getStreakModalVisible, coins]);
   const getAllChallangeAndAllExerciseData = async () => {
     let responseData = 0;
     if (Object.keys(getUserDataDetails).length > 0) {
@@ -225,7 +230,6 @@ const MyPlans = ({navigation}: any) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-
       setRefresh(false);
     }
   };
@@ -448,7 +452,7 @@ const MyPlans = ({navigation}: any) => {
           },
         ),
       ).finally(() => {
-        enteredCurrentEvent
+        enteredCurrentEvent && !Sat && !Sun
           ? RewardsbeforeNextScreen(selectedDay)
           : beforeNextScreen(selectedDay);
       });
@@ -972,12 +976,12 @@ const MyPlans = ({navigation}: any) => {
         )}
       </View>
       {downlodedVideoSent ? <ActivityLoader /> : null}
-          <StreakModal
-            streakDays={coins}
-            setVisible={setStreakModalVisibility}
-            WeekArray={WeekArrayWithEvent}
-            missedDay={WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]}
-          />
+      <StreakModal
+        streakDays={coins}
+        setVisible={setStreakModalVisibility}
+        WeekArray={WeekArrayWithEvent}
+        missedDay={WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]}
+      />
     </SafeAreaView>
   );
 };

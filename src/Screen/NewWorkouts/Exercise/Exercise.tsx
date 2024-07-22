@@ -133,7 +133,8 @@ const Exercise = ({navigation, route}: any) => {
   const [isRunning, setIsRunning] = useState(false);
   const [quitLoader, setQuitLoader] = useState(false);
   const playbackState = usePlaybackState();
-
+  const Sat = getPurchaseHistory?.currentDay == 6;
+  const Sun = getPurchaseHistory?.currentDay == 0;
   const setupPlayer = async () => {
     try {
       await TrackPlayer.add(songs);
@@ -142,7 +143,7 @@ const Exercise = ({navigation, route}: any) => {
         compactCapabilities: [Capability.Play, Capability.Pause],
       });
     } catch (error) {
-      console.log('Music Player Error Exercise' , error);
+      console.log('Music Player Error Exercise', error);
     }
   };
   useEffect(() => {
@@ -270,7 +271,7 @@ const Exercise = ({navigation, route}: any) => {
               if (type == 'focus' || type == 'bodypart')
                 postSingleExerciseAPI(index);
               else {
-                enteredCurrentEvent
+                enteredCurrentEvent && !Sat && !Sun
                   ? postCurrentRewardsExerciseAPI(index)
                   : postCurrentExerciseAPI(index);
               }
@@ -317,7 +318,7 @@ const Exercise = ({navigation, route}: any) => {
               setPause(false);
               type == 'focus' || type == 'bodypart'
                 ? postSingleExerciseAPI(number)
-                : enteredCurrentEvent
+                : enteredCurrentEvent && !Sat && !Sun
                 ? postCurrentRewardsExerciseAPI(number)
                 : postCurrentExerciseAPI(number);
               let checkAdsShow = AddCountFunction();
@@ -349,7 +350,7 @@ const Exercise = ({navigation, route}: any) => {
             ) {
               type == 'focus' || type == 'bodypart'
                 ? postSingleExerciseAPI(number)
-                : enteredCurrentEvent
+                : enteredCurrentEvent && !Sat && !Sun
                 ? postCurrentRewardsExerciseAPI(number)
                 : postCurrentExerciseAPI(number);
 
@@ -433,7 +434,7 @@ const Exercise = ({navigation, route}: any) => {
     try {
       const res = await axios({
         url:
-          (enteredCurrentEvent
+          (enteredCurrentEvent && !Sat && !Sun
             ? NewAppapi.DELETE_EVENT_WEEKLY_DATA
             : NewAppapi.DELETE_TRACK_EXERCISE) +
           '?workout_id=' +
