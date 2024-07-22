@@ -48,7 +48,7 @@ const CountryLocation = ({navigation, route}) => {
             type: 'danger',
             icon: {icon: 'auto', position: 'left'},
           });
-          navigation.navigate('BottomTab');
+          navigation.replace('BottomTab');
         }
       })
       .catch(err => {
@@ -78,7 +78,7 @@ const CountryLocation = ({navigation, route}) => {
             icon: {icon: 'auto', position: 'left'},
           });
           setTimeout(() => {
-            navigation.navigate('BottomTab');
+            navigation.replace('BottomTab');
           }, 500);
         }
       });
@@ -131,7 +131,7 @@ const CountryLocation = ({navigation, route}) => {
         dispatch(setOfferAgreement(ApiCall?.data));
 
         setLoaded(true);
-        navigation.navigate('BottomTab');
+        navigation.replace('BottomTab');
         // if (CustomCreated) {
         //   navigation.navigate('CustomWorkout', {routeName: routeName});
         // } else {

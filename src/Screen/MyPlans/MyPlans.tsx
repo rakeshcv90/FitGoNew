@@ -118,6 +118,8 @@ const MyPlans = ({navigation}: any) => {
   );
   const getStreakModalVisible=useSelector(state=>state?.getStreakModalVisible)
   const fitCoins = useSelector((state: any) => state.fitCoins);
+  const Sat = getPurchaseHistory?.currentDay == 6;
+  const Sun = getPurchaseHistory?.currentDay == 0;
   const dispatch = useDispatch();
   useEffect(() => {
     initInterstitial();
@@ -145,7 +147,7 @@ const MyPlans = ({navigation}: any) => {
     if (
       WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1] !== 'Monday' &&
       coins[WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]] < 0 &&
-      enteredCurrentEvent &&
+      enteredCurrentEvent && !Sat && !Sun &&
       !getStreakStatus?.includes(
         WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2],
       )
@@ -448,7 +450,7 @@ const MyPlans = ({navigation}: any) => {
           },
         ),
       ).finally(() => {
-        enteredCurrentEvent
+        enteredCurrentEvent && !Sat && !Sun
           ? RewardsbeforeNextScreen(selectedDay)
           : beforeNextScreen(selectedDay);
       });

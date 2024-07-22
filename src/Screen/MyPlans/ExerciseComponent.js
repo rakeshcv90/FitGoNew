@@ -6,9 +6,8 @@ import {AppColor, Fonts} from '../../Component/Color';
 import NewButton from '../../Component/NewButton';
 import {FlatList} from 'react-native';
 import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
-import moment, {weekdays} from 'moment';
 import AnimatedLottieView from 'lottie-react-native';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 export const ExerciseComponetWithoutEvents = ({
   dayObject,
   day,
@@ -63,7 +62,10 @@ export const ExerciseComponetWithoutEvents = ({
           <FlatList
             data={dayObject?.exercises}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom:DeviceHeigth<=667?DeviceHeigth*0.5: DeviceHeigth * 0.42}}
+            contentContainerStyle={{
+              paddingBottom:
+                DeviceHeigth <= 667 ? DeviceHeigth * 0.5 : DeviceHeigth * 0.42,
+            }}
             style={{
               width: DeviceWidth * 0.9,
               alignSelf: 'center',
@@ -207,7 +209,7 @@ export const ExerciseComponentWithEvent = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
- 
+
   return (
     <View style={styles.View1}>
       {dayWiseCoins[day] == null || dayWiseCoins[day] < 0 ? (
@@ -229,7 +231,7 @@ export const ExerciseComponentWithEvent = ({
             <TouchableOpacity
               style={{}}
               onPress={() => {
-                AnalyticsConsole(`O_EWS`)
+                AnalyticsConsole(`O_EWS`);
                 navigation.navigate('AddWorkouts', {
                   dayExercises: dayObject?.exercises,
                   day: day,
@@ -266,7 +268,10 @@ export const ExerciseComponentWithEvent = ({
           <FlatList
             data={dayObject?.exercises}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom:DeviceHeigth<=667?DeviceHeigth*0.5: DeviceHeigth * 0.42}}
+            contentContainerStyle={{
+              paddingBottom:
+                DeviceHeigth <= 667 ? DeviceHeigth * 0.5 : DeviceHeigth * 0.42,
+            }}
             style={{
               width: DeviceWidth * 0.9,
               alignSelf: 'center',
@@ -398,7 +403,9 @@ export const ExerciseComponentWithEvent = ({
                   color: AppColor.RED1,
                   lineHeight: 30,
                 }}>
-                {getWeeklyPlansData[day]?.title!=null?getWeeklyPlansData[day]?.title:'Commpleted'}
+                {getWeeklyPlansData[day]?.title != null
+                  ? getWeeklyPlansData[day]?.title
+                  : 'Commpleted'}
               </Text>
             </View>
           </View>

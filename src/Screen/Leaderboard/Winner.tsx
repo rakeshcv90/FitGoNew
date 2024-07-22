@@ -58,20 +58,32 @@ const Winner = ({navigation}: any) => {
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
       if (result.data) {
-        if (result.data?.data[0]?.id == getUserDataDetails?.id) {
-          setUserWinner(true);
-          setWinnerData(result.data?.data[0]);
-        } else if (result.data?.data[1]?.id == getUserDataDetails?.id) {
-          setUserWinner(true);
-          setWinnerData(result.data?.data[1]);
-        } else {
-          //setUserWinner(true);
-          const userIndex = result.data?.data?.findIndex(
-            (item: TypeData) => item.id == getUserDataDetails?.id,
-          );
-          setWinnerData(result.data?.data[0]);
-          setUserData(result.data?.data[userIndex]);
-        }
+        // if (result.data?.data[0]?.id == getUserDataDetails?.id) {
+        //   setUserWinner(true);
+        //   setWinnerData(result.data?.data[0]);
+        // } else if (result.data?.data[1]?.id == getUserDataDetails?.id) {
+        //   setUserWinner(true);
+        //   setWinnerData(result.data?.data[1]);
+        // } else {
+        //   //setUserWinner(true);
+        //   const userIndex = result.data?.data?.findIndex(
+        //     (item: TypeData) => item.id == getUserDataDetails?.id,
+        //   );
+        //   setWinnerData(result.data?.data[0]);
+        //   setUserData(result.data?.data[userIndex]);
+        // }
+        result.data?.data?.map((item: any, index: number) => {
+          if (item?.rank <= result.data?.total_winner_announced) {
+            if (item?.id == getUserDataDetails?.id) {
+              setUserWinner(true);
+              setWinnerData(item);
+            }
+          } else if (item?.id == getUserDataDetails?.id) {
+            setWinnerData(result.data?.data[0])
+            setUserData(item);
+            // console.log(item, 'WINEER', userWinner);
+          }
+        });
       }
       setLoader(false);
       setRefresh(false);

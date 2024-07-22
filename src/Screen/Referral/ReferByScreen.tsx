@@ -146,6 +146,7 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
         res?.data?.msg == 'you are not in current plan please try later.'
       ) {
         setCodeStatus('Incorrect code');
+        setText('Try Again');
         showMessage({
           message: 'You cannot use this referral code.',
           type: 'info',
@@ -182,10 +183,9 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
         setText('Try Again');
       }
     } catch (error) {
-      console.log('error--->', err);
       setText('Apply Code');
       showMessage({
-        message: 'Something error',
+        message: 'Something went wrong',
         type: 'danger',
         animationDuration: 1000,
         floating: true,
