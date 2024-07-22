@@ -74,6 +74,7 @@ import AddWorkouts from '../Screen/MyPlans/AddWorkouts';
 import Leaderboard from '../Screen/Leaderboard/Leaderboard';
 import Winner from '../Screen/Leaderboard/Winner';
 import IntroVideo from '../Screen/Introduction/IntroVideo';
+import LiquidSwipeIntro from '../Screen/Introduction/LiquidSwipeIntro';
 
 import RatingModal from '../Component/RatingModal';
 import SplaceNew from '../Screen/SplaceNew';
@@ -102,9 +103,9 @@ export const LoginStack = () => {
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
         name="IntroductionScreen1"
-        component={IntroductionScreen1}
+        component={LiquidSwipeIntro}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="IntroductionScreen2"
         component={IntroductionScreen2}
       />
