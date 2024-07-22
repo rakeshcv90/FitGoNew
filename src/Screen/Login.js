@@ -65,6 +65,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNFetchBlob from 'rn-fetch-blob';
 import AppUpdateComponent from '../Component/AppUpdateComponent';
 import {EnteringEventFunction} from './Event/EnteringEventFunction';
+import { CommonActions } from '@react-navigation/native';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -651,7 +652,13 @@ const Login = ({navigation}) => {
           if (
             responseData?.data?.additional_data?.term_condition == 'Accepted'
           ) {
-            navigation.replace('BottomTab');
+            // navigation.replace('BottomTab');
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{name: 'BottomTab'}],
+              }),
+            );
           } else {
             navigation.replace('OfferTerms');
           }
@@ -664,7 +671,13 @@ const Login = ({navigation}) => {
 
       if (status == 1) {
         if (responseData?.data?.additional_data?.term_condition == 'Accepted') {
-          navigation.replace('BottomTab');
+          // navigation.replace('BottomTab');
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'BottomTab'}],
+            }),
+          );
         } else {
           navigation.replace('OfferTerms');
         }

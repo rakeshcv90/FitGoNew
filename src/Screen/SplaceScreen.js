@@ -50,6 +50,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import {EnteringEventFunction} from './Event/EnteringEventFunction';
 import AnimatedLottieView from 'lottie-react-native';
 import codePush from 'react-native-code-push';
+import { CommonActions } from '@react-navigation/native';
 const products = Platform.select({
   ios: ['fitme_noob', 'fitme_pro', 'fitme_legend'],
   android: ['fitme_monthly', 'a_monthly', 'fitme_legend'],
@@ -113,7 +114,13 @@ const SplaceScreen = ({navigation,route}) => {
      
         if (getUserDataDetails?.profile_compl_status == 1) {
           if (agreement?.term_condition == 'Accepted') {
-            navigation.replace('BottomTab');
+            // navigation.replace('BottomTab');
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{name: 'BottomTab'}],
+              }),
+            );
           } else {
             navigation.replace('OfferTerms');
           }

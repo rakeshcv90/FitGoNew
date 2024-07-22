@@ -888,6 +888,7 @@ const OneDay = ({navigation, route}: any) => {
             zIndex: 1,
             color: AppColor.WHITE,
           }}
+          disabled={downloaded>0}
           // mB={80}
           bottm={40}
           // weeklyAnimation={downloaded}

@@ -19,6 +19,7 @@ import FitText from '../../Component/Utilities/FitText';
 import {openSettings} from 'react-native-permissions';
 import {LocationPermissionModal} from '../../Component/Utilities/LocationPermission';
 import AndroidOpenSettings from 'react-native-android-open-settings';
+import { CommonActions } from '@react-navigation/native';
 const CountryLocation = ({navigation, route}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const [loaded, setLoaded] = useState(true);
@@ -48,7 +49,13 @@ const CountryLocation = ({navigation, route}) => {
             type: 'danger',
             icon: {icon: 'auto', position: 'left'},
           });
-          navigation.replace('BottomTab');
+          // navigation.replace('BottomTab');
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'BottomTab'}],
+            }),
+          );
         }
       })
       .catch(err => {
@@ -78,7 +85,13 @@ const CountryLocation = ({navigation, route}) => {
             icon: {icon: 'auto', position: 'left'},
           });
           setTimeout(() => {
-            navigation.replace('BottomTab');
+            // navigation.replace('BottomTab');
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{name: 'BottomTab'}],
+              }),
+            );
           }, 500);
         }
       });
@@ -131,7 +144,13 @@ const CountryLocation = ({navigation, route}) => {
         dispatch(setOfferAgreement(ApiCall?.data));
 
         setLoaded(true);
-        navigation.replace('BottomTab');
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: 'BottomTab'}],
+          }),
+        );
+        // navigation.replace('BottomTab');
         // if (CustomCreated) {
         //   navigation.navigate('CustomWorkout', {routeName: routeName});
         // } else {

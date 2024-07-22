@@ -841,6 +841,7 @@ const Banners = ({
             horizontal
             showsHorizontalScrollIndicator={false}
             renderItem={renderItem}
+            scrollEnabled={imageSource?.length > 1}
           />
         </View>
       ),

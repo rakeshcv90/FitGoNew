@@ -2279,6 +2279,7 @@ const HomeNew = ({navigation}) => {
                     floating: true,
                     icon: {icon: 'auto', position: 'left'},
                   });
+                  dispatch(setRewardPopUp(1));
                 } else if (
                   getPurchaseHistory.plan !== 'noob' &&
                   getPurchaseHistory.used_plan < getPurchaseHistory.allow_usage
@@ -2286,8 +2287,10 @@ const HomeNew = ({navigation}) => {
                   navigation?.navigate('UpcomingEvent', {
                     eventType: 'upcoming',
                   });
+                  dispatch(setRewardPopUp(1));
                 } else {
                   navigation?.navigate('NewSubscription', {upgrade: true});
+                  dispatch(setRewardPopUp(1));
                   showMessage({
                     message:
                       'Oops! You’ve used up all your chances to join the event. Upgrade your plan to join now, or wait to renew your plan. ',
@@ -2299,6 +2302,7 @@ const HomeNew = ({navigation}) => {
                 }
               } else {
                 navigation?.navigate('NewSubscription', {upgrade: true});
+                dispatch(setRewardPopUp(1));
               }
             }}
             onCancel={() => {
