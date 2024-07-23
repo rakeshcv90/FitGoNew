@@ -436,10 +436,6 @@ const Referral = () => {
             style={{
               width: DeviceWidth * 0.95,
               alignSelf: 'center',
-              // borderLeftWidth: 1.5,
-              // borderStyle: 'dashed',
-              // borderColor: '#D9DBDC',
-              // backgroundColor: '#D9DBDC',
             }}>
             <View>
               <Text
@@ -447,7 +443,7 @@ const Referral = () => {
                   styles.txt1,
                   {
                     top: DeviceHeigth >= 1024 ? -10 : -20,
-                    marginBottom: DeviceHeigth < 1024 ? -DeviceWidth * 0.04 : 0,
+                    marginBottom: DeviceHeigth < 1024 ? -DeviceWidth * 0.03 : 0,
                     // marginLeft: 20,
                   },
                 ]}>
@@ -475,7 +471,7 @@ const Referral = () => {
               rank={referralData?.current_rank}
               rank2={referralData?.register_rank}
             />
-            <Text style={[styles.txt1, {marginLeft: 0, marginBottom: 0}]}>
+            <Text style={[styles.txt1, {}]}>
               Join Event
             </Text>
           </View>

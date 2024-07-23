@@ -1,7 +1,7 @@
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/Index';
+import Yourself from '../Screen/Yourself/index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -81,6 +81,7 @@ import StreakModal from '../Component/Utilities/StreakModal';
 import OfferGuidelines from '../Component/Utilities/OfferGuidelines';
 import Referral from '../Screen/Referral/Referral';
 import Breath from '../Screen/Breath/Breath';
+import CollectCoins from '../Screen/CoinAnimations/CollectCoins';
 
 const Stack = createStackNavigator();
 
@@ -96,6 +97,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Screen name="CollectCoins" component={CollectCoins}/>
  {/* <Stack.Screen name="Breath" component={Breath} /> */}
       {/* <Stack.Screen name="RatingModal" component={StreakModal}/> */}
       {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}

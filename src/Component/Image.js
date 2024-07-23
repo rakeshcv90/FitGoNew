@@ -247,4 +247,7 @@ export const localImage = {
   Bronze:require('../Icon/Images/InAppRewards/Bronze.png'),
   Silver:require('../Icon/Images/InAppRewards/Silver.png'),
   TickCircle:require('../Icon/Images/InAppRewards/TickCircle.png'),
+  Party:require('../Icon/Images/InAppRewards/partyPopper.json'),
+  thumbAnimation:require('../Icon/Images/InAppRewards/Thumb.json'),
+  watch3d:require('../Icon/Images/InAppRewards/3dWatch.png')
 };

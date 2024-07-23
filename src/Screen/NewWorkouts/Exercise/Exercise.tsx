@@ -201,7 +201,11 @@ const Exercise = ({navigation, route}: any) => {
     getSoundOffOn && Tts.speak(words);
   };
   const dispatch = useDispatch();
+  const [setsCompleted, setSetsCompleted] = useState(0);
+
   useEffect(() => {
+    setSetsCompleted(0);
+
     if (!back) {
       separateTimer
         ? (seperateTimerRef.current = setTimeout(() => {
