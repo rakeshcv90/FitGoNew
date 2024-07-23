@@ -32,7 +32,7 @@ const VideoBanner = () => {
             <Text style={styles.txt}>
               {'How to join the\n'}
               <Text style={{fontSize: 20, fontFamily: Fonts.MONTSERRAT_BOLD}}>
-                Challenge and Earn
+                Challenge and Earn?
               </Text>
             </Text>
             <Image

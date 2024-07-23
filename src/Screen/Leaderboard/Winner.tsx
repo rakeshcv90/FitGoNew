@@ -78,8 +78,11 @@ const Winner = ({navigation}: any) => {
               setUserWinner(true);
               setWinnerData(item);
             }
-          } else if (item?.id == getUserDataDetails?.id) {
+          }
+           else if (item?.id == getUserDataDetails?.id)   {
+           if(userWinner==false){
             setWinnerData(result.data?.data[0])
+           }
             setUserData(item);
             // console.log(item, 'WINEER', userWinner);
           }

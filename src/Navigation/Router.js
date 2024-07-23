@@ -97,7 +97,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="CollectCoins" component={CollectCoins}/>
+      {/* <Stack.Screen name="CollectCoins" component={CollectCoins}/> */}
  {/* <Stack.Screen name="Breath" component={Breath} /> */}
       {/* <Stack.Screen name="RatingModal" component={StreakModal}/> */}
       {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}

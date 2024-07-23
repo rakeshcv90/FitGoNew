@@ -220,15 +220,17 @@ const Referral = () => {
             source={localImage.FitCoin}
             style={{width: DeviceWidth * 0.09, height: DeviceWidth * 0.09}}
           />
-          {rank2?.fit_coins && rank?.fit_coins ? (
+          {rank2?.fit_coins ? (
             <FitText
               type="SubHeading"
               value={'+' + (rank2?.fit_coins - rank?.fit_coins)}
               marginHorizontal={5}
             />
-          ) : (
-            <FitText type="SubHeading" value={'+0'} marginHorizontal={5} />
-          )}
+          ):<FitText
+          type="SubHeading"
+          value={'+0' }
+          marginHorizontal={5}
+        />}
           {getUserDataDetails?.image_path == null ? (
             <View style={styles.textImage}>
               <Text
@@ -267,7 +269,7 @@ const Referral = () => {
   return (
     <View style={styles.container}>
       <NewHeader backButton header={'Refer & Earn'} />
-      {loader?<ActivityLoader/>:null}
+      {loader ? <ActivityLoader /> : null}
       <ScrollView>
         <View style={styles.imgView}>
           <Image
@@ -471,9 +473,7 @@ const Referral = () => {
               rank={referralData?.current_rank}
               rank2={referralData?.register_rank}
             />
-            <Text style={[styles.txt1, {}]}>
-              Join Event
-            </Text>
+            <Text style={[styles.txt1, {}]}>Join Event</Text>
           </View>
 
           {/* <View

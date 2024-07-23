@@ -33,12 +33,12 @@ const CollectCoins = () => {
   const animateView1 = () => {
     Animated.timing(fadeView, {
       toValue: 1,
-      duration: 1500,
+      duration: 2000,
       useNativeDriver: true,
     }).start();
     Animated.timing(moveView, {
       toValue: -8,
-      duration: 1000,
+      duration: 1500,
       useNativeDriver: true,
     }).start(() => {
       console.log('animation has ended');
