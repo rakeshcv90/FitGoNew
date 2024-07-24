@@ -2291,14 +2291,14 @@ const HomeNew = ({navigation}) => {
                 } else {
                   navigation?.navigate('NewSubscription', {upgrade: true});
                   dispatch(setRewardPopUp(1));
-                  showMessage({
-                    message:
-                      'Oops! You’ve used up all your chances to join the event. Upgrade your plan to join now, or wait to renew your plan. ',
-                    type: 'info',
-                    animationDuration: 500,
-                    floating: true,
-                    icon: {icon: 'auto', position: 'left'},
-                  });
+                  // showMessage({
+                  //   message:
+                  //     'Oops! You’ve used up all your chances to join the event. Upgrade your plan to join now, or wait to renew your plan. ',
+                  //   type: 'info',
+                  //   animationDuration: 500,
+                  //   floating: true,
+                  //   icon: {icon: 'auto', position: 'left'},
+                  // });
                 }
               } else {
                 navigation?.navigate('NewSubscription', {upgrade: true});
