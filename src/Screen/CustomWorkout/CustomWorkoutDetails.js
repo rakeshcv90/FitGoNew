@@ -7,6 +7,7 @@ import {
   Modal,
   FlatList,
   ActivityIndicator,
+  BackHandler,
 } from 'react-native';
 import React, {useState, useMemo, useEffect} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
@@ -470,7 +471,6 @@ const CustomWorkoutDetails = ({navigation, route}) => {
     } catch (error) {
       console.log('GET-USER-DATA', error);
       setForLoading(false);
-      
     }
   };
   // const bannerAdsDisplay = () => {
@@ -486,6 +486,13 @@ const CustomWorkoutDetails = ({navigation, route}) => {
   //     return <BannerAdd bannerAdId={bannerAdId} />;
   //   }
   // };
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => true,
+    );
+    return () => backHandler.remove();
+  }, []);
   return (
     <>
       <DietPlanHeader
@@ -611,7 +618,6 @@ const CustomWorkoutDetails = ({navigation, route}) => {
           </View>
         </View>
         {data?.exercise_data.length > 0 && (
-    
           <NewButton
             position={'absolute'}
             title={'Start Workout'}
@@ -631,7 +637,7 @@ const CustomWorkoutDetails = ({navigation, route}) => {
         )}
       </View>
       <Modal
-      animationType="slide"
+        animationType="slide"
         visible={isMenuOpen}
         transparent={true}
         onRequestClose={() => {

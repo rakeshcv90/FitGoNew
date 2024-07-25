@@ -203,6 +203,13 @@ const WorkoutCategories = ({navigation, route}: any) => {
     }
   };
 
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => true,
+    );
+    return () => backHandler.remove();
+  }, []);
   const handleIconPress = (item: any, index: number) => {
     if (switchButton) {
       handleItems(item, selectedExercise, setSelectedExercise);
@@ -271,7 +278,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
                 <View
                   style={{
                     marginHorizontal: 15,
-                    width:DeviceHeigth>=1024 ? '80%': '65%',
+                    width: DeviceHeigth >= 1024 ? '80%' : '65%',
                     // backgroundColor: 'lightgreen',
                   }}>
                   <Text
@@ -354,23 +361,23 @@ const WorkoutCategories = ({navigation, route}: any) => {
     [selectedExercise, switchButton, selectedIndex],
   );
 
-  const handleBackPress = useCallback(() => {
-    if (switchButton) {
-      setSelectedExercise([]);
-      setSwitchButton(false);
-      setItemsLength(0);
-      return true;
-    }
-    return false; // Allow default back behavior when switchButton is false
-  }, [switchButton]);
+  // const handleBackPress = useCallback(() => {
+  //   if (switchButton) {
+  //     setSelectedExercise([]);
+  //     setSwitchButton(false);
+  //     setItemsLength(0);
+  //     return true;
+  //   }
+  //   return false; // Allow default back behavior when switchButton is false
+  // }, [switchButton]);
 
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      handleBackPress,
-    );
-    return () => backHandler.remove();
-  }, [handleBackPress]);
+  // useEffect(() => {
+  //   const backHandler = BackHandler.addEventListener(
+  //     'hardwareBackPress',
+  //     handleBackPress,
+  //   );
+  //   return () => backHandler.remove();
+  // }, [handleBackPress]);
   const emptyComponent = () => {
     return (
       <View
@@ -400,7 +407,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
       if (index == 0 && filteredExercise.length > 1 && noOrNoobPlan) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 9 == 0 && filteredExercise.length > 9) {
-        if(index+1 == filteredExercise.length) return null
+        if (index + 1 == filteredExercise.length) return null;
         return getNativeAdsDisplay();
       }
     }
@@ -534,15 +541,15 @@ const WorkoutCategories = ({navigation, route}: any) => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}: any) => (
             <>
-            <Box
-              item={item}
-              index={index}
-              isSelected={selectedExercise.includes(item?.exercise_id)}
-              switchButton={switchButton}
-              isItemDownload={selectedIndex == index}
-              downloadProgress={downloadProgress}
-            />
-            {getAdsDisplay(index, item)}
+              <Box
+                item={item}
+                index={index}
+                isSelected={selectedExercise.includes(item?.exercise_id)}
+                switchButton={switchButton}
+                isItemDownload={selectedIndex == index}
+                downloadProgress={downloadProgress}
+              />
+              {getAdsDisplay(index, item)}
             </>
           )}
           ListEmptyComponent={emptyComponent}

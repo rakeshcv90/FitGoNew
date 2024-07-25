@@ -4,8 +4,9 @@ import {
   TouchableOpacity,
   ImageBackground,
   ScrollView,
+  BackHandler,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {StatusBar} from 'react-native';
 import {StyleSheet} from 'react-native';
@@ -96,6 +97,19 @@ const MeditationExerciseDetails = ({navigation, route}) => {
   //   }
   // };
   const handleValueChange = value => {};
+
+  const handleBackPress = useCallback(() => {
+    TrackPlayer.reset();
+    return false; // Allow default back behavior when switchButton is false
+  }, []);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBackPress,
+    );
+    return () => backHandler.remove();
+  }, [handleBackPress]);
   return (
     <>
       <LinearGradient

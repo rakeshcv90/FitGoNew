@@ -10,6 +10,7 @@ import {
   Image,
   FlatList,
   StatusBar,
+  BackHandler,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -434,6 +435,14 @@ const OneDay = ({navigation, route}: any) => {
       </View>
     );
   };
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => true,
+    );
+    return () => backHandler.remove();
+  }, []);
   if (reward == 1) {
     postCurrentDayAPI();
     setreward(0);
@@ -628,148 +637,6 @@ const OneDay = ({navigation, route}: any) => {
     );
   };
   return (
-    // <View
-    //   style={{
-    //     flex: 1,
-    //     backgroundColor: AppColor.WHITE,
-    //     padding: 10,
-    //   }}>
-    //   <TouchableOpacity
-    //     onPress={() => {
-    //       if (downloaded > 0) {
-    //         showMessage({
-    //           message:
-    //             'Please wait, downloading in progress. Do not press back.',
-    //           type: 'info',
-    //           animationDuration: 500,
-    //           floating: true,
-    //           icon: {icon: 'auto', position: 'left'},
-    //         });
-    //       } else {
-    //         navigation.goBack();
-    //         setOpen(false);
-    //       }
-    //     }}
-    //     style={{
-    //       marginTop: DeviceHeigth * 0.02,
-    //     }}>
-    //     <AntDesign
-    //       name={'arrowleft'}
-    //       size={25}
-    //       color={AppColor.INPUTTEXTCOLOR}
-    //     />
-    //   </TouchableOpacity>
-    //   <Image
-    //     source={{
-    //       uri:
-    //         getStoreVideoLoc[data?.workout_title + 'Image'] != undefined
-    //           ? 'file://' + getStoreVideoLoc[data?.workout_title + 'Image']
-    //           : // : data?.workout_image_link != ''
-    //             // ? data?.workout_image_link
-    //             data?.workout_image,
-    //     }}
-    //     style={{
-    //       height: DeviceWidth * 0.5,
-    //       width: DeviceWidth,
-    //       alignSelf: 'center',
-    //       marginTop: DeviceHeigth * 0.02,
-    //     }}
-    //     resizeMode="contain"
-    //   />
-    //   {/* <View style={{height: DeviceHeigth * 0.4, marginLeft: 5}}>
-
-    //     </View> */}
-    //   <View style={styles.container}>
-    //     <Text
-    //       style={{
-    //         fontWeight: '700',
-    //         fontSize: 30,
-    //         lineHeight: 40,
-    //         fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-    //         color: AppColor.BLACK,
-    //       }}>
-    //       Day {day}
-    //     </Text>
-    //     <Text
-    //       style={{
-    //         fontWeight: '400',
-    //         fontSize: 14,
-    //         lineHeight: 30,
-    //         fontFamily: 'Poppins',
-    //         color: AppColor.BoldText,
-    //         marginVertical: 5,
-    //       }}>
-    //       <Icons
-    //         name={'clock-outline'}
-    //         size={15}
-    //         color={AppColor.INPUTTEXTCOLOR}
-    //       />
-    //       {dayData?.total_rest > 60
-    //         ? ` ${(dayData?.total_rest / 60).toFixed(0)} min `
-    //         : ` ${dayData?.total_rest} sec `}
-    //       <Icons name={'fire'} size={15} color={AppColor.INPUTTEXTCOLOR} />
-    //       {` ${dayData?.total_calories} Kcal`}
-    //     </Text>
-
-    //     {forLoading ? (
-    //       <FlatList
-    //         data={simerData}
-    //         renderItem={({item, index}: any) => <Box2 />}
-    //         contentContainerStyle={{flexGrow: 1}}
-    //         showsVerticalScrollIndicator={false}
-    //         style={{marginBottom: 100, flex: 1}}
-    //       />
-    //     ) : (
-    //       <FlatList
-    //         data={exerciseData}
-    //         renderItem={({item, index}: any) => (
-    //           <Box selected={-1} index={index + 1} item={item} key={index} />
-    //         )}
-    //         ListEmptyComponent={emptyComponent}
-    //         contentContainerStyle={{flexGrow: 1}}
-    //         showsVerticalScrollIndicator={false}
-    //         style={{marginBottom: 100, flex: 1}}
-    //       />
-    //     )}
-
-    //     <GradientButton
-    //       // play={false}
-    //       // oneDay
-    //       flex={0.01}
-    //       text={downloaded ? `Downloading` : `Start Day ${day}`}
-    //       h={60}
-    //       textStyle={{
-    //         fontSize: 20,
-    //         fontFamily: 'Montserrat-SemiBold',
-    //         lineHeight: 40,
-    //         fontWeight: '700',
-    //         zIndex: 1,
-    //         color: AppColor.WHITE,
-    //       }}
-    //       // mB={80}
-    //       bottm={40}
-    //       // weeklyAnimation={downloaded}
-    //       colors={['#f0013b', '#f0013b']}
-    //       alignSelf
-    //       bR={6}
-    //       normalAnimation={downloaded > 0}
-    //       normalFill={`${100 - downloaded}%`}
-    //       // fillBack="#EB1900"
-    //       // fill={downloaded > 0 ? `${100 / downloaded}%` : '0%'}
-    //       onPress={() => {
-    //         analytics().logEvent(`CV_FITME_STARTED_DAY_${day}_EXERCISES`);
-    //         postCurrentDayAPI();
-    //       }}
-    //     />
-    //   </View>
-    //   {loader && <ActivityLoader visible={loader} />}
-    //   <WorkoutDescription
-    //     data={currentExercise}
-    //     open={visible}
-    //     setOpen={setVisible}
-    //   />
-    //   <PaddoMeterPermissionModal />
-    // </View>
     <View style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <StatusBar
         barStyle={'dark-content'}

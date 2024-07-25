@@ -6,8 +6,9 @@ import {
   KeyboardAvoidingView,
   FlatList,
   ScrollView,
+  BackHandler,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {AppColor} from '../../Component/Color';
 import {StatusBar} from 'react-native';
@@ -316,6 +317,19 @@ const AITrainer = ({navigation, route}) => {
   //     return <BannerAdd bannerAdId={bannerAdId} />;
   //   }
   // };
+
+  const handleBackPress = useCallback(() => {
+    Tts.stop();
+    return false; // Allow default back behavior when switchButton is false
+  }, []);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBackPress,
+    );
+    return () => backHandler.remove();
+  }, [handleBackPress]);
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />

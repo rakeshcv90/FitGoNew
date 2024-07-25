@@ -10,6 +10,7 @@ import {
   Platform,
   ActivityIndicator,
   Dimensions,
+  BackHandler,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
@@ -681,6 +682,14 @@ const NewFocusWorkouts = ({route, navigation}) => {
       });
     });
   };
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => true,
+    );
+    return () => backHandler.remove();
+  }, []);
   return (
     <>
       <View style={styles.container}>
