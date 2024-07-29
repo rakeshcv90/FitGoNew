@@ -328,22 +328,20 @@ const HomeNew = ({navigation}) => {
     }
   }, [isFocused]);
   // useEffect(() => {
-  
+
   //   AppState.addEventListener('change', state => {
   //     //  setAppState(state)
-  
+
   //     if (
   //       state == 'active' &&
-  //       adsStatus.current == true 
+  //       adsStatus.current == true
   //        &&  !AddCountFunction()
   //     ) {
   //       showOpenAppAd();
 
-
-      
   //     }
   //   });
-    
+
   // }, []);
   const getUserDetailData = async () => {
     try {
@@ -653,7 +651,7 @@ const HomeNew = ({navigation}) => {
   const PermissionModal = ({locationP, setLocationP}) => {
     return (
       <Modal
-      animationType="slide"
+        animationType="slide"
         visible={locationP}
         onRequestClose={() => setLocationP(false)}
         transparent>
@@ -2268,6 +2266,7 @@ const HomeNew = ({navigation}) => {
           <UpcomingEventModal
             visible={true}
             onConfirm={() => {
+              AnalyticsConsole('U_E');
               if (getPurchaseHistory) {
                 if (getPurchaseHistory.plan === 'noob') {
                   navigation?.navigate('NewSubscription', {upgrade: true});

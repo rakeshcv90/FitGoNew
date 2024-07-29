@@ -81,7 +81,8 @@ import StreakModal from '../Component/Utilities/StreakModal';
 import OfferGuidelines from '../Component/Utilities/OfferGuidelines';
 import Referral from '../Screen/Referral/Referral';
 import Breath from '../Screen/Breath/Breath';
-import CollectCoins from '../Screen/CoinAnimations/CollectCoins';
+import CollectCoins from '../Screen/NewPostExerciseScreens/CollectCoins';
+import BreathSessionInfo from '../Screen/NewPostExerciseScreens/BreathSessionInfo';
 
 const Stack = createStackNavigator();
 
@@ -97,8 +98,8 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      {/* <Stack.Screen name="CollectCoins" component={CollectCoins}/> */}
- {/* <Stack.Screen name="Breath" component={Breath} /> */}
+      {/* <Stack.Screen name="CollectCoins" component={BreathSessionInfo} /> */}
+       <Stack.Screen name="Breath" component={Breath} /> 
       {/* <Stack.Screen name="RatingModal" component={StreakModal}/> */}
       {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
