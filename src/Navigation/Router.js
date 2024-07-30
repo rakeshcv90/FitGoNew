@@ -1,7 +1,7 @@
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/index';
+import Yourself from '../Screen/Yourself/Index';
 import Scale from '../Screen/Yourself/Scale';
 import Gender from '../Screen/Yourself/Gender';
 import Equipment from '../Screen/Yourself/Equipment';
@@ -82,6 +82,8 @@ import OfferGuidelines from '../Component/Utilities/OfferGuidelines';
 import Referral from '../Screen/Referral/Referral';
 import Breath from '../Screen/Breath/Breath';
 import CollectCoins from '../Screen/CoinAnimations/CollectCoins';
+import EventExercise from '../Screen/Event/EventExercise';
+import EventExerciseHistory from '../Screen/Event/EventExerciseHistory';
 
 const Stack = createStackNavigator();
 
@@ -98,7 +100,7 @@ export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       {/* <Stack.Screen name="CollectCoins" component={CollectCoins}/> */}
- {/* <Stack.Screen name="Breath" component={Breath} /> */}
+ {/* <Stack.Screen name="Breath" component={Breathe} /> */}
       {/* <Stack.Screen name="RatingModal" component={StreakModal}/> */}
       {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
@@ -189,7 +191,8 @@ export const LoginStack = () => {
       <Stack.Screen name="Leaderboard" component={Leaderboard} />
       <Stack.Screen name="Winner" component={Winner} />
       <Stack.Screen name="Referral" component={Referral} />
-      {/* <Stack.Screen name="Breath" component={Breath} /> */}
+      <Stack.Screen name="EventExercise" component={EventExercise} />
+      <Stack.Screen name="EventExerciseHistory" component={EventExerciseHistory} />
     </Stack.Navigator>
   );
 };

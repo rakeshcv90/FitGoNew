@@ -54,13 +54,14 @@ export const NewInterstitialAd = setClosed => {
     });
     interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
       interstitialAd.load();
+      setClosed(true)
     });
     interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
     interstitialAd.addAdEventListener(AdEventType.ERROR, error => {
       setClosed(true);
     });
     interstitialAd.addAdEventListener(AdEventType.OPENED, () => {
-      setClosed(true);
+      // setClosed(true);
     });
     interstitialAd.load();
   };
@@ -69,7 +70,7 @@ export const NewInterstitialAd = setClosed => {
     if (adStatus.current?._loaded) {
       adStatus.current.show();
     } else {
-      setClosed(true);
+      // setClosed(true);
     }
   };
 
