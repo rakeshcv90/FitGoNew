@@ -264,10 +264,10 @@ const EventExercise = ({navigation, route}: any) => {
               `Get Ready for ${allExercise[number]?.exercise_title} Exercise`,
             );
             if (number != 0) {
-              console.log("ERRRRR",enteredCurrentEvent,number)
+              console.log('ERRRRR', enteredCurrentEvent, number);
               enteredCurrentEvent && !Sat && !Sun
-                ? postCurrentRewardsExerciseAPI(number)
-                : postCurrentExerciseAPI(number);
+                ? postCurrentRewardsExerciseAPI(number-1)
+                : postCurrentExerciseAPI(number-1);
             }
 
             setTimer(timer - 1);
@@ -426,22 +426,37 @@ const EventExercise = ({navigation, route}: any) => {
     navigationRef.current.goBack();
   };
   const postCurrentRewardsExerciseAPI = async (index: number) => {
-    console.log("API HITTTTT",trackerData,index)
+    console.log("SDVFSDFGDGDFGDFg",trackerData[index])
+    const url =
+      'https://fitme.cvinfotech.in/adserver/public/api/testing_event_exercise_complete_status';
     const payload = new FormData();
     payload.append('id', trackerData[index]?.id);
 
-    payload.append('type', 'cardio');
+    payload.append('type', type);
     payload.append('day', WeekArray[day]);
     payload.append('workout_id', `-${12 + 1}`);
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
+
     next > 0 && payload.append('next_status', next);
     previous > 0 && payload.append('prev_status', previous);
     skip > 0 && payload.append('skip_status', skip);
 
     try {
+      //LIVE  URL
+      // const res = await axios({
+      //   url: 'https://fitme.cvinfotech.in/adserver/public/api/testing_event_exercise_complete_status',
+      //   // url: NewAppapi.POST_REWARDS_EXERCISE,
+      //   method: 'post',
+      //   data: payload,
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // });
+
+      //TEST URL
       const res = await axios({
-        url: 'https://fitme.cvinfotech.in/adserver/public/api/testing_event_exercise_complete_status',
+        url: url,
         // url: NewAppapi.POST_REWARDS_EXERCISE,
         method: 'post',
         data: payload,

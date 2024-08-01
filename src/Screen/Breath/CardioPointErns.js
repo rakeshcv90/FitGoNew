@@ -11,24 +11,177 @@ import {
 import React, {useEffect, useState} from 'react';
 import FitCoins from '../../Component/Utilities/FitCoins';
 import {AppColor, Fonts} from '../../Component/Color';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import AnimatedLottieView from 'lottie-react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import RNFetchBlob from 'rn-fetch-blob';
+import {showMessage} from 'react-native-flash-message';
+import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
+import moment from 'moment';
+import axios from 'axios';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
-const CardioPointErns = () => {
+const WeekArray = Array(7)
+  .fill(0)
+  .map(
+    (item, index) =>
+      (item = moment()
+        .add(index, 'days')
+        .subtract(moment().isoWeekday(), 'days')
+        .format('dddd')),
+  );
+const CardioPointErns = ({navigation}) => {
   const fitCoins = useSelector(state => state.fitCoins);
   const getAllExercise = useSelector(state => state.getAllExercise);
   const [cardioExxercise, setCardioExercise] = useState([]);
+  const [downloaded, setDownloade] = useState(0);
+  const [selectedDay, setSelectedDay] = useState((moment().day() + 6) % 7);
+  const dispatch = useDispatch();
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   useEffect(() => {
     filterCardioExercise();
   }, []);
+  const sanitizeFileName = fileName => {
+    fileName = fileName.replace(/\s+/g, '_');
+    return fileName;
+  };
+  let StoringData = {},
+    downloadCounter = 0;
+  const downloadVideos = async (data, index, len) => {
+    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
+      data?.exercise_title,
+    )}.mp4`;
+    try {
+      const videoExists = await RNFetchBlob.fs.exists(filePath);
+      if (videoExists) {
+        StoringData[data?.exercise_title] = filePath;
+
+        downloadCounter++;
+        setDownloade((downloadCounter / len) * 100);
+      } else {
+        await RNFetchBlob.config({
+          fileCache: true,
+          // IOSBackgroundTask: true, // Add this for iOS background downloads
+          path: filePath,
+          appendExt: '.mp4',
+        })
+          .fetch('GET', data?.exercise_video, {
+            'Content-Type': 'application/mp4',
+            // key: 'Config.REACT_APP_API_KEY',
+          })
+          .then(res => {
+            StoringData[data?.exercise_title] = res.path();
+            downloadCounter++;
+            setDownloade((downloadCounter / len) * 100);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+      console.log('Downloding');
+    } catch (error) {
+      console.log('ERRRR', error);
+
+      showMessage({
+        message: 'Download interrupted',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+    }
+    dispatch(setVideoLocation(StoringData));
+  };
+  let datas = [];
+  const handleStart = () => {
+    Promise.all(
+      cardioExxercise.map((item, index) => {
+        return downloadVideos(item, index, cardioExxercise.length);
+      }),
+    ).finally(() => {
+      RewardsbeforeNextScreen();
+    });
+  };
+
+  const RewardsbeforeNextScreen = async () => {
+    downloadCounter = 0;
+    const url =
+      'https://fitme.cvinfotech.in/adserver/public/api/test_user_event__exercise_status';
+    for (const item of cardioExxercise) {
+      datas.push({
+        user_id: getUserDataDetails?.id,
+        workout_id: -13,
+        user_day: WeekArray[getPurchaseHistory?.currentDay],
+        user_exercise_id: item?.exercise_id,
+        fit_coins: item?.fit_coins,
+      });
+    }
+
+    try {
+      //LIVE URL
+      // const res = await axios({
+      //   url: NewAppapi.CURRENT_DAY_EVENT_EXERCISE,
+      //   method: 'Post',
+      //   data: {user_details: datas, type: 'cardio'},
+      // });
+
+      //Test URl
+      const res = await axios({
+        url:url,
+        method: 'Post',
+        data: {user_details: datas, type: 'cardio'},
+      });
+      setDownloade(0);
+
+      AnalyticsConsole(`SCE_ON_${getPurchaseHistory?.currentDay}`);
+      console.log('cvbfghfghfgh', res.data);
+      if (
+        res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
+      ) {
+        setDownloade(0);
+
+        navigation.navigate('EventExercise', {
+          allExercise: cardioExxercise,
+          currentExercise: cardioExxercise[0],
+          data: [],
+          day: WeekArray[getPurchaseHistory?.currentDay],
+          exerciseNumber: 0,
+          trackerData: res?.data?.inserted_data,
+          type: 'cardio',
+        });
+        // }
+      } else {
+        navigation.navigate('EventExercise', {
+          allExercise: cardioExxercise,
+          currentExercise: cardioExxercise[0],
+          data: [],
+          day: WeekArray[getPurchaseHistory?.currentDay],
+          exerciseNumber: 0,
+          trackerData: res?.data?.existing_data,
+          type: 'cardio',
+        });
+      }
+    } catch (error) {
+      console.error(error, 'PostDaysAPIERror');
+      setDownloade(0);
+
+      showMessage({
+        message: 'Error, Please try again later',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+    }
+  };
   const filterCardioExercise = () => {
     let exercises = getAllExercise?.filter(item => {
       return item?.exercise_bodypart == 'Cardio';
     });
-    setCardioExercise(exercises)
+    setCardioExercise(exercises);
   };
   return (
     <View style={[styles.container]}>
@@ -63,7 +216,7 @@ const CardioPointErns = () => {
                 marginVertical: 10,
                 marginRight: -5,
               }}>
-              <FitCoins coins={fitCoins > 0 ? fitCoins : 0} />
+              <FitCoins coins={fitCoins > 0 ? fitCoins : 0} disable={true} />
             </View>
           </View>
           <View
@@ -114,7 +267,9 @@ const CardioPointErns = () => {
           </View>
           <View style={{flex: 2.2, flexDirection: 'column'}}>
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={() => {
+                handleStart();
+              }}
               style={{
                 width: DeviceWidth * 0.7,
                 marginVertical: 10,
@@ -132,9 +287,7 @@ const CardioPointErns = () => {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => {
-            
-              }}
+              onPress={() => {}}
               style={{
                 width: 268,
                 height: 40,

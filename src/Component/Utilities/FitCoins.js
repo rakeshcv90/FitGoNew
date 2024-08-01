@@ -5,10 +5,11 @@ import {Image} from 'react-native';
 import {localImage} from '../Image';
 
 
-const FitCoins = ({coins, onPress}) => {
+const FitCoins = ({coins, onPress,disable}) => {
   return (
     <View style={styles.Container}>
-      <TouchableOpacity onPress={onPress} style={styles.button}>
+      <TouchableOpacity onPress={onPress} style={styles.button}
+      disabled={disable}>
         <Image
           source={localImage.Trophy}
           style={{height: 20, width: 20, marginRight: 3}}
