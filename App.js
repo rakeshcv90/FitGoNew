@@ -79,10 +79,10 @@ const App = () => {
     }
     alalyicsData();
   }, []);
-  const handleBackPress = () => {
-    // Do nothing to stop the hardware back press
-    return true;
-  };
+  // const handleBackPress = () => {
+  //   // Do nothing to stop the hardware back press
+  //   return true;
+  // };
 
   // useEffect(() => {
   //   // Add an event listener to handle the hardware back press

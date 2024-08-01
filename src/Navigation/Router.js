@@ -84,6 +84,7 @@ import Breath from '../Screen/Breath/Breath';
 import CollectCoins from '../Screen/CoinAnimations/CollectCoins';
 import EventExercise from '../Screen/Event/EventExercise';
 import EventExerciseHistory from '../Screen/Event/EventExerciseHistory';
+import CardioPointErns from '../Screen/Breath/CardioPointErns';
 
 const Stack = createStackNavigator();
 
@@ -101,6 +102,7 @@ export const LoginStack = () => {
     <Stack.Navigator screenOptions={screenOptions}>
       {/* <Stack.Screen name="CollectCoins" component={CollectCoins}/> */}
  {/* <Stack.Screen name="Breath" component={Breathe} /> */}
+      {/* <Stack.Screen name="CardioPointErns" component={CardioPointErns} /> */}
       {/* <Stack.Screen name="RatingModal" component={StreakModal}/> */}
       {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />

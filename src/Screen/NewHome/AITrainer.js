@@ -24,6 +24,7 @@ import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   SetAIMessageHistory,
+  setRewardedCount,
   setSoundOnOff,
 } from '../../Component/ThemeRedux/Actions';
 import {Alert} from 'react-native';
@@ -42,11 +43,12 @@ const systemMessage = {
 };
 const AITrainer = ({navigation, route}) => {
   const dispatch = useDispatch();
+  const {rewardAdsLoad, showRewardAds} = MyRewardedAd();
+  const isFocused = useIsFocused();
   const [ttsSound, setTtsSound] = useState(
     `Hello! I am${route?.params?.item?.title} your personal fitness instructor. I am here to assist you in your fitness journey.
     `,
   );
-
 
   const [searchText, setSearchText] = useState('');
   const flatListRef = useRef(null);
@@ -54,6 +56,7 @@ const AITrainer = ({navigation, route}) => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const getAIMessageHistory = useSelector(state => state.getAIMessageHistory);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  const getRerwardCount = useSelector(state => state.getRerwardCount);
   const [senderMessage, setsenderMessage] = useState([
     {
       message: `Hello! I am ${route?.params?.item?.title} your personal fitness instructor. I am here to assist you in your fitness journey.
@@ -65,6 +68,10 @@ const AITrainer = ({navigation, route}) => {
   const [speechRate, setSpeechRate] = useState(0.5);
   const [speechPitch, setSpeechPitch] = useState(1);
   const getSoundOffOn = useSelector(state => state.getSoundOffOn);
+
+  useEffect(() => {
+    rewardAdsLoad(); // Load the ad when the component mounts
+  }, []);
   useEffect(() => {
     Tts.addEventListener('tts-start', _event => setTtsStatus('started'));
     Tts.addEventListener('tts-finish', _event => setTtsStatus('finished'));
@@ -72,7 +79,6 @@ const AITrainer = ({navigation, route}) => {
     Tts.setDefaultRate(speechRate);
     Tts.setDefaultPitch(speechPitch);
     Tts.getInitStatus().then(initTts);
-
   }, [getSoundOffOn]);
   const initTts = async () => {
     if (Platform.OS == 'android') {
@@ -96,8 +102,7 @@ const AITrainer = ({navigation, route}) => {
   useEffect(() => {
     flatListRef.current.scrollToEnd({animated: true});
   }, [senderMessage]);
-
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (searchText.trim().length <= 0) {
       showMessage({
         message: 'Please Enter Message',
@@ -108,73 +113,102 @@ const AITrainer = ({navigation, route}) => {
         icon: {icon: 'auto', position: 'left'},
       });
       return false;
-    
-    } else if (reward == 1) {
-      handleSend(searchText);
-      setSearchText('');
     } else {
-      // handleSend(searchText);
-      if (getPurchaseHistory.length > 0) {
-        if (
-          getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
-        ) {
-          handleSend(searchText);
-          setSearchText('');
-        } else {
-          if (reward == 1) {
-            handleSend(searchText);
-            setSearchText('');
-          } else {
-            Alert.alert(
-              'Questions Limit Reached!',
-              'Do you want to Continue Asking Questions? Watch Ads or Upgrade your Subscription',
-              [
-                {
-                  text: 'No',
-                  onPress: () => console.log('Cancel Pressed'),
-                  style: 'Yes',
-                },
-                {
-                  text: 'Yes',
-                  onPress: () => {
-                    MyRewardedAd(setreward).load();
-                  },
-                },
-              ],
-              {
-                cancelable: false,
-              },
-            );
-          }
-        }
+      console.log('sdfsdfsdfdsf', getRerwardCount);
+      if (getRerwardCount < 5) {
+        dispatch(setRewardedCount(getRerwardCount + 1));
+        handleSend(searchText);
+        setSearchText('');
       } else {
-        if (reward == 1) {
-          handleSend(searchText);
-          setSearchText('');
-        } else {
-          Alert.alert(
-            'Questions Limit Reached!',
-            'Do you want to Continue Asking Questions? Watch Ads or Upgrade your Subscription',
-            [
-              {
-                text: 'No',
-                onPress: () => console.log('Cancel Pressed'),
-                style: 'Yes',
-              },
-              {
-                text: 'Yes',
-                onPress: () => {
-                  MyRewardedAd(setreward).load();
-                },
-              },
-            ],
+        Alert.alert(
+          'Questions Limit Reached!',
+          'Do you want to Continue Asking Questions? Watch Ads',
+          [
             {
-              cancelable: false,
+              text: 'No',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'Yes',
             },
-          );
-        }
+            {
+              text: 'Yes',
+              onPress: async () => {
+                dispatch(setRewardedCount(0));
+                await showRewardAds();
+              },
+            },
+          ],
+          {
+            cancelable: false,
+          },
+        );
       }
     }
+    // else if (reward == 1) {
+    //   handleSend(searchText);
+    //   setSearchText('');
+    // } else {
+    //   // handleSend(searchText);
+    //   if (getPurchaseHistory.length > 0) {
+    //     if (
+    //       getPurchaseHistory[0]?.plan_end_date >= moment().format('YYYY-MM-DD')
+    //     ) {
+    //       handleSend(searchText);
+    //       setSearchText('');
+    //     } else {
+    //       if (reward == 1) {
+    //         handleSend(searchText);
+    //         setSearchText('');
+    //       } else {
+    //         Alert.alert(
+    //           'Questions Limit Reached!',
+    //           'Do you want to Continue Asking Questions? Watch Ads or Upgrade your Subscription',
+    //           [
+    //             {
+    //               text: 'No',
+    //               onPress: () => console.log('Cancel Pressed'),
+    //               style: 'Yes',
+    //             },
+    //             {
+    //               text: 'Yes',
+    //               onPress: () => {
+    //                 MyRewardedAd(setreward).load();
+    //               },
+    //             },
+    //           ],
+    //           {
+    //             cancelable: false,
+    //           },
+    //         );
+    //       }
+    //     }
+    //   } else {
+    //     if (reward == 1) {
+    //       handleSend(searchText);
+    //       setSearchText('');
+    //     } else {
+    //       Alert.alert(
+    //         'Questions Limit Reached!',
+    //         'Do you want to Continue Asking Questions? Watch Ads or Upgrade your Subscription',
+    //         [
+    //           {
+    //             text: 'No',
+    //             onPress: () => console.log('Cancel Pressed'),
+    //             style: 'Yes',
+    //           },
+    //           {
+    //             text: 'Yes',
+    //             onPress: () => {
+    //               MyRewardedAd(setreward).load();
+    //             },
+    //           },
+    //         ],
+    //         {
+    //           cancelable: false,
+    //         },
+    //       );
+    //     }
+    //   }
+    // }
   };
   const handleSend = async data => {
     const newMessage = {
@@ -674,7 +708,7 @@ const AITrainer = ({navigation, route}) => {
                 height: 20,
                 marginHorizontal: -10,
               }}
-             tintColor={'#f0013b'} 
+              tintColor={'#f0013b'}
               resizeMode="contain"
               source={localImage.Send}
             />

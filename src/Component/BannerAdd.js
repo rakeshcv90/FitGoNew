@@ -9,7 +9,7 @@ import {
 } from 'react-native-google-mobile-ads';
 import {interstitialAdId, OPENAPP_ID, rewardedAdId} from './AdsId';
 import {View} from 'react-native';
-import {useState, useRef} from 'react';
+import {useState, useRef,useCallback} from 'react';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
 
@@ -103,25 +103,44 @@ export const MyInterstitialAd = () => {
   return {initInterstitial, showInterstitialAd};
 };
 
-export const MyRewardedAd = setreward => {
-  const rewarded = RewardedAd.createForAdRequest(rewardedAdId, {
-    requestNonPersonalizedAdsOnly: true,
-  });
-  const unsubscribeLoaded = rewarded.addAdEventListener(
-    RewardedAdEventType.LOADED,
-    () => {
-      rewarded.show();
-    },
-  );
-  const unsubscribeEarned = rewarded.addAdEventListener(
-    RewardedAdEventType.EARNED_REWARD,
-    reward => {
-      setreward(1);
-    },
-  );
-  const faild = rewarded.addAdEventListener(AdEventType.ERROR, dada => {});
+export const MyRewardedAd = () => {
+  const adStatus = useRef(null);
+  const rewardAdsLoad = useCallback(async () => {
+    const rewarded = RewardedAd.createForAdRequest(rewardedAdId, {
+      requestNonPersonalizedAdsOnly: true,
+    });
 
-  return rewarded;
+    rewarded.addAdEventListener(RewardedAdEventType.LOADED, () => {
+      console.log('Ad loaded');
+      adStatus.current = rewarded;
+    });
+
+    rewarded.addAdEventListener(RewardedAdEventType.EARNED_REWARD, reward => {
+      console.log('User earned a reward:', reward);
+    });
+
+    rewarded.addAdEventListener(AdEventType.CLOSED, () => {
+      console.log('Ad closed');
+      rewarded.load(); // Reload the ad after it is closed
+    });
+
+    rewarded.addAdEventListener(AdEventType.ERROR, error => {
+      console.error('Ad error:', error);
+      rewarded.load(); // Attempt to reload the ad if there is an error
+    });
+
+    await rewarded.load(); // Ensure the ad starts loading
+  }, []);
+
+  const showRewardAds = useCallback(async () => {
+    if (adStatus.current && adStatus.current._loaded) {
+      console.log('Showing ad');
+      await adStatus.current.show();
+    } else {
+      console.log('Ad not ready');
+    }
+  }, []);
+  return {rewardAdsLoad, showRewardAds};
 };
 export const OpenAppAds = () => {
   const adStatusRef = useRef(true);
@@ -131,7 +150,6 @@ export const OpenAppAds = () => {
       adStatusRef.current = OpenAds;
     });
     OpenAds.addAdEventListener(AdEventType.CLOSED, () => {
-    
       OpenAds.load();
     });
     OpenAds.addAdEventListener(AdEventType.CLICKED, () => {});
@@ -142,11 +160,10 @@ export const OpenAppAds = () => {
     OpenAds.load();
   };
   const showOpenAppAd = async () => {
- 
     if (adStatusRef.current?._loaded) {
       adStatusRef.current.show();
     } else {
-       console.log("ADD NOT SHOWN",adStatus)
+      console.log('ADD NOT SHOWN', adStatus);
       /// setClosed(true)
     }
   };

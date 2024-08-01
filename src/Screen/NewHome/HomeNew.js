@@ -2191,9 +2191,10 @@ const HomeNew = ({navigation}) => {
               borderRadius: 16,
             }}>
             <ImageBackground
-              source={{
-                uri: 'https://res.cloudinary.com/drfp9prvm/image/upload/v1720116199/healthy-lifestyle-dumbbell-smart-watch-fruit_dh5ngj.jpg',
-              }}
+              // source={{
+              //   uri: 'https://res.cloudinary.com/drfp9prvm/image/upload/v1720116199/healthy-lifestyle-dumbbell-smart-watch-fruit_dh5ngj.jpg',
+              // }}
+              source={require('../../Icon/Images/NewImage2/storenew.jpg')}
               style={{
                 width: '100%',
                 height: DeviceHeigth * 0.15,

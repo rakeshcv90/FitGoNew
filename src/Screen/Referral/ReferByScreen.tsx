@@ -82,13 +82,13 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
     try {
       const payload = new FormData();
       payload.append('referral_code', referralCode);
-      payload.append('user_id',getUserDataDetails?.id);
+      payload.append('user_id', getUserDataDetails?.id);
       const res = await axios(NewAppapi.SEND_REFERRAL_API, {
         method: 'POST',
         data: payload,
-        headers:{
-          'Content-Type':'multipart/form-data'
-        }
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
       setLoader(false);
 
@@ -105,7 +105,6 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
         });
         setVisible(false);
         navigationRef?.navigate('Yourself');
-        
       } else if (res?.data?.msg == 'Invalid referral code') {
         setCodeStatus('Incorrect code');
         setText('Try Again');
@@ -155,8 +154,7 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
           icon: {icon: 'auto', position: 'left'},
         });
         // navigationRef?.navigate('Yourself');
-      }
-      else if (res?.data?.msg == 'user not exist') {
+      } else if (res?.data?.msg == 'user not exist') {
         setCodeStatus('Incorrect code');
         setText('Try Again');
         shake();
@@ -167,8 +165,7 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
           floating: true,
           icon: {icon: 'auto', position: 'left'},
         });
-      }
-      else if (res.data?.msg == 'referral used') {
+      } else if (res.data?.msg == 'referral used') {
         setCodeStatus('Code already used');
         setText('Try Again');
         shake();
@@ -202,132 +199,142 @@ const ReferByScreen: FC<Props> = ({visible, setVisible, afterRefer}) => {
           flex: 1,
           justifyContent: 'center',
         }}>
-        <TouchableOpacity onPress={() => {
-            setVisible(false);
-            navigationRef.navigate('Yourself')
-          }}>
-          <Image
-            source={localImage.closeButton}
-            style={{
-              width: 15,
-              height: 15,
-              alignSelf: 'flex-end',
-              marginRight: DeviceWidth * 0.05,
-              marginBottom: 8,
-            }}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-        <View style={styles.imgView}>
-          <ImageBackground
-            source={localImage.RefferalOutline}
-            style={styles.outline}
-            resizeMode="stretch">
-            <View style={{marginTop: DeviceHeigth * 0.03}}>
-              <Text
-                style={{
-                  color: AppColor.BLACK,
-                  fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-                  fontSize: 18,
-                  textAlign: 'center',
-                  fontWeight: '600',
-                  fontSize: DeviceHeigth >= 1024 ? 18 : 14,
-                }}>
-                {' '}
-                Referral Code
-              </Text>
-              <Image
-                source={localImage.RefferalCodeImg}
-                style={{
-                  height:
-                    DeviceHeigth >= 1024
-                      ? DeviceHeigth * 0.27
-                      : DeviceHeigth * 0.24,
-                  width: DeviceWidth,
-                }}
-                resizeMode="contain"
-              />
-              <Text
-                style={[
-                  styles.txt1,
-                  {fontSize: DeviceHeigth >= 1024 ? 18 : 14,width:DeviceWidth*0.75},
-                ]}>
-                Enter your referral code below to enjoy exclusive rewards and
-                benefits.
-              </Text>
-              <Text
-                style={[
-                  styles.txt1,
-                  {fontSize: DeviceHeigth >= 1024 ? 18 : 14},
-                ]}>
-                Enter Referral Code
-              </Text>
-              <Animated.View
-                style={{transform: [{translateX: shakeAnimation}]}}>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={txt => {
-                    setReferralCode(txt);
-                    setText('Apply Code');
+        <KeyboardAvoidingView
+          behavior={Platform.OS == 'ios' ? 'padding' : undefined}
+          contentContainerStyle={{flexGrow: 1}}>
+          <TouchableOpacity
+            onPress={() => {
+              setVisible(false);
+              navigationRef.navigate('Yourself');
+            }}>
+            <Image
+              source={localImage.closeButton}
+              style={{
+                width: 15,
+                height: 15,
+                alignSelf: 'flex-end',
+                marginRight: DeviceWidth * 0.05,
+                marginBottom: 8,
+              }}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+          <View style={styles.imgView}>
+            <ImageBackground
+              source={localImage.RefferalOutline}
+              style={styles.outline}
+              resizeMode="stretch">
+              <View style={{marginTop: DeviceHeigth * 0.03}}>
+                <Text
+                  style={{
+                    color: AppColor.BLACK,
+                    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                    fontSize: 18,
+                    textAlign: 'center',
+                    fontWeight: '600',
+                    fontSize: DeviceHeigth >= 1024 ? 18 : 14,
+                  }}>
+                  {' '}
+                  Referral Code
+                </Text>
+                <Image
+                  source={localImage.RefferalCodeImg}
+                  style={{
+                    height:
+                      DeviceHeigth >= 1024
+                        ? DeviceHeigth * 0.27
+                        : DeviceHeigth * 0.24,
+                    width: DeviceWidth,
                   }}
-                  value={referralCode}
-                  autoFocus={true}
-                  cursorColor='black'
-                  autoCapitalize='characters'
-                  placeholder="Enter code"
-                  activeOutlineColor="transparent"
-                  underlineColor="transparent"
-                  activeUnderlineColor="transparent"
+                  resizeMode="contain"
                 />
-              </Animated.View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
                 <Text
                   style={[
                     styles.txt1,
                     {
-                      marginVertical: DeviceHeigth >= 1024 ? 12 : 7,
-                      fontSize: 12,
-                      color:
-                        codeStatus == 'Successfully applied'
-                          ? '#009B51'
-                          : codeStatus == 'Incorrect code'
-                          ? AppColor.RED
-                          : AppColor.YELLOW,
+                      fontSize: DeviceHeigth >= 1024 ? 18 : 14,
+                      width: DeviceWidth * 0.75,
                     },
                   ]}>
-                  {codeStatus}
+                  Enter your referral code below to enjoy exclusive rewards and
+                  benefits.
                 </Text>
-                {codeStatus !== '' && (
-                  <Image
-                    source={
-                      codeStatus == 'Successfully applied'
-                        ? localImage.success
-                        : codeStatus == 'Incorrect code'
-                        ? localImage.danger
-                        : localImage.warning
-                    }
-                    style={{width: 15, height: 15}}
-                    resizeMode="contain"
+                <Text
+                  style={[
+                    styles.txt1,
+                    {fontSize: DeviceHeigth >= 1024 ? 18 : 14},
+                  ]}>
+                  Enter Referral Code
+                </Text>
+
+                <Animated.View
+                  style={{transform: [{translateX: shakeAnimation}]}}>
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={txt => {
+                      setReferralCode(txt);
+                      setText('Apply Code');
+                    }}
+                    value={referralCode}
+                    autoFocus={true}
+                    cursorColor="black"
+                    autoCapitalize="characters"
+                    placeholder="Enter code"
+                    activeOutlineColor="transparent"
+                    underlineColor="transparent"
+                    activeUnderlineColor="transparent"
                   />
-                )}
+                </Animated.View>
+
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text
+                    style={[
+                      styles.txt1,
+                      {
+                        marginVertical: DeviceHeigth >= 1024 ? 12 : 7,
+                        fontSize: 12,
+                        color:
+                          codeStatus == 'Successfully applied'
+                            ? '#009B51'
+                            : codeStatus == 'Incorrect code'
+                            ? AppColor.RED
+                            : AppColor.YELLOW,
+                      },
+                    ]}>
+                    {codeStatus}
+                  </Text>
+                  {codeStatus !== '' && (
+                    <Image
+                      source={
+                        codeStatus == 'Successfully applied'
+                          ? localImage.success
+                          : codeStatus == 'Incorrect code'
+                          ? localImage.danger
+                          : localImage.warning
+                      }
+                      style={{width: 15, height: 15}}
+                      resizeMode="contain"
+                    />
+                  )}
+                </View>
               </View>
-            </View>
-            <NewButton
-              ButtonWidth={DeviceWidth * 0.6}
-              position={'absolute'}
-              bottom={20}
-              title={text}
-              pV={14}
-              onPress={checkCode}
-              disabled={referralCode == '' && true}
-            />
-          </ImageBackground>
-        </View>
+              <NewButton
+                ButtonWidth={DeviceWidth * 0.6}
+                position={'absolute'}
+                bottom={20}
+                title={text}
+                pV={14}
+                onPress={checkCode}
+                disabled={referralCode == '' && true}
+              />
+            </ImageBackground>
+          </View>
+        </KeyboardAvoidingView>
       </View>
     </Modal>
   );
