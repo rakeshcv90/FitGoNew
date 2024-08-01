@@ -48,9 +48,12 @@ const Leaderboard = ({navigation, route}: any) => {
 
   const getLeaderboardDataAPI = async () => {
     try {
+      const url =
+        'https://fitme.cvinfotech.in/adserver/public/api/test_leader_board';
       const result = await axios({
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
+
       if (result.data) {
         const top5 = result.data?.data?.filter((item: any) => item?.rank <= 5);
         const after5 = result.data?.data?.filter((item: any) => item?.rank > 5);
@@ -334,13 +337,11 @@ const Leaderboard = ({navigation, route}: any) => {
               width: DeviceWidth * 0.9,
               alignSelf: 'center',
               textAlign: 'right',
-              fontFamily:Fonts.MONTSERRAT_SEMIBOLD,
-              marginBottom:5,
-              textDecorationLine:'underline'
-            
+              fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+              marginBottom: 5,
+              textDecorationLine: 'underline',
             }}
-            onPress={()=>navigation.navigate('OfferGuidelines')}
-            >
+            onPress={() => navigation.navigate('OfferGuidelines')}>
             How to earn?
           </Text>
           <FlatList data={mainData} renderItem={renderItem} />

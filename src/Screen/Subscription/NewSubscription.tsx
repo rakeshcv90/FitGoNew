@@ -44,7 +44,7 @@ import TrackPlayer, {
   usePlaybackState,
 } from 'react-native-track-player';
 import VersionNumber, {appVersion} from 'react-native-version-number';
-import { findKeyInObject } from '../../Component/Utilities/FindkeyinObject';
+import {findKeyInObject} from '../../Component/Utilities/FindkeyinObject';
 const NewSubscription = ({navigation, route}: any) => {
   const {upgrade} = route.params;
   const dispatch = useDispatch();
@@ -68,6 +68,7 @@ const NewSubscription = ({navigation, route}: any) => {
   const [selected, setSelected] = useState<any>(sortedSubscriptions[2]);
   const [loading, setForLoading] = useState(false);
   const [currentSelected, setCurrentSelected] = useState(2);
+  const [price, setPrice] = useState<any>('');
   const [refresh, setRefresh] = useState(false);
   const isFocused = useIsFocused();
   const playbackState = usePlaybackState();
@@ -331,7 +332,7 @@ const NewSubscription = ({navigation, route}: any) => {
     };
 
     try {
-      let result:any = 0;
+      let result: any = 0;
       if (__DEV__) {
         result = await axios('https://sandbox.itunes.apple.com/verifyReceipt', {
           method: 'POST',
@@ -349,7 +350,6 @@ const NewSubscription = ({navigation, route}: any) => {
           data: receiptBody,
         });
       }
-
 
       if (result.data) {
         const renewalHistory = result.data?.pending_renewal_info;
@@ -443,7 +443,7 @@ const NewSubscription = ({navigation, route}: any) => {
         },
         data,
       });
-      console.log(res.data,"subssssss");
+      console.log(res.data, 'subssssss');
       StartAudio(playbackState);
       if (res.data.message == 'Event created successfully') {
         // PurchaseDetails();
@@ -593,7 +593,6 @@ const NewSubscription = ({navigation, route}: any) => {
   };
 
   const RenderItem = ({item, index}: any) => {
-    // const {item, index} = route.params;
     const planCap: string = findKeyInObject(
       item,
       PLATFORM_IOS ? 'title' : 'name',
@@ -648,8 +647,7 @@ const NewSubscription = ({navigation, route}: any) => {
           backgroundColor: AppColor.WHITE,
           justifyContent: 'center',
           alignItems: 'center',
-          height:
-            DeviceHeigth <= 640 ? DeviceHeigth * 0.8 : DeviceHeigth * 0.65,
+          height: DeviceHeigth <= 640 ? DeviceHeigth * 0.8 : DeviceHeigth * 0.6,
           // !planName.includes('noob') &&
           // !planName.includes('pro') &&
           // !PLATFORM_IOS &&
@@ -728,7 +726,7 @@ const NewSubscription = ({navigation, route}: any) => {
             alignItems: 'center',
             marginBottom: 10,
           }}>
-          <FitText
+          {/* <FitText
             type="Heading"
             value={
               planName.includes('noob')
@@ -743,7 +741,8 @@ const NewSubscription = ({navigation, route}: any) => {
             fontFamily={Fonts.MONTSERRAT_MEDIUM}
             color="#ADADAD"
             textDecorationLine="line-through"
-          />
+          /> */}
+
           <FitText
             type="Heading"
             value={` ${normalizedPrice.split('.')[0]}/month`}
@@ -776,7 +775,7 @@ const NewSubscription = ({navigation, route}: any) => {
         {!planName.includes('noob') &&
           !planName.includes('pro') &&
           !PLATFORM_IOS && <Line />}
-        <View
+        {/* <View
           style={[
             styles.row,
             {
@@ -792,7 +791,7 @@ const NewSubscription = ({navigation, route}: any) => {
             marginVertical={3}
           />
         </View>
-        <Line />
+        <Line /> */}
         <View
           style={[
             styles.row,
@@ -952,6 +951,25 @@ const NewSubscription = ({navigation, route}: any) => {
             item.subscriptionOfferDetails[0].offerToken,
           );
     }
+  };
+  const getPrice = (item: any) => {
+    const temp =
+      Platform.OS == 'ios'
+        ? []
+        : item?.subscriptionOfferDetails[0]?.pricingPhases?.pricingPhaseList;
+    const price: string =
+      currentSelected == 2 && Platform.OS == 'android'
+        ? temp?.length == 1
+          ? temp[0]?.priceAmountMicros
+          : temp[1]?.priceAmountMicros
+        : findKeyInObject(
+            item,
+            PLATFORM_IOS ? 'localizedPrice' : 'priceAmountMicros',
+          );
+    const normalizedPrice = PLATFORM_IOS
+      ? price.replace(/\s/g, '')
+      : `₹${(parseInt(price) / 1000000).toString()}`;
+    return normalizedPrice;
   };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
@@ -1133,30 +1151,95 @@ const NewSubscription = ({navigation, route}: any) => {
               justifyContent: 'center',
               width: DeviceWidth * 0.9,
               // backgroundColor: '#f5f5f5',
-              padding: 15,
+              padding: 10,
               borderRadius: 10,
-              marginTop: 20,
             }}>
-            <Text
-              style={{
-                fontSize: 12,
-                fontWeight: '500',
-                fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                lineHeight: 16,
-                color: '#333333',
-              }}>
-              {/* {Platform.OS == 'android'
-                ? `You can cancel your subscription anytime from Google Play Store. On Cancellation Payment is Non-Refundable, but you still access the features of subscription period. We recommend you to review the terms of use before proceeding with any online transaction.`
-                : `Payment is Non-Refundable. We recommend you to review the terms of use before proceeding with any online transaction`} */}
-              Payment is Non-Refundable. We recommended you to review the terms
-              of use before proceeding with online transaction
-            </Text>
+            {currentSelected == 2 ? (
+              Platform.OS == 'android' ? (
+                <Text
+                  style={{
+                    fontSize: 11,
+                    fontWeight: '500',
+                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                    lineHeight: 16,
+                    color: '#333333',
+                  }}>
+                  Please NOTE: Enjoy the 3-day free trial then you will be
+                  charged {getPrice(sortedSubscriptions[currentSelected])}{' '}monthly. You
+                  can cancel the subscription before your trial period ends if
+                  you do not want to convert to a paid subscription. Your
+                  subscription will renew automatically until you cancel the
+                  subscription, you can manage or cancel your subscription
+                  anytime from the Google Play Store. If you are unsure how to
+                  cancel a subscription, please visit the Google Support
+                  website. Note that deleting the app does not cancel your
+                  subscription.
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    fontSize: 11,
+                    fontWeight: '500',
+                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                    lineHeight: 16,
+                    color: '#333333',
+                  }}>
+                  You will be charged{' '}
+                  {getPrice(sortedSubscriptions[currentSelected])} immediately.
+                  Your subscription will automatically renew unless auto-renew
+                  is turned off 24 hours before the end of the current period.
+                  You can manage or cancel your subscription in your iTunes &
+                  App Store / Apple ID account settings anytime. If you are
+                  unsure how to cancel a subscription, please visit the Apple
+                  Support Website. Note that deleting the app does not cancel
+                  your subscription.
+                </Text>
+              )
+            ) : Platform.OS == 'android' ? (
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontWeight: '500',
+                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                  lineHeight: 16,
+                  color: '#333333',
+                }}>
+                Please NOTE: No Free Trial is available for this plan. You will
+                be charged {getPrice(sortedSubscriptions[currentSelected])} for
+                monthly immediately. Your subscription will renew automatically
+                until you cancel the subscription, you can manage or cancel your
+                subscription anytime from the Google Play Store. If you are
+                unsure how to cancel a subscription, please visit the Google
+                Support website. Note that deleting the app does not cancel your
+                subscription.
+              </Text>
+            ) : (
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontWeight: '500',
+                  fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                  lineHeight: 16,
+                  color: '#333333',
+                }}>
+                You will be charged{' '}
+                {getPrice(sortedSubscriptions[currentSelected])} immediately.
+                Your subscription will automatically renew unless auto-renew is
+                turned off 24 hours before the end of the current period. You
+                can manage or cancel your subscription in your iTunes & App
+                Store / Apple ID account settings anytime. If you are unsure how
+                to cancel a subscription, please visit the Apple Support
+                Website. Note that deleting the app does not cancel your
+                subscription.
+              </Text>
+            )}
           </View>
           <View
             style={{
-              marginVertical: 15,
               alignSelf: 'center',
-              width: '90%',
+              width: DeviceWidth * 0.9,
+              paddingBottom: 20,
+              paddingHorizontal: 10,
             }}>
             <Text style={styles.policyText}>
               By continuing you accept our{' '}

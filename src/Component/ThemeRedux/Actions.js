@@ -412,3 +412,9 @@ export const setStreakModalVisible=data=>{
     payload:data
   }
 }
+export const setRewardedCount=data=>{
+  return{
+    type:types.REWARDED_ADS_COUNT,
+    payload:data
+  }
+}

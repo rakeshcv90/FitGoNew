@@ -75,15 +75,15 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 android {
           ndkVersion rootProject.ext.ndkVersion
 
-    compileSdk rootProject.ext.compileSdk
+    compileSdk rootProject.ext.compileSdkVersion
 
     namespace "fitme.health.fitness.homeworkouts.equipment"
     defaultConfig {
         applicationId "fitme.health.fitness.homeworkouts.equipment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 19
-        versionName "1.19"
+        versionCode 23
+        versionName "1.23"
         missingDimensionStrategy "store", "play"
         def date = new Date();
         def newName = date.format('MMM-dd-yyyy')

@@ -82,6 +82,7 @@ import OfferGuidelines from '../Component/Utilities/OfferGuidelines';
 import Referral from '../Screen/Referral/Referral';
 import Breath from '../Screen/Breath/Breath';
 import CollectCoins from '../Screen/CoinAnimations/CollectCoins';
+import CardioPointErns from '../Screen/Breath/CardioPointErns';
 
 const Stack = createStackNavigator();
 
@@ -98,7 +99,7 @@ export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
       {/* <Stack.Screen name="CollectCoins" component={CollectCoins}/> */}
- {/* <Stack.Screen name="Breath" component={Breath} /> */}
+      {/* <Stack.Screen name="CardioPointErns" component={CardioPointErns} /> */}
       {/* <Stack.Screen name="RatingModal" component={StreakModal}/> */}
       {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
