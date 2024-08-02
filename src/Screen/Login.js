@@ -35,6 +35,7 @@ import AnimatedLottieView from 'lottie-react-native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Setmealdata,
+  setCustomDietData,
   setCustomWorkoutData,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
@@ -65,7 +66,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNFetchBlob from 'rn-fetch-blob';
 import AppUpdateComponent from '../Component/AppUpdateComponent';
 import {EnteringEventFunction} from './Event/EnteringEventFunction';
-import { CommonActions } from '@react-navigation/native';
+import {CommonActions} from '@react-navigation/native';
 
 let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
@@ -625,7 +626,7 @@ const Login = ({navigation}) => {
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         dispatch(setUserProfileData(responseData?.data?.profile));
-        console.log('SDfdsfdsfdsfds', responseData?.data?.profile);
+        dispatch(setCustomDietData(responseData?.data?.diet_data));
 
         if (responseData?.data.event_details == 'Not any subscription') {
           dispatch(setPurchaseHistory([]));

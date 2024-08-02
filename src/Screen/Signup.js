@@ -37,6 +37,7 @@ import {showMessage} from 'react-native-flash-message';
 import {useDispatch, useSelector} from 'react-redux';
 import ActivityLoader from '../Component/ActivityLoader';
 import {
+  setCustomDietData,
   setCustomWorkoutData,
   setOfferAgreement,
   setUserId,
@@ -1109,6 +1110,7 @@ const Signup = ({navigation}) => {
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         dispatch(setUserProfileData(responseData?.data?.profile));
+        dispatch(setCustomDietData(responseData?.data?.diet_data));
         //navigationRef.navigate('Yourself');
         setVisible(true);
       }
@@ -1137,6 +1139,7 @@ const Signup = ({navigation}) => {
         dispatch(setCustomWorkoutData(responseData?.data?.workout_data));
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         dispatch(setUserProfileData(responseData?.data?.profile));
+        dispatch(setCustomDietData(responseData?.data?.diet_data));
 
         if (status == 1) {
           if (
@@ -1158,7 +1161,7 @@ const Signup = ({navigation}) => {
   const LoginCancelModal = () => {
     return (
       <Modal
-animationType="slide"
+        animationType="slide"
         transparent={true}
         visible={cancelLogin}
         onRequestClose={() => {

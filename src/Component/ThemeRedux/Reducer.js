@@ -71,6 +71,8 @@ const intialState = {
   getStreakModalVisible: false,
   getOpenAdsCount: 0,
   getRerwardCount: 0,
+  getDietFilterData: -1,
+  getCustomDietData:[]
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -393,6 +395,16 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         getRerwardCount: action.payload,
       };
+      case types.DIET_TYPE_FILTER:
+        return {
+          ...state,
+          getDietFilterData: action.payload,
+        };
+        case types.CUSTOM_DIET_DATA:
+          return {
+            ...state,
+            getCustomDietData: action.payload,
+          };
     default:
       return state;
   }

@@ -18,6 +18,7 @@ import {
   setBanners,
   setChallengesData,
   setCompleteProfileData,
+  setCustomDietData,
   setCustomWorkoutData,
   setDownloadedImage,
   setDynamicPopupValues,
@@ -50,30 +51,28 @@ import RNFetchBlob from 'rn-fetch-blob';
 import {EnteringEventFunction} from './Event/EnteringEventFunction';
 import AnimatedLottieView from 'lottie-react-native';
 import codePush from 'react-native-code-push';
-import { CommonActions } from '@react-navigation/native';
+import {CommonActions} from '@react-navigation/native';
 const products = Platform.select({
   ios: ['fitme_noob', 'fitme_pro', 'fitme_legend'],
   android: ['fitme_monthly', 'a_monthly', 'fitme_legend'],
 });
 
-const SplaceScreen = ({navigation,route}) => {
+const SplaceScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
 
   // console.log("routeSpalce",route.params?.data)
   const showIntro = useSelector(state => state.showIntro);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
-  const getUpdateAvailable=useSelector(state=>state?.getUpdateAvailable)
+  const getUpdateAvailable = useSelector(state => state?.getUpdateAvailable);
   const planType = useSelector(state => state.planType);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [loaded, setLoaded] = useState(false);
   const [ApiDataloaded, setApiDataLoaded] = useState(false);
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   useEffect(() => {
-  
-      DeviceInfo.syncUniqueId().then(uniqueId => {
-        console.log(uniqueId)
-      
-      })
+    DeviceInfo.syncUniqueId().then(uniqueId => {
+      console.log(uniqueId);
+    });
   }, []);
   useEffect(() => {
     requestPermissionforNotification(dispatch);
@@ -111,7 +110,6 @@ const SplaceScreen = ({navigation,route}) => {
   const loadScreen = agreement => {
     if (showIntro) {
       if (getUserDataDetails?.id) {
-     
         if (getUserDataDetails?.profile_compl_status == 1) {
           if (agreement?.term_condition == 'Accepted') {
             // navigation.replace('BottomTab');
@@ -184,17 +182,17 @@ const SplaceScreen = ({navigation,route}) => {
           Platform.OS == 'android' && checkCancel();
         } else {
           setTimeout(() => {
-           if(getUpdateAvailable==false){
-            loaded.show()
-           }
+            if (getUpdateAvailable == false) {
+              loaded.show();
+            }
             loadScreen(agremment);
           }, 4000);
         }
       } else {
         setTimeout(() => {
-          if(getUpdateAvailable==false){
-            loaded.show()
-           }
+          if (getUpdateAvailable == false) {
+            loaded.show();
+          }
           loadScreen(agremment);
         }, 4000);
       }
@@ -231,12 +229,18 @@ const SplaceScreen = ({navigation,route}) => {
           });
   };
 
- 
   const getUserAllInData = async () => {
+    const url='https://fitme.cvinfotech.in/adserver/public/api/test_all_in_one'
     try {
       const responseData = await axios.get(
-        `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
+        `${url}?version=${VersionNumber.appVersion}`,
+       //${NewAppapi.GET_ALL_IN_ONE}
       );
+    // try {
+    //   const responseData = await axios.get(
+    //     `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
+    //   );
+ 
       if (
         responseData?.data?.msg ==
         'Please update the app to the latest version.'
@@ -261,9 +265,11 @@ const SplaceScreen = ({navigation,route}) => {
         responseData?.data?.data?.forEach(item => {
           objects[item?.type] = item?.image;
         });
-        downloadImages(responseData?.data?.custom_dailog_data[0])
-        dispatch(setDynamicPopupValues(responseData?.data?.custom_dailog_data[0]))
-       
+        downloadImages(responseData?.data?.custom_dailog_data[0]);
+        dispatch(
+          setDynamicPopupValues(responseData?.data?.custom_dailog_data[0]),
+        );
+
         dispatch(setBanners(objects));
         dispatch(setAgreementContent(responseData?.data?.terms[0]));
         dispatch(Setmealdata(responseData?.data?.diets));
@@ -279,52 +285,55 @@ const SplaceScreen = ({navigation,route}) => {
       getAllChallangeAndAllExerciseData();
     }
   };
-// download image
+  // download image
 
-const sanitizeFileName = (fileName) => {
-  fileName = fileName.replace(/\s+/g,'_');
-  return fileName;
-};
+  const sanitizeFileName = fileName => {
+    fileName = fileName.replace(/\s+/g, '_');
+    return fileName;
+  };
 
-const StoringData = {};
+  const StoringData = {};
 
-const downloadImages = async (data) => {
- 
-  try {
-    const fileName = data?.image?.substring(data?.image?.lastIndexOf('/') + 1);
-    const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(fileName)}`;
-    const imageExists = await RNFetchBlob.fs.exists(filePath);
-    if (imageExists) {
-      StoringData['popupImage'] = `file://${filePath}`;
-    } else {
-      await RNFetchBlob.config({
-        fileCache: true,
-        path: filePath,
-      })
-        .fetch('GET', data?.image, {
-          'Content-Type': 'image/png', // Correct content type for PNG images
-          // Add headers or other configurations if required
+  const downloadImages = async data => {
+    try {
+      const fileName = data?.image?.substring(
+        data?.image?.lastIndexOf('/') + 1,
+      );
+      const filePath = `${RNFetchBlob.fs.dirs.CacheDir}/${sanitizeFileName(
+        fileName,
+      )}`;
+      const imageExists = await RNFetchBlob.fs.exists(filePath);
+      if (imageExists) {
+        StoringData['popupImage'] = `file://${filePath}`;
+      } else {
+        await RNFetchBlob.config({
+          fileCache: true,
+          path: filePath,
         })
-        .then(res => {
-          StoringData['popupImage'] = `file://${res.path()}`;
-        })
-        .catch(err => {
-          console.log(err,"image Download error");
-          dispatch(setDownloadedImage({}))
-        });
+          .fetch('GET', data?.image, {
+            'Content-Type': 'image/png', // Correct content type for PNG images
+            // Add headers or other configurations if required
+          })
+          .then(res => {
+            StoringData['popupImage'] = `file://${res.path()}`;
+          })
+          .catch(err => {
+            console.log(err, 'image Download error');
+            dispatch(setDownloadedImage({}));
+          });
+      }
+      dispatch(setDownloadedImage(StoringData));
+    } catch (error) {
+      console.log('ERRRR', error);
+      dispatch(setDownloadedImage({}));
     }
-    dispatch(setDownloadedImage(StoringData))
-  } catch (error) {
-    console.log('ERRRR', error);
-    dispatch(setDownloadedImage({}))
-  }
-};
+  };
   const getUserDetailData = async userId => {
     try {
       const responseData = await axios.get(
         `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
       );
-
+   
       if (
         responseData?.data?.msg ==
         'Please update the app to the latest version.'
@@ -341,6 +350,7 @@ const downloadImages = async (data) => {
         dispatch(setOfferAgreement(responseData?.data?.additional_data));
         DisplayAds(responseData?.data?.additional_data);
         dispatch(setUserProfileData(responseData?.data?.profile));
+        dispatch(setCustomDietData(responseData?.data?.diet_data));
         if (responseData?.data.event_details == 'Not any subscription') {
           dispatch(setPurchaseHistory([]));
           EnteringEventFunction(
@@ -362,8 +372,8 @@ const downloadImages = async (data) => {
         }
       }
     } catch (error) {
-      console.log('GET-USER-DATA', error);
-   
+      console.log('GET-USER-DATA splaceScreen', error);
+
       DisplayAds((response = null));
     }
   };
