@@ -106,7 +106,7 @@ export const NewAppapi = {
   CURRENT_DAY_EVENT_EXERCISE: NewApi + 'user_event__exercise_status',
   POST_REWARDS_EXERCISE: NewApi + 'event_exercise_complete_status', //Done App Version
   EVENT_BANNERS: NewApi + 'get_banners',
-  GET_USER_COINS: NewApi + 'exercise_points_day',
+  // GET_USER_COINS: NewApi + 'exercise_points_day',
   EDIT_EVENT_EXERCISE: NewApi + 'user_edit_exercises',
   GET_EDITED_EXERCISES: NewApi + 'get_weekday_exercise',
   GET_COINS: NewApi + 'exercise_points_day',
@@ -125,4 +125,5 @@ export const NewAppapi = {
   SEND_REFERRAL_API: NewApi + 'add_referral_coin',
   // SEND_REFERRAL_API: NewApi + 'test_add_referral_coin',
   GET_REF_RANK: NewApi + 'user_rank',
+  GET_BREATH_SESSION:NewApi+'get_breathinout_session'
 };
