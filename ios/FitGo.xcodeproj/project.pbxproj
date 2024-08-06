@@ -46,6 +46,7 @@
 		E8AD03B018624266AC0E6ED5 /* Montserrat-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C231053E32AA473AA2B81B39 /* Montserrat-BlackItalic.ttf */; };
 		F3F89787B8A26EB1ABC4B853 /* libPods-FitGo-FitGoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF3CDA6DA54B1363E283F783 /* libPods-FitGo-FitGoTests.a */; };
 		FAC53CAB023C49A1B6CDFBF5 /* Montserrat-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8EDE670F507241F5A594E3FA /* Montserrat-BoldItalic.ttf */; };
+		8CE4659AFCEF4BA39E247549 /* Helvetica Bold Condensed.otf in Resources */ = {isa = PBXBuildFile; fileRef = 571C2D9EB7694EDAA663558C /* Helvetica Bold Condensed.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,6 +122,7 @@
 		EF3CDA6DA54B1363E283F783 /* libPods-FitGo-FitGoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FitGo-FitGoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F141498D4AB64E61A6EF9F2D /* Montserrat-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Light.ttf"; path = "../assets/fonts/Montserrat-Light.ttf"; sourceTree = "<group>"; };
 		F876F902075C49CFA15F58B6 /* Montserrat-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraLight.ttf"; path = "../assets/fonts/Montserrat-ExtraLight.ttf"; sourceTree = "<group>"; };
+		571C2D9EB7694EDAA663558C /* Helvetica Bold Condensed.otf */ = {isa = PBXFileReference; name = "Helvetica Bold Condensed.otf"; path = "../assets/fonts/Helvetica Bold Condensed.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,6 +253,7 @@
 				3497870F246042E9BF616E9B /* Helvetica-Oblique.ttf */,
 				A2E48D4F72EE482A9D3AED70 /* Helvetica.ttf */,
 				4DE44D80B8E64FDE811036F2 /* helvetica-light-587ebe5a59211.ttf */,
+				571C2D9EB7694EDAA663558C /* Helvetica Bold Condensed.otf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -400,6 +403,7 @@
 				36B6B9904D2C4774A37747F3 /* Helvetica-Oblique.ttf in Resources */,
 				30FB3002DC054468B56CE18F /* Helvetica.ttf in Resources */,
 				DA9451ACB44C42728A9818F5 /* helvetica-light-587ebe5a59211.ttf in Resources */,
+				8CE4659AFCEF4BA39E247549 /* Helvetica Bold Condensed.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

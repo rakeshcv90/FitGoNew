@@ -2,6 +2,10 @@
   "migIndex": 1,
   "data": [
     {
+      "path": "assets/fonts/Helvetica Bold Condensed.otf",
+      "sha1": "8b9d8d7295df95e505644f9d15e5075f837ef4d0"
+    },
+    {
       "path": "assets/fonts/Helvetica-Bold.ttf",
       "sha1": "d064906892c6baf2916d5102910026ba0a4f2664"
     },

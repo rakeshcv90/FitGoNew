@@ -264,5 +264,6 @@ export const localImage = {
   fire3d: require('../Icon/Images/InAppRewards/fire3d.png'),
   arms3d: require('../Icon/Images/InAppRewards/Arm3d.png'),
   timer3d: require('../Icon/Images/InAppRewards/timer3d.png'),
-  checkLottie:require('../Icon/Images/InAppRewards/checkLottie.json')
+  checkLottie:require('../Icon/Images/InAppRewards/checkLottie.json'),
+  NoMeal:require('../Icon/Images/InAppRewards/NoMeal.png')
 };

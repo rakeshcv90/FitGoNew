@@ -418,3 +418,15 @@ export const setRewardedCount=data=>{
     payload:data
   }
 }
+export const setMealTypeData=data=>{
+  return{
+    type:types.DIET_TYPE_FILTER,
+    payload:data
+  }
+}
+export const setCustomDietData=data=>{
+  return{
+    type:types.CUSTOM_DIET_DATA,
+    payload:data
+  }
+}

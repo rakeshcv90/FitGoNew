@@ -2113,9 +2113,9 @@ const HomeNew = ({navigation}) => {
               let checkAdsShow = AddCountFunction();
               if (checkAdsShow == true) {
                 showInterstitialAd();
-                navigation.navigate('Meals');
+                navigation.navigate('DietPlatTabBar');
               } else {
-                navigation.navigate('Meals');
+                navigation.navigate('DietPlatTabBar');
               }
             }}
             style={{
