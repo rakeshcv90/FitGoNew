@@ -8,7 +8,7 @@ type Props = TextProps & {
   color?: string;
   value: string;
   errorType?: boolean;
-  textAlign?: 'center' | 'left' | 'right';
+  textAlign?: 'center' | 'left' | 'right' | 'justify';
   textTransform?: 'capitalize' | 'uppercase' | 'none';
   letterSpacing?: number;
   fontFamily?: string;

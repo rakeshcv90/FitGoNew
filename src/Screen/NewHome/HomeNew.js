@@ -1289,6 +1289,7 @@ const HomeNew = ({navigation}) => {
                     AnalyticsConsole('LB');
                     navigation.navigate('Leaderboard');
                   }
+                    // navigation.navigate('Questions',{screenName:'Home'});
                 }}
                 coins={fitCoins > 0 ? fitCoins : 0}
               />

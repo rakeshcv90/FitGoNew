@@ -74,7 +74,7 @@ const songs = [
     url: require('../../Icon/Images/Exercise_Start.mp3'),
   },
 ];
-const EventExercise = ({navigation, route}: any) => {
+const CardioExercise = ({navigation, route}: any) => {
   const {
     allExercise,
     currentExercise,
@@ -298,16 +298,23 @@ const EventExercise = ({navigation, route}: any) => {
               showInterstitialAd();
               clearTimeout(playTimerRef.current);
               //CollectCoins
-              navigation.navigate('CollectCoins', {
-                day: day,
-                allExercise: allExercise,
+
+              navigation?.navigate('BreathSessionInfo', {
                 type: type,
+                day: day,
+                weeklyTime: 0,
+                weeklyCal: 0,
+                weeklyCoins: 0,
+                allExercise: allExercise,
               });
             } else {
-              navigation.navigate('CollectCoins', {
-                day: day,
-                allExercise: allExercise,
+              navigation?.navigate('BreathSessionInfo', {
                 type: type,
+                day: day,
+                weeklyTime: 0,
+                weeklyCal: 0,
+                weeklyCoins: 0,
+                allExercise: allExercise,
               });
             }
           } else if (
@@ -428,7 +435,7 @@ const EventExercise = ({navigation, route}: any) => {
 
     payload.append('type', type);
     payload.append('day', WeekArray[day]);
-    payload.append('workout_id', `-${day + 1}`);
+    payload.append('workout_id', `-${12 + 1}`);
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
 
@@ -1231,7 +1238,7 @@ const EventExercise = ({navigation, route}: any) => {
   );
 };
 
-export default EventExercise;
+export default CardioExercise;
 
 const styles = StyleSheet.create({
   backgroundVideo: {

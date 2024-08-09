@@ -265,5 +265,6 @@ export const localImage = {
   arms3d: require('../Icon/Images/InAppRewards/Arm3d.png'),
   timer3d: require('../Icon/Images/InAppRewards/timer3d.png'),
   checkLottie:require('../Icon/Images/InAppRewards/checkLottie.json'),
-  NoMeal:require('../Icon/Images/InAppRewards/NoMeal.png')
+  NoMeal:require('../Icon/Images/InAppRewards/NoMeal.png'),
+  ChatBotImage:require('../Icon/Images/InAppRewards/ChatBotImage.png')
 };

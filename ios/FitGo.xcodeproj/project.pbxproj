@@ -41,12 +41,11 @@
 		B760FBA942A345108270C380 /* Montserrat-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 75A6734A3F75486F949C6D2B /* Montserrat-SemiBold.ttf */; };
 		C7CB753997914EA3A20B1340 /* Montserrat-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D7604ACC2AA470BA5198074 /* Montserrat-ExtraLightItalic.ttf */; };
 		D15E40C50F4F4635B27837E2 /* Montserrat-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24B810C0B89F4E699E5D6849 /* Montserrat-Medium.ttf */; };
-		DA9451ACB44C42728A9818F5 /* helvetica-light-587ebe5a59211.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4DE44D80B8E64FDE811036F2 /* helvetica-light-587ebe5a59211.ttf */; };
 		E2D6756EE36B412D88EAB6F3 /* Montserrat-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F876F902075C49CFA15F58B6 /* Montserrat-ExtraLight.ttf */; };
 		E8AD03B018624266AC0E6ED5 /* Montserrat-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C231053E32AA473AA2B81B39 /* Montserrat-BlackItalic.ttf */; };
 		F3F89787B8A26EB1ABC4B853 /* libPods-FitGo-FitGoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF3CDA6DA54B1363E283F783 /* libPods-FitGo-FitGoTests.a */; };
 		FAC53CAB023C49A1B6CDFBF5 /* Montserrat-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8EDE670F507241F5A594E3FA /* Montserrat-BoldItalic.ttf */; };
-		8CE4659AFCEF4BA39E247549 /* Helvetica Bold Condensed.otf in Resources */ = {isa = PBXBuildFile; fileRef = 571C2D9EB7694EDAA663558C /* Helvetica Bold Condensed.otf */; };
+		9AD4FBEA8A3141699BD5C40F /* helvetica-light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AB4D69E24E6D4443A4F6C8A9 /* helvetica-light.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,7 +101,6 @@
 		4C426F642AF209950063F75E /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = FitGo/BootSplash.storyboard; sourceTree = "<group>"; };
 		4C5CC9DF2B32FE6E00F3F879 /* FitGoDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = FitGoDebug.entitlements; path = FitGo/FitGoDebug.entitlements; sourceTree = "<group>"; };
 		4CF7BFBE2AC13D4B00F8EF48 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
-		4DE44D80B8E64FDE811036F2 /* helvetica-light-587ebe5a59211.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "helvetica-light-587ebe5a59211.ttf"; path = "../assets/fonts/helvetica-light-587ebe5a59211.ttf"; sourceTree = "<group>"; };
 		5EEC81485B3F092563F09BBE /* Pods-FitGo-FitGoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FitGo-FitGoTests.debug.xcconfig"; path = "Target Support Files/Pods-FitGo-FitGoTests/Pods-FitGo-FitGoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		60FFF6BAC5CB4F848A45865E /* Montserrat-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ThinItalic.ttf"; path = "../assets/fonts/Montserrat-ThinItalic.ttf"; sourceTree = "<group>"; };
 		67DD753F146244F8A2215BE0 /* Helvetica-BoldOblique.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Helvetica-BoldOblique.ttf"; path = "../assets/fonts/Helvetica-BoldOblique.ttf"; sourceTree = "<group>"; };
@@ -122,7 +120,7 @@
 		EF3CDA6DA54B1363E283F783 /* libPods-FitGo-FitGoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FitGo-FitGoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F141498D4AB64E61A6EF9F2D /* Montserrat-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Light.ttf"; path = "../assets/fonts/Montserrat-Light.ttf"; sourceTree = "<group>"; };
 		F876F902075C49CFA15F58B6 /* Montserrat-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraLight.ttf"; path = "../assets/fonts/Montserrat-ExtraLight.ttf"; sourceTree = "<group>"; };
-		571C2D9EB7694EDAA663558C /* Helvetica Bold Condensed.otf */ = {isa = PBXFileReference; name = "Helvetica Bold Condensed.otf"; path = "../assets/fonts/Helvetica Bold Condensed.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		AB4D69E24E6D4443A4F6C8A9 /* helvetica-light.ttf */ = {isa = PBXFileReference; name = "helvetica-light.ttf"; path = "../assets/fonts/helvetica-light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -252,8 +250,7 @@
 				67DD753F146244F8A2215BE0 /* Helvetica-BoldOblique.ttf */,
 				3497870F246042E9BF616E9B /* Helvetica-Oblique.ttf */,
 				A2E48D4F72EE482A9D3AED70 /* Helvetica.ttf */,
-				4DE44D80B8E64FDE811036F2 /* helvetica-light-587ebe5a59211.ttf */,
-				571C2D9EB7694EDAA663558C /* Helvetica Bold Condensed.otf */,
+				AB4D69E24E6D4443A4F6C8A9 /* helvetica-light.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -402,8 +399,7 @@
 				10A23A5A34534E6AAB703DDB /* Helvetica-BoldOblique.ttf in Resources */,
 				36B6B9904D2C4774A37747F3 /* Helvetica-Oblique.ttf in Resources */,
 				30FB3002DC054468B56CE18F /* Helvetica.ttf in Resources */,
-				DA9451ACB44C42728A9818F5 /* helvetica-light-587ebe5a59211.ttf in Resources */,
-				8CE4659AFCEF4BA39E247549 /* Helvetica Bold Condensed.otf in Resources */,
+				9AD4FBEA8A3141699BD5C40F /* helvetica-light.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

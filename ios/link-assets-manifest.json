@@ -2,10 +2,6 @@
   "migIndex": 1,
   "data": [
     {
-      "path": "assets/fonts/Helvetica Bold Condensed.otf",
-      "sha1": "8b9d8d7295df95e505644f9d15e5075f837ef4d0"
-    },
-    {
       "path": "assets/fonts/Helvetica-Bold.ttf",
       "sha1": "d064906892c6baf2916d5102910026ba0a4f2664"
     },
@@ -94,7 +90,7 @@
       "sha1": "9455ac7542b843c9bf96db3dd59302d7da39fa3c"
     },
     {
-      "path": "assets/fonts/helvetica-light-587ebe5a59211.ttf",
+      "path": "assets/fonts/helvetica-light.ttf",
       "sha1": "a7d02da118efb487c83136ea82b1d40e19dc019b"
     }
   ]
