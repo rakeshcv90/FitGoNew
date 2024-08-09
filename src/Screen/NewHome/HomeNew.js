@@ -1282,14 +1282,15 @@ const HomeNew = ({navigation}) => {
             <View style={{alignSelf: 'center'}}>
               <FitCoins
                 onPress={() => {
-                  if (winnerAnnounced) {
-                    AnalyticsConsole('W_L');
-                    navigation.navigate('Winner');
-                  } else {
-                    AnalyticsConsole('LB');
-                    navigation.navigate('Leaderboard');
-                  }
+                  // if (winnerAnnounced) {
+                  //   AnalyticsConsole('W_L');
+                  //   navigation.navigate('Winner');
+                  // } else {
+                  //   AnalyticsConsole('LB');
+                  //   navigation.navigate('Leaderboard');
+                  // }
                     // navigation.navigate('Questions',{screenName:'Home'});
+                     navigation.navigate('StepGuide');
                 }}
                 coins={fitCoins > 0 ? fitCoins : 0}
               />
@@ -2302,7 +2303,8 @@ const HomeNew = ({navigation}) => {
                   // });
                 }
               } else {
-                navigation?.navigate('NewSubscription', {upgrade: true});
+                // navigation?.navigate('NewSubscription', {upgrade: true});
+                navigation?.navigate('StepGuide');
                 dispatch(setRewardPopUp(1));
               }
             }}

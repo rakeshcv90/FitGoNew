@@ -93,6 +93,7 @@ import EditCustomMeal from '../Screen/NewMeal/EditCustomMeal';
 import CardioExercise from '../Screen/Event/CardioExercise';
 import Questions from '../Screen/FAQ/Questions';
 import ChatBot from '../Screen/FAQ/ChatBot';
+import StepGuide from '../Screen/StepbyStepGuide/StepGuide';
 
 const Stack = createStackNavigator();
 
@@ -215,6 +216,7 @@ export const LoginStack = () => {
       <Stack.Screen name="EditCustomMeal" component={EditCustomMeal} />
       <Stack.Screen name="Questions" component={Questions} />
       <Stack.Screen name="ChatBot" component={ChatBot} />
+      <Stack.Screen name="StepGuide" component={StepGuide} />
     </Stack.Navigator>
   );
 };

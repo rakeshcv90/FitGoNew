@@ -50,13 +50,21 @@ export const AppColor={
     YELLOW:'#FFB400',
     ORANGE:'#F38029',
     RATING_COLOR:'#F4CB49',
-    BREATHE_CIRCLE_COLOR: '#00C69A'
+    BREATHE_CIRCLE_COLOR: '#00C69A',
+    DARK_YELLOW: '#FEC40C',
+    LIGHT_YELLOW: '#FFE696',
   }
   export const Fonts = {
+    // MONTSERRAT_BOLD: 'Montserrat-Bold',
+    // MONTSERRAT_SEMIBOLD: 'Montserrat-SemiBold',
+    // MONTSERRAT_MEDIUM: 'Montserrat-Medium',
+    // MONTSERRAT_REGULAR: 'Montserrat-Regular',
     MONTSERRAT_BOLD: 'Montserrat-Bold',
     MONTSERRAT_SEMIBOLD: 'Montserrat-SemiBold',
     MONTSERRAT_MEDIUM: 'Montserrat-Medium',
     MONTSERRAT_REGULAR: 'Montserrat-Regular',
+    HELVETICA_BOLD: 'Helvetica-Bold',
+    HELVETICA_REGULAR: 'Helvetica',
 
 }
 

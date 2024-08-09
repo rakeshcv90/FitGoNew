@@ -266,5 +266,9 @@ export const localImage = {
   timer3d: require('../Icon/Images/InAppRewards/timer3d.png'),
   checkLottie:require('../Icon/Images/InAppRewards/checkLottie.json'),
   NoMeal:require('../Icon/Images/InAppRewards/NoMeal.png'),
-  ChatBotImage:require('../Icon/Images/InAppRewards/ChatBotImage.png')
+  ChatBotImage:require('../Icon/Images/InAppRewards/ChatBotImage.png'),
+  StepGuidHead:require('../Icon/Images/InAppRewards/StepGuidHead.png'),
+  StepHealth:require('../Icon/Images/InAppRewards/StepHealth.png'),
+  StepTrophy:require('../Icon/Images/InAppRewards/StepTrophy.png'),
+  StepBadge:require('../Icon/Images/InAppRewards/StepBadge.png'),
 };
