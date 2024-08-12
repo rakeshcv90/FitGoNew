@@ -294,13 +294,13 @@ const EventExercise = ({navigation, route}: any) => {
               showInterstitialAd();
               clearTimeout(playTimerRef.current);
               //CollectCoins
-              navigation.navigate('CollectCoins', {
+              navigation.navigate('WorkoutCompleted', {
                 day: day,
                 allExercise: allExercise,
                 type: type,
               });
             } else {
-              navigation.navigate('CollectCoins', {
+              navigation.navigate('WorkoutCompleted', {
                 day: day,
                 allExercise: allExercise,
                 type: type,

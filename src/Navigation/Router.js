@@ -95,6 +95,10 @@ import Questions from '../Screen/FAQ/Questions';
 import ChatBot from '../Screen/FAQ/ChatBot';
 import StepGuide from '../Screen/StepbyStepGuide/StepGuide';
 
+import Breathe from '../Screen/Breath/Breathe';
+import WorkoutHistory from '../Screen/WorkoutHistory/WorkoutHistory';
+import OfferPage from '../Screen/OfferScreen/OfferPage';
+import WorkoutCompleted from '../Screen/WorkoutCompleteScreen/WorkoutCompleted';
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -217,6 +221,7 @@ export const LoginStack = () => {
       <Stack.Screen name="Questions" component={Questions} />
       <Stack.Screen name="ChatBot" component={ChatBot} />
       <Stack.Screen name="StepGuide" component={StepGuide} />
+      <Stack.Screen name="WorkoutCompleted" component={WorkoutCompleted} />
     </Stack.Navigator>
   );
 };

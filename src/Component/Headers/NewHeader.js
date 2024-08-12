@@ -6,6 +6,7 @@ import {
   Platform,
   SafeAreaView,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import React from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Config';
@@ -25,6 +26,8 @@ import ShimmerPlaceholder, {
   createShimmerPlaceholder,
 } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
+import {localImage} from '../Image';
+import {ArrowLeft} from '../Utilities/Arrows/Arrow';
 
 const NewHeader = ({
   header,
@@ -35,6 +38,8 @@ const NewHeader = ({
   coins,
   enteredCurrentEvent,
   coinsLoaded,
+  secondIcon,
+  headerColor,
 }) => {
   const navigation = useNavigation();
   const getExperience = useSelector(state => state.getExperience);
@@ -47,15 +52,9 @@ const NewHeader = ({
       style={[
         style.container,
         {
-          height:
-            Platform.OS == 'ios'
-              ? (DeviceHeigth * 13) / 100
-              : (DeviceHeigth * 10) / 100,
-          left: 1,
-          paddingTop:
-            Platform.OS == 'android'
-              ? DeviceHeigth * 0.03
-              : DeviceHeigth * 0.01,
+          paddingVertical: getStatusBarHeight(),
+          left: 3,
+          backgroundColor: headerColor ?? AppColor.WHITE,
         },
       ]}>
       {!backButton ? (
@@ -64,24 +63,9 @@ const NewHeader = ({
         <TouchableOpacity
           style={{left: 10, zIndex: 1}}
           onPress={() => {
-            if (getExperience == true) {
-              dispatch(setExperience(false));
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  routes: [{name: 'BottomTab'}],
-                }),
-              );
-              // navigationRef.current.navigate('BottomTab',{screen:'Home'})
-            } else {
-              navigation.goBack();
-            }
+            navigation.goBack();
           }}>
-          <AntDesign
-            name={'arrowleft'}
-            size={25}
-            color={AppColor.INPUTTEXTCOLOR}
-          />
+          <ArrowLeft />
         </TouchableOpacity>
       )}
 
@@ -145,8 +129,16 @@ const NewHeader = ({
           <View style={{width: 25}}></View>
         )
       ) : (
-        <TouchableOpacity onPress={onPress}>
-          <Icons name={'magnify'} size={25} color={AppColor.INPUTTEXTCOLOR} />
+        <TouchableOpacity onPress={onPress} style={{right: 12}}>
+          {secondIcon ? (
+            <Image
+              source={localImage.infoCircle}
+              style={{height: 25, width: 25}}
+              resizeMode="contain"
+            />
+          ) : (
+            <Icons name={'magnify'} size={25} color={AppColor.INPUTTEXTCOLOR} />
+          )}
         </TouchableOpacity>
       )}
     </SafeAreaView>
@@ -155,10 +147,9 @@ const NewHeader = ({
 const style = StyleSheet.create({
   container: {
     width: DeviceWidth,
-    backgroundColor: '#fff',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
   headerstyle: {
     fontWeight: '600',

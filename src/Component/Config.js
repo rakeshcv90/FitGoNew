@@ -128,4 +128,5 @@ export const NewAppapi = {
   GET_REF_RANK: NewApi + 'user_rank',
   GET_BREATH_SESSION:NewApi+'get_breathinout_session',
   GET_PAST_WINNERS:NewApi+'past_winners',
+  GET_HISTORY:NewApi+'test_coin_deduction_rec'
 };

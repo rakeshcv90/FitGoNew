@@ -299,21 +299,15 @@ const CardioExercise = ({navigation, route}: any) => {
               clearTimeout(playTimerRef.current);
               //CollectCoins
 
-              navigation?.navigate('BreathSessionInfo', {
+              navigation?.navigate('WorkoutCompleted', {
                 type: type,
                 day: day,
-                weeklyTime: 0,
-                weeklyCal: 0,
-                weeklyCoins: 0,
                 allExercise: allExercise,
               });
             } else {
-              navigation?.navigate('BreathSessionInfo', {
+              navigation?.navigate('WorkoutCompleted', {
                 type: type,
                 day: day,
-                weeklyTime: 0,
-                weeklyCal: 0,
-                weeklyCoins: 0,
                 allExercise: allExercise,
               });
             }
