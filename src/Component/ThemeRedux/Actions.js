@@ -430,3 +430,15 @@ export const setCustomDietData=data=>{
     payload:data
   }
 }
+export const setExerciseInTime=data=>{
+  return{
+    type:types.EXERCISE_IN_TIME,
+    payload:data
+  }
+}
+export const setExerciseOutTime=data=>{
+  return{
+    type:types.EXERCISE_OUT_TIME,
+    payload:data
+  }
+}

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {localImage} from '../../Component/Image';
 import FitText from '../../Component/Utilities/FitText';
 import {StepsArray, StepsArrayType} from './StepsArray';
@@ -111,7 +111,7 @@ const StepGuide = ({navigation}: any) => {
   const getPastWinner = () => {
     RequestAPI.makeRequest(
       'POST',
-      'https://fitme.cvinfotechserver.com/adserver/public/api/past_winners',
+      NewAppapi.GET_PAST_WINNERS,
       {
         version: VersionNumber.appVersion,
       },

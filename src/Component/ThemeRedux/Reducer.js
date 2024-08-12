@@ -72,7 +72,9 @@ const intialState = {
   getOpenAdsCount: 0,
   getRerwardCount: 0,
   getDietFilterData: -1,
-  getCustomDietData:[]
+  getCustomDietData:[],
+  getExerciseInTime: '',
+  getExerciseOutTime: '',
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -404,6 +406,16 @@ const ThemeReducer = (state = intialState, action) => {
           return {
             ...state,
             getCustomDietData: action.payload,
+          };
+        case types.EXERCISE_IN_TIME:
+          return {
+            ...state,
+            getExerciseInTime: action.payload,
+          };
+        case types.EXERCISE_OUT_TIME:
+          return {
+            ...state,
+            getExerciseOutTime: action.payload,
           };
     default:
       return state;

@@ -4,7 +4,8 @@ export const DeviceWidth = Dimensions.get('screen').width;
 export const Api = 'https://cvinfotech2@gofit.tentoptoday.com/json/';
 //export const NewApi = 'https://gofit.tentoptoday.com/adserver/public/api/';
 // export const NewApi = 'https://fitme.esapplications.in/adserver/public/api/';
-export const NewApi = 'https://fitme.cvinfotech.in/adserver/public/api/';
+//export const NewApi = 'https://fitme.cvinfotech.in/adserver/public/api/'; //old Server
+export const NewApi = 'https://fitme.cvinfotechserver.com/adserver/public/api/'; //New  Server
 
 export const Appapi = {
   login: 'user_login.php',
@@ -125,5 +126,6 @@ export const NewAppapi = {
   SEND_REFERRAL_API: NewApi + 'add_referral_coin',
   // SEND_REFERRAL_API: NewApi + 'test_add_referral_coin',
   GET_REF_RANK: NewApi + 'user_rank',
-  GET_BREATH_SESSION:NewApi+'get_breathinout_session'
+  GET_BREATH_SESSION:NewApi+'get_breathinout_session',
+  GET_PAST_WINNERS:NewApi+'past_winners',
 };
