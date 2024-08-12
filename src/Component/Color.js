@@ -49,14 +49,22 @@ export const AppColor={
     SUBS_GREEN: '#07B47E',
     YELLOW:'#FFB400',
     ORANGE:'#F38029',
-    RATING_COLOR:'#F4CB49'
+    RATING_COLOR:'#F4CB49',
+    BREATHE_CIRCLE_COLOR :'#00C69A',
+    GRAAY6:'#6B7280',
+    SKY_BLUE:"#DBEAFE",
+    PINK1:'#FC73CD',
+    NAVY_BLUE:'#1E40AF',
+    LIGHT_RED:'#FEF2F2'
+
+
   }
   export const Fonts = {
     MONTSERRAT_BOLD: 'Montserrat-Bold',
     MONTSERRAT_SEMIBOLD: 'Montserrat-SemiBold',
     MONTSERRAT_MEDIUM: 'Montserrat-Medium',
     MONTSERRAT_REGULAR: 'Montserrat-Regular',
-
+   
 }
 
 export const PLATFORM_IOS = Platform.OS == 'ios'

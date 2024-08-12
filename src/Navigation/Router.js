@@ -83,7 +83,10 @@ import Referral from '../Screen/Referral/Referral';
 import Breath from '../Screen/Breath/Breath';
 import CollectCoins from '../Screen/NewPostExerciseScreens/CollectCoins';
 import BreathSessionInfo from '../Screen/NewPostExerciseScreens/BreathSessionInfo';
-
+import Breathe from '../Screen/Breath/Breathe';
+import WorkoutHistory from '../Screen/WorkoutHistory/WorkoutHistory';
+import OfferPage from '../Screen/OfferScreen/OfferPage';
+import WorkoutCompleted from '../Screen/WorkoutCompleteScreen/WorkoutCompleted';
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -98,10 +101,9 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      {/* <Stack.Screen name="CollectCoins" component={BreathSessionInfo} /> */}
-       <Stack.Screen name="Breath" component={Breath} /> 
-      {/* <Stack.Screen name="RatingModal" component={StreakModal}/> */}
-      {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
+      <Stack.Screen name="WorkoutCompleted" component={WorkoutCompleted}/>
+      {/* <Stack.Screen name="OfferPage" component={OfferPage} /> */}
+      {/* <Stack.Screen name="WorkoutHistory" component={WorkoutHistory} /> */}
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
         name="IntroductionScreen1"

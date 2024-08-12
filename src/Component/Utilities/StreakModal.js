@@ -17,9 +17,7 @@ import { setStreakModalVisible } from '../ThemeRedux/Actions';
 const StreakModal = ({streakDays, setVisible, WeekArray, missedDay,visible}) => {
   const days = ['M', 'T', 'W', 'T', 'F'];
   const getStreakModalVisible=useSelector(state=>state?.getStreakModalVisible)
-  // const streakDays=[50,-5,-5,50,50];
-  console.log("visible------>,",getStreakModalVisible)
- 
+  // const streakDays=[50,-5,-5,50,50]; 
   const dispatch=useDispatch()
   return (
     <Modal transparent visible={getStreakModalVisible} animationType='slide'>

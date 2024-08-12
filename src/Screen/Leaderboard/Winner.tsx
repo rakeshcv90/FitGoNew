@@ -22,7 +22,7 @@ import VersionNumber from 'react-native-version-number';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import ActivityLoader from '../../Component/ActivityLoader';
 import DeviceInfo from 'react-native-device-info';
-import {openInbox} from 'react-native-email-link';
+// import {openInbox} from 'react-native-email-link';
 import {showMessage} from 'react-native-flash-message';
 
 type TypeData = {
@@ -306,7 +306,7 @@ const Winner = ({navigation}: any) => {
   };
   const handleEmail = async () => {
     AnalyticsConsole('W_GMAIL');
-    openInbox();
+    // openInbox();
   };
   return (
     <SafeAreaView

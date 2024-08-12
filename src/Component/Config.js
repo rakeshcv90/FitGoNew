@@ -125,5 +125,6 @@ export const NewAppapi = {
   SEND_REFERRAL_API: NewApi + 'add_referral_coin',
   // SEND_REFERRAL_API: NewApi + 'test_add_referral_coin',
   GET_REF_RANK: NewApi + 'user_rank',
-  GET_BREATH_SESSION:NewApi+'get_breathinout_session'
+  GET_BREATH_SESSION:NewApi+'get_breathinout_session',
+  GET_HISTORY:NewApi+'test_coin_deduction_rec'
 };
