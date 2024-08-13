@@ -57,6 +57,13 @@ export const AppColor = {
   orangeColor: '#FEE2BB',
   orangeColor1: '#E38100',
   NEW_GREY_TEXT: '#6B7280',
+  GRAAY6:'#6B7280',
+  SKY_BLUE:"#DBEAFE",
+  PINK1:'#FC73CD',
+  NAVY_BLUE:'#1E40AF',
+  LIGHT_RED:'#FEF2F2',
+  DARK_YELLOW: '#FEC40C',
+  LIGHT_YELLOW: '#FFE696',
 };
 export const Fonts = {
   MONTSERRAT_BOLD: 'Montserrat-Bold',

@@ -607,7 +607,8 @@ const CustomWorkout = ({navigation}) => {
                 }
               } else {
                 AnalyticsConsole('PP_D_B');
-                navigation.navigate('NewSubscription', {upgrade: false});
+                // navigation.navigate('NewSubscription', {upgrade: false});
+                navigation?.navigate('StepGuide');
                 dispatch(setRewardPopUp(1));
               }
             }}

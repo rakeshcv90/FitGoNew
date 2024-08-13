@@ -76,10 +76,18 @@ import CardioPointErns from '../Screen/Event/CardioPointErns';
 import DietPlatTabBar from './DietPlatTabBar';
 import CustomMealList from '../Screen/NewMeal/CustomMealList';
 import EditCustomMeal from '../Screen/NewMeal/EditCustomMeal';
+import CardioExercise from '../Screen/Event/CardioExercise';
+import Questions from '../Screen/FAQ/Questions';
+import ChatBot from '../Screen/FAQ/ChatBot';
+import StepGuide from '../Screen/StepbyStepGuide/StepGuide';
+
+import Breathe from '../Screen/Breath/Breathe';
+import WorkoutHistory from '../Screen/WorkoutHistory/WorkoutHistory';
+import OfferPage from '../Screen/OfferScreen/OfferPage';
+import WorkoutCompleted from '../Screen/WorkoutCompleteScreen/WorkoutCompleted';
 import NewHome from '../Screen/NewHome/NewHome';
 import PastWinner from '../Screen/NewHome/PastWinner';
 import LoadingScreen from '../Component/NewHomeUtilities/LoadingScreen';
-
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -94,7 +102,10 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-        {/* <Stack.Screen name="LoadingScreen" component={LoadingScreen} /> */}
+    
+
+   
+      {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
         name="IntroductionScreen1"
@@ -169,17 +180,26 @@ export const LoginStack = () => {
       <Stack.Screen name="Winner" component={Winner} />
       <Stack.Screen name="Referral" component={Referral} />
       <Stack.Screen name="EventExercise" component={EventExercise} />
+      <Stack.Screen name="CardioExercise" component={CardioExercise} />
       <Stack.Screen
         name="EventExerciseHistory"
         component={EventExerciseHistory}
       />
-      <Stack.Screen name="CollectCoins" component={CollectCoins} />
+      <Stack.Screen
+        name="CollectCoins"
+        component={CollectCoins}
+        options={{detachPreviousScreen: true}}
+      />
       <Stack.Screen name="CardioPointErns" component={CardioPointErns} />
       <Stack.Screen name="BreathSessionInfo" component={BreathSessionInfo} />
       <Stack.Screen name="DietPlatTabBar" component={DietPlatTabBar} />
       <Stack.Screen name="CustomMealList" component={CustomMealList} />
       <Stack.Screen name="EditCustomMeal" component={EditCustomMeal} />
       <Stack.Screen name="PastWinner" component={PastWinner} />
+      <Stack.Screen name="Questions" component={Questions} />
+      <Stack.Screen name="ChatBot" component={ChatBot} />
+      <Stack.Screen name="StepGuide" component={StepGuide} />
+      <Stack.Screen name="WorkoutCompleted" component={WorkoutCompleted} />
     </Stack.Navigator>
   );
 };

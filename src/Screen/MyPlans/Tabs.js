@@ -8,6 +8,7 @@ import {DeviceWidth} from '../../Component/Config';
 import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
 import localStorage from 'redux-persist/es/storage';
+import { showMessage } from 'react-native-flash-message';
 export const WeekTabWithoutEvent = ({
   day,
   dayIndex,
@@ -182,13 +183,81 @@ export const WeekTabWithEvents = ({
     </View>
   );
 };
+export const WeekTabHistory = ({
+  day,
+  dayIndex,
+  setSelectedDay,
+  WeekArray,
+  dayWiseCoins,
+  selectedDay,
+  currentDay,
+}) => {
+  const sameDay = day == WeekArray[selectedDay];
+  const isFutureDay=dayIndex>currentDay;
+  return (
+    <View style={{alignItems: 'center'}}>
+      <Text style={[styles.labelStyle]}>{day.substring(0, 3)}</Text>
+      <TouchableOpacity
+        style={[
+          styles.button1,
+          {
+            backgroundColor:
+              dayWiseCoins[WeekArray[dayIndex]] == 0
+                ? AppColor.GRAY1
+                : AppColor.WHITE,
+            borderWidth: 1.5,
+            borderColor: sameDay ? AppColor.ORANGE : AppColor.GRAAY6,
+          },
+        ]}
+        onPress={() => {
+           if(isFutureDay){
+            showMessage({
+              message: `No data available for the day`,
+              type: 'info',
+              animationDuration: 500,
+              floating: true,
+              icon: {icon: 'auto', position: 'left'},
+            });
+           }else{
+            setSelectedDay(dayIndex);
+           }
+        }}>
+        <Text
+          style={[
+            styles.txt1,
+            {
+              color: sameDay ? AppColor.ORANGE : AppColor.GRAAY6,
+              fontFamily: 'Helvetica',
+              fontSize: 16,
+            },
+          ]}>
+          {dayWiseCoins[WeekArray[dayIndex]] ?? 0}
+        </Text>
+        <Image
+          source={localImage.FitCoin}
+          style={{height: 30, width: 30, marginVertical: 3}}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
+      <View
+        style={{
+          width: 10,
+          height: 10,
+          backgroundColor: sameDay ? AppColor.ORANGE : AppColor.WHITE,
+          marginTop: 8,
+          borderRadius: 100,
+        }}
+      />
+    </View>
+  );
+};
 const styles = StyleSheet.create({
   labelStyle: {
     fontWeight: '600',
-    fontSize: 13,
+    fontSize: 16,
     lineHeight: 20,
-    fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
-    color: AppColor.BLACK,
+    fontFamily: 'Helvetica',
+    color: AppColor.GRAAY6,
   },
   button: {
     width: 60,
@@ -199,21 +268,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 6,
     marginTop: 3,
-    // ...Platform.select({
-    //   android: {
-    //     elevation: 5,
-    //     shadowOpacity: 0.1,
-    //     shadowColor: 'grey',
-    //   },
-    //   ios: {
-    //     shadowColor: '#000000',
-    //     shadowOffset: {width: 0, height: 2},
-    //     shadowOpacity: 0.2,
-    //     shadowRadius: 4,
-    //   },
-    // }),
   },
   txt1: {
     textAlign: 'center',
+  },
+  button1: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 40,
+    paddingHorizontal: 7,
+    paddingVertical: 4,
+    marginTop: 3,
+    paddingTop: 8,
   },
 });

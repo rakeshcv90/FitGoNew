@@ -22,17 +22,17 @@ import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
 import moment from 'moment';
 import axios from 'axios';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
-
 const WeekArray = Array(7)
   .fill(0)
   .map(
     (item, index) =>
       (item = moment()
         .add(index, 'days')
-        .subtract(moment().isoWeekday(), 'days')
+        .subtract(moment().isoWeekday() - 1, 'days')
         .format('dddd')),
   );
-const CardioPointErns = ({navigation}) => {
+const CardioPointErns = ({navigation, route}) => {
+  const {day, type, weeklyTime, weeklyCal, weeklyCoins,allExercise} = route?.params;
   const fitCoins = useSelector(state => state.fitCoins);
   const getAllExercise = useSelector(state => state.getAllExercise);
   const [cardioExxercise, setCardioExercise] = useState([]);
@@ -114,7 +114,7 @@ const CardioPointErns = ({navigation}) => {
       datas.push({
         user_id: getUserDataDetails?.id,
         workout_id: -13,
-        user_day: WeekArray[getPurchaseHistory?.currentDay],
+        user_day: WeekArray[day],
         user_exercise_id: item?.exercise_id,
         fit_coins: item?.fit_coins,
       });
@@ -130,7 +130,7 @@ const CardioPointErns = ({navigation}) => {
 
       //Test URl
       const res = await axios({
-        url:url,
+        url: url,
         method: 'Post',
         data: {user_details: datas, type: 'cardio'},
       });
@@ -143,22 +143,22 @@ const CardioPointErns = ({navigation}) => {
       ) {
         setDownloade(0);
 
-        navigation.navigate('EventExercise', {
+        navigation.navigate('CardioExercise', {
           allExercise: cardioExxercise,
           currentExercise: cardioExxercise[0],
           data: [],
-          day: WeekArray[getPurchaseHistory?.currentDay],
+          day: day,
           exerciseNumber: 0,
           trackerData: res?.data?.inserted_data,
           type: 'cardio',
         });
         // }
       } else {
-        navigation.navigate('EventExercise', {
+        navigation.navigate('CardioExercise', {
           allExercise: cardioExxercise,
           currentExercise: cardioExxercise[0],
           data: [],
-          day: WeekArray[getPurchaseHistory?.currentDay],
+          day: day,
           exerciseNumber: 0,
           trackerData: res?.data?.existing_data,
           type: 'cardio',
@@ -287,7 +287,16 @@ const CardioPointErns = ({navigation}) => {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={() =>
+                navigation?.navigate('BreathSessionInfo', {
+                  type: type,
+                  day: day,
+                  weeklyTime: weeklyTime,
+                  weeklyCal: weeklyCal,
+                  weeklyCoins: weeklyCoins,
+                  allExercise:allExercise
+                })
+              }
               style={{
                 width: 268,
                 height: 40,

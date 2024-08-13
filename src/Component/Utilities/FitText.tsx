@@ -8,7 +8,7 @@ type Props = TextProps & {
   color?: string;
   value: string;
   errorType?: boolean;
-  textAlign?: 'center' | 'left' | 'right';
+  textAlign?: 'center' | 'left' | 'right' | 'justify';
   textTransform?: 'capitalize' | 'uppercase' | 'none';
   letterSpacing?: number;
   fontFamily?: string;
@@ -51,7 +51,7 @@ const FitText: FC<Props> = ({
     switch (type) {
       case 'Heading':
         return {
-          fontFamily: fontFamily || Fonts.MONTSERRAT_BOLD,
+          fontFamily: fontFamily || Fonts.HELVETICA_BOLD,
           fontSize: fontSize || 24,
           fontWeight: fontWeight || '600',
           lineHeight: lineHeight || 32,
@@ -85,7 +85,7 @@ const FitText: FC<Props> = ({
         };
       case 'normal':
         return {
-          fontFamily: fontFamily || Fonts.MONTSERRAT_REGULAR,
+          fontFamily: fontFamily || Fonts.HELVETICA_REGULAR,
           fontSize: fontSize || 14,
           fontWeight: fontWeight || '600',
           lineHeight: lineHeight || 20,

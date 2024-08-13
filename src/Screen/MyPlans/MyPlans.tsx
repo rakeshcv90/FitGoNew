@@ -556,9 +556,10 @@ const MyPlans = ({navigation}: any) => {
 
     try {
       const res = await axios({
-        url: NewAppapi.CURRENT_DAY_EVENT_EXERCISE,
+        url: 'https://fitme.cvinfotech.in/adserver/public/api/test_user_event__exercise_status',
+        // url: NewAppapi.CURRENT_DAY_EVENT_EXERCISE,
         method: 'Post',
-        data: {user_details: datas},
+        data: {user_details: datas, type: 'weekly'},
       });
       setDownloade(0);
       setButtonClicked(false);

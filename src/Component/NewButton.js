@@ -10,8 +10,12 @@ import {
 import {DeviceWidth} from './Config';
 import {AppColor, Fonts} from './Color';
 import {setChallengesData} from './ThemeRedux/Actions';
-
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {ArrowLeft, ArrowRight} from './Utilities/Arrows/Arrow';
 const NewButton = ({
+  icon,
+  iconColor,
+  iconSize,
   image,
   title,
   pH,
@@ -36,7 +40,13 @@ const NewButton = ({
   left,
   elevation,
   bb,
-  alignSelf
+  alignSelf,
+  fontFamily,
+  borderColor,
+  borderWidth,
+  svgArrowLeft,
+  svgArrowRight,
+  svgArrowColor,
 }) => {
   const [isClicked, setIsClicked] = useState(false);
   const handlePress = () => {
@@ -50,16 +60,16 @@ const NewButton = ({
   }, [download]);
   return (
     <TouchableOpacity
-    activeOpacity={0.2}
+      activeOpacity={0.2}
       style={[
         styles.buttonContainer,
         {
           paddingHorizontal: pH ?? 0,
-          alignSelf: alignSelf??'center',
+          alignSelf: alignSelf ?? 'center',
           paddingVertical: pV ?? 18,
           borderRadius: bR ?? 8,
           opacity: opacity ?? 1,
-          width:!bb? ButtonWidth ?? DeviceWidth * 0.9:undefined,
+          width: !bb ? ButtonWidth ?? DeviceWidth * 0.9 : undefined,
           backgroundColor: withAnimation
             ? isClicked
               ? 'darkgrey'
@@ -72,6 +82,8 @@ const NewButton = ({
           top: top ?? undefined,
           left: left ?? undefined,
           right: right ?? undefined,
+          borderWidth: borderWidth ?? 0,
+          borderColor: borderColor ?? undefined,
           ...elevation,
         },
       ]}
@@ -97,13 +109,32 @@ const NewButton = ({
             tintColor={tintColor ?? null}
           />
         )}
-        <Text style={[styles.titleText, {color: titleColor ?? AppColor.WHITE}]}>
+        {svgArrowLeft && <ArrowLeft fillColor={svgArrowColor} />}
+        <Text
+          style={[
+            styles.titleText,
+            {
+              color: titleColor ?? AppColor.WHITE,
+              fontFamily: fontFamily ?? 'Helvetica',
+            },
+          ]}>
           {withAnimation
             ? isClicked
               ? 'Downloading...'
               : title ?? 'Title'
             : title ?? 'Title'}
         </Text>
+        {icon && (
+          <MaterialIcon
+            name={icon}
+            size={iconSize}
+            color={iconColor}
+            style={{marginLeft: 8}}
+          />
+        )}
+        {svgArrowRight && (
+          <ArrowRight fillColor={svgArrowColor} style={{marginLeft: 8}} />
+        )}
       </View>
     </TouchableOpacity>
   );
