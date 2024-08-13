@@ -21,7 +21,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 const PastWinner = ({route}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
-  console.log('gbgbg', getUserDataDetails);
+
   const scrollY = new Animated.Value(0);
   const navigation = useNavigation();
   const cardWidth = scrollY.interpolate({

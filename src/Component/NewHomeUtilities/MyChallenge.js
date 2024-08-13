@@ -21,7 +21,7 @@ const WeekArrayWithEvent = Array(5)
         .format('dddd')),
   );
 const MyChallenge = ({coins}) => {
-  console.log('coins12345', coins);
+
   const getWeeklyPlansData = useSelector(state => state.getWeeklyPlansData);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const navigation = useNavigation();
