@@ -90,7 +90,8 @@ const FitnessInstructor = () => {
             } else {
               navigation.navigate('AITrainer', {item: item});
             }
-          }}>
+          }}
+          >
           <Image
             source={item?.img}
             style={[
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
   container: {
     width: DeviceWidth,
     backgroundColor: AppColor.WHITE,
-    marginVertical: 10,
+    marginVertical: 5,
   },
   box: {
     width: DeviceWidth,

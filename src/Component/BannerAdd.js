@@ -18,7 +18,14 @@ export const BannerAdd = ({bannerAdId}) => {
   const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
   return (
     <>
-      {getPurchaseHistory?.plan != null ? (
+     <BannerAd
+          unitId={bannerAdId}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+          }}
+        />
+      {/* {getPurchaseHistory?.plan != null ? (
         getPurchaseHistory?.plan != 'noob' && isValid ? null : (
           <BannerAd
             unitId={bannerAdId}
@@ -36,7 +43,7 @@ export const BannerAdd = ({bannerAdId}) => {
             requestNonPersonalizedAdsOnly: true,
           }}
         />
-      )}
+      )} */}
     </>
   );
 };

@@ -6,8 +6,11 @@ import {ImageBackground} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {localImage} from '../Image';
 import {showMessage} from 'react-native-flash-message';
+import {useNavigation} from '@react-navigation/native';
+import {AnalyticsConsole} from '../AnalyticsConsole';
 
-const WithoutEvent = () => {
+const WithoutEvent = ({pastWinners}) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.box}>
@@ -23,189 +26,204 @@ const WithoutEvent = () => {
               lineHeight: 20,
               color: AppColor.PrimaryTextColor,
             }}>
-            Past Players
+            Past Champions
           </Text>
         </View>
 
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => {
-            showMessage({
-              message: 'Work in progress for past winner',
-              floating: true,
-              duration: 500,
-              type: 'info',
-              icon: {icon: 'none', position: 'left'},
-            });
-          }}
+        <View
           style={{
             width: '100%',
-            height:
-              DeviceHeigth >= 1024 ? DeviceHeigth * 0.15 : DeviceHeigth * 0.17,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 12,
-            marginTop: DeviceHeigth * 0.02,
-          }}>
-          <LinearGradient
-            start={{x: 1, y: 0}}
-            end={{x: 0, y: 1}}
-            colors={['#6C00A3', '#D900AE']}
-            style={{
-              width: '100%',
-              height: '100%',
-              alignItems: 'center',
+            padding: 10,
 
-              borderRadius: 12,
-            }}>
-            <Image
-              source={require('../../Icon/Images/NewHome/light.png')}
-              resizeMode="stretch"
-              style={{
-                width: 100,
-                height: 130,
-                position: 'absolute',
-                right: 0,
-                top: -10,
-              }}
-            />
+            alignSelf: 'center',
+            backgroundColor:'#0C0C0D0D',
+            borderRadius: 12,
+            shadowColor: 'gray',
+            marginVertical: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+      
+          }}>
+          <View style={{height: 50}}>
             <View
               style={{
-                width: '100%',
-                height: '40%',
-                paddingHorizontal: 10,
-                marginVertical: 10,
+                height: '100%',
+                alignItems: 'center',
+                flexDirection: 'row',
               }}>
-              <View style={{flexDirection: 'row'}}>
-                <View
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 40,
-                    borderWidth: 3,
-                    borderColor: AppColor.WHITE,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 1,
-                  }}>
-                  <Image
-                    source={localImage.NContact}
+              <View
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 50,
+                  borderWidth: 3,
+                  borderColor: AppColor.WHITE,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 1,
+                }}>
+                {pastWinners[0]?.image == null ? (
+                  <View
                     style={{
-                      width: 35,
-                      height: 35,
-                      borderRadius: 40,
+                      width: 45,
+                      height: 45,
+                      borderRadius: 45,
+                      backgroundColor: '#DBEAFE',
                       overflow: 'hidden',
-                    }}
-                    resizeMode="cover"
-                  />
-                </View>
-                <View
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 40,
-                    left: -20,
-                    zIndex: 1,
-                    borderWidth: 3,
-                    borderColor: AppColor.WHITE,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 1,
-                  }}>
-                  <Image
-                    source={localImage.NContact}
-                    style={{
-                      width: 35,
-                      height: 35,
-                      borderRadius: 40,
-                      overflow: 'hidden',
-                    }}
-                    resizeMode="cover"
-                  />
-                </View>
-                <View
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 40,
-                    left: -40,
-                    zIndex: 1,
-                    borderWidth: 3,
-                    borderColor: AppColor.WHITE,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 1,
-                  }}>
-                  <Image
-                    source={localImage.NContact}
-                    style={{
-                      width: 35,
-                      height: 35,
-                      borderRadius: 40,
-                      overflow: 'hidden',
-                    }}
-                    resizeMode="cover"
-                  />
-                </View>
-                <View
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 40,
-                    left: -60,
-                    zIndex: 1,
-                    borderWidth: 3,
-                    borderColor: AppColor.WHITE,
-                    backgroundColor: AppColor.BLACK,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      fontFamily: Fonts.HELVETICA_REGULAR,
-                      color: AppColor.WHITE,
-                      fontSize: 10,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      alignSelf: 'center',
                     }}>
-                    +10
-                  </Text>
-                </View>
+                    <Text
+                      style={{
+                        fontFamily: Fonts.HELVETICA_BOLD,
+                        fontSize: 15,
+                        color: '#1E40AF',
+                      }}>
+                      {pastWinners[0]?.name.substring(0, 2).toUpperCase()}
+                    </Text>
+                  </View>
+                ) : (
+                  <Image
+                    source={localImage.NContact}
+                    // source={{uri:pastWinners[0]?.image}}
+                    style={{
+                      width: 45,
+                      height: 45,
+                      borderRadius: 45,
+                      overflow: 'hidden',
+                    }}
+                    resizeMode="cover"
+                  />
+                )}
+              </View>
+              <View
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 50,
+                  left: -20,
+                  zIndex: 1,
+                  borderWidth: 3,
+                  borderColor: AppColor.WHITE,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+          
+                {pastWinners[1]?.image == null ? (
+                  <View
+                    style={{
+                      width: 45,
+                      height: 45,
+                      borderRadius: 45,
+                      backgroundColor: '#DBEAFE',
+                      overflow: 'hidden',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      alignSelf: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: Fonts.HELVETICA_BOLD,
+                        fontSize: 15,
+                        color: '#1E40AF',
+                      }}>
+                      {pastWinners[1]?.name.substring(0, 2).toUpperCase()}
+                    </Text>
+                  </View>
+                ) : (
+                  <Image
+                    source={localImage.NContact}
+                    // source={{uri:pastWinners[0]?.image}}
+                    style={{
+                      width: 45,
+                      height: 45,
+                      borderRadius: 45,
+                      overflow: 'hidden',
+                    }}
+                    resizeMode="cover"
+                  />
+                )}
+              </View>
+              <View
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 50,
+                  left: -40,
+                  zIndex: 1,
+                  borderWidth: 3,
+                  borderColor: AppColor.WHITE,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                {pastWinners[2]?.image == null ? (
+                  <View
+                    style={{
+                      width: 45,
+                      height: 45,
+                      borderRadius: 45,
+                      backgroundColor: '#DBEAFE',
+                      overflow: 'hidden',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      alignSelf: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: Fonts.HELVETICA_BOLD,
+                        fontSize: 15,
+                        color: '#1E40AF',
+                      }}>
+                      {pastWinners[2]?.name.substring(0, 2).toUpperCase()}
+                    </Text>
+                  </View>
+                ) : (
+                  <Image
+                    source={localImage.NContact}
+                    // source={{uri:pastWinners[0]?.image}}
+                    style={{
+                      width: 45,
+                      height: 45,
+                      borderRadius: 45,
+                      overflow: 'hidden',
+                    }}
+                    resizeMode="cover"
+                  />
+                )}
               </View>
             </View>
-            <View
+          </View>
+          <View>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => {
+                AnalyticsConsole('PW');
+
+                navigation.navigate('PastWinner',{pastWinners:pastWinners});
+              }}
               style={{
-                width: '100%',
-                height: '20%',
-                paddingHorizontal: 10,
-                marginVertical: -10,
+                width: 150,
+                height: 32,
+                backgroundColor:AppColor.WHITE,
+                alignSelf: 'flex-end',
+                borderRadius: 8,
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
               <Text
                 style={{
-                  fontFamily: Fonts.HELVETICA_BOLD,
+                  fontWeight: '500',
                   fontSize: 14,
-                  lineHeight: 17,
-                  color: AppColor.WHITE,
+                  lineHeight: 16,
+                  color: '#343A40',
                 }}>
-                Our past winner’s
+                View Past Winners
               </Text>
-            </View>
-            <View
-              style={{
-                width: '100%',
-                height: '40%',
-                paddingHorizontal: 10,
-              }}>
-              <Text
-                style={{
-                  fontFamily: Fonts.HELVETICA_REGULAR,
-                  fontSize: 12,
-                  lineHeight: 20,
-                  color: AppColor.WHITE,
-                }}>
-                Lorem Ipsum is simply dummy text of the printing
-              </Text>
-            </View>
-          </LinearGradient>
-        </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -215,7 +233,7 @@ const styles = StyleSheet.create({
     width: DeviceWidth,
 
     backgroundColor: AppColor.WHITE,
-    marginVertical: 15,
+
     alignSelf: 'center',
   },
   box: {
@@ -229,7 +247,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // Semi-transparent background
   },
 });
 export default WithoutEvent;

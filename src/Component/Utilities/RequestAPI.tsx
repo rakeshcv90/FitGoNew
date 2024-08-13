@@ -48,7 +48,7 @@ export const RequestAPI = {
         timeout: 30000,
         withCredentials: true,
       });
-      console.log("AXIOS",res.data)
+  
       if (res.data) {
         callback(handleResponse(res, res.data));
       }

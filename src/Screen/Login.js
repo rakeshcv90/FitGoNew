@@ -139,7 +139,7 @@ const Login = ({navigation}) => {
           platform: Platform.OS,
         },
       });
-      console.log('zxcfdsfdsfdsfs', data.data);
+    
       if (data.data.profile_status == 1) {
         showMessage({
           message: data.data.msg,

@@ -38,7 +38,7 @@ const UserEspecially = () => {
     }
   }, [isFocused]);
   const HandelClick = index => {
-    console.log('cxdscdscds', index);
+
     if (index == 1) {
       AnalyticsConsole(`CustomWrk_FR_Home`);
       navigation.navigate('CustomWorkout');
@@ -508,7 +508,7 @@ const styles = StyleSheet.create({
     width: DeviceWidth,
 
     backgroundColor: AppColor.WHITE,
-    marginVertical: 15,
+    marginVertical: 2,
   },
   box: {
     width: DeviceWidth * 0.95,

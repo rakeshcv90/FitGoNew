@@ -72,11 +72,13 @@ import CollectCoins from '../Screen/NewPostExerciseScreens/CollectCoins';
 import BreathSessionInfo from '../Screen/NewPostExerciseScreens/BreathSessionInfo';
 import EventExercise from '../Screen/Event/EventExercise';
 import EventExerciseHistory from '../Screen/Event/EventExerciseHistory';
-import CardioPointErns from '../Screen/Breath/CardioPointErns';
+import CardioPointErns from '../Screen/Event/CardioPointErns';
 import DietPlatTabBar from './DietPlatTabBar';
 import CustomMealList from '../Screen/NewMeal/CustomMealList';
 import EditCustomMeal from '../Screen/NewMeal/EditCustomMeal';
 import NewHome from '../Screen/NewHome/NewHome';
+import PastWinner from '../Screen/NewHome/PastWinner';
+import LoadingScreen from '../Component/NewHomeUtilities/LoadingScreen';
 
 const Stack = createStackNavigator();
 
@@ -92,8 +94,7 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-
-      {/* <Stack.Screen name="NewHome" component={NewHome} /> */}
+        {/* <Stack.Screen name="LoadingScreen" component={LoadingScreen} /> */}
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
         name="IntroductionScreen1"
@@ -142,7 +143,6 @@ export const LoginStack = () => {
       <Stack.Screen name="AIMessageHistory" component={AIMessageHistory} />
       <Stack.Screen name="IntroVideo" component={IntroVideo} />
       <Stack.Screen name="OfferGuidelines" component={OfferGuidelines} />
-
       <Stack.Screen
         name="NewMonthlyAchievement"
         component={NewMonthlyAchievement}
@@ -179,6 +179,7 @@ export const LoginStack = () => {
       <Stack.Screen name="DietPlatTabBar" component={DietPlatTabBar} />
       <Stack.Screen name="CustomMealList" component={CustomMealList} />
       <Stack.Screen name="EditCustomMeal" component={EditCustomMeal} />
+      <Stack.Screen name="PastWinner" component={PastWinner} />
     </Stack.Navigator>
   );
 };

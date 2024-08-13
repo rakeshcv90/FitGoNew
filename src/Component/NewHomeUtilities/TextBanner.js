@@ -5,7 +5,7 @@ import {
   Animated,
   Alert,
   TouchableOpacity,
-  Dimensions,
+
   FlatList,
   ActivityIndicator,
 } from 'react-native';
@@ -28,7 +28,10 @@ import {
   setStoreData,
 } from '../ThemeRedux/Actions';
 import NameUpdateModal from '../Utilities/NameUpdateModal';
-import {checkLocationPermission, locationPermission} from '../../Screen/Terms&Country/LocationPermission';
+import {
+  checkLocationPermission,
+  locationPermission,
+} from '../../Screen/Terms&Country/LocationPermission';
 import {AnalyticsConsole} from '../AnalyticsConsole';
 
 const TextBanner = ({
@@ -379,7 +382,8 @@ const TextBanner = ({
             style={{
               width: '100%',
               height: '100%',
-
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
               backgroundColor: 'lightgrey',
               justifyContent: 'center',
               position: 'absolute',

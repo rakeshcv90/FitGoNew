@@ -9,7 +9,7 @@ import {
   TextInput,
   Platform,
   ActivityIndicator,
-  Dimensions,
+
   BackHandler,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';

@@ -9,6 +9,7 @@ import {
   Image,
   ImageBackground,
   SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useRef, useState, useCallback} from 'react';
 import {AppColor, Fonts} from '../../Component/Color';
@@ -39,6 +40,7 @@ import {
   setRewardPopUp,
   setStoreData,
   setUserProfileData,
+  setWeeklyPlansData,
   setWinnerAnnounced,
   setWorkoutTimeCal,
 } from '../../Component/ThemeRedux/Actions';
@@ -46,8 +48,7 @@ import {useIsFocused} from '@react-navigation/native';
 import AppleStepCounter from '../../Component/NewHomeUtilities/AppleStepCounter';
 import UserEspecially from '../../Component/NewHomeUtilities/UserEspecially';
 import axios from 'axios';
-import OfferZone from '../../Component/NewHomeUtilities/OfferZone';
-import WithEvent from '../../Component/NewHomeUtilities/WithEvent';
+
 import WithoutEvent from '../../Component/NewHomeUtilities/WithoutEvent';
 import FocuseMind from '../../Component/NewHomeUtilities/FocuseMind';
 import FitnessInstructor from '../../Component/NewHomeUtilities/FitnessInstructor';
@@ -56,12 +57,27 @@ import RewardModal from '../../Component/Utilities/RewardModal';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {AlarmNotification} from '../../Component/Reminder';
 import notifee from '@notifee/react-native';
-import {checkLocationPermission} from '../Terms&Country/LocationPermission';
+
 import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 import {showMessage} from 'react-native-flash-message';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
 import {LocationPermissionModal} from '../../Component/Utilities/LocationPermission';
+import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import {Marquee} from '@animatereactnative/marquee';
+import MyChallenge from '../../Component/NewHomeUtilities/MyChallenge';
+import {RequestAPI} from '../../Component/Utilities/RequestAPI';
+import moment from 'moment';
+
+const WeekArrayWithEvent = Array(5)
+  .fill(0)
+  .map(
+    (item, index) =>
+      (item = moment()
+        .add(index, 'days')
+        .subtract(moment().isoWeekday() - 1, 'days')
+        .format('dddd')),
+  );
 const NewHome = ({navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const isAlarmEnabled = useSelector(state => state.isAlarmEnabled);
@@ -75,6 +91,7 @@ const NewHome = ({navigation}) => {
   const fitCoins = useSelector(state => state.fitCoins);
   const [locationP1, setLocationP1] = useState(false);
   const [currentChallenge, setCurrentChallenge] = useState([]);
+  const [totalData, setTotalData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const dispatch = useDispatch();
   const [day, setDay] = useState(0);
@@ -87,6 +104,9 @@ const NewHome = ({navigation}) => {
   const [Bannertype2, setBannerType2] = useState('');
   const Sat = getPurchaseHistory?.currentDay == 6;
   const Sun = getPurchaseHistory?.currentDay == 7;
+  const [myRank, setMyRank] = useState(0);
+  const [pastWinners, setPastWinners] = useState([]);
+  const [coins, setCoins] = useState({});
   useEffect(() => {
     if (isFocused) {
       getAllChallangeAndAllExerciseData();
@@ -94,6 +114,9 @@ const NewHome = ({navigation}) => {
       allWorkoutApi();
       getWorkoutStatus();
       getUserDetailData();
+      getPastWinner();
+      getWeeklyAPI();
+      getEarnedCoins();
     }
   }, [isFocused]);
   useEffect(() => {
@@ -119,7 +142,74 @@ const NewHome = ({navigation}) => {
       dispatch(setIsAlarmEnabled(true));
     }
   }, [isAlarmEnabled]);
+  const getWeeklyAPI = async () => {
+    try {
+      const res = await axios(`${NewAppapi.NEW_WEEKDAY_EXERCISE_API}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: {
+          version: VersionNumber.appVersion,
+          user_id: getUserDataDetails?.id,
+        },
+      });
 
+      if (res.data?.msg == 'User not exist.') {
+        showMessage({
+          message: res?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+        dispatch(setWeeklyPlansData(res?.data));
+      }
+    } catch (error) {
+      console.error(error.response, 'DaysAPIERror');
+    }
+  };
+
+  const getEarnedCoins = async () => {
+    const url =
+      'https://fitme.cvinfotechserver.com/adserver/public/api/test_exercise_points_day';
+    try {
+      // const response = await axios(
+      //   `${NewAppapi.GET_COINS}?user_id=${getUserDataDetails?.id}&day=${
+      //     WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]
+      //   }`,
+      // );
+      const response = await axios(
+        `${url}?user_id=${getUserDataDetails?.id}&day=${
+          WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]
+        }`,
+      );
+
+      if (
+        response?.data?.msg == 'Please update the app to the latest version.'
+      ) {
+        showMessage({
+          message: response?.data?.msg,
+          type: 'danger',
+          animationDuration: 500,
+          floating: true,
+          icon: {icon: 'auto', position: 'left'},
+        });
+      } else {
+      
+        setCoins(response?.data?.responses);
+      }
+    } catch (error) {
+      showMessage({
+        message: 'Something went wrong.',
+        type: 'danger',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+    }
+  };
 
   const getUserDetailData = async () => {
     try {
@@ -224,7 +314,12 @@ const NewHome = ({navigation}) => {
         const myRank = result.data?.data?.findIndex(
           item => item?.id == getUserDataDetails?.id,
         );
-
+        setTotalData(result.data?.data);
+        if (myRank != -1) {
+          setMyRank(result.data?.data[myRank]?.rank);
+        } else {
+          setMyRank(0);
+        }
         dispatch(setFitCoins(result.data?.data[myRank]?.fit_coins));
         dispatch(
           setWinnerAnnounced(
@@ -405,9 +500,33 @@ const NewHome = ({navigation}) => {
 
     return {one, two};
   }
+  const getPastWinner = () => {
+    const url =
+      'https://fitme.cvinfotechserver.com/adserver/public/api/past_winners';
+    RequestAPI.makeRequest(
+      'POST',
+      url,
+      // NewAppapi.GET_PAST_WINNERS,
+      {
+        version: VersionNumber.appVersion,
+      },
+      res => {
+        if (res.error) {
+          setPastWinners([]);
+        }
+        if (res.data) {
+          setPastWinners(res.data?.data);
+        }
+      },
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="#ffffff" barStyle={'dark-content'} />
+      <StatusBar
+        backgroundColor={AppColor.Background_New}
+        barStyle={'dark-content'}
+      />
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
@@ -427,6 +546,9 @@ const NewHome = ({navigation}) => {
             onRefresh={() => {
               getAllChallangeAndAllExerciseData();
               getUserAllInData();
+              getLeaderboardDataAPI();
+              getWeeklyAPI();
+              getEarnedCoins();
             }}
             colors={[AppColor.RED, AppColor.WHITE]}
           />
@@ -436,92 +558,248 @@ const NewHome = ({navigation}) => {
         <View style={styles.userCard}>
           <View
             style={{
-              width: '69%',
-              height: '100%',
+              width: '55%',
+              // height: DeviceHeigth * 0.1,
+              alignItems: 'center',
+              flexDirection: 'row',
             }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <View style={styles.imageView}>
-                <Image
-                  source={
-                    getUserDataDetails.image_path == null
-                      ? localImage.avt
-                      : {uri: getUserDataDetails.image_path}
-                  }
-                  resizeMode="contain"
+            <View style={styles.imageView}>
+              <Image
+                source={
+                  getUserDataDetails.image_path == null
+                    ? localImage.avt
+                    : {uri: getUserDataDetails.image_path}
+                }
+                resizeMode="contain"
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 80 / 2,
+                }}
+              />
+            </View>
+            <View>
+              <View style={{marginHorizontal: -10}}>
+                <Text
                   style={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: 100 / 2,
-                  }}
-                />
-              </View>
-              <View>
-                <View style={{marginHorizontal: 10}}>
-                  <Text
-                    style={{
-                      top: -5,
-                      fontSize: 18,
-                      fontFamily: Fonts.HELVETICA_REGULAR,
-                      fontWeight: '300',
-                      lineHeight: 20,
-                      color: AppColor.SecondaryTextColor,
-                    }}>
-                    {getTimeOfDayMessage()}
-                  </Text>
-                  <Text
-                    style={{
-                      top: 5,
-                      fontSize: 18,
-                      fontFamily: Fonts.HELVETICA_BOLD,
-                      fontWeight: '700',
-                      lineHeight: 20,
-                      color: AppColor.PrimaryTextColor,
-                    }}>
-                    {Object.keys(getUserDataDetails)?.length > 0 ||
-                    getUserDataDetails?.length > 0
-                      ? getUserDataDetails?.name == null
-                        ? 'Guest'
-                        : getUserDataDetails?.name.split(' ')[0]
-                      : 'Guest'}
-                  </Text>
-                </View>
+                    top: -5,
+                    fontSize: 13,
+                    fontFamily: Fonts.HELVETICA_REGULAR,
+                    fontWeight: '300',
+                    lineHeight: 20,
+                    color: AppColor.SecondaryTextColor,
+                  }}>
+                  {getTimeOfDayMessage()}
+                </Text>
+                <Text
+                  style={{
+                    top: 0,
+                    fontSize: 12,
+                    fontFamily: Fonts.HELVETICA_BOLD,
+                    fontWeight: '700',
+                    lineHeight: 20,
+                    color: AppColor.PrimaryTextColor,
+                  }}>
+                  {Object.keys(getUserDataDetails)?.length > 0 ||
+                  getUserDataDetails?.length > 0
+                    ? getUserDataDetails?.name == null
+                      ? 'Guest'
+                      : getUserDataDetails?.name.split(' ')[0]
+                    : 'Guest'}
+                </Text>
               </View>
             </View>
           </View>
           <View
             style={{
-              flexDirection: 'row',
-              borderRadius: 6,
+              width: '45%',
+              height: DeviceHeigth * 0.1,
               alignItems: 'center',
-              padding: 10,
-
-              backgroundColor: AppColor.orangeColor,
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
             }}>
-            <Image
-              source={localImage.FitCoin}
-              style={{height: 30, width: 30}}
-              resizeMode="contain"
-            />
-            <Text style={styles.cointxt}>{fitCoins} coins</Text>
+            {enteredCurrentEvent ? (
+              <>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  disabled={totalData.length > 0 ? false : true}
+                  onPress={() => {
+                    if (totalData.length > 0) {
+                      AnalyticsConsole('LB');
+                      navigation.navigate('Leaderboard');
+                    } else {
+                      showMessage({
+                        message: 'No one has joined the event yet',
+                        type: 'info',
+                        animationDuration: 500,
+                        floating: true,
+                        icon: {icon: 'auto', position: 'left'},
+                      });
+                    }
+                  }}
+                  style={{
+                    width: 70,
+                    height: 40,
+                    borderRadius: 6,
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    backgroundColor: '#DBEAFE',
+                    marginHorizontal: 10,
+                    paddingLeft: 5,
+                  }}>
+                  <Image
+                    source={require('../../Icon/Images/NewHome/cup.png')}
+                    style={{height: 15, width: 15}}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.cointxt}>#{myRank}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  onPress={() => {}}
+                  style={{
+                    width: 70,
+                    height: 40,
+                    borderRadius: 6,
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    paddingLeft: 5,
+                    //justifyContent: 'center',
+                    backgroundColor: AppColor.orangeColor,
+                  }}>
+                  <Image
+                    source={localImage.FitCoin}
+                    style={{height: 20, width: 20}}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.cointxt}>{fitCoins}</Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={() => {
+                  if (totalData.length > 0) {
+                    AnalyticsConsole('LB');
+                    navigation.navigate('Leaderboard');
+                  } else {
+                    showMessage({
+                      message: 'No one has joined the event yet',
+                      type: 'info',
+                      animationDuration: 500,
+                      floating: true,
+                      icon: {icon: 'auto', position: 'left'},
+                    });
+                  }
+                  AnalyticsConsole('LB');
+                  navigation.navigate('Leaderboard');
+                }}
+                style={{
+                  // width: 150,
+                  height: 40,
+                  borderRadius: 6,
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  paddingLeft: 5,
+                  paddingRight: 5,
+                  //justifyContent: 'center',
+                  backgroundColor: AppColor.orangeColor,
+                }}>
+                <Image
+                  source={require('../../Icon/Images/NewHome/cup.png')}
+                  style={{height: 15, width: 15}}
+                  resizeMode="contain"
+                />
+                <Text style={styles.cointxt}>Leaderboard</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
+        <ImageBackground
+          source={require('../../Icon/Images/NewHome/Banner.png')}
+          resizeMode="stretch"
+          style={{
+            width: DeviceWidth * 0.95,
+            height: DeviceHeigth * 0.07,
+            alignSelf: 'center',
+            flexDirection: 'row',
+            marginVertical: 5,
+            marginBottom: DeviceHeigth * 0.02,
+
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              width: '10%',
+              height: '100%',
+              justifyContent: 'center',
+
+              marginLeft: 10,
+            }}>
+            <Image
+              source={require('../../Icon/Images/NewHome/gift.png')}
+              style={{height: '90%', width: '100%'}}
+              resizeMode="contain"
+            />
+          </View>
+          <View
+            style={{
+              width: DeviceHeigth >= 1024 ? '70%' : '60%',
+              height: '100%',
+              overflow: 'visible',
+              zIndex: 1,
+              justifyContent: 'center',
+            }}>
+            <Marquee spacing={20} speed={1}>
+              <Text>Explore our new best offers</Text>
+            </Marquee>
+          </View>
+          <TouchableOpacity
+            onPress={() => {
+              showMessage({
+                message: 'WOrk in Progress',
+                type: 'info',
+                animationDuration: 500,
+                floating: true,
+                icon: {icon: 'auto', position: 'left'},
+              });
+            }}
+            style={{
+              width: DeviceHeigth >= 1024 ? '20%' : '25%',
+              height: '100%',
+              overflow: 'hidden',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
+            }}>
+            <Text
+              style={{
+                fontFamily: Fonts.HELVETICA_REGULAR,
+                fontSize: 14,
+                lineHeight: 16,
+                color: AppColor.RED,
+              }}>
+              EXPLORE
+            </Text>
+            <Icons name={'chevron-right'} size={25} color={AppColor.RED} />
+          </TouchableOpacity>
+        </ImageBackground>
+
         <TextBanner
           locationP={locationP1}
           setLocationP={setLocationP1}
           navigation={navigation}
         />
-        <OfferZone />
-        {enteredCurrentEvent ? <WithEvent /> : <WithoutEvent />}
+        <MyChallenge coins={coins} />
+        <WithoutEvent pastWinners={pastWinners} />
 
-        <WorkoutChallengeZone day={day} currentChallenge={currentChallenge} />
+        {currentChallenge?.length > 0 && (
+          <WorkoutChallengeZone day={day} currentChallenge={currentChallenge} />
+        )}
         {Platform.OS == 'ios' && <AppleStepCounter />}
         <UserEspecially />
         <FocuseMind />
-        <FitnessInstructor />
+        {/* <FitnessInstructor /> */}
         {enteredCurrentEvent && (!Sat || !Sun) && <InviteFriends />}
       </ScrollView>
       <RewardModal
@@ -529,21 +807,17 @@ const NewHome = ({navigation}) => {
         visible={getRewardModalStatus}
         imagesource={localImage.Reward_icon}
         ButtonText={'Start now'}
-        txt1={'Challenge On!\n'}
+        txt1={'Your Event Has Started!'}
         txt2={
-          'Your fitness challenge has started! Begin now to collect FitCoins and win cash rewards!'
+          'Your event is now live. Tap "Start Now" to jump right in and begin your experience.'
         }
         onCancel={() => {
           AnalyticsConsole('CHS_CAN');
           dispatch(setRewardModal(false));
         }}
-        onConfirm={() => {
-          AnalyticsConsole('CHS_OPEN');
-          dispatch(setRewardModal(false));
-          navigation.navigate('BottomTab', {
-            screen: 'MyPlans',
-          });
-        }}
+        // onConfirm={() => {
+
+        // }}
       />
       {getOfferAgreement?.location == 'India' ? (
         (getPopUpFreuqency == 6 || getPopUpFreuqency % 5 == 0) &&
@@ -592,6 +866,45 @@ const NewHome = ({navigation}) => {
         locationP={locationP1}
         setLocationP={setLocationP1}
       />
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => {
+          AnalyticsConsole(`AI_TRAINER_BUTTON`);
+          navigation.navigate('AITrainer');
+        }}
+        style={{
+          width: 56,
+          height: 56,
+          backgroundColor: '#F7F7F7',
+          position: 'absolute',
+          bottom: 20,
+          right: 10,
+          borderRadius: 16,
+          justifyContent: 'center',
+          alignItems: 'center',
+          shadowColor: 'rgba(0, 0, 0, 1)',
+          ...Platform.select({
+            ios: {
+              shadowColor: 'rgba(0, 0, 0, 1)',
+              shadowOffset: {width: 0, height: 2},
+              shadowOpacity: 0.3,
+              shadowRadius: 3,
+            },
+            android: {
+              elevation: 4,
+              // shadowRadius: 3,
+            },
+          }),
+        }}>
+        <Image
+          source={require('../../Icon/Images/NewHome/chat.png')}
+          style={{
+            width: 25,
+            height: 25,
+          }}
+          resizeMode="contain"
+        />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -603,7 +916,7 @@ var styles = StyleSheet.create({
   },
   userCard: {
     width: DeviceWidth * 0.95,
-    height: DeviceHeigth * 0.1,
+    //height: DeviceHeigth * 0.1,
     alignSelf: 'center',
     marginVertical: 5,
     flexDirection: 'row',
@@ -614,14 +927,15 @@ var styles = StyleSheet.create({
   imageView: {
     width: 60,
     height: 60,
-
+    justifyContent: 'center',
     borderRadius: 120 / 2,
   },
   cointxt: {
-    color: AppColor.orangeColor1,
-    fontSize: 18,
+    color: '#1E40AF',
+    fontSize: 16,
     fontFamily: Fonts.HELVETICA_BOLD,
     lineHeight: 20,
+    marginTop: 5,
     marginHorizontal: 5,
   },
 });

@@ -52,11 +52,11 @@ export const AppColor = {
   RATING_COLOR: '#F4CB49',
   BREATHE_CIRCLE_COLOR: '#00C69A',
   Background_New: '#F7F7F7',
-  SecondaryTextColor:'#6B7280',
-  PrimaryTextColor:'#1F2937',
-  orangeColor:'#FEE2BB',
-   orangeColor1:'#E38100'
-  
+  SecondaryTextColor: '#6B7280',
+  PrimaryTextColor: '#1F2937',
+  orangeColor: '#FEE2BB',
+  orangeColor1: '#E38100',
+  NEW_GREY_TEXT: '#6B7280',
 };
 export const Fonts = {
   MONTSERRAT_BOLD: 'Montserrat-Bold',

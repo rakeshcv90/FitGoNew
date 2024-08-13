@@ -976,7 +976,7 @@ const NewSubscription = ({navigation, route}: any) => {
       <DietPlanHeader
         header="Unlock Challenges"
         paddingTop={
-          Platform.OS == 'android' ? DeviceHeigth * 0.02 : DeviceHeigth * 0.025
+          Platform.OS == 'android' ? DeviceHeigth * 0.029 : DeviceHeigth * 0.025
         }
         h={Platform.OS == 'ios' ? DeviceWidth * 0.15 : DeviceWidth * 0.15}
         shadow
@@ -1165,15 +1165,15 @@ const NewSubscription = ({navigation, route}: any) => {
                     color: '#333333',
                   }}>
                   Please NOTE: Enjoy the 3-day free trial then you will be
-                  charged {getPrice(sortedSubscriptions[currentSelected])}{' '}monthly. You
-                  can cancel the subscription before your trial period ends if
-                  you do not want to convert to a paid subscription. Your
-                  subscription will renew automatically until you cancel the
-                  subscription, you can manage or cancel your subscription
-                  anytime from the Google Play Store. If you are unsure how to
-                  cancel a subscription, please visit the Google Support
-                  website. Note that deleting the app does not cancel your
-                  subscription.
+                  charged {getPrice(sortedSubscriptions[currentSelected])}{' '}
+                  monthly. You can cancel the subscription before your trial
+                  period ends if you do not want to convert to a paid
+                  subscription. Your subscription will renew automatically until
+                  you cancel the subscription, you can manage or cancel your
+                  subscription anytime from the Google Play Store. If you are
+                  unsure how to cancel a subscription, please visit the Google
+                  Support website. Note that deleting the app does not cancel
+                  your subscription.
                 </Text>
               ) : (
                 <Text

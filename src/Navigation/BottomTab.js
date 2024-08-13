@@ -295,11 +295,7 @@ const BottomTab = () => {
           component={Workouts}
           options={{tabBarShowLabel: true}}
         />
-        <Tabs.Screen
-          name="Reports"
-          component={NewMonthlyAchievement}
-          options={{tabBarShowLabel: false}}
-        />
+       
 
         <Tabs.Screen
           name="Profile"
