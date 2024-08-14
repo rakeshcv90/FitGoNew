@@ -20,7 +20,7 @@ const EventBanner = React.memo(({navigation}) => {
             : localImage.event_banner1
         }
         style={styles.imgbackground}
-        resizeMode="contain">
+        resizeMode="stretch">
         <NewButton
           position={'absolute'}
           bottom={DeviceHeigth * 0.024}

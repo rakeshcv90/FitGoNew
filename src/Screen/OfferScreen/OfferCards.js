@@ -28,7 +28,7 @@ const OfferCards = React.memo(
         <ImageBackground
           source={imgSource}
           style={[styles.imgBackground, {opacity: opacity}]}
-          resizeMode="contain">
+          resizeMode="stretch">
           <Text style={[styles.text2, {color: text1Color}]}>{text1}</Text>
           <Text style={[styles.text3, {color: text1Color}]}>{text2}</Text>
           <View

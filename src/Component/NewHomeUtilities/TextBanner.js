@@ -5,7 +5,6 @@ import {
   Animated,
   Alert,
   TouchableOpacity,
-
   FlatList,
   ActivityIndicator,
 } from 'react-native';
@@ -34,11 +33,7 @@ import {
 } from '../../Screen/Terms&Country/LocationPermission';
 import {AnalyticsConsole} from '../AnalyticsConsole';
 
-const TextBanner = ({
-  navigation,
-
-  setLocationP,
-}) => {
+const TextBanner = ({navigation, setLocationP}) => {
   const navigation1 = useNavigation();
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
   const getPurchaseHistory = useSelector(state => state?.getPurchaseHistory);
@@ -232,10 +227,12 @@ const TextBanner = ({
     if (messages[currentMessageIndex] == 'How to join!') {
       navigation1.navigate('IntroVideo', {type: 'home'});
     } else {
-      Alert.alert('Current Message', messages[currentMessageIndex]);
+      navigation.navigate('Questions', {screenName: 'Home'});
     }
   };
+
   const handleEventClicks = index => {
+    console.log('XCvddfgdgfdg', BannerType1, Bannertype2, index);
     const Sat = getPurchaseHistory?.currentDay == 6;
     const Sun = getPurchaseHistory?.currentDay == 7;
     if (BannerType1 == 'new_join') {
@@ -293,7 +290,8 @@ const TextBanner = ({
         setLoaded(true);
         if (getPurchaseHistory?.plan == null) {
           AnalyticsConsole('PP_BANNER');
-          navigation.navigate('NewSubscription', {upgrade: false});
+          navigation.navigate('StepGuide');
+          // navigation.navigate('NewSubscription', {upgrade: false});
         } else {
           AnalyticsConsole('UP_BANNER');
           navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});

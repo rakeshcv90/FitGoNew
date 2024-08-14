@@ -197,7 +197,6 @@ const NewHome = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-      
         setCoins(response?.data?.responses);
       }
     } catch (error) {
@@ -352,7 +351,7 @@ const NewHome = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (responseData?.data?.msg == 'version is required') {
-        console.log('version error', responseData?.data?.msg);
+       
       } else {
         const objects = {};
         responseData.data.data.forEach(item => {
@@ -397,7 +396,7 @@ const NewHome = ({navigation}) => {
         const challenge = responseData?.data?.challenge_data?.filter(
           item => item?.status == 'active',
         );
-        // console.log('challenge', challenge);
+        
         setCurrentChallenge(challenge);
         getCurrentDayAPI(challenge);
         dispatch(setAllExercise(responseData.data.data));
@@ -656,7 +655,10 @@ const NewHome = ({navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.6}
-                  onPress={() => {}}
+                  onPress={() => {
+                    AnalyticsConsole('HB');
+                    navigation.navigate('WorkoutHistory');
+                  }}
                   style={{
                     width: 70,
                     height: 40,
@@ -756,13 +758,7 @@ const NewHome = ({navigation}) => {
           </View>
           <TouchableOpacity
             onPress={() => {
-              showMessage({
-                message: 'WOrk in Progress',
-                type: 'info',
-                animationDuration: 500,
-                floating: true,
-                icon: {icon: 'auto', position: 'left'},
-              });
+             navigation.navigate('OfferPage')
             }}
             style={{
               width: DeviceHeigth >= 1024 ? '20%' : '25%',
@@ -784,13 +780,16 @@ const NewHome = ({navigation}) => {
             <Icons name={'chevron-right'} size={25} color={AppColor.RED} />
           </TouchableOpacity>
         </ImageBackground>
+        {enteredCurrentEvent && (!Sat || !Sun) ? (
+          <MyChallenge coins={coins} />
+        ) : (
+          <TextBanner
+            locationP={locationP1}
+            setLocationP={setLocationP1}
+            navigation={navigation}
+          />
+        )}
 
-        <TextBanner
-          locationP={locationP1}
-          setLocationP={setLocationP1}
-          navigation={navigation}
-        />
-        <MyChallenge coins={coins} />
         <WithoutEvent pastWinners={pastWinners} />
 
         {currentChallenge?.length > 0 && (

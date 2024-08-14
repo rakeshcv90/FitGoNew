@@ -209,7 +209,7 @@ export const ExerciseComponentWithEvent = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
-console.log(dayWiseCoins[day])
+
   return (
     <View style={styles.View1}>
       {dayWiseCoins[day] == null || dayWiseCoins[day] < 0 ? (
@@ -394,7 +394,7 @@ console.log(dayWiseCoins[day])
                 }}
                 resizeMode="contain"
               />
-              {console.log('Zxcvxvdsfdsd', getWeeklyPlansData[day]?.title)}
+           
               <Text
                 style={{
                   fontFamily: Fonts.MONTSERRAT_BOLD,

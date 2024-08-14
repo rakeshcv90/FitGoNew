@@ -32,9 +32,10 @@ const Tooltip = ({visible, setVisible}) => {
             justifyContent: 'center',
             alignItems: 'center',
             paddingVertical:18,
-            paddingHorizontal:12
+            paddingHorizontal:12,
+            borderRa:6,
           }}
-          resizeMode="contain">
+          resizeMode="stretch">
           <Text
             style={{
               color: AppColor.BLACK,

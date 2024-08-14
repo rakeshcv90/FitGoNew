@@ -22,12 +22,10 @@ const OfferPage = ({navigation}) => {
   const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
   return (
     <View style={styles.container}>
-      <StatusBar translucent backgroundColor={'transparent'} />
+      <StatusBar translucent backgroundColor={'transparent'} barStyle={'light-content'} />
       <ScrollView>
         <OfferHeader />
-        <EventBanner
-         navigation={navigation}
-        />
+        <EventBanner navigation={navigation} />
         <OfferCards
           imgSource={localImage.cardio_banner}
           header={'Cardio Point'}
@@ -45,7 +43,7 @@ const OfferPage = ({navigation}) => {
           text2={'Lorem Ipsum is simply dummy text of the printing'}
           text3={'20 coins'}
           coinTextColor={AppColor.BLACK}
-          onPress={()=>navigation.navigate("Referral")}
+          onPress={() => navigation.navigate('Referral')}
         />
         <OfferCards
           imgSource={localImage.breathe_banner}

@@ -72,9 +72,10 @@ const intialState = {
   getOpenAdsCount: 0,
   getRerwardCount: 0,
   getDietFilterData: -1,
-  getCustomDietData:[],
+  getCustomDietData: [],
   getExerciseInTime: '',
   getExerciseOutTime: '',
+  getEquipmentExercise: 1,
 };
 const ThemeReducer = (state = intialState, action) => {
   switch (action.type) {
@@ -397,26 +398,31 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         getRerwardCount: action.payload,
       };
-      case types.DIET_TYPE_FILTER:
-        return {
-          ...state,
-          getDietFilterData: action.payload,
-        };
-        case types.CUSTOM_DIET_DATA:
-          return {
-            ...state,
-            getCustomDietData: action.payload,
-          };
-        case types.EXERCISE_IN_TIME:
-          return {
-            ...state,
-            getExerciseInTime: action.payload,
-          };
-        case types.EXERCISE_OUT_TIME:
-          return {
-            ...state,
-            getExerciseOutTime: action.payload,
-          };
+    case types.DIET_TYPE_FILTER:
+      return {
+        ...state,
+        getDietFilterData: action.payload,
+      };
+    case types.CUSTOM_DIET_DATA:
+      return {
+        ...state,
+        getCustomDietData: action.payload,
+      };
+    case types.EXERCISE_IN_TIME:
+      return {
+        ...state,
+        getExerciseInTime: action.payload,
+      };
+    case types.EXERCISE_OUT_TIME:
+      return {
+        ...state,
+        getExerciseOutTime: action.payload,
+      };
+    case types.CHECKE_QUIPMENT_EXERCISE:
+      return {
+        ...state,
+        getEquipmentExercise: action.payload,
+      };
     default:
       return state;
   }
