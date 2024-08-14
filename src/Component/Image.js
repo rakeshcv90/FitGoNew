@@ -305,4 +305,5 @@ export const localImage = {
   StepHealth:require('../Icon/Images/InAppRewards/StepHealth.png'),
   StepTrophy:require('../Icon/Images/InAppRewards/StepTrophy.png'),
   StepBadge:require('../Icon/Images/InAppRewards/StepBadge.png'),
+  cautionLottie:require('../Icon/Images/InAppRewards/cautionLottie.json')
 };

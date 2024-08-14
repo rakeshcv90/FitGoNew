@@ -32,29 +32,35 @@ const WeekArrayWithEvent = Array(5)
         .format('dddd')),
   );
 const WorkoutCompleted = ({navigation, route}) => {
-  const {day, allExercise, type} = route?.params;
+  const day = route?.params?.day;
+  const type = route?.params?.type;
+  const rank = route?.params?.rank;
+  const slotCoins = route?.params?.slotCoins;
   const streakCardOffset = useSharedValue(0);
   const cardioCardOffset = useSharedValue(DeviceWidth);
   const breatheCardOffset = useSharedValue(DeviceWidth);
   const completeCardOffset = useSharedValue(DeviceWidth);
-  console.log('TYPEESADDAS', type);
   const [coins, setCoins] = useState({});
   const [myRank, setMyRank] = useState('');
   const [cardioExxercise, setCardioExercise] = useState([]);
   const [downloaded, setDownloade] = useState(0);
   const [loader, setLoader] = useState(true);
-
+  const [breatheSessionAvailabel, setBraetheSessionAvailable] = useState(false);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const getAllExercise = useSelector(state => state.getAllExercise);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  const [earnedCoin, setEarnedCoin] = useState(0);
+  const [breatheCoins, setBreatheCoins] = useState(0);
+  const [slotDetails, setSlotDetails] = useState({});
   const dispatch = useDispatch();
-
   useEffect(() => {
-    let timeOut = setTimeout(() => {
-      AnimationStart();
-    }, 5000);
-    return () => clearTimeout(timeOut);
-  }, []);
+    if (type == 'complete') {
+      completeCardOffset.value = withSpring(0);
+    } else if (type == 'cardio') {
+      setLoader(true);
+      getEventEarnedCoins();
+    }
+  }, [type]);
   const AnimationStart = () => {
     streakCardOffset.value = withTiming(-DeviceWidth, {duration: 500}, () => {
       cardioCardOffset.value = withSpring(0);
@@ -80,15 +86,11 @@ const WorkoutCompleted = ({navigation, route}) => {
       transform: [{translateX: completeCardOffset.value}],
     };
   });
-  const handleCardioeSkip = () => {
-    cardioCardOffset.value = withTiming(0,{duration:500})
-    
-  };
   const handleBreatheSkip = () => {
-    breatheCardOffset.value = withTiming(0,{duration:500})
+    breatheCardOffset.value = withSpring(0);
   };
   const handleCompleteSkip = () => {
-    completeCardOffset.value = withTiming(0,{duration:500})
+    completeCardOffset.value = withSpring(0);
   };
 
   useEffect(() => {
@@ -193,8 +195,8 @@ const WorkoutCompleted = ({navigation, route}) => {
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {
         setDownloade(0);
-
-        navigation.navigate('CardioExercise', {
+        cardioCardOffset.value = withSpring(-DeviceWidth);
+        navigation.navigate('EventExercise', {
           allExercise: cardioExxercise,
           currentExercise: cardioExxercise[0],
           data: [],
@@ -205,7 +207,7 @@ const WorkoutCompleted = ({navigation, route}) => {
         });
         // }
       } else {
-        navigation.navigate('CardioExercise', {
+        navigation.navigate('EventExercise', {
           allExercise: cardioExxercise,
           currentExercise: cardioExxercise[0],
           data: [],
@@ -252,7 +254,9 @@ const WorkoutCompleted = ({navigation, route}) => {
         },
       );
       console.log('WEEKLY CAL', res.data, payload);
+      setEarnedCoin(res?.data?.coins);
       getEarnedCoins();
+
       // if (res.data) {
       //   console.log('WEEKLY CAL', res.data);
       //   let complete = res.data?.completed_exercise;
@@ -300,6 +304,7 @@ const WorkoutCompleted = ({navigation, route}) => {
       } else {
         console.log('coins', response?.data?.responses);
         setCoins(response?.data?.responses);
+
         getLeaderboardDataAPI();
       }
     } catch (error) {
@@ -326,6 +331,7 @@ const WorkoutCompleted = ({navigation, route}) => {
           item => item?.id == getUserDataDetails?.id,
         );
         setMyRank(result.data?.data[myRank]?.rank);
+        console.log(result.data?.data[myRank]?.rank, 'rank');
       }
       getBreatheAPI();
     } catch (error) {
@@ -344,14 +350,25 @@ const WorkoutCompleted = ({navigation, route}) => {
           item => item.status == 'open',
         );
         setLoader(false);
-        if (openIndex == -1) {
-          type == 'cardio' ? handleCompleteSkip() : handleCardioeSkip();
-        } else {
+        setTimeout(() => {
+          AnimationStart();
+        }, 7000);
+        if (openIndex == -1 && type == 'cardio') {
+          console.log(1);
+          handleCompleteSkip();
+        } else if (type == 'weekly' && openIndex != -1) {
+          setBraetheSessionAvailable(true);
+          setBreatheCoins(result?.data?.sessions[openIndex]?.fit_coins);
+        } else if (type == 'cardio') {
+          setBreatheCoins(result?.data?.sessions[openIndex]?.fit_coins);
           handleBreatheSkip();
         }
       }
     } catch (error) {
       console.log(error);
+      setTimeout(() => {
+        AnimationStart();
+      }, 7000);
     }
   };
   return (
@@ -364,7 +381,7 @@ const WorkoutCompleted = ({navigation, route}) => {
             backgroundColor={AppColor.GRAY}
             barStyle={'dark-content'}
           />
-          <NewHeader backButton header={'Exercise Completed'} />
+          <NewHeader header={'Exercise Completed'} />
           <View style={{flex: 1}}>
             <Animated.View style={[styles.imgView, streakAnimation]}>
               <Image source={localImage.offer_girl} style={styles.imgStyle1} />
@@ -373,6 +390,9 @@ const WorkoutCompleted = ({navigation, route}) => {
                 streakCoins={coins}
                 cardioCoins={cardioExxercise[0]?.fit_coins}
                 download={0}
+                title={
+                  'Well Done! You’ve completed your workout for the day. Workout regularly to increase your chances to win the cash prize.'
+                }
               />
             </Animated.View>
             <Animated.View style={[styles.imgView, cardioAnimation]}>
@@ -383,8 +403,20 @@ const WorkoutCompleted = ({navigation, route}) => {
                 onPress={() => handleStart()}
                 streakCoins={coins}
                 cardioCoins={cardioExxercise[0]?.fit_coins}
-                handleSkip={handleCardioeSkip}
+                handleSkip={() => {
+                  if (breatheSessionAvailabel) {
+                    cardioCardOffset.value = withSpring(-DeviceWidth);
+                    breatheCardOffset.value = withSpring(0);
+                  } else {
+                    cardioCardOffset.value = withSpring(-DeviceWidth);
+                    completeCardOffset.value = withSpring(0);
+                  }
+                }}
                 download={downloaded}
+                EarnedCoins={earnedCoin}
+                title={
+                  'Just 15 minutes of cardio = 10 Extra FitCoins\nComplete the 15-minute cardio session and boost your chance to win ₹1000!'
+                }
               />
             </Animated.View>
             <Animated.View style={[styles.imgView, breatheAnimation]}>
@@ -395,11 +427,22 @@ const WorkoutCompleted = ({navigation, route}) => {
               <WorkoutCard
                 cardType={'breathe'}
                 cardHeader={'Breathe in & out'}
-                onPress={() => {}}
+                onPress={() => {
+                  breatheCardOffset.value = withSpring(-DeviceWidth); //removing the card before navigation
+                  navigation.navigate('Breathe', {slotCoins: breatheCoins});
+                }}
                 streakCoins={coins}
                 cardioCoins={cardioExxercise[0]?.fit_coins}
                 download={0}
-                handleSkip={handleBreatheSkip}
+                handleSkip={() => {
+                  breatheCardOffset.value = withSpring(-DeviceWidth);
+                  completeCardOffset.value = withSpring(0);
+                }}
+                EarnedCoins={earnedCoin}
+                breatheCoins={breatheCoins}
+                title={
+                  'Increase your chances to win ₹1000! Complete a quick breathing exercise and earn Extra FitCoins.'
+                }
               />
             </Animated.View>
             <Animated.View style={[styles.imgView, completeAnimation]}>
@@ -410,6 +453,11 @@ const WorkoutCompleted = ({navigation, route}) => {
                 streakCoins={coins}
                 cardioCoins={cardioExxercise[0]?.fit_coins}
                 download={0}
+                EarnedCoins={slotCoins ?? earnedCoin}
+                rank={rank ?? myRank}
+                title={
+                  'Congratulations! You’ve completed your workout and earned more FitCoins. Keep working out regularly to win the fitness challenge.'
+                }
               />
             </Animated.View>
           </View>
