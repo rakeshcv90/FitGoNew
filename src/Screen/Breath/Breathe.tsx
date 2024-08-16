@@ -44,6 +44,7 @@ import axios from 'axios';
 import VersionNumber from 'react-native-version-number';
 import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
+import ActivityLoader from '../../Component/ActivityLoader';
 interface CircleProps {
   index: number;
   progress: Animated.SharedValue<number>;
@@ -63,10 +64,12 @@ const transform = (progress: number, index: number) => {
 
 const Breathe = ({navigation, route}) => {
   const slotCoins = route?.params?.slotCoins;
+  const type = route?.params?.type;
+  const offerType = route?.params?.offerType;
   const progress = useSharedValue(0);
   const goesDown = useSharedValue(false);
   const [pause, setPause] = useState(true);
-  const [seconds, setSeconds] = useState(30);
+  const [loaded, setLoaded] = useState(true);
   const [start, setStart] = useState(3);
   const scaleAnimation = useSharedValue(0);
   const fadeAnimation = useSharedValue(0.5);
@@ -93,6 +96,7 @@ const Breathe = ({navigation, route}) => {
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
   const [quitModalVisible, setQuitModalVisible] = useState(false);
   const AddCoinsApi = async () => {
+    setLoaded(false);
     let payload = new FormData();
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('status', 'done');
@@ -109,6 +113,7 @@ const Breathe = ({navigation, route}) => {
       }
     } catch (error) {
       console.log(error, 'breathe coin add api ');
+      setLoaded(true);
     }
   };
   const getLeaderboardDataAPI = async () => {
@@ -123,15 +128,20 @@ const Breathe = ({navigation, route}) => {
         const myRank = result.data?.data?.findIndex(
           item => item?.id == getUserDataDetails?.id, // static for testing purpose
         );
-        console.log(result?.data, getUserDataDetails);
-        navigation.navigate('WorkoutCompleted', {
-          type: 'complete',
-          rank: result.data?.data[myRank]?.rank,
-          slotCoins: slotCoins,
-        });
+        setLoaded(true);
+        if (type == 'OfferPage') {
+          navigation.navigate('OfferPage');
+        } else {
+          navigation.navigate('WorkoutCompleted', {
+            type: 'complete',
+            rank: result.data?.data[myRank]?.rank,
+            slotCoins: slotCoins,
+          });
+        }
       }
     } catch (error) {
       console.log(error);
+      setLoaded(true);
     }
   };
   const songs = [
@@ -438,19 +448,25 @@ const Breathe = ({navigation, route}) => {
       </Animated.View>
     );
   };
-
   return (
     <View style={styles.container1}>
       <StatusBar backgroundColor={AppColor.BLACK} barStyle={'light-content'} />
       <TouchableOpacity
-        style={{marginTop: getStatusBarHeight(), marginLeft: 16}}
+        style={{marginTop: getStatusBarHeight() + 20, marginLeft: 16}}
         onPress={() => {
-          setQuitModalVisible(true)
-          console.log('ButtonClicked')
+          setQuitModalVisible(true);
+          console.log('ButtonClicked');
         }}>
         <ArrowLeft fillColor={AppColor.WHITE} />
       </TouchableOpacity>
-      <QuitModal visible={quitModalVisible} setVisible={setQuitModalVisible} navigation={navigation}/>
+      <QuitModal
+        visible={quitModalVisible}
+        setVisible={setQuitModalVisible}
+        navigation={navigation}
+        type={type}
+        offerType={offerType ?? false}
+      />
+      {loaded?null:<ActivityLoader/>}
       {start > 0 ? (
         <View style={{flex: 1, justifyContent: 'center'}}>
           <View style={{}}>
@@ -691,7 +707,6 @@ const Breathe = ({navigation, route}) => {
         text2={'taking deep breaths'}
         speed={3}
       />
-
     </View>
   );
 };

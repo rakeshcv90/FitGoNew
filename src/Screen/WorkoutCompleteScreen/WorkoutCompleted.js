@@ -54,10 +54,10 @@ const WorkoutCompleted = ({navigation, route}) => {
   const [slotDetails, setSlotDetails] = useState({});
   const dispatch = useDispatch();
   useEffect(() => {
+    filterCardioExercise();
     if (type == 'complete') {
       completeCardOffset.value = withSpring(0);
-    } else if (type == 'cardio') {
-      setLoader(true);
+    } else if (type == 'cardio' || type=='weekly') {
       getEventEarnedCoins();
     }
   }, [type]);
@@ -92,11 +92,6 @@ const WorkoutCompleted = ({navigation, route}) => {
   const handleCompleteSkip = () => {
     completeCardOffset.value = withSpring(0);
   };
-
-  useEffect(() => {
-    getEventEarnedCoins();
-    filterCardioExercise();
-  }, []);
   const sanitizeFileName = fileName => {
     fileName = fileName.replace(/\s+/g, '_');
     return fileName;
@@ -256,29 +251,6 @@ const WorkoutCompleted = ({navigation, route}) => {
       console.log('WEEKLY CAL', res.data, payload);
       setEarnedCoin(res?.data?.coins);
       getEarnedCoins();
-
-      // if (res.data) {
-      //   console.log('WEEKLY CAL', res.data);
-      //   let complete = res.data?.completed_exercise;
-      //   let totalExerciseTime = 0,
-      //     totalCalories = 0;
-      //   allExercise?.map((item, index) => {
-      //     if (index + 1 <= complete) {
-      //       // Assuming exercise_rest is a string like '30 sec'
-      //       let restPeriod = parseInt(item?.exercise_rest?.split(' ')[0]);
-      //       let numberOfSets = 3; // Assuming each exercise has 3 sets
-      //       totalExerciseTime += restPeriod * numberOfSets;
-      //       totalCalories = parseInt(item?.exercise_calories) + totalCalories;
-      //       console.log(totalCalories, totalExerciseTime);
-      //     }
-      //   });
-      //   setExerciseTime(totalExerciseTime);
-      //   setExerciseCal(totalCalories);
-      //   (complete = 0), (totalCalories = 0), (totalExerciseTime = 0);
-      //   setCount(res.data?.coins);
-
-      //   // animate();
-      // }
     } catch (error) {
       console.log('ERRRRRR', error);
     }
@@ -331,7 +303,6 @@ const WorkoutCompleted = ({navigation, route}) => {
           item => item?.id == getUserDataDetails?.id,
         );
         setMyRank(result.data?.data[myRank]?.rank);
-        console.log(result.data?.data[myRank]?.rank, 'rank');
       }
       getBreatheAPI();
     } catch (error) {
@@ -354,7 +325,6 @@ const WorkoutCompleted = ({navigation, route}) => {
           AnimationStart();
         }, 7000);
         if (openIndex == -1 && type == 'cardio') {
-          console.log(1);
           handleCompleteSkip();
         } else if (type == 'weekly' && openIndex != -1) {
           setBraetheSessionAvailable(true);

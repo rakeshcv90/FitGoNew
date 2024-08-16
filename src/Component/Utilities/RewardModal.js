@@ -1,4 +1,11 @@
-import {View, Text, StyleSheet, Modal, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Modal,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useState} from 'react';
 import {AppColor, Fonts} from '../Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../Config';
@@ -7,7 +14,10 @@ import {localImage} from '../Image';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import NewButton from '../NewButton';
 import {setRewardModal} from '../ThemeRedux/Actions';
-import { useDispatch } from 'react-redux';
+import {useDispatch} from 'react-redux';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {AnalyticsConsole} from '../AnalyticsConsole';
+import {useNavigation} from '@react-navigation/native';
 const RewardModal = ({
   visible,
   imagesource,
@@ -17,8 +27,10 @@ const RewardModal = ({
   txt2,
   ButtonText,
 }) => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
   return (
-    <Modal transparent visible={visible} animationType='slide'>
+    <Modal transparent visible={visible} animationType="slide">
       <View style={{backgroundColor: `rgba(0,0,0,0.4)`, flex: 1}}>
         <View style={styles.View1}>
           <Icon
@@ -50,21 +62,70 @@ const RewardModal = ({
           <View
             style={{
               marginVertical: 30,
-              width: DeviceWidth * 0.85,
+              width: DeviceWidth * 0.80,
               alignSelf: 'center',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}>
-            <Text style={[styles.txt1, {fontSize: 15, lineHeight: 20}]}>
-              <Text style={{color: '#f0013b', fontSize: 20, lineHeight: 40}}>
-                {txt1}
-              </Text>
-            {txt2}
+            <Text
+              style={{
+                color: AppColor.PrimaryTextColor,
+                fontSize: 20,
+                fontFamily: Fonts.HELVETICA_BOLD,
+                lineHeight: 25,
+              }}>
+              {txt1}
             </Text>
-            <NewButton
+
+            <Text
+              style={[
+                styles.txt1,
+                {
+                  fontSize: 14,
+                  lineHeight: 24,
+                  textAlign: 'center',
+                  color: AppColor.SecondaryTextColor,
+                  fontFamily: Fonts.HELVETICA_REGULAR,
+                },
+              ]}>
+              {txt2}
+            </Text>
+            <TouchableOpacity
+            activeOpacity={0.8}
+              onPress={() => {
+                AnalyticsConsole('CHS_OPEN');
+                dispatch(setRewardModal(false));
+                navigation.navigate('BottomTab', {
+                  screen: 'MyPlans',
+                });
+              }}
+              style={{
+                width: 250,
+                height: 50,
+                backgroundColor: 'red',
+                borderRadius: 6,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.HELVETICA_BOLD,
+                  fontSize: 13,
+                  lineHeight: 16,
+                  color: AppColor.WHITE,
+                  marginHorizontal: 10,
+                }}>
+                StartNow
+              </Text>
+              <AntDesign name={'arrowright'} size={15} color={AppColor.WHITE} />
+            </TouchableOpacity>
+            {/* <NewButton
               pV={15}
               title={ButtonText}
               ButtonWidth={DeviceWidth * 0.6}
               onPress={onConfirm}
-            />
+            /> */}
           </View>
         </View>
       </View>

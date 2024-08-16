@@ -6,7 +6,7 @@ import NewButton from '../../Component/NewButton';
 import {AppColor} from '../../Component/Color';
 import AnimatedLottieView from 'lottie-react-native';
 import { useNavigation } from '@react-navigation/native';
-const QuitModal = ({visible,setVisible,navigation}) => {
+const QuitModal = ({visible,setVisible,navigation,type,offerType}) => {
   console.log(visible)
   return (
     <Modal visible={visible} animationType="slide" transparent>
@@ -40,8 +40,13 @@ const QuitModal = ({visible,setVisible,navigation}) => {
             mV={10}
             buttonColor={AppColor.BREATHE_CIRCLE_COLOR}
             onPress={()=>{
+             if(type){
+              setVisible(false)
+              navigation.navigate("OfferPage")
+             }else{
               setVisible(false)
               navigation.navigate("WorkoutCompleted",{type: 'complete'})
+             }
             }}
           />
           <Text style={styles.txt1} onPress={()=>setVisible(false)}>Continue</Text>

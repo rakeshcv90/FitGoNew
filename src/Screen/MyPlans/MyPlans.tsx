@@ -31,6 +31,7 @@ import {
   setEditedExercise,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
+  setEquipmentExercise,
   setFitCoins,
   setFitmeMealAdsCount,
   setHomeGraphData,
@@ -49,7 +50,6 @@ import RNFetchBlob from 'rn-fetch-blob';
 import {showMessage} from 'react-native-flash-message';
 import {useFocusEffect} from '@react-navigation/native';
 import AnimatedLottieView from 'lottie-react-native';
-
 import {MyInterstitialAd} from '../../Component/BannerAdd';
 import analytics from '@react-native-firebase/analytics';
 import {EnteringEventFunction} from '../Event/EnteringEventFunction';
@@ -58,11 +58,12 @@ import {
   ExerciseComponentWithEvent,
   ExerciseComponetWithoutEvents,
 } from './ExerciseComponent';
-import FitCoins from '../../Component/Utilities/FitCoins';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import ActivityLoader from '../../Component/ActivityLoader';
 import StreakModal from '../../Component/Utilities/StreakModal';
+import {localImage} from '../../Component/Image';
+import Icons from 'react-native-vector-icons/FontAwesome';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -96,7 +97,11 @@ const MyPlans = ({navigation}: any) => {
   const [downlodedVideoSent, setDownloadedVideoSent] = useState(false);
   const [fetchCoins, setFetchCoins] = useState(false);
   const [streakModalVisibility, setStreakModalVisibility] = useState(false);
-  const getStreakStatus = useSelector(state => state?.getStreakStatus);
+  const getStreakStatus = useSelector((state: any) => state?.getStreakStatus);
+  const [myRank, setMyRank] = useState(0);
+  const [totalData, setTotalData] = useState([]);
+  const [visible1, setVisible1] = useState(false);
+  const [visible2, setVisible2] = useState(false);
   const getFitmeMealAdsCount = useSelector(
     (state: any) => state.getFitmeMealAdsCount,
   );
@@ -116,7 +121,13 @@ const MyPlans = ({navigation}: any) => {
   const getEditedDayExercise = useSelector(
     (state: any) => state.getEditedDayExercise,
   );
-  const getStreakModalVisible=useSelector(state=>state?.getStreakModalVisible)
+  const getStreakModalVisible = useSelector(
+    (state: any) => state?.getStreakModalVisible,
+  );
+  const getEquipmentExercise = useSelector(
+    (state: any) => state?.getEquipmentExercise,
+  );
+
   const fitCoins = useSelector((state: any) => state.fitCoins);
   const Sat = getPurchaseHistory?.currentDay == 6;
   const Sun = getPurchaseHistory?.currentDay == 0;
@@ -147,19 +158,22 @@ const MyPlans = ({navigation}: any) => {
     if (
       WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1] !== 'Monday' &&
       coins[WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]] < 0 &&
-      enteredCurrentEvent && !Sat && !Sun &&
+      enteredCurrentEvent &&
+      !Sat &&
+      !Sun &&
       !getStreakStatus?.includes(
         WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2],
       )
     ) {
       dispatch(setStreakModalVisible(true));
-      dispatch(setStreakStatus([
-      ...getStreakStatus,
-      WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]
-    
-    ]))
+      dispatch(
+        setStreakStatus([
+          ...getStreakStatus,
+          WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2],
+        ]),
+      );
     }
-  }, [getStreakModalVisible,coins]);
+  }, [getStreakModalVisible, coins]);
   const getAllChallangeAndAllExerciseData = async () => {
     let responseData = 0;
     if (Object.keys(getUserDataDetails).length > 0) {
@@ -251,7 +265,6 @@ const MyPlans = ({navigation}: any) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-        console.log('coins', response?.data?.responses);
         setCoins(response?.data?.responses);
       }
     } catch (error) {
@@ -313,6 +326,7 @@ const MyPlans = ({navigation}: any) => {
           user_id: getUserDataDetails?.id,
         },
       });
+
       if (res.data?.msg == 'User not exist.') {
         showMessage({
           message: res?.data?.msg,
@@ -613,6 +627,12 @@ const MyPlans = ({navigation}: any) => {
         const myRank = result.data?.data?.findIndex(
           item => item?.id == getUserDataDetails?.id,
         );
+        setTotalData(result.data?.data);
+        if (myRank != -1) {
+          setMyRank(result.data?.data[myRank]?.rank);
+        } else {
+          setMyRank(0);
+        }
         setFetchCoins(false);
         setMyRankData(result.data?.data[myRank]);
         dispatch(setFitCoins(result.data?.data[myRank]?.fit_coins));
@@ -852,6 +872,335 @@ const MyPlans = ({navigation}: any) => {
       }
     }
   };
+  const BottomModal = ({setVisible1, visible1}: any) => {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        statusBarTranslucent
+        visible={visible1}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: `rgba(0,0,0,0.5)`,
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}>
+          <View
+            style={{
+              width: '100%',
+              alignSelf: 'flex-end',
+              //height: 500,
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+              backgroundColor: 'white',
+              paddingVertical: 10,
+              paddingHorizontal: 20,
+              paddingTop: 20,
+            }}>
+            <Text
+              style={{
+                fontFamily: Fonts.HELVETICA_BOLD,
+                fontSize: 14,
+                lineHeight: 20,
+                color: AppColor.PrimaryTextColor,
+                textAlign: 'center',
+              }}>
+              Adjust Your Workout Plan
+            </Text>
+            <Text
+              style={{
+                fontFamily: Fonts.HELVETICA_REGULAR,
+                fontSize: 14,
+                lineHeight: 24,
+                color: AppColor.SecondaryTextColor,
+                marginVertical: 10,
+              }}>
+              Would you like to switch to workouts with equipment or continue
+              with the workouts without equipment?
+            </Text>
+            <TouchableOpacity
+              // onPress={() => {
+              //   dispatch(setEquipmentExercise(0));
+              // }}
+              activeOpacity={1}
+              style={{
+                width: '100%',
+                height: 60,
+                backgroundColor: '#F9F9F9',
+                marginVertical: 10,
+                borderRadius: 6,
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingHorizontal: 20,
+                justifyContent: 'space-between',
+                borderWidth: 1,
+                borderColor:
+                  getEquipmentExercise == 0 ? AppColor.WHITE : AppColor.RED,
+              }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.HELVETICA_REGULAR,
+                  fontSize: 16,
+                  lineHeight: 24,
+                  color:
+                    getEquipmentExercise == 0
+                      ? AppColor.SecondaryTextColor
+                      : AppColor.RED,
+                }}>
+                With Equipment
+              </Text>
+              <Image
+                source={localImage.Workout}
+                style={{width: 30, height: 30}}
+                tintColor={
+                  getEquipmentExercise == 0
+                    ? AppColor.SecondaryTextColor
+                    : AppColor.RED
+                }
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              // onPress={() => {
+              //   dispatch(setEquipmentExercise(1));
+              // }}
+              activeOpacity={1}
+              style={{
+                width: '100%',
+                height: 60,
+                backgroundColor: '#F9F9F9',
+                marginVertical: 10,
+                borderRadius: 6,
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingHorizontal: 20,
+                justifyContent: 'space-between',
+                borderWidth: 1,
+                borderColor:
+                  getEquipmentExercise == 1 ? AppColor.WHITE : AppColor.RED,
+              }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.HELVETICA_REGULAR,
+                  fontSize: 16,
+                  lineHeight: 24,
+                  color:
+                    getEquipmentExercise == 1
+                      ? AppColor.SecondaryTextColor
+                      : AppColor.RED,
+                }}>
+                Without Equipment
+              </Text>
+              <Image
+                source={require('../../Icon/Images/NewHome/WithoutEquipment.png')}
+                style={{width: 30, height: 30}}
+                tintColor={
+                  getEquipmentExercise == 1
+                    ? AppColor.SecondaryTextColor
+                    : AppColor.RED
+                }
+              />
+            </TouchableOpacity>
+            <View
+              style={{
+                width: '100%',
+                marginVertical: 10,
+                borderRadius: 6,
+                flexDirection: 'row',
+                alignItems: 'center',
+
+                justifyContent: 'space-between',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  setVisible1(false);
+                }}
+                activeOpacity={0.7}
+                style={{
+                  width: '48%',
+                  height: 50,
+                  backgroundColor: AppColor.WHITE,
+                  marginVertical: 10,
+                  borderRadius: 6,
+                  borderWidth: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderColor: AppColor.SecondaryTextColor,
+                }}>
+                <Text
+                  style={{
+                    fontWeight: '500',
+                    fontSize: 16,
+                    lineHeight: 18,
+                    color: AppColor.SecondaryTextColor,
+                  }}>
+                  Close
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  if (getEquipmentExercise == 1) {
+                    dispatch(setEquipmentExercise(0));
+                    setVisible1(false);
+                    setVisible2(true);
+                  } else {
+                    dispatch(setEquipmentExercise(1));
+                    setVisible1(false);
+                    setVisible2(true);
+                  }
+                }}
+                activeOpacity={0.7}
+                style={{
+                  width: '48%',
+                  height: 50,
+                  backgroundColor: AppColor.RED,
+                  marginVertical: 10,
+                  borderRadius: 6,
+                  borderWidth: 1,
+                  borderColor: AppColor.RED,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontWeight: '500',
+                    fontSize: 16,
+                    lineHeight: 18,
+                    color: AppColor.WHITE,
+                  }}>
+                  Continue
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+  const Exercise_Preparing_Modal = ({setVisible2, visible2}: any) => {
+    return (
+      <Modal
+        animationType="slide"
+        // transparent={true}
+        statusBarTranslucent
+        visible={visible2}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: AppColor.WHITE,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          {/* <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <AnimatedLottieView
+              source={require('../../Icon/Images/NewHome/calender.json')}
+              speed={2}
+              autoPlay
+              loop
+              resizeMode="cover"
+              style={{width: 200, height: 150}}
+            />
+            <Text
+              style={{
+                fontFamily: Fonts.HELVETICA_BOLD,
+                fontSize: 16,
+                lineHeight: 20,
+                color: AppColor.PrimaryTextColor,
+              }}>
+              Please wait we are preparing your plan
+            </Text>
+            <View
+              style={{
+                width: '80%',
+                alignSelf: 'center',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.HELVETICA_BOLD,
+                  fontSize: 14,
+                  lineHeight: 20,
+                  color: AppColor.SecondaryTextColor,
+                  marginTop: 20,
+                }}>
+                Just a moment! We're preparing the perfect
+              </Text>
+              <Text
+                style={{
+                  fontFamily: Fonts.HELVETICA_BOLD,
+                  fontSize: 14,
+                  lineHeight: 20,
+                  color: AppColor.SecondaryTextColor,
+                }}>
+                workout plan for you.
+              </Text>
+            </View>
+          </View> */}
+
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <AnimatedLottieView
+              source={require('../../Icon/Images/NewHome/loader.json')}
+              speed={2}
+              autoPlay
+              loop
+              resizeMode="contain"
+              style={{width: 200, height: 150}}
+            />
+            <Text
+              style={{
+                fontFamily: Fonts.HELVETICA_BOLD,
+                fontSize: 16,
+                lineHeight: 20,
+                color: AppColor.PrimaryTextColor,
+              }}>
+              Congratulation!
+            </Text>
+            <Text
+              style={{
+                fontFamily: Fonts.HELVETICA_BOLD,
+                fontSize: 14,
+                lineHeight: 20,
+                color: AppColor.SecondaryTextColor,
+                marginTop: 20,
+              }}>
+              Your perfect workout plan is ready.
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                setVisible2(false);
+              }}
+              style={{
+                width: 200,
+                height: 50,
+                backgroundColor: 'red',
+                marginTop: 50,
+                borderRadius: 6,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  color: AppColor.WHITE,
+                  fontWeight: '500',
+                  lineHeight: 18,
+                }}>
+                Continue Workout
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
   return (
     <SafeAreaView
       style={{
@@ -859,15 +1208,115 @@ const MyPlans = ({navigation}: any) => {
         backgroundColor: AppColor.WHITE,
       }}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <NewHeader
-        header={'Weekly Plan'}
-        SearchButton={false}
-        backButton={false}
-        extraView={true}
-        enteredCurrentEvent={enteredCurrentEvent}
-        coins={fitCoins > 0 ? fitCoins : 0}
-        coinsLoaded={fetchCoins}
-      />
+      {enteredCurrentEvent ? (
+        <>
+          <View
+            style={{
+              width: DeviceWidth * 0.98,
+              height: DeviceHeigth * 0.1,
+              alignSelf: 'center',
+
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              backgroundColor: AppColor.WHITE,
+              // paddingTop:
+              //   Platform.OS == 'android'
+              //     ? DeviceHeigth * 0.03
+              //     : DeviceHeigth * 0.01,
+            }}>
+            <View
+              style={{width: '50%', height: '100%', justifyContent: 'center'}}>
+              <Text
+                style={{
+                  fontFamily: Fonts.HELVETICA_BOLD,
+                  fontSize: 16,
+                  lineHeight: 19,
+                  color: AppColor.PrimaryTextColor,
+                }}>
+                Week Challenge
+              </Text>
+            </View>
+            <View
+              style={{
+                width: '50%',
+                height: '100%',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+              }}>
+              <>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  disabled={totalData.length > 0 ? false : true}
+                  onPress={() => {
+                    if (totalData.length > 0) {
+                      AnalyticsConsole('LB');
+                      navigation.navigate('Leaderboard');
+                    } else {
+                      showMessage({
+                        message: 'No one has joined the event yet',
+                        type: 'info',
+                        animationDuration: 500,
+                        floating: true,
+                        icon: {icon: 'auto', position: 'left'},
+                      });
+                    }
+                  }}
+                  style={{
+                    width: 70,
+                    height: 40,
+                    borderRadius: 6,
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    backgroundColor: '#DBEAFE',
+                    marginHorizontal: 10,
+                    paddingLeft: 5,
+                  }}>
+                  <Image
+                    source={require('../../Icon/Images/NewHome/cup.png')}
+                    style={{height: 15, width: 15}}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.cointxt}>#{myRank}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  onPress={() => {}}
+                  style={{
+                    width: 70,
+                    height: 40,
+                    borderRadius: 6,
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    paddingLeft: 5,
+                    //justifyContent: 'center',
+                    backgroundColor: AppColor.orangeColor,
+                  }}>
+                  <Image
+                    source={localImage.FitCoin}
+                    style={{height: 20, width: 20}}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.cointxt}>{fitCoins}</Text>
+                </TouchableOpacity>
+              </>
+            </View>
+          </View>
+        </>
+      ) : (
+        <>
+          <NewHeader
+            header={'Weekly Plan'}
+            SearchButton={false}
+            backButton={false}
+            extraView={true}
+            enteredCurrentEvent={enteredCurrentEvent}
+            coins={fitCoins > 0 ? fitCoins : 0}
+            coinsLoaded={fetchCoins}
+          />
+        </>
+      )}
 
       <View
         style={{
@@ -877,7 +1326,7 @@ const MyPlans = ({navigation}: any) => {
               ? DeviceHeigth < 1024
                 ? -DeviceWidth * 0.1
                 : -DeviceWidth * 0.05
-              : -DeviceWidth * 0.05,
+              : -DeviceWidth * 0.0,
         }}>
         {loader ? (
           <View
@@ -973,14 +1422,63 @@ const MyPlans = ({navigation}: any) => {
         ) : (
           emptyComponent()
         )}
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => {
+            setVisible1(true);
+          }}
+          style={{
+            //
+            width: 120,
+            height: 56,
+            backgroundColor: '#F7F7F7',
+            flexDirection: 'row',
+            position: 'absolute',
+
+            bottom: 20,
+            right: 10,
+            borderRadius: 16,
+            justifyContent: 'center',
+            alignItems: 'center',
+            shadowColor: 'rgba(0, 0, 0, 1)',
+            ...Platform.select({
+              ios: {
+                shadowColor: 'rgba(0, 0, 0, 1)',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.3,
+                shadowRadius: 3,
+              },
+              android: {
+                elevation: 4,
+              },
+            }),
+          }}>
+          <Icons
+            name="refresh"
+            size={20}
+            style={{marginHorizontal: 10}}
+            color={AppColor.RED}
+          />
+          <Text
+            style={{
+              fontFamily: Fonts.HELVETICA_BOLD,
+              fontSize: 14,
+              lineHeight: 20,
+              color: AppColor.RED,
+            }}>
+            Adjust
+          </Text>
+        </TouchableOpacity>
       </View>
       {downlodedVideoSent ? <ActivityLoader /> : null}
-          <StreakModal
-            streakDays={coins}
-            setVisible={setStreakModalVisibility}
-            WeekArray={WeekArrayWithEvent}
-            missedDay={WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]}
-          />
+      <StreakModal
+        streakDays={coins}
+        setVisible={setStreakModalVisibility}
+        WeekArray={WeekArrayWithEvent}
+        missedDay={WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]}
+      />
+      <BottomModal setVisible1={setVisible1} visible1={visible1} />
+      <Exercise_Preparing_Modal setVisible2={setVisible2} visible2={visible2} />
     </SafeAreaView>
   );
 };
@@ -1039,5 +1537,13 @@ const styles = StyleSheet.create({
         elevation: 3,
       },
     }),
+  },
+  cointxt: {
+    color: '#1E40AF',
+    fontSize: 16,
+    fontFamily: Fonts.HELVETICA_BOLD,
+    lineHeight: 20,
+    marginTop: 5,
+    marginHorizontal: 5,
   },
 });

@@ -442,3 +442,9 @@ export const setExerciseOutTime=data=>{
     payload:data
   }
 }
+  export const setEquipmentExercise=data=>{
+    return{
+      type:types.CHECKE_QUIPMENT_EXERCISE,
+      payload:data
+    }
+}

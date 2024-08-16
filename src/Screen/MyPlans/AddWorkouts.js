@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import Icons from 'react-native-vector-icons/FontAwesome5';
@@ -21,6 +21,7 @@ import axios from 'axios';
 import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {setEditedExercise} from '../../Component/ThemeRedux/Actions';
+import {useIsFocused} from '@react-navigation/native';
 const AddWorkouts = ({route, navigation}) => {
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState('');
@@ -36,6 +37,26 @@ const AddWorkouts = ({route, navigation}) => {
   const day = route?.params?.day;
   let ExerciseIds = tempList.map(item => item?.exercise_id);
   const [filteredCategories, setFilteredCategories] = useState(getAllExercise);
+  const isFocused = useIsFocused();
+  const getEquipmentExercise = useSelector(
+    state => state?.getEquipmentExercise,
+  );
+
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     if (getEquipmentExercise == 1) {
+  //       const filteredItems = getAllExercise?.filter(item => {
+  //         return item?.exercise_equipment == 'No Equipment';
+  //       });
+  //       setFilteredCategories(filteredItems);
+  //     } else {
+  //       const filteredItems = getAllExercise?.filter(item => {
+  //         return item?.exercise_equipment != 'No Equipment';
+  //       });
+  //       setFilteredCategories(filteredItems);
+  //     }
+  //   }
+  // }, []);
   const updateFilteredCategories = test => {
     const filteredItems = getAllExercise?.filter(item =>
       item.exercise_title.toLowerCase().includes(test.toLowerCase()),
@@ -128,7 +149,7 @@ const AddWorkouts = ({route, navigation}) => {
       } else {
         setLoaded(true);
         dispatch(setEditedExercise({[day]: response?.data}));
-   
+
         navigation.navigate('BottomTab');
       }
     } catch (error) {
@@ -161,10 +182,12 @@ const AddWorkouts = ({route, navigation}) => {
       </View>
       <View style={styles.border} />
       {loaded ? null : <ActivityLoader />}
+  
       <FlatList
-        // data={filteredCategories}
         data={[
-          ...filteredCategories.filter(item => ExerciseIds.includes(item.exercise_id)),
+          ...filteredCategories.filter(item =>
+            ExerciseIds.includes(item.exercise_id),
+          ),
           ...filteredCategories.filter(
             item => !ExerciseIds.includes(item.exercise_id),
           ),
@@ -174,7 +197,9 @@ const AddWorkouts = ({route, navigation}) => {
           marginBottom: DeviceHeigth * 0.02,
         }}
         renderItem={({item, index}) => (
+        
           <View key={index}>
+  
             <TouchableOpacity
               style={styles.button}
               disabled={
@@ -200,18 +225,16 @@ const AddWorkouts = ({route, navigation}) => {
                   />
                 </View>
                 <View style={{marginLeft: 15, width: DeviceWidth * 0.55}}>
-                <View style={{width:200}}>
-                <Text numberOfLines={1} style={[styles.txt3]}>{item?.exercise_title}</Text>
-                </View>
-                  
+                  <View style={{width: 200}}>
+                    <Text numberOfLines={1} style={[styles.txt3]}>
+                      {item?.exercise_title}
+                    </Text>
+                  </View>
+
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  {console.log("fjfjfjf",item)}
                     <Text style={styles.txt2}>
                       {'Time : ' + item?.exercise_rest}
                     </Text>
-                    {/* <Text style={[styles.txt2, {marginLeft: 10}]}>
-                      {'Reps : 12-15'}
-                    </Text> */}
                   </View>
                 </View>
               </View>

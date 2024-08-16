@@ -230,7 +230,7 @@ const SplaceScreen = ({navigation, route}) => {
   };
 
   const getUserAllInData = async () => {
-    const url='https://fitme.cvinfotech.in/adserver/public/api/test_all_in_one'
+    const url='https://fitme.cvinfotechserver.com/adserver/public/api/test_all_in_one'
     try {
       const responseData = await axios.get(
         `${url}?version=${VersionNumber.appVersion}`,

@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
-  Dimensions,
+
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import AnimatedLottieView from 'lottie-react-native';
