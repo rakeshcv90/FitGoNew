@@ -497,7 +497,8 @@ const Leaderboard = () => {
                   fontSize: 16,
                   lineHeight: 20,
                   textAlign: 'center',
-                  top: DeviceHeigth >= 1024 ? 20 : DeviceHeigth <= 625?10:20,
+                  top:
+                    DeviceHeigth >= 1024 ? 20 : DeviceHeigth <= 625 ? 10 : 20,
                   color: AppColor.PrimaryTextColor,
                 }}>
                 {mainData[0]?.name}
@@ -664,49 +665,34 @@ const Leaderboard = () => {
                 Leaderboard
               </Text>
             </View>
-            <TouchableOpacity
-              onPress={
-                () => 
+            {/* {enteredCurrentEvent ? ( */}
+              <TouchableOpacity
+                onPress={() =>
                   //setVisible(true)
-                 navigation.navigate('Referral')
-              }
-              style={{
-                height: 40,
-                backgroundColor: AppColor.RED,
-                borderTopLeftRadius: 8,
-                borderBottomLeftRadius: 8,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingRight: 10,
-              }}>
-              <AnimatedLottieView
-                source={require('../../Icon/Images/InAppRewards/ReferButton.json')}
-                speed={1}
-                autoPlay
-                loop
-                resizeMode="contain"
+                  navigation.navigate('Referral')
+                }
                 style={{
-                  width: 30,
-                  height: 30,
-                }}
-              />
-              <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                <Text
+                  height: 40,
+                  backgroundColor: AppColor.RED,
+                  borderTopLeftRadius: 8,
+                  borderBottomLeftRadius: 8,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingRight: 10,
+                }}>
+                <AnimatedLottieView
+                  source={require('../../Icon/Images/InAppRewards/ReferButton.json')}
+                  speed={1}
+                  autoPlay
+                  loop
+                  resizeMode="contain"
                   style={{
-                    fontFamily: Fonts.HELVETICA_REGULAR,
-                    fontSize: 12,
-                    lineHeight: 11,
-                    color: AppColor.WHITE,
-                  }}>
-                  Refer&
-                </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
+                    width: 30,
+                    height: 30,
+                  }}
+                />
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
                   <Text
                     style={{
                       fontFamily: Fonts.HELVETICA_REGULAR,
@@ -714,15 +700,43 @@ const Leaderboard = () => {
                       lineHeight: 11,
                       color: AppColor.WHITE,
                     }}>
-                    Earn
+                    Refer&
                   </Text>
-                  <Image
-                    source={localImage.FitCoin}
-                    style={{width: 15, height: 15}}
-                  />
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: Fonts.HELVETICA_REGULAR,
+                        fontSize: 12,
+                        lineHeight: 11,
+                        color: AppColor.WHITE,
+                      }}>
+                      Earn
+                    </Text>
+                    <Image
+                      source={localImage.FitCoin}
+                      style={{width: 15, height: 15}}
+                    />
+                  </View>
                 </View>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            {/* ) : (
+              <View
+                style={{
+                  height: 40,
+                  borderTopLeftRadius: 8,
+                  borderBottomLeftRadius: 8,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingRight: 10,
+                }}
+              />
+            )} */}
           </View>
 
           <ScrollView
@@ -810,7 +824,7 @@ const Leaderboard = () => {
                         height: 110,
                         marginTop: -25,
                         borderRadius: 100,
-                        backgroundColor: AppColor.WHITE,
+                        backgroundColor: '#DBEAFE',
                         justifyContent: 'center',
                         alignItems: 'center',
                         zIndex: -1,
@@ -820,7 +834,7 @@ const Leaderboard = () => {
                         style={{
                           fontFamily: Fonts.HELVETICA_BOLD,
                           fontSize: 30,
-                          color: AppColor.BLACK,
+                          color: '#1E40AF',
                           lineHeight: 40,
                         }}>
                         {mainData[1]?.name.substring(0, 1)}
@@ -918,7 +932,7 @@ const Leaderboard = () => {
                         left: 20,
                         marginTop: 5,
                         overflow: 'hidden',
-                        backgroundColor: AppColor.WHITE,
+                        backgroundColor: '#DBEAFE',
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
@@ -926,7 +940,7 @@ const Leaderboard = () => {
                         style={{
                           fontFamily: Fonts.HELVETICA_BOLD,
                           fontSize: 30,
-                          color: AppColor.BLACK,
+                          color: '#1E40AF',
                           lineHeight: 40,
                         }}>
                         {mainData[0]?.name.substring(0, 1)}
@@ -1005,6 +1019,7 @@ const Leaderboard = () => {
                         color: AppColor.WHITE,
                         fontSize: 12,
                       }}>
+                      {' '}
                       {mainData[0]?.fit_coins}
                     </Text>
                   </LinearGradient>
@@ -1038,6 +1053,7 @@ const Leaderboard = () => {
                       color: AppColor.WHITE,
                       fontSize: 12,
                     }}>
+                    {' '}
                     {mainData[2]?.fit_coins}
                   </Text>
                 </LinearGradient>
@@ -1082,7 +1098,7 @@ const Leaderboard = () => {
                         borderRadius: 100,
                         left: 20,
                         marginTop: 9,
-                        backgroundColor: AppColor.WHITE,
+                        backgroundColor: '#DBEAFE',
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
@@ -1090,7 +1106,7 @@ const Leaderboard = () => {
                         style={{
                           fontFamily: Fonts.HELVETICA_BOLD,
                           fontSize: 30,
-                          color: AppColor.BLACK,
+                          color: '#1E40AF',
                           lineHeight: 40,
                         }}>
                         {mainData[2]?.name.substring(0, 1)}
@@ -1876,10 +1892,11 @@ const Leaderboard = () => {
                   <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={() => {
-                      navigation?.navigate('NewSubscription', {upgrade: true});
+                      // navigation?.navigate('NewSubscription', {upgrade: true});
+                      navigation.navigate('StepGuide');
                     }}
                     style={{
-                      width: '30%',
+                      //width: '30%',
                       // height: 38,
                       padding: 15,
                       backgroundColor: 'red',

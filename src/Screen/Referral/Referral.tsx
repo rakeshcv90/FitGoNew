@@ -1,9 +1,8 @@
 import {
   Image,
   ImageBackground,
-  Platform,
-  RefreshControl,
-  SafeAreaView,
+
+
   ScrollView,
   StyleSheet,
   Text,
@@ -25,7 +24,7 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {showMessage} from 'react-native-flash-message';
 import NewHeader from '../../Component/Headers/NewHeader';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 const Referral = () => {
   const getUserDataDetails = useSelector(
     (state: any) => state.getUserDataDetails,
@@ -267,7 +266,7 @@ const Referral = () => {
     );
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <NewHeader backButton header={'Refer & Earn'} />
       {loader ? <ActivityLoader /> : null}
       <ScrollView>
@@ -576,7 +575,7 @@ const Referral = () => {
           />
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

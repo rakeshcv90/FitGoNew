@@ -1,7 +1,7 @@
 import {
   Image,
   ImageBackground,
-  SafeAreaView,
+ 
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -20,7 +20,7 @@ import FastImage from 'react-native-fast-image';
 import {RequestAPI} from '../../Component/Utilities/RequestAPI';
 import VersionNumber from 'react-native-version-number';
 import FitIcon from '../../Component/Utilities/FitIcon';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 type StepItem = {
   item: StepsArrayType;
   index: number;
@@ -131,7 +131,7 @@ const StepGuide = ({navigation}: any) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor={AppColor.RED}barStyle={'light-content'}/>
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -342,7 +342,7 @@ const StepGuide = ({navigation}: any) => {
           alignSelf
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

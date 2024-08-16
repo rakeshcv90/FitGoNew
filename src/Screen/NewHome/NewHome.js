@@ -351,7 +351,6 @@ const NewHome = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (responseData?.data?.msg == 'version is required') {
-       
       } else {
         const objects = {};
         responseData.data.data.forEach(item => {
@@ -381,7 +380,7 @@ const NewHome = ({navigation}) => {
     } else if (currentHour >= 17 && currentHour < 21) {
       return 'Good Evening';
     } else {
-      return 'Good Night';
+      return 'Good Evening';
     }
   };
 
@@ -396,7 +395,7 @@ const NewHome = ({navigation}) => {
         const challenge = responseData?.data?.challenge_data?.filter(
           item => item?.status == 'active',
         );
-        
+
         setCurrentChallenge(challenge);
         getCurrentDayAPI(challenge);
         dispatch(setAllExercise(responseData.data.data));
@@ -592,7 +591,7 @@ const NewHome = ({navigation}) => {
                 </Text>
                 <Text
                   style={{
-                    top: 0,
+                    top: -5,
                     fontSize: 12,
                     fontFamily: Fonts.HELVETICA_BOLD,
                     fontWeight: '700',
@@ -758,7 +757,7 @@ const NewHome = ({navigation}) => {
           </View>
           <TouchableOpacity
             onPress={() => {
-             navigation.navigate('OfferPage')
+              navigation.navigate('OfferPage');
             }}
             style={{
               width: DeviceHeigth >= 1024 ? '20%' : '25%',

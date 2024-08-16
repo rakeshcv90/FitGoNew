@@ -916,8 +916,9 @@ const MyPlans = ({navigation}: any) => {
                 color: AppColor.SecondaryTextColor,
                 marginVertical: 10,
               }}>
-              Would you like to switch to workouts with equipment or continue
-              with the workouts without equipment?
+              {getEquipmentExercise == 1
+                ? `Would you like to switch your  workouts with equipments`
+                : `Comfortable working out with equipment or would you like to switch to without equipment workouts?`}
             </Text>
             <TouchableOpacity
               // onPress={() => {
@@ -1078,6 +1079,12 @@ const MyPlans = ({navigation}: any) => {
     );
   };
   const Exercise_Preparing_Modal = ({setVisible2, visible2}: any) => {
+    const [loadscrreen, setLoadScreen] = useState(false);
+    useEffect(() => {
+      setTimeout(() => {
+        setLoadScreen(true);
+      }, 5000);
+    }, [visible2]);
     return (
       <Modal
         animationType="slide"
@@ -1091,112 +1098,119 @@ const MyPlans = ({navigation}: any) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          {/* <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <AnimatedLottieView
-              source={require('../../Icon/Images/NewHome/calender.json')}
-              speed={2}
-              autoPlay
-              loop
-              resizeMode="cover"
-              style={{width: 200, height: 150}}
-            />
-            <Text
-              style={{
-                fontFamily: Fonts.HELVETICA_BOLD,
-                fontSize: 16,
-                lineHeight: 20,
-                color: AppColor.PrimaryTextColor,
-              }}>
-              Please wait we are preparing your plan
-            </Text>
-            <View
-              style={{
-                width: '80%',
-                alignSelf: 'center',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text
+          {loadscrreen == false ? (
+            <>
+              <View
                 style={{
-                  fontFamily: Fonts.HELVETICA_BOLD,
-                  fontSize: 14,
-                  lineHeight: 20,
-                  color: AppColor.SecondaryTextColor,
-                  marginTop: 20,
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}>
-                Just a moment! We're preparing the perfect
-              </Text>
-              <Text
+                <AnimatedLottieView
+                  source={require('../../Icon/Images/NewHome/calender.json')}
+                  speed={2}
+                  autoPlay
+                  loop
+                  resizeMode="cover"
+                  style={{width: 200, height: 150}}
+                />
+                <Text
+                  style={{
+                    fontFamily: Fonts.HELVETICA_BOLD,
+                    fontSize: 16,
+                    lineHeight: 20,
+                    color: AppColor.PrimaryTextColor,
+                  }}>
+                  Please wait we are preparing your plan
+                </Text>
+                <View
+                  style={{
+                    width: '80%',
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: Fonts.HELVETICA_BOLD,
+                      fontSize: 14,
+                      lineHeight: 20,
+                      color: AppColor.SecondaryTextColor,
+                      marginTop: 20,
+                    }}>
+                    Just a moment! We're preparing the perfect
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: Fonts.HELVETICA_BOLD,
+                      fontSize: 14,
+                      lineHeight: 20,
+                      color: AppColor.SecondaryTextColor,
+                    }}>
+                    workout plan for you.
+                  </Text>
+                </View>
+              </View>
+            </>
+          ) : (
+            <>
+              <View
                 style={{
-                  fontFamily: Fonts.HELVETICA_BOLD,
-                  fontSize: 14,
-                  lineHeight: 20,
-                  color: AppColor.SecondaryTextColor,
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}>
-                workout plan for you.
-              </Text>
-            </View>
-          </View> */}
-
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <AnimatedLottieView
-              source={require('../../Icon/Images/NewHome/loader.json')}
-              speed={2}
-              autoPlay
-              loop
-              resizeMode="contain"
-              style={{width: 200, height: 150}}
-            />
-            <Text
-              style={{
-                fontFamily: Fonts.HELVETICA_BOLD,
-                fontSize: 16,
-                lineHeight: 20,
-                color: AppColor.PrimaryTextColor,
-              }}>
-              Congratulation!
-            </Text>
-            <Text
-              style={{
-                fontFamily: Fonts.HELVETICA_BOLD,
-                fontSize: 14,
-                lineHeight: 20,
-                color: AppColor.SecondaryTextColor,
-                marginTop: 20,
-              }}>
-              Your perfect workout plan is ready.
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                setVisible2(false);
-              }}
-              style={{
-                width: 200,
-                height: 50,
-                backgroundColor: 'red',
-                marginTop: 50,
-                borderRadius: 6,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  color: AppColor.WHITE,
-                  fontWeight: '500',
-                  lineHeight: 18,
-                }}>
-                Continue Workout
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <AnimatedLottieView
+                  source={require('../../Icon/Images/NewHome/loader.json')}
+                  speed={2}
+                  autoPlay
+                  loop
+                  resizeMode="contain"
+                  style={{width: 200, height: 150}}
+                />
+                <Text
+                  style={{
+                    fontFamily: Fonts.HELVETICA_BOLD,
+                    fontSize: 16,
+                    lineHeight: 20,
+                    color: AppColor.PrimaryTextColor,
+                  }}>
+                  Congratulation!
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Fonts.HELVETICA_BOLD,
+                    fontSize: 14,
+                    lineHeight: 20,
+                    color: AppColor.SecondaryTextColor,
+                    marginTop: 20,
+                  }}>
+                  Your perfect workout plan is ready.
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setVisible2(false);
+                    setLoadScreen(false);
+                  }}
+                  style={{
+                    width: 200,
+                    height: 50,
+                    backgroundColor: 'red',
+                    marginTop: 50,
+                    borderRadius: 6,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      color: AppColor.WHITE,
+                      fontWeight: '500',
+                      lineHeight: 18,
+                    }}>
+                    Continue Workout
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
         </View>
       </Modal>
     );

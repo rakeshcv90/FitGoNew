@@ -4,8 +4,9 @@ import {
   Linking,
   Platform,
   RefreshControl,
-  SafeAreaView,
+
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -45,6 +46,7 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {findKeyInObject} from '../../Component/Utilities/FindkeyinObject';
+import { SafeAreaView } from 'react-native-safe-area-context';
 const NewSubscription = ({navigation, route}: any) => {
   const {upgrade} = route.params;
   const dispatch = useDispatch();
@@ -973,7 +975,8 @@ const NewSubscription = ({navigation, route}: any) => {
   };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
-      <DietPlanHeader
+      <StatusBar backgroundColor={AppColor.WHITE} barStyle={'dark-content'}/>
+     <DietPlanHeader
         header="Unlock Challenges"
         paddingTop={
           Platform.OS == 'android' ? DeviceHeigth * 0.029 : DeviceHeigth * 0.025

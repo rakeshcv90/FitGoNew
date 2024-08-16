@@ -427,7 +427,7 @@ const TextBanner = ({navigation, setLocationP}) => {
         <View
           style={{
             width: '100%',
-            height: '75%',
+            height: '85%',
             backgroundColor: 'red',
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
@@ -455,13 +455,13 @@ const TextBanner = ({navigation, setLocationP}) => {
         <View
           style={{
             width: '100%',
-            height: '25%',
+            height: '15%',
           }}>
           <ImageBackground
             style={{
               width: '100%',
               height: '100%',
-
+              justifyContent: 'center',
               overflow: 'hidden',
 
               borderBottomLeftRadius: 20,

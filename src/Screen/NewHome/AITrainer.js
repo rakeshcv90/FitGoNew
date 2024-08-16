@@ -81,9 +81,7 @@ const AITrainer = ({navigation}) => {
     Tts.getInitStatus().then(initTts);
   }, [getSoundOffOn]);
   const initTts = async () => {
-
     await Tts.setDefaultLanguage('en-IN');
-
 
     readText();
     setTtsStatus('initialized');
@@ -523,7 +521,7 @@ const AITrainer = ({navigation}) => {
                           <>
                             <Image
                               resizeMode="contain"
-                              source={localImage.Noimage}
+                              source={require('../../Icon/Images/NewImage2/mary.png')}
                               style={{
                                 width: 35,
                                 height: 35,
