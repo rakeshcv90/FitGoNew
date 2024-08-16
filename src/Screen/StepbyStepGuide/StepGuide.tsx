@@ -3,6 +3,7 @@ import {
   ImageBackground,
   SafeAreaView,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -130,7 +131,8 @@ const StepGuide = ({navigation}: any) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <StatusBar backgroundColor={AppColor.RED}barStyle={'light-content'}/>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{width: '100%', alignSelf: 'center'}}>
@@ -340,7 +342,7 @@ const StepGuide = ({navigation}: any) => {
           alignSelf
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

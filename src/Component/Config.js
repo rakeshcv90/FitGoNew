@@ -7,6 +7,7 @@ export const Api = 'https://cvinfotech2@gofit.tentoptoday.com/json/';
 //export const NewApi = 'https://fitme.cvinfotech.in/adserver/public/api/'; //old Server
 export const NewApi = 'https://fitme.cvinfotechserver.com/adserver/public/api/'; //New  Server
 
+
 export const Appapi = {
   login: 'user_login.php',
   signup: 'user_registration.php',
@@ -128,5 +129,7 @@ export const NewAppapi = {
   GET_REF_RANK: NewApi + 'user_rank',
   GET_BREATH_SESSION:NewApi+'get_breathinout_session',
   GET_PAST_WINNERS:NewApi+'past_winners',
-  GET_HISTORY:NewApi+'test_coin_deduction_rec'
+  GET_HISTORY:NewApi+'test_coin_deduction_rec',
+  SEND_BREATHE_COINS:NewApi+'add_breathinout_coins',
+  GET_CARDIO_STATUS:NewApi+'cardio_exercise_status'
 };

@@ -14,15 +14,16 @@ const PercentageBar = ({
   const [getheight, setHeight] = useState(height);
   const [getBackgroundColor, setBackgroundColor] = useState(backgroundColor);
   const [getCompletedColor, setCompletedColor] = useState(completedColor);
+
   return (
     <View>
       <View style={{justifyContent: 'center'}}>
         <View
           style={{
-            width: DeviceHeigth >= 1024 ? '95%' : '90%',
+            width: '100%',
             height: getheight,
             marginVertical: 10,
-            borderRadius: 50,
+            borderRadius: 15,
 
             backgroundColor: '#E7E7E7B2',
           }}
@@ -33,8 +34,12 @@ const PercentageBar = ({
           style={{
             width: percentage > 10 ? `${percentage}%` : '10%',
             height: getheight,
-            marginVertical: 10,
-            borderRadius: 50,
+            marginVertical: 15,
+            //  borderRadius:15,
+            borderBottomLeftRadius: 15,
+            borderTopLeftRadius: 15,
+            borderTopRightRadius: percentage >= 100 ? 15 : 0,
+            borderBottomRightRadius: percentage >= 100 ? 15 : 0,
             position: 'absolute',
             bottom: 20,
           }}></LinearGradient>
@@ -43,7 +48,7 @@ const PercentageBar = ({
             width: percentage > 10 ? `${percentage}%` : '10%',
             height: getheight,
             // position: 'absolute',
-            bottom: 30,
+            bottom: 35,
 
             // top:
             //   Platform.OS == 'ios'

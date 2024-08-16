@@ -315,18 +315,21 @@ const CardioExercise = ({navigation, route}: any) => {
               showInterstitialAd();
               clearTimeout(playTimerRef.current);
               //CollectCoins
-
-              navigation?.navigate('WorkoutCompleted', {
-                type: type,
-                day: day,
-                allExercise: allExercise,
-              });
+              offerType
+                ? navigation.goBack()
+                : navigation?.navigate('WorkoutCompleted', {
+                    type: type,
+                    day: day,
+                    allExercise: allExercise,
+                  });
             } else {
-              navigation?.navigate('WorkoutCompleted', {
-                type: type,
-                day: day,
-                allExercise: allExercise,
-              });
+              offerType
+                ? navigation.goBack()
+                : navigation?.navigate('WorkoutCompleted', {
+                    type: type,
+                    day: day,
+                    allExercise: allExercise,
+                  });
             }
           } else if (
             seconds == 0 &&
@@ -499,19 +502,19 @@ const CardioExercise = ({navigation, route}: any) => {
     } catch (error) {
       console.error(error?.response, 'PostREWARDSAPIERror');
     }
-    if (
-      getExerciseOutTime != '' &&
-      moment().format(format) > getExerciseOutTime
-    ) {
-      console.warn(
-        'SHOWINGDF',
-        moment().format(format),
-        getExerciseInTime,
-        getExerciseOutTime,
-      );
-      setOverExerciseVisible(true);
-      setPause(!pause)
-    }
+    // if (
+    //   getExerciseOutTime != '' &&
+    //   moment().format(format) > getExerciseOutTime
+    // ) {
+    //   console.warn(
+    //     'SHOWINGDF',
+    //     moment().format(format),
+    //     getExerciseInTime,
+    //     getExerciseOutTime,
+    //   );
+    //   setOverExerciseVisible(false);
+    //   setPause(!pause);
+    // }
   };
 
   const PauseModal = useMemo(() => {
@@ -1190,12 +1193,12 @@ const CardioExercise = ({navigation, route}: any) => {
         setOpen={setOpen}
         data={allExercise[number]}
       />
-      <OverExerciseModal
+      {/* <OverExerciseModal
         setOverExerciseVisible={setOverExerciseVisible}
         overExerciseVisible={overExerciseVisible}
         handleBreakButton={deleteTrackExercise}
         loader={quitLoader}
-      />
+      /> */}
     </SafeAreaView>
   );
 };

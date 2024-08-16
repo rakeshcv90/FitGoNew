@@ -4,9 +4,10 @@ import {
   Text,
   View,
   Animated as NativeAnimated,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
+import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
 import {clamp, mix, polar2Canvas, withBouncing} from 'react-native-redash';
 import Animated, {
@@ -38,6 +39,12 @@ import {duration} from 'moment';
 import {Image} from 'react-native';
 import backgroundServer from 'react-native-background-actions';
 import QuitModal from './QuitModal';
+import {useSelector} from 'react-redux';
+import axios from 'axios';
+import VersionNumber from 'react-native-version-number';
+import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
+import {getStatusBarHeight} from 'react-native-status-bar-height';
+import ActivityLoader from '../../Component/ActivityLoader';
 interface CircleProps {
   index: number;
   progress: Animated.SharedValue<number>;
@@ -55,11 +62,14 @@ const transform = (progress: number, index: number) => {
   return [{translateX}, {translateY}, {scale}];
 };
 
-const Breathe = () => {
+const Breathe = ({navigation, route}) => {
+  const slotCoins = route?.params?.slotCoins;
+  const type = route?.params?.type;
+  const offerType = route?.params?.offerType;
   const progress = useSharedValue(0);
   const goesDown = useSharedValue(false);
   const [pause, setPause] = useState(true);
-  const [seconds, setSeconds] = useState(30);
+  const [loaded, setLoaded] = useState(true);
   const [start, setStart] = useState(3);
   const scaleAnimation = useSharedValue(0);
   const fadeAnimation = useSharedValue(0.5);
@@ -83,6 +93,57 @@ const Breathe = () => {
   const cardFallAnimation2 = useSharedValue(-DeviceHeigth);
   const fallLetsStart = useSharedValue(-DeviceHeigth);
   const collectButtonOffset = useSharedValue(0);
+  const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
+  const [quitModalVisible, setQuitModalVisible] = useState(false);
+  const AddCoinsApi = async () => {
+    setLoaded(false);
+    let payload = new FormData();
+    payload.append('user_id', getUserDataDetails?.id);
+    payload.append('status', 'done');
+    try {
+      const res = await axios(NewAppapi.SEND_BREATHE_COINS, {
+        method: 'post',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        data: payload,
+      });
+      if (res?.data) {
+        getLeaderboardDataAPI();
+      }
+    } catch (error) {
+      console.log(error, 'breathe coin add api ');
+      setLoaded(true);
+    }
+  };
+  const getLeaderboardDataAPI = async () => {
+    try {
+      const url =
+        'https://fitme.cvinfotech.in/adserver/public/api/test_leader_board';
+      const result = await axios({
+        url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
+      });
+
+      if (result?.data) {
+        const myRank = result.data?.data?.findIndex(
+          item => item?.id == getUserDataDetails?.id, // static for testing purpose
+        );
+        setLoaded(true);
+        if (type == 'OfferPage') {
+          navigation.navigate('OfferPage');
+        } else {
+          navigation.navigate('WorkoutCompleted', {
+            type: 'complete',
+            rank: result.data?.data[myRank]?.rank,
+            slotCoins: slotCoins,
+          });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      setLoaded(true);
+    }
+  };
   const songs = [
     {
       title: 'Breathing Sound',
@@ -363,7 +424,7 @@ const Breathe = () => {
   const AnimatedCollectButton = useAnimatedStyle(() => ({
     opacity: collectButtonOffset.value,
   }));
-  const Cards = ({animation, lottie, text1, text2, speed}) => {
+  const Cards = ({animation, lottie, text1, text2, speed}: any) => {
     return (
       <Animated.View style={[styles.cardContainer, animation]}>
         <AnimatedLottieView
@@ -390,6 +451,22 @@ const Breathe = () => {
   return (
     <View style={styles.container1}>
       <StatusBar backgroundColor={AppColor.BLACK} barStyle={'light-content'} />
+      <TouchableOpacity
+        style={{marginTop: getStatusBarHeight() + 20, marginLeft: 16}}
+        onPress={() => {
+          setQuitModalVisible(true);
+          console.log('ButtonClicked');
+        }}>
+        <ArrowLeft fillColor={AppColor.WHITE} />
+      </TouchableOpacity>
+      <QuitModal
+        visible={quitModalVisible}
+        setVisible={setQuitModalVisible}
+        navigation={navigation}
+        type={type}
+        offerType={offerType ?? false}
+      />
+      {loaded?null:<ActivityLoader/>}
       {start > 0 ? (
         <View style={{flex: 1, justifyContent: 'center'}}>
           <View style={{}}>
@@ -607,6 +684,10 @@ const Breathe = () => {
               title={'Collect'}
               fontFamily={'Helvetica-Bold'}
               pV={12}
+              onPress={() => {
+                console.log('clicked');
+                AddCoinsApi();
+              }}
             />
           </Animated.View>
         </View>

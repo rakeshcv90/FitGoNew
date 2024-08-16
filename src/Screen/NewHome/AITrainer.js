@@ -41,12 +41,12 @@ const systemMessage = {
   content: `You are a Gym Traineer and you give response to uswho are  only related Gym Traineer, how to do Workouts,
    what diet have to take`,
 };
-const AITrainer = ({navigation, route}) => {
+const AITrainer = ({navigation}) => {
   const dispatch = useDispatch();
   const {rewardAdsLoad, showRewardAds} = MyRewardedAd();
   const isFocused = useIsFocused();
   const [ttsSound, setTtsSound] = useState(
-    `Hello! I am${route?.params?.item?.title} your personal fitness instructor. I am here to assist you in your fitness journey.
+    `Hello! I am your personal fitness instructor. I am here to assist you in your fitness journey.
     `,
   );
 
@@ -59,7 +59,7 @@ const AITrainer = ({navigation, route}) => {
   const getRerwardCount = useSelector(state => state.getRerwardCount);
   const [senderMessage, setsenderMessage] = useState([
     {
-      message: `Hello! I am ${route?.params?.item?.title} your personal fitness instructor. I am here to assist you in your fitness journey.
+      message: `Hello! I am your personal fitness instructor. I am here to assist you in your fitness journey.
       `,
       sender: 'ChatGpt',
     },
@@ -81,12 +81,9 @@ const AITrainer = ({navigation, route}) => {
     Tts.getInitStatus().then(initTts);
   }, [getSoundOffOn]);
   const initTts = async () => {
-    if (Platform.OS == 'android') {
-      await Tts.setDefaultLanguage(route?.params?.item?.language);
-      await Tts.setDefaultVoice(route?.params?.item?.languageId);
-    } else {
-      await Tts.setDefaultVoice(route?.params?.item?.languageId);
-    }
+
+    await Tts.setDefaultLanguage('en-IN');
+
 
     readText();
     setTtsStatus('initialized');
@@ -411,7 +408,7 @@ const AITrainer = ({navigation, route}) => {
               textAlign: 'center',
             },
           ]}>
-          {'Fitness Coach' + ' ' + route?.params?.item?.title}
+          Fitness Coach
         </Text>
 
         <View onPress={() => {}}>
@@ -508,7 +505,7 @@ const AITrainer = ({navigation, route}) => {
                                 marginHorizontal: 15,
                               }}
                               resizeMode="contain"
-                              source={route?.params?.item?.img}
+                              source={localImage.Noimage}
                             />
                             <AnimatedLottieView
                               source={{
@@ -526,7 +523,7 @@ const AITrainer = ({navigation, route}) => {
                           <>
                             <Image
                               resizeMode="contain"
-                              source={route?.params?.item?.img}
+                              source={localImage.Noimage}
                               style={{
                                 width: 35,
                                 height: 35,

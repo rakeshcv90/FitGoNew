@@ -212,7 +212,7 @@ export const ExerciseComponentWithEvent = ({
 
   return (
     <View style={styles.View1}>
-      {dayWiseCoins[day] == null || dayWiseCoins[day] < 0 ? (
+      {dayWiseCoins[day] == null || dayWiseCoins[day] > 0 ? (
         <>
           <View style={styles.View2}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -394,7 +394,7 @@ export const ExerciseComponentWithEvent = ({
                 }}
                 resizeMode="contain"
               />
-              {console.log('Zxcvxvdsfdsd', getWeeklyPlansData[day]?.title)}
+           
               <Text
                 style={{
                   fontFamily: Fonts.MONTSERRAT_BOLD,

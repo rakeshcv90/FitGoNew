@@ -54,7 +54,7 @@ const NewButton = ({
     setIsClicked(true);
   };
   useEffect(() => {
-    if (download == 100) {
+    if (download == 100 || download==0) {
       setIsClicked(false);
     }
   }, [download]);
@@ -132,9 +132,9 @@ const NewButton = ({
             style={{marginLeft: 8}}
           />
         )}
-        {svgArrowRight && (
+        {svgArrowRight?withAnimation && isClicked?null:(
           <ArrowRight fillColor={svgArrowColor} style={{marginLeft: 8}} />
-        )}
+        ): null}
       </View>
     </TouchableOpacity>
   );

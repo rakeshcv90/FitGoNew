@@ -241,7 +241,7 @@ const Exercise = ({navigation, route}: any) => {
               : setupPlayer();
             StartAnimation();
           } else if (timer === 0 && number == 0) {
-            if (number == allExercise?.length - 1) return;
+            // if (number == allExercise?.length - 1) return;
 
             setRestStart(false);
             setShowSet(true);

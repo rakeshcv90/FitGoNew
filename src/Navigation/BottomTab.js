@@ -40,6 +40,7 @@ import {AnalyticsConsole} from '../Component/AnalyticsConsole';
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
 import {showMessage} from 'react-native-flash-message';
 import AnimatedLottieView from 'lottie-react-native';
+import NewHome from '../Screen/NewHome/NewHome';
 const Tabs = createBottomTabNavigator();
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
@@ -253,7 +254,7 @@ const BottomTab = () => {
   return (
     <>
       <Tabs.Navigator
-        initialRouteName={'Home'}
+        initialRouteName={'NewHome'}
         tabBar={props => <CustomTab {...props} />}
         screenOptions={{
           activeTintColor: '#D01818',
@@ -278,7 +279,7 @@ const BottomTab = () => {
         }}>
         <Tabs.Screen
           name="Home"
-          component={HomeNew}
+          component={NewHome}
           options={{tabBarShowLabel: false}}
         />
         <Tabs.Screen
@@ -294,11 +295,7 @@ const BottomTab = () => {
           component={Workouts}
           options={{tabBarShowLabel: true}}
         />
-        <Tabs.Screen
-          name="Reports"
-          component={NewMonthlyAchievement}
-          options={{tabBarShowLabel: false}}
-        />
+       
 
         <Tabs.Screen
           name="Profile"

@@ -2,28 +2,22 @@ import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
 import Yourself from '../Screen/Yourself/Index';
-import Scale from '../Screen/Yourself/Scale';
+
 import Gender from '../Screen/Yourself/Gender';
-import Equipment from '../Screen/Yourself/Equipment';
-import Focus from '../Screen/Yourself/Focus';
-import Level from '../Screen/Yourself/Level';
+
 import Height from '../Screen/Yourself/Height';
 import Weight from '../Screen/Yourself/Weight';
 import IntroductionScreen1 from '../Screen/Introduction/IntroductionScreen1';
 import IntroductionScreen2 from '../Screen/Introduction/IntroductionScreen2';
 import IntroductionScreen3 from '../Screen/Introduction/IntroductionScreen3';
 import LogSignUp from '../Screen/LogSignUp';
-// import NewEditProfile from '../Component/NewEditProfile';
+
 import NewPersonalDetails from '../Screen/NewPersonalDetails';
 
-import FocusArea from '../Screen/FocusArea';
-import Injury from '../Screen/Yourself/Injury';
-
-import WorkoutArea from '../Screen/Yourself/WorkoutArea';
 import Age from '../Screen/Yourself/Age';
 import Goal from '../Screen/Yourself/Goal';
 import LoadData from '../Screen/Yourself/LoadData';
-import Profile from '../Screen/NewHome/Profile';
+
 import BottomTab from './BottomTab';
 import WorkoutDescription from '../Screen/NewWorkouts/WorkoutsDescription';
 import WorkoutDays from '../Screen/NewWorkouts/WorkoutDays';
@@ -31,21 +25,19 @@ import OneDay from '../Screen/NewWorkouts/OneDay';
 import Exercise from '../Screen/NewWorkouts/Exercise/Exercise';
 import SaveDayExercise from '../Screen/NewWorkouts/Exercise/SaveDayExercise';
 import DayRewards from '../Screen/NewWorkouts/Exercise/DayRewards';
-import AllWorkouts from '../Screen/NewWorkouts/AllWorkouts';
+
 import Meals from '../Screen/NewHome/Meals';
 import MealDetails from '../Screen/NewHome/MealDetails';
 import MeditationDetails from '../Screen/NewHome/MeditationDetails';
 import MeditationExerciseDetails from '../Screen/NewHome/MeditationExerciseDetails';
 import AITrainer from '../Screen/NewHome/AITrainer';
 import AIMessageHistory from '../Screen/NewHome/AIMessageHistory';
-import Subscription from '../Screen/Subscription/Subscription';
-import Report from '../Screen/NewHome/Report';
-import NewProgressScreen from '../Screen/NewHome/NewProgressScreen';
+
 import NewMonthlyAchievement from '../Screen/NewHome/NewMonthlyAchievement';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import {createStackNavigator} from '@react-navigation/stack';
 import StoreScreen from '../Screen/NewHome/StoreScreen';
-import FocuseWorkoutList from '../Screen/FocusArea/FocuseWorkoutList';
+
 import CustomWorkout from '../Screen/CustomWorkout/CustomWorkout';
 import CustomWorkoutDetails from '../Screen/CustomWorkout/CustomWorkoutDetails';
 import CreateWorkout from '../Screen/CustomWorkout/CreateWorkout';
@@ -74,16 +66,10 @@ import AddWorkouts from '../Screen/MyPlans/AddWorkouts';
 import Leaderboard from '../Screen/Leaderboard/Leaderboard';
 import Winner from '../Screen/Leaderboard/Winner';
 import IntroVideo from '../Screen/Introduction/IntroVideo';
-
-import RatingModal from '../Component/RatingModal';
-import SplaceNew from '../Screen/SplaceNew';
-import StreakModal from '../Component/Utilities/StreakModal';
 import OfferGuidelines from '../Component/Utilities/OfferGuidelines';
 import Referral from '../Screen/Referral/Referral';
-import Breath from '../Screen/Breath/Breath';
 import CollectCoins from '../Screen/NewPostExerciseScreens/CollectCoins';
 import BreathSessionInfo from '../Screen/NewPostExerciseScreens/BreathSessionInfo';
-
 import EventExercise from '../Screen/Event/EventExercise';
 import EventExerciseHistory from '../Screen/Event/EventExerciseHistory';
 import CardioPointErns from '../Screen/Event/CardioPointErns';
@@ -99,6 +85,9 @@ import Breathe from '../Screen/Breath/Breathe';
 import WorkoutHistory from '../Screen/WorkoutHistory/WorkoutHistory';
 import OfferPage from '../Screen/OfferScreen/OfferPage';
 import WorkoutCompleted from '../Screen/WorkoutCompleteScreen/WorkoutCompleted';
+import NewHome from '../Screen/NewHome/NewHome';
+import PastWinner from '../Screen/NewHome/PastWinner';
+import LoadingScreen from '../Component/NewHomeUtilities/LoadingScreen';
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -113,6 +102,9 @@ const screenOptions = {
 export const LoginStack = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
+    
+
+   
       {/* <Stack.Screen name="SplaceNew" component={SplaceNew} /> */}
       <Stack.Screen name="SplaceScreen" component={SplaceScreen} />
       <Stack.Screen
@@ -153,6 +145,7 @@ export const LoginStack = () => {
       <Stack.Screen name="MealDetails" component={MealDetails} />
       <Stack.Screen name="Store" component={StoreScreen} />
       <Stack.Screen name="MeditationDetails" component={MeditationDetails} />
+      <Stack.Screen name='Breathe' component={Breathe}/>
       <Stack.Screen
         name="MeditationExerciseDetails"
         component={MeditationExerciseDetails}
@@ -162,21 +155,6 @@ export const LoginStack = () => {
       <Stack.Screen name="AIMessageHistory" component={AIMessageHistory} />
       <Stack.Screen name="IntroVideo" component={IntroVideo} />
       <Stack.Screen name="OfferGuidelines" component={OfferGuidelines} />
-      {/* <Stack.Screen name="Equipment" component={Equipment} /> */}
-      {/* <Stack.Screen name="Focus" component={Focus} /> */}
-      {/* <Stack.Screen name="Level" component={Level} /> */}
-      {/* <Stack.Screen name="Profile" component={Profile} /> */}
-      {/* <Stack.Screen name="NewEditProfile" component={NewEditProfile} /> */}
-      {/* <Stack.Screen name="AllWorkouts" component={AllWorkouts} /> */}
-      {/* <Stack.Screen name="Report" component={Report} /> */}
-      {/* <Stack.Screen name="Subscription" component={Subscription} /> */}
-      {/* <Stack.Screen name="FocuseWorkoutList" component={FocuseWorkoutList} /> */}
-      {/* <Stack.Screen name="Injury" component={Injury} /> */}
-      {/* <Stack.Screen name="FocusArea" component={FocusArea} />
-      <Stack.Screen name="WorkoutArea" component={WorkoutArea} /> */}
-      {/* <Stack.Screen name="Edit_Profile" component={NewEditProfile} /> */}
-      {/* <Stack.Screen name="Scale" component={Scale} /> */}
-
       <Stack.Screen
         name="NewMonthlyAchievement"
         component={NewMonthlyAchievement}
@@ -218,9 +196,12 @@ export const LoginStack = () => {
       <Stack.Screen name="DietPlatTabBar" component={DietPlatTabBar} />
       <Stack.Screen name="CustomMealList" component={CustomMealList} />
       <Stack.Screen name="EditCustomMeal" component={EditCustomMeal} />
+      <Stack.Screen name="PastWinner" component={PastWinner} />
       <Stack.Screen name="Questions" component={Questions} />
       <Stack.Screen name="ChatBot" component={ChatBot} />
       <Stack.Screen name="StepGuide" component={StepGuide} />
+      <Stack.Screen name="OfferPage" component={OfferPage} />
+      <Stack.Screen name="WorkoutHistory" component={WorkoutHistory} />
       <Stack.Screen
         name="WorkoutCompleted"
         component={WorkoutCompleted}

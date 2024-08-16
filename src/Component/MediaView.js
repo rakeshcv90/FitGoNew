@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {Dimensions, Text, TouchableOpacity} from 'react-native';
 import {NativeMediaView} from 'react-native-admob-native-ads';
 import { Logger } from './utils';
 import { DeviceHeigth } from './Config';

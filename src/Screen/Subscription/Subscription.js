@@ -8,7 +8,7 @@ import {
   Alert,
   Animated,
   Easing,
-  Dimensions,
+
   Modal,
   Linking,
   ImageBackground,
