@@ -99,7 +99,7 @@ const CollectCoins = ({navigation, route}) => {
     payload.append('type', type);
     try {
       const res = await axios(
-        // 'https://fitme.cvinfotech.in/adserver/public/api/testing_add_coins',
+        // 'https://fitme.cvinfotechserver.com/adserver/public/api/testing_add_coins',
         NewAppapi.POST_API_FOR_COIN_CALCULATION,
         {
           method: 'post',

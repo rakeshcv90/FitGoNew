@@ -31,6 +31,8 @@ import {
   setEditedExercise,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
+  setExerciseInTime,
+  setExerciseOutTime,
   setFitCoins,
   setFitmeMealAdsCount,
   setHomeGraphData,
@@ -63,6 +65,7 @@ import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import ActivityLoader from '../../Component/ActivityLoader';
 import StreakModal from '../../Component/Utilities/StreakModal';
+import OverExerciseModal from '../../Component/Utilities/OverExercise';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -82,6 +85,8 @@ const WeekArrayWithEvent = Array(5)
         .subtract(moment().isoWeekday() - 1, 'days')
         .format('dddd')),
   );
+
+const format = 'hh:mm:ss';
 const MyPlans = ({navigation}: any) => {
   const [downloaded, setDownloade] = useState(0);
   const [coins, setCoins] = useState({});
@@ -95,7 +100,9 @@ const MyPlans = ({navigation}: any) => {
   const [myRankData, setMyRankData] = useState([]);
   const [downlodedVideoSent, setDownloadedVideoSent] = useState(false);
   const [fetchCoins, setFetchCoins] = useState(false);
+  const [start, setStart] = useState(false);
   const [streakModalVisibility, setStreakModalVisibility] = useState(false);
+  const [overExerciseVisible, setOverExerciseVisible] = useState(false);
   const getStreakStatus = useSelector(state => state?.getStreakStatus);
   const getFitmeMealAdsCount = useSelector(
     (state: any) => state.getFitmeMealAdsCount,
@@ -116,11 +123,71 @@ const MyPlans = ({navigation}: any) => {
   const getEditedDayExercise = useSelector(
     (state: any) => state.getEditedDayExercise,
   );
-  const getStreakModalVisible=useSelector(state=>state?.getStreakModalVisible)
+  const getStreakModalVisible = useSelector(
+    state => state?.getStreakModalVisible,
+  );
   const fitCoins = useSelector((state: any) => state.fitCoins);
   const Sat = getPurchaseHistory?.currentDay == 6;
   const Sun = getPurchaseHistory?.currentDay == 0;
   const dispatch = useDispatch();
+
+  const getExerciseInTime = useSelector(
+    (state: any) => state.getExerciseInTime,
+  );
+  const getExerciseOutTime = useSelector(
+    (state: any) => state.getExerciseOutTime,
+  );
+
+  useEffect(() => {
+    if (start && getExerciseOutTime == '') {
+      dispatch(setExerciseInTime(moment().format(format)));
+      dispatch(setExerciseOutTime(moment().add(5, 'minutes').format(format)));
+      console.warn('STARTING', moment().format(format), getExerciseOutTime);
+    }
+    if (
+      getExerciseInTime < getExerciseOutTime &&
+      !start &&
+      getExerciseOutTime != ''
+    ) {
+      console.warn('COMPLETEE', moment().format(format), getExerciseOutTime);
+      dispatch(setExerciseInTime(moment().format(format)));
+    } else if (
+      getExerciseOutTime != '' &&
+      moment().format(format) > getExerciseOutTime
+      // &&
+      // getExerciseInTime > getExerciseOutTime
+      // moment(getExerciseInTime, format).isAfter(
+      //   moment(getExerciseOutTime, format),
+      // )
+    ) {
+      console.warn(
+        'SHOWINGDF',
+        moment().format(format),
+        getExerciseInTime,
+        getExerciseOutTime,
+      );
+      setOverExerciseVisible(true);
+    }
+    // if (
+    //   // complete &&
+    //   getExerciseOutTime != '' &&
+    //   // moment().format(format) < getExerciseOutTime
+    //   moment(getExerciseOutTime, format).isAfter(moment())
+    // ) {
+    //   console.warn('COMPLETEE', moment().format(format));
+    //   dispatch(setExerciseInTime(moment().format(format)));
+    // } else if (
+    //   getExerciseOutTime != '' &&
+    //   moment().isAfter(moment(getExerciseOutTime, format)) &&
+    //   moment(getExerciseInTime, format).isAfter(moment(getExerciseOutTime, format))
+    //   // moment().format(format) > getExerciseOutTime&&
+    //   // getExerciseInTime > getExerciseOutTime
+    // ) {
+    //   console.warn('SHOWINGDF', moment().format(format),getExerciseInTime,getExerciseOutTime);
+    //   setOverExerciseVisible(true);
+    // }
+  }, [getExerciseInTime, getExerciseOutTime, start]);
+
   useEffect(() => {
     initInterstitial();
     allWorkoutApi1();
@@ -147,19 +214,22 @@ const MyPlans = ({navigation}: any) => {
     if (
       WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1] !== 'Monday' &&
       coins[WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]] < 0 &&
-      enteredCurrentEvent && !Sat && !Sun &&
+      enteredCurrentEvent &&
+      !Sat &&
+      !Sun &&
       !getStreakStatus?.includes(
         WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2],
       )
     ) {
       dispatch(setStreakModalVisible(true));
-      dispatch(setStreakStatus([
-      ...getStreakStatus,
-      WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]
-    
-    ]))
+      dispatch(
+        setStreakStatus([
+          ...getStreakStatus,
+          WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2],
+        ]),
+      );
     }
-  }, [getStreakModalVisible,coins]);
+  }, [getStreakModalVisible, coins]);
   const getAllChallangeAndAllExerciseData = async () => {
     let responseData = 0;
     if (Object.keys(getUserDataDetails).length > 0) {
@@ -437,7 +507,18 @@ const MyPlans = ({navigation}: any) => {
   };
   let datas = [];
   const handleStart = () => {
-    if (!visible) {
+    if (
+      getExerciseOutTime != '' &&
+      moment().format(format) > getExerciseOutTime
+    ) {
+      console.warn(
+        'SHOWINGDF',
+        moment().format(format),
+        getExerciseInTime,
+        getExerciseOutTime,
+      );
+      setOverExerciseVisible(true);
+    } else if (!visible) {
       setVisible(true);
       Promise.all(
         getWeeklyPlansData[WeekArray[selectedDay]]?.exercises?.map(
@@ -460,6 +541,7 @@ const MyPlans = ({navigation}: any) => {
   const beforeNextScreen = async (selectedDay: any) => {
     downloadCounter = 0;
     setDownloadedVideoSent(true);
+    setStart(true);
     for (const item of getWeeklyPlansData[WeekArray[selectedDay]]?.exercises) {
       datas.push({
         user_id: getUserDataDetails?.id,
@@ -481,6 +563,7 @@ const MyPlans = ({navigation}: any) => {
         setButtonClicked(false);
         setVisible(false);
         setDownloadedVideoSent(false);
+        setStart(false);
         let checkAdsShow = AddCountFunction();
 
         AnalyticsConsole(`SE_ON_${getPurchaseHistory?.currentDay}`);
@@ -523,6 +606,7 @@ const MyPlans = ({navigation}: any) => {
       setButtonClicked(false);
       setVisible(false);
       setDownloadedVideoSent(false);
+      setStart(false);
       showMessage({
         message: 'Error, Please try again later',
         type: 'danger',
@@ -533,6 +617,7 @@ const MyPlans = ({navigation}: any) => {
     }
   };
   const RewardsbeforeNextScreen = async (selectedDay: any) => {
+    setStart(true);
     downloadCounter = 0;
     setDownloadedVideoSent(true);
     for (const item of getWeeklyPlansData[WeekArray[selectedDay]]?.exercises) {
@@ -547,7 +632,7 @@ const MyPlans = ({navigation}: any) => {
 
     try {
       const res = await axios({
-        url: 'https://fitme.cvinfotech.in/adserver/public/api/test_user_event__exercise_status',
+        url: 'https://fitme.cvinfotechserver.com/adserver/public/api/test_user_event__exercise_status',
         // url: NewAppapi.CURRENT_DAY_EVENT_EXERCISE,
         method: 'Post',
         data: {user_details: datas, type: 'weekly'},
@@ -559,6 +644,7 @@ const MyPlans = ({navigation}: any) => {
       if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {
+        setStart(false);
         setDownloade(0);
         setButtonClicked(false);
         setVisible(false);
@@ -576,6 +662,7 @@ const MyPlans = ({navigation}: any) => {
         });
         // }
       } else {
+        setStart(false);
         setDownloadedVideoSent(false);
         navigation.navigate('EventExercise', {
           allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
@@ -975,12 +1062,17 @@ const MyPlans = ({navigation}: any) => {
         )}
       </View>
       {downlodedVideoSent ? <ActivityLoader /> : null}
-          <StreakModal
-            streakDays={coins}
-            setVisible={setStreakModalVisibility}
-            WeekArray={WeekArrayWithEvent}
-            missedDay={WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]}
-          />
+      <StreakModal
+        streakDays={coins}
+        setVisible={setStreakModalVisibility}
+        WeekArray={WeekArrayWithEvent}
+        missedDay={WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]}
+      />
+      <OverExerciseModal
+        setOverExerciseVisible={setOverExerciseVisible}
+        overExerciseVisible={overExerciseVisible}
+        handleBreakButton={() =>setOverExerciseVisible(false)}
+      />
     </SafeAreaView>
   );
 };

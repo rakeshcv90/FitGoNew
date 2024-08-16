@@ -34,6 +34,8 @@ import {CircularProgressBase} from 'react-native-circular-progress-indicator';
 import {
   setCoreCount,
   setCoreFilOpt,
+  setExerciseInTime,
+  setExerciseOutTime,
   setLowerBodyCount,
   setLowerBodyFilOpt,
   setUprBdyOpt,
@@ -47,6 +49,10 @@ import NewButton from '../../Component/NewButton';
 import {showMessage} from 'react-native-flash-message';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import NewButton2 from '../../Component/NewButton2';
+import moment from 'moment';
+import OverExerciseModal from '../../Component/Utilities/OverExercise';
+
+const format = 'hh:mm:ss';
 
 const NewFocusWorkouts = ({route, navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
@@ -73,6 +79,8 @@ const NewFocusWorkouts = ({route, navigation}) => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFilterList, setSearchFilterList] = useState([]);
+  const [start, setStart] = useState(false);
+  const [overExerciseVisible, setOverExerciseVisible] = useState(false);
   const dispatch = useDispatch();
   const uperBody = [
     {
@@ -159,6 +167,36 @@ const NewFocusWorkouts = ({route, navigation}) => {
       filterExercises(exerciseData, searchCriteriaRedux);
     }
   }, []);
+
+  const getExerciseInTime = useSelector(state => state.getExerciseInTime);
+  const getExerciseOutTime = useSelector(state => state.getExerciseOutTime);
+
+  useEffect(() => {
+    if (start && getExerciseOutTime == '') {
+      dispatch(setExerciseInTime(moment().format(format)));
+      dispatch(setExerciseOutTime(moment().add(5, 'minutes').format(format)));
+      console.warn('STARTING', moment().format(format), getExerciseOutTime);
+    }
+    if (
+      getExerciseInTime < getExerciseOutTime &&
+      !start &&
+      getExerciseOutTime != ''
+    ) {
+      console.warn('COMPLETEE', moment().format(format), getExerciseOutTime);
+      dispatch(setExerciseInTime(moment().format(format)));
+    } else if (
+      getExerciseOutTime != '' &&
+      moment().format(format) > getExerciseOutTime
+    ) {
+      console.warn(
+        'SHOWINGDF',
+        moment().format(format),
+        getExerciseInTime,
+        getExerciseOutTime,
+      );
+      setOverExerciseVisible(true);
+    }
+  }, [getExerciseInTime, getExerciseOutTime, start]);
 
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -646,41 +684,71 @@ const NewFocusWorkouts = ({route, navigation}) => {
     dispatch(setVideoLocation(StoringData));
   };
   const Start = exercise => {
-    AnalyticsConsole('S_E_FW');
-    Promise.all(
-      exercise?.map((item, index) => {
-        return downloadVideos(item, index, exercise?.length);
-      }),
-    ).finally(() => {
-      setDownloade(0);
-      navigation.navigate('Exercise', {
-        allExercise: exercise,
-        currentExercise: exercise[0],
-        data: CategoryDetails,
-        day: -11,
-        exerciseNumber: 0,
-        trackerData: [],
-        type: 'bodypart',
-        challenge: false,
+    if (
+      getExerciseOutTime != '' &&
+      moment().format(format) > getExerciseOutTime
+    ) {
+      console.warn(
+        'SHOWINGDF',
+        moment().format(format),
+        getExerciseInTime,
+        getExerciseOutTime,
+      );
+      setOverExerciseVisible(true);
+    } else {
+      setStart(true);
+      AnalyticsConsole('S_E_FW');
+      Promise.all(
+        exercise?.map((item, index) => {
+          return downloadVideos(item, index, exercise?.length);
+        }),
+      ).finally(() => {
+        setDownloade(0);
+        setStart(false);
+        navigation.navigate('Exercise', {
+          allExercise: exercise,
+          currentExercise: exercise[0],
+          data: CategoryDetails,
+          day: -11,
+          exerciseNumber: 0,
+          trackerData: [],
+          type: 'bodypart',
+          challenge: false,
+        });
       });
-    });
+    }
   };
   const handleIconPress = (item, index) => {
-    downloadVideos(item, index, 1).finally(() => {
-      setDownloade(0);
-      setDownloadProgress(0);
-      setSelectedIndex(-1);
-      navigation.navigate('Exercise', {
-        allExercise: [item],
-        currentExercise: item,
-        data: CategoryDetails,
-        day: -11,
-        exerciseNumber: 0,
-        trackerData: [],
-        type: 'bodypart',
-        challenge: false,
+    if (
+      getExerciseOutTime != '' &&
+      moment().format(format) > getExerciseOutTime
+    ) {
+      console.warn(
+        'SHOWINGDF',
+        moment().format(format),
+        getExerciseInTime,
+        getExerciseOutTime,
+      );
+      setOverExerciseVisible(true);
+    } else {
+      setStart(true);
+      downloadVideos(item, index, 1).finally(() => {
+        setStart(false);
+        setDownloade(0);
+        setDownloadProgress(0);
+        setSelectedIndex(-1);
+        navigation.navigate('Exercise', {
+          allExercise: [item],
+          currentExercise: item,
+          data: CategoryDetails,
+          day: -11,
+          exerciseNumber: 0,
+          trackerData: [],
+          type: 'bodypart',
+          challenge: false,
+        });
       });
-    });
+    }
   };
 
   useEffect(() => {
@@ -739,7 +807,8 @@ const NewFocusWorkouts = ({route, navigation}) => {
             flexDirection: 'row',
             alignItems: 'center',
             paddingLeft: 10,
-            top: DeviceHeigth<=626?-DeviceWidth * 0.01:-DeviceWidth * 0.05,
+            top:
+              DeviceHeigth <= 626 ? -DeviceWidth * 0.01 : -DeviceWidth * 0.05,
           }}>
           <Icons name="magnify" size={20} color={'#33333380'} />
           <TextInput
@@ -918,6 +987,10 @@ const NewFocusWorkouts = ({route, navigation}) => {
       <View style={styles.footer}>
         <BannerAdd bannerAdId={bannerAdId} />
       </View>
+      <OverExerciseModal
+        setOverExerciseVisible={setOverExerciseVisible}
+        overExerciseVisible={overExerciseVisible}
+      />
     </>
   );
 };

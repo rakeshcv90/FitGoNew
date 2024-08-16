@@ -36,6 +36,8 @@ import {
   useIsFocused,
 } from '@react-navigation/native';
 import {
+  setExerciseInTime,
+  setExerciseOutTime,
   setVideoLocation,
   setWorkoutTimeCal,
 } from '../../Component/ThemeRedux/Actions';
@@ -54,6 +56,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import WorkoutsDescription from './WorkoutsDescription';
 import {showMessage} from 'react-native-flash-message';
+import OverExerciseModal from '../../Component/Utilities/OverExercise';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 interface BoxProps {
@@ -64,6 +67,9 @@ interface BoxProps {
   isSelected: boolean;
   switchButton: boolean;
 }
+
+const format = 'hh:mm:ss';
+
 const WorkoutCategories = ({navigation, route}: any) => {
   const [item, setItem] = useState();
   const {categoryExercise, CategoryDetails} = route?.params;
@@ -80,6 +86,8 @@ const WorkoutCategories = ({navigation, route}: any) => {
   const [itemsLength, setItemsLength] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [downloadProgress, setDownloadProgress] = useState(0);
+  const [start, setStart] = useState(false);
+  const [overExerciseVisible, setOverExerciseVisible] = useState(false);
   const dispatch = useDispatch();
   const getCustttomeTimeCal = useSelector(
     (state: any) => state.getCustttomeTimeCal,
@@ -99,6 +107,40 @@ const WorkoutCategories = ({navigation, route}: any) => {
     setDownloade(0);
     setSelectedIndex(-1);
   }, [isFocused]);
+
+  const getExerciseInTime = useSelector(
+    (state: any) => state.getExerciseInTime,
+  );
+  const getExerciseOutTime = useSelector(
+    (state: any) => state.getExerciseOutTime,
+  );
+
+  useEffect(() => {
+    if (start && getExerciseOutTime == '') {
+      dispatch(setExerciseInTime(moment().format(format)));
+      dispatch(setExerciseOutTime(moment().add(5, 'minutes').format(format)));
+      console.warn('STARTING', moment().format(format), getExerciseOutTime);
+    }
+    if (
+      getExerciseInTime < getExerciseOutTime &&
+      !start &&
+      getExerciseOutTime != ''
+    ) {
+      console.warn('COMPLETEE', moment().format(format), getExerciseOutTime);
+      dispatch(setExerciseInTime(moment().format(format)));
+    } else if (
+      getExerciseOutTime != '' &&
+      moment().format(format) > getExerciseOutTime
+    ) {
+      console.warn(
+        'SHOWINGDF',
+        moment().format(format),
+        getExerciseInTime,
+        getExerciseOutTime,
+      );
+      setOverExerciseVisible(true);
+    }
+  }, [getExerciseInTime, getExerciseOutTime, start]);
 
   function onLoadEnd() {
     setIsLoading(false);
@@ -215,8 +257,10 @@ const WorkoutCategories = ({navigation, route}: any) => {
       handleItems(item, selectedExercise, setSelectedExercise);
     } else {
       AnalyticsConsole('S_E_S_WC');
+      setStart(true);
       downloadVideos(item, index, 1).finally(() => {
         setDownloade(0);
+        setStart(false);
         setDownloadProgress(0);
         setSelectedIndex(-1);
         navigation.navigate('Exercise', {
@@ -452,25 +496,40 @@ const WorkoutCategories = ({navigation, route}: any) => {
   };
 
   const Start = (exercise: Array<any>) => {
-    setDownloade(5);
-    Promise.all(
-      exercise?.map((item: any, index: number) => {
-        return downloadVideos(item, index, exercise?.length);
-      }),
-    ).finally(() => {
-      setDownloade(0);
-      setDownloadProgress(0);
-      navigation.navigate('Exercise', {
-        allExercise: exercise,
-        currentExercise: exercise[0],
-        data: CategoryDetails,
-        day: -12,
-        exerciseNumber: 0,
-        trackerData: [],
-        type: 'focus',
-        challenge: false,
+    if (
+      getExerciseOutTime != '' &&
+      moment().format(format) > getExerciseOutTime
+    ) {
+      console.warn(
+        'SHOWINGDF',
+        moment().format(format),
+        getExerciseInTime,
+        getExerciseOutTime,
+      );
+      setOverExerciseVisible(true);
+    } else {
+      setDownloade(5);
+      setStart(true);
+      Promise.all(
+        exercise?.map((item: any, index: number) => {
+          return downloadVideos(item, index, exercise?.length);
+        }),
+      ).finally(() => {
+        setDownloade(0);
+        setStart(false);
+        setDownloadProgress(0);
+        navigation.navigate('Exercise', {
+          allExercise: exercise,
+          currentExercise: exercise[0],
+          data: CategoryDetails,
+          day: -12,
+          exerciseNumber: 0,
+          trackerData: [],
+          type: 'focus',
+          challenge: false,
+        });
       });
-    });
+    }
   };
 
   return (
@@ -636,7 +695,10 @@ const WorkoutCategories = ({navigation, route}: any) => {
         )}
       </View>
       <WorkoutsDescription data={item} open={visible} setOpen={setVisible} />
-      {/* {bannerAdsDisplay()} */}
+      <OverExerciseModal
+        setOverExerciseVisible={setOverExerciseVisible}
+        overExerciseVisible={overExerciseVisible}
+      />
     </SafeAreaView>
   );
 };
