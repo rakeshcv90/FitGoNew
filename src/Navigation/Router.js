@@ -1,7 +1,7 @@
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/index';
+import Yourself from '../Screen/Yourself/Index';
 
 import Gender from '../Screen/Yourself/Gender';
 

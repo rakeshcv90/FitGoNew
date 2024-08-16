@@ -428,6 +428,7 @@ const WorkoutCompleted = ({navigation, route}) => {
                 title={
                   'Congratulations! You’ve completed your workout and earned more FitCoins. Keep working out regularly to win the fitness challenge.'
                 }
+                handleComplete={()=>navigation.navigate("MyPlans")}
               />
             </Animated.View>
           </View>

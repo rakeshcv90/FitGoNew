@@ -165,7 +165,7 @@ const Leaderboard = () => {
               <Text
                 style={{
                   fontFamily: Fonts.HELVETICA_REGULAR,
-                  fontSize: 14,
+                fontSize: 16,
                   // lineHeight: ,
                   color: myID ? AppColor.WHITE : AppColor.SecondaryTextColor,
                 }}>
@@ -185,7 +185,7 @@ const Leaderboard = () => {
               <Text
                 style={{
                   fontFamily: Fonts.HELVETICA_REGULAR,
-                  fontSize: 14,
+                  fontSize: 16,
                   marginHorizontal: 10,
                   // color: AppColor.PrimaryTextColor,
                   color: myID ? AppColor.WHITE : AppColor.PrimaryTextColor,
@@ -208,7 +208,7 @@ const Leaderboard = () => {
               <Text
                 style={{
                   fontFamily: Fonts.HELVETICA_REGULAR,
-                  fontSize: 14,
+                  fontSize: 16,
                   marginHorizontal: 10,
                   color: myID ? AppColor.WHITE : AppColor.PrimaryTextColor,
                 }}>
@@ -665,7 +665,7 @@ const Leaderboard = () => {
                 Leaderboard
               </Text>
             </View>
-            {/* {enteredCurrentEvent ? ( */}
+            {enteredCurrentEvent ? (
               <TouchableOpacity
                 onPress={() =>
                   //setVisible(true)
@@ -724,7 +724,7 @@ const Leaderboard = () => {
                   </View>
                 </View>
               </TouchableOpacity>
-            {/* ) : (
+            ) : (
               <View
                 style={{
                   height: 40,
@@ -734,9 +734,11 @@ const Leaderboard = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   paddingRight: 10,
+                  //backgroundColor:'red',
+                  width:50,
                 }}
               />
-            )} */}
+            )}
           </View>
 
           <ScrollView
@@ -836,6 +838,7 @@ const Leaderboard = () => {
                           fontSize: 30,
                           color: '#1E40AF',
                           lineHeight: 40,
+                          marginTop: 5,
                         }}>
                         {mainData[1]?.name.substring(0, 1)}
                       </Text>
@@ -864,7 +867,7 @@ const Leaderboard = () => {
                     <Text
                       style={{
                         fontFamily: Fonts.HELVETICA_REGULAR,
-                        fontSize: 12,
+                        fontSize: 16,
                         lineHeight: 20,
                         color: AppColor.PrimaryTextColor,
                       }}>
@@ -918,7 +921,7 @@ const Leaderboard = () => {
                       DeviceHeigth >= 1024
                         ? -50
                         : DeviceHeigth >= 807
-                        ? -DeviceWidth * 0.17
+                        ? -DeviceWidth * 0.15
                         : -DeviceWidth * 0.2,
                   }}>
                   {mainData[0]?.image_path == null ? (
@@ -941,6 +944,7 @@ const Leaderboard = () => {
                           fontFamily: Fonts.HELVETICA_BOLD,
                           fontSize: 30,
                           color: '#1E40AF',
+                          marginTop: 5,
                           lineHeight: 40,
                         }}>
                         {mainData[0]?.name.substring(0, 1)}
@@ -983,7 +987,7 @@ const Leaderboard = () => {
                     <Text
                       style={{
                         fontFamily: Fonts.HELVETICA_BOLD,
-                        fontSize: 14,
+                        fontSize: 16,
                         lineHeight: 20,
                         color: AppColor.PrimaryTextColor,
                       }}>
@@ -1061,12 +1065,12 @@ const Leaderboard = () => {
                   style={{
                     position: 'absolute',
                     bottom: 0,
-                    right: DeviceHeigth >= 1024 ? 170 : 50,
+                    right: DeviceHeigth >= 1024 ? 170 : 30,
                   }}>
                   <Text
                     style={{
                       fontFamily: Fonts.HELVETICA_REGULAR,
-                      fontSize: 12,
+                      fontSize: 16,
                       lineHeight: 20,
                       color: AppColor.PrimaryTextColor,
                     }}>
@@ -1107,6 +1111,7 @@ const Leaderboard = () => {
                           fontFamily: Fonts.HELVETICA_BOLD,
                           fontSize: 30,
                           color: '#1E40AF',
+                          marginTop: 5,
                           lineHeight: 40,
                         }}>
                         {mainData[2]?.name.substring(0, 1)}

@@ -752,7 +752,13 @@ const NewHome = ({navigation}) => {
               justifyContent: 'center',
             }}>
             <Marquee spacing={20} speed={1}>
-              <Text>Explore our new best offers</Text>
+              <Text
+                style={{
+                  color: AppColor.PrimaryTextColor,
+                  fontFamily: Fonts.HELVETICA_REGULAR,
+                }}>
+                Explore our new best offers
+              </Text>
             </Marquee>
           </View>
           <TouchableOpacity
