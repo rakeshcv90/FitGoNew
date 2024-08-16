@@ -1,7 +1,7 @@
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/index';
+import Yourself from '../Screen/Yourself/Index';
 
 import Gender from '../Screen/Yourself/Gender';
 
@@ -200,9 +200,13 @@ export const LoginStack = () => {
       <Stack.Screen name="Questions" component={Questions} />
       <Stack.Screen name="ChatBot" component={ChatBot} />
       <Stack.Screen name="StepGuide" component={StepGuide} />
-      <Stack.Screen name="WorkoutCompleted" component={WorkoutCompleted} />
       <Stack.Screen name="OfferPage" component={OfferPage} />
       <Stack.Screen name="WorkoutHistory" component={WorkoutHistory} />
+      <Stack.Screen
+        name="WorkoutCompleted"
+        component={WorkoutCompleted}
+        options={{detachPreviousScreen: true}}
+      />
     </Stack.Navigator>
   );
 };

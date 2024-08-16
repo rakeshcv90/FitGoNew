@@ -58,16 +58,11 @@ const ChatBot = ({navigation, route}: any) => {
       setshowLoader(false);
       setShowChatBot(true);
     }, 3000);
-    if (answerTrue) {
-      nav = setInterval(() => {
-        setAnswerTrue(false);
-      }, 3000);
-    }
     return () => {
       clearTimeout(load);
       clearTimeout(nav);
     };
-  }, [showChatBot, showChatBot2, answerTrue]);
+  }, [showChatBot, showChatBot2]);
 
   const handleEmail = async () => {
     AnalyticsConsole('W_GMAIL');
@@ -198,7 +193,7 @@ const ChatBot = ({navigation, route}: any) => {
                   fontWeight="600"
                   fontFamily={Fonts.MONTSERRAT_MEDIUM}
                   color="blue"
-                  value="aessikarwar03@gmail.com."
+                  value="aessikarwar03@gmail.com >"
                   onPress={handleEmail}
                 />
               )}

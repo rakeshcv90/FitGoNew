@@ -100,7 +100,7 @@ const OneDay = ({navigation, route}: any) => {
     } else {
       try {
         const res = await axios({
-          // url:'https://fitme.cvinfotech.in/adserver/public/api/days?day=1&workout_id=44'
+          // url:'https://fitme.cvinfotechserver.com/adserver/public/api/days?day=1&workout_id=44'
           url:
             NewAppapi.Get_DAYS +
             '?day=' +

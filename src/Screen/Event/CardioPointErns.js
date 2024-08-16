@@ -109,7 +109,7 @@ const CardioPointErns = ({navigation, route}) => {
   const RewardsbeforeNextScreen = async () => {
     downloadCounter = 0;
     const url =
-      'https://fitme.cvinfotech.in/adserver/public/api/test_user_event__exercise_status';
+      'https://fitme.cvinfotechserver.com/adserver/public/api/test_user_event__exercise_status';
     for (const item of cardioExxercise) {
       datas.push({
         user_id: getUserDataDetails?.id,

@@ -288,12 +288,12 @@ const EventExercise = ({navigation, route}: any) => {
             currentSet == allExercise[number]?.exercise_sets
           ) {
             setPause(false);
+            setCurrentSet(currentSet+1)
             postCurrentRewardsExerciseAPI(number);
             let checkAdsShow = AddCountFunction();
+            clearTimeout(playTimerRef.current);
             if (checkAdsShow == true) {
               showInterstitialAd();
-              clearTimeout(playTimerRef.current);
-              //CollectCoins
               navigation.navigate('WorkoutCompleted', {
                 day: day,
                 allExercise: allExercise,
@@ -320,19 +320,22 @@ const EventExercise = ({navigation, route}: any) => {
             clearTimeout(playTimerRef.current);
             StartAnimation();
           } else if (seconds == 0 && number < allExercise?.length - 1) {
+            console.log('NUMBER', number);
             setCurrentSet(0);
-            handleExerciseChange(allExercise[number + 1]?.exercise_title);
-            setNumber(number + 1);
-            setAddClosed(false);
+            const index = allExercise?.findIndex(
+              (item: any) =>
+                item?.exercise_id == allExercise[number]?.exercise_id,
+            );
+            handleExerciseChange(allExercise[index + 1]?.exercise_title);
+            setNumber(index + 1);
+            setRestStart(true);
             !addClosed && showInterstitialAd();
             if (addClosed) {
+              initInterstitial();
               ProgressRef.current?.play();
               setPause(false);
-              setRestStart(true);
+              setAddClosed(false);
             }
-            Platform.OS == 'android'
-              ? Platform.Version != 34 && setupPlayer()
-              : setupPlayer();
           }
         }
       }, 1000);
@@ -414,7 +417,7 @@ const EventExercise = ({navigation, route}: any) => {
   };
   const postCurrentRewardsExerciseAPI = async (index: number) => {
     const url =
-      'https://fitme.cvinfotech.in/adserver/public/api/testing1_event_exercise_complete_status';
+      'https://fitme.cvinfotechserver.com/adserver/public/api/testing1_event_exercise_complete_status';
     const payload = new FormData();
     payload.append('id', trackerData[index]?.id);
 
@@ -431,7 +434,7 @@ const EventExercise = ({navigation, route}: any) => {
     try {
       //LIVE  URL
       // const res = await axios({
-      //   url: 'https://fitme.cvinfotech.in/adserver/public/api/testing_event_exercise_complete_status',
+      //   url: 'https://fitme.cvinfotechserver.com/adserver/public/api/testing_event_exercise_complete_status',
       //   // url: NewAppapi.POST_REWARDS_EXERCISE,
       //   method: 'post',
       //   data: payload,
@@ -461,7 +464,7 @@ const EventExercise = ({navigation, route}: any) => {
       } else if (res.data) {
         setCompleted(completed + 1);
         // setCurrentData(allExercise[index]);
-        setRestStart(true);
+        // setRestStart(true);
         // setPlayW(0);
         setSeconds(parseInt(allExercise[index]?.exercise_rest.split(' ')[0]));
       }
@@ -610,20 +613,7 @@ const EventExercise = ({navigation, route}: any) => {
           useNativeDriver: true,
         }),
       ]),
-      // Wait for a moment (hold the text visible and scaled up)
       Animated.delay(2000),
-      // Fade out and scale down
-      // Animated.parallel([
-      // Animated.timing(opacity, {
-      //   toValue: 0,
-      //   duration: 1000,
-      //   useNativeDriver: true,
-      // }),
-      // Animated.timing(scale, {
-      //   toValue: 1,
-      //   duration: 1000,
-      //   useNativeDriver: true,
-      // }),
       Animated.timing(translateY, {
         toValue: -DeviceHeigth,
         duration: 2000,
@@ -713,6 +703,7 @@ const EventExercise = ({navigation, route}: any) => {
                   zIndex: -1,
                   backgroundColor: AppColor.WHITE,
                   borderRadius: 10,
+                  overflow: 'hidden',
                 },
                 ShadowStyle,
               ]}>
@@ -744,11 +735,11 @@ const EventExercise = ({navigation, route}: any) => {
           <View
             style={[
               {
-                height: DeviceHeigth * 0.28,
+                // height: DeviceHeigth * 0.28,
                 paddingTop: 10,
                 paddingHorizontal: 20,
                 backgroundColor: AppColor.WHITE,
-                width: DeviceHeigth >= 1024 ? '90%' : '95%',
+                width: DeviceHeigth >= 1024 ? '90%' : '90%',
                 alignSelf: 'center',
                 borderRadius: 10,
               },
@@ -906,6 +897,7 @@ const EventExercise = ({navigation, route}: any) => {
                   zIndex: -1,
                   backgroundColor: AppColor.WHITE,
                   borderRadius: 10,
+                  overflow: 'hidden',
                 },
                 ShadowStyle,
               ]}>
@@ -937,11 +929,11 @@ const EventExercise = ({navigation, route}: any) => {
           <View
             style={[
               {
-                height: DeviceHeigth * 0.28,
+                // height: DeviceHeigth * 0.28,
                 paddingTop: 10,
                 paddingHorizontal: 20,
                 backgroundColor: AppColor.WHITE,
-                width: DeviceHeigth >= 1024 ? '90%' : '95%',
+                width: DeviceHeigth >= 1024 ? '90%' : '90%',
                 alignSelf: 'center',
                 borderRadius: 10,
               },
@@ -978,14 +970,15 @@ const EventExercise = ({navigation, route}: any) => {
                 onPress={() => {
                   if (number == 0) return;
                   setPrevious(previous + 1);
-                  // setPlayW(prevTimer => 0);
+                  setShowSet(true);
+                  setCurrentSet(1);
+                  StartAnimation()
                   setPause(false);
                   clearTimeout(playTimerRef.current);
                   const index = allExercise?.findIndex(
                     (item: any) =>
                       item?.exercise_id == allExercise[number]?.exercise_id,
                   );
-                  // setCurrentData(allExercise[index - 1]);
                   handleExerciseChange(allExercise[index - 1]?.exercise_title);
                   setNumber(number - 1);
                   setSeconds(
@@ -1029,8 +1022,9 @@ const EventExercise = ({navigation, route}: any) => {
                 onPress={() => {
                   setNext(next + 1);
                   setPause(!pause);
-                  // setDefaultPre(0);
-                  // setPlayW(prevTimer => 0);
+                  setShowSet(true);
+                  setCurrentSet(1);
+                  StartAnimation()
                   setPause(false);
                   clearTimeout(playTimerRef.current);
                   setTimeout(() => {
@@ -1070,97 +1064,57 @@ const EventExercise = ({navigation, route}: any) => {
                 justifyContent: 'space-between',
                 alignItems: 'center',
               }}>
-              <View
+              <TouchableOpacity
+                onPress={() => {
+                  dispatch(setSoundOnOff(!getSoundOffOn));
+                }}
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
+                  justifyContent: 'center',
                   alignItems: 'center',
-                  width: DeviceHeigth >= 1024 ? '50%' : '70%',
+                  marginVertical: 5,
+                  flexDirection: 'row',
+                  paddingLeft: 5,
                 }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    dispatch(setSoundOnOff(!getSoundOffOn));
-                  }}
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginVertical: 5,
-                    flexDirection: 'row',
-                    paddingLeft: 5,
-                  }}>
-                  <Image
-                    source={
-                      getSoundOffOn
-                        ? require('../../Icon/Images/InAppRewards/SoundOn.png')
-                        : require('../../Icon/Images/InAppRewards/SoundOff.png')
-                    }
-                    style={{width: 15, height: 15}}
-                    resizeMode="contain"
-                  />
-                  <FitText
-                    type="normal"
-                    value={getSoundOffOn ? ' Sound Off' : ' Sound On'}
-                    color="#6B7280"
-                    fontFamily={Fonts.HELVETICA_REGULAR}
-                    lineHeight={30}
-                  />
-                </TouchableOpacity>
-                <View
-                  style={{
-                    backgroundColor: '#6B7280',
-                    width: 1,
-                    height: 20,
-                    opacity: 0.5,
-                  }}
+                <Image
+                  source={
+                    !getSoundOffOn
+                      ? require('../../Icon/Images/InAppRewards/SoundOn.png')
+                      : require('../../Icon/Images/InAppRewards/SoundOff.png')
+                  }
+                  style={{width: 15, height: 15}}
+                  resizeMode="contain"
                 />
-                <TouchableOpacity
-                  onPress={() => {
-                    setOpen(true);
-                  }}
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginVertical: 5,
-                    flexDirection: 'row',
-                  }}>
-                  <Image
-                    source={require('../../Icon/Images/InAppRewards/Exercise_Info1.png')}
-                    style={{width: 15, height: 15}}
-                    resizeMode="contain"
-                  />
-                  <FitText
-                    type="normal"
-                    value=" Exercise Info"
-                    color="#6B7280"
-                    fontFamily={Fonts.HELVETICA_REGULAR}
-                    lineHeight={30}
-                  />
-                </TouchableOpacity>
-              </View>
-              {enteredCurrentEvent && type == 'weekly'
-                ? null
-                : allExercise?.length > 1 && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        setRestStart(false);
-                        setVisible(true);
-                      }}
-                      style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: 5,
-                        width: 30,
-                        height: 30,
-                        backgroundColor: restStart ? 'transparent' : '#E9ECEF',
-                        marginVertical: 5,
-                      }}>
-                      <Image
-                        source={localImage.Exercise_List}
-                        style={{width: 15, height: 15}}
-                        resizeMode="contain"
-                      />
-                    </TouchableOpacity>
-                  )}
+                <FitText
+                  type="normal"
+                  value={getSoundOffOn ? ' Sound Off' : ' Sound On'}
+                  color="#6B7280"
+                  fontFamily={Fonts.HELVETICA_REGULAR}
+                  lineHeight={30}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setOpen(true);
+                }}
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginVertical: 5,
+                  flexDirection: 'row',
+                }}>
+                <Image
+                  source={require('../../Icon/Images/InAppRewards/Exercise_Info1.png')}
+                  style={{width: 15, height: 15}}
+                  resizeMode="contain"
+                />
+                <FitText
+                  type="normal"
+                  value=" Exercise Info"
+                  color="#6B7280"
+                  fontFamily={Fonts.HELVETICA_REGULAR}
+                  lineHeight={30}
+                />
+              </TouchableOpacity>
             </View>
           </View>
         </>

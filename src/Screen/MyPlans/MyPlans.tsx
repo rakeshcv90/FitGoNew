@@ -31,6 +31,8 @@ import {
   setEditedExercise,
   setEnteredCurrentEvent,
   setEnteredUpcomingEvent,
+  setExerciseInTime,
+  setExerciseOutTime,
   setEquipmentExercise,
   setFitCoins,
   setFitmeMealAdsCount,
@@ -64,6 +66,7 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import StreakModal from '../../Component/Utilities/StreakModal';
 import {localImage} from '../../Component/Image';
 import Icons from 'react-native-vector-icons/FontAwesome';
+import OverExerciseModal from '../../Component/Utilities/OverExercise';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -83,6 +86,8 @@ const WeekArrayWithEvent = Array(5)
         .subtract(moment().isoWeekday() - 1, 'days')
         .format('dddd')),
   );
+
+const format = 'hh:mm:ss';
 const MyPlans = ({navigation}: any) => {
   const [downloaded, setDownloade] = useState(0);
   const [coins, setCoins] = useState({});
@@ -96,12 +101,14 @@ const MyPlans = ({navigation}: any) => {
   const [myRankData, setMyRankData] = useState([]);
   const [downlodedVideoSent, setDownloadedVideoSent] = useState(false);
   const [fetchCoins, setFetchCoins] = useState(false);
+  const [start, setStart] = useState(false);
   const [streakModalVisibility, setStreakModalVisibility] = useState(false);
   const getStreakStatus = useSelector((state: any) => state?.getStreakStatus);
   const [myRank, setMyRank] = useState(0);
   const [totalData, setTotalData] = useState([]);
   const [visible1, setVisible1] = useState(false);
   const [visible2, setVisible2] = useState(false);
+  const [overExerciseVisible, setOverExerciseVisible] = useState(false);
   const getFitmeMealAdsCount = useSelector(
     (state: any) => state.getFitmeMealAdsCount,
   );
@@ -132,6 +139,64 @@ const MyPlans = ({navigation}: any) => {
   const Sat = getPurchaseHistory?.currentDay == 6;
   const Sun = getPurchaseHistory?.currentDay == 0;
   const dispatch = useDispatch();
+
+  const getExerciseInTime = useSelector(
+    (state: any) => state.getExerciseInTime,
+  );
+  const getExerciseOutTime = useSelector(
+    (state: any) => state.getExerciseOutTime,
+  );
+
+  useEffect(() => {
+    if (start && getExerciseOutTime == '') {
+      dispatch(setExerciseInTime(moment().format(format)));
+      dispatch(setExerciseOutTime(moment().add(5, 'minutes').format(format)));
+      console.warn('STARTING', moment().format(format), getExerciseOutTime);
+    }
+    if (
+      getExerciseInTime < getExerciseOutTime &&
+      !start &&
+      getExerciseOutTime != ''
+    ) {
+      console.warn('COMPLETEE', moment().format(format), getExerciseOutTime);
+      dispatch(setExerciseInTime(moment().format(format)));
+    } else if (
+      getExerciseOutTime != '' &&
+      moment().format(format) > getExerciseOutTime
+      // &&
+      // getExerciseInTime > getExerciseOutTime
+      // moment(getExerciseInTime, format).isAfter(
+      //   moment(getExerciseOutTime, format),
+      // )
+    ) {
+      console.warn(
+        'SHOWINGDF',
+        moment().format(format),
+        getExerciseInTime,
+        getExerciseOutTime,
+      );
+      setOverExerciseVisible(true);
+    }
+    // if (
+    //   // complete &&
+    //   getExerciseOutTime != '' &&
+    //   // moment().format(format) < getExerciseOutTime
+    //   moment(getExerciseOutTime, format).isAfter(moment())
+    // ) {
+    //   console.warn('COMPLETEE', moment().format(format));
+    //   dispatch(setExerciseInTime(moment().format(format)));
+    // } else if (
+    //   getExerciseOutTime != '' &&
+    //   moment().isAfter(moment(getExerciseOutTime, format)) &&
+    //   moment(getExerciseInTime, format).isAfter(moment(getExerciseOutTime, format))
+    //   // moment().format(format) > getExerciseOutTime&&
+    //   // getExerciseInTime > getExerciseOutTime
+    // ) {
+    //   console.warn('SHOWINGDF', moment().format(format),getExerciseInTime,getExerciseOutTime);
+    //   setOverExerciseVisible(true);
+    // }
+  }, [getExerciseInTime, getExerciseOutTime, start]);
+
   useEffect(() => {
     initInterstitial();
     allWorkoutApi1();
@@ -451,7 +516,18 @@ const MyPlans = ({navigation}: any) => {
   };
   let datas = [];
   const handleStart = () => {
-    if (!visible) {
+    if (
+      getExerciseOutTime != '' &&
+      moment().format(format) > getExerciseOutTime
+    ) {
+      console.warn(
+        'SHOWINGDF',
+        moment().format(format),
+        getExerciseInTime,
+        getExerciseOutTime,
+      );
+      setOverExerciseVisible(true);
+    } else if (!visible) {
       setVisible(true);
       Promise.all(
         getWeeklyPlansData[WeekArray[selectedDay]]?.exercises?.map(
@@ -474,6 +550,7 @@ const MyPlans = ({navigation}: any) => {
   const beforeNextScreen = async (selectedDay: any) => {
     downloadCounter = 0;
     setDownloadedVideoSent(true);
+    setStart(true);
     for (const item of getWeeklyPlansData[WeekArray[selectedDay]]?.exercises) {
       datas.push({
         user_id: getUserDataDetails?.id,
@@ -495,6 +572,7 @@ const MyPlans = ({navigation}: any) => {
         setButtonClicked(false);
         setVisible(false);
         setDownloadedVideoSent(false);
+        setStart(false);
         let checkAdsShow = AddCountFunction();
 
         AnalyticsConsole(`SE_ON_${getPurchaseHistory?.currentDay}`);
@@ -537,6 +615,7 @@ const MyPlans = ({navigation}: any) => {
       setButtonClicked(false);
       setVisible(false);
       setDownloadedVideoSent(false);
+      setStart(false);
       showMessage({
         message: 'Error, Please try again later',
         type: 'danger',
@@ -547,6 +626,7 @@ const MyPlans = ({navigation}: any) => {
     }
   };
   const RewardsbeforeNextScreen = async (selectedDay: any) => {
+    setStart(true);
     downloadCounter = 0;
     setDownloadedVideoSent(true);
     for (const item of getWeeklyPlansData[WeekArray[selectedDay]]?.exercises) {
@@ -561,7 +641,7 @@ const MyPlans = ({navigation}: any) => {
 
     try {
       const res = await axios({
-        url: 'https://fitme.cvinfotech.in/adserver/public/api/test_user_event__exercise_status',
+        url: 'https://fitme.cvinfotechserver.com/adserver/public/api/test_user_event__exercise_status',
         // url: NewAppapi.CURRENT_DAY_EVENT_EXERCISE,
         method: 'Post',
         data: {user_details: datas, type: 'weekly'},
@@ -573,6 +653,7 @@ const MyPlans = ({navigation}: any) => {
       if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {
+        setStart(false);
         setDownloade(0);
         setButtonClicked(false);
         setVisible(false);
@@ -590,6 +671,7 @@ const MyPlans = ({navigation}: any) => {
         });
         // }
       } else {
+        setStart(false);
         setDownloadedVideoSent(false);
         navigation.navigate('EventExercise', {
           allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
@@ -1477,7 +1559,12 @@ const MyPlans = ({navigation}: any) => {
         WeekArray={WeekArrayWithEvent}
         missedDay={WeekArrayWithEvent[getPurchaseHistory?.currentDay - 2]}
       />
-      <BottomModal setVisible1={setVisible1} visible1={visible1} />
+      <OverExerciseModal
+        setOverExerciseVisible={setOverExerciseVisible}
+        overExerciseVisible={overExerciseVisible}
+        handleBreakButton={() =>setOverExerciseVisible(false)}
+      />
+       <BottomModal setVisible1={setVisible1} visible1={visible1} />
       <Exercise_Preparing_Modal setVisible2={setVisible2} visible2={visible2} />
     </SafeAreaView>
   );
