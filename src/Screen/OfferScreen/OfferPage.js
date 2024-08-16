@@ -122,8 +122,11 @@ const OfferPage = ({navigation}) => {
           getPurchaseHistory?.currentDay - 1
         }`,
       );
+      console.log('datataa---->',response?.data)
       if (response?.data?.status) {
         setCardioStatus(true);
+        setLoaded(true);
+      }else{
         setLoaded(true);
       }
     } catch (error) {
@@ -238,7 +241,7 @@ const OfferPage = ({navigation}) => {
       ) {
         setDownloade(0);
         setWokroutLoaded(true);
-        navigation.navigate('EventExercise', {
+        navigation.navigate('CardioExercise', {
           allExercise: cardioExxercise,
           currentExercise: cardioExxercise[0],
           data: [],
@@ -251,7 +254,7 @@ const OfferPage = ({navigation}) => {
         // }
       } else {
         setWokroutLoaded(true);
-        navigation.navigate('EventExercise', {
+        navigation.navigate('CardioExercise', {
           allExercise: cardioExxercise,
           currentExercise: cardioExxercise[0],
           data: [],
