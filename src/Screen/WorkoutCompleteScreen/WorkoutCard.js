@@ -35,13 +35,26 @@ const WeekArray = Array(5)
         .format('dddd')),
   );
 
-const WorkoutCard = ({cardHeader, cardType, onPress, streakCoins,cardioCoins,handleSkip, handleComplete, download}) => {
+const WorkoutCard = ({
+  cardHeader,
+  cardType,
+  onPress,
+  streakCoins,
+  cardioCoins,
+  handleSkip,
+  handleComplete,
+  download,
+  EarnedCoins,
+  rank,
+  breatheCoins,
+  title
+}) => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
 
   useEffect(() => {
-    scaleOffset.value = withRepeat(withTiming(1, {duration: 400}), -1, true);
-  }, []);
-  const scaleOffset = useSharedValue(0.7);
+    scaleOffset.value = withRepeat(withTiming(1.2, {duration: 400}), -1, true);
+  }, [cardType]);
+  const scaleOffset = useSharedValue(0.8);
   const scaleAnimation = useAnimatedStyle(() => {
     return {
       transform: [{scale: scaleOffset.value}],
@@ -51,34 +64,36 @@ const WorkoutCard = ({cardHeader, cardType, onPress, streakCoins,cardioCoins,han
     <View style={styles.container}>
       <Text style={styles.header}>{cardHeader ?? 'Exercise Completed'}</Text>
       <Text style={styles.txt1}>
-        Congratulations, You have completed exercise. Lorem ipsum dolor sit
-        amet, consectetur adipiscing elit.
+       {title}
       </Text>
       {cardType == 'streak' && (
         <View style={styles.streakView}>
-          {WeekArray.map((v, i) => (
+          {WeekArray.map((v, i) => {
+          console.log(streakCoins[v],"dayss")
+          return(
             <View style={{alignItems: 'center'}}>
-              <Animated.View style={[v > 0 ? scaleAnimation : undefined]}>
-                <ImageBackground
-                  source={
-                    streakCoins[v] > 0
-                      ? localImage.Streak
-                      : streakCoins[v] == null
-                      ? localImage.greyStreak
-                      : localImage.StreakBreak
-                  }
-                  style={styles.img2}
-                  resizeMode="contain">
-                  {streakCoins[v] > 0 && (
-                    <Icons name="check-bold" color={AppColor.WHITE} size={22} />
-                  )}
-                </ImageBackground>
-              </Animated.View>
-              <Text style={{color: AppColor.GRAAY6, fontFamily: 'Helvetica'}}>
-                {v?.substring(0, 3)}
-              </Text>
-            </View>
-          ))}
+            <Animated.View style={[streakCoins[v] > 0 ? scaleAnimation : undefined]}>
+              <ImageBackground
+                source={
+                  streakCoins[v] > 0
+                    ? localImage.Streak
+                    : streakCoins[v] == null
+                    ? localImage.greyStreak
+                    : localImage.StreakBreak
+                }
+                style={styles.img2}
+                resizeMode="contain">
+                {streakCoins[v] > 0 && (
+                  <Icons name="check-bold" color={AppColor.WHITE} size={22} />
+                )}
+              </ImageBackground>
+            </Animated.View>
+            <Text style={{color: AppColor.GRAAY6, fontFamily: 'Helvetica'}}>
+              {v?.substring(0, 3)}
+            </Text>
+          </View>
+          )
+          })}
         </View>
       )}
       {cardType == 'cardio' && (
@@ -88,11 +103,11 @@ const WorkoutCard = ({cardHeader, cardType, onPress, streakCoins,cardioCoins,han
               source={localImage.FitCoin}
               style={{height: 30, width: 30, marginRight: 5}}
             />
-            <Text style={styles.txt3}>{cardioCoins??0} coins</Text>
+            <Text style={styles.txt3}>{cardioCoins ?? 0} coins</Text>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
-            onPress={handleSkip}
+              onPress={handleSkip}
               style={{
                 color: AppColor.GRAAY6,
                 marginRight: 10,
@@ -108,6 +123,8 @@ const WorkoutCard = ({cardHeader, cardType, onPress, streakCoins,cardioCoins,han
               svgArrowRight
               svgArrowColor={AppColor.WHITE}
               onPress={onPress}
+              withAnimation={true}
+              download={download}
             />
           </View>
         </View>
@@ -119,11 +136,11 @@ const WorkoutCard = ({cardHeader, cardType, onPress, streakCoins,cardioCoins,han
               source={localImage.FitCoin}
               style={{height: 30, width: 30, marginRight: 5}}
             />
-            <Text style={styles.txt3}>20 coin</Text>
+            <Text style={styles.txt3}>{breatheCoins??0} coins</Text>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
-            onPress={handleSkip}
+              onPress={handleSkip}
               style={{
                 color: AppColor.GRAAY6,
                 marginRight: 10,
@@ -139,8 +156,8 @@ const WorkoutCard = ({cardHeader, cardType, onPress, streakCoins,cardioCoins,han
               svgArrowRight
               svgArrowColor={AppColor.WHITE}
               onPress={onPress}
-              withAnimation
-              download={download}
+              withAnimation={false}
+              download={0}
             />
           </View>
         </View>
@@ -155,9 +172,8 @@ const WorkoutCard = ({cardHeader, cardType, onPress, streakCoins,cardioCoins,han
                 resizeMode="contain"
               />
               <Text style={styles.txt4}>
-                {streakCoins[WeekArray[getPurchaseHistory?.currentDay - 1]] ??
-                  0}
-                Earned
+                {EarnedCoins ?? 0}
+                {'  Earned'}
               </Text>
             </View>
             <Image
@@ -183,7 +199,7 @@ const WorkoutCard = ({cardHeader, cardType, onPress, streakCoins,cardioCoins,han
                     fontFamily: 'Helvetica-Bold',
                     marginLeft: 3,
                   }}>
-                  169
+                  {rank ?? '--'}
                 </Text>
               </View>
             </View>
@@ -196,10 +212,10 @@ const WorkoutCard = ({cardHeader, cardType, onPress, streakCoins,cardioCoins,han
               bottom: 16,
               backgroundColor: AppColor.GRAY,
               paddingHorizontal: 6,
-              paddingVertical: 14,
+              paddingVertical: 6,
               borderRadius: 8,
             }}>
-            <ArrowRight />
+            <Icons name="arrow-right" size={25} color={AppColor.BLACK} />
           </TouchableOpacity>
         </>
       )}

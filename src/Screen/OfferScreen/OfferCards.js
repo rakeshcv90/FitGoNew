@@ -7,7 +7,6 @@ import {localImage} from '../../Component/Image';
 import NewButton from '../../Component/NewButton';
 import {Image} from 'react-native';
 import Svg, {Path} from 'react-native-svg';
-
 const OfferCards = React.memo(
   ({
     imgSource,
@@ -21,13 +20,16 @@ const OfferCards = React.memo(
     opacity,
     onPress,
     buttonText,
+    isactive,
+    withAnimation,
+    downloaded
   }) => {
     return (
       <View style={styles.container}>
         <Text style={styles.txt1}>{header}</Text>
         <ImageBackground
           source={imgSource}
-          style={[styles.imgBackground, {opacity: opacity}]}
+          style={[styles.imgBackground, {opacity: isactive ? 1 : 0.7}]}
           resizeMode="stretch">
           <Text style={[styles.text2, {color: text1Color}]}>{text1}</Text>
           <Text style={[styles.text3, {color: text1Color}]}>{text2}</Text>
@@ -64,6 +66,9 @@ const OfferCards = React.memo(
             bottom={DeviceHeigth * 0.04}
             left={16}
             onPress={onPress}
+            disabled={!isactive}
+            withAnimation={withAnimation??false}
+            download={downloaded??0}
           />
         </ImageBackground>
       </View>

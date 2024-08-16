@@ -311,4 +311,5 @@ export const localImage = {
   Silver2: require('../Icon/Images/InAppRewards/Silver2.png'),
   Gold: require('../Icon/Images/InAppRewards/Gold.png'),
   NormalRank: require('../Icon/Images/InAppRewards/NormalRank.png'),
+  cautionLottie:require('../Icon/Images/InAppRewards/cautionLottie.json')
 };

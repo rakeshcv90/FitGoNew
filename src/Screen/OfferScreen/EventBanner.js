@@ -5,17 +5,24 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import NewButton from '../../Component/NewButton';
 import {AppColor} from '../../Component/Color';
 import {useSelector} from 'react-redux';
+import moment from 'moment';
 
 const EventBanner = React.memo(({navigation}) => {
   const enteredUpcomingEvent = useSelector(
     state => state?.enteredUpcomingEvent,
   );
   const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
+  const getPurchaseHistory=useSelector(state=>state?.getPurchaseHistory);
+  const dayLeft =
+  getPurchaseHistory?.upcoming_day_status == 1 &&
+  getPurchaseHistory?.event_start_date_upcoming != null
+    ? getPurchaseHistory?.event_start_date_upcoming
+    : getPurchaseHistory?.event_start_date_current;
   return (
     <View style={styles.container}>
       <ImageBackground
         source={
-          enteredCurrentEvent
+          enteredUpcomingEvent
             ? localImage.event_banner2
             : localImage.event_banner1
         }
@@ -26,9 +33,25 @@ const EventBanner = React.memo(({navigation}) => {
           bottom={DeviceHeigth * 0.024}
           pV={13}
           buttonColor={AppColor.WHITE}
+          disabled={enteredUpcomingEvent}
           ButtonWidth={DeviceWidth * 0.8}
           titleColor={AppColor.BLACK}
-          title={enteredCurrentEvent ? `${4} days left` : `Join Event`}
+          title={enteredUpcomingEvent ? `${ 
+             getPurchaseHistory?.upcoming_day_status == 1
+            ? `${moment(dayLeft).diff(
+                moment()
+                  .day(getPurchaseHistory?.currentDay)
+                  .format('YYYY-MM-DD'),
+                'days',
+              )} days left`
+            : `${moment(dayLeft)
+                .add(7, 'days')
+                .diff(
+                  moment()
+                    .day(getPurchaseHistory?.currentDay)
+                    .format('YYYY-MM-DD'),
+                  'days',
+                )} days left`}` : `Join Event`}
           fontFamily={'Helvetica-Bold'}
           svgArrowRight={!enteredCurrentEvent}
           iconSize={18}

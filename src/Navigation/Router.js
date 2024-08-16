@@ -1,7 +1,7 @@
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/Index';
+import Yourself from '../Screen/Yourself/index';
 
 import Gender from '../Screen/Yourself/Gender';
 
@@ -145,6 +145,7 @@ export const LoginStack = () => {
       <Stack.Screen name="MealDetails" component={MealDetails} />
       <Stack.Screen name="Store" component={StoreScreen} />
       <Stack.Screen name="MeditationDetails" component={MeditationDetails} />
+      <Stack.Screen name='Breathe' component={Breathe}/>
       <Stack.Screen
         name="MeditationExerciseDetails"
         component={MeditationExerciseDetails}
