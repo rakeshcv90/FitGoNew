@@ -87,7 +87,7 @@ const Leaderboard = () => {
       const result = await axios({
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
-
+console.log("SDfvdvdfdfgdf",result.data?.data)
       if (result.data) {
         const top5 = result.data?.data?.filter((item: any) => item?.rank <= 5);
         const after5 = result.data?.data?.filter(

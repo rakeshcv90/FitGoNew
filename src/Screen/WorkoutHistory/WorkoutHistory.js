@@ -214,7 +214,7 @@ const WorkoutHistory = () => {
                   )}
                 </View>
               ) : null}
-              {/* <SingleWorkout /> */}
+              <SingleWorkout />
               {screenObject?.breathe == 0 &&
               !screenObject?.cardio == 0 ? null : (
                 <View style={styles.container1}>

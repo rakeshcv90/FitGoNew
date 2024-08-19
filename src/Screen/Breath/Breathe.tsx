@@ -334,7 +334,7 @@ const Breathe = ({navigation, route}) => {
           );
           wellDoneTextFade.value = withTiming(1, {duration: 1000});
           wellDoneTextMove.value = withTiming(
-            -DeviceHeigth * 0.3,
+            -DeviceHeigth * 0.27,
             {
               duration: 1000,
             },

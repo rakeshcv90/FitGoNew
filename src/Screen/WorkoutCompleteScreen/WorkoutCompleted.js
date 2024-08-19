@@ -250,7 +250,7 @@ const WorkoutCompleted = ({navigation, route}) => {
         });
         // }
       } else {
-        navigation.navigate('EventExercise', {
+        navigation.navigate('CardioExercise', {
           allExercise: cardioExxercise,
           currentExercise: cardioExxercise[0],
           data: [],

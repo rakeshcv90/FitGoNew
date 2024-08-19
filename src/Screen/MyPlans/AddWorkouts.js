@@ -279,7 +279,7 @@ const AddWorkouts = ({route, navigation}) => {
       />
       <View style={{marginBottom: 20}}>
         <NewButton
-          title={'Add'}
+          title={'Update Exercises'}
           image={localImage.Plus}
           tintColor={AppColor.WHITE}
           Ih={20}

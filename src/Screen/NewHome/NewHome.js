@@ -643,7 +643,7 @@ const NewHome = ({navigation}) => {
                     flexDirection: 'row',
                     backgroundColor: '#DBEAFE',
                     marginHorizontal: 10,
-                    paddingLeft: 5,
+                    paddingLeft: 10,
                   }}>
                   <Image
                     source={require('../../Icon/Images/NewHome/cup.png')}
@@ -664,8 +664,8 @@ const NewHome = ({navigation}) => {
                     borderRadius: 6,
                     alignItems: 'center',
                     flexDirection: 'row',
-                    paddingLeft: 5,
-                    //justifyContent: 'center',
+                   // paddingLeft: 10,
+                    justifyContent: 'center',
                     backgroundColor: AppColor.orangeColor,
                   }}>
                   <Image
@@ -673,7 +673,7 @@ const NewHome = ({navigation}) => {
                     style={{height: 20, width: 20}}
                     resizeMode="contain"
                   />
-                  <Text style={styles.cointxt}>{fitCoins}</Text>
+                  <Text style={styles.cointxt}>{fitCoins<=0?0:fitCoins}</Text>
                 </TouchableOpacity>
               </>
             ) : (
@@ -777,12 +777,12 @@ const NewHome = ({navigation}) => {
               style={{
                 fontFamily: Fonts.HELVETICA_REGULAR,
                 fontSize: 14,
-                lineHeight: 16,
+                lineHeight: 25,
                 color: AppColor.RED,
               }}>
               EXPLORE
             </Text>
-            <Icons name={'chevron-right'} size={25} color={AppColor.RED} />
+            <Icons name={'chevron-right'} size={30} color={AppColor.RED} />
           </TouchableOpacity>
         </ImageBackground>
         {enteredCurrentEvent && (!Sat || !Sun) ? (
@@ -938,8 +938,8 @@ var styles = StyleSheet.create({
     color: '#1E40AF',
     fontSize: 16,
     fontFamily: Fonts.HELVETICA_BOLD,
-    lineHeight: 20,
-    marginTop: 5,
+    lineHeight: 30,
+   // marginTop: 5,
     marginHorizontal: 5,
   },
 });

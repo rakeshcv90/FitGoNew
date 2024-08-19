@@ -19,6 +19,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {setExperience} from '../ThemeRedux/Actions';
 import {navigationRef} from '../../../App';
+import { ArrowLeft } from '../Utilities/Arrows/Arrow';
 
 type Props = {
   header: string;
@@ -107,11 +108,12 @@ const DietPlanHeader: FC<Props> = ({
           {workoutCat ? (
             <Icons name={'close'} size={25} color={AppColor.INPUTTEXTCOLOR} />
           ) : (
-            <AntDesign
-              name={'arrowleft'}
-              size={25}
-              color={AppColor.INPUTTEXTCOLOR}
-            />
+            // <AntDesign
+            //   name={'arrowleft'}
+            //   size={25}
+            //   color={AppColor.INPUTTEXTCOLOR}
+            // />
+            <ArrowLeft/>
           )}
         </TouchableOpacity>
       )}

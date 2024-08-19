@@ -1368,6 +1368,7 @@ const MyPlans = ({navigation}: any) => {
                     backgroundColor: '#DBEAFE',
                     marginHorizontal: 10,
                     paddingLeft: 5,
+                    justifyContent: 'center',
                   }}>
                   <Image
                     source={require('../../Icon/Images/NewHome/cup.png')}
@@ -1386,7 +1387,7 @@ const MyPlans = ({navigation}: any) => {
                     alignItems: 'center',
                     flexDirection: 'row',
                     paddingLeft: 5,
-                    //justifyContent: 'center',
+                    justifyContent: 'center',
                     backgroundColor: AppColor.orangeColor,
                   }}>
                   <Image
@@ -1394,7 +1395,9 @@ const MyPlans = ({navigation}: any) => {
                     style={{height: 20, width: 20}}
                     resizeMode="contain"
                   />
-                  <Text style={styles.cointxt}>{fitCoins}</Text>
+                  <Text style={styles.cointxt}>
+                    {fitCoins <= 0 ? 0 : fitCoins}
+                  </Text>
                 </TouchableOpacity>
               </>
             </View>
@@ -1576,9 +1579,9 @@ const MyPlans = ({navigation}: any) => {
       <OverExerciseModal
         setOverExerciseVisible={setOverExerciseVisible}
         overExerciseVisible={overExerciseVisible}
-        handleBreakButton={() =>setOverExerciseVisible(false)}
+        handleBreakButton={() => setOverExerciseVisible(false)}
       />
-       <BottomModal setVisible1={setVisible1} visible1={visible1} />
+      <BottomModal setVisible1={setVisible1} visible1={visible1} />
       <Exercise_Preparing_Modal setVisible2={setVisible2} visible2={visible2} />
     </SafeAreaView>
   );
@@ -1643,8 +1646,8 @@ const styles = StyleSheet.create({
     color: '#1E40AF',
     fontSize: 16,
     fontFamily: Fonts.HELVETICA_BOLD,
-    lineHeight: 20,
-    marginTop: 5,
+    lineHeight: 30,
+    // marginTop: 5,
     marginHorizontal: 5,
   },
 });

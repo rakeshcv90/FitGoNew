@@ -78,7 +78,7 @@ const Rewards = ({data}) => {
           img2={localImage.persons}
           txt1={'Successful\nRegistration'}
           txt2={'1 Sent'}
-          txt3={2}
+          txt3={" +2"}
           count={`${data?.reffered}`}
           countColor={AppColor.NAVY_BLUE}
         />
@@ -88,7 +88,7 @@ const Rewards = ({data}) => {
           img2={localImage.person_plus}
           txt1={'Event joined'}
           txt2={'1 Join'}
-          txt3={2}
+          txt3={' +5'}
           count={data?.joined ?? -1}
           alingItems={'center'}
           countColor={AppColor.ORANGE}

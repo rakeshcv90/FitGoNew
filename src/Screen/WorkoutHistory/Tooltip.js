@@ -8,7 +8,7 @@ import {
 import React from 'react';
 import {localImage} from '../../Component/Image';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 
 const Tooltip = ({visible, setVisible}) => {
   return (
@@ -16,7 +16,7 @@ const Tooltip = ({visible, setVisible}) => {
       <TouchableOpacity
         style={{
           flex: 1,
-          backgroundColor:'rgba(0,0,0,0.4)'
+          backgroundColor: 'rgba(0,0,0,0.4)',
         }}
         activeOpacity={1}
         onPress={() => setVisible(prev => !prev)}>
@@ -31,21 +31,21 @@ const Tooltip = ({visible, setVisible}) => {
             zIndex: 1,
             justifyContent: 'center',
             alignItems: 'center',
-            paddingVertical:18,
-            paddingHorizontal:12,
-            borderRa:6,
+            paddingVertical: 18,
+            paddingHorizontal: 12,
+            borderRa: 6,
           }}
           resizeMode="stretch">
           <Text
             style={{
               color: AppColor.BLACK,
-            //   width: DeviceWidth * 0.5,
-              fontFamily: 'Helvetica',
-              fontSize: 16,
-              lineHeight:18
+              //   width: DeviceWidth * 0.5,
+              fontFamily: Fonts.HELVETICA_REGULAR,
+              fontSize: 14,
+              lineHeight: 24,
             }}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry.
+            History can not be deleted until your event is going on. When the
+            event ends and winner is announced, history will be deleted.
           </Text>
         </ImageBackground>
       </TouchableOpacity>

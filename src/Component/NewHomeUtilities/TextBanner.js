@@ -455,7 +455,7 @@ const TextBanner = ({navigation, setLocationP}) => {
         <View
           style={{
             width: '100%',
-            height: '15%',
+            height: '16%',
           }}>
           <ImageBackground
             style={{
@@ -473,7 +473,7 @@ const TextBanner = ({navigation, setLocationP}) => {
               style={{
                 width: '100%',
                 height: '100%',
-                padding: 10,
+                padding: 5,
                 flexDirection: 'row',
               }}>
               <TouchableOpacity
@@ -557,7 +557,7 @@ var styles = StyleSheet.create({
   text: {
     fontFamily: Fonts.HELVETICA_REGULAR,
     fontWeight: '400',
-    fontSize: 18,
+    fontSize: 15,
     lineHeight: 20,
     textAlign: 'center',
     color: AppColor.WHITE,

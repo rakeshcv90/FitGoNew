@@ -36,14 +36,13 @@ const WithoutEvent = ({pastWinners}) => {
             padding: 10,
 
             alignSelf: 'center',
-            backgroundColor:'#0C0C0D0D',
+            backgroundColor: '#0C0C0D0D',
             borderRadius: 12,
             shadowColor: 'gray',
             marginVertical: 10,
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
-      
           }}>
           <View style={{height: 50}}>
             <View
@@ -110,7 +109,6 @@ const WithoutEvent = ({pastWinners}) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-          
                 {pastWinners[1]?.image == null ? (
                   <View
                     style={{
@@ -193,6 +191,41 @@ const WithoutEvent = ({pastWinners}) => {
                   />
                 )}
               </View>
+              <View
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 50,
+                  left: -60,
+                  zIndex: 1,
+                  borderWidth: 3,
+                  borderColor: AppColor.WHITE,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <View
+                  style={{
+                    width: 45,
+                    height: 45,
+                    borderRadius: 45,
+                    backgroundColor: AppColor.BLACK,
+                    overflow: 'hidden',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    opacity:0.8
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: Fonts.HELVETICA_BOLD,
+                      fontSize: 18,
+                      color: AppColor.WHITE,
+                      textAlign:'center'
+                    }}>
+                   +{pastWinners?.length}
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
           <View>
@@ -201,12 +234,12 @@ const WithoutEvent = ({pastWinners}) => {
               onPress={() => {
                 AnalyticsConsole('PW');
 
-                navigation.navigate('PastWinner',{pastWinners:pastWinners});
+                navigation.navigate('PastWinner', {pastWinners: pastWinners});
               }}
               style={{
                 width: 150,
                 height: 32,
-                backgroundColor:AppColor.WHITE,
+                backgroundColor: AppColor.WHITE,
                 alignSelf: 'flex-end',
                 borderRadius: 8,
                 justifyContent: 'center',
