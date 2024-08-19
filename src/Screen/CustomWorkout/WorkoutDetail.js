@@ -17,6 +17,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import AnimatedLottieView from 'lottie-react-native';
 import {setSoundOnOff} from '../../Component/ThemeRedux/Actions';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
+import Video from 'react-native-video';
 
 const WorkoutDetail = ({navigation, route}) => {
   const data = route.params.item;
@@ -35,7 +36,6 @@ const WorkoutDetail = ({navigation, route}) => {
 
       if (!ttsStatus.isInitialized) {
         try {
-   
           await Tts.setDefaultLanguage('en-IN');
           await Tts.setDucking(true);
           await Tts.setIgnoreSilentSwitch('ignore');
@@ -44,7 +44,7 @@ const WorkoutDetail = ({navigation, route}) => {
           console.log('VoicessError', error);
         }
       }
-     
+
       Tts.addEventListener('tts-progress', event => {});
     };
 
@@ -87,7 +87,7 @@ const WorkoutDetail = ({navigation, route}) => {
   return (
     <>
       <DietPlanHeader
-        header={data?.exercise_title??'--'}
+        header={data?.exercise_title ?? '--'}
         SearchButton={true}
         onPress={() => {
           getFilterData();
@@ -121,7 +121,7 @@ const WorkoutDetail = ({navigation, route}) => {
             />
           </View>
         )}
-        <Image
+        {/* <Image
           source={{uri: data?.exercise_image_link || data?.exercise_image}}
           onLoad={() => setIsLoading(false)}
           style={{
@@ -131,8 +131,27 @@ const WorkoutDetail = ({navigation, route}) => {
             marginTop: 10,
           }}
           resizeMode="contain"
-        />
+        /> */}
 
+        <Video
+          source={{
+            uri: data?.exercise_video,
+          }}
+          repeat={true}
+          resizeMode="contain"
+          style={{
+            height: DeviceWidth / 1.5,
+            width: DeviceWidth * 0.95,
+            alignSelf: 'center',
+            marginTop: 10,
+          }}
+          onReadyForDisplay={() => setIsLoading(false)}
+          poster={
+            data?.exercise_image?.includes('https')
+              ? data?.exercise_image
+              : data?.exercise_image_link
+          }
+        />
         <View style={styles.container1}>
           <View style={styles.content}>
             <Text

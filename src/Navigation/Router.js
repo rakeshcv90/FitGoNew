@@ -200,9 +200,13 @@ export const LoginStack = () => {
       <Stack.Screen name="Questions" component={Questions} />
       <Stack.Screen name="ChatBot" component={ChatBot} />
       <Stack.Screen name="StepGuide" component={StepGuide} />
-      <Stack.Screen name="WorkoutCompleted" component={WorkoutCompleted} />
       <Stack.Screen name="OfferPage" component={OfferPage} />
       <Stack.Screen name="WorkoutHistory" component={WorkoutHistory} />
+      <Stack.Screen
+        name="WorkoutCompleted"
+        component={WorkoutCompleted}
+        options={{detachPreviousScreen: true}}
+      />
     </Stack.Navigator>
   );
 };

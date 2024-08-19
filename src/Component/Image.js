@@ -305,6 +305,7 @@ export const localImage = {
   StepHealth:require('../Icon/Images/InAppRewards/StepHealth.png'),
   StepTrophy:require('../Icon/Images/InAppRewards/StepTrophy.png'),
   StepBadge:require('../Icon/Images/InAppRewards/StepBadge.png'),
+  Hourglass:require('../Icon/Images/InAppRewards/Hourglass.png'),
   checkLottie: require('../Icon/Images/InAppRewards/checkLottie.json'),
   NoMeal: require('../Icon/Images/InAppRewards/NoMeal.png'),
   Bronze2: require('../Icon/Images/InAppRewards/Bronze2.png'),

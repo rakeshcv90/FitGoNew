@@ -19,8 +19,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import VersionNumber from 'react-native-version-number';
 import RNFetchBlob from 'rn-fetch-blob';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
-import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
+import {setExerciseInTime, setVideoLocation} from '../../Component/ThemeRedux/Actions';
 import LoadingScreen from '../../Component/LoadingScreen';
+import { useIsFocused } from '@react-navigation/native';
+
+const format = 'hh:mm:ss';
 
 const WeekArrayWithEvent = Array(5)
   .fill(0)
@@ -153,11 +156,51 @@ const WorkoutCompleted = ({navigation, route}) => {
       RewardsbeforeNextScreen();
     });
   };
+  const getExerciseInTime = useSelector(state => state.getExerciseInTime);
+  const getExerciseOutTime = useSelector(state => state.getExerciseOutTime);
+  const [overExerciseVisible, setOverExerciseVisible] = useState(false);
+  const focused = useIsFocused();
 
+  useEffect(() => {
+    // if (moment(getExerciseOutTime, format).isAfter(moment().format(format))) {
+    //   moment(getExerciseOutTime, format).isAfter(moment().format(format));
+    // } else {
+    // if (
+    //   getExerciseOutTime != ''&&
+    //   moment(getExerciseOutTime, format).isAfter(moment().format(format))
+    // ) {
+    //   console.warn('COMPLETEE', moment().format(format));
+    //   dispatch(setExerciseInTime(moment().format(format)));
+    // } else
+    if (
+      getExerciseOutTime != '' &&
+      moment().format(format) > getExerciseOutTime
+      // moment(getExerciseInTime, format).isAfter(
+      //   moment(getExerciseOutTime, format),
+      // )
+    ) {
+      console.warn(
+        'SHOWINGDF',
+        moment().format(format),
+        getExerciseInTime,
+        getExerciseOutTime,
+      );
+      setOverExerciseVisible(true);
+    } else {
+      console.log(
+        'ads',
+        // getExerciseOutTime != '' &&
+        // moment().isAfter(moment(getExerciseOutTime, format))&&
+        getExerciseInTime > getExerciseOutTime,
+        getExerciseInTime,
+        getExerciseOutTime,
+      );
+    }
+  }, [focused]);
   const RewardsbeforeNextScreen = async () => {
     downloadCounter = 0;
     const url =
-      'https://fitme.cvinfotech.in/adserver/public/api/test_user_event__exercise_status';
+      'https://fitme.cvinfotechserver.com/adserver/public/api/test_user_event__exercise_status';
     for (const item of cardioExxercise) {
       datas.push({
         user_id: getUserDataDetails?.id,
@@ -185,13 +228,17 @@ const WorkoutCompleted = ({navigation, route}) => {
       setDownloade(0);
 
       AnalyticsConsole(`SCE_ON_${getPurchaseHistory?.currentDay}`);
-      console.log('cvbfghfghfgh', res.data);
+       // setStart(false);
+       if (moment().format(format) < getExerciseOutTime) {
+        console.warn('COMPLETEE', moment().format(format));
+        dispatch(setExerciseInTime(moment().format(format)));
+      }
       if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {
         setDownloade(0);
         cardioCardOffset.value = withSpring(-DeviceWidth);
-        navigation.navigate('EventExercise', {
+        navigation.navigate('CardioExercise', {
           allExercise: cardioExxercise,
           currentExercise: cardioExxercise[0],
           data: [],
@@ -199,6 +246,7 @@ const WorkoutCompleted = ({navigation, route}) => {
           exerciseNumber: 0,
           trackerData: res?.data?.inserted_data,
           type: 'cardio',
+          offerType: false
         });
         // }
       } else {
@@ -210,6 +258,7 @@ const WorkoutCompleted = ({navigation, route}) => {
           exerciseNumber: 0,
           trackerData: res?.data?.existing_data,
           type: 'cardio',
+          offerType: false
         });
       }
     } catch (error) {
@@ -238,7 +287,7 @@ const WorkoutCompleted = ({navigation, route}) => {
     payload.append('type', type);
     try {
       const res = await axios(
-        'https://fitme.cvinfotech.in/adserver/public/api/testing_add_coins',
+        'https://fitme.cvinfotechserver.com/adserver/public/api/testing_add_coins',
         // NewAppapi.POST_API_FOR_COIN_CALCULATION,
         {
           method: 'post',
@@ -293,7 +342,7 @@ const WorkoutCompleted = ({navigation, route}) => {
   const getLeaderboardDataAPI = async () => {
     try {
       const url =
-        'https://fitme.cvinfotech.in/adserver/public/api/test_leader_board';
+        'https://fitme.cvinfotechserver.com/adserver/public/api/test_leader_board';
       const result = await axios({
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });

@@ -122,6 +122,7 @@ const OfferPage = ({navigation}) => {
           getPurchaseHistory?.currentDay - 1
         }`,
       );
+      console.log('datataa---->',response?.data)
       if (response?.data?.status) {
         setCardioStatus(true);
         setLoaded(true);

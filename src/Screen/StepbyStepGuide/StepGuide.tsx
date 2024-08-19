@@ -260,7 +260,7 @@ const StepGuide = ({navigation}: any) => {
                     style={[
                       styles.greyContainer,
                       {
-                        height: IPAD_HEIGHT ? DeviceWidth / 4 : DeviceWidth / 2,
+                        // height: IPAD_HEIGHT ? DeviceWidth / 4 : DeviceWidth / 2,
                       },
                     ]}>
                     <FitText type="SubHeading" value="Won" />
@@ -301,7 +301,7 @@ const StepGuide = ({navigation}: any) => {
                     </View>
                     <FitText
                       type="SubHeading"
-                      value={item?.name}
+                      value={item?.name?.split(' ')[0]}
                       textTransform="capitalize"
                       textAlign="center"
                     />
@@ -310,7 +310,7 @@ const StepGuide = ({navigation}: any) => {
             </View>
             <FitText
               type="Heading"
-              value="Terms & Condition"
+              value="Terms & Conditions"
               marginVertical={10}
             />
             <View style={{flexDirection: 'row', marginVertical: 5}}>
@@ -335,7 +335,7 @@ const StepGuide = ({navigation}: any) => {
           text="Enter Challenge"
           colors={['#F0013B', '#F0013B']}
           bR={10}
-          h={60}
+          h={50}
           onPress={() =>
             navigation?.navigate('NewSubscription', {upgrade: true})
           }
@@ -414,7 +414,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingVertical: 15,
+    paddingVertical: 10,
   },
   image: {
     height: 60,
