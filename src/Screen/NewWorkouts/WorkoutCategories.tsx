@@ -286,6 +286,7 @@ const WorkoutCategories = ({navigation, route}: any) => {
         isItemDownload,
         downloadProgress,
       }) => {
+        const time = parseInt(item?.exercise_rest.split(' ')[0]);
         return (
           <>
             <View
@@ -337,7 +338,10 @@ const WorkoutCategories = ({navigation, route}: any) => {
                   </Text>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={[styles.small, {textTransform: 'capitalize'}]}>
-                      {item?.exercise_rest}
+                      {/* {item?.exercise_rest} */}
+                      {time > 30
+                          ? Math.floor(time / 60) + ' min'
+                          : time + ' sec'}
                     </Text>
                   </View>
                 </View>

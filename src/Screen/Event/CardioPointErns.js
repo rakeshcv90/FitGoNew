@@ -108,8 +108,8 @@ const CardioPointErns = ({navigation, route}) => {
 
   const RewardsbeforeNextScreen = async () => {
     downloadCounter = 0;
-    const url =
-      'https://fitme.cvinfotechserver.com/adserver/public/api/test_user_event__exercise_status';
+    // const url =
+    //   'https://fitme.cvinfotechserver.com/adserver/public/api/test_user_event__exercise_status';
     for (const item of cardioExxercise) {
       datas.push({
         user_id: getUserDataDetails?.id,
@@ -122,18 +122,18 @@ const CardioPointErns = ({navigation, route}) => {
 
     try {
       //LIVE URL
-      // const res = await axios({
-      //   url: NewAppapi.CURRENT_DAY_EVENT_EXERCISE,
-      //   method: 'Post',
-      //   data: {user_details: datas, type: 'cardio'},
-      // });
-
-      //Test URl
       const res = await axios({
-        url: url,
+        url: NewAppapi.CURRENT_DAY_EVENT_EXERCISE,
         method: 'Post',
         data: {user_details: datas, type: 'cardio'},
       });
+
+      //Test URl
+      // const res = await axios({
+      //   url: url,
+      //   method: 'Post',
+      //   data: {user_details: datas, type: 'cardio'},
+      // });
       setDownloade(0);
 
       AnalyticsConsole(`SCE_ON_${getPurchaseHistory?.currentDay}`);

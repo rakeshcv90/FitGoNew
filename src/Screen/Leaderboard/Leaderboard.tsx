@@ -87,7 +87,7 @@ const Leaderboard = () => {
       const result = await axios({
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
-
+console.log("SDfvdvdfdfgdf",result.data?.data)
       if (result.data) {
         const top5 = result.data?.data?.filter((item: any) => item?.rank <= 5);
         const after5 = result.data?.data?.filter(
@@ -120,12 +120,12 @@ const Leaderboard = () => {
     }
   };
   const getPastWinner = () => {
-    const url =
-      'https://fitme.cvinfotechserver.com/adserver/public/api/past_winners';
+    // const url =
+    //   'https://fitme.cvinfotechserver.com/adserver/public/api/past_winners';
     RequestAPI.makeRequest(
       'POST',
-      url,
-      // NewAppapi.GET_PAST_WINNERS,
+      // url,
+      NewAppapi.GET_PAST_WINNERS,
       {
         version: VersionNumber.appVersion,
       },
@@ -165,7 +165,7 @@ const Leaderboard = () => {
               <Text
                 style={{
                   fontFamily: Fonts.HELVETICA_REGULAR,
-                  fontSize: 14,
+                fontSize: 16,
                   // lineHeight: ,
                   color: myID ? AppColor.WHITE : AppColor.SecondaryTextColor,
                 }}>
@@ -185,7 +185,7 @@ const Leaderboard = () => {
               <Text
                 style={{
                   fontFamily: Fonts.HELVETICA_REGULAR,
-                  fontSize: 14,
+                  fontSize: 16,
                   marginHorizontal: 10,
                   // color: AppColor.PrimaryTextColor,
                   color: myID ? AppColor.WHITE : AppColor.PrimaryTextColor,
@@ -208,7 +208,7 @@ const Leaderboard = () => {
               <Text
                 style={{
                   fontFamily: Fonts.HELVETICA_REGULAR,
-                  fontSize: 14,
+                  fontSize: 16,
                   marginHorizontal: 10,
                   color: myID ? AppColor.WHITE : AppColor.PrimaryTextColor,
                 }}>
@@ -497,7 +497,8 @@ const Leaderboard = () => {
                   fontSize: 16,
                   lineHeight: 20,
                   textAlign: 'center',
-                  top: DeviceHeigth >= 1024 ? 20 : DeviceHeigth <= 625?10:20,
+                  top:
+                    DeviceHeigth >= 1024 ? 20 : DeviceHeigth <= 625 ? 10 : 20,
                   color: AppColor.PrimaryTextColor,
                 }}>
                 {mainData[0]?.name}
@@ -575,19 +576,19 @@ const Leaderboard = () => {
   };
 
   const getEarnedCoins = async () => {
-    const url =
-      'https://fitme.cvinfotechserver.com/adserver/public/api/test_exercise_points_day';
+    // const url =
+    //   'https://fitme.cvinfotechserver.com/adserver/public/api/test_exercise_points_day';
     try {
-      // const response = await axios(
-      //   `${NewAppapi.GET_COINS}?user_id=${getUserDataDetails?.id}&day=${
-      //     WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]
-      //   }`,
-      // );
       const response = await axios(
-        `${url}?user_id=${getUserDataDetails?.id}&day=${
+        `${NewAppapi.GET_COINS}?user_id=${getUserDataDetails?.id}&day=${
           WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]
         }`,
       );
+      // const response = await axios(
+      //   `${url}?user_id=${getUserDataDetails?.id}&day=${
+      //     WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]
+      //   }`,
+      // );
 
       if (
         response?.data?.msg == 'Please update the app to the latest version.'
@@ -664,49 +665,34 @@ const Leaderboard = () => {
                 Leaderboard
               </Text>
             </View>
-            <TouchableOpacity
-              onPress={
-                () => 
+            {enteredCurrentEvent ? (
+              <TouchableOpacity
+                onPress={() =>
                   //setVisible(true)
-                 navigation.navigate('Referral')
-              }
-              style={{
-                height: 40,
-                backgroundColor: AppColor.RED,
-                borderTopLeftRadius: 8,
-                borderBottomLeftRadius: 8,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingRight: 10,
-              }}>
-              <AnimatedLottieView
-                source={require('../../Icon/Images/InAppRewards/ReferButton.json')}
-                speed={1}
-                autoPlay
-                loop
-                resizeMode="contain"
+                  navigation.navigate('Referral')
+                }
                 style={{
-                  width: 30,
-                  height: 30,
-                }}
-              />
-              <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                <Text
+                  height: 40,
+                  backgroundColor: AppColor.RED,
+                  borderTopLeftRadius: 8,
+                  borderBottomLeftRadius: 8,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingRight: 10,
+                }}>
+                <AnimatedLottieView
+                  source={require('../../Icon/Images/InAppRewards/ReferButton.json')}
+                  speed={1}
+                  autoPlay
+                  loop
+                  resizeMode="contain"
                   style={{
-                    fontFamily: Fonts.HELVETICA_REGULAR,
-                    fontSize: 12,
-                    lineHeight: 11,
-                    color: AppColor.WHITE,
-                  }}>
-                  Refer&
-                </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
+                    width: 30,
+                    height: 30,
+                  }}
+                />
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
                   <Text
                     style={{
                       fontFamily: Fonts.HELVETICA_REGULAR,
@@ -714,15 +700,45 @@ const Leaderboard = () => {
                       lineHeight: 11,
                       color: AppColor.WHITE,
                     }}>
-                    Earn
+                    Refer&
                   </Text>
-                  <Image
-                    source={localImage.FitCoin}
-                    style={{width: 15, height: 15}}
-                  />
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: Fonts.HELVETICA_REGULAR,
+                        fontSize: 12,
+                        lineHeight: 11,
+                        color: AppColor.WHITE,
+                      }}>
+                      Earn
+                    </Text>
+                    <Image
+                      source={localImage.FitCoin}
+                      style={{width: 15, height: 15}}
+                    />
+                  </View>
                 </View>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            ) : (
+              <View
+                style={{
+                  height: 40,
+                  borderTopLeftRadius: 8,
+                  borderBottomLeftRadius: 8,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  paddingRight: 10,
+                  //backgroundColor:'red',
+                  width:50,
+                }}
+              />
+            )}
           </View>
 
           <ScrollView
@@ -810,7 +826,7 @@ const Leaderboard = () => {
                         height: 110,
                         marginTop: -25,
                         borderRadius: 100,
-                        backgroundColor: AppColor.WHITE,
+                        backgroundColor: '#DBEAFE',
                         justifyContent: 'center',
                         alignItems: 'center',
                         zIndex: -1,
@@ -820,8 +836,9 @@ const Leaderboard = () => {
                         style={{
                           fontFamily: Fonts.HELVETICA_BOLD,
                           fontSize: 30,
-                          color: AppColor.BLACK,
+                          color: '#1E40AF',
                           lineHeight: 40,
+                          marginTop: 5,
                         }}>
                         {mainData[1]?.name.substring(0, 1)}
                       </Text>
@@ -850,7 +867,7 @@ const Leaderboard = () => {
                     <Text
                       style={{
                         fontFamily: Fonts.HELVETICA_REGULAR,
-                        fontSize: 12,
+                        fontSize: 16,
                         lineHeight: 20,
                         color: AppColor.PrimaryTextColor,
                       }}>
@@ -904,7 +921,7 @@ const Leaderboard = () => {
                       DeviceHeigth >= 1024
                         ? -50
                         : DeviceHeigth >= 807
-                        ? -DeviceWidth * 0.17
+                        ? -DeviceWidth * 0.15
                         : -DeviceWidth * 0.2,
                   }}>
                   {mainData[0]?.image_path == null ? (
@@ -918,7 +935,7 @@ const Leaderboard = () => {
                         left: 20,
                         marginTop: 5,
                         overflow: 'hidden',
-                        backgroundColor: AppColor.WHITE,
+                        backgroundColor: '#DBEAFE',
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
@@ -926,7 +943,8 @@ const Leaderboard = () => {
                         style={{
                           fontFamily: Fonts.HELVETICA_BOLD,
                           fontSize: 30,
-                          color: AppColor.BLACK,
+                          color: '#1E40AF',
+                          marginTop: 5,
                           lineHeight: 40,
                         }}>
                         {mainData[0]?.name.substring(0, 1)}
@@ -969,7 +987,7 @@ const Leaderboard = () => {
                     <Text
                       style={{
                         fontFamily: Fonts.HELVETICA_BOLD,
-                        fontSize: 14,
+                        fontSize: 16,
                         lineHeight: 20,
                         color: AppColor.PrimaryTextColor,
                       }}>
@@ -1005,6 +1023,7 @@ const Leaderboard = () => {
                         color: AppColor.WHITE,
                         fontSize: 12,
                       }}>
+                      {' '}
                       {mainData[0]?.fit_coins}
                     </Text>
                   </LinearGradient>
@@ -1038,6 +1057,7 @@ const Leaderboard = () => {
                       color: AppColor.WHITE,
                       fontSize: 12,
                     }}>
+                    {' '}
                     {mainData[2]?.fit_coins}
                   </Text>
                 </LinearGradient>
@@ -1045,12 +1065,12 @@ const Leaderboard = () => {
                   style={{
                     position: 'absolute',
                     bottom: 0,
-                    right: DeviceHeigth >= 1024 ? 170 : 50,
+                    right: DeviceHeigth >= 1024 ? 170 : 30,
                   }}>
                   <Text
                     style={{
                       fontFamily: Fonts.HELVETICA_REGULAR,
-                      fontSize: 12,
+                      fontSize: 16,
                       lineHeight: 20,
                       color: AppColor.PrimaryTextColor,
                     }}>
@@ -1082,7 +1102,7 @@ const Leaderboard = () => {
                         borderRadius: 100,
                         left: 20,
                         marginTop: 9,
-                        backgroundColor: AppColor.WHITE,
+                        backgroundColor: '#DBEAFE',
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
@@ -1090,7 +1110,8 @@ const Leaderboard = () => {
                         style={{
                           fontFamily: Fonts.HELVETICA_BOLD,
                           fontSize: 30,
-                          color: AppColor.BLACK,
+                          color: '#1E40AF',
+                          marginTop: 5,
                           lineHeight: 40,
                         }}>
                         {mainData[2]?.name.substring(0, 1)}
@@ -1671,7 +1692,7 @@ const Leaderboard = () => {
                           style={{
                             width: 8,
                             height: 8,
-                            marginLeft: 20,
+                            marginLeft: 15,
                             borderRadius: 8,
                             backgroundColor:
                               sameDay == 'Monday' ? 'black' : 'white',
@@ -1876,10 +1897,11 @@ const Leaderboard = () => {
                   <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={() => {
-                      navigation?.navigate('NewSubscription', {upgrade: true});
+                      // navigation?.navigate('NewSubscription', {upgrade: true});
+                      navigation.navigate('StepGuide');
                     }}
                     style={{
-                      width: '30%',
+                      //width: '30%',
                       // height: 38,
                       padding: 15,
                       backgroundColor: 'red',

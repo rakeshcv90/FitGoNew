@@ -65,7 +65,7 @@ const ChatBot = ({navigation, route}: any) => {
   }, [showChatBot, showChatBot2]);
 
   const handleEmail = async () => {
-    AnalyticsConsole('W_GMAIL');
+    AnalyticsConsole('FAQ_GMAIL');
     const supported = await Linking.canOpenURL('googlegmail://');
 
     if (supported) Linking.openURL('googlegmail://');

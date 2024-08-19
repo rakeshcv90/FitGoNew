@@ -230,16 +230,16 @@ const SplaceScreen = ({navigation, route}) => {
   };
 
   const getUserAllInData = async () => {
-    const url='https://fitme.cvinfotechserver.com/adserver/public/api/test_all_in_one'
-    try {
-      const responseData = await axios.get(
-        `${url}?version=${VersionNumber.appVersion}`,
-       //${NewAppapi.GET_ALL_IN_ONE}
-      );
+    // const url='https://fitme.cvinfotechserver.com/adserver/public/api/test_all_in_one'
     // try {
     //   const responseData = await axios.get(
-    //     `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
+    //     `${url}?version=${VersionNumber.appVersion}`,
+    //    //${NewAppapi.GET_ALL_IN_ONE}
     //   );
+    try {
+      const responseData = await axios.get(
+        `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
+      );
  
       if (
         responseData?.data?.msg ==

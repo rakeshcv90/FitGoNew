@@ -199,8 +199,8 @@ const WorkoutCompleted = ({navigation, route}) => {
   }, [focused]);
   const RewardsbeforeNextScreen = async () => {
     downloadCounter = 0;
-    const url =
-      'https://fitme.cvinfotechserver.com/adserver/public/api/test_user_event__exercise_status';
+    // const url =
+    //   'https://fitme.cvinfotechserver.com/adserver/public/api/test_user_event__exercise_status';
     for (const item of cardioExxercise) {
       datas.push({
         user_id: getUserDataDetails?.id,
@@ -213,18 +213,18 @@ const WorkoutCompleted = ({navigation, route}) => {
 
     try {
       //LIVE URL
-      // const res = await axios({
-      //   url: NewAppapi.CURRENT_DAY_EVENT_EXERCISE,
-      //   method: 'Post',
-      //   data: {user_details: datas, type: 'cardio'},
-      // });
-
-      //Test URl
       const res = await axios({
-        url: url,
+        url: NewAppapi.CURRENT_DAY_EVENT_EXERCISE,
         method: 'Post',
         data: {user_details: datas, type: 'cardio'},
       });
+
+      //Test URl
+      // const res = await axios({
+      //   url: url,
+      //   method: 'Post',
+      //   data: {user_details: datas, type: 'cardio'},
+      // });
       setDownloade(0);
 
       AnalyticsConsole(`SCE_ON_${getPurchaseHistory?.currentDay}`);
@@ -288,8 +288,8 @@ const WorkoutCompleted = ({navigation, route}) => {
     payload.append('type', type);
     try {
       const res = await axios(
-        'https://fitme.cvinfotechserver.com/adserver/public/api/testing_add_coins',
-        // NewAppapi.POST_API_FOR_COIN_CALCULATION,
+        // 'https://fitme.cvinfotechserver.com/adserver/public/api/testing_add_coins',
+        NewAppapi.POST_API_FOR_COIN_CALCULATION,
         {
           method: 'post',
           headers: {
@@ -478,6 +478,7 @@ const WorkoutCompleted = ({navigation, route}) => {
                 title={
                   'Congratulations! You’ve completed your workout and earned more FitCoins. Keep working out regularly to win the fitness challenge.'
                 }
+                handleComplete={()=>navigation.navigate("MyPlans")}
               />
             </Animated.View>
           </View>

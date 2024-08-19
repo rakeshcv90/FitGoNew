@@ -21,7 +21,6 @@ const WeekArrayWithEvent = Array(5)
         .format('dddd')),
   );
 const MyChallenge = ({coins}) => {
-
   const getWeeklyPlansData = useSelector(state => state.getWeeklyPlansData);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const navigation = useNavigation();
@@ -158,7 +157,7 @@ const MyChallenge = ({coins}) => {
             </View>
             {WeekArrayWithEvent.map((item, index) => {
               const sameDay =
-              WeekArrayWithEvent[getPurchaseHistory.currentDay - 1];
+                WeekArrayWithEvent[getPurchaseHistory.currentDay - 1];
               return index == 0 ? (
                 <>
                   <View
@@ -178,15 +177,15 @@ const MyChallenge = ({coins}) => {
                       paddingRight: 5,
                     }}>
                     <Image
-                       source={
-                          coins['Monday'] < 0
-                            ? require('../../Icon/Images/NewHome/f2.png')
-                            : coins['Monday'] == null
-                            ? sameDay
-                              ? require('../../Icon/Images/NewHome/f3.png')
-                              : require('../../Icon/Images/NewHome/f4.png')
-                            : require('../../Icon/Images/NewHome/f1.png')
-                        }
+                      source={
+                        coins['Monday'] < 0
+                          ? require('../../Icon/Images/NewHome/f2.png')
+                          : coins['Monday'] == null
+                          ? sameDay
+                            ? require('../../Icon/Images/NewHome/f3.png')
+                            : require('../../Icon/Images/NewHome/f4.png')
+                          : require('../../Icon/Images/NewHome/f1.png')
+                      }
                       resizeMode="contain"
                       style={{
                         width: 30,
@@ -203,22 +202,22 @@ const MyChallenge = ({coins}) => {
                             : DeviceWidth * 0.1,
                         height: 5,
                         backgroundColor:
-                            coins['Tuesday'] < 0
-                              ? 'green'
-                              : coins['Tuesday'] == null
-                              ? '#EBEDF0'
-                              : 'green',
+                          coins['Tuesday'] < 0
+                            ? 'green'
+                            : coins['Tuesday'] == null
+                            ? '#EBEDF0'
+                            : 'green',
                       }}></View>
                     <Image
-                     source={
-                          coins['Tuesday'] < 0
-                            ? require('../../Icon/Images/NewHome/f2.png')
-                            : coins['Tuesday'] == null
-                            ? sameDay
-                              ? require('../../Icon/Images/NewHome/f3.png')
-                              : require('../../Icon/Images/NewHome/f4.png')
-                            : require('../../Icon/Images/NewHome/f1.png')
-                        }
+                      source={
+                        coins['Tuesday'] < 0
+                          ? require('../../Icon/Images/NewHome/f2.png')
+                          : coins['Tuesday'] == null
+                          ? sameDay
+                            ? require('../../Icon/Images/NewHome/f3.png')
+                            : require('../../Icon/Images/NewHome/f4.png')
+                          : require('../../Icon/Images/NewHome/f1.png')
+                      }
                       resizeMode="contain"
                       style={{
                         width: 30,
@@ -235,22 +234,22 @@ const MyChallenge = ({coins}) => {
                             : DeviceWidth * 0.12,
                         height: 5,
                         backgroundColor:
-                            coins['Thursday'] < 0
-                              ? 'green'
-                              : coins['Thursday'] == null
-                              ? '#EBEDF0'
-                              : 'green',
+                          coins['Thursday'] < 0
+                            ? 'green'
+                            : coins['Thursday'] == null
+                            ? '#EBEDF0'
+                            : 'green',
                       }}></View>
                     <Image
-                   source={
-                          coins['Wednesday'] < 0
-                            ? require('../../Icon/Images/NewHome/f2.png')
-                            : coins['Wednesday'] == null
-                            ? sameDay
-                              ? require('../../Icon/Images/NewHome/f3.png')
-                              : require('../../Icon/Images/NewHome/f4.png')
-                            : require('../../Icon/Images/NewHome/f1.png')
-                        }
+                      source={
+                        coins['Wednesday'] < 0
+                          ? require('../../Icon/Images/NewHome/f2.png')
+                          : coins['Wednesday'] == null
+                          ? sameDay
+                            ? require('../../Icon/Images/NewHome/f3.png')
+                            : require('../../Icon/Images/NewHome/f4.png')
+                          : require('../../Icon/Images/NewHome/f1.png')
+                      }
                       resizeMode="contain"
                       style={{
                         width: 30,
@@ -267,22 +266,22 @@ const MyChallenge = ({coins}) => {
                             : DeviceWidth * 0.1,
                         height: 5,
                         backgroundColor:
-                            coins['Thursday'] < 0
-                              ? 'green'
-                              : coins['Thursday'] == null
-                              ? '#EBEDF0'
-                              : 'green',
+                          coins['Thursday'] < 0
+                            ? 'green'
+                            : coins['Thursday'] == null
+                            ? '#EBEDF0'
+                            : 'green',
                       }}></View>
                     <Image
-                source={
-                          coins['Thursday'] < 0
-                            ? require('../../Icon/Images/NewHome/f2.png')
-                            : coins['Thursday'] == null
-                            ? sameDay
-                              ? require('../../Icon/Images/NewHome/f3.png')
-                              : require('../../Icon/Images/NewHome/f4.png')
-                            : require('../../Icon/Images/NewHome/f1.png')
-                        }
+                      source={
+                        coins['Thursday'] < 0
+                          ? require('../../Icon/Images/NewHome/f2.png')
+                          : coins['Thursday'] == null
+                          ? sameDay
+                            ? require('../../Icon/Images/NewHome/f3.png')
+                            : require('../../Icon/Images/NewHome/f4.png')
+                          : require('../../Icon/Images/NewHome/f1.png')
+                      }
                       resizeMode="contain"
                       style={{
                         width: 30,
@@ -299,22 +298,22 @@ const MyChallenge = ({coins}) => {
                             : DeviceWidth * 0.1,
                         height: 5,
                         backgroundColor:
-                            coins['Friday'] < 0
-                              ? 'green'
-                              : coins['Friday'] == null
-                              ? '#EBEDF0'
-                              : 'green',
+                          coins['Friday'] < 0
+                            ? 'green'
+                            : coins['Friday'] == null
+                            ? '#EBEDF0'
+                            : 'green',
                       }}></View>
                     <Image
-                     source={
-                          coins['Friday'] < 0
-                            ? require('../../Icon/Images/NewHome/f2.png')
-                            : coins['Friday'] == null
-                            ? sameDay
-                              ? require('../../Icon/Images/NewHome/f3.png')
-                              : require('../../Icon/Images/NewHome/f4.png')
-                            : require('../../Icon/Images/NewHome/f1.png')
-                        }
+                      source={
+                        coins['Friday'] < 0
+                          ? require('../../Icon/Images/NewHome/f2.png')
+                          : coins['Friday'] == null
+                          ? sameDay
+                            ? require('../../Icon/Images/NewHome/f3.png')
+                            : require('../../Icon/Images/NewHome/f4.png')
+                          : require('../../Icon/Images/NewHome/f1.png')
+                      }
                       resizeMode="contain"
                       style={{
                         width: 30,
@@ -323,120 +322,121 @@ const MyChallenge = ({coins}) => {
                     />
                   </View>
                   <View
+                    style={{
+                      flexDirection: 'row',
+                      marginTop: 0,
+                      width: '100%',
+                      height: 10,
+                      alignItems: 'center',
+                      paddingLeft:
+                        DeviceHeigth >= 1024
+                          ? DeviceWidth * 0.07
+                          : DeviceHeigth >= 807
+                          ? DeviceWidth * 0.03
+                          : DeviceWidth * 0.03,
+
+                      paddingRight: 5,
+                    }}>
+                    <View
                       style={{
-                        flexDirection: 'row',
-                        marginTop: 0,
-                        width: '100%',
-                        height: 10,
-                        alignItems: 'center',
-                        paddingLeft:
+                        width: 8,
+                        height: 8,
+                        marginLeft: 20,
+                        borderRadius: 8,
+                        backgroundColor:
+                          sameDay == 'Monday' ? 'black' : 'white',
+                      }}
+                    />
+                    <View
+                      style={{
+                        width:
                           DeviceHeigth >= 1024
-                            ? DeviceWidth * 0.07
+                            ? DeviceWidth * 0.15
                             : DeviceHeigth >= 807
-                            ? DeviceWidth * 0.03
-                            : DeviceWidth * 0.03,
+                            ? DeviceWidth * 0.12
+                            : DeviceWidth * 0.1,
+                        height: 5,
+                      }}
+                    />
 
-                        paddingRight: 5,
-                      }}>
-                      <View
-                        style={{
-                          width: 8,
-                          height: 8,
-                          marginLeft: 20,
-                          borderRadius: 8,
-                          backgroundColor:
-                            sameDay == 'Monday' ? 'black' : 'white',
-                        }}
-                      />
-                      <View
-                        style={{
-                          width:
-                            DeviceHeigth >= 1024
-                              ? DeviceWidth * 0.15
-                              : DeviceHeigth >= 807
-                              ? DeviceWidth * 0.12
-                              : DeviceWidth * 0.1,
-                          height: 5,
-                        }}
-                      />
+                    <View
+                      style={{
+                        width: 8,
+                        height: 8,
+                        marginLeft: 20,
+                        borderRadius: 8,
+                        backgroundColor:
+                          sameDay == 'Tuesday' ? 'black' : 'white',
+                      }}
+                    />
+                    <View
+                      style={{
+                        width:
+                          DeviceHeigth >= 1024
+                            ? DeviceWidth * 0.16
+                            : DeviceHeigth >= 807
+                            ? DeviceWidth * 0.12
+                            : DeviceWidth * 0.12,
+                        height: 5,
+                      }}
+                    />
 
-                      <View
-                        style={{
-                          width: 8,
-                          height: 8,
-                          marginLeft: 20,
-                          borderRadius: 8,
-                          backgroundColor:
-                            sameDay == 'Tuesday' ? 'black' : 'white',
-                        }}
-                      />
-                      <View
-                        style={{
-                          width:
-                            DeviceHeigth >= 1024
-                              ? DeviceWidth * 0.16
-                              : DeviceHeigth >= 807
-                              ? DeviceWidth * 0.12
-                              : DeviceWidth * 0.12,
-                          height: 5,
-                        }}
-                      />
+                    <View
+                      style={{
+                        width: 8,
+                        height: 8,
+                        marginLeft: 20,
+                        borderRadius: 8,
+                        backgroundColor:
+                          sameDay == 'Wednesday' ? 'black' : 'white',
+                      }}
+                    />
+                    <View
+                      style={{
+                        width:
+                          DeviceHeigth >= 1024
+                            ? DeviceWidth * 0.15
+                            : DeviceHeigth >= 807
+                            ? DeviceWidth * 0.11
+                            : DeviceWidth * 0.1,
+                        height: 5,
+                      }}
+                    />
 
-                      <View
-                        style={{
-                          width: 8,
-                          height: 8,
-                          marginLeft: 20,
-                          borderRadius: 8,
-                          backgroundColor:
-                            sameDay == 'Wednesday' ? 'black' : 'white',
-                        }}
-                      />
-                      <View
-                        style={{
-                          width:
-                            DeviceHeigth >= 1024
-                              ? DeviceWidth * 0.15
-                              : DeviceHeigth >= 807
-                              ? DeviceWidth * 0.11
-                              : DeviceWidth * 0.1,
-                          height: 5,
-                        }}
-                      />
+                    <View
+                      style={{
+                        width: 8,
+                        height: 8,
+                        marginLeft: 20,
+                        borderRadius: 8,
+                        backgroundColor:
+                          sameDay == 'Thursday' ? 'black' : 'white',
+                      }}
+                    />
+                    <View
+                      style={{
+                        width:
+                          DeviceHeigth >= 1024
+                            ? DeviceWidth * 0.155
+                            : DeviceHeigth >= 807
+                            ? DeviceWidth * 0.11
+                            : DeviceWidth * 0.1,
+                        height: 5,
+                      }}
+                    />
 
-                      <View
-                        style={{
-                          width: 8,
-                          height: 8,
-                          marginLeft: 20,
-                          borderRadius: 8,
-                          backgroundColor:
-                            sameDay == 'Thursday' ? 'black' : 'white',
-                        }}
-                      />
-                      <View
-                        style={{
-                          width:
-                            DeviceHeigth >= 1024
-                              ? DeviceWidth * 0.155
-                              : DeviceHeigth >= 807
-                              ? DeviceWidth * 0.11
-                              : DeviceWidth * 0.1,
-                          height: 5,
-                        }}
-                      />
-
-                      <View
-                        style={{
-                          width: 8,
-                          height: 8,
-                          marginLeft: 20,
-                          borderRadius: 8,
-                          backgroundColor:
-                            sameDay == 'Friday' ? 'black' : 'white',
-                        }}
-                      />
-                    </View>
+                    <View
+                      style={{
+                        width: 8,
+                        height: 8,
+                        marginLeft: 20,
+                        borderRadius: 8,
+                        right:DeviceHeigth>=1024?-DeviceWidth*0.0:-DeviceWidth*0.04,
+                        backgroundColor:
+                          sameDay == 'Friday' ? 'black' : 'white',
+                      }}
+                    />
+                  </View>
                 </>
               ) : (
                 <></>

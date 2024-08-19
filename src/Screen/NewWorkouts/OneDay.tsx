@@ -285,6 +285,7 @@ const OneDay = ({navigation, route}: any) => {
 
   const Box = ({selected, item, index}: any) => {
     const [isLoading, setIsLoading] = useState(true);
+    const time = parseInt(item?.exercise_rest.split(' ')[0]);
     return (
       <>
         <TouchableOpacity
@@ -355,7 +356,11 @@ const OneDay = ({navigation, route}: any) => {
                 <Text style={[styles.small, {fontSize: 14}]}>
                   {item?.exercise_title}
                 </Text>
-                <Text style={styles.small}>{item?.exercise_rest}</Text>
+                <Text style={styles.small}>
+                {time > 30
+                          ? Math.floor(time / 60) + ' min'
+                          : time + ' sec'}
+                          </Text>
               </View>
             </View>
           </View>

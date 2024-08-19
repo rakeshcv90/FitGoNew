@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, ScrollView, Image} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, Image, Platform} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {AppColor} from '../../Component/Color';
@@ -214,7 +214,7 @@ const WorkoutHistory = () => {
                   )}
                 </View>
               ) : null}
-              {/* <SingleWorkout /> */}
+              <SingleWorkout />
               {screenObject?.breathe == 0 &&
               !screenObject?.cardio == 0 ? null : (
                 <View style={styles.container1}>
@@ -244,6 +244,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: AppColor.BACKGROUNG,
+  paddingTop:Platform.OS=='ios'?20:0
   },
   container1: {
     // width: DeviceWidth,

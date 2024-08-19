@@ -11,6 +11,7 @@ import {
   BackHandler,
   Animated,
   Easing,
+  StatusBar,
 } from 'react-native';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -56,6 +57,7 @@ import WorkoutsDescription from '../NewWorkouts/WorkoutsDescription';
 import {ShadowStyle} from '../../Component/Utilities/ShadowStyle';
 import FitText from '../../Component/Utilities/FitText';
 import FitIcon from '../../Component/Utilities/FitIcon';
+import { ScrollView } from 'react-native';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -416,8 +418,8 @@ const EventExercise = ({navigation, route}: any) => {
     navigationRef.current.goBack();
   };
   const postCurrentRewardsExerciseAPI = async (index: number) => {
-    const url =
-      'https://fitme.cvinfotechserver.com/adserver/public/api/testing1_event_exercise_complete_status';
+    // const url =
+    //   'https://fitme.cvinfotechserver.com/adserver/public/api/testing1_event_exercise_complete_status';
     const payload = new FormData();
     payload.append('id', trackerData[index]?.id);
 
@@ -433,19 +435,8 @@ const EventExercise = ({navigation, route}: any) => {
 
     try {
       //LIVE  URL
-      // const res = await axios({
-      //   url: 'https://fitme.cvinfotechserver.com/adserver/public/api/testing_event_exercise_complete_status',
-      //   // url: NewAppapi.POST_REWARDS_EXERCISE,
-      //   method: 'post',
-      //   data: payload,
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data',
-      //   },
-      // });
-
-      //TEST URL
       const res = await axios({
-        url: url,
+        url: 'https://fitme.cvinfotechserver.com/adserver/public/api/testing_event_exercise_complete_status',
         // url: NewAppapi.POST_REWARDS_EXERCISE,
         method: 'post',
         data: payload,
@@ -453,6 +444,17 @@ const EventExercise = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
+
+      //TEST URL
+      // const res = await axios({
+      //   url: url,
+      //   // url: NewAppapi.POST_REWARDS_EXERCISE,
+      //   method: 'post',
+      //   data: payload,
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // });
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -634,6 +636,10 @@ const EventExercise = ({navigation, route}: any) => {
         flex: 1,
         backgroundColor: '#F7F7F7',
       }}>
+      <StatusBar barStyle={'dark-content'} />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: 10}}>
       {restStart ? (
         <>
           <View
@@ -1119,6 +1125,7 @@ const EventExercise = ({navigation, route}: any) => {
           </View>
         </>
       )}
+      </ScrollView>
       <BottomSheetExercise
         isVisible={visible}
         setVisible={setVisible}

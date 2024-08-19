@@ -44,6 +44,7 @@ const validationSchema = Yup.object().shape({
   name: Yup.string()
     .required('Full Name is Required')
     .matches(/^[A-Za-z].*/, 'First Name must start with a character')
+    .matches(/^[a-zA-Z0-9 ]*$/, 'Full Name must not contain special characters')
     .min(3, 'First Name must contain atleast 3 characters'),
   email: Yup.string()
     .matches(/^[\w.\-]+@[\w.\-]+\.\w{2,4}$/, 'Invalid Email Format')

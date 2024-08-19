@@ -12,6 +12,7 @@ import {
   Animated,
   Easing,
   StatusBar,
+  ScrollView,
 } from 'react-native';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -504,8 +505,8 @@ const CardioExercise = ({navigation, route}: any) => {
   };
   const postCurrentRewardsExerciseAPI = async (index: number) => {
     setOverExerciseVisible(true);
-    const url =
-      'https://fitme.cvinfotechserver.com/adserver/public/api/testing1_event_exercise_complete_status';
+    // const url =
+    //   'https://fitme.cvinfotechserver.com/adserver/public/api/testing1_event_exercise_complete_status';
     const payload = new FormData();
     payload.append('id', trackerData[index]?.id);
 
@@ -521,19 +522,8 @@ const CardioExercise = ({navigation, route}: any) => {
 
     try {
       //LIVE  URL
-      // const res = await axios({
-      //   url: 'https://fitme.cvinfotechserver.com/adserver/public/api/testing_event_exercise_complete_status',
-      //   // url: NewAppapi.POST_REWARDS_EXERCISE,
-      //   method: 'post',
-      //   data: payload,
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data',
-      //   },
-      // });
-
-      //TEST URL
       const res = await axios({
-        url: url,
+        url: 'https://fitme.cvinfotechserver.com/adserver/public/api/testing_event_exercise_complete_status',
         // url: NewAppapi.POST_REWARDS_EXERCISE,
         method: 'post',
         data: payload,
@@ -541,6 +531,17 @@ const CardioExercise = ({navigation, route}: any) => {
           'Content-Type': 'multipart/form-data',
         },
       });
+
+      //TEST URL
+      // const res = await axios({
+      //   url: url,
+      //   // url: NewAppapi.POST_REWARDS_EXERCISE,
+      //   method: 'post',
+      //   data: payload,
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // });
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -738,511 +739,503 @@ const CardioExercise = ({navigation, route}: any) => {
         flex: 1,
         backgroundColor: '#F7F7F7',
       }}>
-        <StatusBar barStyle={'dark-content'} />
-      {restStart ? (
-        <>
-          <View
-            style={{
-              height: DeviceHeigth * 0.6,
-              paddingHorizontal: 20,
-            }}>
+      <StatusBar barStyle={'dark-content'} />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom: 10}}>
+        {restStart ? (
+          <>
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginTop: DeviceWidth * 0.05,
+                height: DeviceHeigth * 0.6,
+                paddingHorizontal: 20,
               }}>
-              <TouchableOpacity
-                onPress={() => {
-                  setBack(true);
-                }}
-                style={{
-                  width: 40,
-                }}>
-                <AntIcons
-                  name={'arrowleft'}
-                  size={20}
-                  color={
-                    number == allExercise?.length
-                      ? AppColor.WHITE
-                      : AppColor.INPUTTEXTCOLOR
-                  }
-                />
-              </TouchableOpacity>
-              <Text
-                style={{
-                  color: '#1F2937',
-                  fontFamily: Fonts.HELVETICA_BOLD,
-                  fontSize: 18,
-                  lineHeight: 20,
-                  fontWeight: '600',
-                }}>
-                {allExercise[number]?.exercise_title}
-              </Text>
               <View
                 style={{
-                  padding: 2,
-                  paddingHorizontal: 10,
-                  borderRadius: 20,
-                  borderWidth: 1,
-                  borderColor: '#EBEDF0',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginTop: DeviceWidth * 0.05,
                 }}>
-                <Text
-                  style={{
-                    color: '#6B7280',
-                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                    fontSize: 16,
-                    lineHeight: 20,
-                    fontWeight: '600',
-                  }}>
-                  {number + 1}/{allExercise?.length}
-                </Text>
-              </View>
-            </View>
-            <View
-              style={[
-                {
-                  height: DeviceHeigth * 0.5,
-                  marginTop: DeviceHeigth * 0.02,
-                  zIndex: -1,
-                  backgroundColor: AppColor.WHITE,
-                  borderRadius: 10,
-                },
-                ShadowStyle,
-              ]}>
-              <Video
-                source={{
-                  uri: getStoreVideoLoc[allExercise[number]?.exercise_title],
-                }}
-                onReadyForDisplay={() => {
-                  setDemo(true);
-                }}
-                onLoad={() => {
-                  setDemo(true);
-                }}
-                paused={!demo}
-                onPlaybackResume={() => {
-                  setDemo(true);
-                }}
-                repeat={true}
-                resizeMode="contain"
-                style={{
-                  width: DeviceWidth,
-                  height: DeviceHeigth * 0.4,
-                  alignSelf: 'center',
-                  top: 30,
-                }}
-              />
-            </View>
-          </View>
-          <View
-            style={[
-              {
-                // height: DeviceHeigth * 0.28,
-                paddingTop: 10,
-                paddingHorizontal: 20,
-                backgroundColor: AppColor.WHITE,
-                width: DeviceHeigth >= 1024 ? '90%' : '95%',
-                alignSelf: 'center',
-                borderRadius: 10,
-              },
-              ShadowStyle,
-            ]}>
-            <View
-              style={{
-                alignSelf: 'center',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  fontSize: 40,
-                  fontWeight: '600',
-                  fontFamily: Fonts.HELVETICA_BOLD,
-                  lineHeight: 54,
-                  color: '#1F2937',
-                }}>
-                {timer == 10 ? '00:' + timer : '00:0' + timer}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: DeviceWidth,
-                alignSelf: 'center',
-                marginVertical: 10,
-              }}>
-              <CircularProgressWithChild
-                value={timer}
-                radius={60}
-                initialValue={10}
-                inActiveStrokeColor={'#F0F0F0'}
-                activeStrokeSecondaryColor="#F0013B"
-                activeStrokeColor="#530014"
-                activeStrokeWidth={40}
-                inActiveStrokeWidth={40}
-                strokeLinecap="butt"
-                maxValue={10}>
                 <TouchableOpacity
                   onPress={() => {
-                    setSkip(skip + 1);
-                    clearTimeout(playTimerRef.current);
-                    setTimer(0);
+                    setBack(true);
+                  }}
+                  style={{
+                    width: 40,
                   }}>
-                  <Image
-                    source={require('../../Icon/Images/InAppRewards/SkipButton.png')}
-                    style={{width: 40, height: 40}}
-                    resizeMode="contain"
+                  <AntIcons
+                    name={'arrowleft'}
+                    size={20}
+                    color={
+                      number == allExercise?.length
+                        ? AppColor.WHITE
+                        : AppColor.INPUTTEXTCOLOR
+                    }
                   />
                 </TouchableOpacity>
-              </CircularProgressWithChild>
-            </View>
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: '600',
-                fontFamily: Fonts.HELVETICA_BOLD,
-                lineHeight: 25,
-                color: '#1F2937',
-                textAlign: 'center',
-              }}>
-              Get Ready
-            </Text>
-          </View>
-        </>
-      ) : (
-        <>
-          {showSet && (
-            <Animated.Text
-              style={{
-                color: AppColor.RED,
-                fontSize: 30,
-                position: 'absolute',
-                fontFamily: Fonts.MONTSERRAT_BOLD,
-                lineHeight: 40,
-                fontWeight: 'bold',
-                top: DeviceHeigth * 0.4,
-                alignSelf: 'center',
-                zIndex: 1,
-                opacity: opacity,
-                transform: [{scale}, {translateY}],
-              }}>
-              SET {currentSet}
-            </Animated.Text>
-          )}
-
-          <View
-            style={{
-              height: DeviceHeigth * 0.6,
-              paddingHorizontal: 20,
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginTop: DeviceWidth * 0.05,
-              }}>
-              <TouchableOpacity
-                onPress={() => {
-                  setBack(true);
-                }}
-                style={{
-                  width: 40,
-                }}>
-                <AntIcons
-                  name={'arrowleft'}
-                  size={20}
-                  color={
-                    number == allExercise?.length
-                      ? AppColor.WHITE
-                      : AppColor.INPUTTEXTCOLOR
-                  }
-                />
-              </TouchableOpacity>
-              <Text
-                style={{
-                  color: '#1F2937',
-                  fontFamily: Fonts.HELVETICA_BOLD,
-                  fontSize: 18,
-                  lineHeight: 20,
-                  fontWeight: '600',
-                }}>
-                {allExercise[number]?.exercise_title}
-              </Text>
-              <View
-                style={{
-                  padding: 2,
-                  paddingHorizontal: 10,
-                  borderRadius: 20,
-                  borderWidth: 1,
-                  borderColor: '#EBEDF0',
-                }}>
                 <Text
                   style={{
-                    color: '#6B7280',
-                    fontFamily: Fonts.MONTSERRAT_MEDIUM,
-                    fontSize: 16,
+                    color: '#1F2937',
+                    fontFamily: Fonts.HELVETICA_BOLD,
+                    fontSize: 18,
                     lineHeight: 20,
                     fontWeight: '600',
                   }}>
-                  {number + 1}/{allExercise?.length}
+                  {allExercise[number]?.exercise_title}
                 </Text>
+                <View
+                  style={{
+                    padding: 2,
+                    paddingHorizontal: 10,
+                    borderRadius: 20,
+                    borderWidth: 1,
+                    borderColor: '#EBEDF0',
+                  }}>
+                  <Text
+                    style={{
+                      color: '#6B7280',
+                      fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                      fontSize: 16,
+                      lineHeight: 20,
+                      fontWeight: '600',
+                    }}>
+                    {number + 1}/{allExercise?.length}
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={[
+                  {
+                    height: DeviceHeigth * 0.5,
+                    marginTop: DeviceHeigth * 0.02,
+                    zIndex: -1,
+                    backgroundColor: AppColor.WHITE,
+                    borderRadius: 10,
+                  },
+                  ShadowStyle,
+                ]}>
+                <Video
+                  source={{
+                    uri: getStoreVideoLoc[allExercise[number]?.exercise_title],
+                  }}
+                  onReadyForDisplay={() => {
+                    setDemo(true);
+                  }}
+                  onLoad={() => {
+                    setDemo(true);
+                  }}
+                  paused={!demo}
+                  onPlaybackResume={() => {
+                    setDemo(true);
+                  }}
+                  repeat={true}
+                  resizeMode="contain"
+                  style={{
+                    width: DeviceWidth,
+                    height: DeviceHeigth * 0.4,
+                    alignSelf: 'center',
+                    top: 30,
+                  }}
+                />
               </View>
             </View>
             <View
               style={[
                 {
-                  height: DeviceHeigth * 0.5,
-                  marginTop: DeviceHeigth * 0.02,
-                  zIndex: -1,
+                  // height: DeviceHeigth * 0.28,
+                  paddingTop: 10,
+                  paddingHorizontal: 20,
                   backgroundColor: AppColor.WHITE,
+                  width: DeviceHeigth >= 1024 ? '90%' : '95%',
+                  alignSelf: 'center',
                   borderRadius: 10,
                 },
                 ShadowStyle,
               ]}>
-              <Video
-                source={{
-                  uri: getStoreVideoLoc[allExercise[number]?.exercise_title],
-                }}
-                onReadyForDisplay={() => {
-                  setPause(true);
-                }}
-                onLoad={() => {
-                  setPause(true);
-                }}
-                paused={!pause}
-                onPlaybackResume={() => {
-                  setPause(true);
-                }}
-                repeat={true}
-                resizeMode="contain"
+              <View
                 style={{
-                  width: DeviceWidth,
-                  height: DeviceHeigth * 0.4,
                   alignSelf: 'center',
-                  top: 30,
-                }}
-              />
-            </View>
-          </View>
-          <View
-            style={[
-              {
-                // height: DeviceHeigth * 0.28,
-                paddingTop: 10,
-                paddingHorizontal: 20,
-                backgroundColor: AppColor.WHITE,
-                width: DeviceHeigth >= 1024 ? '90%' : '95%',
-                alignSelf: 'center',
-                borderRadius: 10,
-              },
-              ShadowStyle,
-            ]}>
-            <View
-              style={{
-                alignSelf: 'center',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 40,
+                    fontWeight: '600',
+                    fontFamily: Fonts.HELVETICA_BOLD,
+                    lineHeight: 54,
+                    color: '#1F2937',
+                  }}>
+                  {timer == 10 ? '00:' + timer : '00:0' + timer}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: DeviceWidth,
+                  alignSelf: 'center',
+                  marginVertical: 10,
+                }}>
+                <CircularProgressWithChild
+                  value={timer}
+                  radius={60}
+                  initialValue={10}
+                  inActiveStrokeColor={'#F0F0F0'}
+                  activeStrokeSecondaryColor="#F0013B"
+                  activeStrokeColor="#530014"
+                  activeStrokeWidth={40}
+                  inActiveStrokeWidth={40}
+                  strokeLinecap="butt"
+                  maxValue={10}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSkip(skip + 1);
+                      clearTimeout(playTimerRef.current);
+                      setTimer(0);
+                    }}>
+                    <Image
+                      source={require('../../Icon/Images/InAppRewards/SkipButton.png')}
+                      style={{width: 40, height: 40}}
+                      resizeMode="contain"
+                    />
+                  </TouchableOpacity>
+                </CircularProgressWithChild>
+              </View>
               <Text
                 style={{
-                  fontSize: 40,
+                  fontSize: 20,
                   fontWeight: '600',
                   fontFamily: Fonts.HELVETICA_BOLD,
-                  lineHeight: 54,
+                  lineHeight: 25,
                   color: '#1F2937',
+                  textAlign: 'center',
                 }}>
-                {remainingSeconds > 9
-                  ? `0${minutes}:${remainingSeconds}`
-                  : `0${minutes}:0${remainingSeconds}`}
+                Get Ready
               </Text>
             </View>
+          </>
+        ) : (
+          <>
+            {showSet && (
+              <Animated.Text
+                style={{
+                  color: AppColor.RED,
+                  fontSize: 30,
+                  position: 'absolute',
+                  fontFamily: Fonts.MONTSERRAT_BOLD,
+                  lineHeight: 40,
+                  fontWeight: 'bold',
+                  top: DeviceHeigth * 0.4,
+                  alignSelf: 'center',
+                  zIndex: 1,
+                  opacity: opacity,
+                  transform: [{scale}, {translateY}],
+                }}>
+                SET {currentSet}
+              </Animated.Text>
+            )}
+
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                width: '80%',
-                alignSelf: 'center',
-                marginVertical: 10,
+                height: DeviceHeigth * 0.6,
+                paddingHorizontal: 20,
               }}>
-              <TouchableOpacity
-                disabled={number == 0}
-                onPress={() => {
-                  if (number == 0) return;
-                  setPrevious(previous + 1);
-                  allExercise[number]?.exercise_sets != 0 && setShowSet(true);
-                  setCurrentSet(1);
-                  StartAnimation();
-                  setPause(false);
-                  clearTimeout(playTimerRef.current);
-                  const index = allExercise?.findIndex(
-                    (item: any) =>
-                      item?.exercise_id == allExercise[number]?.exercise_id,
-                  );
-                  // setCurrentData(allExercise[index - 1]);
-                  handleExerciseChange(allExercise[index - 1]?.exercise_title);
-                  setNumber(number - 1);
-                  setSeconds(
-                    parseInt(
-                      allExercise[index - 1]?.exercise_rest.split(' ')[0],
-                    ),
-                  );
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginTop: DeviceWidth * 0.05,
                 }}>
-                <FitIcon
-                  name="skip-previous"
-                  type="MaterialCommunityIcons"
-                  size={30}
-                  style={{
-                    color: '#6B7280',
-                    opacity: number == 0 ? 0.5 : 1,
+                <TouchableOpacity
+                  onPress={() => {
+                    setBack(true);
                   }}
-                />
-              </TouchableOpacity>
-              <CircularProgressWithChild
-                value={seconds}
-                radius={60}
-                inActiveStrokeColor={'#F0F0F0'}
-                activeStrokeSecondaryColor="#F0013B"
-                activeStrokeColor="#530014"
-                activeStrokeWidth={40}
-                inActiveStrokeWidth={40}
-                strokeLinecap="butt"
-                maxValue={parseInt(
-                  allExercise[number]?.exercise_rest.split(' ')[0],
-                )}
-                initialValue={parseInt(
-                  allExercise[number]?.exercise_rest.split(' ')[0],
-                )}>
-                <TouchableOpacity onPress={() => setPause(!pause)}>
-                  <FitIcon
-                    name={!pause ? 'play' : 'pause'}
-                    type="MaterialCommunityIcons"
-                    size={40}
-                    color="#1F2937"
+                  style={{
+                    width: 40,
+                  }}>
+                  <AntIcons
+                    name={'arrowleft'}
+                    size={20}
+                    color={
+                      number == allExercise?.length
+                        ? AppColor.WHITE
+                        : AppColor.INPUTTEXTCOLOR
+                    }
                   />
                 </TouchableOpacity>
-              </CircularProgressWithChild>
-              <TouchableOpacity
-                disabled={number == allExercise?.length - 1}
-                onPress={() => {
-                  setNext(next + 1);
-                  setPause(!pause);
-                  allExercise[number]?.exercise_sets != 0 && setShowSet(true);
-                  setCurrentSet(1);
-                  StartAnimation();
-                  setPause(false);
-                  clearTimeout(playTimerRef.current);
-                  setTimeout(() => {
-                    if (number == allExercise?.length - 1) return;
+                <Text
+                  style={{
+                    color: '#1F2937',
+                    fontFamily: Fonts.HELVETICA_BOLD,
+                    fontSize: 18,
+                    lineHeight: 20,
+                    fontWeight: '600',
+                  }}>
+                  {allExercise[number]?.exercise_title}
+                </Text>
+                <View
+                  style={{
+                    padding: 2,
+                    paddingHorizontal: 10,
+                    borderRadius: 20,
+                    borderWidth: 1,
+                    borderColor: '#EBEDF0',
+                  }}>
+                  <Text
+                    style={{
+                      color: '#6B7280',
+                      fontFamily: Fonts.MONTSERRAT_MEDIUM,
+                      fontSize: 16,
+                      lineHeight: 20,
+                      fontWeight: '600',
+                    }}>
+                    {number + 1}/{allExercise?.length}
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={[
+                  {
+                    height: DeviceHeigth * 0.5,
+                    marginTop: DeviceHeigth * 0.02,
+                    zIndex: -1,
+                    backgroundColor: AppColor.WHITE,
+                    borderRadius: 10,
+                  },
+                  ShadowStyle,
+                ]}>
+                <Video
+                  source={{
+                    uri: getStoreVideoLoc[allExercise[number]?.exercise_title],
+                  }}
+                  onReadyForDisplay={() => {
+                    setPause(true);
+                  }}
+                  onLoad={() => {
+                    setPause(true);
+                  }}
+                  paused={!pause}
+                  onPlaybackResume={() => {
+                    setPause(true);
+                  }}
+                  repeat={true}
+                  resizeMode="contain"
+                  style={{
+                    width: DeviceWidth,
+                    height: DeviceHeigth * 0.4,
+                    alignSelf: 'center',
+                    top: 30,
+                  }}
+                />
+              </View>
+            </View>
+            <View
+              style={[
+                {
+                  // height: DeviceHeigth * 0.28,
+                  paddingTop: 10,
+                  paddingHorizontal: 20,
+                  backgroundColor: AppColor.WHITE,
+                  width: DeviceHeigth >= 1024 ? '90%' : '95%',
+                  alignSelf: 'center',
+                  borderRadius: 10,
+                },
+                ShadowStyle,
+              ]}>
+              <View
+                style={{
+                  alignSelf: 'center',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 40,
+                    fontWeight: '600',
+                    fontFamily: Fonts.HELVETICA_BOLD,
+                    lineHeight: 54,
+                    color: '#1F2937',
+                  }}>
+                  {remainingSeconds > 9
+                    ? `0${minutes}:${remainingSeconds}`
+                    : `0${minutes}:0${remainingSeconds}`}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '80%',
+                  alignSelf: 'center',
+                  marginVertical: 10,
+                }}>
+                <TouchableOpacity
+                  disabled={number == 0}
+                  onPress={() => {
+                    if (number == 0) return;
+                    setPrevious(previous + 1);
+                    allExercise[number]?.exercise_sets != 0 && setShowSet(true);
+                    setCurrentSet(1);
+                    StartAnimation();
+                    setPause(false);
+                    clearTimeout(playTimerRef.current);
                     const index = allExercise?.findIndex(
                       (item: any) =>
                         item?.exercise_id == allExercise[number]?.exercise_id,
                     );
-                    setNumber(number + 1);
-                    !enteredCurrentEvent && setSkipCount(skipCount + 1);
-                    // setCurrentData(allExercise[index + 1]);
+                    // setCurrentData(allExercise[index - 1]);
                     handleExerciseChange(
-                      allExercise[index + 1]?.exercise_title,
+                      allExercise[index - 1]?.exercise_title,
                     );
+                    setNumber(number - 1);
                     setSeconds(
                       parseInt(
-                        allExercise[index + 1]?.exercise_rest.split(' ')[0],
+                        allExercise[index - 1]?.exercise_rest.split(' ')[0],
                       ),
                     );
-                  }, 1500);
+                  }}>
+                  <FitIcon
+                    name="skip-previous"
+                    type="MaterialCommunityIcons"
+                    size={30}
+                    style={{
+                      color: '#6B7280',
+                      opacity: number == 0 ? 0.5 : 1,
+                    }}
+                  />
+                </TouchableOpacity>
+                <CircularProgressWithChild
+                  value={seconds}
+                  radius={60}
+                  inActiveStrokeColor={'#F0F0F0'}
+                  activeStrokeSecondaryColor="#F0013B"
+                  activeStrokeColor="#530014"
+                  activeStrokeWidth={40}
+                  inActiveStrokeWidth={40}
+                  strokeLinecap="butt"
+                  maxValue={parseInt(
+                    allExercise[number]?.exercise_rest.split(' ')[0],
+                  )}
+                  initialValue={parseInt(
+                    allExercise[number]?.exercise_rest.split(' ')[0],
+                  )}>
+                  <TouchableOpacity onPress={() => setPause(!pause)}>
+                    <FitIcon
+                      name={!pause ? 'play' : 'pause'}
+                      type="MaterialCommunityIcons"
+                      size={40}
+                      color="#1F2937"
+                    />
+                  </TouchableOpacity>
+                </CircularProgressWithChild>
+                <TouchableOpacity
+                  disabled={number == allExercise?.length - 1}
+                  onPress={() => {
+                    setNext(next + 1);
+                    setPause(!pause);
+                    allExercise[number]?.exercise_sets != 0 && setShowSet(true);
+                    setCurrentSet(1);
+                    StartAnimation();
+                    setPause(false);
+                    clearTimeout(playTimerRef.current);
+                    setTimeout(() => {
+                      if (number == allExercise?.length - 1) return;
+                      const index = allExercise?.findIndex(
+                        (item: any) =>
+                          item?.exercise_id == allExercise[number]?.exercise_id,
+                      );
+                      setNumber(number + 1);
+                      !enteredCurrentEvent && setSkipCount(skipCount + 1);
+                      // setCurrentData(allExercise[index + 1]);
+                      handleExerciseChange(
+                        allExercise[index + 1]?.exercise_title,
+                      );
+                      setSeconds(
+                        parseInt(
+                          allExercise[index + 1]?.exercise_rest.split(' ')[0],
+                        ),
+                      );
+                    }, 1500);
+                  }}>
+                  <FitIcon
+                    name="skip-next"
+                    type="MaterialCommunityIcons"
+                    size={30}
+                    style={{
+                      color: '#6B7280',
+                      opacity: number == allExercise?.length - 1 ? 0.5 : 1,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={{height: DeviceHeigth >= 1024 ? 20 : 0}} />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
                 }}>
-                <FitIcon
-                  name="skip-next"
-                  type="MaterialCommunityIcons"
-                  size={30}
-                  style={{
-                    color: '#6B7280',
-                    opacity: number == allExercise?.length - 1 ? 0.5 : 1,
+                <TouchableOpacity
+                  onPress={() => {
+                    dispatch(setSoundOnOff(!getSoundOffOn));
                   }}
-                />
-              </TouchableOpacity>
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginVertical: 5,
+                    flexDirection: 'row',
+                    paddingLeft: 5,
+                  }}>
+                  <Image
+                    source={
+                      !getSoundOffOn
+                        ? require('../../Icon/Images/InAppRewards/SoundOn.png')
+                        : require('../../Icon/Images/InAppRewards/SoundOff.png')
+                    }
+                    style={{width: 15, height: 15}}
+                    resizeMode="contain"
+                  />
+                  <FitText
+                    type="normal"
+                    value={getSoundOffOn ? ' Sound Off' : ' Sound On'}
+                    color="#6B7280"
+                    fontFamily={Fonts.HELVETICA_REGULAR}
+                    lineHeight={30}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setOpen(true);
+                  }}
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginVertical: 5,
+                    flexDirection: 'row',
+                  }}>
+                  <Image
+                    source={require('../../Icon/Images/InAppRewards/Exercise_Info1.png')}
+                    style={{width: 15, height: 15}}
+                    resizeMode="contain"
+                  />
+                  <FitText
+                    type="normal"
+                    value=" Exercise Info"
+                    color="#6B7280"
+                    fontFamily={Fonts.HELVETICA_REGULAR}
+                    lineHeight={30}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={{height: DeviceHeigth >= 1024 ? 20 : 0}} />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
-              <TouchableOpacity
-                onPress={() => {
-                  dispatch(setSoundOnOff(!getSoundOffOn));
-                }}
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginVertical: 5,
-                  flexDirection: 'row',
-                  paddingLeft: 5,
-                }}>
-                <Image
-                  source={
-                    !getSoundOffOn
-                      ? require('../../Icon/Images/InAppRewards/SoundOn.png')
-                      : require('../../Icon/Images/InAppRewards/SoundOff.png')
-                  }
-                  style={{width: 15, height: 15}}
-                  resizeMode="contain"
-                />
-                <FitText
-                  type="normal"
-                  value={getSoundOffOn ? ' Sound Off' : ' Sound On'}
-                  color="#6B7280"
-                  fontFamily={Fonts.HELVETICA_REGULAR}
-                  lineHeight={30}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  setOpen(true);
-                }}
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginVertical: 5,
-                  flexDirection: 'row',
-                }}>
-                <Image
-                  source={require('../../Icon/Images/InAppRewards/Exercise_Info1.png')}
-                  style={{width: 15, height: 15}}
-                  resizeMode="contain"
-                />
-                <FitText
-                  type="normal"
-                  value=" Exercise Info"
-                  color="#6B7280"
-                  fontFamily={Fonts.HELVETICA_REGULAR}
-                  lineHeight={30}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </>
-      )}
-      {/* <BottomSheetExercise
-        isVisible={visible}
-        setVisible={setVisible}
-        exerciseData={allExercise}
-        // setCurrentData={setCurrentData}
-        // setPlayW={setPlayW}
-        setPause={setPause}
-        // setRandomCount={setRandomCount}
-        playTimerRef={playTimerRef}
-        currentExercise={currentExercise}
-        setSeconds={setSeconds}
-        handleExerciseChange={handleExerciseChange}
-        setNumber={setNumber}
-      /> */}
+          </>
+        )}
+      </ScrollView>
       <PauseModal back={back} quitLoader={quitLoader} />
 
       <WorkoutsDescription

@@ -13,6 +13,7 @@ import {QuestionsArray, QuestionsArrayType} from './QuestionsArray';
 import {AppColor} from '../../Component/Color';
 import {navigationRef} from '../../../App';
 import FitIcon from '../../Component/Utilities/FitIcon';
+import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
 
 const Questions = ({route, navigation}: any) => {
   const RenderItem = useMemo(
@@ -21,12 +22,13 @@ const Questions = ({route, navigation}: any) => {
         <>
           <TouchableOpacity
             key={index}
-            onPress={() =>
+            onPress={() =>{
+              AnalyticsConsole(`Q_${item?.id}`)
               navigation.navigate('ChatBot', {
                 quesNo: item.id,
                 screenName: route.params?.screenName,
               })
-            }
+            }}
             style={{
               flexDirection: 'row',
               marginVertical: 5,

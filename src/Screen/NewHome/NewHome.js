@@ -172,19 +172,19 @@ const NewHome = ({navigation}) => {
   };
 
   const getEarnedCoins = async () => {
-    const url =
-      'https://fitme.cvinfotechserver.com/adserver/public/api/test_exercise_points_day';
+    // const url =
+    //   'https://fitme.cvinfotechserver.com/adserver/public/api/test_exercise_points_day';
     try {
-      // const response = await axios(
-      //   `${NewAppapi.GET_COINS}?user_id=${getUserDataDetails?.id}&day=${
-      //     WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]
-      //   }`,
-      // );
       const response = await axios(
-        `${url}?user_id=${getUserDataDetails?.id}&day=${
+        `${NewAppapi.GET_COINS}?user_id=${getUserDataDetails?.id}&day=${
           WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]
         }`,
       );
+      // const response = await axios(
+      //   `${url}?user_id=${getUserDataDetails?.id}&day=${
+      //     WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]
+      //   }`,
+      // );
 
       if (
         response?.data?.msg == 'Please update the app to the latest version.'
@@ -351,7 +351,6 @@ const NewHome = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else if (responseData?.data?.msg == 'version is required') {
-       
       } else {
         const objects = {};
         responseData.data.data.forEach(item => {
@@ -381,7 +380,7 @@ const NewHome = ({navigation}) => {
     } else if (currentHour >= 17 && currentHour < 21) {
       return 'Good Evening';
     } else {
-      return 'Good Night';
+      return 'Good Evening';
     }
   };
 
@@ -396,7 +395,7 @@ const NewHome = ({navigation}) => {
         const challenge = responseData?.data?.challenge_data?.filter(
           item => item?.status == 'active',
         );
-        
+
         setCurrentChallenge(challenge);
         getCurrentDayAPI(challenge);
         dispatch(setAllExercise(responseData.data.data));
@@ -504,8 +503,8 @@ const NewHome = ({navigation}) => {
       'https://fitme.cvinfotechserver.com/adserver/public/api/past_winners';
     RequestAPI.makeRequest(
       'POST',
-      url,
-      // NewAppapi.GET_PAST_WINNERS,
+      // url,
+      NewAppapi.GET_PAST_WINNERS,
       {
         version: VersionNumber.appVersion,
       },
@@ -592,7 +591,7 @@ const NewHome = ({navigation}) => {
                 </Text>
                 <Text
                   style={{
-                    top: 0,
+                    top: -5,
                     fontSize: 12,
                     fontFamily: Fonts.HELVETICA_BOLD,
                     fontWeight: '700',
@@ -644,7 +643,7 @@ const NewHome = ({navigation}) => {
                     flexDirection: 'row',
                     backgroundColor: '#DBEAFE',
                     marginHorizontal: 10,
-                    paddingLeft: 5,
+                    paddingLeft: 10,
                   }}>
                   <Image
                     source={require('../../Icon/Images/NewHome/cup.png')}
@@ -665,8 +664,8 @@ const NewHome = ({navigation}) => {
                     borderRadius: 6,
                     alignItems: 'center',
                     flexDirection: 'row',
-                    paddingLeft: 5,
-                    //justifyContent: 'center',
+                   // paddingLeft: 10,
+                    justifyContent: 'center',
                     backgroundColor: AppColor.orangeColor,
                   }}>
                   <Image
@@ -674,7 +673,7 @@ const NewHome = ({navigation}) => {
                     style={{height: 20, width: 20}}
                     resizeMode="contain"
                   />
-                  <Text style={styles.cointxt}>{fitCoins}</Text>
+                  <Text style={styles.cointxt}>{fitCoins<=0?0:fitCoins}</Text>
                 </TouchableOpacity>
               </>
             ) : (
@@ -693,8 +692,8 @@ const NewHome = ({navigation}) => {
                       icon: {icon: 'auto', position: 'left'},
                     });
                   }
-                  AnalyticsConsole('LB');
-                  navigation.navigate('Leaderboard');
+                  // AnalyticsConsole('LB');
+                  // navigation.navigate('Leaderboard');
                 }}
                 style={{
                   // width: 150,
@@ -753,12 +752,18 @@ const NewHome = ({navigation}) => {
               justifyContent: 'center',
             }}>
             <Marquee spacing={20} speed={1}>
-              <Text>Explore our new best offers</Text>
+              <Text
+                style={{
+                  color: AppColor.PrimaryTextColor,
+                  fontFamily: Fonts.HELVETICA_REGULAR,
+                }}>
+                Explore our new best offers
+              </Text>
             </Marquee>
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
-             navigation.navigate('OfferPage')
+              navigation.navigate('OfferPage');
             }}
             style={{
               width: DeviceHeigth >= 1024 ? '20%' : '25%',
@@ -772,12 +777,40 @@ const NewHome = ({navigation}) => {
               style={{
                 fontFamily: Fonts.HELVETICA_REGULAR,
                 fontSize: 14,
-                lineHeight: 16,
+                lineHeight: 25,
                 color: AppColor.RED,
               }}>
               EXPLORE
             </Text>
-            <Icons name={'chevron-right'} size={25} color={AppColor.RED} />
+            <Icons name={'chevron-right'} size={30} color={AppColor.RED} />
+          </TouchableOpacity> */}
+          <TouchableOpacity
+          activeOpacity={0.8}
+            onPress={() => {
+              navigation.navigate('OfferPage');
+            }}
+            style={{
+              width: DeviceHeigth >= 1024 ? '20%' : '25%',
+              height: '60%',
+              overflow: 'hidden',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
+              borderRadius:8,
+              paddingLeft:10,
+              backgroundColor:AppColor.RED
+            }}>
+            <Text
+              style={{
+                fontFamily: Fonts.HELVETICA_REGULAR,
+                fontSize: 12,
+                lineHeight: 25,
+
+                color: AppColor.WHITE,
+              }}>
+              EXPLORE
+            </Text>
+            <Icons name={'chevron-right'} size={20} color={AppColor.WHITE} />
           </TouchableOpacity>
         </ImageBackground>
         {enteredCurrentEvent && (!Sat || !Sun) ? (
@@ -933,8 +966,8 @@ var styles = StyleSheet.create({
     color: '#1E40AF',
     fontSize: 16,
     fontFamily: Fonts.HELVETICA_BOLD,
-    lineHeight: 20,
-    marginTop: 5,
+    lineHeight: 30,
+   // marginTop: 5,
     marginHorizontal: 5,
   },
 });

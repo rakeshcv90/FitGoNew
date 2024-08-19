@@ -34,6 +34,7 @@ import Tts from 'react-native-tts';
 import {useIsFocused} from '@react-navigation/native';
 import {bannerAdId} from '../../Component/AdsId';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { ArrowLeft } from '../../Component/Utilities/Arrows/Arrow';
 // const apiKey = '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';
 // const apiKey = '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';
 const systemMessage = {
@@ -81,9 +82,7 @@ const AITrainer = ({navigation}) => {
     Tts.getInitStatus().then(initTts);
   }, [getSoundOffOn]);
   const initTts = async () => {
-
     await Tts.setDefaultLanguage('en-IN');
-
 
     readText();
     setTtsStatus('initialized');
@@ -389,11 +388,12 @@ const AITrainer = ({navigation}) => {
             Tts.stop();
             navigation.goBack();
           }}>
-          <AntDesign
+          {/* <AntDesign
             name={'arrowleft'}
             size={25}
             color={AppColor.INPUTTEXTCOLOR}
-          />
+          /> */}
+          <ArrowLeft/>
         </TouchableOpacity>
 
         <Text
@@ -523,7 +523,7 @@ const AITrainer = ({navigation}) => {
                           <>
                             <Image
                               resizeMode="contain"
-                              source={localImage.Noimage}
+                              source={require('../../Icon/Images/NewImage2/mary.png')}
                               style={{
                                 width: 35,
                                 height: 35,

@@ -9,7 +9,6 @@ import {
   TextInput,
   Platform,
   ActivityIndicator,
-
   BackHandler,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
@@ -831,7 +830,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item, index}) => {
-              const time = parseInt(item?.exercise_rest.split(' ')[0])
+              const time = parseInt(item?.exercise_rest.split(' ')[0]);
               return (
                 <>
                   <TouchableOpacity
@@ -895,7 +894,9 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           fontFamily: Fonts.MONTSERRAT_MEDIUM,
                           color: '#1E1E1E',
                         }}>
-                        {time > 30? `${time%60} min` :time+' sec'}
+                        {time > 30
+                          ? Math.floor(time / 60) + ' min'
+                          : time + ' sec'}
                       </Text>
                     </View>
                     {selectedIndex == index && downloadProgress <= 5 ? (

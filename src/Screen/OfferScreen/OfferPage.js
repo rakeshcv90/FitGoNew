@@ -122,8 +122,11 @@ const OfferPage = ({navigation}) => {
           getPurchaseHistory?.currentDay - 1
         }`,
       );
+      console.log('datataa---->',response?.data)
       if (response?.data?.status) {
         setCardioStatus(true);
+        setLoaded(true);
+      }else{
         setLoaded(true);
       }
     } catch (error) {
@@ -218,27 +221,27 @@ const OfferPage = ({navigation}) => {
 
     try {
       //LIVE URL
-      // const res = await axios({
-      //   url: NewAppapi.CURRENT_DAY_EVENT_EXERCISE,
-      //   method: 'Post',
-      //   data: {user_details: datas, type: 'cardio'},
-      // });
-
-      //Test URl
       const res = await axios({
-        url: url,
+        url: NewAppapi.CURRENT_DAY_EVENT_EXERCISE,
         method: 'Post',
         data: {user_details: datas, type: 'cardio'},
       });
+
+      //Test URl
+      // const res = await axios({
+      //   url: url,
+      //   method: 'Post',
+      //   data: {user_details: datas, type: 'cardio'},
+      // });
       setDownloade(0);
 
-      AnalyticsConsole(`SCE_ON_${getPurchaseHistory?.currentDay-1}`);
+      // AnalyticsConsole(`SCE_ON_${getPurchaseHistory?.currentDay-1}`);
       if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {
         setDownloade(0);
         setWokroutLoaded(true);
-        navigation.navigate('EventExercise', {
+        navigation.navigate('CardioExercise', {
           allExercise: cardioExxercise,
           currentExercise: cardioExxercise[0],
           data: [],
@@ -251,7 +254,7 @@ const OfferPage = ({navigation}) => {
         // }
       } else {
         setWokroutLoaded(true);
-        navigation.navigate('EventExercise', {
+        navigation.navigate('CardioExercise', {
           allExercise: cardioExxercise,
           currentExercise: cardioExxercise[0],
           data: [],

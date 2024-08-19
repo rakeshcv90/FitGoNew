@@ -87,6 +87,7 @@ const Signup = ({navigation}) => {
     name: Yup.string()
       .required('Full Name must contain at least 3 characters')
       .matches(/^[A-Za-z].*/, 'Full Name must start with a character')
+      .matches(/^[a-zA-Z0-9 ]*$/, 'Full Name must not contain special characters')
       .min(3, 'Full Name must contain at least 3 characters'),
 
     email: Yup.string()

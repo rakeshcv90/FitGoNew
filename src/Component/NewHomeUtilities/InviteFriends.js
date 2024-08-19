@@ -26,7 +26,7 @@ const InviteFriends = () => {
             lineHeight: 24,
             color: AppColor.WHITE,
           }}>
-          Invite friend to get ₹301
+          Invite your friends to get ₹1000
         </Text>
         <Text
           style={{
@@ -37,9 +37,9 @@ const InviteFriends = () => {
             color: AppColor.WHITE,
             marginTop: 10,
           }}>
-          Invite friend to Fitme and get ₹301 when your
+          Invite your friends to earn more Fitcoins.
         </Text>
-        <Text
+        {/* <Text
           style={{
             // fontFamily: Fonts.HELVETICA_REGULAR,
             fontWeight: '300',
@@ -49,14 +49,14 @@ const InviteFriends = () => {
             marginTop: 3,
           }}>
           friend sends their register. They get ₹20!
-        </Text>
+        </Text> */}
         <View
           style={{
             flexDirection: 'row',
             marginVertical: DeviceHeigth * 0.02,
             alignItems: 'center',
           }}>
-          <Text
+          {/* <Text
             style={{
               //fontFamily: Fonts.HELVETICA_REGULAR,
               fontWeight: '300',
@@ -81,7 +81,7 @@ const InviteFriends = () => {
           <Image
             style={{width: 20, height: 20}}
             source={require('../../Icon/Images/NewHome/share.png')}
-          />
+          /> */}
         </View>
         <TouchableOpacity
         onPress={()=>{

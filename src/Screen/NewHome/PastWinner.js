@@ -2,7 +2,7 @@ import {
   View,
   Text,
   StatusBar,
-  SafeAreaView,
+ 
   StyleSheet,
   ScrollView,
   Image,
@@ -19,6 +19,7 @@ import {localImage} from '../../Component/Image';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import { SafeAreaView } from 'react-native-safe-area-context';
 const PastWinner = ({route}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
 
@@ -95,7 +96,7 @@ const PastWinner = ({route}) => {
                       borderRadius: 80,
                       overflow: 'hidden',
                       zIndex: -1,
-                      backgroundColor: AppColor.WHITE,
+                      backgroundColor: '#DBEAFE',
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
@@ -103,8 +104,8 @@ const PastWinner = ({route}) => {
                       style={{
                         fontFamily: Fonts.HELVETICA_BOLD,
                         fontSize: 30,
-                        color: AppColor.BLACK,
-                        lineHeight: 40,
+                        color: '#1E40AF',
+                        lineHeight: 50,
                       }}>
                       {getUserDataDetails?.name.substring(0, 2).toUpperCase()}
                     </Text>
@@ -181,7 +182,8 @@ const PastWinner = ({route}) => {
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => {
-              navigation?.navigate('NewSubscription', {upgrade: true});
+             // navigation?.navigate('NewSubscription', {upgrade: true});
+             navigation.navigate('StepGuide');
             }}
             style={{
               width: 203,
