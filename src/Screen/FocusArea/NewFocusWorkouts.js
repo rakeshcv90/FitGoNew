@@ -831,6 +831,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item, index}) => {
+              const time = parseInt(item?.exercise_rest.split(' ')[0])
               return (
                 <>
                   <TouchableOpacity
@@ -894,7 +895,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
                           fontFamily: Fonts.MONTSERRAT_MEDIUM,
                           color: '#1E1E1E',
                         }}>
-                        {item?.exercise_rest}
+                        {time > 30? `${time%60} min` :time+' sec'}
                       </Text>
                     </View>
                     {selectedIndex == index && downloadProgress <= 5 ? (

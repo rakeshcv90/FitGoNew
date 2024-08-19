@@ -11,6 +11,7 @@ import {
   BackHandler,
   Animated,
   Easing,
+  StatusBar,
 } from 'react-native';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -143,7 +144,7 @@ const CardioExercise = ({navigation, route}: any) => {
   const {initInterstitial, showInterstitialAd} =
     NewInterstitialAd(setAddClosed);
   const [seconds, setSeconds] = useState(
-    parseInt(allExercise[number + 1]?.exercise_rest.split(' ')[0]),
+    parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
   );
   const [isRunning, setIsRunning] = useState(false);
   const [quitLoader, setQuitLoader] = useState(false);
@@ -192,9 +193,6 @@ const CardioExercise = ({navigation, route}: any) => {
 
   // Convert seconds into minutes and seconds
 
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-
   useEffect(() => {
     initInterstitial();
     const initTts = async () => {
@@ -237,7 +235,7 @@ const CardioExercise = ({navigation, route}: any) => {
         if (restStart) {
           if (timer === 0 && number != 0) {
             // if (number == allExercise?.length - 1) return;
-            setShowSet(true);
+            allExercise[number]?.exercise_sets != 0 && setShowSet(true);
             setCurrentSet(currentSet + 1);
             setRestStart(false);
             Tts.stop();
@@ -255,9 +253,9 @@ const CardioExercise = ({navigation, route}: any) => {
             StartAnimation();
           } else if (timer === 0 && number == 0) {
             if (number == allExercise?.length - 1) return;
-
+            setPause(true);
             setRestStart(false);
-            setShowSet(true);
+            allExercise[number]?.exercise_sets != 0 && setShowSet(true);
             setCurrentSet(currentSet + 1);
             setTimer(10);
             setDemo(!demo);
@@ -297,71 +295,127 @@ const CardioExercise = ({navigation, route}: any) => {
               setSeconds(seconds - 1);
             }
           }
-          if (
-            seconds == 0 &&
-            number == allExercise?.length - 1 &&
-            currentSet == allExercise[number]?.exercise_sets
-          ) {
-            setPause(false);
-            postCurrentRewardsExerciseAPI(number);
-            let checkAdsShow = AddCountFunction();
-            // const above45 =
-            //   moment(getExerciseInTime, 'hh:mm:ss')
-            //     .add(2, 'minutes')
-            //     .format('hh:mm:ss') >= moment().format('hh:mm:ss');
-            // console.error(above45,'START', getExerciseInTime, "NEWWEWEEW",moment().format('hh:mm:ss'));
-
-            if (checkAdsShow == true) {
-              showInterstitialAd();
-              clearTimeout(playTimerRef.current);
-              //CollectCoins
-              offerType
-                ? navigation.goBack()
-                : navigation?.navigate('WorkoutCompleted', {
-                    type: type,
-                    day: day,
-                    allExercise: allExercise,
-                  });
-            } else {
-              offerType
-                ? navigation.goBack()
-                : navigation?.navigate('WorkoutCompleted', {
-                    type: type,
-                    day: day,
-                    allExercise: allExercise,
-                  });
-            }
-          } else if (
-            seconds == 0 &&
-            number <= allExercise?.length - 1 &&
-            currentSet < allExercise[number]?.exercise_sets &&
-            !showSet
-          ) {
-            setShowSet(true);
-            setCurrentSet(currentSet + 1);
-            setSeconds(
-              parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
-            );
-            clearTimeout(playTimerRef.current);
-            StartAnimation();
-          } else if (seconds == 0 && number < allExercise?.length - 1) {
-            !addClosed && showInterstitialAd();
-            if (addClosed) {
-              ProgressRef.current?.play();
+          if (allExercise[number]?.exercise_sets != 0) {
+            if (
+              seconds == 0 &&
+              number == allExercise?.length - 1 &&
+              currentSet == allExercise[number]?.exercise_sets
+            ) {
               setPause(false);
-              setCurrentSet(0);
-              const index = allExercise?.findIndex(
-                (item: any) =>
-                  item?.exercise_id == allExercise[number]?.exercise_id,
+              postCurrentRewardsExerciseAPI(number);
+              let checkAdsShow = AddCountFunction();
+              // const above45 =
+              //   moment(getExerciseInTime, 'hh:mm:ss')
+              //     .add(2, 'minutes')
+              //     .format('hh:mm:ss') >= moment().format('hh:mm:ss');
+              // console.error(above45,'START', getExerciseInTime, "NEWWEWEEW",moment().format('hh:mm:ss'));
+
+              if (checkAdsShow == true) {
+                showInterstitialAd();
+                clearTimeout(playTimerRef.current);
+                //CollectCoins
+                offerType
+                  ? navigation.navigate('OfferPage')
+                  : navigation?.navigate('WorkoutCompleted', {
+                      type: type,
+                      day: day,
+                      allExercise: allExercise,
+                    });
+              } else {
+                offerType
+                  ? navigation.navigate('OfferPage')
+                  : navigation?.navigate('WorkoutCompleted', {
+                      type: type,
+                      day: day,
+                      allExercise: allExercise,
+                    });
+              }
+            } else if (
+              seconds == 0 &&
+              number <= allExercise?.length - 1 &&
+              currentSet < allExercise[number]?.exercise_sets &&
+              !showSet
+            ) {
+              setShowSet(true);
+              setCurrentSet(currentSet + 1);
+              setSeconds(
+                parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
               );
-              handleExerciseChange(allExercise[index + 1]?.exercise_title);
-              setNumber(index + 1);
-              setRestStart(true);
-              setAddClosed(false);
+              clearTimeout(playTimerRef.current);
+              StartAnimation();
+            } else if (seconds == 0 && number < allExercise?.length - 1) {
+              !addClosed && showInterstitialAd();
+              if (addClosed) {
+                ProgressRef.current?.play();
+                setPause(false);
+                setCurrentSet(0);
+                const index = allExercise?.findIndex(
+                  (item: any) =>
+                    item?.exercise_id == allExercise[number]?.exercise_id,
+                );
+                handleExerciseChange(allExercise[index + 1]?.exercise_title);
+                setNumber(index + 1);
+                setRestStart(true);
+                setAddClosed(false);
+              }
+              Platform.OS == 'android'
+                ? Platform.Version != 34 && setupPlayer()
+                : setupPlayer();
             }
-            Platform.OS == 'android'
-              ? Platform.Version != 34 && setupPlayer()
-              : setupPlayer();
+          } else {
+            if (
+              seconds == 0 &&
+              number == allExercise?.length - 1
+              // currentSet == allExercise[number]?.exercise_sets
+            ) {
+              setPause(false);
+              postCurrentRewardsExerciseAPI(number);
+              let checkAdsShow = AddCountFunction();
+              // const above45 =
+              //   moment(getExerciseInTime, 'hh:mm:ss')
+              //     .add(2, 'minutes')
+              //     .format('hh:mm:ss') >= moment().format('hh:mm:ss');
+              // console.error(above45,'START', getExerciseInTime, "NEWWEWEEW",moment().format('hh:mm:ss'));
+
+              if (checkAdsShow == true) {
+                showInterstitialAd();
+                clearTimeout(playTimerRef.current);
+                //CollectCoins
+                offerType
+                  ? navigation.navigate('OfferPage')
+                  : navigation?.navigate('WorkoutCompleted', {
+                      type: type,
+                      day: day,
+                      allExercise: allExercise,
+                    });
+              } else {
+                offerType
+                  ? navigation.navigate('OfferPage')
+                  : navigation?.navigate('WorkoutCompleted', {
+                      type: type,
+                      day: day,
+                      allExercise: allExercise,
+                    });
+              }
+            } else if (seconds == 0 && number <= allExercise?.length - 1) {
+              !addClosed && showInterstitialAd();
+              if (addClosed) {
+                ProgressRef.current?.play();
+                setPause(false);
+                setCurrentSet(0);
+                const index = allExercise?.findIndex(
+                  (item: any) =>
+                    item?.exercise_id == allExercise[number]?.exercise_id,
+                );
+                handleExerciseChange(allExercise[index + 1]?.exercise_title);
+                setNumber(index + 1);
+                setRestStart(true);
+                setAddClosed(false);
+              }
+              Platform.OS == 'android'
+                ? Platform.Version != 34 && setupPlayer()
+                : setupPlayer();
+            }
           }
         }
       }, 1000);
@@ -440,10 +494,16 @@ const CardioExercise = ({navigation, route}: any) => {
       setQuitLoader(false);
       console.log('DELE TRACK ERRR', error);
     }
-    navigationRef.current.goBack();
+    offerType
+      ? navigation.navigate('OfferPage')
+      : navigation?.navigate('WorkoutCompleted', {
+          type: type,
+          day: day,
+          allExercise: allExercise,
+        });
   };
   const postCurrentRewardsExerciseAPI = async (index: number) => {
-    setOverExerciseVisible(true)
+    setOverExerciseVisible(true);
     const url =
       'https://fitme.cvinfotechserver.com/adserver/public/api/testing1_event_exercise_complete_status';
     const payload = new FormData();
@@ -502,19 +562,6 @@ const CardioExercise = ({navigation, route}: any) => {
     } catch (error) {
       console.error(error?.response, 'PostREWARDSAPIERror');
     }
-    // if (
-    //   getExerciseOutTime != '' &&
-    //   moment().format(format) > getExerciseOutTime
-    // ) {
-    //   console.warn(
-    //     'SHOWINGDF',
-    //     moment().format(format),
-    //     getExerciseInTime,
-    //     getExerciseOutTime,
-    //   );
-    //   setOverExerciseVisible(false);
-    //   setPause(!pause);
-    // }
   };
 
   const PauseModal = useMemo(() => {
@@ -682,12 +729,16 @@ const CardioExercise = ({navigation, route}: any) => {
     });
   };
 
+  let minutes = Math.floor(seconds / 60);
+  let remainingSeconds = seconds % 60;
+
   return (
     <SafeAreaView
       style={{
         flex: 1,
         backgroundColor: '#F7F7F7',
       }}>
+        <StatusBar barStyle={'dark-content'} />
       {restStart ? (
         <>
           <View
@@ -788,7 +839,7 @@ const CardioExercise = ({navigation, route}: any) => {
           <View
             style={[
               {
-                height: DeviceHeigth * 0.28,
+                // height: DeviceHeigth * 0.28,
                 paddingTop: 10,
                 paddingHorizontal: 20,
                 backgroundColor: AppColor.WHITE,
@@ -864,7 +915,7 @@ const CardioExercise = ({navigation, route}: any) => {
         </>
       ) : (
         <>
-          {/* {showSet && (
+          {showSet && (
             <Animated.Text
               style={{
                 color: AppColor.RED,
@@ -881,7 +932,7 @@ const CardioExercise = ({navigation, route}: any) => {
               }}>
               SET {currentSet}
             </Animated.Text>
-          )} */}
+          )}
 
           <View
             style={{
@@ -981,7 +1032,7 @@ const CardioExercise = ({navigation, route}: any) => {
           <View
             style={[
               {
-                height: DeviceHeigth * 0.28,
+                // height: DeviceHeigth * 0.28,
                 paddingTop: 10,
                 paddingHorizontal: 20,
                 backgroundColor: AppColor.WHITE,
@@ -1005,7 +1056,9 @@ const CardioExercise = ({navigation, route}: any) => {
                   lineHeight: 54,
                   color: '#1F2937',
                 }}>
-                {seconds >= 10 ? '00:' + seconds : '00:0' + seconds}
+                {remainingSeconds > 9
+                  ? `0${minutes}:${remainingSeconds}`
+                  : `0${minutes}:0${remainingSeconds}`}
               </Text>
             </View>
             <View
@@ -1022,7 +1075,7 @@ const CardioExercise = ({navigation, route}: any) => {
                 onPress={() => {
                   if (number == 0) return;
                   setPrevious(previous + 1);
-                  setShowSet(true);
+                  allExercise[number]?.exercise_sets != 0 && setShowSet(true);
                   setCurrentSet(1);
                   StartAnimation();
                   setPause(false);
@@ -1053,14 +1106,18 @@ const CardioExercise = ({navigation, route}: any) => {
               <CircularProgressWithChild
                 value={seconds}
                 radius={60}
-                initialValue={30}
                 inActiveStrokeColor={'#F0F0F0'}
                 activeStrokeSecondaryColor="#F0013B"
                 activeStrokeColor="#530014"
                 activeStrokeWidth={40}
                 inActiveStrokeWidth={40}
                 strokeLinecap="butt"
-                maxValue={30}>
+                maxValue={parseInt(
+                  allExercise[number]?.exercise_rest.split(' ')[0],
+                )}
+                initialValue={parseInt(
+                  allExercise[number]?.exercise_rest.split(' ')[0],
+                )}>
                 <TouchableOpacity onPress={() => setPause(!pause)}>
                   <FitIcon
                     name={!pause ? 'play' : 'pause'}
@@ -1075,7 +1132,7 @@ const CardioExercise = ({navigation, route}: any) => {
                 onPress={() => {
                   setNext(next + 1);
                   setPause(!pause);
-                  setShowSet(true);
+                  allExercise[number]?.exercise_sets != 0 && setShowSet(true);
                   setCurrentSet(1);
                   StartAnimation();
                   setPause(false);
@@ -1172,7 +1229,7 @@ const CardioExercise = ({navigation, route}: any) => {
           </View>
         </>
       )}
-      <BottomSheetExercise
+      {/* <BottomSheetExercise
         isVisible={visible}
         setVisible={setVisible}
         exerciseData={allExercise}
@@ -1185,7 +1242,7 @@ const CardioExercise = ({navigation, route}: any) => {
         setSeconds={setSeconds}
         handleExerciseChange={handleExerciseChange}
         setNumber={setNumber}
-      />
+      /> */}
       <PauseModal back={back} quitLoader={quitLoader} />
 
       <WorkoutsDescription

@@ -250,7 +250,8 @@ const WorkoutCompleted = ({navigation, route}) => {
         });
         // }
       } else {
-        navigation.navigate('EventExercise', {
+        cardioCardOffset.value = withSpring(-DeviceWidth);
+        navigation.navigate('CardioExercise', {
           allExercise: cardioExxercise,
           currentExercise: cardioExxercise[0],
           data: [],

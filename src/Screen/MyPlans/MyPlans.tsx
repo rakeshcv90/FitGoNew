@@ -581,7 +581,7 @@ const MyPlans = ({navigation}: any) => {
           analytics().logEvent(
             `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
           );
-          navigation.navigate('EventExercise', {
+          navigation.navigate('Exercise', {
             allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
             currentExercise:
               getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
@@ -595,7 +595,7 @@ const MyPlans = ({navigation}: any) => {
           analytics().logEvent(
             `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
           );
-          navigation.navigate('EventExercise', {
+          navigation.navigate('Exercise', {
             allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
             currentExercise:
               getWeeklyPlansData[WeekArray[selectedDay]]?.exercises[0],
@@ -768,7 +768,7 @@ const MyPlans = ({navigation}: any) => {
           analytics().logEvent(
             `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
           );
-          navigation.navigate('EventExercise', {
+          navigation.navigate('Exercise', {
             allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
             currentExercise:
               // trainingCount != -1
@@ -784,7 +784,7 @@ const MyPlans = ({navigation}: any) => {
           analytics().logEvent(
             `CV_FITME_CLICKED_ON_${WeekArray[selectedDay]}_PLAN`,
           );
-          navigation.navigate('EventExercise', {
+          navigation.navigate('Exercise', {
             allExercise: getWeeklyPlansData[WeekArray[selectedDay]]?.exercises,
             currentExercise:
               // trainingCount != -1
