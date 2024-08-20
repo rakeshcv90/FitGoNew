@@ -150,7 +150,7 @@ const MyPlans = ({navigation}: any) => {
   useEffect(() => {
     if (start && getExerciseOutTime == '') {
       dispatch(setExerciseInTime(moment().format(format)));
-      dispatch(setExerciseOutTime(moment().add(5, 'minutes').format(format)));
+      dispatch(setExerciseOutTime(moment().add(45, 'minutes').format(format)));
       console.warn('STARTING', moment().format(format), getExerciseOutTime);
     }
     if (
@@ -160,23 +160,7 @@ const MyPlans = ({navigation}: any) => {
     ) {
       console.warn('COMPLETEE', moment().format(format), getExerciseOutTime);
       dispatch(setExerciseInTime(moment().format(format)));
-    } else if (
-      getExerciseOutTime != '' &&
-      moment().format(format) > getExerciseOutTime
-      // &&
-      // getExerciseInTime > getExerciseOutTime
-      // moment(getExerciseInTime, format).isAfter(
-      //   moment(getExerciseOutTime, format),
-      // )
-    ) {
-      console.warn(
-        'SHOWINGDF',
-        moment().format(format),
-        getExerciseInTime,
-        getExerciseOutTime,
-      );
-      setOverExerciseVisible(true);
-    }
+    } 
     // if (
     //   // complete &&
     //   getExerciseOutTime != '' &&

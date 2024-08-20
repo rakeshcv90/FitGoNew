@@ -9,12 +9,12 @@ import {showMessage} from 'react-native-flash-message';
 import {useNavigation} from '@react-navigation/native';
 import {AnalyticsConsole} from '../AnalyticsConsole';
 
-const WithoutEvent = ({pastWinners}) => {
+const WithoutEvent = ({pastWinners, noText}) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <View
+        {!noText&&<View
           style={{
             width: '100%',
           }}>
@@ -28,7 +28,7 @@ const WithoutEvent = ({pastWinners}) => {
             }}>
             Past Champions
           </Text>
-        </View>
+        </View>}
 
         <View
           style={{

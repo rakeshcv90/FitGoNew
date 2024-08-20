@@ -1,7 +1,6 @@
 import {
   Image,
   ImageBackground,
- 
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -20,8 +19,9 @@ import FastImage from 'react-native-fast-image';
 import {RequestAPI} from '../../Component/Utilities/RequestAPI';
 import VersionNumber from 'react-native-version-number';
 import FitIcon from '../../Component/Utilities/FitIcon';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import WithoutEvent from '../../Component/NewHomeUtilities/WithoutEvent';
 type StepItem = {
   item: StepsArrayType;
   index: number;
@@ -73,16 +73,15 @@ const StepItems = ({item, index}: StepItem) => {
           color={AppColor.BLACK}
           fontFamily={Fonts.MONTSERRAT_REGULAR}
           fontWeight="500"
-          fontSize={IPAD_HEIGHT ? 16 : 14}
-        >
-        <FitText
-          type="normal"
-          value={item.bold}
-          color={AppColor.BLACK}
-          fontFamily={Fonts.MONTSERRAT_REGULAR}
-          fontWeight="bold"
-          fontSize={IPAD_HEIGHT ? 16 : 14}
-        />
+          fontSize={IPAD_HEIGHT ? 16 : 14}>
+          <FitText
+            type="normal"
+            value={item.bold}
+            color={AppColor.BLACK}
+            fontFamily={Fonts.MONTSERRAT_REGULAR}
+            fontWeight="bold"
+            fontSize={IPAD_HEIGHT ? 16 : 14}
+          />
         </FitText>
       </View>
     </View>
@@ -133,7 +132,7 @@ const StepGuide = ({navigation}: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor={AppColor.RED}barStyle={'light-content'}/>
+      <StatusBar backgroundColor={AppColor.RED} barStyle={'light-content'} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{width: '100%', alignSelf: 'center'}}>
@@ -248,86 +247,17 @@ const StepGuide = ({navigation}: any) => {
               </View>
             </View>
             <FitText type="Heading" value="Past Winners" textAlign="center" />
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                paddingVertical: 10,
-              }}>
-              {pastWinners &&
-                pastWinners.map((item: any, index: number) => (
-                  <View
-                    style={[
-                      styles.greyContainer,
-                      {
-                        // height: IPAD_HEIGHT ? DeviceWidth / 4 : DeviceWidth / 2,
-                      },
-                    ]}>
-                    <FitText type="SubHeading" value="Won" />
-                    <FitText type="SubHeading" value="₹1000" />
-                    <View style={styles.row}>
-                      {item?.image == null ? (
-                        <ImageBackground
-                          source={localImage.PinkGradient}
-                          tintColor="#DBEAFE"
-                          imageStyle={styles.mainImage}
-                          resizeMode="contain"
-                          style={styles.image}>
-                          <FitText
-                            type="SubHeading"
-                            value={item?.name.substring(0, 1)}
-                            color="#1E40AF"
-                            textTransform="uppercase"
-                          />
-                        </ImageBackground>
-                      ) : (
-                        <ImageBackground
-                          source={localImage.PinkGradient}
-                          imageStyle={styles.mainImage}
-                          resizeMode="contain"
-                          style={styles.image}>
-                          <FastImage
-                            style={styles.mainImage1}
-                            source={{
-                              uri: item?.image,
-                              headers: {Authorization: 'someAuthToken'},
-                              priority: FastImage.priority.high,
-                            }}
-                            resizeMode={FastImage.resizeMode.cover}
-                            defaultSource={localImage.NOWORKOUT}
-                          />
-                        </ImageBackground> 
-                      )}
-                    </View>
-                    <FitText
-                      type="SubHeading"
-                      value={item?.name?.split(' ')[0]}
-                      textTransform="capitalize"
-                      textAlign="center"
-                    />
-                  </View>
-                ))}
-            </View>
+            <WithoutEvent pastWinners={pastWinners} noText />
             <FitText
               type="Heading"
               value="Terms & Conditions"
               marginVertical={10}
+              onPress={() => {
+                navigation.navigate('TermaAndCondition', {
+                  title: 'Terms & Condition',
+                });
+              }}
             />
-            <View style={{flexDirection: 'row', marginVertical: 5}}>
-              <FitText type="normal" value="• " />
-              <FitText
-                type="normal"
-                value="Participants must complete daily/weekly fitness tasks as specified."
-              />
-            </View>
-            <View style={{flexDirection: 'row', marginVertical: 5}}>
-              <FitText type="normal" value="• " />
-              <FitText
-                type="normal"
-                value="Personal data will be used only for challenge purposes."
-              />
-            </View>
           </View>
         </View>
       </ScrollView>
@@ -337,9 +267,9 @@ const StepGuide = ({navigation}: any) => {
           colors={['#F0013B', '#F0013B']}
           bR={10}
           h={50}
-          onPress={() =>{
-            AnalyticsConsole('STEP_Sub')
-            navigation?.navigate('NewSubscription', {upgrade: true})
+          onPress={() => {
+            AnalyticsConsole('STEP_Sub');
+            navigation?.navigate('NewSubscription', {upgrade: true});
           }}
           alignSelf
         />

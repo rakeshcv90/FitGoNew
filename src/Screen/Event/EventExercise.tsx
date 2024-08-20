@@ -187,8 +187,6 @@ const EventExercise = ({navigation, route}: any) => {
 
   // Convert seconds into minutes and seconds
 
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
 
   useEffect(() => {
     initInterstitial();
@@ -284,6 +282,7 @@ const EventExercise = ({navigation, route}: any) => {
               setSeconds(seconds - 1);
             }
           }
+          if (allExercise[number]?.exercise_sets != 0) {
           if (
             seconds == 0 &&
             number == allExercise?.length - 1 &&
@@ -339,6 +338,7 @@ const EventExercise = ({navigation, route}: any) => {
               setAddClosed(false);
             }
           }
+        }
         }
       }, 1000);
     } else {
@@ -435,19 +435,8 @@ const EventExercise = ({navigation, route}: any) => {
 
     try {
       //LIVE  URL
-      const res = await axios({
-        url: 'https://fitme.cvinfotechserver.com/adserver/public/api/testing_event_exercise_complete_status',
-        // url: NewAppapi.POST_REWARDS_EXERCISE,
-        method: 'post',
-        data: payload,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      //TEST URL
       // const res = await axios({
-      //   url: url,
+      //   url: 'https://fitme.cvinfotechserver.com/adserver/public/api/testing_event_exercise_complete_status',
       //   // url: NewAppapi.POST_REWARDS_EXERCISE,
       //   method: 'post',
       //   data: payload,
@@ -455,6 +444,17 @@ const EventExercise = ({navigation, route}: any) => {
       //     'Content-Type': 'multipart/form-data',
       //   },
       // });
+
+      //TEST URL
+      const res = await axios({
+        // url: url,
+        url: NewAppapi.POST_REWARDS_EXERCISE,
+        method: 'post',
+        data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -630,6 +630,8 @@ const EventExercise = ({navigation, route}: any) => {
     });
   };
 
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
   return (
     <SafeAreaView
       style={{
@@ -639,7 +641,7 @@ const EventExercise = ({navigation, route}: any) => {
       <StatusBar barStyle={'dark-content'} />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 10}}>
+        contentContainerStyle={{marginBottom: 10}}>
       {restStart ? (
         <>
           <View
@@ -959,7 +961,9 @@ const EventExercise = ({navigation, route}: any) => {
                   lineHeight: 54,
                   color: '#1F2937',
                 }}>
-                {seconds >= 10 ? '00:' + seconds : '00:0' + seconds}
+                {remainingSeconds > 9
+                  ? `0${minutes}:${remainingSeconds}`
+                  : `0${minutes}:0${remainingSeconds}`}
               </Text>
             </View>
             <View

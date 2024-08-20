@@ -36,6 +36,7 @@ const Questions = ({route, navigation}: any) => {
               width: '95%',
               alignItems: 'center',
               justifyContent: 'space-between',
+              paddingLeft: 5
             }}>
             <View style={{width: '95%'}}>
               <FitText

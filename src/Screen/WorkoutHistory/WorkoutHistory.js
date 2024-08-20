@@ -1,4 +1,11 @@
-import {View, Text, StyleSheet, ScrollView, Image, Platform} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  Platform,
+} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {AppColor} from '../../Component/Color';
@@ -21,6 +28,7 @@ import Tooltip from './Tooltip';
 import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../../Component/ActivityLoader';
 import LoadingScreen from '../../Component/NewHomeUtilities/LoadingScreen';
+import { useSelector } from 'react-redux';
 
 const WorkoutHistory = () => {
   const [selectedDay, setSelectedDay] = useState((moment().day() + 6) % 7);
@@ -38,6 +46,7 @@ const WorkoutHistory = () => {
           .subtract(moment().isoWeekday() - 1, 'days')
           .format('dddd')),
     );
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const sameDay = moment().format('dddd') == WeekArrayWithEvent[selectedDay];
   const currentDay = (moment().day() + 6) % 7;
   useEffect(() => {
@@ -50,7 +59,7 @@ const WorkoutHistory = () => {
     setLoaded(true);
     try {
       const res = await axios(
-        `${NewAppapi.GET_HISTORY}?user_id=${10281} & day=${
+        `${NewAppapi.GET_HISTORY}?user_id=${getUserDataDetails?.id} & day=${
           WeekArrayWithEvent[selectedDay]
         }`,
       );
@@ -214,7 +223,7 @@ const WorkoutHistory = () => {
                   )}
                 </View>
               ) : null}
-              <SingleWorkout />
+              {/* <SingleWorkout /> */}
               {screenObject?.breathe == 0 &&
               !screenObject?.cardio == 0 ? null : (
                 <View style={styles.container1}>
@@ -244,7 +253,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: AppColor.BACKGROUNG,
-  paddingTop:Platform.OS=='ios'?20:0
+    paddingTop: Platform.OS == 'ios' ? 20 : 0,
   },
   container1: {
     // width: DeviceWidth,

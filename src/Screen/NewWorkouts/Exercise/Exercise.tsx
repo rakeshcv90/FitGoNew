@@ -59,7 +59,7 @@ import NativeAddTest from '../../../Component/NativeAddTest';
 import {ShadowStyle} from '../../../Component/Utilities/ShadowStyle';
 import FitIcon from '../../../Component/Utilities/FitIcon';
 import FitText from '../../../Component/Utilities/FitText';
-import { StatusBar } from 'react-native';
+import {StatusBar} from 'react-native';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -186,11 +186,6 @@ const Exercise = ({navigation, route}: any) => {
     setIsRunning(prevState => !prevState);
   };
 
-  // Convert seconds into minutes and seconds
-
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-
   useEffect(() => {
     initInterstitial();
     const initTts = async () => {
@@ -226,7 +221,7 @@ const Exercise = ({navigation, route}: any) => {
         if (restStart) {
           if (timer === 0 && number != 0) {
             // if (number == allExercise?.length - 1) return;
-            setShowSet(true);
+            //setShowSet(true);
             setCurrentSet(1);
             setRestStart(false);
             Tts.stop();
@@ -288,63 +283,110 @@ const Exercise = ({navigation, route}: any) => {
               setSeconds(seconds - 1);
             }
           }
-          if (
-            seconds == 0 &&
-            number == allExercise?.length - 1 &&
-            currentSet == allExercise[number]?.exercise_sets
-          ) {
-            setPause(false);
-            type == 'focus' || type == 'bodypart'
-              ? postSingleExerciseAPI(number)
-              : postCurrentExerciseAPI(number);
-            let checkAdsShow = AddCountFunction();
-            if (checkAdsShow == true) {
-              showInterstitialAd();
-              navigation.navigate('SaveDayExercise', {
-                data,
-                day,
-                allExercise,
-                type,
-                challenge,
-              });
-            } else {
-              navigation.navigate('SaveDayExercise', {
-                data,
-                day,
-                allExercise,
-                type,
-                challenge,
-              });
-            }
-          } else if (
-            seconds == 0 &&
-            number <= allExercise?.length - 1 &&
-            currentSet < allExercise[number]?.exercise_sets &&
-            !showSet
-          ) {
-            setShowSet(true);
-            setCurrentSet(currentSet + 1);
-            setSeconds(
-              parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
-            );
-            clearTimeout(playTimerRef.current);
-            StartAnimation();
-          } else if (seconds == 0 && number < allExercise?.length - 1) {
-            console.log('NUMBER', number);
-            setCurrentSet(0);
-            const index = allExercise?.findIndex(
-              (item: any) =>
-                item?.exercise_id == allExercise[number]?.exercise_id,
-            );
-            handleExerciseChange(allExercise[index + 1]?.exercise_title);
-            setNumber(index + 1);
-            setRestStart(true);
-            !addClosed && showInterstitialAd();
-            if (addClosed) {
-              initInterstitial();
-              ProgressRef.current?.play();
+          if (allExercise[number]?.exercise_sets != 0) {
+            if (
+              seconds == 0 &&
+              number == allExercise?.length - 1 &&
+              currentSet == allExercise[number]?.exercise_sets
+            ) {
               setPause(false);
-              setAddClosed(false);
+              type == 'focus' || type == 'bodypart'
+                ? postSingleExerciseAPI(number)
+                : postCurrentExerciseAPI(number);
+              let checkAdsShow = AddCountFunction();
+              if (checkAdsShow == true) {
+                showInterstitialAd();
+                navigation.navigate('SaveDayExercise', {
+                  data,
+                  day,
+                  allExercise,
+                  type,
+                  challenge,
+                });
+              } else {
+                navigation.navigate('SaveDayExercise', {
+                  data,
+                  day,
+                  allExercise,
+                  type,
+                  challenge,
+                });
+              }
+            } else if (
+              seconds == 0 &&
+              number <= allExercise?.length - 1 &&
+              currentSet < allExercise[number]?.exercise_sets &&
+              !showSet
+            ) {
+              setShowSet(true);
+              setCurrentSet(currentSet + 1);
+              setSeconds(
+                parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
+              );
+              clearTimeout(playTimerRef.current);
+              StartAnimation();
+            } else if (seconds == 0 && number < allExercise?.length - 1) {
+              console.log('NUMBER', number);
+              setCurrentSet(0);
+              const index = allExercise?.findIndex(
+                (item: any) =>
+                  item?.exercise_id == allExercise[number]?.exercise_id,
+              );
+              handleExerciseChange(allExercise[index + 1]?.exercise_title);
+              setNumber(index + 1);
+              setRestStart(true);
+              !addClosed && showInterstitialAd();
+              if (addClosed) {
+                initInterstitial();
+                ProgressRef.current?.play();
+                setPause(false);
+                setAddClosed(false);
+              }
+            }
+          } else {
+            if (seconds == 0 && number == allExercise?.length - 1) {
+              setPause(false);
+              type == 'focus' || type == 'bodypart'
+                ? postSingleExerciseAPI(number)
+                : postCurrentExerciseAPI(number);
+              let checkAdsShow = AddCountFunction();
+              if (checkAdsShow == true) {
+                showInterstitialAd();
+                navigation.navigate('SaveDayExercise', {
+                  data,
+                  day,
+                  allExercise,
+                  type,
+                  challenge,
+                });
+              } else {
+                navigation.navigate('SaveDayExercise', {
+                  data,
+                  day,
+                  allExercise,
+                  type,
+                  challenge,
+                });
+              }
+            } else if (seconds == 0 && number <= allExercise?.length - 1) {
+              !addClosed && showInterstitialAd();
+              if (addClosed) {
+                initInterstitial()
+                ProgressRef.current?.play();
+                setPause(false);
+                setCurrentSet(0);
+                const index = allExercise?.findIndex(
+                  (item: any) =>
+                    item?.exercise_id == allExercise[number]?.exercise_id,
+                );
+                handleExerciseChange(allExercise[index + 1]?.exercise_title);
+                setNumber(index + 1);
+                setRestStart(true);
+                setAddClosed(false);
+              }
+              Platform.OS == 'android'
+                ? Platform.Version != 34 && setupPlayer()
+                : setupPlayer();
             }
           }
         }
@@ -509,7 +551,6 @@ const Exercise = ({navigation, route}: any) => {
       return (
         <Modal
           visible={back}
-          animationType="slide"
           onRequestClose={() => setBack(false)}
           animationType="slide">
           <View
@@ -643,6 +684,8 @@ const Exercise = ({navigation, route}: any) => {
       console.log(opacity, 'opacity2');
     });
   };
+  let minutes = Math.floor(seconds / 60);
+  let remainingSeconds = seconds % 60;
   return (
     <SafeAreaView
       style={{
@@ -972,7 +1015,9 @@ const Exercise = ({navigation, route}: any) => {
                     lineHeight: 54,
                     color: '#1F2937',
                   }}>
-                  {seconds >= 10 ? '00:' + seconds : '00:0' + seconds}
+                  {remainingSeconds > 9
+                    ? `0${minutes}:${remainingSeconds}`
+                    : `0${minutes}:0${remainingSeconds}`}
                 </Text>
               </View>
               <View
@@ -1103,7 +1148,7 @@ const Exercise = ({navigation, route}: any) => {
                     }}>
                     <Image
                       source={
-                        getSoundOffOn
+                        !getSoundOffOn
                           ? require('../../../Icon/Images/InAppRewards/SoundOn.png')
                           : require('../../../Icon/Images/InAppRewards/SoundOff.png')
                       }

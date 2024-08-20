@@ -50,6 +50,7 @@ import {
 import {LogOut} from '../Component/LogOut';
 import {AnalyticsConsole} from '../Component/AnalyticsConsole';
 import RatingModal from '../Component/RatingModal';
+import FitIcon from '../Component/Utilities/FitIcon';
 const NewProfile = ({navigation}) => {
   useEffect(() => {
     notifee.getTriggerNotifications().then(res => {
@@ -75,7 +76,7 @@ const NewProfile = ({navigation}) => {
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const [notificationTimer, setNotificationTimer] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  const [ratingVisibilty,setRatingVisibilty]=useState(false);
+  const [ratingVisibilty, setRatingVisibilty] = useState(false);
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   const setAlarmIsEnabled = data => {
     dispatch(setIsAlarmEnabled(data));
@@ -632,7 +633,7 @@ const NewProfile = ({navigation}) => {
 
     return (
       <Modal
-      animationType="slide"
+        animationType="slide"
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
@@ -652,63 +653,83 @@ const NewProfile = ({navigation}) => {
           ]}>
           <View
             style={{
-              width: DeviceWidth * 0.85,
+              width: DeviceWidth * 0.8,
               justifyContent: 'center',
               alignItems: 'center',
             }}>
+            <FitIcon
+              name="alert-circle-outline"
+              type="MaterialCommunityIcons"
+              size={30}
+              color="#FF9500"
+            />
             <Text
               style={{
                 fontFamily: 'Poppins',
                 fontWeight: '700',
                 fontSize: 17,
                 color: AppColor.BoldText,
+                lineHeight: 24,
+                marginTop: 5,
               }}>
               Do you want to Delete your Account ?
             </Text>
           </View>
           <View
             style={{
-              justifyContent: 'flex-end',
               flexDirection: 'row',
-              width: DeviceWidth * 0.85,
+              width: DeviceWidth * 0.8,
               alignItems: 'center',
               marginTop: 30,
+              justifyContent: 'center',
+              alignSelf: 'center',
             }}>
             <TouchableOpacity
-              style={{marginRight: 20}}
+              style={{
+                backgroundColor: AppColor.RED,
+                borderRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: 5,
+                width: '40%',
+                paddingVertical: 7,
+                marginRight: 12
+              }}
               onPress={() => setModalVisible(false)}>
               <Text
                 style={{
-                  color: AppColor.BoldText,
-                  fontFamily: 'Poppins',
+                  color: AppColor.WHITE,
+                  fontFamily: Fonts.HELVETICA_REGULAR,
                   fontSize: 14,
-                  fontWeight: '500',
+                  fontWeight: '600',
                 }}>
                 Cancel
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{
-                backgroundColor: AppColor.RED,
-                borderRadius: 20,
+                borderColor: '#6B7280',
+                borderWidth: 1,
+                borderRadius: 10,
                 justifyContent: 'center',
                 alignItems: 'center',
-                paddingLeft: 5,
-                paddingRight: 5,
+                padding: 5,
+                width: '40%',
+                paddingVertical: 7,
               }}
               onPress={() => {
                 Delete();
               }}>
               <Text
                 style={{
-                  padding: 5,
                   textAlign: 'center',
-                  color: AppColor.WHITE,
-                  fontSize: 12,
-                  fontWeight: '500',
-                  fontFamily: 'Poppins',
+                  color: '#6B7280',
+                  fontSize: 15,
+                  fontWeight: '600',
+                  // lineHeight: 20,
+                  fontFamily: Fonts.HELVETICA_REGULAR,
                 }}>
-                Confirm
+                Delete
               </Text>
             </TouchableOpacity>
           </View>
@@ -759,8 +780,7 @@ const NewProfile = ({navigation}) => {
               color: AppColor.BLACK,
               fontSize: 14,
               fontWeight: '500',
-              maxWidth:DeviceWidth*0.65
-              
+              maxWidth: DeviceWidth * 0.65,
             }}>
             {getUserDataDetails?.email == null
               ? 'guest@gmail.com'
@@ -1003,7 +1023,12 @@ const NewProfile = ({navigation}) => {
         />
       </ScrollView>
       {UpdateScreenVisibility ? <UpdateProfileModal /> : null}
-      {ratingVisibilty?<RatingModal setModalVisibilty={setRatingVisibilty} getVisibility={ratingVisibilty} />:null}
+      {ratingVisibilty ? (
+        <RatingModal
+          setModalVisibilty={setRatingVisibilty}
+          getVisibility={ratingVisibilty}
+        />
+      ) : null}
       <DeleteAccount />
     </View>
   );
@@ -1111,8 +1136,9 @@ const styles = StyleSheet.create({
   },
   modalContent1: {
     padding: 20,
-    borderRadius: 8,
-    width: DeviceWidth * 0.95,
+    borderRadius: 10,
+    width: DeviceWidth * 0.9,
+    alignSelf: 'center',
     position: 'absolute',
     top: DeviceHeigth / 2.5,
     marginHorizontal: 10,

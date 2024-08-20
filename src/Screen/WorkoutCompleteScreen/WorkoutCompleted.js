@@ -19,9 +19,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import VersionNumber from 'react-native-version-number';
 import RNFetchBlob from 'rn-fetch-blob';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
-import {setExerciseInTime, setVideoLocation} from '../../Component/ThemeRedux/Actions';
+import {
+  setExerciseInTime,
+  setVideoLocation,
+} from '../../Component/ThemeRedux/Actions';
 import LoadingScreen from '../../Component/LoadingScreen';
-import { useIsFocused } from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
+import OverExerciseModal from '../../Component/Utilities/OverExercise';
 
 const format = 'hh:mm:ss';
 
@@ -60,7 +64,7 @@ const WorkoutCompleted = ({navigation, route}) => {
     filterCardioExercise();
     if (type == 'complete') {
       completeCardOffset.value = withSpring(0);
-    } else if (type == 'cardio' || type=='weekly') {
+    } else if (type == 'cardio' || type == 'weekly') {
       getEventEarnedCoins();
     }
   }, [type]);
@@ -228,8 +232,8 @@ const WorkoutCompleted = ({navigation, route}) => {
       setDownloade(0);
 
       AnalyticsConsole(`SCE_ON_${getPurchaseHistory?.currentDay}`);
-       // setStart(false);
-       if (moment().format(format) < getExerciseOutTime) {
+      // setStart(false);
+      if (moment().format(format) < getExerciseOutTime) {
         console.warn('COMPLETEE', moment().format(format));
         dispatch(setExerciseInTime(moment().format(format)));
       }
@@ -246,7 +250,7 @@ const WorkoutCompleted = ({navigation, route}) => {
           exerciseNumber: 0,
           trackerData: res?.data?.inserted_data,
           type: 'cardio',
-          offerType: false
+          offerType: false,
         });
         // }
       } else {
@@ -259,7 +263,7 @@ const WorkoutCompleted = ({navigation, route}) => {
           exerciseNumber: 0,
           trackerData: res?.data?.existing_data,
           type: 'cardio',
-          offerType: false
+          offerType: false,
         });
       }
     } catch (error) {
@@ -478,12 +482,17 @@ const WorkoutCompleted = ({navigation, route}) => {
                 title={
                   'Congratulations! You’ve completed your workout and earned more FitCoins. Keep working out regularly to win the fitness challenge.'
                 }
-                handleComplete={()=>navigation.navigate("MyPlans")}
+                handleComplete={() => navigation.navigate('MyPlans')}
               />
             </Animated.View>
           </View>
         </View>
       )}
+      <OverExerciseModal
+        setOverExerciseVisible={setOverExerciseVisible}
+        overExerciseVisible={overExerciseVisible}
+        handleBreakButton={() => setOverExerciseVisible(false)}
+      />
     </>
   );
 };

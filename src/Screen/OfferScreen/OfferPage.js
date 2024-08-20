@@ -332,7 +332,7 @@ const OfferPage = ({navigation}) => {
             text3={`${breatheCoins} coins`}
             coinTextColor={AppColor.WHITE}
             bannerType={'breathe'}
-            isactive={breatheStatus}
+            isactive={!breatheStatus}
             onPress={() => navigation.navigate('Breathe', {type: 'OfferPage'})}
           />
         </ScrollView>

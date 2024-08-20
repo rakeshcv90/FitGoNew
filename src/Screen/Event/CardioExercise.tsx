@@ -401,6 +401,7 @@ const CardioExercise = ({navigation, route}: any) => {
             } else if (seconds == 0 && number <= allExercise?.length - 1) {
               !addClosed && showInterstitialAd();
               if (addClosed) {
+                initInterstitial()
                 ProgressRef.current?.play();
                 setPause(false);
                 setCurrentSet(0);
@@ -522,19 +523,8 @@ const CardioExercise = ({navigation, route}: any) => {
 
     try {
       //LIVE  URL
-      const res = await axios({
-        url: 'https://fitme.cvinfotechserver.com/adserver/public/api/testing_event_exercise_complete_status',
-        // url: NewAppapi.POST_REWARDS_EXERCISE,
-        method: 'post',
-        data: payload,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      //TEST URL
       // const res = await axios({
-      //   url: url,
+      //   url: 'https://fitme.cvinfotechserver.com/adserver/public/api/testing_event_exercise_complete_status',
       //   // url: NewAppapi.POST_REWARDS_EXERCISE,
       //   method: 'post',
       //   data: payload,
@@ -542,6 +532,17 @@ const CardioExercise = ({navigation, route}: any) => {
       //     'Content-Type': 'multipart/form-data',
       //   },
       // });
+
+      //TEST URL
+      const res = await axios({
+        // url: url,
+        url: NewAppapi.POST_REWARDS_EXERCISE,
+        method: 'post',
+        data: payload,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       if (res?.data?.msg == 'Please update the app to the latest version.') {
         showMessage({
           message: res?.data?.msg,
@@ -742,7 +743,7 @@ const CardioExercise = ({navigation, route}: any) => {
       <StatusBar barStyle={'dark-content'} />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 10}}>
+        contentContainerStyle={{marginBottom: 10}}>
         {restStart ? (
           <>
             <View
@@ -812,6 +813,7 @@ const CardioExercise = ({navigation, route}: any) => {
                     zIndex: -1,
                     backgroundColor: AppColor.WHITE,
                     borderRadius: 10,
+                    overflow: 'hidden',
                   },
                   ShadowStyle,
                 ]}>

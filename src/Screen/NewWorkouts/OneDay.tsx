@@ -25,6 +25,8 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {
   setCount,
+  setExerciseInTime,
+  setExerciseOutTime,
   setSubscriptiomModal,
   setVideoLocation,
 } from '../../Component/ThemeRedux/Actions';
@@ -53,7 +55,9 @@ import RNFetchBlob from 'rn-fetch-blob';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import FastImage from 'react-native-fast-image';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import OverExerciseModal from '../../Component/Utilities/OverExercise';
 
+const format = 'hh:mm:ss';
 const OneDay = ({navigation, route}: any) => {
   const {data, dayData, day, trainingCount, challenge} = route.params;
   const [exerciseData, setExerciseData] = useState([]);
@@ -65,6 +69,8 @@ const OneDay = ({navigation, route}: any) => {
   const [reward, setreward] = useState(0);
   const avatarRef = React.createRef();
   const [forLoading, setForLoading] = useState(true);
+  const [overExerciseVisible, setOverExerciseVisible] = useState(false);
+  const [start, setStart] = useState(false);
 
   const [loader, setLoader] = useState(false);
 
@@ -210,9 +216,32 @@ const OneDay = ({navigation, route}: any) => {
     }
   };
 
+  const getExerciseInTime = useSelector(
+    (state: any) => state.getExerciseInTime,
+  );
+  const getExerciseOutTime = useSelector(
+    (state: any) => state.getExerciseOutTime,
+  );
+  useEffect(() => {
+    if (start && getExerciseOutTime == '') {
+      dispatch(setExerciseInTime(moment().format(format)));
+      dispatch(setExerciseOutTime(moment().add(45, 'minutes').format(format)));
+      console.warn('STARTING', moment().format(format), getExerciseOutTime);
+    }
+    if (
+      getExerciseInTime < getExerciseOutTime &&
+      !start &&
+      getExerciseOutTime != ''
+    ) {
+      console.warn('COMPLETEE', moment().format(format), getExerciseOutTime);
+      dispatch(setExerciseInTime(moment().format(format)));
+    } 
+  }, [getExerciseInTime, getExerciseOutTime, start]);
+
   const postCurrentDayAPI = async () => {
     let datas = [];
     let trainingCount = -1;
+    setStart(true);
     trainingCount = trackerData.findIndex(
       item => item?.exercise_status == 'undone',
     );
@@ -231,6 +260,7 @@ const OneDay = ({navigation, route}: any) => {
         downloadVideos(item, index, exerciseData.length),
       ),
     ).finally(async () => {
+      setStart(false);
       try {
         const res = await axios({
           url: challenge
@@ -357,10 +387,8 @@ const OneDay = ({navigation, route}: any) => {
                   {item?.exercise_title}
                 </Text>
                 <Text style={styles.small}>
-                {time > 30
-                          ? Math.floor(time / 60) + ' min'
-                          : time + ' sec'}
-                          </Text>
+                  {time > 30 ? Math.floor(time / 60) + ' min' : time + ' sec'}
+                </Text>
               </View>
             </View>
           </View>
@@ -667,7 +695,6 @@ const OneDay = ({navigation, route}: any) => {
           top: Platform.OS == 'ios' ? DeviceHeigth * 0.05 : DeviceHeigth * 0.03,
           width: DeviceWidth,
           paddingLeft: 15,
-       
 
           flexDirection: 'row',
           justifyContent: 'space-between',
@@ -688,7 +715,7 @@ const OneDay = ({navigation, route}: any) => {
               setOpen(false);
             }
           }}
-          style={{marginTop:DeviceWidth*0.04}}>
+          style={{marginTop: DeviceWidth * 0.04}}>
           <AntDesign name={'arrowleft'} size={25} color={AppColor.WHITE} />
         </TouchableOpacity>
       </View>
@@ -760,7 +787,7 @@ const OneDay = ({navigation, route}: any) => {
             zIndex: 1,
             color: AppColor.WHITE,
           }}
-          disabled={downloaded>0}
+          disabled={downloaded > 0}
           // mB={80}
           bottm={40}
           // weeklyAnimation={downloaded}
@@ -773,7 +800,18 @@ const OneDay = ({navigation, route}: any) => {
           // fill={downloaded > 0 ? `${100 / downloaded}%` : '0%'}
           onPress={() => {
             analytics().logEvent(`CV_FITME_STARTED_DAY_${day}_EXERCISES`);
-            postCurrentDayAPI();
+            if (
+              getExerciseOutTime != '' &&
+              moment().format(format) > getExerciseOutTime
+            ) {
+              console.warn(
+                'SHOWINGDF',
+                moment().format(format),
+                getExerciseInTime,
+                getExerciseOutTime,
+              );
+              setOverExerciseVisible(true);
+            } else postCurrentDayAPI();
           }}
         />
       </View>
@@ -784,6 +822,11 @@ const OneDay = ({navigation, route}: any) => {
         setOpen={setVisible}
       />
       <PaddoMeterPermissionModal />
+      <OverExerciseModal
+        setOverExerciseVisible={setOverExerciseVisible}
+        overExerciseVisible={overExerciseVisible}
+        handleBreakButton={() => setOverExerciseVisible(false)}
+      />
     </View>
   );
 };
