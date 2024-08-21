@@ -271,7 +271,10 @@ const Exercise = ({navigation, route}: any) => {
           }
         } else {
           if (pause) {
-            if (seconds == 30) {
+            if (
+              seconds ==
+              parseInt(allExercise[number]?.exercise_rest.split(' ')[0])
+            ) {
               SPEAK('Lets Go');
             }
             // setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
@@ -318,6 +321,10 @@ const Exercise = ({navigation, route}: any) => {
               currentSet < allExercise[number]?.exercise_sets &&
               !showSet
             ) {
+              if (currentSet + 1 == allExercise[number]?.exercise_sets) {
+                initInterstitial();
+                console.log('ADD INITIALISE');
+              }
               setShowSet(true);
               setCurrentSet(currentSet + 1);
               setSeconds(
@@ -337,7 +344,6 @@ const Exercise = ({navigation, route}: any) => {
               setRestStart(true);
               !addClosed && showInterstitialAd();
               if (addClosed) {
-                initInterstitial();
                 ProgressRef.current?.play();
                 setPause(false);
                 setAddClosed(false);
@@ -371,7 +377,6 @@ const Exercise = ({navigation, route}: any) => {
             } else if (seconds == 0 && number <= allExercise?.length - 1) {
               !addClosed && showInterstitialAd();
               if (addClosed) {
-                initInterstitial()
                 ProgressRef.current?.play();
                 setPause(false);
                 setCurrentSet(0);
@@ -1065,14 +1070,18 @@ const Exercise = ({navigation, route}: any) => {
                 <CircularProgressWithChild
                   value={seconds}
                   radius={60}
-                  initialValue={30}
                   inActiveStrokeColor={'#F0F0F0'}
                   activeStrokeSecondaryColor="#F0013B"
                   activeStrokeColor="#530014"
                   activeStrokeWidth={40}
                   inActiveStrokeWidth={40}
                   strokeLinecap="butt"
-                  maxValue={30}>
+                  maxValue={parseInt(
+                    allExercise[number]?.exercise_rest.split(' ')[0],
+                  )}
+                  initialValue={parseInt(
+                    allExercise[number]?.exercise_rest.split(' ')[0],
+                  )}>
                   <TouchableOpacity onPress={() => setPause(!pause)}>
                     <FitIcon
                       name={!pause ? 'play' : 'pause'}

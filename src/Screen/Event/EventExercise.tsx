@@ -285,7 +285,10 @@ const EventExercise = ({navigation, route}: any) => {
           }
         } else {
           if (pause) {
-            if (seconds == parseInt(allExercise[number]?.exercise_rest.split(' ')[0])) {
+            if (
+              seconds ==
+              parseInt(allExercise[number]?.exercise_rest.split(' ')[0])
+            ) {
               SPEAK('Lets Go');
             }
             // setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
@@ -293,7 +296,10 @@ const EventExercise = ({navigation, route}: any) => {
               if (seconds == 4) SPEAK('three.            two.');
               if (seconds == 2) SPEAK('one.    Done');
               if (seconds == 11) SPEAK('10 seconds to go');
-
+              if (allExercise[number]?.exercise_sets == 0) {
+                initInterstitial();
+                console.log('ADD INITIALISE NO SET');
+              }
               setSeconds(seconds - 1);
             }
           }
@@ -323,28 +329,24 @@ const EventExercise = ({navigation, route}: any) => {
               setPause(false);
               setCurrentSet(currentSet + 1);
               postCurrentRewardsExerciseAPI(number);
-              let checkAdsShow = AddCountFunction();
               clearTimeout(playTimerRef.current);
-              if (checkAdsShow == true) {
                 showInterstitialAd();
                 navigation.navigate('WorkoutCompleted', {
                   day: day,
                   allExercise: allExercise,
                   type: type,
                 });
-              } else {
-                navigation.navigate('WorkoutCompleted', {
-                  day: day,
-                  allExercise: allExercise,
-                  type: type,
-                });
-              }
+              
             } else if (
               seconds == 0 &&
               number <= allExercise?.length - 1 &&
               currentSet < allExercise[number]?.exercise_sets &&
               !showSet
             ) {
+              if (currentSet + 1 == allExercise[number]?.exercise_sets) {
+                initInterstitial();
+                console.log('ADD INITIALISE');
+              }
               setShowSet(true);
               setCurrentSet(currentSet + 1);
               setSeconds(
@@ -353,22 +355,23 @@ const EventExercise = ({navigation, route}: any) => {
               clearTimeout(playTimerRef.current);
               StartAnimation();
             } else if (seconds == 0 && number < allExercise?.length - 1) {
-              console.log('NUMBER', number);
-              setCurrentSet(0);
-              const index = allExercise?.findIndex(
-                (item: any) =>
-                  item?.exercise_id == allExercise[number]?.exercise_id,
-              );
-              handleExerciseChange(allExercise[index + 1]?.exercise_title);
-              setNumber(index + 1);
-              setRestStart(true);
               !addClosed && !overExerciseVisible && showInterstitialAd();
               if (addClosed) {
-                initInterstitial();
                 ProgressRef.current?.play();
                 setPause(false);
+                setCurrentSet(0);
+                const index = allExercise?.findIndex(
+                  (item: any) =>
+                    item?.exercise_id == allExercise[number]?.exercise_id,
+                );
+                handleExerciseChange(allExercise[index + 1]?.exercise_title);
+                setNumber(index + 1);
+                setRestStart(true);
                 setAddClosed(false);
               }
+              Platform.OS == 'android'
+                ? Platform.Version != 34 && setupPlayer()
+                : setupPlayer();
             }
           } else {
             if (
@@ -398,7 +401,6 @@ const EventExercise = ({navigation, route}: any) => {
             } else if (seconds == 0 && number <= allExercise?.length - 1) {
               !addClosed && !overExerciseVisible && showInterstitialAd();
               if (addClosed) {
-                initInterstitial();
                 ProgressRef.current?.play();
                 setPause(false);
                 setCurrentSet(0);
@@ -688,7 +690,7 @@ const EventExercise = ({navigation, route}: any) => {
   };
 
   const StartAnimation = () => {
-    console.log(opacity, 'opacity');
+    // console.log(opacity, 'opacity');
     // Define the animation sequence
     Animated.sequence([
       // Fade in and scale up
@@ -715,7 +717,7 @@ const EventExercise = ({navigation, route}: any) => {
       opacity.setValue(0);
       scale.setValue(1);
       translateY.setValue(0);
-      console.log(opacity, 'opacity2');
+      // console.log(opacity, 'opacity2');
     });
   };
 
@@ -730,7 +732,7 @@ const EventExercise = ({navigation, route}: any) => {
       <StatusBar barStyle={'dark-content'} />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{marginBottom: 10}}>
+        contentContainerStyle={{paddingBottom: 10}}>
         {restStart ? (
           <>
             <View
@@ -1101,14 +1103,18 @@ const EventExercise = ({navigation, route}: any) => {
                 <CircularProgressWithChild
                   value={seconds}
                   radius={60}
-                  initialValue={30}
                   inActiveStrokeColor={'#F0F0F0'}
                   activeStrokeSecondaryColor="#F0013B"
                   activeStrokeColor="#530014"
                   activeStrokeWidth={40}
                   inActiveStrokeWidth={40}
                   strokeLinecap="butt"
-                  maxValue={30}>
+                  maxValue={parseInt(
+                    allExercise[number]?.exercise_rest.split(' ')[0],
+                  )}
+                  initialValue={parseInt(
+                    allExercise[number]?.exercise_rest.split(' ')[0],
+                  )}>
                   <TouchableOpacity onPress={() => setPause(!pause)}>
                     <FitIcon
                       name={!pause ? 'play' : 'pause'}

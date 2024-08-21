@@ -284,7 +284,10 @@ const CardioExercise = ({navigation, route}: any) => {
           }
         } else {
           if (pause) {
-            if (seconds == 30) {
+            if (
+              seconds ==
+              parseInt(allExercise[number]?.exercise_rest.split(' ')[0])
+            ) {
               SPEAK('Lets Go');
             }
             // setPlayW(playW + 100 / parseInt(currentData?.exercise_rest));
@@ -292,7 +295,10 @@ const CardioExercise = ({navigation, route}: any) => {
               if (seconds == 4) SPEAK('three.            two.');
               if (seconds == 2) SPEAK('one.    Done');
               if (seconds == 11) SPEAK('10 seconds to go');
-
+              if (allExercise[number]?.exercise_sets == 0) {
+                initInterstitial();
+                console.log('ADD INITIALISE NO SET');
+              }
               setSeconds(seconds - 1);
             }
           }
@@ -304,39 +310,26 @@ const CardioExercise = ({navigation, route}: any) => {
             ) {
               setPause(false);
               postCurrentRewardsExerciseAPI(number);
-              let checkAdsShow = AddCountFunction();
-              // const above45 =
-              //   moment(getExerciseInTime, 'hh:mm:ss')
-              //     .add(2, 'minutes')
-              //     .format('hh:mm:ss') >= moment().format('hh:mm:ss');
-              // console.error(above45,'START', getExerciseInTime, "NEWWEWEEW",moment().format('hh:mm:ss'));
 
-              if (checkAdsShow == true) {
-                showInterstitialAd();
-                clearTimeout(playTimerRef.current);
-                //CollectCoins
-                offerType
-                  ? navigation.navigate('OfferPage')
-                  : navigation?.navigate('WorkoutCompleted', {
-                      type: type,
-                      day: day,
-                      allExercise: allExercise,
-                    });
-              } else {
-                offerType
-                  ? navigation.navigate('OfferPage')
-                  : navigation?.navigate('WorkoutCompleted', {
-                      type: type,
-                      day: day,
-                      allExercise: allExercise,
-                    });
-              }
+              showInterstitialAd();
+              clearTimeout(playTimerRef.current);
+              offerType
+                ? navigation.navigate('OfferPage')
+                : navigation?.navigate('WorkoutCompleted', {
+                    type: type,
+                    day: day,
+                    allExercise: allExercise,
+                  });
             } else if (
               seconds == 0 &&
               number <= allExercise?.length - 1 &&
               currentSet < allExercise[number]?.exercise_sets &&
               !showSet
             ) {
+              if (currentSet + 1 == allExercise[number]?.exercise_sets) {
+                initInterstitial();
+                console.log('ADD INITIALISE');
+              }
               setShowSet(true);
               setCurrentSet(currentSet + 1);
               setSeconds(
@@ -401,7 +394,6 @@ const CardioExercise = ({navigation, route}: any) => {
             } else if (seconds == 0 && number <= allExercise?.length - 1) {
               !addClosed && showInterstitialAd();
               if (addClosed) {
-                initInterstitial()
                 ProgressRef.current?.play();
                 setPause(false);
                 setCurrentSet(0);
@@ -743,7 +735,7 @@ const CardioExercise = ({navigation, route}: any) => {
       <StatusBar barStyle={'dark-content'} />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{marginBottom: 10}}>
+        contentContainerStyle={{paddingBottom: 10}}>
         {restStart ? (
           <>
             <View

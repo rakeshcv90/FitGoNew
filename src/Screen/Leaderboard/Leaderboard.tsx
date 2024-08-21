@@ -1566,9 +1566,9 @@ console.log("XCvdvdfvdf")
                                 : DeviceWidth * 0.12,
                             height: 5,
                             backgroundColor:
-                              coins['Thursday'] < 0
+                              coins['Wednesday'] < 0
                                 ? 'green'
-                                : coins['Thursday'] == null
+                                : coins['Wednesday'] == null
                                 ? '#EBEDF0'
                                 : 'green',
                           }}></View>
