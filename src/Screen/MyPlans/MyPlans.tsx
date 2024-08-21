@@ -1505,7 +1505,7 @@ const MyPlans = ({navigation}: any) => {
         ) : (
           emptyComponent()
         )}
-        <TouchableOpacity
+        {/* <TouchableOpacity
           activeOpacity={1}
           onPress={() => {
             setVisible1(true);
@@ -1551,7 +1551,7 @@ const MyPlans = ({navigation}: any) => {
             }}>
             Adjust
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       {downlodedVideoSent ? <ActivityLoader /> : null}
       <StreakModal

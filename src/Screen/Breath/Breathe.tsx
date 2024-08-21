@@ -6,7 +6,7 @@ import {
   Animated as NativeAnimated,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {AppColor, Fonts} from '../../Component/Color';
 import {clamp, mix, polar2Canvas, withBouncing} from 'react-native-redash';
@@ -94,7 +94,7 @@ const Breathe = ({navigation, route}) => {
   const fallLetsStart = useSharedValue(-DeviceHeigth);
   const collectButtonOffset = useSharedValue(0);
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
-  const [quitModalVisible, setQuitModalVisible] = useState(false);
+  const quitCardAnimation = useSharedValue(-DeviceHeigth);
   const AddCoinsApi = async () => {
     setLoaded(false);
     let payload = new FormData();
@@ -172,43 +172,6 @@ const Breathe = ({navigation, route}) => {
     }
   };
 
-  const CountdownTimer = ({}) => {
-    const [seconds, setSeconds] = useState(30);
-    useEffect(() => {
-      if (seconds > 0) {
-        const timer = setTimeout(() => {
-          setSeconds(seconds - 1);
-        }, 1000);
-        return () => clearTimeout(timer);
-      }
-    }, [seconds]);
-
-    return (
-      <View
-        style={{
-          borderWidth: 1,
-          borderColor: AppColor.BREATHE_CIRCLE_COLOR,
-          borderRadius: 8,
-          paddingHorizontal: 16,
-          paddingVertical: 6,
-          flexDirection: 'row',
-        }}>
-        <CircularProgressBase
-          value={seconds}
-          radius={10}
-          maxValue={30}
-          initialValue={30}
-          activeStrokeWidth={4}
-          inActiveStrokeWidth={4}
-        />
-        <Text
-          style={{
-            color: AppColor.WHITE,
-            marginLeft: 6,
-          }}>{`00:${seconds > 9 ? seconds : `0${seconds}`}`}</Text>
-      </View>
-    );
-  };
   const buttonClick = () => {
     setEnableClick(true);
   };
@@ -424,6 +387,9 @@ const Breathe = ({navigation, route}) => {
   const AnimatedCollectButton = useAnimatedStyle(() => ({
     opacity: collectButtonOffset.value,
   }));
+  const QuitCardAnimation = useAnimatedStyle(() => ({
+    transform: [{translateY: quitCardAnimation.value}],
+  }));
   const Cards = ({animation, lottie, text1, text2, speed}: any) => {
     return (
       <Animated.View style={[styles.cardContainer, animation]}>
@@ -448,25 +414,72 @@ const Breathe = ({navigation, route}) => {
       </Animated.View>
     );
   };
+  const handleBack = useCallback(() => {
+    quitCardAnimation.value = withSpring(0, {});
+  }, []);
+  const BackButton = () => {
+    return (
+      <TouchableOpacity
+        style={{marginTop: getStatusBarHeight() + 20, marginLeft: 16}}
+        onPress={handleBack}>
+        <ArrowLeft fillColor={AppColor.WHITE} />
+      </TouchableOpacity>
+    );
+  };
+  const CountdownTimer = memo(() => {
+    const [seconds, setSeconds] = useState(30);
+    useEffect(() => {
+      const timer = setInterval(() => {
+        setSeconds(prev => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          } else {
+            return prev - 1;
+          }
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    }, []);
+    return (
+      <View
+        style={{
+          borderWidth: 1,
+          borderColor: AppColor.BREATHE_CIRCLE_COLOR,
+          borderRadius: 8,
+          paddingHorizontal: 16,
+          paddingVertical: 6,
+          flexDirection: 'row',
+        }}>
+        <CircularProgressBase
+          value={seconds}
+          radius={10}
+          maxValue={30}
+          initialValue={30}
+          activeStrokeWidth={4}
+          inActiveStrokeWidth={4}
+        />
+        <Text
+          style={{
+            color: AppColor.WHITE,
+            marginLeft: 6,
+          }}>{`00:${seconds > 9 ? seconds : `0${seconds}`}`}</Text>
+      </View>
+    );
+  });
+  
   return (
     <View style={styles.container1}>
       <StatusBar backgroundColor={AppColor.BLACK} barStyle={'light-content'} />
-      <TouchableOpacity
-        style={{marginTop: getStatusBarHeight() + 20, marginLeft: 16}}
-        onPress={() => {
-          setQuitModalVisible(true);
-          console.log('ButtonClicked');
-        }}>
-        <ArrowLeft fillColor={AppColor.WHITE} />
-      </TouchableOpacity>
-      <QuitModal
-        visible={quitModalVisible}
-        setVisible={setQuitModalVisible}
-        navigation={navigation}
-        type={type}
-        offerType={offerType ?? false}
-      />
-      {loaded?null:<ActivityLoader/>}
+      <BackButton />
+      <Animated.View
+        style={[
+          QuitCardAnimation,
+          {zIndex: 10, justifyContent: 'center', alignItems: 'center'},
+        ]}>
+        <QuitModal type={type} cardAnimation={quitCardAnimation} />
+      </Animated.View>
+      {loaded ? null : <ActivityLoader />}
       {start > 0 ? (
         <View style={{flex: 1, justifyContent: 'center'}}>
           <View style={{}}>
@@ -666,7 +679,7 @@ const Breathe = ({navigation, route}) => {
                   fontFamily: 'Helvetica-Bold',
                   fontSize: 20,
                 }}>
-                +2
+                {`+${slotCoins ?? 1}`}
               </Text>
             </View>
           </Animated.View>

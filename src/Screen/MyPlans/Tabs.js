@@ -8,7 +8,7 @@ import {DeviceWidth} from '../../Component/Config';
 import {Image} from 'react-native';
 import {localImage} from '../../Component/Image';
 import localStorage from 'redux-persist/es/storage';
-import { showMessage } from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 export const WeekTabWithoutEvent = ({
   day,
   dayIndex,
@@ -193,7 +193,7 @@ export const WeekTabHistory = ({
   currentDay,
 }) => {
   const sameDay = day == WeekArray[selectedDay];
-  const isFutureDay=dayIndex>currentDay;
+  const isFutureDay = dayIndex > currentDay;
   return (
     <View style={{alignItems: 'center'}}>
       <Text style={[styles.labelStyle]}>{day.substring(0, 3)}</Text>
@@ -210,7 +210,7 @@ export const WeekTabHistory = ({
           },
         ]}
         onPress={() => {
-           if(isFutureDay){
+          if (isFutureDay) {
             showMessage({
               message: `No data available for the day`,
               type: 'info',
@@ -218,9 +218,9 @@ export const WeekTabHistory = ({
               floating: true,
               icon: {icon: 'auto', position: 'left'},
             });
-           }else{
+          } else {
             setSelectedDay(dayIndex);
-           }
+          }
         }}>
         <Text
           style={[
@@ -231,7 +231,9 @@ export const WeekTabHistory = ({
               fontSize: 16,
             },
           ]}>
-          {dayWiseCoins[WeekArray[dayIndex]] ?? 0}
+          {dayWiseCoins[WeekArray[dayIndex]] < 0
+            ? 0
+            : dayWiseCoins[WeekArray[dayIndex]] ?? 0}
         </Text>
         <Image
           source={localImage.FitCoin}

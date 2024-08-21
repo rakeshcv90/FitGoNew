@@ -40,6 +40,7 @@ const NewHeader = ({
   coinsLoaded,
   secondIcon,
   headerColor,
+  statusBarPadding
 }) => {
   const navigation = useNavigation();
   const getExperience = useSelector(state => state.getExperience);
@@ -52,7 +53,7 @@ const NewHeader = ({
       style={[
         style.container,
         {
-          paddingVertical: getStatusBarHeight(),
+          paddingVertical: getStatusBarHeight()>30?statusBarPadding??27: getStatusBarHeight(),
           left: 3,
           backgroundColor: headerColor ?? AppColor.WHITE,
         },

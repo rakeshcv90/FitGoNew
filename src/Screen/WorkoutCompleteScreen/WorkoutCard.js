@@ -47,7 +47,7 @@ const WorkoutCard = ({
   EarnedCoins,
   rank,
   breatheCoins,
-  title
+  title,
 }) => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
 
@@ -63,36 +63,39 @@ const WorkoutCard = ({
   return (
     <View style={styles.container}>
       <Text style={styles.header}>{cardHeader ?? 'Exercise Completed'}</Text>
-      <Text style={styles.txt1}>
-       {title}
-      </Text>
+      <Text style={styles.txt1}>{title}</Text>
       {cardType == 'streak' && (
         <View style={styles.streakView}>
           {WeekArray.map((v, i) => {
-          console.log(streakCoins[v],"dayss")
-          return(
-            <View style={{alignItems: 'center'}}>
-            <Animated.View style={[streakCoins[v] > 0 ? scaleAnimation : undefined]}>
-              <ImageBackground
-                source={
-                  streakCoins[v] > 0
-                    ? localImage.Streak
-                    : streakCoins[v] == null
-                    ? localImage.greyStreak
-                    : localImage.StreakBreak
-                }
-                style={styles.img2}
-                resizeMode="contain">
-                {streakCoins[v] > 0 && (
-                  <Icons name="check-bold" color={AppColor.WHITE} size={22} />
-                )}
-              </ImageBackground>
-            </Animated.View>
-            <Text style={{color: AppColor.GRAAY6, fontFamily: 'Helvetica'}}>
-              {v?.substring(0, 3)}
-            </Text>
-          </View>
-          )
+            console.log(streakCoins[v], 'dayss');
+            return (
+              <View style={{alignItems: 'center'}}>
+                <Animated.View
+                  style={[streakCoins[v] > 0 ? scaleAnimation : undefined]}>
+                  <ImageBackground
+                    source={
+                      streakCoins[v] > 0
+                        ? localImage.Streak
+                        : streakCoins[v] == null
+                        ? localImage.greyStreak
+                        : localImage.StreakBreak
+                    }
+                    style={styles.img2}
+                    resizeMode="contain">
+                    {streakCoins[v] > 0 && (
+                      <Icons
+                        name="check-bold"
+                        color={AppColor.WHITE}
+                        size={22}
+                      />
+                    )}
+                  </ImageBackground>
+                </Animated.View>
+                <Text style={{color: AppColor.GRAAY6, fontFamily: 'Helvetica'}}>
+                  {v?.substring(0, 3)}
+                </Text>
+              </View>
+            );
           })}
         </View>
       )}
@@ -136,7 +139,7 @@ const WorkoutCard = ({
               source={localImage.FitCoin}
               style={{height: 30, width: 30, marginRight: 5}}
             />
-            <Text style={styles.txt3}>{breatheCoins??0} coins</Text>
+            <Text style={styles.txt3}>{breatheCoins ?? 0} coins</Text>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Text
@@ -168,7 +171,7 @@ const WorkoutCard = ({
             <View style={{alignItems: 'center', width: DeviceWidth * 0.4}}>
               <Image
                 source={localImage.FitCoin}
-                style={{height: 45, width: 45}}
+                style={{height: 40, width: 40}}
                 resizeMode="contain"
               />
               <Text style={styles.txt4}>
@@ -178,28 +181,23 @@ const WorkoutCard = ({
             </View>
             <Image
               source={localImage.line}
-              style={{height: DeviceHeigth * 0.12}}
+              style={{height: DeviceHeigth * 0.09}}
               resizeMode="contain"
             />
             <View style={{alignItems: 'center', width: DeviceWidth * 0.4}}>
               <Image
                 source={localImage.trophyIcon}
-                style={{height: 50, width: 50}}
+                style={{height: 40, width: 40}}
                 resizeMode="contain"
               />
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <AntDesign
-                  name="caretup"
-                  color={AppColor.NEW_GREEN}
-                  size={12}
-                />
                 <Text
                   style={{
                     color: AppColor.NEW_GREEN,
                     fontFamily: 'Helvetica-Bold',
                     marginLeft: 3,
                   }}>
-                  {rank ?? '--'}
+                  {`#${rank ?? '--'}`}
                 </Text>
               </View>
             </View>

@@ -309,7 +309,6 @@ const WorkoutCompleted = ({navigation, route}) => {
       console.log('ERRRRRR', error);
     }
   };
-
   const getEarnedCoins = async () => {
     try {
       const response = await axios(
@@ -402,11 +401,11 @@ const WorkoutCompleted = ({navigation, route}) => {
       ) : (
         <View style={styles.container}>
           <StatusBar
-            backgroundColor={AppColor.GRAY}
+            backgroundColor={AppColor.WHITE}
             barStyle={'dark-content'}
           />
-          <NewHeader header={'Exercise Completed'} />
-          <View style={{flex: 1}}>
+          <NewHeader header={'Exercise Completed'} statusBarPadding={22}/>
+          <View style={{flex: 1,marginTop:5}}>
             <Animated.View style={[styles.imgView, streakAnimation]}>
               <Image source={localImage.offer_girl} style={styles.imgStyle1} />
               <WorkoutCard
