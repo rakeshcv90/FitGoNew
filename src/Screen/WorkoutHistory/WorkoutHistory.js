@@ -66,7 +66,7 @@ const WorkoutHistory = () => {
           exerciseCount: res?.data?.event_overview?.exercises,
           missedExercise: res?.data?.event_overview?.missed,
           duration: Math.ceil(
-            (res?.data?.event_overview?.exercises * 3 * 30) / 60,
+            ((res?.data?.event_overview?.exercises-res?.data?.event_overview?.missed) * 3 * 30) / 60,
           ),
           //deduction
           next: res?.data?.point_deduction?.next_status,
@@ -82,7 +82,6 @@ const WorkoutHistory = () => {
           total_points: res?.data?.refer_rewards?.total_rewards_points,
         });
         setCoins(res.data.points);
-        // console.log('response--->', res.data);
       }
     } catch (error) {
       console.log('history Api error--> ', error.response);
@@ -214,7 +213,6 @@ const WorkoutHistory = () => {
                   )}
                 </View>
               ) : null}
-              <SingleWorkout />
               {screenObject?.breathe == 0 &&
               !screenObject?.cardio == 0 ? null : (
                 <View style={styles.container1}>

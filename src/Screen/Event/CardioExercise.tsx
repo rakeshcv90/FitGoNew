@@ -316,7 +316,7 @@ const CardioExercise = ({navigation, route}: any) => {
                 clearTimeout(playTimerRef.current);
                 //CollectCoins
                 offerType
-                  ? navigation.navigate('OfferPage')
+                  ? navigation.navigate('OfferPage',{type:'cardioCompleted'})
                   : navigation?.navigate('WorkoutCompleted', {
                       type: type,
                       day: day,
@@ -324,7 +324,7 @@ const CardioExercise = ({navigation, route}: any) => {
                     });
               } else {
                 offerType
-                  ? navigation.navigate('OfferPage')
+                  ? navigation.navigate('OfferPage',{type:'cardioCompleted'})
                   : navigation?.navigate('WorkoutCompleted', {
                       type: type,
                       day: day,
@@ -383,7 +383,7 @@ const CardioExercise = ({navigation, route}: any) => {
                 clearTimeout(playTimerRef.current);
                 //CollectCoins
                 offerType
-                  ? navigation.navigate('OfferPage')
+                  ? navigation.navigate('OfferPage',{type:'cardioCompleted'})
                   : navigation?.navigate('WorkoutCompleted', {
                       type: type,
                       day: day,
@@ -391,7 +391,7 @@ const CardioExercise = ({navigation, route}: any) => {
                     });
               } else {
                 offerType
-                  ? navigation.navigate('OfferPage')
+                  ? navigation.navigate('OfferPage',{type:'cardioCompleted'})
                   : navigation?.navigate('WorkoutCompleted', {
                       type: type,
                       day: day,
@@ -475,6 +475,7 @@ const CardioExercise = ({navigation, route}: any) => {
     payload.append('workout_id', `-${day + 1}`);
     payload.append('user_id', getUserDataDetails?.id);
     payload.append('version', VersionNumber.appVersion);
+    payload.append('type',type)
     setQuitLoader(true);
     try {
       const res = await axios({
@@ -496,7 +497,7 @@ const CardioExercise = ({navigation, route}: any) => {
       console.log('DELE TRACK ERRR', error);
     }
     offerType
-      ? navigation.navigate('OfferPage')
+      ? navigation.navigate('OfferPage',{type:'cardioCompleted'})
       : navigation?.navigate('WorkoutCompleted', {
           type: type,
           day: day,

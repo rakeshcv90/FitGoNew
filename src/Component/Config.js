@@ -131,5 +131,5 @@ export const NewAppapi = {
   GET_PAST_WINNERS:NewApi+'past_winners',
   GET_HISTORY:NewApi+'test_coin_deduction_rec',
   SEND_BREATHE_COINS:NewApi+'add_breathinout_coins',
-  GET_CARDIO_STATUS:NewApi+'cardio_exercise_status'
+  GET_CARDIO_STATUS:NewApi+'cardio_status'
 };

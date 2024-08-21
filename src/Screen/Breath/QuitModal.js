@@ -5,60 +5,65 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import NewButton from '../../Component/NewButton';
 import {AppColor} from '../../Component/Color';
 import AnimatedLottieView from 'lottie-react-native';
-import { useNavigation } from '@react-navigation/native';
-const QuitModal = ({visible,setVisible,navigation,type,offerType}) => {
-  console.log(visible)
+import {useNavigation} from '@react-navigation/native';
+import { withSpring } from 'react-native-reanimated';
+const QuitModal = ({type,cardAnimation}) => {
+  const navigation = useNavigation();
   return (
-    <Modal visible={visible} animationType="slide" transparent>
-      <View style={styles.container}>
-        <View style={styles.contentView}>
-          <Text style={styles.txt1}>Take your time</Text>
-          <AnimatedLottieView
-            source={localImage.cautionLottie}
-            style={{
-              height: DeviceHeigth * 0.2,
-              width: DeviceWidth * 0.8,
-              alignSelf: 'center',
-            }}
-            autoPlay
-            loop
-            speed={1}
-            resizeMode="contain"
-          />
-          <Text
-            style={[
-              styles.txt1,
-              {fontFamily: 'Helvetica', fontSize: 15, lineHeight: 24},         
-            ]}>
-            {"Your body's main\nsource of enery is oxygen"}
-          </Text>
-          <NewButton
-            ButtonWidth={DeviceWidth * 0.4}
-            pV={12}
-            title={'Yes, quit'}
-            fontFamily={'Helvetica-Bold'}
-            mV={10}
-            buttonColor={AppColor.BREATHE_CIRCLE_COLOR}
-            onPress={()=>{
-             if(type){
-              setVisible(false)
-              navigation.navigate("OfferPage")
-             }else{
-              setVisible(false)
-              navigation.navigate("WorkoutCompleted",{type: 'complete'})
-             }
-            }}
-          />
-          <Text style={styles.txt1} onPress={()=>setVisible(false)}>Continue</Text>
-        </View>
+    <View style={styles.container}>
+      <View style={styles.contentView}>
+        <Text style={styles.txt1}>Take your time</Text>
+        <AnimatedLottieView
+          source={localImage.cautionLottie}
+          style={{
+            height: DeviceHeigth * 0.2,
+            width: DeviceWidth * 0.8,
+            alignSelf: 'center',
+          }}
+          autoPlay
+          loop
+          speed={1}
+          resizeMode="contain"
+        />
+        <Text
+          style={[
+            styles.txt1,
+            {fontFamily: 'Helvetica', fontSize: 15, lineHeight: 24},
+          ]}>
+          {"Your body's main\nsource of energy is oxygen"}
+        </Text>
+        <NewButton
+          ButtonWidth={DeviceWidth * 0.4}
+          pV={12}
+          title={'Continue'}
+          fontFamily={'Helvetica-Bold'}
+          mV={10}
+          buttonColor={AppColor.BREATHE_CIRCLE_COLOR}
+           onPress={()=>{
+            cardAnimation.value=withSpring(DeviceHeigth,{},()=>cardAnimation.value=-DeviceHeigth)
+           }}
+        />
+        <Text
+          style={styles.txt1}
+          onPress={() => {
+            if (type) {
+              navigation.navigate('OfferPage');
+            } else {
+              navigation.navigate('WorkoutCompleted', {type: 'complete'});
+            }
+          }}>
+          Yes, quit
+        </Text>
       </View>
-    </Modal>
+    </View>
   );
 };
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
+    zIndex: 10,
+    position:'absolute',
+    top:DeviceHeigth/5,
+    
   },
   contentView: {
     width: DeviceWidth * 0.7,

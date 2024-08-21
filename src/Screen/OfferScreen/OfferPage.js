@@ -21,9 +21,11 @@ import VersionNumber from 'react-native-version-number';
 import RNFetchBlob from 'rn-fetch-blob';
 import ActivityLoader from '../../Component/ActivityLoader';
 import Loader from '../../Component/Loader';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
-import { setVideoLocation } from '../../Component/ThemeRedux/Actions';
-const OfferPage = ({navigation}) => {
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
+import {useFocusEffect} from '@react-navigation/native';
+const OfferPage = ({navigation, route}) => {
+  const type = route?.params?.type;
   const WeekArrayWithEvent = Array(5)
     .fill(0)
     .map(
@@ -47,20 +49,49 @@ const OfferPage = ({navigation}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const [cardioExxercise, setCardioExercise] = useState([]);
   const getAllExercise = useSelector(state => state.getAllExercise);
+  const [breatheCompleteStatus, setBreatheCompleteStatus] = useState(false);
   const [downloaded, setDownloade] = useState(0);
-  const dispatch=useDispatch()
-  useEffect(() => {
-    getBreatheAPI();
-    filterCardioExercise();
-  }, []);
-
+  const dispatch = useDispatch();
+  useFocusEffect(
+    React.useCallback(() => {
+      getBreatheAPI();
+      filterCardioExercise();
+      getEventEarnedCoins();
+    }, []),
+  );
+  const getEventEarnedCoins = async () => {
+    const payload = new FormData();
+    payload.append('user_id', getUserDataDetails?.id);
+    payload.append(
+      'user_day',
+      WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1],
+    );
+    payload.append('type', 'cardio');
+    try {
+      const res = await axios(
+        // 'https://fitme.cvinfotechserver.com/adserver/public/api/testing_add_coins',
+        NewAppapi.POST_API_FOR_COIN_CALCULATION,
+        {
+          method: 'post',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          data: payload,
+        },
+      );
+      getCardioStatus();
+    } catch (error) {
+      console.log('ERRRRRR', error);
+      getCardioStatus();
+    }
+  };
   const getBreatheAPI = async () => {
     try {
       const result = await axios({
-        url: `${NewAppapi.GET_BREATH_SESSION}`,
+        url: `${NewAppapi.GET_BREATH_SESSION}?user_id=${getUserDataDetails?.id}`,
       });
 
-      if (result.data) {
+      if (result?.data) {
         getEarnedCoins();
         const activeIndex = result?.data?.sessions?.findIndex(
           item => item.status == 'open',
@@ -68,6 +99,9 @@ const OfferPage = ({navigation}) => {
         if (activeIndex != -1) {
           setBreatheStatus(true);
           setBreatheCoins(result?.data?.sessions[activeIndex]?.fit_coins);
+          setBreatheCompleteStatus(
+            result?.data?.sessions[activeIndex]?.complete_status,
+          );
         }
       }
     } catch (error) {
@@ -93,7 +127,7 @@ const OfferPage = ({navigation}) => {
           icon: {icon: 'auto', position: 'left'},
         });
       } else {
-        getCardioStatus();
+        //
         if (
           response.data?.responses[
             WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]
@@ -110,23 +144,26 @@ const OfferPage = ({navigation}) => {
         floating: true,
         icon: {icon: 'auto', position: 'left'},
       });
-      getCardioStatus();
     }
   };
   const getCardioStatus = async () => {
     try {
       const response = await axios(
-        `${NewAppapi.GET_CARDIO_STATUS}?user_id=${
-          getUserDataDetails?.id
-        }&version=${VersionNumber.appVersion}&day=${
-          getPurchaseHistory?.currentDay - 1
-        }`,
+        `${NewAppapi.GET_CARDIO_STATUS}`,{
+          method:'post',
+          // headers:{
+          //   'Content-Type':'multipart/form-data'
+          // },
+          data:{
+            user_id:getUserDataDetails?.id
+          }
+        }
+        
       );
-      console.log('datataa---->',response?.data)
-      if (response?.data?.status) {
+      if (response?.data?.status == true) {
         setCardioStatus(true);
         setLoaded(true);
-      }else{
+      } else {
         setLoaded(true);
       }
     } catch (error) {
@@ -179,7 +216,7 @@ const OfferPage = ({navigation}) => {
             console.log(err);
           });
       }
-      console.log('Downloding');
+      // console.log('Downloding');
     } catch (error) {
       console.log('ERRRR', error);
 
@@ -213,7 +250,7 @@ const OfferPage = ({navigation}) => {
       datas.push({
         user_id: getUserDataDetails?.id,
         workout_id: -13,
-        user_day: WeekArrayWithEvent[getPurchaseHistory?.currentDay-1],
+        user_day: WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1],
         user_exercise_id: item?.exercise_id,
         fit_coins: item?.fit_coins,
       });
@@ -226,16 +263,7 @@ const OfferPage = ({navigation}) => {
         method: 'Post',
         data: {user_details: datas, type: 'cardio'},
       });
-
-      //Test URl
-      // const res = await axios({
-      //   url: url,
-      //   method: 'Post',
-      //   data: {user_details: datas, type: 'cardio'},
-      // });
       setDownloade(0);
-
-      // AnalyticsConsole(`SCE_ON_${getPurchaseHistory?.currentDay-1}`);
       if (
         res.data?.msg == 'Exercise Status for All Users Inserted Successfully'
       ) {
@@ -245,11 +273,11 @@ const OfferPage = ({navigation}) => {
           allExercise: cardioExxercise,
           currentExercise: cardioExxercise[0],
           data: [],
-          day: getPurchaseHistory?.currentDay-1,
+          day: getPurchaseHistory?.currentDay - 1,
           exerciseNumber: 0,
           trackerData: res?.data?.inserted_data,
           type: 'cardio',
-          offerType:true
+          offerType: true,
         });
         // }
       } else {
@@ -258,11 +286,11 @@ const OfferPage = ({navigation}) => {
           allExercise: cardioExxercise,
           currentExercise: cardioExxercise[0],
           data: [],
-          day: getPurchaseHistory?.currentDay-1,
+          day: getPurchaseHistory?.currentDay - 1,
           exerciseNumber: 0,
           trackerData: res?.data?.existing_data,
           type: 'cardio',
-          offerType:true
+          offerType: true,
         });
       }
     } catch (error) {
@@ -306,7 +334,7 @@ const OfferPage = ({navigation}) => {
             text2={'Do a few minutes of cardio and earn extra FitCoins'}
             text3={`${cardioExxercise[0]?.fit_coins} coins`}
             coinTextColor={AppColor.YELLOW}
-            isactive={cardioStatus && exerciseStatus}
+            isactive={!cardioStatus && exerciseStatus && enteredCurrentEvent}
             onPress={() => handleStart()}
             withAnimation
             downloaded={downloaded}
@@ -320,7 +348,7 @@ const OfferPage = ({navigation}) => {
             text3={'7 coins'}
             coinTextColor={AppColor.BLACK}
             onPress={() => navigation.navigate('Referral')}
-            isactive={true}
+            isactive={enteredCurrentEvent}
             buttonText={'Refer now'}
           />
           <OfferCards
@@ -332,7 +360,9 @@ const OfferPage = ({navigation}) => {
             text3={`${breatheCoins} coins`}
             coinTextColor={AppColor.WHITE}
             bannerType={'breathe'}
-            isactive={breatheStatus}
+            isactive={
+              breatheStatus && enteredCurrentEvent && !breatheCompleteStatus
+            }
             onPress={() => navigation.navigate('Breathe', {type: 'OfferPage'})}
           />
         </ScrollView>
