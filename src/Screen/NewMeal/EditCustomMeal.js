@@ -183,7 +183,7 @@ const EditCustomMeal = ({navigation, route}) => {
   };
   const UpdateCustomMealList = async () => {
     const url =
-      'https://fitme.cvinfotech.in/adserver/public/api/test_update_custom_diet';
+      'https://fitme.cvinfotechserver.com/adserver/public/api/test_update_custom_diet';
 
     setForLoading(true);
     const payload = new FormData();

@@ -29,7 +29,7 @@ import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import RewardModal from '../../Component/Utilities/RewardModal';
 import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -307,7 +307,8 @@ const MeditationDetails = ({navigation, route}) => {
           style={{
             width: '95%',
             alignSelf: 'center',
-            top: -DeviceHeigth * 0.02,
+            top: DeviceHeigth >= 1024 ? 0 : -DeviceHeigth * 0.02,
+            marginVertical: DeviceHeigth >= 1024 ? DeviceHeigth * 0.02 : 0,
           }}>
           <Text
             style={{
@@ -624,32 +625,35 @@ const MeditationDetails = ({navigation, route}) => {
         {getOfferAgreement?.location == 'India' ? (
           getPopUpFreuqency == 5 || getPopUpFreuqency % 4 == 0 ? (
             <UpcomingEventModal
-            visible={true}
-            onConfirm={() => {
-              if (getPurchaseHistory?.plan != null) {
-                if (
-                  getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
-                ) {
-                  AnalyticsConsole('UP_D_B');
-                  navigation.navigate('UpcomingEvent', {eventType: 'upcoming'});
-                  dispatch(setRewardPopUp(1));
+              visible={true}
+              onConfirm={() => {
+                if (getPurchaseHistory?.plan != null) {
+                  if (
+                    getPurchaseHistory?.end_date >=
+                    moment().format('YYYY-MM-DD')
+                  ) {
+                    AnalyticsConsole('UP_D_B');
+                    navigation.navigate('UpcomingEvent', {
+                      eventType: 'upcoming',
+                    });
+                    dispatch(setRewardPopUp(1));
+                  } else {
+                    AnalyticsConsole('PP_D_B');
+                    navigation.navigate('NewSubscription', {upgrade: false});
+                    dispatch(setRewardPopUp(1));
+                  }
                 } else {
                   AnalyticsConsole('PP_D_B');
-                  navigation.navigate('NewSubscription', {upgrade: false});
+                  // navigation.navigate('NewSubscription', {upgrade: false});
+                  navigation?.navigate('StepGuide');
                   dispatch(setRewardPopUp(1));
                 }
-              } else {
-                AnalyticsConsole('PP_D_B');
-                // navigation.navigate('NewSubscription', {upgrade: false});
-                navigation?.navigate('StepGuide');
+              }}
+              onCancel={() => {
+                AnalyticsConsole('JNC_D_B');
                 dispatch(setRewardPopUp(1));
-              }
-            }}
-            onCancel={() => {
-              AnalyticsConsole('JNC_D_B');
-              dispatch(setRewardPopUp(1));
-            }}
-          />
+              }}
+            />
           ) : null
         ) : null}
       </>

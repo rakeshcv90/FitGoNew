@@ -369,7 +369,7 @@ const TextBanner = ({navigation, setLocationP}) => {
         style={{
           height: '100%',
           width:
-            imageSource?.length > 1 ? DeviceWidth * 0.9 : DeviceWidth * 0.95,
+            imageSource?.length > 1 ? DeviceWidth * 0.95 : DeviceWidth * 0.95,
           alignSelf: 'center',
 
           justifyContent: 'center',
@@ -395,6 +395,7 @@ const TextBanner = ({navigation, setLocationP}) => {
             height: '100%',
             overflow: 'hidden',
             borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
           }}
           resizeMode="stretch"
           source={{uri: item}}
@@ -484,6 +485,7 @@ const TextBanner = ({navigation, setLocationP}) => {
                   height: '100%',
                   justifyContent: 'center',
                   alignItems: 'center',
+                  paddingLeft: DeviceHeigth * 0.05,
                 }}>
                 <Animated.Text style={[styles.text, {opacity: fadeAnim}]}>
                   {messages[currentMessageIndex]}
@@ -551,7 +553,7 @@ var styles = StyleSheet.create({
     height: DeviceHeigth * 0.25,
     alignSelf: 'center',
     borderRadius: 20,
-
+    paddingBottom: 5,
     alignItems: 'center',
   },
   text: {

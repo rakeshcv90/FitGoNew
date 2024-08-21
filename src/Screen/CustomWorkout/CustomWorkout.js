@@ -40,6 +40,7 @@ import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import FastImage from 'react-native-fast-image';
 import RewardModal from '../../Component/Utilities/RewardModal';
 import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
+import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -81,7 +82,7 @@ const CustomWorkout = ({navigation}) => {
   const askPermissionForLibrary = async permission => {
     const resultLib = await request(permission);
 
-    if (resultLib == 'granted'||resultLib=='limited') {
+    if (resultLib == 'granted' || resultLib == 'limited') {
       try {
         const resultLibrary = await launchImageLibrary({
           mediaType: 'photo',
@@ -429,13 +430,16 @@ const CustomWorkout = ({navigation}) => {
 
   return (
     <>
-      <NewHeader
+      <DietPlanHeader
         header={'Create Custom Workout'}
-        SearchButton={false}
-        backButton={true}
+        shadow
+   
+        left={DeviceHeigth >= 1024 ? DeviceWidth * 0.045 : DeviceWidth * 0.02}
       />
 
       <View style={styles.container}>
+  
+
         <View style={[styles.meditionBox, {top: -20}]}>
           <FlatList
             data={customWorkoutData}
@@ -466,7 +470,7 @@ const CustomWorkout = ({navigation}) => {
         )}
       </View>
       <Modal
-      animationType="slide"
+        animationType="slide"
         visible={isCustomWorkout}
         transparent={true}
         onRequestClose={() => {
@@ -589,8 +593,8 @@ const CustomWorkout = ({navigation}) => {
       </Modal>
       <BannerAdd bannerAdId={bannerAdId} />
       {getOfferAgreement?.location == 'India' ? (
-          getPopUpFreuqency == 5 || getPopUpFreuqency % 4 == 0 ? (
-            <UpcomingEventModal
+        getPopUpFreuqency == 5 || getPopUpFreuqency % 4 == 0 ? (
+          <UpcomingEventModal
             visible={true}
             onConfirm={() => {
               if (getPurchaseHistory?.plan != null) {

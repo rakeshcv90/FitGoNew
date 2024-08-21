@@ -69,6 +69,13 @@ import MyChallenge from '../../Component/NewHomeUtilities/MyChallenge';
 import {RequestAPI} from '../../Component/Utilities/RequestAPI';
 import moment from 'moment';
 
+import Reanimated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+} from 'react-native-reanimated';
+
 const WeekArrayWithEvent = Array(5)
   .fill(0)
   .map(
@@ -100,8 +107,7 @@ const NewHome = ({navigation}) => {
     state => state?.getRewardModalStatus,
   );
   const [showRewardModal, setShowRewardModal] = useState(false);
-  const [BannerType1, setBannertype1] = useState('');
-  const [Bannertype2, setBannerType2] = useState('');
+
   const Sat = getPurchaseHistory?.currentDay == 6;
   const Sun = getPurchaseHistory?.currentDay == 7;
   const [myRank, setMyRank] = useState(0);
@@ -142,6 +148,21 @@ const NewHome = ({navigation}) => {
       dispatch(setIsAlarmEnabled(true));
     }
   }, [isAlarmEnabled]);
+
+  const shimmerValue = useSharedValue(0);
+
+  // Animated style for shimmer effect
+  const shimmerStyle = useAnimatedStyle(() => ({
+    transform: [{translateX: shimmerValue.value * 10}],
+  }));
+
+  useEffect(() => {
+    shimmerValue.value = withRepeat(
+      withTiming(100, {duration: 1500}),
+      -1,
+      false,
+    );
+  }, []);
   const getWeeklyAPI = async () => {
     try {
       const res = await axios(`${NewAppapi.NEW_WEEKDAY_EXERCISE_API}`, {
@@ -577,10 +598,10 @@ const NewHome = ({navigation}) => {
               />
             </View>
             <View>
-              <View style={{marginHorizontal: -10}}>
+              <View style={{marginHorizontal: -10, justifyContent: 'center'}}>
                 <Text
                   style={{
-                    top: -5,
+                    //  top: 5,
                     fontSize: 13,
                     fontFamily: Fonts.HELVETICA_REGULAR,
                     fontWeight: '300',
@@ -591,7 +612,7 @@ const NewHome = ({navigation}) => {
                 </Text>
                 <Text
                   style={{
-                    top: -5,
+                    top: -2,
                     fontSize: 12,
                     fontFamily: Fonts.HELVETICA_BOLD,
                     fontWeight: '700',
@@ -664,7 +685,7 @@ const NewHome = ({navigation}) => {
                     borderRadius: 6,
                     alignItems: 'center',
                     flexDirection: 'row',
-                   // paddingLeft: 10,
+                    // paddingLeft: 10,
                     justifyContent: 'center',
                     backgroundColor: AppColor.orangeColor,
                   }}>
@@ -673,7 +694,9 @@ const NewHome = ({navigation}) => {
                     style={{height: 20, width: 20}}
                     resizeMode="contain"
                   />
-                  <Text style={styles.cointxt}>{fitCoins<=0?0:fitCoins}</Text>
+                  <Text style={styles.cointxt}>
+                    {fitCoins <= 0 ? 0 : fitCoins}
+                  </Text>
                 </TouchableOpacity>
               </>
             ) : (
@@ -704,7 +727,7 @@ const NewHome = ({navigation}) => {
                   paddingLeft: 5,
                   paddingRight: 5,
                   //justifyContent: 'center',
-                  backgroundColor: AppColor.orangeColor,
+                  backgroundColor: '#DBEAFE',
                 }}>
                 <Image
                   source={require('../../Icon/Images/NewHome/cup.png')}
@@ -761,30 +784,8 @@ const NewHome = ({navigation}) => {
               </Text>
             </Marquee>
           </View>
+
           {/* <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('OfferPage');
-            }}
-            style={{
-              width: DeviceHeigth >= 1024 ? '20%' : '25%',
-              height: '100%',
-              overflow: 'hidden',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-            }}>
-            <Text
-              style={{
-                fontFamily: Fonts.HELVETICA_REGULAR,
-                fontSize: 14,
-                lineHeight: 25,
-                color: AppColor.RED,
-              }}>
-              EXPLORE
-            </Text>
-            <Icons name={'chevron-right'} size={30} color={AppColor.RED} />
-          </TouchableOpacity> */}
-          <TouchableOpacity
           activeOpacity={0.8}
             onPress={() => {
               navigation.navigate('OfferPage');
@@ -811,6 +812,42 @@ const NewHome = ({navigation}) => {
               EXPLORE
             </Text>
             <Icons name={'chevron-right'} size={20} color={AppColor.WHITE} />
+          </TouchableOpacity> */}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              navigation.navigate('OfferPage');
+            }}
+            style={{
+              width: DeviceHeigth >= 1024 ? '20%' : '25%',
+              height: '60%',
+              overflow: 'hidden',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
+              borderRadius: 8,
+              paddingLeft: 10,
+              backgroundColor: AppColor.RED,
+            }}>
+            <Text
+              style={{
+                fontFamily: Fonts.HELVETICA_REGULAR,
+                fontSize: 12,
+                lineHeight: 25,
+
+                color: AppColor.WHITE,
+              }}>
+              EXPLORE
+            </Text>
+            <Icons name={'chevron-right'} size={20} color={AppColor.WHITE} />
+            <Reanimated.View style={[styles.shimmerWrapper, shimmerStyle]}>
+              <LinearGradient
+                colors={['#ffffff00', '#ffffff80', '#ffffff00']}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
+                style={styles.shimmer}
+              />
+            </Reanimated.View>
           </TouchableOpacity>
         </ImageBackground>
         {enteredCurrentEvent && (!Sat || !Sun) ? (
@@ -967,8 +1004,17 @@ var styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: Fonts.HELVETICA_BOLD,
     lineHeight: 30,
-   // marginTop: 5,
+    // marginTop: 5,
     marginHorizontal: 5,
+  },
+  shimmerWrapper: {
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+  },
+  shimmer: {
+    width: '20%',
+    height: '100%',
   },
 });
 export default NewHome;

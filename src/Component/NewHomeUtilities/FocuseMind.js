@@ -79,7 +79,7 @@ const FocuseMind = () => {
             width: 100,
             height: 100,
             borderRadius: 100,
-            backgroundColor: 'red',
+           
           }}>
           <Image
             source={
@@ -91,7 +91,7 @@ const FocuseMind = () => {
               width: 100,
               height: 100,
               borderRadius: 100,
-              backgroundColor: 'red',
+             
             }}
           />
         </View>
@@ -213,6 +213,7 @@ const FocuseMind = () => {
                 fontSize: 14,
                 lineHeight: 20,
                 color: AppColor.SecondaryTextColor,
+                textDecorationLine:'underline'
               }}>
               View more
             </Text>

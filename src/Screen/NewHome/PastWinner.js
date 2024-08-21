@@ -2,7 +2,6 @@ import {
   View,
   Text,
   StatusBar,
- 
   StyleSheet,
   ScrollView,
   Image,
@@ -19,7 +18,7 @@ import {localImage} from '../../Component/Image';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 const PastWinner = ({route}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
 
@@ -166,24 +165,24 @@ const PastWinner = ({route}) => {
                 color: AppColor.WHITE,
                 marginTop: 10,
               }}>
-              Want to next winner
+              Want to be the next winner?
             </Text>
             <Text
               style={{
                 fontFamily: Fonts.HELVETICA_BOLD,
-                fontSize: 14,
+                fontSize: 16,
                 lineHeight: 20,
                 marginTop: 5,
                 color: '#F6C544',
               }}>
-              Earn ₹1,000/-
+              And earn ₹1,000/-
             </Text>
           </View>
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => {
-             // navigation?.navigate('NewSubscription', {upgrade: true});
-             navigation.navigate('StepGuide');
+              // navigation?.navigate('NewSubscription', {upgrade: true});
+              navigation.navigate('StepGuide');
             }}
             style={{
               width: 203,
@@ -271,6 +270,7 @@ const PastWinner = ({route}) => {
                           style={{width: 55, height: 55}}
                           resizeMode="contain"
                         /> */}
+
                         {winner.image == null ? (
                           <View
                             style={{
@@ -294,9 +294,9 @@ const PastWinner = ({route}) => {
                           </View>
                         ) : (
                           <Image
-                            source={localImage.NContact}
-                            style={{width: 55, height: 55}}
-                            resizeMode="contain"
+                            source={{uri: winner.image}}
+                            style={{width: 55, height: 55, borderRadius: 55}}
+                            resizeMode="center"
                           />
                         )}
                       </View>
