@@ -85,8 +85,8 @@ const WithoutEvent = ({pastWinners}) => {
                   </View>
                 ) : (
                   <Image
-                    source={localImage.NContact}
-                    // source={{uri:pastWinners[0]?.image}}
+                    // source={localImage.NContact}
+                    source={{uri:pastWinners[0]?.image}}
                     style={{
                       width: 45,
                       height: 45,
@@ -132,8 +132,8 @@ const WithoutEvent = ({pastWinners}) => {
                   </View>
                 ) : (
                   <Image
-                    source={localImage.NContact}
-                    // source={{uri:pastWinners[0]?.image}}
+                    // source={localImage.NContact}
+                    source={{uri:pastWinners[1]?.image}}
                     style={{
                       width: 45,
                       height: 45,
@@ -179,8 +179,8 @@ const WithoutEvent = ({pastWinners}) => {
                   </View>
                 ) : (
                   <Image
-                    source={localImage.NContact}
-                    // source={{uri:pastWinners[0]?.image}}
+                    // source={localImage.NContact}
+                    source={{uri:pastWinners[2]?.image}}
                     style={{
                       width: 45,
                       height: 45,
@@ -213,21 +213,22 @@ const WithoutEvent = ({pastWinners}) => {
                     justifyContent: 'center',
                     alignItems: 'center',
                     alignSelf: 'center',
-                    opacity:0.8
+                    opacity: 0.8,
                   }}>
                   <Text
                     style={{
                       fontFamily: Fonts.HELVETICA_BOLD,
                       fontSize: 18,
                       color: AppColor.WHITE,
-                      textAlign:'center'
+                      textAlign: 'center',
                     }}>
-                   +{pastWinners?.length}
+                    +{pastWinners?.length}
                   </Text>
                 </View>
               </View>
             </View>
           </View>
+       
           <View>
             <TouchableOpacity
               activeOpacity={0.7}
@@ -242,6 +243,7 @@ const WithoutEvent = ({pastWinners}) => {
                 backgroundColor: AppColor.WHITE,
                 alignSelf: 'flex-end',
                 borderRadius: 8,
+                marginRight: DeviceHeigth >= 806 ? 0 : 10,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>

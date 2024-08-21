@@ -30,6 +30,7 @@ import Icons from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import moment from 'moment';
 import {showMessage} from 'react-native-flash-message';
+import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
 
 type TypeData = {
   name: string;
@@ -87,7 +88,7 @@ const Leaderboard = () => {
       const result = await axios({
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
-console.log("SDfvdvdfdfgdf",result.data?.data)
+      console.log('SDfvdvdfdfgdf', result.data?.data);
       if (result.data) {
         const top5 = result.data?.data?.filter((item: any) => item?.rank <= 5);
         const after5 = result.data?.data?.filter(
@@ -165,7 +166,7 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
               <Text
                 style={{
                   fontFamily: Fonts.HELVETICA_REGULAR,
-                fontSize: 16,
+                  fontSize: 16,
                   // lineHeight: ,
                   color: myID ? AppColor.WHITE : AppColor.SecondaryTextColor,
                 }}>
@@ -212,7 +213,7 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                   marginHorizontal: 10,
                   color: myID ? AppColor.WHITE : AppColor.PrimaryTextColor,
                 }}>
-                {item?.fit_coins}
+                {item?.fit_coins > 0 ? item?.fit_coins : 0}
               </Text>
             </View>
           </View>
@@ -301,7 +302,7 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                 marginHorizontal: 10,
                 color: AppColor.WHITE,
               }}>
-              {myRank[0]?.fit_coins}
+              {myRank[0]?.fit_coins > 0 ? myRank[0]?.fit_coins : 0}
             </Text>
           </View>
         </View>
@@ -589,7 +590,7 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
       //     WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]
       //   }`,
       // );
-
+console.log("XCvdvdfvdf")
       if (
         response?.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -641,13 +642,14 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                 marginHorizontal: 0,
                 alignSelf: 'center',
               }}>
-              <FitIcon
+              {/* <FitIcon
                 name="arrowleft"
                 size={20}
                 type="AntDesign"
                 color={AppColor.BLACK}
                 onPress={() => navigation?.goBack()}
-              />
+              /> */}
+              <ArrowLeft onPress={() => navigation?.goBack()} />
             </View>
             <View
               style={{
@@ -672,7 +674,7 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                   navigation.navigate('Referral')
                 }
                 style={{
-                  height: 40,
+                  // height: 45,
                   backgroundColor: AppColor.RED,
                   borderTopLeftRadius: 8,
                   borderBottomLeftRadius: 8,
@@ -680,6 +682,7 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                   alignItems: 'center',
                   justifyContent: 'center',
                   paddingRight: 10,
+                  padding: 10,
                 }}>
                 <AnimatedLottieView
                   source={require('../../Icon/Images/InAppRewards/ReferButton.json')}
@@ -735,7 +738,7 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                   justifyContent: 'center',
                   paddingRight: 10,
                   //backgroundColor:'red',
-                  width:50,
+                  width: 50,
                 }}
               />
             )}
@@ -777,7 +780,7 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                 alignItems: 'center',
                 borderRadius: 12,
                 marginVertical: 18,
-
+                // paddingBottom: DeviceHeigth * 0.02,
                 paddingTop: 20,
                 shadowColor: 'grey',
                 ...Platform.select({
@@ -846,8 +849,8 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                   ) : (
                     <Image
                       resizeMode="stretch"
-                      // source={{uri: mainData[1]?.image_path}}
-                      source={localImage.NContact}
+                      source={{uri: mainData[1]?.image_path}}
+                      // source={localImage.NContact}
                       style={{
                         width: 110,
                         height: 110,
@@ -871,7 +874,8 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                         lineHeight: 20,
                         color: AppColor.PrimaryTextColor,
                       }}>
-                      {mainData[1]?.name}
+                      {mainData[1]?.name.charAt(0).toUpperCase()}
+                      {mainData[1]?.name.slice(1).toLowerCase()}
                     </Text>
                   </View>
                   <LinearGradient
@@ -904,7 +908,7 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                         fontSize: 12,
                       }}>
                       {' '}
-                      {mainData[1]?.fit_coins}
+                      {mainData[1]?.fit_coins > 0 ? mainData[1]?.fit_coins : 0}
                     </Text>
                   </LinearGradient>
                 </ImageBackground>
@@ -988,10 +992,14 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                       style={{
                         fontFamily: Fonts.HELVETICA_BOLD,
                         fontSize: 16,
-                        lineHeight: 20,
+                        lineHeight: 15,
+                        textAlign: 'center',
+                        top: 2,
                         color: AppColor.PrimaryTextColor,
                       }}>
-                      {mainData[0]?.name}
+                      {/* {mainData[0]?.name} */}
+                      {mainData[0]?.name.charAt(0).toUpperCase()}
+                      {mainData[0]?.name.slice(1).toLowerCase()}
                     </Text>
                   </View>
                   <LinearGradient
@@ -1015,7 +1023,7 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                     }}>
                     <Image
                       source={localImage.FitCoin}
-                      style={{width: 20, height: 20, marginLeft: 0}}
+                      style={{width: 20, height: 20}}
                     />
                     <Text
                       style={{
@@ -1024,7 +1032,7 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                         fontSize: 12,
                       }}>
                       {' '}
-                      {mainData[0]?.fit_coins}
+                      {mainData[0]?.fit_coins > 0 ? mainData[0]?.fit_coins : 0}
                     </Text>
                   </LinearGradient>
                 </ImageBackground>
@@ -1058,7 +1066,8 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                       fontSize: 12,
                     }}>
                     {' '}
-                    {mainData[2]?.fit_coins}
+                    {/* {mainData[2]?.fit_coins} */}
+                    {mainData[2]?.fit_coins > 0 ? mainData[2]?.fit_coins : 0}
                   </Text>
                 </LinearGradient>
                 <View
@@ -1074,7 +1083,8 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                       lineHeight: 20,
                       color: AppColor.PrimaryTextColor,
                     }}>
-                    {mainData[2]?.name}
+                    {mainData[2]?.name.charAt(0).toUpperCase()}
+                    {mainData[2]?.name.slice(1).toLowerCase()}
                   </Text>
                 </View>
                 <ImageBackground
@@ -1114,7 +1124,7 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                           marginTop: 5,
                           lineHeight: 40,
                         }}>
-                        {mainData[2]?.name.substring(0, 1)}
+                        {mainData[2]?.name.substring(0, 1).toUpperCase()}
                       </Text>
                     </View>
                   ) : (
@@ -1137,41 +1147,14 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                 style={{
                   width: '100%',
                   height: 100,
-
                   marginVertical: 60,
                 }}>
                 {otherData?.map((item: any, index: number) => (
                   <RenderItem item={item} index={index} />
                 ))}
               </View>
-              {getMyRank()}
 
-              {/* <TouchableOpacity
-              onPress={() => {
-                showMessage({
-                  message: 'Work in Progress',
-                  type: 'info',
-                  animationDuration: 200,
-                  floating: true,
-                  icon: {icon: 'auto', position: 'left'},
-                });
-              }}
-              style={{
-                width: '100%',
-                marginTop: DeviceHeigth * 0.02,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  fontFamily: Fonts.HELVETICA_REGULAR,
-                  fontSize: 12,
-                  lineHeight: 20,
-                  textDecorationLine: 'underline',
-                }}>
-                View All
-              </Text>
-            </TouchableOpacity> */}
+              {getMyRank()}
             </View>
             <View
               style={{
@@ -1233,14 +1216,15 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                             fontFamily: Fonts.HELVETICA_BOLD,
                             fontSize: 15,
                             color: '#1E40AF',
+                            textAlign: 'center',
                           }}>
                           {pastWinners[0]?.name.substring(0, 2).toUpperCase()}
                         </Text>
                       </View>
                     ) : (
                       <Image
-                        source={localImage.NContact}
-                        // source={{uri:pastWinners[0]?.image}}
+                        //source={localImage.NContact}
+                        source={{uri: pastWinners[0]?.image}}
                         style={{
                           width: 45,
                           height: 45,
@@ -1286,9 +1270,7 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                       </View>
                     ) : (
                       <Image
-                        source={localImage.NContact}
-                        // source={{uri:pastWinners[1]?.image}}
-
+                        source={{uri: pastWinners[1]?.image}}
                         style={{
                           width: 45,
                           height: 45,
@@ -1334,9 +1316,8 @@ console.log("SDfvdvdfdfgdf",result.data?.data)
                       </View>
                     ) : (
                       <Image
-                        source={localImage.NContact}
-                        // source={{uri:pastWinners[1]?.image}}
-
+                        // source={localImage.NContact}
+                        source={{uri: pastWinners[2]?.image}}
                         style={{
                           width: 45,
                           height: 45,

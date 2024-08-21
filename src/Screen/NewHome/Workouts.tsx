@@ -1121,7 +1121,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: AppColor.WHITE,
     // paddingHorizontal: 16,
-    marginTop: -30,
+    marginTop: DeviceHeigth>=1024?0:-30,
   },
   category: {
     fontFamily: 'Poppins',
