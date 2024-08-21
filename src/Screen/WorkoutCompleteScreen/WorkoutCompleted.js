@@ -404,7 +404,7 @@ const WorkoutCompleted = ({navigation, route}) => {
             backgroundColor={AppColor.WHITE}
             barStyle={'dark-content'}
           />
-          <NewHeader header={'Exercise Completed'} statusBarPadding={22}/>
+          <NewHeader header={'Rewards Unlocked'} statusBarPadding={22}/>
           <View style={{flex: 1,marginTop:5}}>
             <Animated.View style={[styles.imgView, streakAnimation]}>
               <Image source={localImage.offer_girl} style={styles.imgStyle1} />
