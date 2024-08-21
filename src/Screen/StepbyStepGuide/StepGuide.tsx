@@ -246,10 +246,10 @@ const StepGuide = ({navigation}: any) => {
                 />
               </View>
             </View>
-            <FitText type="Heading" value="Past Winners" textAlign="center" />
-            <WithoutEvent pastWinners={pastWinners} noText />
+            <FitText type="Heading" value="Past Winners" />
+            <WithoutEvent pastWinners={pastWinners} pV={0} noText />
             <FitText
-              type="Heading"
+              type="SubHeading"
               value="Terms & Conditions"
               marginVertical={10}
               onPress={() => {
@@ -257,6 +257,8 @@ const StepGuide = ({navigation}: any) => {
                   title: 'Terms & Condition',
                 });
               }}
+              textAlign='center'
+              textDecorationLine='underline'
             />
           </View>
         </View>
@@ -321,7 +323,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     paddingBottom: 0,
-    marginVertical: DeviceWidth * 0.1,
+    marginVertical: DeviceWidth * 0.05,
   },
   greyContainer: {
     borderRadius: 10,

@@ -9,11 +9,11 @@ import {showMessage} from 'react-native-flash-message';
 import {useNavigation} from '@react-navigation/native';
 import {AnalyticsConsole} from '../AnalyticsConsole';
 
-const WithoutEvent = ({pastWinners, noText}) => {
+const WithoutEvent = ({pastWinners, noText,pV}) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <View style={styles.box}>
+      <View style={[styles.box,{paddingVertical: pV??10}]}>
         {!noText&&<View
           style={{
             width: '100%',
@@ -273,8 +273,7 @@ const styles = StyleSheet.create({
     width: DeviceWidth * 0.95,
 
     alignSelf: 'center',
-    alignItems: 'center',
-    paddingVertical: 10,
+    alignItems: 'center'
   },
   modalContainer: {
     flex: 1,

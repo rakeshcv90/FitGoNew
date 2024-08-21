@@ -19,7 +19,7 @@ type Props = TextProps & {
   marginHorizontal?: number;
   fontStyle?: 'normal' | 'italic';
   w?: string | any;
-  textDecorationLine?: 'line-through';
+  textDecorationLine?: 'line-through' | 'underline';
   onPress?: Function;
   children?: ReactNode;
   marginTop?:number;

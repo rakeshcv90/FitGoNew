@@ -23,6 +23,7 @@ type OverExerciseType = {
   setOverExerciseVisible: Function;
   handleBreakButton: Function | any;
   loader?: boolean;
+  closeExtrFunction?: Function | any
 };
 
 const format = 'hh:mm:ss';
@@ -32,10 +33,12 @@ const OverExerciseModal = ({
   overExerciseVisible,
   handleBreakButton,
   loader,
+  closeExtrFunction
 }: OverExerciseType) => {
   const dispatch = useDispatch();
 
   const close = () => {
+   closeExtrFunction && closeExtrFunction()
     setOverExerciseVisible(false);
     dispatch(setExerciseInTime(''));
     dispatch(setExerciseOutTime(''));
