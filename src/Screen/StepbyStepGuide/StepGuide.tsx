@@ -5,6 +5,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -22,6 +23,7 @@ import FitIcon from '../../Component/Utilities/FitIcon';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import WithoutEvent from '../../Component/NewHomeUtilities/WithoutEvent';
+import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
 type StepItem = {
   item: StepsArrayType;
   index: number;
@@ -136,21 +138,16 @@ const StepGuide = ({navigation}: any) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{width: '100%', alignSelf: 'center'}}>
-        <View
+        <TouchableOpacity
+            onPress={() => navigation?.goBack()}
           style={{
             position: 'absolute',
             top: (DeviceWidth * 0.1) / 2,
             zIndex: 1,
             marginLeft: 20,
           }}>
-          <FitIcon
-            name="arrowleft"
-            size={20}
-            type="AntDesign"
-            color={AppColor.WHITE}
-            onPress={() => navigation?.goBack()}
-          />
-        </View>
+          <ArrowLeft fillColor={AppColor.WHITE} />
+        </TouchableOpacity>
         <View style={styles.topBox}>
           <Image
             source={localImage.StepGuidHead}
@@ -257,8 +254,8 @@ const StepGuide = ({navigation}: any) => {
                   title: 'Terms & Condition',
                 });
               }}
-              textAlign='center'
-              textDecorationLine='underline'
+              textAlign="center"
+              textDecorationLine="underline"
             />
           </View>
         </View>

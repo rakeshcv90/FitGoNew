@@ -61,7 +61,7 @@ const TermaAndCondition = ({route}) => {
           </>
         )}
       </View>
-      {/* <HeaderWithoutSearch Header={route.params.title} /> */}
+      <HeaderWithoutSearch Header={route.params.title} />
 
       <WebView
         source={{

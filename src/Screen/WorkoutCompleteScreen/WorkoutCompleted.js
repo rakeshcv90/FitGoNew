@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, StatusBar} from 'react-native';
+import {View, Text, StyleSheet, StatusBar, BackHandler} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {AppColor} from '../../Component/Color';
 import NewHeader from '../../Component/Headers/NewHeader';
@@ -166,16 +166,15 @@ const WorkoutCompleted = ({navigation, route}) => {
   const focused = useIsFocused();
 
   useEffect(() => {
-    // if (moment(getExerciseOutTime, format).isAfter(moment().format(format))) {
-    //   moment(getExerciseOutTime, format).isAfter(moment().format(format));
-    // } else {
-    // if (
-    //   getExerciseOutTime != ''&&
-    //   moment(getExerciseOutTime, format).isAfter(moment().format(format))
-    // ) {
-    //   console.warn('COMPLETEE', moment().format(format));
-    //   dispatch(setExerciseInTime(moment().format(format)));
-    // } else
+    // Add an event listener to handle the hardware back press
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+    // Remove the event listener when the component is unmounted
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+  }, []);
+  useEffect(() => {
     if (
       getExerciseOutTime != '' &&
       moment().format(format) > getExerciseOutTime
@@ -201,6 +200,9 @@ const WorkoutCompleted = ({navigation, route}) => {
       );
     }
   }, [focused]);
+  const handleBackPress = () => {
+    return true
+  }
   const RewardsbeforeNextScreen = async () => {
     downloadCounter = 0;
     // const url =
@@ -404,8 +406,8 @@ const WorkoutCompleted = ({navigation, route}) => {
             backgroundColor={AppColor.WHITE}
             barStyle={'dark-content'}
           />
-          <NewHeader header={'Rewards Unlocked'} statusBarPadding={22}/>
-          <View style={{flex: 1,marginTop:5}}>
+          <NewHeader header={'Rewards Unlocked'} statusBarPadding={22} />
+          <View style={{flex: 1, marginTop: 5}}>
             <Animated.View style={[styles.imgView, streakAnimation]}>
               <Image source={localImage.offer_girl} style={styles.imgStyle1} />
               <WorkoutCard
@@ -419,7 +421,11 @@ const WorkoutCompleted = ({navigation, route}) => {
               />
             </Animated.View>
             <Animated.View style={[styles.imgView, cardioAnimation]}>
-              <Image source={localImage.cardioImage} style={styles.imgStyle1} />
+              <Image
+                source={localImage.cardioImage}
+                style={styles.imgStyle1}
+                resizeMode="stretch"
+              />
               <WorkoutCard
                 cardType={'cardio'}
                 cardHeader={'Cardio Point'}
@@ -469,7 +475,11 @@ const WorkoutCompleted = ({navigation, route}) => {
               />
             </Animated.View>
             <Animated.View style={[styles.imgView, completeAnimation]}>
-              <Image source={localImage.offer_girl} style={styles.imgStyle1} />
+              <Image
+                source={localImage.offer_girl}
+                style={styles.imgStyle1}
+                resizeMode="stretch"
+              />
               <WorkoutCard
                 cardType={'complete'}
                 cardHeader={'Exercise Completed'}
@@ -501,7 +511,7 @@ const styles = StyleSheet.create({
     backgroundColor: AppColor.GRAY,
   },
   imgView: {
-    height: DeviceHeigth * 0.5,
+    height: DeviceHeigth >= 1024 ? DeviceHeigth * 0.65 : DeviceHeigth * 0.5,
     width: DeviceWidth * 0.95,
     alignSelf: 'center',
     marginBottom: 10,

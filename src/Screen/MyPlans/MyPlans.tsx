@@ -67,6 +67,7 @@ import StreakModal from '../../Component/Utilities/StreakModal';
 import {localImage} from '../../Component/Image';
 import Icons from 'react-native-vector-icons/FontAwesome';
 import OverExerciseModal from '../../Component/Utilities/OverExercise';
+import FitText from '../../Component/Utilities/FitText';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -160,7 +161,7 @@ const MyPlans = ({navigation}: any) => {
     ) {
       console.warn('COMPLETEE', moment().format(format), getExerciseOutTime);
       dispatch(setExerciseInTime(moment().format(format)));
-    } 
+    }
     // if (
     //   // complete &&
     //   getExerciseOutTime != '' &&
@@ -1288,7 +1289,7 @@ const MyPlans = ({navigation}: any) => {
         backgroundColor: AppColor.WHITE,
       }}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      {enteredCurrentEvent ? (
+      {!enteredCurrentEvent ? (
         <>
           <View
             style={{
@@ -1388,17 +1389,13 @@ const MyPlans = ({navigation}: any) => {
           </View>
         </>
       ) : (
-        <>
-          <NewHeader
-            header={'Weekly Plan'}
-            SearchButton={false}
-            backButton={false}
-            extraView={true}
-            enteredCurrentEvent={false}
-            coins={fitCoins > 0 ? fitCoins : 0}
-            coinsLoaded={fetchCoins}
-          />
-        </>
+        <FitText
+          type="Heading"
+          fontSize={20}
+          value="Weekly Plan"
+          marginVertical={10}
+          textAlign="center"
+        />
       )}
 
       <View

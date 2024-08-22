@@ -187,6 +187,15 @@ const Exercise = ({navigation, route}: any) => {
   };
 
   useEffect(() => {
+    // Add an event listener to handle the hardware back press
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+    // Remove the event listener when the component is unmounted
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+  }, []);
+  useEffect(() => {
     initInterstitial();
     const initTts = async () => {
       const ttsStatus = await Tts.getInitStatus();

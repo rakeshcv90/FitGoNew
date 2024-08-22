@@ -551,13 +551,6 @@ const NewHome = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           flexGrow: 1,
-          paddingBottom: DeviceHeigth * 0.0,
-          paddingVertical:
-            Platform.OS == 'ios'
-              ? DeviceHeigth >= 1024
-                ? DeviceHeigth * 0.06
-                : 0
-              : 0,
         }}
         refreshControl={
           <RefreshControl

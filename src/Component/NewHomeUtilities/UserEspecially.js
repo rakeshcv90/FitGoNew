@@ -38,7 +38,6 @@ const UserEspecially = () => {
     }
   }, [isFocused]);
   const HandelClick = index => {
-
     if (index == 1) {
       AnalyticsConsole(`CustomWrk_FR_Home`);
       navigation.navigate('CustomWorkout');
@@ -293,7 +292,7 @@ const UserEspecially = () => {
                       lineHeight: 16,
                       color: AppColor.WHITE,
                     }}>
-                    A balanced diet is a
+                    Create your own workout
                   </Text>
                   <Text
                     style={{
@@ -421,17 +420,17 @@ const UserEspecially = () => {
                       lineHeight: 16,
                       color: AppColor.WHITE,
                     }}>
-                    A balanced diet is a
+                    Reach Your Goals Quicker with a Nutritious Diet
                   </Text>
-                  <Text
+                  {/* <Text
                     style={{
                       fontFamily: Fonts.HELVETICA_REGULAR,
                       fontSize: 13,
                       lineHeight: 16,
                       color: AppColor.WHITE,
                     }}>
-                    healthy life
-                  </Text>
+                    Nutritious Diet
+                  </Text> */}
                 </View>
               </View>
             </ImageBackground>

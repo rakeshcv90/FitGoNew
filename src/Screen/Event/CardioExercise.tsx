@@ -462,6 +462,15 @@ const CardioExercise = ({navigation, route}: any) => {
     }
   };
 
+  useEffect(() => {
+    // Add an event listener to handle the hardware back press
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+    // Remove the event listener when the component is unmounted
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+  }, []);
   const deleteTrackExercise = async () => {
     const payload = new FormData();
     payload.append('day', WeekArray[day]);

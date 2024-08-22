@@ -430,11 +430,9 @@ const CustomWorkout = ({navigation}) => {
 
   return (
     <>
-      <DietPlanHeader
+      <NewHeader
         header={'Create Custom Workout'}
-        shadow
-   
-        left={DeviceHeigth >= 1024 ? DeviceWidth * 0.045 : DeviceWidth * 0.02}
+        backButton
       />
 
       <View style={styles.container}>

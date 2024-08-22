@@ -4,14 +4,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   Platform,
-  SafeAreaView,
   ActivityIndicator,
   Image,
 } from 'react-native';
 import React from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Config';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {AppColor} from '../Color';
+import {AppColor, PLATFORM_IOS} from '../Color';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {useDispatch, useSelector} from 'react-redux';
@@ -28,6 +27,7 @@ import ShimmerPlaceholder, {
 import LinearGradient from 'react-native-linear-gradient';
 import {localImage} from '../Image';
 import {ArrowLeft} from '../Utilities/Arrows/Arrow';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const NewHeader = ({
   header,
@@ -40,7 +40,7 @@ const NewHeader = ({
   coinsLoaded,
   secondIcon,
   headerColor,
-  statusBarPadding
+  statusBarPadding,
 }) => {
   const navigation = useNavigation();
   const getExperience = useSelector(state => state.getExperience);
@@ -53,7 +53,7 @@ const NewHeader = ({
       style={[
         style.container,
         {
-          paddingVertical: getStatusBarHeight()>30?statusBarPadding??27: getStatusBarHeight(),
+          paddingVertical: PLATFORM_IOS ? 5 : getStatusBarHeight(),
           left: 3,
           backgroundColor: headerColor ?? AppColor.WHITE,
         },

@@ -31,6 +31,7 @@ const WorkoutChallengeZone = ({day, currentChallenge}) => {
 
               backgroundColor: AppColor.WHITE,
               flexDirection: 'row',
+              alignItems: 'center',
             }}>
             <View
               style={{
@@ -62,8 +63,8 @@ const WorkoutChallengeZone = ({day, currentChallenge}) => {
                   fontFamily: Fonts.HELVETICA_BOLD,
                   fontSize: 14,
                   fontWeight: '700',
-                  lineHeight: 18,
-                  marginVertical: DeviceHeigth * 0.025,
+                  lineHeight: 25,
+                  // marginVertical: DeviceHeigth * 0.025,
                   marginHorizontal: 5,
                   marginHorizontal: 15,
                   color: AppColor.HEADERTEXTCOLOR,
@@ -75,49 +76,54 @@ const WorkoutChallengeZone = ({day, currentChallenge}) => {
                   fontSize: 14,
                   fontWeight: '500',
                   lineHeight: 20,
-                  marginHorizontal: 5,
-                  top: -10,
+                  // top: -10,
                   marginHorizontal: 15,
                   color: AppColor.SecondaryTextColor,
                 }}>
                 {currentChallenge[0]?.sub_title}
               </Text>
-
-              <Text
+              <View
                 style={{
-                  fontFamily: Fonts.HELVETICA_REGULAR,
-                  fontSize: 12,
-                  fontWeight: '400',
-                  lineHeight: 15,
-                  marginHorizontal: 15,
-                  color: AppColor.PrimaryTextColor,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
                 }}>
-                {`${day}/${currentChallenge[0]?.total_days} Days`}
-              </Text>
+                <Text
+                  style={{
+                    fontFamily: Fonts.HELVETICA_REGULAR,
+                    fontSize: 12,
+                    fontWeight: '400',
+                    lineHeight: 15,
+                    marginHorizontal: 15,
+                    color: AppColor.PrimaryTextColor,
+                  }}>
+                  {`${day}/${currentChallenge[0]?.total_days} Days`}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    AnalyticsConsole(`D_Wrk_DAYS_FR_Home`);
+                    navigation.navigate('WorkoutDays', {
+                      data: currentChallenge[0],
+                      challenge: true,
+                    });
+                  }}
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    // top: DeviceHeigth * 0.037,
+                    // left: -DeviceWidth * 0.15,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                  }}>
+                  <Image
+                    source={require('../../Icon/Images/NewHome/start.png')}
+                    resizeMode="contain"
+                    style={{width: 100, height: 30}}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-            <TouchableOpacity
-              onPress={() => {
-                AnalyticsConsole(`D_Wrk_DAYS_FR_Home`);
-                navigation.navigate('WorkoutDays', {
-                  data: currentChallenge[0],
-                  challenge: true,
-                });
-              }}
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                top: DeviceHeigth * 0.037,
-                left: -DeviceWidth * 0.15,
-                flexDirection: 'row',
-                alignItems: 'center',
-                alignSelf: 'center',
-              }}>
-              <Image
-                source={require('../../Icon/Images/NewHome/start.png')}
-                resizeMode="contain"
-                style={{width: 100, height: 30}}
-              />
-            </TouchableOpacity>
           </View>
           <View
             style={{
@@ -167,7 +173,7 @@ var styles = StyleSheet.create({
     width: DeviceWidth,
     // height: DeviceHeigth * 0.2,
     backgroundColor: AppColor.WHITE,
-    marginVertical:15,
+    marginVertical: 15,
   },
   box: {
     width: DeviceWidth * 0.95,

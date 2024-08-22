@@ -238,8 +238,8 @@ const WithoutEvent = ({pastWinners, noText,pV}) => {
                 navigation.navigate('PastWinner', {pastWinners: pastWinners});
               }}
               style={{
-                width: 150,
-                height: 32,
+                width: DeviceWidth * 0.35,
+                height: 40,
                 backgroundColor: AppColor.WHITE,
                 alignSelf: 'flex-end',
                 borderRadius: 8,
