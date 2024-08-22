@@ -831,6 +831,7 @@ const CardioExercise = ({navigation, route}: any) => {
                     height: DeviceHeigth * 0.4,
                     alignSelf: 'center',
                     top: 30,
+                    overflow: 'hidden',
                   }}
                 />
               </View>

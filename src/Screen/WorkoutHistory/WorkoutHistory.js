@@ -28,7 +28,7 @@ import Tooltip from './Tooltip';
 import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../../Component/ActivityLoader';
 import LoadingScreen from '../../Component/NewHomeUtilities/LoadingScreen';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 
 const WorkoutHistory = () => {
   const [selectedDay, setSelectedDay] = useState((moment().day() + 6) % 7);
@@ -59,9 +59,7 @@ const WorkoutHistory = () => {
     setLoaded(true);
     try {
       const res = await axios(
-        `${NewAppapi.GET_HISTORY}?user_id=${getUserDataDetails?.id} & day=${
-          WeekArrayWithEvent[selectedDay]
-        }`,
+        `${NewAppapi.GET_HISTORY}?user_id=${getUserDataDetails?.id} & day=${WeekArrayWithEvent[selectedDay]}`,
       );
       if (res?.data) {
         setLoaded1(false);
@@ -75,7 +73,11 @@ const WorkoutHistory = () => {
           exerciseCount: res?.data?.event_overview?.exercises,
           missedExercise: res?.data?.event_overview?.missed,
           duration: Math.ceil(
-            ((res?.data?.event_overview?.exercises-res?.data?.event_overview?.missed) * 3 * 30) / 60,
+            ((res?.data?.event_overview?.exercises -
+              res?.data?.event_overview?.missed) *
+              3 *
+              30) /
+              60,
           ),
           //deduction
           next: res?.data?.point_deduction?.next_status,
@@ -148,7 +150,7 @@ const WorkoutHistory = () => {
                 }
               </Text>
             </View>
-          ) : coins[WeekArrayWithEvent[selectedDay]] == 0 ? (
+          ) : coins[WeekArrayWithEvent[selectedDay]] < 0 ? (
             <View
               style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
               <Image
@@ -162,7 +164,11 @@ const WorkoutHistory = () => {
                   style={{height: 20, width: 20}}
                   resizeMode="contain"
                 />
-                <Text>{` ${WeekArrayWithEvent[selectedDay]} miss`}</Text>
+                <Text
+                  style={{
+                    color: AppColor.BLACK,
+                    fontFamily: Fonts.HELVETICA_REGULAR,
+                  }}>{` ${WeekArrayWithEvent[selectedDay]} miss`}</Text>
               </View>
               <Text style={styles.txt2}>
                 {'You miss this day and you loss the'}
@@ -282,7 +288,7 @@ const styles = StyleSheet.create({
     width: DeviceWidth,
     backgroundColor: AppColor.WHITE,
     marginBottom: 15,
-    paddingBottom: 15,
+    paddingVertical: 15,
   },
   view2: {
     backgroundColor: AppColor.LIGHT_RED,

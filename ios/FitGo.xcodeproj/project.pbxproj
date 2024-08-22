@@ -93,7 +93,7 @@
 		2AAC3EDE2B4530CD007908D0 /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
 		2AB4A85D2C24329600F7CD92 /* fitme_notification.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = fitme_notification.wav; sourceTree = "<group>"; };
 		2B4095CC67EC4DFDA5C7D1D2 /* Montserrat-SemiBoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-SemiBoldItalic.ttf"; path = "../assets/fonts/Montserrat-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
-		2D1D9160A09F4A82B136B4CB /* helvetica-light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "helvetica-light.ttf"; path = "../assets/fonts/helvetica-light.ttf"; sourceTree = "<group>"; };
+		2D1D9160A09F4A82B136B4CB /* helvetica-light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "helvetica-light.ttf"; path = "../assets/fonts/helvetica-light.ttf"; sourceTree = "<group>"; };
 		3497870F246042E9BF616E9B /* Helvetica-Oblique.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Helvetica-Oblique.ttf"; path = "../assets/fonts/Helvetica-Oblique.ttf"; sourceTree = "<group>"; };
 		395C5D581A2E222812791E4D /* Pods-FitGo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FitGo.release.xcconfig"; path = "Target Support Files/Pods-FitGo/Pods-FitGo.release.xcconfig"; sourceTree = "<group>"; };
 		3DBAA78B4FA844C8B903172F /* Montserrat-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Black.ttf"; path = "../assets/fonts/Montserrat-Black.ttf"; sourceTree = "<group>"; };
@@ -698,7 +698,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.23;
+				MARKETING_VERSION = 1.24;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -737,7 +737,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.23;
+				MARKETING_VERSION = 1.24;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

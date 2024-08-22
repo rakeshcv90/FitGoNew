@@ -556,7 +556,7 @@ const NewHome = ({navigation}) => {
             Platform.OS == 'ios'
               ? DeviceHeigth >= 1024
                 ? DeviceHeigth * 0.06
-                : DeviceHeigth * 0.04
+                : 0
               : 0,
         }}
         refreshControl={
@@ -589,7 +589,7 @@ const NewHome = ({navigation}) => {
                     ? localImage.avt
                     : {uri: getUserDataDetails.image_path}
                 }
-                resizeMode="contain"
+                resizeMode="cover"
                 style={{
                   width: 40,
                   height: 40,

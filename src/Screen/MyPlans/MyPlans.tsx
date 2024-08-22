@@ -1394,7 +1394,7 @@ const MyPlans = ({navigation}: any) => {
             SearchButton={false}
             backButton={false}
             extraView={true}
-            enteredCurrentEvent={enteredCurrentEvent}
+            enteredCurrentEvent={false}
             coins={fitCoins > 0 ? fitCoins : 0}
             coinsLoaded={fetchCoins}
           />
@@ -1404,12 +1404,10 @@ const MyPlans = ({navigation}: any) => {
       <View
         style={{
           flex: 1,
-          marginTop:
-            Platform.OS == 'ios'
-              ? DeviceHeigth < 1024
-                ? -DeviceWidth * 0.1
-                : -DeviceWidth * 0.05
-              : -DeviceWidth * 0.0,
+          // marginTop:
+          //   Platform.OS == 'ios'
+          //     ? DeviceHeigth < 1024 - DeviceWidth * 0.05
+          //     : -DeviceWidth * 0.0,
         }}>
         {loader ? (
           <View

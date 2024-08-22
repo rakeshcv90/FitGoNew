@@ -296,7 +296,7 @@ const PastWinner = ({route}) => {
                           <Image
                             source={{uri: winner.image}}
                             style={{width: 55, height: 55, borderRadius: 55}}
-                            resizeMode="center"
+                            resizeMode="cover"
                           />
                         )}
                       </View>

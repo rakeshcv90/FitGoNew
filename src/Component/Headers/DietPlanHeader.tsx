@@ -19,7 +19,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 import {setExperience} from '../ThemeRedux/Actions';
 import {navigationRef} from '../../../App';
-import { ArrowLeft } from '../Utilities/Arrows/Arrow';
+import {ArrowLeft} from '../Utilities/Arrows/Arrow';
 
 type Props = {
   header: string;
@@ -34,7 +34,7 @@ type Props = {
   left?: number;
   h?: number;
   paddingTop?: number;
-  introType?:boolean;
+  introType?: boolean;
 };
 
 const DietPlanHeader: FC<Props> = ({
@@ -71,7 +71,9 @@ const DietPlanHeader: FC<Props> = ({
             ? paddingTop
             : Platform.OS == 'android'
             ? DeviceHeigth * 0.035
-            : DeviceHeigth * 0.055,
+            : DeviceHeigth >= 1024
+            ? DeviceHeigth * 0.055
+            : DeviceHeigth * 0.035,
         },
       ]}>
       {backButton ? (
@@ -113,7 +115,7 @@ const DietPlanHeader: FC<Props> = ({
             //   size={25}
             //   color={AppColor.INPUTTEXTCOLOR}
             // />
-            <ArrowLeft/>
+            <ArrowLeft />
           )}
         </TouchableOpacity>
       )}

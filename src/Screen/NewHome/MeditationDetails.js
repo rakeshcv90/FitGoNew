@@ -307,8 +307,8 @@ const MeditationDetails = ({navigation, route}) => {
           style={{
             width: '95%',
             alignSelf: 'center',
-            top: DeviceHeigth >= 1024 ? 0 : -DeviceHeigth * 0.02,
-            marginVertical: DeviceHeigth >= 1024 ? DeviceHeigth * 0.02 : 0,
+            // top: DeviceHeigth >= 1024 ? 0 : -DeviceHeigth * 0.02,
+            marginVertical: DeviceHeigth * 0.02,
           }}>
           <Text
             style={{

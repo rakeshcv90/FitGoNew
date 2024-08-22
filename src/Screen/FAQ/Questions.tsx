@@ -10,10 +10,11 @@ import React, {useMemo} from 'react';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import FitText from '../../Component/Utilities/FitText';
 import {QuestionsArray, QuestionsArrayType} from './QuestionsArray';
-import {AppColor} from '../../Component/Color';
+import {AppColor, PLATFORM_IOS} from '../../Component/Color';
 import {navigationRef} from '../../../App';
 import FitIcon from '../../Component/Utilities/FitIcon';
-import { AnalyticsConsole } from '../../Component/AnalyticsConsole';
+import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import {DeviceHeigth} from '../../Component/Config';
 
 const Questions = ({route, navigation}: any) => {
   const RenderItem = useMemo(
@@ -22,12 +23,12 @@ const Questions = ({route, navigation}: any) => {
         <>
           <TouchableOpacity
             key={index}
-            onPress={() =>{
-              AnalyticsConsole(`Q_${item?.id}`)
+            onPress={() => {
+              AnalyticsConsole(`Q_${item?.id}`);
               navigation.navigate('ChatBot', {
                 quesNo: item.id,
                 screenName: route.params?.screenName,
-              })
+              });
             }}
             style={{
               flexDirection: 'row',
@@ -36,7 +37,7 @@ const Questions = ({route, navigation}: any) => {
               width: '95%',
               alignItems: 'center',
               justifyContent: 'space-between',
-              paddingLeft: 5
+              paddingLeft: 5,
             }}>
             <View style={{width: '95%'}}>
               <FitText
@@ -72,7 +73,11 @@ const Questions = ({route, navigation}: any) => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
-      <DietPlanHeader header="Frequently Asked Questions" shadow />
+      <DietPlanHeader
+        header="Frequently Asked Questions"
+        shadow
+        h={PLATFORM_IOS ? (DeviceHeigth * 10) / 100 : (DeviceHeigth * 10) / 100}
+      />
       <View
         style={{
           width: '95%',
@@ -83,6 +88,7 @@ const Questions = ({route, navigation}: any) => {
           data={QuestionsArray}
           showsVerticalScrollIndicator={false}
           renderItem={({item, index}: any) => RenderItem(item, index)}
+          contentContainerStyle={{paddingBottom: DeviceHeigth * 0.1}}
         />
       </View>
     </SafeAreaView>
