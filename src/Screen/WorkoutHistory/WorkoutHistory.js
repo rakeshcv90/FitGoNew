@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import {WeekTabHistory, WeekTabWithEvents} from '../MyPlans/Tabs';
 import moment from 'moment';
 import {

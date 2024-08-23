@@ -13,6 +13,7 @@ import {DeviceHeigth, DeviceWidth} from '../Component/Config';
 import {useNavigation} from '@react-navigation/native';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {localImage} from './Image';
+import { ArrowLeft } from './Utilities/Arrows/Arrow';
 const HeaderWithoutSearch = ({Header}) => {
   const navigation = useNavigation();
   return (
@@ -37,7 +38,7 @@ const HeaderWithoutSearch = ({Header}) => {
             onPress={() => {
               navigation.goBack();
             }}>
-            <Icons name={'arrow-left'} size={25} color={'white'} />
+           <ArrowLeft/>
           </TouchableOpacity>
           <View
             style={{

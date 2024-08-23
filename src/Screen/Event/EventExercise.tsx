@@ -835,7 +835,7 @@ const EventExercise = ({navigation, route}: any) => {
               style={[
                 {
                   // height: DeviceHeigth * 0.28,
-                  paddingTop: 10,
+                  paddingVertical: 10,
                   paddingHorizontal: 20,
                   backgroundColor: AppColor.WHITE,
                   width: DeviceHeigth >= 1024 ? '90%' : '90%',
