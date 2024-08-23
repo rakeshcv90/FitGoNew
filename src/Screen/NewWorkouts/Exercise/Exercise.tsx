@@ -342,8 +342,26 @@ const Exercise = ({navigation, route}: any) => {
               clearTimeout(playTimerRef.current);
               StartAnimation();
             } else if (seconds == 0 && number < allExercise?.length - 1) {
-              console.log('NUMBER', number);
-              setCurrentSet(0);
+            //   console.log('NUMBER', number);
+            //   setCurrentSet(0);
+            //   const index = allExercise?.findIndex(
+            //     (item: any) =>
+            //       item?.exercise_id == allExercise[number]?.exercise_id,
+            //   );
+            //   handleExerciseChange(allExercise[index + 1]?.exercise_title);
+            //   setNumber(index + 1);
+            //   setRestStart(true);
+            //   !addClosed && showInterstitialAd();
+            //   if (addClosed) {
+            //     ProgressRef.current?.play();
+            //     setPause(false);
+            //     setAddClosed(false);
+            //   }
+            // }
+            !addClosed && showInterstitialAd();
+            if (addClosed) {
+              ProgressRef.current?.play();
+              setPause(false);
               const index = allExercise?.findIndex(
                 (item: any) =>
                   item?.exercise_id == allExercise[number]?.exercise_id,
@@ -351,13 +369,12 @@ const Exercise = ({navigation, route}: any) => {
               handleExerciseChange(allExercise[index + 1]?.exercise_title);
               setNumber(index + 1);
               setRestStart(true);
-              !addClosed && showInterstitialAd();
-              if (addClosed) {
-                ProgressRef.current?.play();
-                setPause(false);
-                setAddClosed(false);
-              }
+              setAddClosed(false);
             }
+            Platform.OS == 'android'
+              ? Platform.Version != 34 && setupPlayer()
+              : setupPlayer();
+          }
           } else {
             if (seconds == 0 && number == allExercise?.length - 1) {
               setPause(false);
@@ -812,7 +829,7 @@ const Exercise = ({navigation, route}: any) => {
               style={[
                 {
                   // height: DeviceHeigth * 0.28,
-                  paddingTop: 10,
+                  paddingVertical: 10,
                   paddingHorizontal: 20,
                   backgroundColor: AppColor.WHITE,
                   width: DeviceHeigth >= 1024 ? '90%' : '90%',

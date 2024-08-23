@@ -1289,7 +1289,7 @@ const MyPlans = ({navigation}: any) => {
         backgroundColor: AppColor.WHITE,
       }}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      {!enteredCurrentEvent ? (
+      {enteredCurrentEvent ? (
         <>
           <View
             style={{

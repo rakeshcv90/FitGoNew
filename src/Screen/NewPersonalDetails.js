@@ -215,7 +215,6 @@ const NewPersonalDetails = ({route, navigation}) => {
           workout_plans: values.workout_plans,
         },
       });
-      console.log(values.email,"emaill")
       if (dataItem.data.msg == 'User Updated Successfully') {
         showMessage({
           message: 'Details updated successfully.',
@@ -241,6 +240,7 @@ const NewPersonalDetails = ({route, navigation}) => {
 
         setForLoading(false);
       } else {
+        console.log('message-------->',dataItem?.data?.msg)
         showMessage({
           message: dataItem?.data?.msg,
           floating: true,
