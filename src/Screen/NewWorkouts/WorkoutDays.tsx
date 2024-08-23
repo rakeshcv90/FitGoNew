@@ -42,6 +42,7 @@ import NativeAddTest from '../../Component/NativeAddTest';
 import FastImage from 'react-native-fast-image';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
+import NewHeader from '../../Component/Headers/NewHeader';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -858,16 +859,11 @@ const WorkoutDays = ({navigation, route}: any) => {
   };
   return (
     <View style={styles.container}>
-      <DietPlanHeader
+      <NewHeader
         header={
           data?.workout_title == undefined ? data?.title : data?.workout_title
         }
-        h={
-          Platform.OS == 'ios'
-            ? (DeviceHeigth * 13) / 100
-            : (DeviceHeigth * 7) / 100
-        }
-        shadow
+        backButton
       />
 
       <>

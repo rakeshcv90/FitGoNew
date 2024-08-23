@@ -812,7 +812,7 @@ const NewHome = ({navigation}) => {
               navigation.navigate('OfferPage');
             }}
             style={{
-              width: DeviceHeigth >= 1024 ? '20%' : '25%',
+              width: DeviceHeigth >= 1024 ? '16%' : '25%',
               height: '60%',
               overflow: 'hidden',
               justifyContent: 'center',

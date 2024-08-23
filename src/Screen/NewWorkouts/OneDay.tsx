@@ -56,6 +56,7 @@ import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import FastImage from 'react-native-fast-image';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import OverExerciseModal from '../../Component/Utilities/OverExercise';
+import { ArrowLeft } from '../../Component/Utilities/Arrows/Arrow';
 
 const format = 'hh:mm:ss';
 const OneDay = ({navigation, route}: any) => {
@@ -716,7 +717,8 @@ const OneDay = ({navigation, route}: any) => {
             }
           }}
           style={{marginTop: DeviceWidth * 0.04}}>
-          <AntDesign name={'arrowleft'} size={25} color={AppColor.WHITE} />
+          {/* <AntDesign name={'arrowleft'} size={25} color={AppColor.WHITE} /> */}
+          <ArrowLeft fillColor={AppColor.WHITE} />
         </TouchableOpacity>
       </View>
 

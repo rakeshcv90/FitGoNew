@@ -36,7 +36,11 @@ const PastWinner = ({route}) => {
         backgroundColor={AppColor.Background_New}
         barStyle={'dark-content'}
       />
-      <DietPlanHeader header={'Past Winners'} shadow />
+      <DietPlanHeader header={'Past Winners'} paddingTop={Platform.OS == 'android'
+            ? DeviceHeigth * 0.035
+            : DeviceHeigth >= 1024
+            ? DeviceHeigth * 0.055
+            : DeviceWidth * 0.1} shadow />
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}

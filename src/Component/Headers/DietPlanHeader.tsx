@@ -73,7 +73,7 @@ const DietPlanHeader: FC<Props> = ({
             ? DeviceHeigth * 0.035
             : DeviceHeigth >= 1024
             ? DeviceHeigth * 0.055
-            : DeviceHeigth * 0.035,
+            : DeviceWidth * 0.15,
         },
       ]}>
       {backButton ? (

@@ -557,7 +557,20 @@ const WorkoutCategories = ({navigation, route}: any) => {
             navigation?.goBack();
           }
         }}
-        h={Platform.OS == 'ios' ? DeviceWidth * 0.2 : DeviceWidth * 0.15}
+        h={
+          Platform.OS == 'ios'
+            ? DeviceHeigth >= 1024
+              ? DeviceWidth * 0.1
+              : DeviceWidth * 0.2
+            : DeviceWidth * 0.15
+        }
+        paddingTop={
+          Platform.OS == 'android'
+            ? DeviceHeigth * 0.035
+            : DeviceHeigth >= 1024
+            ? DeviceHeigth * 0.035
+            : DeviceWidth * 0.05
+        }
         key={CategoryDetails?.id}
       />
       <View style={styles.container}>

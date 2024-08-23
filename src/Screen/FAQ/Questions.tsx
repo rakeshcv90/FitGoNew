@@ -76,7 +76,6 @@ const Questions = ({route, navigation}: any) => {
       <DietPlanHeader
         header="Frequently Asked Questions"
         shadow
-        h={PLATFORM_IOS ? (DeviceHeigth * 10) / 100 : (DeviceHeigth * 10) / 100}
       />
       <View
         style={{
