@@ -384,7 +384,7 @@ const MyPlans = ({navigation}: any) => {
           equipment: getEquipmentExercise == 1 ? 'no' : 'yes',
         },
       });
-      console.log('suiuisusisusisu', res?.data);
+
       if (res.data?.msg == 'User not exist.') {
         showMessage({
           message: res?.data?.msg,
@@ -1517,8 +1517,10 @@ const MyPlans = ({navigation}: any) => {
         ) : (
           emptyComponent()
         )}
+
         {enteredCurrentEvent &&
-          coins[WeekArrayWithEvent[getPurchaseHistory?.currentDay-1]] < 0 && (
+          coins[WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]] ==
+            null && WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]== WeekArrayWithEvent[selectedDay]&&(
             <TouchableOpacity
               activeOpacity={1}
               onPress={() => {

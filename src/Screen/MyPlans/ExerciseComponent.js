@@ -228,7 +228,7 @@ export const ExerciseComponentWithEvent = ({
                 <Text style={styles.txt2}>{day ?? '--'}</Text>
               </View>
             </View>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={{}}
               onPress={() => {
                 AnalyticsConsole(`O_EWS`);
@@ -242,7 +242,7 @@ export const ExerciseComponentWithEvent = ({
               {day == WeekArray[currentDay] ? (
                 <Image source={localImage.EditPen} style={styles.edit} />
               ) : null}
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           {day == WeekArray[currentDay] ? (
             <NewButton
