@@ -67,7 +67,6 @@ const WorkoutCard = ({
       {cardType == 'streak' && (
         <View style={styles.streakView}>
           {WeekArray.map((v, i) => {
-            console.log(streakCoins[v], 'dayss');
             return (
               <View style={{alignItems: 'center'}}>
                 <Animated.View
