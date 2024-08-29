@@ -378,13 +378,13 @@ const styles = StyleSheet.create({
       DeviceHeigth <= 667
         ? -12
         : DeviceHeigth <= 844
-        ? -13
+        ? -11
         : DeviceHeigth >= 1024
         ? -13
         : -13,
     right:
       DeviceHeigth <= 844
-        ? 15
+        ? 20
         : DeviceHeigth >= 1024
         ? DeviceHeigth * 0.054
         : 12,

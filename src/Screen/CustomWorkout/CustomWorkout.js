@@ -430,14 +430,20 @@ const CustomWorkout = ({navigation}) => {
 
   return (
     <>
-      <NewHeader
+      {/* <NewHeader
         header={'Create Custom Workout'}
         backButton
+      /> */}
+      <DietPlanHeader
+        header={'Create Custom Workout'}
+        SearchButton={false}
+        shadow
+        backPressCheck={true}
+        onPress={() => {
+          navigation?.goBack();
+        }}
       />
-
       <View style={styles.container}>
-  
-
         <View style={[styles.meditionBox, {top: -20}]}>
           <FlatList
             data={customWorkoutData}

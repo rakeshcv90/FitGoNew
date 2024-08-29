@@ -298,7 +298,7 @@ const App = () => {
         statusBarHeight={StatusBar_Bar_Height + 30}
       />
 
-      {!!progress ? showProgressView() : null}
+      {!!progress ? showProgressView() : null} 
     </>
   );
 };
@@ -317,6 +317,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
 });
-// export default App;
+//export default App;
 
 export default codePush(codePushOptions)(App);

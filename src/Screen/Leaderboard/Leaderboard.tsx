@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {AppColor, Fonts, PLATFORM_IOS} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth, NewAppapi} from '../../Component/Config';
 import {useDispatch, useSelector} from 'react-redux';
@@ -31,6 +31,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import moment from 'moment';
 import {showMessage} from 'react-native-flash-message';
 import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
+import {checkLocationPermission} from '../Terms&Country/LocationPermission';
+import Share, {ShareOptions, ShareSingleOptions} from 'react-native-share';
 
 type TypeData = {
   name: string;
@@ -65,22 +67,68 @@ const Leaderboard = () => {
   const [mainData, setMainData] = useState<Array<TypeData>>([]);
   const [otherData, setOtherData] = useState<Array<TypeData>>([]);
   const [totalData, setTotalData] = useState<Array<TypeData>>([]);
+  const [referralLink, setReferralLink] = useState('');
   const [refresh, setRefresh] = useState(false);
   const [pastWinners, setPastWinners] = useState([]);
   const [loader, setLoader] = useState(false);
   const [visible, setVisible] = useState(false);
   const [coins, setCoins] = useState({});
   const [winnerData, setWinnerData] = useState();
+  const getBanners = useSelector((state: any) => state?.getBanners);
+  const getOfferAgreement = useSelector(
+    (state: any) => state.getOfferAgreement,
+  );
+  const enteredUpcomingEvent = useSelector(
+    (state: any) => state?.enteredUpcomingEvent,
+  );
+
   const enteredCurrentEvent = useSelector(
     (state: any) => state?.enteredCurrentEvent,
   );
+  const [BannerType1, setBannertype1] = useState('');
+  const [Bannertype2, setBannerType2] = useState('');
   useEffect(() => {
     setLoader(true);
     getLeaderboardDataAPI();
     getPastWinner();
-    getEarnedCoins();
+    getReferralCode();
+    enteredCurrentEvent && getEarnedCoins();
   }, []);
-
+  useEffect(
+    useCallback(() => {
+      const handleBannerType = async () => {
+        if (getOfferAgreement?.location === 'India') {
+          if (enteredCurrentEvent && enteredUpcomingEvent) {
+            setBannertype1('ongoing_challenge');
+            setBannerType2('joined_challenge');
+          } else if (enteredCurrentEvent && !enteredUpcomingEvent) {
+            setBannertype1('ongoing_challenge');
+            setBannerType2('upcoming_challenge');
+          } else if (!enteredCurrentEvent && enteredUpcomingEvent) {
+            setBannertype1('joined_challenge');
+          } else {
+            setBannertype1('new_join');
+          }
+        } else {
+          try {
+            const result = await checkLocationPermission();
+            if (!getOfferAgreement?.location) {
+              setBannertype1('new_join');
+            } else if (result === 'granted') {
+              setBannertype1('coming_soon');
+            } else if (result === 'blocked' || result === 'denied') {
+              setBannertype1('new_join');
+            }
+          } catch (err) {
+            console.error('Error checking location permission:', err);
+            setBannertype1('coming_soon');
+          }
+        }
+      };
+      handleBannerType();
+      return () => {};
+    }, [getOfferAgreement, enteredCurrentEvent, enteredUpcomingEvent]),
+  );
   const getLeaderboardDataAPI = async () => {
     try {
       const url =
@@ -88,7 +136,7 @@ const Leaderboard = () => {
       const result = await axios({
         url: `${NewAppapi.GET_LEADERBOARD}?user_id=${getUserDataDetails?.id}&version=${VersionNumber.appVersion}`,
       });
-      console.log('SDfvdvdfdfgdf', result.data?.data);
+
       if (result.data) {
         const top5 = result.data?.data?.filter((item: any) => item?.rank <= 5);
         const after5 = result.data?.data?.filter(
@@ -243,6 +291,7 @@ const Leaderboard = () => {
             backgroundColor: 'red',
             marginVertical: -10,
             borderRadius: 8,
+            padding: 5,
           }}>
           <View
             style={{
@@ -311,8 +360,38 @@ const Leaderboard = () => {
       return null;
     }
   };
-
+  const getReferralCode = () => {
+    RequestAPI.makeRequest(
+      'POST',
+      NewAppapi.GENERATE_REFERRAL_CODE,
+      {
+        user_id: getUserDataDetails?.id,
+      },
+      async (res: any) => {
+        setLoader(false);
+        if (res?.error) {
+        } else {
+          setReferralLink(res.data?.link);
+        }
+      },
+    );
+  };
   const WinnerModal = ({setVisible, visible, mainData}: any) => {
+    const shareWinnerMessage = async () => {
+      try {
+        const options: ShareOptions = {
+          message: `I just won the fitness challenge with the FitMe app and earned ₹1000 . You can win too—download the FitMe app now and start earning!
+          Just download the Fitme app from here: ${referralLink} `,
+         
+        };
+        const result = await Share.open(options);
+        if (result.success) {
+          console.log(result);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
     return (
       <Modal
         animationType="slide"
@@ -320,7 +399,7 @@ const Leaderboard = () => {
         statusBarTranslucent
         visible={visible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
+     
           setVisible(!visible);
         }}>
         <View
@@ -525,27 +604,33 @@ const Leaderboard = () => {
                 }}>
                 <Text
                   style={{
-                    fontFamily: Fonts.HELVETICA_REGULAR,
-                    fontSize: 14,
-                    lineHeight: 20,
-                    color: AppColor.PrimaryTextColor,
-                  }}>
-                  We are excited to announce that John Doe is the ultimate
-                  winner for this week's contest.
-                </Text>
-                <Text
-                  style={{
                     fontFamily: Fonts.HELVETICA_BOLD,
                     fontSize: 14,
                     lineHeight: 20,
+                    top: -10,
+                    textAlign: 'center',
                     color: AppColor.PrimaryTextColor,
                   }}>
-                  Grab your Reward Now!
+                  You're this week's winner!
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: Fonts.HELVETICA_REGULAR,
+                    fontSize: 14,
+                    lineHeight: 20,
+                    top: -5,
+                    textAlign: 'center',
+                    color: AppColor.PrimaryTextColor,
+                  }}>
+                  Check your email to claim your prize and don’t forget to share
+                  your achievement on social media!
                 </Text>
               </View>
               <TouchableOpacity
                 activeOpacity={0.6}
-                onPress={() => {}}
+                onPress={() => {
+                  shareWinnerMessage();
+                }}
                 style={{
                   width: DeviceHeigth >= 1024 ? '40%' : '65%',
                   height: 50,
@@ -566,7 +651,7 @@ const Leaderboard = () => {
                     color: AppColor.WHITE,
                     marginHorizontal: 10,
                   }}>
-                  Share
+                  Share Now
                 </Text>
               </TouchableOpacity>
             </ImageBackground>
@@ -590,7 +675,7 @@ const Leaderboard = () => {
       //     WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]
       //   }`,
       // );
-console.log("XCvdvdfvdf")
+
       if (
         response?.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -637,20 +722,18 @@ console.log("XCvdvdfvdf")
               backgroundColor: AppColor.Background_New,
               justifyContent: 'space-between',
             }}>
-            <View
+            <TouchableOpacity
+            onPress={() => navigation?.goBack()}
               style={{
                 marginHorizontal: 0,
                 alignSelf: 'center',
+               paddingVertical:5,
+            
               }}>
-              {/* <FitIcon
-                name="arrowleft"
-                size={20}
-                type="AntDesign"
-                color={AppColor.BLACK}
-                onPress={() => navigation?.goBack()}
-              /> */}
-              <ArrowLeft onPress={() => navigation?.goBack()} />
-            </View>
+                
+         
+              <ArrowLeft  />
+            </TouchableOpacity>
             <View
               style={{
                 alignSelf: 'center',
@@ -682,7 +765,6 @@ console.log("XCvdvdfvdf")
                   alignItems: 'center',
                   justifyContent: 'center',
                   paddingRight: 10,
-                  padding: 10,
                 }}>
                 <AnimatedLottieView
                   source={require('../../Icon/Images/InAppRewards/ReferButton.json')}
@@ -695,12 +777,17 @@ console.log("XCvdvdfvdf")
                     height: 30,
                   }}
                 />
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 5,
+                  }}>
                   <Text
                     style={{
                       fontFamily: Fonts.HELVETICA_REGULAR,
                       fontSize: 12,
-                      lineHeight: 11,
+                      lineHeight: 12,
                       color: AppColor.WHITE,
                     }}>
                     Refer&
@@ -715,7 +802,7 @@ console.log("XCvdvdfvdf")
                       style={{
                         fontFamily: Fonts.HELVETICA_REGULAR,
                         fontSize: 12,
-                        lineHeight: 11,
+                        lineHeight: 13,
                         color: AppColor.WHITE,
                       }}>
                       Earn
@@ -763,7 +850,7 @@ console.log("XCvdvdfvdf")
                 onRefresh={() => {
                   getLeaderboardDataAPI();
                   getPastWinner();
-                  getEarnedCoins();
+                  enteredCurrentEvent && getEarnedCoins();
                   setLoader(true);
                 }}
                 colors={[AppColor.RED, AppColor.WHITE]}
@@ -1829,7 +1916,7 @@ console.log("XCvdvdfvdf")
                     textAlign: 'center',
                     color: AppColor.PrimaryTextColor,
                   }}>
-                  Join Weekly Challenge & Win Cash Prize!!
+                  Join Weekly Challenge & Win Cash Prize!
                 </Text>
                 <View
                   style={{
@@ -1838,11 +1925,14 @@ console.log("XCvdvdfvdf")
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginVertical: 20,
+                    backgroundColor: 'red',
+                    borderRadius: 20,
                   }}>
                   <Image
-                    source={require('../../Icon/Images/NewHome/b1.png')}
+                    // source={require('../../Icon/Images/NewHome/b1.png')}
+                    source={{uri: getBanners[BannerType1]}}
                     resizeMode="stretch"
-                    style={{width: '100%', height: 150}}
+                    style={{width: '100%', height: 150, borderRadius: 20}}
                   />
                 </View>
                 <View

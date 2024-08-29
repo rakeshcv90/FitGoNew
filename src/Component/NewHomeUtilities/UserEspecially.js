@@ -6,10 +6,11 @@ import {
   TouchableOpacity,
   Modal,
   Linking,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {DeviceHeigth, DeviceWidth} from '../Config';
-import {AppColor, Fonts} from '../Color';
+import {AppColor, Fonts, PLATFORM_IOS} from '../Color';
 import {AnalyticsConsole} from '../AnalyticsConsole';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {AddCountFunction} from '../Utilities/AddCountFunction';
@@ -257,7 +258,7 @@ const UserEspecially = () => {
             }}>
             <ImageBackground
               source={require('../../Icon/Images/NewHome/back3.png')}
-              resizeMode="stretch"
+              resizeMode={Platform.OS=='ios'?"stretch":"contain"}
               style={{
                 width: '100%',
                 height: '100%',
@@ -294,15 +295,7 @@ const UserEspecially = () => {
                     }}>
                     Create your own workout
                   </Text>
-                  <Text
-                    style={{
-                      fontFamily: Fonts.HELVETICA_REGULAR,
-                      fontSize: 13,
-                      lineHeight: 16,
-                      color: AppColor.WHITE,
-                    }}>
-                    healthy life
-                  </Text>
+                  
                 </View>
               </View>
             </ImageBackground>
@@ -318,7 +311,7 @@ const UserEspecially = () => {
             }}>
             <ImageBackground
               source={require('../../Icon/Images/NewHome/back1.png')}
-              resizeMode="stretch"
+              resizeMode={Platform.OS=='ios'?"stretch":"contain"}
               style={{
                 width: '100%',
                 height: '100%',
@@ -373,6 +366,7 @@ const UserEspecially = () => {
             width: '100%',
             flexDirection: 'row',
             justifyContent: 'space-between',
+           top:Platform.OS=='android'?-15:0
           }}>
           <TouchableOpacity
             activeOpacity={0.7}
@@ -385,7 +379,7 @@ const UserEspecially = () => {
             }}>
             <ImageBackground
               source={require('../../Icon/Images/NewHome/back2.png')}
-              resizeMode="stretch"
+              resizeMode={Platform.OS=='ios'?"stretch":"contain"}
               style={{
                 width: '100%',
                 height: '100%',
@@ -446,7 +440,7 @@ const UserEspecially = () => {
             }}>
             <ImageBackground
               source={require('../../Icon/Images/NewHome/back4.png')}
-              resizeMode="stretch"
+              resizeMode={Platform.OS=='ios'?"stretch":"contain"}
               style={{
                 width: '100%',
                 height: '100%',
