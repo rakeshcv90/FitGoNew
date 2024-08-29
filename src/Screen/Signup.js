@@ -384,7 +384,7 @@ const Signup = ({navigation}) => {
         setForLoading(false);
         showMessage({
           message:
-            'This Device already registered with ' + ' ' + data.data.email,
+            'This device is already registered with ' + ' ' + data.data.email,
           type: 'danger',
           animationDuration: 500,
           floating: true,
@@ -535,7 +535,7 @@ const Signup = ({navigation}) => {
         setForLoading(false);
         showMessage({
           message:
-            'This Device already registered with ' + ' ' + data.data.email,
+            'This device is already registered with ' + ' ' + data.data.email,
           type: 'danger',
           animationDuration: 500,
           floating: true,

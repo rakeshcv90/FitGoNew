@@ -294,7 +294,7 @@ const UserEspecially = () => {
                     }}>
                     Create your own workout
                   </Text>
-                  <Text
+                  {/* <Text
                     style={{
                       fontFamily: Fonts.HELVETICA_REGULAR,
                       fontSize: 13,
@@ -302,7 +302,7 @@ const UserEspecially = () => {
                       color: AppColor.WHITE,
                     }}>
                     healthy life
-                  </Text>
+                  </Text> */}
                 </View>
               </View>
             </ImageBackground>

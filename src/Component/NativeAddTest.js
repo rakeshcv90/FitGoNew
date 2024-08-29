@@ -16,10 +16,11 @@ import NativeAdView, {
   TaglineView,
 } from 'react-native-admob-native-ads';
 import {MediaView} from './MediaView';
-import {adUnitIDs} from './AdsId';
+import {ADS_IDs, adUnitIDs, adUnitIDsTest} from './AdsId';
 import AnimatedLottieView from 'lottie-react-native';
 import {DeviceHeigth, DeviceWidth} from './Config';
-import { AppColor } from './Color';
+import {AppColor} from './Color';
+import {useSelector} from 'react-redux';
 // import {adUnitIDs} from './utils';
 
 const NativeAddTest = ({media, type}) => {
@@ -30,6 +31,10 @@ const NativeAddTest = ({media, type}) => {
   const [imageData, setImageData] = useState(null);
   const [headlineData, setHeadlineData] = useState(null);
   const nativeAdRef = useRef();
+  const adLoadedRef = useRef(false); // Track ad loading state
+  const DeviceID = useSelector(state => state.getDeviceID);
+  const IsTesting = DeviceID != '' && ADS_IDs.includes(DeviceID);
+
   const onAdFailedToLoad = event => {
     setError(true);
     setLoading(false);
@@ -48,13 +53,18 @@ const NativeAddTest = ({media, type}) => {
     setAspectRatio(event.aspectRatio);
     setImageData(event.icon);
     setHeadlineData(event.headline.split(':'));
+    adLoadedRef.current = true; // Mark ad as loaded
+    console.log('NATIVE LOADED');
   };
 
   const onAdLeftApplication = () => {};
 
   useEffect(() => {
-    nativeAdRef.current?.loadAd();
-
+    if (!adLoadedRef.current && nativeAdRef.current) {
+      setLoading(true);
+      nativeAdRef.current.loadAd(); // Only load the ad once
+      console.log('NATIVE AD LOADED');
+    }
   }, []);
 
   return (
@@ -78,7 +88,15 @@ const NativeAddTest = ({media, type}) => {
       mediationOptions={{
         nativeBanner: true,
       }}
-      adUnitID={type === 'image' ? adUnitIDs.image : adUnitIDs.video} // REPLACE WITH NATIVE_AD_VIDEO_ID for video ads.
+      adUnitID={
+        type === 'image'
+          ? IsTesting
+            ? adUnitIDsTest.image
+            : adUnitIDs.image
+          : IsTesting
+          ? adUnitIDsTest.video
+          : adUnitIDs.video
+      } // REPLACE WITH NATIVE_AD_VIDEO_ID for video ads.
       //   repository={type === 'image' ? 'imageAd' : 'videoAd'}
     >
       <View
@@ -214,7 +232,7 @@ const NativeAddTest = ({media, type}) => {
             ]}
             buttonAndroidStyle={{
               backgroundColor: AppColor.RED,
-              borderRadius:8,
+              borderRadius: 8,
             }}
             allCaps
             textStyle={{

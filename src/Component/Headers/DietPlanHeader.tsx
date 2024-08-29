@@ -80,13 +80,9 @@ const DietPlanHeader: FC<Props> = ({
         <View style={{width: 20}}></View>
       ) : (
         <TouchableOpacity
-          // style={{
-          //   left: left
-          //     ? left
-          //     : DeviceHeigth >= 1024
-          //     ? DeviceWidth * 0.045
-          //     : DeviceWidth * 0.04,
-          // }}
+          style={{
+            marginTop: 5,
+          }}
           onPress={() => {
             if (backPressCheck && onPress) {
               onPress();

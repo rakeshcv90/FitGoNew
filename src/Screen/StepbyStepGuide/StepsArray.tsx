@@ -33,9 +33,9 @@ export const StepsArray = [
   {
     id: 4,
     heading: `Earn more coins`,
-    text: `By participating on weeklyearn `,
+    text: `By participating on weekly earn `,
     image: require('../../Icon/Images/InAppRewards/StepGuide4.png'),
-    bold:'extra fitcoins'
+    bold:'extra fitcoins.'
   },
   {
     id: 5,
