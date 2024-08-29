@@ -20,6 +20,7 @@ import {
   setCompleteProfileData,
   setCustomDietData,
   setCustomWorkoutData,
+  setDeviceID,
   setDownloadedImage,
   setDynamicPopupValues,
   setEnteredCurrentEvent,
@@ -45,7 +46,7 @@ import {
   AdEventType,
   TestIds,
 } from 'react-native-google-mobile-ads';
-import {interstitialAdId} from '../Component/AdsId';
+import {ADS_IDs, interstitialAdId, interstitialAdIdTest} from '../Component/AdsId';
 import {LogOut} from '../Component/LogOut';
 import RNFetchBlob from 'rn-fetch-blob';
 import {EnteringEventFunction} from './Event/EnteringEventFunction';
@@ -71,7 +72,11 @@ const SplaceScreen = ({navigation, route}) => {
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   useEffect(() => {
     DeviceInfo.syncUniqueId().then(uniqueId => {
-      console.log(uniqueId);
+      console.log("Device Id----",uniqueId);
+      dispatch(setDeviceID(uniqueId))
+      ADS_IDs.includes(uniqueId)
+        ? initInterstitial(true)
+        : initInterstitial(false);
     });
   }, []);
   useEffect(() => {
@@ -80,7 +85,6 @@ const SplaceScreen = ({navigation, route}) => {
     getPlanData();
 
     dispatch(setFitmeAdsCount(0));
-    initInterstitial();
   }, []);
   useEffect(() => {
     if (
@@ -92,11 +96,11 @@ const SplaceScreen = ({navigation, route}) => {
       DisplayAds(getOfferAgreement);
     }
   }, [loaded]);
-  const initInterstitial = async () => {
-    const interstitialAd = InterstitialAd.createForAdRequest(
-      interstitialAdId,
-      {},
-    );
+  const initInterstitial = async isTestingDevice => {
+    const ID = isTestingDevice
+      ? interstitialAdIdTest
+      : interstitialAdId;
+    const interstitialAd = InterstitialAd.createForAdRequest(ID, {});
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
       setLoaded(interstitialAd);
     });
@@ -177,7 +181,7 @@ const SplaceScreen = ({navigation, route}) => {
       setLoaded(false);
 
       if (getPurchaseHistory?.plan != null) {
-        if (getPurchaseHistory?.plan == 'premium' && isValid) {
+        if (getPurchaseHistory?.plan == 'premium' && !isValid) {
           loadScreen(agremment);
           Platform.OS == 'android' && checkCancel();
         } else {
@@ -240,7 +244,7 @@ const SplaceScreen = ({navigation, route}) => {
       const responseData = await axios.get(
         `${NewAppapi.GET_ALL_IN_ONE}?version=${VersionNumber.appVersion}`,
       );
- 
+
       if (
         responseData?.data?.msg ==
         'Please update the app to the latest version.'
@@ -333,7 +337,7 @@ const SplaceScreen = ({navigation, route}) => {
       const responseData = await axios.get(
         `${NewAppapi.ALL_USER_DETAILS}?version=${VersionNumber.appVersion}&user_id=${userId}`,
       );
-   
+
       if (
         responseData?.data?.msg ==
         'Please update the app to the latest version.'

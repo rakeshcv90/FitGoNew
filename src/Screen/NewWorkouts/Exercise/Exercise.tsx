@@ -60,6 +60,7 @@ import {ShadowStyle} from '../../../Component/Utilities/ShadowStyle';
 import FitIcon from '../../../Component/Utilities/FitIcon';
 import FitText from '../../../Component/Utilities/FitText';
 import {StatusBar} from 'react-native';
+import { ArrowLeft } from '../../../Component/Utilities/Arrows/Arrow';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -748,15 +749,7 @@ const Exercise = ({navigation, route}: any) => {
                   style={{
                     width: 40,
                   }}>
-                  <AntIcons
-                    name={'arrowleft'}
-                    size={20}
-                    color={
-                      number == allExercise?.length
-                        ? AppColor.WHITE
-                        : AppColor.INPUTTEXTCOLOR
-                    }
-                  />
+                <ArrowLeft/>
                 </TouchableOpacity>
                 <Text
                   style={{
@@ -942,15 +935,7 @@ const Exercise = ({navigation, route}: any) => {
                   style={{
                     width: 40,
                   }}>
-                  <AntIcons
-                    name={'arrowleft'}
-                    size={20}
-                    color={
-                      number == allExercise?.length
-                        ? AppColor.WHITE
-                        : AppColor.INPUTTEXTCOLOR
-                    }
-                  />
+              <ArrowLeft/>
                 </TouchableOpacity>
                 <Text
                   style={{

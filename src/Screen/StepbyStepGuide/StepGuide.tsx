@@ -1,6 +1,7 @@
 import {
   Image,
   ImageBackground,
+  Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -179,7 +180,7 @@ const StepGuide = ({navigation}: any) => {
             ))}
             <FitText
               type="Heading"
-              value="Unleash your Fitness star"
+              value="Unleash your Fitness Star"
               textAlign="center"
             />
             <HeartCom />
@@ -273,6 +274,52 @@ const StepGuide = ({navigation}: any) => {
           alignSelf
         />
       </View>
+      <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => {
+            navigation.navigate('Questions')
+          }}
+          style={{
+            //
+            width: 120,
+            height: 56,
+            backgroundColor: '#F7F7F7',
+            flexDirection: 'row',
+            position: 'absolute',
+
+            bottom: 90,
+            right: 15,
+            borderRadius: 16,
+            justifyContent: 'center',
+            alignItems: 'center',
+            shadowColor: 'rgba(0, 0, 0, 1)',
+            ...Platform.select({
+              ios: {
+                shadowColor: 'rgba(0, 0, 0, 1)',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.3,
+                shadowRadius: 3,
+              },
+              android: {
+                elevation: 4,
+              },
+            }),
+          }}>
+          <Image
+            source={require('../../Icon/Images/InAppRewards/FAQ.png')}
+            style={{height: 25, width: 25,marginRight: 5}}
+            resizeMode="contain"
+          />
+          <Text
+            style={{
+              fontFamily: Fonts.HELVETICA_BOLD,
+              fontSize: 16,
+              lineHeight: 30,
+              color: AppColor.RED,
+            }}>
+            FAQs
+          </Text>
+        </TouchableOpacity>
     </SafeAreaView>
   );
 };

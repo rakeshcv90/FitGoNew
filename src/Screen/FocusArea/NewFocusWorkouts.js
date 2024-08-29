@@ -384,7 +384,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             },
           }}>
           <View style={styles.listContainer}>
-            {console.log('ZXccvxvcx', DeviceHeigth)}
+          
             <View
               style={{
                 flexDirection: 'row',

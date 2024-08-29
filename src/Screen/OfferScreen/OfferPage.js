@@ -92,7 +92,7 @@ const OfferPage = ({navigation, route}) => {
       });
 
       if (result?.data) {
-        getEarnedCoins();
+       enteredCurrentEvent && getEarnedCoins();
         const activeIndex = result?.data?.sessions?.findIndex(
           item => item.status == 'open',
         );
@@ -106,7 +106,7 @@ const OfferPage = ({navigation, route}) => {
       }
     } catch (error) {
       console.log(error, 'Breathe session api error');
-      getEarnedCoins();
+     enteredCurrentEvent && getEarnedCoins();
     }
   };
   const getEarnedCoins = async () => {

@@ -448,3 +448,9 @@ export const setExerciseOutTime=data=>{
       payload:data
     }
 }
+  export const setDeviceID=data=>{
+    return{
+      type:types.DEVICE_ID,
+      payload:data
+    }
+}

@@ -423,6 +423,11 @@ const ThemeReducer = (state = intialState, action) => {
         ...state,
         getEquipmentExercise: action.payload,
       };
+    case types.DEVICE_ID:
+      return {
+        ...state,
+        getDeviceID: action.payload,
+      };
     default:
       return state;
   }
