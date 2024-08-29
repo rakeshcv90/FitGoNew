@@ -345,7 +345,7 @@ const OfferPage = ({navigation, route}) => {
             text1={'Refer and earn'}
             text1Color={AppColor.BLACK}
             text2={'Invite your friends & earn bonus FitCoins.'}
-            text3={'7 coins'}
+            text3={'5 coins'}
             coinTextColor={AppColor.BLACK}
             onPress={() => navigation.navigate('Referral')}
             isactive={enteredCurrentEvent}

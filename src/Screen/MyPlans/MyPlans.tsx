@@ -68,6 +68,8 @@ import {localImage} from '../../Component/Image';
 import Icons from 'react-native-vector-icons/FontAwesome';
 import OverExerciseModal from '../../Component/Utilities/OverExercise';
 import FitText from '../../Component/Utilities/FitText';
+import Equipment from '../Yourself/Equipment';
+import {useEvent} from 'react-native-reanimated';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -110,6 +112,7 @@ const MyPlans = ({navigation}: any) => {
   const [visible1, setVisible1] = useState(false);
   const [visible2, setVisible2] = useState(false);
   const [overExerciseVisible, setOverExerciseVisible] = useState(false);
+  const [workoutPrepared, setPrepared] = useState(false);
   const getFitmeMealAdsCount = useSelector(
     (state: any) => state.getFitmeMealAdsCount,
   );
@@ -188,11 +191,14 @@ const MyPlans = ({navigation}: any) => {
     //getAllExerciseData();
     getAllChallangeAndAllExerciseData();
     getGraphData();
-    getWeeklyAPI();
     checkMealAddCount();
     // PurchaseDetails();
     getUserDetailData();
   }, []);
+  useEffect(() => {
+    getWeeklyAPI();
+    console.log('called');
+  }, [workoutPrepared]);
   useFocusEffect(
     React.useCallback(() => {
       if (enteredCurrentEvent) {
@@ -203,6 +209,7 @@ const MyPlans = ({navigation}: any) => {
       }
     }, []),
   );
+  console.log(getEquipmentExercise);
   //condition to check streak modal
   useEffect(() => {
     if (
@@ -374,9 +381,10 @@ const MyPlans = ({navigation}: any) => {
         data: {
           version: VersionNumber.appVersion,
           user_id: getUserDataDetails?.id,
+          equipment: getEquipmentExercise == 1 ? 'no' : 'yes',
         },
       });
-
+      console.log('suiuisusisusisu', res?.data);
       if (res.data?.msg == 'User not exist.') {
         showMessage({
           message: res?.data?.msg,
@@ -388,6 +396,7 @@ const MyPlans = ({navigation}: any) => {
         setLoader(false);
       } else {
         dispatch(setWeeklyPlansData(res?.data));
+
         setLoader(false);
       }
       setLoader(false);
@@ -1145,7 +1154,11 @@ const MyPlans = ({navigation}: any) => {
       </Modal>
     );
   };
-  const Exercise_Preparing_Modal = ({setVisible2, visible2}: any) => {
+  const Exercise_Preparing_Modal = ({
+    setVisible2,
+    visible2,
+    setPrepared,
+  }: any) => {
     const [loadscrreen, setLoadScreen] = useState(false);
     useEffect(() => {
       setTimeout(() => {
@@ -1256,6 +1269,7 @@ const MyPlans = ({navigation}: any) => {
                   onPress={() => {
                     setVisible2(false);
                     setLoadScreen(false);
+                    setPrepared(prev => !prev);
                   }}
                   style={{
                     width: 200,
@@ -1503,53 +1517,56 @@ const MyPlans = ({navigation}: any) => {
         ) : (
           emptyComponent()
         )}
-        {/* <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => {
-            setVisible1(true);
-          }}
-          style={{
-            //
-            width: 120,
-            height: 56,
-            backgroundColor: '#F7F7F7',
-            flexDirection: 'row',
-            position: 'absolute',
+        {enteredCurrentEvent &&
+          coins[WeekArrayWithEvent[getPurchaseHistory?.currentDay-1]] < 0 && (
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                setVisible1(true);
+              }}
+              style={{
+                //
+                width: 120,
+                height: 56,
+                backgroundColor: '#F7F7F7',
+                flexDirection: 'row',
+                position: 'absolute',
 
-            bottom: 20,
-            right: 10,
-            borderRadius: 16,
-            justifyContent: 'center',
-            alignItems: 'center',
-            shadowColor: 'rgba(0, 0, 0, 1)',
-            ...Platform.select({
-              ios: {
+                bottom: 20,
+                right: 10,
+                borderRadius: 16,
+                justifyContent: 'center',
+                alignItems: 'center',
                 shadowColor: 'rgba(0, 0, 0, 1)',
-                shadowOffset: {width: 0, height: 2},
-                shadowOpacity: 0.3,
-                shadowRadius: 3,
-              },
-              android: {
-                elevation: 4,
-              },
-            }),
-          }}>
-          <Icons
-            name="refresh"
-            size={20}
-            style={{marginHorizontal: 10}}
-            color={AppColor.RED}
-          />
-          <Text
-            style={{
-              fontFamily: Fonts.HELVETICA_BOLD,
-              fontSize: 14,
-              lineHeight: 20,
-              color: AppColor.RED,
-            }}>
-            Adjust
-          </Text>
-        </TouchableOpacity> */}
+                ...Platform.select({
+                  ios: {
+                    shadowColor: 'rgba(0, 0, 0, 1)',
+                    shadowOffset: {width: 0, height: 2},
+                    shadowOpacity: 0.3,
+                    shadowRadius: 3,
+                  },
+                  android: {
+                    elevation: 4,
+                  },
+                }),
+              }}>
+              <Icons
+                name="refresh"
+                size={20}
+                style={{marginHorizontal: 10}}
+                color={AppColor.RED}
+              />
+              <Text
+                style={{
+                  fontFamily: Fonts.HELVETICA_BOLD,
+                  fontSize: 14,
+                  lineHeight: 20,
+                  color: AppColor.RED,
+                }}>
+                Adjust
+              </Text>
+            </TouchableOpacity>
+          )}
       </View>
       {downlodedVideoSent ? <ActivityLoader /> : null}
       <StreakModal
@@ -1564,7 +1581,11 @@ const MyPlans = ({navigation}: any) => {
         handleBreakButton={() => setOverExerciseVisible(false)}
       />
       <BottomModal setVisible1={setVisible1} visible1={visible1} />
-      <Exercise_Preparing_Modal setVisible2={setVisible2} visible2={visible2} />
+      <Exercise_Preparing_Modal
+        setVisible2={setVisible2}
+        visible2={visible2}
+        setPrepared={setPrepared}
+      />
     </SafeAreaView>
   );
 };

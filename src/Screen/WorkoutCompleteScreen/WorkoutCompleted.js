@@ -26,7 +26,8 @@ import {
 import LoadingScreen from '../../Component/LoadingScreen';
 import {useIsFocused} from '@react-navigation/native';
 import OverExerciseModal from '../../Component/Utilities/OverExercise';
-
+import Wrapper from './Wrapper';
+import AnimatedLottieView from 'lottie-react-native';
 const format = 'hh:mm:ss';
 
 const WeekArrayWithEvent = Array(5)
@@ -201,8 +202,8 @@ const WorkoutCompleted = ({navigation, route}) => {
     }
   }, [focused]);
   const handleBackPress = () => {
-    return true
-  }
+    return true;
+  };
   const RewardsbeforeNextScreen = async () => {
     downloadCounter = 0;
     // const url =
@@ -401,101 +402,151 @@ const WorkoutCompleted = ({navigation, route}) => {
       {loader ? (
         <LoadingScreen />
       ) : (
-        <View style={styles.container}>
-          <StatusBar
-            backgroundColor={AppColor.WHITE}
-            barStyle={'dark-content'}
-          />
-          <NewHeader header={'Rewards Unlocked'} statusBarPadding={22} />
-          <View style={{flex: 1, marginTop: 5}}>
-            <Animated.View style={[styles.imgView, streakAnimation]}>
-              <Image source={localImage.offer_girl} style={styles.imgStyle1} />
-              <WorkoutCard
-                cardType={'streak'}
-                streakCoins={coins}
-                cardioCoins={cardioExxercise[0]?.fit_coins}
-                download={0}
-                title={
-                  'Well Done! You’ve completed your workout for the day. Workout regularly to increase your chances to win the cash prize.'
-                }
-              />
-            </Animated.View>
-            <Animated.View style={[styles.imgView, cardioAnimation]}>
-              <Image
-                source={localImage.cardioImage}
-                style={styles.imgStyle1}
-                resizeMode="stretch"
-              />
-              <WorkoutCard
-                cardType={'cardio'}
-                cardHeader={'Cardio Point'}
-                onPress={() => handleStart()}
-                streakCoins={coins}
-                cardioCoins={cardioExxercise[0]?.fit_coins}
-                handleSkip={() => {
-                  if (breatheSessionAvailabel) {
-                    cardioCardOffset.value = withSpring(-DeviceWidth);
-                    breatheCardOffset.value = withSpring(0);
-                  } else {
-                    cardioCardOffset.value = withSpring(-DeviceWidth);
-                    completeCardOffset.value = withSpring(0);
+        <Wrapper>
+          <View style={styles.container}>
+            <StatusBar
+              backgroundColor={AppColor.GRAY}
+              barStyle={'dark-content'}
+            />
+            <Text style={styles.headerText}>Rewards unlocked</Text>
+            <View style={{flex: 1, marginTop: 5}}>
+              <Animated.View style={[styles.imgView, streakAnimation]}>
+                <View
+                  style={{
+                    height: '96%',
+                    width: '100%',
+                    backgroundColor: AppColor.WHITE,
+                    borderRadius: 16,
+                    marginBottom: 7,
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={localImage.celebrationTrophy}
+                    style={{height: '70%'}}
+                    resizeMode="contain"
+                  />
+                  <AnimatedLottieView
+                    source={localImage.celebrationAnimation}
+                    speed={1.5}
+                    autoPlay
+                    loop
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      position: 'absolute',
+                    }}
+                    resizeMode="contain"
+                  />
+                </View>
+                <WorkoutCard
+                  cardType={'streak'}
+                  streakCoins={coins}
+                  cardioCoins={cardioExxercise[0]?.fit_coins}
+                  download={0}
+                  title={
+                    'Well Done! You’ve completed your workout for the day. Workout regularly to increase your chances to win the cash prize.'
                   }
-                }}
-                download={downloaded}
-                EarnedCoins={earnedCoin}
-                title={
-                  'Just 15 minutes of cardio = 10 Extra FitCoins\nComplete the 15-minute cardio session and boost your chance to win ₹1000!'
-                }
-              />
-            </Animated.View>
-            <Animated.View style={[styles.imgView, breatheAnimation]}>
-              <Image
-                source={localImage.breahteImage}
-                style={styles.imgStyle1}
-              />
-              <WorkoutCard
-                cardType={'breathe'}
-                cardHeader={'Breathe in & out'}
-                onPress={() => {
-                  breatheCardOffset.value = withSpring(-DeviceWidth); //removing the card before navigation
-                  navigation.navigate('Breathe', {slotCoins: breatheCoins});
-                }}
-                streakCoins={coins}
-                cardioCoins={cardioExxercise[0]?.fit_coins}
-                download={0}
-                handleSkip={() => {
-                  breatheCardOffset.value = withSpring(-DeviceWidth);
-                  completeCardOffset.value = withSpring(0);
-                }}
-                EarnedCoins={earnedCoin}
-                breatheCoins={breatheCoins}
-                title={
-                  'Increase your chances to win ₹1000! Complete a quick breathing exercise and earn Extra FitCoins.'
-                }
-              />
-            </Animated.View>
-            <Animated.View style={[styles.imgView, completeAnimation]}>
-              <Image
-                source={localImage.offer_girl}
-                style={styles.imgStyle1}
-                resizeMode="stretch"
-              />
-              <WorkoutCard
-                cardType={'complete'}
-                cardHeader={'Exercise Completed'}
-                streakCoins={coins}
-                cardioCoins={cardioExxercise[0]?.fit_coins}
-                download={0}
-                EarnedCoins={slotCoins ?? earnedCoin}
-                rank={rank ?? myRank}
-                title={
-                  'Congratulations! You’ve completed your workout and earned more FitCoins. Keep working out regularly to win the fitness challenge.'
-                }
-                handleComplete={() => navigation.navigate('MyPlans')}
-              />
-            </Animated.View>
+                />
+              </Animated.View>
+              <Animated.View style={[styles.imgView, cardioAnimation]}>
+                <Image
+                  source={localImage.cardioImage}
+                  style={styles.imgStyle1}
+                  resizeMode="stretch"
+                />
+                <WorkoutCard
+                  cardType={'cardio'}
+                  cardHeader={'Cardio Point'}
+                  onPress={() => handleStart()}
+                  streakCoins={coins}
+                  cardioCoins={cardioExxercise[0]?.fit_coins}
+                  handleSkip={() => {
+                    if (breatheSessionAvailabel) {
+                      cardioCardOffset.value = withSpring(-DeviceWidth);
+                      breatheCardOffset.value = withSpring(0);
+                    } else {
+                      cardioCardOffset.value = withSpring(-DeviceWidth);
+                      completeCardOffset.value = withSpring(0);
+                    }
+                  }}
+                  download={downloaded}
+                  EarnedCoins={earnedCoin}
+                  title={
+                    'Just 15 minutes of cardio = 10 Extra FitCoins\nComplete the 15-minute cardio session and boost your chance to win ₹1000!'
+                  }
+                />
+              </Animated.View>
+              <Animated.View style={[styles.imgView, breatheAnimation]}>
+                <Image
+                  source={localImage.breahteImage}
+                  style={styles.imgStyle1}
+                />
+                <WorkoutCard
+                  cardType={'breathe'}
+                  cardHeader={'Breathe in & out'}
+                  onPress={() => {
+                    breatheCardOffset.value = withSpring(-DeviceWidth); //removing the card before navigation
+                    navigation.navigate('Breathe', {slotCoins: breatheCoins});
+                  }}
+                  streakCoins={coins}
+                  cardioCoins={cardioExxercise[0]?.fit_coins}
+                  download={0}
+                  handleSkip={() => {
+                    breatheCardOffset.value = withSpring(-DeviceWidth);
+                    completeCardOffset.value = withSpring(0);
+                  }}
+                  EarnedCoins={earnedCoin}
+                  breatheCoins={breatheCoins}
+                  title={
+                    'Increase your chances to win ₹1000! Complete a quick breathing exercise and earn Extra FitCoins.'
+                  }
+                />
+              </Animated.View>
+              <Animated.View style={[styles.imgView, completeAnimation]}>
+                <View
+                  style={{
+                    height: '96%',
+                    width: '100%',
+                    backgroundColor: AppColor.WHITE,
+                    borderRadius: 16,
+                    marginBottom: 7,
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={localImage.celebrationTrophy}
+                    style={{height: '70%'}}
+                    resizeMode="contain"
+                  />
+                  <AnimatedLottieView
+                    source={localImage.celebrationAnimation}
+                    speed={1.5}
+                    autoPlay
+                    loop
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      position: 'absolute',
+                    }}
+                    resizeMode="contain"
+                  />
+                </View>
+                <WorkoutCard
+                  cardType={'complete'}
+                  cardHeader={'Exercise Completed'}
+                  streakCoins={coins}
+                  cardioCoins={cardioExxercise[0]?.fit_coins}
+                  download={0}
+                  EarnedCoins={slotCoins ?? earnedCoin}
+                  rank={rank ?? myRank}
+                  title={
+                    'Congratulations! You’ve completed your workout and earned more FitCoins. Keep working out regularly to win the fitness challenge.'
+                  }
+                  handleComplete={() => navigation.navigate('MyPlans')}
+                />
+              </Animated.View>
+            </View>
           </View>
-        </View>
+        </Wrapper>
       )}
       <OverExerciseModal
         setOverExerciseVisible={setOverExerciseVisible}
@@ -507,8 +558,8 @@ const WorkoutCompleted = ({navigation, route}) => {
 };
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: AppColor.GRAY,
+    // flex: 1,
+    // backgroundColor: AppColor.GRAY,
   },
   imgView: {
     height: DeviceHeigth >= 1024 ? DeviceHeigth * 0.65 : DeviceHeigth * 0.5,
@@ -524,5 +575,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   cardHolder: {position: 'absolute', bottom: 15, alignSelf: 'center'},
+  headerText: {
+    color: AppColor.BLACK,
+    textAlign: 'center',
+    fontFamily: 'Helvetica-Bold',
+    fontSize: 20,
+    paddingVertical: 8,
+  },
 });
 export default WorkoutCompleted;
