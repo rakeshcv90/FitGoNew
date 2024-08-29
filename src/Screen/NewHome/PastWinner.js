@@ -36,11 +36,17 @@ const PastWinner = ({route}) => {
         backgroundColor={AppColor.Background_New}
         barStyle={'dark-content'}
       />
-      <DietPlanHeader header={'Past Winners'} paddingTop={Platform.OS == 'android'
-            ? DeviceHeigth * 0.035
+      <DietPlanHeader
+        header={'Past Winners'}
+        paddingTop={
+          Platform.OS == 'android'
+            ? DeviceHeigth * 0.03
             : DeviceHeigth >= 1024
             ? DeviceHeigth * 0.055
-            : DeviceWidth * 0.1} shadow />
+            : DeviceWidth * 0.1
+        }
+        shadow
+      />
       <ScrollView
         keyboardDismissMode="interactive"
         showsVerticalScrollIndicator={false}
@@ -66,7 +72,7 @@ const PastWinner = ({route}) => {
           style={{width: '100%', height: '100%'}}>
           <View
             style={{
-              width: '60%',
+              width: '100%',
               height: 180,
 
               alignItems: 'center',
@@ -115,7 +121,8 @@ const PastWinner = ({route}) => {
                   </View>
                 ) : (
                   <Image
-                    source={localImage.NContact}
+                    source={{uri:getUserDataDetails?.image_path}}
+                    
                     style={{
                       width: 80,
                       height: 80,
@@ -168,19 +175,11 @@ const PastWinner = ({route}) => {
                 lineHeight: 26,
                 color: AppColor.WHITE,
                 marginTop: 10,
+                textAlign: 'center',
               }}>
-              Want to be the next winner?
+              Ready to win an exciting prize and join the winner’s club?
             </Text>
-            <Text
-              style={{
-                fontFamily: Fonts.HELVETICA_BOLD,
-                fontSize: 16,
-                lineHeight: 20,
-                marginTop: 5,
-                color: '#F6C544',
-              }}>
-              And earn ₹1,000/-
-            </Text>
+        
           </View>
           <TouchableOpacity
             activeOpacity={0.8}
@@ -195,8 +194,8 @@ const PastWinner = ({route}) => {
               alignItems: 'center',
               alignSelf: 'center',
               justifyContent: 'center',
-              marginBottom: 30,
-              marginTop: 20,
+              marginBottom: DeviceHeigth * 0.04,
+              marginTop: DeviceHeigth * 0.02,
               backgroundColor: AppColor.WHITE,
               borderRadius: 6,
               shadowColor: 'grey',
@@ -220,7 +219,7 @@ const PastWinner = ({route}) => {
                 marginHorizontal: 5,
                 color: AppColor.PrimaryTextColor,
               }}>
-              Joint Event
+              Joint Now
             </Text>
             <AntDesign
               name={'arrowright'}

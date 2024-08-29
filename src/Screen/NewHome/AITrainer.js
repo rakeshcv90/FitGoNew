@@ -383,7 +383,7 @@ const AITrainer = ({navigation}) => {
           },
         ]}>
         <TouchableOpacity
-          style={{left: 10}}
+          style={{left: 10,paddingVertical:5}}
           onPress={() => {
             Tts.stop();
             navigation.goBack();

@@ -40,6 +40,7 @@ const MyChallenge = ({coins}) => {
         <View
           style={{
             width: '100%',
+            marginTop:20
           }}>
           <Text
             style={{
@@ -491,7 +492,7 @@ const MyChallenge = ({coins}) => {
                     lineHeight: 18,
                     fontWeight: '500',
                   }}>
-                  Start New
+                  Start Now
                 </Text>
               </TouchableOpacity>
             </View>

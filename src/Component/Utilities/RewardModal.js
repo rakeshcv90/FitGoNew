@@ -116,7 +116,7 @@ const RewardModal = ({
                   color: AppColor.WHITE,
                   marginHorizontal: 10,
                 }}>
-                StartNow
+                Start Now
               </Text>
               <AntDesign name={'arrowright'} size={15} color={AppColor.WHITE} />
             </TouchableOpacity>

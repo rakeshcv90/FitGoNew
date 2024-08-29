@@ -158,6 +158,8 @@ export const localImage = {
   NPedometer: require('../Icon/Images/NewImage2/NPdeometer.png'),
   NContact: require('../Icon/Images/NewImage2/NContact.png'),
   NPrivacy: require('../Icon/Images/NewImage2/NPrivacy.png'),
+  FAQ: require('../Icon/Images/NewImage2/faq.png'),
+  REPORT: require('../Icon/Images/NewImage2/report.png'),
   NPolicy: require('../Icon/Images/NewImage2/NDocument.png'),
   NRate: require('../Icon/Images/NewImage2/NRate.png'),
   NDelete: require('../Icon/Images/NewImage2/NDelete.png'),

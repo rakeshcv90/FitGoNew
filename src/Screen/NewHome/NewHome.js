@@ -75,6 +75,7 @@ import Reanimated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
+import WinnerView from '../../Component/NewHomeUtilities/WinnerView';
 
 const WeekArrayWithEvent = Array(5)
   .fill(0)
@@ -113,6 +114,8 @@ const NewHome = ({navigation}) => {
   const [myRank, setMyRank] = useState(0);
   const [pastWinners, setPastWinners] = useState([]);
   const [coins, setCoins] = useState({});
+  const[winnerAnnounce,setWinnerAnnounce]=useState()
+
   useEffect(() => {
     if (isFocused) {
       getAllChallangeAndAllExerciseData();
@@ -122,7 +125,8 @@ const NewHome = ({navigation}) => {
       getUserDetailData();
       getPastWinner();
       getWeeklyAPI();
-      getEarnedCoins();
+
+      enteredCurrentEvent && getEarnedCoins();
     }
   }, [isFocused]);
   useEffect(() => {
@@ -335,6 +339,7 @@ const NewHome = ({navigation}) => {
           item => item?.id == getUserDataDetails?.id,
         );
         setTotalData(result.data?.data);
+        setWinnerAnnounce(result?.data)
         if (myRank != -1) {
           setMyRank(result.data?.data[myRank]?.rank);
         } else {
@@ -560,7 +565,8 @@ const NewHome = ({navigation}) => {
               getUserAllInData();
               getLeaderboardDataAPI();
               getWeeklyAPI();
-              getEarnedCoins();
+
+              enteredCurrentEvent && getEarnedCoins();
             }}
             colors={[AppColor.RED, AppColor.WHITE]}
           />
@@ -767,49 +773,23 @@ const NewHome = ({navigation}) => {
               zIndex: 1,
               justifyContent: 'center',
             }}>
-            <Marquee spacing={20} speed={1}>
+            <Marquee spacing={20} speed={0.7}>
               <Text
                 style={{
                   color: AppColor.PrimaryTextColor,
                   fontFamily: Fonts.HELVETICA_REGULAR,
                 }}>
-                Explore our new best offers
+                Amazing Offers to Earn Bonus FitCoins and Win Cash Prize!{'  '}{' '}
+                Check Out the Upcoming Challenges!
               </Text>
             </Marquee>
           </View>
 
-          {/* <TouchableOpacity
-          activeOpacity={0.8}
-            onPress={() => {
-              navigation.navigate('OfferPage');
-            }}
-            style={{
-              width: DeviceHeigth >= 1024 ? '20%' : '25%',
-              height: '60%',
-              overflow: 'hidden',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-              borderRadius:8,
-              paddingLeft:10,
-              backgroundColor:AppColor.RED
-            }}>
-            <Text
-              style={{
-                fontFamily: Fonts.HELVETICA_REGULAR,
-                fontSize: 12,
-                lineHeight: 25,
-
-                color: AppColor.WHITE,
-              }}>
-              EXPLORE
-            </Text>
-            <Icons name={'chevron-right'} size={20} color={AppColor.WHITE} />
-          </TouchableOpacity> */}
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => {
               navigation.navigate('OfferPage');
+              // navigation.navigate('StepGuide');
             }}
             style={{
               width: DeviceHeigth >= 1024 ? '16%' : '25%',
@@ -843,7 +823,10 @@ const NewHome = ({navigation}) => {
             </Reanimated.View>
           </TouchableOpacity>
         </ImageBackground>
-        {enteredCurrentEvent && (!Sat || !Sun) ? (
+        {winnerAnnounce?.winner_announced==true?<WinnerView totalData={totalData}/>:
+          
+          
+          enteredCurrentEvent && (!Sat || !Sun) ? (
           <MyChallenge coins={coins} />
         ) : (
           <TextBanner
@@ -852,6 +835,7 @@ const NewHome = ({navigation}) => {
             navigation={navigation}
           />
         )}
+       
 
         <WithoutEvent pastWinners={pastWinners} />
 
@@ -868,10 +852,10 @@ const NewHome = ({navigation}) => {
         navigation={navigation}
         visible={getRewardModalStatus}
         imagesource={localImage.Reward_icon}
-        ButtonText={'Start now'}
-        txt1={'Your Event Has Started!'}
+        // ButtonText={'Start now'}
+        txt1={'Get Set, Go!'}
         txt2={
-          'Your event is now live. Tap "Start Now" to jump right in and begin your experience.'
+          'Your Fitness Challenge is NOW LIVE! Start the Challenge Now to Earn Cash Rewards.'
         }
         onCancel={() => {
           AnalyticsConsole('CHS_CAN');
@@ -928,6 +912,11 @@ const NewHome = ({navigation}) => {
         locationP={locationP1}
         setLocationP={setLocationP1}
       />
+      {/* <WinnerViewModal
+        setWinnerAnnounced={setWinnerAnnounced}
+        winnerVisible={winnerVisible}
+        //mainData={mainData}
+      /> */}
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={() => {

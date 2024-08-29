@@ -126,7 +126,7 @@ const NewMonthlyAchievement = ({navigation}) => {
   ];
   return (
     <SafeAreaView style={styles.Container}>
-      <NewHeader header={'Report'} />
+      <NewHeader header={'Report'} backButton={true}/>
       <ScrollView showsVerticalScrollIndicator={false}>
         {getBmi?.Bmi ? (
           <View>
@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
     shadowColor: 'grey',
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: 'grey',
         shadowOffset: {width: 5, height: 5},
         shadowOpacity: 0.2,
         shadowRadius: 8,

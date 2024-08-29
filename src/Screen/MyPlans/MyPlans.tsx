@@ -1364,7 +1364,10 @@ const MyPlans = ({navigation}: any) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.6}
-                  onPress={() => {}}
+                  onPress={() => {
+                    AnalyticsConsole('HB');
+                    navigation.navigate('WorkoutHistory');
+                  }}
                   style={{
                     width: 70,
                     height: 40,

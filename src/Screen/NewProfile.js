@@ -154,21 +154,27 @@ const NewProfile = ({navigation}) => {
   };
   const HandleButtons = (id, value) => {
     if (id == 3) {
+      navigation.navigate('Questions', {screenName: 'Home'});
+    } 
+    if (id == 4) {
+      navigation.navigate('NewMonthlyAchievement');
+    } 
+    else if (id == 5) {
       analytics().logEvent(
         `CV_FITME_CLICKED_ON_${value?.text1?.replace(' ', '_')}`,
       );
       openMailApp();
-    } else if (id == 4) {
+    } else if (id == 6) {
       AnalyticsConsole(`PRIVACY_BUTTON`);
       navigation.navigate('TermaAndCondition', {
         title: 'Privacy & Policy',
       });
-    } else if (id == 5) {
+    } else if (id == 7) {
       AnalyticsConsole(`T_n_CBUTTON`);
       navigation.navigate('TermaAndCondition', {
         title: 'Terms & Condition',
       });
-    } else if (id == 6) {
+    } else if (id == 8) {
       AnalyticsConsole(`APP_RATING_BUTTON`);
       setRatingVisibilty(true);
       // if (Platform.OS == 'ios') {
@@ -180,9 +186,9 @@ const NewProfile = ({navigation}) => {
       //     'https://play.google.com/store/apps/details?id=fitme.health.fitness.homeworkouts.equipment&hl=en-IN&pli=1',
       //   );
       // }
-    } else if (id == 7) {
+    } else if (id == 9) {
       setModalVisible(true);
-    } else if (id == 8) {
+    } else if (id == 10) {
       AnalyticsConsole(`LOGOUT_BUTTON`);
       LogOut(dispatch);
     }
@@ -198,38 +204,43 @@ const NewProfile = ({navigation}) => {
       txt: 'Display Always On',
       img: localImage.DisplayOn,
     },
-    // {
-    //   id: 2,
-    //   txt: 'Health Notification',
-    //   img: localImage.NPedometer,
-    // },
     {
       id: 3,
+      txt: 'FAQs',
+      img: localImage.FAQ,
+    },
+    {
+      id: 4,
+      txt: 'Report',
+      img: localImage.REPORT,
+    },
+    {
+      id: 5,
       txt: 'Contact Us',
       img: localImage.NContact,
     },
     {
-      id: 4,
+      id: 6,
       txt: 'Privacy Policy',
       img: localImage.NPrivacy,
     },
     {
-      id: 5,
+      id: 7,
       txt: 'Terms & Conditions',
       img: localImage.NPolicy,
     },
     {
-      id: 6,
+      id: 8,
       txt: 'Rate Us',
       img: localImage.NRate,
     },
     {
-      id: 7,
+      id: 9,
       txt: 'Delete Account',
       img: localImage.NDelete,
     },
     {
-      id: 8,
+      id: 10,
       txt: 'Log Out',
       img: localImage.NLogOut,
     },
@@ -693,7 +704,7 @@ const NewProfile = ({navigation}) => {
                 padding: 5,
                 width: '40%',
                 paddingVertical: 7,
-                marginRight: 12
+                marginRight: 12,
               }}
               onPress={() => setModalVisible(false)}>
               <Text
