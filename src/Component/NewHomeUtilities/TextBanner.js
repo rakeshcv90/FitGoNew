@@ -56,7 +56,10 @@ const TextBanner = ({navigation, setLocationP}) => {
   useEffect(
     useCallback(() => {
       const handleBannerType = async () => {
-        if (getOfferAgreement?.location === 'India') {
+        if (
+          getOfferAgreement?.location === 'India' ||
+          getOfferAgreement?.location == 'United States'
+        ) {
           if (enteredCurrentEvent && enteredUpcomingEvent) {
             setBannertype1('ongoing_challenge');
             setBannerType2('joined_challenge');
@@ -179,7 +182,10 @@ const TextBanner = ({navigation, setLocationP}) => {
         setLoaded(true);
       } else {
         dispatch(setOfferAgreement(ApiCall?.data));
-        if (ApiCall?.data?.location == 'India') {
+        if (
+          ApiCall?.data?.location == 'India' ||
+          ApiCall?.data?.location == 'United States'
+        ) {
           if (Sat && enteredCurrentEvent) {
             AnalyticsConsole('W_L');
             navigation.navigate('Winner');
@@ -286,7 +292,10 @@ const TextBanner = ({navigation, setLocationP}) => {
   const handleStart = () => {
     if (getUserDataDetails?.email != null && getUserDataDetails?.name != null) {
       setLoaded(false);
-      if (getOfferAgreement?.location == 'India') {
+      if (
+        getOfferAgreement?.location === 'India' ||
+        getOfferAgreement?.location == 'United States'
+      ) {
         setLoaded(true);
         if (getPurchaseHistory?.plan == null) {
           AnalyticsConsole('PP_BANNER');

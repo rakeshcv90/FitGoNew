@@ -114,7 +114,7 @@ const NewHome = ({navigation}) => {
   const [myRank, setMyRank] = useState(0);
   const [pastWinners, setPastWinners] = useState([]);
   const [coins, setCoins] = useState({});
-  const[winnerAnnounce,setWinnerAnnounce]=useState()
+  const [winnerAnnounce, setWinnerAnnounce] = useState();
 
   useEffect(() => {
     if (isFocused) {
@@ -339,7 +339,7 @@ const NewHome = ({navigation}) => {
           item => item?.id == getUserDataDetails?.id,
         );
         setTotalData(result.data?.data);
-        setWinnerAnnounce(result?.data)
+        setWinnerAnnounce(result?.data);
         if (myRank != -1) {
           setMyRank(result.data?.data[myRank]?.rank);
         } else {
@@ -823,10 +823,9 @@ const NewHome = ({navigation}) => {
             </Reanimated.View>
           </TouchableOpacity>
         </ImageBackground>
-        {winnerAnnounce?.winner_announced==true?<WinnerView totalData={totalData}/>:
-          
-          
-          enteredCurrentEvent && (!Sat || !Sun) ? (
+        {winnerAnnounce?.winner_announced == true ? (
+          <WinnerView totalData={totalData} />
+        ) : enteredCurrentEvent && (!Sat || !Sun) ? (
           <MyChallenge coins={coins} />
         ) : (
           <TextBanner
@@ -835,7 +834,6 @@ const NewHome = ({navigation}) => {
             navigation={navigation}
           />
         )}
-       
 
         <WithoutEvent pastWinners={pastWinners} />
 
@@ -865,7 +863,8 @@ const NewHome = ({navigation}) => {
 
         // }}
       />
-      {getOfferAgreement?.location == 'India' ? (
+      {getOfferAgreement?.location === 'India' ||
+      getOfferAgreement?.location == 'United States' ? (
         (getPopUpFreuqency == 6 || getPopUpFreuqency % 5 == 0) &&
         !enteredUpcomingEvent ? (
           <UpcomingEventModal

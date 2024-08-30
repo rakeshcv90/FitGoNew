@@ -97,7 +97,10 @@ const Leaderboard = () => {
   useEffect(
     useCallback(() => {
       const handleBannerType = async () => {
-        if (getOfferAgreement?.location === 'India') {
+        if (
+          getOfferAgreement?.location === 'India' ||
+          getOfferAgreement?.location == 'United States'
+        ) {
           if (enteredCurrentEvent && enteredUpcomingEvent) {
             setBannertype1('ongoing_challenge');
             setBannerType2('joined_challenge');
@@ -382,7 +385,6 @@ const Leaderboard = () => {
         const options: ShareOptions = {
           message: `I just won the fitness challenge with the FitMe app and earned ₹1000 . You can win too—download the FitMe app now and start earning!
           Just download the Fitme app from here: ${referralLink} `,
-         
         };
         const result = await Share.open(options);
         if (result.success) {
@@ -399,7 +401,6 @@ const Leaderboard = () => {
         statusBarTranslucent
         visible={visible}
         onRequestClose={() => {
-     
           setVisible(!visible);
         }}>
         <View
@@ -723,16 +724,13 @@ const Leaderboard = () => {
               justifyContent: 'space-between',
             }}>
             <TouchableOpacity
-            onPress={() => navigation?.goBack()}
+              onPress={() => navigation?.goBack()}
               style={{
                 marginHorizontal: 0,
                 alignSelf: 'center',
-               paddingVertical:5,
-            
+                paddingVertical: 5,
               }}>
-                
-         
-              <ArrowLeft  />
+              <ArrowLeft />
             </TouchableOpacity>
             <View
               style={{

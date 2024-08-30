@@ -596,7 +596,8 @@ const CustomWorkout = ({navigation}) => {
         {/* </BlurView> */}
       </Modal>
       <BannerAdd bannerAdId={bannerAdId} />
-      {getOfferAgreement?.location == 'India' ? (
+      {getOfferAgreement?.location === 'India' ||
+      getOfferAgreement?.location == 'United States' ? (
         getPopUpFreuqency == 5 || getPopUpFreuqency % 4 == 0 ? (
           <UpcomingEventModal
             visible={true}

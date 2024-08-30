@@ -563,7 +563,10 @@ const Banners = ({
   const handleStart = () => {
     if (getUserDataDetails?.email != null && getUserDataDetails?.name != null) {
       setLoaded(false);
-      if (getOfferAgreement?.location == 'India') {
+      if (
+        getOfferAgreement?.location === 'India' ||
+        getOfferAgreement?.location == 'United States'
+      ) {
         setLoaded(true);
         if (getPurchaseHistory?.plan == null) {
           AnalyticsConsole('PP_BANNER');
@@ -682,7 +685,10 @@ const Banners = ({
         setLoaded(true);
       } else {
         dispatch(setOfferAgreement(ApiCall?.data));
-        if (ApiCall?.data?.location == 'India') {
+        if (
+          ApiCall?.data?.location == 'India' ||
+          ApiCall?.data?.location == 'United States'
+        ) {
           if (Sat && enteredCurrentEvent) {
             AnalyticsConsole('W_L');
             navigation.navigate('Winner');
