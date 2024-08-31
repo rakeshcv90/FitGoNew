@@ -4,7 +4,6 @@ import {
   Linking,
   Platform,
   RefreshControl,
-
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -46,7 +45,7 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {findKeyInObject} from '../../Component/Utilities/FindkeyinObject';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 const NewSubscription = ({navigation, route}: any) => {
   const {upgrade} = route.params;
   const dispatch = useDispatch();
@@ -374,6 +373,7 @@ const NewSubscription = ({navigation, route}: any) => {
     }
   };
   const fetchPurchaseHistoryIOS = async (item: any, startDate: any) => {
+    const price: string = findKeyInObject(selected, 'localizedPrice').replace(/\s/g, '')
     let data = {
       user_id: getUserDataDetails.id,
       transaction_id: item.original_transaction_id,
@@ -385,12 +385,12 @@ const NewSubscription = ({navigation, route}: any) => {
           : 'premium',
       platform: Platform.OS,
       product_id: item.auto_renew_product_id,
-      plan_value:
-        item.auto_renew_product_id == 'fitme_noob'
-          ? 30
-          : item.auto_renew_product_id == 'fitme_pro'
-          ? 69
-          : 149,
+      plan_value: parseInt(price.substring(1)),
+      // item.auto_renew_product_id == 'fitme_noob'
+      //   ? 30
+      //   : item.auto_renew_product_id == 'fitme_pro'
+      //   ? 69
+      //   : 149,
     };
     PlanPurchasetoBackendAPI(data);
   };
@@ -411,7 +411,7 @@ const NewSubscription = ({navigation, route}: any) => {
   //'fitme_monthly', 'a_month', 'fitme_legend'localizedPrice
   const fetchPurchaseHistoryAndroid = async (data: any) => {
     setForLoading(true);
-    const price: string = findKeyInObject(selected, 'priceAmountMicros');
+    const price: string = findKeyInObject(selected, 'formattedPrice');
     const jsonObject = JSON.parse(data);
     const postData = {
       user_id: getUserDataDetails.id,
@@ -424,12 +424,12 @@ const NewSubscription = ({navigation, route}: any) => {
       transaction_id: jsonObject.orderId,
       platform: Platform.OS,
       product_id: jsonObject?.productId,
-      plan_value:
-        jsonObject.productId == 'fitme_monthly'
-          ? 30
-          : jsonObject.productId == 'a_monthly'
-          ? 69
-          : 149,
+      plan_value: parseInt(price.substring(1)),
+      // jsonObject.productId == 'fitme_monthly'
+      //   ? 30
+      //   : jsonObject.productId == 'a_monthly'
+      //   ? 69
+      //   : 149,
     };
 
     PlanPurchasetoBackendAPI(postData);
@@ -445,7 +445,7 @@ const NewSubscription = ({navigation, route}: any) => {
         },
         data,
       });
-      console.log(res.data, 'subssssss');
+
       StartAudio(playbackState);
       if (res.data.message == 'Event created successfully') {
         // PurchaseDetails();
@@ -599,6 +599,7 @@ const NewSubscription = ({navigation, route}: any) => {
       item,
       PLATFORM_IOS ? 'title' : 'name',
     );
+
     const temp =
       Platform.OS == 'ios'
         ? []
@@ -606,15 +607,14 @@ const NewSubscription = ({navigation, route}: any) => {
     const price: string =
       index == 2 && Platform.OS == 'android'
         ? temp?.length == 1
-          ? temp[0]?.priceAmountMicros
-          : temp[1]?.priceAmountMicros
+          ? temp[0]?.formattedPrice
+          : temp[1]?.formattedPrice
         : findKeyInObject(
             item,
-            PLATFORM_IOS ? 'localizedPrice' : 'priceAmountMicros',
+            PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
           );
-    const normalizedPrice = PLATFORM_IOS
-      ? price.replace(/\s/g, '')
-      : `₹${(parseInt(price) / 1000000).toString()}`;
+
+    const normalizedPrice = PLATFORM_IOS ? price.replace(/\s/g, '') : price;
 
     const planName = planCap.toLowerCase();
     const color = planName.includes('noob')
@@ -860,7 +860,7 @@ const NewSubscription = ({navigation, route}: any) => {
           getPurchaseHistory?.plan_value == null && (
             <View style={{height: 50, width: '100%'}} />
           )}
-        {/* {console.log("zxcdcxzc",item)} */}
+
         <GradientButton
           text={
             planName.includes(getPurchaseHistory?.plan)
@@ -962,21 +962,19 @@ const NewSubscription = ({navigation, route}: any) => {
     const price: string =
       currentSelected == 2 && Platform.OS == 'android'
         ? temp?.length == 1
-          ? temp[0]?.priceAmountMicros
-          : temp[1]?.priceAmountMicros
+          ? temp[0]?.formattedPrice
+          : temp[1]?.formattedPrice
         : findKeyInObject(
             item,
-            PLATFORM_IOS ? 'localizedPrice' : 'priceAmountMicros',
+            PLATFORM_IOS ? 'localizedPrice' : 'formattedPrice',
           );
-    const normalizedPrice = PLATFORM_IOS
-      ? price.replace(/\s/g, '')
-      : `₹${(parseInt(price) / 1000000).toString()}`;
+    const normalizedPrice = PLATFORM_IOS ? price.replace(/\s/g, '') : price;
     return normalizedPrice;
   };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
-      <StatusBar backgroundColor={AppColor.WHITE} barStyle={'dark-content'}/>
-     <DietPlanHeader
+      <StatusBar backgroundColor={AppColor.WHITE} barStyle={'dark-content'} />
+      <DietPlanHeader
         header="Unlock Challenges"
         paddingTop={
           Platform.OS == 'android' ? DeviceHeigth * 0.029 : DeviceHeigth * 0.025
@@ -1068,7 +1066,6 @@ const NewSubscription = ({navigation, route}: any) => {
                     <TouchableOpacity
                       key={index}
                       onPress={() => {
-                        console.log('CURENRETA', currentSelected, index);
                         setCurrentSelected(index);
                       }}
                       style={[

@@ -18,7 +18,9 @@ export const ADS_IDs = [
   '68c70c162994d5f8',
   'fccf6c54a494e29f', //android 14 samsung
   'bb8c2a687a70122f', // pixel 3xl debug
-  '8454b6dd3a6df800'  // pixel 3xl release
+  '8454b6dd3a6df800' , // pixel 3xl release
+  '35c64759de0db5f8',
+  '8d54921a7c6b740f'//rakeshrao
 ];
 
 //Live Ads
