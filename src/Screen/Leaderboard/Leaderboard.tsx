@@ -87,6 +87,8 @@ const Leaderboard = () => {
   );
   const [BannerType1, setBannertype1] = useState('');
   const [Bannertype2, setBannerType2] = useState('');
+  const Sat = getPurchaseHistory?.currentDay == 6;
+  const Sun = getPurchaseHistory?.currentDay == 7;
   useEffect(() => {
     setLoader(true);
     getLeaderboardDataAPI();
@@ -675,7 +677,7 @@ const Leaderboard = () => {
       //     WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1]
       //   }`,
       // );
-
+      {console.log("gggggggggggg",enteredCurrentEvent,WeekArrayWithEvent,getPurchaseHistory?.currentDay-2)}
       if (
         response?.data?.msg == 'Please update the app to the latest version.'
       ) {
@@ -1448,8 +1450,7 @@ const Leaderboard = () => {
                 </TouchableOpacity>
               </View>
             </View>
-            {enteredCurrentEvent ? (
-              <View
+            {enteredCurrentEvent ? (Sat||Sun)!=true? <View
                 style={{
                   width: '95%',
                   backgroundColor: AppColor.WHITE,
@@ -1488,6 +1489,7 @@ const Leaderboard = () => {
                     paddingLeft: 5,
                     paddingRight: 5,
                   }}>
+                    {/* {console.log("gggggggggggg",coins)} */}
                   {WeekArrayWithEvent?.map((item, index) => {
                     const sameDay =
                       WeekArrayWithEvent[getPurchaseHistory.currentDay - 1] ==
@@ -1885,8 +1887,7 @@ const Leaderboard = () => {
                     Start Task
                   </Text>
                 </TouchableOpacity>
-              </View>
-            ) : (
+              </View>:null: (
               <View
                 style={{
                   width: '95%',
