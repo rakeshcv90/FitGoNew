@@ -297,7 +297,7 @@ const EventExercise = ({navigation, route}: any) => {
               if (seconds == 4) SPEAK('three.            two.');
               if (seconds == 2) SPEAK('one.    Done');
               if (seconds == 11) SPEAK('10 seconds to go');
-              if (allExercise[number]?.exercise_sets == 0) {
+              if (allExercise[number]?.exercise_sets == 0 && seconds == 10) {
                 initInterstitial();
                 console.log('ADD INITIALISE NO SET');
               }

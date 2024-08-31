@@ -13,6 +13,7 @@ export const ADS_IDs = [
   '5e7dd1b045daf6ae',
   '574a7ef0e979217a',
   '8e95036375aa56c4',
+  '68c70c162994d5f8'
 ];
 
 //Live Ads

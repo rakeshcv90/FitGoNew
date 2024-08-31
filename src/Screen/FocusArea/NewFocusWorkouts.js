@@ -817,7 +817,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             contentContainerStyle={{paddingBottom: DeviceHeigth * 0.1}}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(item) => item?.exercise_id.toString()}
             renderItem={({item, index}) => {
               const time = parseInt(item?.exercise_rest.split(' ')[0]);
               return (
@@ -948,7 +948,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             initialNumToRender={10}
             maxToRenderPerBatch={10}
             updateCellsBatchingPeriod={100}
-            removeClippedSubviews={true}
+            // removeClippedSubviews={true}
           />
         </View>
         <NewButton

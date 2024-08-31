@@ -51,6 +51,7 @@ const NewSubscription = ({navigation, route}: any) => {
   const {upgrade} = route.params;
   const dispatch = useDispatch();
   const getInAppPurchase = useSelector((state: any) => state.getInAppPurchase);
+  const getOfferAgreement = useSelector((state: any) => state.getOfferAgreement);
 
   const getPurchaseHistory = useSelector(
     (state: any) => state.getPurchaseHistory,
@@ -747,7 +748,7 @@ const NewSubscription = ({navigation, route}: any) => {
 
           <FitText
             type="Heading"
-            value={` ${normalizedPrice.split('.')[0]}/month`}
+            value={` ${PLATFORM_IOS?normalizedPrice: normalizedPrice.split('.')[0]}/month`}
             fontSize={28}
             lineHeight={34}
             marginVertical={5}
