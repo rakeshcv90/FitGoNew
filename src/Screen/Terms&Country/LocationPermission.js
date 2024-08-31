@@ -45,7 +45,7 @@ const getCurrentLocation = () => {
       position => {
         const {latitude, longitude} = position?.coords;
         const coords = {
-          lat: latitude,
+          lat: latitude, // 36.17367911141759, -115.15029443045587 United States
           lng: longitude,
         };
         getApiKey()
@@ -55,16 +55,18 @@ const getCurrentLocation = () => {
                 resolve(response);
               })
               .catch(err => {
-                console.log('coords error1',err)
-                reject(err)});
+                console.log('coords error1', err);
+                reject(err);
+              });
           })
           .catch(err => {
-            console.log('coords error',err)
-            reject(err)});
+            console.log('coords error', err);
+            reject(err);
+          });
       },
       error => {
         reject(error); // Call reject with the error object
-        console.log('coords error---->',error)
+        console.log('coords error---->', error);
       },
     );
   });

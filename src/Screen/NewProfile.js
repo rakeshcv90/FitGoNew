@@ -803,7 +803,7 @@ const NewProfile = ({navigation}) => {
         {getUserDataDetails.email != null
           ? CardData?.map((v, i) => {
               if (
-                getOfferAgreement?.location != 'India' &&
+                (getOfferAgreement?.location != 'India' && getOfferAgreement?.location!='United States') &&
                 v.txt == 'Subscription'
               )
                 return;

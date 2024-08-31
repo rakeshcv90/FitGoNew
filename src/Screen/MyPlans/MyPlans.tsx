@@ -905,14 +905,13 @@ const MyPlans = ({navigation}: any) => {
           alignItems: 'center',
         }}>
         <AnimatedLottieView
-          source={require('../../Icon/Images/NewImage2/Adloader.json')}
+           source={require('../../Icon/Images/NewImage/NoData.json')}
           speed={2}
           autoPlay
           loop
           resizeMode="contain"
           style={{
             width: DeviceWidth * 0.5,
-
             height: DeviceHeigth * 0.5,
           }}
         />

@@ -13,7 +13,12 @@ export const ADS_IDs = [
   '5e7dd1b045daf6ae',
   '574a7ef0e979217a',
   '8e95036375aa56c4',
-  '68c70c162994d5f8'
+  'e2fd7fb50154f6a9',
+  '171a4ea7fccd8a28',
+  '68c70c162994d5f8',
+  'fccf6c54a494e29f', //android 14 samsung
+  'bb8c2a687a70122f', // pixel 3xl debug
+  '8454b6dd3a6df800'  // pixel 3xl release
 ];
 
 //Live Ads

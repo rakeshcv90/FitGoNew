@@ -25,7 +25,6 @@ import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
 import {useFocusEffect} from '@react-navigation/native';
 const OfferPage = ({navigation, route}) => {
-  const type = route?.params?.type;
   const WeekArrayWithEvent = Array(5)
     .fill(0)
     .map(

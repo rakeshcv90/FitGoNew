@@ -1,7 +1,7 @@
 import React from 'react';
 import SplaceScreen from '../Screen/SplaceScreen';
 import TermaAndCondition from '../Screen/TermaAndCondition';
-import Yourself from '../Screen/Yourself/Index';
+import Yourself from '../Screen/Yourself/index';
 
 import Gender from '../Screen/Yourself/Gender';
 
@@ -88,6 +88,7 @@ import WorkoutCompleted from '../Screen/WorkoutCompleteScreen/WorkoutCompleted';
 import NewHome from '../Screen/NewHome/NewHome';
 import PastWinner from '../Screen/NewHome/PastWinner';
 import LoadingScreen from '../Component/NewHomeUtilities/LoadingScreen';
+import CardioCompleted from '../Screen/WorkoutCompleteScreen/CardioCompleted';
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -207,6 +208,7 @@ export const LoginStack = () => {
         component={WorkoutCompleted}
         options={{detachPreviousScreen: true}}
       />
+      <Stack.Screen name="CardioCompleted" component={CardioCompleted} />
     </Stack.Navigator>
   );
 };

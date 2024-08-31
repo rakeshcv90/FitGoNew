@@ -241,7 +241,7 @@ const HomeNew = ({navigation}) => {
   useEffect(
     useCallback(() => {
       const handleBannerType = async () => {
-        if (getOfferAgreement?.location === 'India') {
+        if (getOfferAgreement?.location === 'India' || getOfferAgreement?.location=='United States') {
           if (enteredCurrentEvent && enteredUpcomingEvent) {
             setBannertype1('ongoing_challenge');
             setBannerType2('joined_challenge');
@@ -2263,7 +2263,7 @@ const HomeNew = ({navigation}) => {
           });
         }}
       />
-      {getOfferAgreement?.location == 'India' ? (
+      {getOfferAgreement?.location === 'India' || getOfferAgreement?.location=='United States' ? (
         (getPopUpFreuqency == 6 || getPopUpFreuqency % 5 == 0) &&
         !enteredUpcomingEvent ? (
           <UpcomingEventModal
