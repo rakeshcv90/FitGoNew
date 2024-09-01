@@ -34,6 +34,7 @@ const WinnerView = ({totalData}) => {
                 width: '40%',
                 height: '100%',
                 justifyContent: 'center',
+                marginRight: 10
               }}>
               <ImageBackground
                 source={require('../../Icon/Images/NewHome/WinnerAvtar.png')}
@@ -130,7 +131,7 @@ const WinnerView = ({totalData}) => {
             </View>
             <View
               style={{
-                width: '60%',
+                width: '50%',
                 height: '100%',
                 alignSelf: 'center',
                 justifyContent: 'center',
@@ -144,7 +145,7 @@ const WinnerView = ({totalData}) => {
                   top: -10,
                   color: AppColor.BLACK,
                 }}>
-                Winner Announcement
+                Winner Alert!
               </Text>
               <Text
                 style={{
@@ -154,7 +155,7 @@ const WinnerView = ({totalData}) => {
                   textAlign: 'center',
                   color: AppColor.BLACK,
                 }}>
-                Cash prize in this week’s fitness challenge.
+                Winner Name has won this week’s challenge and the amazing prize!
               </Text>
             </View>
           </View>

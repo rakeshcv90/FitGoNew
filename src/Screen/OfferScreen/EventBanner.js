@@ -30,7 +30,7 @@ const EventBanner = React.memo(({navigation}) => {
         resizeMode="stretch">
         <NewButton
           position={'absolute'}
-          bottom={DeviceHeigth * 0.024}
+          bottom={DeviceHeigth * 0.03}
           pV={13}
           buttonColor={AppColor.WHITE}
           disabled={enteredUpcomingEvent}

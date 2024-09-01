@@ -71,19 +71,20 @@ const UpcomingEventModal = ({visible, onCancel, onConfirm}) => {
             />
             <NewButton
               buttonColor={
-                getDynamicPopUpvalues?.button_color ?? AppColor.WHITE
+                getDynamicPopUpvalues?.button_color ?? '#FF9900'
               }
               title={getDynamicPopUpvalues?.button_text ?? 'EARN NOW'}
-              titleColor={getDynamicPopUpvalues?.button_text_color ?? AppColor.RED}
-              pH={12}
-              pV={12}
+              titleColor={getDynamicPopUpvalues?.button_text_color ?? AppColor.WHITE}
+              pH={15}
+              pV={15}
               bb
               bottom={
-                getDownloadedImage?.popupImage ? undefined : DeviceHeigth * 0.06
+                getDownloadedImage?.popupImage ? undefined : -DeviceHeigth * 0.25
               }
-              alignSelf={getDownloadedImage?.popupImage?getDynamicPopUpvalues?.button_position:undefined}
+              bR={5}
+              alignSelf={getDownloadedImage?.popupImage?getDynamicPopUpvalues?.button_position:'flex-start'}
               mV={getDownloadedImage?.popupImage?getDynamicPopUpvalues?.margin_bottom:undefined}
-              left={getDownloadedImage?.popupImage?getDynamicPopUpvalues?.margin_start:undefined}
+              left={getDownloadedImage?.popupImage?getDynamicPopUpvalues?.margin_start:DeviceWidth*0.08}
               right={getDownloadedImage?.popupImage?getDynamicPopUpvalues?.margin_end:undefined}
               onPress={onConfirm}
             />

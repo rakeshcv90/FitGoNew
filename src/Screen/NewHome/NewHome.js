@@ -779,8 +779,7 @@ const NewHome = ({navigation}) => {
                   color: AppColor.PrimaryTextColor,
                   fontFamily: Fonts.HELVETICA_REGULAR,
                 }}>
-                Amazing Offers to Earn Bonus FitCoins and Win Cash Prize!{'  '}{' '}
-                Check Out the Upcoming Challenges!
+                Explore Special Offers to Win Exciting Prizes! Check Out the Upcoming Challenges!
               </Text>
             </Marquee>
           </View>

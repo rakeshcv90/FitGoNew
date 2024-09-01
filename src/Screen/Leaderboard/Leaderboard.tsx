@@ -1915,7 +1915,7 @@ const Leaderboard = () => {
                     textAlign: 'center',
                     color: AppColor.PrimaryTextColor,
                   }}>
-                  Join Weekly Challenge & Win Cash Prize!
+                  Join the Weekly Challenge to Win the Exciting Prizes!
                 </Text>
                 <View
                   style={{
@@ -1960,8 +1960,8 @@ const Leaderboard = () => {
                         lineHeight: 20,
                         fontWeight: '500',
                       }}>
-                      Missed this week, but you can join next week’s challenge
-                      to win ₹1,000/-
+                      Missed this week's challenge? No worries! Join next week
+                      to win big prizes!
                     </Text>
                   </View>
                   <TouchableOpacity

@@ -184,7 +184,7 @@ const StepGuide = ({navigation}: any) => {
               textAlign="center"
             />
             <HeartCom />
-            <FitText
+            {/* <FitText
               type="normal"
               value="Win prizes worth of"
               textAlign="center"
@@ -243,7 +243,7 @@ const StepGuide = ({navigation}: any) => {
                   }}
                 />
               </View>
-            </View>
+            </View> */}
             <FitText type="Heading" value="Past Winners" />
             <WithoutEvent pastWinners={pastWinners} pV={0} noText />
             <FitText

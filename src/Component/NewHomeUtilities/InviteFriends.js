@@ -26,7 +26,7 @@ const InviteFriends = () => {
             lineHeight: 24,
             color: AppColor.WHITE,
           }}>
-          Invite your friends to get ₹1000
+          Refer & Win Amazing Prizes
         </Text>
         <Text
           style={{
@@ -37,7 +37,7 @@ const InviteFriends = () => {
             color: AppColor.WHITE,
             marginTop: 10,
           }}>
-          Invite your friends to earn more Fitcoins.
+          Invite your friends to earn {'\n'}more Fitcoins.
         </Text>
         {/* <Text
           style={{

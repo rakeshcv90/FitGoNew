@@ -444,7 +444,7 @@ const WorkoutCompleted = ({navigation, route}) => {
                   cardioCoins={cardioExxercise[0]?.fit_coins}
                   download={0}
                   title={
-                    'Well Done! You’ve completed your workout for the day. Workout regularly to increase your chances to win the cash prize.'
+                    `You’ve completed your workout for the day. Workout regularly to increase your chances of winning exciting prizes!`
                   }
                 />
               </Animated.View>
@@ -472,8 +472,8 @@ const WorkoutCompleted = ({navigation, route}) => {
                   download={downloaded}
                   EarnedCoins={earnedCoin}
                   title={
-                    'Just 15 minutes of cardio = 10 Extra FitCoins\nComplete the 15-minute cardio session and boost your chance to win ₹1000!'
-                  }
+                    `Complete the 15-minute cardio session and increase your chances of winning fantastic prizes!`
+                   }
                 />
               </Animated.View>
               <Animated.View style={[styles.imgView, breatheAnimation]}>
@@ -498,7 +498,7 @@ const WorkoutCompleted = ({navigation, route}) => {
                   EarnedCoins={earnedCoin}
                   breatheCoins={breatheCoins}
                   title={
-                    'Increase your chances to win ₹1000! Complete a quick breathing exercise and earn Extra FitCoins.'
+                    'Increase your chances to grab the amazing prizes! Complete a quick breathing exercise and earn Extra FitCoins.'
                   }
                 />
               </Animated.View>

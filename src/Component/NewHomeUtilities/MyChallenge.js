@@ -468,7 +468,7 @@ const MyChallenge = ({coins}) => {
                     lineHeight: 20,
                     fontWeight: '500',
                   }}>
-                  Kickstart your workout challenge and {'\n'}win ₹1,000/-
+                  Kickstart your workout routine to {'\n'}claim your prize!
                 </Text>
               </View>
               <TouchableOpacity
