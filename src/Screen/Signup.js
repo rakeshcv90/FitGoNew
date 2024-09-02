@@ -1114,6 +1114,7 @@ const Signup = ({navigation}) => {
         dispatch(setCustomDietData(responseData?.data?.diet_data));
         //navigationRef.navigate('Yourself');
         setVisible(true);
+        console.log("CONSOLE",visible,responseData.data)
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);

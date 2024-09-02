@@ -16,10 +16,10 @@ import NativeAdView, {
   TaglineView,
 } from 'react-native-admob-native-ads';
 import {MediaView} from './MediaView';
-import {ADS_IDs, adUnitIDs, adUnitIDsTest} from './AdsId';
+import {ADS_IDs, ADS_IOS, adUnitIDs, adUnitIDsTest} from './AdsId';
 import AnimatedLottieView from 'lottie-react-native';
 import {DeviceHeigth, DeviceWidth} from './Config';
-import {AppColor} from './Color';
+import {AppColor, PLATFORM_IOS} from './Color';
 import {useSelector} from 'react-redux';
 // import {adUnitIDs} from './utils';
 
@@ -33,7 +33,12 @@ const NativeAddTest = ({media, type}) => {
   const nativeAdRef = useRef();
   const adLoadedRef = useRef(false); // Track ad loading state
   const DeviceID = useSelector(state => state.getDeviceID);
-  const IsTesting = DeviceID != '' && ADS_IDs.includes(DeviceID);
+  const getUserDataDetails = useSelector(state => state.getUserDataDetails);
+  
+  const IsTesting = PLATFORM_IOS
+    ? getUserDataDetails?.social_id != null &&
+      ADS_IOS.includes(getUserDataDetails?.social_id)
+    : DeviceID != '' && ADS_IDs.includes(DeviceID);
 
   const onAdFailedToLoad = event => {
     setError(true);
