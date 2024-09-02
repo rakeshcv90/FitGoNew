@@ -12,7 +12,7 @@ const Wrapper = ({children,styles}) => {
 const style=StyleSheet.create({
     container:{
         flex:1,
-       backgroundColor:AppColor.GRAY
+       backgroundColor:AppColor.WHITE
     }
 })
 export default Wrapper

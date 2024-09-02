@@ -39,6 +39,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import {setFitmeAdsCount} from '../../Component/ThemeRedux/Actions';
 import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const StoreScreen = ({navigation}) => {
@@ -164,14 +166,15 @@ const StoreScreen = ({navigation}) => {
   return (
     <>
       <View style={styles.container}>
-        <NewHeader header={'Store'} SearchButton={false} backButton={true} />
         <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-        {/* <ScrollView
+        <Wrapper>
+          {/* <ScrollView
           keyboardDismissMode="interactive"
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{flexGrow: 1}}
           style={{top: -DeviceHeigth * 0.025}}
           keyboardShouldPersistTaps="handled"> */}
+          <NewHeader1 header={'Store'} backButton />
           <View
             style={{
               width: '95%',
@@ -530,6 +533,7 @@ const StoreScreen = ({navigation}) => {
             )}
             {/* <View style={{height: DeviceHeigth * 0.025}} /> */}
           </View>
+        </Wrapper>
       </View>
       {/* {bannerAdsDisplay()} */}
       <View style={{marginBottom: DeviceHeigth <= 808 ? -1 : -10}}>

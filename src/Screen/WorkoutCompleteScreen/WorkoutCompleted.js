@@ -164,6 +164,7 @@ const WorkoutCompleted = ({navigation, route}) => {
   const getExerciseInTime = useSelector(state => state.getExerciseInTime);
   const getExerciseOutTime = useSelector(state => state.getExerciseOutTime);
   const [overExerciseVisible, setOverExerciseVisible] = useState(false);
+  const getEquipmentExercise=useSelector(state=>state?.getEquipmentExercise)
   const focused = useIsFocused();
 
   useEffect(() => {
@@ -284,7 +285,11 @@ const WorkoutCompleted = ({navigation, route}) => {
   };
   const filterCardioExercise = () => {
     let exercises = getAllExercise?.filter(item => {
-      return item?.exercise_bodypart == 'Cardio';
+      if (getEquipmentExercise == 0) {
+        return item?.exercise_bodypart == 'Cardio' && item?.exercise_equipment !='No Equipment';
+      }else{
+        return item?.exercise_bodypart == 'Cardio' && item?.exercise_equipment =='No Equipment';
+      }
     });
     setCardioExercise(exercises);
   };

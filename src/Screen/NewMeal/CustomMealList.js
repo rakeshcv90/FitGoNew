@@ -30,6 +30,8 @@ import {
   setCustomDietData,
   setMealTypeData,
 } from '../../Component/ThemeRedux/Actions';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 
 const CustomMealList = ({navigation, route}) => {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -525,21 +527,19 @@ const CustomMealList = ({navigation, route}) => {
     <View style={styles.container}>
       {forLoading ? <ActivityLoader /> : ''}
       <StatusBar barStyle={'dark-content'} backgroundColor={'white'} />
-      <DietPlanHeader
-        header={'Select meals'}
-        SearchButton={true}
-        shadow
-        backPressCheck={true}
-        onPress={() => {
-          navigation?.goBack();
-
-          dispatch(setMealTypeData(-1));
-        }}
-        onPressImage={() => {
-          refStandard.current.open();
-        }}
-        source={require('../../Icon/Images/NewImage2/filter.png')}
-      />
+      <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
+        <NewHeader1
+          header={'Select meals'}
+          backButton
+          onBackPress={() => {
+            navigation?.goBack();
+            dispatch(setMealTypeData(-1));
+          }}
+          onIconPress={() => {
+            refStandard.current.open();
+          }}
+          iconSource={require('../../Icon/Images/NewImage2/filter.png')}
+        />
       <View
         style={{
           flex: 9,
@@ -614,7 +614,7 @@ const CustomMealList = ({navigation, route}) => {
         <BannerAdd bannerAdId={bannerAdId} />
       </View>
       <BottomSheet />
-     
+     </Wrapper>
     </View>
   );
 };

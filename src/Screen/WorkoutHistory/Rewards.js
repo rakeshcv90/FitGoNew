@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 20,
     paddingVertical: 10,
-    width: DeviceWidth / 2.35,
+    width: DeviceWidth / 2.3,
     backgroundColor: AppColor.WHITE,
     justifyContent: 'space-between',
     borderRadius: 14,

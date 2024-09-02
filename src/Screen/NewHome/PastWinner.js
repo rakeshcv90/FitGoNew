@@ -170,6 +170,7 @@ const PastWinner = ({route}) => {
             </View>
             <Text
               style={{
+                width:'95%',
                 fontFamily: Fonts.HELVETICA_REGULAR,
                 fontSize: 18,
                 lineHeight: 26,

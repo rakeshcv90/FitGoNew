@@ -47,6 +47,10 @@ import TrackPlayer, {
 import VersionNumber, {appVersion} from 'react-native-version-number';
 import {findKeyInObject} from '../../Component/Utilities/FindkeyinObject';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+
+
 const NewSubscription = ({navigation, route}: any) => {
   const {upgrade} = route.params;
   const dispatch = useDispatch();
@@ -977,14 +981,11 @@ const NewSubscription = ({navigation, route}: any) => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <StatusBar backgroundColor={AppColor.WHITE} barStyle={'dark-content'}/>
-     <DietPlanHeader
+      <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
+        <NewHeader1
         header="Unlock Challenges"
-        paddingTop={
-          Platform.OS == 'android' ? DeviceHeigth * 0.029 : DeviceHeigth * 0.025
-        }
-        h={Platform.OS == 'ios' ? DeviceWidth * 0.15 : DeviceWidth * 0.15}
-        shadow
-      />
+          backButton
+        />
       <View style={{flex: 1, marginHorizontal: 20, marginTop: 10}}>
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -1272,6 +1273,7 @@ const NewSubscription = ({navigation, route}: any) => {
         </ScrollView>
       </View>
       {loading && <ActivityLoader visible={loading} />}
+      </Wrapper>
     </SafeAreaView>
   );
 };

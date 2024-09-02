@@ -25,6 +25,8 @@ import ActivityLoader from '../../Component/ActivityLoader';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {showMessage} from 'react-native-flash-message';
 import NewHeader from '../../Component/Headers/NewHeader';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
 
 const Referral = () => {
   const getUserDataDetails = useSelector(
@@ -268,9 +270,10 @@ const Referral = () => {
   };
   return (
     <View style={styles.container}>
-      <NewHeader backButton header={'Refer & Earn'} />
       {loader ? <ActivityLoader /> : null}
-      <ScrollView>
+     <Wrapper styles={{backgroundColor:AppColor.WHITE}}>
+     <NewHeader1 backButton header={'Refer & Earn'} />
+     <ScrollView>
         <View style={styles.imgView}>
           <Image
             source={localImage.Refer_banner}
@@ -576,6 +579,7 @@ const Referral = () => {
           />
         </View>
       </ScrollView>
+     </Wrapper>
     </View>
   );
 };

@@ -23,6 +23,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setMealTypeData} from '../Component/ThemeRedux/Actions';
 import CreateMealList from '../Screen/NewMeal/CreateMealList';
 import {useIsFocused} from '@react-navigation/native';
+import NewHeader1 from '../Component/Headers/NewHeader1';
+import Wrapper from '../Screen/WorkoutCompleteScreen/Wrapper';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -293,62 +295,62 @@ const DietPlatTabBar = ({navigation}) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'white'} />
-     
-      <DietPlanHeader
-        header={'Diet plan'}
-        SearchButton={showSearchButton ? true : false}
-        shadow
-        backPressCheck={true}
-        onPress={() => {
-          navigation?.goBack();
-        }}
-        onPressImage={() => {
-          AnalyticsConsole('Diet_Item_Click');
-          refStandard.current.open();
-        }}
-        source={require('../Icon/Images/NewImage2/filter.png')}
-      />
-      <Tab.Navigator
-        initialRouteName="Breakfast"
-        screenOptions={{
-          tabBarLabelStyle: {fontSize: 11, fontWeight: '700'},
-          tabBarInactiveTintColor: AppColor.CHECKBOXCOLOR,
-          tabBarActiveTintColor: AppColor.BLACK,
-          tabBarStyle: {backgroundColor: AppColor.WHITE},
-          tabBarItemStyle: {
-            // width: 'auto',
-          },
-          tabBarContentContainerStyle: {
-            // justifyContent: 'space-between', // Distribute tabs evenly
-          },
-          tabBarIndicatorStyle: {backgroundColor: AppColor.RED},
-        }}
-        screenListeners={{
-          state: e => {
-            const route = e.data.state.routes[e.data.state.index];
-            setShowSearchButton(route.name !== 'My meal');
-          },
-        }}>
-        <Tab.Screen
-          name="Breakfast"
-          component={NewMealList}
-          initialParams={{data: mealData?.breakfast}}
+      <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
+        <NewHeader1
+          header={'Diet plan'}
+          backButton
+          icon={showSearchButton ? true : false}
+          onBackPress={() => {
+            navigation?.goBack();
+          }}
+          onIconPress={() => {
+            AnalyticsConsole('Diet_Item_Click');
+            refStandard.current.open();
+          }}
+          iconSource={require('../Icon/Images/NewImage2/filter.png')}
         />
-        <Tab.Screen
-          name="Lunch"
-          component={NewMealList}
-          initialParams={{data: mealData?.lunch}}
-        />
-        <Tab.Screen
-          name="Dinner"
-          component={NewMealList}
-          initialParams={{data: mealData?.dinner}}
-        />
-        {getCustomDietData.length > 0 && (
-          <Tab.Screen name="My meal" component={CreateMealList} />
-        )}
-      </Tab.Navigator>
-      <BottomSheet />
+        <Tab.Navigator
+          initialRouteName="Breakfast"
+          screenOptions={{
+            tabBarLabelStyle: {fontSize: 11, fontWeight: '700'},
+            tabBarInactiveTintColor: AppColor.CHECKBOXCOLOR,
+            tabBarActiveTintColor: AppColor.BLACK,
+            tabBarStyle: {backgroundColor: AppColor.WHITE},
+            tabBarItemStyle: {
+              // width: 'auto',
+            },
+            tabBarContentContainerStyle: {
+              // justifyContent: 'space-between', // Distribute tabs evenly
+            },
+            tabBarIndicatorStyle: {backgroundColor: AppColor.RED},
+          }}
+          screenListeners={{
+            state: e => {
+              const route = e.data.state.routes[e.data.state.index];
+              setShowSearchButton(route.name !== 'My meal');
+            },
+          }}>
+          <Tab.Screen
+            name="Breakfast"
+            component={NewMealList}
+            initialParams={{data: mealData?.breakfast}}
+          />
+          <Tab.Screen
+            name="Lunch"
+            component={NewMealList}
+            initialParams={{data: mealData?.lunch}}
+          />
+          <Tab.Screen
+            name="Dinner"
+            component={NewMealList}
+            initialParams={{data: mealData?.dinner}}
+          />
+          {getCustomDietData.length > 0 && (
+            <Tab.Screen name="My meal" component={CreateMealList} />
+          )}
+        </Tab.Navigator>
+        <BottomSheet />
+      </Wrapper>
     </View>
   );
 };

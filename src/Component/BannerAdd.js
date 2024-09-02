@@ -104,7 +104,7 @@ export const MyInterstitialAd = () => {
   const interstitialAdRef = useRef(null);
   const adStatus = useRef(true);
   const initInterstitial = async () => {
-    if(interstitialAdRef.current) return
+    if (interstitialAdRef.current) return;
     const interstitialAd = InterstitialAd.createForAdRequest(
       IsTesting ? interstitialAdIdTest : interstitialAdId,
       {
@@ -121,13 +121,13 @@ export const MyInterstitialAd = () => {
     interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
     interstitialAd.addAdEventListener(AdEventType.ERROR, error => {});
     interstitialAd.load();
-    console.log("INTER LOADER")
+    console.log('INTER LOADER');
   };
 
   const showInterstitialAd = async () => {
     if (adStatus.current?._loaded) {
       adStatus.current.show();
-      interstitialAdRef.current = null
+      interstitialAdRef.current = null;
     } else {
     }
   };

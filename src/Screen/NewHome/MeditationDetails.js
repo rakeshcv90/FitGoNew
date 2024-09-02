@@ -30,6 +30,8 @@ import {bannerAdId} from '../../Component/AdsId';
 import RewardModal from '../../Component/Utilities/RewardModal';
 import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -295,14 +297,13 @@ const MeditationDetails = ({navigation, route}) => {
   // };
   return (
     <View style={styles.container}>
-      <NewHeader
-        header={headerTitle?.workout_mindset_title}
-        SearchButton={false}
-        backButton={true}
-      />
+     
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-
-      <>
+      <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
+       <NewHeader1
+        header={headerTitle?.workout_mindset_title}
+        backButton
+      />
         <View
           style={{
             width: '95%',
@@ -657,7 +658,7 @@ const MeditationDetails = ({navigation, route}) => {
             />
           ) : null
         ) : null}
-      </>
+      </Wrapper>
       {/* {bannerAdsDisplay()} */}
       <BannerAdd bannerAdId={bannerAdId} />
     </View>

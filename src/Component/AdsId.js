@@ -18,7 +18,8 @@ export const ADS_IDs = [                                      // Device_IDs
   '68c70c162994d5f8',
   'fccf6c54a494e29f', //android 14 samsung
   'bb8c2a687a70122f', // pixel 3xl debug
-  '8454b6dd3a6df800'  // pixel 3xl release
+  '8454b6dd3a6df800',  // pixel 3xl release
+  'efafdb802eeaa67a'
 ];
 export const ADS_IOS = [                                        // SOCIAL_IDs
   '001477.ab2010ce7baf4388bddca64e18eb7c5b.0652',               // Apple Ipad

@@ -34,7 +34,9 @@ import Tts from 'react-native-tts';
 import {useIsFocused} from '@react-navigation/native';
 import {bannerAdId} from '../../Component/AdsId';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { ArrowLeft } from '../../Component/Utilities/Arrows/Arrow';
+import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
 // const apiKey = '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';
 // const apiKey = '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';
 const systemMessage = {
@@ -363,225 +365,182 @@ const AITrainer = ({navigation}) => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <View
-        style={[
-          {
-            width: DeviceWidth,
-            backgroundColor: '#fff',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            height:
-              Platform.OS == 'ios'
-                ? (DeviceHeigth * 13) / 100
-                : (DeviceHeigth * 10) / 100,
-            left: 1,
-            paddingTop:
-              Platform.OS == 'android'
-                ? DeviceHeigth * 0.03
-                : DeviceHeigth * 0.06,
-          },
-        ]}>
-        <TouchableOpacity
-          style={{left: 10,paddingVertical:5}}
-          onPress={() => {
+      <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
+        <NewHeader1
+          header="Fitness Coach"
+          onBackPress={() => {
             Tts.stop();
             navigation.goBack();
-          }}>
-          {/* <AntDesign
-            name={'arrowleft'}
-            size={25}
-            color={AppColor.INPUTTEXTCOLOR}
-          /> */}
-          <ArrowLeft/>
-        </TouchableOpacity>
-
-        <Text
-          style={[
-            styles.headerstyle,
-            {
-              color: AppColor.INPUTTEXTCOLOR,
-              fontFamily: 'Montserrat-SemiBold',
-              fontWeight: '700',
-
-              width: DeviceWidth * 0.8,
-              textAlign: 'center',
-            },
-          ]}>
-          Fitness Coach
-        </Text>
-
-        <View onPress={() => {}}>
-          {/* <Icons name={'magnify'} size={25} color={AppColor.INPUTTEXTCOLOR} /> */}
-        </View>
-      </View>
-      {getAIMessageHistory?.length > 0 && (
-        <TouchableOpacity
-          style={{
-            width: 25,
-            height: 25,
-            justifyContent: 'flex-end',
-            alignSelf: 'flex-end',
-            top: -DeviceHeigth * 0.065,
-            marginHorizontal: DeviceWidth * 0.03,
           }}
-          onPress={() => {
-            navigation.navigate('AIMessageHistory');
-          }}>
-          <Image
-            resizeMode="contain"
-            source={localImage.ChatHistory}
+          backButton
+        />
+        {getAIMessageHistory?.length > 0 && (
+          <TouchableOpacity
             style={{
               width: 25,
               height: 25,
               justifyContent: 'flex-end',
               alignSelf: 'flex-end',
+              top: -DeviceHeigth * 0.065,
+              marginHorizontal: DeviceWidth * 0.03,
             }}
-          />
-        </TouchableOpacity>
-      )}
-      <KeyboardAvoidingView
-        behavior={Platform.OS == 'ios' ? 'padding' : undefined}
-        contentContainerStyle={{flexGrow: 1}}
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          width: '100%',
-          top:
-            Platform.OS == 'android'
-              ? DeviceHeigth * 0.09
-              : DeviceHeigth * 0.12,
-        }}>
-        <ScrollView
-          style={{flexGrow: 1, marginVertical: DeviceHeigth * 0.0}}
-          ref={flatListRef}
-          onContentSizeChange={() =>
-            flatListRef.current.scrollToEnd({animated: true})
-          }
-          onLayout={() => flatListRef.current.scrollToEnd({animated: true})}
-          keyboardDismissMode="interactive"
-          keyboardShouldPersistTaps="always"
-          showsVerticalScrollIndicator={false}>
-          <FlatList
-            data={senderMessage}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({item, index}) => {
-              if (item.sender == 'ChatGpt' && item?.message != 'test') {
-                setTtsSound(item.message);
-              }
-              return (
-                <>
-                  <View
-                    style={
-                      item.sender == 'ChatGpt'
-                        ? item.message == 'test'
-                          ? styles.messageContainer3
-                          : styles.messageContainer
-                        : styles.messageContainer1
-                    }>
+            onPress={() => {
+              navigation.navigate('AIMessageHistory');
+            }}>
+            <Image
+              resizeMode="contain"
+              source={localImage.ChatHistory}
+              style={{
+                width: 25,
+                height: 25,
+                justifyContent: 'flex-end',
+                alignSelf: 'flex-end',
+              }}
+            />
+          </TouchableOpacity>
+        )}
+        <KeyboardAvoidingView
+          behavior={Platform.OS == 'ios' ? 'padding' : undefined}
+          contentContainerStyle={{flexGrow: 1}}
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+            top:
+              Platform.OS == 'android'
+                ? DeviceHeigth * 0.09
+                : DeviceHeigth * 0.12,
+          }}>
+          <ScrollView
+            style={{flexGrow: 1, marginVertical: DeviceHeigth * 0.0}}
+            ref={flatListRef}
+            onContentSizeChange={() =>
+              flatListRef.current.scrollToEnd({animated: true})
+            }
+            onLayout={() => flatListRef.current.scrollToEnd({animated: true})}
+            keyboardDismissMode="interactive"
+            keyboardShouldPersistTaps="always"
+            showsVerticalScrollIndicator={false}>
+            <FlatList
+              data={senderMessage}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item, index}) => {
+                if (item.sender == 'ChatGpt' && item?.message != 'test') {
+                  setTtsSound(item.message);
+                }
+                return (
+                  <>
                     <View
                       style={
-                        item.message == 'test'
-                          ? styles.messageBubble1
-                          : styles.messageBubble
+                        item.sender == 'ChatGpt'
+                          ? item.message == 'test'
+                            ? styles.messageContainer3
+                            : styles.messageContainer
+                          : styles.messageContainer1
                       }>
-                      {item.sender == 'ChatGpt' ? (
-                        item.message == 'test' ? (
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              justifyContent: 'center',
-                              alignSelf: 'flex-start',
-                              shadowColor: '#000',
-                              shadowOffset: {width: 0, height: 5},
-                              shadowOpacity: 0.25,
-                              shadowRadius: 3.84,
-                              elevation: 5,
-                            }}>
-                            <Image
-                              style={{
-                                width: 40,
-                                height: 40,
-                                marginHorizontal: 15,
-                              }}
-                              resizeMode="contain"
-                              source={localImage.Noimage}
-                            />
-                            <AnimatedLottieView
-                              source={{
-                                uri: 'https://lottie.host/a48740c2-459a-4b47-9106-7c9020469ac9/1PPt5ehAsa.json',
-                              }} // Replace with your animation file
-                              autoPlay
-                              loop
-                              style={{
-                                width: 45,
-                                height: 45,
-                              }}
-                            />
-                          </View>
-                        ) : (
-                          <>
-                            <Image
-                              resizeMode="contain"
-                              source={require('../../Icon/Images/NewImage2/mary.png')}
-                              style={{
-                                width: 35,
-                                height: 35,
-                                justifyContent: 'flex-end',
-                                alignSelf: 'flex-end',
-                                marginHorizontal: 5,
-                              }}
-                            />
+                      <View
+                        style={
+                          item.message == 'test'
+                            ? styles.messageBubble1
+                            : styles.messageBubble
+                        }>
+                        {item.sender == 'ChatGpt' ? (
+                          item.message == 'test' ? (
                             <View
                               style={{
-                                width: 250,
-                                backgroundColor: '#fff',
-                                borderRadius: 16,
-                                //borderWidth: 1,
-                                // borderColor: '#f4c7c3',
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignSelf: 'flex-start',
                                 shadowColor: '#000',
-                                shadowOffset: {
-                                  width: 0,
-                                  height: 2,
-                                },
+                                shadowOffset: {width: 0, height: 5},
                                 shadowOpacity: 0.25,
                                 shadowRadius: 3.84,
                                 elevation: 5,
                               }}>
+                              <Image
+                                style={{
+                                  width: 40,
+                                  height: 40,
+                                  marginHorizontal: 15,
+                                }}
+                                resizeMode="contain"
+                                source={localImage.Noimage}
+                              />
+                              <AnimatedLottieView
+                                source={{
+                                  uri: 'https://lottie.host/a48740c2-459a-4b47-9106-7c9020469ac9/1PPt5ehAsa.json',
+                                }} // Replace with your animation file
+                                autoPlay
+                                loop
+                                style={{
+                                  width: 45,
+                                  height: 45,
+                                }}
+                              />
+                            </View>
+                          ) : (
+                            <>
+                              <Image
+                                resizeMode="contain"
+                                source={require('../../Icon/Images/NewImage2/mary.png')}
+                                style={{
+                                  width: 35,
+                                  height: 35,
+                                  justifyContent: 'flex-end',
+                                  alignSelf: 'flex-end',
+                                  marginHorizontal: 5,
+                                }}
+                              />
                               <View
                                 style={{
                                   width: 250,
-
+                                  backgroundColor: '#fff',
                                   borderRadius: 16,
-                                  borderColor: '#f4c7c3',
-                                  borderWidth: 1,
-                                  backgroundColor: '#9410001A',
-                                  padding: 10,
+                                  //borderWidth: 1,
+                                  // borderColor: '#f4c7c3',
+                                  shadowColor: '#000',
+                                  shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                  },
+                                  shadowOpacity: 0.25,
+                                  shadowRadius: 3.84,
+                                  elevation: 5,
                                 }}>
-                                <Text
+                                <View
                                   style={{
-                                    fontFamily: 'Poppins',
-                                    fontWeight: '400',
-                                    fontSize: 12,
-                                    lineHeight: 15,
-                                    color: AppColor.LITELTEXTCOLOR,
+                                    width: 250,
+
+                                    borderRadius: 16,
+                                    borderColor: '#f4c7c3',
+                                    borderWidth: 1,
+                                    backgroundColor: '#9410001A',
+                                    padding: 10,
                                   }}>
-                                  {item.message}
-                                </Text>
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    if (getSoundOffOn) {
-                                      dispatch(setSoundOnOff(false));
-                                    } else {
-                                      dispatch(setSoundOnOff(true));
-                                    }
-                                    setTtsSound(item.message);
-                                  }}
-                                  style={{
-                                    justifyContent: 'center',
-                                    alignSelf: 'flex-end',
-                                  }}>
-                                  {/* <AnimatedLottieView
+                                  <Text
+                                    style={{
+                                      fontFamily: 'Poppins',
+                                      fontWeight: '400',
+                                      fontSize: 12,
+                                      lineHeight: 15,
+                                      color: AppColor.LITELTEXTCOLOR,
+                                    }}>
+                                    {item.message}
+                                  </Text>
+                                  <TouchableOpacity
+                                    onPress={() => {
+                                      if (getSoundOffOn) {
+                                        dispatch(setSoundOnOff(false));
+                                      } else {
+                                        dispatch(setSoundOnOff(true));
+                                      }
+                                      setTtsSound(item.message);
+                                    }}
+                                    style={{
+                                      justifyContent: 'center',
+                                      alignSelf: 'flex-end',
+                                    }}>
+                                    {/* <AnimatedLottieView
                                     source={require('../../Icon/Images/NewImage2/Sound.json')}
                                     autoPlay
                                     loop
@@ -591,129 +550,130 @@ const AITrainer = ({navigation}) => {
                                       marginBottom: -10,
                                     }}
                                   /> */}
-                                  <Image
-                                    style={{
-                                      width: 30,
-                                      height: 30,
+                                    <Image
+                                      style={{
+                                        width: 30,
+                                        height: 30,
 
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                    }}
-                                    source={
-                                      getSoundOffOn
-                                        ? require('../../Icon/Images/NewImage2/sound.png')
-                                        : require('../../Icon/Images/NewImage2/soundmute.png')
-                                    }
-                                  />
-                                </TouchableOpacity>
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                      }}
+                                      source={
+                                        getSoundOffOn
+                                          ? require('../../Icon/Images/NewImage2/sound.png')
+                                          : require('../../Icon/Images/NewImage2/soundmute.png')
+                                      }
+                                    />
+                                  </TouchableOpacity>
+                                </View>
                               </View>
-                            </View>
-                          </>
-                        )
-                      ) : (
-                        <>
-                          <View
-                            style={{
-                              width: 250,
-                              backgroundColor: '#ffffff',
-                              borderRadius: 16,
-                              borderWidth: 1,
-                              borderColor: '#5050501A',
-                              padding: 10,
-                              shadowColor: '#000',
-                              shadowOffset: {
-                                width: 0,
-                                height: 2,
-                              },
-                              shadowOpacity: 0.25,
-                              shadowRadius: 3.84,
-                              elevation: 5,
-                            }}>
-                            <Text
+                            </>
+                          )
+                        ) : (
+                          <>
+                            <View
                               style={{
-                                fontFamily: 'Poppins',
-                                fontWeight: '400',
-                                fontSize: 12,
-                                lineHeight: 15,
-                                marginHorizontal: 5,
-                                color: AppColor.LITELTEXTCOLOR,
+                                width: 250,
+                                backgroundColor: '#ffffff',
+                                borderRadius: 16,
+                                borderWidth: 1,
+                                borderColor: '#5050501A',
+                                padding: 10,
+                                shadowColor: '#000',
+                                shadowOffset: {
+                                  width: 0,
+                                  height: 2,
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3.84,
+                                elevation: 5,
                               }}>
-                              {item.message}
-                            </Text>
-                          </View>
-                          <Image
-                            resizeMode="contain"
-                            // source={localImage.User}
-                            source={
-                              getUserDataDetails?.image_path == null
-                                ? localImage.User
-                                : {uri: getUserDataDetails?.image_path}
-                            }
-                            style={{
-                              width: 30,
-                              height: 30,
-                              borderRadius: 30 / 2,
-                              marginHorizontal: 5,
-                              justifyContent: 'flex-end',
-                              alignSelf: 'flex-end',
-                            }}
-                          />
-                        </>
-                      )}
+                              <Text
+                                style={{
+                                  fontFamily: 'Poppins',
+                                  fontWeight: '400',
+                                  fontSize: 12,
+                                  lineHeight: 15,
+                                  marginHorizontal: 5,
+                                  color: AppColor.LITELTEXTCOLOR,
+                                }}>
+                                {item.message}
+                              </Text>
+                            </View>
+                            <Image
+                              resizeMode="contain"
+                              // source={localImage.User}
+                              source={
+                                getUserDataDetails?.image_path == null
+                                  ? localImage.User
+                                  : {uri: getUserDataDetails?.image_path}
+                              }
+                              style={{
+                                width: 30,
+                                height: 30,
+                                borderRadius: 30 / 2,
+                                marginHorizontal: 5,
+                                justifyContent: 'flex-end',
+                                alignSelf: 'flex-end',
+                              }}
+                            />
+                          </>
+                        )}
+                      </View>
                     </View>
-                  </View>
-                </>
-              );
-            }}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
-            updateCellsBatchingPeriod={100}
-            removeClippedSubviews={true}
-          />
-        </ScrollView>
-
-        <View
-          style={{
-            width: '100%',
-            height: 50,
-            alignSelf: 'center',
-            backgroundColor: '#FCFCFC',
-            borderTopLeftRadius: 16,
-            borderTopRightRadius: 16,
-            borderWidth: 1,
-            bottom: 0,
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingLeft: 20,
-          }}>
-          <TextInput
-            placeholder="Type Here...."
-            placeholderTextColor={'rgba(80, 80, 80, 0.6)'}
-            value={searchText}
-            onChangeText={text => {
-              setSearchText(text);
-            }}
-            style={styles.inputText}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              sendMessage();
-            }}>
-            <Image
-              style={{
-                width: 20,
-                height: 20,
-                marginHorizontal: -10,
+                  </>
+                );
               }}
-              tintColor={'#f0013b'}
-              resizeMode="contain"
-              source={localImage.Send}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
-          </TouchableOpacity>
-        </View>
-        {/* {bannerAdsDisplay()} */}
-        <BannerAdd bannerAdId={bannerAdId} />
-      </KeyboardAvoidingView>
+          </ScrollView>
+
+          <View
+            style={{
+              width: '100%',
+              height: 50,
+              alignSelf: 'center',
+              backgroundColor: '#FCFCFC',
+              borderTopLeftRadius: 16,
+              borderTopRightRadius: 16,
+              borderWidth: 1,
+              bottom: 0,
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingLeft: 20,
+            }}>
+            <TextInput
+              placeholder="Type Here...."
+              placeholderTextColor={'rgba(80, 80, 80, 0.6)'}
+              value={searchText}
+              onChangeText={text => {
+                setSearchText(text);
+              }}
+              style={styles.inputText}
+            />
+            <TouchableOpacity
+              onPress={() => {
+                sendMessage();
+              }}>
+              <Image
+                style={{
+                  width: 20,
+                  height: 20,
+                  marginHorizontal: -10,
+                }}
+                tintColor={'#f0013b'}
+                resizeMode="contain"
+                source={localImage.Send}
+              />
+            </TouchableOpacity>
+          </View>
+          {/* {bannerAdsDisplay()} */}
+          <BannerAdd bannerAdId={bannerAdId} />
+        </KeyboardAvoidingView>
+      </Wrapper>
     </View>
   );
 };
