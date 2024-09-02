@@ -42,6 +42,8 @@ import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import FocusArea from '../FocusArea';
 import ActivityLoader from '../../Component/ActivityLoader';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const Workouts = ({navigation}: any) => {
@@ -753,10 +755,11 @@ const Workouts = ({navigation}: any) => {
   };
   return (
     <>
-      <NewHeader header={'Workouts'} SearchButton={false} backButton={false} />
       <View style={styles.container}>
         {isLoaded ? null : <ActivityLoader />}
-        <FlatList
+      <Wrapper styles={{backgroundColor:AppColor.WHITE}}>
+        <NewHeader1 header={'Workouts'}/>
+      <FlatList
           data={[1, 2, 3, 4]}
           showsVerticalScrollIndicator={false}
           refreshControl={
@@ -1111,6 +1114,7 @@ const Workouts = ({navigation}: any) => {
             );
           }}
         />
+      </Wrapper>
       </View>
     </>
   );
@@ -1120,8 +1124,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: AppColor.WHITE,
-    // paddingHorizontal: 16,
-    marginTop: DeviceHeigth>=1024?0:-20,
   },
   category: {
     fontFamily: 'Poppins',

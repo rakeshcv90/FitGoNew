@@ -44,6 +44,7 @@ import TrackPlayer, {
   Capability,
   usePlaybackState,
 } from 'react-native-track-player';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
 
 const UpcomingEvent = ({navigation, route}: any) => {
   const {eventType} = route?.params;
@@ -88,7 +89,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
         },
         data,
       });
-      AnalyticsConsole('JO_UP_EVENT')
+      AnalyticsConsole('JO_UP_EVENT');
       StartAudio(playbackState);
       if (res.data.message == 'Event created successfully') {
         PauseAudio(playbackState);
@@ -132,7 +133,6 @@ const UpcomingEvent = ({navigation, route}: any) => {
       }
     } catch (error) {
       setLoading(false);
-   
     }
   };
   useEffect(() => {
@@ -150,14 +150,12 @@ const UpcomingEvent = ({navigation, route}: any) => {
     }
   };
   const StartAudio = async (playbackState: any) => {
-   
     await TrackPlayer.play();
   };
   const PauseAudio = async (playbackState: any) => {
-   
     await TrackPlayer.reset();
   };
- 
+
   const getUserDetailData = async () => {
     try {
       const responseData = await axios.get(
@@ -198,7 +196,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
       }
     } catch (error) {
       console.log('GET-USER-DATA', error);
-   
+
       setRefresh(false);
       setLoading(false);
       console.log(error);
@@ -313,7 +311,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
-      <DietPlanHeader
+      {/* <DietPlanHeader
         header={eventType == 'upcoming' ? 'Upcoming Challenge' : 'My Challenge'}
         h={DeviceWidth * 0.15}
         onPress={() => navigation?.navigate('BottomTab')}
@@ -322,6 +320,11 @@ const UpcomingEvent = ({navigation, route}: any) => {
           Platform.OS == 'android' ? DeviceHeigth * 0.02 : DeviceHeigth * 0.025
         }
         shadow
+      /> */}
+      <NewHeader1
+        backButton
+        header={eventType == 'upcoming' ? 'Upcoming Challenge' : 'My Challenge'}
+        onBackPress={()=>navigation?.navigate('BottomTab')}
       />
       <ScrollView
         showsVerticalScrollIndicator={false}

@@ -43,6 +43,8 @@ import FastImage from 'react-native-fast-image';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
 import {AddCountFunction} from '../../Component/Utilities/AddCountFunction';
 import NewHeader from '../../Component/Headers/NewHeader';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -859,14 +861,9 @@ const WorkoutDays = ({navigation, route}: any) => {
   };
   return (
     <View style={styles.container}>
-      <NewHeader
-        header={
-          data?.workout_title == undefined ? data?.title : data?.workout_title
-        }
-        backButton
-      />
-
-      <>
+    <Wrapper styles={{backgroundColor:AppColor.WHITE}}>
+      <NewHeader1 backButton header={data?.workout_title == undefined ? data?.title : data?.workout_title}/>
+    <>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
@@ -909,6 +906,8 @@ const WorkoutDays = ({navigation, route}: any) => {
       <BannerAdd bannerAdId={bannerAdId} />
       <ActivityLoader visible={refresh} />
       <PaddoMeterPermissionModal />
+    </Wrapper>
+
     </View>
   );
 };
