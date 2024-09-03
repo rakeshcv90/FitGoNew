@@ -7,9 +7,9 @@ export const ADS_IDs = [                                      // Device_IDs
   '3ef616890f6a402b',
   '8d3ebdca6951807b',
   '0695a8250663f8b6',
-  '421ccabce91103f0',
+  // '421ccabce91103f0',  // Vivo LIVE DEVICE ALWAYS COMMENTED
   'd21a4be384ec19bf',
-  '84b935069781fa18',
+  // '84b935069781fa18',  // Huawei LIVE DEVICE ALWAYS COMMENTED
   '5e7dd1b045daf6ae',
   '574a7ef0e979217a',
   '8e95036375aa56c4',
