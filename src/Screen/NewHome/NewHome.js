@@ -779,7 +779,8 @@ const NewHome = ({navigation}) => {
                   color: AppColor.PrimaryTextColor,
                   fontFamily: Fonts.HELVETICA_REGULAR,
                 }}>
-                Explore Special Offers to Win Exciting Prizes! Check Out the Upcoming Challenges!
+                Explore Special Offers to Win Exciting Prizes! Check Out the
+                Upcoming Challenges!
               </Text>
             </Marquee>
           </View>
@@ -824,8 +825,8 @@ const NewHome = ({navigation}) => {
         </ImageBackground>
         {winnerAnnounce?.winner_announced == true ? (
           <WinnerView totalData={totalData} />
-        ) : enteredCurrentEvent && (!Sat || !Sun) ? (
-          <MyChallenge coins={coins} />
+        ) : enteredCurrentEvent ? (
+          (Sat || Sun) != true && <MyChallenge coins={coins} />
         ) : (
           <TextBanner
             locationP={locationP1}
