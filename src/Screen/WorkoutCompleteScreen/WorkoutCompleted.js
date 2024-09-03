@@ -23,11 +23,11 @@ import {
   setExerciseInTime,
   setVideoLocation,
 } from '../../Component/ThemeRedux/Actions';
-import LoadingScreen from '../../Component/LoadingScreen';
 import {useIsFocused} from '@react-navigation/native';
 import OverExerciseModal from '../../Component/Utilities/OverExercise';
 import Wrapper from './Wrapper';
 import AnimatedLottieView from 'lottie-react-native';
+import LoadingScreen from '../../Component/NewHomeUtilities/LoadingScreen';
 const format = 'hh:mm:ss';
 
 const WeekArrayWithEvent = Array(5)
@@ -314,6 +314,7 @@ const WorkoutCompleted = ({navigation, route}) => {
       setEarnedCoin(res?.data?.coins);
       getEarnedCoins();
     } catch (error) {
+      getEarnedCoins();
       console.log('ERRRRRR', error);
     }
   };
@@ -341,6 +342,7 @@ const WorkoutCompleted = ({navigation, route}) => {
         getLeaderboardDataAPI();
       }
     } catch (error) {
+      getLeaderboardDataAPI()
       showMessage({
         message: 'Something went wrong.',
         type: 'danger',
@@ -374,14 +376,13 @@ const WorkoutCompleted = ({navigation, route}) => {
   const getBreatheAPI = async () => {
     try {
       const result = await axios({
-        url: `${NewAppapi.GET_BREATH_SESSION}`,
+        url: `${NewAppapi.GET_BREATH_SESSION}?user_id=${getUserDataDetails?.id}`,
       });
-
+      setLoader(false);
       if (result.data) {
         const openIndex = result?.data?.sessions?.findIndex(
           item => item.status == 'open',
         );
-        setLoader(false);
         setTimeout(() => {
           AnimationStart();
         }, 7000);
@@ -396,6 +397,7 @@ const WorkoutCompleted = ({navigation, route}) => {
         }
       }
     } catch (error) {
+      setLoader(false);
       console.log(error);
       setTimeout(() => {
         AnimationStart();

@@ -718,11 +718,6 @@ const Leaderboard = () => {
         <LoadingScreen />
       ) : (
         <View style={styles.container}>
-          <StatusBar
-            barStyle={'dark-content'}
-            translucent={true}
-            backgroundColor={AppColor.Background_New}
-          />
           <Wrapper styles={{backgroundColor: AppColor.Background_New}}>
             <NewHeader1
               header={'Leaderboard'}
@@ -810,6 +805,9 @@ const Leaderboard = () => {
                         paddingRight: 10,
                         //backgroundColor:'red',
                         width: 50,
+                        paddingRight: 10,
+                        position: 'absolute',
+                        right:0
                       }}
                     />
                   )}
@@ -2000,7 +1998,7 @@ export default Leaderboard;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: DeviceWidth,
+
     backgroundColor: AppColor.Background_New,
   },
   userCard: {

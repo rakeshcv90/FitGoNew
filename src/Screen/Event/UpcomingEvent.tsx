@@ -45,6 +45,7 @@ import TrackPlayer, {
   usePlaybackState,
 } from 'react-native-track-player';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 
 const UpcomingEvent = ({navigation, route}: any) => {
   const {eventType} = route?.params;
@@ -310,469 +311,468 @@ const UpcomingEvent = ({navigation, route}: any) => {
       : getPurchaseHistory?.event_start_date_current;
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
-      {/* <DietPlanHeader
-        header={eventType == 'upcoming' ? 'Upcoming Challenge' : 'My Challenge'}
-        h={DeviceWidth * 0.15}
-        onPress={() => navigation?.navigate('BottomTab')}
-        backPressCheck
-        paddingTop={
-          Platform.OS == 'android' ? DeviceHeigth * 0.02 : DeviceHeigth * 0.025
-        }
-        shadow
-      /> */}
-      <NewHeader1
-        backButton
-        header={eventType == 'upcoming' ? 'Upcoming Challenge' : 'My Challenge'}
-        onBackPress={()=>navigation?.navigate('BottomTab')}
-      />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{marginHorizontal: 16, flex: 1, zIndex: -1}}
-        refreshControl={
-          <RefreshControl
-            refreshing={refresh}
-            onRefresh={getUserDetailData}
-            colors={[AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED]}
-          />
-        }>
-        <ShadowCard
-          shadow
-          mV={DeviceHeigth * 0.02}
-          pV={DeviceWidth * 0.05}
-          justifyContent={'space-between'}>
-          <View
-            style={[
-              styles.row,
-              {
-                marginBottom: 10,
-                width: '100%',
-              },
-            ]}>
-            <FitText
-              value={`Hi ${getUserDataDetails?.name}`}
-              type="SubHeading"
-              color="#1E1E1E"
-              fontWeight="600"
-              fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+    <View style={{flex: 1, backgroundColor: AppColor.WHITE}}>
+      <Wrapper>
+        <NewHeader1
+          backButton
+          header={
+            eventType == 'upcoming' ? 'Upcoming Challenge' : 'My Challenge'
+          }
+          onBackPress={() => navigation?.navigate('BottomTab')}
+        />
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{marginHorizontal: 16, flex: 1, zIndex: -1}}
+          refreshControl={
+            <RefreshControl
+              refreshing={refresh}
+              onRefresh={getUserDetailData}
+              colors={[AppColor.NEW_DARK_RED, AppColor.NEW_DARK_RED]}
             />
-            {eventType == 'current' && (
-              <View
-                style={{
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  backgroundColor: '#F380291A',
-                  padding: 5,
-                  borderRadius: 5,
-                  flexDirection: 'row',
-                }}>
-                <FitIcon
-                  name="clock-outline"
-                  size={14}
-                  type="MaterialCommunityIcons"
-                  color={AppColor.ORANGE}
-                  mR={5}
-                />
-                <FitText
-                  type="SubHeading"
-                  value={
-                    getPurchaseHistory?.upcoming_day_status == 1
-                      ? `${moment(dayLeft).diff(
-                          moment()
-                            .day(getPurchaseHistory?.currentDay)
-                            .format('YYYY-MM-DD'),
-                          'days',
-                        )} days left`
-                      : `${moment(dayLeft)
-                          .add(7, 'days')
-                          .diff(
+          }>
+          <ShadowCard
+            shadow
+            mV={DeviceHeigth * 0.02}
+            pV={DeviceWidth * 0.05}
+            justifyContent={'space-between'}>
+            <View
+              style={[
+                styles.row,
+                {
+                  marginBottom: 10,
+                  width: '100%',
+                },
+              ]}>
+              <FitText
+                value={`Hi ${getUserDataDetails?.name}`}
+                type="SubHeading"
+                color="#1E1E1E"
+                fontWeight="600"
+                fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+              />
+              {eventType == 'current' && (
+                <View
+                  style={{
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    backgroundColor: '#F380291A',
+                    padding: 5,
+                    borderRadius: 5,
+                    flexDirection: 'row',
+                  }}>
+                  <FitIcon
+                    name="clock-outline"
+                    size={14}
+                    type="MaterialCommunityIcons"
+                    color={AppColor.ORANGE}
+                    mR={5}
+                  />
+                  <FitText
+                    type="SubHeading"
+                    value={
+                      getPurchaseHistory?.upcoming_day_status == 1
+                        ? `${moment(dayLeft).diff(
                             moment()
                               .day(getPurchaseHistory?.currentDay)
                               .format('YYYY-MM-DD'),
                             'days',
                           )} days left`
-                  }
-                  color={AppColor.ORANGE}
-                  fontSize={14}
-                  lineHeight={18}
+                        : `${moment(dayLeft)
+                            .add(7, 'days')
+                            .diff(
+                              moment()
+                                .day(getPurchaseHistory?.currentDay)
+                                .format('YYYY-MM-DD'),
+                              'days',
+                            )} days left`
+                    }
+                    color={AppColor.ORANGE}
+                    fontSize={14}
+                    lineHeight={18}
+                    fontWeight="600"
+                    fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+                  />
+                </View>
+              )}
+            </View>
+            <View
+              style={[
+                styles.row,
+                {
+                  marginBottom: 10,
+                  alignSelf: 'flex-start',
+                },
+              ]}>
+              <FitIcon
+                name="calendar-month-outline"
+                size={25}
+                type="MaterialCommunityIcons"
+                color="#333333"
+                mR={5}
+              />
+              <View
+                style={{
+                  justifyContent: 'center',
+                  // alignItems: 'center',
+                  padding: 5,
+                  borderRadius: 5,
+                }}>
+                <FitText
+                  value={'Start on:'}
+                  type="normal"
+                  color="#1E1E1E"
                   fontWeight="600"
                   fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
                 />
+                <FitText
+                  value={
+                    getPurchaseHistory?.upcoming_day_status == 1
+                      ? `${moment(dayLeft).format('DD-MMM-YYYY')} | Monday`
+                      : `${moment(dayLeft)
+                          .add(7, 'days')
+                          .format('DD-MMM-YYYY')} | Monday`
+                  }
+                  type="normal"
+                  color="#1E1E1E"
+                  fontFamily={Fonts.MONTSERRAT_MEDIUM}
+                />
               </View>
-            )}
-          </View>
-          <View
-            style={[
-              styles.row,
-              {
-                marginBottom: 10,
-                alignSelf: 'flex-start',
-              },
-            ]}>
-            <FitIcon
-              name="calendar-month-outline"
-              size={25}
-              type="MaterialCommunityIcons"
-              color="#333333"
-              mR={5}
-            />
-            <View
-              style={{
-                justifyContent: 'center',
-                // alignItems: 'center',
-                padding: 5,
-                borderRadius: 5,
-              }}>
-              <FitText
-                value={'Start on:'}
-                type="normal"
-                color="#1E1E1E"
-                fontWeight="600"
-                fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
-              />
-              <FitText
-                value={
-                  getPurchaseHistory?.upcoming_day_status == 1
-                    ? `${moment(dayLeft).format('DD-MMM-YYYY')} | Monday`
-                    : `${moment(dayLeft)
-                        .add(7, 'days')
-                        .format('DD-MMM-YYYY')} | Monday`
-                }
-                type="normal"
-                color="#1E1E1E"
-                fontFamily={Fonts.MONTSERRAT_MEDIUM}
-              />
             </View>
-          </View>
-          <LinearGradient
-            colors={['#ffffff', '#F8E7EA']}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
-            style={[
-              styles.row,
-              {
-                justifyContent: 'center',
-                width: '100%',
-                padding: 10,
-                borderRadius: 10,
-                marginVertical: 10,
-              },
-            ]}>
-            <Svg width={45} height={45} fill="#F38029" viewBox="0 -960 960 960">
-              <Path d="M480-520q33 0 56.5-23.5T560-600q0-33-23.5-56.5T480-680q-33 0-56.5 23.5T400-600q0 33 23.5 56.5T480-520ZM280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm200 128q50 0 85-35t35-85v-240H360v240q0 50 35 85t85 35Zm200-128q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z" />
-            </Svg>
-            <View style={{marginLeft: 10}}>
-              <FitText type="normal" value="Winnning price" />
-              <FitText type="Heading" value="₹1,000/-" />
-            </View>
-          </LinearGradient>
-          <FitText
-            type="SubHeading"
-            value={
-              eventType == 'upcoming'
-                ? 'Gear Up for Your Next Challenge!'
-                : 'Your challenge will start on Monday'
-            }
-            fontStyle="italic"
-            fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
-            fontWeight="700"
-            fontSize={14}
-          />
-          <FitText
-            type="normal"
-            value={
-              eventType == 'upcoming'
-                ? 'Every week is a new opportunity. Gear up for your next challenge!'
-                : `You can do the exercise using our App until the challenge begins.`
-            }
-            textAlign="center"
-            color="#333333"
-            fontFamily={Fonts.MONTSERRAT_MEDIUM}
-            fontWeight="600"
-          />
-
-          {getPurchaseHistory?.plan != null &&
-          getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage &&
-          eventType == 'upcoming' &&
-          getPurchaseHistory?.upcoming_day_status != 1 ? (
-            <TouchableOpacity
-              onPress={PlanPurchasetoBackendAPI}
-              style={{
-                width: DeviceWidth * 0.4,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 5,
-                backgroundColor: AppColor.NEW_DARK_RED,
-                paddingVertical: 10,
-                marginVertical: 20,
-              }}>
-              <FitText
-                type="normal"
-                value="Join Now"
-                color={AppColor.WHITE}
-                fontFamily={Fonts.MONTSERRAT_MEDIUM}
-              />
-            </TouchableOpacity>
-          ) : getPurchaseHistory?.plan != null &&
-            getPurchaseHistory?.upcoming_day_status != 1 ? (
-            getPurchaseHistory?.used_plan == getPurchaseHistory?.allow_usage ? (
-              <FitText
-                type="normal"
-                value="You've reached your limit to join the challenge. Upgrade your plan to join the new challenge"
-                textAlign="center"
-                color="#333333"
-                fontFamily={Fonts.MONTSERRAT_MEDIUM}
-                fontWeight="600"
-                marginVertical={10}
-              />
-            ) : null
-          ) : null}
-        </ShadowCard>
-        {getPurchaseHistory?.plan != null && (
-          <>
+            <LinearGradient
+              colors={['#ffffff', '#F8E7EA']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={[
+                styles.row,
+                {
+                  justifyContent: 'center',
+                  width: '100%',
+                  padding: 10,
+                  borderRadius: 10,
+                  marginVertical: 10,
+                },
+              ]}>
+              <Svg
+                width={45}
+                height={45}
+                fill="#F38029"
+                viewBox="0 -960 960 960">
+                <Path d="M480-520q33 0 56.5-23.5T560-600q0-33-23.5-56.5T480-680q-33 0-56.5 23.5T400-600q0 33 23.5 56.5T480-520ZM280-120v-80h160v-124q-49-11-87.5-41.5T296-442q-75-9-125.5-65.5T120-640v-40q0-33 23.5-56.5T200-760h80v-80h400v80h80q33 0 56.5 23.5T840-680v40q0 76-50.5 132.5T664-442q-18 46-56.5 76.5T520-324v124h160v80H280Zm0-408v-152h-80v40q0 38 22 68.5t58 43.5Zm200 128q50 0 85-35t35-85v-240H360v240q0 50 35 85t85 35Zm200-128q36-13 58-43.5t22-68.5v-40h-80v152Zm-200-52Z" />
+              </Svg>
+              <View style={{marginLeft: 10}}>
+                <FitText type="normal" value="Winnning price" />
+                <FitText type="Heading" value="₹1,000/-" />
+              </View>
+            </LinearGradient>
             <FitText
-              value="Your Plan"
               type="SubHeading"
-              fontFamily={Fonts.MONTSERRAT_BOLD}
-              fontSize={18}
+              value={
+                eventType == 'upcoming'
+                  ? 'Gear Up for Your Next Challenge!'
+                  : 'Your challenge will start on Monday'
+              }
+              fontStyle="italic"
+              fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+              fontWeight="700"
+              fontSize={14}
             />
-            <ShadowCard
-              shadow
-              mV={DeviceHeigth * 0.02}
-              alignItems={'flex-start'}
-              bColor={
-                getPurchaseHistory?.plan == 'noob'
-                  ? AppColor.SUBS_BLUE
-                  : getPurchaseHistory?.plan == 'pro'
-                  ? AppColor.SUBS_GREEN
-                  : AppColor.ORANGE
-              }>
+            <FitText
+              type="normal"
+              value={
+                eventType == 'upcoming'
+                  ? 'Every week is a new opportunity. Gear up for your next challenge!'
+                  : `You can do the exercise using our App until the challenge begins.`
+              }
+              textAlign="center"
+              color="#333333"
+              fontFamily={Fonts.MONTSERRAT_MEDIUM}
+              fontWeight="600"
+            />
+
+            {getPurchaseHistory?.plan != null &&
+            getPurchaseHistory?.used_plan < getPurchaseHistory?.allow_usage &&
+            eventType == 'upcoming' &&
+            getPurchaseHistory?.upcoming_day_status != 1 ? (
+              <TouchableOpacity
+                onPress={PlanPurchasetoBackendAPI}
+                style={{
+                  width: DeviceWidth * 0.4,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 5,
+                  backgroundColor: AppColor.NEW_DARK_RED,
+                  paddingVertical: 10,
+                  marginVertical: 20,
+                }}>
+                <FitText
+                  type="normal"
+                  value="Join Now"
+                  color={AppColor.WHITE}
+                  fontFamily={Fonts.MONTSERRAT_MEDIUM}
+                />
+              </TouchableOpacity>
+            ) : getPurchaseHistory?.plan != null &&
+              getPurchaseHistory?.upcoming_day_status != 1 ? (
+              getPurchaseHistory?.used_plan ==
+              getPurchaseHistory?.allow_usage ? (
+                <FitText
+                  type="normal"
+                  value="You've reached your limit to join the challenge. Upgrade your plan to join the new challenge"
+                  textAlign="center"
+                  color="#333333"
+                  fontFamily={Fonts.MONTSERRAT_MEDIUM}
+                  fontWeight="600"
+                  marginVertical={10}
+                />
+              ) : null
+            ) : null}
+          </ShadowCard>
+          {getPurchaseHistory?.plan != null && (
+            <>
               <FitText
+                value="Your Plan"
                 type="SubHeading"
-                errorType
+                fontFamily={Fonts.MONTSERRAT_BOLD}
                 fontSize={18}
-                lineHeight={24}
-                value={
-                  getPurchaseHistory?.plan == 'noob'
-                    ? 'Basic plan'
-                    : getPurchaseHistory?.plan == 'pro'
-                    ? 'Medium plan'
-                    : 'Premium plan'
-                }
-                marginVertical={5}
-                color={
+              />
+              <ShadowCard
+                shadow
+                mV={DeviceHeigth * 0.02}
+                alignItems={'flex-start'}
+                bColor={
                   getPurchaseHistory?.plan == 'noob'
                     ? AppColor.SUBS_BLUE
                     : getPurchaseHistory?.plan == 'pro'
                     ? AppColor.SUBS_GREEN
                     : AppColor.ORANGE
-                }
-              />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  width: '100%',
-                }}>
+                }>
                 <FitText
-                  type="Heading"
-                  value={`₹${getPurchaseHistory?.plan_value}/month`}
-                  fontSize={28}
-                  lineHeight={34}
+                  type="SubHeading"
+                  errorType
+                  fontSize={18}
+                  lineHeight={24}
+                  value={
+                    getPurchaseHistory?.plan == 'noob'
+                      ? 'Basic plan'
+                      : getPurchaseHistory?.plan == 'pro'
+                      ? 'Medium plan'
+                      : 'Premium plan'
+                  }
                   marginVertical={5}
+                  color={
+                    getPurchaseHistory?.plan == 'noob'
+                      ? AppColor.SUBS_BLUE
+                      : getPurchaseHistory?.plan == 'pro'
+                      ? AppColor.SUBS_GREEN
+                      : AppColor.ORANGE
+                  }
                 />
                 <View
                   style={{
-                    justifyContent: 'center',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
                     alignItems: 'center',
-                    backgroundColor: '#0A684733',
-                    padding: 5,
-                    paddingVertical: 2,
-                    borderRadius: 5,
+                    width: '100%',
                   }}>
                   <FitText
-                    type="normal"
-                    value="Active"
-                    color={AppColor.GREEN}
-                    fontSize={12}
-                    lineHeight={16}
-                    fontWeight="600"
-                    fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
+                    type="Heading"
+                    value={`₹${getPurchaseHistory?.plan_value}/month`}
+                    fontSize={28}
+                    lineHeight={34}
+                    marginVertical={5}
                   />
-                </View>
-              </View>
-              <Text numberOfLines={1} style={{color: '#3333331A'}}>
-                {Array(100).fill('- ')}
-              </Text>
-              {getPurchaseHistory?.plan != 'noob' &&
-                getPurchaseHistory?.plan != 'pro' &&
-                !PLATFORM_IOS && (
-                  <View style={styles.row}>
-                    <FitIcon
-                      name="check"
-                      mR={5}
-                      size={13}
-                      type="MaterialCommunityIcons"
-                      color={
-                        getPurchaseHistory?.plan == 'noob'
-                          ? AppColor.SUBS_BLUE
-                          : getPurchaseHistory?.plan == 'pro'
-                          ? AppColor.SUBS_GREEN
-                          : AppColor.ORANGE
-                      }
-                    />
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: '#0A684733',
+                      padding: 5,
+                      paddingVertical: 2,
+                      borderRadius: 5,
+                    }}>
                     <FitText
                       type="normal"
-                      value="3 day free trial"
-                      color="#333333E5"
-                      marginVertical={3}
+                      value="Active"
+                      color={AppColor.GREEN}
+                      fontSize={12}
+                      lineHeight={16}
+                      fontWeight="600"
+                      fontFamily={Fonts.MONTSERRAT_SEMIBOLD}
                     />
                   </View>
-                )}
-              <View style={styles.row}>
-                <FitIcon
-                  color={
-                    getPurchaseHistory?.plan == 'noob'
-                      ? AppColor.SUBS_BLUE
-                      : getPurchaseHistory?.plan == 'pro'
-                      ? AppColor.SUBS_GREEN
-                      : AppColor.ORANGE
-                  }
-                  name="check"
-                  mR={5}
-                  size={13}
-                  type="MaterialCommunityIcons"
-                />
+                </View>
+                <Text numberOfLines={1} style={{color: '#3333331A'}}>
+                  {Array(100).fill('- ')}
+                </Text>
+                {getPurchaseHistory?.plan != 'noob' &&
+                  getPurchaseHistory?.plan != 'pro' &&
+                  !PLATFORM_IOS && (
+                    <View style={styles.row}>
+                      <FitIcon
+                        name="check"
+                        mR={5}
+                        size={13}
+                        type="MaterialCommunityIcons"
+                        color={
+                          getPurchaseHistory?.plan == 'noob'
+                            ? AppColor.SUBS_BLUE
+                            : getPurchaseHistory?.plan == 'pro'
+                            ? AppColor.SUBS_GREEN
+                            : AppColor.ORANGE
+                        }
+                      />
+                      <FitText
+                        type="normal"
+                        value="3 day free trial"
+                        color="#333333E5"
+                        marginVertical={3}
+                      />
+                    </View>
+                  )}
+                <View style={styles.row}>
+                  <FitIcon
+                    color={
+                      getPurchaseHistory?.plan == 'noob'
+                        ? AppColor.SUBS_BLUE
+                        : getPurchaseHistory?.plan == 'pro'
+                        ? AppColor.SUBS_GREEN
+                        : AppColor.ORANGE
+                    }
+                    name="check"
+                    mR={5}
+                    size={13}
+                    type="MaterialCommunityIcons"
+                  />
+                  <FitText
+                    type="normal"
+                    value="Winning price ₹1000/-"
+                    color="#333333E5"
+                    marginVertical={3}
+                  />
+                </View>
+                <View style={styles.row}>
+                  <FitIcon
+                    color={
+                      getPurchaseHistory?.plan == 'noob'
+                        ? AppColor.SUBS_BLUE
+                        : getPurchaseHistory?.plan == 'pro'
+                        ? AppColor.SUBS_GREEN
+                        : AppColor.ORANGE
+                    }
+                    name="check"
+                    mR={5}
+                    size={13}
+                    type="MaterialCommunityIcons"
+                  />
+                  <FitText
+                    type="normal"
+                    value={
+                      getPurchaseHistory?.plan == 'noob'
+                        ? '1 event/month'
+                        : getPurchaseHistory?.plan == 'pro'
+                        ? '2 event/month'
+                        : '3 event/month'
+                    }
+                    color="#333333E5"
+                    marginVertical={3}
+                  />
+                </View>
+                <View style={styles.row}>
+                  <FitIcon
+                    color={
+                      getPurchaseHistory?.plan == 'noob'
+                        ? AppColor.SUBS_BLUE
+                        : getPurchaseHistory?.plan == 'pro'
+                        ? AppColor.SUBS_GREEN
+                        : AppColor.ORANGE
+                    }
+                    name="check"
+                    mR={5}
+                    size={13}
+                    type="MaterialCommunityIcons"
+                  />
+                  <FitText
+                    type="normal"
+                    value={
+                      getPurchaseHistory?.plan == 'noob'
+                        ? 'With Ads'
+                        : getPurchaseHistory?.plan == 'pro'
+                        ? 'Fewer Ads'
+                        : 'No Ads'
+                    }
+                    color="#333333E5"
+                    marginVertical={3}
+                  />
+                </View>
+              </ShadowCard>
+            </>
+          )}
+        </ScrollView>
+        {getPurchaseHistory?.plan_value != null && (
+          <View
+            style={{
+              ...ShadowStyle,
+              width: DeviceWidth,
+              backgroundColor: AppColor.WHITE,
+              justifyContent: 'center',
+              alignItems: 'center',
+              height:
+                getPurchaseHistory?.plan != 'premium'
+                  ? DeviceWidth / 3
+                  : DeviceWidth / 6,
+              borderTopColor: '#00000024',
+              borderTopWidth: 0.5,
+            }}>
+            {getPurchaseHistory?.plan != 'premium' && (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('NewSubscription', {upgrade: true})
+                }
+                style={{
+                  width: DeviceWidth * 0.9,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 5,
+                  borderWidth: 1,
+                  borderColor: AppColor.RED,
+                  paddingVertical: 10,
+                }}>
                 <FitText
                   type="normal"
-                  value="Winning price ₹1000/-"
-                  color="#333333E5"
-                  marginVertical={3}
+                  value="Upgrade Plan"
+                  color={AppColor.RED}
+                  fontFamily={Fonts.MONTSERRAT_MEDIUM}
                 />
-              </View>
-              <View style={styles.row}>
-                <FitIcon
-                  color={
-                    getPurchaseHistory?.plan == 'noob'
-                      ? AppColor.SUBS_BLUE
-                      : getPurchaseHistory?.plan == 'pro'
-                      ? AppColor.SUBS_GREEN
-                      : AppColor.ORANGE
-                  }
-                  name="check"
-                  mR={5}
-                  size={13}
-                  type="MaterialCommunityIcons"
-                />
-                <FitText
-                  type="normal"
-                  value={
-                    getPurchaseHistory?.plan == 'noob'
-                      ? '1 event/month'
-                      : getPurchaseHistory?.plan == 'pro'
-                      ? '2 event/month'
-                      : '3 event/month'
-                  }
-                  color="#333333E5"
-                  marginVertical={3}
-                />
-              </View>
-              <View style={styles.row}>
-                <FitIcon
-                  color={
-                    getPurchaseHistory?.plan == 'noob'
-                      ? AppColor.SUBS_BLUE
-                      : getPurchaseHistory?.plan == 'pro'
-                      ? AppColor.SUBS_GREEN
-                      : AppColor.ORANGE
-                  }
-                  name="check"
-                  mR={5}
-                  size={13}
-                  type="MaterialCommunityIcons"
-                />
-                <FitText
-                  type="normal"
-                  value={
-                    getPurchaseHistory?.plan == 'noob'
-                      ? 'With Ads'
-                      : getPurchaseHistory?.plan == 'pro'
-                      ? 'Fewer Ads'
-                      : 'No Ads'
-                  }
-                  color="#333333E5"
-                  marginVertical={3}
-                />
-              </View>
-            </ShadowCard>
-          </>
-        )}
-      </ScrollView>
-      {getPurchaseHistory?.plan_value != null && (
-        <View
-          style={{
-            ...ShadowStyle,
-            width: DeviceWidth,
-            backgroundColor: AppColor.WHITE,
-            justifyContent: 'center',
-            alignItems: 'center',
-            height:
-              getPurchaseHistory?.plan != 'premium'
-                ? DeviceWidth / 3
-                : DeviceWidth / 6,
-            borderTopColor: '#00000024',
-            borderTopWidth: 0.5,
-          }}>
-          {getPurchaseHistory?.plan != 'premium' && (
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('NewSubscription', {upgrade: true})
-              }
+              onPress={() => {
+                AnalyticsConsole(`CanP_BTN`);
+                PLATFORM_IOS
+                  ? Linking.openSettings()
+                  : Linking.openURL(
+                      'https://play.google.com/store/account/subscriptions',
+                    );
+              }}
               style={{
                 width: DeviceWidth * 0.9,
                 justifyContent: 'center',
                 alignItems: 'center',
-                borderRadius: 5,
-                borderWidth: 1,
-                borderColor: AppColor.RED,
                 paddingVertical: 10,
               }}>
               <FitText
                 type="normal"
-                value="Upgrade Plan"
+                value="Cancel Plan"
                 color={AppColor.RED}
                 fontFamily={Fonts.MONTSERRAT_MEDIUM}
               />
             </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            onPress={() => {
-              AnalyticsConsole(`CanP_BTN`);
-              PLATFORM_IOS
-                ? Linking.openSettings()
-                : Linking.openURL(
-                    'https://play.google.com/store/account/subscriptions',
-                  );
-            }}
-            style={{
-              width: DeviceWidth * 0.9,
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingVertical: 10,
-            }}>
-            <FitText
-              type="normal"
-              value="Cancel Plan"
-              color={AppColor.RED}
-              fontFamily={Fonts.MONTSERRAT_MEDIUM}
-            />
-          </TouchableOpacity>
-        </View>
-      )}
+          </View>
+        )}
+      </Wrapper>
       <ChangeModal />
       <ActivityLoader visible={loading} />
-    </SafeAreaView>
+    </View>
   );
 };
 
