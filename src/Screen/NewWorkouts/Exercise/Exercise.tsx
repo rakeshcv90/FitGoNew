@@ -60,7 +60,8 @@ import {ShadowStyle} from '../../../Component/Utilities/ShadowStyle';
 import FitIcon from '../../../Component/Utilities/FitIcon';
 import FitText from '../../../Component/Utilities/FitText';
 import {StatusBar} from 'react-native';
-import { ArrowLeft } from '../../../Component/Utilities/Arrows/Arrow';
+import {ArrowLeft} from '../../../Component/Utilities/Arrows/Arrow';
+import CircleProgress from '../../../Component/Utilities/ProgressCircle';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -141,7 +142,7 @@ const Exercise = ({navigation, route}: any) => {
   const {initInterstitial, showInterstitialAd} =
     NewInterstitialAd(setAddClosed);
   const [seconds, setSeconds] = useState(
-    parseInt(currentData?.exercise_rest.split(' ')[0]),
+    parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
   );
   const [isRunning, setIsRunning] = useState(false);
   const [quitLoader, setQuitLoader] = useState(false);
@@ -153,6 +154,9 @@ const Exercise = ({navigation, route}: any) => {
   const opacity = useRef(new Animated.Value(0)).current;
   const scale = useRef(new Animated.Value(1)).current;
   const translateY = useRef(new Animated.Value(0)).current;
+  const animatedProgress = useRef(new Animated.Value(0)).current; // Animated value for progress
+  const timerProgress = useRef(new Animated.Value(0)).current; // Animated value for progress
+
   const setupPlayer = async () => {
     try {
       await TrackPlayer.add(songs);
@@ -230,18 +234,18 @@ const Exercise = ({navigation, route}: any) => {
       playTimerRef.current = setTimeout(() => {
         if (restStart) {
           if (timer === 0 && number != 0) {
-            // if (number == allExercise?.length - 1) return;
-            //setShowSet(true);
             setCurrentSet(1);
             setRestStart(false);
             Tts.stop();
             setSeconds(
               parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
-            );
-
-            setTimer(10);
-            // setDemoW(0);
-            setDemo(!demo);
+              );
+              
+              setTimer(10);
+              // setDemoW(0);
+              setDemo(!demo);
+              timerProgress.setValue(0);
+              setDemoW(0);
             PauseAudio(playbackState);
             Platform.OS == 'android'
               ? Platform.Version != 34 && setupPlayer()
@@ -249,19 +253,21 @@ const Exercise = ({navigation, route}: any) => {
             StartAnimation();
           } else if (timer === 0 && number == 0) {
             // if (number == allExercise?.length - 1) return;
-
             setRestStart(false);
             setShowSet(true);
             setCurrentSet(currentSet + 1);
             setTimer(10);
             setDemo(!demo);
             PauseAudio(playbackState);
+            timerProgress.setValue(0);
+            setDemoW(0);
             Platform.OS == 'android'
               ? Platform.Version != 34 && setupPlayer()
               : setupPlayer();
             StartAnimation();
           } else if (timer == 4) {
             setTimer(timer - 1);
+            setDemoW(demoW + 10);
             // setDemoW(demoW + 100 / timer);
             StartAudio(playbackState);
           } else if (timer == 10) {
@@ -275,9 +281,11 @@ const Exercise = ({navigation, route}: any) => {
             }
 
             setTimer(timer - 1);
+            setDemoW(demoW + 10);
           } else {
             // setDemoW(demoW + 100 / timer);
             setTimer(timer - 1);
+            setDemoW(demoW + 10);
           }
         } else {
           if (pause) {
@@ -296,8 +304,12 @@ const Exercise = ({navigation, route}: any) => {
                 initInterstitial();
                 console.log('ADD INITIALISE NO SET');
               }
-
               setSeconds(seconds - 1);
+              setPlayW(
+                playW +
+                  100 /
+                    parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
+              );
             }
           }
           if (allExercise[number]?.exercise_sets != 0) {
@@ -335,6 +347,8 @@ const Exercise = ({navigation, route}: any) => {
               currentSet < allExercise[number]?.exercise_sets &&
               !showSet
             ) {
+              animatedProgress.setValue(0);
+              setPlayW(0);
               if (currentSet + 1 == allExercise[number]?.exercise_sets) {
                 initInterstitial();
                 console.log('ADD INITIALISE');
@@ -347,39 +361,39 @@ const Exercise = ({navigation, route}: any) => {
               clearTimeout(playTimerRef.current);
               StartAnimation();
             } else if (seconds == 0 && number < allExercise?.length - 1) {
-            //   console.log('NUMBER', number);
-            //   setCurrentSet(0);
-            //   const index = allExercise?.findIndex(
-            //     (item: any) =>
-            //       item?.exercise_id == allExercise[number]?.exercise_id,
-            //   );
-            //   handleExerciseChange(allExercise[index + 1]?.exercise_title);
-            //   setNumber(index + 1);
-            //   setRestStart(true);
-            //   !addClosed && showInterstitialAd();
-            //   if (addClosed) {
-            //     ProgressRef.current?.play();
-            //     setPause(false);
-            //     setAddClosed(false);
-            //   }
-            // }
-            !addClosed && showInterstitialAd();
-            if (addClosed) {
-              ProgressRef.current?.play();
-              setPause(false);
-              const index = allExercise?.findIndex(
-                (item: any) =>
-                  item?.exercise_id == allExercise[number]?.exercise_id,
-              );
-              handleExerciseChange(allExercise[index + 1]?.exercise_title);
-              setNumber(index + 1);
-              setRestStart(true);
-              setAddClosed(false);
+              //   console.log('NUMBER', number);
+              //   setCurrentSet(0);
+              //   const index = allExercise?.findIndex(
+              //     (item: any) =>
+              //       item?.exercise_id == allExercise[number]?.exercise_id,
+              //   );
+              //   handleExerciseChange(allExercise[index + 1]?.exercise_title);
+              //   setNumber(index + 1);
+              //   setRestStart(true);
+              //   !addClosed && showInterstitialAd();
+              //   if (addClosed) {
+              //     ProgressRef.current?.play();
+              //     setPause(false);
+              //     setAddClosed(false);
+              //   }
+              // }
+              !addClosed && showInterstitialAd();
+              if (addClosed) {
+                ProgressRef.current?.play();
+                setPause(false);
+                const index = allExercise?.findIndex(
+                  (item: any) =>
+                    item?.exercise_id == allExercise[number]?.exercise_id,
+                );
+                handleExerciseChange(allExercise[index + 1]?.exercise_title);
+                setNumber(index + 1);
+                setRestStart(true);
+                setAddClosed(false);
+              }
+              Platform.OS == 'android'
+                ? Platform.Version != 34 && setupPlayer()
+                : setupPlayer();
             }
-            Platform.OS == 'android'
-              ? Platform.Version != 34 && setupPlayer()
-              : setupPlayer();
-          }
           } else {
             if (seconds == 0 && number == allExercise?.length - 1) {
               setPause(false);
@@ -406,6 +420,8 @@ const Exercise = ({navigation, route}: any) => {
                 });
               }
             } else if (seconds == 0 && number <= allExercise?.length - 1) {
+              animatedProgress.setValue(0);
+              setPlayW(0);
               !addClosed && showInterstitialAd();
               if (addClosed) {
                 ProgressRef.current?.play();
@@ -430,8 +446,20 @@ const Exercise = ({navigation, route}: any) => {
     } else {
     }
     // return () => clearTimeout(playTimerRef.current);
-  }, [pause, timer, back, demo, seconds, restStart, showSet, addClosed]);
-
+  }, [pause, timer, back, demo, seconds, restStart, showSet, addClosed, playW,demoW]);
+  useEffect(() => {
+    Animated.timing(animatedProgress, {
+      toValue: Math.round(playW) == 100 ? 0 : Math.round(playW),
+      duration: 500, // Duration of the animation (500ms)
+      useNativeDriver: true,
+    }).start();
+    Animated.timing(timerProgress, {
+      toValue: Math.round(demoW) == 100 ? 0 : Math.round(demoW),
+      duration: 500, // Duration of the animation (500ms)
+      useNativeDriver: true,
+    }).start();
+  }, [playW,demoW]);
+  
   useEffect(() => {
     setRestStart(true);
     setTimer(10);
@@ -690,7 +718,7 @@ const Exercise = ({navigation, route}: any) => {
   }, [back]);
 
   const StartAnimation = () => {
-    console.log(opacity, 'opacity');
+    // console.log(opacity, 'opacity');
     // Define the animation sequence
     Animated.sequence([
       // Fade in and scale up
@@ -717,7 +745,7 @@ const Exercise = ({navigation, route}: any) => {
       opacity.setValue(0);
       scale.setValue(1);
       translateY.setValue(0);
-      console.log(opacity, 'opacity2');
+      // console.log(opacity, 'opacity2');
     });
   };
   let minutes = Math.floor(seconds / 60);
@@ -753,7 +781,7 @@ const Exercise = ({navigation, route}: any) => {
                   style={{
                     width: 40,
                   }}>
-                <ArrowLeft/>
+                  <ArrowLeft />
                 </TouchableOpacity>
                 <Text
                   style={{
@@ -861,17 +889,13 @@ const Exercise = ({navigation, route}: any) => {
                   alignSelf: 'center',
                   marginVertical: 10,
                 }}>
-                <CircularProgressWithChild
-                  value={timer}
-                  radius={60}
-                  initialValue={10}
-                  inActiveStrokeColor={'#F0F0F0'}
-                  activeStrokeSecondaryColor="#F0013B"
-                  activeStrokeColor="#530014"
-                  activeStrokeWidth={40}
-                  inActiveStrokeWidth={40}
-                  strokeLinecap="butt"
-                  maxValue={10}>
+                <CircleProgress
+                  radius={50}
+                  animatedProgress={animatedProgress}
+                  strokeLinecap={timer == 0 ? 'butt' : 'round'}
+                  strokeWidth={25}
+                  changingColorsArray={['#530014', '#F0013B']}
+                  secondayCircleColor="#F0013B">
                   <TouchableOpacity
                     onPress={() => {
                       setSkip(skip + 1);
@@ -884,7 +908,7 @@ const Exercise = ({navigation, route}: any) => {
                       resizeMode="contain"
                     />
                   </TouchableOpacity>
-                </CircularProgressWithChild>
+                </CircleProgress>
               </View>
               <Text
                 style={{
@@ -939,7 +963,7 @@ const Exercise = ({navigation, route}: any) => {
                   style={{
                     width: 40,
                   }}>
-              <ArrowLeft/>
+                  <ArrowLeft />
                 </TouchableOpacity>
                 <Text
                   style={{
@@ -1057,6 +1081,8 @@ const Exercise = ({navigation, route}: any) => {
                     setShowSet(true);
                     setCurrentSet(1);
                     setPause(false);
+                    animatedProgress.setValue(0);
+                    setPlayW(0);
                     clearTimeout(playTimerRef.current);
                     const index = allExercise?.findIndex(
                       (item: any) =>
@@ -1082,21 +1108,13 @@ const Exercise = ({navigation, route}: any) => {
                     }}
                   />
                 </TouchableOpacity>
-                <CircularProgressWithChild
-                  value={seconds}
-                  radius={60}
-                  inActiveStrokeColor={'#F0F0F0'}
-                  activeStrokeSecondaryColor="#F0013B"
-                  activeStrokeColor="#530014"
-                  activeStrokeWidth={40}
-                  inActiveStrokeWidth={40}
-                  strokeLinecap="butt"
-                  maxValue={parseInt(
-                    allExercise[number]?.exercise_rest.split(' ')[0],
-                  )}
-                  initialValue={parseInt(
-                    allExercise[number]?.exercise_rest.split(' ')[0],
-                  )}>
+                <CircleProgress
+                  radius={50}
+                  animatedProgress={animatedProgress}
+                  strokeLinecap={seconds == 0 ? 'butt' : 'round'}
+                  strokeWidth={25}
+                  changingColorsArray={['#530014', '#F0013B']}
+                  secondayCircleColor="#F0013B">
                   <TouchableOpacity onPress={() => setPause(!pause)}>
                     <FitIcon
                       name={!pause ? 'play' : 'pause'}
@@ -1105,7 +1123,7 @@ const Exercise = ({navigation, route}: any) => {
                       color="#1F2937"
                     />
                   </TouchableOpacity>
-                </CircularProgressWithChild>
+                </CircleProgress>
                 <TouchableOpacity
                   disabled={number == allExercise?.length - 1}
                   onPress={() => {
@@ -1117,6 +1135,8 @@ const Exercise = ({navigation, route}: any) => {
                     clearTimeout(playTimerRef.current);
                     setTimeout(() => {
                       if (number == allExercise?.length - 1) return;
+                      animatedProgress.setValue(0);
+                      setPlayW(0);
                       const index = allExercise?.findIndex(
                         (item: any) =>
                           item?.exercise_id == allExercise[number]?.exercise_id,

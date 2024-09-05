@@ -58,7 +58,8 @@ import {ShadowStyle} from '../../Component/Utilities/ShadowStyle';
 import FitText from '../../Component/Utilities/FitText';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import OverExerciseModal from '../../Component/Utilities/OverExercise';
-import { ArrowLeft } from '../../Component/Utilities/Arrows/Arrow';
+import {ArrowLeft} from '../../Component/Utilities/Arrows/Arrow';
+import CircleProgress from '../../Component/Utilities/ProgressCircle';
 
 const WeekArray = Array(7)
   .fill(0)
@@ -98,7 +99,7 @@ const EventExercise = ({navigation, route}: any) => {
 
   const VideoRef = useRef();
   const [visible, setVisible] = useState(false);
-  // const [playW, setPlayW] = useState(0);
+  const [playW, setPlayW] = useState(0);
   const [demoW, setDemoW] = useState(0);
   // const [demoS, setDemoS] = useState(0);
   const [number, setNumber] = useState(0);
@@ -148,7 +149,7 @@ const EventExercise = ({navigation, route}: any) => {
   const {initInterstitial, showInterstitialAd} =
     NewInterstitialAd(setAddClosed);
   const [seconds, setSeconds] = useState(
-    parseInt(allExercise[number + 1]?.exercise_rest.split(' ')[0]),
+    parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
   );
   const [isRunning, setIsRunning] = useState(false);
   const [quitLoader, setQuitLoader] = useState(false);
@@ -160,6 +161,8 @@ const EventExercise = ({navigation, route}: any) => {
   const opacity = useRef(new Animated.Value(0)).current;
   const scale = useRef(new Animated.Value(1)).current;
   const translateY = useRef(new Animated.Value(0)).current;
+  const animatedProgress = useRef(new Animated.Value(0)).current; // Animated value for progress
+  const timerProgress = useRef(new Animated.Value(0)).current; // Animated value for progress
 
   const setupPlayer = async () => {
     try {
@@ -249,6 +252,8 @@ const EventExercise = ({navigation, route}: any) => {
             setTimer(10);
             // setDemoW(0);
             setDemo(!demo);
+            timerProgress.setValue(0);
+            setDemoW(0);
             PauseAudio(playbackState);
             Platform.OS == 'android'
               ? Platform.Version != 34 && setupPlayer()
@@ -262,6 +267,8 @@ const EventExercise = ({navigation, route}: any) => {
             setCurrentSet(currentSet + 1);
             setTimer(10);
             setDemo(!demo);
+            timerProgress.setValue(0);
+            setDemoW(0);
             PauseAudio(playbackState);
             Platform.OS == 'android'
               ? Platform.Version != 34 && setupPlayer()
@@ -269,7 +276,7 @@ const EventExercise = ({navigation, route}: any) => {
             StartAnimation();
           } else if (timer == 4) {
             setTimer(timer - 1);
-            // setDemoW(demoW + 100 / timer);
+            setDemoW(demoW + 10);
             StartAudio(playbackState);
           } else if (timer == 10) {
             SPEAK(
@@ -278,10 +285,10 @@ const EventExercise = ({navigation, route}: any) => {
             if (number != 0) {
               postCurrentRewardsExerciseAPI(number - 1);
             }
-
+            setDemoW(demoW + 10);
             setTimer(timer - 1);
           } else {
-            // setDemoW(demoW + 100 / timer);
+            setDemoW(demoW + 10);
             setTimer(timer - 1);
           }
         } else {
@@ -302,6 +309,11 @@ const EventExercise = ({navigation, route}: any) => {
                 console.log('ADD INITIALISE NO SET');
               }
               setSeconds(seconds - 1);
+              setPlayW(
+                playW +
+                  100 /
+                    parseInt(allExercise[number]?.exercise_rest.split(' ')[0]),
+              );
             }
           }
 
@@ -331,19 +343,20 @@ const EventExercise = ({navigation, route}: any) => {
               setCurrentSet(currentSet + 1);
               postCurrentRewardsExerciseAPI(number);
               clearTimeout(playTimerRef.current);
-                showInterstitialAd();
-                navigation.navigate('WorkoutCompleted', {
-                  day: day,
-                  allExercise: allExercise,
-                  type: type,
-                });
-              
+              showInterstitialAd();
+              navigation.navigate('WorkoutCompleted', {
+                day: day,
+                allExercise: allExercise,
+                type: type,
+              });
             } else if (
               seconds == 0 &&
               number <= allExercise?.length - 1 &&
               currentSet < allExercise[number]?.exercise_sets &&
               !showSet
             ) {
+              animatedProgress.setValue(0);
+              setPlayW(0);
               if (currentSet + 1 == allExercise[number]?.exercise_sets) {
                 initInterstitial();
                 console.log('ADD INITIALISE');
@@ -400,6 +413,8 @@ const EventExercise = ({navigation, route}: any) => {
                 });
               }
             } else if (seconds == 0 && number <= allExercise?.length - 1) {
+              animatedProgress.setValue(0);
+              setPlayW(0);
               !addClosed && !overExerciseVisible && showInterstitialAd();
               if (addClosed) {
                 ProgressRef.current?.play();
@@ -434,7 +449,22 @@ const EventExercise = ({navigation, route}: any) => {
     showSet,
     addClosed,
     timerShown,
+    playW,
+    demoW,
   ]);
+  useEffect(() => {
+    Animated.timing(animatedProgress, {
+      toValue: Math.round(playW) == 100 ? 0 : Math.round(playW),
+      duration: 500, // Duration of the animation (500ms)
+      useNativeDriver: true,
+    }).start();
+    Animated.timing(timerProgress, {
+      toValue: Math.round(demoW) == 100 ? 0 : Math.round(demoW),
+      duration: 500, // Duration of the animation (500ms)
+      useNativeDriver: true,
+    }).start();
+  }, [playW, demoW]);
+
   useEffect(() => {
     setRestStart(true);
     setTimer(10);
@@ -764,7 +794,7 @@ const EventExercise = ({navigation, route}: any) => {
                         : AppColor.INPUTTEXTCOLOR
                     }
                   /> */}
-                  <ArrowLeft/>
+                  <ArrowLeft />
                 </TouchableOpacity>
                 <Text
                   style={{
@@ -872,17 +902,13 @@ const EventExercise = ({navigation, route}: any) => {
                   alignSelf: 'center',
                   marginVertical: 10,
                 }}>
-                <CircularProgressWithChild
-                  value={timer}
-                  radius={60}
-                  initialValue={10}
-                  inActiveStrokeColor={'#F0F0F0'}
-                  activeStrokeSecondaryColor="#F0013B"
-                  activeStrokeColor="#530014"
-                  activeStrokeWidth={40}
-                  inActiveStrokeWidth={40}
-                  strokeLinecap="butt"
-                  maxValue={10}>
+                <CircleProgress
+                  radius={50}
+                  animatedProgress={timerProgress}
+                  strokeLinecap={timer == 0 ? 'butt' : 'round'}
+                  strokeWidth={25}
+                  changingColorsArray={['#530014', '#F0013B']}
+                  secondayCircleColor="#F0013B">
                   <TouchableOpacity
                     onPress={() => {
                       setSkip(skip + 1);
@@ -895,7 +921,7 @@ const EventExercise = ({navigation, route}: any) => {
                       resizeMode="contain"
                     />
                   </TouchableOpacity>
-                </CircularProgressWithChild>
+                </CircleProgress>
               </View>
               <Text
                 style={{
@@ -950,7 +976,7 @@ const EventExercise = ({navigation, route}: any) => {
                   style={{
                     width: 40,
                   }}>
-               <ArrowLeft/>
+                  <ArrowLeft />
                 </TouchableOpacity>
                 <Text
                   style={{
@@ -1070,19 +1096,23 @@ const EventExercise = ({navigation, route}: any) => {
                     StartAnimation();
                     setPause(false);
                     clearTimeout(playTimerRef.current);
-                    const index = allExercise?.findIndex(
-                      (item: any) =>
-                        item?.exercise_id == allExercise[number]?.exercise_id,
-                    );
-                    handleExerciseChange(
-                      allExercise[index - 1]?.exercise_title,
-                    );
-                    setNumber(number - 1);
-                    setSeconds(
-                      parseInt(
-                        allExercise[index - 1]?.exercise_rest.split(' ')[0],
-                      ),
-                    );
+                    setTimeout(() => {
+                      animatedProgress.setValue(0);
+                      setPlayW(0);
+                      const index = allExercise?.findIndex(
+                        (item: any) =>
+                          item?.exercise_id == allExercise[number]?.exercise_id,
+                      );
+                      handleExerciseChange(
+                        allExercise[index - 1]?.exercise_title,
+                      );
+                      setNumber(number - 1);
+                      setSeconds(
+                        parseInt(
+                          allExercise[index - 1]?.exercise_rest.split(' ')[0],
+                        ),
+                      );
+                    }, 1500);
                   }}>
                   <FitIcon
                     name="skip-previous"
@@ -1094,21 +1124,13 @@ const EventExercise = ({navigation, route}: any) => {
                     }}
                   />
                 </TouchableOpacity>
-                <CircularProgressWithChild
-                  value={seconds}
-                  radius={60}
-                  inActiveStrokeColor={'#F0F0F0'}
-                  activeStrokeSecondaryColor="#F0013B"
-                  activeStrokeColor="#530014"
-                  activeStrokeWidth={40}
-                  inActiveStrokeWidth={40}
-                  strokeLinecap="butt"
-                  maxValue={parseInt(
-                    allExercise[number]?.exercise_rest.split(' ')[0],
-                  )}
-                  initialValue={parseInt(
-                    allExercise[number]?.exercise_rest.split(' ')[0],
-                  )}>
+                <CircleProgress
+                  radius={50}
+                  animatedProgress={animatedProgress}
+                  strokeLinecap={seconds == 0 ? 'butt' : 'round'}
+                  strokeWidth={25}
+                  changingColorsArray={['#530014', '#F0013B']}
+                  secondayCircleColor="#F0013B">
                   <TouchableOpacity onPress={() => setPause(!pause)}>
                     <FitIcon
                       name={!pause ? 'play' : 'pause'}
@@ -1117,7 +1139,7 @@ const EventExercise = ({navigation, route}: any) => {
                       color="#1F2937"
                     />
                   </TouchableOpacity>
-                </CircularProgressWithChild>
+                </CircleProgress>
                 <TouchableOpacity
                   disabled={number == allExercise?.length - 1}
                   onPress={() => {
@@ -1130,6 +1152,8 @@ const EventExercise = ({navigation, route}: any) => {
                     clearTimeout(playTimerRef.current);
                     setTimeout(() => {
                       if (number == allExercise?.length - 1) return;
+                      animatedProgress.setValue(0);
+                      setPlayW(0);
                       const index = allExercise?.findIndex(
                         (item: any) =>
                           item?.exercise_id == allExercise[number]?.exercise_id,

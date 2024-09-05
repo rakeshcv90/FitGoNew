@@ -852,9 +852,7 @@ const NewSubscription = ({navigation, route}: any) => {
             value={
               planName.includes('noob')
                 ? 'With Ads'
-                : planName.includes('pro')
-                ? 'Fewer Ads'
-                : 'No Ads'
+                : 'Fewer Ads'
             }
             color="#333333E5"
             fontFamily={Fonts.MONTSERRAT_MEDIUM}

@@ -17,6 +17,7 @@ export const ExerciseComponetWithoutEvents = ({
   download,
   isClicked,
   setIsClicked,
+  overExerciseVisible
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
@@ -41,7 +42,7 @@ export const ExerciseComponetWithoutEvents = ({
           <NewButton
             title={'Start'}
             onPress={onPress}
-            withAnimation
+            withAnimation={overExerciseVisible}
             download={download}
             isClicked={isClicked}
             setIsClicked={setIsClicked}
@@ -206,6 +207,7 @@ export const ExerciseComponentWithEvent = ({
   selectedDay,
   currentDay,
   download,
+  overExerciseVisible
 }) => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
@@ -248,7 +250,7 @@ export const ExerciseComponentWithEvent = ({
             <NewButton
               title={'Start'}
               onPress={onPress}
-              withAnimation
+              withAnimation={overExerciseVisible}
               download={download}
             />
           ) : null}
