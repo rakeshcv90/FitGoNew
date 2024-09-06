@@ -3,9 +3,10 @@ import React, {FC} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 type IconTypes = {
-  type: 'MaterialCommunityIcons' | 'AntDesign' | 'MaterialIcons';
+  type: 'MaterialCommunityIcons' | 'AntDesign' | 'MaterialIcons' | 'FontAwesome5';
   color?: string;
   size: number;
   onPress?: () => void;
@@ -43,8 +44,16 @@ const FitIcon: FC<IconTypes> = ({
           color={color}
           style={[style ? style : {marginLeft: mL ?? 0, marginRight: mR ?? 0}]}
         />
-      ) : (
+      ) : type == 'MaterialCommunityIcons'? (
         <MaterialCommunityIcons
+          name={name}
+          size={size}
+          onPress={onPress}
+          color={color}
+          style={[style ? style : {marginLeft: mL ?? 0, marginRight: mR ?? 0}]}
+        />
+      ): (
+        <FontAwesome5
           name={name}
           size={size}
           onPress={onPress}

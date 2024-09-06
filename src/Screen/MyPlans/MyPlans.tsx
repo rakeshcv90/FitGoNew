@@ -113,6 +113,7 @@ const MyPlans = ({navigation}: any) => {
   const [visible2, setVisible2] = useState(false);
   const [overExerciseVisible, setOverExerciseVisible] = useState(false);
   const [workoutPrepared, setPrepared] = useState(false);
+  const [downloadText, setDownloadText] = useState(false);
   const getFitmeMealAdsCount = useSelector(
     (state: any) => state.getFitmeMealAdsCount,
   );
@@ -508,6 +509,9 @@ const MyPlans = ({navigation}: any) => {
     }
     dispatch(setVideoLocation(StoringData));
   };
+  useEffect(() => {
+    !overExerciseVisible && setDownloadText(false)
+  },[overExerciseVisible])
   let datas = [];
   const handleStart = () => {
     if (
@@ -521,7 +525,9 @@ const MyPlans = ({navigation}: any) => {
         getExerciseOutTime,
       );
       setOverExerciseVisible(true);
+      setDownloadText(true);
     } else if (!visible) {
+      setDownloadText(true);
       setVisible(true);
       Promise.all(
         getWeeklyPlansData[WeekArray[selectedDay]]?.exercises?.map(
@@ -1478,6 +1484,7 @@ const MyPlans = ({navigation}: any) => {
                 selectedDay={selectedDay}
                 currentDay={getPurchaseHistory?.currentDay - 1}
                 download={downloaded}
+                overExerciseVisible={downloadText}
               />
             </>
           ) : (
@@ -1510,6 +1517,7 @@ const MyPlans = ({navigation}: any) => {
                 WeekArray={WeekArray}
                 getWeeklyPlansData={getWeeklyPlansData}
                 download={downloaded}
+                overExerciseVisible={downloadText}
               />
             </>
           )

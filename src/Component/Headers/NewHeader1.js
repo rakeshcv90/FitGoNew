@@ -15,6 +15,8 @@ const NewHeader1 = ({
   onIconPress,
   materialIconName,
   IconComponent,
+  fillColor,
+  headerStyle
 }) => {
   const navigation = useNavigation();
   return (
@@ -28,10 +30,10 @@ const NewHeader1 = ({
               navigation.goBack();
             })
           }>
-          <ArrowLeft />
+          <ArrowLeft fillColor={fillColor??AppColor.BLACK} />
         </TouchableOpacity>
       )}
-      {header && <Text style={styles.headerStyle}>{header}</Text>}
+      {header && <Text style={headerStyle?? styles.headerStyle}>{header}</Text>}
       {icon && (
         <TouchableOpacity onPress={onIconPress} style={styles.iconStyle}>
           {iconType == 'icon' ? (
@@ -60,6 +62,7 @@ const styles = StyleSheet.create({
     color: AppColor.BLACK,
     fontFamily: Fonts.HELVETICA_BOLD,
     fontSize: 20,
+    textTransform: 'capitalize'
   },
   backButtonStyle: {
     position: 'absolute',

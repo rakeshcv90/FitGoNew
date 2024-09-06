@@ -3,6 +3,7 @@ import {View, Text, Platform} from 'react-native';
 import Slider from '@react-native-community/slider';
 import {DeviceHeigth, DeviceWidth} from './Config';
 import {StyleSheet} from 'react-native';
+import {AppColor} from './Color';
 
 const SeekBar = ({
   currentPosition,
@@ -18,18 +19,6 @@ const SeekBar = ({
 
   return (
     <View style={{}}>
-      <Slider
-        style={{width: '100%', }}
-        minimumValue={0}
-        maximumValue={duration}
-        thumbTintColor="#2578E2"
-        value={currentPosition}
-        minimumTrackTintColor="#0E2C52"
-        maximumTrackTintColor="#FFFFFF"
-        onSlidingComplete={onSlidingComplete}
-        onValueChange={onValueChange}
-        trackStyle={styles.track}
-      />
       <View
         style={{
           // width:
@@ -44,6 +33,18 @@ const SeekBar = ({
         <Text style={styles.textView}>{formatTime(currentPosition)}</Text>
         <Text style={styles.textView1}>{formatTime(duration)}</Text>
       </View>
+      <Slider
+        style={{width: '100%'}}
+        minimumValue={0}
+        maximumValue={duration}
+        thumbTintColor="#F0013B"
+        value={currentPosition}
+        minimumTrackTintColor="#F0013B"
+        maximumTrackTintColor="#FFFFFF"
+        onSlidingComplete={onSlidingComplete}
+        onValueChange={onValueChange}
+        trackStyle={styles.track}
+      />
     </View>
   );
 };
@@ -54,7 +55,7 @@ var styles = StyleSheet.create({
     lineHeight: 15,
     textAlign: 'center',
     fontFamily: 'Montserrat-SemiBold',
-    color: '#191919',
+    color: AppColor.WHITE,
   },
   textView1: {
     fontSize: 15,
@@ -62,7 +63,7 @@ var styles = StyleSheet.create({
     lineHeight: 15,
     textAlign: 'center',
     fontFamily: 'Montserrat-SemiBold',
-    color: '#191919',
+    color: AppColor.WHITE,
   },
   track: {
     height: 30, // Change the height to increase the thickness of the track

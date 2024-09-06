@@ -10,7 +10,7 @@ import React, {useCallback, useEffect} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {StatusBar} from 'react-native';
 import {StyleSheet} from 'react-native';
-import {AppColor} from '../../Component/Color';
+import {AppColor, Fonts} from '../../Component/Color';
 import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -31,7 +31,9 @@ import {BannerAdd} from '../../Component/BannerAdd';
 import {bannerAdId} from '../../Component/AdsId';
 import moment from 'moment';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
+import FitIcon from '../../Component/Utilities/FitIcon';
 
 const MeditationExerciseDetails = ({navigation, route}) => {
   let isFocused = useIsFocused();
@@ -112,128 +114,105 @@ const MeditationExerciseDetails = ({navigation, route}) => {
   }, [handleBackPress]);
   return (
     <>
-      <LinearGradient
-        start={{x: 0, y: 1}}
-        end={{x: 1, y: 0}}
-        colors={['#A9CBF6', '#DEEDFF']}
-        style={styles.container}>
-        <TouchableOpacity
-          style={{
-            marginHorizontal: DeviceWidth * 0.03,
-            marginVertical:
-              Platform.OS == 'android'
-                ? DeviceHeigth * 0.05
-                : DeviceHeigth > 667
-                ? DeviceHeigth * 0.06
-                : DeviceHeigth * 0.035,
-          }}
-          onPress={() => {
-            TrackPlayer.reset();
-            navigation.goBack();
-          }}>
-          <AntDesign
-              name={'arrowleft'}
-              size={25}
-              color={AppColor.INPUTTEXTCOLOR}
-            />
-        </TouchableOpacity>
-        <StatusBar
-          barStyle={'dark-content'}
-          backgroundColor={'transparent'}
-          translucent={true}
-        />
-
-        <View
-          style={{
-            width: '100%',
-            height: '55%',
-            alignSelf: 'center',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          {playbackState.state == 'playing' && (
-            <AnimatedLottieView
-              source={require('../../Icon/Images/NewImage/MusicAnimation.json')}
-              speed={2}
-              autoPlay
-              loop
-              style={{
-                width: 300,
-                height: 300,
-                position: 'absolute',
-                top:
-                  Platform.OS == 'ios'
-                    ? -DeviceHeigth * 0.1
-                    : -DeviceHeigth * 0.12,
-              }}
-            />
-          )}
-
-          <Image
+      <View style={styles.container}>
+        <Wrapper styles={styles.container}>
+          <StatusBar
+            barStyle={'light-content'}
+            backgroundColor={'black'}
+            translucent={false}
+          />
+          <NewHeader1
+            header={route.params?.name}
+            fillColor={AppColor.WHITE}
+            headerStyle={{
+              color: AppColor.WHITE,
+              fontFamily: Fonts.HELVETICA_BOLD,
+              fontSize: 20,
+              textTransform: 'capitalize',
+            }}
+            backButton
+            onBackPress={() =>{
+              TrackPlayer.reset();
+              navigation.goBack()
+            }}
+          />
+          <View
             style={{
               width: '100%',
-              height: '100%',
-            }}
-            resizeMode="contain"
-            source={require('../../Icon/Images/NewImage/meditation.png')}></Image>
-
-          <Text
-            style={{
-              fontFamily: 'Montserrat-SemiBold',
-              fontWeight: '700',
-              lineHeight: 30,
-              fontSize: 20,
-              color: '#191919',
-              textAlign: 'center',
-              top: Platform.OS == 'android' ? 0 : -10,
-            }}>
-            {route.params.item.exercise_mindset_title}
-          </Text>
-        </View>
-        <View
-          style={{
-            width: 350,
-            height: DeviceHeigth * 0.15,
-            marginVertical: 10,
-            alignSelf: 'center',
-
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              width: 350,
-              height: DeviceHeigth * 0.05,
-              marginVertical: DeviceHeigth * 0.04,
-            }}>
-            <SeekBar
-              currentPosition={position}
-              duration={duration}
-              onSlidingComplete={handleSlidingComplete}
-              onValueChange={handleValueChange}
-            />
-          </View>
-
-          <View
-            style={{
-              width: 350,
-              flexDirection: 'row',
-              justifyContent: 'center',
+              height: '65%',
               alignSelf: 'center',
               alignItems: 'center',
+              justifyContent: 'center',
             }}>
-            <TouchableOpacity
+            <Image
               style={{
-                alignItems: 'center',
-                alignSelf: 'center',
-                justifyContent: 'center',
-                left: -15,
+                width: '100%',
+                height: '100%',
               }}
-              // onPress={async () => {
-              //   await TrackPlayer.skipToPrevious();
-              //   togglePlayback(playbackState);
-              // }}
-            >
-              {/* <Image
+              resizeMode="contain"
+              source={{
+                uri: route.params.item?.exercise_mindset_image_link,
+              }}
+            />
+
+            <Text
+              style={{
+                fontFamily: 'Montserrat-SemiBold',
+                fontWeight: '700',
+                lineHeight: 30,
+                fontSize: 20,
+                color: AppColor.WHITE,
+                textAlign: 'center',
+                top: Platform.OS == 'android' ? 0 : -10,
+              }}>
+              {route.params.item.exercise_mindset_title}
+            </Text>
+          </View>
+          <View
+            style={{
+              width: 350,
+              height: DeviceHeigth * 0.15,
+              marginVertical: 10,
+              alignSelf: 'center',
+
+              alignItems: 'center',
+            }}>
+            <View
+              style={{
+                width: 350,
+                height: DeviceHeigth * 0.05,
+                marginTop: DeviceHeigth * 0.04,
+                marginBottom: DeviceHeigth * 0.01,
+              }}>
+              <SeekBar
+                currentPosition={position}
+                duration={duration}
+                onSlidingComplete={handleSlidingComplete}
+                onValueChange={handleValueChange}
+              />
+            </View>
+
+            <View
+              style={{
+                width: 350,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignSelf: 'center',
+                alignItems: 'center',
+              }}>
+              <TouchableOpacity
+                style={{
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                  justifyContent: 'center',
+                  left: -15,
+                }}
+                // onPress={async () => {
+                //   await TrackPlayer.skipToPrevious();
+                //   togglePlayback(playbackState);
+                // }}
+              >
+                {/* <Image
                 source={localImage.Farwed}
                 style={{
                   height: 32,
@@ -242,25 +221,10 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                   //tintColor: '#fff',
                 }}
                 resizeMode="contain"></Image> */}
-            </TouchableOpacity>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              activeOpacity={0.4}
-              style={{
-                width: 60,
-                height: 60,
-                borderRadius: 120 / 2,
-                alignItems: 'center',
-                alignSelf: 'center',
-                justifyContent: 'center',
-              }}
-              onPress={async () => {
-                togglePlayback(playbackState);
-              }}>
-              <LinearGradient
-                start={{x: 0, y: 1}}
-                end={{x: 1, y: 0}}
-                colors={['#236FD0', '#0D2A4E']}
+              <TouchableOpacity
+                activeOpacity={0.4}
                 style={{
                   width: 60,
                   height: 60,
@@ -268,40 +232,41 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                   alignItems: 'center',
                   alignSelf: 'center',
                   justifyContent: 'center',
+                }}
+                onPress={async () => {
+                  togglePlayback(playbackState);
                 }}>
-                <Image
-                  source={
-                    playbackState.state === State.Paused ||
-                    playbackState.state === State.Ready
-                      ? localImage.Play3
-                      : localImage.Pause
-                  }
-                  style={{
-                    height: 25,
-                    width: 25,
-                    left: playbackState.state === State.Paused && 2,
-                    alignSelf: 'center',
-                    tintColor: '#fff',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                  resizeMode="contain"></Image>
-              </LinearGradient>
-            </TouchableOpacity>
+                {playbackState.state === State.Paused ||
+                playbackState.state === State.Ready ? (
+                  <FitIcon
+                    type="FontAwesome5"
+                    name={'play'}
+                    size={30}
+                    color={AppColor.WHITE}
+                  />
+                ) : (
+                  <FitIcon
+                    type="MaterialCommunityIcons"
+                    name={'pause'}
+                    size={30}
+                    color={AppColor.WHITE}
+                  />
+                )}
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={{
-                alignItems: 'center',
-                alignSelf: 'center',
-                justifyContent: 'center',
-                left: 15,
-              }}
-              // onPress={async () => {
-              //   await TrackPlayer.skipToNext();
-              //   togglePlayback(playbackState);
-              // }}
-            >
-              {/* <Image
+              <TouchableOpacity
+                style={{
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                  justifyContent: 'center',
+                  left: 15,
+                }}
+                // onPress={async () => {
+                //   await TrackPlayer.skipToNext();
+                //   togglePlayback(playbackState);
+                // }}
+              >
+                {/* <Image
                 source={localImage.Farwed}
                 style={{
                   height: 30,
@@ -310,10 +275,11 @@ const MeditationExerciseDetails = ({navigation, route}) => {
                   alignSelf: 'center',
                 }}
                 resizeMode="contain"></Image> */}
-            </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </LinearGradient>
+        </Wrapper>
+      </View>
 
       {/* {bannerAdsDisplay()} */}
       <BannerAdd bannerAdId={bannerAdId} />
@@ -323,6 +289,7 @@ const MeditationExerciseDetails = ({navigation, route}) => {
 var styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: AppColor.BLACK,
   },
 });
 export default MeditationExerciseDetails;

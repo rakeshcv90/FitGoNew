@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import FitIcon from '../../Component/Utilities/FitIcon';
@@ -19,7 +19,7 @@ import {DeviceHeigth, DeviceWidth} from '../../Component/Config';
 import AnimatedLottieView from 'lottie-react-native';
 import {localImage} from '../../Component/Image';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
-import { ShadowStyle } from '../../Component/Utilities/ShadowStyle';
+import {ShadowStyle} from '../../Component/Utilities/ShadowStyle';
 
 type StoreItemProps = {
   type_id: number;
@@ -31,13 +31,25 @@ const NewStore = ({navigation}: any) => {
   const [searchWord, setSearchWord] = useState('');
   const getStoreData = useSelector((state: any) => state.getStoreData);
 
-  const SearchBar = () => {
+  // Filtered categories memoized for performance
+  const filteredCategories = useMemo(() => {
+    return getStoreData.filter((item: any) =>
+      item.type_title.toLowerCase().includes(searchWord.toLowerCase()),
+    );
+  }, [searchWord, getStoreData]);
+
+  const updateSearchWord = (text: string) => {
+    setSearchWord(text);
+  };
+
+  // Memoize SearchBar to avoid unnecessary re-renders
+  const SearchBar = useMemo(() => {
     return (
       <View style={[styles.searchContainer, styles.centerStyle]}>
         <TextInput
           placeholder="Search Product"
           value={searchWord}
-          onChangeText={setSearchWord}
+          onChangeText={updateSearchWord}
           placeholderTextColor="#49454F"
           style={{
             width: '95%',
@@ -51,7 +63,7 @@ const NewStore = ({navigation}: any) => {
         />
       </View>
     );
-  };
+  }, [searchWord, updateSearchWord]);
 
   const emptyComponent = () => {
     return (
@@ -103,11 +115,11 @@ const NewStore = ({navigation}: any) => {
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <Wrapper styles={{backgroundColor: '#F9F9F9'}}>
         <NewHeader1 header={'Store'} backButton />
-        <SearchBar />
-        <View style={[styles.mainContainer, styles.centerStyle,ShadowStyle]}>
+        {SearchBar}
+        <View style={[styles.mainContainer, styles.centerStyle, ShadowStyle]}>
           <FitText type="Heading" value="Shop by categories" fontSize={14} />
           <FlatList
-            data={getStoreData}
+            data={filteredCategories}
             renderItem={renderItem}
             keyExtractor={(_, index) => index.toString()}
             numColumns={2}

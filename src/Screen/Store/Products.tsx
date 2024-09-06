@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  Linking,
   RefreshControl,
   StatusBar,
   StyleSheet,
@@ -9,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import FitIcon from '../../Component/Utilities/FitIcon';
@@ -72,13 +73,25 @@ const Products = ({navigation, route}: any) => {
     );
   };
 
-  const SearchBar = () => {
+  // Filtered categories memoized for performance
+  const filteredCategories = useMemo(() => {
+    return productsData.filter((item: any) =>
+      item.product_title.toLowerCase().includes(searchWord.toLowerCase()),
+    );
+  }, [searchWord, productsData]);
+
+  const updateSearchWord = (text: string) => {
+    setSearchWord(text);
+  };
+
+  // Memoize SearchBar to avoid unnecessary re-renders
+  const SearchBar = useMemo(() => {
     return (
       <View style={[styles.searchContainer, styles.centerStyle]}>
         <TextInput
           placeholder="Search Product"
           value={searchWord}
-          onChangeText={setSearchWord}
+          onChangeText={updateSearchWord}
           placeholderTextColor="#49454F"
           style={{
             width: '95%',
@@ -92,7 +105,7 @@ const Products = ({navigation, route}: any) => {
         />
       </View>
     );
-  };
+  }, [searchWord, updateSearchWord]);
 
   const emptyComponent = () => {
     return (
@@ -126,6 +139,7 @@ const Products = ({navigation, route}: any) => {
   }) => {
     const onPress = () => {
       AnalyticsConsole(`${item?.product_title.substring(0, 5)}`);
+      Linking.openURL(item?.product_link);
     };
     return (
       <TouchableOpacity
@@ -138,7 +152,7 @@ const Products = ({navigation, route}: any) => {
           resizeMode="contain"
           style={styles.itemImage}
         />
-        <View style={{margin: 10}}>
+        <View style={{margin: 10,alignItems: 'center',}}>
           <FitText type="SubHeading" value={item.product_title} />
         </View>
       </TouchableOpacity>
@@ -154,11 +168,11 @@ const Products = ({navigation, route}: any) => {
           <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
           <Wrapper styles={{backgroundColor: '#F9F9F9'}}>
             <NewHeader1 header={product.type_title} backButton />
-            <SearchBar />
-            <View style={[styles.centerStyle,{flex: 1}]}>
+            {SearchBar}
+            <View style={[styles.centerStyle, {flex: 1}]}>
               <FlatList
-                data={productsData}
-                scrollEnabled={productsData.length > 0}
+                data={filteredCategories}
+                scrollEnabled={filteredCategories.length > 0}
                 renderItem={renderItem}
                 keyExtractor={(_, index) => index.toString()}
                 numColumns={2}

@@ -89,6 +89,8 @@ import NewHome from '../Screen/NewHome/NewHome';
 import PastWinner from '../Screen/NewHome/PastWinner';
 import LoadingScreen from '../Component/NewHomeUtilities/LoadingScreen';
 import CardioCompleted from '../Screen/WorkoutCompleteScreen/CardioCompleted';
+import NewStore from '../Screen/Store/NewStore';
+import Products from '../Screen/Store/Products';
 const Stack = createStackNavigator();
 
 const screenOptions = {
@@ -144,7 +146,8 @@ export const LoginStack = () => {
       <Stack.Screen name="DayRewards" component={DayRewards} />
       <Stack.Screen name="Meals" component={Meals} />
       <Stack.Screen name="MealDetails" component={MealDetails} />
-      <Stack.Screen name="Store" component={StoreScreen} />
+      <Stack.Screen name="Store" component={NewStore} />
+      <Stack.Screen name="Products" component={Products} />
       <Stack.Screen name="MeditationDetails" component={MeditationDetails} />
       <Stack.Screen name='Breathe' component={Breathe}/>
       <Stack.Screen

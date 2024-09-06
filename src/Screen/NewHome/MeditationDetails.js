@@ -1,4 +1,10 @@
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ImageBackground,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import NewHeader from '../../Component/Headers/NewHeader';
 import {StatusBar} from 'react-native';
@@ -42,6 +48,9 @@ const MeditationDetails = ({navigation, route}) => {
   const [forLoading, setForLoading] = useState(true);
   const [mindsetExercise, setmindsetExercise] = useState([]);
   const [headerTitle, setHeaderTitle] = useState(route?.params?.item);
+  const [selectedTitle, setSelectedTitle] = useState(
+    route?.params?.item?.workout_mindset_title,
+  );
   const [downloaded, setDownloade] = useState(0);
   const avatarRef = React.createRef();
   const allWorkoutData = useSelector(state => state.allWorkoutData);
@@ -160,6 +169,7 @@ const MeditationDetails = ({navigation, route}) => {
       onPress={() => {
         setHeaderTitle(title);
         getCaterogy(title.id, title.workout_mindset_level);
+        setSelectedTitle(title?.workout_mindset_title);
       }}>
       <LinearGradient
         start={{x: 0, y: 1}}
@@ -168,8 +178,10 @@ const MeditationDetails = ({navigation, route}) => {
         style={[
           styles.listItem,
           {
+            width: DeviceHeigth >= 1024 ? DeviceWidth * 0.165 : 100,
             borderWidth: headerTitle?.id == title?.id ? 2 : 0,
             borderColor: headerTitle?.id == title?.id && '#368EFF',
+            marginHorizontal: DeviceHeigth >= 1024 ? 10 : 5,
           },
         ]}>
         {headerTitle?.id == title?.id && (
@@ -181,33 +193,18 @@ const MeditationDetails = ({navigation, route}) => {
                 height: 20,
                 width: 20,
                 position: 'absolute',
-                top: 2,
+                top: 5,
                 alignSelf: 'flex-end',
-                right: 2,
+                right: 5,
               },
             ]}
             resizeMode="contain"></Image>
         )}
-
-        <Image
-          source={
-            title.workout_mindset_image_link != null
-              ? require('../../Icon/Images/NewImage/meditation.png')
-              : localImage.Noimage
-          }
-          style={[
-            styles.img,
-            {
-              height: 50,
-              width: 50,
-            },
-          ]}
-          resizeMode="cover"></Image>
         <Text
           style={[
             styles.title,
             {
-              color: color.color3,
+              color: '#1E1E1E99',
             },
           ]}>
           {title.workout_mindset_title}
@@ -295,21 +292,23 @@ const MeditationDetails = ({navigation, route}) => {
 
   //   }
   // };
+  const Space = () => (
+    <View
+      style={{height: 15, width: DeviceWidth, backgroundColor: '#F9F9F9'}}
+    />
+  );
   return (
     <View style={styles.container}>
-     
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
       <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
-       <NewHeader1
-        header={headerTitle?.workout_mindset_title}
-        backButton
-      />
+        <NewHeader1 header={headerTitle?.workout_mindset_title} backButton />
+        <Space />
         <View
           style={{
-            width: '95%',
+            width: '90%',
             alignSelf: 'center',
-            top: DeviceHeigth >= 1024 ? 0 : -DeviceHeigth * 0.02,
-            marginVertical: DeviceHeigth * 0.02,
+            // top: DeviceHeigth >= 1024 ? 0 : -DeviceHeigth * 0.02,
+            marginVertical: DeviceHeigth * 0.01,
           }}>
           <Text
             style={{
@@ -324,14 +323,13 @@ const MeditationDetails = ({navigation, route}) => {
           </Text>
           <Text
             style={{
-              color: '#191919',
+              color: '#6B7280',
               fontFamily: 'Montserrat-Medium',
               fontWeight: '500',
-              lineHeight: 15,
-              fontSize: 12,
-              top: 2,
+              lineHeight: 20,
+              fontSize: 14,
             }}>
-            Select your meditation practice.
+            Looking for something specific?
           </Text>
         </View>
         <View style={styles.meditionBox}>
@@ -351,10 +349,12 @@ const MeditationDetails = ({navigation, route}) => {
             updateCellsBatchingPeriod={100}
             removeClippedSubviews={true}
           />
+          <View style={{height: 20}} />
         </View>
+        <Space />
         <View
           style={{
-            width: '95%',
+            width: '90%',
             alignSelf: 'center',
 
             marginVertical: DeviceHeigth * 0.03,
@@ -372,12 +372,11 @@ const MeditationDetails = ({navigation, route}) => {
           </Text>
           <Text
             style={{
-              color: '#191919',
+              color: '#6B7280',
               fontFamily: 'Montserrat-Medium',
               fontWeight: '500',
-              lineHeight: 15,
-              fontSize: 12,
-              top: 2,
+              lineHeight: 20,
+              fontSize: 14,
             }}>
             Start the meditation of your choice.
           </Text>
@@ -484,134 +483,95 @@ const MeditationDetails = ({navigation, route}) => {
               renderItem={({item, index}) => {
                 return (
                   <>
-                    <LinearGradient
-                      start={{x: 0, y: 1}}
-                      end={{x: 1, y: 0}}
-                      colors={[
-                        colors[index % colors.length].color1,
-                        colors[index % colors.length].color2,
-                      ]}
-                      style={styles.listItem1}>
-                      <View
-                        style={[
-                          styles.listItem1,
-                          {
-                            marginHorizontal: 0,
-                            flexDirection: 'row',
-                            marginHorizontal: 0,
-
-                            justifyContent: 'space-between',
-                          },
-                        ]}>
-                        <View
-                          style={{
-                            width: '65%',
-                            height: 150,
-                            paddingLeft: 5,
-                          }}>
-                          <View
-                            style={{
-                              marginVertical: -DeviceHeigth * 0.002,
-                            }}>
+                    <TouchableOpacity
+                      style={styles.box}
+                      activeOpacity={0.8}
+                      onPress={() => {
+                        navigation.navigate('MeditationExerciseDetails', {
+                          item: item,
+                          name: selectedTitle,
+                        });
+                      }}>
+                      <ImageBackground
+                        source={
+                          item.exercise_mindset_image_link != null
+                            ? {uri: item.exercise_mindset_image_link}
+                            : localImage.Noimage
+                        }
+                        style={{
+                          height: '100%',
+                          width: '100%',
+                        }}
+                        resizeMode="stretch">
+                        <LinearGradient
+                          start={{x: 0, y: 1}}
+                          end={{x: 1, y: 0}}
+                          colors={[
+                            'rgba(0,0,0,1)',
+                            'rgba(0,0,0,1)',
+                            'transparent',
+                            'transparent',
+                          ]}
+                          style={[styles.box, styles.grad]}>
+                          <View style={{width: '50%', padding: 10}}>
                             <Text
                               style={{
-                                color: AppColor.LITELTEXTCOLOR,
+                                color: AppColor.WHITE,
                                 fontFamily: 'Montserrat-SemiBold',
-                                fontWeight: '600',
-                                lineHeight: 15,
-                                fontSize: 14,
+                                fontWeight: '700',
+                                lineHeight: 25,
+                                fontSize: 18,
                               }}>
                               {item.exercise_mindset_title}
                             </Text>
-                            <Text
-                              numberOfLines={3}
+                            <View
                               style={{
-                                color: '#505050',
-                                fontFamily: 'Montserrat-Medium',
-                                fontWeight: '500',
-                                lineHeight: 15,
-                                top: 5,
-                                fontSize: 12,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                marginTop: DeviceHeigth * 0.02,
                               }}>
-                              {item.exercise_mindset_description}
-                            </Text>
+                              <TouchableOpacity
+                                // disabled={downloaded > 0 && downloaded != 100}
+                                onPress={() => {
+                                  navigation.navigate(
+                                    'MeditationExerciseDetails',
+                                    {
+                                      item: item,
+                                      name: selectedTitle,
+                                    },
+                                  );
+                                }}>
+                                <Image
+                                  source={localImage.Play2}
+                                  style={[
+                                    styles.img,
+                                    {
+                                      height: 60,
+                                      width: 60,
+                                      left: -12,
+                                    },
+                                  ]}
+                                  resizeMode="cover"></Image>
+                              </TouchableOpacity>
+                              <Text
+                                style={{
+                                  color: AppColor.WHITE,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: '700',
+                                  lineHeight: 21,
+                                  fontSize: 14,
+                                  left: -12,
+                                  bottom: 4,
+                                }}>
+                                {downloaded > 0 && downloaded != 100
+                                  ? 'Downloading ...'
+                                  : '25 Min'}
+                              </Text>
+                            </View>
                           </View>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              marginVertical: DeviceHeigth * 0.005,
-                              left: -12,
-                            }}>
-                            <TouchableOpacity
-                              // disabled={downloaded > 0 && downloaded != 100}
-                              onPress={() => {
-                                navigation.navigate(
-                                  'MeditationExerciseDetails',
-                                  {
-                                    item: item,
-                                  },
-                                );
-                              }}>
-                              <Image
-                                source={localImage.Play2}
-                                style={[
-                                  styles.img,
-                                  {
-                                    height: 60,
-                                    width: 60,
-                                  },
-                                ]}
-                                resizeMode="cover"></Image>
-                            </TouchableOpacity>
-                            <Text
-                              style={{
-                                color: AppColor.LITELTEXTCOLOR,
-                                fontFamily: 'Poppins',
-                                fontWeight: '700',
-                                lineHeight: 21,
-                                fontSize: 14,
-                              }}>
-                              {downloaded > 0 && downloaded != 100
-                                ? 'Downloading ...'
-                                : '25 Min'}
-                            </Text>
-                          </View>
-                        </View>
-                        <View
-                          style={{
-                            width: '30%',
-                            height: 150,
-
-                            left: -20,
-                            marginVertical: -DeviceHeigth * 0.01,
-                          }}>
-                          <AnimatedLottieView
-                            source={require('../../Icon/Images/NewImage/MusicAnimation.json')}
-                            speed={2}
-                            autoPlay
-                            loop
-                            style={{
-                              height: 130,
-                              width: DeviceWidth * 0.3,
-                              position: 'absolute',
-                              top: -20,
-                            }}
-                          />
-                          <Image
-                            source={
-                              item.exercise_mindset_image_link != null
-                                ? {uri: item.exercise_mindset_image_link}
-                                : localImage.Noimage
-                            }
-                            style={{
-                              height: 130,
-                              width: DeviceWidth * 0.3,
-                            }}
-                            resizeMode="contain"></Image>
-                        </View>
-                      </View>
-                    </LinearGradient>
+                        </LinearGradient>
+                      </ImageBackground>
+                    </TouchableOpacity>
                     {getAdsDisplay(index, item)}
                   </>
                 );
@@ -677,17 +637,17 @@ var styles = StyleSheet.create({
   listItem: {
     width: 100,
     height: 100,
-    marginHorizontal: 10,
-    borderRadius: 10,
+    borderRadius: 20,
     justifyContent: 'center',
     alignSelf: 'center',
     alignItems: 'center',
   },
   title: {
-    fontSize: 14,
-    fontWeight: '600',
-    lineHeight: 17,
-    fontFamily: 'Montserrat-SemiBold',
+    fontSize: 16,
+    fontWeight: '700',
+    lineHeight: 23,
+    fontFamily: Fonts.HELVETICA_BOLD,
+    textTransform: 'uppercase',
   },
   img: {
     height: 80,
@@ -702,5 +662,14 @@ var styles = StyleSheet.create({
     padding: 5,
     justifyContent: 'space-between',
   },
+  box: {
+    width: '97%',
+    height: DeviceHeigth * 0.17,
+    borderRadius: 10,
+    alignSelf: 'center',
+    overflow: 'hidden',
+    marginVertical: 5,
+  },
+  grad: {width: '100%', justifyContent: 'center', marginVertical: 0},
 });
 export default MeditationDetails;
