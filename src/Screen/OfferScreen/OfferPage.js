@@ -24,6 +24,7 @@ import Loader from '../../Component/Loader';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {setVideoLocation} from '../../Component/ThemeRedux/Actions';
 import {useFocusEffect} from '@react-navigation/native';
+import {TurboModuleRegistry} from 'react-native';
 const OfferPage = ({navigation, route}) => {
   const WeekArrayWithEvent = Array(5)
     .fill(0)
@@ -49,6 +50,8 @@ const OfferPage = ({navigation, route}) => {
   const [cardioExxercise, setCardioExercise] = useState([]);
   const getAllExercise = useSelector(state => state.getAllExercise);
   const [breatheCompleteStatus, setBreatheCompleteStatus] = useState(false);
+  const [upComingTime, setUpcomingTime] = useState('');
+  const [cardioPoints, setCardioPoints] = useState(-10);
   const getEquipmentExercise = useSelector(
     state => state?.getEquipmentExercise,
   );
@@ -69,6 +72,7 @@ const OfferPage = ({navigation, route}) => {
       WeekArrayWithEvent[getPurchaseHistory?.currentDay - 1],
     );
     payload.append('type', 'cardio');
+
     try {
       const res = await axios(
         // 'https://fitme.cvinfotechserver.com/adserver/public/api/testing_add_coins',
@@ -81,6 +85,8 @@ const OfferPage = ({navigation, route}) => {
           data: payload,
         },
       );
+      console.log(res?.data);
+      setCardioPoints(res?.data?.cardio_earning);
       getCardioStatus();
     } catch (error) {
       console.log('ERRRRRR', error);
@@ -92,12 +98,19 @@ const OfferPage = ({navigation, route}) => {
       const result = await axios({
         url: `${NewAppapi.GET_BREATH_SESSION}?user_id=${getUserDataDetails?.id}`,
       });
-
       if (result?.data) {
         enteredCurrentEvent && getEarnedCoins();
         const activeIndex = result?.data?.sessions?.findIndex(
           item => item.status == 'open',
         );
+        const upcomingIndex = result?.data?.sessions?.findIndex(
+          item => item.status == 'upcoming',
+        );
+        if (upcomingIndex != -1) {
+          setUpcomingTime(
+            `${result?.data?.sessions[upcomingIndex]?.start_time} - ${result?.data?.sessions[upcomingIndex]?.end_time}`,
+          );
+        }
         if (activeIndex != -1) {
           setBreatheStatus(true);
           setBreatheCoins(result?.data?.sessions[activeIndex]?.fit_coins);
@@ -230,14 +243,26 @@ const OfferPage = ({navigation, route}) => {
     dispatch(setVideoLocation(StoringData));
   };
   let datas = [];
+  console.log(exerciseStatus);
   const handleStart = () => {
-    Promise.all(
-      cardioExxercise.map((item, index) => {
-        return downloadVideos(item, index, cardioExxercise.length);
-      }),
-    ).finally(() => {
-      RewardsbeforeNextScreen();
-    });
+    if (!cardioStatus && exerciseStatus && enteredCurrentEvent) {
+      Promise.all(
+        cardioExxercise.map((item, index) => {
+          return downloadVideos(item, index, cardioExxercise.length);
+        }),
+      ).finally(() => {
+        RewardsbeforeNextScreen();
+      });
+    } else {
+      showMessage({
+        message: "Complete today's exercises to unlock the cardio session.",
+        type: 'info',
+        animationDuration: 500,
+        floating: true,
+        icon: {icon: 'auto', position: 'left'},
+      });
+      navigation.navigate('BottomTab', {screen: 'MyPlans'});
+    }
   };
 
   const RewardsbeforeNextScreen = async () => {
@@ -308,13 +333,20 @@ const OfferPage = ({navigation, route}) => {
   const filterCardioExercise = () => {
     let exercises = getAllExercise?.filter(item => {
       if (getEquipmentExercise == 0) {
-        return item?.exercise_bodypart == 'Cardio' && item?.exercise_equipment !='No Equipment';
-      }else{
-        return item?.exercise_bodypart == 'Cardio' && item?.exercise_equipment =='No Equipment';
+        return (
+          item?.exercise_bodypart == 'Cardio' &&
+          item?.exercise_equipment != 'No Equipment'
+        );
+      } else {
+        return (
+          item?.exercise_bodypart == 'Cardio' &&
+          item?.exercise_equipment == 'No Equipment'
+        );
       }
     });
     setCardioExercise(exercises);
   };
+  console.log(breatheCompleteStatus);
   return (
     <View style={styles.container}>
       <StatusBar
@@ -337,10 +369,22 @@ const OfferPage = ({navigation, route}) => {
             text2={'Do a few minutes of cardio and earn extra FitCoins'}
             text3={`${cardioExxercise[0]?.fit_coins} coins`}
             coinTextColor={AppColor.YELLOW}
-            isactive={!cardioStatus && exerciseStatus && enteredCurrentEvent}
+            isactive={!cardioStatus}
             onPress={() => handleStart()}
-            withAnimation
+            withAnimation={
+              !cardioStatus && exerciseStatus && enteredCurrentEvent
+            }
             downloaded={downloaded}
+            buttonText={
+              !cardioStatus && exerciseStatus && enteredCurrentEvent
+                ? 'Start now'
+                : `Completed`
+            }
+            showRightArrow={
+              !cardioStatus && exerciseStatus && enteredCurrentEvent
+                ? true
+                : false
+            }
           />
           <OfferCards
             imgSource={localImage.reffer_banner}
@@ -363,10 +407,18 @@ const OfferPage = ({navigation, route}) => {
             text3={`${breatheCoins} coins`}
             coinTextColor={AppColor.WHITE}
             bannerType={'breathe'}
-            isactive={
+            isactive={!breatheCompleteStatus}
+            buttonText={
+              breatheStatus && enteredCurrentEvent && !breatheCompleteStatus
+                ? 'Start now'
+                : upComingTime
+            }
+            onPress={() => {
+              navigation.navigate('Breathe', {type: 'OfferPage'});
+            }}
+            showRightArrow={
               breatheStatus && enteredCurrentEvent && !breatheCompleteStatus
             }
-            onPress={() => navigation.navigate('Breathe', {type: 'OfferPage'})}
           />
         </ScrollView>
       ) : (
