@@ -43,7 +43,6 @@ const OfferPage = ({navigation, route}) => {
   const enteredUpcomingEvent = useSelector(
     state => state?.enteredUpcomingEvent,
   );
-  const enteredCurrentEvent = useSelector(state => state?.enteredCurrentEvent);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
   const [cardioExxercise, setCardioExercise] = useState([]);
@@ -98,7 +97,7 @@ const OfferPage = ({navigation, route}) => {
         url: `${NewAppapi.GET_BREATH_SESSION}?user_id=${getUserDataDetails?.id}`,
       });
       if (result?.data) {
-        enteredCurrentEvent && getEarnedCoins();
+        getEarnedCoins();
         const activeIndex = result?.data?.sessions?.findIndex(
           item => item.status == 'open',
         );
@@ -120,7 +119,7 @@ const OfferPage = ({navigation, route}) => {
       }
     } catch (error) {
       console.log(error, 'Breathe session api error');
-      enteredCurrentEvent && getEarnedCoins();
+      getEarnedCoins();
     }
   };
   const getEarnedCoins = async () => {
@@ -244,7 +243,7 @@ const OfferPage = ({navigation, route}) => {
   let datas = [];
   console.log(exerciseStatus);
   const handleStart = () => {
-    if (!cardioStatus && exerciseStatus && enteredCurrentEvent) {
+    if (!cardioStatus && exerciseStatus) {
       Promise.all(
         cardioExxercise.map((item, index) => {
           return downloadVideos(item, index, cardioExxercise.length);
@@ -345,7 +344,6 @@ const OfferPage = ({navigation, route}) => {
     });
     setCardioExercise(exercises);
   };
-  console.log(breatheCompleteStatus);
   return (
     <View style={styles.container}>
       <StatusBar
@@ -371,19 +369,13 @@ const OfferPage = ({navigation, route}) => {
             isactive={!cardioStatus}
             onPress={() => handleStart()}
             withAnimation={
-              !cardioStatus && exerciseStatus && enteredCurrentEvent
+              !cardioStatus
             }
             downloaded={downloaded}
             buttonText={
-              !cardioStatus && exerciseStatus && enteredCurrentEvent
-                ? 'Start now'
-                : `Completed`
+              cardioStatus ? `Completed` : 'Start now'
             }
-            showRightArrow={
-              !cardioStatus && exerciseStatus && enteredCurrentEvent
-                ? true
-                : false
-            }
+            showRightArrow={!cardioStatus}
           />
           <OfferCards
             imgSource={localImage.reffer_banner}
@@ -394,7 +386,7 @@ const OfferPage = ({navigation, route}) => {
             text3={'5 coins'}
             coinTextColor={AppColor.BLACK}
             onPress={() => navigation.navigate('Referral')}
-            isactive={enteredCurrentEvent}
+            isactive={true}
             buttonText={'Refer now'}
           />
           <OfferCards
@@ -406,9 +398,9 @@ const OfferPage = ({navigation, route}) => {
             text3={`${breatheCoins} coins`}
             coinTextColor={AppColor.WHITE}
             bannerType={'breathe'}
-            isactive={!breatheCompleteStatus}
+            isactive={breatheStatus && !breatheCompleteStatus}
             buttonText={
-              breatheStatus && enteredCurrentEvent && !breatheCompleteStatus
+              breatheStatus && !breatheCompleteStatus
                 ? 'Start now'
                 : upComingTime
             }
@@ -416,7 +408,7 @@ const OfferPage = ({navigation, route}) => {
               navigation.navigate('Breathe', {type: 'OfferPage'});
             }}
             showRightArrow={
-              breatheStatus && enteredCurrentEvent && !breatheCompleteStatus
+              breatheStatus && !breatheCompleteStatus
             }
           />
         </ScrollView>

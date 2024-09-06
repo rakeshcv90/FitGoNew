@@ -454,12 +454,6 @@ const TextBanner = ({navigation, setLocationP}) => {
             ) : getBanners && getBanners[Bannertype2] ? (
               <Box imageSource={[getBanners[Bannertype2]]} />
             ) : null}
-            <NameUpdateModal
-              dataType={dataType}
-              openEditModal={openEditModal}
-              setOpenEditModal={setOpenEditModal}
-              user_id={getUserDataDetails?.id}
-            />
           </View>
         </View>
         <View

@@ -389,7 +389,7 @@ const WorkoutCompleted = ({navigation, route}) => {
         if (openIndex == -1 && type == 'cardio') {
           handleCompleteSkip();
         } else if (type == 'weekly' && openIndex != -1) {
-          setBraetheSessionAvailable(true);
+          setBraetheSessionAvailable(result?.data?.sessions[openIndex]?.complete_status);
           setBreatheCoins(result?.data?.sessions[openIndex]?.fit_coins);
         } else if (type == 'cardio') {
           setBreatheCoins(result?.data?.sessions[openIndex]?.fit_coins);
@@ -468,7 +468,7 @@ const WorkoutCompleted = ({navigation, route}) => {
                   streakCoins={coins}
                   cardioCoins={cardioExxercise[0]?.fit_coins}
                   handleSkip={() => {
-                    if (breatheSessionAvailabel) {
+                    if (!breatheSessionAvailabel) {
                       cardioCardOffset.value = withSpring(-DeviceWidth);
                       breatheCardOffset.value = withSpring(0);
                     } else {

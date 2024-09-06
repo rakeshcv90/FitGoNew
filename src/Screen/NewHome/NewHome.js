@@ -738,91 +738,93 @@ const NewHome = ({navigation}) => {
             )}
           </View>
         </View>
-        <ImageBackground
-          source={require('../../Icon/Images/NewHome/Banner.png')}
-          resizeMode="stretch"
-          style={{
-            width: DeviceWidth * 0.95,
-            height: DeviceHeigth * 0.07,
-            alignSelf: 'center',
-            flexDirection: 'row',
-            marginVertical: 5,
-            marginBottom: DeviceHeigth * 0.02,
-
-            alignItems: 'center',
-          }}>
-          <View
+        {enteredCurrentEvent && (
+          <ImageBackground
+            source={require('../../Icon/Images/NewHome/Banner.png')}
+            resizeMode="stretch"
             style={{
-              width: '10%',
-              height: '100%',
-              justifyContent: 'center',
+              width: DeviceWidth * 0.95,
+              height: DeviceHeigth * 0.07,
+              alignSelf: 'center',
+              flexDirection: 'row',
+              marginVertical: 5,
+              marginBottom: DeviceHeigth * 0.02,
 
-              marginLeft: 10,
+              alignItems: 'center',
             }}>
-            <Image
-              source={require('../../Icon/Images/NewHome/gift.png')}
-              style={{height: '90%', width: '100%'}}
-              resizeMode="contain"
-            />
-          </View>
-          <View
-            style={{
-              width: DeviceHeigth >= 1024 ? '70%' : '60%',
-              height: '100%',
-              overflow: 'visible',
-              zIndex: 1,
-              justifyContent: 'center',
-            }}>
-            <Marquee spacing={20} speed={0.7}>
+            <View
+              style={{
+                width: '10%',
+                height: '100%',
+                justifyContent: 'center',
+
+                marginLeft: 10,
+              }}>
+              <Image
+                source={require('../../Icon/Images/NewHome/gift.png')}
+                style={{height: '90%', width: '100%'}}
+                resizeMode="contain"
+              />
+            </View>
+            <View
+              style={{
+                width: DeviceHeigth >= 1024 ? '70%' : '60%',
+                height: '100%',
+                overflow: 'visible',
+                zIndex: 1,
+                justifyContent: 'center',
+              }}>
+              <Marquee spacing={20} speed={0.7}>
+                <Text
+                  style={{
+                    color: AppColor.PrimaryTextColor,
+                    fontFamily: Fonts.HELVETICA_REGULAR,
+                  }}>
+                  Explore Special Offers to Win Exciting Prizes! Check Out the
+                  Upcoming Challenges!
+                </Text>
+              </Marquee>
+            </View>
+
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => {
+                navigation.navigate('OfferPage');
+                // navigation.navigate('StepGuide');
+              }}
+              style={{
+                width: DeviceHeigth >= 1024 ? '16%' : '25%',
+                height: '60%',
+                overflow: 'hidden',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
+                borderRadius: 8,
+                paddingLeft: 10,
+                backgroundColor: AppColor.RED,
+              }}>
               <Text
                 style={{
-                  color: AppColor.PrimaryTextColor,
                   fontFamily: Fonts.HELVETICA_REGULAR,
+                  fontSize: 12,
+                  lineHeight: 25,
+
+                  color: AppColor.WHITE,
                 }}>
-                Explore Special Offers to Win Exciting Prizes! Check Out the
-                Upcoming Challenges!
+                EXPLORE
               </Text>
-            </Marquee>
-          </View>
-
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => {
-              navigation.navigate('OfferPage');
-              // navigation.navigate('StepGuide');
-            }}
-            style={{
-              width: DeviceHeigth >= 1024 ? '16%' : '25%',
-              height: '60%',
-              overflow: 'hidden',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'row',
-              borderRadius: 8,
-              paddingLeft: 10,
-              backgroundColor: AppColor.RED,
-            }}>
-            <Text
-              style={{
-                fontFamily: Fonts.HELVETICA_REGULAR,
-                fontSize: 12,
-                lineHeight: 25,
-
-                color: AppColor.WHITE,
-              }}>
-              EXPLORE
-            </Text>
-            <Icons name={'chevron-right'} size={20} color={AppColor.WHITE} />
-            <Reanimated.View style={[styles.shimmerWrapper, shimmerStyle]}>
-              <LinearGradient
-                colors={['#ffffff00', '#ffffff80', '#ffffff00']}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 0}}
-                style={styles.shimmer}
-              />
-            </Reanimated.View>
-          </TouchableOpacity>
-        </ImageBackground>
+              <Icons name={'chevron-right'} size={20} color={AppColor.WHITE} />
+              <Reanimated.View style={[styles.shimmerWrapper, shimmerStyle]}>
+                <LinearGradient
+                  colors={['#ffffff00', '#ffffff80', '#ffffff00']}
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  style={styles.shimmer}
+                />
+              </Reanimated.View>
+            </TouchableOpacity>
+          </ImageBackground>
+        )}
         {winnerAnnounce?.winner_announced == true ? (
           <WinnerView totalData={totalData} />
         ) : enteredCurrentEvent ? (
