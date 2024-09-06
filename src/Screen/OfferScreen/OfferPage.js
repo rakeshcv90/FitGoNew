@@ -37,7 +37,7 @@ const OfferPage = ({navigation, route}) => {
   const [breatheStatus, setBreatheStatus] = useState(false);
   const [cardioStatus, setCardioStatus] = useState(false);
   const [exerciseStatus, setExerciseStatus] = useState(false);
-  const [breatheCoins, setBreatheCoins] = useState(0);
+  const [breatheCoins, setBreatheCoins] = useState(1);
   const [loaded, setLoaded] = useState(false);
   const [workoutLoaded, setWokroutLoaded] = useState(true);
   const enteredUpcomingEvent = useSelector(
