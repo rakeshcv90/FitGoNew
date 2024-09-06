@@ -22,14 +22,15 @@ const OfferCards = React.memo(
     buttonText,
     isactive,
     withAnimation,
-    downloaded
+    downloaded,
+    showRightArrow
   }) => {
     return (
       <View style={styles.container}>
         <Text style={styles.txt1}>{header}</Text>
         <ImageBackground
           source={imgSource}
-          style={[styles.imgBackground, {opacity: isactive ? 1 : 0.7}]}
+          style={[styles.imgBackground, ]}
           resizeMode="stretch">
           <Text style={[styles.text2, {color: text1Color}]}>{text1}</Text>
           <Text style={[styles.text3, {color: text1Color}]}>{text2}</Text>
@@ -55,10 +56,10 @@ const OfferCards = React.memo(
           </View>
           <NewButton
             title={buttonText ?? 'Start now'}
-            svgArrowRight
+            svgArrowRight={showRightArrow??true}
             svgArrowColor={AppColor.WHITE}
             iconColor={AppColor.WHITE}
-            ButtonWidth={DeviceWidth * 0.35}
+            ButtonWidth={DeviceWidth * 0.38}
             alignSelf={'flex-start'}
             fontFamily={'Helvetica-Bold'}
             pV={10}
@@ -69,6 +70,7 @@ const OfferCards = React.memo(
             disabled={!isactive}
             withAnimation={withAnimation??false}
             download={downloaded??0}
+            opacity={isactive ? 1 : 0.7}
           />
         </ImageBackground>
       </View>
