@@ -240,7 +240,7 @@ const TextBanner = ({navigation, setLocationP}) => {
   const handleEventClicks = index => {
     console.log('XCvddfgdgfdg', BannerType1, Bannertype2, index);
     const Sat = getPurchaseHistory?.currentDay == 6;
-    const Sun = getPurchaseHistory?.currentDay == 7;
+    const Sun = getPurchaseHistory?.currentDay == 0;
     if (BannerType1 == 'new_join') {
       handleStart();
     } else if (BannerType1 == 'coming_soon') {

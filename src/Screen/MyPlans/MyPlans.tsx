@@ -1383,6 +1383,7 @@ const MyPlans = ({navigation}: any) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.6}
+                  disabled={(Sat || Sun) == true}
                   onPress={() => {
                     AnalyticsConsole('HB');
                     navigation.navigate('WorkoutHistory');

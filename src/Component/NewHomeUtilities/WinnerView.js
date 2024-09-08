@@ -58,7 +58,7 @@ const WinnerView = ({totalData}) => {
                       overflow: 'hidden',
                       justifyContent: 'center',
                       alignItems: 'center',
-                      backgroundColor: '#DBEAFE',
+                      // backgroundColor: '#DBEAFE',
                     }}>
                     <Text
                       style={{
@@ -155,7 +155,7 @@ const WinnerView = ({totalData}) => {
                   textAlign: 'center',
                   color: AppColor.BLACK,
                 }}>
-                Winner Name has won this week’s challenge and the amazing prize!
+                   {totalData[0].name} has won this week’s challenge and the amazing prize!
               </Text>
             </View>
           </View>

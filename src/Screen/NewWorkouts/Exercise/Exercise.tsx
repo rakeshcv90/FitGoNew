@@ -891,7 +891,7 @@ const Exercise = ({navigation, route}: any) => {
                 }}>
                 <CircleProgress
                   radius={50}
-                  animatedProgress={animatedProgress}
+                  animatedProgress={timerProgress}
                   strokeLinecap={timer == 0 ? 'butt' : 'round'}
                   strokeWidth={25}
                   changingColorsArray={['#530014', '#F0013B']}
@@ -1268,10 +1268,10 @@ const Exercise = ({navigation, route}: any) => {
         isVisible={visible}
         setVisible={setVisible}
         exerciseData={allExercise}
-        // setCurrentData={setCurrentData}
-        // setPlayW={setPlayW}
+        timerProgress={timerProgress}
+        setPlayW={setPlayW}
         setPause={setPause}
-        // setRandomCount={setRandomCount}
+        animatedProgress={animatedProgress}
         playTimerRef={playTimerRef}
         currentExercise={currentExercise}
         setSeconds={setSeconds}

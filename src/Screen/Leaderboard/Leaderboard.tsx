@@ -90,7 +90,7 @@ const Leaderboard = () => {
   const [BannerType1, setBannertype1] = useState('');
   const [Bannertype2, setBannerType2] = useState('');
   const Sat = getPurchaseHistory?.currentDay == 6;
-  const Sun = getPurchaseHistory?.currentDay == 7;
+  const Sun = getPurchaseHistory?.currentDay == 0;
   useEffect(() => {
     setLoader(true);
     getLeaderboardDataAPI();
@@ -1143,7 +1143,7 @@ const Leaderboard = () => {
                     style={{
                       position: 'absolute',
                       bottom: 0,
-                      right: DeviceHeigth >= 1024 ? 170 : 30,
+                      right: DeviceHeigth >= 1024 ? 170 : 55,
                     }}>
                     <Text
                       style={{

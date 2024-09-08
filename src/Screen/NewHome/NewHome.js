@@ -110,7 +110,7 @@ const NewHome = ({navigation}) => {
   const [showRewardModal, setShowRewardModal] = useState(false);
 
   const Sat = getPurchaseHistory?.currentDay == 6;
-  const Sun = getPurchaseHistory?.currentDay == 7;
+  const Sun = getPurchaseHistory?.currentDay == 0;
   const [myRank, setMyRank] = useState(0);
   const [pastWinners, setPastWinners] = useState([]);
   const [coins, setCoins] = useState({});
@@ -674,6 +674,7 @@ const NewHome = ({navigation}) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   activeOpacity={0.6}
+                  disabled={(Sat || Sun) == true}
                   onPress={() => {
                     AnalyticsConsole('HB');
                     navigation.navigate('WorkoutHistory');

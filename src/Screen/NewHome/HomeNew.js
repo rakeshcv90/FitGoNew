@@ -1235,7 +1235,7 @@ const HomeNew = ({navigation}) => {
   };
 
   const Sat = getPurchaseHistory?.currentDay == 6;
-  const Sun = getPurchaseHistory?.currentDay == 7;
+  const Sun = getPurchaseHistory?.currentDay == 0;
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />

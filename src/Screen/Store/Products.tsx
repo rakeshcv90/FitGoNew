@@ -107,29 +107,6 @@ const Products = ({navigation, route}: any) => {
     );
   }, [searchWord, updateSearchWord]);
 
-  const emptyComponent = () => {
-    return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        <AnimatedLottieView
-          source={require('../../Icon/Images/NewImage/NoData.json')}
-          speed={2}
-          autoPlay
-          loop
-          resizeMode="cover"
-          style={{
-            width: DeviceWidth * 0.6,
-            height: DeviceHeigth * 0.3,
-          }}
-        />
-      </View>
-    );
-  };
-
   const renderItem = ({
     item,
     index,
@@ -141,9 +118,14 @@ const Products = ({navigation, route}: any) => {
       AnalyticsConsole(`${item?.product_title.substring(0, 5)}`);
       Linking.openURL(item?.product_link);
     };
+    const isLastOdd =
+      index + (1 % 2) != 0 && index + 1 == filteredCategories.length;
     return (
       <TouchableOpacity
-        style={styles.itemContainer}
+        style={[
+          styles.itemContainer,
+          {flex: isLastOdd ? 0 : 1, width: isLastOdd ? '45%' : '50%'},
+        ]}
         activeOpacity={0.5}
         onPress={onPress}>
         <Image
@@ -152,7 +134,7 @@ const Products = ({navigation, route}: any) => {
           resizeMode="contain"
           style={styles.itemImage}
         />
-        <View style={{margin: 10,alignItems: 'center',}}>
+        <View style={{margin: 10, alignItems: 'center'}}>
           <FitText type="SubHeading" value={item.product_title} />
         </View>
       </TouchableOpacity>
@@ -169,25 +151,44 @@ const Products = ({navigation, route}: any) => {
           <Wrapper styles={{backgroundColor: '#F9F9F9'}}>
             <NewHeader1 header={product.type_title} backButton />
             {SearchBar}
-            <View style={[styles.centerStyle, {flex: 1}]}>
-              <FlatList
-                data={filteredCategories}
-                scrollEnabled={filteredCategories.length > 0}
-                renderItem={renderItem}
-                keyExtractor={(_, index) => index.toString()}
-                numColumns={2}
-                showsVerticalScrollIndicator={false}
-                style={{flex: 1}}
-                ListEmptyComponent={emptyComponent}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refresh}
-                    onRefresh={getProductsData}
-                    colors={[AppColor.RED]}
-                  />
-                }
-              />
-            </View>
+            {filteredCategories.length > 0 ? (
+              <View style={[styles.centerStyle, {flex: 1}]}>
+                <FlatList
+                  data={filteredCategories}
+                  renderItem={renderItem}
+                  keyExtractor={(_, index) => index.toString()}
+                  numColumns={2}
+                  showsVerticalScrollIndicator={false}
+                  style={{flex: 1}}
+                  refreshControl={
+                    <RefreshControl
+                      refreshing={refresh}
+                      onRefresh={getProductsData}
+                      colors={[AppColor.RED]}
+                    />
+                  }
+                />
+              </View>
+            ) : (
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <AnimatedLottieView
+                  source={require('../../Icon/Images/NewImage/NoData.json')}
+                  speed={2}
+                  autoPlay
+                  loop
+                  resizeMode="cover"
+                  style={{
+                    width: DeviceWidth * 0.6,
+                    height: DeviceHeigth * 0.3,
+                  }}
+                />
+              </View>
+            )}
           </Wrapper>
         </View>
       )}
@@ -223,9 +224,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: AppColor.WHITE,
     overflow: 'hidden',
-    width: '50%',
     margin: 10,
-    flex: 1,
   },
   itemImage: {
     width: '80%',

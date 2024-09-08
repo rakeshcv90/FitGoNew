@@ -246,7 +246,7 @@
 
 //   const handleEventClicks = index => {
 //     const Sat = getPurchaseHistory?.currentDay == 6;
-//     const Sun = getPurchaseHistory?.currentDay == 7;
+//     const Sun = getPurchaseHistory?.currentDay == 0;
 //     if (type1 == 'new_join') {
 //       handleStart();
 //     } else if (type1 == 'coming_soon') {
@@ -749,7 +749,7 @@ const Banners = ({
 
   const handleEventClicks = index => {
     const Sat = getPurchaseHistory?.currentDay == 6;
-    const Sun = getPurchaseHistory?.currentDay == 7;
+    const Sun = getPurchaseHistory?.currentDay == 0;
     if (type1 == 'new_join') {
       handleStart();
     } else if (type1 == 'coming_soon') {

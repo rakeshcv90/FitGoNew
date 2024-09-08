@@ -22,8 +22,9 @@ const BottomSheetExercise = ({
   setCurrentData,
   setPlayW,
   setPause,
-  setRandomCount,
+  animatedProgress,
   playTimerRef,
+  timerProgress,
   currentExercise,
   setSeconds,
   handleExerciseChange,
@@ -36,13 +37,17 @@ const BottomSheetExercise = ({
         <TouchableOpacity
           style={styles.box}
           onPress={() => {
-            setVisible(false);
-            setSeconds(parseInt(item?.exercise_rest.split(' ')[0]));
             setPause(false);
             clearInterval(playTimerRef.current);
-            handleExerciseChange(item?.exercise_title);
-            setNumber(index - 1);
-            // }
+            setTimeout(() => {
+              setSeconds(parseInt(item?.exercise_rest.split(' ')[0]));
+              setPlayW(0);
+              timerProgress.setValue(0);
+              animatedProgress.setValue(0);
+              handleExerciseChange(item?.exercise_title);
+              setNumber(index - 1);
+              setVisible(false);
+            }, 1500);
           }}>
           <View
             style={{
@@ -102,7 +107,7 @@ const BottomSheetExercise = ({
             />
           </View>
         </TouchableOpacity>
-        {index !== exerciseData.length  && (
+        {index !== exerciseData.length && (
           <View
             style={{
               width: '100%',
@@ -203,7 +208,7 @@ const BottomSheetExercise = ({
           backgroundColor: 'white',
           maxHeight: '65%',
           minHeight: '25%',
-         // marginBottom: Platform.OS == 'ios' ? 0 : 0,
+          // marginBottom: Platform.OS == 'ios' ? 0 : 0,
         }}
         bottomSheetTitleStyle={{
           color: '#1E1E1E',

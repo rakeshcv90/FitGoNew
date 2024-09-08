@@ -796,7 +796,7 @@ const Login = ({navigation}) => {
           });
           setVerifyVisible(false);
         } else if (
-          data.data.msg == 'Please update the app to the latest version.'
+          data.data[0]?.msg == 'Please update the app to the latest version.'
         ) {
           setForLoading(false);
           showMessage({
@@ -810,7 +810,7 @@ const Login = ({navigation}) => {
           setVerifyVisible(false);
         } else {
           showMessage({
-            message: 'Somthing went wrong!',
+            message: data.data[0]?.msg,
             type: 'ganger',
             animationDuration: 500,
 
