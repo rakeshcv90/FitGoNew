@@ -145,6 +145,7 @@ const Leaderboard = () => {
       });
 
       if (result.data) {
+        console.log(result.data)
         const top5 = result.data?.data?.filter((item: any) => item?.rank <= 5);
         const after5 = result.data?.data?.filter(
           (item: any) => item?.rank > 3 && item?.rank < 6,
@@ -727,7 +728,7 @@ const Leaderboard = () => {
               }}
               IconComponent={() => (
                 <>
-                  {!enteredCurrentEvent ? (
+                  {enteredCurrentEvent ? (
                     <TouchableOpacity
                       onPress={() =>
                         //setVisible(true)

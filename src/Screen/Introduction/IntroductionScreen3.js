@@ -167,7 +167,7 @@ const IntroductionScreen3 = ({navigation}) => {
             color="#f0013b"
           />
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() =>{
             AnalyticsConsole('IV_F_IS')
              navigation.navigate('IntroVideo', {type: 'intro'})}}>
@@ -182,7 +182,8 @@ const IntroductionScreen3 = ({navigation}) => {
               height: '100%',
             }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        <View style={{width: 50, height: 50}} />
         <CircularProgressWithChild
           value={100}
           activeStrokeColor={'#f0013b'}

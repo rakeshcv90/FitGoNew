@@ -140,7 +140,8 @@ const IntroductionScreen1 = ({navigation}) => {
           flexDirection: 'row',
         }}>
         <View style={{width: 50, height: 50}} />
-        <TouchableOpacity
+        <View style={{width: 50, height: 50}} />
+        {/* <TouchableOpacity
           onPress={() =>{
             AnalyticsConsole('IV_F_IS')
              navigation.navigate('IntroVideo', {type: 'intro'})}}>
@@ -155,7 +156,7 @@ const IntroductionScreen1 = ({navigation}) => {
               height: '100%',
             }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <CircularProgressWithChild
           value={33}
           activeStrokeColor={'#f0013b'}
