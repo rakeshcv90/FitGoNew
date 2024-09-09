@@ -260,12 +260,6 @@ const NewFocusWorkouts = ({route, navigation}) => {
 
   const getNativeAdsDisplay = () => {
     if (getPurchaseHistory?.plan != null) {
-      if (
-        getPurchaseHistory?.plan == 'premium' &&
-        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        return null;
-      } else {
         return (
           <View
             style={{
@@ -275,7 +269,7 @@ const NewFocusWorkouts = ({route, navigation}) => {
             <NativeAddTest type="image" media={false} />
           </View>
         );
-      }
+      
     } else {
       return (
         <View

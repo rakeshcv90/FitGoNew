@@ -89,7 +89,12 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
 
         const isValid =
           getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
-        const count = getPurchaseHistory?.plan == 'noob' ? 3 : 6;
+        const count =
+          getPurchaseHistory?.plan == 'noob'
+            ? 3
+            : getPurchaseHistory?.plan == 'pro'
+            ? 6
+            : 8;
         const Sat = getPurchaseHistory?.currentDay == 6;
         const Sun = getPurchaseHistory?.currentDay == 0;
         const onPress = () => {
@@ -129,21 +134,20 @@ const CustomTab = ({state, descriptors, navigation, onIndexChange}) => {
             });
             if (!isFocused && !event.defaultPrevented) {
               if (getPurchaseHistory.plan != null) {
-                if (getPurchaseHistory?.plan == 'premium' && isValid) {
+                // if (getPurchaseHistory?.plan == 'premium' && isValid) {
+                //   navigation.navigate(route.name);
+                //   Dispatch(setFitmeAdsCount(0));
+                //   Dispatch(setOpenAdsCount(0));
+                // } else {
+                if (getFitmeAdsCount < count) {
+                  Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
+                  Dispatch(setOpenAdsCount(getOpenAdsCount + 1));
                   navigation.navigate(route.name);
+                } else {
+                  showInterstitialAd();
                   Dispatch(setFitmeAdsCount(0));
                   Dispatch(setOpenAdsCount(0));
-                } else {
-                  if (getFitmeAdsCount < count) {
-                    Dispatch(setFitmeAdsCount(getFitmeAdsCount + 1));
-                    Dispatch(setOpenAdsCount(getOpenAdsCount + 1));
-                    navigation.navigate(route.name);
-                  } else {
-                    showInterstitialAd();
-                    Dispatch(setFitmeAdsCount(0));
-                    Dispatch(setOpenAdsCount(0));
-                    navigation.navigate(route.name);
-                  }
+                  navigation.navigate(route.name);
                 }
               } else {
                 if (getFitmeAdsCount < count) {
@@ -295,7 +299,6 @@ const BottomTab = () => {
           component={Workouts}
           options={{tabBarShowLabel: true}}
         />
-       
 
         <Tabs.Screen
           name="Profile"
@@ -381,13 +384,13 @@ const styles = StyleSheet.create({
         ? -11
         : DeviceHeigth >= 1024
         ? -13
-        : -13,
+        : -10,
     right:
       DeviceHeigth <= 844
         ? 20
         : DeviceHeigth >= 1024
         ? DeviceHeigth * 0.054
-        : 12,
+        : 20,
     width: 25,
     height: 25,
   },

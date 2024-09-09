@@ -2,8 +2,6 @@ import {
   Image,
   ImageBackground,
   Platform,
-  RefreshControl,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -27,6 +25,8 @@ import {showMessage} from 'react-native-flash-message';
 import NewHeader from '../../Component/Headers/NewHeader';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
+import { StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Referral = () => {
   const getUserDataDetails = useSelector(
@@ -269,7 +269,12 @@ const Referral = () => {
     );
   };
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+    <StatusBar
+      translucent
+      backgroundColor={'transparent'}
+      barStyle={'dark-content'}
+    />
       {loader ? <ActivityLoader /> : null}
      <Wrapper styles={{backgroundColor:AppColor.WHITE}}>
      <NewHeader1 backButton header={'Refer & Earn'} />
@@ -516,7 +521,7 @@ const Referral = () => {
             alignSelf: 'center',
             width: DeviceWidth * 0.93,
             justifyContent: 'space-between',
-            marginBottom: 10,
+            marginBottom: 30,
           }}>
           <TouchableOpacity
             style={[
@@ -526,17 +531,19 @@ const Referral = () => {
                   DeviceHeigth >= 1024 ? DeviceWidth * 0.8 : DeviceWidth * 0.75,
               },
             ]}
-            onPress={shareWhatsApp}>
-            <FitIcon
-              name="whatsapp"
-              type="MaterialCommunityIcons"
-              size={20}
-              color={AppColor.WHITE}
-            />
+            onPress={share}>
             <FitText
               type="SubHeading"
-              value={` Refer Via WhatsApp`}
-              color={AppColor.WHITE}
+              color={AppColor.BLACK}
+              value={referralCode}
+              textTransform="uppercase"
+              marginHorizontal={10}
+            />
+            <FitIcon
+              name="link"
+              type="AntDesign"
+              size={20}
+              color={AppColor.BLACK}
             />
           </TouchableOpacity>
           <TouchableOpacity style={styles.share} onPress={share}>
@@ -548,7 +555,7 @@ const Referral = () => {
             />
           </TouchableOpacity>
         </View>
-        <Text
+        {/* <Text
           style={[
             styles.txt1,
             {fontFamily: 'Helvetica', color: AppColor.Gray5},
@@ -561,7 +568,6 @@ const Referral = () => {
             {
               width:
                 DeviceHeigth >= 1024 ? DeviceWidth * 0.95 : DeviceWidth * 0.95,
-              paddingVertical: DeviceHeigth >= 1024 ? 20 : 10,
             },
           ]}>
           <FitText
@@ -577,10 +583,10 @@ const Referral = () => {
             color={AppColor.BLACK}
             onPress={clipboard}
           />
-        </View>
+        </View> */}
       </ScrollView>
      </Wrapper>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -675,7 +681,10 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   whatsapp: {
-    backgroundColor: '#128C7E',
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
+    backgroundColor: '#D9D9D933',
+    borderStyle: 'dashed',
     padding: 15,
     flexDirection: 'row',
     justifyContent: 'center',

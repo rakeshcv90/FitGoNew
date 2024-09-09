@@ -4,8 +4,8 @@ import {
   Modal,
   Platform,
   RefreshControl,
-  SafeAreaView,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -46,6 +46,7 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 import NewHeader1 from '../../Component/Headers/NewHeader1';
 import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const UpcomingEvent = ({navigation, route}: any) => {
   const {eventType} = route?.params;
@@ -311,7 +312,12 @@ const UpcomingEvent = ({navigation, route}: any) => {
       : getPurchaseHistory?.event_start_date_current;
 
   return (
-    <View style={{flex: 1, backgroundColor: AppColor.WHITE}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
+      <StatusBar
+        translucent
+        backgroundColor={'transparent'}
+        barStyle={'dark-content'}
+      />
       <Wrapper>
         <NewHeader1
           backButton
@@ -772,7 +778,7 @@ const UpcomingEvent = ({navigation, route}: any) => {
       </Wrapper>
       <ChangeModal />
       <ActivityLoader visible={loading} />
-    </View>
+    </SafeAreaView>
   );
 };
 

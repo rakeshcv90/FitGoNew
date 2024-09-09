@@ -232,12 +232,6 @@ const CustomWorkout = ({navigation}) => {
   };
   const getNativeAdsDisplay = () => {
     if (getPurchaseHistory?.plan != null) {
-      if (
-        getPurchaseHistory?.plan == 'premium' &&
-        getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD')
-      ) {
-        return null;
-      } else {
         return (
           <View
             style={{
@@ -247,7 +241,7 @@ const CustomWorkout = ({navigation}) => {
             <NativeAddTest type="image" media={false} />
           </View>
         );
-      }
+      
     } else {
       return (
         <View

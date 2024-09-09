@@ -388,8 +388,8 @@ const Leaderboard = () => {
     const shareWinnerMessage = async () => {
       try {
         const options: ShareOptions = {
-          message: `I just won the fitness challenge with the FitMe app and earned ₹1000 . You can win too—download the FitMe app now and start earning!
-          Just download the Fitme app from here: ${referralLink} `,
+          message: `I just won the fitness challenge with the FitMe app and earned a voucher! 🎉 You can win too—download the FitMe app now and start earning amazing rewards.
+          Download the App Now: ${referralLink} `,
         };
         const result = await Share.open(options);
         if (result.success) {

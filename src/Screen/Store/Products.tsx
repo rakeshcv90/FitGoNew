@@ -175,6 +175,7 @@ const Products = ({navigation, route}: any) => {
                   flex: 1,
                   alignItems: 'center',
                   justifyContent: 'center',
+                  marginTop: -50
                 }}>
                 <AnimatedLottieView
                   source={require('../../Icon/Images/NewImage/NoData.json')}

@@ -25,15 +25,12 @@ export const AddCountFunction = () => {
   const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
   if (getPurchaseHistory?.plan != null) {
     if (getPurchaseHistory?.plan == 'premium' && isValid) {
-      dispatch(setFitmeMealAdsCount(0));
-      return false;
-    } else {
-      if (getPurchaseHistory?.plan == 'pro')
-      return  countAds(getFitmeMealAdsCount, dispatch, setFitmeMealAdsCount, 6);
-      else if (getPurchaseHistory?.plan == 'noob')
-       return countAds(getFitmeMealAdsCount, dispatch, setFitmeMealAdsCount, 3);
-    }
+      return countAds(getFitmeMealAdsCount, dispatch, setFitmeMealAdsCount, 8);
+    } else if (getPurchaseHistory?.plan == 'pro')
+      return countAds(getFitmeMealAdsCount, dispatch, setFitmeMealAdsCount, 6);
+    else if (getPurchaseHistory?.plan == 'noob')
+      return countAds(getFitmeMealAdsCount, dispatch, setFitmeMealAdsCount, 3);
   } else {
-   return countAds(getFitmeMealAdsCount, dispatch, setFitmeMealAdsCount, 3);
+    return countAds(getFitmeMealAdsCount, dispatch, setFitmeMealAdsCount, 3);
   }
 };
