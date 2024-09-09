@@ -84,10 +84,10 @@ const Referral = () => {
   const share = async () => {
     try {
       const options: ShareOptions = {
-        message: `Here's your chance to earn ₹1000 every week.
+        message: `Win amazing voucher rewards every week
         1. Just download the Fitme app from here: ${referralLink}
         2. Use my referral code to register: ${referralCode}
-        3. Take part in the fitness challenge and earn cash rewards of up to ₹1000 every week.`,
+        3. Take part in the fitness challenge and win amazing weekly voucher rewards.`,
         // url: referralLink,
       };
       const result = await Share.open(options);
@@ -102,10 +102,10 @@ const Referral = () => {
     try {
       const options: ShareSingleOptions = {
         title: 'Share via',
-        message: `Here's your chance to earn ₹1000 every week.
+        message: `Win amazing voucher rewards every week
           1. Just download the Fitme app from here: ${referralLink}
           2.Use my referral code to register: ${referralCode}
-          3. Take part in the fitness challenge and earn cash rewards of up to ₹1000 every week.`,
+          3. Take part in the fitness challenge and win amazing weekly voucher rewards.`,
         // url: referralLink,
         social: Share.Social.WHATSAPP,
         // whatsAppNumber: '919999999999', // country code + phone number
