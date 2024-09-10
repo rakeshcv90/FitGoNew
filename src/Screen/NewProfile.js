@@ -396,7 +396,7 @@ const NewProfile = ({navigation}) => {
     const askPermissionForLibrary = async permission => {
       const resultLib = await request(permission);
 
-      if (resultLib == 'granted') {
+      if (resultLib == 'granted' || resultLib == 'limited') {
         try {
           const resultLibrary = await launchImageLibrary({
             mediaType: 'photo',

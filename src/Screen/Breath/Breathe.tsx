@@ -155,6 +155,7 @@ const Breathe = ({navigation, route}) => {
   ];
   const setupPlayer = async () => {
     try {
+      await TrackPlayer.reset()
       await TrackPlayer.add(songs);
       await TrackPlayer.updateOptions({
         capabilities: [
@@ -179,7 +180,7 @@ const Breathe = ({navigation, route}) => {
     await TrackPlayer.play();
   };
   const pauseMusic = async () => {
-    await TrackPlayer.pause();
+    await TrackPlayer.stop();
   };
   const countdownAnimationStyle = useAnimatedStyle(() => {
     return {

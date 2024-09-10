@@ -222,7 +222,7 @@ const PastWinner = ({route}) => {
                     marginHorizontal: 5,
                     color: AppColor.PrimaryTextColor,
                   }}>
-                  Joint Now
+                  Join Now
                 </Text>
                 <AntDesign
                   name={'arrowright'}

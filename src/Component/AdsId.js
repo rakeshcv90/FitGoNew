@@ -16,7 +16,7 @@ export const ADS_IDs = [                                      // Device_IDs
   'e2fd7fb50154f6a9',
   '171a4ea7fccd8a28',
   '68c70c162994d5f8',
-  'fccf6c54a494e29f', //android 14 samsung
+  'c87c56528508709e', //android 14 samsung
   '8a0a218772cd72ed', // pixel 3xl debug
   '8454b6dd3a6df800',  // pixel 3xl release
   'efafdb802eeaa67a',

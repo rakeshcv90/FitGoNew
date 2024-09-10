@@ -76,6 +76,7 @@ import Reanimated, {
   withTiming,
 } from 'react-native-reanimated';
 import WinnerView from '../../Component/NewHomeUtilities/WinnerView';
+import NewBanner from '../../Component/NewHomeUtilities/NewBanner';
 
 const WeekArrayWithEvent = Array(5)
   .fill(0)
@@ -831,10 +832,14 @@ const NewHome = ({navigation}) => {
         ) : enteredCurrentEvent ? (
           (Sat || Sun) != true && <MyChallenge coins={coins} />
         ) : (
-          <TextBanner
-            locationP={locationP1}
-            setLocationP={setLocationP1}
-            navigation={navigation}
+          <NewBanner
+            purchaseHistory={getPurchaseHistory}
+            userDetails={getUserDataDetails}
+            setLocation={setLocationP1}
+            Sat={Sat}
+            Sun={Sun}
+            enteredCurrentEvent={enteredCurrentEvent}
+            enteredUpcomingEvent={enteredUpcomingEvent}
           />
         )}
 

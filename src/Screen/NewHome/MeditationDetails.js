@@ -226,7 +226,7 @@ const MeditationDetails = ({navigation, route}) => {
           resizeMode="contain"
           style={{
             width: DeviceWidth * 0.3,
-            height: DeviceHeigth * 0.15,
+            height: DeviceHeigth * 0.3,
             alignSelf: 'center',
           }}
         />
@@ -565,7 +565,7 @@ const MeditationDetails = ({navigation, route}) => {
                                 }}>
                                 {downloaded > 0 && downloaded != 100
                                   ? 'Downloading ...'
-                                  : '25 Min'}
+                                  : item?.exercise_mindset_time}
                               </Text>
                             </View>
                           </View>

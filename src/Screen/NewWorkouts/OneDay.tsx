@@ -388,7 +388,7 @@ const OneDay = ({navigation, route}: any) => {
                   {item?.exercise_title}
                 </Text>
                 <Text style={styles.small}>
-                  {time > 30 ? Math.floor(time / 60) + ' min' : time + ' sec'}
+                  {time > 60 ? Math.floor(time / 60) + ' min' : time + ' sec'}
                 </Text>
               </View>
             </View>

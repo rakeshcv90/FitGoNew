@@ -87,8 +87,6 @@ const Leaderboard = () => {
   const enteredCurrentEvent = useSelector(
     (state: any) => state?.enteredCurrentEvent,
   );
-  const [BannerType1, setBannertype1] = useState('');
-  const [Bannertype2, setBannerType2] = useState('');
   const Sat = getPurchaseHistory?.currentDay == 6;
   const Sun = getPurchaseHistory?.currentDay == 0;
   useEffect(() => {
@@ -98,44 +96,6 @@ const Leaderboard = () => {
     getReferralCode();
     enteredCurrentEvent && getEarnedCoins();
   }, []);
-  useEffect(
-    useCallback(() => {
-      const handleBannerType = async () => {
-        if (
-          getOfferAgreement?.location === 'India' ||
-          getOfferAgreement?.location == 'United States'
-        ) {
-          if (enteredCurrentEvent && enteredUpcomingEvent) {
-            setBannertype1('ongoing_challenge');
-            setBannerType2('joined_challenge');
-          } else if (enteredCurrentEvent && !enteredUpcomingEvent) {
-            setBannertype1('ongoing_challenge');
-            setBannerType2('upcoming_challenge');
-          } else if (!enteredCurrentEvent && enteredUpcomingEvent) {
-            setBannertype1('joined_challenge');
-          } else {
-            setBannertype1('new_join');
-          }
-        } else {
-          try {
-            const result = await checkLocationPermission();
-            if (!getOfferAgreement?.location) {
-              setBannertype1('new_join');
-            } else if (result === 'granted') {
-              setBannertype1('coming_soon');
-            } else if (result === 'blocked' || result === 'denied') {
-              setBannertype1('new_join');
-            }
-          } catch (err) {
-            console.error('Error checking location permission:', err);
-            setBannertype1('coming_soon');
-          }
-        }
-      };
-      handleBannerType();
-      return () => {};
-    }, [getOfferAgreement, enteredCurrentEvent, enteredUpcomingEvent]),
-  );
   const getLeaderboardDataAPI = async () => {
     try {
       const url =
@@ -1913,12 +1873,12 @@ const Leaderboard = () => {
                       alignItems: 'center',
                       justifyContent: 'center',
                       marginVertical: 20,
-                      backgroundColor: 'red',
+                      // backgroundColor: 'red',
                       borderRadius: 20,
                     }}>
                     <Image
                       // source={require('../../Icon/Images/NewHome/b1.png')}
-                      source={{uri: getBanners[BannerType1]}}
+                      source={{uri: getBanners['new_join']}}
                       resizeMode="stretch"
                       style={{width: '100%', height: 150, borderRadius: 20}}
                     />

@@ -26,7 +26,9 @@ import {PLATFORM_IOS} from './Color';
 
 const DeviceID = store.getState().getDeviceID;
 const getUserDataDetails = store.getState().getUserDataDetails;
-const IsTesting = PLATFORM_IOS
+const IsTesting = __DEV__
+  ? true
+  : PLATFORM_IOS
   ? getUserDataDetails?.social_id != null &&
     ADS_IOS.includes(getUserDataDetails?.social_id)
   : DeviceID != '' && ADS_IDs.includes(DeviceID);
@@ -66,14 +68,17 @@ export const BannerAdd = ({bannerAdId}) => {
 };
 export const NewInterstitialAd = setClosed => {
   // Created specially for Splash Screen by Sahil
+  const interstitialAdRef = useRef(null);
   const adStatus = useRef(true);
   const initInterstitial = async () => {
+    if (interstitialAdRef.current) return;
     const interstitialAd = InterstitialAd.createForAdRequest(
       IsTesting ? interstitialAdIdTest : interstitialAdId,
       {},
     );
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
       adStatus.current = interstitialAd;
+      interstitialAdRef.current = interstitialAd;
     });
     interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
       interstitialAd.load();
@@ -92,6 +97,7 @@ export const NewInterstitialAd = setClosed => {
   const showInterstitialAd = async () => {
     if (adStatus.current?._loaded) {
       adStatus.current.show();
+      interstitialAdRef.current = null;
     } else {
       // setClosed(true);
     }

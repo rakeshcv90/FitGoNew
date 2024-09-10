@@ -109,7 +109,9 @@ const SplaceScreen = ({navigation, route}) => {
     }
   }, [loaded]);
   const initInterstitial = async isTestingDevice => {
-    const ID = isTestingDevice
+    const ID = __DEV__
+      ? interstitialAdIdTest
+      : isTestingDevice
       ? interstitialAdIdTest
       : interstitialAdId;
     const interstitialAd = InterstitialAd.createForAdRequest(ID, {});

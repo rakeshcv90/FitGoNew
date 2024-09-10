@@ -115,7 +115,7 @@ const Products = ({navigation, route}: any) => {
     index: number;
   }) => {
     const onPress = () => {
-      AnalyticsConsole(`${item?.product_title.substring(0, 5)}`);
+      AnalyticsConsole(`Products`);
       Linking.openURL(item?.product_link);
     };
     const isLastOdd =
@@ -182,7 +182,7 @@ const Products = ({navigation, route}: any) => {
                   speed={2}
                   autoPlay
                   loop
-                  resizeMode="cover"
+                  resizeMode="contain"
                   style={{
                     width: DeviceWidth * 0.6,
                     height: DeviceHeigth * 0.3,

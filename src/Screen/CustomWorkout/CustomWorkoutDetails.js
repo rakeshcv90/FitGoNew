@@ -315,7 +315,6 @@ const CustomWorkoutDetails = ({navigation, route}) => {
                 </View>
               </View>
 
-              {getExerciseStatus(item?.exercise_id, trackerData)}
             </TouchableOpacity>
             {index !== data?.exercise_data.length - 1 && (
               <View
