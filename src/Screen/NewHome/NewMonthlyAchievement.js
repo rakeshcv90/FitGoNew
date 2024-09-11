@@ -30,6 +30,7 @@ import {
 } from '../../Component/BmiComponent';
 import { useFocusEffect } from '@react-navigation/native';
 import { red } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
 const NewMonthlyAchievement = ({navigation}) => {
   const [getDate, setDate] = useState(moment().format('YYYY-MM-DD'));
   const getUserDataDetails = useSelector(state => state?.getUserDataDetails);
@@ -126,7 +127,8 @@ const NewMonthlyAchievement = ({navigation}) => {
   ];
   return (
     <SafeAreaView style={styles.Container}>
-      <NewHeader header={'Report'} backButton={true}/>
+      {/* <NewHeader header={'Report'} backButton={true}/> */}
+      <NewHeader1 backButton header={'Report'}/>
       <ScrollView showsVerticalScrollIndicator={false}>
         {getBmi?.Bmi ? (
           <View>

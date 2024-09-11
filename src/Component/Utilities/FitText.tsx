@@ -64,7 +64,7 @@ const FitText: FC<Props> = ({
           fontStyle,
           width: w ?? 'auto',
           textDecorationLine,
-          marginTop:marginTop??'undefined'
+          marginTop:marginTop
         };
       case 'SubHeading':
         return {
@@ -81,7 +81,7 @@ const FitText: FC<Props> = ({
           fontStyle,
           width: w ?? 'auto',
           textDecorationLine,
-          marginTop:marginTop??'undefined'
+          marginTop:marginTop
         };
       case 'normal':
         return {
@@ -98,7 +98,7 @@ const FitText: FC<Props> = ({
           fontStyle,
           width: w ?? 'auto',
           textDecorationLine,
-          marginTop:marginTop??'undefined'
+          marginTop:marginTop
         };
       default:
         return {};

@@ -46,13 +46,19 @@ import {
   AdEventType,
   TestIds,
 } from 'react-native-google-mobile-ads';
-import {ADS_IDs, interstitialAdId, interstitialAdIdTest} from '../Component/AdsId';
+import {
+  ADS_IDs,
+  ADS_IOS,
+  interstitialAdId,
+  interstitialAdIdTest,
+} from '../Component/AdsId';
 import {LogOut} from '../Component/LogOut';
 import RNFetchBlob from 'rn-fetch-blob';
 import {EnteringEventFunction} from './Event/EnteringEventFunction';
 import AnimatedLottieView from 'lottie-react-native';
 import codePush from 'react-native-code-push';
 import {CommonActions} from '@react-navigation/native';
+import {PLATFORM_IOS} from '../Component/Color';
 const products = Platform.select({
   ios: ['fitme_noob', 'fitme_pro', 'fitme_legend'],
   android: ['fitme_monthly', 'a_monthly', 'fitme_legend'],
@@ -68,16 +74,22 @@ const SplaceScreen = ({navigation, route}) => {
   const planType = useSelector(state => state.planType);
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const [loaded, setLoaded] = useState(false);
-  const [ApiDataloaded, setApiDataLoaded] = useState(false);
+  const [ApiDataloaded, setApiDataLoaded] = useState({});
   const getOfferAgreement = useSelector(state => state.getOfferAgreement);
   useEffect(() => {
-    DeviceInfo.syncUniqueId().then(uniqueId => {
-      console.log("Device Id----",uniqueId);
-      dispatch(setDeviceID(uniqueId))
-      ADS_IDs.includes(uniqueId)
-        ? initInterstitial(true)
-        : initInterstitial(false);
-    });
+    PLATFORM_IOS
+      ? getUserDataDetails && getUserDataDetails?.social_id != null
+        ? ADS_IOS.includes(getUserDataDetails?.social_id)
+          ? initInterstitial(true)
+          : initInterstitial(false)
+        : loadScreen()
+      : DeviceInfo.syncUniqueId().then(uniqueId => {
+          console.log('Device Id----', uniqueId);
+          dispatch(setDeviceID(uniqueId));
+          ADS_IDs.includes(uniqueId)
+            ? initInterstitial(true)
+            : initInterstitial(false);
+        });
   }, []);
   useEffect(() => {
     requestPermissionforNotification(dispatch);

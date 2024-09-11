@@ -224,7 +224,7 @@ export const localImage = {
   earnText: require('../Icon/Images/InAppRewards/EarnText.png'),
   bottomCircle: require('../Icon/Images/InAppRewards/BottomCircle.png'),
   VideoLogo: require('../Icon/Images/InAppRewards/Videologo.png'),
-  fullsizebanner: require('../Icon/Images/InAppRewards/fullsizeBanner.jpg'),
+  fullsizebanner: require('../Icon/Images/InAppRewards/fullsizeBanner.png'),
   Rating1: require('../Icon/Images/InAppRewards/Cry_image.png'),
   Rating2: require('../Icon/Images/InAppRewards/Sad_image.png'),
   Rating3: require('../Icon/Images/InAppRewards/Happy_image.png'),

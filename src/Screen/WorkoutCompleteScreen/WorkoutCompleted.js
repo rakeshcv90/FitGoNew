@@ -23,11 +23,11 @@ import {
   setExerciseInTime,
   setVideoLocation,
 } from '../../Component/ThemeRedux/Actions';
-import LoadingScreen from '../../Component/LoadingScreen';
 import {useIsFocused} from '@react-navigation/native';
 import OverExerciseModal from '../../Component/Utilities/OverExercise';
 import Wrapper from './Wrapper';
 import AnimatedLottieView from 'lottie-react-native';
+import LoadingScreen from '../../Component/NewHomeUtilities/LoadingScreen';
 const format = 'hh:mm:ss';
 
 const WeekArrayWithEvent = Array(5)
@@ -164,6 +164,7 @@ const WorkoutCompleted = ({navigation, route}) => {
   const getExerciseInTime = useSelector(state => state.getExerciseInTime);
   const getExerciseOutTime = useSelector(state => state.getExerciseOutTime);
   const [overExerciseVisible, setOverExerciseVisible] = useState(false);
+  const getEquipmentExercise=useSelector(state=>state?.getEquipmentExercise)
   const focused = useIsFocused();
 
   useEffect(() => {
@@ -284,7 +285,11 @@ const WorkoutCompleted = ({navigation, route}) => {
   };
   const filterCardioExercise = () => {
     let exercises = getAllExercise?.filter(item => {
-      return item?.exercise_bodypart == 'Cardio';
+      if (getEquipmentExercise == 0) {
+        return item?.exercise_bodypart == 'Cardio' && item?.exercise_equipment !='No Equipment';
+      }else{
+        return item?.exercise_bodypart == 'Cardio' && item?.exercise_equipment =='No Equipment';
+      }
     });
     setCardioExercise(exercises);
   };
@@ -309,6 +314,7 @@ const WorkoutCompleted = ({navigation, route}) => {
       setEarnedCoin(res?.data?.coins);
       getEarnedCoins();
     } catch (error) {
+      getEarnedCoins();
       console.log('ERRRRRR', error);
     }
   };
@@ -336,6 +342,7 @@ const WorkoutCompleted = ({navigation, route}) => {
         getLeaderboardDataAPI();
       }
     } catch (error) {
+      getLeaderboardDataAPI()
       showMessage({
         message: 'Something went wrong.',
         type: 'danger',
@@ -369,14 +376,13 @@ const WorkoutCompleted = ({navigation, route}) => {
   const getBreatheAPI = async () => {
     try {
       const result = await axios({
-        url: `${NewAppapi.GET_BREATH_SESSION}`,
+        url: `${NewAppapi.GET_BREATH_SESSION}?user_id=${getUserDataDetails?.id}`,
       });
-
+      setLoader(false);
       if (result.data) {
         const openIndex = result?.data?.sessions?.findIndex(
           item => item.status == 'open',
         );
-        setLoader(false);
         setTimeout(() => {
           AnimationStart();
         }, 7000);
@@ -391,6 +397,7 @@ const WorkoutCompleted = ({navigation, route}) => {
         }
       }
     } catch (error) {
+      setLoader(false);
       console.log(error);
       setTimeout(() => {
         AnimationStart();
@@ -444,7 +451,7 @@ const WorkoutCompleted = ({navigation, route}) => {
                   cardioCoins={cardioExxercise[0]?.fit_coins}
                   download={0}
                   title={
-                    'Well Done! You’ve completed your workout for the day. Workout regularly to increase your chances to win the cash prize.'
+                    `You’ve completed your workout for the day. Workout regularly to increase your chances of winning exciting prizes!`
                   }
                 />
               </Animated.View>
@@ -472,8 +479,8 @@ const WorkoutCompleted = ({navigation, route}) => {
                   download={downloaded}
                   EarnedCoins={earnedCoin}
                   title={
-                    'Just 15 minutes of cardio = 10 Extra FitCoins\nComplete the 15-minute cardio session and boost your chance to win ₹1000!'
-                  }
+                    `Complete the 15-minute cardio session and increase your chances of winning fantastic prizes!`
+                   }
                 />
               </Animated.View>
               <Animated.View style={[styles.imgView, breatheAnimation]}>
@@ -498,7 +505,7 @@ const WorkoutCompleted = ({navigation, route}) => {
                   EarnedCoins={earnedCoin}
                   breatheCoins={breatheCoins}
                   title={
-                    'Increase your chances to win ₹1000! Complete a quick breathing exercise and earn Extra FitCoins.'
+                    'Increase your chances to grab the amazing prizes! Complete a quick breathing exercise and earn Extra FitCoins.'
                   }
                 />
               </Animated.View>

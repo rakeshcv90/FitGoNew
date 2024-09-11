@@ -9,6 +9,7 @@ import {
 } from 'react-native-google-mobile-ads';
 import {
   ADS_IDs,
+  ADS_IOS,
   bannerAdIdTest,
   interstitialAdId,
   interstitialAdIdTest,
@@ -21,9 +22,14 @@ import {useState, useRef, useCallback, useEffect} from 'react';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
 import {store} from './ThemeRedux/Store';
+import {PLATFORM_IOS} from './Color';
 
 const DeviceID = store.getState().getDeviceID;
-const IsTesting = DeviceID != '' && ADS_IDs.includes(DeviceID);
+const getUserDataDetails = store.getState().getUserDataDetails;
+const IsTesting = PLATFORM_IOS
+  ? getUserDataDetails?.social_id != null &&
+    ADS_IOS.includes(getUserDataDetails?.social_id)
+  : DeviceID != '' && ADS_IDs.includes(DeviceID);
 export const BannerAdd = ({bannerAdId}) => {
   const getPurchaseHistory = useSelector(state => state.getPurchaseHistory);
   const isValid = getPurchaseHistory?.end_date >= moment().format('YYYY-MM-DD');
@@ -98,7 +104,7 @@ export const MyInterstitialAd = () => {
   const interstitialAdRef = useRef(null);
   const adStatus = useRef(true);
   const initInterstitial = async () => {
-    if(interstitialAdRef.current) return
+    if (interstitialAdRef.current) return;
     const interstitialAd = InterstitialAd.createForAdRequest(
       IsTesting ? interstitialAdIdTest : interstitialAdId,
       {
@@ -115,13 +121,13 @@ export const MyInterstitialAd = () => {
     interstitialAd.addAdEventListener(AdEventType.CLICKED, () => {});
     interstitialAd.addAdEventListener(AdEventType.ERROR, error => {});
     interstitialAd.load();
-    console.log("INTER LOADER")
+    console.log('INTER LOADER');
   };
 
   const showInterstitialAd = async () => {
     if (adStatus.current?._loaded) {
       adStatus.current.show();
-      interstitialAdRef.current = null
+      interstitialAdRef.current = null;
     } else {
     }
   };

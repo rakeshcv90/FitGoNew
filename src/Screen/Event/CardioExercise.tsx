@@ -833,7 +833,6 @@ const CardioExercise = ({navigation, route}: any) => {
                     height: DeviceHeigth * 0.4,
                     alignSelf: 'center',
                     top: 30,
-                    overflow: 'hidden',
                   }}
                 />
               </View>
@@ -995,6 +994,7 @@ const CardioExercise = ({navigation, route}: any) => {
                     zIndex: -1,
                     backgroundColor: AppColor.WHITE,
                     borderRadius: 10,
+                    overflow: 'hidden',
                   },
                   ShadowStyle,
                 ]}>

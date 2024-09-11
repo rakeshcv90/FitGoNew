@@ -49,6 +49,9 @@ const OfferPage = ({navigation, route}) => {
   const [cardioExxercise, setCardioExercise] = useState([]);
   const getAllExercise = useSelector(state => state.getAllExercise);
   const [breatheCompleteStatus, setBreatheCompleteStatus] = useState(false);
+  const getEquipmentExercise = useSelector(
+    state => state?.getEquipmentExercise,
+  );
   const [downloaded, setDownloade] = useState(0);
   const dispatch = useDispatch();
   useFocusEffect(
@@ -91,7 +94,7 @@ const OfferPage = ({navigation, route}) => {
       });
 
       if (result?.data) {
-       enteredCurrentEvent && getEarnedCoins();
+        enteredCurrentEvent && getEarnedCoins();
         const activeIndex = result?.data?.sessions?.findIndex(
           item => item.status == 'open',
         );
@@ -105,7 +108,7 @@ const OfferPage = ({navigation, route}) => {
       }
     } catch (error) {
       console.log(error, 'Breathe session api error');
-     enteredCurrentEvent && getEarnedCoins();
+      enteredCurrentEvent && getEarnedCoins();
     }
   };
   const getEarnedCoins = async () => {
@@ -147,18 +150,15 @@ const OfferPage = ({navigation, route}) => {
   };
   const getCardioStatus = async () => {
     try {
-      const response = await axios(
-        `${NewAppapi.GET_CARDIO_STATUS}`,{
-          method:'post',
-          // headers:{
-          //   'Content-Type':'multipart/form-data'
-          // },
-          data:{
-            user_id:getUserDataDetails?.id
-          }
-        }
-        
-      );
+      const response = await axios(`${NewAppapi.GET_CARDIO_STATUS}`, {
+        method: 'post',
+        // headers:{
+        //   'Content-Type':'multipart/form-data'
+        // },
+        data: {
+          user_id: getUserDataDetails?.id,
+        },
+      });
       if (response?.data?.status == true) {
         setCardioStatus(true);
         setLoaded(true);
@@ -307,7 +307,11 @@ const OfferPage = ({navigation, route}) => {
   };
   const filterCardioExercise = () => {
     let exercises = getAllExercise?.filter(item => {
-      return item?.exercise_bodypart == 'Cardio';
+      if (getEquipmentExercise == 0) {
+        return item?.exercise_bodypart == 'Cardio' && item?.exercise_equipment !='No Equipment';
+      }else{
+        return item?.exercise_bodypart == 'Cardio' && item?.exercise_equipment =='No Equipment';
+      }
     });
     setCardioExercise(exercises);
   };

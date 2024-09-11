@@ -28,6 +28,8 @@ import {useSelector} from 'react-redux';
 import moment from 'moment';
 import NativeAddTest from '../../Component/NativeAddTest';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
 
 type Coordinates = {
   latitude: number;
@@ -54,7 +56,7 @@ const GymListing = ({navigation}: any) => {
     Geolocation.getCurrentPosition(
       position => {
         const pos = position.coords;
-     
+
         setCoords({
           latitude: pos.latitude,
           longitude: pos.longitude,
@@ -112,7 +114,7 @@ const GymListing = ({navigation}: any) => {
           ? 'http://maps.apple.com/?daddr='
           : 'google.navigation:q=';
       var url = scheme + `${location.latitude},${location.longitude}`;
-  
+
       await Linking.openURL(url);
     } catch (error) {
       console.log('OPEN APP ERRR', error);
@@ -271,7 +273,7 @@ const GymListing = ({navigation}: any) => {
     const noOrNoobPlan =
       getPurchaseHistory?.plan == null || getPurchaseHistory?.plan == 'noob';
     if (gymsData?.length >= 1) {
-      if (noOrNoobPlan&& index == 0 && gymsData?.length > 1) {
+      if (noOrNoobPlan && index == 0 && gymsData?.length > 1) {
         return getNativeAdsDisplay();
       } else if ((index + 1) % 8 == 0) {
         return getNativeAdsDisplay();
@@ -311,57 +313,60 @@ const GymListing = ({navigation}: any) => {
   return (
     <View style={{flex: 1, backgroundColor: AppColor.WHITE}}>
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
-      <NewHeader header={'Nearby Gyms'} SearchButton={false} backButton />
-      <View
-        style={{
-          flex: 1,
-          marginHorizontal: 10,
-        }}>
-        {loader ? (
-          <ActivityLoader visible={loader} />
-        ) : (
-          <FlatList
-            data={gymsData}
-            contentContainerStyle={{
-              justifyContent: 'center',
-            }}
-            renderItem={renderItem}
-            refreshControl={
-              <RefreshControl
-                refreshing={loader}
-                onRefresh={() => GetGymsAPI(coords)}
-                colors={[AppColor.RED, AppColor.WHITE]}
-              />
-            }
-            ListEmptyComponent={
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginTop: DeviceHeigth * 0.15,
-                  marginHorizontal: 20
-                }}>
-                <Image
-                  source={require('../../Icon/Images/NewImage2/NoLocation.png')}
-                  style={{
-                    width: DeviceWidth * 0.6,
-                    height: DeviceWidth * 0.6,
-                    marginBottom: 20,
-                  }}
-                  resizeMode="contain"
+      <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
+        <NewHeader1 header={'Nearby Gyms'} backButton />
+        <View
+          style={{
+            flex: 1,
+            marginHorizontal: 10,
+          }}>
+          {loader ? (
+            <ActivityLoader visible={loader} />
+          ) : (
+            <FlatList
+              data={gymsData}
+              contentContainerStyle={{
+                justifyContent: 'center',
+              }}
+              renderItem={renderItem}
+              refreshControl={
+                <RefreshControl
+                  refreshing={loader}
+                  onRefresh={() => GetGymsAPI(coords)}
+                  colors={[AppColor.RED, AppColor.WHITE]}
                 />
-                <Text
-                  style={styles.heading}
-                  onPress={() => Linking.openSettings()}>
-                  Oops, There are no certified gyms available in your location at this time.
-                </Text>
-              </View>
-            }
-            showsVerticalScrollIndicator={false}
-          />
-        )}
-      </View>
+              }
+              ListEmptyComponent={
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: DeviceHeigth * 0.15,
+                    marginHorizontal: 20,
+                  }}>
+                  <Image
+                    source={require('../../Icon/Images/NewImage2/NoLocation.png')}
+                    style={{
+                      width: DeviceWidth * 0.6,
+                      height: DeviceWidth * 0.6,
+                      marginBottom: 20,
+                    }}
+                    resizeMode="contain"
+                  />
+                  <Text
+                    style={styles.heading}
+                    onPress={() => Linking.openSettings()}>
+                    Oops, There are no certified gyms available in your location
+                    at this time.
+                  </Text>
+                </View>
+              }
+              showsVerticalScrollIndicator={false}
+            />
+          )}
+        </View>
+      </Wrapper>
       {/* {bannerAdsDisplay()} */}
       <BannerAdd bannerAdId={bannerAdId} />
     </View>

@@ -51,6 +51,9 @@ import {LogOut} from '../Component/LogOut';
 import {AnalyticsConsole} from '../Component/AnalyticsConsole';
 import RatingModal from '../Component/RatingModal';
 import FitIcon from '../Component/Utilities/FitIcon';
+import Wrapper from './WorkoutCompleteScreen/Wrapper';
+import Header from '../Component/Header';
+import NewHeader1 from '../Component/Headers/NewHeader1';
 const NewProfile = ({navigation}) => {
   useEffect(() => {
     notifee.getTriggerNotifications().then(res => {
@@ -750,8 +753,9 @@ const NewProfile = ({navigation}) => {
   };
   return (
     <View style={styles.Container}>
-      <NewHeader header={'Profile'} />
-      <View style={styles.ProfileContainer}>
+    <Wrapper styles={{backgroundColor:AppColor.WHITE}}>
+     <NewHeader1 header={'Profile'}/>
+    <View style={styles.ProfileContainer}>
         <View style={[styles.profileView, {}]}>
           <Image
             source={
@@ -1041,6 +1045,7 @@ const NewProfile = ({navigation}) => {
         />
       ) : null}
       <DeleteAccount />
+    </Wrapper>
     </View>
   );
 };

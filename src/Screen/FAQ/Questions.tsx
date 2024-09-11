@@ -15,6 +15,8 @@ import {navigationRef} from '../../../App';
 import FitIcon from '../../Component/Utilities/FitIcon';
 import {AnalyticsConsole} from '../../Component/AnalyticsConsole';
 import {DeviceHeigth} from '../../Component/Config';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
 
 const Questions = ({route, navigation}: any) => {
   const RenderItem = useMemo(
@@ -73,23 +75,22 @@ const Questions = ({route, navigation}: any) => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: AppColor.WHITE}}>
-      <DietPlanHeader
-        header="Frequently Asked Questions"
-        shadow
-      />
-      <View
-        style={{
-          width: '95%',
-          alignSelf: 'center',
-          marginBottom: 20,
-        }}>
-        <FlatList
-          data={QuestionsArray}
-          showsVerticalScrollIndicator={false}
-          renderItem={({item, index}: any) => RenderItem(item, index)}
-          contentContainerStyle={{paddingBottom: DeviceHeigth * 0.1}}
-        />
-      </View>
+      <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
+        <NewHeader1 header="Frequently Asked Questions" backButton />
+        <View
+          style={{
+            width: '95%',
+            alignSelf: 'center',
+            marginBottom: 20,
+          }}>
+          <FlatList
+            data={QuestionsArray}
+            showsVerticalScrollIndicator={false}
+            renderItem={({item, index}: any) => RenderItem(item, index)}
+            contentContainerStyle={{paddingBottom: DeviceHeigth * 0.1}}
+          />
+        </View>
+      </Wrapper>
     </SafeAreaView>
   );
 };

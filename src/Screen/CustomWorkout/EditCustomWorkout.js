@@ -30,6 +30,8 @@ import AnimatedLottieView from 'lottie-react-native';
 import {setCustomWorkoutData} from '../../Component/ThemeRedux/Actions';
 import VersionNumber from 'react-native-version-number';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
 
 const EditCustomWorkout = ({navigation, route}) => {
   const data = route?.params?.item;
@@ -328,7 +330,6 @@ const EditCustomWorkout = ({navigation, route}) => {
     } catch (error) {
       console.log('GET-USER-DATA', error);
       setForLoading(false);
-  
     }
   };
   const updateFilteredCategories = test => {
@@ -340,163 +341,163 @@ const EditCustomWorkout = ({navigation, route}) => {
   };
   return (
     <>
-      <DietPlanHeader
-        header={'Edit Custom Workout'}
-        shadow
-        left={DeviceHeigth >= 1024 ? DeviceWidth * 0.045 : DeviceWidth * 0.02}
-      />
       {forLoading ? <ActivityLoader /> : ''}
       <View style={styles.container}>
-        <View style={{width: '95%', alignSelf: 'center'}}>
-          <View
-            style={{
-              width: '95%',
-              height: 50,
-              alignSelf: 'center',
-              backgroundColor: '#F3F5F5',
-              borderRadius: 6,
-              flexDirection: 'row',
-              alignItems: 'center',
-              paddingLeft: 10,
-              top: -DeviceWidth * 0.05,
-            }}>
-            <Icons name="search" size={18} color={'#333333E5'} />
-            <TextInput
-              placeholder="Search Exercise"
-              placeholderTextColor="#33333380"
-              value={searchQuery}
-              onChangeText={text => {
-                setSearchQuery(text);
-                updateFilteredCategories(text);
-              }}
-              style={styles.inputText}
-            />
-          </View>
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              alignSelf: 'center',
-              width: '100%',
-              alignSelf: 'center',
-            }}>
-            <FlatList
-              data={completeProfileData?.focusarea}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({item, index}) => (
-                <TouchableOpacity
-                  activeOpacity={0.9}
-                  style={[
-                    styles.listView,
-                    {
-                      backgroundColor:
-                        bodyPart == item.bodypart_title ? '#A937371A' : '#fff',
-                      borderWidth: bodyPart != item.bodypart_title ? 1 : 0,
-                      borderColor:
-                        bodyPart != item.bodypart_title
-                          ? '#33333333'
-                          : '#A937371A',
-                      marginLeft: index == 0 ? DeviceWidth * 0.0 : 0,
-                      marginRight:
-                        index == completeProfileData?.focusarea?.length - 1
-                          ? DeviceWidth * 0.06
-                          : 5,
-                    },
-                  ]}
-                  onPress={() => {
-                    setBodyPart(item.bodypart_title);
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      fontWeight: '500',
-                      lineHeight: 16,
-                      textAlign: 'center',
-                      color:
-                        bodyPart != item.bodypart_title
-                          ? '#333333E5'
-                          : '#f0013b',
-                      fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+        <Wrapper styles={{backgroundColor: AppColor.WHITE,}} >
+          <NewHeader1 header={'Edit Custom Workout'} backButton />
+          <View style={{width: '95%', alignSelf: 'center'}}>
+            <View
+              style={{
+                width: '95%',
+                height: 50,
+                alignSelf: 'center',
+                backgroundColor: '#F3F5F5',
+                borderRadius: 6,
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingLeft: 10,
+                marginBottom: 10
+              }}>
+              <Icons name="search" size={18} color={'#333333E5'} />
+              <TextInput
+                placeholder="Search Exercise"
+                placeholderTextColor="#33333380"
+                value={searchQuery}
+                onChangeText={text => {
+                  setSearchQuery(text);
+                  updateFilteredCategories(text);
+                }}
+                style={styles.inputText}
+              />
+            </View>
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                alignSelf: 'center',
+                width: '100%',
+                alignSelf: 'center',
+              }}>
+              <FlatList
+                data={completeProfileData?.focusarea}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item, index}) => (
+                  <TouchableOpacity
+                    activeOpacity={0.9}
+                    style={[
+                      styles.listView,
+                      {
+                        backgroundColor:
+                          bodyPart == item.bodypart_title
+                            ? '#A937371A'
+                            : '#fff',
+                        borderWidth: bodyPart != item.bodypart_title ? 1 : 0,
+                        borderColor:
+                          bodyPart != item.bodypart_title
+                            ? '#33333333'
+                            : '#A937371A',
+                        marginLeft: index == 0 ? DeviceWidth * 0.0 : 0,
+                        marginRight:
+                          index == completeProfileData?.focusarea?.length - 1
+                            ? DeviceWidth * 0.06
+                            : 5,
+                      },
+                    ]}
+                    onPress={() => {
+                      setBodyPart(item.bodypart_title);
                     }}>
-                    {item.bodypart_title}
-                  </Text>
-                </TouchableOpacity>
-              )}
-              showsVerticalScrollIndicator={false}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              updateCellsBatchingPeriod={100}
-              removeClippedSubviews={true}
-            />
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        fontWeight: '500',
+                        lineHeight: 16,
+                        textAlign: 'center',
+                        color:
+                          bodyPart != item.bodypart_title
+                            ? '#333333E5'
+                            : '#f0013b',
+                        fontFamily: Fonts.MONTSERRAT_SEMIBOLD,
+                      }}>
+                      {item.bodypart_title}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+                showsVerticalScrollIndicator={false}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                updateCellsBatchingPeriod={100}
+                removeClippedSubviews={true}
+              />
+            </View>
+            <View
+              style={[
+                styles.meditionBox,
+                {paddingBottom: 300, top: DeviceHeigth * 0.03},
+              ]}>
+              <FlatList
+                // data={filteredCategories}
+                data={[
+                  ...filteredCategories.filter(item =>
+                    selectedItems.includes(item.exercise_id),
+                  ),
+                  ...filteredCategories.filter(
+                    item => !selectedItems.includes(item.exercise_id),
+                  ),
+                ]}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={renderItem1}
+                ListEmptyComponent={emptyComponent}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                updateCellsBatchingPeriod={100}
+                removeClippedSubviews={true}
+              />
+            </View>
           </View>
           <View
-            style={[
-              styles.meditionBox,
-              {paddingBottom: 300, top: DeviceHeigth * 0.03},
-            ]}>
-            <FlatList
-              // data={filteredCategories}
-              data={[
-                ...filteredCategories.filter(item =>
-                  selectedItems.includes(item.exercise_id),
-                ),
-                ...filteredCategories.filter(
-                  item => !selectedItems.includes(item.exercise_id),
-                ),
-              ]}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={renderItem1}
-              ListEmptyComponent={emptyComponent}
-              initialNumToRender={10}
-              maxToRenderPerBatch={10}
-              updateCellsBatchingPeriod={100}
-              removeClippedSubviews={true}
-            />
-          </View>
-        </View>
-        <View
-          style={{
-            paddingLeft: 15,
-            paddingRight: 15,
-            height: 40,
-            borderRadius: 30,
-            justifyContent: 'center',
-            alignItems: 'center',
-            position: 'absolute',
-            alignSelf: 'center',
-            backgroundColor: '#f0013b',
-            bottom: Platform.OS == 'ios' ? 35 : 10,
-          }}>
-          <TouchableOpacity
             style={{
-              width: 180,
+              paddingLeft: 15,
+              paddingRight: 15,
               height: 40,
-
               borderRadius: 30,
               justifyContent: 'center',
               alignItems: 'center',
-              flexDirection: 'row',
-            }}
-            onPress={() => {
-              submitCustomExercise();
-            }}
-            activeOpacity={0.5}>
-            <Image
-              source={localImage.Plus}
-              tintColor={AppColor.WHITE}
-              style={{width: 20, height: 20}}
-            />
-            <Text style={styles.button}>{'Update Workout '}</Text>
+              position: 'absolute',
+              alignSelf: 'center',
+              backgroundColor: '#f0013b',
+              bottom: Platform.OS == 'ios' ? 35 : 10,
+            }}>
+            <TouchableOpacity
+              style={{
+                width: 180,
+                height: 40,
 
-            <Text style={[styles.button, {marginHorizontal: -5}]}>
-              ({selectedItems?.length}){' '}
-            </Text>
-          </TouchableOpacity>
-        </View>
+                borderRadius: 30,
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
+              }}
+              onPress={() => {
+                submitCustomExercise();
+              }}
+              activeOpacity={0.5}>
+              <Image
+                source={localImage.Plus}
+                tintColor={AppColor.WHITE}
+                style={{width: 20, height: 20}}
+              />
+              <Text style={styles.button}>{'Update Workout '}</Text>
+
+              <Text style={[styles.button, {marginHorizontal: -5}]}>
+                ({selectedItems?.length}){' '}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </Wrapper>
       </View>
     </>
   );

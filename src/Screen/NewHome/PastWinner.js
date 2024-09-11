@@ -21,7 +21,7 @@ import {useSelector} from 'react-redux';
 import {SafeAreaView} from 'react-native-safe-area-context';
 const PastWinner = ({route}) => {
   const getUserDataDetails = useSelector(state => state.getUserDataDetails);
-
+  const enteredCurrentEvent = useSelector(state => state.enteredCurrentEvent);
   const scrollY = new Animated.Value(0);
   const navigation = useNavigation();
   const cardWidth = scrollY.interpolate({
@@ -70,171 +70,175 @@ const PastWinner = ({route}) => {
           end={{x: 1, y: 1}}
           colors={['#D900AE', '#6C00A3']}
           style={{width: '100%', height: '100%'}}>
-          <View
-            style={{
-              width: '100%',
-              height: 180,
-
-              alignItems: 'center',
-              alignSelf: 'center',
-              marginVertical: 16,
-            }}>
-            <View
-              style={{
-                width: 150,
-                height: 120,
-                alignItems: 'center',
-                marginTop: 20,
-              }}>
+          {!enteredCurrentEvent && (
+            <>
               <View
                 style={{
-                  width: 88,
-                  height: 88,
+                  width: '100%',
+                  height: 180,
 
-                  borderRadius: 88,
-                  borderWidth: 6,
-                  borderColor: AppColor.WHITE,
-                  justifyContent: 'center',
                   alignItems: 'center',
+                  alignSelf: 'center',
+                  marginVertical: 16,
                 }}>
-                {getUserDataDetails?.image_path == null ? (
+                <View
+                  style={{
+                    width: 150,
+                    height: 120,
+                    alignItems: 'center',
+                    marginTop: 20,
+                  }}>
                   <View
                     style={{
-                      width: 80,
-                      height: 80,
-                      borderRadius: 80,
-                      overflow: 'hidden',
-                      zIndex: -1,
-                      backgroundColor: '#DBEAFE',
+                      width: 88,
+                      height: 88,
+
+                      borderRadius: 88,
+                      borderWidth: 6,
+                      borderColor: AppColor.WHITE,
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
-                    <Text
-                      style={{
-                        fontFamily: Fonts.HELVETICA_BOLD,
-                        fontSize: 30,
-                        color: '#1E40AF',
-                        lineHeight: 50,
-                      }}>
-                      {getUserDataDetails?.name.substring(0, 2).toUpperCase()}
-                    </Text>
+                    {getUserDataDetails?.image_path == null ? (
+                      <View
+                        style={{
+                          width: 80,
+                          height: 80,
+                          borderRadius: 80,
+                          overflow: 'hidden',
+                          zIndex: -1,
+                          backgroundColor: '#DBEAFE',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Text
+                          style={{
+                            fontFamily: Fonts.HELVETICA_BOLD,
+                            fontSize: 30,
+                            color: '#1E40AF',
+                            lineHeight: 50,
+                          }}>
+                          {getUserDataDetails?.name
+                            .substring(0, 2)
+                            .toUpperCase()}
+                        </Text>
+                      </View>
+                    ) : (
+                      <Image
+                        source={{uri: getUserDataDetails?.image_path}}
+                        style={{
+                          width: 80,
+                          height: 80,
+                          borderRadius: 80,
+                          overflow: 'hidden',
+                          zIndex: -1,
+                        }}
+                        resizeMode="cover"
+                      />
+                    )}
                   </View>
-                ) : (
                   <Image
-                    source={{uri:getUserDataDetails?.image_path}}
-                    
+                    source={require('../../Icon/Images/NewHome/crown2.png')}
+                    resizeMode="contain"
                     style={{
-                      width: 80,
-                      height: 80,
-                      borderRadius: 80,
-                      overflow: 'hidden',
-                      zIndex: -1,
+                      width:
+                        DeviceHeigth >= 1024
+                          ? DeviceWidth * 0.045
+                          : DeviceWidth * 0.1,
+                      height: DeviceWidth * 0.08,
+                      position: 'absolute',
+                      top:
+                        DeviceHeigth >= 1024
+                          ? -DeviceWidth * 0.045
+                          : -DeviceWidth * 0.055,
                     }}
-                    resizeMode="cover"
                   />
-                )}
+                  <Image
+                    source={require('../../Icon/Images/NewHome/win.png')}
+                    resizeMode="contain"
+                    style={{
+                      width:
+                        DeviceHeigth >= 1024
+                          ? DeviceWidth * 0.08
+                          : DeviceWidth * 0.15,
+                      height: DeviceWidth * 0.08,
+                      position: 'absolute',
+
+                      bottom:
+                        DeviceHeigth >= 1024
+                          ? DeviceWidth * 0.0
+                          : DeviceWidth * 0.035,
+                    }}
+                  />
+                </View>
+                <Text
+                  style={{
+                    width: '95%',
+                    fontFamily: Fonts.HELVETICA_REGULAR,
+                    fontSize: 18,
+                    lineHeight: 26,
+                    color: AppColor.WHITE,
+                    marginTop: 10,
+                    textAlign: 'center',
+                  }}>
+                  Ready to win an exciting prize and join the winner’s club?
+                </Text>
               </View>
-              <Image
-                source={require('../../Icon/Images/NewHome/crown2.png')}
-                resizeMode="contain"
-                style={{
-                  width:
-                    DeviceHeigth >= 1024
-                      ? DeviceWidth * 0.045
-                      : DeviceWidth * 0.1,
-                  height: DeviceWidth * 0.08,
-                  position: 'absolute',
-                  top:
-                    DeviceHeigth >= 1024
-                      ? -DeviceWidth * 0.045
-                      : -DeviceWidth * 0.055,
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => {
+                  // navigation?.navigate('NewSubscription', {upgrade: true});
+                  navigation.navigate('StepGuide');
                 }}
-              />
-              <Image
-                source={require('../../Icon/Images/NewHome/win.png')}
-                resizeMode="contain"
                 style={{
-                  width:
-                    DeviceHeigth >= 1024
-                      ? DeviceWidth * 0.08
-                      : DeviceWidth * 0.15,
-                  height: DeviceWidth * 0.08,
-                  position: 'absolute',
-
-                  bottom:
-                    DeviceHeigth >= 1024
-                      ? DeviceWidth * 0.0
-                      : DeviceWidth * 0.035,
-                }}
-              />
-            </View>
-            <Text
-              style={{
-                fontFamily: Fonts.HELVETICA_REGULAR,
-                fontSize: 18,
-                lineHeight: 26,
-                color: AppColor.WHITE,
-                marginTop: 10,
-                textAlign: 'center',
-              }}>
-              Ready to win an exciting prize and join the winner’s club?
-            </Text>
-        
-          </View>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => {
-              // navigation?.navigate('NewSubscription', {upgrade: true});
-              navigation.navigate('StepGuide');
-            }}
-            style={{
-              width: 203,
-              height: 48,
-              backgroundColor: 'green',
-              alignItems: 'center',
-              alignSelf: 'center',
-              justifyContent: 'center',
-              marginBottom: DeviceHeigth * 0.04,
-              marginTop: DeviceHeigth * 0.02,
-              backgroundColor: AppColor.WHITE,
-              borderRadius: 6,
-              shadowColor: 'grey',
-              flexDirection: 'row',
-              ...Platform.select({
-                ios: {
-                  shadowColor: '#000000',
-                  shadowOffset: {width: 0, height: 2},
-                  shadowOpacity: 0.2,
-                  shadowRadius: 2,
-                },
-                android: {
-                  elevation: 0,
-                },
-              }),
-            }}>
-            <Text
-              style={{
-                fontFamily: Fonts.HELVETICA_BOLD,
-                fontSize: 18,
-                marginHorizontal: 5,
-                color: AppColor.PrimaryTextColor,
-              }}>
-              Joint Now
-            </Text>
-            <AntDesign
-              name={'arrowright'}
-              size={20}
-              color={AppColor.PrimaryTextColor}
-            />
-          </TouchableOpacity>
-
+                  width: 203,
+                  height: 48,
+                  backgroundColor: 'green',
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                  justifyContent: 'center',
+                  marginBottom: DeviceHeigth * 0.04,
+                  marginTop: DeviceHeigth * 0.02,
+                  backgroundColor: AppColor.WHITE,
+                  borderRadius: 6,
+                  shadowColor: 'grey',
+                  flexDirection: 'row',
+                  ...Platform.select({
+                    ios: {
+                      shadowColor: '#000000',
+                      shadowOffset: {width: 0, height: 2},
+                      shadowOpacity: 0.2,
+                      shadowRadius: 2,
+                    },
+                    android: {
+                      elevation: 0,
+                    },
+                  }),
+                }}>
+                <Text
+                  style={{
+                    fontFamily: Fonts.HELVETICA_BOLD,
+                    fontSize: 18,
+                    marginHorizontal: 5,
+                    color: AppColor.PrimaryTextColor,
+                  }}>
+                  Joint Now
+                </Text>
+                <AntDesign
+                  name={'arrowright'}
+                  size={20}
+                  color={AppColor.PrimaryTextColor}
+                />
+              </TouchableOpacity>
+            </>
+          )}
           <View
             style={{
               width: '100%',
               backgroundColor: AppColor.WHITE,
               alignSelf: 'center',
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
+              borderTopLeftRadius: enteredCurrentEvent ? 0 : 20,
+              borderTopRightRadius: enteredCurrentEvent ? 0 : 20,
             }}>
             <View style={styles.winnersList}>
               {route.params.pastWinners.map((winner, index) => (

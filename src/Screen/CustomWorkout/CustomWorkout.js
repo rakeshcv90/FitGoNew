@@ -41,6 +41,8 @@ import FastImage from 'react-native-fast-image';
 import RewardModal from '../../Component/Utilities/RewardModal';
 import UpcomingEventModal from '../../Component/Utilities/UpcomingEventModal';
 import DietPlanHeader from '../../Component/Headers/DietPlanHeader';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
@@ -430,48 +432,38 @@ const CustomWorkout = ({navigation}) => {
 
   return (
     <>
-      {/* <NewHeader
-        header={'Create Custom Workout'}
-        backButton
-      /> */}
-      <DietPlanHeader
-        header={'Create Custom Workout'}
-        SearchButton={false}
-        shadow
-        backPressCheck={true}
-        onPress={() => {
-          navigation?.goBack();
-        }}
-      />
       <View style={styles.container}>
-        <View style={[styles.meditionBox, {top: -20}]}>
-          <FlatList
-            data={customWorkoutData}
-            // contentContainerStyle={{ flex: 1,  }}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={renderItem}
-            ListEmptyComponent={emptyComponent}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
-            updateCellsBatchingPeriod={100}
-            removeClippedSubviews={true}
-          />
-        </View>
-        {customWorkoutData?.length > 0 && (
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            activeOpacity={0.5}
-            onPress={() => {
-              setIsCustomWorkout(true);
-            }}>
-            <Image
-              source={localImage.Plus}
-              style={{width: 20, height: 20}}
-              tintColor={AppColor.WHITE}
+        <Wrapper>
+          <NewHeader1 header={'Create Custom Workout'} backButton />
+          <View style={[styles.meditionBox, {marginTop: 10}]}>
+            <FlatList
+              data={customWorkoutData}
+              // contentContainerStyle={{ flex: 1,  }}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={renderItem}
+              ListEmptyComponent={emptyComponent}
+              initialNumToRender={10}
+              maxToRenderPerBatch={10}
+              updateCellsBatchingPeriod={100}
+              removeClippedSubviews={true}
             />
-            <Text style={styles.button}>{'Create Workout'}</Text>
-          </TouchableOpacity>
-        )}
+          </View>
+          {customWorkoutData?.length > 0 && (
+            <TouchableOpacity
+              style={styles.buttonStyle}
+              activeOpacity={0.5}
+              onPress={() => {
+                setIsCustomWorkout(true);
+              }}>
+              <Image
+                source={localImage.Plus}
+                style={{width: 20, height: 20}}
+                tintColor={AppColor.WHITE}
+              />
+              <Text style={styles.button}>{'Create Workout'}</Text>
+            </TouchableOpacity>
+          )}
+        </Wrapper>
       </View>
       <Modal
         animationType="slide"

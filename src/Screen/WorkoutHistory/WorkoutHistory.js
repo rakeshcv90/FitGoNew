@@ -29,6 +29,8 @@ import {showMessage} from 'react-native-flash-message';
 import ActivityLoader from '../../Component/ActivityLoader';
 import LoadingScreen from '../../Component/NewHomeUtilities/LoadingScreen';
 import {useSelector} from 'react-redux';
+import Wrapper from '../WorkoutCompleteScreen/Wrapper';
+import NewHeader1 from '../../Component/Headers/NewHeader1';
 
 const WorkoutHistory = () => {
   const [selectedDay, setSelectedDay] = useState((moment().day() + 6) % 7);
@@ -113,141 +115,151 @@ const WorkoutHistory = () => {
         <LoadingScreen />
       ) : (
         <View style={styles.container}>
-          <NewHeader
-            backButton
-            header={'Workout History'}
-            SearchButton
-            secondIcon
-            onPress={() => settooltipVisible(prev => !prev)}
-          />
-          <Tooltip visible={tooltipVisible} setVisible={settooltipVisible} />
-          <View style={styles.view1}>
-            {WeekArrayWithEvent.map((item, index) => (
-              <WeekTabHistory
-                day={item}
-                dayIndex={index}
-                selectedDay={selectedDay}
-                setSelectedDay={setSelectedDay}
-                WeekArray={WeekArrayWithEvent}
-                dayWiseCoins={coins}
-                currentDay={currentDay}
-              />
-            ))}
-          </View>
-          {loaded ? (
-            <ActivityLoader />
-          ) : sameDay && coins[WeekArrayWithEvent[selectedDay]] == 0 ? (
-            <View
-              style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-              <Image
-                source={localImage.daymiss_icon}
-                style={{height: DeviceHeigth * 0.3, width: DeviceWidth * 0.7}}
-                resizeMode="contain"
-              />
-              <Text style={styles.txt2}>
-                {
-                  'You have not earned any points today, start working out to earn points'
-                }
-              </Text>
+          <Wrapper styles={{backgroundColor: AppColor.WHITE}}>
+            <NewHeader1
+              header={'Workout History'}
+              backButton
+              icon
+              iconSource={localImage.infoCircle}
+              onIconPress={() => settooltipVisible(prev => !prev)}
+            />
+            <Tooltip visible={tooltipVisible} setVisible={settooltipVisible} />
+            <View style={styles.view1}>
+              {WeekArrayWithEvent.map((item, index) => (
+                <WeekTabHistory
+                  day={item}
+                  dayIndex={index}
+                  selectedDay={selectedDay}
+                  setSelectedDay={setSelectedDay}
+                  WeekArray={WeekArrayWithEvent}
+                  dayWiseCoins={coins}
+                  currentDay={currentDay}
+                />
+              ))}
             </View>
-          ) : coins[WeekArrayWithEvent[selectedDay]] < 0 ? (
-            <View
-              style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-              <Image
-                source={localImage.daymiss_icon}
-                style={{height: DeviceHeigth * 0.3, width: DeviceWidth * 0.7}}
-                resizeMode="contain"
-              />
-              <View style={styles.view2}>
+            {loaded ? (
+              <ActivityLoader />
+            ) : sameDay && coins[WeekArrayWithEvent[selectedDay]] == 0 ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
                 <Image
-                  source={localImage.caution}
-                  style={{height: 20, width: 20}}
+                  source={localImage.daymiss_icon}
+                  style={{height: DeviceHeigth * 0.3, width: DeviceWidth * 0.7}}
                   resizeMode="contain"
                 />
+                <Text style={styles.txt2}>
+                  {
+                    'You have not earned any points today, start working out to earn points'
+                  }
+                </Text>
+              </View>
+            ) : coins[WeekArrayWithEvent[selectedDay]] < 0 ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={localImage.daymiss_icon}
+                  style={{height: DeviceHeigth * 0.3, width: DeviceWidth * 0.7}}
+                  resizeMode="contain"
+                />
+                <View style={styles.view2}>
+                  <Image
+                    source={localImage.caution}
+                    style={{height: 20, width: 20}}
+                    resizeMode="contain"
+                  />
+                  <Text
+                    style={{
+                      color: AppColor.BLACK,
+                      fontFamily: Fonts.HELVETICA_REGULAR,
+                    }}>{` ${WeekArrayWithEvent[selectedDay]} miss`}</Text>
+                </View>
+                <Text style={styles.txt2}>
+                  {'You miss this day and you loss the'}
+                </Text>
                 <Text
                   style={{
-                    color: AppColor.BLACK,
-                    fontFamily: Fonts.HELVETICA_REGULAR,
-                  }}>{` ${WeekArrayWithEvent[selectedDay]} miss`}</Text>
+                    color: AppColor.RED,
+                    fontFamily: 'Helvetica-Bold',
+                    fontSize: 18,
+                  }}>
+                  -5 Points
+                </Text>
               </View>
-              <Text style={styles.txt2}>
-                {'You miss this day and you loss the'}
-              </Text>
-              <Text
-                style={{
-                  color: AppColor.RED,
-                  fontFamily: 'Helvetica-Bold',
-                  fontSize: 18,
-                }}>
-                -5 Points
-              </Text>
-            </View>
-          ) : (
-            <ScrollView showsVerticalScrollIndicator={false}>
-              <Overview data={screenObject} />
-              {screenObject.next != 0 ||
-              screenObject?.repeat != 0 ||
-              screenObject?.skip != 0 ||
-              screenObject?.delay != 0 ? (
-                <View style={styles.container1}>
-                  <Text style={styles.txt1}>Points Deduction</Text>
-                  {screenObject.next == 0 ? null : (
-                    <PointDeduction
+            ) : (
+              <ScrollView showsVerticalScrollIndicator={false}>
+                <Overview data={screenObject} />
+                {screenObject.next != 0 ||
+                screenObject?.repeat != 0 ||
+                screenObject?.skip != 0 ||
+                screenObject?.delay != 0 ? (
+                  <View style={styles.container1}>
+                    <Text style={styles.txt1}>Points Deduction</Text>
+                    {screenObject.next == 0 ? null : (
+                      <PointDeduction
+                        border
+                        text1={'Stay on current exercise?'}
+                        text2={`${screenObject.next}/${screenObject?.exerciseCount} exercise skip`}
+                        icon={localImage.pause_icon}
+                        coins={screenObject.next}
+                      />
+                    )}
+                    {screenObject?.repeat == 0 ? null : (
+                      <PointDeduction
+                        border
+                        text1={'Repeated the exericse?'}
+                        text2={'Yes'}
+                        icon={localImage.repeat_icon}
+                        coins={screenObject.repeat}
+                      />
+                    )}
+                    {screenObject?.skip == 0 ? null : (
+                      <PointDeduction
+                        border
+                        text1={'Skip to the next exercise rest timer?'}
+                        text2={`${screenObject.skip}/${screenObject?.exerciseCount} rest time skipped`}
+                        icon={localImage.skip_icon}
+                        coins={screenObject.skip}
+                      />
+                    )}
+                    {screenObject?.delay == 0 ? null : (
+                      <PointDeduction
+                        text1={`Delay ${screenObject?.delay}hour`}
+                        text2={`You are ${screenObject?.delay} hours behind comapred to your previous workout.`}
+                        icon={localImage.delay_icon}
+                        coins={screenObject.delay}
+                      />
+                    )}
+                  </View>
+                ) : null}
+                {screenObject?.breathe == 0 &&
+                !screenObject?.cardio == 0 ? null : (
+                  <View style={styles.container1}>
+                    <Text style={styles.txt1}>Workout</Text>
+                    <ExtraWorkouts
                       border
-                      text1={'Stay on current exercise?'}
-                      text2={`${screenObject.next}/${screenObject?.exerciseCount} exercise skip`}
-                      icon={localImage.pause_icon}
-                      coins={screenObject.next}
+                      txt={'Cardio'}
+                      icon={localImage.heart_icon}
+                      coins={screenObject?.cardio}
                     />
-                  )}
-                  {screenObject?.repeat == 0 ? null : (
-                    <PointDeduction
-                      border
-                      text1={'Repeated the exericse?'}
-                      text2={'Yes'}
-                      icon={localImage.repeat_icon}
-                      coins={screenObject.repeat}
+                    <ExtraWorkouts
+                      txt={'Breathe in and out'}
+                      icon={localImage.breath_icon}
+                      coins={screenObject?.breathe}
                     />
-                  )}
-                  {screenObject?.skip == 0 ? null : (
-                    <PointDeduction
-                      border
-                      text1={'Skip to the next exercise rest timer?'}
-                      text2={`${screenObject.skip}/${screenObject?.exerciseCount} rest time skipped`}
-                      icon={localImage.skip_icon}
-                      coins={screenObject.skip}
-                    />
-                  )}
-                  {screenObject?.delay == 0 ? null : (
-                    <PointDeduction
-                      text1={`Delay ${screenObject?.delay}hour`}
-                      text2={`You are ${screenObject?.delay} hours behind comapred to your previous workout.`}
-                      icon={localImage.delay_icon}
-                      coins={screenObject.delay}
-                    />
-                  )}
-                </View>
-              ) : null}
-              {screenObject?.breathe == 0 &&
-              !screenObject?.cardio == 0 ? null : (
-                <View style={styles.container1}>
-                  <Text style={styles.txt1}>Workout</Text>
-                  <ExtraWorkouts
-                    border
-                    txt={'Cardio'}
-                    icon={localImage.heart_icon}
-                    coins={screenObject?.cardio}
-                  />
-                  <ExtraWorkouts
-                    txt={'Breathe in and out'}
-                    icon={localImage.breath_icon}
-                    coins={screenObject?.breathe}
-                  />
-                </View>
-              )}
-              <Rewards data={screenObject} />
-            </ScrollView>
-          )}
+                  </View>
+                )}
+                <Rewards data={screenObject} />
+              </ScrollView>
+            )}
+          </Wrapper>
         </View>
       )}
     </>
